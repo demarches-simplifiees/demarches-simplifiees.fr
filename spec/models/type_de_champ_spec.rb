@@ -247,30 +247,35 @@ describe TypeDeChamp do
     it_behaves_like "a prefillable type de champ", :type_de_champ_civilite
     it_behaves_like "a prefillable type de champ", :type_de_champ_pays
     it_behaves_like "a prefillable type de champ", :type_de_champ_regions
+    it_behaves_like "a prefillable type de champ", :type_de_champ_departements
+    it_behaves_like "a prefillable type de champ", :type_de_champ_communes
     it_behaves_like "a prefillable type de champ", :type_de_champ_yes_no
     it_behaves_like "a prefillable type de champ", :type_de_champ_checkbox
     it_behaves_like "a prefillable type de champ", :type_de_champ_drop_down_list
-    it_behaves_like "a prefillable type de champ", :type_de_champ_departements
+    it_behaves_like "a prefillable type de champ", :type_de_champ_repetition
     it_behaves_like "a prefillable type de champ", :type_de_champ_multiple_drop_down_list
     it_behaves_like "a prefillable type de champ", :type_de_champ_epci
+    it_behaves_like "a prefillable type de champ", :type_de_champ_dossier_link
+    it_behaves_like "a prefillable type de champ", :type_de_champ_siret
+    it_behaves_like "a prefillable type de champ", :type_de_champ_rna
 
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_communes
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_dossier_link
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_linked_drop_down_list
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_header_section
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_explication
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_piece_justificative
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_repetition
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_cnaf
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_dgfip
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_pole_emploi
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_mesri
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_carte
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_address
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_siret
-    it_behaves_like "a non-prefillable type de champ", :type_de_champ_rna
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_annuaire_education
+  end
+
+  describe '#normalize_libelle' do
+    it { expect(create(:type_de_champ, :header_section, libelle: " 2.3 Test").libelle).to eq("2.3 Test") }
+    it { expect(create(:type_de_champ, libelle: " fix me ").libelle).to eq("fix me") }
   end
 end

@@ -15,12 +15,14 @@ RSpec.describe PrefillParams do
 
       VCR.insert_cassette('api_geo_regions')
       VCR.insert_cassette('api_geo_departements')
+      VCR.insert_cassette('api_geo_communes')
       VCR.insert_cassette('api_geo_epcis')
     end
 
     after do
       VCR.eject_cassette('api_geo_regions')
       VCR.eject_cassette('api_geo_departements')
+      VCR.eject_cassette('api_geo_communes')
       VCR.eject_cassette('api_geo_epcis')
     end
 
@@ -36,8 +38,8 @@ RSpec.describe PrefillParams do
 
       let(:params) {
         {
-          "champ_#{type_de_champ_1.to_typed_id}" => value_1,
-          "champ_#{type_de_champ_2.to_typed_id}" => value_2
+          "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
+          "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2
         }
       }
 
@@ -53,7 +55,7 @@ RSpec.describe PrefillParams do
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
       let(:types_de_champ_public) { [{ type: :text }] }
 
-      let(:params) { { type_de_champ.to_typed_id => "value" } }
+      let(:params) { { type_de_champ.to_typed_id_for_query => "value" } }
 
       it "filters out the champ" do
         expect(prefill_params_array).to match([])
@@ -71,7 +73,7 @@ RSpec.describe PrefillParams do
     context 'when there is no Champ that matches the TypeDeChamp with the given stable id' do
       let!(:type_de_champ) { create(:type_de_champ_text) } # goes to another procedure
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => "value" } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => "value" } }
 
       it "filters out the param" do
         expect(prefill_params_array).to match([])
@@ -84,7 +86,7 @@ RSpec.describe PrefillParams do
         let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
-        let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
         it "builds an array of hash matching the given params" do
           expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
@@ -98,7 +100,7 @@ RSpec.describe PrefillParams do
         let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
         let(:champ) { find_champ_by_stable_id(dossier, type_de_champ.stable_id) }
 
-        let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+        let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
         it "builds an array of hash matching the given params" do
           expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
@@ -110,7 +112,7 @@ RSpec.describe PrefillParams do
       let(:types_de_champ_public) { [{ type: type_de_champ_type }] }
       let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
 
-      let(:params) { { "champ_#{type_de_champ.to_typed_id}" => value } }
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
       context "when the type de champ is unauthorized (#{type_de_champ_type})" do
         it "filters out the param" do
@@ -137,8 +139,26 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :checkbox, "false"
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :departements, "03"
+    it_behaves_like "a champ public value that is authorized", :communes, ['01', '01457']
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
+    it_behaves_like "a champ public value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
+    it_behaves_like "a champ public value that is authorized", :siret, "13002526500013"
+    it_behaves_like "a champ public value that is authorized", :rna, "value"
+
+    context "when the public type de champ is authorized (repetition)" do
+      let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
+      let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
+      let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
+      let(:type_de_champ_child_value) { "value" }
+      let(:type_de_champ_child_value2) { "value2" }
+
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
+
+      it "builds an array of hash(id, value) matching the given params" do
+        expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
+      end
+    end
 
     it_behaves_like "a champ private value that is authorized", :text, "value"
     it_behaves_like "a champ private value that is authorized", :textarea, "value"
@@ -158,14 +178,31 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
+    it_behaves_like "a champ private value that is authorized", :rna, "value"
+    it_behaves_like "a champ private value that is authorized", :siret, "13002526500013"
     it_behaves_like "a champ private value that is authorized", :departements, "03"
+    it_behaves_like "a champ private value that is authorized", :communes, ['01', '01457']
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
+    it_behaves_like "a champ private value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
+
+    context "when the private type de champ is authorized (repetition)" do
+      let(:types_de_champ_private) { [{ type: :repetition, children: [{ type: :text }] }] }
+      let(:type_de_champ) { procedure.published_revision.types_de_champ_private.first }
+      let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
+      let(:type_de_champ_child_value) { "value" }
+      let(:type_de_champ_child_value2) { "value2" }
+
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
+
+      it "builds an array of hash(id, value) matching the given params" do
+        expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
+      end
+    end
 
     it_behaves_like "a champ public value that is unauthorized", :decimal_number, "non decimal string"
     it_behaves_like "a champ public value that is unauthorized", :integer_number, "non integer string"
     it_behaves_like "a champ public value that is unauthorized", :number, "value"
-    it_behaves_like "a champ public value that is unauthorized", :communes, "value"
     it_behaves_like "a champ public value that is unauthorized", :dossier_link, "value"
     it_behaves_like "a champ public value that is unauthorized", :titre_identite, "value"
     it_behaves_like "a champ public value that is unauthorized", :civilite, "value"
@@ -176,7 +213,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :header_section, "value"
     it_behaves_like "a champ public value that is unauthorized", :explication, "value"
     it_behaves_like "a champ public value that is unauthorized", :piece_justificative, "value"
-    it_behaves_like "a champ public value that is unauthorized", :repetition, "value"
     it_behaves_like "a champ public value that is unauthorized", :cnaf, "value"
     it_behaves_like "a champ public value that is unauthorized", :dgfip, "value"
     it_behaves_like "a champ public value that is unauthorized", :pole_emploi, "value"
@@ -186,10 +222,33 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :pays, "value"
     it_behaves_like "a champ public value that is unauthorized", :regions, "value"
     it_behaves_like "a champ public value that is unauthorized", :departements, "value"
-    it_behaves_like "a champ public value that is unauthorized", :siret, "value"
-    it_behaves_like "a champ public value that is unauthorized", :rna, "value"
+    it_behaves_like "a champ public value that is unauthorized", :communes, "value"
     it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
     it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, ["value"]
+
+    context "when the public type de champ is unauthorized because of wrong value format (repetition)" do
+      let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
+      let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
+      let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
+
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => "value" } }
+
+      it "builds an array of hash(id, value) matching the given params" do
+        expect(prefill_params_array).to match([])
+      end
+    end
+
+    context "when the public type de champ is unauthorized because of wrong value typed_id (repetition)" do
+      let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
+      let(:type_de_champ) { procedure.published_revision.types_de_champ_public.first }
+      let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
+
+      let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => ["{\"wrong\":\"value\"}", "{\"wrong\":\"value2\"}"] } }
+
+      it "builds an array of hash(id, value) matching the given params" do
+        expect(prefill_params_array).to match([])
+      end
+    end
   end
 
   private
@@ -200,7 +259,7 @@ RSpec.describe PrefillParams do
 
   def attributes(champ, value)
     TypesDeChamp::PrefillTypeDeChamp
-      .build(champ.type_de_champ)
-      .transform_value_to_assignable_attributes(value)
+      .build(champ.type_de_champ, procedure.active_revision)
+      .to_assignable_attributes(champ, value)
   end
 end

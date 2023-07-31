@@ -35,10 +35,15 @@ en:
   help: 'Help'
   help_dropdown:
     general_title: "Online help"
+    procedure_title: "Do you have a question about this procedure?"
     problem_title: A problem with the website ?
     problem_description: Find your answer in the online help.
     technical_contact_title: Technical contact
     technical_contact_description: Send us a message to %{contact_email}.
+    contact_administration: "Contact the administration directly:"
+    help_brouillon_title: "Need help filling out your file?"
+    help_filled_dossier: "A question about your file?"
+    contact_instructeur: Send a message directly to the instructor.
   utils:
     'yes': 'Yes'
     'no': 'No'
@@ -59,6 +64,9 @@ en:
     commentaire:
       send_message_to_instructeur: "Send a message to the instructor"
       reply_in_mailbox: "Reply in mailbox"
+  skiplinks:
+    quick: Quick access
+    content: Content
   layouts:
     commencer:
       no_procedure:
@@ -130,12 +138,18 @@ en:
           yes_no_html: '"true" for Yes, "false" pour No'
           checkbox_html: '"true" to check, "false" to uncheck'
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">ISO 3166-2 country code</a>
-          departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
           regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
+          departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
+          communes_html: An array of the department code and the <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">INSEE commune code</a>.
+          drop_down_list_html: A choice among those selected when the procedure was created
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
           drop_down_list_other_html: Any value
+          siret_html: A SIRET number
+          rna_html: A RNA number
+          repetition_html: A array of hashes with possible values for each field of the repetition.
           epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
+          dossier_link_html: The file ID, as integer.
         examples:
           title: Example
           text: Short text
@@ -152,6 +166,9 @@ en:
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          dossier_link: 42
+          rna: "W503726238"
+          siret: "13002526500013"
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
@@ -503,13 +520,18 @@ en:
               not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
             value:
               not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "must be an integer"
   errors:
     format: "Field « %{attribute} » %{message}"
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
       targeted_user_link_expired: "This invitation link or the file is no longer available."
-      invalid_siret: "The Tahiti number is incorrect"
+      invalid_siret_length: "The TAHITI number must contain exactly 6 characters."
+      invalid_siret_checksum: "The TAHITI number is invalid."
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any company registered under this TAHITI number.'
       siret_network_error: 'Sorry, TAHITI number retrieval is temporarily unavailable. Please try again in a few moments'

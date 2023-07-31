@@ -49,8 +49,9 @@ class Dossier < ApplicationRecord
   self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DateEncodingConcern
-  include DossierRebaseConcern
   include DossierPrefillableConcern
+  include DossierRebaseConcern
+  include DossierSectionsConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -225,6 +226,9 @@ class Dossier < ApplicationRecord
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
   scope :state_not_termine,                    -> { where.not(state: TERMINE) }
+  scope :state_accepte,                        -> { where(state: states.fetch(:accepte)) }
+  scope :state_refuse,                         -> { where(state: states.fetch(:refuse)) }
+  scope :state_sans_suite,                     -> { where(state: states.fetch(:sans_suite)) }
 
   scope :archived,                  -> { where(archived: true) }
   scope :not_archived,              -> { where(archived: false) }
@@ -1242,20 +1246,6 @@ class Dossier < ApplicationRecord
     en_brouillon_expired_to_delete.find_each(&:purge_discarded)
     en_construction_expired_to_delete.find_each(&:purge_discarded)
     termine_expired_to_delete.find_each(&:purge_discarded)
-  end
-
-  def sections_for(champ)
-    @sections = Hash.new do |hash, parent|
-      case parent
-      when :public
-        hash[parent] = champs_public.filter(&:header_section?)
-      when :private
-        hash[parent] = champs_private.filter(&:header_section?)
-      else
-        hash[parent] = parent.champs.filter(&:header_section?)
-      end
-    end
-    @sections[champ.parent || (champ.public? ? :public : :private)]
   end
 
   def clone

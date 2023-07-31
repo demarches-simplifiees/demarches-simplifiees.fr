@@ -1,11 +1,15 @@
 import { getConfig } from '@utils';
 const {
-  crisp: { key, enabled, administrateur }
+  crisp: { key, enabled, administrateur },
+  locale
 } = getConfig();
 
 declare const window: Window &
   typeof globalThis & {
     CRISP_WEBSITE_ID?: string | null;
+    CRISP_RUNTIME_CONFIG?: {
+      locale: string;
+    };
     $crisp: (
       | [cmd: string, key: string, value: unknown]
       | [key: string, value: unknown]
@@ -15,6 +19,9 @@ declare const window: Window &
 if (enabled) {
   window.$crisp = [];
   window.CRISP_WEBSITE_ID = key;
+  window.CRISP_RUNTIME_CONFIG = {
+    locale: locale
+  };
 
   const script = document.createElement('script');
   const firstScript = document.getElementsByTagName('script')[0];

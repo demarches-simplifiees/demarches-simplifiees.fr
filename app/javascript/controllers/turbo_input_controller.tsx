@@ -4,13 +4,18 @@ import { ApplicationController } from './application_controller';
 
 export class TurboInputController extends ApplicationController {
   static values = {
-    url: String
+    url: String,
+    loadOnConnect: { type: Boolean, default: false }
   };
 
   declare readonly urlValue: string;
+  declare readonly loadOnConnectValue: boolean;
 
   connect(): void {
     this.on('input', () => this.debounce(this.load, 200));
+    if (this.loadOnConnectValue) {
+      this.load();
+    }
   }
 
   private load(): void {

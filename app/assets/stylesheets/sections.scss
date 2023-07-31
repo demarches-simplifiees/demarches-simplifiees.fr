@@ -1,0 +1,26 @@
+.counter-start-header-section {
+  counter-reset: hsc1;
+}
+
+h2.header-section::before {
+  counter-increment: hsc1;
+  content: counter(hsc1) " ";
+}
+
+h3.header-section::before {
+  counter-increment: hsc2;
+  content: counter(hsc1) "." counter(hsc2) " ";
+}
+
+h4.header-section::before {
+  counter-increment: hsc3;
+  content: counter(hsc1) "." counter(hsc2) "." counter(hsc3) " ";
+}
+
+.header-section-reset2 {
+  counter-reset: hsc2;
+}
+
+.header-section-reset3 {
+  counter-reset: hsc3;
+}

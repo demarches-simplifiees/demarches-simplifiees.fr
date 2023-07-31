@@ -21,4 +21,13 @@
 #  type_de_champ_id               :integer
 #
 class Champs::DossierLinkChamp < Champ
+  validate :value_integerable, if: -> { value.present? }, on: :prefill
+
+  private
+
+  def value_integerable
+    Integer(value)
+  rescue ArgumentError
+    errors.add(:value, :not_integerable)
+  end
 end

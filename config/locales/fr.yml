@@ -25,10 +25,15 @@ fr:
   help: 'Aide'
   help_dropdown:
     general_title: "Aide en ligne"
+    procedure_title: "Une question sur cette démarche ?"
     problem_title: Un problème avec le site ?
     problem_description: Trouvez votre réponse dans l’aide en ligne.
     technical_contact_title: Contact technique
     technical_contact_description: Envoyez nous un message à %{contact_email}.
+    contact_administration: "Contactez directement l’administration :"
+    help_brouillon_title: "Besoin d’aide pour remplir votre dossier ?"
+    help_filled_dossier: "Une question sur votre dossier ?"
+    contact_instructeur: Envoyez directement un message à l’instructeur.
   utils:
     'yes': Oui
     'no': Non
@@ -50,6 +55,9 @@ fr:
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
       reply_in_mailbox: "Répondre dans la messagerie"
+  skiplinks:
+    quick: Accès rapide
+    content: Contenu
   layouts:
     commencer:
       no_procedure:
@@ -121,12 +129,18 @@ fr:
           yes_no_html: '"true" pour Oui, "false" pour Non'
           checkbox_html: '"true" pour coché, "false" pour décoché'
           pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">code pays ISO 3166-2</a>
-          departements_html: Un <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">numéro de département</a>
           regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">code INSEE de région</a>
+          departements_html: Un <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">numéro de département</a>
+          communes_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">le code INSEE de la commune</a>.
+          drop_down_list_html: Un choix parmi ceux sélectionnés à la création de la procédure
           datetime_html: Datetime au format ISO8601
           date_html: Date au format ISO8601
           drop_down_list_other_html: Toute valeur
+          rna_html: Un numéro RNA
+          siret_html: Un numéro de SIRET
+          repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
           epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>.
+          dossier_link_html: L'identifiant du dossier, sous forme de nombre entier.
         examples:
           title: Exemple
           text: Texte court
@@ -144,6 +158,9 @@ fr:
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"
+          dossier_link: 42
+          rna: "W503726238"
+          siret: "13002526500013"
         prefill_link_title: Lien de préremplissage (GET)
         prefill_link_info: Copiez le lien grâce au bouton ci-dessous et remplacez les valeurs par les données dont vous disposez.
         prefill_link_too_long: Attention, ce lien de préremplissage est trop long et risque de ne pas fonctionner sur certains navigateurs.
@@ -505,6 +522,10 @@ fr:
               not_in_departement_epci_codes: "doit être un code d'EPCI du département correspondant"
             value:
               not_in_departement_epci_names: "doit être un nom d'EPCI du département correspondant"
+        "champs/dossier_link_champ":
+          attributes:
+            value:
+              not_integerable: "doit être un entier"
   errors:
     format: "Le champ « %{attribute} » %{message}"
     messages:
@@ -512,7 +533,8 @@ fr:
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
-      invalid_siret: "Le numéro TAHITI est incorrect"
+      invalid_siret_length: "Le numéro TAHITI doit comporter exactement 6 caractères."
+      invalid_siret_checksum: "Le format du numéro TAHITI est invalide."
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Désolé, nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro TAHITI.'
       siret_network_error: 'Désolé, la récupération des informations des numéros TAHITI est temporairement indisponible. Veuillez réessayer dans quelques instants.'

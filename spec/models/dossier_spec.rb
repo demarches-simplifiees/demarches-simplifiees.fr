@@ -1861,7 +1861,7 @@ describe Dossier do
           let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
           before { dossier.champs_public << champ_repetition }
 
-          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(2) }
+          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4) }
           it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids) }
         end
 
