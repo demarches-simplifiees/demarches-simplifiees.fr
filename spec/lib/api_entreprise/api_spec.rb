@@ -108,6 +108,7 @@ describe APIEntreprise::API do
           let(:siren) { procedure.service.siret[0..8] }
           let(:dinum_siret) { "13002526500013" }
           it 'send default recipient' do
+            ENV["API_ENTREPRISE_DEFAULT_SIRET"] = dinum_siret
             subject
             expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/).with(query: hash_including({ recipient: dinum_siret }))
           end
