@@ -517,6 +517,14 @@ class TypeDeChamp < ApplicationRecord
     (drop_down_list_options - drop_down_list_disabled_options).reject(&:empty?)
   end
 
+  def options_with_drop_down_other
+    if drop_down_other?
+      drop_down_options + [Champs::DropDownListChamp::OTHER]
+    else
+      drop_down_options
+    end
+  end
+
   def layer_enabled?(layer)
     options && options[layer] && options[layer] != '0'
   end

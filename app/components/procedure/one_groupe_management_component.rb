@@ -60,6 +60,6 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
     return [] if targeted_champ.is_a?(Logic::Empty)
     targeted_champ
       .options(@revision.types_de_champ_public)
-      .map { |tdc| [tdc.first, constant(tdc.first).to_json] }
+      .map { |(label, value)| [label, constant(value).to_json] }
   end
 end
