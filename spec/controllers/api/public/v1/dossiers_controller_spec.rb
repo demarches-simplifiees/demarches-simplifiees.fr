@@ -130,6 +130,74 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
     end
   end
 
+  describe '#index' do
+    let(:procedure) { dossier.procedure }
+    let(:dossier) { create(:dossier, prefilled: true, user: nil) }
+    let(:prefill_token) { dossier.prefill_token }
+    let(:params) { { id: procedure.id, prefill_token: } }
+
+    subject(:create_request) do
+      request.headers["Content-Type"] = "application/json"
+      get :index, params:
+    end
+
+    let(:body) { JSON.parse(response.body).map(&:deep_symbolize_keys) }
+
+    before { create_request }
+
+    context 'not found' do
+      let(:prefill_token) { 'invalid_token' }
+      it 'should respond with and empty array' do
+        expect(response).to have_http_status(:ok)
+        expect(body).to eq([])
+      end
+    end
+
+    context 'when dossier prefilled' do
+      it 'should respond with dossier state' do
+        expect(response).to have_http_status(:ok)
+        expect(body.first[:state]).to eq('prefilled')
+      end
+    end
+
+    context 'when dossier brouillon' do
+      let(:dossier) { create(:dossier, prefilled: true) }
+      it 'should respond with dossier state' do
+        expect(response).to have_http_status(:ok)
+        expect(body.first[:state]).to eq('brouillon')
+      end
+    end
+
+    context 'when dossier en_construction' do
+      let(:dossier) { create(:dossier, :en_construction, prefilled: true) }
+      it 'should respond with dossier state' do
+        expect(response).to have_http_status(:ok)
+        expect(body.first[:state]).to eq('en_construction')
+        expect(body.first[:submitted_at]).to eq(dossier.depose_at.iso8601)
+      end
+    end
+
+    context 'with multiple tokens' do
+      let(:dossier) { create(:dossier, prefilled: true, user: nil) }
+      let(:other_dossier) { create(:dossier, prefilled: true, user: nil, procedure:) }
+      let(:prefill_token) { [dossier.prefill_token, other_dossier.prefill_token] }
+
+      it 'should respond with dossiers state' do
+        expect(response).to have_http_status(:ok)
+        expect(body.map { _1[:dossier_number] }).to match_array([dossier.id, other_dossier.id])
+      end
+
+      context 'comma separated tokens' do
+        let(:prefill_token) { [dossier.prefill_token, other_dossier.prefill_token].join(',') }
+
+        it 'should respond with dossiers state' do
+          expect(response).to have_http_status(:ok)
+          expect(body.map { _1[:dossier_number] }).to match_array([dossier.id, other_dossier.id])
+        end
+      end
+    end
+  end
+
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
