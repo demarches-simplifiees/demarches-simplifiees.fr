@@ -434,6 +434,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:mesri)
   end
 
+  def datetime?
+    type_champ == TypeDeChamp.type_champs.fetch(:datetime)
+  end
+
   def public?
     !private?
   end

@@ -68,6 +68,7 @@ class Champ < ApplicationRecord
     :rna?,
     :siret?,
     :carte?,
+    :datetime?,
     :stable_id,
     :mandatory?,
     :prefillable?,
