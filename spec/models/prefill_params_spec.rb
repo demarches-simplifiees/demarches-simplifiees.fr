@@ -140,6 +140,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ public value that is authorized", :departements, "03"
     it_behaves_like "a champ public value that is authorized", :communes, ['01', '01457']
+    it_behaves_like "a champ public value that is authorized", :annuaire_education, "0050009H"
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ public value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
@@ -182,6 +183,7 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ private value that is authorized", :siret, "13002526500013"
     it_behaves_like "a champ private value that is authorized", :departements, "03"
     it_behaves_like "a champ private value that is authorized", :communes, ['01', '01457']
+    it_behaves_like "a champ private value that is authorized", :annuaire_education, "0050009H"
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ private value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
@@ -223,7 +225,6 @@ RSpec.describe PrefillParams do
     it_behaves_like "a champ public value that is unauthorized", :regions, "value"
     it_behaves_like "a champ public value that is unauthorized", :departements, "value"
     it_behaves_like "a champ public value that is unauthorized", :communes, "value"
-    it_behaves_like "a champ public value that is unauthorized", :annuaire_education, "value"
     it_behaves_like "a champ public value that is unauthorized", :multiple_drop_down_list, ["value"]
 
     context "when the public type de champ is unauthorized because of wrong value format (repetition)" do

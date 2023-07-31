@@ -1,0 +1,14 @@
+{
+  "nhits": 0,
+  "parameters": {
+    "dataset": "fr-en-annuaire-education",
+    "rows": 1,
+    "start": 0,
+    "refine": {
+      "identifiant_de_l_etablissement": "0341247"
+    },
+    "format": "json",
+    "timezone": "UTC"
+  },
+  "records": []
+}
