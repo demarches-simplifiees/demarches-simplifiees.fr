@@ -1,34 +1,6 @@
-@import "constants";
 
 #invites-form {
-  padding: $default-padding;
-  text-align: left;
-
-  form {
-    display: flex;
-    margin-top: $default-padding;
-  }
-
-  h4 {
-    font-weight: bold;
-    margin-bottom: $default-spacer;
-  }
-
-  p {
-    margin-bottom: $default-spacer;
-  }
-
-  ul {
-    list-style-position: inside;
-    list-style-type: disc;
-    margin-bottom: $default-padding;
-  }
-
-  input[type=email] {
-    margin-bottom: $default-spacer;
-  }
-
-  .button {
-    margin-left: $default-spacer;
+  @media (min-width: 48em) {
+    min-width: 400px;
   }
 }
