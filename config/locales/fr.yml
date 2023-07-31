@@ -58,6 +58,12 @@ fr:
   skiplinks:
     quick: Accès rapide
     content: Contenu
+  combo_search_component:
+    screen_reader_instructions: "Quand les résultats de l’autocomplete sont disponibles, utilisez les flèches haut et bas pour naviguer dans la liste des résultats. Appuyez sur Entrée pour sélectionner un résultat. Appuyez sur Echap pour fermer la liste des résultats."
+    result_slot_html:
+      zero: Aucun résultat
+      one: 1 résultat
+      other: <slot name="count"></slot> résultats
   layouts:
     commencer:
       no_procedure:

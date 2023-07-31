@@ -1,3 +1,2 @@
-class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseComponent
-  include ApplicationHelper
+class EditableChamp::CommunesComponent < EditableChamp::ComboSearchComponent
 end

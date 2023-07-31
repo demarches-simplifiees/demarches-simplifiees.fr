@@ -1,3 +1,2 @@
-class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBaseComponent
-  include ApplicationHelper
+class EditableChamp::AnnuaireEducationComponent < EditableChamp::ComboSearchComponent
 end

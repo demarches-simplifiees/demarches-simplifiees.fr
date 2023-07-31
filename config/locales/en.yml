@@ -67,6 +67,12 @@ en:
   skiplinks:
     quick: Quick access
     content: Content
+  combo_search_component:
+    screen_reader_instructions: "When autocomplete results are available, use the up and down arrows to navigate through the list of results. Press Enter to select a result. Press Escape to close the results list."
+    result_slot_html:
+      zero: No result
+      one: 1 result
+      other: <slot name="count"></slot> results
   layouts:
     commencer:
       no_procedure:
