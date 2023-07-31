@@ -11,7 +11,8 @@
     Usager
   </dt>
   <dd class="attribute-data attribute-data--meta-usager">
-    <%= link_to('Voir son compte utilisateur', manager_user_path(user)) %>
+    <% style = "background-color: red;color: white;" if user.blocked_at %>
+    <%= link_to('Voir son compte utilisateur', manager_user_path(user),  style: style) %>
   </dd>
 </dl>
 
