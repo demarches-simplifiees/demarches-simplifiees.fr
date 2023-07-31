@@ -59,3 +59,4 @@
       - if Rails.env.development?
         = vite_typescript_tag 'axe-core'
       = yield :charts_js
+    = render Attachment::ProgressBarComponent.new
