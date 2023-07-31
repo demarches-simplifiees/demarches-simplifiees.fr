@@ -146,15 +146,16 @@ en:
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">ISO 3166-2 country code</a>
           regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
           departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
-          communes_html: An array of the department code and the <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">INSEE commune code</a>.
+          communes_html: An array of the department code and the <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">INSEE commune code</a>
+          address_html: An address EXACTLY formated as the label returned by <a href="https://adresse.data.gouv.fr" target="_blank" rel="noopener noreferrer">the Base Adresse Nationale</a>
           drop_down_list_html: A choice among those selected when the procedure was created
           date_html: ISO8601 date
           datetime_html: ISO8601 datetime
           drop_down_list_other_html: Any value
           siret_html: A SIRET number
           rna_html: A RNA number
-          repetition_html: A array of hashes with possible values for each field of the repetition.
-          epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>.
+          repetition_html: A array of hashes with possible values for each field of the repetition
+          epci_html: An array of the department code and the <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">EPCI one</a>
           annuaire_education_html: An educational institution code, as defined by the <a href="https://api.gouv.fr/les-api/api-annuaire-education" target="_blank" rel="noopener noreferrer">Éducation Nationale</a> directory
           dossier_link_html: The file ID, as integer
         examples:
@@ -170,6 +171,7 @@ en:
           pays: "FR"
           departements: "56"
           regions: "53"
+          address: "20 Avenue de Ségur 75007 Paris"
           date: "2023-02-01"
           datetime: "2023-02-01T10:30"
           checkbox: "true"

@@ -288,6 +288,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:regions),
       TypeDeChamp.type_champs.fetch(:departements),
       TypeDeChamp.type_champs.fetch(:communes),
+      TypeDeChamp.type_champs.fetch(:address),
       TypeDeChamp.type_champs.fetch(:date),
       TypeDeChamp.type_champs.fetch(:datetime),
       TypeDeChamp.type_champs.fetch(:yes_no),
@@ -384,10 +385,6 @@ class TypeDeChamp < ApplicationRecord
 
   def date?
     type_champ == TypeDeChamp.type_champs.fetch(:date)
-  end
-
-  def datetime?
-    type_champ == TypeDeChamp.type_champs.fetch(:datetime)
   end
 
   def titre_identite?

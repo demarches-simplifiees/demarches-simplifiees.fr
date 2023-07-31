@@ -41,10 +41,6 @@ module Instructeurs
           GroupeInstructeurMailer
             .notify_removed_instructeur(groupe_instructeur, instructeur, current_user.email)
             .deliver_later
-
-          GroupeInstructeurMailer
-            .notify_group_when_instructeurs_removed(groupe_instructeur, [instructeur], current_user.email)
-            .deliver_later
         else
           flash[:alert] = "L’instructeur « #{instructeur.email} » n’est pas dans le groupe."
         end
