@@ -79,7 +79,7 @@ class Procedure < ApplicationRecord
     :cerfa_flag,
     :test_started_at,
     :lien_demarche,
-    :migrated_champ_routage
+    :routing_criteria_name
   ]
 
   default_scope -> { kept }
