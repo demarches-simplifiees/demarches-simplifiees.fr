@@ -78,8 +78,7 @@ class Procedure < ApplicationRecord
     :durees_conservation_required,
     :cerfa_flag,
     :test_started_at,
-    :lien_demarche,
-    :migrated_champ_routage
+    :lien_demarche
   ]
 
   default_scope -> { kept }
