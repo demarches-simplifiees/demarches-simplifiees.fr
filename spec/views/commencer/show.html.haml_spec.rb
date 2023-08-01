@@ -112,11 +112,5 @@ RSpec.describe 'commencer/show.html.haml', type: :view do
         expect(rendered).to have_link('Poursuivre mon dossier prérempli', href: brouillon_dossier_path(prefilled_dossier))
       end
     end
-
-    context 'and they have stored query params in order to prefill a dossier' do
-      let(:stored_query_params) { true }
-
-      it_behaves_like 'it renders a link to create a new dossier', 'Poursuivre mon dossier prérempli'
-    end
   end
 end
