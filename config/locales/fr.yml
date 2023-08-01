@@ -309,6 +309,7 @@ fr:
         invite_to_edit_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
         invite_to_edit_line2: Cette personne aura le droit de modifier votre dossier.
         email: Adresse mail
+        email_hint: "Exemple : camilya.martin@exemple.fr"
         invite_message: Ajouter un message à la personne invitée (optionnel)
         send_invitation: Envoyer une invitation
         invite_to_participate: "Personnes invitées à participer à ce dossier"
