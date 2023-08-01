@@ -22,7 +22,7 @@ class GroupeInstructeur < ApplicationRecord
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
-  validates :closed, acceptance: { accept: [false] }, if: -> { self.procedure.groupe_instructeurs.active.one? }
+  validates :closed, acceptance: { accept: [false] }, if: -> { closed_changed? && self.procedure.groupe_instructeurs.active.one? }
 
   before_validation -> { label&.strip! }
   after_save :toggle_routing
