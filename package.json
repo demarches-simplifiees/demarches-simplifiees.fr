@@ -21,6 +21,7 @@
     "@tmcw/togeojson": "^5.2.2",
     "chartkick": "^4.2.0",
     "core-js": "^3.27.1",
+    "date-fns": "^2.29.3",
     "debounce": "^1.2.1",
     "dom4": "^2.1.6",
     "email-butler": "^1.0.13",

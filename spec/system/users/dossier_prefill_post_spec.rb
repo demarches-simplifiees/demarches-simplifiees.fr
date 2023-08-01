@@ -13,9 +13,11 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
   let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
   let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
+  let(:type_de_champ_annuaire_education) { create(:type_de_champ_annuaire_education, procedure: procedure) }
   let(:type_de_champ_dossier_link) { create(:type_de_champ_dossier_link, procedure: procedure) }
-  let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
   let(:type_de_champ_commune) { create(:type_de_champ_communes, procedure: procedure) }
+  let(:type_de_champ_address) { create(:type_de_champ_address, procedure: procedure) }
+  let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
 
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
@@ -30,12 +32,14 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   }
   let(:epci_value) { ['01', '200029999'] }
   let(:commune_value) { ['01', '01457'] } # Vonnas (01540)
+  let(:address_value) { "20 Avenue de Ségur 75007 Paris" }
   let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }
   let(:integer_repetition_libelle) { sub_type_de_champs_repetition.second.libelle }
   let(:text_repetition_value) { "First repetition text" }
   let(:integer_repetition_value) { "42" }
   let(:dossier_link_value) { '42' }
+  let(:annuaire_education_value) { '0050009H' }
 
   before do
     allow(Rails).to receive(:cache).and_return(memory_store)
@@ -160,7 +164,9 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
         "champ_#{type_de_champ_multiple_drop_down_list.to_typed_id_for_query}" => multiple_drop_down_list_values,
         "champ_#{type_de_champ_epci.to_typed_id_for_query}" => epci_value,
         "champ_#{type_de_champ_dossier_link.to_typed_id_for_query}" => dossier_link_value,
-        "champ_#{type_de_champ_commune.to_typed_id_for_query}" => commune_value
+        "champ_#{type_de_champ_commune.to_typed_id_for_query}" => commune_value,
+        "champ_#{type_de_champ_address.to_typed_id_for_query}" => address_value,
+        "champ_#{type_de_champ_annuaire_education.to_typed_id_for_query}" => annuaire_education_value
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end

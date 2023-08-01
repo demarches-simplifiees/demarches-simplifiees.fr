@@ -25,8 +25,12 @@ class TypesDeChamp::PrefillTypeDeChamp < SimpleDelegator
       TypesDeChamp::PrefillDepartementTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:communes)
       TypesDeChamp::PrefillCommuneTypeDeChamp.new(type_de_champ, revision)
+    when TypeDeChamp.type_champs.fetch(:address)
+      TypesDeChamp::PrefillAddressTypeDeChamp.new(type_de_champ, revision)
     when TypeDeChamp.type_champs.fetch(:epci)
       TypesDeChamp::PrefillEpciTypeDeChamp.new(type_de_champ, revision)
+    when TypeDeChamp.type_champs.fetch(:annuaire_education)
+      TypesDeChamp::PrefillAnnuaireEducationTypeDeChamp.new(type_de_champ, revision)
     else
       new(type_de_champ, revision)
     end

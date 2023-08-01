@@ -6,7 +6,9 @@ module Types::Champs
 
     def etablissement
       if object.etablissement_id.present?
-        Loaders::Record.for(Etablissement).load(object.etablissement_id)
+        Loaders::Record.for(Etablissement).load(object.etablissement_id).then do |etablissement|
+          etablissement unless etablissement&.as_degraded_mode?
+        end
       end
     end
   end

@@ -1,3 +1,5 @@
+import invariant from 'tiny-invariant';
+
 const PENDING_CLASS = 'direct-upload--pending';
 const ERROR_CLASS = 'direct-upload--error';
 const COMPLETE_CLASS = 'direct-upload--complete';
@@ -18,7 +20,7 @@ export default class ProgressBar {
   static init(input: HTMLInputElement, id: string, file: File) {
     clearErrors(input);
     const html = this.render(id, file.name);
-    input.insertAdjacentHTML('beforebegin', html);
+    input.before(html);
   }
 
   static start(id: string) {
@@ -53,10 +55,24 @@ export default class ProgressBar {
   }
 
   static render(id: string, filename: string) {
-    return `<div id="direct-upload-${id}" class="direct-upload ${PENDING_CLASS}" data-direct-upload-id="${id}">
-      <div role="progressbar" aria-valuemin="0" aria-valuemax="100" class="direct-upload__progress" style="width: 0%"></div>
-      <span class="direct-upload__filename">${filename}</span>
-    </div>`;
+    const template = document.querySelector<HTMLTemplateElement>(
+      '#progress-bar-template'
+    );
+    invariant(template, 'Missing progress-bar-template');
+    const fragment = template.content.cloneNode(true) as DocumentFragment;
+    const container = fragment.querySelector<HTMLDivElement>('.direct-upload');
+    invariant(container, 'Missing .direct-upload element in template');
+    const slot = container.querySelector<HTMLSlotElement>(
+      'slot[name="filename"]'
+    );
+    invariant(slot, 'Missing "filename" slot in template');
+
+    container.id = `direct-upload-${id}`;
+    container.dataset.directUploadId = id;
+    container.classList.add(PENDING_CLASS);
+    slot.replaceWith(document.createTextNode(filename));
+
+    return container;
   }
 
   id: string;

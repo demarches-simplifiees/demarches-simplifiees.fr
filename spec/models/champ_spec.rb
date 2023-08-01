@@ -637,4 +637,12 @@ describe Champ do
       end
     end
   end
+
+  describe '#update_with_external_data!' do
+    let(:champ) { create(:champ_siret) }
+    let(:data) { "data" }
+    subject { champ.update_with_external_data!(data: data) }
+
+    it { expect { subject }.to change { champ.reload.data }.to(data) }
+  end
 end

@@ -68,6 +68,7 @@ class Champ < ApplicationRecord
     :rna?,
     :siret?,
     :carte?,
+    :datetime?,
     :stable_id,
     :mandatory?,
     :prefillable?,
@@ -220,6 +221,10 @@ class Champ < ApplicationRecord
 
   def fetch_external_data
     raise NotImplemented.new(:fetch_external_data)
+  end
+
+  def update_with_external_data!(data:)
+    update!(data: data)
   end
 
   def clone

@@ -288,6 +288,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:regions),
       TypeDeChamp.type_champs.fetch(:departements),
       TypeDeChamp.type_champs.fetch(:communes),
+      TypeDeChamp.type_champs.fetch(:address),
       TypeDeChamp.type_champs.fetch(:date),
       TypeDeChamp.type_champs.fetch(:datetime),
       TypeDeChamp.type_champs.fetch(:yes_no),
@@ -296,6 +297,7 @@ class TypeDeChamp < ApplicationRecord
       TypeDeChamp.type_champs.fetch(:repetition),
       TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
       TypeDeChamp.type_champs.fetch(:epci),
+      TypeDeChamp.type_champs.fetch(:annuaire_education),
       TypeDeChamp.type_champs.fetch(:dossier_link),
       TypeDeChamp.type_champs.fetch(:siret),
       TypeDeChamp.type_champs.fetch(:rna)
@@ -385,10 +387,6 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:date)
   end
 
-  def datetime?
-    type_champ == TypeDeChamp.type_champs.fetch(:datetime)
-  end
-
   def titre_identite?
     type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
   end
@@ -431,6 +429,10 @@ class TypeDeChamp < ApplicationRecord
 
   def mesri?
     type_champ == TypeDeChamp.type_champs.fetch(:mesri)
+  end
+
+  def datetime?
+    type_champ == TypeDeChamp.type_champs.fetch(:datetime)
   end
 
   def public?
