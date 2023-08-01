@@ -135,7 +135,15 @@ module Instructeurs
       end
 
       @dossier = dossier
-      render :change_state
+      respond_to do |format|
+        format.turbo_stream do
+          render :change_state
+        end
+
+        format.html do
+          redirect_back(fallback_location: instructeur_procedure_path(procedure))
+        end
+      end
     end
 
     def repasser_en_construction
@@ -147,7 +155,15 @@ module Instructeurs
       end
 
       @dossier = dossier
-      render :change_state
+      respond_to do |format|
+        format.turbo_stream do
+          render :change_state
+        end
+
+        format.html do
+          redirect_back(fallback_location: instructeur_procedure_path(procedure))
+        end
+      end
     end
 
     def repasser_en_instruction
@@ -159,7 +175,15 @@ module Instructeurs
       end
 
       @dossier = dossier
-      render :change_state
+      respond_to do |format|
+        format.turbo_stream do
+          render :change_state
+        end
+
+        format.html do
+          redirect_back(fallback_location: instructeur_procedure_path(procedure))
+        end
+      end
     end
 
     def terminer
