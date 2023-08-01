@@ -257,6 +257,11 @@ ul.dropdown-items {
       }
     }
 
+    &.form-inside {
+      background-color: $white;
+      margin-top: -2px;
+    }
+
     &.danger {
       &:hover {
         background-color: $medium-red;

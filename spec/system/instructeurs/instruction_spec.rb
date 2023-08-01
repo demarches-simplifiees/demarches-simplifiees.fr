@@ -41,7 +41,7 @@ describe 'Instructing a dossier:', js: true do
 
     expect(page).to have_text('Dossier passé en instruction.')
     expect(page).to have_text('Instruire le dossier')
-    expect(page).to have_selector('.label.en-instruction')
+    expect(page).to have_selector('.fr-badge', text: 'en instruction')
 
     dossier.reload
     expect(dossier.state).to eq(Dossier.states.fetch(:en_instruction))

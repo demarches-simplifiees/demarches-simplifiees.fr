@@ -16,6 +16,7 @@ module Users
       if user_signed_in?
         set_prefilled_dossier_ownership if @prefilled_dossier&.orphan?
         check_prefilled_dossier_ownership if @prefilled_dossier
+      else
         store_user_location!(@procedure)
       end
 

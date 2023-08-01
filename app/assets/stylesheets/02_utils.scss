@@ -143,6 +143,20 @@
   vertical-align: super;
 }
 
+// Labels that we only want for screen readers
+// https://www.coolfields.co.uk/2016/05/text-for-screen-readers-only-updated/
+.sr-only {
+  border: none;
+  clip: rect(1px, 1px, 1px, 1px);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  width: 1px;
+  overflow: hidden;
+  position: absolute !important;
+  word-wrap: normal !important;
+}
+
 // generate spacer utility like bootstrap my-2 -> margin-left/right: 2 * $default-spacer
 // using $direction.key as css modifier, $direction.values to set css properties
 // scale it using $steps
