@@ -17,7 +17,8 @@ module Users
         set_prefilled_dossier_ownership if @prefilled_dossier&.orphan?
         check_prefilled_dossier_ownership if @prefilled_dossier
       else
-        store_user_location!(@procedure)
+        # pf specific: allows social logins (google, france connect,...) to get back when logged
+        store_user_location!(@procedure, @prefilled_dossier&.prefill_token)
       end
 
       render 'commencer/show'
@@ -27,6 +28,7 @@ module Users
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
       @revision = @procedure.draft_revision
+
       if !user_signed_in?
         store_user_location!(@procedure)
       end
@@ -140,8 +142,8 @@ module Users
       redirect_to root_path
     end
 
-    def store_user_location!(procedure)
-      store_location_for(:user, helpers.procedure_lien(procedure, prefill_token: params[:prefill_token]))
+    def store_user_location!(procedure, prefill_token = nil)
+      store_location_for(:user, helpers.procedure_lien(procedure, prefill_token: prefill_token || params[:prefill_token]))
     end
 
     def generate_empty_pdf(revision)

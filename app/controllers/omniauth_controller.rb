@@ -2,12 +2,10 @@ class OmniauthController < ApplicationController
   before_action :redirect_to_login_if_connection_aborted, only: [:callback]
   before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account, :merge_with_new_account, :mail_merge_with_existing_account, :resend_and_renew_merge_confirmation]
 
-  PROVIDERS = ['google', 'microsoft', 'yahoo', 'sipf', 'tatou']
-
   def login
     provider = provider_param
     # already checked in routes.rb but brakeman complains
-    if PROVIDERS.include?(provider)
+    if OmniAuthService.enabled?(provider)
       redirect_to OmniAuthService.authorization_uri(provider)
     else
       redirect_to new_user_session_path

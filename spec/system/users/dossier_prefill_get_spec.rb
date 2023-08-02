@@ -184,5 +184,20 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
         end
       end
     end
+
+    context 'when the user signs up with OAuth' do
+      it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
+        let(:user) { User.last }
+
+        before do
+          allow_any_instance_of(OmniAuthClient).to receive(:authorization_uri).and_return(omniauth_callback_path(provider: 'google', code: "c0d3"))
+          allow(OmniAuthService).to receive(:retrieve_user_informations).and_return(build(:france_connect_information))
+
+          page.find(".fr-btn", text: 'Gmail, Google').click
+
+          click_on "Poursuivre mon dossier prérempli"
+        end
+      end
+    end
   end
 end
