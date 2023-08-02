@@ -6,19 +6,7 @@ class ArchiveUploader
 
   def upload(archive)
     uploaded_blob = create_and_upload_blob
-    begin
-      archive.file.purge if archive.file.attached?
-    rescue ActiveStorage::FileNotFoundError
-      archive.file.destroy
-      archive.file.detach
-    end
-    archive.reload
-    ActiveStorage::Attachment.create(
-      name: 'file',
-      record_type: 'Archive',
-      record_id: archive.id,
-      blob_id: uploaded_blob.id
-    )
+    archive.file.attach(uploaded_blob)
   end
 
   def blob
