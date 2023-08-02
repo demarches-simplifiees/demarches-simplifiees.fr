@@ -138,7 +138,7 @@ class API::V2::Schema < GraphQL::Schema
     end
   end
 
-  use Timeout, max_seconds: 10
+  use Timeout, max_seconds: 30
   use GraphQL::Batch
   use GraphQL::Backtrace
 
