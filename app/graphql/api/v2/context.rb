@@ -80,6 +80,7 @@ class API::V2::Context < GraphQL::Query::Context
     elsif self[:token].present?
       token = APIToken.find_and_verify(self[:token], demarche.administrateurs)
       if token.present?
+        token.touch(:last_v2_authenticated_at)
         Current.user = token.administrateur.user
         true
       else

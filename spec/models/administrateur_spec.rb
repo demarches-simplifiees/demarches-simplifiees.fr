@@ -208,7 +208,7 @@ describe Administrateur, type: :model do
     subject { Administrateur.unused }
 
     let(:new_admin) { create(:administrateur) }
-    let(:unused_admin) { create(:administrateur) }
+    let(:unused_admin) { create(:administrateur, :with_api_token) }
 
     before do
       new_admin.user.update(last_sign_in_at: (6.months - 1.day).ago)
@@ -221,6 +221,18 @@ describe Administrateur, type: :model do
       let(:procedure) { create(:procedure, hidden_at: 1.month.ago) }
 
       before { unused_admin.procedures << procedure }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a with_api_token on api v1' do
+      before { unused_admin.api_tokens.first.touch(:last_v1_authenticated_at) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'with a with_api_token on api v2' do
+      before { unused_admin.api_tokens.first.touch(:last_v2_authenticated_at) }
 
       it { is_expected.to be_empty }
     end
