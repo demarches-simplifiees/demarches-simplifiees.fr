@@ -1,12 +1,3 @@
-# == Schema Information
-#
-# Table name: administrateurs
-#
-#  id         :integer          not null, primary key
-#  created_at :datetime
-#  updated_at :datetime
-#  user_id    :bigint           not null
-#
 class Administrateur < ApplicationRecord
   UNUSED_ADMIN_THRESHOLD = ENV.fetch('UNUSED_ADMIN_THRESHOLD') { 6 }.to_i.months
 

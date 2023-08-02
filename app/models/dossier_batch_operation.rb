@@ -1,14 +1,3 @@
-# == Schema Information
-#
-# Table name: dossier_batch_operations
-#
-#  id                 :bigint           not null, primary key
-#  state              :string           default("pending"), not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  batch_operation_id :bigint           not null
-#  dossier_id         :bigint           not null
-#
 class DossierBatchOperation < ApplicationRecord
   belongs_to :dossier
   belongs_to :batch_operation

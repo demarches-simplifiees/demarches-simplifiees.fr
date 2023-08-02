@@ -1,17 +1,3 @@
-# == Schema Information
-#
-# Table name: email_events
-#
-#  id           :bigint           not null, primary key
-#  method       :string           not null
-#  processed_at :datetime
-#  status       :string           not null
-#  subject      :string           not null
-#  to           :string           not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  message_id   :string
-#
 class EmailEvent < ApplicationRecord
   RETENTION_DURATION = 1.month
 

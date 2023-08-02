@@ -1,19 +1,3 @@
-# == Schema Information
-#
-# Table name: types_de_champ
-#
-#  id          :integer          not null, primary key
-#  condition   :jsonb
-#  description :text
-#  libelle     :string
-#  mandatory   :boolean          default(FALSE)
-#  options     :jsonb
-#  private     :boolean          default(FALSE), not null
-#  type_champ  :string
-#  created_at  :datetime
-#  updated_at  :datetime
-#  stable_id   :bigint
-#
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 

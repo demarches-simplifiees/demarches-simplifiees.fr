@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: targeted_user_links
-#
-#  id                :uuid             not null, primary key
-#  target_context    :string           not null
-#  target_model_type :string           not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  target_model_id   :bigint           not null
-#  user_id           :bigint
-#
 class TargetedUserLink < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :target_model, polymorphic: true, optional: false

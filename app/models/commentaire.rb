@@ -1,17 +1,3 @@
-# == Schema Information
-#
-# Table name: commentaires
-#
-#  id             :integer          not null, primary key
-#  body           :string
-#  discarded_at   :datetime
-#  email          :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  dossier_id     :integer
-#  expert_id      :bigint
-#  instructeur_id :bigint
-#
 class Commentaire < ApplicationRecord
   include Discard::Model
 
