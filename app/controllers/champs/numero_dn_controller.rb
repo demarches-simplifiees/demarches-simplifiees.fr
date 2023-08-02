@@ -5,8 +5,6 @@ class Champs::NumeroDnController < ApplicationController
     @champ = policy_scope(Champ).find(params[:champ_id])
     @dn = params[:dn]
     @ddn = params[:ddn]
-    puts "#{@dn}:#{@ddn}"
-    pp params
 
     @status = dn_empty? || bad_dn_format? || bad_ddn_format?
     return if @status
