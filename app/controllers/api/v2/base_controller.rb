@@ -8,7 +8,6 @@ class API::V2::BaseController < ApplicationController
   private
 
   def context
-    # new token
     if api_token.present?
       api_token.context
     # web interface (/graphql) give current_administrateur
@@ -16,12 +15,6 @@ class API::V2::BaseController < ApplicationController
       {
         administrateur_id: current_administrateur.id,
         procedure_ids: current_administrateur.procedure_ids,
-        write_access: true
-      }
-    # old token
-    else
-      {
-        token: authorization_bearer_token,
         write_access: true
       }
     end

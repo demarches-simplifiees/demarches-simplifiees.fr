@@ -55,52 +55,12 @@ class APIToken < ApplicationRecord
       [api_token, packed_token]
     end
 
-    def find_and_verify(maybe_packed_token, administrateurs = [])
-      token = case unpack(maybe_packed_token)
-      in { plain_token:, id: } # token v3
-        find_by(id:, version: 3)&.then(&ensure_valid_token(plain_token))
-      in { plain_token:, administrateur_id: } # token v2
-        # the migration to the APIToken model set `version: 1` for all the v1 and v2 token
-        # this is the only place where we can fix the version
-        where(administrateur_id:, version: 1).update_all(version: 2) # update to v2
-        find_by(administrateur_id:, version: 2)&.then(&ensure_valid_token(plain_token))
-      in { plain_token: } # token v1
-        where(administrateur: administrateurs, version: 1).find(&ensure_valid_token(plain_token))
-      end
-
-      # TODO:
-      # remove all the not v3 version code
-      # when everyone has migrated
-      # it should also be a good place in case we need to feature flag old token use
-      if token&.version == 3 || Rails.env.test?
-        token
-      else
-        nil
-      end
+    def find_and_verify(base64_packed_token)
+      id, plain_token = Base64.urlsafe_decode64(base64_packed_token).split(';')
+      find_by(id:, version: 3)&.then(&ensure_valid_token(plain_token))
     end
 
     private
-
-    UUID_SIZE = SecureRandom.uuid.size
-    def unpack(maybe_packed_token)
-      case message_verifier.verified(maybe_packed_token)
-      in [administrateur_id, plain_token]
-        { plain_token:, administrateur_id: }
-      else
-        case Base64.urlsafe_decode64(maybe_packed_token).split(';')
-        in [id, plain_token] if id.size == UUID_SIZE # valid format "<uuid>;<random token>"
-          { plain_token:, id: }
-        else
-          { plain_token: maybe_packed_token }
-        end
-      end
-    rescue
-      { plain_token: maybe_packed_token }
-    end
-
-    def message_verifier
-      Rails.application.message_verifier('api_v2_token')
-    end
 
     def ensure_valid_token(plain_token)
       -> (api_token) { api_token if BCrypt::Password.new(api_token.encrypted_token) == plain_token }
