@@ -904,6 +904,8 @@ fr:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
+      usual_traitement_time_title: Quels sont des délais d'instruction pour cette démarche ?
+      usual_traitement_time_detail_html: Habituellement, les dossiers de cette démarche sont traités dans un délai de %{traitement_time}. Cette estimation est calculée automatiquement à partir des délais d’instruction constatés sur %{percentile}% des demandes qui ont été traitées lors des %{days} derniers jours. Le délai réel peut être différent. Pour plus d'informations, vous pouvez <a href="%{href}" target="_blank" rel="noopener noreferrer">consulter la page statistiques</a> de cette démarche.
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
       sva_svr_title: "Cette démarche applique le « %{rule} »"

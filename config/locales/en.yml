@@ -849,6 +849,8 @@ en:
       estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
       estimated_fill_duration_title: What is the procedure estimated fill time ?
       estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
+      usual_traitement_time_title: What are the processing times for this procedure?
+      usual_traitement_time_detail_html: Usually, files in this procedure are processed within %{traitement_time}. This estimate is calculated automatically from the processing times observed on %{percentile}% of requests that have been processed during the last %{days} days. Actual lead time may vary. For more information, you can <a href="%{href}" target="_blank" rel="noopener noreferrer">consult the statistics page</a> of this procedure.
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation
       sva_svr_title: "This procedure applies the « %{rule} »"
