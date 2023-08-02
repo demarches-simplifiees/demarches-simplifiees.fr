@@ -1362,7 +1362,6 @@ class Dossier < ApplicationRecord
 
   def self.notify_draft_not_submitted
     brouillon_near_procedure_closing_date
-      .includes(:user)
       .find_each do |dossier|
         DossierMailer.notify_brouillon_not_submitted(dossier).deliver_later
       end

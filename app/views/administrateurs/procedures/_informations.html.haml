@@ -102,8 +102,9 @@
 
 %h3.header-subsection Ajouter des tags
 %p.explication Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
-= hidden_field_tag  'procedure[tags]', nil
+= hidden_field_tag  'procedure[tags]', JSON.generate(@procedure.tags)
 = react_component("ComboMultiple",
+  id: "procedure_tags_combo",
   options: Procedure.tags,
   selected: @procedure.tags,
   disabled: [],

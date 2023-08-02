@@ -21,6 +21,10 @@ class ApplicationJob < ActiveJob::Base
     ENV.fetch("MAX_ATTEMPTS_JOBS", DEFAULT_MAX_ATTEMPTS_JOBS).to_i
   end
 
+  def max_run_time
+    4.hours # decrease run time by default
+  end
+
   def request_id
     @request_id ||= Current.request_id
   end

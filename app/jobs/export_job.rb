@@ -4,7 +4,11 @@ class ExportJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
 
   before_perform do |job|
-    Sentry.set_tags(procedure_id: job.arguments.first.procedure.id)
+    Sentry.set_tags(procedure: job.arguments.first.procedure.id)
+  end
+
+  def max_run_time
+    Export::MAX_DUREE_GENERATION
   end
 
   def perform(export)
