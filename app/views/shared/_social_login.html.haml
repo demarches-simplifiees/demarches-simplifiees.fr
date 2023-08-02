@@ -1,35 +1,13 @@
-- google = ENV['GOOGLE_CLIENT_ID'].present?
-- microsoft = ENV['MICROSOFT_CLIENT_ID'].present?
-- yahoo = ENV['YAHOO_CLIENT_ID'].present?
-- sipf = ENV['SIPF_CLIENT_ID'].present?
-- tatou = ENV['TATOU_CLIENT_ID'].present?
-- fc = ENV['FC_PARTICULIER_ID'].present?
-- prefix ||= "S'identifier avec "
-- if google || microsoft || yahoo || tatou || sipf || fc
+- if OmniAuthService.providers.present? || FranceConnectService.enabled?
   .form-column.prior-border.ou-border.procedure-context-content
     .auth-form.sign-in-form.fr-py-5w
       .social-logins
         %h1.fr-h3.center= title
         %br
-        - if google
-          = link_to '/auth/google', class: "fr-btn fr-btn--lg fr-btn--secondary"  do
-            = image_tag 'icons/logo_google.svg', alt: 'icone Google'
-            #{prefix}  #{t('views.shared.social_login.google')}
-        - if microsoft
-          = link_to '/auth/microsoft', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
-            = image_tag 'icons/logo_microsoft.svg', alt: 'icone Microsoft'
-            #{prefix}  #{t('views.shared.social_login.microsoft')}
-        - if yahoo
-          = link_to '/auth/yahoo', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
-            = image_tag 'icons/logo_yahoo.svg', alt: 'icone Yahoo'
-            #{prefix} #{t('views.shared.social_login.yahoo')}
-        - if tatou
-          = link_to '/auth/tatou', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
-            = image_tag 'icons/logo_tatou.svg', alt: 'icone Tàtou'
-            #{prefix} #{t('views.shared.social_login.tatou')}
-        - if sipf
-          = link_to '/auth/sipf', class: "fr-btn fr-btn--lg fr-btn--secondary "  do
-            = image_tag 'icons/logo_sipf.svg', alt: 'icone Polynesie'
-            = t('views.shared.social_login.sipf')
-    - if fc
+        - OmniAuthService.providers.each do |provider|
+          = link_to "/auth/#{provider}", class: "fr-btn fr-btn--lg fr-btn--secondary"  do
+            = image_tag "icons/logo_#{provider}.svg", alt: "icone #{provider.camelize}"
+            #{t("views.shared.social_login.#{provider}")}
+    - if FranceConnectService.enabled?
       = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
+

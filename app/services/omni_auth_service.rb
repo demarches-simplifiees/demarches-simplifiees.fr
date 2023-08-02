@@ -1,4 +1,14 @@
 class OmniAuthService
+  def self.enabled?(provider)
+    ENV["#{provider.upcase}_CLIENT_ID"].present?
+  end
+
+  PROVIDERS = ['google', 'microsoft', 'yahoo', 'sipf', 'tatou']
+
+  def self.providers
+    PROVIDERS.filter(&method(:enabled?))
+  end
+
   def self.authorization_uri(provider)
     if provider.blank?
       raise "provider should not be nil"

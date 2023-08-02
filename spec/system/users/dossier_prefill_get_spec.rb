@@ -102,6 +102,39 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
     end
   end
 
+  context 'when authenticated with existing dossier and session params (ie: reload the page)' do
+    let(:user) { create(:user, password: password) }
+    let(:dossier) { create(:dossier, :prefilled, procedure: procedure, prefill_token: "token", user: nil) }
+
+    before do
+      create(:champ_text, dossier: dossier, type_de_champ: type_de_champ_text, value: text_value)
+
+      page.set_rack_session(prefill_token: "token")
+      page.set_rack_session(prefill_params: { "action" => "commencer", "champ_#{type_de_champ_text.to_typed_id}" => text_value, "controller" => "users/commencer", "path" => procedure.path })
+
+      visit "/users/sign_in"
+      sign_in_with user.email, password
+
+      visit commencer_path(
+        path: procedure.path,
+        "champ_#{type_de_champ_text.to_typed_id}" => text_value
+      )
+
+      click_on "Poursuivre mon dossier prérempli"
+    end
+
+    it "should not create a new dossier" do
+      expect(Dossier.count).to eq(1)
+      expect(dossier.reload.user).to eq(user)
+
+      expect(page).to have_current_path(brouillon_dossier_path(dossier))
+      expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
+
+      expect(page.get_rack_session[:prefill_token]).to be_nil
+      expect(page.get_rack_session[:prefill_params]).to be_nil
+    end
+  end
+
   context 'when unauthenticated' do
     before { visit entry_path }
 
@@ -146,6 +179,21 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
           allow(FranceConnectService).to receive(:retrieve_user_informations_particulier).and_return(build(:france_connect_information))
 
           page.find('.fr-connect').click
+
+          click_on "Poursuivre mon dossier prérempli"
+        end
+      end
+    end
+
+    context 'when the user signs up with OAuth' do
+      it_behaves_like "the user has got a prefilled dossier, owned by themselves" do
+        let(:user) { User.last }
+
+        before do
+          allow_any_instance_of(OmniAuthClient).to receive(:authorization_uri).and_return(omniauth_callback_path(provider: 'google', code: "c0d3"))
+          allow(OmniAuthService).to receive(:retrieve_user_informations).and_return(build(:france_connect_information))
+
+          page.find(".fr-btn", text: 'Gmail, Google').click
 
           click_on "Poursuivre mon dossier prérempli"
         end

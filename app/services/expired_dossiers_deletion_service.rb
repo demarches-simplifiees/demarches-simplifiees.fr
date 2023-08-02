@@ -21,7 +21,7 @@ class ExpiredDossiersDeletionService
 
     user_notifications = group_by_user_email(dossiers_close_to_expiration)
 
-    dossiers_close_to_expiration.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
+    dossiers_close_to_expiration.in_batches.update_all(brouillon_close_to_expiration_notice_sent_at: Time.zone.now)
 
     user_notifications.each do |(email, dossiers)|
       DossierMailer.notify_brouillon_near_deletion(

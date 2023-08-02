@@ -151,7 +151,7 @@
   height: 25px;
 }
 
-.state-button {
+.instruction-button {
   display: inline-block;
 }
 
@@ -255,6 +255,11 @@ ul.dropdown-items {
       &.selected {
         background: $light-grey;
       }
+    }
+
+    &.form-inside {
+      background-color: $white;
+      margin-top: -2px;
     }
 
     &.danger {

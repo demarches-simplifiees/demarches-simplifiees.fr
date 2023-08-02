@@ -180,7 +180,8 @@
                                   archived: p.archived,
                                   dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                   close_to_expiration: @statut == 'expirant',
-                                  hidden_by_administration: @statut == 'supprimes_recemment' }
+                                  hidden_by_administration: @statut == 'supprimes_recemment',
+                                  post_method: { method: :post } }
             %tfoot
               %tr
                 %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }= paginate @filtered_sorted_paginated_ids

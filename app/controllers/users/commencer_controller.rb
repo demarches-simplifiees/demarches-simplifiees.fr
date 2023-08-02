@@ -1,24 +1,26 @@
 module Users
   class CommencerController < ApplicationController
-    include QueryParamsStoreConcern
-
     layout 'procedure_context'
-
-    before_action :retrieve_prefilled_dossier,        if: -> { params[:prefill_token].present? },                only: :commencer
-    before_action :set_prefilled_dossier_ownership,   if: -> { user_signed_in? && @prefilled_dossier&.orphan? }, only: :commencer
-    before_action :check_prefilled_dossier_ownership, if: -> { user_signed_in? && @prefilled_dossier },          only: :commencer
 
     def commencer
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
-
-      store_query_params
-
       @revision = @procedure.published_revision
-      if !user_signed_in?
-        store_user_location!(@procedure)
+
+      if params[:prefill_token].present? || commencer_page_is_reloaded?
+        retrieve_prefilled_dossier(params[:prefill_token] || session[:prefill_token])
+      elsif prefill_params_present?
+        build_prefilled_dossier
       end
-      @revision = @procedure.published_revision
+
+      if user_signed_in?
+        set_prefilled_dossier_ownership if @prefilled_dossier&.orphan?
+        check_prefilled_dossier_ownership if @prefilled_dossier
+      else
+        # pf specific: allows social logins (google, france connect,...) to get back when logged
+        store_user_location!(@procedure, @prefilled_dossier&.prefill_token)
+      end
+
       render 'commencer/show'
     end
 
@@ -26,6 +28,7 @@ module Users
       @procedure = retrieve_procedure
       return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
       @revision = @procedure.draft_revision
+
       if !user_signed_in?
         store_user_location!(@procedure)
       end
@@ -76,6 +79,14 @@ module Users
 
     private
 
+    def commencer_page_is_reloaded?
+      session[:prefill_token].present? && session[:prefill_params] == params.to_unsafe_h
+    end
+
+    def prefill_params_present?
+      params.keys.find { |param| param.split('_').first == "champ" }
+    end
+
     def retrieve_procedure
       Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
     end
@@ -84,8 +95,23 @@ module Users
       Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_by(path: params[:path])
     end
 
-    def retrieve_prefilled_dossier
-      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: params[:prefill_token])
+    def build_prefilled_dossier
+      @prefilled_dossier = Dossier.new(
+        revision: @revision,
+        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
+        state: Dossier.states.fetch(:brouillon),
+        prefilled: true
+      )
+      @prefilled_dossier.build_default_individual
+      if @prefilled_dossier.save
+        @prefilled_dossier.prefill!(PrefillParams.new(@prefilled_dossier, params.to_unsafe_h).to_a)
+      end
+      session[:prefill_token] = @prefilled_dossier.prefill_token
+      session[:prefill_params] = params.to_unsafe_h
+    end
+
+    def retrieve_prefilled_dossier(prefill_token)
+      @prefilled_dossier = Dossier.state_brouillon.prefilled.find_by!(prefill_token: prefill_token)
     end
 
     # The prefilled dossier is not owned yet, and the user is signed in: they become the new owner
@@ -116,8 +142,8 @@ module Users
       redirect_to root_path
     end
 
-    def store_user_location!(procedure)
-      store_location_for(:user, helpers.procedure_lien(procedure, prefill_token: params[:prefill_token]))
+    def store_user_location!(procedure, prefill_token = nil)
+      store_location_for(:user, helpers.procedure_lien(procedure, prefill_token: prefill_token || params[:prefill_token]))
     end
 
     def generate_empty_pdf(revision)
