@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: groupe_instructeurs
-#
-#  id           :bigint           not null, primary key
-#  closed       :boolean          default(FALSE)
-#  label        :text             not null
-#  routing_rule :jsonb
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  procedure_id :bigint           not null
-#
 class GroupeInstructeur < ApplicationRecord
   include Logic
   DEFAUT_LABEL = 'défaut'

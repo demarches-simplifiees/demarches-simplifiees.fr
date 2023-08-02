@@ -101,9 +101,6 @@ GEM
     aes_key_wrap (1.1.0)
     after_party (1.11.2)
     anchored (1.1.0)
-    annotate (3.2.0)
-      activerecord (>= 3.2, < 8.0)
-      rake (>= 10.4, < 14.0)
     ast (2.4.2)
     attr_required (1.0.1)
     axe-core-api (4.2.1)
@@ -813,7 +810,6 @@ DEPENDENCIES
   administrate-field-enum
   after_party
   anchored
-  annotate
   axe-core-rspec
   bcrypt
   bootsnap (>= 1.4.4)
