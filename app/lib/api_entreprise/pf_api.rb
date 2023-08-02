@@ -17,23 +17,7 @@ class APIEntreprise::PfAPI
     url = url(resource_name)
     params = params(no_tahiti)
 
-    response = Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: false, headers: headers)
-
-    if response.success?
-      JSON.parse(response.body, symbolize_names: true)
-    elsif response.code&.between?(401, 499)
-      raise APIEntreprise::API::Error::ResourceNotFound.new(response)
-    elsif response.code == 400
-      raise APIEntreprise::API::Error::BadFormatRequest.new(response)
-    elsif response.code == 502
-      raise APIEntreprise::API::Error::BadGateway.new(response)
-    elsif response.code == 503
-      raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
-    elsif response.timed_out?
-      raise APIEntreprise::API::Error::TimedOut.new(response)
-    else
-      raise APIEntreprise::API::Error::RequestFailed.new(response)
-    end
+    parse_response_body(Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: false, headers: headers))
   end
 
   def url(resource_name)
@@ -60,8 +44,7 @@ class APIEntreprise::PfAPI
       body = parse_response_body(fetch_access_token)
       if (body[:error])
         Rails.logger.error "Unable to connect to I-taiete : #{body[:error_description]}"
-        puts "Unable to connect to i-taiete : #{body[:error_description]}"
-        return ''
+        raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
       end
       @access_token = body[:access_token]
       @expires_at = Time.zone.now + body[:expires_in].seconds - 1.minute
@@ -70,7 +53,21 @@ class APIEntreprise::PfAPI
   end
 
   def parse_response_body(response)
-    JSON.parse(response.body, symbolize_names: true)
+    if response.success?
+      JSON.parse(response.body, symbolize_names: true)
+    elsif response.code&.between?(401, 499)
+      raise APIEntreprise::API::Error::ResourceNotFound.new(response)
+    elsif response.code == 400
+      raise APIEntreprise::API::Error::BadFormatRequest.new(response)
+    elsif response.code == 502
+      raise APIEntreprise::API::Error::BadGateway.new(response)
+    elsif response.code == 503
+      raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
+    elsif response.timed_out?
+      raise APIEntreprise::API::Error::TimedOut.new(response)
+    else
+      raise APIEntreprise::API::Error::RequestFailed.new(response)
+    end
   end
 
   def user_password
