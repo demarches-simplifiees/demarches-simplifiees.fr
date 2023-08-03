@@ -1,31 +1,34 @@
 - if dossier_transfers.present?
-  %ul.dossiers-transfers.mb-2
-    - dossier_transfers.each do |transfer|
-      %li.mb-4
-        .transfer-details.mb-2
-          Demande de transfert Nº #{transfer.id} envoyé par #{transfer.dossiers.first.user.email}
-        %table.table.dossiers-table.hoverable
-          %thead
-            %tr
-              %th.number-col= t('views.users.dossiers.dossiers_list.n_dossier')
-              %th= t('views.users.dossiers.dossiers_list.procedure')
-              %th= t('views.users.dossiers.dossiers_list.status')
-              %th Date de dépot
-          %tbody
-            - transfer.dossiers.each do |dossier|
-              %tr{ data: { 'transfer-id': transfer.id } }
-                %td.number-col
-                  %span.icon.folder
-                  = dossier.id
-                %td= dossier.procedure.libelle
-                %td= status_badge(dossier.state)
-                %td{ style: 'padding: 18px;' }= (dossier.depose_at || dossier.created_at).strftime('%d/%m/%Y')
+  .fr-table.fr-table--bordered
+    %table.table.dossiers-table.display-table
+      %thead
+        %tr
+          %th.number-col= t('views.users.dossiers.dossiers_list.n_dossier')
+          %th= t('views.users.dossiers.dossiers_list.procedure')
+          %th= t('views.users.dossiers.dossiers_list.status')
+          %th.action-col.follow-col Date de dépot
+      %tbody
+        - dossier_transfers.each do |transfer|
+          - transfer.dossiers.each do |dossier|
+            %tr.fr-background-alt--blue-france.no-border
+              %td.fr-py-2w{ colspan: 100 }
+                .flex.align-center
+                  %p.fr-mb-0
+                    %small
+                      = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: transfer.dossiers.first.user.email)
+                  .ml-auto
+                    = link_to t('views.users.dossiers.transfers.accept'), transfer_path(transfer), class: "fr-btn fr-btn--sm fr-btn--tertiary", method: :put
 
-        .transfer-actions.mt-4
-          = link_to "Accepter", transfer_path(transfer), class: "button primary", method: :put
-          = link_to "Rejeter", transfer_path(transfer), class: "button danger", method: :delete
+                    = link_to t('views.users.dossiers.transfers.reject'), transfer_path(transfer), class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline", method: :delete
+            %tr{ data: { 'transfer-id': transfer.id } }
+              %th.number-col{ scope: :row }
+                %span.icon.folder
+                = dossier.id
+              %td= dossier.procedure.libelle
+              %td= status_badge(dossier.state)
+              %td.action-col.follow-col{ style: 'padding: 18px;' }= (dossier.depose_at || dossier.created_at).strftime('%d/%m/%Y')
 
-  = paginate(dossier_transfers)
+    = paginate(dossier_transfers)
 
 - else
   .blank-tab

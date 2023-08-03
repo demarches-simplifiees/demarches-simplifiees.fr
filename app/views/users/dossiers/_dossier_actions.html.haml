@@ -7,7 +7,7 @@
 
 
 - if has_actions
-  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--secondary'}) do |menu|
+  = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm'}) do |menu|
     - menu.with_button_inner_html do
       = t('views.users.dossiers.dossier_action.actions')
 

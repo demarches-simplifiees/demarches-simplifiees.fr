@@ -24,8 +24,8 @@
 %p.notice
   = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
   - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
-    = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: Procedure::NEW_MAX_DUREE_CONSERVATION)
-= f.number_field :duree_conservation_dossiers_dans_ds, { class: 'form-control', placeholder: '6', required: true }.merge(f.object.duree_conservation_etendue_par_ds ? {} : { max: Procedure::NEW_MAX_DUREE_CONSERVATION })
+    = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
+= f.number_field :duree_conservation_dossiers_dans_ds, { class: 'form-control', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }
 
 - if @procedure.created_at.present?
   = f.label :lien_site_web do
@@ -102,8 +102,9 @@
 
 %h3.header-subsection Ajouter des tags
 %p.explication Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
-= hidden_field_tag  'procedure[tags]', nil
+= hidden_field_tag  'procedure[tags]', JSON.generate(@procedure.tags)
 = react_component("ComboMultiple",
+  id: "procedure_tags_combo",
   options: Procedure.tags,
   selected: @procedure.tags,
   disabled: [],

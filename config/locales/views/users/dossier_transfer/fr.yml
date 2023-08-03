@@ -9,3 +9,5 @@ fr:
         email_label: Email du compte destinataire
         submit: Envoyer la demande de transfert
         notice_sent: L'invitation au transfert a été envoyée avec succès
+        destroy: La demande de transfert a été supprimée avec succès
+        unauthorized_destroy: Vous n'avez pas l'autorisation pour supprimer cette demande de transfert
