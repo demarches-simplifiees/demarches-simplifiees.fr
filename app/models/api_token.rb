@@ -51,19 +51,20 @@ class APIToken < ApplicationRecord
       plain_token = generate_unique_secure_token
       encrypted_token = BCrypt::Password.create(plain_token)
       api_token = create!(administrateur:, encrypted_token:, name: Date.today.strftime('Jeton d’API généré le %d/%m/%Y'))
-      packed_token = Base64.urlsafe_encode64([api_token.id, plain_token].join(';'))
-      [api_token, packed_token]
+      bearer = BearerToken.new(api_token.id, plain_token)
+      [api_token, bearer.to_string]
     end
 
-    def find_and_verify(base64_packed_token)
-      id, plain_token = Base64.urlsafe_decode64(base64_packed_token).split(';')
-      find_by(id:, version: 3)&.then(&ensure_valid_token(plain_token))
-    end
+    def find_and_verify(bearer_string)
+      bearer = BearerToken.from_string(bearer_string)
 
-    private
+      return if bearer.nil?
 
-    def ensure_valid_token(plain_token)
-      -> (api_token) { api_token if BCrypt::Password.new(api_token.encrypted_token) == plain_token }
+      api_token = find_by(id: bearer.api_token_id, version: 3)
+
+      return if api_token.nil?
+
+      BCrypt::Password.new(api_token.encrypted_token) == bearer.plain_token ? api_token : nil
     end
   end
 
@@ -72,6 +73,20 @@ class APIToken < ApplicationRecord
   def check_allowed_procedure_ids_ownership
     if allowed_procedure_ids.present?
       self.allowed_procedure_ids = allowed_procedures.map(&:id)
+    end
+  end
+
+  class BearerToken < Data.define(:api_token_id, :plain_token)
+    def to_string
+      Base64.urlsafe_encode64([api_token_id, plain_token].join(';'))
+    end
+
+    def self.from_string(bearer_token)
+      return if bearer_token.nil?
+
+      api_token_id, plain_token = Base64.urlsafe_decode64(bearer_token).split(';')
+      BearerToken.new(api_token_id, plain_token)
+    rescue ArgumentError
     end
   end
 end
