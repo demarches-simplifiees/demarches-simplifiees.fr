@@ -62,7 +62,7 @@ class Sendinblue::API
       event_opts[:event] = event_type
       client.get_email_event_report(event_opts).events.presence&.map(&:message_id)
     end.compact.uniq
-    Parallel.each(message_ids, in_threads: 5, progress: "Deleting message logs") do |message_id|
+    Parallel.each(message_ids, in_threads: 5) do |message_id|
       client.smtp_log_message_id_delete(message_id)
     end
     true
