@@ -6,103 +6,121 @@ describe APIToken, type: :model do
     let(:api_token) { api_token_and_packed_token.first }
     let(:packed_token) { api_token_and_packed_token.second }
 
-    it do
+    before { api_token_and_packed_token }
+
+    it 'with a full access token' do
       expect(api_token.administrateur).to eq(administrateur)
       expect(api_token.prefix).to eq(packed_token.slice(0, 5))
       expect(api_token.version).to eq(3)
       expect(api_token.write_access?).to eq(true)
       expect(api_token.procedure_ids).to eq([])
-      expect(api_token.allowed_procedure_ids).to eq(nil)
       expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
       expect(api_token.full_access?).to be_truthy
     end
 
-    context 'with read_only' do
+    context 'updated read_only' do
       before { api_token.update(write_access: false) }
+
       it do
-        expect(api_token.full_access?).to be_truthy
         expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: false)
       end
     end
 
-    context 'with procedure' do
+    context 'with a new added procedure' do
       let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
-      before { procedure }
+
+      before do
+        procedure
+        api_token.reload
+      end
 
       it do
+        expect(api_token.full_access?).to be_truthy
         expect(api_token.procedure_ids).to eq([procedure.id])
-        expect(api_token.procedures_to_allow).to eq([procedure])
-        expect(api_token.allowed_procedure_ids).to eq(nil)
+        expect(api_token.procedures).to eq([procedure])
         expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true)
       end
 
-      context 'update with procedure_id' do
-        let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
+      context 'and another procedure, but access only to the first one' do
         let(:other_procedure) { create(:procedure, administrateurs: [administrateur]) }
-        before { api_token.update(allowed_procedure_ids: [procedure.id]); other_procedure }
+
+        before do
+          other_procedure
+          api_token.update(allowed_procedure_ids: [procedure.id])
+          api_token.reload
+        end
 
         it do
-          expect(api_token.procedure_ids).to match_array([procedure.id, other_procedure.id])
-          expect(api_token.procedures_to_allow).to eq([other_procedure])
-          expect(api_token.allowed_procedure_ids).to eq([procedure.id])
+          expect(api_token.full_access?).to be_falsey
+          expect(api_token.procedure_ids).to match_array([procedure.id])
+          expect(api_token.targetable_procedures).to eq([other_procedure])
           expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true)
+        end
+
+        context 'and then gain full access' do
+          before do
+            api_token.become_full_access!
+            api_token.reload
+          end
+
+          it do
+            expect(api_token.full_access?).to be(true)
+            expect(api_token.procedure_ids).to match_array([procedure.id, other_procedure.id])
+            expect(api_token.targetable_procedures).to eq([procedure, other_procedure])
+          end
         end
       end
 
-      context 'update with wrong procedure_id' do
-        let(:other_administrateur) { create(:administrateur) }
-        let(:procedure) { create(:procedure, administrateurs: [other_administrateur]) }
-        before { api_token.update(allowed_procedure_ids: [procedure.id]) }
+      context 'but acces to a wrong procedure_id' do
+        let(:forbidden_procedure) { create(:procedure) }
+
+        before do
+          api_token.update(allowed_procedure_ids: [forbidden_procedure.id])
+          api_token.reload
+        end
 
         it do
           expect(api_token.full_access?).to be_falsey
           expect(api_token.procedure_ids).to eq([])
-          expect(api_token.procedures_to_allow).to eq([])
-          expect(api_token.allowed_procedure_ids).to eq([])
+          expect(api_token.targetable_procedures).to eq([procedure])
           expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
         end
       end
 
       context 'update with destroyed procedure_id' do
         let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
-        before { api_token.update(allowed_procedure_ids: [procedure.id]); procedure.destroy }
+
+        before do
+          api_token.update(allowed_procedure_ids: [procedure.id])
+          procedure.destroy
+          api_token.reload
+        end
 
         it do
           expect(api_token.full_access?).to be_falsey
           expect(api_token.procedure_ids).to eq([])
-          expect(api_token.procedures_to_allow).to eq([])
-          expect(api_token.allowed_procedure_ids).to eq([procedure.id])
+          expect(api_token.targetable_procedures).to eq([])
           expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
         end
       end
 
       context 'update with detached procedure_id' do
-        let(:other_procedure) { create(:procedure, administrateurs: [administrateur]) }
         let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
-        before { api_token.update(allowed_procedure_ids: [procedure.id]); other_procedure; administrateur.procedures.delete(procedure) }
+        let(:other_procedure) { create(:procedure, administrateurs: [administrateur]) }
+
+        before do
+          api_token.update(allowed_procedure_ids: [procedure.id])
+          other_procedure
+          administrateur.procedures.delete(procedure)
+          api_token.reload
+        end
 
         it do
           expect(api_token.full_access?).to be_falsey
-          expect(api_token.procedure_ids).to eq([other_procedure.id])
-          expect(api_token.allowed_procedure_ids).to eq([procedure.id])
+          expect(api_token.procedure_ids).to eq([])
+          expect(api_token.targetable_procedures).to eq([other_procedure])
           expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
         end
-      end
-    end
-
-    context 'with procedure and allowed_procedure_ids' do
-      let(:procedure) { create(:procedure, administrateurs: [administrateur]) }
-      let(:other_procedure) { create(:procedure, administrateurs: [administrateur]) }
-
-      before do
-        api_token.update(allowed_procedure_ids: [procedure.id])
-        other_procedure
-      end
-
-      it do
-        expect(api_token.procedure_ids).to match_array([procedure.id, other_procedure.id])
-        expect(api_token.allowed_procedure_ids).to eq([procedure.id])
-        expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true)
       end
     end
   end
@@ -133,8 +151,7 @@ describe APIToken, type: :model do
 
     context "with a bearer token with the wrong plain_token" do
       let(:bearer_token) do
-        clear_packed = [api_token.id, 'wrong'].join(';')
-        Base64.urlsafe_encode64(clear_packed)
+        APIToken::BearerToken.new(api_token.id, 'wrong').to_string
       end
 
       it { is_expected.to be_nil }

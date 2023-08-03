@@ -2,42 +2,53 @@ class APIToken < ApplicationRecord
   include ActiveRecord::SecureToken
 
   belongs_to :administrateur, inverse_of: :api_tokens
-  has_many :procedures, through: :administrateur
 
-  before_save :check_allowed_procedure_ids_ownership
+  before_save :sanitize_targeted_procedure_ids
 
   def context
-    context = { administrateur_id: administrateur_id, write_access: write_access? }
+    {
+      administrateur_id:,
+      procedure_ids:,
+      write_access:
+    }
+  end
 
+  def procedure_ids
     if full_access?
-      context.merge procedure_ids:
+      administrateur.procedures.ids
     else
-      context.merge procedure_ids: procedure_ids & allowed_procedure_ids
+      sanitized_targeted_procedure_ids
     end
+  end
+
+  def procedures
+    Procedure.where(id: procedure_ids)
   end
 
   def full_access?
-    allowed_procedure_ids.nil?
+    targeted_procedure_ids.nil?
   end
 
-  def procedures_to_allow
-    procedures.select(:id, :libelle, :path).where.not(id: allowed_procedure_ids || []).order(:libelle)
+  def targetable_procedures
+    administrateur
+      .procedures
+      .where.not(id: targeted_procedure_ids)
+      .select(:id, :libelle, :path)
+      .order(:libelle)
   end
 
-  def allowed_procedures
-    if allowed_procedure_ids.present?
-      procedures.select(:id, :libelle, :path).where(id: allowed_procedure_ids).order(:libelle)
-    else
-      []
-    end
+  def untarget_procedure(procedure_id)
+    new_target_ids = targeted_procedure_ids - [procedure_id]
+
+    update!(allowed_procedure_ids: new_target_ids)
   end
 
-  def disallow_procedure(procedure_id)
-    allowed_procedure_ids = allowed_procedures.map(&:id) - [procedure_id]
-    if allowed_procedure_ids.empty?
-      allowed_procedure_ids = nil
-    end
-    update!(allowed_procedure_ids:)
+  def sanitized_targeted_procedure_ids
+    administrateur.procedures.ids.intersection(targeted_procedure_ids || [])
+  end
+
+  def become_full_access!
+    update_column(:allowed_procedure_ids, nil)
   end
 
   # Prefix is made of the first 6 characters of the uuid base64 encoded
@@ -70,10 +81,14 @@ class APIToken < ApplicationRecord
 
   private
 
-  def check_allowed_procedure_ids_ownership
-    if allowed_procedure_ids.present?
-      self.allowed_procedure_ids = allowed_procedures.map(&:id)
+  def sanitize_targeted_procedure_ids
+    if targeted_procedure_ids.present?
+      write_attribute(:allowed_procedure_ids, sanitized_targeted_procedure_ids)
     end
+  end
+
+  def targeted_procedure_ids
+    read_attribute(:allowed_procedure_ids)
   end
 
   class BearerToken < Data.define(:api_token_id, :plain_token)
