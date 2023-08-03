@@ -24,7 +24,7 @@ describe EditableChamp::EditableChampComponent, type: :component do
     context 'when a private champ' do
       let(:champ) { create(:champ, dossier: dossier, private: true) }
 
-      it { expect(subject).to eq('') }
+      it { expect(subject).to eq('autosave') }
     end
 
     context 'when a dossier is en_construction' do
@@ -41,7 +41,7 @@ describe EditableChamp::EditableChampComponent, type: :component do
       end
 
       context 'when a private dropdown champ' do
-        let(:controllers) { ['champ-dropdown'] }
+        let(:controllers) { ['autosave', 'champ-dropdown'] }
         let(:champ) { create(:champ_drop_down_list, dossier: dossier, private: true) }
 
         it { expect(subject).to eq(data) }
@@ -56,7 +56,7 @@ describe EditableChamp::EditableChampComponent, type: :component do
     end
 
     context 'when a private dropdown champ' do
-      let(:controllers) { ['champ-dropdown'] }
+      let(:controllers) { ['autosave', 'champ-dropdown'] }
       let(:champ) { create(:champ_drop_down_list, dossier: dossier, private: true) }
 
       it { expect(subject).to eq(data) }

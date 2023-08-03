@@ -6,7 +6,7 @@
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
 
   - if dossier.brouillon?
-    - form_options = { url: brouillon_dossier_url(dossier), method: :patch, data: { save_on_input: true } }
+    - form_options = { url: brouillon_dossier_url(dossier), method: :patch }
   - else
     - form_options = { url: modifier_dossier_url(dossier), method: :patch }
   = render Attachment::DeleteFormComponent.new
@@ -47,4 +47,4 @@
       = fields_for champ.input_name, champ do |form|
         = render EditableChamp::EditableChampComponent.new form: form, champ: champ
 
-  = render Dossiers::EditFooterComponent.new(dossier: dossier)
+  = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: false)

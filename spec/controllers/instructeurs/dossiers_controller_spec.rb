@@ -771,7 +771,7 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
       another_instructeur.follow(dossier)
       Timecop.freeze(now)
-      patch :update_annotations, params: params
+      patch :update_annotations, params: params, format: :turbo_stream
 
       champ_multiple_drop_down_list.reload
       champ_linked_drop_down_list.reload
@@ -819,7 +819,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
         expect(champ_repetition.champs.first.value).to eq('text')
         expect(dossier.reload.last_champ_private_updated_at).to eq(now)
-        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(response).to have_http_status(200)
       }
 
       it 'updates the annotations' do
@@ -848,7 +848,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it {
         expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
-        expect(response).to redirect_to(annotations_privees_instructeur_dossier_path(dossier.procedure, dossier))
+        expect(response).to have_http_status(200)
       }
     end
   end
