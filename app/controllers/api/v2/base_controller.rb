@@ -33,7 +33,7 @@ class API::V2::BaseController < ApplicationController
   def api_token
     if @api_token.nil?
       @api_token = APIToken
-        .find_and_verify(authorization_bearer_token)
+        .authenticate(authorization_bearer_token)
         &.tap { _1.touch(:last_v2_authenticated_at) } || false
     end
     @api_token

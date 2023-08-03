@@ -55,7 +55,7 @@ class APIToken < ApplicationRecord
       [api_token, bearer.to_string]
     end
 
-    def find_and_verify(bearer_string)
+    def authenticate(bearer_string)
       bearer = BearerToken.from_string(bearer_string)
 
       return if bearer.nil?

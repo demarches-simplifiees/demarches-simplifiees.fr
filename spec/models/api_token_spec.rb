@@ -107,13 +107,13 @@ describe APIToken, type: :model do
     end
   end
 
-  describe '#find_and_verify' do
+  describe '#authenticate' do
     let(:api_token_and_packed_token) { APIToken.generate(administrateur) }
     let(:api_token) { api_token_and_packed_token.first }
     let(:packed_token) { api_token_and_packed_token.second }
     let(:bearer_token) { packed_token }
 
-    subject { APIToken.find_and_verify(bearer_token) }
+    subject { APIToken.authenticate(bearer_token) }
 
     context 'with the legit packed token' do
       it { is_expected.to eq(api_token) }
