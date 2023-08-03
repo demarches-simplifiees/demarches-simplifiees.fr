@@ -12,15 +12,29 @@ class API::V2::BaseController < ApplicationController
       @api_token.context
     # web interface (/graphql) give current_administrateur
     elsif current_administrateur.present?
-      {
-        administrateur_id: current_administrateur.id,
-        procedure_ids: current_administrateur.procedure_ids,
-        write_access: true
-      }
+      graphql_web_interface_context
+    else
+      unauthenticated_request_context
     end
   end
 
   private
+
+  def graphql_web_interface_context
+    {
+      administrateur_id: current_administrateur.id,
+      procedure_ids: current_administrateur.procedure_ids,
+      write_access: true
+    }
+  end
+
+  def unauthenticated_request_context
+    {
+      administrateur_id: nil,
+      procedure_ids: [],
+      write_access: false
+    }
+  end
 
   def authenticate_from_token
     @api_token = authenticate_with_http_token { |t, _o| APIToken.authenticate(t) }
