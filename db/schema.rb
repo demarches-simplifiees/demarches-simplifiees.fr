@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_02_121131) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_02_161011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -777,7 +777,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_121131) do
     t.datetime "published_at", precision: 6
     t.bigint "published_revision_id"
     t.bigint "replaced_by_procedure_id"
-    t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
