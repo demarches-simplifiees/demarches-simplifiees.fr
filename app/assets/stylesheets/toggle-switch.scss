@@ -9,7 +9,16 @@
   height: 24px;
   margin: 0;
   margin-right: 15px;
-  margin-bottom: 40px;
+
+  margin-bottom: $default-fields-spacer;
+
+  &.small-margin {
+    margin-bottom: $default-spacer;
+  }
+
+  &.no-margin {
+    margin-bottom: 0;
+  }
 }
 
 // Hide default HTML checkbox

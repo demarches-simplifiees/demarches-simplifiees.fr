@@ -1,0 +1,6 @@
+fr:
+  allowed_full_access_html: Ce jeton a accès à <strong>toutes</strong> les démarches attachées à votre compte administrateur
+  allowed_procedures_html:
+    zero: Ce jeton n’a accès à <strong>aucune</strong> démarche
+    one: Ce jeton a accès a une démarche sélectionnée
+    other: Ce jeton a accès a %{count} démarches sélectionnées

@@ -161,6 +161,13 @@
   margin-left: auto;
 }
 
+.truncate-80 {
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 // generate spacer utility like bootstrap my-2 -> margin-left/right: 2 * $default-spacer
 // using $direction.key as css modifier, $direction.values to set css properties
 // scale it using $steps

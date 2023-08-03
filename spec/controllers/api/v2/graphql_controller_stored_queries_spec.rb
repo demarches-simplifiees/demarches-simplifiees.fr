@@ -1,6 +1,8 @@
 describe API::V2::GraphqlController do
   let(:admin) { create(:administrateur) }
-  let(:token) { APIToken.generate(admin)[1] }
+  let(:generated_token) { APIToken.generate(admin) }
+  let(:api_token) { generated_token.first }
+  let(:token) { generated_token.second }
   let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin], types_de_champ_public:) }
   let(:types_de_champ_public) { [] }
@@ -210,6 +212,14 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierArchiver][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierArchiver][:dossier][:archived]).to be_truthy
       }
+
+      context 'read only token' do
+        before { api_token.update(write_access: false) }
+
+        it {
+          expect(gql_data[:dossierArchiver][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+        }
+      end
     end
 
     context 'dossierPasserEnInstruction' do
@@ -262,6 +272,14 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierAccepter][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
       }
+
+      context 'read only token' do
+        before { api_token.update(write_access: false) }
+
+        it {
+          expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+        }
+      end
     end
 
     context 'dossierRefuser' do
@@ -275,6 +293,14 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierRefuser][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierRefuser][:dossier][:state]).to eq('refuse')
       }
+
+      context 'read only token' do
+        before { api_token.update(write_access: false) }
+
+        it {
+          expect(gql_data[:dossierRefuser][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+        }
+      end
     end
 
     context 'dossierClasserSansSuite' do
@@ -288,6 +314,14 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierClasserSansSuite][:dossier][:id]).to eq(dossier.to_typed_id)
         expect(gql_data[:dossierClasserSansSuite][:dossier][:state]).to eq('sans_suite')
       }
+
+      context 'read only token' do
+        before { api_token.update(write_access: false) }
+
+        it {
+          expect(gql_data[:dossierClasserSansSuite][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+        }
+      end
     end
 
     context 'groupeInstructeurModifier' do

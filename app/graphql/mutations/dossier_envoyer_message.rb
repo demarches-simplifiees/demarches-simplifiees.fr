@@ -20,7 +20,7 @@ module Mutations
       end
     end
 
-    def ready?(attachment: nil, **args)
+    def authorized_before_load?(attachment: nil, **args)
       if attachment.present?
         validate_blob(attachment)
       else

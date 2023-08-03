@@ -26,6 +26,10 @@ class API::V2::Context < GraphQL::Query::Context
     self[:internal_use]
   end
 
+  def write_access?
+    self[:write_access]
+  end
+
   def current_administrateur
     unless self[:administrateur_id]
       raise GraphQL::ExecutionError.new("Pour effectuer cette opération, vous avez besoin d’un jeton au nouveau format. Vous pouvez l’obtenir dans votre interface administrateur.", extensions: { code: :deprecated_token })
@@ -45,14 +49,23 @@ class API::V2::Context < GraphQL::Query::Context
     self[:authorized] ||= {}
 
     if self[:authorized][demarche.id].nil?
-      self[:authorized][demarche.id] = if self[:administrateur_id]
-        demarche.administrateurs.map(&:id).include?(self[:administrateur_id])
-      elsif self[:token]
-        APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
-      end
+      self[:authorized][demarche.id] = compute_demarche_authorization(demarche)
     end
 
     self[:authorized][demarche.id]
+  end
+
+  private
+
+  def compute_demarche_authorization(demarche)
+    # procedure_ids and token are passed from graphql controller
+    if self[:procedure_ids].present?
+      self[:procedure_ids].include?(demarche.id)
+    elsif self[:token].present?
+      APIToken.find_and_verify(self[:token], demarche.administrateurs).present?
+    else
+      false
+    end
   end
 
   # This is a query AST visitor that we use to check
