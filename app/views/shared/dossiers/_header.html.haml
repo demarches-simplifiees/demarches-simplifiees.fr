@@ -1,18 +1,17 @@
-= status_badge(dossier.state)
-.title-container
-  %span.icon.folder
-  %h1= procedure_libelle(dossier.procedure)
-  %h2
-    = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
-    = t('views.users.dossiers.show.header.created_date', date_du_dossier: I18n.l(dossier.created_at))
+%h1
+  = procedure_libelle(dossier.procedure)
+  = status_badge(dossier.state, 'super')
+%h2
+  = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
+  = t('views.users.dossiers.show.header.created_date', date_du_dossier: I18n.l(dossier.created_at))
 
-  = render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
+= render(partial: 'users/dossiers/expiration_banner', locals: {dossier: dossier})
 
-  - if dossier.show_procedure_state_warning?
-    = render(partial: 'users/dossiers/procedure_removed_banner', locals: { dossier: dossier })
-  - elsif current_user.owns?(dossier)
-    .header-actions
-      = render partial: 'invites/dropdown', locals: { dossier: dossier, morphing: false }
+- if dossier.show_procedure_state_warning?
+  = render(partial: 'users/dossiers/procedure_removed_banner', locals: { dossier: dossier })
+- elsif current_user.owns?(dossier)
+  .header-actions
+    = render partial: 'invites/dropdown', locals: { dossier: dossier, morphing: false }
 
-      - unless dossier.read_only?
-        = render partial: 'users/dossiers/identity_dropdown', locals: { dossier: dossier }
+    - unless dossier.read_only?
+      = render partial: 'users/dossiers/identity_dropdown', locals: { dossier: dossier }
