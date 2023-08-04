@@ -16,7 +16,8 @@ class GroupeInstructeur < ApplicationRecord
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
-  validates :closed, acceptance: { accept: [false] }, if: -> do
+  validates :closed, acceptance: { accept: [false], message: I18n.t('.activerecord.errors.models.groupe_instructeur.defaut') }, if: -> { (self == procedure.defaut_groupe_instructeur) }
+  validates :closed, acceptance: { accept: [false], message: 'Il doit y avoir au moins un groupe d’instructeurs actif sur chaque démarche' }, if: -> do
     if closed
       (other_groupe_instructeurs.map(&:closed) + [closed]).all?
     else
