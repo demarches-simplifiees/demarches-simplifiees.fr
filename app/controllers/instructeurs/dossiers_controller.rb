@@ -31,8 +31,8 @@ module Instructeurs
 
     def geo_data
       send_data dossier.to_feature_collection.to_json,
-        type: 'application/json',
-        filename: "dossier-#{dossier.id}-features.json"
+                type: 'application/json',
+                filename: "dossier-#{dossier.id}-features.json"
     end
 
     def apercu_attestation
@@ -242,7 +242,7 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params, dossier.champs_private))
+      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params))
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
@@ -330,14 +330,18 @@ module Instructeurs
       champs_params
     end
 
-    def remove_changes_forbidden_by_visa(params, champs)
-      visa = champs.reverse_each.find { |c| checked_visa?(c) }
-      if visa.present?
-        switch_point = visa.id.to_s
-        notfound = true
-        params[:champs_private_all_attributes].reject! do |_k, v|
-          notfound &&= v[:id] != switch_point
-        end
+    def remove_changes_forbidden_by_visa(params)
+      # auto-save send small sets of fields to update so for speed, we look for brothers containing visa
+      visa_type = TypeDeChamp.type_champs.fetch(:visa)
+      champs = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position)
+      params[:champs_private_all_attributes].to_h.reject! do |k, _v|
+        champ = champs.find(k)
+        # look for position of last checked visa in same dossier, row
+        visa = champs.private_only
+          .where(row_id: champ.row_id, dossier: champ.dossier_id, type_de_champ: { type_champ: visa_type })
+          .where.not(value: "")
+          .order(position: :desc).first
+        visa.present? && champ[:position] < visa[:position]
       end
       params
     end
