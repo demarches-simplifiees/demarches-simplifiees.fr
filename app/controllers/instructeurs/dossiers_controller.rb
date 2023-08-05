@@ -242,7 +242,8 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params))
+      # dossier_with_champs.assign_attributes(champs_private_params)
+      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa)
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
@@ -332,12 +333,12 @@ module Instructeurs
       champs_params
     end
 
-    def remove_changes_forbidden_by_visa(params)
+    def remove_changes_forbidden_by_visa
       # auto-save send small sets of fields to update so for speed, we look for brothers containing visa
       visa_type = TypeDeChamp.type_champs.fetch(:visa)
       champs = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position)
-      params[:champs_private_all_attributes].to_h.reject! do |k, _v|
-        champ = champs.find(k)
+      params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
+        champ = champs.find(v[:id])
         # look for position of last checked visa in same dossier, row
         visa = champs.private_only
           .where(row_id: champ.row_id, dossier: champ.dossier_id, type_de_champ: { type_champ: visa_type })
@@ -345,7 +346,7 @@ module Instructeurs
           .order(position: :desc).first
         visa.present? && champ[:position] < visa[:position]
       end
-      params
+      champs_private_params
     end
 
     def mark_demande_as_read
