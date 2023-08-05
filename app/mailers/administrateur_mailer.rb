@@ -22,6 +22,15 @@ class AdministrateurMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL)
   end
 
+  def api_token_expiration(user, tokens)
+    @subject = "Renouvellement de jeton d'API nécessaire"
+    @tokens = tokens
+
+    mail(to: user.email,
+      subject: @subject,
+      reply_to: CONTACT_EMAIL)
+  end
+
   private
 
   def forced_delivery_for_action?

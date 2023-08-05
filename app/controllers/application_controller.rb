@@ -7,7 +7,6 @@ class ApplicationController < ActionController::Base
 
   MAINTENANCE_MESSAGE = 'Le site est actuellement en maintenance. Il sera à nouveau disponible dans un court instant.'
 
-  before_action :set_current_roles
   before_action :set_sentry_user
   before_action :redirect_if_untrusted
   before_action :reject, if: -> { ENV.fetch("MAINTENANCE_MODE", 'false') == 'true' }
@@ -150,11 +149,6 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def set_current_roles
-    Current.administrateur = current_administrateur
-    Current.instructeur = current_instructeur
-  end
-
   def set_active_storage_host
     ActiveStorage::Current.host = request.base_url
   end
@@ -188,6 +182,13 @@ class ApplicationController < ActionController::Base
 
   def set_sentry_user
     Sentry.set_user(sentry_user)
+  end
+
+  def set_sentry_dossier(dossier)
+    Sentry.configure_scope do |scope|
+      scope.set_tags(procedure: dossier.procedure.id)
+      scope.set_tags(dossier: dossier.id)
+    end
   end
 
   # private method called by rails fwk

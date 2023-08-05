@@ -50,10 +50,10 @@ fr:
     remove_description: La description de l’annotation privée « %{label} » a été supprimée.
     update_drop_down_secondary_libelle: Le libellé secondaire de l’annotation « %{label} » a été modifié. Le nouveau libellé est « %{to} ».
     update_drop_down_secondary_description: La description secondaire de l’annotation « %{label} » a été modifiée. La nouvelle description est « %{to} ».
-    update_type_champ_private: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} ».
-    update_piece_justificative_template_private: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié.
-    update_drop_down_options_private: "Les options de sélection de l’annotation privée « %{label} » ont été modifiées :"
-    update_carte_layers_private: "Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés :"
+    update_type_champ: Le type de l’annotation privée « %{label} » a été modifié. Elle est maintenant de type « %{to} ».
+    update_piece_justificative_template: Le modèle de pièce justificative de l’annotation privée « %{label} » a été modifié.
+    update_drop_down_options: "Les options de sélection de l’annotation privée « %{label} » ont été modifiées :"
+    update_carte_layers: "Les référentiels cartographiques de l’annotation privée « %{label} » ont été modifiés :"
     enable_drop_down_other: L’annotation privée « %{label} » comporte maintenant un choix « Autre ».
     disable_drop_down_other: L’annotation privée « %{label} » ne comporte plus de choix « Autre ».
     enable_collapsible_explanation: Le texte complementaire affichable au clique de l’annotation privée « %{label} » a été ajouté.

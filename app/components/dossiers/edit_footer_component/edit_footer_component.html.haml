@@ -1,12 +1,13 @@
 .dossier-edit-sticky-footer
   .send-dossier-actions-bar
-    = render partial: 'shared/dossiers/autosave', locals: { dossier: @dossier }
+    = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?)
 
-    - if @dossier.can_transition_to_en_construction?
+    - if !annotation? && @dossier.can_transition_to_en_construction?
       = button_to t('.submit'), brouillon_dossier_url(@dossier), button_options
 
   - if @dossier.brouillon? && !owner?
     .send-notice.invite-cannot-submit
       = t('.invite_notice')
 
-  = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
+  - if !annotation?
+    = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }

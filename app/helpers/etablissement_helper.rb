@@ -1,4 +1,12 @@
 module EtablissementHelper
+  def pretty_siret(siret)
+    if siret.length > 6
+      "#{siret[0..2]} #{siret[3..5]} #{siret[6..8]} #{siret[9..]}"
+    else
+      siret
+    end
+  end
+
   def pretty_currency(capital_social, unit: '€')
     number_to_currency(capital_social, locale: :fr, unit: unit, precision: 0)
   end

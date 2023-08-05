@@ -1,6 +1,7 @@
 module Users
   class DossiersController < UserController
     include DossierHelper
+    include TurboChampsConcern
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
@@ -214,7 +215,7 @@ module Users
       respond_to do |format|
         format.html { render :brouillon }
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
 
           render(:update, layout: false)
         end
@@ -232,7 +233,7 @@ module Users
       respond_to do |format|
         format.html { render :modifier }
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
         end
       end
     end
@@ -422,13 +423,9 @@ module Users
     end
 
     def dossier
-      @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id]).tap do |dossier|
-                       # Ease search & groupments by tags
-                       Sentry.configure_scope do |scope|
-                         scope.set_tags(procedure: dossier.procedure.id)
-                         scope.set_tags(dossier: dossier.id)
-                       end
-                     end
+      @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id]).tap do
+        set_sentry_dossier(_1)
+      end
     end
 
     def dossier_with_champs(pj_template: true)
@@ -501,24 +498,6 @@ module Users
       errors
     end
 
-    def champs_to_turbo_update
-      champ_ids = champs_public_params
-        .fetch(:champs_public_all_attributes)
-        .keys
-        .map(&:to_i)
-
-      to_update = dossier
-        .champs_public_all
-        .filter { _1.id.in?(champ_ids) && _1.refresh_after_update? }
-      to_show, to_hide = dossier
-        .champs_public_all
-        .filter(&:conditional?)
-        .partition(&:visible?)
-        .map { champs_to_one_selector(_1 - to_update) }
-
-      return to_show, to_hide, to_update
-    end
-
     def ensure_ownership!
       if !current_user.owns?(dossier)
         forbidden!
@@ -578,13 +557,6 @@ module Users
       else
         submit_validation_options
       end
-    end
-
-    def champs_to_one_selector(champs)
-      champs
-        .map(&:input_group_id)
-        .map { |id| "##{id}" }
-        .join(',')
     end
   end
 end

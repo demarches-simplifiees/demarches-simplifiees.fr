@@ -1,0 +1,15 @@
+---
+fr:
+  brouillon:
+    explanation: Votre brouillon est automatiquement enregistré.
+    confirmation: Brouillon enregistré
+    error: Impossible d’enregistrer le brouillon
+  en_construction:
+    explanation: Votre dossier est automatiquement enregistré.
+    confirmation: Dossier enregistré
+    error: Impossible d’enregistrer le dossier
+  annotations:
+    explanation: Vos annotations sont automatiquement enregistrées.
+    confirmation: Annotations enregistré
+    error: Impossible d’enregistrer les annotations
+  more_information: En savoir plus

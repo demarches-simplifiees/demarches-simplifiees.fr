@@ -46,18 +46,20 @@ class API::V1::DossiersController < APIController
     @procedure = Procedure.for_api.find(params[:procedure_id])
 
     administrateur = find_administrateur_for_token(@procedure)
-    if administrateur
-      Current.administrateur = administrateur
-    else
+    if administrateur.nil?
       render json: {}, status: :unauthorized
+    else
+      # allow BaseController append_info_to_payload
+      # to log info on current_user
+      @current_user = administrateur.user
+
+      order = ORDER_DIRECTIONS.fetch(params[:order], :asc)
+      @dossiers = @procedure
+        .dossiers
+        .visible_by_administration
+        .order_by_created_at(order)
+
     end
-
-    order = ORDER_DIRECTIONS.fetch(params[:order], :asc)
-    @dossiers = @procedure
-      .dossiers
-      .visible_by_administration
-      .order_by_created_at(order)
-
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
   end

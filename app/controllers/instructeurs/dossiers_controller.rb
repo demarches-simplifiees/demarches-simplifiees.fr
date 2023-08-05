@@ -4,6 +4,7 @@ module Instructeurs
     include ActionView::Helpers::TextHelper
     include CreateAvisConcern
     include DossierHelper
+    include TurboChampsConcern
 
     include ActionController::Streaming
     include Zipline
@@ -30,8 +31,8 @@ module Instructeurs
 
     def geo_data
       send_data dossier.to_feature_collection.to_json,
-        type: 'application/json',
-        filename: "dossier-#{dossier.id}-features.json"
+                type: 'application/json',
+                filename: "dossier-#{dossier.id}-features.json"
     end
 
     def apercu_attestation
@@ -241,16 +242,19 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa(champs_private_params, dossier.champs_private))
+      # dossier_with_champs.assign_attributes(champs_private_params)
+      dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa)
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
-      dossier.save
-      dossier.log_modifier_annotations!(current_instructeur)
+      if !dossier.save(context: :annotations)
+        flash.now.alert = dossier.errors.full_messages
+      end
 
       respond_to do |format|
-        format.html { redirect_to annotations_privees_instructeur_dossier_path(procedure, dossier) }
-        format.turbo_stream
+        format.turbo_stream do
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_params.fetch(:champs_private_all_attributes), dossier.champs_private_all)
+        end
       end
     end
 
@@ -305,7 +309,9 @@ module Instructeurs
     end
 
     def dossier
-      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id]))
+      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id])).tap do
+        set_sentry_dossier(_1)
+      end
     end
 
     def dossier_with_champs
@@ -327,16 +333,20 @@ module Instructeurs
       champs_params
     end
 
-    def remove_changes_forbidden_by_visa(params, champs)
-      visa = champs.reverse_each.find { |c| checked_visa?(c) }
-      if visa.present?
-        switch_point = visa.id.to_s
-        notfound = true
-        params[:champs_private_all_attributes].reject! do |_k, v|
-          notfound &&= v[:id] != switch_point
-        end
+    def remove_changes_forbidden_by_visa
+      # auto-save send small sets of fields to update so for speed, we look for brothers containing visa
+      visa_type = TypeDeChamp.type_champs.fetch(:visa)
+      champs = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position)
+      params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
+        champ = champs.find(v[:id])
+        # look for position of last checked visa in same dossier, row
+        visa = champs.private_only
+          .where(row_id: champ.row_id, dossier: champ.dossier_id, type_de_champ: { type_champ: visa_type })
+          .where.not(value: "")
+          .order(position: :desc).first
+        visa.present? && champ[:position] < visa[:position]
       end
-      params
+      champs_private_params
     end
 
     def mark_demande_as_read

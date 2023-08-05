@@ -4,6 +4,18 @@ module Mutations
 
     delegate :current_administrateur, to: :context
 
+    def ready?(**args)
+      if context.write_access?
+        authorized_before_load?(**args)
+      else
+        return false, { errors: ['Le jeton utilisé est configuré seulement en lecture'] }
+      end
+    end
+
+    def authorized_before_load?(**args)
+      true
+    end
+
     def partition_instructeurs_by(instructeurs)
       instructeurs
         .partition { _1.id.present? }
