@@ -1,7 +1,7 @@
 namespace :after_party do
-  desc 'Deployment task: fix_champ_type_mismatch'
+  desc 'Deployment task: fix_private_champ_type_mismatch'
   task fix_private_champ_type_mismatch: :environment do
-    puts "Running deploy task 'fix_champ_type_mismatch'"
+    puts "Running deploy task 'fix_private_champ_type_mismatch'"
 
     champs = Champ.private_only
 
@@ -21,5 +21,8 @@ namespace :after_party do
     end
 
     progress.finish
+
+    AfterParty::TaskRecord
+      .create version: AfterParty::TaskRecorder.new(__FILE__).timestamp
   end
 end
