@@ -166,7 +166,17 @@ def add_single_champ(pdf, champ)
   when 'Champs::ExplicationChamp'
     format_in_2_lines(pdf, tdc.libelle, strip_tags(tdc.description))
   when 'Champs::CarteChamp'
-    format_in_2_lines(pdf, tdc.libelle, champ.to_feature_collection.to_json)
+    pdf.pad_bottom(4) do
+      pdf.font 'marianne', style: :bold, size: 12 do
+        pdf.text tdc.libelle
+      end
+
+      pdf.indent(default_margin) do
+        champ.geo_areas.each do |area|
+          pdf.text "- #{area.label}".tr(' ', ' ') # replace non breaking space, which are invalid in pdf
+        end
+      end
+    end
   when 'Champs::SiretChamp'
     pdf.font 'marianne', style: :bold do
       pdf.text tdc.libelle
