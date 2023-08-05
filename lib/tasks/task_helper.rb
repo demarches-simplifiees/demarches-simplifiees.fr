@@ -42,6 +42,14 @@ class ProgressReport
     end
   end
 
+  def set(count)
+    set_progress(count: count)
+
+    if @per_10_000 % 10 == 0
+      print_progress
+    end
+  end
+
   def finish
     if @count > 0 && @per_10_000 != 10_000
       set_progress(total: @count)

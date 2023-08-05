@@ -308,7 +308,9 @@ module Instructeurs
     end
 
     def dossier
-      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id]))
+      @dossier ||= DossierPreloader.load_one(dossier_scope.find(params[:dossier_id])).tap do
+        set_sentry_dossier(_1)
+      end
     end
 
     def dossier_with_champs

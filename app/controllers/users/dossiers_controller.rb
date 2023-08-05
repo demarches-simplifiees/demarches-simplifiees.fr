@@ -423,13 +423,9 @@ module Users
     end
 
     def dossier
-      @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id]).tap do |dossier|
-                       # Ease search & groupments by tags
-                       Sentry.configure_scope do |scope|
-                         scope.set_tags(procedure: dossier.procedure.id)
-                         scope.set_tags(dossier: dossier.id)
-                       end
-                     end
+      @dossier ||= dossier_scope.find(params[:id] || params[:dossier_id]).tap do
+        set_sentry_dossier(_1)
+      end
     end
 
     def dossier_with_champs(pj_template: true)
