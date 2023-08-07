@@ -6,7 +6,7 @@
 
   .secondary{ class: @champ.has_secondary_options_for_primary? ? '' : 'hidden' }
     = @form.label :secondary_value, for: "#{@champ.input_id}-secondary" do
-      - sanitize((@champ.drop_down_secondary_libelle.presence || (@champ.libelle + ' : précisez')) + (@champ.type_de_champ.mandatory? ? tag.span(' *', class: 'mandatory') : ''))
+      - sanitize((@champ.drop_down_secondary_libelle.presence || (@champ.libelle + ' : précisez')) + (@champ.mandatory? ? tag.span(' *', class: 'mandatory') : ''))
     - if @champ.drop_down_secondary_description.present?
       .notice{ id: "#{@champ.describedby_id}-secondary" }= render SimpleFormatComponent.new(@champ.drop_down_secondary_description, allow_a: true)
     = @form.select :secondary_value,
