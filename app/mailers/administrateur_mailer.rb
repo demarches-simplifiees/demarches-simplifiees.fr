@@ -4,6 +4,7 @@ class AdministrateurMailer < ApplicationMailer
 
   def activate_before_expiration(user, reset_password_token)
     @user = user
+    @author_name = BizDev.full_name(administration_id)
     @reset_password_token = reset_password_token
     @expiration_date = @user.reset_password_sent_at + Devise.reset_password_within
     @subject = "N'oubliez pas d’activer votre compte administrateur"
