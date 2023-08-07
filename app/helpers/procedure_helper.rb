@@ -39,10 +39,10 @@ module ProcedureHelper
   end
 
   def can_send_groupe_message?(procedure)
-    total_groupe_instructeur_on_procedure = procedure.groupe_instructeurs.active.count
-    total_groupe_instructeur_on_instructeur = current_instructeur.groupe_instructeurs.active.where(procedure: procedure).count
+    groupe_instructeur_on_procedure_ids = procedure.groupe_instructeurs.active.ids.sort
+    groupe_instructeur_on_instructeur_ids = current_instructeur.groupe_instructeurs.active.where(procedure: procedure).ids.sort
 
-    total_groupe_instructeur_on_procedure == total_groupe_instructeur_on_instructeur
+    groupe_instructeur_on_procedure_ids == groupe_instructeur_on_instructeur_ids
   end
 
   def url_or_email_to_lien_dpo(procedure)
