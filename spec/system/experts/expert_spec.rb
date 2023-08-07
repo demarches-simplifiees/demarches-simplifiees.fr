@@ -100,15 +100,15 @@ describe 'Inviting an expert:' do
 
       # check validation
       click_on 'Envoyer votre avis'
-      expect(page).to have_content('Le champ « Réponse oui/non » doit être rempli')
+      expect(page).to have_content("Le champ « Réponse oui/non » n'est pas inclus(e) dans la liste")
 
-      choose 'oui'
+      choose 'non'
       fill_in 'avis_answer', with: 'Ma réponse d’expert.'
       click_on 'Envoyer votre avis'
 
       expect(page).to have_content('Votre réponse est enregistrée')
       expect(page).to have_content('Ma réponse d’expert.')
-      expect(page).to have_content('oui')
+      expect(page).to have_content('non')
 
       within('.breadcrumbs') { click_on 'Avis' }
       expect(page).to have_text('1 avis donné')
