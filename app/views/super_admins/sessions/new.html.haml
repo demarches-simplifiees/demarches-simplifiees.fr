@@ -12,8 +12,9 @@
         = f.label :password, "Mot de passe (#{PASSWORD_MIN_LENGTH} caractères minimum)"
         = f.password_field :password, autocomplete: 'current-password'
 
-        = f.label :otp_attempt, 'Code OTP (uniquement si vous avez déjà activé 2FA)'
-        = f.text_field :otp_attempt
+        - if SUPER_ADMIN_OTP_ENABLED
+          = f.label :otp_attempt, 'Code OTP (uniquement si vous avez déjà activé 2FA)'
+          = f.text_field :otp_attempt
 
         %p= link_to "Mot de passe oublié ou réinitialisation 2FA ?", new_super_admin_password_path, class: "link"
         = f.submit "Se connecter", class: "fr-btn fr-btn--lg"
