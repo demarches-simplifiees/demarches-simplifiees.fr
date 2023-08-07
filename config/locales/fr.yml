@@ -91,6 +91,22 @@ fr:
       instructeur: 'Aller à la liste des démarches'
       admin: "Aller au panneau d’administration"
   views:
+    legal_notice:
+      title: "Mentions légales"
+      editing: "Éditeur"
+      editing_content: 
+        line_one: "Direction Interministérielle au Numérique (DINUM)"
+        line_two: "20 Avenue de Ségur"
+        line_three: "75007 PARIS"
+      direction: "Direction de la publication"
+      direction_content: "Madame Stéphanie Schaer , Directrice interministérielle du numérique."
+      hosting: "Prestataire d'hébergement"
+      hosting_content:
+        line_one: "OVH"
+        line_two: "RCS Roubaix – Tourcoing 424 761 419 00045"
+        line_three: "Code APE 6202A"
+        line_four: "N° TVA : FR 22 424 761 419"
+        line_five: "Siège social : 2 rue Kellermann - 59100 Roubaix - France."    
     commencer:
       show:
         start_procedure: Commencer la démarche
