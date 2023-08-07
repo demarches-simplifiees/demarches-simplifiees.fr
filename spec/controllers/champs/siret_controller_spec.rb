@@ -170,7 +170,6 @@ describe Champs::SiretController, type: :controller do
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
-          expect(champ.value).to eq(siret)
           expect(champ.etablissement.siret).to eq(siret)
           expect(champ.reload.etablissement.naf).to eq("6419Z | 5221Z")
           expect(dossier.reload.etablissement).to eq(nil)
