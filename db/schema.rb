@@ -165,6 +165,8 @@ ActiveRecord::Schema.define(version: 2023_04_13_171421) do
     t.string "email"
     t.bigint "experts_procedure_id"
     t.text "introduction"
+    t.boolean "question_answer"
+    t.string "question_label"
     t.datetime "reminded_at"
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false

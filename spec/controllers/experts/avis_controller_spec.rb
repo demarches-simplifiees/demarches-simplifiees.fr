@@ -344,10 +344,11 @@ describe Experts::AvisController, type: :controller do
       let(:invite_linked_dossiers) { nil }
       let(:introduction_file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
       let(:confidentiel) { false }
+      let(:question_label) { '' }
 
       before do
         Timecop.freeze(now)
-        post :create_avis, params: { id: previous_avis.id, procedure_id:, avis: { emails:, introduction:, experts_procedure:, confidentiel:, invite_linked_dossiers:, introduction_file: } }
+        post :create_avis, params: { id: previous_avis.id, procedure_id:, avis: { emails:, introduction:, experts_procedure:, confidentiel:, invite_linked_dossiers:, introduction_file:, question_label: } }
         created_avis.reload
       end
 
@@ -370,6 +371,15 @@ describe Experts::AvisController, type: :controller do
           expect(flash.alert).to eq(["toto.fr : Le champ « Email » n'est pas valide"])
           expect(Avis.last).to eq(previous_avis)
           expect(dossier.last_avis_updated_at).to eq(nil)
+        end
+      end
+
+      context 'with a question' do
+        let(:question_label) { "question" }
+
+        it do
+          expect(created_avis.question_label).to eq('question')
+          expect(response).to redirect_to(instruction_expert_avis_path(previous_avis.procedure, previous_avis))
         end
       end
 

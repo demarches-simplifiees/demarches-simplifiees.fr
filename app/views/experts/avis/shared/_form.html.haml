@@ -3,15 +3,17 @@
     %h1.tab-title Inviter des personnes à donner leur avis
     %p.avis-notice Les invités pourront consulter le dossier, donner un avis et contribuer au fil de messagerie. Ils ne pourront pas modifier le dossier.
     = render Attachment::DeleteFormComponent.new
-    = form_for avis, url: url, html: { class: 'form', multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis.dossier, :avis_by_expert) } } do |f|
+    = form_for avis, url: url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis.dossier, :avis_by_expert) } } do |f|
       = hidden_field_tag  'avis[emails]', nil
-      = react_component("ComboMultiple",
-          options: [], selected: [], disabled: [],
-          group: '.ask-avis',
-          name: 'emails',
-          label: 'Emails',
-          acceptNewValues: true)
-      = f.text_area :introduction, rows: 3, value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
+      .fr-input-group
+        = react_component("ComboMultiple",
+            options: [], selected: [], disabled: [],
+            group: '.ask-avis',
+            name: 'emails',
+            label: 'Emails',
+            acceptNewValues: true)
+      .fr-input-group
+        = f.text_area :introduction, rows: 3, class: 'fr-input', value: avis.introduction || 'Bonjour, merci de me donner votre avis sur ce dossier.', required: true
       %p.tab-title Ajouter une pièce jointe
       .form-group
         = render Attachment::EditComponent.new(attached_file: avis.introduction_file)
@@ -29,9 +31,9 @@
 
         - else
           .confidentiel-wrapper
-            = f.label :confidentiel, 'Cet avis sera '
-            = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);"
+            = f.label :confidentiel, 'Cet avis sera ', class: 'fr-label'
+            = f.select :confidentiel, [['partagé avec les autres experts', false], ['confidentiel', true]], {}, onchange: "javascript:DS.toggleCondidentielExplanation(event);", class: 'fr-input'
             .confidentiel-explanation.hidden
               Il ne sera pas affiché aux autres experts consultés, mais sera visible par les instructeurs.
 
-      = f.submit 'Demander un avis', class: 'button primary send'
+      = f.submit 'Demander un avis', class: 'fr-btn fr-mt-2w'
