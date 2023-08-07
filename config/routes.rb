@@ -373,6 +373,8 @@ Rails.application.routes.draw do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
             get 'instruction'
+            get 'avis_list'
+            get 'avis_new'
             get 'messagerie'
             post 'commentaire' => 'avis#create_commentaire'
             post 'avis' => 'avis#create_avis'
@@ -408,8 +410,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :avis, only: [:show, :update] do
-          get '', action: 'procedure', on: :collection, as: :procedure
+        resources :avis, only: [] do
           member do
             patch 'revoquer'
             get 'remind'
@@ -442,6 +443,7 @@ Rails.application.routes.draw do
             get 'messagerie'
             get 'annotations-privees' => 'dossiers#annotations_privees'
             get 'avis'
+            get 'avis_new'
             get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
             patch 'follow'
             patch 'unfollow'

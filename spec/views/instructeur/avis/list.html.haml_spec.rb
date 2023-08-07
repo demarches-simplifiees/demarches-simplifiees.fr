@@ -1,7 +1,7 @@
-describe 'instructeurs/avis/shared/_list.html.haml', type: :view do
+describe 'instructeurs/avis/_list.html.haml', type: :view do
   before { view.extend DossierHelper }
 
-  subject { render 'instructeurs/avis/shared/list.html.haml', avis: avis, avis_seen_at: seen_at, current_instructeur: instructeur }
+  subject { render 'instructeurs/avis/list.html.haml', avis: avis, avis_seen_at: seen_at, current_instructeur: instructeur }
 
   let(:instructeur) { create(:instructeur) }
   let(:instructeur2) { create(:instructeur) }

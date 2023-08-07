@@ -53,7 +53,7 @@
               - if avis.piece_justificative_file.attached?
                 = render Attachment::ShowComponent.new(attachment: avis.piece_justificative_file.attachment)
               .answer-body
-                - if avis.question_answer
+                - if [true, false].include? avis.question_answer
                   %p= t("question_answer.#{avis.question_answer}", scope: 'helpers.label')
 
                 = render SimpleFormatComponent.new(avis.answer, allow_a: false)
