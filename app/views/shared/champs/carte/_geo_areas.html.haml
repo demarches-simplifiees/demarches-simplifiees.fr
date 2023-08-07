@@ -2,8 +2,12 @@
   .areas-title Sélections utilisateur
   .areas
     %ul
-      - champ.selections_utilisateur.each do |geo_area|
+      - champ.selections_utilisateur.slice(0, 20).each do |geo_area|
         = render partial: 'shared/champs/carte/geo_area', locals: { geo_area: geo_area, editing: editing }
+      - if champ.selections_utilisateur.size > 20
+        %li
+          %span
+            et #{champ.selections_utilisateur.size - 20} autres points, lignes ou polygones.
 
 - if champ.cadastres.present?
   .areas-title Parcelles cadastrales
