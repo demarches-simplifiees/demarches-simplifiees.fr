@@ -2,5 +2,10 @@
 
 = render partial: "header", locals: { dossier: @dossier }
 
+- if @display_news
+  = render Dsfr::NoticeComponent.new(closable: false) do |c|
+    - c.with_title do
+      Vos modifications dans les annotations privées sont maintenant sauvegardées au fur et à mesure de la saisie !
+
 #dossier-annotations-privees
   = render partial: "shared/dossiers/edit_annotations", locals: { dossier: @dossier, seen_at: @annotations_privees_seen_at }

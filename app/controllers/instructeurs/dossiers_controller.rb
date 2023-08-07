@@ -67,6 +67,7 @@ module Instructeurs
 
     def annotations_privees
       @annotations_privees_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.annotations_privees_seen_at
+      @display_news = Date.today < Date.new(2023,8,10)
     end
 
     def avis
