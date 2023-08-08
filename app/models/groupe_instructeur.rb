@@ -5,6 +5,7 @@
 #  id           :bigint           not null, primary key
 #  closed       :boolean          default(FALSE)
 #  label        :text             not null
+#  routing_rule :jsonb
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
 #  procedure_id :bigint           not null
@@ -80,4 +81,6 @@ class GroupeInstructeur < ApplicationRecord
   def toggle_routing
     procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
   end
+
+  serialize :routing_rule, LogicSerializer
 end

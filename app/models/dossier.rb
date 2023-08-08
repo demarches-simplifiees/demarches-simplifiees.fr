@@ -668,11 +668,11 @@ class Dossier < ApplicationRecord
   end
 
   def show_groupe_instructeur_details?
-    procedure.routing_enabled? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?)
+    procedure.routing_enabled? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?) && !procedure.feature_enabled?(:routing_rules)
   end
 
   def show_groupe_instructeur_selector?
-    procedure.routing_enabled? && !procedure.feature_enabled?(:procedure_routage_api)
+    procedure.routing_enabled? && !procedure.feature_enabled?(:procedure_routage_api) && !procedure.feature_enabled?(:routing_rules)
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)

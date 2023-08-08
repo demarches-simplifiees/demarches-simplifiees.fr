@@ -163,21 +163,7 @@ class TypeDeChamp < ApplicationRecord
 
   serialize :options, WithIndifferentAccess
 
-  class ConditionSerializer
-    def self.load(condition)
-      if condition.present?
-        Logic.from_h(condition)
-      end
-    end
-
-    def self.dump(condition)
-      if condition.present?
-        condition.to_h
-      end
-    end
-  end
-
-  serialize :condition, ConditionSerializer
+  serialize :condition, LogicSerializer
 
   after_initialize :set_dynamic_type
   after_create :populate_stable_id
