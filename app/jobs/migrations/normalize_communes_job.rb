@@ -16,13 +16,26 @@ class Migrations::NormalizeCommunesJob < ApplicationJob
         end
       end
 
-      if !champ.code_postal? && champ.code_postal_with_fallback?
-        value_json[:code_postal] = champ.code_postal_with_fallback
+      if !champ.code_postal? && code_postal_with_fallback(champ).present?
+        value_json[:code_postal] = code_postal_with_fallback(champ)
       end
 
       if value_json.present?
         champ.update_column(:value_json, value_json)
       end
+    end
+  end
+
+  private
+
+  # We try to extract the postal code from the value, which is the name of the commune and the
+  # postal code in brackets.
+  def code_postal_with_fallback(champ)
+    if champ.value.present?
+      match = champ.value.match(/[^(]\(([^\)]*)\)$/)
+      match[1] if match.present?
+    else
+      nil
     end
   end
 end

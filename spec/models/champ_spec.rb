@@ -146,18 +146,11 @@ describe Champ do
     end
   end
 
-  describe 'for_export', vcr: { cassette_name: 'api_geo_all' } do
+  describe 'for_export' do
     let(:type_de_champ) { create(:type_de_champ) }
     let(:champ) { type_de_champ.champ.build(value: value) }
 
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-    before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-
-      champ.save
-    end
+    before { champ.save }
 
     context 'when type_de_champ is text' do
       let(:value) { '123' }

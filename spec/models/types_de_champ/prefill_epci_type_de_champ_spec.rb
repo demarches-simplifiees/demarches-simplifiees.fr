@@ -4,12 +4,6 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
   let(:procedure) { create(:procedure) }
   let(:type_de_champ) { build(:type_de_champ_epci, procedure: procedure) }
   let(:champ) { create(:champ_epci, type_de_champ: type_de_champ) }
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
 
   describe 'ancestors' do
     subject { described_class.new(type_de_champ, procedure.active_revision) }
@@ -23,16 +17,6 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
     end
     subject(:all_possible_values) { described_class.new(type_de_champ, procedure.active_revision).all_possible_values }
 
-    before do
-      VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_epcis')
-    end
-
-    after do
-      VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_epcis')
-    end
-
     it { expect(all_possible_values).to match(expected_values) }
   end
 
@@ -40,16 +24,6 @@ RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
     let(:departement_code) { departements.pick(:code) }
     let(:epci_code) { APIGeoService.epcis(departement_code).pick(:code) }
     subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
-
-    before do
-      VCR.insert_cassette('api_geo_departements')
-      VCR.insert_cassette('api_geo_epcis')
-    end
-
-    after do
-      VCR.eject_cassette('api_geo_departements')
-      VCR.eject_cassette('api_geo_epcis')
-    end
 
     it { is_expected.to eq([departement_code, epci_code]) }
   end

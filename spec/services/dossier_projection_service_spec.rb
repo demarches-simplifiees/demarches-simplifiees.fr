@@ -1,11 +1,4 @@
 describe DossierProjectionService do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
   describe '#project' do
     subject { described_class.project(dossiers_ids, fields) }
 
@@ -54,7 +47,7 @@ describe DossierProjectionService do
       end
     end
 
-    context 'with commune champ', vcr: { cassette_name: 'api_geo_communes' } do
+    context 'with commune champ' do
       let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :communes }]) }
       let!(:dossier) { create(:dossier, procedure:) }
 

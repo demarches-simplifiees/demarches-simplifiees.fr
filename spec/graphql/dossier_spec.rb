@@ -26,7 +26,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
-  describe 'dossier with champs', vcr: { cassette_name: 'graphql_communes' } do
+  describe 'dossier with champs' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
@@ -48,13 +48,7 @@ RSpec.describe Types::DossierType, type: :graphql do
       }
     end
 
-    let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-    before do
-      allow(Rails).to receive(:cache).and_return(memory_store)
-      Rails.cache.clear
-      dossier.champs_public.second.update(data: address)
-    end
+    before { dossier.champs_public.second.update(data: address) }
 
     it do
       expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"

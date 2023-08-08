@@ -6,14 +6,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
-  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'api_geo_all' } do
+  scenario 'fill a dossier', js: true do
     log_in(user, procedure)
 
     fill_individual

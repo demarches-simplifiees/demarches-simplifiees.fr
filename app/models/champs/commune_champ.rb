@@ -64,7 +64,7 @@ class Champs::CommuneChamp < Champs::TextChamp
 
   def to_s
     if code?
-      "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal_with_fallback})"
+      "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal})"
     else
       value.present? ? value.to_s : ''
     end
@@ -79,15 +79,15 @@ class Champs::CommuneChamp < Champs::TextChamp
   end
 
   def communes
-    if code_postal_with_fallback?
-      APIGeoService.communes_by_postal_code(code_postal_with_fallback)
+    if code_postal?
+      APIGeoService.communes_by_postal_code(code_postal)
     else
       []
     end
   end
 
   def value=(code)
-    if code.blank? || !code_postal_with_fallback?
+    if code.blank? || !code_postal?
       self.code_departement = nil
       self.external_id = nil
       super(nil)
@@ -102,23 +102,6 @@ class Champs::CommuneChamp < Champs::TextChamp
         self.external_id = nil
         super(nil)
       end
-    end
-  end
-
-  def code_postal_with_fallback?
-    code_postal_with_fallback.present?
-  end
-
-  # We try to extract the postal code from the value, which is the name of the commune and the
-  # postal code in brackets. This is temporary until we do a full data migration.
-  def code_postal_with_fallback
-    if code_postal?
-      code_postal
-    elsif value.present?
-      match = value.match(/[^(]\(([^\)]*)\)$/)
-      match[1] if match.present?
-    else
-      nil
     end
   end
 

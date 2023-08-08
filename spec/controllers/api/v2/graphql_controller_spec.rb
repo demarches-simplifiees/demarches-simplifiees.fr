@@ -11,8 +11,6 @@ describe API::V2::GraphqlController do
   let(:dossiers) { [dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
   def compute_checksum_in_chunks(io)
     Digest::MD5.new.tap do |checksum|
       while (chunk = io.read(5.megabytes))
@@ -40,12 +38,7 @@ describe API::V2::GraphqlController do
     blob
   end
 
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-
-    instructeur.assign_to_procedure(procedure)
-  end
+  before { instructeur.assign_to_procedure(procedure) }
 
   let(:query) do
     "{
@@ -407,7 +400,7 @@ describe API::V2::GraphqlController do
         dossier
       end
 
-      context "for individual", vcr: { cassette_name: 'api_geo_all' } do
+      context "for individual" do
         let(:procedure) { create(:procedure, :published, :for_individual, :with_service, :with_all_champs, :with_all_annotations, administrateurs: [admin]) }
         let(:query) do
           "{

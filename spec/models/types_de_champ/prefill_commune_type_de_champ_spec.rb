@@ -3,22 +3,6 @@
 RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
   let(:procedure) { create(:procedure) }
   let(:type_de_champ) { build(:type_de_champ_communes, procedure: procedure) }
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
-  before do
-    VCR.insert_cassette('api_geo_departements')
-    VCR.insert_cassette('api_geo_communes')
-  end
-
-  after do
-    VCR.eject_cassette('api_geo_departements')
-    VCR.eject_cassette('api_geo_communes')
-  end
 
   describe 'ancestors' do
     subject { described_class.new(type_de_champ, procedure.active_revision) }
