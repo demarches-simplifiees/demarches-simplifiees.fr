@@ -6,7 +6,8 @@ module Experts
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
     before_action :check_if_avis_revoked, except: [:index, :procedure]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
-    before_action :set_avis_and_dossier, only: [:show, :instruction, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
+    before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
+    before_action :check_messaging_allowed, only: [:messagerie, :create_commentaire]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -53,6 +54,13 @@ module Experts
     end
 
     def instruction
+      @new_avis = Avis.new
+    end
+
+    def avis_list
+    end
+
+    def avis_new
       @new_avis = Avis.new
     end
 
@@ -135,7 +143,7 @@ module Experts
         extension = params[:format]
         render extension.to_sym => avis.dossier.etablissement.entreprise_bilans_bdf_to_sheet(extension)
       else
-        redirect_to instructeur_avis_path(avis)
+        redirect_to expert_avis_path(avis)
       end
     end
 
@@ -147,6 +155,13 @@ module Experts
     end
 
     private
+
+    def check_messaging_allowed
+      if !@avis.procedure.allow_expert_messaging
+        flash[:alert] = "Vous n'êtes pas autorisé à acceder à la messagerie"
+        redirect_to expert_avis_url(avis.procedure, avis)
+      end
+    end
 
     def redirect_if_no_sign_up_needed
       avis = Avis.find(params[:id])
@@ -179,7 +194,7 @@ module Experts
     end
 
     def avis_params
-      params.require(:avis).permit(:answer, :piece_justificative_file)
+      params.require(:avis).permit(:answer, :piece_justificative_file, :question_answer)
     end
 
     def commentaire_params

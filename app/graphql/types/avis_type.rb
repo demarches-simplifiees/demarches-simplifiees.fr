@@ -4,6 +4,8 @@ module Types
 
     field :question, String, null: false, method: :introduction
     field :reponse, String, null: true, method: :answer
+    field :question_label, String, null: true
+    field :question_answer, Boolean, null: true
     field :date_question, GraphQL::Types::ISO8601DateTime, null: false, method: :created_at
     field :date_reponse, GraphQL::Types::ISO8601DateTime, null: true, method: :updated_at
 

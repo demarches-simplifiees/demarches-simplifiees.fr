@@ -25,24 +25,24 @@ Cela évite l’accès récursif aux dossiers."
 
     field :duree_conservation_dossiers, Int, "Durée de conservation des dossiers en mois.", null: false
 
-    field :demarche_url, String, null: true
-    field :site_web_url, String, null: true
-    field :dpo_url, String, null: true
+    field :demarche_url, String, "URL pour commencer la démarche", null: true
+    field :site_web_url, String, "URL où les usagers trouvent le lien vers la démarche", null: true
+    field :dpo_url, String, "URL ou email pour contacter le Délégué à la Protection des Données (DPO)", null: true
     field :notice_url, String, null: true
-    field :cadre_juridique_url, String, null: true
+    field :cadre_juridique_url, String, "URL du cadre juridique qui justifie le droit de collecter les données demandées dans la démarche", null: true
 
     field :opendata, Boolean, null: false
-    field :tags, [String], null: false
-    field :zones, [String], null: false
+    field :tags, [String], "mots ou expressions attribués à la démarche pour décrire son contenu et la retrouver", null: false
+    field :zones, [String], "ministère(s) ou collectivité(s) qui mettent en oeuvre la démarche", null: false
 
     field :revision, Types::RevisionType, null: false
     field :service, Types::ServiceType, null: true
 
     field :logo, Types::File, null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
-    field :notice, Types::File, null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
-    field :deliberation, Types::File, null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
+    field :notice, Types::File, "notice explicative de la démarche", null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
+    field :deliberation, Types::File, "fichier contenant le cadre juridique", null: true, extensions: [{ Extensions::Attachment => { root: :procedure } }]
 
-    field :dossiers_count, Int, null: false, internal: true
+    field :dossiers_count, Int, "nb de dossiers déposés", null: false, internal: true
 
     def service
       Loaders::Record.for(Service).load(procedure.service_id)

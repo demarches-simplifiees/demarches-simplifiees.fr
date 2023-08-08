@@ -37,7 +37,6 @@ fr:
       accessibilite:
         label: "Accessibilité : partiellement conforme"
         title: "Consulter notre déclaration d’accessibilité"
-        url: "https://doc.demarches-simplifiees.fr/declaration-daccessibilite"
       api_doc:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
@@ -67,7 +66,6 @@ fr:
       mentions_legales:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"
-        url: "https://doc.demarches-simplifiees.fr/mentions-legales"
       releases:
         label: "Nouveautés"
         title: "Les dernière mises à jour de la plateforme"

@@ -261,7 +261,7 @@ describe DossierRebaseConcern do
         { type: :datetime, stable_id: 103 },
         { type: :yes_no, stable_id: 104 },
         { type: :integer_number, stable_id: 105 }
-      ])
+      ], types_de_champ_private: [{ type: :text, stable_id: 11 }])
     end
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { procedure.active_revision.types_de_champ }
@@ -282,6 +282,9 @@ describe DossierRebaseConcern do
     let(:rebased_number_champ) { dossier.champs_public.find { _1.stable_id == 105 } }
 
     let(:rebased_new_repetition_champ) { dossier.champs_public.find { _1.libelle == "une autre repetition" } }
+
+    let(:private_text_type_de_champ) { types_de_champ.find { _1.stable_id == 11 } }
+    let(:rebased_private_text_champ) { dossier.champs_private.find { _1.stable_id == 11 } }
 
     before do
       procedure.publish!
@@ -354,6 +357,16 @@ describe DossierRebaseConcern do
       expect(rebased_new_repetition_champ.rebased_at).not_to be_nil
       expect(rebased_new_repetition_champ.rows.size).to eq(1)
       expect(rebased_new_repetition_champ.rows[0].size).to eq(2)
+
+      dossier.passer_en_construction!
+      procedure.draft_revision.find_and_ensure_exclusive_use(private_text_type_de_champ.stable_id).update(type_champ: TypeDeChamp.type_champs.fetch(:textarea))
+      procedure.publish_revision!
+      perform_enqueued_jobs
+      procedure.reload
+      dossier.reload
+
+      expect(rebased_private_text_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:textarea))
+      expect(rebased_private_text_champ.type).to eq("Champs::TextareaChamp")
     end
   end
 

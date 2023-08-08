@@ -8,6 +8,8 @@
 #  confidentiel         :boolean          default(FALSE), not null
 #  email                :string
 #  introduction         :text
+#  question_answer      :boolean
+#  question_label       :string
 #  reminded_at          :datetime
 #  revoked_at           :datetime
 #  created_at           :datetime         not null
@@ -41,9 +43,11 @@ class Avis < ApplicationRecord
 
   validates :email, format: { with: Devise.email_regexp, message: "n'est pas valide" }, allow_nil: true
   validates :claimant, presence: true
+  validates :question_answer, inclusion: { in: [true, false] }, on: :update, if: -> { question_label.present? }
   validates :piece_justificative_file, size: { less_than: FILE_MAX_SIZE }
   validates :introduction_file, size: { less_than: FILE_MAX_SIZE }
   before_validation -> { sanitize_email(:email) }
+  before_validation -> { strip_attribute(:question_label) }
 
   default_scope { joins(:dossier) }
   scope :with_answer, -> { where.not(answer: nil) }
@@ -67,8 +71,10 @@ class Avis < ApplicationRecord
   def spreadsheet_columns
     [
       ['Dossier ID', dossier_id.to_s],
-      ['Question / Introduction', :introduction],
+      ['Introduction', :introduction],
       ['Réponse', :answer],
+      ['Question', :question_label],
+      ['Réponse oui/non', :question_answer],
       ['Créé le', :created_at],
       ['Répondu le', :updated_at],
       ['Instructeur', claimant&.email],
@@ -105,5 +111,11 @@ class Avis < ApplicationRecord
   def remind_by!(revocator)
     return false if !remindable_by?(revocator) || answer.present?
     update!(reminded_at: Time.zone.now)
+  end
+
+  private
+
+  def strip_attribute(attribute)
+    self[attribute] = self[attribute]&.strip&.presence
   end
 end

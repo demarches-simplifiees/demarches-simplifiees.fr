@@ -101,7 +101,7 @@ describe APIToken, type: :model do
       end
 
       it do
-        expect(api_token.procedure_ids).to eq([procedure.id, other_procedure.id])
+        expect(api_token.procedure_ids).to match_array([procedure.id, other_procedure.id])
         expect(api_token.allowed_procedure_ids).to eq([procedure.id])
         expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true)
       end

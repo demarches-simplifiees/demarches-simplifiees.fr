@@ -242,12 +242,18 @@ class Dossier < ApplicationRecord
       .merge(visible_by_user.or(state_not_en_construction))
   }
   scope :visible_by_user_or_administration, -> { visible_by_user.or(visible_by_administration) }
+  scope :hidden_for_administration, -> {
+    state_not_brouillon.hidden_by_administration.or(state_en_construction.hidden_by_user)
+  }
   scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
 
-  scope :order_by_updated_at, -> (order = :desc) { order(updated_at: order) }
-  scope :order_by_created_at, -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
-  scope :updated_since,       -> (since) { where('dossiers.updated_at >= ?', since) }
-  scope :created_since,       -> (since) { where('dossiers.depose_at >= ?', since) }
+  scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order) }
+  scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
+  scope :updated_since,                  -> (since) { where('dossiers.updated_at >= ?', since) }
+  scope :created_since,                  -> (since) { where('dossiers.depose_at >= ?', since) }
+  scope :hidden_by_user_since,           -> (since) { where('dossiers.hidden_by_user_at NOT NULL AND dossiers.hidden_by_user_at >= ?', since) }
+  scope :hidden_by_administration_since, -> (since) { where('dossiers.hidden_by_administration_at NOT NULL AND dossiers.hidden_by_administration_at >= ?', since) }
+  scope :hidden_since,                   -> (since) { hidden_by_user_since(since).or(hidden_by_administration_since(since)) }
 
   scope :with_type_de_champ, -> (stable_id) {
     joins('INNER JOIN champs ON champs.dossier_id = dossiers.id INNER JOIN types_de_champ ON types_de_champ.id = champs.type_de_champ_id')

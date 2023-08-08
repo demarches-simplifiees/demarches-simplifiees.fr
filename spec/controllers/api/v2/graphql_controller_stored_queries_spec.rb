@@ -9,6 +9,7 @@ describe API::V2::GraphqlController do
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
   let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
+  let(:dossier_accepte) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
   let(:dossiers) { [dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
   let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
@@ -102,6 +103,40 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to be_nil
           expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
           expect(gql_data[:demarche][:activeRevision]).not_to be_nil
+        }
+      end
+
+      context 'include deleted Dossiers' do
+        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true } }
+        let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier_accepte) }
+
+        before { deleted_dossier }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+          expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(1)
+          expect(gql_data[:demarche][:deletedDossiers][:nodes].first[:id]).to eq(deleted_dossier.to_typed_id)
+          expect(gql_data[:demarche][:deletedDossiers][:nodes].first[:dateSupression]).to eq(deleted_dossier.deleted_at.iso8601)
+        }
+      end
+
+      context 'include pending deleted Dossiers' do
+        let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true } }
+
+        before {
+          dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
+          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+        }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
         }
       end
     end

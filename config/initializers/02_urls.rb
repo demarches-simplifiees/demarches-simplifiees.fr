@@ -31,9 +31,8 @@ INSTRUCTEUR_TUTORIAL_URL = [DOC_URL, "dematerialiser-un-formulaire-1", "tutoriel
 CADRE_JURIDIQUE_URL = [ADMINISTRATEUR_TUTORIAL_URL, "cadre-juridique"].join("#") # TODO version polynésie
 LISTE_DES_DEMARCHES_URL = "https://www.service-public.pf/demarches-en-ligne"
 CGU_URL = ENV.fetch("CGU_URL", [DOC_URL, "cgu"].join("/"))
-RGPD_URL = [CGU_URL, "rgpd"].join("#")
-MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", [CGU_URL, "mentions-legales"].join("#"))
-ACCESSIBILITE_URL = ENV.fetch("ACCESSIBILITE_URL", [DOC_URL, "declaration-daccessibilite"].join("/"))
+MENTIONS_LEGALES_URL = ENV.fetch("MENTIONS_LEGALES_URL", "/mentions-legales")
+ACCESSIBILITE_URL = ENV.fetch("ACCESSIBILITE_URL", "/declaration-accessibilite")
 API_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "graphql"].join("/")
 WEBHOOK_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "webhook"].join("/")
 ARCHIVAGE_DOC_URL = [FR_DOC_URL, "pour-aller-plus-loin", "archivage-longue-duree-des-demarches"].join("/")
@@ -46,6 +45,8 @@ MATOMO_IFRAME_URL = ENV.fetch("MATOMO_IFRAME_URL", "https://#{ENV.fetch('MATOMO_
 CSP_REPORT_URI = ENV.fetch("CSP_REPORT_URI", "")
 
 #----- Polynesian variables
+
+RGPD_URL = [CGU_URL, "rgpd"].join("#")
 
 API_TE_FENUA_URL = ENV.fetch("API_TE_FENUA_URL", "https://www.tefenua.gov.pf/api")
 

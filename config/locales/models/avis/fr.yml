@@ -7,6 +7,7 @@ fr:
         answer: "Réponse"
         claimant: Demandeur
         confidentiel: confidentiel
+        question_answer: "Réponse oui/non"
   helpers:
     label:
       invite_linked_dossiers:
@@ -14,8 +15,24 @@ fr:
         other: Inviter aussi l’expert sur les dossiers liés n° %{ids}
       revoke: Révoquer la demande d’avis
       remind: Relancer l’expert
-    hint:
-      confidentiel: "Cet avis n’est pas affiché avec les autres experts consultés"
+      question_label: Posez une question à l'expert
+      question_label_hint: (facultatif) l'expert pourra répondre par oui/non
+      introduction: Message d'introduction
+      question_answer:
+        true: oui
+        false: non
     confirmation:
       revoke: "Souhaitez-vous révoquer la demande d’avis à %{email} ?"
       remind: "Souhaitez-vous relancer %{email} ?"
+    sidemenu:
+      give_avis: Donner votre avis
+      see_avis: Voir les avis
+      ask_avis: Demander un avis
+      ask_new_avis: Demander un nouvel avis
+    information_text:
+      no_new_avis_text: Le dossier a été traité
+      no_new_avis_text_detail: Les demandes d'avis ne sont plus autorisées
+      unauthorized_avis_text: Cette démarche n’autorise pas la demande d’avis à un expert.
+      unauthorized_avis_text_detail: Veuillez contacter votre administrateur
+      empty_text: Aucun avis.
+      empty_text_detail: Aucun avis n’est disponible sur ce dossier.

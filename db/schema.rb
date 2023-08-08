@@ -165,6 +165,8 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
     t.string "email"
     t.bigint "experts_procedure_id"
     t.text "introduction"
+    t.boolean "question_answer"
+    t.string "question_label"
     t.datetime "reminded_at"
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false
@@ -693,6 +695,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
 
   create_table "procedures", id: :serial, force: :cascade do |t|
     t.string "aasm_state", default: "brouillon"
+    t.boolean "allow_expert_messaging", default: true, null: false
     t.boolean "allow_expert_review", default: true, null: false
     t.string "api_entreprise_token"
     t.text "api_particulier_scopes", default: [], array: true

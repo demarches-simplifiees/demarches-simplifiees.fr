@@ -270,8 +270,10 @@ describe ProcedureExportService do
       it 'should have headers' do
         expect(avis_sheet.headers).to eq([
           "Dossier ID",
-          "Question / Introduction",
+          "Introduction",
           "Réponse",
+          "Question",
+          "Réponse oui/non",
           "Créé le",
           "Répondu le",
           "Instructeur",

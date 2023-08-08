@@ -1,0 +1,43 @@
+en:
+  users:
+    procedure_footer:
+      contact:
+        email:
+          link: "By email %{service_email}"
+      legals:
+        data_retention: "%{application_name} will keep your file: %{duree_conservation_dossiers_dans_ds} months"
+      dematerialisation:
+        link: "https://www.service-public.pf/demarches-en-ligne/"
+  views:
+    legal_notice:
+      title: "Legal Notices"
+      editing: "Editor"
+      editing_content:
+        line_one: "Direction of Modernization and Reforms of Administration of French Polynesia (DMRA)"
+        line_two: "Phone : 40.47.24.60 - Mail : secretariat@modernisation.gov.pf"
+        line_three: "BP 2551 - 98713 Papeete, French Polynesia"
+      direction: "Publishing director"
+      direction_content: "Mr. Eric DEAT, Director of Modernization and Reforms of Administration of French Polynesia."
+      hosting: "Hosting provider"
+      hosting_content:
+        line_one: "Direction of Information Systems of french Polynésia (DSI)"
+        line_two: "TAHITI number 004507 001"
+        line_three: "Phone : (689) 40.54.43.54 - Mail : secretariat@informatique.gov.pf"
+        line_four: "BP 4574- 98713 Papeete Tahiti French Polynesia"
+        line_five: "Immeuble Toriki, Rue Dumont d’Urville, 98713 Papeete, French Polynesia"
+    accessibility_statement:
+      line_two: "This accessibility statement applies to %{app_name} (%{host}) which is based on Démarches-Simplifiées.fr site."
+      compliance:
+        line_one_html: "The website Mes-Démarches is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
+      results:
+        title: "Test results"
+        programme:
+          label: "Follow the Démarches-Simplifiées accessibility continuous improvement programme"
+          title: "Follow the Démarches-Simplifiées accessibility continuous improvement programme - new tab"
+      contact:
+        intro: "If you are unable to access a piece of content or service, you can contact the Mes-Démarches manager to be directed to an accessible alternative or obtain the content in another form."
+        infos:
+          email_html: "By email:"
+          phone_html: "Contact DMRA by phone:"
+          adress_html: "By post : BP 2551 - 98713 Papeete, French Polynesia"
+
