@@ -59,6 +59,8 @@ class Avis < ApplicationRecord
   scope :en_construction_expired, -> { unscope(:joins).where(dossier: Dossier.en_construction_expired) }
   scope :not_hidden_by_administration, -> { where(dossiers: { hidden_by_administration_at: nil }) }
   scope :not_revoked, -> { where(revoked_at: nil) }
+  scope :not_termine, -> { where.not(dossiers: { state: Dossier::TERMINE }) }
+
   # The form allows subtmitting avis requests to several emails at once,
   # hence this virtual attribute.
   attr_accessor :emails

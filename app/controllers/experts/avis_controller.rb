@@ -13,7 +13,7 @@ module Experts
     DONNES_STATUS   = 'donnes'
 
     def index
-      avis = current_expert.avis.not_revoked.includes(dossier: [groupe_instructeur: :procedure]).not_hidden_by_administration
+      avis = current_expert.avis.not_revoked.not_termine.includes(dossier: [groupe_instructeur: :procedure]).not_hidden_by_administration
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
 
@@ -35,7 +35,7 @@ module Experts
         redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cette démarche." }) and return
       end
 
-      @avis_a_donner = expert_avis.without_answer
+      @avis_a_donner = expert_avis.not_termine.without_answer
       @avis_donnes = expert_avis.with_answer
 
       @statut = params[:statut].presence || A_DONNER_STATUS

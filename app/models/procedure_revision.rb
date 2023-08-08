@@ -430,12 +430,14 @@ class ProcedureRevision < ApplicationRecord
 
   def conditions_are_valid?
     public_tdcs = types_de_champ_public.to_a
+      .flat_map { _1.repetition? ? children_of(_1) : _1 }
 
     public_tdcs
-      .flat_map { _1.repetition? ? children_of(_1) : _1 }
       .map.with_index
       .filter_map { |tdc, i| tdc.condition? ? [tdc, i] : nil }
-      .map { |tdc, i| [tdc, tdc.condition.errors(public_tdcs.take(i))] }
+      .map do |tdc, i|
+        [tdc, tdc.condition.errors(public_tdcs.take(i))]
+      end
       .filter { |_tdc, errors| errors.present? }
       .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }
   end
