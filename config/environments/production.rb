@@ -88,6 +88,12 @@ Rails.application.configure do
       authentication:       ENV.fetch("SMTP_AUTHENTICATION"),
       enable_starttls_auto: ENV.fetch("SMTP_TLS").present?
     }
+  elsif ENV['SENDMAIL_ENABLED'] == 'enabled'
+    config.action_mailer.delivery_method = :sendmail
+    config.action_mailer.sendmail_settings = {
+      location: ENV.fetch("SENDMAIL_LOCATION"),
+      arguments: ENV.fetch("SENDMAIL_ARGUMENTS")
+    }
   else
     sendinblue_weigth = ENV.fetch('SENDINBLUE_BALANCING_VALUE') { 0 }.to_i
     dolist_weigth = ENV.fetch('DOLIST_BALANCING_VALUE') { 0 }.to_i

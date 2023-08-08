@@ -49,7 +49,7 @@
     "use-debounce": "^9.0.3",
     "whatwg-fetch": "^3.0.0",
     "yet-another-abortcontroller-polyfill": "^0.0.4",
-    "zod": "^3.21.4"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@2fd/graphdoc": "^2.4.0",

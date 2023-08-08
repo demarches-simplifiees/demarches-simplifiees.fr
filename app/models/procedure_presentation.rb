@@ -340,6 +340,22 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
+  def sortable?(field)
+    sort['table'] == field['table'] && sort['column'] == field['column']
+  end
+
+  def aria_sort(order, field)
+    if sortable?(field)
+      if order == 'asc'
+        { "aria-sort": "ascending" }
+      elsif order == 'desc'
+        { "aria-sort": "descending" }
+      end
+    else
+      {}
+    end
+  end
+
   private
 
   def field_id(field)
