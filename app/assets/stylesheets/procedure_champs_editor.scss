@@ -67,7 +67,7 @@
     }
 
     .head {
-      background-color: #D9ECFF;
+      background-color: #FAFDFF;
 
       select {
         margin-bottom: 0px;
@@ -75,23 +75,10 @@
     }
 
     &.type-header-section {
-      &,
+      background-color: $blue-cumulus-950;
+
       .head {
-        background-color: $blue-france-500;
-      }
-
-      .handle.icon {
-        filter: contrast(0%) brightness(200%);
-        opacity: 0.9;
-      }
-
-      label {
-        color: $light-grey;
-      }
-
-      .conditionnel,
-      p {
-        color: $white;
+        background-color: $blue-cumulus-950;
       }
     }
 
