@@ -9,7 +9,6 @@ describe 'root/_footer.html.haml', type: :view do
     expect(subject).to have_link('Documentation', href: DOC_URL)
     expect(CGU_URL).to include('mes-demarches.gitbook.io')
     expect(RGPD_URL).to include('mes-demarches.gitbook.io')
-    expect(MENTIONS_LEGALES_URL).to include('mes-demarches.gitbook.io')
     expect(DOC_URL).to include('mes-demarches.gitbook.io')
   end
 

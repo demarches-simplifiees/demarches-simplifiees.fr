@@ -103,14 +103,14 @@ en:
     legal_notice:
       title: "Legal Notices"
       editing: "Editor"
-      editing_content: 
+      editing_content:
         line_one: "Interministerial Directorate for Digital Affairs (DINUM)"
       direction: "Publishing Department"
       direction_content: "Ms. Stéphanie Schaer , Interministerial Director of Digital Affairs."
       hosting: "Hosting provider"
       hosting_content:
         line_four: "VAT NUMBER: FR 22 424 761 419"
-        line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."   
+        line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."
     commencer:
       show:
         start_procedure: Start the procedure
