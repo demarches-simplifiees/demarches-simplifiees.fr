@@ -111,6 +111,99 @@ en:
       hosting_content:
         line_four: "VAT NUMBER: FR 22 424 761 419"
         line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."
+    accessibility_statement:
+      title: "Accessibility statement"
+      line_one: "DINUM is committed to making its service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
+      line_two: "This accessibility statement applies to %{app_name} (%{host})."
+      compliance:
+        title: "Compliance status"
+        line_one_html: "The website Démarches simplifiées is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
+      results:
+        title: "Test results"
+        line_one: "As of 1 April 2023, the average compliance rate of the site is 75%."
+        line_three: "Users can follow the measures taken by the service to improve the accessibility of the site at the following address:"
+        programme:
+          label: "Follow the DS accessibility continuous improvement programme"
+          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
+          title: "Follow the DS accessibility continuous improvement programme - new tab"
+      no_accessible:
+        title: "Non-accessible content"
+        subtitle_one: "Non-compliances"
+        examples_html: "Examples :
+          <ul>
+            <li>The documentation pages are not fully accessible and are managed by a third party tool.</li>
+            <li>The same applies to the FAQ pages.</li>
+          </ul>
+          <p>We are taking this into account for the future development of the site's pages.</p>
+          "
+      preparation:
+        title: "Preparation of this accessibility declaration"
+        intro: "This declaration was drawn up on 27 April 2022. It was updated on 1 April 2023."
+        subtitle_one: "Technologies used to create the site"
+        techno_ruby:
+          label: "Ruby on Rails"
+          url: "https://rubyonrails.org/"
+          title: "Ruby on Rails - new tab"
+        subtitle_two: "Test environment"
+        environment_intro: "The content rendering checks were carried out on the basis of a combination provided by the RGAA reference base, with the following versions:"
+        environment_one: "Firefox 111.0.1 and NVDA 2022.4"
+        environment_two: "Safari and VoiceOver (version available on macOS Monterey 12.6.3)"
+        environment_three: "Edge and JAWS 2020"
+        subtitle_three: "Tools for assessing accessibility"
+        tool_one: "RGAA Assistant (Firefox extension)"
+        tool_two: "Web Developer (Firefox extension)"
+        tool_three: "HeadingsMap (Firefox extension)"
+        tool_four: "Colour Contrast Analyser application"
+        tool_five: "Contrast Finder"
+        tool_six: "Stylus (Firefox extension)"
+        subtitle_four: "Pages of the site subject to the compliance check"
+        page_one:
+          label: "Home"
+        page_two:
+          label: "Contact"
+        page_three:
+          label: "Legal notices"
+        page_four:
+          label: "Accessibility statement"
+        page_five:
+          label: "Authentification"
+        page_six: "Home page - User search results"
+        page_seven:
+          label: "FAQ"
+          url: "https://faq.demarches-simplifiees.fr/"
+          title: "FAQ - new tab"
+        page_eight:
+          label: "FAQ - User (submission of a file)"
+          url: "https://faq.demarches-simplifiees.fr/collection/17-usager-depot-dun-dossier"
+          title: "FAQ - User (submission of a file) - new tab"
+        page_nine: "Documentation - Presentation"
+        page_ten: "Documentation - Start-up"
+        page_eleven: "Documentation - General"
+        page_twelve: "File creation - Identity"
+        page_thirteen: "File creation - Draft"
+        page_fourteen: "Dossier - Summary"
+        page_fifteen: "Dossier - Application"
+        page_sixteen: "Dossier - Messaging"
+      contact:
+        title: "Feedback and contact"
+        intro: "If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form."
+        infos:
+          email_html: "By email:"
+          phone_html: "Contact DINUM by phone:"
+          adress_html: "By post : DINUM , 20 avenue de Ségur 75007 Paris"
+      remedies:
+        title: "Remedies"
+        line_one: "If you notice a lack of accessibility that prevents you from accessing a content or functionality of the site, and you report it to us and do not manage to obtain a rapid response from us, you are entitled to send your complaints or a request for referral to the Rights Defender."
+        line_two: "Several means are available to you:"
+        remedies_one:
+          label: "A contact form"
+          url: "https://www.defenseurdesdroits.fr/nous-contacter"
+          title: "A contact form - new tab"
+        remedies_two:
+          label: "Contact the delegate of the Human Rights Defender in your region"
+          url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
+          title: "Contact the delegate of the Human Rights Defender in your region - new tab"
+        remedies_three: "Send a letter by post (free of charge, do not put a stamp) Défenseur des droits Libre réponse 71120 75342 Paris CEDEX 07"
     commencer:
       show:
         start_procedure: Start the procedure
