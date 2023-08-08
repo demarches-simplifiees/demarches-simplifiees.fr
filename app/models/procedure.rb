@@ -29,7 +29,6 @@
 #  instructeurs_self_management_enabled      :boolean
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
-#  lien_demarche                             :string
 #  lien_dpo                                  :string
 #  lien_notice                               :string
 #  lien_site_web                             :string
