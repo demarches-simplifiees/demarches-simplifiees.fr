@@ -15,10 +15,6 @@ class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
     end
   end
 
-  def departement_input_id
-    "#{@champ.input_id}-departement"
-  end
-
   def departement_select_options
     { selected: @champ.code_departement }.merge(@champ.mandatory? ? { prompt: '' } : { include_blank: '' })
   end

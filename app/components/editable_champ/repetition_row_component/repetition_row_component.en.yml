@@ -1,0 +1,4 @@
+---
+en:
+  delete: Destroy element
+  delete_title: "Destroy the n°%{row_number} element"

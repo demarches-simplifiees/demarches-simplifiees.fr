@@ -1,7 +1,7 @@
 .container.dossier-edit
   - if dossier.champs_private.present?
     %section.counter-start-header-section
-      = render Attachment::DeleteFormComponent.new
+      = render NestedForms::FormOwnerComponent.new
       = form_for dossier, url: annotations_instructeur_dossier_path(dossier.procedure, dossier), html: { class: 'form', multipart: true } do |f|
         - dossier.champs_private.each do |champ|
           = fields_for champ.input_name, champ do |form|
