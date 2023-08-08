@@ -18,7 +18,7 @@ class TypeDeChamp < ApplicationRecord
   self.ignored_columns = [:migrated_parent, :revision_id, :parent_id, :order_place]
 
   FILE_MAX_SIZE = 200.megabytes
-  FEATURE_FLAGS = { 'visa' => 'visa', 'tefenua' => 'visa' }
+  FEATURE_FLAGS = { 'visa' => 'visa', 'tefenua' => 'tefenua' }
 
   INSTANCE_TYPE_CHAMPS = {
     nationalites: 'nationalites',
@@ -583,7 +583,7 @@ class TypeDeChamp < ApplicationRecord
 
   def self.refresh_after_update?(type_champ)
     case type_champ
-    when type_champs.fetch(:epci), type_champs.fetch(:visa)
+    when type_champs.fetch(:epci), type_champs.fetch(:communes), type_champs.fetch(:visa)
       true
     else
       false

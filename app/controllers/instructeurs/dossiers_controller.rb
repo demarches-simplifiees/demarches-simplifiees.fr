@@ -31,8 +31,8 @@ module Instructeurs
 
     def geo_data
       send_data dossier.to_feature_collection.to_json,
-                type: 'application/json',
-                filename: "dossier-#{dossier.id}-features.json"
+        type: 'application/json',
+        filename: "dossier-#{dossier.id}-features.json"
     end
 
     def apercu_attestation
@@ -333,9 +333,9 @@ module Instructeurs
 
     def champs_private_params
       champs_params = params.require(:dossier).permit(champs_private_attributes: [
-        :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, :value, value: [],
+        :id, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, :value, value: [],
         champs_attributes: [
-          :id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :departement, :code_departement, value: []
+          :id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: []
         ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
       champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}

@@ -432,7 +432,16 @@ type Commune {
   Le code INSEE
   """
   code: String!
+
+  """
+  Le nom de la commune
+  """
   name: String!
+
+  """
+  Le code postal
+  """
+  postalCode: String
 }
 
 type CommuneChamp implements Champ {

@@ -3,29 +3,20 @@ module Types::Champs
     implements Types::ChampType
 
     class CommuneType < Types::BaseObject
-      field :name, String, null: false
+      field :name, String, "Le nom de la commune", null: false
       field :code, String, "Le code INSEE", null: false
+      field :postal_code, String, "Le code postal", null: true, method: :code_postal
     end
 
     field :commune, CommuneType, null: true
     field :departement, Types::Champs::DepartementChampType::DepartementType, null: true
 
     def commune
-      if object.code?
-        {
-          name: object.to_s,
-          code: object.code
-        }
-      end
+      object if object.code?
     end
 
     def departement
-      if object.departement?
-        {
-          name: object.name_departement,
-          code: object.code_departement
-        }
-      end
+      object.departement if object.departement?
     end
   end
 end
