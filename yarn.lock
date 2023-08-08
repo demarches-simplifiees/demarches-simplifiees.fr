@@ -1155,28 +1155,28 @@
     "@babel/helper-validator-identifier" "^7.19.1"
     to-fast-properties "^2.0.0"
 
-"@coldwired/actions@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.11.0.tgz#b50f833074ff4cd0b80afe022efb9c44b048b21a"
-  integrity sha512-IIF1fCCPWRywUfF1nG0QvOzjqKZWKBoniyS2qEJbejpE5FB17eohLIG4GZpkxFtzW+yb96ASRcqAFYcmMEjmYQ==
+"@coldwired/actions@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/actions/-/actions-0.11.1.tgz#1e2c387dcaadfd4d1d319a9611ab46695ad0726d"
+  integrity sha512-1KX5sjFCtOiLawxCUIq/oYboVE6t6ELKXJto+E7uMmERoHN/2lrr0JmmX5bIsjaHGeqTzZUweOa7Sp705kexIQ==
   dependencies:
-    "@coldwired/utils" "^0.10.0"
+    "@coldwired/utils" "^0.11.1"
     morphdom "^2.7.0"
     tiny-invariant "^1.3.1"
 
-"@coldwired/turbo-stream@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.11.0.tgz#fef5338cf95c5e331aa229c5edda92383bc6a05d"
-  integrity sha512-Ty1xvjBzqp9dXZfibH6mYTgESmccxe6utG9wZbla+GcsibgCDJJ7NWQEs13RNUhVeCeSRyDL8Ho//UpwqFUEHg==
+"@coldwired/turbo-stream@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/turbo-stream/-/turbo-stream-0.11.1.tgz#0f0f710422f61700cb8d8d8368799dbce64dd083"
+  integrity sha512-i8ubx6EeLAw84KGYxnxZUlEgVidBmAMCItZcgM3fpv9EN6f4tt3rc53sA+0wAECeZoP6FmqvkNxlPuFIMlBo3A==
   dependencies:
-    "@coldwired/actions" "^0.11.0"
-    "@coldwired/utils" "^0.10.0"
+    "@coldwired/actions" "^0.11.1"
+    "@coldwired/utils" "^0.11.1"
     tiny-invariant "^1.3.1"
 
-"@coldwired/utils@^0.10.0":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.10.0.tgz#9d7fd3b3abc437db39abf714b263b55afa2fcc43"
-  integrity sha512-5rbSe+k60GgXb55uVvqloest7JWSdSIwRCSirs/u7JWWv6UP+UuYEYQjCpgQVTqBNwYMXiaB843VnWApxsf8oQ==
+"@coldwired/utils@^0.11.1":
+  version "0.11.1"
+  resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.11.1.tgz#d126246ab66591467e9e4c765769f133f6236ddb"
+  integrity sha512-vuW1hVhD5U4NX/0dl+fT4RL92T5fEITwc9l/DnaBoP5SAuCAVRnHCWcdyROGz55E4WvSXFqAHD6qkxRwOKG2og==
 
 "@emotion/is-prop-valid@^0.8.2":
   version "0.8.8"
