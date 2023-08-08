@@ -1,4 +1,11 @@
 describe DossierProjectionService do
+  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
+
+  before do
+    allow(Rails).to receive(:cache).and_return(memory_store)
+    Rails.cache.clear
+  end
+
   describe '#project' do
     subject { described_class.project(dossiers_ids, fields) }
 
@@ -44,6 +51,34 @@ describe DossierProjectionService do
         expect(result[0].columns[0]).to be nil
         expect(result[1].columns[0]).to eq('champ_1')
         expect(result[2].columns[0]).to eq('champ_2')
+      end
+    end
+
+    context 'with commune champ', vcr: { cassette_name: 'api_geo_communes' } do
+      let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :communes }]) }
+      let!(:dossier) { create(:dossier, procedure:) }
+
+      let(:dossiers_ids) { [dossier.id] }
+      let(:fields) do
+        [
+          {
+            "table" => "type_de_champ",
+            "column" => procedure.active_revision.types_de_champ_public[0].stable_id.to_s
+          }
+        ]
+      end
+
+      before do
+        dossier.champs_public.first.update(code_postal: '63290')
+        dossier.champs_public.first.update(value: '63102')
+      end
+
+      let(:result) { subject }
+
+      it 'returns champ value' do
+        expect(result.length).to eq(1)
+        expect(result[0].dossier_id).to eq(dossier.id)
+        expect(result[0].columns[0]).to eq('Châteldon (63290)')
       end
     end
 
