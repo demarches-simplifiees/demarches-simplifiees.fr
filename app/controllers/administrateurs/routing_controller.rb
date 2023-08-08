@@ -5,26 +5,29 @@ module Administrateurs
     before_action :retrieve_procedure
 
     def update
-      left = champ_value(targeted_champ)
-      right = parsed_value
+      left = targeted_champ
 
-      @procedure.groupe_instructeurs.find(groupe_instructeur_id).update!(routing_rule: ds_eq(left, right))
+      right = targeted_champ_changed? ? empty : value
+
+      groupe_instructeur.update!(routing_rule: ds_eq(left, right))
     end
 
     private
 
+    def targeted_champ_changed?
+      targeted_champ != groupe_instructeur.routing_rule&.left
+    end
+
     def targeted_champ
-      routing_params[:targeted_champ].to_i
+      Logic.from_json(routing_params[:targeted_champ])
     end
 
     def value
-      routing_params[:value]
+      Logic.from_json(routing_params[:value])
     end
 
-    def parsed_value
-      term = Logic.from_json(value) rescue nil
-
-      term.presence || constant(value)
+    def groupe_instructeur
+      @groupe_instructeur ||= @procedure.groupe_instructeurs.find(groupe_instructeur_id)
     end
 
     def groupe_instructeur_id

@@ -702,6 +702,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
     t.datetime "closed_at"
     t.datetime "created_at", null: false
     t.string "declarative_with_state"
+    t.bigint "defaut_groupe_instructeur_id"
     t.string "description"
     t.string "direction"
     t.datetime "dossiers_count_computed_at"
@@ -747,6 +748,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
     t.bigint "zone_id"
     t.index ["api_particulier_sources"], name: "index_procedures_on_api_particulier_sources", using: :gin
     t.index ["declarative_with_state"], name: "index_procedures_on_declarative_with_state"
+    t.index ["defaut_groupe_instructeur_id"], name: "index_procedures_on_defaut_groupe_instructeur_id"
     t.index ["draft_revision_id"], name: "index_procedures_on_draft_revision_id"
     t.index ["hidden_at"], name: "index_procedures_on_hidden_at"
     t.index ["libelle"], name: "index_procedures_on_libelle"
@@ -1031,6 +1033,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
   add_foreign_key "procedure_revisions", "attestation_templates"
   add_foreign_key "procedure_revisions", "dossier_submitted_messages"
   add_foreign_key "procedure_revisions", "procedures"
+  add_foreign_key "procedures", "groupe_instructeurs", column: "defaut_groupe_instructeur_id"
   add_foreign_key "procedures", "procedure_revisions", column: "draft_revision_id"
   add_foreign_key "procedures", "procedure_revisions", column: "published_revision_id"
   add_foreign_key "procedures", "services", name: "fk_procedures_services"

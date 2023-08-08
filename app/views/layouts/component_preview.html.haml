@@ -16,9 +16,10 @@
     = vite_client_tag
     = vite_javascript_tag 'application'
 
-    = preload_link_tag(asset_url("Muli-Regular.woff2"))
-    = preload_link_tag(asset_url("Muli-Bold.woff2"))
+    = preload_link_tag(asset_url("Marianne-Regular.woff2"))
+    = preload_link_tag(asset_url("Spectral-Regular.ttf"))
 
+    = vite_stylesheet_tag 'main', media: 'all'
     = stylesheet_link_tag 'application', media: 'all'
 
   %body{ class: browser.platform.ios? ? 'ios' : nil }
