@@ -504,6 +504,7 @@ Rails.application.routes.draw do
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review
+        put :allow_expert_messaging
         put :experts_require_administrateur_invitation
         put :restore
       end
