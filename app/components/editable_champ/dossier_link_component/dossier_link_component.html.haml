@@ -1,12 +1,18 @@
 .dossier-link
-  = @form.number_field :value,
+  = @form.text_field :value,
     id: @champ.input_id,
     aria: { describedby: @champ.describedby_id },
+    inputmode: :numeric,
+    min: 1,
+    pattern: "[0-9]{1,12}",
     placeholder: "Numéro de dossier",
     autocomplete: 'off',
     required: @champ.required?,
-    data: { controller: 'turbo-input', turbo_input_url_value: champs_dossier_link_path(@champ.id) },
-    class: "width-33-desktop"
+    class: "width-33-desktop #{@champ.blank? ? '' : 'small-margin'}"
 
-  .help-block{ id: dom_id(@champ, :help_block) }
-    = render partial: 'shared/champs/dossier_link/help_block', locals: { id: @champ.value }
+  - if !@champ.blank?
+    - if dossier.blank?
+      .fr-error-text.fr-mb-4w
+        = t('.not_found')
+    - else
+      .fr-info-text.fr-mb-4w= sanitize(dossier.text_summary)

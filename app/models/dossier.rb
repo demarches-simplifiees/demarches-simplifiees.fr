@@ -251,8 +251,8 @@ class Dossier < ApplicationRecord
   scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
   scope :updated_since,                  -> (since) { where('dossiers.updated_at >= ?', since) }
   scope :created_since,                  -> (since) { where('dossiers.depose_at >= ?', since) }
-  scope :hidden_by_user_since,           -> (since) { where('dossiers.hidden_by_user_at NOT NULL AND dossiers.hidden_by_user_at >= ?', since) }
-  scope :hidden_by_administration_since, -> (since) { where('dossiers.hidden_by_administration_at NOT NULL AND dossiers.hidden_by_administration_at >= ?', since) }
+  scope :hidden_by_user_since,           -> (since) { where('dossiers.hidden_by_user_at IS NOT NULL AND dossiers.hidden_by_user_at >= ?', since) }
+  scope :hidden_by_administration_since, -> (since) { where('dossiers.hidden_by_administration_at IS NOT NULL AND dossiers.hidden_by_administration_at >= ?', since) }
   scope :hidden_since,                   -> (since) { hidden_by_user_since(since).or(hidden_by_administration_since(since)) }
 
   scope :with_type_de_champ, -> (stable_id) {

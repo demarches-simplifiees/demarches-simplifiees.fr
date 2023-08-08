@@ -64,4 +64,24 @@ class Champs::AddressChamp < Champs::TextChamp
   def fetch_external_data
     APIAddress::AddressAdapter.new(external_id).to_params
   end
+
+  def departement_name
+    APIGeoService.departement_name(address.fetch('department_code'))
+  end
+
+  def commune_name
+    APIGeoService.commune_name(address.fetch('department_code'), address.fetch('city_code'))
+  end
+
+  def departement
+    if full_address?
+      { code: address.fetch('department_code'), name: departement_name }
+    end
+  end
+
+  def commune
+    if full_address?
+      { code: address.fetch('city_code'), name: commune_name, postal_code: address.fetch('postal_code') }
+    end
+  end
 end

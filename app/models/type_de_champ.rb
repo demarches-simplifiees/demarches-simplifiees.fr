@@ -572,7 +572,8 @@ class TypeDeChamp < ApplicationRecord
     when type_champs.fetch(:epci),
       type_champs.fetch(:communes),
 	  type_champs.fetch(:visa,
-      type_champs.fetch(:multiple_drop_down_list)
+      type_champs.fetch(:multiple_drop_down_list),
+      type_champs.fetch(:dossier_link)
       true
     else
       false

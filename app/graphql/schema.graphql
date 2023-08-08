@@ -67,6 +67,8 @@ type Address {
 
 type AddressChamp implements Champ {
   address: Address
+  commune: Commune
+  departement: Departement
   id: ID!
 
   """

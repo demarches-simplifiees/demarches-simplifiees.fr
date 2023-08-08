@@ -55,8 +55,12 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
   context 'en_contruction' do
     let(:dossier) { create(:dossier, :en_construction) }
     it 'displays the correct actions' do
-      expect(subject).to have_link('Passer en instruction', href: passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
-      expect(subject).to have_link('Suivre le dossier', href: follow_instructeur_dossier_path(dossier.procedure, dossier))
+      within("form[action=\"#{passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Passer en instruction')
+      end
+      within("form[action=\"#{follow_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Suivre le dossier')
+      end
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 2)
     end
   end
@@ -70,10 +74,14 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     end
 
     it 'displays the correct actions' do
-      expect(subject).to have_link('Repasser en construction', href: repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier))
-      expect(subject).to have_link('Ne plus suivre', href: unfollow_instructeur_dossier_path(dossier.procedure, dossier))
+      within("form[action=\"#{repasser_en_construction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Repasser en construction')
+      end
+      within("form[action=\"#{unfollow_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Ne plus suivre')
+      end
       expect(subject).to have_button('Instruire le dossier')
-      expect(subject).to have_selector('.header-actions ul:first-child > li a.fr-btn', count: 2)
+      expect(subject).to have_selector('.header-actions ul:first-child > li .fr-btn', count: 15)
       expect(subject).to have_selector('.header-actions ul:first-child > li.instruction-button', count: 1)
     end
   end
@@ -82,8 +90,12 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     let(:dossier) { create(:dossier, :accepte) }
 
     it 'displays the correct actions' do
-      expect(subject).to have_link('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
-      expect(subject).to have_link('Archiver le dossier', href: archive_instructeur_dossier_path(dossier.procedure, dossier))
+      within("form[action=\"#{repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Repasser en instruction')
+      end
+      within("form[action=\"#{archive_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Archiver le dossier')
+      end
       expect(subject).to have_selector('[title^="Supprimer le dossier"]')
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 3)
     end
@@ -98,7 +110,9 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     end
 
     it 'displays the correct actions' do
-      expect(subject).to have_link('Restaurer', href: restore_instructeur_dossier_path(dossier.procedure, dossier))
+      within("form[action=\"#{restore_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Restaurer')
+      end
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 1)
     end
   end
@@ -109,7 +123,9 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
 
     it 'displays the correct actions' do
       expect(subject).to have_text('Conserver un mois de plus')
-      expect(subject).to have_link('Repasser en instruction', href: repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier))
+      within("form[action=\"#{repasser_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Repasser en instruction')
+      end
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 2)
     end
   end
@@ -118,7 +134,9 @@ describe 'instructeurs/dossiers/show.html.haml', type: :view do
     let(:dossier) { create(:dossier, :accepte, :archived) }
 
     it 'displays the correct actions' do
-      expect(subject).to have_link('Désarchiver le dossier', href: unarchive_instructeur_dossier_path(dossier.procedure, dossier))
+      within("form[action=\"#{unarchive_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
+        expect(subject).to have_button('Désarchiver le dossier')
+      end
       expect(subject).to have_selector('[title^="Supprimer le dossier"]')
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 2)
     end
