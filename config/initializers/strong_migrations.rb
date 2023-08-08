@@ -1,5 +1,7 @@
 # Mark existing migrations as safe
-StrongMigrations.start_after = 20220315125851
+# StrongMigrations.start_after = 20220315125851
+# tmp ignore strong migrations
+StrongMigrations.start_after = 20230808171134
 
 # Set timeouts for migrations
 # If you use PgBouncer in transaction mode, delete these lines and set timeouts on the database user
@@ -12,7 +14,7 @@ StrongMigrations.auto_analyze = true
 
 # Set the version of the production database
 # so the right checks are run in development
-# StrongMigrations.target_version = 10
+StrongMigrations.target_version = 10
 
 # Add custom checks
 # StrongMigrations.add_check do |method, args|
