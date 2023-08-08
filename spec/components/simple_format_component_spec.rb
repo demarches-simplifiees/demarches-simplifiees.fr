@@ -58,6 +58,8 @@ TEXT
     let(:text) do
       <<~TEXT
         bonjour https://www.demarches-simplifiees.fr
+        nohttp www.ds.io
+        ecrivez à ds@rspec.io
       TEXT
     end
 
@@ -66,6 +68,19 @@ TEXT
       it { expect(page).to have_selector("a") }
       it "inject expected attributes" do
         link = page.find_link("https://www.demarches-simplifiees.fr").native
+        expect(link[:rel]).to eq("noopener noreferrer")
+        expect(link[:title]).to eq("Nouvel onglet")
+      end
+
+      it "convert email autolinks" do
+        link = page.find_link("ds@rspec.io").native
+        expect(link[:href]).to eq("mailto:ds@rspec.io")
+        expect(link[:rel]).to be_nil
+      end
+
+      it "convert www only" do
+        link = page.find_link("www.ds.io").native
+        expect(link[:href]).to eq("http://www.ds.io")
         expect(link[:rel]).to eq("noopener noreferrer")
         expect(link[:title]).to eq("Nouvel onglet")
       end
