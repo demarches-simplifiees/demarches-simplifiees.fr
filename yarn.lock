@@ -6232,10 +6232,10 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-turbo-polyfills@^0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/turbo-polyfills/-/turbo-polyfills-0.3.1.tgz#e5aceee2c68fbabd2c7e7984f59245edcbc158f8"
-  integrity sha512-mraczRBnomddTFOJ3n43KFmTTSURcue61OG+IPQgOs4CfkpUmxgkNQwD+jiu7AQDi4wgsZ3kqJki0hKkedvpHg==
+turbo-polyfills@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/turbo-polyfills/-/turbo-polyfills-0.5.0.tgz#346368bf19abf6ac615fd069e9456b0a4b9ab8b6"
+  integrity sha512-R8XwTGkvWkEYlMcCsV2ienkGGsjs4xvnky/nXabNG3SMuGX1KfYIzA9NkSaifwWJY6kpxnTIGfUej2c52RzJQQ==
 
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"

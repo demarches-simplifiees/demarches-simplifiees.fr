@@ -30,11 +30,11 @@ class Champs::DateChamp < Champ
 
   def to_s
     value.present? ? I18n.l(Time.zone.parse(value), format: '%d %B %Y') : ""
+  rescue ArgumentError
+    value.presence || "" # old dossiers can have not parseable dates
   end
 
-  def for_tag
-    value.present? ? I18n.l(Time.zone.parse(value), format: '%d %B %Y') : ""
-  end
+  alias for_tag to_s
 
   def for_export
     value.present? ? Date.parse(value) : ""

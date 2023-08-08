@@ -45,6 +45,18 @@ describe Champs::DateChamp do
     end
   end
 
+  describe "#to_s" do
+    it "format the date" do
+      champ_with_value("2020-06-20")
+      expect(date_champ.to_s).to eq("20 juin 2020")
+    end
+
+    it "does not fail when value is not iso" do
+      champ_with_value("2023-30-01")
+      expect(date_champ.to_s).to eq("2023-30-01")
+    end
+  end
+
   def champ_with_value(number)
     date_champ.tap { |c| c.value = number }
   end

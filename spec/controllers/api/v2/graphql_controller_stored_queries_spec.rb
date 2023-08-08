@@ -71,7 +71,35 @@ describe API::V2::GraphqlController do
       it {
         expect(gql_errors).to be_nil
         expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonnePhysique')
+        expect(gql_data[:dossier][:demandeur][:nom]).to eq(dossier.individual.nom)
+        expect(gql_data[:dossier][:demandeur][:prenom]).to eq(dossier.individual.prenom)
       }
+
+      context 'with entreprise' do
+        let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin], types_de_champ_public:) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonneMorale')
+          expect(gql_data[:dossier][:demandeur][:siret]).to eq(dossier.etablissement.siret)
+          expect(gql_data[:dossier][:demandeur][:libelleNaf]).to eq(dossier.etablissement.libelle_naf)
+        }
+
+        context 'when in degraded mode' do
+          before { dossier.etablissement.update(adresse: nil) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonneMoraleIncomplete')
+            expect(gql_data[:dossier][:demandeur][:siret]).to eq(dossier.etablissement.siret)
+            expect(gql_data[:dossier][:demandeur][:libelleNaf]).to be_nil
+          }
+        end
+      end
     end
 
     context 'getDemarche' do
@@ -324,15 +352,24 @@ describe API::V2::GraphqlController do
         }
       end
 
-      context 'when in degraded mode' do
+      context 'with entreprise' do
         let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin]) }
         let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
 
-        before { dossier.etablissement.update(adresse: nil) }
-
         it {
-          expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierAccepter][:errors]).to be_nil
+          expect(gql_data[:dossierAccepter][:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
         }
+
+        context 'when in degraded mode' do
+          before { dossier.etablissement.update(adresse: nil) }
+
+          it {
+            expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
+          }
+        end
       end
     end
 
