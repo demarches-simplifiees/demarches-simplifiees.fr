@@ -180,6 +180,7 @@ Rails.application.routes.draw do
     post ':champ_id/carte', to: 'carte#show', as: :carte
     post ':champ_id/repetition', to: 'repetition#add', as: :repetition
     delete ':champ_id/repetition', to: 'repetition#remove'
+    delete ':champ_id/options', to: 'options#remove', as: :options
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'

@@ -3,13 +3,12 @@
     = @form.collection_check_boxes(:value, @champ.enabled_non_empty_options, :to_s, :to_s) do |b|
       - tag.div(class: 'editable-champ editable-champ-checkbox') do
         - b.label(for: @champ.checkbox_id(b.value)) do
-          - b.check_box({ multiple: true, checked: @champ&.selected_options&.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value) }) + b.text
+          - b.check_box({ multiple: true, checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value) }) + b.text
   - else
-    = @form.hidden_field :value
-    = react_component("ComboMultipleDropdownList",
-      options: @champ.options,
-      selected: @champ.selected_options,
-      disabled: @champ.disabled_options,
-      id: @champ.input_id,
-      labelledby: @champ.labelledby_id,
-      describedby: @champ.describedby_id)
+    - if @champ.selected_options.present?
+      .fr-mb-2w{ "data-turbo": "true" }
+        - @champ.selected_options.each do |option|
+          = render NestedForms::OwnedButtonComponent.new(formaction: champs_options_path(@champ.id, option:), http_method: :delete, opt: { class: 'fr-tag fr-tag--dismiss fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option) }) do
+            = option
+    - if @champ.unselected_options.present?
+      = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }

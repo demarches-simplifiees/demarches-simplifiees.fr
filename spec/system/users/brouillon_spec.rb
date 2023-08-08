@@ -38,8 +38,8 @@ describe 'The user' do
     check('val1')
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
-    select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
-    select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
+    select('alpha', from: form_id_for('multiple_choice_drop_down_list_long'))
+    select('charly', from: form_id_for('multiple_choice_drop_down_list_long'))
 
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
@@ -109,7 +109,10 @@ describe 'The user' do
     expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_selected_value('regions', selected: 'Martinique')
     expect(page).to have_selected_value('departements', selected: '02 – Aisne')
-    check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
+    within("##{champ_for('multiple_choice_drop_down_list_long').input_group_id}") do
+      expect(page).to have_button('alpha')
+      expect(page).to have_button('charly')
+    end
     expect(page).to have_selected_value('communes', selected: 'Brétigny (60400)')
     expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_field('dossier_link', with: dossier_to_link.id.to_s)
@@ -542,8 +545,12 @@ describe 'The user' do
   end
 
   def champ_value_for(libelle)
+    champ_for(libelle).value
+  end
+
+  def champ_for(libelle)
     champs = user_dossier.reload.champs_public
-    champs.find { |c| c.libelle == libelle }.value
+    champs.find { |c| c.libelle == libelle }
   end
 
   def fill_individual
