@@ -28,9 +28,11 @@
     - else
       = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: true
     .optional-justificatif{ id: "justificatif_motivation_suggest_#{popup_class}", onclick: "DS.showImportJustificatif('#{popup_class}');" }
-      .fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-attachment-line.fr-ml-0 Ajouter un justificatif (optionnel)
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-attachment-line.fr-ml-0{ type: 'button', onclick: "DS.showImportJustificatif('accept');" } Ajouter un justificatif (optionnel)
     .hidden{ id: "justificatif_motivation_import_#{popup_class}" }
-      = file_field :dossier, :justificatif_motivation, direct_upload: true
-    .text-right.fr-mt-2w
-      %span.fr-btn.fr-btn--secondary{ onclick: 'DS.motivationCancel();' } Annuler
+      = file_field :dossier, :justificatif_motivation, direct_upload: true, id: "dossier_justificatif_motivation_#{popup_class}",onchange: "DS.showDeleteJustificatif('#{popup_class}');"
+    .hidden.js_delete_motivation{ id: "delete_motivation_import_#{popup_class}" }
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w{ type: 'button', onclick: "DS.deleteJustificatif('#{popup_class}');" } Supprimer le  justificatif
+    .fr-mt-2w
+      = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--secondary', onclick: 'DS.motivationCancel();'
       = button_tag 'Valider la décision', name: :process_action, value: process_action, class: 'fr-btn fr-mr-0', title: title

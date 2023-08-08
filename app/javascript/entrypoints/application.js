@@ -20,7 +20,10 @@ import { toggleCondidentielExplanation } from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
-  showImportJustificatif
+  motivationCancelBatchDropdown,
+  showImportJustificatif,
+  showDeleteJustificatif,
+  deleteJustificatif
 } from '../new_design/instruction-button';
 import { showFusion, showNewAccount } from '../new_design/fc-fusion';
 
@@ -32,7 +35,10 @@ const DS = {
   toggleCondidentielExplanation,
   showMotivation,
   motivationCancel,
+  motivationCancelBatchDropdown,
   showImportJustificatif,
+  showDeleteJustificatif,
+  deleteJustificatif,
   showFusion,
   showNewAccount
 };
