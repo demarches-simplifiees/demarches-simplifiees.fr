@@ -149,6 +149,8 @@ en:
         environment_one: "Firefox 111.0.1 and NVDA 2022.4"
         environment_two: "Safari and VoiceOver (version available on macOS Monterey 12.6.3)"
         environment_three: "Edge and JAWS 2020"
+        environment_four: "Google Chrome and TalkBack 9.1"
+        environment_five: "Safari and VoiceOver (version available on iOS 15.7.4)"
         subtitle_three: "Tools for assessing accessibility"
         tool_one: "RGAA Assistant (Firefox extension)"
         tool_two: "Web Developer (Firefox extension)"
