@@ -6,17 +6,25 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    params = data_source[:entreprise]&.slice(*attr_to_fetch)
-    params[:etat_administratif] = map_etat_administratif(data_source)
+    params = data_source[:entreprise]
+    return {} if params.nil?
 
-    if params.present? && valid_params?(params)
-      params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime if params[:date_creation].present?
-      if params[:raison_sociale].present? && is_individual_entreprise?(params[:forme_juridique_code])
-        params[:raison_sociale] = humanize_raison_sociale(params[:raison_sociale])
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: params)
+
+      params = params.slice(*attr_to_fetch)
+      params[:etat_administratif] = map_etat_administratif(data_source)
+
+      if params.present? && valid_params?(params)
+        params[:date_creation] = Time.zone.at(params[:date_creation]).to_datetime if params[:date_creation].present?
+        if params[:raison_sociale].present? && is_individual_entreprise?(params[:forme_juridique_code])
+          params[:raison_sociale] = humanize_raison_sociale(params[:raison_sociale])
+        end
+        params.transform_keys { |k| :"entreprise_#{k}" }
+      else
+        {}
       end
-      params.transform_keys { |k| :"entreprise_#{k}" }
-    else
-      {}
     end
   end
 
