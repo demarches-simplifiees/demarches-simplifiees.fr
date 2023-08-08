@@ -1009,10 +1009,10 @@ describe Users::DossiersController, type: :controller do
     end
   end
 
-  describe '#delete_dossier' do
+  describe '#destroy' do
     before { sign_in(user) }
 
-    subject { patch :delete_dossier, params: { id: dossier.id } }
+    subject { delete :destroy, params: { id: dossier.id } }
 
     shared_examples_for "the dossier can not be deleted" do
       it "doesn’t notify the deletion" do
@@ -1066,6 +1066,22 @@ describe Users::DossiersController, type: :controller do
 
       it_behaves_like "the dossier can not be deleted"
       it { is_expected.to redirect_to(root_path) }
+
+      context 'but user is invited' do
+        before { dossier.invites.create(user:, email: user.email, message: 'Salut', email_sender: user2.email) }
+
+        it do
+          procedure = dossier.procedure
+          dossier_id = dossier.id
+
+          expect(user.invite?(dossier)).to be_truthy
+          is_expected.to redirect_to(dossiers_path)
+          expect(Dossier.find_by(id: dossier_id)).to be_present
+          expect(Dossier.find_by(id: dossier_id).hidden_by_user_at).to be_nil
+          expect(procedure.deleted_dossiers.count).to eq(0)
+          expect(user.invite?(dossier)).to be_falsy
+        end
+      end
     end
   end
 

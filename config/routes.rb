@@ -322,7 +322,7 @@ Rails.application.routes.draw do
       get '/:path/:provider', action: 'openid_connect', as: :openid_connect, constraints: { :provider => /google|microsoft|yahoo|tatou/ }
     end
 
-    resources :dossiers, only: [:index, :show, :new] do
+    resources :dossiers, only: [:index, :show, :destroy, :new] do
       member do
         get 'identite'
         patch 'update_identite'
@@ -339,7 +339,6 @@ Rails.application.routes.draw do
         get 'demande'
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
-        patch 'delete_dossier'
         patch 'restore', to: 'dossiers#restore'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
