@@ -185,14 +185,14 @@ def add_single_champ(pdf, champ)
       add_identite_etablissement(pdf, champ.etablissement)
     end
   when 'Champs::NumberChamp'
-    value = champ.to_s.empty? ? 'Non communiqué' : number_with_delimiter(champ.to_s)
+    value = champ.blank? ? 'Non communiqué' : number_with_delimiter(champ.to_s)
     format_in_2_lines(pdf, tdc.libelle, value)
   when 'Champs::CommuneChamp'
-    value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
+    value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, value)
-    pdf.text "Département : #{champ.departement}" if champ.departement.present?
+    pdf.text "Département : #{champ.departement_code_and_name}" if champ.departement?
   else
-    value = champ.to_s.empty? ? 'Non communiqué' : champ.to_s
+    value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_columns(pdf, tdc.libelle, value)
   end
 end

@@ -738,6 +738,13 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(assigns(:include_infos_administration)).to eq(true) }
       it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
+
+      context 'empty champs commune' do
+        let(:procedure) { create(:procedure, :published, :with_commune, instructeurs:) }
+        let(:dossier) { create(:dossier, :accepte, procedure:) }
+
+        it { expect(response).to render_template 'dossiers/show' }
+      end
     end
 
     context 'with dossier in batch_operation' do

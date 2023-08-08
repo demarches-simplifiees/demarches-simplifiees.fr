@@ -1680,8 +1680,8 @@ describe Dossier do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            ["commune", nil],
-            ["commune (Code insee)", nil],
+            ["commune", ''],
+            ["commune (Code insee)", ''],
             ["commune (Département)", ""]
           ]
         end
