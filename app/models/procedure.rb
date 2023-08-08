@@ -4,6 +4,7 @@
 #
 #  id                                        :integer          not null, primary key
 #  aasm_state                                :string           default("brouillon")
+#  allow_expert_messaging                    :boolean          default(TRUE), not null
 #  allow_expert_review                       :boolean          default(TRUE), not null
 #  api_entreprise_token                      :string
 #  api_particulier_scopes                    :text             default([]), is an Array
