@@ -18,10 +18,11 @@ en:
       legals:
         header: "Legals :"
         data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} months"
+        data_retention_title: "Explanation of our data retention and archiving policy"
         terms: "Laws regarding this data collection"
         dpo: "Contact the Data Protection Officer"
       dematerialisation: 
         header: Paperless
         title_1: Access to the printable PDF form
-        title_2: Online administrative procedures
-        link: "https://www.solidarite-numerique.fr/cartographie/"
+        title_2: Find a “France Services” desk
+        link: "https://www.transformation.gouv.fr/france-services"
