@@ -191,7 +191,6 @@ en:
         intro: "If you are unable to access a piece of content or service, you can contact the Simplified Approaches manager to be directed to an accessible alternative or obtain the content in another form."
         infos:
           email_html: "By email:"
-          phone_html: "Contact DINUM by phone:"
           adress_html: "By post : DINUM , 20 avenue de Ségur 75007 Paris"
       remedies:
         title: "Remedies"
