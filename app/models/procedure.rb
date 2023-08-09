@@ -991,4 +991,13 @@ class Procedure < ApplicationRecord
   def stable_ids_used_by_routing_rules
     @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact
   end
+
+  # We need this to unfuck administrate + aasm
+  def self.human_attribute_name(attribute, options = {})
+    if attribute == :aasm_state
+      'Statut'
+    else
+      super
+    end
+  end
 end

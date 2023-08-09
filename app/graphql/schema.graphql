@@ -1126,7 +1126,7 @@ enum DemarcheState {
   close
 
   """
-  Depubliee
+  Dépubliée
   """
   depubliee
 
