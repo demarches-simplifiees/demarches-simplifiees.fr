@@ -13,7 +13,7 @@ module Loaders
 
     def perform(keys)
       query(keys).each { |record| fulfill(record.stable_id, [record].compact) }
-      keys.each { |key| fulfill(key, nil) unless fulfilled?(key) }
+      keys.each { |key| fulfill(key, []) unless fulfilled?(key) }
     end
 
     private

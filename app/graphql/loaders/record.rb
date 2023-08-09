@@ -21,7 +21,7 @@ module Loaders
         fulfilled_value = @array ? [record].compact : record
         fulfill(record.public_send(@column), fulfilled_value)
       end
-      keys.each { |key| fulfill(key, nil) unless fulfilled?(key) }
+      keys.each { |key| fulfill(key, @array ? [] : nil) unless fulfilled?(key) }
     end
 
     private

@@ -685,7 +685,7 @@ describe API::V2::GraphqlController do
         #   end
         #
         #   it "should return an error" do
-        #     expect(gql_errors).to eq([{ message: "Cannot return null for non-nullable field PersonneMorale.siegeSocial" }])
+        #     expect(gql_errors).to eq([{ message: "Cannot return null for non-nullable field PersonneMorale.siegeSocial", extensions: { code: "invalid_null" } }])
         #   end
         # end
       end
