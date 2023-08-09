@@ -83,6 +83,8 @@ class Administrateur < ApplicationRecord
     end
 
     procedures.with_discarded.each do |procedure|
+      next if procedure.service.nil?
+
       next_administrateur = procedure.administrateurs.where.not(id: self.id).first
       procedure.service.update(administrateur: next_administrateur)
     end
