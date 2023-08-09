@@ -14,6 +14,13 @@ class API::V2::DossiersController < API::V2::BaseController
 
   private
 
+  def append_info_to_payload(payload)
+    super
+    if dossier.present?
+      payload.merge!(ds_dossier_id: dossier.id.to_s, ds_procedure_id: dossier.procedure.id.to_s)
+    end
+  end
+
   def ensure_dossier_present
     if dossier.blank?
       head :unauthorized
