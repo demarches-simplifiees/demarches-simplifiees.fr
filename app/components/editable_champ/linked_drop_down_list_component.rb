@@ -6,7 +6,7 @@ class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampB
   end
 
   def secondary_label_text
-    @champ.drop_down_secondary_libelle.presence || "Valeur secondaire dépendant de la première"
+    @champ.drop_down_secondary_libelle.presence || "#{@champ.libelle} : précisez"
   end
 
   def secondary_label_mandatory
