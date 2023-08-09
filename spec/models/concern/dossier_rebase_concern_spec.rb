@@ -454,7 +454,7 @@ describe DossierRebaseConcern do
           tdc_to_update.update(drop_down_list_value: "option\nupdated")
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1", "option"]').to('["option"]') }
+        it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1","option"]').to('["option"]') }
       end
 
       context 'when a dropdown unused option is removed' do

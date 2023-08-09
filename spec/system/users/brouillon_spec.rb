@@ -38,14 +38,14 @@ describe 'The user' do
     check('val1')
     check('val3')
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
-    select_combobox('multiple_choice_drop_down_list_long', 'alp', 'alpha')
-    select_combobox('multiple_choice_drop_down_list_long', 'cha', 'charly')
+    select('alpha', from: form_id_for('multiple_choice_drop_down_list_long'))
+    select('charly', from: form_id_for('multiple_choice_drop_down_list_long'))
 
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
     select('02 – Aisne', from: form_id_for('departements'))
-    select_combobox('communes', 'Ai', '02 - Aisne', check: false)
-    select_combobox('communes', 'Ambl', 'Ambléon (01300)')
+    fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
+    select('Brétigny (60400)', from: form_id_for('communes'))
 
     select('Australienne', from: form_id_for('nationalites'))
     select('Mahina - Tahiti - 98709', from: form_id_for('commune_de_polynesie'))
@@ -82,7 +82,7 @@ describe 'The user' do
     expect(champ_value_for('pays')).to eq('Australie')
     expect(champ_value_for('regions')).to eq('Martinique')
     expect(champ_value_for('departements')).to eq('Aisne')
-    expect(champ_value_for('communes')).to eq('Ambléon (01300)')
+    expect(champ_value_for('communes')).to eq('Brétigny')
     expect(champ_value_for('dossier_link')).to eq(dossier_to_link.id.to_s)
     expect(champ_value_for('piece_justificative')).to be_nil # antivirus hasn't approved the file yet
 
@@ -109,8 +109,12 @@ describe 'The user' do
     expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_selected_value('regions', selected: 'Martinique')
     expect(page).to have_selected_value('departements', selected: '02 – Aisne')
-    check_selected_value('multiple_choice_drop_down_list_long', with: ['alpha', 'charly'])
-    check_selected_value('communes', with: 'Ambléon (01300)')
+    within("##{champ_for('multiple_choice_drop_down_list_long').input_group_id}") do
+      expect(page).to have_button('alpha')
+      expect(page).to have_button('charly')
+    end
+    expect(page).to have_selected_value('communes', selected: 'Brétigny (60400)')
+    expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_field('dossier_link', with: dossier_to_link.id.to_s)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('Analyse antivirus en cours')
@@ -541,8 +545,12 @@ describe 'The user' do
   end
 
   def champ_value_for(libelle)
+    champ_for(libelle).value
+  end
+
+  def champ_for(libelle)
     champs = user_dossier.reload.champs_public
-    champs.find { |c| c.libelle == libelle }.value
+    champs.find { |c| c.libelle == libelle }
   end
 
   def fill_individual

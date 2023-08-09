@@ -1,9 +1,7 @@
 class API::V2::GraphqlController < API::V2::BaseController
   def execute
-    result = API::V2::Schema.execute(query,
-      variables: variables,
-      context: context,
-      operation_name: params[:operationName])
+    result = API::V2::Schema.execute(query:, variables:, context:, operation_name:)
+    @query_info = result.context.query_info
 
     render json: result
   rescue GraphQL::ParseError, JSON::ParserError => exception
@@ -27,10 +25,7 @@ class API::V2::GraphqlController < API::V2::BaseController
 
     super
 
-    payload.merge!({
-      graphql_query: query(fallback: params[:queryId]),
-      graphql_variables: to_unsafe_hash(params[:variables]).to_json
-    })
+    payload.merge!(@query_info.presence || {})
   end
 
   def process_action(*args)
@@ -44,9 +39,9 @@ class API::V2::GraphqlController < API::V2::BaseController
     }, status: 400
   end
 
-  def query(fallback: nil)
+  def query
     if params[:queryId].present?
-      API::V2::StoredQuery.get(params[:queryId], fallback: fallback)
+      API::V2::StoredQuery.get(params[:queryId])
     else
       params[:query]
     end
@@ -54,6 +49,10 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   def variables
     ensure_hash(params[:variables])
+  end
+
+  def operation_name
+    params[:operationName]
   end
 
   # Handle form data, JSON body, or a blank value
@@ -74,23 +73,6 @@ class API::V2::GraphqlController < API::V2::BaseController
     else
       raise ArgumentError, "Unexpected parameter: #{ambiguous_param}"
     end
-  end
-
-  def to_unsafe_hash(ambiguous_param)
-    case ambiguous_param
-    when String
-      if ambiguous_param.present?
-        JSON.parse(ambiguous_param)
-      else
-        {}
-      end
-    when ActionController::Parameters
-      ambiguous_param.to_unsafe_h
-    else
-      ambiguous_param
-    end
-  rescue JSON::ParserError
-    {}
   end
 
   def handle_parse_error(exception)
@@ -115,15 +97,15 @@ class API::V2::GraphqlController < API::V2::BaseController
   end
 
   def handle_error_in_production(exception)
-    id = SecureRandom.uuid
-    Sentry.capture_exception(exception, extra: { exception_id: id })
+    extra = { exception_id: SecureRandom.uuid }
+    Sentry.capture_exception(exception, extra:)
 
     render json: {
       errors: [
         {
           message: "Internal Server Error",
           extensions: {
-            exception: { id: id }
+            exception: { id: extra[:exception_id] }
           }
         }
       ],

@@ -1,8 +1,8 @@
 %fieldset.radios
-  %label
-    = @form.radio_button :value, true
+  %label{ for: @champ.yes_input_id }
+    = @form.radio_button :value, true, id: @champ.yes_input_id
     Oui
 
-  %label
-    = @form.radio_button :value, false
+  %label{ for: @champ.no_input_id }
+    = @form.radio_button :value, false, id: @champ.no_input_id
     Non

@@ -1,1 +1,6 @@
 = turbo_stream.remove "safe-row-selector-#{@row_id}"
+
+- if @champ.rows.size > 0 && @champ.rows.last&.first&.present?
+  = turbo_stream.focus @champ.rows.last&.first.focusable_input_id
+- else
+  = turbo_stream.focus dom_id(@champ, :create_repetition)

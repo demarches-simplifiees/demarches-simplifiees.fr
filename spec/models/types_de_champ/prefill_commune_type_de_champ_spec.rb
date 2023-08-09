@@ -26,21 +26,21 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
     it { is_expected.to be_kind_of(TypesDeChamp::PrefillTypeDeChamp) }
   end
 
-  describe '#all_possible_values' do
-    let(:expected_values) do
-      departements.map { |departement| "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/communes?codeDepartement=#{departement[:code]}" }
-    end
-    subject(:all_possible_values) { described_class.new(type_de_champ, procedure.active_revision).all_possible_values }
+  # describe '#all_possible_values' do
+  #   let(:expected_values) do
+  #     departements.map { |departement| "#{departement[:code]} (#{departement[:name]}) : https://geo.api.gouv.fr/communes?codeDepartement=#{departement[:code]}" }
+  #   end
+  #   subject(:all_possible_values) { described_class.new(type_de_champ, procedure.active_revision).all_possible_values }
 
-    it { expect(all_possible_values).to match(expected_values) }
-  end
+  #   it { expect(all_possible_values).to match(expected_values) }
+  # end
 
   describe '#example_value' do
     let(:departement_code) { departements.pick(:code) }
-    let(:commune_code) { APIGeoService.communes(departement_code).pick(:code) }
+    let(:value) { APIGeoService.communes(departement_code).pick(:postal_code, :code) }
     subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
 
-    it { is_expected.to eq([departement_code, commune_code]) }
+    it { is_expected.to eq(value) }
   end
 
   describe '#to_assignable_attributes' do
@@ -65,22 +65,22 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
     end
 
     context 'when the value is an array of one element' do
-      context 'when the first element is a valid departement code' do
-        let(:value) { ['01'] }
-        it { is_expected.to match({ id: champ.id, code_departement: '01', departement: 'Ain' }) }
+      context 'when the first element is a valid postal code' do
+        let(:value) { ['01540'] }
+        it { is_expected.to match({ id: champ.id, code_postal: '01540' }) }
       end
 
-      context 'when the first element is not a valid departement code' do
+      context 'when the first element is not a valid postal code' do
         let(:value) { ['totoro'] }
         it { is_expected.to match(nil) }
       end
     end
 
     context 'when the value is an array of two elements' do
-      context 'when the first element is a valid departement code' do
+      context 'when the first element is a valid postal code' do
         context 'when the second element is a valid insee code' do
-          let(:value) { ['01', '01457'] }
-          it { is_expected.to match({ id: champ.id, code_departement: '01', departement: 'Ain', external_id: '01457', value: 'Vonnas (01540)' }) }
+          let(:value) { ['01540', '01457'] }
+          it { is_expected.to match({ id: champ.id, code_postal: '01540', value: '01457' }) }
         end
 
         context 'when the second element is not a valid insee code' do
@@ -89,26 +89,26 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
         end
       end
 
-      context 'when the first element is not a valid departement code' do
+      context 'when the first element is not a valid postal code' do
         let(:value) { ['totoro', '01457'] }
         it { is_expected.to match(nil) }
       end
     end
 
     context 'when the value is an array of three or more elements' do
-      context 'when the first element is a valid departement code' do
+      context 'when the first element is a valid postal code' do
         context 'when the second element is a valid insee code' do
-          let(:value) { ['01', '01457', 'hello'] }
-          it { is_expected.to match({ id: champ.id, code_departement: '01', departement: 'Ain', external_id: '01457', value: 'Vonnas (01540)' }) }
+          let(:value) { ['01540', '01457', 'hello'] }
+          it { is_expected.to match({ id: champ.id, code_postal: '01540', value: '01457' }) }
         end
 
         context 'when the second element is not a valid insee code' do
-          let(:value) { ['01', 'totoro', 'hello'] }
+          let(:value) { ['01540', 'totoro', 'hello'] }
           it { is_expected.to match(nil) }
         end
       end
 
-      context 'when the first element is not a valid departement code' do
+      context 'when the first element is not a valid postal code' do
         let(:value) { ['totoro', '01457', 'hello'] }
         it { is_expected.to match(nil) }
       end

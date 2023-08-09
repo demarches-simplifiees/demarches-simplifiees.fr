@@ -19,7 +19,8 @@ features = [
   :qrcoded_pdf,
   :visa,
   :attestation_v2,
-  :procedure_routage_api
+  :procedure_routage_api,
+  :routing_rules
 ]
 
 def database_exists?

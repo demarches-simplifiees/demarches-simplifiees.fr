@@ -1,0 +1,8 @@
+= fields_for @champ.input_name, @champ do |form|
+  = turbo_stream.replace @champ.input_group_id do
+    = render EditableChamp::EditableChampComponent.new champ: @champ, form:
+
+- if @next_checkbox_id.present?
+  = turbo_stream.focus @next_checkbox_id
+- else
+  = turbo_stream.focus @champ.input_id

@@ -175,11 +175,11 @@ Rails.application.routes.draw do
   namespace :champs do
     get ':champ_id/siret', to: 'siret#show', as: :siret
     get ':champ_id/rna', to: 'rna#show', as: :rna
-    get ':champ_id/dossier_link', to: 'dossier_link#show', as: :dossier_link
     get ':champ_id/dn', to: 'numero_dn#show', as: :dn
     post ':champ_id/carte', to: 'carte#show', as: :carte
     post ':champ_id/repetition', to: 'repetition#add', as: :repetition
     delete ':champ_id/repetition', to: 'repetition#remove'
+    delete ':champ_id/options', to: 'options#remove', as: :options
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
     post ':champ_id/carte/features', to: 'carte#create'
@@ -321,7 +321,7 @@ Rails.application.routes.draw do
       get '/:path/:provider', action: 'openid_connect', as: :openid_connect, constraints: { :provider => /google|microsoft|yahoo|tatou/ }
     end
 
-    resources :dossiers, only: [:index, :show, :new] do
+    resources :dossiers, only: [:index, :show, :destroy, :new] do
       member do
         get 'identite'
         patch 'update_identite'
@@ -338,7 +338,6 @@ Rails.application.routes.draw do
         get 'demande'
         get 'messagerie'
         post 'commentaire' => 'dossiers#create_commentaire'
-        patch 'delete_dossier'
         patch 'restore', to: 'dossiers#restore'
         get 'attestation'
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
@@ -521,6 +520,8 @@ Rails.application.routes.draw do
         patch :change_targeted_champ, on: :member
         delete :delete_row, on: :member
       end
+
+      patch :update, controller: 'routing', as: :routing_rules
 
       put 'clone'
       put 'archive'

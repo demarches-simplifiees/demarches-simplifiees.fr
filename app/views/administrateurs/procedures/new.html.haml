@@ -6,7 +6,7 @@
 
 .procedure-form
   .procedure-form__columns.container
-    = render Attachment::DeleteFormComponent.new
+    = render NestedForms::FormOwnerComponent.new
     = form_for @procedure,
       url: url_for({ controller: 'administrateurs/procedures', action: :create, id: @procedure.id }),
       html: { class: 'form procedure-form__column--form', multipart: true } do |f|

@@ -28,7 +28,7 @@ en:
       give_avis: Give your opinion
       see_avis: Read opinions
       ask_avis: Ask for an opinion
-      ask_new_avis: Ask for a new opinion
+      ask_new_avis: Ask for another opinion
     information_text:
       no_new_avis_text: The file has been proceed
       no_new_avis_text_detail: Opinion requests are closed

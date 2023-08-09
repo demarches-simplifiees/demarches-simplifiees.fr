@@ -11,6 +11,8 @@ describe 'Inviting an expert:' do
     let(:champ) { dossier.champs_public.first }
     let(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
     let(:avis_with_question) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true, question_label: 'Question ?') }
+    let(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure) }
+    let(:avis_on_dossier_accepte) { create(:avis, dossier: dossier_accepte, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
     context 'when I don’t already have an account' do
       let(:password) { 'This is an expert password' }
@@ -58,11 +60,15 @@ describe 'Inviting an expert:' do
 
     scenario 'I can give an answer' do
       avis # create avis
+      avis_on_dossier_accepte # create avis
       login_as expert.user, scope: :user
 
       visit expert_all_avis_path
       expect(page).to have_text('1 avis à donner')
       expect(page).to have_text('0 avis donnés')
+
+      expect(page).to have_selector('.badge', text: 1)
+      expect(page).to have_selector('.notifications')
 
       click_on '1 avis à donner'
       click_on avis.dossier.user.email
@@ -78,9 +84,12 @@ describe 'Inviting an expert:' do
       expect(page).to have_content('Ma réponse d’expert : c’est un oui.')
       expect(page).to have_content('RIB.pdf')
 
-      within('.breadcrumbs') { click_on 'Avis' }
+      within('.fr-breadcrumb__list') { click_on 'Avis' }
       expect(page).to have_text('0 avis à donner')
       expect(page).to have_text('1 avis donné')
+
+      expect(page).not_to have_selector('.badge', text: 1)
+      expect(page).not_to have_selector('.notifications')
     end
 
     scenario 'I can give a yes/no answer to a question' do
@@ -114,7 +123,7 @@ describe 'Inviting an expert:' do
       expect(page).to have_text('Vous')
       expect(page).to have_text('non')
 
-      within('.breadcrumbs') { click_on 'Avis' }
+      within('.fr-breadcrumb__list') { click_on 'Avis' }
       expect(page).to have_text('1 avis donné')
     end
 

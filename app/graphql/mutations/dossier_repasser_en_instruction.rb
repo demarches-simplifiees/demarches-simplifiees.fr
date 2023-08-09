@@ -18,7 +18,7 @@ module Mutations
     end
 
     def authorized?(dossier:, instructeur:, **args)
-      if !dossier.termine?
+      if !dossier.can_repasser_en_instruction?
         return false, { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
       end
       dossier_authorized_for?(dossier, instructeur)

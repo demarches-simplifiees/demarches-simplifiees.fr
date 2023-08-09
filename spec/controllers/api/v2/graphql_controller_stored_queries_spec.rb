@@ -71,7 +71,35 @@ describe API::V2::GraphqlController do
       it {
         expect(gql_errors).to be_nil
         expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonnePhysique')
+        expect(gql_data[:dossier][:demandeur][:nom]).to eq(dossier.individual.nom)
+        expect(gql_data[:dossier][:demandeur][:prenom]).to eq(dossier.individual.prenom)
       }
+
+      context 'with entreprise' do
+        let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin], types_de_champ_public:) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonneMorale')
+          expect(gql_data[:dossier][:demandeur][:siret]).to eq(dossier.etablissement.siret)
+          expect(gql_data[:dossier][:demandeur][:libelleNaf]).to eq(dossier.etablissement.libelle_naf)
+        }
+
+        context 'when in degraded mode' do
+          before { dossier.etablissement.update(adresse: nil) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+            expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonneMoraleIncomplete')
+            expect(gql_data[:dossier][:demandeur][:siret]).to eq(dossier.etablissement.siret)
+            expect(gql_data[:dossier][:demandeur][:libelleNaf]).to be_nil
+          }
+        end
+      end
     end
 
     context 'getDemarche' do
@@ -107,7 +135,7 @@ describe API::V2::GraphqlController do
       end
 
       context 'include deleted Dossiers' do
-        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true } }
+        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedSince: 2.weeks.ago.iso8601 } }
         let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier_accepte) }
 
         before { deleted_dossier }
@@ -122,7 +150,7 @@ describe API::V2::GraphqlController do
       end
 
       context 'include pending deleted Dossiers' do
-        let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true } }
+        let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedSince: 2.weeks.ago.iso8601 } }
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
@@ -314,6 +342,34 @@ describe API::V2::GraphqlController do
         it {
           expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
         }
+      end
+
+      context 'when already rejected' do
+        let(:dossier) { create(:dossier, :refuse, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Le dossier est déjà refusé')
+        }
+      end
+
+      context 'with entreprise' do
+        let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin]) }
+        let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierAccepter][:errors]).to be_nil
+          expect(gql_data[:dossierAccepter][:dossier][:id]).to eq(dossier.to_typed_id)
+          expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
+        }
+
+        context 'when in degraded mode' do
+          before { dossier.etablissement.update(adresse: nil) }
+
+          it {
+            expect(gql_data[:dossierAccepter][:errors].first[:message]).to eq('Les informations du SIRET du dossier ne sont pas complètes. Veuillez réessayer plus tard.')
+          }
+        end
       end
     end
 

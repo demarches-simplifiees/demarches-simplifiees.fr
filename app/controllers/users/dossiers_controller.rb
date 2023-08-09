@@ -6,7 +6,7 @@ module Users
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :qrcode, :transferer_all]
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update, :create_commentaire, :papertrail, :restore]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -260,9 +260,13 @@ module Users
       end
     end
 
-    def delete_dossier
+    def destroy
       if dossier.can_be_deleted_by_user?
-        dossier.hide_and_keep_track!(current_user, :user_request)
+        if current_user.owns?(dossier)
+          dossier.hide_and_keep_track!(current_user, :user_request)
+        elsif current_user.invite?(dossier)
+          current_user.invites.where(dossier:).destroy_all
+        end
         flash.notice = t('users.dossiers.ask_deletion.soft_deleted_dossier')
         redirect_to dossiers_path
       else
@@ -403,14 +407,14 @@ module Users
 
     def champs_public_params
       champs_params = params.require(:dossier).permit(champs_public_attributes: [
-        :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: [],
+        :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :code_departement, value: [],
           champs_attributes: [
-            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :departement, :code_departement, value: []
+            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :code_departement, value: []
           ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
       champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}
       champs_params
-   end
+    end
 
     def dossier_scope
       if action_name == 'update_brouillon'
@@ -471,6 +475,10 @@ module Users
 
       if should_change_groupe_instructeur?
         @dossier.assign_to_groupe_instructeur(groupe_instructeur_from_params)
+      end
+
+      if @dossier.procedure.feature_enabled?(:routing_rules)
+        RoutingEngine.compute(@dossier)
       end
 
       if dossier.en_construction?

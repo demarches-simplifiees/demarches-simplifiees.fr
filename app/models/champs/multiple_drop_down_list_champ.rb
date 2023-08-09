@@ -21,8 +21,6 @@
 #  type_de_champ_id               :integer
 #
 class Champs::MultipleDropDownListChamp < Champ
-  before_save :format_before_save
-
   validate :values_are_in_options, if: -> { value.present? }
 
   def options?
@@ -79,19 +77,45 @@ class Champs::MultipleDropDownListChamp < Champ
     update_column(:value, (selected_options - options).to_json)
   end
 
-  private
+  def focusable_input_id
+    render_as_checkboxes? ? checkbox_id(options.find(&:present?)) : input_id
+  end
 
-  def format_before_save
-    if value.present?
-      json = JSON.parse(value)
-      if json == ['']
-        self.value = nil
-      else
-        json = json - ['']
-        self.value = json.to_s
-      end
+  def checkbox_id(value)
+    "#{input_id}-#{Digest::MD5.hexdigest(value)}"
+  end
+
+  def next_checkbox_id(value)
+    return nil if value.blank? || !selected_options.include?(value)
+    index = selected_options.index(value)
+    next_values = selected_options.reject { _1 == value }
+    next_value = next_values[index] || next_values.last
+    next_value ? checkbox_id(next_value) : nil
+  end
+
+  def unselected_options
+    enabled_non_empty_options - selected_options
+  end
+
+  def value=(value)
+    return super(nil) if value.nil?
+
+    values = if value.is_a?(Array)
+      value
+    elsif value.starts_with?('[')
+      JSON.parse(value)
+    else
+      selected_options + [value]
+    end.uniq.without('')
+
+    if values.empty?
+      super(nil)
+    else
+      super(values.to_json)
     end
   end
+
+  private
 
   def values_are_in_options
     json = selected_options.reject(&:blank?)

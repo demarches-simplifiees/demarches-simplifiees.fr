@@ -1,8 +1,0 @@
-- if id.present?
-  - dossier = Dossier.find_by(id: id)
-  - if dossier.blank?
-    %p.text-warning
-      Ce dossier est inconnu
-  - else
-    %p.text-info
-      %span.dossier-text-summary= sanitize(dossier.text_summary)

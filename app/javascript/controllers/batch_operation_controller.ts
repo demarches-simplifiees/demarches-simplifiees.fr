@@ -24,6 +24,12 @@ export class BatchOperationController extends ApplicationController {
     if (pagination) {
       displayNotice(this.inputTargets);
     }
+
+    // add focus on button for a11y
+    const button = document.getElementById('js_select_more');
+    if (button) {
+      button.focus();
+    }
   }
 
   onSelectMore(event: {
@@ -44,6 +50,12 @@ export class BatchOperationController extends ApplicationController {
 
     hide(document.querySelector('#not_selected'));
     show(document.querySelector('#selected'));
+
+    // add focus on button for a11y
+    const button = document.getElementById('js_delete_selection');
+    if (button) {
+      button.focus();
+    }
   }
 
   onDeleteSelection(event: { preventDefault: () => void }) {

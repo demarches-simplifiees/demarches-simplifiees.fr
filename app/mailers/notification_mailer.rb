@@ -26,7 +26,7 @@ class NotificationMailer < ApplicationMailer
     attachments[@attachment[:filename]] = @attachment[:content] if @attachment.present?
 
     I18n.with_locale(@dossier.user_locale) do
-      mail(subject: @subject, to: @email, template_name: 'send_notification')
+      mail(subject: Nokogiri::HTML.parse(@subject).text, to: @email, template_name: 'send_notification')
     end
   end
 

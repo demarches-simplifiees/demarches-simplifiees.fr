@@ -684,6 +684,17 @@ describe API::V2::GraphqlController do
             })
           end
         end
+
+        # TODO Pf siege_social is not filled by pf library and may be nil
+        # context "error in degraded mode" do
+        #   before do
+        #     dossier.etablissement.update!(adresse: nil, siege_social: nil)
+        #   end
+        #
+        #   it "should return an error" do
+        #     expect(gql_errors).to eq([{ message: "Cannot return null for non-nullable field PersonneMorale.siegeSocial" }])
+        #   end
+        # end
       end
 
       context "champs" do

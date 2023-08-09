@@ -31,7 +31,8 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
     ]
   }
   let(:epci_value) { ['01', '200029999'] }
-  let(:commune_value) { ['01', '01457'] } # Vonnas (01540)
+  let(:commune_value) { ['01540', '01457'] } # Vonnas (01540)
+  let(:commune_libelle) { 'Vonnas (01540)' }
   let(:address_value) { "20 Avenue de Ségur 75007 Paris" }
   let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }
   let(:text_repetition_libelle) { sub_type_de_champs_repetition.first.libelle }

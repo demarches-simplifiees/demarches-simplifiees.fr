@@ -67,6 +67,8 @@ type Address {
 
 type AddressChamp implements Champ {
   address: Address
+  commune: Commune
+  departement: Departement
   id: ID!
 
   """
@@ -432,7 +434,16 @@ type Commune {
   Le code INSEE
   """
   code: String!
+
+  """
+  Le nom de la commune
+  """
   name: String!
+
+  """
+  Le code postal
+  """
+  postalCode: String
 }
 
 type CommuneChamp implements Champ {
@@ -3305,6 +3316,11 @@ type PersonneMorale implements Demandeur {
   siegeSocial: Boolean
   siret: String!
   typeVoie: String @deprecated(reason: "Utilisez le champ `address.street_address` à la place.")
+}
+
+type PersonneMoraleIncomplete implements Demandeur {
+  id: ID!
+  siret: String!
 }
 
 type PersonnePhysique implements Demandeur {

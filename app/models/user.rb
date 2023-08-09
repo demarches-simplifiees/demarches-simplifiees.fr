@@ -110,12 +110,12 @@ class User < ApplicationRecord
     dossier.user_id == id
   end
 
-  def invite?(dossier_id)
-    invites.pluck(:dossier_id).include?(dossier_id.to_i)
+  def invite?(dossier)
+    invites.exists?(dossier:)
   end
 
   def owns_or_invite?(dossier)
-    owns?(dossier) || invite?(dossier.id)
+    owns?(dossier) || invite?(dossier)
   end
 
   def invite!

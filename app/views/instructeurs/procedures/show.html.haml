@@ -133,9 +133,9 @@
                   %td.text-center
                     - if batch_operation_component.render?
                       - if p.batch_operation_id.present?
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled') }
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier_id) }
                       - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled') }
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
 
                       - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                         %span.notifications{ 'aria-label': 'notifications' }
@@ -174,14 +174,14 @@
 
                   %td.action-col.follow-col
                     %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
-                      = render partial: 'dossier_actions', locals: { procedure_id: @procedure.id,
+                      = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
                                   dossier_id: p.dossier_id,
                                   state: p.state,
                                   archived: p.archived,
                                   dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                   close_to_expiration: @statut == 'expirant',
                                   hidden_by_administration: @statut == 'supprimes_recemment',
-                                  post_method: { method: :post } }
+                                  turbo: false }
             %tfoot
               %tr
                 %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }= paginate @filtered_sorted_paginated_ids

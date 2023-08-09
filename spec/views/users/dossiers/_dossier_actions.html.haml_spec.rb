@@ -6,7 +6,7 @@ describe 'users/dossiers/dossier_actions.html.haml', type: :view do
   subject { render 'users/dossiers/dossier_actions.html.haml', dossier: dossier, current_user: user }
 
   it { is_expected.to have_link('Commencer un autre dossier', href: commencer_url(path: procedure.path)) }
-  it { is_expected.to have_link('Supprimer le dossier', href: delete_dossier_dossier_path(dossier)) }
+  it { is_expected.to have_link('Supprimer le dossier', href: dossier_path(dossier)) }
   it { is_expected.to have_link('Transférer le dossier', href: transferer_dossier_path(dossier)) }
 
   context 'when the dossier is termine' do

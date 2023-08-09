@@ -1,0 +1,4 @@
+---
+fr:
+  delete: Supprimer l’élément
+  delete_title: "Supprimer l’élément n°%{row_number}"

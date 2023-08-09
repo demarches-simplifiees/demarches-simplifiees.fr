@@ -19,7 +19,7 @@
           - if @avis.introduction_file.attached?
             = render Attachment::ShowComponent.new(attachment: @avis.introduction_file.attachment)
 
-          = render Attachment::DeleteFormComponent.new
+          = render NestedForms::FormOwnerComponent.new
           = form_for @avis, url: expert_avis_path(@avis.procedure, @avis), html: { data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@avis) }, multipart: true } do |f|
 
             - if @avis.question_label.present?

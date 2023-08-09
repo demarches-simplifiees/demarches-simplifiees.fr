@@ -62,9 +62,9 @@ describe 'user access to the list of their dossiers', js: true do
 
   describe 'deletion' do
     it 'should have links to delete dossiers' do
-      expect(page).to have_link(nil, href: delete_dossier_dossier_path(dossier_brouillon))
-      expect(page).to have_link(nil, href: delete_dossier_dossier_path(dossier_en_construction))
-      expect(page).not_to have_link(nil, href: delete_dossier_dossier_path(dossier_en_instruction))
+      expect(page).to have_link('Supprimer le dossier', href: dossier_path(dossier_brouillon))
+      expect(page).to have_link('Supprimer le dossier', href: dossier_path(dossier_en_construction))
+      expect(page).not_to have_link('Supprimer le dossier', href: dossier_path(dossier_en_instruction))
     end
 
     context 'when user clicks on delete button', js: true do

@@ -738,6 +738,13 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(assigns(:include_infos_administration)).to eq(true) }
       it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
+
+      context 'empty champs commune' do
+        let(:procedure) { create(:procedure, :published, :with_commune, instructeurs:) }
+        let(:dossier) { create(:dossier, :accepte, procedure:) }
+
+        it { expect(response).to render_template 'dossiers/show' }
+      end
     end
 
     context 'with dossier in batch_operation' do
@@ -824,7 +831,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it {
-        expect(champ_multiple_drop_down_list.value).to eq('["val1", "val2"]')
+        expect(champ_multiple_drop_down_list.value).to eq('["val1","val2"]')
         expect(champ_linked_drop_down_list.primary_value).to eq('primary')
         expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
         expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
@@ -873,7 +880,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
-      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true).and_call_original
+      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true, include_avis_for_expert: false).and_call_original
     end
 
     it 'includes an attachment' do

@@ -404,14 +404,6 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
     t.index ["user_id"], name: "index_dossiers_on_user_id"
   end
 
-  create_table "drop_down_lists", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "type_de_champ_id"
-    t.datetime "updated_at"
-    t.string "value"
-    t.index ["type_de_champ_id"], name: "index_drop_down_lists_on_type_de_champ_id"
-  end
-
   create_table "email_events", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "message_id"
@@ -588,6 +580,7 @@ ActiveRecord::Schema.define(version: 2023_08_08_171134) do
     t.datetime "created_at", null: false
     t.text "label", null: false
     t.bigint "procedure_id", null: false
+    t.jsonb "routing_rule"
     t.datetime "updated_at", null: false
     t.index ["closed", "procedure_id"], name: "index_groupe_instructeurs_on_closed_and_procedure_id"
     t.index ["procedure_id", "label"], name: "index_groupe_instructeurs_on_procedure_id_and_label", unique: true

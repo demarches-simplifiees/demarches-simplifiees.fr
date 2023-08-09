@@ -51,4 +51,16 @@ class Champs::DgfipChamp < Champs::TextChamp
       { reference_avis: reference_avis, numero_fiscal: numero_fiscal }.to_json
     end
   end
+
+  def numero_fiscal_input_id
+    "#{input_id}-numero_fiscal"
+  end
+
+  def reference_avis_input_id
+    "#{input_id}-reference_avis"
+  end
+
+  def focusable_input_id
+    numero_fiscal_input_id
+  end
 end

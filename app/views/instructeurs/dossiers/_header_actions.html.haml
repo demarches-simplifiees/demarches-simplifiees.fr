@@ -7,7 +7,7 @@
               dossier_is_followed: current_instructeur&.follow?(dossier),
               close_to_expiration: dossier.close_to_expiration?,
               hidden_by_administration: dossier.hidden_by_administration?,
-              post_method: {data: { turbo_method: :post }}}
+              turbo: true }
 
   %li.instruction-button
     = render partial: "instruction_button", locals: { dossier: dossier }

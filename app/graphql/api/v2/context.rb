@@ -55,6 +55,15 @@ class API::V2::Context < GraphQL::Query::Context
     self[:authorized][demarche.id]
   end
 
+  def query_info
+    {
+      graphql_query: query.query_string,
+      graphql_variables: query.provided_variables&.to_json,
+      graphql_null_error: errors.any? { _1.is_a? GraphQL::InvalidNullError }.presence,
+      graphql_timeout_error: errors.any? { _1.is_a? GraphQL::Schema::Timeout::TimeoutError }.presence
+    }.compact
+  end
+
   private
 
   def compute_demarche_authorization(demarche)

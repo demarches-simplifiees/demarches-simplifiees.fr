@@ -23,9 +23,10 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_css('label', text: type_de_champ_multiple_drop_down_list.libelle)
     expect(page).to have_content(multiple_drop_down_list_values.first)
     expect(page).to have_content(multiple_drop_down_list_values.last)
-    expect(page).to have_field(type_de_champ_epci.libelle, with: epci_value.last)
+    expect(page).to have_field("Le département de l’EPCI", with: epci_value.first)
+    expect(page).to have_selector("option[value='#{epci_value.last}'][selected]")
     expect(page).to have_field(type_de_champ_dossier_link.libelle, with: dossier_link_value)
-    expect(page).to have_selector("input[value='Vonnas (01540)']")
+    expect(page).to have_field(commune_libelle, with: '01457')
     expect(page).to have_content(annuaire_education_value.last)
     expect(page).to have_content(address_value.last)
   end
