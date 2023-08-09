@@ -23,18 +23,18 @@ class API::V2::StoredQuery
     $revision: ID
     $createdSince: ISO8601DateTime
     $updatedSince: ISO8601DateTime
-    $deletedOrder: Order
-    $deletedFirst: Int
-    $deletedAfter: String
-    $deletedSince: ISO8601DateTime
     $pendingDeletedOrder: Order
     $pendingDeletedFirst: Int
     $pendingDeletedAfter: String
     $pendingDeletedSince: ISO8601DateTime
+    $deletedOrder: Order
+    $deletedFirst: Int
+    $deletedAfter: String
+    $deletedSince: ISO8601DateTime
     $includeGroupeInstructeurs: Boolean = false
     $includeDossiers: Boolean = false
-    $includeDeletedDossiers: Boolean = false
     $includePendingDeletedDossiers: Boolean = false
+    $includeDeletedDossiers: Boolean = false
     $includeRevision: Boolean = false
     $includeService: Boolean = false
     $includeChamps: Boolean = true
@@ -118,11 +118,16 @@ class API::V2::StoredQuery
     $revision: ID
     $createdSince: ISO8601DateTime
     $updatedSince: ISO8601DateTime
+    $pendingDeletedOrder: Order
+    $pendingDeletedFirst: Int
+    $pendingDeletedAfter: String
+    $pendingDeletedSince: ISO8601DateTime
     $deletedOrder: Order
     $deletedFirst: Int
     $deletedAfter: String
     $deletedSince: ISO8601DateTime
     $includeDossiers: Boolean = false
+    $includePendingDeletedDossiers: Boolean = false
     $includeDeletedDossiers: Boolean = false
     $includeChamps: Boolean = true
     $includeAnotations: Boolean = true
@@ -155,6 +160,19 @@ class API::V2::StoredQuery
         }
         nodes {
           ...DossierFragment
+        }
+      }
+      pendingDeletedDossiers(
+        order: $pendingDeletedOrder
+        first: $pendingDeletedFirst
+        after: $pendingDeletedAfter
+        deletedSince: $pendingDeletedSince
+      ) @include(if: $includePendingDeletedDossiers) {
+        pageInfo {
+          ...PageInfoFragment
+        }
+        nodes {
+          ...DeletedDossierFragment
         }
       }
       deletedDossiers(
@@ -240,7 +258,7 @@ class API::V2::StoredQuery
       ...FileFragment
     }
     pdf {
-      url
+      ...FileFragment
     }
     usager {
       email
@@ -250,14 +268,9 @@ class API::V2::StoredQuery
     }
     demandeur {
       __typename
-      ... on PersonnePhysique {
-        civilite
-        nom
-        prenom
-        dateDeNaissance
-      }
-      ... on PersonneMoraleIncomplete { siret }
+      ...PersonnePhysiqueFragment
       ...PersonneMoraleFragment
+      ...PersonneMoraleIncompleteFragment
     }
     demarche {
       revision {
@@ -367,24 +380,6 @@ class API::V2::StoredQuery
     ... on ExplicationChampDescriptor {
       collapsibleExplanationEnabled
       collapsibleExplanationText
-    }
-    ... on PaysChampDescriptor {
-      options {
-        name
-        code
-      }
-    }
-    ... on RegionChampDescriptor {
-      options {
-        name
-        code
-      }
-    }
-    ... on DepartementChampDescriptor {
-      options {
-        name
-        code
-      }
     }
   }
 
@@ -502,8 +497,7 @@ class API::V2::StoredQuery
     }
     ... on EpciChamp {
       epci {
-        name
-        code
+        ...EpciFragment
       }
       departement {
         ...DepartementFragment
@@ -524,14 +518,12 @@ class API::V2::StoredQuery
     }
     ... on RegionChamp {
       region {
-        name
-        code
+        ...RegionFragment
       }
     }
     ... on PaysChamp {
       pays {
-        name
-        code
+        ...PaysFragment
       }
     }
     ... on SiretChamp {
@@ -579,6 +571,17 @@ class API::V2::StoredQuery
     }
   }
 
+  fragment PersonneMoraleIncompleteFragment on PersonneMoraleIncomplete {
+    siret
+  }
+
+  fragment PersonnePhysiqueFragment on PersonnePhysique {
+    civilite
+    nom
+    prenom
+  }
+
+
   fragment FileFragment on File {
     filename
     contentType
@@ -602,7 +605,22 @@ class API::V2::StoredQuery
     regionCode
   }
 
+  fragment PaysFragment on Pays {
+    name
+    code
+  }
+
+  fragment RegionFragment on Region {
+    name
+    code
+  }
+
   fragment DepartementFragment on Departement {
+    name
+    code
+  }
+
+  fragment EpciFragment on Epci {
     name
     code
   }
