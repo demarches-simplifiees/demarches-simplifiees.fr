@@ -7,7 +7,7 @@
   Vous venez d’être nommé instructeur sur #{APPLICATION_NAME}.
 
 %p
-  Votre compte a été créé pour l'adresse email #{@user.email}. Pour l’activer, je vous invite à cliquer sur le lien suivant : 
+  Votre compte a été créé pour l'adresse email #{@user.email}. Pour l’activer, nous vous invitons à cliquer sur le lien suivant : 
   = link_to(users_activate_url(token: @reset_password_token), users_activate_url(token: @reset_password_token))
 
 %p
