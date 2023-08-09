@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { cassette_name: 'api_geo_regions' } do
+RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model do
   let(:procedure) { create(:procedure) }
   let(:type_de_champ) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
   let(:champ) { create(:champ_repetition, type_de_champ: type_de_champ) }
@@ -8,12 +8,6 @@ RSpec.describe TypesDeChamp::PrefillRepetitionTypeDeChamp, type: :model, vcr: { 
   let(:text_repetition) { prefillable_subchamps.first }
   let(:integer_repetition) { prefillable_subchamps.second }
   let(:region_repetition) { prefillable_subchamps.third }
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
 
   describe 'ancestors' do
     subject { described_class.build(type_de_champ, procedure.active_revision) }

@@ -1,8 +1,6 @@
 require 'csv'
 
 describe ProcedureExportService do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
   let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
 
@@ -24,12 +22,7 @@ describe ProcedureExportService do
     end
   end
 
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
-  describe 'to_xlsx', vcr: { cassette_name: 'api_geo_all' } do
+  describe 'to_xlsx' do
     subject do
       service
         .to_xlsx
@@ -371,7 +364,7 @@ describe ProcedureExportService do
     end
   end
 
-  describe 'to_zip', vcr: { cassette_name: 'api_geo_all' } do
+  describe 'to_zip' do
     subject { service.to_zip }
     context 'without files' do
       it 'does not raises in_batches' do
@@ -435,7 +428,7 @@ describe ProcedureExportService do
       create(:geo_area, :polygon, champ: champ_carte)
     end
 
-    it 'should have features', vcr: { cassette_name: 'api_geo_all' } do
+    it 'should have features' do
       expect(subject['features'].size).to eq(1)
       expect(properties['dossier_id']).to eq(dossier.id)
       expect(properties['champ_id']).to eq(champ_carte.stable_id)

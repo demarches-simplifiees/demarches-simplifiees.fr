@@ -1,11 +1,4 @@
 describe APIGeoService do
-  let(:memory_store) { ActiveSupport::Cache.lookup_store(:memory_store) }
-
-  before do
-    allow(Rails).to receive(:cache).and_return(memory_store)
-    Rails.cache.clear
-  end
-
   describe 'pays' do
     it 'countrie_code' do
       countries = JSON.parse(Rails.root.join('spec/fixtures/files/pays_dump.json').read)
@@ -26,7 +19,7 @@ describe APIGeoService do
     end
   end
 
-  describe 'regions', vcr: { cassette_name: 'api_geo_regions' } do
+  describe 'regions' do
     it 'return sorted results' do
       expect(APIGeoService.regions.size).to eq(18)
       expect(APIGeoService.regions.first).to eq(code: '84', name: 'Auvergne-Rhône-Alpes')
@@ -34,7 +27,7 @@ describe APIGeoService do
     end
   end
 
-  describe 'departements', vcr: { cassette_name: 'api_geo_departements' } do
+  describe 'departements' do
     it 'return sorted results' do
       expect(APIGeoService.departements.size).to eq(110)
       expect(APIGeoService.departements.first).to eq(code: '99', name: 'Etranger')
@@ -43,7 +36,7 @@ describe APIGeoService do
     end
   end
 
-  describe 'communes', vcr: { cassette_name: 'api_geo_communes' } do
+  describe 'communes' do
     it 'return sorted results' do
       expect(APIGeoService.communes('01').size).to eq(399)
       expect(APIGeoService.communes('01').first).to eq(code: '01004', name: 'Ambérieu-en-Bugey', postal_code: '01500', departement_code: '01', epci_code: '240100883')
@@ -51,27 +44,29 @@ describe APIGeoService do
     end
   end
 
-  describe 'communes_by_postal_code', vcr: { cassette_name: 'api_geo_communes' } do
+  describe 'communes_by_postal_code' do
     it 'return results' do
+      expect(APIGeoService.communes_by_postal_code('01500').size).to eq(8)
       expect(APIGeoService.communes_by_postal_code('75019').size).to eq(2)
       expect(APIGeoService.communes_by_postal_code('69005').size).to eq(2)
       expect(APIGeoService.communes_by_postal_code('13006').size).to eq(2)
       expect(APIGeoService.communes_by_postal_code('73480').size).to eq(3)
       expect(APIGeoService.communes_by_postal_code('20000').first[:code]).to eq('2A004')
+      expect(APIGeoService.communes_by_postal_code('37160').size).to eq(7)
     end
   end
 
-  describe 'commune_name', vcr: { cassette_name: 'api_geo_communes' } do
+  describe 'commune_name' do
     subject { APIGeoService.commune_name('01', '01457') }
     it { is_expected.to eq('Vonnas') }
   end
 
-  describe 'commune_code', vcr: { cassette_name: 'api_geo_communes' } do
+  describe 'commune_code' do
     subject { APIGeoService.commune_code('01', 'Vonnas') }
     it { is_expected.to eq('01457') }
   end
 
-  describe 'epcis', vcr: { cassette_name: 'api_geo_epcis' } do
+  describe 'epcis' do
     it 'return sorted results' do
       expect(APIGeoService.epcis('01').size).to eq(17)
       expect(APIGeoService.epcis('01').first).to eq(code: '200042935', name: 'CA Haut - Bugey Agglomération')

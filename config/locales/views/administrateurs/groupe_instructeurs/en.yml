@@ -41,11 +41,14 @@ en:
           notice: This group will be a choice from the list "%{routing_criteria_name}"
         csv_import:
           title: CSV Import
-          notice_1_html: The csv file must have 1 column with instructors emails. For routed procedures, the csv file must have 2 columns (Group, Email) and be separated by commas. The import does not overwrite existing groups and instructors.
+          notice_1_html: The csv file must have 1 column with instructors emails(%{instructeurs_link}). For routed procedures, the csv file must have 2 columns (Group, Email) and be separated by commas (%{groupes_link}). The import does not overwrite existing groups and instructors.
           notice_2: The size of the file must be less than %{csv_max_size}.
           import_file: Import file
           import_file_procedure_not_published: The import of instructors by CSV file is available once the process has been published
           import_file_alert: Instructors added to the procedure will receive an email. Are you sure you want to continue ?"
+          link_text: file example
+          instructeurs_file_path: /csv/import-instructeurs-test.csv
+          groupes_file_path: /csv/en/import-groupe-test.csv
         set_up: set up
         button:
           add_group: Add group

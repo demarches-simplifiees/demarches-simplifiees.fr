@@ -193,7 +193,7 @@ describe API::V2::GraphqlController do
       end
     end
 
-    context 'getDemarcheDescriptor', vcr: { cassette_name: 'api_geo_regions' } do
+    context 'getDemarcheDescriptor' do
       let(:operation_name) { 'getDemarcheDescriptor' }
       let(:types_de_champ_public) { [{ type: :text }, { type: :piece_justificative }, { type: :regions }] }
 
