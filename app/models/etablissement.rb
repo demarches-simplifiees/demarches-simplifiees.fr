@@ -144,7 +144,7 @@ class Etablissement < ApplicationRecord
       "#{numero_voie} #{type_voie} #{nom_voie}",
       complement_adresse,
       "#{code_postal} #{localite}"
-    ].reject(&:blank?).join(', ').squeeze(' ')
+    ].compact_blank.join(', ').squeeze(' ')
   end
 
   def association?

@@ -4,7 +4,6 @@ module Redcarpet
     include ApplicationHelper
 
     # won't use rubocop tag method because it is missing output buffer
-    # rubocop:disable Rails/ContentTag
     def list(content, list_type)
       tag = list_type == :ordered ? :ol : :ul
       content_tag(tag, content, { class: @options[:class_names_map].fetch(:list) {} }, false)
@@ -32,7 +31,5 @@ module Redcarpet
         link
       end
     end
-
-    # rubocop:enable Rails/ContentTag
   end
 end

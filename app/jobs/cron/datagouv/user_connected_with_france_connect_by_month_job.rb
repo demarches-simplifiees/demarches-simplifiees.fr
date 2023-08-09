@@ -14,6 +14,6 @@ class Cron::Datagouv::UserConnectedWithFranceConnectByMonthJob < Cron::CronJob
   end
 
   def data
-    User.where(created_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month, loged_in_with_france_connect: "particulier").count
+    User.where(created_at: 1.month.ago.all_month, loged_in_with_france_connect: "particulier").count
   end
 end

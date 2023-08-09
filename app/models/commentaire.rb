@@ -15,7 +15,6 @@
 class Commentaire < ApplicationRecord
   include Discard::Model
 
-  self.ignored_columns = [:user_id]
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
 
   belongs_to :instructeur, inverse_of: :commentaires, optional: true

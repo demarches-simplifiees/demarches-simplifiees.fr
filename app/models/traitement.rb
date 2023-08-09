@@ -22,7 +22,8 @@ class Traitement < ApplicationRecord
     includes(:dossier)
       .termine
       .where(dossier: procedure.dossiers.visible_by_administration)
-      .where.not('dossiers.depose_at' => nil, processed_at: nil)
+      .where.not('dossiers.depose_at' => nil)
+      .where.not(processed_at: nil)
       .order(:processed_at)
   end
 end

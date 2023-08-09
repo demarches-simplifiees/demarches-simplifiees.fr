@@ -330,7 +330,7 @@ FactoryBot.define do
       published
 
       aasm_state { :close }
-      published_at { Time.zone.now - 1.second }
+      published_at { 1.second.ago }
       closed_at { Time.zone.now }
     end
 
@@ -338,7 +338,7 @@ FactoryBot.define do
       published
 
       aasm_state { :depubliee }
-      published_at { Time.zone.now - 1.second }
+      published_at { 1.second.ago }
       unpublished_at { Time.zone.now }
     end
 
