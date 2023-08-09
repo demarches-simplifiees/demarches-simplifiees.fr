@@ -141,7 +141,7 @@ RSpec.describe DossierHelper, type: :helper do
 
     it 'en_construction is En construction' do
       dossier.en_construction!
-      expect(subject).to eq('En construction')
+      expect(subject).to eq('En construction')
     end
 
     it 'accepte is traité' do
@@ -151,12 +151,12 @@ RSpec.describe DossierHelper, type: :helper do
 
     it 'en_instruction is reçu' do
       dossier.en_instruction!
-      expect(subject).to eq('En instruction')
+      expect(subject).to eq('En instruction')
     end
 
     it 'sans_suite is traité' do
       dossier.sans_suite!
-      expect(subject).to eq('Classé sans suite')
+      expect(subject).to eq('Classé sans suite')
     end
 
     it 'refuse is traité' do

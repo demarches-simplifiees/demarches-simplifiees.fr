@@ -162,7 +162,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en instruction.')
+        expect(response.body).to include('Le dossier est déjà en instruction.')
       end
     end
 
@@ -175,7 +175,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'warns about the error' do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
+        expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
       end
     end
 
@@ -208,7 +208,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en construction.')
+        expect(response.body).to include('Le dossier est déjà en construction.')
       end
     end
 
@@ -245,7 +245,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en instruction.')
+        expect(response.body).to include('Le dossier est déjà en instruction.')
       end
     end
 

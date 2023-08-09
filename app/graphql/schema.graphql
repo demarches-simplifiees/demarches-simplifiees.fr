@@ -2053,12 +2053,12 @@ enum DossierState {
   accepte
 
   """
-  En construction
+  En construction
   """
   en_construction
 
   """
-  En instruction
+  En instruction
   """
   en_instruction
 
@@ -2068,7 +2068,7 @@ enum DossierState {
   refuse
 
   """
-  Classé sans suite
+  Classé sans suite
   """
   sans_suite
 }
