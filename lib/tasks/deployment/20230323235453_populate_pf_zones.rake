@@ -9,7 +9,7 @@ namespace :after_party do
     if Flipper.enabled? :zonage
       puts "Running deploy task 'populate_pf_zones'"
       puts "Removing DS zones"
-      config = Psych.safe_load(File.read(Rails.root.join("config", "zones_pf.yml")))
+      config = Psych.safe_load(Rails.root.join("config", "zones_pf.yml").read)
       fr_zones = config["ministeres"].map { |ministere| ministere.keys.first } + ['COLLECTIVITE', "MInArm", "EN", "SPM"]
       fr_zones.each { |acronym| zone = Zone.where(acronym: acronym).first; zone&.labels&.destroy_all; zone&.destroy; }
 
@@ -20,7 +20,7 @@ namespace :after_party do
         coll_label.update(name: libelle)
       end
 
-      config = Psych.safe_load(File.read(Rails.root.join("config", "zones_pf.yml")))
+      config = Psych.safe_load(Rails.root.join("config", "zones_pf.yml").read)
       config["ministeres"].each do |ministere|
         acronym = ministere.keys.first
         zone = Zone.find_or_create_by!(acronym: acronym)

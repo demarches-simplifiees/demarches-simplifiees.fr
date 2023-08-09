@@ -4,8 +4,7 @@ namespace :after_party do
     puts "Running deploy task 'clean_france_connect'"
 
     FranceConnectInformation
-      .left_outer_joins(:user)
-      .where(users: { id: nil })
+      .where.missing(:user)
       .destroy_all
 
     # Update task as completed.  If you remove the line below, the task will
