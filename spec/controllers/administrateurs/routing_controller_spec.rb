@@ -49,4 +49,22 @@ describe Administrateurs::RoutingController, type: :controller do
       end
     end
   end
+
+  describe "#update_defaut_groupe_instructeur" do
+    let(:procedure) { create(:procedure) }
+    let(:gi_2) { procedure.groupe_instructeurs.create(label: 'groupe 2') }
+    let(:params) do
+      {
+        procedure_id: procedure.id,
+        defaut_groupe_instructeur_id: gi_2.id
+      }
+    end
+
+    before do
+      post :update_defaut_groupe_instructeur, params: params, format: :turbo_stream
+      procedure.reload
+    end
+
+    it { expect(procedure.defaut_groupe_instructeur.id).to eq(gi_2.id) }
+  end
 end

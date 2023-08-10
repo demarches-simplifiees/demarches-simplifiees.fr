@@ -12,6 +12,11 @@ module Administrateurs
       groupe_instructeur.update!(routing_rule: ds_eq(left, right))
     end
 
+    def update_defaut_groupe_instructeur
+      new_defaut = @procedure.groupe_instructeurs.find(defaut_groupe_instructeur_id)
+      @procedure.update!(defaut_groupe_instructeur: new_defaut)
+    end
+
     private
 
     def targeted_champ_changed?
@@ -19,11 +24,11 @@ module Administrateurs
     end
 
     def targeted_champ
-      Logic.from_json(routing_params[:targeted_champ])
+      Logic.from_json(params[:targeted_champ])
     end
 
     def value
-      Logic.from_json(routing_params[:value])
+      Logic.from_json(params[:value])
     end
 
     def groupe_instructeur
@@ -31,11 +36,11 @@ module Administrateurs
     end
 
     def groupe_instructeur_id
-      routing_params[:groupe_instructeur_id]
+      params[:groupe_instructeur_id]
     end
 
-    def routing_params
-      params.permit(:targeted_champ, :value, :groupe_instructeur_id)
+    def defaut_groupe_instructeur_id
+      params[:defaut_groupe_instructeur_id]
     end
   end
 end
