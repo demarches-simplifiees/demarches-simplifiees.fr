@@ -21,4 +21,11 @@
 #  type_de_champ_id               :integer
 #
 class Champs::EmailChamp < Champs::TextChamp
+  validates :value,
+    format: {
+      with: Devise.email_regexp,
+      message: I18n.t('invalid', scope: 'activerecord.errors.models.email_champ.attributes.value')
+    },
+    allow_nil: true,
+    if: -> { validation_context != :brouillon }
 end

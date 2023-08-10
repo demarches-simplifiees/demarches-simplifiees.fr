@@ -388,6 +388,10 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
+        account_creation:
+          empty: "Aucun dossier"
+          detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
+          detail_two: "Celui ci doit ressembler à"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
@@ -572,6 +576,10 @@ fr:
           attributes:
             email:
               taken: ': Invitation déjà envoyée'
+        email_champ:
+          attributes:
+            value:
+              invalid: "est invalide. Saisir une adresse éléctronique valide, exemple : john.doe@exemple.fr"
         user:
           attributes: &error_attributes
             reset_password_token:
