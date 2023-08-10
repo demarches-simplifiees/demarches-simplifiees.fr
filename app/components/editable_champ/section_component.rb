@@ -10,7 +10,9 @@ class EditableChamp::SectionComponent < ApplicationComponent
   end
 
   def render_within_fieldset?
-    first_champ_is_an_header_section? && any_champ_fillable?
+    first_champ_is_an_header_section?
+    # pf: don't call any_champ_fillable? as this prevents correct numerotation
+    # && any_champ_fillable?
   end
 
   def header_section

@@ -1,26 +1,24 @@
 .counter-start-header-section {
-  counter-reset: hsc1;
-
   counter-reset: h1 h2 h3 h4 h5 h6;
 
   .reset-h1 {
-    counter-reset: h2;
+    counter-reset: h1;
   }
 
   .reset-h2 {
-    counter-reset: h3;
+    counter-reset: h2;
   }
 
   .reset-h3 {
-    counter-reset: h4;
+    counter-reset: h3;
   }
 
   .reset-h4 {
-    counter-reset: h5;
+    counter-reset: h4;
   }
 
   .reset-h5 {
-    counter-reset: h6;
+    counter-reset: h5;
   }
 
 
@@ -62,27 +60,4 @@
       content: counter(repetition);
     }
   }
-}
-
-h2.header-section::before {
-  counter-increment: hsc1;
-  content: counter(hsc1) " ";
-}
-
-h3.header-section::before {
-  counter-increment: hsc2;
-  content: counter(hsc1) "." counter(hsc2) " ";
-}
-
-h4.header-section::before {
-  counter-increment: hsc3;
-  content: counter(hsc1) "." counter(hsc2) "." counter(hsc3) " ";
-}
-
-.header-section-reset2 {
-  counter-reset: hsc2;
-}
-
-.header-section-reset3 {
-  counter-reset: hsc3;
 }
