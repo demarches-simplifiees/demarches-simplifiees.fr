@@ -23,7 +23,7 @@
 class Champs::HeaderSectionChamp < Champ
   def level
     if parent.present?
-      header_section_level_value.to_i + parent.current_section_level
+      header_section_level_value.to_i + parent.current_section_level(dossier.revision)
     elsif header_section_level_value
       header_section_level_value.to_i
     else

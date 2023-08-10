@@ -17,4 +17,4 @@
             %td= group.label
             %td.actions= link_to "voir", instructeur_groupe_path(@procedure, group)
 
-    = paginate @groupes_instructeurs
+    = paginate @groupes_instructeurs, views_prefix: 'shared'

@@ -450,7 +450,7 @@ fr:
           simple: Rechercher
         secondary_menu: Menu secondaire
         index:
-          dossiers: "Dossiers"
+          dossiers: "Mes dossiers"
         dossiers_list:
           caption: Mes dossiers
           procedure: "Démarche"
