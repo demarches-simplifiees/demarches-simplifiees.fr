@@ -8,6 +8,8 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
 
     before do
       allow_any_instance_of(Procedure).to receive(:stable_ids_used_by_routing_rules).and_return(routing_rules_stable_ids)
+      # pf visa & tefenua champs are activated via Flipper which requires current_user which is not active in these tests
+      allow_any_instance_of(TypesDeChampEditor::ChampComponent).to receive(:filter_featured_type_champ).and_return(true)
       render_inline(component)
     end
 
