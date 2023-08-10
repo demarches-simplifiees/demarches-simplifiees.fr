@@ -1,3 +1,2 @@
-- class_names = 'header-section ' + (@champ.dossier.auto_numbering_section_headers_for?(@champ) ? "header-section-counter" : "")
-= content_tag "h" + (1+@champ.level).to_s, { class: class_names, data: { controller: 'header-section' } } do
-  = @champ.libelle
+= tag.send(tag_for_depth, class: header_section_classnames) do
+  = libelle

@@ -1,7 +1,12 @@
 #errors-summary
-  - if @revision.invalid?
+  - if invalid?
     .card.warning
-      .card-title La logique conditionnelle est devenue invalide
+      .card-title Le formulaire contient des erreurs
 
-      %p.mb-2= t('.fix', count: @revision.errors.count)
-      = error_message
+      - if condition_errors?
+        %p.mb-2= t('.fix_conditional', count: errors_for(:condition).size)
+        = error_message_for(:condition)
+
+      - if header_section_errors?
+        %p.mb-2= t('.fix_header_section', count: errors_for(:header_section).size)
+        = error_message_for(:header_section)

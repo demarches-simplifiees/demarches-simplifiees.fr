@@ -8,7 +8,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
     before { render_inline(described_class.new(conditions: conditions, upper_tdcs: upper_tdcs)) }
 
     context 'when there are no condition' do
-      it { expect(page).to have_no_css('.condition-error') }
+      it { expect(page).to have_no_css('.errors-summary') }
     end
 
     context 'when the targeted_champ is not available' do
@@ -16,7 +16,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(1))] }
 
       it do
-        expect(page).to have_css('.condition-error')
+        expect(page).to have_css('.errors-summary')
         expect(page).to have_content("Un champ cible n'est plus disponible")
       end
     end
@@ -27,7 +27,7 @@ describe TypesDeChampEditor::ConditionsErrorsComponent, type: :component do
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(1))] }
 
       it do
-        expect(page).to have_css('.condition-error')
+        expect(page).to have_css('.errors-summary')
         expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse en france » et ne peut pas être utilisé comme champ cible.")
       end
     end

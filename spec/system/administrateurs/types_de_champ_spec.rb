@@ -1,4 +1,6 @@
 describe 'As an administrateur I can edit types de champ', js: true do
+  include ActionView::RecordIdentifier
+
   let(:administrateur) { procedure.administrateurs.first }
   let(:estimated_duration_visible) { true }
   let(:procedure) { create(:procedure, estimated_duration_visible:) }
@@ -227,6 +229,30 @@ describe 'As an administrateur I can edit types de champ', js: true do
       add_champ
       select('Pièce justificative', from: 'Type de champ')
       expect(page).not_to have_content('Durée de remplissage estimée')
+    end
+  end
+
+  context 'header section' do
+    scenario 'invalid order, it pops up errors summary' do
+      add_champ
+      select('Titre de section', from: 'Type de champ')
+      first_header = procedure.active_revision.types_de_champ_public.first
+      select('Titre de niveau 1', from: dom_id(first_header, :header_section_level))
+
+      add_champ
+      wait_until { procedure.reload.active_revision.types_de_champ_public.count == 2 }
+      second_header = procedure.active_revision.types_de_champ_public.last
+      select('Titre de section', from: dom_id(second_header, :type_champ))
+      select('Titre de niveau 2', from: dom_id(second_header, :header_section_level))
+
+      within(".types-de-champ-block li:first-child") do
+        page.accept_alert do
+          click_on 'Supprimer'
+        end
+      end
+
+      expect(page).to have_content("Le formulaire contient des erreurs")
+      expect(page).to have_content("Le titre de section suivant est invalide, veuillez le corriger :")
     end
   end
 end

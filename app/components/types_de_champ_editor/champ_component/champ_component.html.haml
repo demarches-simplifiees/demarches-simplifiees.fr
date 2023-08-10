@@ -48,6 +48,11 @@
             .cell.mt-1
               = form.label :description, "Description du champ (optionnel)", for: dom_id(type_de_champ, :description)
               = form.text_area :description, class: 'small-margin small width-100', rows: 3, id: dom_id(type_de_champ, :description)
+          - if type_de_champ.header_section?
+            .cell.mt-1
+              = render TypesDeChampEditor::HeaderSectionComponent.new(form: form, tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ))
+
+
 
       .flex.justify-start.mt-1
         -# ----- Polynesia options

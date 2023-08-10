@@ -6,7 +6,11 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
   private
 
   def has_label?(champ)
-    types_without_label = [TypeDeChamp.type_champs.fetch(:header_section), TypeDeChamp.type_champs.fetch(:explication)]
+    types_without_label = [
+      TypeDeChamp.type_champs.fetch(:header_section),
+      TypeDeChamp.type_champs.fetch(:explication),
+      TypeDeChamp.type_champs.fetch(:repetition)
+    ]
     !types_without_label.include?(@champ.type_champ)
   end
 

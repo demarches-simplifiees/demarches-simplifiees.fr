@@ -132,6 +132,7 @@ module Administrateurs
         :drop_down_secondary_description,
         :collapsible_explanation_enabled,
         :collapsible_explanation_text,
+        :header_section_level,
         editable_options: [
           *INSTANCE_EDITABLE_OPTIONS,
           *TypesDeChamp::CarteTypeDeChamp::LAYERS
