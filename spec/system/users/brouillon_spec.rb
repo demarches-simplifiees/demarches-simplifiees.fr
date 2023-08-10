@@ -40,6 +40,9 @@ describe 'The user' do
     fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
     select('Brétigny (60400)', from: form_id_for('communes'))
 
+    # communes needs more time to be updated
+    wait_until { champ_value_for('communes') == "Brétigny" }
+
     select('Australienne', from: form_id_for('nationalites'))
     select('Mahina - Tahiti - 98709', from: form_id_for('commune_de_polynesie'))
     select('98709 - Mahina - Tahiti', from: form_id_for('code_postal_de_polynesie'))
