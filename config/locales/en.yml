@@ -568,10 +568,6 @@ en:
           attributes:
             email:
               taken: ': Invitation already sent'
-        email_champ:
-          attributes:
-            value:
-              invalid: "is invalid. Fill in a valid email address, example: john.doe@example.fr"
 
         user:
           attributes: &error_attributes
