@@ -90,4 +90,31 @@ TEXT
       it { expect(page).not_to have_selector("a") }
     end
   end
+
+  context 'emphasis not in urls' do
+    let(:text) do
+      <<~TEXT
+        A _string emphased_ but https://example.fr/path_preserves_underscore
+        email: here_is_my@email.com
+      TEXT
+    end
+
+    context "without autolink" do
+      let(:allow_a) { false }
+      it { expect(page).to have_selector("em", count: 1, text: "string emphased") }
+      it { expect(page).to have_text("https://example.fr/path_preserves_underscore") }
+      it { expect(page).to have_text("email: here_is_my@email.com") }
+    end
+
+    context "with autolink" do
+      let(:allow_a) { true }
+      it {
+        expect(page).to have_link("https://example.fr/path_preserves_underscore")
+
+        # NOTE: As of Redcarpet 3.6.0, autolinking email containing _ is broken https://github.com/vmg/redcarpet/issues/402
+        # but we still want the email to be displayed
+        expect(page).to have_text("here_is_my@email.com")
+      }
+    end
+  end
 end

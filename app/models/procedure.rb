@@ -456,6 +456,10 @@ class Procedure < ApplicationRecord
     publiee? || brouillon?
   end
 
+  def replaced_by_procedure?
+    replaced_by_procedure_id.present?
+  end
+
   def dossier_can_transition_to_en_construction?
     accepts_new_dossiers? || depubliee?
   end
@@ -561,6 +565,9 @@ class Procedure < ApplicationRecord
     if is_different_admin || from_library
       procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
+
+    new_defaut_groupe = procedure.groupe_instructeurs.find_by(label: defaut_groupe_instructeur.label)
+    procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
 
     procedure
   end

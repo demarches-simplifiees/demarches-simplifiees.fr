@@ -8,7 +8,7 @@
         %span.icon.accept
         .dropdown-description
           %h4 Accepter
-          L’usager sera notifié que son dossier a été accepté
+          L’usager sera informé que son dossier a été accepté
 
     - menu.with_item(class: "hidden inactive form-inside") do
       = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier, placeholder: 'Expliquez au demandeur pourquoi ce dossier est accepté (facultatif)', popup_class: 'accept', process_action: 'accepter', title: 'Accepter', confirm: "Confirmez-vous l'acceptation ce dossier ?" }
@@ -19,7 +19,7 @@
         %span.icon.without-continuation
         .dropdown-description
           %h4 Classer sans suite
-          L’usager sera notifié que son dossier a été classé sans suite
+          L’usager sera informé que son dossier a été classé sans suite
 
     - menu.with_item(class: "hidden inactive form-inside") do
       = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier, placeholder: 'Expliquez au demandeur pourquoi ce dossier est classé sans suite (obligatoire)', popup_class: 'without-continuation', process_action: 'classer_sans_suite', title: 'Classer sans suite', confirm: 'Confirmez-vous le classement sans suite de ce dossier ?' }
@@ -29,7 +29,7 @@
         %span.icon.refuse
         .dropdown-description
           %h4 Refuser
-          L’usager sera notifié que son dossier a été refusé
+          L’usager sera informé que son dossier a été refusé
 
     - menu.with_item(class: "hidden inactive form-inside") do
       = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier: dossier, placeholder: 'Expliquez au demandeur pourquoi ce dossier est refusé (obligatoire)', popup_class: 'refuse', process_action: 'refuser', title: 'Refuser', confirm: 'Confirmez-vous le refus de ce dossier ?' }

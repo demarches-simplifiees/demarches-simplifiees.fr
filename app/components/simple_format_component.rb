@@ -21,12 +21,22 @@ class SimpleFormatComponent < ApplicationComponent
     no_images: true
   }
 
+  SIMPLE_URL_REGEX = %r{https?://\S+}
+  EMAIL_IN_TEXT_REGEX = Regexp.new(Devise.email_regexp.source.gsub(/\\A|\\z/, '\b'))
+
   def initialize(text, allow_a: true, class_names_map: {})
+    @allow_a = allow_a
+
     @text = (text || "").gsub(/\R/, "\n\n") # force double \n otherwise a single one won't split paragraph
       .split("\n\n") #
       .map { _1.sub(/^\s+(?=[0-9]\.|[^ *-])/, "") } # this block prevent redcarpet to consider "   text" as block code by lstriping
       .join("\n\n")
-    @allow_a = allow_a
+      .gsub(EMAIL_IN_TEXT_REGEX) { _1.gsub('_', '\\_') } # Workaround for redcarpet bug on autolink email having _. Cf tests
+
+    if !@allow_a
+      @text = @text.gsub(SIMPLE_URL_REGEX) { _1.gsub('_', '\\_') } # Escape underscores in URLs
+    end
+
     @renderer = Redcarpet::Markdown.new(
       Redcarpet::BareRenderer.new(class_names_map:),
       REDCARPET_EXTENSIONS.merge(autolink: @allow_a)
