@@ -18,7 +18,7 @@ module DossierSectionsConcern
 
     def auto_numbering_section_headers_for?(champ)
       # pf : historically, headers in repetiion are numbered so apply numbering in repetitions
-      # return false if champ.child?
+      return false if champ.child?
 
       sections_for(champ)&.none?(&:libelle_with_section_index?)
     end

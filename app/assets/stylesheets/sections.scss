@@ -2,23 +2,23 @@
   counter-reset: h1 h2 h3 h4 h5 h6;
 
   .reset-h1 {
-    counter-reset: h1;
-  }
-
-  .reset-h2 {
     counter-reset: h2;
   }
 
-  .reset-h3 {
+  .reset-h2 {
     counter-reset: h3;
   }
 
-  .reset-h4 {
+  .reset-h3 {
     counter-reset: h4;
   }
 
-  .reset-h5 {
+  .reset-h4 {
     counter-reset: h5;
+  }
+
+  .reset-h5 {
+    counter-reset: h6;
   }
 
 
