@@ -175,6 +175,31 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
+    context 'with specific service' do
+      let(:requested_siret) { '13001501900024' }
+      let(:another_siret) { '11000004900012' }
+      let(:requested_service) { create(:service, siret: requested_siret) }
+      let(:another_service) { create(:service, siret: another_siret) }
+      let!(:procedure1) { create(:procedure, :published, service: another_service) }
+      let!(:procedure2) { create(:procedure, :published, service: requested_service) }
+      it 'display only procedures with specific service (identified by siret)' do
+        get :all, params: { service_siret: requested_siret }
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+      end
+    end
+
+    context 'with a siret which does not identify a service' do
+      let(:requested_siret) { '13001501900024' }
+      let(:another_siret) { '11000004900012' }
+      let(:another_service) { create(:service, siret: another_siret) }
+      let!(:procedure1) { create(:procedure, :published, service: another_service) }
+      it 'displays none procedure' do
+        get :all, params: { service_siret: requested_siret }
+        expect(assigns(:procedures)).to be_empty
+      end
+    end
+
     context 'with specific tag' do
       let!(:tags_procedure) { create(:procedure, :published, tags: ['environnement', 'diplomatie']) }
 

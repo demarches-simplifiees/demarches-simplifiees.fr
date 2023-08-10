@@ -421,11 +421,17 @@ module Administrateurs
     private
 
     def filter_procedures(filter)
+      if filter.service_siret.present?
+        service = Service.find_by(siret: filter.service_siret)
+        return Procedure.none if service.nil?
+      end
+
       procedures_result = Procedure.select(:id).left_joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
+      procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 
