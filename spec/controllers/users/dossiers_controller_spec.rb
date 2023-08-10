@@ -202,7 +202,7 @@ describe Users::DossiersController, type: :controller do
       let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
 
       it 'redirects to the dossiers list' do
-        expect(response).to redirect_to(dossiers_path)
+        expect(response).to redirect_to(dossier_path(dossier))
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
     end
@@ -412,7 +412,7 @@ describe Users::DossiersController, type: :controller do
       it 'redirects to the dossiers list' do
         subject
 
-        expect(response).to redirect_to(dossiers_path)
+        expect(response).to redirect_to(dossier_path(dossier))
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
     end
@@ -528,7 +528,7 @@ describe Users::DossiersController, type: :controller do
       it 'redirects to the dossiers list' do
         subject
 
-        expect(response).to redirect_to(dossiers_path)
+        expect(response).to redirect_to(dossier_path(dossier))
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
     end
@@ -612,7 +612,7 @@ describe Users::DossiersController, type: :controller do
 
       it 'redirects to the dossiers list' do
         subject
-        expect(response).to redirect_to(dossiers_path)
+        expect(response).to redirect_to(dossier_path(dossier))
         expect(flash.alert).to eq('Votre dossier ne peut plus être modifié')
       end
     end

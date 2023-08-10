@@ -74,7 +74,7 @@
           - c.with_body do
             %p
               = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
-            = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), modifier_dossier_path(@first_brouillon_recently_updated), class: 'fr-btn'
+            = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
 
       = render partial: "dossiers_list", locals: { dossiers: @user_dossiers }
 
