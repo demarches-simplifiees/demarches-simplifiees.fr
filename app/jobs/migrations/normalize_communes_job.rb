@@ -5,7 +5,7 @@ class Migrations::NormalizeCommunesJob < ApplicationJob
 
       value_json = champ.value_json || {}
 
-      if !champ.departement?
+      if !champ.departement? || champ.code_departement == 'undefined'
         metro_code = champ.external_id[0..1]
         drom_com_code = champ.external_id[0..2]
 
