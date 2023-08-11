@@ -1,4 +1,7 @@
 class APIEntreprise::PfAPI
+  # as of 09/08/2023, i-taiete seems to timeout if we provide bearer token
+  # ==> as i-taiete works without, bear token is no longer sent
+
   ENTREPRISE_RESOURCE_NAME = "etablissements/Entreprise"
 
   TIMEOUT = 15
@@ -8,7 +11,7 @@ class APIEntreprise::PfAPI
   end
 
   def self.api_up?
-    Typhoeus.get(API_ENTREPRISE_PF_URL, timeout: 0.5, ssl_verifypeer: false, verbose: false).code == 200
+    (200...500).cover?(Typhoeus.get(API_ENTREPRISE_PF_URL, timeout: 2, ssl_verifypeer: false, verbose: false).code)
   end
 
   private
@@ -17,7 +20,7 @@ class APIEntreprise::PfAPI
     url = url(resource_name)
     params = params(no_tahiti)
 
-    parse_response_body(Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: false, headers: headers))
+    parse_response_body(Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: false))
   end
 
   def url(resource_name)
