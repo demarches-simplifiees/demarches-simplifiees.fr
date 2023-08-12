@@ -1,0 +1,30 @@
+module Instructeurs
+  class ContactInformationsController < InstructeurController
+    def new
+      assign_procedure_and_groupe_instructeur
+      @contact_information = @groupe_instructeur.build_contact_information
+    end
+
+    def create
+      assign_procedure_and_groupe_instructeur
+      @contact_information = @groupe_instructeur.build_contact_information(contact_information_params)
+      if @contact_information.save
+        redirect_to instructeur_groupe_path(@groupe_instructeur, procedure_id: @procedure.id), notice: "Les informations de contact ont bien été ajoutées"
+      else
+        flash[:alert] = @contact_information.errors.full_messages
+        render :new
+      end
+    end
+
+    private
+
+    def assign_procedure_and_groupe_instructeur
+      @procedure = current_instructeur.procedures.find params[:procedure_id]
+      @groupe_instructeur = current_instructeur.groupe_instructeurs.find params[:groupe_id]
+    end
+
+    def contact_information_params
+      params.require(:contact_information).permit(:nom, :email, :telephone, :horaires, :adresse)
+    end
+  end
+end

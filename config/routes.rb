@@ -394,6 +394,7 @@ Rails.application.routes.draw do
         resources :archives, only: [:index, :create]
 
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
+          resource :contact_information
           member do
             post 'add_instructeur'
             delete 'remove_instructeur'
