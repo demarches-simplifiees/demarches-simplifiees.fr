@@ -162,9 +162,19 @@ services:
     restart: always
     environment:
       - ACTIVE_STORAGE_SERVICE
+      - API_ADRESSE_URL
+      - API_CPS_AUTH
+      - API_CPS_CLIENT_ID
+      - API_CPS_CLIENT_SECRET
+      - API_CPS_PASSWORD
+      - API_CPS_URL
+      - API_CPS_USERNAME
+      - API_EDUCATION_URL
+      - API_ENTREPRISE_DEFAULT_SIRET
+      - API_ENTREPRISE_PF_AUTH
+      - API_ENTREPRISE_PF_URL
       - APPLICATION_BASE_URL
       - APPLICATION_NAME
-      - API_ENTREPRISE_DEFAULT_SIRET
       - APP_HOST
       - CLAMD_TCP_HOST=clamav-${ENV:-dev}
       - CLAMD_TCP_PORT=3310
