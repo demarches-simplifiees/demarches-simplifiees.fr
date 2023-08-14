@@ -635,14 +635,6 @@ class Procedure < ApplicationRecord
     result
   end
 
-  def email_logo_url
-    if logo.attached?
-      logo.variant(:email).processed.blob.url(expires_in: 1.year)
-    else
-      ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
-    end
-  end
-
   def logo_url
     if logo.attached?
       Rails.application.routes.url_helpers.url_for(logo)
