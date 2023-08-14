@@ -432,17 +432,17 @@ describe 'The user' do
         fill_individual
 
         expect(page).to have_css('label', text: 'age du candidat', visible: true)
-        expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
-        expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
+        expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age du candidat (facultatif)', with: '18')
-        expect(page).to have_css('label', text: 'permis de conduire', visible: true)
-        expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
+        expect(page).to have_css('legend', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('legend', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        choose('Oui')
-        expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        page.find('label', text: 'Oui').click
+        expect(page).to have_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_css('label', text: 'tonnage', visible: true)
 
         fill_in('tonnage', with: '1')
@@ -453,7 +453,7 @@ describe 'The user' do
         expect(page).to have_no_css('label', text: 'parking', visible: true)
 
         fill_in('age du candidat (facultatif)', with: '2')
-        expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         click_on 'Déposer le dossier'
@@ -461,14 +461,14 @@ describe 'The user' do
         click_on 'Modifier mon dossier'
 
         expect(page).to have_css('label', text: 'age du candidat', visible: true)
-        expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age du candidat (facultatif)', with: '18')
         wait_for_autosave
 
         # the champ keeps their previous value so they are all displayed
-        expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_css('label', text: 'tonnage', visible: true)
       end
     end
