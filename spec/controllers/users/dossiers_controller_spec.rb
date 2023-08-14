@@ -255,7 +255,8 @@ describe Users::DossiersController, type: :controller do
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
 
       if api_current_status_response
-        stub_request(:get, API_ENTREPRISE_PF_URL).to_return(status: api_current_status_response.include?("502") ? 502 : 200)
+        has_issues = api_current_status_response.include?("502") || api_current_status_response.include?("HASISSUES")
+        stub_request(:get, API_ENTREPRISE_PF_URL).to_return(status: has_issues ? 502 : 200)
       end
     end
 
