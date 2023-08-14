@@ -5,7 +5,7 @@ class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
   def perform(*args)
     gzip_filepath = [
       'tmp/',
-      Time.zone.now.to_formatted_s(:number),
+      Time.zone.now.to_fs(:number),
       '-demarches.json.gz'
     ].join
 

@@ -1,4 +1,4 @@
-describe 'shared/dossiers/champs.html.haml', type: :view do
+describe 'shared/dossiers/champs', type: :view do
   let(:instructeur) { create(:instructeur) }
   let(:demande_seen_at) { nil }
 
@@ -8,7 +8,7 @@ describe 'shared/dossiers/champs.html.haml', type: :view do
     allow(view).to receive(:current_instructeur).and_return(instructeur)
   end
 
-  subject { render 'shared/dossiers/champs.html.haml', champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: nil }
+  subject { render 'shared/dossiers/champs', champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: nil }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }

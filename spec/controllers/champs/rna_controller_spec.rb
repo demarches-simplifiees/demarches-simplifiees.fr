@@ -147,7 +147,7 @@ describe Champs::RNAController, type: :controller do
     context 'when user is not signed in' do
       subject! { get :show, params: { champ_id: champ.id }, format: :turbo_stream }
 
-      it { expect(response.code).to eq('401') }
+      it { expect(response.code).to redirect_to(new_user_session_path) }
     end
   end
 end

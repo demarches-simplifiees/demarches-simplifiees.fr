@@ -1,4 +1,4 @@
-describe 'users/dossiers/siret.html.haml', type: :view do
+describe 'users/dossiers/siret', type: :view do
   let(:dossier) { create(:dossier) }
 
   before do

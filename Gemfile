@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'rails', '~> 7.0.4' # allows update to security fixes at any time
+
 gem 'aasm'
 gem 'acsv'
 gem 'active_link_to' # Automatically set a class on active links
@@ -74,7 +76,6 @@ gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
-gem 'rails'
 gem 'rails-i18n' # Locales par défaut
 gem 'rake-progressbar', require: false
 gem 'redcarpet'
