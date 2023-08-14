@@ -868,6 +868,7 @@ DEPENDENCIES
   matrix
   memory_profiler
   mina
+  mini_magick
   net-imap
   net-pop
   net-smtp
