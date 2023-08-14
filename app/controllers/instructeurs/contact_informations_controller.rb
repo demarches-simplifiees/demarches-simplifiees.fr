@@ -16,6 +16,22 @@ module Instructeurs
       end
     end
 
+    def edit
+      assign_procedure_and_groupe_instructeur
+      @contact_information = @groupe_instructeur.contact_information
+    end
+
+    def update
+      assign_procedure_and_groupe_instructeur
+      @contact_information = @groupe_instructeur.contact_information
+      if @contact_information.update(contact_information_params)
+        redirect_to instructeur_groupe_path(@groupe_instructeur, procedure_id: @procedure.id), notice: "Les informations de contact ont bien été modifiées"
+      else
+        flash[:alert] = @contact_information.errors.full_messages
+        render :edit
+      end
+    end
+
     private
 
     def assign_procedure_and_groupe_instructeur

@@ -56,4 +56,39 @@ describe Instructeurs::ContactInformationsController, type: :controller do
       it { expect(assigns(:contact_information).nom).to eq('super service') }
     end
   end
+
+  describe '#update' do
+    let(:contact_information) { create(:contact_information, groupe_instructeur: gi) }
+    let(:contact_information_params) {
+      {
+        nom: 'nom'
+      }
+    }
+    let(:params) {
+      {
+        id: contact_information.id,
+        contact_information: contact_information_params,
+        procedure_id: procedure.id,
+        groupe_id: gi.id
+      }
+    }
+
+    before do
+      patch :update, params: params
+    end
+
+    context 'when updating a contact_information' do
+      it { expect(flash.alert).to be_nil }
+      it { expect(flash.notice).to eq('Les informations de contact ont bien été modifiées') }
+      it { expect(ContactInformation.last.nom).to eq('nom') }
+      it { expect(response).to redirect_to(instructeur_groupe_path(gi, procedure_id: procedure.id)) }
+    end
+
+    context 'when updating a contact_information with invalid data' do
+      let(:contact_information_params) { { nom: '' } }
+
+      it { expect(flash.alert).not_to be_nil }
+      it { expect(response).to render_template(:edit) }
+    end
+  end
 end
