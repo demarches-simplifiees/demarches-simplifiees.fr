@@ -292,6 +292,9 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
+        # pf wait for CAF processing ? sometimes test fails
+        sleep(0.5)
+
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
 
