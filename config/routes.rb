@@ -56,8 +56,6 @@ Rails.application.routes.draw do
 
     resources :dossiers, only: [:show]
 
-    resources :demandes, only: [:index]
-
     resources :bill_signatures, only: [:index]
 
     resources :exports, only: [:index, :show]
@@ -79,9 +77,6 @@ Rails.application.routes.draw do
       patch :bulk_update, on: :collection
     end
     resources :safe_mailers, only: [:index, :edit, :update, :destroy, :new, :create, :show]
-
-    post 'demandes/create_administrateur'
-    post 'demandes/refuse_administrateur'
 
     authenticate :super_admin do
       mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
