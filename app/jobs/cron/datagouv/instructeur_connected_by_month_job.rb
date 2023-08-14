@@ -14,6 +14,6 @@ class Cron::Datagouv::InstructeurConnectedByMonthJob < Cron::CronJob
   end
 
   def data
-    Instructeur.joins(:user).where(user: { last_sign_in_at: 1.month.ago.beginning_of_month..1.month.ago.end_of_month }).count
+    Instructeur.joins(:user).where(user: { last_sign_in_at: 1.month.ago.all_month }).count
   end
 end

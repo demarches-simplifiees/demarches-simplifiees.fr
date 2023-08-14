@@ -21,7 +21,7 @@ class EmailEvent < ApplicationRecord
   }
 
   scope :dolist, -> { dolist_smtp.or(dolist_api) }
-  scope :dolist_smtp, -> { where(method: 'dolist_smtp') }
+  scope :dolist_smtp, -> { where(method: 'dolist_smtp') } # legacy method: removable after 2023-06
   scope :dolist_api, -> { where(method: 'dolist_api') }
   scope :sendinblue, -> { where(method: 'sendinblue') }
   scope :outdated, -> { where("created_at < ?", RETENTION_DURATION.ago) }

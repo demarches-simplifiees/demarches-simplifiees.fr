@@ -20,6 +20,12 @@ class Logic::Eq < Logic::BinaryOperator
         stable_id: @left.stable_id,
         right: @right
       }
+    elsif @left.type(type_de_champs) == :enums
+      errors << {
+        type: :required_include,
+        stable_id: @left.try(:stable_id),
+        operator_name: self.class.name
+      }
     end
 
     errors + @left.errors(type_de_champs) + @right.errors(type_de_champs)

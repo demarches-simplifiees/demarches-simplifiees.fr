@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :geo_area do
     association :champ
     properties { {} }
+    geometry { {} }
 
     trait :cadastre do
       source { GeoArea.sources.fetch(:cadastre) }

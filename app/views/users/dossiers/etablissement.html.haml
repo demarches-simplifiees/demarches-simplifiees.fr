@@ -42,4 +42,4 @@
 
     .actions
       = link_to 'Utiliser un autre numéro TAHITI', siret_dossier_path(@dossier), class: 'fr-btn fr-btn--secondary'
-      = link_to 'Continuer avec ces informations', brouillon_dossier_path(@dossier), class: 'r-btn'
+      = link_to 'Continuer avec ces informations', url_for_dossier(@dossier), class: 'fr-btn'

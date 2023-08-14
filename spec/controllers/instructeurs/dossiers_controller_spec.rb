@@ -162,7 +162,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en instruction.')
+        expect(response.body).to include('Le dossier est déjà en instruction.')
       end
     end
 
@@ -175,7 +175,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       it 'warns about the error' do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
+        expect(response.body).to include('Le dossier est en ce moment accepté : il n’est pas possible de le passer en instruction.')
       end
     end
 
@@ -208,7 +208,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en construction.')
+        expect(response.body).to include('Le dossier est déjà en construction.')
       end
     end
 
@@ -245,7 +245,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it 'warns about the error' do
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_instruction))
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Le dossier est déjà en instruction.')
+        expect(response.body).to include('Le dossier est déjà en instruction.')
       end
     end
 
@@ -762,28 +762,19 @@ describe Instructeurs::DossiersController, type: :controller do
         { type: :multiple_drop_down_list },
         { type: :linked_drop_down_list },
         { type: :datetime },
-        { type: :repetition, children: [{}] }
+        { type: :repetition, children: [{}] },
+        { type: :drop_down_list, options: [:a, :b, :other] }
       ], instructeurs: instructeurs)
     end
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
-    let(:champ_multiple_drop_down_list) do
-      dossier.champs_private.first
-    end
-
-    let(:champ_linked_drop_down_list) do
-      dossier.champs_private.second
-    end
-
-    let(:champ_datetime) do
-      dossier.champs_private.third
-    end
-
-    let(:champ_repetition) do
-      dossier.champs_private.fourth
-    end
+    let(:champ_multiple_drop_down_list) { dossier.champs_private.first }
+    let(:champ_linked_drop_down_list) { dossier.champs_private.second }
+    let(:champ_datetime) { dossier.champs_private.third }
+    let(:champ_repetition) { dossier.champs_private.fourth }
+    let(:champ_drop_down_list) { dossier.champs_private.fifth }
 
     before do
       expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
@@ -795,6 +786,7 @@ describe Instructeurs::DossiersController, type: :controller do
       champ_linked_drop_down_list.reload
       champ_datetime.reload
       champ_repetition.reload
+      champ_drop_down_list.reload
     end
 
     after do
@@ -824,6 +816,11 @@ describe Instructeurs::DossiersController, type: :controller do
               '3': {
                 id: champ_repetition.champs.first.id,
                 value: 'text'
+              },
+              '4': {
+                id: champ_drop_down_list.id,
+                value: '__other__',
+                value_other: 'other value'
               }
             }
           }
@@ -836,6 +833,7 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
         expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
         expect(champ_repetition.champs.first.value).to eq('text')
+        expect(champ_drop_down_list.value).to eq('other value')
         expect(dossier.reload.last_champ_private_updated_at).to eq(now)
         expect(response).to have_http_status(200)
       }

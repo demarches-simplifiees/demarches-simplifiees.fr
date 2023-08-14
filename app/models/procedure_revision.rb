@@ -31,6 +31,7 @@ class ProcedureRevision < ApplicationRecord
   scope :ordered, -> { order(:created_at) }
 
   validate :conditions_are_valid?
+  validate :header_sections_are_valid?
 
   delegate :path, to: :procedure, prefix: true
 
@@ -162,7 +163,7 @@ class ProcedureRevision < ApplicationRecord
 
   def dossier_for_preview(user)
     dossier = Dossier
-      .create_with(groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier)
+      .create_with(groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier, autorisation_donnees: true)
       .find_or_initialize_by(revision: self, user: user, for_procedure_preview: true, state: Dossier.states.fetch(:brouillon))
 
     if dossier.new_record?
@@ -225,6 +226,16 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.any?(&:carte?)
   end
 
+  def coordinate_and_tdc(stable_id)
+    return [nil, nil] if stable_id.blank?
+
+    coordinate = revision_types_de_champ
+      .joins(:type_de_champ)
+      .find_by(type_de_champ: { stable_id: stable_id })
+
+    [coordinate, coordinate&.type_de_champ]
+  end
+
   private
 
   def compute_estimated_fill_duration
@@ -243,16 +254,6 @@ class ProcedureRevision < ApplicationRecord
       tdc_as_json = tdcs_as_json.find { |json| json["id"] == parent_tdc.stable_id }
       tdc_as_json&.merge!(types_de_champ: children_of(parent_tdc).includes(piece_justificative_template_attachment: :blob).map(&:as_json_for_editor))
     end
-  end
-
-  def coordinate_and_tdc(stable_id)
-    return [nil, nil] if stable_id.blank?
-
-    coordinate = revision_types_de_champ
-      .joins(:type_de_champ)
-      .find_by(type_de_champ: { stable_id: stable_id })
-
-    [coordinate, coordinate&.type_de_champ]
   end
 
   def renumber(siblings)
@@ -440,5 +441,25 @@ class ProcedureRevision < ApplicationRecord
       end
       .filter { |_tdc, errors| errors.present? }
       .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }
+  end
+
+  def header_sections_are_valid?
+    public_tdcs = types_de_champ_public.to_a
+
+    root_tdcs_errors = errors_for_header_sections_order(public_tdcs)
+    repetition_tdcs_errors = public_tdcs
+      .filter_map { _1.repetition? ? children_of(_1) : nil }
+      .map { errors_for_header_sections_order(_1) }
+
+    repetition_tdcs_errors + root_tdcs_errors
+  end
+
+  def errors_for_header_sections_order(tdcs)
+    tdcs
+      .map.with_index
+      .filter_map { |tdc, i| tdc.header_section? ? [tdc, i] : nil }
+      .map { |tdc, i| [tdc, tdc.check_coherent_header_level(tdcs.take(i))] }
+      .filter { |_tdc, errors| errors.present? }
+      .each { |tdc, message| errors.add(:header_section, message, type_de_champ: tdc) }
   end
 end

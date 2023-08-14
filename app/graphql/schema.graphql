@@ -1126,7 +1126,7 @@ enum DemarcheState {
   close
 
   """
-  Depubliee
+  Dépubliée
   """
   depubliee
 
@@ -2053,12 +2053,12 @@ enum DossierState {
   accepte
 
   """
-  En construction
+  En construction
   """
   en_construction
 
   """
-  En instruction
+  En instruction
   """
   en_instruction
 
@@ -2068,7 +2068,7 @@ enum DossierState {
   refuse
 
   """
-  Classé sans suite
+  Classé sans suite
   """
   sans_suite
 }
@@ -2610,6 +2610,41 @@ type GroupeInstructeurWithDossiers {
   Le numero du groupe instructeur.
   """
   number: Int!
+
+  """
+  Liste de tous les dossiers en attente de suppression définitive d’un groupe instructeur.
+  """
+  pendingDeletedDossiers(
+    """
+    Returns the elements in the list that come after the specified cursor.
+    """
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """
+    Dossiers en attente de suppression depuis la date.
+    """
+    deletedSince: ISO8601DateTime
+
+    """
+    Returns the first _n_ elements from the list.
+    """
+    first: Int
+
+    """
+    Returns the last _n_ elements from the list.
+    """
+    last: Int
+
+    """
+    L’ordre des dossiers en attente de suppression.
+    """
+    order: Order = ASC
+  ): DeletedDossierConnection!
 }
 
 type HeaderSectionChampDescriptor implements ChampDescriptor {

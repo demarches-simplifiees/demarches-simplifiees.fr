@@ -46,7 +46,6 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
-  self.ignored_columns = [:en_construction_conservation_extension]
   include DossierFilteringConcern
   include DateEncodingConcern
   include DossierPrefillableConcern
@@ -282,13 +281,13 @@ class Dossier < ApplicationRecord
   scope :processed_in_month, -> (date) do
     date = date.to_datetime
     state_termine
-      .where(processed_at: date.beginning_of_month..date.end_of_month)
+      .where(processed_at: date.all_month)
   end
   scope :ordered_for_export, -> {
     order(depose_at: 'asc')
   }
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
-  scope :without_followers,           -> { left_outer_joins(:follows).where(follows: { id: nil }) }
+  scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
   scope :with_champs, -> {
     includes(champs_public: [
@@ -298,6 +297,8 @@ class Dossier < ApplicationRecord
       champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
     ])
   }
+
+  scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
   scope :with_annotations, -> {
     includes(champs_private: [
       :type_de_champ,

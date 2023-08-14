@@ -22,6 +22,9 @@
       - if @filter.libelle
         .selected-query.fr-mb-2w
           = link_to @filter.libelle, all_admin_procedures_path(@filter.without(:libelle)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+      - if @filter.service_siret
+        .selected-query.fr-mb-2w
+          = link_to @filter.service_siret, all_admin_procedures_path(@filter.without(:service_siret)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
       - if @filter.selected_zones.present?
         .selected-zones.fr-mb-2w
           - @filter.selected_zones.each do |zone|
@@ -38,7 +41,7 @@
       - if @filter.from_publication_date.present?
         .selected-from-publication-date.fr-mb-2w
           = link_to "Depuis #{l(@filter.from_publication_date)}", all_admin_procedures_path(@filter.without(:from_publication_date)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
-      = paginate @procedures, params: @filter.params, views_prefix: 'administrateurs'
+      = paginate @procedures, params: @filter.params, views_prefix: 'shared'
       %thead
         %tr
           %th{ scope: 'col' }
@@ -52,4 +55,4 @@
       %tbody{ 'data-turbo': 'true' }
         - @procedures.each do |procedure|
           = render partial: 'detail', locals: { procedure: procedure, show_detail: false }
-    .fr-mt-2w= paginate @procedures, params: @filter.params, views_prefix: 'administrateurs'
+    .fr-mt-2w= paginate @procedures, params: @filter.params, views_prefix: 'shared'

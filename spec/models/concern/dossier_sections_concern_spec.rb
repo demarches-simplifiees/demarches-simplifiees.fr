@@ -25,7 +25,7 @@ describe DossierSectionsConcern do
       it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(false) }
     end
 
-    context "header_section in a repetition are not auto-numbered" do
+    context "header_section in a repetition are auto-numbered" do
       let(:types_de_champ_public) { [{ type: :header_section, libelle: public_libelle }, { type: :repetition, mandatory: true, children: [{ type: :header_section, libelle: "Enfant" }, { type: :text }] }] }
 
       context "with parent section having headers with number" do

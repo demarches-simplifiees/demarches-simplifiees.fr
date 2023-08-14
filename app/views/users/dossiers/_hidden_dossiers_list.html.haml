@@ -1,36 +1,44 @@
 - if hidden_dossiers.present?
-  %table.table.dossiers-table.hoverable
-    %thead
-      %tr
-        %th.number-col Nº dossier
-        %th Démarche
-        %th Raison de suppression
-        %th Date de suppression
-    %tbody
-      - hidden_dossiers.each do |dossier|
-        - libelle_demarche = dossier.procedure.libelle
+  %span.fr-h6.fr-mr-2w
+    = page_entries_info hidden_dossiers
 
-        %tr{ data: { 'dossier-id': dossier.id } }
-          %td.number-col
-            %span.icon.folder
-            = dossier.id
-          %td
-            = libelle_demarche
+  .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-2w
+    %table.table.dossiers-table.hoverable
+      %caption= t('views.users.dossiers.dossiers_list.caption')
+      %thead
+        %tr
+          %th.number-col Nº dossier
+          %th Démarche
+          %th Raison de suppression
+          %th Date de suppression
+          %th.action-col.follow-col Actions
+      %tbody
+        - hidden_dossiers.each do |dossier|
+          - libelle_demarche = dossier.procedure.libelle
 
-          %td.cell-link
-            = deletion_reason_badge("user_request")
-          %td
-            = dossier.updated_at.strftime('%d/%m/%Y')
-          %td
-            = link_to restore_dossier_path(dossier.id), method: :patch, class: "button primary" do
-              Restaurer
+          %tr{ data: { 'dossier-id': dossier.id } }
+            %td.number-col
+              %span.icon.folder
+              = dossier.id
+            %td
+              = libelle_demarche
 
-  = paginate(hidden_dossiers)
+            %td.cell-link
+              = deletion_reason_badge("user_request")
+            %td
+              = dossier.updated_at.strftime('%d/%m/%Y')
+            %td.action-col.follow-col
+              = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn" do
+                Restaurer
+
+    = paginate hidden_dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab
-    %h2.empty-text Aucun dossier.
+    %h2.empty-text
+      = t("views.users.dossiers.account_creation.empty")
     %p.empty-text-details
-      Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
-      %br
-      Celui ci doit ressembler à #{APPLICATION_BASE_URL}/commencer/xxx.
+      = t("views.users.dossiers.account_creation.detail_one")
+    %p.empty-text-details
+      = t("views.users.dossiers.account_creation.detail_two")
+      #{APPLICATION_BASE_URL}/commencer/xxx.

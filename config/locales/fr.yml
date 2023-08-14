@@ -187,7 +187,6 @@ fr:
         intro: "Si vous n’arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter le responsable de Démarches simplifiées pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme."
         infos:
           email_html: "Par voie électronique :"
-          phone_html: "Contacter la DINUM par téléphone :"
           adress_html: "Par voie postale : DINUM , 20 avenue de Ségur 75007 Paris"
       remedies:
         title: "Voies de recours"
@@ -389,6 +388,10 @@ fr:
         dossier_not_in_instructor_group: "Le dossier n° %{dossier_id} de la procédure « %{procedure_libelle} » correspond à votre recherche mais il est rattaché au groupe d’instructeurs « %{groupe_instructeur_label} »."
     users:
       dossiers:
+        account_creation:
+          empty: "Aucun dossier"
+          detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
+          detail_two: "Celui ci doit ressembler à"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
@@ -451,7 +454,7 @@ fr:
           simple: Rechercher
         secondary_menu: Menu secondaire
         index:
-          dossiers: "Dossiers"
+          dossiers: "Mes dossiers"
         dossiers_list:
           caption: Mes dossiers
           procedure: "Démarche"

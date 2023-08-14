@@ -35,9 +35,9 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
 
             dossier = Dossier.last
             dossier_url = "http://test.host#{commencer_path(procedure.path, prefill_token: dossier.prefill_token)}"
-            expect(JSON.parse(response.body)["dossier_url"]).to eq(dossier_url)
-            expect(JSON.parse(response.body)["dossier_id"]).to eq(dossier.to_typed_id)
-            expect(JSON.parse(response.body)["dossier_number"]).to eq(dossier.id)
+            expect(response.parsed_body["dossier_url"]).to eq(dossier_url)
+            expect(response.parsed_body["dossier_id"]).to eq(dossier.to_typed_id)
+            expect(response.parsed_body["dossier_number"]).to eq(dossier.id)
           end
 
           context 'when prefill values are given' do
@@ -141,7 +141,7 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
       get :index, params:
     end
 
-    let(:body) { JSON.parse(response.body).map(&:deep_symbolize_keys) }
+    let(:body) { response.parsed_body.map(&:deep_symbolize_keys) }
 
     before { create_request }
 

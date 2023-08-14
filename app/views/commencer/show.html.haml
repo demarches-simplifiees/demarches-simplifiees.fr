@@ -22,7 +22,7 @@
       - if @prefilled_dossier
         %h2.huge-title= t('views.commencer.show.prefilled_draft')
         %p= t('views.commencer.show.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @procedure.libelle)
-        = link_to t('views.commencer.show.go_to_prefilled_file'), brouillon_dossier_path(@prefilled_dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+        = link_to t('views.commencer.show.go_to_prefilled_file'), url_for_dossier(@prefilled_dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
 
       - elsif dossiers.empty?
         = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-my-2w'
@@ -32,7 +32,7 @@
         %h2.huge-title= t('views.commencer.show.already_draft')
         %p
           = t('views.commencer.show.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: dossier.procedure.libelle)
-        = link_to t('views.commencer.show.continue_file'), brouillon_dossier_path(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+        = link_to t('views.commencer.show.continue_file'), url_for_dossier(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
         = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
 
       - elsif not_drafts.size == 1
@@ -40,7 +40,7 @@
         %h2.huge-title= t('views.commencer.show.already_not_draft')
         %p
           = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: dossier.procedure.libelle)
-        = link_to t('views.commencer.show.show_my_submitted_file'), dossier_path(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+        = link_to t('views.commencer.show.show_my_submitted_file'), url_for_dossier(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
         = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
 
       - else

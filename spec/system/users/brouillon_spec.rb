@@ -40,6 +40,9 @@ describe 'The user' do
     fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
     select('Brétigny (60400)', from: form_id_for('communes'))
 
+    # communes needs more time to be updated
+    wait_until { champ_value_for('communes') == "Brétigny" }
+
     select('Australienne', from: form_id_for('nationalites'))
     select('Mahina - Tahiti - 98709', from: form_id_for('commune_de_polynesie'))
     select('98709 - Mahina - Tahiti', from: form_id_for('code_postal_de_polynesie'))
@@ -418,6 +421,7 @@ describe 'The user' do
           types_de_champ_public: [
             { type: :integer_number, libelle: 'age', stable_id: age_stable_id },
             { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
+            { type: :header_section, libelle: 'info voiture', condition: permis_condition },
             { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
             { type: :text, libelle: 'parking', condition: parking_condition }
           ])
@@ -430,10 +434,12 @@ describe 'The user' do
 
         expect(page).to have_css('label', text: 'age', visible: true)
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age', with: '18')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
+        expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         choose('Oui')

@@ -21,15 +21,18 @@
 #  type_de_champ_id               :integer
 #
 class Champs::HeaderSectionChamp < Champ
-  def search_terms
-    # The user cannot enter any information here so it doesn’t make much sense to search
+  def level
+    if parent.present?
+      header_section_level_value.to_i + parent.current_section_level(dossier.revision)
+    elsif header_section_level_value
+      header_section_level_value.to_i
+    else
+      0
+    end
   end
 
-  def level
-    level = type_de_champ.level.present? ? type_de_champ.level.to_i : 1
-    level = 1 if level < 1
-    level = 3 if level > 3
-    level
+  def search_terms
+    # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
   def libelle_with_section_index?

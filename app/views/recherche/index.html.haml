@@ -1,6 +1,6 @@
 - content_for(:title, "Recherche : #{@search_terms}")
 
-.container
+.fr-container
 
   - if @dossier_not_in_instructor_group.present?
     .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
@@ -11,17 +11,18 @@
     = t('pluralize.dossier_trouve', count: @dossiers_count)
 
   - if @projected_dossiers.present?
-    = paginate @paginated_ids
-    %table.table.dossiers-table.hoverable
-      %thead
-        %tr
-          %th.notification-col
-          %th.number-col Nº dossier
-          %th Démarche
-          %th Demandeur
-          %th.status-col Statut
-          %th.action-col.follow-col
-      %tbody
+    = paginate @paginated_ids, views_prefix: 'shared'
+    .fr-table.fr-table--bordered
+      %table.table.dossiers-table.hoverable
+        %thead
+          %tr
+            %th.notification-col
+            %th.number-col Nº dossier
+            %th Démarche
+            %th Demandeur
+            %th.status-col Statut
+            %th.action-col.follow-col
+        %tbody
         - @projected_dossiers.each do |p|
           - procedure_libelle, user_email, procedure_id = p.columns
           - instructeur_dossier =  @instructeur_dossiers_ids.include?(p.dossier_id)
@@ -90,7 +91,9 @@
                     = t('views.instructeurs.dossiers.restore')
 
               - else
-                %td.action-col.follow-col= render partial: "instructeurs/procedures/dossier_actions",
+                %td.action-col.follow-col
+                  %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+                    = render partial: "instructeurs/procedures/dossier_actions",
                                                             locals: { procedure_id: procedure_id,
                                                                       dossier_id: p.dossier_id,
                                                                       state: p.state,
@@ -102,7 +105,7 @@
 
             - else
               %td
-    = paginate @paginated_ids
+    = paginate @paginated_ids, views_prefix: 'shared'
 
   - else
     %h2 Aucun dossier correspondant à votre recherche n’a été trouvé

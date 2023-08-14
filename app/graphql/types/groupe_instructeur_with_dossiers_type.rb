@@ -18,6 +18,11 @@ module Types
       argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers supprimés depuis la date."
     end
 
+    field :pending_deleted_dossiers, Types::DeletedDossierType.connection_type, "Liste de tous les dossiers en attente de suppression définitive d’un groupe instructeur.", null: false do
+      argument :order, Types::Order, default_value: :asc, required: false, description: "L’ordre des dossiers en attente de suppression."
+      argument :deleted_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers en attente de suppression depuis la date."
+    end
+
     def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:, lookahead:)
       dossiers = object
         .dossiers
@@ -69,6 +74,16 @@ module Types
       end
 
       dossiers.order(deleted_at: order)
+    end
+
+    def pending_deleted_dossiers(deleted_since: nil, order:)
+      dossiers = object.dossiers.hidden_for_administration
+
+      if deleted_since.present?
+        dossiers = dossiers.hidden_since(deleted_since)
+      end
+
+      dossiers.order(hidden_by_user_at: order, hidden_by_administration_at: order)
     end
   end
 end

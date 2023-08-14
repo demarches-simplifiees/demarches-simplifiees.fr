@@ -143,7 +143,10 @@ module Types
       {
         filename: "dossier-#{object.id}.pdf",
         content_type: 'application/pdf',
-        url: Rails.application.routes.url_helpers.api_v2_dossier_pdf_url(id: sgid)
+        url: Rails.application.routes.url_helpers.api_v2_dossier_pdf_url(id: sgid),
+        byte_size: 0,
+        byte_size_big_int: '0',
+        checksum: ''
       }
     end
 
@@ -152,7 +155,10 @@ module Types
       {
         filename: "dossier-#{object.id}-features.json",
         content_type: 'application/json',
-        url: Rails.application.routes.url_helpers.api_v2_dossier_geojson_url(id: sgid)
+        url: Rails.application.routes.url_helpers.api_v2_dossier_geojson_url(id: sgid),
+        byte_size: 0,
+        byte_size_big_int: '0',
+        checksum: ''
       }
     end
 

@@ -69,4 +69,8 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
       revision
     end
   end
+
+  def used_by_routing_rules?
+    stable_id.in?(procedure.stable_ids_used_by_routing_rules)
+  end
 end

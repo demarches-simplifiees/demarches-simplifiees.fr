@@ -1,6 +1,6 @@
 - has_edit_action = !dossier.read_only?
 - has_delete_action = dossier.can_be_deleted_by_user?
-- has_new_dossier_action = dossier.procedure.accepts_new_dossiers?
+- has_new_dossier_action = dossier.procedure.accepts_new_dossiers? || dossier.procedure.replaced_by_procedure?
 - has_transfer_action = dossier.user == current_user
 - has_actions = has_edit_action || has_delete_action || has_new_dossier_action || has_transfer_action
 

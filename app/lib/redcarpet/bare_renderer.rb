@@ -4,7 +4,6 @@ module Redcarpet
     include ApplicationHelper
 
     # won't use rubocop tag method because it is missing output buffer
-    # rubocop:disable Rails/ContentTag
     def list(content, list_type)
       tag = list_type == :ordered ? :ol : :ul
       content_tag(tag, content, { class: @options[:class_names_map].fetch(:list) {} }, false)
@@ -27,12 +26,11 @@ module Redcarpet
       when :url
         link(link, nil, link)
       when :email
+        # NOTE: As of Redcarpet 3.6.0, autolinking email containing is broken https://github.com/vmg/redcarpet/issues/402
         content_tag(:a, link, { href: "mailto:#{link}" })
       else
         link
       end
     end
-
-    # rubocop:enable Rails/ContentTag
   end
 end

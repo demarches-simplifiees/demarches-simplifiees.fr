@@ -59,7 +59,7 @@ describe 'dropdown list with other option activated', js: true do
     scenario 'with a select and other, selecting a value save it (avoid hidden other_value to be sent)' do
       fill_individual
 
-      find(".drop_down_other input", visible: false)
+      expect(page).not_to have_selector(".drop_down_other input")
       select("Autre")
       find(".drop_down_other input", visible: true)
 

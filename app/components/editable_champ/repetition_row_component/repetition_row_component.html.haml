@@ -1,8 +1,11 @@
 - row_id = "safe-row-selector-#{@row.first.row_id}"
 .row{ id: row_id }
-  - @row.each do |champ|
-    = fields_for champ.input_name, champ do |form|
-      = render EditableChamp::EditableChampComponent.new form: form, champ: champ, seen_at: @seen_at
+  - if @row.size > 1
+    %fieldset
+      %legend.block-id= "#{@champ.libelle} "
+      = render EditableChamp::SectionComponent.new(champs: @row)
+  - else
+    = render EditableChamp::SectionComponent.new(champs: @row)
 
   .flex.row-reverse{ 'data-turbo': 'true' }
     = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.id, row_id: @row.first.row_id), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne", title: t(".delete_title", row_number: @champ.rows.find_index(@row))}) do

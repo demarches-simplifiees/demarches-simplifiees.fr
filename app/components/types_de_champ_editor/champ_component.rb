@@ -1,10 +1,11 @@
 class TypesDeChampEditor::ChampComponent < ApplicationComponent
   attr_reader :coordinate, :upper_coordinates
 
-  def initialize(coordinate:, upper_coordinates:, focused: false)
+  def initialize(coordinate:, upper_coordinates:, focused: false, errors: '')
     @coordinate = coordinate
     @focused = focused
     @upper_coordinates = upper_coordinates
+    @errors = errors
   end
 
   private

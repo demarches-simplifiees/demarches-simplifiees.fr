@@ -64,17 +64,11 @@ class APIEntrepriseService
       APIEntreprise::AttestationFiscaleJob.set(wait:).perform_later(etablissement.id, procedure_id, user_id)
     end
 
-    def fr_api_up?(uname = "apie_2_etablissements")
-      statuses = APIEntreprise::API.new.current_status.fetch(:results)
-
-      # find results having uname = apie_2_etablissements
-      status = statuses.find { |result| result[:uname] == uname }
-
-      status.fetch(:code) == 200
+    def fr_api_up?
+      APIEntreprise::API.new.current_status.fetch(:page).fetch(:status) == 'UP'
     rescue => e
-      Sentry.capture_exception(e, extra: { uname: uname })
-
-      nil
+      Sentry.capture_exception(e)
+      false
     end
 
     def api_up?(uname = "apie_2_etablissements")

@@ -83,7 +83,12 @@ class RootController < ApplicationController
       end
     end
 
-    @dossier.association(:revision).target = @dossier.procedure.build_draft_revision
+    draft_revision = @dossier.procedure.build_draft_revision(types_de_champ_public: all_champs.map(&:type_de_champ))
+    @dossier.association(:revision).target = draft_revision
+    @dossier.champs_public.map(&:type_de_champ).map do |tdc|
+      tdc.association(:revision_type_de_champ).target = tdc.build_revision_type_de_champ(revision: draft_revision)
+      tdc.association(:revision).target = draft_revision
+    end
   end
 
   def suivi

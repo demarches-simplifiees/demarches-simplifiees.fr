@@ -15,16 +15,16 @@
 .fr-container#procedures{ data: { item_count: @statut === "publiees" ? @procedures_publiees_count : @statut === "brouillons" ? @procedures_draft_count : @procedures_closed_count } }
   - if @statut === "publiees"
     = render partial: "procedures_list", locals: { procedures: @procedures_publiees }
-    = paginate @procedures_publiees
+    = paginate @procedures_publiees, views_prefix: 'shared'
 
   - if @statut === "brouillons"
     = render partial: "procedures_list", locals: { procedures: @procedures_draft }
-    = paginate @procedures_draft
+    = paginate @procedures_draft, views_prefix: 'shared'
 
   - if @statut === "archivees"
     = render partial: "procedures_list", locals: { procedures: @procedures_closed }
-    = paginate @procedures_closed
+    = paginate @procedures_closed, views_prefix: 'shared'
 
   - if @statut === "supprimees"
     = render partial: "procedures_list", locals: { procedures: @procedures_deleted }
-    = paginate @procedures_deleted
+    = paginate @procedures_deleted, views_prefix: 'shared'

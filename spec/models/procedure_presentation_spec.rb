@@ -73,6 +73,7 @@ describe ProcedurePresentation do
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '' },
+          { "label" => 'Avis', "table" => 'avis', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
@@ -789,7 +790,7 @@ describe ProcedurePresentation do
       let(:filters) { { "suivis" => [{ "table" => "self", "column" => "state", "value" => "en_construction" }] } }
 
       it 'should get i18n value' do
-        expect(subject).to eq("En construction")
+        expect(subject).to eq("En construction")
       end
     end
   end

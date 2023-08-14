@@ -20,6 +20,7 @@ fr:
           publiee: Publiée
           close: Close
           hidden: Supprimée
+          depubliee: Dépubliée
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier

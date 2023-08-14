@@ -1,33 +1,40 @@
 - if deleted_dossiers.present?
-  %table.table.dossiers-table.hoverable
-    %thead
-      %tr
-        %th.number-col Nº dossier
-        %th Démarche
-        %th Raison de suppression
-        %th Date de suppression
-    %tbody
-      - deleted_dossiers.each do |dossier|
-        - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
+  %span.fr-h6.fr-mr-2w
+    = page_entries_info deleted_dossiers
 
-        %tr{ data: { 'dossier-id': dossier.dossier_id } }
-          %td.number-col
-            %span.icon.folder
-            = dossier.dossier_id
-          %td
-            = libelle_demarche
+  .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-2w
+    %table.table.dossiers-table.hoverable.display-table
+      %caption= t('views.users.dossiers.dossiers_list.caption')
+      %thead
+        %tr
+          %th.number-col Nº dossier
+          %th Démarche
+          %th Raison de suppression
+          %th Date de suppression
+      %tbody
+        - deleted_dossiers.each do |dossier|
+          - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
 
-          %td.cell-link
-            = deletion_reason_badge(dossier.reason)
-          %td
-            = dossier.updated_at.strftime('%d/%m/%Y')
+          %tr{ data: { 'dossier-id': dossier.dossier_id } }
+            %td.number-col
+              %span.icon.folder
+              = dossier.dossier_id
+            %td
+              = libelle_demarche
 
-  = paginate(deleted_dossiers)
+            %td.cell-link
+              = deletion_reason_badge(dossier.reason)
+            %td
+              = dossier.updated_at.strftime('%d/%m/%Y')
+
+  = paginate deleted_dossiers, views_prefix: 'shared'
 
 - else
   .blank-tab
-    %h2.empty-text Aucun dossier.
+    %h2.empty-text
+      = t("views.users.dossiers.account_creation.empty")
     %p.empty-text-details
-      Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche.
-      %br
-      Celui ci doit ressembler à #{APPLICATION_BASE_URL}/commencer/xxx.
+      = t("views.users.dossiers.account_creation.detail_one")
+    %p.empty-text-details
+      = t("views.users.dossiers.account_creation.detail_two")
+      #{APPLICATION_BASE_URL}/commencer/xxx.

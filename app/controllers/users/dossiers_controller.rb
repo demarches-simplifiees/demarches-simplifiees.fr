@@ -10,32 +10,48 @@ module Users
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_brouillon, :submit_brouillon, :modifier, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :update_brouillon, :submit_brouillon, :modifier, :update]
+    before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :update_brouillon, :submit_brouillon, :update]
+    before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
 
     def index
-      dossiers = Dossier.includes(:procedure).order_by_updated_at.page(page)
+      dossiers = Dossier.includes(:procedure).order_by_updated_at
       dossiers_visibles = dossiers.visible_by_user
 
       @user_dossiers = current_user.dossiers.state_not_termine.merge(dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
-      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
-      @dossiers_supprimes_definitivement = current_user.deleted_dossiers.order_by_updated_at.page(page)
-      @dossier_transfers = DossierTransfer.for_email(current_user.email).page(page)
+      @dossiers_supprimes_definitivement = current_user.deleted_dossiers.order_by_updated_at
+      @dossier_transfers = DossierTransfer.for_email(current_user.email)
+      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
+
+      @dossiers = case @statut
+      when 'en-cours'
+        @user_dossiers
+      when 'traites'
+        @dossiers_traites
+      when 'dossiers-invites'
+        @dossiers_invites
+      when 'dossiers-supprimes-recemment'
+        @dossiers_supprimes_recemment
+      when 'dossiers-supprimes-definitivement'
+        @dossiers_supprimes_definitivement
+      when 'dossiers-transferes'
+        @dossier_transfers
+      when 'dossiers-expirant'
+        @dossiers_close_to_expiration
+      end.page(page)
+
+      @first_brouillon_recently_updated = current_user.dossiers.visible_by_user.brouillons_recently_updated.first
     end
 
     def show
-      if dossier.brouillon?
-        redirect_to brouillon_dossier_path(dossier)
-        return
-      end
-
       @dossier = dossier
       respond_to do |format|
         format.pdf do
@@ -164,15 +180,6 @@ module Users
       session.delete(:prefill_params)
       @dossier = dossier_with_champs
       @dossier.valid?(context: :prefilling)
-
-      # TODO: remove when the champs are unifed
-      if !@dossier.autorisation_donnees
-        if dossier.procedure.for_individual
-          redirect_to identite_dossier_path(@dossier)
-        else
-          redirect_to siret_dossier_path(@dossier)
-        end
-      end
     end
 
     def submit_brouillon
@@ -397,7 +404,23 @@ module Users
     def ensure_dossier_can_be_updated
       if !dossier.can_be_updated_by_user?
         flash.alert = t('users.dossiers.no_longer_editable')
-        redirect_to dossiers_path
+        redirect_to dossier_path(dossier)
+      end
+    end
+
+    def ensure_dossier_can_be_filled
+      if !dossier.autorisation_donnees
+        if dossier.procedure.for_individual
+          redirect_to identite_dossier_path(dossier)
+        else
+          redirect_to siret_dossier_path(dossier)
+        end
+      end
+    end
+
+    def ensure_dossier_can_be_viewed
+      if dossier.brouillon?
+        redirect_to brouillon_dossier_path(dossier)
       end
     end
 

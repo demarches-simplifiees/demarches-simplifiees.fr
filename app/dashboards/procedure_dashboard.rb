@@ -11,6 +11,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     published_types_de_champ_public: TypesDeChampCollectionField,
     published_types_de_champ_private: TypesDeChampCollectionField,
     path: ProcedureLinkField,
+    aasm_state: ProcedureStateField,
     dossiers: Field::HasMany,
     administrateurs: Field::HasMany,
     id: Field::Number.with_options(searchable: true),
@@ -40,6 +41,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     max_duree_conservation_dossiers_dans_ds: Field::Number,
     estimated_duration_visible: Field::Boolean,
     piece_justificative_multiple: Field::Boolean,
+    replaced_by_procedure_id: Field::String,
     tags: Field::Text
   }.freeze
 
@@ -56,7 +58,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :service,
     :dossiers,
     :published_at,
-    :unpublished_at
+    :aasm_state
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -64,6 +66,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :path,
+    :aasm_state,
     :administrateurs,
     :libelle,
     :description,
@@ -78,6 +81,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :whitelisted_at,
     :hidden_at,
     :closed_at,
+    :unpublished_at,
     :published_types_de_champ_public,
     :published_types_de_champ_private,
     :for_individual,
@@ -92,7 +96,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :duree_conservation_dossiers_dans_ds,
     :max_duree_conservation_dossiers_dans_ds,
     :estimated_duration_visible,
-    :piece_justificative_multiple
+    :piece_justificative_multiple,
+    :replaced_by_procedure_id
   ].freeze
 
   # FORM_ATTRIBUTES
@@ -103,7 +108,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :duree_conservation_dossiers_dans_ds,
     :max_duree_conservation_dossiers_dans_ds,
     :estimated_duration_visible,
-    :piece_justificative_multiple
+    :piece_justificative_multiple,
+    :replaced_by_procedure_id
   ].freeze
 
   # Overwrite this method to customize how procedures are displayed

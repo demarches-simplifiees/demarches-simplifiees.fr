@@ -83,15 +83,15 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         }
     end
 
-    context 'with only one group' do
+    context 'default group' do
       before do
         delete_group gi_1_1
-        delete_group gi_1_2
       end
 
       it { expect(flash.alert).to be_present }
+      it { expect(flash.alert).to eq "Suppression impossible : le groupe « défaut » est le groupe par défaut." }
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(1) }
+      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
     end
 
     context 'with many groups' do
@@ -181,7 +181,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
   describe '#update' do
     let(:new_name) { 'nouveau nom du groupe' }
-    let(:closed_value) { false }
+    let(:closed_value) { '0' }
     let!(:procedure_non_routee) { create(:procedure, :published, :for_individual, administrateurs: [admin]) }
     let!(:gi_1_1) { procedure_non_routee.defaut_groupe_instructeur }
 
@@ -195,26 +195,33 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       gi_1_1.reload
     end
 
-    it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_1)) }
-    it { expect(gi_1_1.label).to eq(new_name) }
-    it { expect(gi_1_1.closed).to eq(false) }
-    it { expect(flash.notice).to be_present }
+    it do
+      expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_1))
+      expect(gi_1_1.label).to eq(new_name)
+      expect(gi_1_1.closed).to eq(false)
+      expect(flash.notice).to be_present
+    end
 
-    context 'when we try do disable the only groupe instructeur' do
-      let(:closed_value) { true }
+    context 'when we try do disable the default groupe instructeur' do
+      let(:closed_value) { '1' }
+      let!(:gi_1_2) { procedure.groupe_instructeurs.create(label: 'groupe instructeur 2') }
 
-      it { expect(response).to render_template(:show) }
-      it { expect(gi_1_1.label).not_to eq(new_name) }
-      it { expect(gi_1_1.closed).to eq(false) }
-      it { expect(flash.alert).to eq(['Il doit y avoir au moins un groupe instructeur actif sur chaque démarche']) }
+      it do
+        expect(subject).to redirect_to admin_procedure_groupe_instructeur_path(procedure_non_routee, gi_1_1)
+        expect(gi_1_1.label).not_to eq(new_name)
+        expect(gi_1_1.closed).to eq(false)
+        expect(flash.alert).to eq('Il est impossible de désactiver le groupe d’instructeurs par défaut.')
+      end
     end
 
     context 'when the name is already taken' do
       let!(:gi_1_2) { procedure_non_routee.groupe_instructeurs.create(label: 'groupe instructeur 2') }
       let(:new_name) { gi_1_2.label }
 
-      it { expect(gi_1_1.label).not_to eq(new_name) }
-      it { expect(flash.alert).to eq(['Le libellé est déjà utilisé(e)']) }
+      it do
+        expect(gi_1_1.label).not_to eq(new_name)
+        expect(flash.alert).to eq(['Le libellé est déjà utilisé(e)'])
+      end
     end
   end
 

@@ -3,11 +3,11 @@ class APIGeo::API
   CACHE_DURATION = 1.day
 
   def self.pays
-    parse(File.open('app/lib/api_geo/pays.json').read)
+    parse(File.read('app/lib/api_geo/pays.json'))
   end
 
   def self.nationalites
-    parse(File.open('app/lib/api_geo/nationalites.json').read)
+    parse(File.read('app/lib/api_geo/nationalites.json'))
   end
 
   def self.polynesian_cities

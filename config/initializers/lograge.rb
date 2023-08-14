@@ -18,6 +18,8 @@ Rails.application.configure do
         graphql_variables: event.payload[:graphql_variables],
         graphql_null_error: event.payload[:graphql_null_error],
         graphql_timeout_error: event.payload[:graphql_timeout_error],
+        ds_procedure_id: event.payload[:ds_procedure_id],
+        ds_dossier_id: event.payload[:ds_dossier_id],
         browser: event.payload[:browser],
         browser_version: event.payload[:browser_version],
         platform: event.payload[:platform],

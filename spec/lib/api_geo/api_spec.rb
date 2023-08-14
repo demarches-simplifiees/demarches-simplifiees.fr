@@ -4,7 +4,7 @@ describe APIGeo::API do
   describe '.nationalites', vcr: { cassette_name: 'api_geo_nationalites' } do
     subject { described_class.nationalites }
     let(:nationalites) {
-      JSON.parse(File.open('app/lib/api_geo/nationalites.json').read, symbolize_names: true)
+      JSON.parse(File.read('app/lib/api_geo/nationalites.json'), symbolize_names: true)
     }
 
     it { is_expected.to eq nationalites }
@@ -18,7 +18,7 @@ describe APIGeo::API do
   describe '.pays' do
     subject { described_class.pays }
     let(:pays) {
-      JSON.parse(File.open('app/lib/api_geo/pays.json').read, symbolize_names: true)
+      JSON.parse(File.read('app/lib/api_geo/pays.json'), symbolize_names: true)
     }
     it { is_expected.to eq pays }
   end
