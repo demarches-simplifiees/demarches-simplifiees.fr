@@ -8,4 +8,10 @@ class ContactInformation < ApplicationRecord
   validates :horaires, presence: { message: 'doivent être renseignés' }, allow_nil: false
   validates :adresse, presence: { message: 'doit être renseignée' }, allow_nil: false
   validates :groupe_instructeur, presence: { message: 'doit être renseigné' }, allow_nil: false
+
+  def telephone_url
+    if telephone.present?
+      "tel:#{telephone.gsub(/[[:blank:]]/, '')}"
+    end
+  end
 end
