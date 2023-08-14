@@ -91,4 +91,17 @@ describe Instructeurs::ContactInformationsController, type: :controller do
       it { expect(response).to render_template(:edit) }
     end
   end
+
+  describe '#destroy' do
+    let(:contact_information) { create(:contact_information, groupe_instructeur: gi) }
+
+    before do
+      delete :destroy, params: { id: contact_information.id, procedure_id: procedure.id, groupe_id: gi.id }
+    end
+
+    it { expect { contact_information.reload }.to raise_error(ActiveRecord::RecordNotFound) }
+    it { expect(flash.alert).to be_nil }
+    it { expect(flash.notice).to eq("Les informations de contact ont bien été supprimées") }
+    it { expect(response).to redirect_to(instructeur_groupe_path(gi, procedure_id: procedure.id)) }
+  end
 end

@@ -30,3 +30,9 @@
   .sticky-action-footer
     = f.submit "Enregistrer", class: "fr-btn fr-mr-2w"
     = link_to "Annuler", instructeur_groupe_path(@groupe_instructeur, procedure_id: procedure_id), class: "fr-btn fr-btn--secondary"
+    - if [ "edit", "update"].include? params[:action]
+      = link_to 'Supprimer',
+        instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id),
+          method: :delete,
+            data: { confirm: "Confirmez vous la suppression de ces informations de contact ?" },
+              class: 'fr-btn fr-btn--secondary'

@@ -32,6 +32,12 @@ module Instructeurs
       end
     end
 
+    def destroy
+      assign_procedure_and_groupe_instructeur
+      @groupe_instructeur.contact_information.destroy
+      redirect_to instructeur_groupe_path(@groupe_instructeur, procedure_id: @procedure.id), notice: "Les informations de contact ont bien été supprimées"
+    end
+
     private
 
     def assign_procedure_and_groupe_instructeur
