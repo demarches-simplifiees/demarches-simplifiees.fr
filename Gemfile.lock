@@ -303,6 +303,7 @@ GEM
       raabro (~> 1.4)
     geo_coord (0.2.0)
     geocoder (1.6.5)
+    geom2d (0.4.1)
     globalid (1.1.0)
       activesupport (>= 5.0)
     gon (6.4.0)
