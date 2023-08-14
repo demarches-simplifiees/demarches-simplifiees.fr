@@ -351,6 +351,8 @@ Rails.application.routes.draw do
     delete 'france_connect_information' => 'profil#destroy_fci'
   end
 
+  get 'procedures/:id/logo', to: 'procedures#logo', as: :procedure_logo
+
   #
   # Expert
   #
