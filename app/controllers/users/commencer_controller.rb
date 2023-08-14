@@ -96,7 +96,6 @@ module Users
     def build_prefilled_dossier
       @prefilled_dossier = Dossier.new(
         revision: @revision,
-        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
         state: Dossier.states.fetch(:brouillon),
         prefilled: true
       )

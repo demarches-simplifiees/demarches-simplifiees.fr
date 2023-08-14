@@ -12,8 +12,11 @@ en:
         copy_link_button: Copy the procedure link to clipboard
       email_usagers:
         contact_users: Contact users (draft)
-        notice: "You will send a message to %{dossiers_count} whose files are in draft, in the instructor groups : %{groupe_instructeurs}."
+        hint:
+          zero: "There is no user with a draft."
+          one: "You will send a message to <strong>1</strong> user."
+          other: "You will send a message to <strong>%{count}</strong> users."
       administrators_list:
         title: "%{procedure_libelle} - n°%{procedure_id} - administrators"
-      stats: 
+      stats:
         title: Statistics

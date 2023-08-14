@@ -466,27 +466,63 @@ describe Dossier, type: :model do
     after { Timecop.return }
 
     context 'when dossier is en_construction' do
-      before do
-        dossier.passer_en_construction!
-        dossier.reload
+      context 'when the procedure.routing_enabled? is false' do
+        before do
+          dossier.passer_en_construction!
+          dossier.reload
+        end
+
+        it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
+        it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
+        it { expect(dossier.depose_at).to eq(beginning_of_day) }
+        it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
+        it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
+
+        it 'should keep first en_construction_at date' do
+          Timecop.return
+          dossier.passer_en_instruction!(instructeur: instructeur)
+          dossier.repasser_en_construction!(instructeur: instructeur)
+
+          expect(dossier.traitements.size).to eq(3)
+          expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+          expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
+          expect(dossier.depose_at).to eq(beginning_of_day)
+          expect(dossier.en_construction_at).to be > beginning_of_day
+        end
       end
 
-      it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
-      it { expect(dossier.depose_at).to eq(beginning_of_day) }
-      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
+      context 'when the procedure.routing_enabled? is true' do
+        include Logic
+        let(:gi_libelle) { 'Paris' }
+        let!(:procedure) do
+          create(:procedure,
+                 types_de_champ_public: [
+                   { type: :drop_down_list, libelle: 'Votre ville', options: [gi_libelle, 'Lyon', 'Marseille'] },
+                   { type: :text, libelle: 'Un champ texte' }
+                 ])
+        end
+        let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
+        let(:dossier) { create(:dossier, :brouillon, user:, procedure:, groupe_instructeur: nil) }
+        let(:gi) do
+          create(:groupe_instructeur,
+                   routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id),
+                                       constant(gi_libelle)))
+        end
 
-      it 'should keep first en_construction_at date' do
-        Timecop.return
-        dossier.passer_en_instruction!(instructeur: instructeur)
-        dossier.repasser_en_construction!(instructeur: instructeur)
+        before do
+          procedure.groupe_instructeurs = [gi]
+          procedure.defaut_groupe_instructeur = gi
+          procedure.save!
+          procedure.toggle_routing
+          dossier.champs.first.value = gi_libelle
+          dossier.save!
+          dossier.passer_en_construction!
+          dossier.reload
+        end
 
-        expect(dossier.traitements.size).to eq(3)
-        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
-        expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
-        expect(dossier.depose_at).to eq(beginning_of_day)
-        expect(dossier.en_construction_at).to be > beginning_of_day
+        it 'RoutingEngine.compute' do
+          expect(dossier.groupe_instructeur).not_to be_nil
+        end
       end
     end
 

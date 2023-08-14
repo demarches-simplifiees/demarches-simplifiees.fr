@@ -3,30 +3,35 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
                     [t('.contact_users')]] }
-.messagerie.container
-  - if @email_usagers_dossiers.present?
-    %p.notice.mb-2.mt-4
-      = t('.notice', dossiers_count: pluralize(@dossiers_count, 'personne'), groupe_instructeurs: @groupe_instructeurs.join(', '))
+.messagerie.fr-container
+  %h1 Contacter les usagers
+  %p.fr-highlight
+    = t('.hint', count: @dossiers_without_groupe_count).html_safe
 
-    = render partial: 'shared/dossiers/messages/form', locals: { commentaire: @commentaire, form_url: create_multiple_commentaire_instructeur_procedure_path(@procedure), disable_piece_jointe: true }
+  - if @dossiers_without_groupe_count.positive?
+    = form_for(@bulk_message, url: create_multiple_commentaire_instructeur_procedure_path, html: {  data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@procedure, :bulk_message) } }) do |f|
 
-    - if @bulk_messages.present?
-      %section.list-avis.mt-8
-        %h1.tab-title
-          Messages envoyés précédemment
-          %span.fr-badge= @bulk_messages.count
+      %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
-        %ul
-          - @bulk_messages.each do |message|
-            %li.one-avis.flex.align-start
-              .width-100
-                %h2.claimant
-                  %span.email= message.instructeur.email
-                  %span.date message envoyé à #{@dossiers_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
-                %p= message.body
-                .answer.flex.align-start
-                  - if message.piece_jointe.present?
-                    = render Attachment::ShowComponent.new(attachment: message.piece_jointe.attachment)
+      = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder:  t('views.shared.dossiers.messages.form.write_message_placeholder'), title:  t('views.shared.dossiers.messages.form.write_message_placeholder'), class: 'fr-input message-textarea'})
+
+      .fr-mt-3w
+        = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
   - else
     .page-title.center
-      %h2 Il n’y a aucun dossier en brouillon dans vos groupes d’instructeurs
+      %h2 Il n’y a aucun dossier en brouillon
+
+  - if @bulk_messages.present?
+    %section.list-avis.mt-8
+      %h1.tab-title
+        Messages envoyés précédemment
+        %span.fr-badge= @bulk_messages.count
+
+      %ul
+        - @bulk_messages.each do |message|
+          %li.one-avis.flex.align-start
+            .width-100
+              %h2.claimant
+                %span.email= message.instructeur.email
+                %span.date message envoyé à #{@dossiers_count} usagers le #{message.sent_at.strftime('%d/%m/%y à %H:%M')}
+              %p= message.body
