@@ -82,6 +82,8 @@ ENV \
     APPLICATION_NAME="Mes-Démarches"\
     APP_HOST="localhost:3000"\
     APP_NAME="tps_local"\
+    AR_ENCRYPTION_KEY_DERIVATION_SALT=""\
+    AR_ENCRYPTION_PRIMARY_KEY=""\
     BASIC_AUTH_ENABLED="disabled"\
     BASIC_AUTH_PASSWORD=""\
     BASIC_AUTH_USERNAME=""\

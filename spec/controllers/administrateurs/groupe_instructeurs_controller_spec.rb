@@ -326,7 +326,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
   describe '#remove_instructeur' do
     let!(:instructeur) { create(:instructeur) }
 
-    before { gi_1_1.instructeurs << admin.instructeur << instructeur }
+    before do
+      gi_1_1.instructeurs << admin.instructeur << instructeur
+      procedure.update(routing_enabled: true)
+    end
 
     def remove_instructeur(instructeur)
       delete :remove_instructeur,

@@ -1,4 +1,4 @@
-describe 'users/dossiers/index.html.haml', type: :view do
+describe 'users/dossiers/index', type: :view do
   let(:user) { create(:user) }
   let(:dossier_brouillon) { create(:dossier, state: Dossier.states.fetch(:brouillon), user: user) }
   let(:dossier_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user) }

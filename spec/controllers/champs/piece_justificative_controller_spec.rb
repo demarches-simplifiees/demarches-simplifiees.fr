@@ -50,7 +50,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       it "it shouldn't be able to download a qrcoded pdf" do
         subject
         expect(response.status).to eq(400)
-        expect(response.location).to eq("#{ActiveStorage::Current.host}/")
+        expect(response.location).to eq("http://test.host/")
       end
     end
 

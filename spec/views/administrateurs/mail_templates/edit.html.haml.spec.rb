@@ -1,4 +1,4 @@
-describe 'administrateurs/mail_templates/edit.html.haml', type: :view do
+describe 'administrateurs/mail_templates/edit', type: :view do
   let(:procedure) { create(:procedure) }
   let(:mail_template) { create(:received_mail, procedure: procedure) }
   let(:all_tags) { mail_template.tags }

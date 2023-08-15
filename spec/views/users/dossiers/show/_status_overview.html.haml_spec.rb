@@ -1,7 +1,7 @@
-describe 'users/dossiers/show/_status_overview.html.haml', type: :view do
+describe 'users/dossiers/show/_status_overview', type: :view do
   before { allow(dossier.procedure).to receive(:usual_traitement_time_for_recent_dossiers).and_return(1.day) }
 
-  subject! { render 'users/dossiers/show/status_overview.html.haml', dossier: dossier }
+  subject! { render 'users/dossiers/show/status_overview', dossier: dossier }
 
   matcher :have_timeline_item do |selector|
     match do |rendered|

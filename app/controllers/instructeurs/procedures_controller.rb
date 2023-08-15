@@ -175,7 +175,7 @@ module Instructeurs
           end
 
           format.html do
-            redirect_to export.file.service_url
+            redirect_to url_from(export.file.url)
           end
         end
       else
@@ -343,7 +343,7 @@ module Instructeurs
     end
 
     def current_filters
-      @current_filters ||= procedure_presentation.filters[statut]
+      @current_filters ||= procedure_presentation.filters.fetch(statut, [])
     end
 
     def email_usagers_dossiers

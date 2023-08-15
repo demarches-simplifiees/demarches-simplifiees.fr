@@ -829,30 +829,49 @@ describe ProcedurePresentation do
   end
 
   describe '#filtered_sorted_ids' do
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
     let(:dossier_1) { create(:dossier) }
     let(:dossier_2) { create(:dossier) }
     let(:dossier_3) { create(:dossier) }
     let(:dossiers) { Dossier.where(id: [dossier_1, dossier_2, dossier_3].map(&:id)) }
 
     let(:sorted_ids) { [dossier_2, dossier_3, dossier_1].map(&:id) }
+    let(:statut) { 'tous' }
 
-    subject { procedure_presentation.filtered_sorted_ids(dossiers, 'tous') }
+    subject { procedure_presentation.filtered_sorted_ids(dossiers, statut) }
 
-    before do
-      expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
-    end
-
-    it { is_expected.to eq(sorted_ids) }
-
-    context 'when a filter is present' do
-      let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
+    context 'with no filters' do
+      let(:statut) { 'suivis' }
+      let(:dossiers) { procedure.dossiers }
 
       before do
-        procedure_presentation.filters['tous'] = 'some_filter'
-        expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
+        create(:follow, dossier: en_construction_dossier, instructeur: procedure_presentation.instructeur)
+        create(:follow, dossier: accepte_dossier, instructeur: procedure_presentation.instructeur)
+      end
+
+      let(:en_construction_dossier) { create(:dossier, :en_construction, procedure:) }
+      let(:accepte_dossier) { create(:dossier, :accepte, procedure:) }
+
+      it { is_expected.to contain_exactly(en_construction_dossier.id) }
+    end
+
+    context 'with mocked sorted_ids' do
+      before do
+        expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
       end
 
       it { is_expected.to eq(sorted_ids) }
+
+      context 'when a filter is present' do
+        let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
+
+        before do
+          procedure_presentation.filters['tous'] = 'some_filter'
+          expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
+        end
+
+        it { is_expected.to eq(sorted_ids) }
+      end
     end
   end
 

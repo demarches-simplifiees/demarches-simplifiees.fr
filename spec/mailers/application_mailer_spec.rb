@@ -11,7 +11,7 @@ RSpec.describe ApplicationMailer, type: :mailer do
       end
 
       context 'when the server handles invalid emails with Net::SMTPSyntaxError' do
-        let(:smtp_error) { Net::SMTPSyntaxError.new }
+        let(:smtp_error) { Net::SMTPSyntaxError.new('400 unexpected recipients: want atleast 1, got 0') }
         it { expect(subject.message).to be_an_instance_of(ActionMailer::Base::NullMail) }
       end
 
@@ -96,7 +96,7 @@ RSpec.describe ApplicationMailer, type: :mailer do
       end
 
       context "smtp server busy" do
-        let(:smtp_error) { Net::SMTPServerBusy.new }
+        let(:smtp_error) { Net::SMTPServerBusy.new('451 4.7.500 Server busy') }
 
         it "re-raise an error and creates an event" do
           expect { subject.deliver_now }.to change { EmailEvent.count }.by(1).and raise_error(MailDeliveryError)

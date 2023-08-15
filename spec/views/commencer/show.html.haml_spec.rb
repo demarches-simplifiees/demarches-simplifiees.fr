@@ -1,4 +1,4 @@
-RSpec.describe 'commencer/show.html.haml', type: :view do
+RSpec.describe 'commencer/show', type: :view do
   include Rails.application.routes.url_helpers
 
   let(:stored_query_params) { false }

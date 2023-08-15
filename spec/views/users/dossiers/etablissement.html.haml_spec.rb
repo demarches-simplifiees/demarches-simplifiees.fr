@@ -1,4 +1,4 @@
-describe 'users/dossiers/etablissement.html.haml', type: :view do
+describe 'users/dossiers/etablissement', type: :view do
   let(:etablissement) { create(:etablissement, :with_exercices, siret: "12345678900001") }
   let(:dossier) { create(:dossier, etablissement: etablissement) }
   let(:footer) { view.content_for(:footer) }

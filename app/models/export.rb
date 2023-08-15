@@ -86,7 +86,7 @@ class Export < ApplicationRecord
 
   def flash_message
     if available?
-      "L’export au format \"#{format}\" est prêt. Vous pouvez le <a href=\"#{file.service_url}\">télécharger</a>"
+      "L’export au format \"#{format}\" est prêt. Vous pouvez le <a href=\"#{file.url}\">télécharger</a>"
     else
       "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
     end

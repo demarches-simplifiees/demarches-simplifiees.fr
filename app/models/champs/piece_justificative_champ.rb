@@ -56,7 +56,7 @@ class Champs::PieceJustificativeChamp < Champ
     return nil if attachment.nil?
 
     if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
-      attachment.service_url
+      attachment.url
     end
   end
 

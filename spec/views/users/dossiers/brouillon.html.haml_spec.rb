@@ -1,4 +1,4 @@
-describe 'users/dossiers/brouillon.html.haml', type: :view do
+describe 'users/dossiers/brouillon', type: :view do
   let(:procedure) { create(:procedure, :with_type_de_champ, :with_notice, :with_service) }
   let(:dossier) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure) }
   let(:footer) { view.content_for(:footer) }

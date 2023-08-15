@@ -1,4 +1,4 @@
-describe 'administrateurs/procedures/zones.html.haml' do
+describe 'administrateurs/procedures/zones' do
   let(:procedure) { create(:procedure) }
   let(:populate_zones_task) { Rake::Task['after_party:populate_zones'] }
 
