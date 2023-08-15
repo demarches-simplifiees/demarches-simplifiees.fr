@@ -1,4 +1,4 @@
-RSpec.describe 'shared/archives/_table.html.haml', type: :view do
+RSpec.describe 'shared/archives/_table', type: :view do
   include Rails.application.routes.url_helpers
 
   let(:procedure) { create(:procedure) }
@@ -10,7 +10,7 @@ RSpec.describe 'shared/archives/_table.html.haml', type: :view do
       allow(view).to receive(:create_archive_url).and_return("/archive/created/stubed")
     end
 
-  subject { render 'shared/archives/table.html.haml', count_dossiers_termines_by_month: { month_date => 5 }, archives: all_archives + [monthly_archive].compact, average_dossier_weight: average_dossier_weight, procedure: procedure }
+  subject { render 'shared/archives/table', count_dossiers_termines_by_month: { month_date => 5 }, archives: all_archives + [monthly_archive].compact, average_dossier_weight: average_dossier_weight, procedure: procedure }
 
   context "when archive is available" do
     let(:monthly_archive) { create(:archive, time_span_type: "monthly", month: month_date, job_status: :generated, file: Rack::Test::UploadedFile.new('spec/fixtures/files/RIB.pdf', 'application/pdf')) }

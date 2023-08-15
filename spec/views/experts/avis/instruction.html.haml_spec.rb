@@ -1,4 +1,4 @@
-describe 'experts/avis/instruction.html.haml', type: :view do
+describe 'experts/avis/instruction', type: :view do
   let(:expert) { create(:expert) }
   let(:claimant) { create(:instructeur) }
   let(:procedure) { create(:procedure) }

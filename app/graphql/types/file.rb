@@ -11,7 +11,7 @@ module Types
       if object.is_a?(Hash)
         object[:url]
       else
-        object.service_url
+        object.url
       end
     end
   end

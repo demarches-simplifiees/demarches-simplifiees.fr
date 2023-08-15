@@ -11,7 +11,7 @@
     - elsif export.available?
       - menu.with_item do
         %div
-          = link_to ready_link_label(export), export.file.service_url, target: "_blank", rel: "noopener", role: 'menuitem'
+          = link_to ready_link_label(export), export.file.url, target: "_blank", rel: "noopener", role: 'menuitem'
           - if export.old?
             = button_to download_export_path(export_format: export.format, force_export: true), refresh_button_options(export).merge(role: 'menuitem') do
               .icon.retry

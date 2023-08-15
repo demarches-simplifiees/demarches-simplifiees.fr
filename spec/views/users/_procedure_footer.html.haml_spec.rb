@@ -1,4 +1,4 @@
-describe 'users/procedure_footer.html.haml', type: :view do
+describe 'users/procedure_footer', type: :view do
   let(:service) { create(:service) }
   let(:dossier) {
     dossier = create(:dossier)
@@ -6,7 +6,7 @@ describe 'users/procedure_footer.html.haml', type: :view do
     return dossier
   }
 
-  subject { render 'users/procedure_footer.html.haml', procedure: dossier.procedure, dossier: dossier }
+  subject { render 'users/procedure_footer', procedure: dossier.procedure, dossier: dossier }
 
   it "affiche les informations de contact" do
     expect(subject).to have_text(service.nom)

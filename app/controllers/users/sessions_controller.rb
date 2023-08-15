@@ -36,7 +36,7 @@ class Users::SessionsController < Devise::SessionsController
 
       case connected_with_france_connect
       when User.loged_in_with_france_connects.fetch(:particulier)
-        redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint]
+        redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
         return
       when User.loged_in_with_france_connects.fetch(:sipf), User.loged_in_with_france_connects.fetch(:tatou)
         params = { redirect_uri: root_url }

@@ -1,4 +1,4 @@
-describe 'dossiers/show/header.html.haml', type: :view do
+describe 'dossiers/show/header', type: :view do
   let(:procedure) { create(:procedure, :discarded) }
   let(:dossier) { create(:dossier, state: "brouillon", procedure: procedure) }
   let(:user) { dossier.user }
@@ -7,7 +7,7 @@ describe 'dossiers/show/header.html.haml', type: :view do
     sign_in user
   end
 
-  subject! { render 'shared/dossiers/header.html.haml', dossier: dossier }
+  subject! { render 'shared/dossiers/header', dossier: dossier }
 
   context "when the procedure is discarded with a dossier en brouillon" do
     it 'affiche que la démarche est supprimée' do

@@ -93,7 +93,7 @@ class Attachment::EditComponent < ApplicationComponent
     nil
   end
 
-  def field_name
+  def field_name(object_name = nil, method_name = nil, *method_names, multiple: false, index: nil)
     helpers.field_name(@form_object_name || ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
   end
 

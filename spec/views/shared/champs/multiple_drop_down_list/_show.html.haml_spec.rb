@@ -1,4 +1,4 @@
-describe 'views/shared/champs/multiple_drop_down_list/_show.html.haml', type: :view do
+describe 'views/shared/champs/multiple_drop_down_list/_show', type: :view do
   let(:champ) { build(:champ_multiple_drop_down_list, value: ['abc', '2, 3, 4']) }
 
   subject { render partial: 'shared/champs/multiple_drop_down_list/show', locals: { champ: champ } }
