@@ -8,8 +8,8 @@ fr:
         one: "Le délai maximum pour la conservation du dossier suivant a été atteint.\nLe dossier suivant a été automatiquement supprimé :"
         other: "Le délai maximum pour la conservation des dossiers suivants a été atteint.\nLes dossiers suivants ont été automatiquement supprimés :"
       account_active:
-        one: Votre compte reste activé sur Démarches Simplifiées, seul le dossier est supprimé.
-        other: Votre compte reste activé sur Démarches Simplifiées, seuls les dossiers ont été supprimés.
+        one: Votre compte reste disponible sur Mes-Démarches, seul le dossier est supprimé. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
+        other: Votre compte reste disponible sur Mes-Démarches, seuls les dossiers ont été supprimés. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
       footer_en_construction:
         one: "Le dossier ne sera pas traité, nous nous excusons de la gène occasionnée."
         other: "Les dossiers ne seront pas traités, nous nous excusons de la gène occasionnée."

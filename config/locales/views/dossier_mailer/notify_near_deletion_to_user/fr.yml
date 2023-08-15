@@ -14,8 +14,8 @@ fr:
         one: "Afin de respecter la durée de conservation de vos données personnelles, le dossier suivant dont le traitement est terminé sera supprimé automatiquement dans deux semaines :"
         other: "Afin de respecter la durée de conservation de vos données personnelles, les dossiers suivants dont le traitement est terminé seront supprimés automatiquement dans deux semaines :"
       account_active:
-        one: Votre compte reste activé sur Mes-Démarches, seul le dossier sera supprimé.
-        other: Votre compte reste activé sur Mes-Démarches, seuls les dossiers seront supprimés.
+        one: Votre compte reste activé sur Mes-Démarches, seul le dossier sera supprimé. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
+        other: Votre compte reste activé sur Mes-Démarches, seuls les dossiers seront supprimés. Si vous avez des questions ou des préoccupations, répondez simplement à ce mail et nous serons là pour vous aider.
       footer_termine:
         one: "Vous pouvez télécharger votre dossier au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
         other: "Vous pouvez télécharger vos dossiers au format PDF depuis l’onglet « Expirant » sur la page <a href=\"%{dossiers_url}\">Mes dossiers</a>."
