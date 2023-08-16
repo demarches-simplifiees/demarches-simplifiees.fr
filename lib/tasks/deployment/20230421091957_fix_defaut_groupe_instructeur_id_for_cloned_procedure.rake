@@ -6,6 +6,7 @@ namespace :after_party do
       .unscoped
       .joins(:groupe_instructeurs)
       .where.not(parent_procedure_id: nil)
+      .where.not(defaut_groupe_instructeur_id: nil)
       .where("procedures.created_at > ?", Time.zone.parse("17/04/2023"))
 
     procedures.each do |p|
