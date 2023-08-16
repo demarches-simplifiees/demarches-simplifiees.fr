@@ -15,7 +15,7 @@ class AgentConnect::AgentController < ApplicationController
     cookies.encrypted[STATE_COOKIE_NAME] = state
     cookies.encrypted[NONCE_COOKIE_NAME] = nonce
 
-    redirect_to uri
+    redirect_to uri, allow_other_host: true
   end
 
   def callback

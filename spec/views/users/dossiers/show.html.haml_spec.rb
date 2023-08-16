@@ -1,4 +1,4 @@
-describe 'users/dossiers/show.html.haml', type: :view do
+describe 'users/dossiers/show', type: :view do
   let(:dossier) { create(:dossier, :en_construction) }
 
   before do

@@ -1,8 +1,8 @@
-describe 'instructeurs/procedures/_list.html.haml', type: :view do
+describe 'instructeurs/procedures/_list', type: :view do
   let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
 
   subject do
-    render('instructeurs/procedures/list.html.haml',
+    render('instructeurs/procedures/list',
             p: procedure,
             dossiers_count_per_procedure: 5,
             dossiers_a_suivre_count_per_procedure: 2,

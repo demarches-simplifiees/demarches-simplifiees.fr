@@ -6,7 +6,7 @@ class OmniauthController < ApplicationController
     provider = provider_param
     # already checked in routes.rb but brakeman complains
     if OmniAuthService.enabled?(provider)
-      redirect_to OmniAuthService.authorization_uri(provider)
+      redirect_to OmniAuthService.authorization_uri(provider), allow_other_host: true
     else
       redirect_to new_user_session_path
     end
