@@ -17,6 +17,7 @@ describe "Dossier en_construction" do
     expect(page).not_to have_button("Remplacer")
     click_on "Supprimer le fichier toto.txt"
 
+    wait_until { champ.reload.for_export.blank? }
     expect(page).not_to have_text("toto.txt")
   end
 
@@ -25,19 +26,19 @@ describe "Dossier en_construction" do
       tdc.update_attribute(:mandatory, true)
     end
 
-    # Pf: this test runs locally but not on github. Maybe because it opens a file dialog box
-    # scenario 'remplace a mandatory piece justificative', js: true do
-    #   visit_dossier(dossier)
-    #
-    #   click_on "Remplacer le fichier toto.txt"
-    #
-    #   input_selector = "#attachment-multiple-empty-#{champ.id}"
-    #   expect(page).to have_selector(input_selector)
-    #   find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
-    #
-    #   expect(page).to have_text("file.pdf")
-    #   expect(page).not_to have_text("toto.txt")
-    # end
+    scenario 'remplace a mandatory piece justificative', js: true do
+      visit_dossier(dossier)
+
+      click_on "Remplacer le fichier toto.txt"
+
+      input_selector = "#attachment-multiple-empty-#{champ.id}"
+      expect(page).to have_selector(input_selector)
+      find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
+
+      wait_until { champ.reload.for_export == 'file.pdf' }
+      expect(page).to have_text("file.pdf")
+      expect(page).not_to have_text("toto.txt")
+    end
   end
 
   context "with a mandatory titre identite" do

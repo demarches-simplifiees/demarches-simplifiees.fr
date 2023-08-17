@@ -292,8 +292,7 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
-        # pf wait for CAF processing ? sometimes test fails
-        sleep(0.5)
+        wait_until { cnaf_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la CAF/)
@@ -349,6 +348,8 @@ describe 'fetch API Particulier Data', js: true do
           perform_enqueued_jobs
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
+
+        wait_until { pole_emploi_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis Pôle emploi/)
@@ -420,6 +421,8 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
+        wait_until { mesri_champ.reload.data.present? }
+
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis le MESRI/)
 
@@ -482,6 +485,8 @@ describe 'fetch API Particulier Data', js: true do
           perform_enqueued_jobs
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
+
+        wait_until { dgfip_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)
         expect(page).to have_content(/Des données.*ont été reçues depuis la DGFiP/)
