@@ -10,7 +10,7 @@
           = render EditableChamp::EditableChampComponent.new form: ,champ:
 - else
   - if header_section
-    = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
+    %div{ class: "reset-#{tag_for_depth}" }= render EditableChamp::HeaderSectionComponent.new(champ: header_section)
   - splitted_tail.each do |section, champ|
     - if section.present?
       = render section
