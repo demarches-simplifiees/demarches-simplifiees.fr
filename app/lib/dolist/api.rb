@@ -152,7 +152,11 @@ module Dolist
         }
       }.to_json
 
-      post(url, body)["FieldList"].find { _1['ID'] == 72 }['Value']
+      fields = post(url, body).fetch("FieldList", [])
+
+      return nil if fields.empty?
+
+      fields.find { _1['ID'] == 72 }.fetch('Value')
     end
 
     def ignorable_error?(response, mail)
