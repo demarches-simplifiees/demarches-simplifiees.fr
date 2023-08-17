@@ -26,18 +26,28 @@ en:
         line_four: "BP 4574- 98713 Papeete Tahiti French Polynesia"
         line_five: "Immeuble Toriki, Rue Dumont d’Urville, 98713 Papeete, French Polynesia"
     accessibility_statement:
-      line_two: "This accessibility statement applies to %{app_name} (%{host}) which is based on Démarches-Simplifiées.fr site."
+      line_one: "DINUM is committed to making this service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
+      line_two: "This accessibility statement applies to %{app_name} (%{host}), which is based on Démarches-Simplifiées.fr site."
       compliance:
-        line_one_html: "The website Mes-Démarches is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
+        line_one_html: "The Mes-Démarches website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
       results:
         title: "Test results"
+        line_one: "As of 1 April 2023, the site's average compliance rate is 75%."
         programme:
-          label: "Follow the Démarches-Simplifiées accessibility continuous improvement programme"
-          title: "Follow the Démarches-Simplifiées accessibility continuous improvement programme - new tab"
+          label: "Follow the Mes-Démarches/Démarches-Simplifiées accessibility continuous improvement programme"
+          title: "Follow the Mes-Démarches/Démarches-Simplifiées accessibility continuous improvement programme - new tab"
+      preparation:
+        title: "Preparation of this accessibility statement"
+        intro: "This statement was drawn up on April 27, 2022. It was updated on April 1, 2023."
+        environment_intro: "The content rendering tests were carried out on the basis of a combination provided by the RGAA reference base, with the following versions:"
+        subtitle_four: "Pages of the site checked for compliance"
       contact:
-        intro: "If you are unable to access a piece of content or service, you can contact the Mes-Démarches manager to be directed to an accessible alternative or obtain the content in another form."
+        intro: "If you are unable to access a specific area of the website, you can contact manager of Mes-Démarches to be directed to an accessible alternative or to get the content in another form."
         infos:
           email_html: "By email:"
           phone_html: "Contact DMRA by phone:"
-          adress_html: "By post : BP 2551 - 98713 Papeete, French Polynesia"
+          adress_html: "By mail : BP 2551 - 98713 Papeete, French Polynesia"
+      remedies:
+        line_one: "If you report tu us a lack of accessibility that prevents you from accessing any content or functionality of the site, and do not manage to receive a rapid response from us, you are entitled to send your complaints or a request for referral to the Rights Defender."
+        remedies_three: "Send a letter by mail (free of charge, no stamp) at Défenseur des droits Libre réponse 71120 75342 Paris CEDEX 07"
 
