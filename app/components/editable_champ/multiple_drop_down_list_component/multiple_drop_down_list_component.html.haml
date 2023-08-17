@@ -1,13 +1,11 @@
 - if @champ.options?
   - if @champ.render_as_checkboxes?
-    %legend.fr-fieldset__legend--regular.fr-fieldset__legend= render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
-    = @form.collection_check_boxes :value, @champ.enabled_non_empty_options, :to_s, :to_s do |b|
-      - tag.div(class: 'editable-champ editable-champ-checkbox') do
-        %fieldset.fr-fieldset__element
-          .fr-checkbox-group
-            = b.check_box(checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
-            %label.fr-label{ for: @champ.checkbox_id(b.value) }
-              = b.text
+    - @form.collection_check_boxes :value, @champ.enabled_non_empty_options, :to_s, :to_s do |b|
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = b.check_box(checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
+          %label.fr-label{ for: @champ.checkbox_id(b.value) }
+            = b.text
 
   - else
     %div{ 'data-turbo-focus-group': true }
@@ -18,4 +16,4 @@
               = option
               %span.tag-dismiss x
       - if @champ.unselected_options.present?
-        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: 'fr-select'
+        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: 'fr-select fr-mt-2v'
