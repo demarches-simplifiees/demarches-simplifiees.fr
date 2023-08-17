@@ -49,6 +49,9 @@ module Users
       end.page(page)
 
       @first_brouillon_recently_updated = current_user.dossiers.visible_by_user.brouillons_recently_updated.first
+
+      @filter = DossiersFilter.new(current_user, params)
+      @dossiers = @filter.filter_procedures(@dossiers).page(page)
     end
 
     def show
