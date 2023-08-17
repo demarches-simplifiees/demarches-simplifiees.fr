@@ -133,6 +133,7 @@ module Administrateurs
         :collapsible_explanation_enabled,
         :collapsible_explanation_text,
         :header_section_level,
+        :character_limit,
         editable_options: [
           *INSTANCE_EDITABLE_OPTIONS,
           *TypesDeChamp::CarteTypeDeChamp::LAYERS

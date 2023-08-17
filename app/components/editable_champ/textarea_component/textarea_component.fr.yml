@@ -1,0 +1,3 @@
+fr:
+  remaining_characters: Il vous reste %{remaining_words} caractères.
+  excess_characters: Vous avez dépassé la taille conseillée de %{excess_words} caractères.

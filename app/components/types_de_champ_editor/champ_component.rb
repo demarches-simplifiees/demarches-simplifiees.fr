@@ -121,4 +121,14 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   def conditional_enabled?
     !type_de_champ.private?
   end
+
+  def options_for_character_limit
+    [
+      [t('.character_limit.unlimited'), nil],
+      [t('.character_limit.limit', limit: 400), 400],
+      [t('.character_limit.limit', limit: 1000), 1000],
+      [t('.character_limit.limit', limit: 5000), 5000],
+      [t('.character_limit.limit', limit: 10000), 10000]
+    ]
+  end
 end

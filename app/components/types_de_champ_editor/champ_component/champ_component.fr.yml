@@ -13,3 +13,6 @@ fr:
     parcelles: Parcelles du cadastre
     zones_manuelles: Zones Manuelles
     batiments: Batiments
+  character_limit:
+    unlimited: Pas de limite de charactères
+    limit: Limité à %{limit} caractères

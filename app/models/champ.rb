@@ -75,6 +75,8 @@ class Champ < ApplicationRecord
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
+    :character_limit?,
+    :character_limit,
     to: :type_de_champ
 
   # pf champ
