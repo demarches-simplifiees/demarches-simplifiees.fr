@@ -30,6 +30,10 @@ class Champs::DropDownListChamp < Champ
     render_as_radios?
   end
 
+  def dsfr_champ_container
+    render_as_radios? ? :fieldset : :div
+  end
+
   def selected
     other? ? OTHER : value
   end

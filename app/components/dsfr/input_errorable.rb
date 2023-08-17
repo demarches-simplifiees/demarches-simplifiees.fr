@@ -21,22 +21,78 @@ module Dsfr
         end
       end
 
-      def input_group_error_class_names
-        if @champ && @champ.legend_label?
-          {
-            "fr-fieldset--error": errors_on_attribute?,
-            "fr-fieldset--valid": !errors_on_attribute? && errors_on_another_attribute?
-          }
+      def fr_select?
+        return false if fr_fieldset?
+
+        [
+          'departements',
+          'drop_down_list',
+          'multiple_drop_down_list',
+          'pays',
+          'regions'
+        ].include?(@champ.type_champ)
+      end
+
+      def fr_input?
+        [
+          'annuaire_education',
+          'date',
+          'datetime',
+          'decimal_number',
+          'dgfip',
+          'dossier_link',
+          'email',
+          'iban',
+          'integer_number',
+          'mesri',
+          'number',
+          'phone',
+          'piece_justificative',
+          'pole_emploi',
+          'rna',
+          'siret',
+          'text',
+          'textarea',
+          'titre_identite'
+        ].include?(@champ.type_champ)
+      end
+
+      def fr_radio?
+        [
+          'boolean'
+        ].include?(@champ.type_champ)
+      end
+
+      def fr_fieldset?
+        @champ.dsfr_champ_container == :fieldset
+      end
+
+      def dsfr_group_classname
+        if fr_fieldset?
+          dsfr_input_classname
         else
-          {
-            "fr-input-group--error": errors_on_attribute?,
-            "fr-input-group--valid": !errors_on_attribute? && errors_on_another_attribute?
-          }
+          "#{dsfr_input_classname}-group"
         end
       end
 
+      def dsfr_input_classname
+        return "fr-fieldset" if fr_fieldset?
+        return "fr-input" if fr_input?
+        return "fr-select" if fr_select?
+        return "fr-radio" if fr_radio?
+      end
+
+      def input_group_error_class_names
+        {
+          "#{dsfr_group_classname}--error" => errors_on_attribute?,
+          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute?
+        }
+      end
+
       def input_error_class_names
-        { 'fr-input--error': errors_on_attribute? }
+        {
+          "#{dsfr_input_classname}--error": errors_on_attribute?
+        }
       end
 
       def input_error_opts

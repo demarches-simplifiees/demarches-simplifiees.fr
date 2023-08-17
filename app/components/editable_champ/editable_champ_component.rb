@@ -22,47 +22,6 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     "EditableChamp::#{@champ.type_champ.camelcase}Component".constantize
   end
 
-  def select_group
-    [
-      'departements',
-      'drop_down_list',
-      'epci',
-      'pays',
-      'regions'
-    ]
-  end
-
-  def input_group
-    [
-      'annuaire_education',
-      'date',
-      'datetime',
-      'decimal_number',
-      'dgfip',
-      'dossier_link',
-      'email',
-      'iban',
-      'integer_number',
-      'mesri',
-      'number',
-      'phone',
-      'piece_justificative',
-      'pole_emploi',
-      'rna',
-      'siret',
-      'text',
-      'textarea',
-      'titre_identite'
-    ]
-  end
-
-  def radio_group
-    [
-      'boolean',
-      'yes_no'
-    ]
-  end
-
   def html_options
     {
       class: class_names(
@@ -70,10 +29,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
           'editable-champ': true,
           "editable-champ-#{@champ.type_champ}": true,
           "hidden": !@champ.visible?,
-          "fr-input-group": input_group.include?(@champ.type_champ),
-          "fr-select-group": select_group.include?(@champ.type_champ),
-          "fr-radio-group": radio_group.include?(@champ.type_champ),
-          "fr-fieldset": @champ.legend_label?
+          dsfr_group_classname => true
         }.merge(input_group_error_class_names)
       ),
       id: @champ.input_group_id,

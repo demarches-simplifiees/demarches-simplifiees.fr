@@ -1,4 +1,8 @@
 class Champs::YesNoChamp < Champs::BooleanChamp
+  def dsfr_champ_container
+    :fieldset
+  end
+
   def legend_label?
     true
   end

@@ -1,3 +1,3 @@
-.fr-messages-group{ id: @describedby_id   }
+.fr-messages-group{ id: @describedby_id }
   - @error_full_messages.each do |error_message|
-    %p{ class: class_names('fr-message' => true, "fr-message--#{@errors_on_attribute ? 'error' : 'valid'}" => true)}= error_message
+    %p{ class: class_names('fr-message' => true, "fr-message--#{@errors_on_attribute ? 'error' : 'valid'}" => true) }= error_message

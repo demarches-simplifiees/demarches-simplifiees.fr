@@ -8,7 +8,7 @@
 
 .fr-fieldset__element.fr-mb-0
   - if commune_options.empty?
-    - #noop
+    - # noop
   - elsif commune_options.size <= 3
     %fieldset.fr-fieldset
       .fr-fieldset__legend--regular.fr-fieldset__legend= t('.commune').html_safe

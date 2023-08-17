@@ -1,4 +1,8 @@
 class Champs::CheckboxChamp < Champs::BooleanChamp
+  def dsfr_champ_container
+    :fieldset
+  end
+
   def for_export
     true? ? 'on' : 'off'
   end
@@ -7,9 +11,8 @@ class Champs::CheckboxChamp < Champs::BooleanChamp
     mandatory? && (blank? || !true?)
   end
 
-  # TODO remove when normalize_checkbox_values is over
-  def true?
-    value_with_legacy == TRUE_VALUE
+  def legend_label?
+    false
   end
 
   def html_label?
@@ -18,12 +21,5 @@ class Champs::CheckboxChamp < Champs::BooleanChamp
 
   def single_checkbox?
     true
-  end
-
-  private
-
-  # TODO remove when normalize_checkbox_values is over
-  def value_with_legacy
-    value == 'on' ? TRUE_VALUE : value
   end
 end
