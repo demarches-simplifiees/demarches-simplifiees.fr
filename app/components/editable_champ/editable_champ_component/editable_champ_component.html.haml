@@ -3,13 +3,6 @@
     = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at
   = render component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
 
-  - if errors_on_attribute?
-    - if error_full_messages.size == 1
-      %p.fr-error-text{ id: describedby_id }= error_full_messages.first
-    - else
-      .fr-error-text{ id: describedby_id }
-        %ul.list-style-type-none.fr-pl-0
-          - error_full_messages.each do |error_message|
-            %li= error_message
+  = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: errors_on_attribute?, error_full_messages: error_full_messages, described_by: describedby_id)
 
   = @form.hidden_field :id, value: @champ.id
