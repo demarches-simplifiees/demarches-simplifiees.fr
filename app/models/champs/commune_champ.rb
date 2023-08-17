@@ -88,6 +88,18 @@ class Champs::CommuneChamp < Champs::TextChamp
     end
   end
 
+  def html_label?
+    false
+  end
+
+  def legend_label?
+    true
+  end
+
+  def dsfr_champ_container
+    :fieldset
+  end
+
   private
 
   def safe_to_s
