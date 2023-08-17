@@ -22,6 +22,18 @@ class Champs::EpciChamp < Champs::TextChamp
     code_departement.present?
   end
 
+  def dsfr_champ_container
+    :fieldset
+  end
+
+  def html_label?
+    false
+  end
+
+  def legend_label?
+    true
+  end
+
   def code?
     code.present?
   end
