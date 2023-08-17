@@ -523,6 +523,12 @@ describe Procedure do
       it "should clone instructeurs in the groupe" do
         expect(subject.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email)).to eq(procedure.groupe_instructeurs.where(label: "groupe_1").first.instructeurs.map(&:email))
       end
+
+      it 'should clone with success a second group instructeur closed' do
+        procedure.groupe_instructeurs.last.update(closed: true)
+
+        expect { subject }.not_to raise_error
+      end
     end
 
     it 'should reset duree_conservation_etendue_par_ds' do
