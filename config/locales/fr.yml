@@ -392,6 +392,7 @@ fr:
           empty: "Aucun dossier"
           detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
           detail_two: "Celui ci doit ressembler à"
+        fix_champ: "corriger l'erreur"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
@@ -605,6 +606,12 @@ fr:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+        "dossier/champs":
+          format: "%{message}"
+          attributes:
+            value:
+              format: "%{message}"
+
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:

@@ -1240,7 +1240,7 @@ describe Dossier do
 
       it 'should have errors' do
         expect(errors).not_to be_empty
-        expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+        expect(errors.first.full_message).to eq("doit être rempli")
       end
 
       context "conditionaly visible" do
@@ -1273,7 +1273,7 @@ describe Dossier do
 
         it 'should have errors' do
           expect(errors).not_to be_empty
-          expect(errors.first).to eq("Le champ #{champ_siret.libelle} doit être rempli.")
+          expect(errors.first.full_message).to eq("doit être rempli")
         end
       end
     end
@@ -1290,7 +1290,7 @@ describe Dossier do
           dossier.champs_public.first.champs.destroy_all
           expect(dossier.champs_public.first.rows).to be_empty
           expect(errors).not_to be_empty
-          expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+          expect(errors.first.full_message).to eq("doit être rempli")
         end
       end
 
@@ -1299,8 +1299,7 @@ describe Dossier do
 
         it 'should have errors' do
           expect(dossier.champs_public.first.rows).not_to be_empty
-          expect(errors).not_to be_empty
-          expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+          expect(errors.first.full_message).to eq("doit être rempli")
         end
 
         context "conditionaly visible" do
@@ -1317,7 +1316,7 @@ describe Dossier do
             dossier.champs_public.first.update(value: 'true')
             expect(dossier.champs_public.second.rows).not_to be_empty
             expect(errors).not_to be_empty
-            expect(errors.first).to eq("Le champ #{champ_with_error.libelle} doit être rempli.")
+            expect(errors.first.full_message).to eq("doit être rempli")
           end
         end
       end

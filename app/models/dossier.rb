@@ -1077,7 +1077,7 @@ class Dossier < ApplicationRecord
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
-        "Le champ #{champ.libelle.truncate(200)} doit être rempli."
+        champ.errors.add(:value, message: champ.errors.generate_message(:value, :missing))
       end
   end
 
