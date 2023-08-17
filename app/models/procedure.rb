@@ -62,6 +62,7 @@
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
+  include InitiationProcedureConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
