@@ -1,187 +1,53 @@
 {
-  "entreprise": {
-    "siren": "418166096",
-    "capital_social": 462308,
-    "numero_tva_intracommunautaire": "FR16418166096",
-    "forme_juridique": "SA à directoire (s.a.i.)",
-    "forme_juridique_code": "5699",
-    "nom_commercial": "OCTO-TECHNOLOGY",
-    "procedure_collective": false,
-    "raison_sociale": "OCTO-TECHNOLOGY",
-    "siret_siege_social": "41816609600051",
-    "code_effectif_entreprise": "31",
-    "date_creation": 891381600,
-    "nom": "test_nom",
-    "prenom": "test_prenom",
-    "date_radiation": null,
-    "categorie_entreprise": "PME",
-    "tranche_effectif_salarie_entreprise": {
-      "de": 200,
-      "a": 249,
-      "code": "31",
-      "date_reference": "2014",
-      "intitule": "200 à 249 salariés"
+  "data": {
+    "siren": "130025265",
+    "siret_siege_social": "13002526500013",
+    "type": "personne_morale",
+    "personne_morale_attributs": {
+      "raison_sociale": "DIRECTION INTERMINISTERIELLE DU NUMERIQUE",
+      "sigle": "DINUM"
     },
-    "etat_administratif": {
-      "value": "A",
-      "date_cessation": null
+    "personne_physique_attributs": {
+      "pseudonyme": "DJ Falcon",
+      "prenom_usuel": "Jean",
+      "prenom_1": "Jean",
+      "prenom_2": "Jacques",
+      "prenom_3": "Pierre",
+      "prenom_4": "Paul",
+      "nom_usage": "Dupont",
+      "nom_naissance": "Dubois",
+      "sexe": "M"
     },
-    "exercices": [
-      {
-        "chiffre_affaires": null,
-        "date_fin": null,
-        "date_debut": null,
-        "date_fin_exercice_timestamp": null
-      },
-      {
-        "chiffre_affaires": null,
-        "date_fin": null,
-        "date_debut": null,
-        "date_fin_exercice_timestamp": null
-      },
-      {
-        "chiffre_affaires": null,
-        "date_fin": null,
-        "date_debut": null,
-        "date_fin_exercice_timestamp": null
-      }
-    ],
-    "mandataires_sociaux": [
-      {
-        "nom": "HISQUIN",
-        "prenom": "FRANCOIS",
-        "fonction": "PRESIDENT DU DIRECTOIRE",
-        "dirigeant": true,
-        "date_naissance": "1965-01-27",
-        "date_naissance_timestamp": -155523600,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "BONTE",
-        "prenom": "NICOLAS",
-        "fonction": "PRESIDENT DU CONSEIL DE SURVEILLANCE",
-        "dirigeant": true,
-        "date_naissance": "1965-01-21",
-        "date_naissance_timestamp": -156042000,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "BOSQUE",
-        "prenom": "WILLIAM",
-        "fonction": "VICE PRESIDENT ET MEMBRE DU CONSEIL DE SURVEILLANCE",
-        "dirigeant": true,
-        "date_naissance": "1970-12-31",
-        "date_naissance_timestamp": 31446000,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "CINQUIN",
-        "prenom": "LUDOVIC",
-        "fonction": "MEMBRE DU DIRECTOIRE",
-        "dirigeant": true,
-        "date_naissance": "1972-01-25",
-        "date_naissance_timestamp": 65142000,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "LUCAS",
-        "prenom": "JACQUES",
-        "fonction": "MEMBRE DU CONSEIL DE SURVEILLANCE",
-        "dirigeant": true,
-        "date_naissance": "1964-12-02",
-        "date_naissance_timestamp": -160362000,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "DEGONSE",
-        "prenom": "GERARD",
-        "fonction": "MEMBRE DU CONSEIL DE SURVEILLANCE",
-        "dirigeant": true,
-        "date_naissance": "1947-07-03",
-        "date_naissance_timestamp": -710038800,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "PLANTIN",
-        "prenom": "JEAN-FRANCOIS",
-        "fonction": "COMMISSAIRE AUX COMPTES TITULAIRE",
-        "dirigeant": true,
-        "date_naissance": "1959-01-27",
-        "date_naissance_timestamp": -344912400,
-        "raison_sociale": "",
-        "identifiant": "",
-        "type": "PP"
-      },
-      {
-        "nom": "",
-        "prenom": "",
-        "fonction": "COMMISSAIRE AUX COMPTES SUPPLEANT",
-        "dirigeant": true,
-        "date_naissance": "",
-        "date_naissance_timestamp": 0,
-        "raison_sociale": "BCRH \u0026 ASSOCIES - SOCIETE A RESPONSABILITE LIMITEE A ASSOCIE UNIQUE",
-        "identifiant": "490092574",
-        "type": "PM"
-      }
-    ]
+    "categorie_entreprise": "GE",
+    "status_diffusion": "lorem",
+    "diffusable_commercialement": true,
+    "forme_juridique": {
+      "code": "7120",
+      "libelle": "Service central d'un ministère"
+    },
+    "activite_principale": {
+      "code": "8411Z",
+      "libelle": "Administration publique générale",
+      "nomenclature": "NAFRev2"
+    },
+    "tranche_effectif_salarie": {
+      "code": "51",
+      "intitule": "2 000 à 4 999 salariés",
+      "date_reference": "2016",
+      "de": 2000,
+      "a": 4999
+    },
+    "etat_administratif": "A",
+    "economie_sociale_et_solidaire": true,
+    "date_creation": 1634103818,
+    "date_cessation": 1634133818
   },
-  "etablissement_siege": {
-    "siege_social": true,
-    "siret": "41816609600051",
-    "naf": "6202A",
-    "libelle_naf": "Conseil en systèmes et logiciels informatiques",
-    "date_mise_a_jour": 1449183600,
-    "tranche_effectif_salarie_etablissement": {
-      "de": 200,
-      "a": 249,
-      "code": "31",
-      "date_reference": "2014",
-      "intitule": "200 à 249 salariés"
-    },
-    "date_creation_etablissement": 1108594800,
-    "enseigne": null,
-    "region_implantation": {
-      "code": "11",
-      "value": "Île-de-France"
-    },
-    "commune_implantation": {
-      "code": "75108",
-      "value": "PARIS 8"
-    },
-    "pays_implantation": {
-      "code": null,
-      "value": null
-    },
-    "diffusable_commercialement": null,
-    "adresse": {
-      "l1": "OCTO TECHNOLOGY",
-      "l2": null,
-      "l3": null,
-      "l4": "50 AVENUE DES CHAMPS ELYSEES",
-      "l5": null,
-      "l6": "75008 PARIS",
-      "l7": "FRANCE",
-      "numero_voie": "50",
-      "type_voie": "AV",
-      "nom_voie": "DES CHAMPS ELYSEES",
-      "complement_adresse": null,
-      "code_postal": "75008",
-      "localite": "PARIS 8",
-      "code_insee_localite": "75108",
-      "cedex": null
-    }
+  "links": {
+    "siege_social": "https://entreprises.api.gouv.fr/api/v3/insee/etablissements/30613890001294",
+    "siege_social_adresse": "https://entreprises.api.gouv.fr/api/v3/insee/etablissements/30613890001294/adresse"
   },
-  "gateway_error": false
+  "meta": {
+    "date_derniere_mise_a_jour": 1618396818,
+    "redirect_from_siren": "306138900"
+  }
 }
