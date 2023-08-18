@@ -8,6 +8,8 @@ en:
         data_retention: "%{application_name} will keep your file: %{duree_conservation_dossiers_dans_ds} months"
       dematerialisation:
         link: "https://www.service-public.pf/demarches-en-ligne/"
+        title_2: Trouver une démarche
+        alt: Find a procedure
   views:
     legal_notice:
       title: "Legal Notices"
