@@ -21,7 +21,8 @@ class DossierDashboard < Administrate::BaseDashboard
     en_construction_at: Field::DateTime,
     en_instruction_at: Field::DateTime,
     processed_at: Field::DateTime,
-    champs_public: ChampCollectionField
+    champs_public: ChampCollectionField,
+    groupe_instructeur: Field::BelongsTo
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -39,10 +40,11 @@ class DossierDashboard < Administrate::BaseDashboard
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
+    :user,
     :text_summary,
     :state,
     :procedure,
-    :user,
+    :groupe_instructeur,
     :champs_public,
     :created_at,
     :updated_at,

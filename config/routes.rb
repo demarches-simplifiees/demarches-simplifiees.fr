@@ -33,6 +33,8 @@ Rails.application.routes.draw do
       post 'repasser_en_instruction', on: :member
     end
 
+    resources :groupe_instructeurs, only: [:index, :show]
+
     resources :administrateurs, only: [:index, :show, :new, :create] do
       post 'reinvite', on: :member
       delete 'delete', on: :member
