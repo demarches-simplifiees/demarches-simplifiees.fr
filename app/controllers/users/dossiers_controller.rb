@@ -18,6 +18,7 @@ module Users
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
     before_action :forbid_closed_submission!, only: [:submit_brouillon]
+    before_action :set_dossier_as_editing_fork, only: [:submit_en_construction]
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
 
@@ -234,7 +235,6 @@ module Users
     end
 
     def submit_en_construction
-      @dossier = dossier.find_editing_fork(dossier.user)
       @dossier = dossier_with_champs(pj_template: false)
       errors = submit_dossier_and_compute_errors
 
@@ -490,6 +490,15 @@ module Users
 
     def dossier_with_champs(pj_template: true)
       DossierPreloader.load_one(dossier, pj_template:)
+    end
+
+    def set_dossier_as_editing_fork
+      @dossier = dossier.find_editing_fork(dossier.user)
+
+      return if @dossier.present?
+
+      flash[:alert] = t('users.dossiers.en_construction_submitted')
+      redirect_to dossier_path(dossier)
     end
 
     def should_change_groupe_instructeur?

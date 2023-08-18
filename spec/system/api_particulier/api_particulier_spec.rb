@@ -292,6 +292,7 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
+        perform_enqueued_jobs
         wait_until { cnaf_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)
@@ -349,6 +350,7 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
+        perform_enqueued_jobs
         wait_until { pole_emploi_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)
@@ -421,6 +423,7 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
+        perform_enqueued_jobs
         wait_until { mesri_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)
@@ -486,6 +489,7 @@ describe 'fetch API Particulier Data', js: true do
         end
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
+        perform_enqueued_jobs
         wait_until { dgfip_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)

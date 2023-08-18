@@ -485,6 +485,7 @@ describe 'The user' do
 
       fill_in('texte obligatoire', with: 'a valid user input')
       wait_for_autosave
+      wait_until { champ_value_for('texte obligatoire') == 'a valid user input' }
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
@@ -504,6 +505,7 @@ describe 'The user' do
       allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
       click_on 'Réessayer'
       wait_for_autosave
+      wait_until { champ_value_for('texte obligatoire') == 'a valid user input' }
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')

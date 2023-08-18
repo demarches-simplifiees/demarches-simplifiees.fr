@@ -749,6 +749,7 @@ en:
       no_access: "You do not have access to this file"
       no_longer_editable: "Your file can no longer be edited"
       verify_site: "Verify you are on "
+      en_construction_submitted: "The modifications have already been submitted"
       create_commentaire:
         message_send: "Your message has been sent to the instructor in charge of your file."
       cloned_success: "Your file has been duplicated. Please review it then you can submit it"
