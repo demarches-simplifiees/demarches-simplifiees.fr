@@ -182,6 +182,32 @@ RSpec.describe DossierCloneConcern do
           expect(champ_pj_fork.updated_at).to eq(champ_pj.updated_at)
         }
       end
+
+      context 'invalid origin' do
+        let(:procedure) do
+          create(:procedure, types_de_champ_public: [
+            { type: :drop_down_list, libelle: "Le savez-vous?", stable_id: 992, drop_down_list_value: ["Oui", "Non", "Peut-être"].join("\r\n"), mandatory: true }
+          ])
+        end
+
+        before do
+          champ = dossier.champs.find { _1.stable_id == 992 }
+          champ.value = "Je ne sais pas"
+          champ.save!(validate: false)
+        end
+
+        it 'can still fork' do
+          # rubocop:disable Lint/BooleanSymbol
+          expect(dossier.valid?(context: :false)).to be_falsey
+
+          new_dossier.champs.load # load relation so champs are validated below
+
+          expect(new_dossier.valid?(context: :false)).to be_falsey
+          expect(new_dossier.champs.find { _1.stable_id == 992 }.value).to eq("Je ne sais pas")
+
+          # rubocop:enable Lint/BooleanSymbol
+        end
+      end
     end
   end
 
