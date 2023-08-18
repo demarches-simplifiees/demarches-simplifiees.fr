@@ -465,7 +465,7 @@ fr:
           updated: "Mis à jour"
           actions: "Actions"
           no_result_title: Aucun dossier
-          no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à #{APPLICATION_BASE_URL}/commencer/xxx."
+          no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
         dossier_action:
