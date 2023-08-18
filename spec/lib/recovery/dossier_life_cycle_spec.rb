@@ -15,7 +15,9 @@ describe 'Dossier::Recovery::LifeCycle' do
     let(:dossier) do
       d = create(:dossier, procedure:)
 
-      repetition(d).add_row(d.revision)
+      # pf default mandatory repetition already contains a row
+      # repetition(d).add_row(d.revision)
+
       pj_champ(d).piece_justificative_file.attach(some_file)
       carte(d).update(geo_areas: [geo_area])
       d.etablissement = create(:etablissement, :with_exercices)
@@ -39,10 +41,13 @@ describe 'Dossier::Recovery::LifeCycle' do
 
       d.traitements.accepter(motivation: 'oui', processed_at: Time.zone.now)
       d.save
+      pp d.champs.map(&:attributes)
 
       d.dossier_operation_logs << build(:dossier_operation_log, :with_serialized)
 
       d.transfer_logs.create(from: create(:user), to: create(:user))
+
+      pp d.champs.map(&:attributes)
 
       d
     end
