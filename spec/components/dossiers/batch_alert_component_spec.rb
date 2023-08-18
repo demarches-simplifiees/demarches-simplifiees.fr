@@ -23,6 +23,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { is_expected.to have_selector('.fr-alert--info') }
       it { is_expected.to have_text("Une action de masse est en cours") }
       it { is_expected.to have_text("1/2 dossiers ont été archivés") }
+      it { is_expected.to have_text("Cette opération a été lancée par #{instructeur.email}, il y a moins d'une minute") }
     end
 
     context 'finished and success' do

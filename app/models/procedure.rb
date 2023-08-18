@@ -404,9 +404,12 @@ class Procedure < ApplicationRecord
   end
 
   def reset!
-    return false
     if !locked? || draft_changed?
-      draft_revision.dossiers.destroy_all
+      dossier_ids_to_destroy = draft_revision.dossiers.ids
+      if dossier_ids_to_destroy.present?
+        Rails.logger.info("Resetting #{dossier_ids_to_destroy.size} dossiers on procedure #{id}: #{dossier_ids_to_destroy}")
+        draft_revision.dossiers.destroy_all
+      end
     end
   end
 
