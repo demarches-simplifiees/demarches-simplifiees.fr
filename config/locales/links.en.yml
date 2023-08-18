@@ -6,7 +6,7 @@ en:
         alt: "Logo DMRA"
         height: 164
         width: 120
-      provided_by: "la DINUM"
+      provided_by: "The DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
     common:
@@ -41,9 +41,10 @@ en:
         label: "API Documentation"
         title: "API Documentation"
         url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
-      betagouv:
-        title: "The Beta.gouv.fr website — First Minister"
-        url: "https://beta.gouv.fr"
+      dinum:
+        title: "The DINUM website - Government"
+        url: "https://www.numerique.gouv.fr/dinum/"
+        alt: "Interministerial Directorate for Digital Affairs"
       code:
         label: "Source code"
         title: "Our Source code is open source"
