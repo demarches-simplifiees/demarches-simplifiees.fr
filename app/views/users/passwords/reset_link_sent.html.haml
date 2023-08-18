@@ -12,7 +12,7 @@
 
   %section.link-sent-info
     %p
-      = t('views.users.passwords.reset_link_sent.email_sent_html', email: @email)
+      = t('views.users.passwords.reset_link_sent.email_sent_html', email: @email, application_name: APPLICATION_NAME)
     %p
       = t('views.users.passwords.reset_link_sent.click_link_to_reset_password')
     %p
@@ -28,5 +28,8 @@
       - if FranceConnectService.enabled?
         %li
           = t('views.users.passwords.reset_link_sent.check_france_connect_html', href: france_connect_particulier_path)
+
+      %li
+        = t('views.users.passwords.reset_link_sent.check_gpdr')
     %p
       = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_url)

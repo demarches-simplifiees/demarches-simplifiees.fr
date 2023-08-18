@@ -116,6 +116,18 @@ describe 'The user' do
     expect(page).to have_text('Analyse antivirus en cours')
   end
 
+  scenario 'fill nothing and every error anchor links points to an existing element', js: true do
+    log_in(user, procedure)
+    fill_individual
+    click_on 'Déposer le dossier'
+
+    expect(page).to have_selector("#flash_message")
+    all('.error-anchor').map do |link_element|
+      error_anchor = URI(link_element['href'])
+      expect(page).to have_selector("##{error_anchor.fragment}")
+    end
+  end
+
   let(:procedure_with_repetition) do
     create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'sub type de champ' }] }])
   end
@@ -485,6 +497,7 @@ describe 'The user' do
 
       fill_in('texte obligatoire', with: 'a valid user input')
       wait_for_autosave
+      wait_until { champ_value_for('texte obligatoire') == 'a valid user input' }
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
@@ -495,15 +508,16 @@ describe 'The user' do
       fill_individual
 
       # Test autosave failure
-      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_raise("Server is busy")
+      allow_any_instance_of(Users::DossiersController).to receive(:update).and_raise("Server is busy")
       fill_in('texte obligatoire', with: 'a valid user input')
       blur
       expect(page).to have_css('span', text: 'Impossible d’enregistrer le brouillon', visible: true)
 
       # Test that retrying after a failure works
-      allow_any_instance_of(Users::DossiersController).to receive(:update_brouillon).and_call_original
-      click_on 'réessayer'
+      allow_any_instance_of(Users::DossiersController).to receive(:update).and_call_original
+      click_on 'Réessayer'
       wait_for_autosave
+      wait_until { champ_value_for('texte obligatoire') == 'a valid user input' }
 
       visit current_path
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')

@@ -74,7 +74,7 @@ module Administrateurs
     def destroy
       coordinate, type_de_champ = draft.coordinate_and_tdc(params[:stable_id])
 
-      if coordinate.used_by_routing_rules?
+      if coordinate&.used_by_routing_rules?
         errors = "« #{type_de_champ.libelle} » est utilisé pour le routage, vous ne pouvez pas le supprimer."
         @morphed = [champ_component_from(coordinate, focused: false, errors:)]
         flash.alert = errors
@@ -133,6 +133,7 @@ module Administrateurs
         :collapsible_explanation_enabled,
         :collapsible_explanation_text,
         :header_section_level,
+        :character_limit,
         editable_options: [
           *INSTANCE_EDITABLE_OPTIONS,
           *TypesDeChamp::CarteTypeDeChamp::LAYERS

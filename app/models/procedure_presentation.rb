@@ -61,7 +61,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('user', 'email', type: :text),
       field_hash('followers_instructeurs', 'email', type: :text),
       field_hash('groupe_instructeur', 'id', type: :enum),
-      field_hash('avis', 'id', type: :text)
+      field_hash('avis', 'answer', type: :text)
     )
 
     if procedure.for_individual
@@ -91,6 +91,7 @@ class ProcedurePresentation < ApplicationRecord
 
     fields.concat procedure.types_de_champ_for_procedure_presentation
       .pluck(:type_champ, :libelle, :private, :stable_id)
+      .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .map { |(type_champ, libelle, is_private, stable_id)| field_hash(is_private ? TYPE_DE_CHAMP_PRIVATE : TYPE_DE_CHAMP, stable_id.to_s, label: libelle, type: (TypeDeChamp.options_for_select?(type_champ) ? :enum : :text)) }
 
     fields
@@ -210,7 +211,7 @@ class ProcedurePresentation < ApplicationRecord
           .includes(:followers_instructeurs)
           .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
           .filter_ilike('instructeurs_users', :email, values)
-      when 'user', 'individual'
+      when 'user', 'individual', 'avis'
         dossiers
           .includes(table)
           .filter_ilike(table, column, values)
@@ -230,7 +231,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filtered_sorted_ids(dossiers, statut, count: nil)
-    dossiers_by_statut = dossiers.by_statut(instructeur, statut)
+    dossiers_by_statut = dossiers.by_statut(statut, instructeur)
     dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count || dossiers_by_statut.size)
 
     if filters[statut].present?

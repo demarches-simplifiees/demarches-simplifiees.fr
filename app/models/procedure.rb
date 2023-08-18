@@ -62,6 +62,7 @@
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
+  include InitiationProcedureConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -404,7 +405,11 @@ class Procedure < ApplicationRecord
 
   def reset!
     if !locked? || draft_changed?
-      draft_revision.dossiers.destroy_all
+      dossier_ids_to_destroy = draft_revision.dossiers.ids
+      if dossier_ids_to_destroy.present?
+        Rails.logger.info("Resetting #{dossier_ids_to_destroy.size} dossiers on procedure #{id}: #{dossier_ids_to_destroy}")
+        draft_revision.dossiers.destroy_all
+      end
     end
   end
 
@@ -573,9 +578,15 @@ class Procedure < ApplicationRecord
     procedure.replaced_by_procedure = nil
     procedure.service = nil
 
-    transaction do
-      procedure.save
+    if !procedure.valid?
+      procedure.errors.attribute_names.each do |attribute|
+        next if [:notice, :deliberation, :logo].exclude?(attribute)
+        procedure.public_send("#{attribute}=", nil)
+      end
+    end
 
+    transaction do
+      procedure.save!
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
     end
 

@@ -1,0 +1,13 @@
+%fieldset.fr-fieldset{ 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages' }
+  %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+    = content
+
+  - @buttons.map { _1.values_at(:label, :value, :hint) }.each do |label, value, hint|
+    .fr-fieldset__element
+      .fr-radio-group
+        = @form.radio_button @target, value
+        = @form.label @target, value: value, class: 'fr-label' do
+          - capture do
+            = label
+            %span.fr-hint-text= hint
+    .fr-messages-group{ 'aria-live': 'assertive' }

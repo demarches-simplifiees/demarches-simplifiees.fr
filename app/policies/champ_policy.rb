@@ -9,7 +9,7 @@ class ChampPolicy < ApplicationPolicy
       # but for some reasons ActiveRecord <= 5.2 generates bogus SQL. Hence the manual version of it below.
       scope
         .joins('LEFT OUTER JOIN dossiers ON dossiers.id = champs.dossier_id')
-        .joins('LEFT OUTER JOIN invites ON invites.dossier_id = dossiers.id')
+        .joins('LEFT OUTER JOIN invites ON invites.dossier_id = dossiers.id OR invites.dossier_id = dossiers.editing_fork_origin_id')
         .joins('LEFT OUTER JOIN groupe_instructeurs ON groupe_instructeurs.id = dossiers.groupe_instructeur_id')
         .joins('LEFT OUTER JOIN assign_tos ON assign_tos.groupe_instructeur_id = groupe_instructeurs.id')
         .joins('LEFT OUTER JOIN instructeurs ON instructeurs.id = assign_tos.instructeur_id')

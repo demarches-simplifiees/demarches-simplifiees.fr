@@ -17,6 +17,16 @@ describe 'experts/avis/index', type: :view do
     expect(subject).to have_text("avis à donner")
   end
 
+  context 'dossier is termine' do
+    before do
+      avis.dossier.update!(state: "accepte")
+    end
+
+    it 'doesn’t count avis a donner when dossier is termine' do
+      expect(subject).to have_selector("##{dom_id(procedure)} .avis-a-donner .stats-number", text: 0)
+    end
+  end
+
   context 'when the dossier is deleted by instructeur' do
     before do
       avis.dossier.update!(state: "accepte", hidden_by_administration_at: Time.zone.now.beginning_of_day.utc)

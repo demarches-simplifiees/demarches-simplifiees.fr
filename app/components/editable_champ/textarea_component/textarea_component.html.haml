@@ -1,6 +1,16 @@
+%span.sr-only= t('.recommended_size', size: @champ.character_limit_base)
+
 ~ @form.text_area :value,
   id: @champ.input_id,
   aria: { describedby: @champ.describedby_id },
   rows: 6,
   required: @champ.required?,
   value: html_to_string(@champ.value)
+
+- if @champ.character_limit_info?
+  %span.fr-icon-information-fill.fr-text-default--info.characters-count
+    = t('.remaining_characters', remaining_words: @champ.remaining_characters)
+
+- if @champ.character_limit_warning?
+  %span.fr-icon-warning-fill.fr-text-default--warning.characters-count
+    = t('.excess_characters', excess_words: @champ.excess_characters)

@@ -75,6 +75,8 @@ class Champ < ApplicationRecord
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
+    :character_limit?,
+    :character_limit,
     to: :type_de_champ
 
   # pf champ
@@ -112,6 +114,10 @@ class Champ < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def stable_id_with_row
+    [row_id, stable_id].compact
   end
 
   def sections
@@ -229,10 +235,10 @@ class Champ < ApplicationRecord
     update!(data: data)
   end
 
-  def clone
+  def clone(fork = false)
     champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
-    value_attributes = private? ? [] : [:value, :value_json, :data, :external_id]
-    relationships = private? ? [] : [:etablissement, :geo_areas]
+    value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
+    relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
     deep_clone(only: champ_attributes + value_attributes, include: relationships) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
@@ -241,6 +247,10 @@ class Champ < ApplicationRecord
 
   def focusable_input_id
     input_id
+  end
+
+  def forked_with_changes?
+    public? && dossier.champ_forked_with_changes?(self)
   end
 
   private

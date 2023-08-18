@@ -152,7 +152,18 @@ module Dolist
         }
       }.to_json
 
-      post(url, body)["FieldList"].find { _1['ID'] == 72 }['Value']
+      fields = post(url, body).fetch("FieldList", [])
+
+      if fields.empty?
+        Sentry.with_scope do |scope|
+          scope.set_extra(:contact, email_address)
+          Sentry.capture_message("Dolist::API: contact not found")
+        end
+
+        return nil
+      end
+
+      fields.find { _1['ID'] == 72 }.fetch('Value')
     end
 
     def ignorable_error?(response, mail)

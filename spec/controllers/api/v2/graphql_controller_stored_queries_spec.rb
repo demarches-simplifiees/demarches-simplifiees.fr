@@ -83,6 +83,7 @@ describe API::V2::GraphqlController do
       it {
         expect(gql_errors).to be_nil
         expect(gql_data[:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossier][:connectionUsager]).to eq('password')
         expect(gql_data[:dossier][:demandeur][:__typename]).to eq('PersonnePhysique')
         expect(gql_data[:dossier][:demandeur][:nom]).to eq(dossier.individual.nom)
         expect(gql_data[:dossier][:demandeur][:prenom]).to eq(dossier.individual.prenom)
@@ -555,7 +556,7 @@ describe API::V2::GraphqlController do
           expect(gql_errors).to be_nil
           expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
           expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
-          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to eq([{ id: admin.instructeur.to_typed_id, email: admin.instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to match_array([{ id: admin.instructeur.to_typed_id, email: admin.instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
         }
       end
     end
@@ -573,7 +574,7 @@ describe API::V2::GraphqlController do
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:warnings]).to eq([message: "yolo n’est pas une adresse email valide"])
         expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
         expect(groupe_instructeur.instructeurs.count).to eq(2)
-        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:instructeurs]).to eq([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+        expect(gql_data[:groupeInstructeurAjouterInstructeurs][:groupeInstructeur][:instructeurs]).to match_array([{ id: existing_instructeur.to_typed_id, email: existing_instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
       }
     end
 

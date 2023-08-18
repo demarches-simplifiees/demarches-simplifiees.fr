@@ -518,6 +518,23 @@ type CommuneDePolynesieChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+enum ConnectionUsager {
+  """
+  Compte supprimé
+  """
+  deleted
+
+  """
+  Connexion via FranceConnect
+  """
+  france_connect
+
+  """
+  Connexion via mot de passe
+  """
+  password
+}
+
 """
 GeoJSON coordinates
 """
@@ -1255,6 +1272,7 @@ type Dossier {
   attestation: File
   avis(id: ID): [Avis!]!
   champs(id: ID): [Champ!]!
+  connectionUsager: ConnectionUsager!
 
   """
   Date de dépôt.

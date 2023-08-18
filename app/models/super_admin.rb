@@ -60,6 +60,7 @@ class SuperAdmin < ApplicationRecord
 
     if user.valid?
       user.invite_administrateur!(id)
+      Procedure.create_initiation_procedure(user.administrateur)
     end
 
     user

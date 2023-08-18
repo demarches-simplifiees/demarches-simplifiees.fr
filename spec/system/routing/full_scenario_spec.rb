@@ -119,6 +119,8 @@ describe 'The routing', js: true do
     fill_in litteraire_user.dossiers.first.champs_public.first.libelle, with: 'some value'
     wait_for_autosave(false)
 
+    click_on 'Déposer les modifications'
+
     log_out
 
     # the litteraires instructeurs should have a notification
@@ -216,6 +218,8 @@ describe 'The routing', js: true do
     wait_for_autosave(false)
 
     expect(page).to have_text(new_group)
+
+    click_on 'Déposer les modifications'
 
     log_out
   end

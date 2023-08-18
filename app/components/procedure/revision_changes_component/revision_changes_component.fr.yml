@@ -39,6 +39,8 @@ fr:
     add_condition: Une condition a été ajoutée sur le champ « %{label} ». La nouvelle condition est « %{to} ».
     remove_condition: La condition du champ « %{label} » a été supprimée.
     update_condition: La condition du champ « %{label} » a été modifiée. La nouvelle condition est « %{to} ».
+    update_character_limit: La limite de caractères du champ texte « %{label} » a été modifiée. La nouvelle limite est « %{to} ».
+    remove_character_limit: La limite de caractères du champ texte « %{label} » a été supprimée.
   private:
     add: L’annotation privée « %{label} » a été ajoutée.
     remove: L’annotation privée « %{label} » a été supprimée.

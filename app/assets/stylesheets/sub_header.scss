@@ -2,7 +2,7 @@
 @import "constants";
 
 .sub-header {
-  background-color: $alt-blue-france;
+  background-color: var(--background-alt-blue-france);
   padding-top: $default-padding;
   margin-bottom: $sub-header-bottom-margin;
   border-bottom: 1px solid $border-grey;

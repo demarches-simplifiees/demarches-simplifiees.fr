@@ -5,9 +5,9 @@ en:
     confirmation: Draft saved
     error: Impossible to save the draft
   en_construction:
-    explanation: Your file is automatically saved.
-    confirmation: File saved
-    error: Impossible to save the file
+    explanation: Your modifications are automatically saved. Submit them when you’re done.
+    confirmation: Modifications saved
+    error: Impossible to save the modifications.
   annotations:
     explanation: Your annotations are automatically saved.
     confirmation: Annotations saved

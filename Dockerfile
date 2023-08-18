@@ -195,7 +195,7 @@ ENV \
     YAHOO_CLIENT_SECRET=""
 
 COPY --chown=userapp:userapp . ${APP_PATH}
-RUN RAILS_ENV=production bundle exec rails assets:precompile
+RUN RAILS_ENV=production NODE_OPTIONS=--max-old-space-size=4000 bundle exec rails assets:precompile
 
 RUN chmod a+x $APP_PATH/app/lib/*.sh
 

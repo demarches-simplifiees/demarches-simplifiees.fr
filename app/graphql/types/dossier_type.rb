@@ -6,6 +6,12 @@ module Types
       end
     end
 
+    class ConnectionUsager < Types::BaseEnum
+      value(:france_connect, "Connexion via FranceConnect", value: :france_connect)
+      value(:password, "Connexion via mot de passe", value: :password)
+      value(:deleted, "Compte supprimé", value: :deleted)
+    end
+
     description "Un dossier"
 
     global_id_field :id
@@ -25,6 +31,8 @@ module Types
     field :date_expiration, GraphQL::Types::ISO8601DateTime, "Date d’expiration.", null: true
 
     field :archived, Boolean, null: false
+
+    field :connection_usager, ConnectionUsager, null: false
 
     field :motivation, String, null: true
     field :motivation_attachment, Types::File, null: true, extensions: [
@@ -67,11 +75,25 @@ module Types
       end
     end
 
+    def connection_usager
+      if object.user_deleted?
+        :deleted
+      else
+        user_loader.then do |user|
+          if user.france_connect_information.present?
+            :france_connect
+          else
+            :password
+          end
+        end
+      end
+    end
+
     def usager
       if object.user_deleted?
         { email: object.user_email_for(:display), id: '<deleted>' }
       else
-        Loaders::Record.for(User).load(object.user_id)
+        user_loader
       end
     end
 
@@ -172,6 +194,12 @@ module Types
 
     def self.authorized?(object, context)
       context.authorized_demarche?(object.revision.procedure)
+    end
+
+    private
+
+    def user_loader
+      Loaders::Record.for(User, includes: :france_connect_information).load(object.user_id)
     end
   end
 end
