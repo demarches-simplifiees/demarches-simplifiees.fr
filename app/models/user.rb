@@ -155,6 +155,7 @@ class User < ApplicationRecord
     if user.valid? && user.administrateur.nil?
       user.create_administrateur!
       user.update(france_connect_information: nil)
+      AdminUpdateDefaultZonesJob.perform_later(user.administrateur)
     end
 
     user

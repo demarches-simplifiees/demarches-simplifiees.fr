@@ -15,6 +15,7 @@ class Administrateur < ApplicationRecord
   has_many :procedures, through: :administrateurs_procedures
   has_many :services
   has_many :api_tokens, inverse_of: :administrateur, dependent: :destroy
+  has_and_belongs_to_many :default_zones, class_name: 'Zone', join_table: 'default_zones_administrateurs'
 
   belongs_to :user
 
