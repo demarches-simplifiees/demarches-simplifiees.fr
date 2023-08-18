@@ -359,7 +359,8 @@ en:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
           traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
-          tous: All the files that have been submitted on this approach, regardless of the status.
+          tous: All the files that have been submitted on this approach, included files to be follow and files followed by you or other instructors.
+          tous_with_routing: All the files that have been submitted on this approach, and assigned to your instructors groups.
           supprimes_recemment: All files not <strong>archive</strong>, <strong>completed</strong> and <strong>deleted by the instructors</strong> on this approach.
           archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
           expirant: Records will not expire prior to the data retention period.
@@ -501,12 +502,13 @@ en:
         reset_link_sent:
           got_it: Got it!
           open_your_mailbox: Now open your mailbox.
-          email_sent_html: We have sent you an email to the address <strong>%{email}</strong>.
+          email_sent_html: "If a <strong>%{application_name}</strong> account exists with the address <strong>%{email}</strong>, we have sent you an email."
           click_link_to_reset_password: Click on the link in the email to change your password.
           no_mail: Didn't receive the email?
           check_spams: Check your junk or spam email.
           check_account: Have you created a %{application_name} account with the adress %{email}? You will not receive any message if no account is linked to your email adress.
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
+          check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
       shared:
         email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'

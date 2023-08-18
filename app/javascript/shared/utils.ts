@@ -32,7 +32,8 @@ const Gon = z
         enabled: z.boolean().default(false),
         environment: z.string().optional(),
         user: z.object({ id: z.string() }).default({ id: '' }),
-        browser: z.object({ modern: z.boolean() }).default({ modern: false })
+        browser: z.object({ modern: z.boolean() }).default({ modern: false }),
+        release: z.string().nullish()
       })
       .default({}),
     crisp: z

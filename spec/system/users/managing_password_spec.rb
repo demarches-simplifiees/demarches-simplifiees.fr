@@ -15,7 +15,7 @@ describe 'Managing password:', js: true do
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
-      expect(page).to have_text 'Nous vous avons envoyé un email'
+      expect(page).to have_text 'nous vous avons envoyé un email'
       expect(page).to have_text user.email
 
       click_reset_password_link_for user.email
@@ -46,7 +46,7 @@ describe 'Managing password:', js: true do
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
-      expect(page).to have_text 'Nous vous avons envoyé un email'
+      expect(page).to have_text 'nous vous avons envoyé un email'
       expect(page).to have_text user.email
 
       click_reset_password_link_for user.email

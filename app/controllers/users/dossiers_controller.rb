@@ -582,7 +582,7 @@ module Users
 
       [
         "Le champ « #{model.libelle.truncate(200)} » #{str_error}",
-        helpers.link_to(t('views.users.dossiers.fix_champ'), public_send(route_helper, anchor: model.input_id))
+        helpers.link_to(t('views.users.dossiers.fix_champ'), public_send(route_helper, anchor: model.labelledby_id), class: 'error-anchor')
       ].join(", ")
     rescue # case of invalid type de champ on champ
       str_error

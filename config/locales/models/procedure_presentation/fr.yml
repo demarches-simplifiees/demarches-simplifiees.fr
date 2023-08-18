@@ -29,7 +29,7 @@ fr:
             nom: Nom
             gender: Civilité
           avis:
-            id: Avis
+            answer: Avis
           etablissement:
             entreprise_siren: SIREN
             entreprise_forme_juridique: Forme juridique

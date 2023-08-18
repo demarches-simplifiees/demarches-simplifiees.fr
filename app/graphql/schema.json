@@ -244,6 +244,34 @@
               "deprecationReason": null
             },
             {
+              "name": "commune",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Commune",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "departement",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Departement",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -855,6 +883,34 @@
               "deprecationReason": null
             },
             {
+              "name": "questionAnswer",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "questionLabel",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "reponse",
               "description": null,
               "args": [
@@ -1228,6 +1284,11 @@
             },
             {
               "kind": "OBJECT",
+              "name": "EpciChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "IntegerNumberChamp",
               "ofType": null
             },
@@ -1491,6 +1552,11 @@
             {
               "kind": "OBJECT",
               "name": "EmailChampDescriptor",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "EpciChampDescriptor",
               "ofType": null
             },
             {
@@ -2329,7 +2395,7 @@
             },
             {
               "name": "name",
-              "description": null,
+              "description": "Le nom de la commune",
               "args": [
 
               ],
@@ -2341,6 +2407,20 @@
                   "name": "String",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "postalCode",
+              "description": "Le code postal",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -2696,6 +2776,35 @@
             }
           ],
           "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "ENUM",
+          "name": "ConnectionUsager",
+          "description": null,
+          "fields": null,
+          "inputFields": null,
+          "interfaces": null,
+          "enumValues": [
+            {
+              "name": "france_connect",
+              "description": "Connexion via FranceConnect",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "password",
+              "description": "Connexion via mot de passe",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "deleted",
+              "description": "Compte supprimé",
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
           "possibleTypes": null
         },
         {
@@ -3740,6 +3849,11 @@
             },
             {
               "kind": "OBJECT",
+              "name": "PersonneMoraleIncomplete",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "PersonnePhysique",
               "ofType": null
             }
@@ -4272,6 +4386,95 @@
               "deprecationReason": null
             },
             {
+              "name": "pendingDeletedDossiers",
+              "description": "Liste de tous les dossiers en attente de suppression définitive d’une démarche.",
+              "args": [
+                {
+                  "name": "after",
+                  "description": "Returns the elements in the list that come after the specified cursor.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "before",
+                  "description": "Returns the elements in the list that come before the specified cursor.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "first",
+                  "description": "Returns the first _n_ elements from the list.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "last",
+                  "description": "Returns the last _n_ elements from the list.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "order",
+                  "description": "L’ordre des dossiers en attente de suppression.",
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "Order",
+                    "ofType": null
+                  },
+                  "defaultValue": "ASC",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "deletedSince",
+                  "description": "Dossiers en attente de suppression depuis la date.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ISO8601DateTime",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "DeletedDossierConnection",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "publishedRevision",
               "description": null,
               "args": [
@@ -4490,7 +4693,7 @@
           "fields": [
             {
               "name": "cadreJuridiqueUrl",
-              "description": null,
+              "description": "URL du cadre juridique qui justifie le droit de collecter les données demandées dans la démarche",
               "args": [
 
               ],
@@ -4596,7 +4799,7 @@
             },
             {
               "name": "deliberation",
-              "description": null,
+              "description": "fichier contenant le cadre juridique",
               "args": [
 
               ],
@@ -4610,7 +4813,7 @@
             },
             {
               "name": "demarcheUrl",
-              "description": null,
+              "description": "URL pour commencer la démarche",
               "args": [
 
               ],
@@ -4642,7 +4845,7 @@
             },
             {
               "name": "dpoUrl",
-              "description": null,
+              "description": "URL ou email pour contacter le Délégué à la Protection des Données (DPO)",
               "args": [
 
               ],
@@ -4706,7 +4909,7 @@
             },
             {
               "name": "notice",
-              "description": null,
+              "description": "notice explicative de la démarche",
               "args": [
 
               ],
@@ -4802,7 +5005,7 @@
             },
             {
               "name": "siteWebUrl",
-              "description": null,
+              "description": "URL où les usagers trouvent le lien vers la démarche",
               "args": [
 
               ],
@@ -4834,7 +5037,7 @@
             },
             {
               "name": "tags",
-              "description": null,
+              "description": "mots ou expressions attribués à la démarche pour décrire son contenu et la retrouver",
               "args": [
 
               ],
@@ -4878,7 +5081,7 @@
             },
             {
               "name": "zones",
-              "description": null,
+              "description": "ministère(s) ou collectivité(s) qui mettent en oeuvre la démarche",
               "args": [
 
               ],
@@ -4938,7 +5141,7 @@
             },
             {
               "name": "depubliee",
-              "description": "Depubliee",
+              "description": "Dépubliée",
               "isDeprecated": false,
               "deprecationReason": null
             }
@@ -5575,6 +5778,24 @@
                       "ofType": null
                     }
                   }
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "connectionUsager",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "ConnectionUsager",
+                  "ofType": null
                 }
               },
               "isDeprecated": false,
@@ -8762,13 +8983,13 @@
           "enumValues": [
             {
               "name": "en_construction",
-              "description": "En construction",
+              "description": "En construction",
               "isDeprecated": false,
               "deprecationReason": null
             },
             {
               "name": "en_instruction",
-              "description": "En instruction",
+              "description": "En instruction",
               "isDeprecated": false,
               "deprecationReason": null
             },
@@ -8786,7 +9007,7 @@
             },
             {
               "name": "sans_suite",
-              "description": "Classé sans suite",
+              "description": "Classé sans suite",
               "isDeprecated": false,
               "deprecationReason": null
             }
@@ -9434,6 +9655,275 @@
               "deprecationReason": null
             }
           ],
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "Epci",
+          "description": null,
+          "fields": [
+            {
+              "name": "code",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "EpciChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "departement",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Departement",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "epci",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Epci",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "EpciChampDescriptor",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptors",
+              "description": "Description des champs d’un bloc répétable.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INTERFACE",
+                    "name": "ChampDescriptor",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place."
+            },
+            {
+              "name": "description",
+              "description": "Description du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "required",
+              "description": "Est-ce que le champ est obligatoire ?",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "type",
+              "description": "Type de la valeur du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "TypeDeChamp",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `__typename` à la place."
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "ChampDescriptor",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
           "possibleTypes": null
         },
         {
@@ -10976,6 +11466,95 @@
                 "ofType": {
                   "kind": "SCALAR",
                   "name": "Int",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "pendingDeletedDossiers",
+              "description": "Liste de tous les dossiers en attente de suppression définitive d’un groupe instructeur.",
+              "args": [
+                {
+                  "name": "after",
+                  "description": "Returns the elements in the list that come after the specified cursor.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "before",
+                  "description": "Returns the elements in the list that come before the specified cursor.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "first",
+                  "description": "Returns the first _n_ elements from the list.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "last",
+                  "description": "Returns the last _n_ elements from the list.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "Int",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "order",
+                  "description": "L’ordre des dossiers en attente de suppression.",
+                  "type": {
+                    "kind": "ENUM",
+                    "name": "Order",
+                    "ofType": null
+                  },
+                  "defaultValue": "ASC",
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                },
+                {
+                  "name": "deletedSince",
+                  "description": "Dossiers en attente de suppression depuis la date.",
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "ISO8601DateTime",
+                    "ofType": null
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "OBJECT",
+                  "name": "DeletedDossierConnection",
                   "ofType": null
                 }
               },
@@ -14321,6 +14900,59 @@
         },
         {
           "kind": "OBJECT",
+          "name": "PersonneMoraleIncomplete",
+          "description": null,
+          "fields": [
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "siret",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Demandeur",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "PersonnePhysique",
           "description": null,
           "fields": [
@@ -16067,7 +16699,7 @@
             },
             {
               "name": "nom",
-              "description": null,
+              "description": "nom du service qui met en oeuvre la démarche",
               "args": [
 
               ],
@@ -16085,7 +16717,7 @@
             },
             {
               "name": "organisme",
-              "description": null,
+              "description": "nom de l'organisme qui met en oeuvre la démarche",
               "args": [
 
               ],
@@ -16103,7 +16735,7 @@
             },
             {
               "name": "siret",
-              "description": null,
+              "description": "n° siret du service qui met en oeuvre la démarche",
               "args": [
 
               ],
@@ -16117,7 +16749,7 @@
             },
             {
               "name": "typeOrganisme",
-              "description": null,
+              "description": "type d'organisme qui met en oeuvre la démarche",
               "args": [
 
               ],
@@ -17406,6 +18038,12 @@
             {
               "name": "mesri",
               "description": "Données du Ministère de l’Enseignement Supérieur, de la Recherche et de l’Innovation",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "epci",
+              "description": "EPCI",
               "isDeprecated": false,
               "deprecationReason": null
             },

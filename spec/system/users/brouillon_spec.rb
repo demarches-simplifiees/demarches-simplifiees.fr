@@ -116,6 +116,18 @@ describe 'The user' do
     expect(page).to have_text('Analyse antivirus en cours')
   end
 
+  scenario 'fill nothing and every error anchor links points to an existing element', js: true do
+    log_in(user, procedure)
+    fill_individual
+    click_on 'Déposer le dossier'
+
+    expect(page).to have_selector("#flash_message")
+    all('.error-anchor').map do |link_element|
+      error_anchor = URI(link_element['href'])
+      expect(page).to have_selector("##{error_anchor.fragment}")
+    end
+  end
+
   let(:procedure_with_repetition) do
     create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'sub type de champ' }] }])
   end

@@ -73,7 +73,7 @@ describe ProcedurePresentation do
           { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '' },
-          { "label" => 'Avis', "table" => 'avis', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
+          { "label" => 'Avis', "table" => 'avis', "column" => 'answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
           { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '' },
@@ -703,6 +703,19 @@ describe ProcedurePresentation do
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
         end
+      end
+    end
+
+    context 'for avis table' do
+      let(:procedure) { create(:procedure, :for_individual) }
+      let!(:kept_dossier) { create(:dossier, procedure:) }
+      let!(:discarded_dossier) { create(:dossier, procedure:) }
+      let!(:avis) { create(:avis, :with_answer, dossier: kept_dossier) }
+
+      context 'for answer column' do
+        let(:filter) { [{ 'table' => 'avis', 'column' => 'answer', 'value' => 'Pertinente' }] }
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
       end
     end
 
