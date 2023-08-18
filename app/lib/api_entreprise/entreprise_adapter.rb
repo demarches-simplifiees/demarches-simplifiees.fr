@@ -50,7 +50,7 @@ class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
 
     case raw_value
     when 'A' then 'actif'
-    when 'F' then 'fermé'
+    when 'F', 'C' then 'fermé'
     end
   end
 
