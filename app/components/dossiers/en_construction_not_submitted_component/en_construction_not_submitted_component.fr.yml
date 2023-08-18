@@ -1,0 +1,9 @@
+---
+fr:
+  title: Des modifications n’ont pas encore été déposées
+  body: |
+    Vous avez apporté des modifications après le dépôt de votre dossier.
+    Déposez-les afin que l’administration les prenne en compte.
+  buttons:
+    edit: Continuer à modifier
+    submit: Déposer les modifications
