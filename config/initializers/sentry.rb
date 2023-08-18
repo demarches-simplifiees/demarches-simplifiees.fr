@@ -42,7 +42,11 @@ Sentry.init do |config|
       # Don't trace on all attempts
       [0, 2, 5, 10, 20, max_attempts].include?(attempts)
     else # rails requests
-      0.001
+      if sampling_context.dig(:env, "REQUEST_METHOD") == "GET"
+        0.001
+      else
+        0.01
+      end
     end
   end
 
