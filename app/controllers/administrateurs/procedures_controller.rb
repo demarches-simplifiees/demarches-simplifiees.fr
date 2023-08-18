@@ -60,12 +60,7 @@ module Administrateurs
     end
 
     def apercu
-      revision = if current_administrateur.owns?(procedure_without_control)
-        procedure_without_control.draft_revision
-      else
-        procedure_without_control.active_revision
-      end
-      @dossier = revision.dossier_for_preview(current_user)
+      @dossier = procedure_without_control.draft_revision.dossier_for_preview(current_user)
       @tab = apercu_tab
     end
 
@@ -182,8 +177,13 @@ module Administrateurs
         flash.notice = 'Démarche clonée, pensez a vérifier la Présentation et choisir le service a laquelle cette procédure est associé.'
         redirect_to admin_procedure_path(id: new_procedure.id)
       else
-        flash.alert = new_procedure.errors.full_messages
-        redirect_back(fallback_location: admin_procedures_path)
+        if cloned_from_library?
+          flash.alert = new_procedure.errors.full_messages
+          redirect_to new_from_existing_admin_procedures_path
+        else
+          flash.alert = new_procedure.errors.full_messages
+          redirect_to admin_procedures_path
+        end
       end
 
     rescue ActiveRecord::RecordNotFound

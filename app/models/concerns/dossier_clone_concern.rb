@@ -64,11 +64,11 @@ module DossierCloneConcern
     return false if invalid? || editing_fork.invalid?
     return false if revision_id > editing_fork.revision_id
 
-    diff = make_diff(editing_fork)
-
     transaction do
+      rebase!(force: true)
+      diff = make_diff(editing_fork)
       apply_diff(diff)
-      update(revision_id: editing_fork.revision_id, last_champ_updated_at: Time.zone.now)
+      touch(:last_champ_updated_at)
       assign_to_groupe_instructeur(editing_fork.groupe_instructeur)
     end
     reload
