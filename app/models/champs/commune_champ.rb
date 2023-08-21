@@ -96,10 +96,6 @@ class Champs::CommuneChamp < Champs::TextChamp
     true
   end
 
-  def dsfr_champ_container
-    :fieldset
-  end
-
   private
 
   def safe_to_s

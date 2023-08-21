@@ -17,6 +17,10 @@ class Dsfr::InputComponent < ApplicationComponent
     @required = required
   end
 
+  def dsfr_champ_container
+    :div
+  end
+
   # add invalid class on input when input is invalid
   # and and valid on input only if another input is invalid
   def input_group_opts
@@ -48,6 +52,10 @@ class Dsfr::InputComponent < ApplicationComponent
   # i18n lookups
   def label
     get_slot(:label).presence || default_label
+  end
+
+  def dsfr_input_classname
+    'fr-input'
   end
 
   # kind of input helpers

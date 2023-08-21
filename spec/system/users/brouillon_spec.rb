@@ -21,15 +21,15 @@ describe 'The user' do
     fill_in('decimal_number', with: '17')
     fill_in('integer_number', with: '12')
     scroll_to(find_field('checkbox'), align: :center)
-    check('checkbox')
+    find('label', text: 'checkbox').click
     choose('Madame')
     fill_in('email', with: 'loulou@yopmail.com')
     fill_in('phone', with: '0123456789')
     scroll_to(find_field('Non'), align: :center)
-    choose('Non')
-    choose('val2')
-    check('val1')
-    check('val3')
+    find('label', text: 'Non').click
+    find('.fr-radio-group label', text: 'val2').click
+    find('.fr-checkbox-group label', text: 'val1').click
+    find('.fr-checkbox-group label', text: 'val3').click
     select('bravo', from: form_id_for('simple_choice_drop_down_list_long'))
     select('alpha', from: form_id_for('multiple_choice_drop_down_list_long'))
     select('charly', from: form_id_for('multiple_choice_drop_down_list_long'))
@@ -37,8 +37,9 @@ describe 'The user' do
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
     select('02 – Aisne', from: form_id_for('departements'))
-    fill_in('Renseignez le code postal puis sélectionnez la commune dans la liste', with: '60400')
-    select('Brétigny (60400)', from: form_id_for('communes'))
+    fill_in('Renseignez le code postal', with: '60400')
+    # wait_until { all('label', text: 'Sélectionnez la commune dans la liste').size == 1 }
+    select('Brétigny (60400)', from: form_id_for('commune'))
 
     # communes needs more time to be updated
     wait_until { champ_value_for('communes') == "Brétigny" }
@@ -97,7 +98,7 @@ describe 'The user' do
       expect(page).to have_button('alpha')
       expect(page).to have_button('charly')
     end
-    expect(page).to have_selected_value('communes', selected: 'Brétigny (60400)')
+    expect(page).to have_selected_value('commune', selected: 'Brétigny (60400)')
     expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')
@@ -359,15 +360,15 @@ describe 'The user' do
         fill_individual
 
         expect(page).to have_no_css('label', text: 'champ_c', visible: true)
-        check('champ_a')
+        find('label', text: 'champ_a').click # check
         wait_for_autosave
 
         expect(page).to have_css('label', text: 'champ_c', visible: true)
-        uncheck('champ_a')
+        find('label', text: 'champ_a').click # uncheck
         wait_for_autosave
 
         expect(page).to have_no_css('label', text: 'champ_c', visible: true)
-        check('champ_b')
+        find('label', text: 'champ_b').click # check
         wait_for_autosave
 
         expect(page).to have_css('label', text: 'champ_c', visible: true)
@@ -554,7 +555,7 @@ describe 'The user' do
   end
 
   def fill_individual
-    choose 'Monsieur'
+    find('label', text: 'Monsieur').click
     fill_in('individual_prenom', with: 'prenom')
     fill_in('individual_nom', with: 'nom')
     click_on 'Continuer'

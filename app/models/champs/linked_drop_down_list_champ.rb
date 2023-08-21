@@ -13,10 +13,6 @@ class Champs::LinkedDropDownListChamp < Champ
     end
   end
 
-  def dsfr_champ_container
-    :fieldset
-  end
-
   def secondary_value
     if value.present?
       JSON.parse(value)[1]

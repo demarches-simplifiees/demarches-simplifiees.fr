@@ -156,10 +156,6 @@ class Champ < ApplicationRecord
     stable_id_with_maybe_row.split('|')
   end
 
-  def dsfr_champ_container
-    :div
-  end
-
   def html_label?
     true
   end

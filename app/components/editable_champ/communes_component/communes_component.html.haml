@@ -8,7 +8,7 @@
 
 .fr-fieldset__element.fr-mb-0
   - if commune_options.empty?
-    - # noop
+    -# noop
   - elsif commune_options.size <= 3
     %fieldset.fr-fieldset
       .fr-fieldset__legend--regular.fr-fieldset__legend= t('.commune').html_safe
@@ -16,11 +16,8 @@
       - commune_options.each.with_index do |(option, value), index|
         .fr-fieldset__element
           .fr-radio-group
-            = @form.radio_button :value, value, checked: @champ.selected == value, id: index == 0 ? @champ.input_id : nil
-            = @form.label :value, option, for: option, class: 'fr-label'
-            / %label
-            /   = @form.radio_button :value, value, checked: @champ.selected == value, id: index == 0 ? @champ.input_id : nil
-            /   = option
+            = @form.radio_button :value, value, checked: @champ.selected == value, id: index == 0 ? @champ.input_id : "radio-#{index}-#{value.parameterize}"
+            = @form.label :value, option, for: index == 0 ? @champ.input_id : "radio-#{index}-#{value.parameterize}", class: 'fr-label'
   - else
     = @form.label :value, t('.commune').html_safe, for: @champ.input_id, class: 'fr-label'
     = @form.select :value, commune_options, commune_select_options, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile fr-select"

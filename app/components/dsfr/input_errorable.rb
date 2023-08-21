@@ -8,6 +8,30 @@ module Dsfr
 
       renders_one :hint
 
+      def dsfr_group_classname
+        if dsfr_champ_container == :fieldset
+          'fr-fieldset'
+        else
+          "#{dsfr_input_classname}-group"
+        end
+      end
+
+      def input_group_error_class_names
+        {
+          "#{dsfr_group_classname}--error" => errors_on_attribute?,
+          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute?
+        }
+      end
+
+      def errors_on_attribute?
+        errors.has_key?(attribute_or_rich_body)
+      end
+
+      # errors helpers
+      def error_full_messages
+        errors.full_messages_for(attribute_or_rich_body)
+      end
+
       private
 
       # lookup for edge case from `form.rich_text_area`
@@ -21,72 +45,8 @@ module Dsfr
         end
       end
 
-      def fr_select?
-        return false if fr_fieldset?
-
-        [
-          'departements',
-          'drop_down_list',
-          'multiple_drop_down_list',
-          'pays',
-          'regions'
-        ].include?(@champ.type_champ)
-      end
-
-      def fr_input?
-        [
-          'annuaire_education',
-          'date',
-          'datetime',
-          'decimal_number',
-          'dgfip',
-          'dossier_link',
-          'email',
-          'iban',
-          'integer_number',
-          'mesri',
-          'number',
-          'phone',
-          'piece_justificative',
-          'pole_emploi',
-          'rna',
-          'siret',
-          'text',
-          'textarea',
-          'titre_identite'
-        ].include?(@champ.type_champ)
-      end
-
-      def fr_radio?
-        [
-          'boolean'
-        ].include?(@champ.type_champ)
-      end
-
       def fr_fieldset?
-        @champ.dsfr_champ_container == :fieldset
-      end
-
-      def dsfr_group_classname
-        if fr_fieldset?
-          dsfr_input_classname
-        else
-          "#{dsfr_input_classname}-group"
-        end
-      end
-
-      def dsfr_input_classname
-        return "fr-fieldset" if fr_fieldset?
-        return "fr-input" if fr_input?
-        return "fr-select" if fr_select?
-        return "fr-radio" if fr_radio?
-      end
-
-      def input_group_error_class_names
-        {
-          "#{dsfr_group_classname}--error" => errors_on_attribute?,
-          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute?
-        }
+        !['fr-input', 'fr-radio', 'fr-select'].include?(dsfr_input_classname)
       end
 
       def input_error_class_names
@@ -133,21 +93,8 @@ module Dsfr
         @opts
       end
 
-      def describedby_id
-        dom_id(@champ, :error_full_messages)
-      end
-
       def errors_on_another_attribute?
         !errors.empty?
-      end
-
-      def errors_on_attribute?
-        errors.has_key?(attribute_or_rich_body)
-      end
-
-      # errors helpers
-      def error_full_messages
-        errors.full_messages_for(attribute_or_rich_body)
       end
 
       def map_array_to_hash_with_true(array_or_string_or_nil)

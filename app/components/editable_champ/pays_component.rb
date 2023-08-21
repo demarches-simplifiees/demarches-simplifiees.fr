@@ -1,6 +1,10 @@
 class EditableChamp::PaysComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
 
+  def dsfr_input_classname
+    'fr-select'
+  end
+
   private
 
   def options

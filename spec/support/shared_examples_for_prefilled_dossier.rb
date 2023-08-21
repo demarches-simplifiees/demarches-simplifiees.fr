@@ -26,6 +26,9 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(page).to have_field("Le département de l’EPCI", with: epci_value.first)
     expect(page).to have_selector("option[value='#{epci_value.last}'][selected]")
     expect(page).to have_field(type_de_champ_dossier_link.libelle, with: dossier_link_value)
+    label_commune = page.find(:label, text: commune_libelle)
+    radio_commune = page.find("##{label_commune['for']}")
+    expect(radio_commune).to be_checked
     expect(page).to have_field(commune_libelle, with: '01457')
     expect(page).to have_content(annuaire_education_value.last)
     expect(page).to have_content(address_value.last)
