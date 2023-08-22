@@ -24,4 +24,4 @@
         %li
           = link_to 'Retour', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn fr-btn--secondary'
         %li
-          %button.fr-btn{ disabled: true,  data: { 'radio-enabled-submit-target': 'submit' } } Créer les groupes
+          %button.fr-btn{ disabled: true,  data: { disable_with: 'Création des groupes…', 'radio-enabled-submit-target': 'submit' } } Créer les groupes
