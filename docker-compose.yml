@@ -187,7 +187,7 @@ services:
       - DB_PASSWORD
       - DB_POOL
       - DB_USERNAME
-      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:---pool=*:10}
+      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:---pool=mailers:5 --pool=exports:2 --pool=low_priority:1 --pool=archives:2 --pool=default:1 --pool=cron:1 --pool=*:1}
       - DOLIST_BALANCING_VALUE
       - DOLIST_USERNAME
       - DOLIST_PASSWORD
