@@ -58,8 +58,18 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
 
   def available_values_for_select(targeted_champ)
     return [] if targeted_champ.is_a?(Logic::Empty)
-    targeted_champ
-      .options(@revision.types_de_champ_public)
-      .map { |(label, value)| [label, constant(value).to_json] }
+
+    case @revision.types_de_champ_public.find_by(stable_id: targeted_champ.stable_id).type_champ
+    when TypeDeChamp.type_champs.fetch(:departements)
+      departements_for_select
+    when TypeDeChamp.type_champs.fetch(:drop_down_list)
+      targeted_champ
+        .options(@revision.types_de_champ_public)
+        .map { |(label, value)| [label, constant(value).to_json] }
+    end
+  end
+
+  def departements_for_select
+    APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", constant("#{_1[:code]} – #{_1[:name]}").to_json] }
   end
 end
