@@ -108,7 +108,7 @@ class GroupeInstructeur < ApplicationRecord
 
     options = case routing_tdc.type_champ
     when TypeDeChamp.type_champs.fetch(:departements)
-      APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" }
+      routing_tdc.codes_and_names
     when TypeDeChamp.type_champs.fetch(:drop_down_list)
       routing_tdc.options_with_drop_down_other
     end

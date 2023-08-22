@@ -42,7 +42,7 @@ module Administrateurs
 
       tdc_options = case tdc.type_champ
       when TypeDeChamp.type_champs.fetch(:departements)
-        APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" }
+        tdc.codes_and_names
       when TypeDeChamp.type_champs.fetch(:drop_down_list)
         tdc.drop_down_options.reject(&:empty?)
       end
