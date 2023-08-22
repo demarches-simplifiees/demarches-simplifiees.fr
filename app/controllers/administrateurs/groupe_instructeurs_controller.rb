@@ -40,7 +40,12 @@ module Administrateurs
 
       tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
-      tdc_options = tdc.drop_down_options.reject(&:empty?)
+      tdc_options = case tdc.type_champ
+      when TypeDeChamp.type_champs.fetch(:departements)
+        APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" }
+      when TypeDeChamp.type_champs.fetch(:drop_down_list)
+        tdc.drop_down_options.reject(&:empty?)
+      end
 
       tdc_options.each do |option_label|
         routing_rule = ds_eq(champ_value(stable_id), constant(option_label))
