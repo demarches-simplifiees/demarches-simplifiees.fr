@@ -16,7 +16,7 @@ export class EmailInputController extends ApplicationController {
       this.suggestionTarget.innerHTML = address;
       show(this.ariaRegionTarget);
       this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
-    } else if (email.toLowerCase().endsWith('@mail.pf')) {
+    } else if (email.toLowerCase().endsWith('.pf')) {
       this.discard();
     } else {
       const suggestion = suggest(email);

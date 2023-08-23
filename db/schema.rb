@@ -712,6 +712,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_184741) do
     t.string "declarative_with_state"
     t.bigint "defaut_groupe_instructeur_id"
     t.string "description"
+    t.string "description_target_audience"
     t.string "direction"
     t.datetime "dossiers_count_computed_at"
     t.bigint "draft_revision_id"
