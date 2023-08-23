@@ -6,12 +6,22 @@ fr:
         other: Démarches
     attributes:
       procedure:
+        hints:
+          description: Décrivez en quelques lignes le contexte, la finalité etc.
+          description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les critères d’éligibilité s’il y en a, les pré-requis, etc.
+          lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
+          cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
         path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur Mes-Démarches (choisi par un usager)
         max_duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers maximum (autorisé par un super admin de MD)
         id: Id
-        libelle: Libelle
+        libelle: Titre de la démarche
+        description: Quel est l’objet de la démarche ?
+        description_target_audience: À qui s’adresse la démarche ?
+        lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
+        cadre_juridique: Lien vers le texte
+        lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)
         published_at: 'Date de publication'
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'

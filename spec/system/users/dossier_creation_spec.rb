@@ -19,7 +19,6 @@ describe 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
-        expect(page).to have_procedure_description(procedure)
         expect(page).to have_title(libelle)
 
         choose 'Monsieur'
@@ -91,7 +90,7 @@ describe 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path siret_dossier_path(dossier)
-        expect(page).to have_procedure_description(procedure)
+        expect(page).to have_content(procedure.libelle)
 
         fill_in 'Numéro TAHITI', with: siret
         click_on 'Valider'
@@ -108,7 +107,7 @@ describe 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
-        expect(page).to have_procedure_description(procedure)
+        expect(page).to have_content(procedure.libelle)
 
         fill_in 'Numéro TAHITI', with: '0000'
         click_on 'Valider'

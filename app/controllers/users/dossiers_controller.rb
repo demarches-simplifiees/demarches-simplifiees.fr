@@ -109,10 +109,12 @@ module Users
     def identite
       @dossier = dossier
       @user = current_user
+      @no_description = true
     end
 
     def update_identite
       @dossier = dossier
+      @no_description = true
 
       if @dossier.individual.update(individual_params)
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
@@ -127,10 +129,12 @@ module Users
 
     def siret
       @dossier = dossier
+      @no_description = true
     end
 
     def update_siret
       @dossier = dossier
+      @no_description = true
 
       # We use the user as the holder model object for the siret value
       # (so that we can restore it on the form in case of error).
