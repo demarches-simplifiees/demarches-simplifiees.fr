@@ -42,7 +42,6 @@ fr:
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory>*</span> ) sont obligatoires.
     mandatory_champs: Tous les champs sont obligatoires.
-    no_mandatory: (facultatif)
     file_number: Numéro de dossier
     subject: Sujet
     message: Message
