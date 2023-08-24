@@ -385,6 +385,22 @@ describe Procedure do
         end
       end
     end
+
+    context 'with auto archive' do
+      let(:procedure) { create(:procedure, auto_archive_on: 1.day.from_now) }
+
+      it { expect(procedure).to be_valid }
+
+      context 'when auto_archive_on is in the past' do
+        it 'validates only when attribute is changed' do
+          procedure.auto_archive_on = 1.day.ago
+          expect(procedure).not_to be_valid
+
+          procedure.save!(validate: false)
+          expect(procedure).to be_valid
+        end
+      end
+    end
   end
 
   describe 'opendata' do

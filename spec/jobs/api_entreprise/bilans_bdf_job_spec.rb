@@ -6,10 +6,10 @@ RSpec.describe APIEntreprise::BilansBdfJob, type: :job do
   let(:procedure_id) { procedure.id }
   let(:body) { File.read('spec/fixtures/files/api_entreprise/bilans_entreprise_bdf.json') }
   let(:status) { 200 }
-  let(:bilans_bdf) { JSON.parse(body)["bilans"] }
+  let(:bilans_bdf) { JSON.parse(body)["data"] }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/bilans_entreprises_bdf\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/banque_de_france\/unites_legales\/#{siren}\/bilans/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(["bilans_entreprise_bdf"])
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)

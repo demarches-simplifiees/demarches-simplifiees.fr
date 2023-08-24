@@ -11,13 +11,17 @@ class APIEntreprise::BilansBdfAdapter < APIEntreprise::Adapter
   end
 
   def process_params
-    if data_source[:bilans].present?
-      {
-        entreprise_bilans_bdf: data_source[:bilans],
-        entreprise_bilans_bdf_monnaie: data_source[:monnaie]
-      }
-    else
-      {}
+    Sentry.with_scope do |scope|
+      data = data_source[:data]
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: data)
+
+      result = {}
+      if data
+        result[:entreprise_bilans_bdf] = data
+        result[:entreprise_bilans_bdf_monnaie] = 'euros'
+      end
+      result
     end
   end
 end
