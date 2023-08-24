@@ -35,4 +35,71 @@ namespace :recovery do
     importer.load
     rake_puts "Mise à jour terminée"
   end
+
+  # all_ids = JSON.parse(File.read('success.log')).values.flatten
+  # all_ids += JSON.parse(File.read('error.log')).values.flatten.reject{_1.is_a? String}
+  desc <<~USAGE
+    given a in_file path, read it as JSON
+    the given file should be an Array of dossier_ids dump with JSON.dump `JSON.dump([1,2,3,4])`
+    ex: rails recovery:list_blob_ids[/in_ids.json, /blob_keys.json]
+  USAGE
+  task :list_blob_ids, [:in_file_path, :out_file_path] => [:environment] do |_t, args|
+    dossier_ids = JSON.parse(File.read(args[:in_file_path]))
+    rake_puts "Will export #{dossier_ids}"
+
+    dossiers_with_data = Dossier.where(id: dossier_ids)
+      .preload(commentaires: { piece_jointe_attachment: :blob },
+                               avis: { introduction_file_attachment: :blob, piece_justificative_file_attachment: :blob },
+                               dossier_operation_logs: { serialized_attachment: :blob },
+                               attestation: { pdf_attachment: :blob },
+                               justificatif_motivation_attachment: :blob)
+    dossiers = DossierPreloader.new(dossiers_with_data)
+
+    rake_puts "preloader rdy to batch"
+    blob_keys = dossiers.in_batches(100).map do |dossier|
+      rake_puts "working on dossier: #{dossier.id}"
+      blob_keys_for_dossier = []
+
+      blob_keys_for_dossier += dossier.champs.flat_map do |champ|
+        champ.piece_justificative_file.map { _1.blob.key }
+      end
+
+      blob_keys_for_dossier += dossier.commentaires.flat_map do |commentaire|
+        commentaire_blob_key = []
+        if commentaire.piece_jointe.attached?
+          commentaire_blob_key += [commentaire.piece_jointe_attachment.blob.key]
+        end
+        commentaire_blob_key
+      end
+
+      blob_keys_for_dossier += dossier.avis.flat_map do |avis|
+        avis_blob_keys = []
+        if avis.introduction_file.attached?
+          avis_blob_keys += [avis.introduction_file_attachment.blob.key]
+        end
+        if avis.piece_justificative_file.attached?
+          avis_blob_keys += [avis.piece_justificative_file.blob.key]
+        end
+        avis_blob_keys
+      end
+
+      blob_keys_for_dossier += dossier.dossier_operation_logs.flat_map do |dol|
+        dol_blob_key = []
+        if dol.serialized.attached?
+          dol_blob_key += [dol.serialized_attachment.blob.key]
+        end
+        dol_blob_key
+      end
+
+      if dossier.attestation.present?
+        blob_keys_for_dossier += [dossier.attestation.pdf.key]
+      end
+
+      if dossier.justificatif_motivation.attached?
+        blob_keys_for_dossier += [dossier.justificatif_motivation_attachment.blob.key]
+      end
+      blob_keys_for_dossier
+    end
+    File.write(args[:out_file_path], JSON.dump(blob_keys))
+  end
 end
