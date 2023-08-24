@@ -1,6 +1,7 @@
 module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper
+    include Logic
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
@@ -17,6 +18,73 @@ module Administrateurs
 
       @instructeurs = paginated_instructeurs
       @available_instructeur_emails = available_instructeur_emails
+    end
+
+    def options
+      @procedure = procedure
+    end
+
+    def ajout
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure) if procedure.groupe_instructeurs.one?
+      @procedure = procedure
+      @groupes_instructeurs = paginated_groupe_instructeurs
+    end
+
+    def simple_routing
+      @procedure = procedure
+    end
+
+    def create_simple_routing
+      @procedure = procedure
+      stable_id = params[:create_simple_routing][:stable_id].to_i
+
+      tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
+
+      tdc_options = tdc.options["drop_down_options"].reject(&:empty?)
+
+      tdc_options.each do |option_label|
+        gi = procedure.groupe_instructeurs.find_by({ label: option_label }) || procedure.groupe_instructeurs
+          .create({ label: option_label, instructeurs: [current_administrateur.instructeur] })
+        gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
+      end
+
+      defaut = @procedure.defaut_groupe_instructeur
+
+      if !tdc_options.include?(defaut.label)
+        new_defaut = @procedure.reload.groupe_instructeurs_but_defaut.first
+        @procedure.update!(defaut_groupe_instructeur: new_defaut)
+        reaffecter_all_dossiers_to_defaut_groupe
+        defaut.instructeurs.each { new_defaut.add(_1) }
+        defaut.destroy!
+      end
+
+      flash.notice = 'Les groupes instructeurs ont été ajoutés'
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+    end
+
+    def wizard
+      if params[:choice][:state] == 'routage_custom'
+        new_label = procedure.defaut_groupe_instructeur.label + ' bis'
+        procedure.groupe_instructeurs
+          .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+      elsif params[:choice][:state] == 'routage_simple'
+        redirect_to simple_routing_admin_procedure_groupe_instructeurs_path
+      end
+    end
+
+    def destroy_all_groups_but_defaut
+      reaffecter_all_dossiers_to_defaut_groupe
+      procedure.groupe_instructeurs_but_defaut.each(&:destroy!)
+      procedure.update!(routing_enabled: false, instructeurs_self_management_enabled: false)
+      procedure.defaut_groupe_instructeur.update!(
+        routing_rule: nil,
+        label: GroupeInstructeur::DEFAUT_LABEL,
+        closed: false
+      )
+      flash.notice = 'Tous les groupes instructeurs ont été supprimés'
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def show
@@ -48,12 +116,29 @@ module Administrateurs
     def update
       @groupe_instructeur = groupe_instructeur
 
-      if closed_params? && @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
-          alert: "Il est impossible de désactiver le groupe d’instructeurs par défaut."
-      elsif @groupe_instructeur.update(groupe_instructeur_params)
+      if @groupe_instructeur.update(groupe_instructeur_params)
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
           notice: "Le nom est à présent « #{@groupe_instructeur.label} »."
+      else
+        @procedure = procedure
+        @instructeurs = paginated_instructeurs
+        @available_instructeur_emails = available_instructeur_emails
+
+        flash.now[:alert] = @groupe_instructeur.errors.full_messages
+        render :show
+      end
+    end
+
+    def update_state
+      @groupe_instructeur = procedure.groupe_instructeurs.find(params[:groupe_instructeur_id])
+
+      if closed_params? && @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+          alert: "Il est impossible de désactiver le groupe d’instructeurs par défaut."
+      elsif @groupe_instructeur.update(closed: params[:closed])
+        state_for_notice = @groupe_instructeur.closed ? 'désactivé' : 'activé'
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+          notice: "Le groupe #{@groupe_instructeur.label} est #{state_for_notice}."
       else
         @procedure = procedure
         @instructeurs = paginated_instructeurs
@@ -76,7 +161,15 @@ module Administrateurs
       else
         @groupe_instructeur.destroy!
         if procedure.groupe_instructeurs.active.one?
-          procedure.update!(routing_enabled: false)
+          procedure.update!(
+            routing_enabled: false,
+            instructeurs_self_management_enabled: false
+          )
+          procedure.defaut_groupe_instructeur.update!(
+            routing_rule: nil,
+            label: GroupeInstructeur::DEFAUT_LABEL,
+            closed: false
+          )
           routing_notice = " et le routage a été désactivé"
         end
         flash[:notice] = "le groupe « #{@groupe_instructeur.label} » a été supprimé#{routing_notice}."
@@ -110,6 +203,14 @@ module Administrateurs
 
       flash[:notice] = "Les dossiers du groupe « #{groupe_instructeur.label} » ont été réaffectés au groupe « #{target_group.label} »."
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+    end
+
+    def reaffecter_all_dossiers_to_defaut_groupe
+      procedure.groupe_instructeurs_but_defaut.each do |gi|
+        gi.dossiers.find_each do |dossier|
+          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, current_administrateur)
+        end
+      end
     end
 
     def add_instructeur
@@ -193,7 +294,7 @@ module Administrateurs
     def update_instructeurs_self_management_enabled
       procedure.update!(instructeurs_self_management_enabled_params)
 
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure),
+      redirect_to options_admin_procedure_groupe_instructeurs_path(procedure),
       notice: "L’autogestion des instructeurs est #{procedure.instructeurs_self_management_enabled? ? "activée" : "désactivée"}."
     end
 
@@ -264,7 +365,7 @@ module Administrateurs
     private
 
     def closed_params?
-      groupe_instructeur_params[:closed] == "1"
+      params[:closed] == "1"
     end
 
     def procedure
@@ -287,12 +388,21 @@ module Administrateurs
     end
 
     def groupe_instructeur_params
-      params.require(:groupe_instructeur).permit(:label, :closed)
+      params.require(:groupe_instructeur).permit(:label)
     end
 
     def paginated_groupe_instructeurs
-      procedure
-        .groupe_instructeurs
+      groupes = if params[:q].present?
+        query = ActiveRecord::Base.sanitize_sql_like(params[:q])
+
+        procedure
+          .groupe_instructeurs
+          .where('unaccent(label) ILIKE unaccent(?)', "%#{query}%")
+      else
+        procedure.groupe_instructeurs
+      end
+
+      groupes
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
     end

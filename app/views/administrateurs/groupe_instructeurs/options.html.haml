@@ -1,0 +1,8 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[t('.procedures'), admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    [(@procedure.groupe_instructeurs.many? ? 'Groupes' : 'Instructeurs'), admin_procedure_groupe_instructeurs_path(@procedure)],
+                    ['Options']] }
+
+= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
+  = render Procedure::InstructeursOptionsComponent.new(procedure: @procedure, state: params[:state])

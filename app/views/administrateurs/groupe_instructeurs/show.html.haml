@@ -4,8 +4,9 @@
                     ['Groupes d’instructeurs', admin_procedure_groupe_instructeurs_path(@procedure)],
                     [@groupe_instructeur.label]] }
 
-.container.groupe-instructeur
-  = render partial: 'administrateurs/groups_header'
+= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
+  = render Procedure::OneGroupeManagementComponent.new(revision: @procedure.active_revision, groupe_instructeur: @groupe_instructeur)
+
   = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
       groupe_instructeur: @groupe_instructeur,

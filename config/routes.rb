@@ -538,6 +538,8 @@ Rails.application.routes.draw do
       resources :mail_templates, only: [:edit, :update, :show]
 
       resources :groupe_instructeurs, only: [:index, :show, :create, :update, :destroy] do
+        patch 'update_state' => 'groupe_instructeurs#update_state'
+
         member do
           post 'add_instructeur'
           delete 'remove_instructeur'
@@ -546,6 +548,13 @@ Rails.application.routes.draw do
         end
 
         collection do
+          get 'options'
+          get 'ajout'
+          post 'ajout' => 'groupe_instructeurs#create'
+          patch 'wizard'
+          get 'simple_routing'
+          post 'create_simple_routing'
+          delete 'destroy_all_groups_but_defaut'
           patch 'update_routing_criteria_name'
           patch 'update_instructeurs_self_management_enabled'
           post 'import'

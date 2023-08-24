@@ -1,0 +1,8 @@
+---
+fr:
+  groupe:
+    one: "%{count} groupe"
+    other: "%{count} groupes"
+  found:
+    one: "trouvé"
+    other: "trouvés"

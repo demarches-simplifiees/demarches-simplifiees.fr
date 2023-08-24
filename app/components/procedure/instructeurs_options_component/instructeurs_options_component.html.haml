@@ -1,0 +1,49 @@
+- content_for(:title, 'Options')
+- if @state.nil?
+  %h1 Options concernant l’instruction
+
+  %ul.fr-toggle__list
+    %li
+      = form_for @procedure,
+        method: :patch,
+        url: update_instructeurs_self_management_enabled_admin_procedure_groupe_instructeurs_path(@procedure),
+        data: { controller: 'autosubmit', turbo: 'true' } do |f|
+
+        = render Dsfr::ToggleComponent.new(form: f,
+          target: :instructeurs_self_management_enabled,
+          title: 'Autogestion des instructeurs',
+          hint: "L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.#{ ' Lorsque la démarche est routée, l’autogestion est activée d’office et n’est pas désactivable.' if @procedure.routing_enabled? }",
+          disabled: @procedure.routing_enabled?)
+  %p.fr-mt-2w Routage
+  %p.fr-mt-2w= t('.routing_configuration_notice_1')
+  - if @procedure.active_revision.routable_types_de_champ.none?
+    %p.fr-mt-2w= t('.routing_configuration_notice_2_html', path: champs_admin_procedure_path(@procedure))
+  - elsif @procedure.groupe_instructeurs.active.one?
+    = link_to 'Configurer le routage', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn'
+
+  - else
+    = button_to 'Supprimer le routage',
+      destroy_all_groups_but_defaut_admin_procedure_groupe_instructeurs_path,
+      class: 'fr-btn',
+      method: :delete,
+      title: t('.delete_title', defaut_label: @procedure.defaut_groupe_instructeur.label),
+      data: ( @procedure.publiee? ? { disable_with: "Suppression...", confirm: t('.delete_confirmation', defaut_label: @procedure.defaut_groupe_instructeur.label) } : nil)
+
+- elsif @state == 'choix'
+  = form_for :choice,
+    method: :patch,
+    data: { controller: 'radio-enabled-submit' },
+    url: wizard_admin_procedure_groupe_instructeurs_path(@procedure) do |f|
+
+    %div{ data: { 'action': "click->radio-enabled-submit#click" } }
+      = render Dsfr::RadioButtonListComponent.new(form: f,
+        target: :state,
+        buttons: [ { label: 'À partir d’un champ', value: 'routage_simple', hint: 'crée les groupes en fonction d’un champ du formulaire' } ,
+          { label: 'Avancé', value: 'routage_custom', hint: 'libre à vous de créer et de configurer les groupes' }]) do
+        %h1 Choix du type de routage
+
+      %ul.fr-btns-group.fr-btns-group--inline-sm
+        %li
+          = link_to 'Retour', options_admin_procedure_groupe_instructeurs_path(@procedure), class: 'fr-btn fr-btn--secondary'
+        %li
+          %button.fr-btn{ disabled: true,  data: { 'radio-enabled-submit-target': 'submit' } } Continuer
