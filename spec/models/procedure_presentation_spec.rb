@@ -382,6 +382,23 @@ describe ProcedurePresentation do
       end
     end
 
+    context 'for avis table' do
+      let(:table) { 'avis' }
+      let(:column) { 'answer' }
+      let(:order) { 'asc' }
+
+      let!(:dossier_yes) { create(:dossier, procedure:) }
+      let!(:dossier_no) { create(:dossier, procedure:) }
+
+      before do
+        create_list(:avis, 2, dossier: dossier_yes, question_answer: true)
+        create(:avis,  dossier: dossier_no, question_answer: true)
+        create(:avis,  dossier: dossier_no, question_answer: false)
+      end
+
+      it { is_expected.to eq([dossier_yes, dossier_no].map(&:id)) }
+    end
+
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
       let(:table) { 'etablissement' }
