@@ -29,7 +29,7 @@ describe Champs::SiretController, type: :controller do
 
       before do
         sign_in user
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
           .to_return(status: api_etablissement_status, body: api_etablissement_body)
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siret[0..8]}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
@@ -149,7 +149,7 @@ describe Champs::SiretController, type: :controller do
       end
 
       context 'when the SIRET informations are retrieved successfully' do
-        let(:siret) { '41816609600051' }
+        let(:siret) { '30613890001294' }
         let(:api_etablissement_status) { 200 }
         let(:api_etablissement_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
 
@@ -158,7 +158,7 @@ describe Champs::SiretController, type: :controller do
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
           expect(champ.etablissement.siret).to eq(siret)
-          expect(champ.etablissement.naf).to eq("6202A")
+          expect(champ.etablissement.naf).to eq("8411Z")
           expect(dossier.reload.etablissement).to eq(nil)
         end
       end

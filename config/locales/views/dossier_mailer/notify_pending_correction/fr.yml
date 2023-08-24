@@ -1,0 +1,13 @@
+---
+fr:
+  dossier_mailer:
+    notify_pending_correction:
+      subject: Vous devez corriger votre dossier nº %{dossier_id} « %{libelle_demarche} »
+      explanation_html:
+        Afin de poursuivre son instruction, <strong>un instructeur vous demande d’apporter des corrections</strong> à votre dossier nº %{dossier_id} de la démarche « %{libelle_demarche} ».
+      link:
+        Consultez la messagerie de votre dossier pour prendre connaissance des modifications à effectuer,
+        puis modifiez le dossier directement sur le site.
+      access_message: Ouvrir la messagerie
+
+

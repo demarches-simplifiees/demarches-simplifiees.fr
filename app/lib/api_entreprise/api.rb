@@ -1,15 +1,15 @@
 class APIEntreprise::API
   ENTREPRISE_RESOURCE_NAME = "v3/insee/sirene/unites_legales/%{id}"
-  ETABLISSEMENT_RESOURCE_NAME = "v2/etablissements/%{id}"
+  ETABLISSEMENT_RESOURCE_NAME = "v3/insee/sirene/etablissements/%{id}"
   EXTRAIT_KBIS_NAME = "v3/infogreffe/rcs/unites_legales/%{id}/extrait_kbis"
   TVA_NAME = "v3/european_commission/unites_legales/%{id}/numero_tva"
   EXERCICES_RESOURCE_NAME = "v3/dgfip/etablissements/%{id}/chiffres_affaires"
-  RNA_RESOURCE_NAME = "v2/associations/%{id}"
+  RNA_RESOURCE_NAME = "v4/djepva/api-association/associations/open_data/%{id}"
   EFFECTIFS_RESOURCE_NAME = "v2/effectifs_mensuels_acoss_covid"
   EFFECTIFS_ANNUELS_RESOURCE_NAME = "v2/effectifs_annuels_acoss_covid/%{id}"
   ATTESTATION_SOCIALE_RESOURCE_NAME = "v4/urssaf/unites_legales/%{id}/attestation_vigilance"
   ATTESTATION_FISCALE_RESOURCE_NAME = "v4/dgfip/unites_legales/%{id}/attestation_fiscale"
-  BILANS_BDF_RESOURCE_NAME = "v2/bilans_entreprises_bdf/%{id}"
+  BILANS_BDF_RESOURCE_NAME = "v3/banque_de_france/unites_legales/%{id}/bilans"
   PRIVILEGES_RESOURCE_NAME = "v2/privileges"
 
   TIMEOUT = 20

@@ -21,7 +21,9 @@
   = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
   - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
     = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
-= f.number_field :duree_conservation_dossiers_dans_ds, { class: 'fr-input', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }
+
+.fr-input-group
+  = f.number_field :duree_conservation_dossiers_dans_ds, { class: 'fr-input', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }
 
 - if @procedure.created_at.present?
   = render Dsfr::InputComponent.new(form: f, attribute: :lien_site_web, input_type: :text_field, opts: {}, required: false)
@@ -89,11 +91,11 @@
       %p.notice
         En choisissant cette option, l’usager devra renseigner son n° TAHITI.<br>Grâce à l’ISPF et l'API I-Taiete, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
 
-  %p.explication
+  %p
     Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ 'numero TAHITI' directement dans le formulaire.
 
 %h3.header-subsection Ajouter des tags
-%p.explication Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
+%p Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
 = hidden_field_tag  'procedure[tags]', JSON.generate(@procedure.tags)
 = react_component("ComboMultiple",
   id: "procedure_tags_combo",
@@ -101,7 +103,7 @@
   selected: @procedure.tags,
   disabled: [],
   label: 'Tags',
-  group: '.procedure-form__column--form',
+  group: '.procedure_tags_combo',
   name: 'tags',
   describedby: 'procedure-tags',
   acceptNewValues: true)
@@ -184,6 +186,7 @@
     Date limite de dépôt des dossiers
   %p.notice
     Si une date est définie, aucun dossier ne pourra plus être déposé ou modifié après cette limite.
+    %strong Les dossiers en construction passeront en instruction et la démarche sera clôturée.
   %p.notice
     Le
     - value = @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil

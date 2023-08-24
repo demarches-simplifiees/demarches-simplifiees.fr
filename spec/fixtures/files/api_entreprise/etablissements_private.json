@@ -1,49 +1,100 @@
 {
-  "etablissement": {
-    "siege_social": true,
-    "siret": "41816609600051",
-    "naf": "6202A",
-    "libelle_naf": "Conseil en systèmes et logiciels informatiques",
-    "date_mise_a_jour": 1449183600,
-    "tranche_effectif_salarie_etablissement": {
-      "de": 200,
-      "a": 249,
-      "code": "31",
-      "date_reference": "2014",
-      "intitule": "200 à 249 salariés"
-    },
-    "date_creation_etablissement": 1108594800,
-    "enseigne": null,
-    "region_implantation": {
-      "code": "11",
-      "value": "Île-de-France"
-    },
-    "commune_implantation": {
-      "code": "75108",
-      "value": "PARIS 8"
-    },
-    "pays_implantation": {
-      "code": null,
-      "value": null
-    },
-    "diffusable_commercialement": false,
-    "adresse": {
-      "l1": "OCTO TECHNOLOGY",
-      "l2": null,
-      "l3": null,
-      "l4": "50 AVENUE DES CHAMPS ELYSEES",
-      "l5": null,
-      "l6": "75008 PARIS",
-      "l7": "FRANCE",
-      "numero_voie": "50",
-      "type_voie": "AV",
-      "nom_voie": "DES CHAMPS ELYSEES",
-      "complement_adresse": "complement_adresse",
-      "code_postal": "75008",
-      "localite": "PARIS 8",
-      "code_insee_localite": "75108",
-      "cedex": null
-    }
-  },
-  "gateway_error": false
+   "data" : {
+      "activite_principale" : {
+         "code" : "62.02A",
+         "libelle" : "Conseil en systêmes et logiciels informatiques",
+         "nomenclature" : "NAFRev2"
+      },
+      "adresse" : {
+         "acheminement_postal" : {
+            "l1" : "OCTO-TECHNOLOGY",
+            "l2" : "",
+            "l3" : "",
+            "l4" : "50 AVENUE DES CHAMPS ELYSEES",
+            "l5" : "",
+            "l6" : "75008 PARIS 8",
+            "l7" : "FRANCE"
+         },
+         "code_cedex" : null,
+         "code_commune" : "75108",
+         "code_pays_etranger" : null,
+         "code_postal" : "75008",
+         "complement_adresse" : null,
+         "distribution_speciale" : null,
+         "indice_repetition_voie" : null,
+         "libelle_cedex" : null,
+         "libelle_commune" : "PARIS 8",
+         "libelle_commune_etranger" : null,
+         "libelle_pays_etranger" : null,
+         "libelle_voie" : "DES CHAMPS ELYSEES",
+         "numero_voie" : "50",
+         "status_diffusion" : "diffusible",
+         "type_voie" : "AVENUE"
+      },
+      "date_creation" : 1108594800,
+      "date_fermeture" : 1480287600,
+      "diffusable_commercialement" : false,
+      "enseigne" : null,
+      "etat_administratif" : "F",
+      "siege_social" : false,
+      "siret" : "41816609600051",
+      "status_diffusion" : "diffusible",
+      "tranche_effectif_salarie" : {
+         "a" : null,
+         "code" : "NN",
+         "date_reference" : null,
+         "de" : null,
+         "intitule" : "Unités non employeuses"
+      },
+      "unite_legale" : {
+         "activite_principale" : {
+            "code" : "62.02A",
+            "libelle" : "Conseil en systèmes et logiciels informatiques",
+            "nomenclature" : "NAFRev2"
+         },
+         "categorie_entreprise" : "GE",
+         "date_creation" : 891381600,
+         "diffusable_commercialement" : true,
+         "economie_sociale_et_solidaire" : false,
+         "etat_administratif" : "A",
+         "forme_juridique" : {
+            "code" : "5710",
+            "libelle" : "SAS, société par actions simplifiée"
+         },
+         "personne_morale_attributs" : {
+            "raison_sociale" : "OCTO-TECHNOLOGY",
+            "sigle" : null
+         },
+         "personne_physique_attributs" : {
+            "nom_naissance" : null,
+            "nom_usage" : null,
+            "prenom_1" : null,
+            "prenom_2" : null,
+            "prenom_3" : null,
+            "prenom_4" : null,
+            "prenom_usuel" : null,
+            "pseudonyme" : null,
+            "sexe" : null
+         },
+         "rna" : null,
+         "siren" : "418166096",
+         "siret_siege_social" : "41816609600069",
+         "status_diffusion" : "diffusible",
+         "tranche_effectif_salarie" : {
+            "a" : 999,
+            "code" : "41",
+            "date_reference" : "2020",
+            "de" : 500,
+            "intitule" : "500 à 999 salariés"
+         },
+         "type" : "personne_morale"
+      }
+   },
+   "links" : {
+      "unite_legale" : "https://entreprise.api.gouv.fr/v3/insee/sirene/unites_legales/418166096"
+   },
+   "meta" : {
+      "date_derniere_mise_a_jour" : 1538172000,
+      "redirect_from_siret" : null
+   }
 }

@@ -1044,6 +1044,7 @@ describe Dossier do
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
+    let!(:correction) { create(:dossier_correction, dossier:) }
 
     before { dossier.passer_en_instruction!(instructeur: instructeur) }
 
@@ -1055,6 +1056,11 @@ describe Dossier do
     it { expect(operation_serialized['operation']).to eq('passer_en_instruction') }
     it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
     it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
+
+    it "resolve pending correction" do
+      expect(dossier.pending_correction?).to be_falsey
+      expect(correction.reload.resolved_at).to be_present
+    end
   end
 
   describe '#passer_automatiquement_en_instruction!' do

@@ -461,6 +461,7 @@ Rails.application.routes.draw do
             post 'repasser-en-construction' => 'dossiers#repasser_en_construction'
             post 'repasser-en-instruction' => 'dossiers#repasser_en_instruction'
             post 'terminer'
+            post 'pending_correction'
             post 'send-to-instructeurs' => 'dossiers#send_to_instructeurs'
             post 'avis' => 'dossiers#create_avis'
             get 'print' => 'dossiers#print'

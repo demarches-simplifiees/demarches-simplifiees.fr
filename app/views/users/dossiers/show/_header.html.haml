@@ -3,6 +3,7 @@
     %h1
       = dossier.procedure.libelle
       = status_badge(dossier.state, 'super')
+      = pending_correction_badge(:for_user) if dossier.pending_correction?
     %h2
       = t('views.users.dossiers.show.header.dossier_number', dossier_id: dossier.id)
       - if dossier.depose_at.present?

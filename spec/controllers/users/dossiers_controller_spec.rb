@@ -237,7 +237,7 @@ describe Users::DossiersController, type: :controller do
 
     before do
       sign_in(user)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
         .to_return(body: Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read, status: 200)
@@ -563,6 +563,16 @@ describe Users::DossiersController, type: :controller do
 
         expect(response).to redirect_to(dossier_path(dossier))
         expect(flash.alert).to eq("Les modifications ont déjà été déposées")
+      end
+    end
+
+    context "when there are pending correction" do
+      let!(:correction) { create(:dossier_correction, dossier: dossier) }
+
+      subject { post :submit_en_construction, params: { id: dossier.id, dossier: { pending_correction_confirm: "1" } } }
+
+      it "resolve correction" do
+        expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
       end
     end
   end

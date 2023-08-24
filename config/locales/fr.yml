@@ -335,6 +335,8 @@ fr:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           notice: Télécharger le guide de la démarche
           notice_title: "Pour vous aider à remplir votre dossier, vous pouvez consulter le guide de cette démarche."
+          pending_correction:
+            confirm_label: Je certifie avoir effectué toutes les corrections demandées par l’administration.
         messages:
           form:
             send_message: "Envoyer le message"
@@ -911,3 +913,5 @@ fr:
         weekly_distribution_details: "au cours des 6 derniers mois"
     procedure_description:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
+      estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
+      estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."

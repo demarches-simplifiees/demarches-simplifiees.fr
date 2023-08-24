@@ -1,14 +1,14 @@
 RSpec.describe APIEntreprise::ServiceJob, type: :job do
-  let(:siret) { '41816609600051' }
+  let(:siret) { '30613890001294' }
   let(:service) { create(:service, siret: siret) }
   let(:entreprise_body) { File.read('spec/fixtures/files/api_entreprise/etablissements.json') }
   let(:geocoder_body) { File.read('spec/fixtures/files/api_address/address.json') }
   let(:status) { 200 }
 
-  let (:adresse) { "OCTO TECHNOLOGY\r\n50 AVENUE DES CHAMPS ELYSEES\r\n75008 PARIS\r\nFRANCE" }
+  let (:adresse) { "DIRECTION INTERMINISTERIELLE DU NUMERIQUE\r\nJEAN MARIE DURAND\r\nZAE SAINT GUENAULT\r\n51 BIS RUE DE LA PAIX\r\nCS 72809\r\n75256 PARIX CEDEX 12\r\nFRANCE" }
 
   before do
-    stub_request(:get, %r{https://entreprise.api.gouv.fr/v2/etablissements/})
+    stub_request(:get, %r{https://entreprise.api.gouv.fr/v3\/insee\/sirene\/etablissements\/#{siret}})
       .to_return(body: entreprise_body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
 
@@ -30,9 +30,9 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
 
     expect(infos).not_to be_empty
     expect(infos["adresse"]).to eq(adresse)
-    expect(infos["numero_voie"]).to eq("50")
-    expect(infos["code_postal"]).to eq("75008")
-    expect(infos["localite"]).to eq("PARIS 8")
+    expect(infos["numero_voie"]).to eq("22")
+    expect(infos["code_postal"]).to eq("75016")
+    expect(infos["localite"]).to eq("PARIS 12")
   end
 
   it "geocode address" do
@@ -45,7 +45,7 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
 
   context "errors responses" do
     it "clear attributes when no address match" do
-      stub_request(:get, %r{https://entreprise.api.gouv.fr/v2/etablissements/})
+      stub_request(:get, %r{https://entreprise.api.gouv.fr/v3\/insee\/sirene\/etablissements\/#{siret}})
         .to_return(body: "{}", status: 404)
       subject
       service.reload

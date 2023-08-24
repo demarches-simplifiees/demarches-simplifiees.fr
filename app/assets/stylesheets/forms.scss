@@ -3,19 +3,6 @@
 @import "placeholders";
 
 .form {
-  h1 {
-    text-align: center;
-    margin-bottom: 20px;
-
-    @media (max-width: $two-columns-breakpoint) {
-      font-size: 26px;
-    }
-  }
-
-  p {
-    margin-bottom: $default-spacer;
-  }
-
   ul {
     list-style-type: square;
     list-style-position: outside;
@@ -57,7 +44,7 @@
     color: $dark-red;
   }
 
-  label,
+  label:not(.fr-label),
   legend.form-label {
     font-size: 18px;
     margin-bottom: $default-padding;
@@ -83,6 +70,9 @@
     margin-top: - $default-spacer;
     margin-bottom: $default-padding;
 
+    p {
+      margin-bottom: $default-spacer;
+    }
 
     input[type='date'] {
       display: inline-block;
@@ -392,10 +382,6 @@
     margin-bottom: $default-fields-spacer;
   }
 
-  input[type=date] {
-    max-width: 180px;
-  }
-
   select {
     // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
     -webkit-appearance: none;
@@ -527,11 +513,9 @@
   }
 
   .explication-libelle {
-    color: $black;
     font-weight: bold;
     font-size: 20px;
     margin-bottom: $default-padding;
-    border-bottom: none;
   }
 
   .explication {
@@ -727,6 +711,14 @@ textarea::placeholder {
   color: $dark-grey;
 }
 
-.send-wrapper--with-border-top {
-  border-top: 2px solid rgba(0, 0, 145, 1);
+.sticky-action-footer {
+  border-top: 2px solid $blue-france-500;
+  position: sticky;
+  // scss-lint:disable VendorPrefix
+  position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+  // scss-lint:enable VendorPrefix
+  bottom: 0;
+  padding: $default-padding 0;
+  background-color: $white;
+  z-index: 2;
 }

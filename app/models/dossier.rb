@@ -47,13 +47,14 @@
 #  user_id                                            :integer
 #
 class Dossier < ApplicationRecord
+  include DossierCloneConcern
+  include DossierCorrectableConcern
   include DossierFilteringConcern
   include DateEncodingConcern
   include DossierPrefillableConcern
   include DossierRebaseConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
-  include DossierCloneConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -99,6 +100,8 @@ class Dossier < ApplicationRecord
   has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
+  has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachment: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
+
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
@@ -898,6 +901,8 @@ class Dossier < ApplicationRecord
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
     save!
+
+    resolve_pending_correction!
 
     if !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later

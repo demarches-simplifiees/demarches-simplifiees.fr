@@ -1,7 +1,7 @@
 = form_for procedure.administrateurs.new(user: User.new),
   url: { controller: 'procedure_administrateurs' },
   html: { class: 'form', id: "new_administrateur"  },
-  data: { turbo: true, turbo_force: true } do |f|
+  data: { turbo: true, turbo_force: :server } do |f|
   = f.label :email do
     Ajouter un administrateur
   %p.notice Renseignez l’email d’un administrateur déjà enregistré sur #{APPLICATION_NAME} pour lui permettre de modifier « #{procedure.libelle} ».
