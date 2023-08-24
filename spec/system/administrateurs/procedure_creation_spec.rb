@@ -41,14 +41,6 @@ describe 'Creating a new procedure', js: true do
 
       add_champ
       expect(page).to have_selector('.type-de-champ', count: 1)
-
-      click_on Procedure.last.libelle
-
-      preview_window = window_opened_by { find('#preview-procedure').click }
-      within_window(preview_window) do
-        expect(page).to have_current_path(apercu_admin_procedure_path(Procedure.last))
-        expect(page).to have_field('libelle de champ')
-      end
     end
 
     scenario 'a warning is displayed when creating an invalid procedure' do

@@ -1,49 +1,37 @@
 = render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
-                    ["#{@procedure.libelle.truncate_words(10)}"]],
-            metadatas: true }
+    locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                      ["#{@procedure.libelle.truncate_words(10)}"]],
+              metadatas: true }
 
-.container.procedure-admin-container
-  - if @procedure.draft_revision.valid?
-    - if !@procedure.brouillon?
-      = link_to admin_procedure_archives_path(@procedure), class: 'button', id: "archive-procedure" do
-        %span.icon.download
-        Télécharger
+.fr-container.procedure-admin-container
+  %ul.fr-btns-group.fr-btns-group--inline-sm.fr-btns-group--icon-left
+    - if @procedure.draft_revision.valid?
+      - if !@procedure.brouillon?
+        = link_to 'Télécharger', admin_procedure_archives_path(@procedure), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line', id: "archive-procedure"
 
-      = link_to commencer_dossier_vide_for_revision_path(@procedure.active_revision), target: "_blank", rel: "noopener", class: 'button', id: "pdf-procedure" do
-        %span.icon.printer
-        PDF
+        = link_to 'PDF', commencer_dossier_vide_for_revision_path(@procedure.active_revision), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-printer-line', id: "pdf-procedure"
 
-    = link_to apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'button', id: "preview-procedure" do
-      %span.icon.preview
-      Prévisualiser
+      - if @procedure.brouillon? || @procedure.draft_changed?
+        = link_to 'Tester la démarche', sanitize_url(@procedure_lien_test), target: :blank, rel: :noopener, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-edit-line'
 
-    - if @procedure.brouillon? || @procedure.draft_changed?
-      = link_to sanitize_url(@procedure_lien_test), target: :blank, rel: :noopener, class: 'button' do
-        %span.icon.in-progress
-        Tester
+      - if @procedure.publiee? || @procedure.brouillon?
+        = link_to 'Envoyer une copie', admin_procedure_transfert_path(@procedure), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-arrow-right-up-line'
 
-    - if @procedure.publiee? || @procedure.brouillon?
-      = link_to admin_procedure_transfert_path(@procedure), class: 'button' do
-        %span.icon.reply
-        Envoyer une copie
+      - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
+        = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'fr-btn fr-btn--primary fr-btn--icon-left fr-icon-success-line', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
-    - if !@procedure.publiee? && !@procedure.close? && !@procedure.depubliee?
-      = link_to 'Publier', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+      - if (@procedure.close? || @procedure.depubliee?) && !@procedure.draft_changed?
+        = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'fr-btn fr-btn--primary fr-btn--icon-left fr-icon-success-line', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
-    - if (@procedure.close? || @procedure.depubliee?) && !@procedure.draft_changed?
-      = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'button primary', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
+      - if @procedure.locked? && !@procedure.close?
+        = link_to 'Clore', admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-archive-line', id: "close-procedure-link", data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."}
 
-    - if @procedure.locked? && !@procedure.close?
-      = link_to admin_procedure_archive_path(procedure_id: @procedure.id), method: :put, class: 'button', id: "close-procedure-link", data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} do
-        %span.icon.archive
-        Clore
 
-.container
+.fr-container
   = render TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision)
 
 - if @procedure.draft_changed?
-  .container
+  .fr-container
     .card.featured
       .card-title
         = t(:has_changes, scope: [:administrateurs, :revision_changes])
@@ -54,7 +42,7 @@
 
 - if !@procedure.procedure_expires_when_termine_enabled?
   = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }
-.container
+.fr-container
   %h2.fr-mt-5w.fr-mb-3w.fr-h1 Indispensable avant publication
   .fr-grid-row.fr-grid-row--gutters
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
