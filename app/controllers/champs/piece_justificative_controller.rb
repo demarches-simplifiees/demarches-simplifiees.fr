@@ -32,7 +32,7 @@ class Champs::PieceJustificativeController < ApplicationController
         if blob.filename.extension == 'pdf' && @champ.dossier.procedure.feature_enabled?(:qrcoded_pdf)
           send_data StampService.new.stamp(blob, download_url(@champ, index)), filename: blob.filename.to_s, type: 'application/pdf'
         else
-          redirect_to blob.url, status: :found
+          redirect_to blob.url, status: :found, allow_other_host: true
         end
       else
         flash.alert = "Le document demandé n'existe pas."
