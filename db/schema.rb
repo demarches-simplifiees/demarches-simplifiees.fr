@@ -268,6 +268,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_184741) do
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
   end
 
+  create_table "default_zones_administrateurs", id: false, force: :cascade do |t|
+    t.bigint "administrateur_id"
+    t.bigint "zone_id"
+    t.index ["administrateur_id"], name: "index_default_zones_administrateurs_on_administrateur_id"
+    t.index ["zone_id"], name: "index_default_zones_administrateurs_on_zone_id"
+  end
+
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "attempts", default: 0, null: false
     t.datetime "created_at"
@@ -705,6 +712,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_184741) do
     t.string "declarative_with_state"
     t.bigint "defaut_groupe_instructeur_id"
     t.string "description"
+    t.string "description_target_audience"
     t.string "direction"
     t.datetime "dossiers_count_computed_at"
     t.bigint "draft_revision_id"
@@ -982,6 +990,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_184741) do
     t.string "acronym", null: false
     t.datetime "created_at", null: false
     t.string "label"
+    t.string "tchap_hs", default: [], array: true
     t.datetime "updated_at", null: false
     t.index ["acronym"], name: "index_zones_on_acronym", unique: true
   end

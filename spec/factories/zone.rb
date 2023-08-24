@@ -1,6 +1,7 @@
 FactoryBot.define do
   factory :zone do
     sequence(:acronym) { |n| "MA#{n}" }
+    tchap_hs { ['agent.educpop.tchap.gouv.fr'] }
     transient do
       labels { [{ designated_on: '1981-05-08', name: "Ministère de l'Education Populaire" }] }
     end

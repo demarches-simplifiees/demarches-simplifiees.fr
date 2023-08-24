@@ -46,6 +46,7 @@ services:
       - ${PORT}:3000
     environment:
       - ACTIVE_STORAGE_SERVICE
+      - ADMINISTRATION_BANNER_MESSAGE
       - AGENT_CONNECT_BASE_URL
       - AGENT_CONNECT_ENABLED
       - AGENT_CONNECT_ID
@@ -82,12 +83,12 @@ services:
       - DB_POOL
       - DB_USERNAME
       - DEMANDE_INSCRIPTION_ADMIN_PAGE_URL
-      - DOLIST_BALANCING_VALUE
-      - DOLIST_USERNAME
-      - DOLIST_PASSWORD
+      - DOC_URL
       - DOLIST_ACCOUNT_ID
       - DOLIST_API_KEY
-      - DOC_URL
+      - DOLIST_BALANCING_VALUE
+      - DOLIST_PASSWORD
+      - DOLIST_USERNAME
       - DS_PROXY_URL
       - ENCRYPTION_SERVICE_SALT
       - FAVICON_16PX_SRC
@@ -106,10 +107,10 @@ services:
       - HELPSCOUT_WEBHOOK_SECRET
       - INVISIBLE_CAPTCHA_SECRET
       - LEGIT_ADMIN_DOMAINS
-      - MAILER_LOGO_SRC
       - MAILCATCHER_ENABLED
       - MAILCATCHER_HOST
       - MAILCATCHER_PORT
+      - MAILER_LOGO_SRC
       - MATOMO_COOKIE_DOMAIN
       - MATOMO_DOMAIN
       - MATOMO_ENABLED
@@ -144,6 +145,7 @@ services:
       - TATOU_BASE_URL
       - TATOU_CLIENT_ID
       - TATOU_CLIENT_SECRET
+      - USAGER_BANNER_MESSAGE
       - WATERMARK_FILE
       - WEB_CONCURRENCY=${WEB_CONCURRENCY:-2}
       - YAHOO_CLIENT_ID
@@ -187,7 +189,7 @@ services:
       - DB_PASSWORD
       - DB_POOL
       - DB_USERNAME
-      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:---pool=*:10}
+      - DELAYED_JOB_ARGS=${DELAYED_JOB_ARGS:---pool=mailers:5 --pool=exports:2 --pool=low_priority:1 --pool=archives:2 --pool=default:1 --pool=cron:1 --pool=*:1}
       - DOLIST_BALANCING_VALUE
       - DOLIST_USERNAME
       - DOLIST_PASSWORD

@@ -53,9 +53,10 @@
     .fr-btn {
       margin-bottom: 2 * $default-spacer;
       display: inline;
-      width: 95%;
+      width: 96%;
+      margin-left: 2%;
 
-      padding: 8px 16px;
+      padding: 8px 8px;
       background-color: #FFFFFF;
 
       &:hover {

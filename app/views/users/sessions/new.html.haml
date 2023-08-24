@@ -8,6 +8,7 @@
   #session-new.auth-form.sign-in-form
     = form_for resource, url: user_session_path, html: { class: "fr-py-5w" } do |f|
 
+      -# %p.fr-hr-or= t('views.shared.france_connect_login.separator')
       %h1.fr-h3.center= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
 
       %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
@@ -15,9 +16,9 @@
           %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
 
         .fr-fieldset__element
-          %p.fr-text--sm= t('utils.asterisk_html')
+          %p.fr-text--sm= t('utils.mandatory_champs')
 
-        .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
+        .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: false })
 
         .fr-fieldset__element
           = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })

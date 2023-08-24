@@ -40,7 +40,8 @@ fr:
     i_dont_know: Je ne sais pas
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
-    asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory> * </span> ) sont obligatoires.
+    asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory>*</span> ) sont obligatoires.
+    mandatory_champs: Tous les champs sont obligatoires.
     file_number: Numéro de dossier
     subject: Sujet
     message: Message
@@ -399,7 +400,6 @@ fr:
           identity_data: Données d’identité
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
-          description: Description de la démarche
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
@@ -452,7 +452,7 @@ fr:
         demande:
           edit_dossier: "Modifier le dossier"
         search:
-          search_file: Rechercher un dossier
+          search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
         secondary_menu: Menu secondaire
         index:

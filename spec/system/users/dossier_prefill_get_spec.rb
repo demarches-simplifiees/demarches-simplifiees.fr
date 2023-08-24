@@ -67,7 +67,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\//)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
 
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siret_value[0..8]}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siret_value[0..8]}/)
       .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
 
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/associations\//)
@@ -179,7 +179,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
           allow_any_instance_of(OmniAuthClient).to receive(:authorization_uri).and_return(omniauth_callback_path(provider: 'google', code: "c0d3"))
           allow(OmniAuthService).to receive(:retrieve_user_informations).and_return(build(:france_connect_information))
 
-          page.find(".fr-btn", text: 'Gmail, Google').click
+          page.find(".fr-btn", text: 'Google').click
 
           click_on "Poursuivre mon dossier prérempli"
         end

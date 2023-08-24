@@ -50,6 +50,7 @@ en:
     deconnexion: "Log out"
     pj: "Attachments"
     asterisk_html: Fields marked by an asterisk ( <span class = mandatory>*</span> ) are mandatory.
+    mandatory_champs: All fields are mandatory.
     file_number: File number
     subject: Subject
     message: Message
@@ -398,7 +399,6 @@ en:
           identity_data: Identity data
           all_required: All fields are required.
           civility: Civility
-          description: Description of the procedure
           first_name: First Name
           last_name: Last Name
           birthdate: Date de naissance
@@ -451,7 +451,7 @@ en:
         demande:
           edit_dossier: "Edit file"
         search:
-          search_file: Search a file
+          search_file: Search a file (File number, keywords)
           simple: Search
         secondary_menu: Secondary menu
         index:

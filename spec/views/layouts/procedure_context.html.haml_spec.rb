@@ -51,18 +51,4 @@ describe 'layouts/procedure_context', type: :view do
       expect(subject).to have_text(dossier.procedure.service.email)
     end
   end
-
-  context 'when neither procedure or dossier are assigned' do
-    it 'renders a placeholder for the procedure' do
-      expect(subject).to have_selector('.no-procedure')
-    end
-
-    it 'renders the inner content' do
-      expect(subject).to have_text('Column content')
-    end
-
-    it 'renders a generic footer' do
-      expect(subject).to have_text('Mentions légales')
-    end
-  end
 end

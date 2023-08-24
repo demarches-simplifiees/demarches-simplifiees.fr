@@ -16,10 +16,10 @@ describe 'users/sessions/new', type: :view do
     expect(rendered).to have_field('Mot de passe')
     expect(rendered).to have_button('Se connecter')
     if ENV['GOOGLE_CLIENT_ID'].present?
-      expect(rendered).to have_link('Gmail, Google')
+      expect(rendered).to have_link('Google')
     end
     if ENV['MICROSOFT_CLIENT_ID'].present?
-      expect(rendered).to have_link('Outlook, Microsoft 365')
+      expect(rendered).to have_link('Microsoft')
     end
     if ENV['YAHOO_CLIENT_ID'].present?
       expect(rendered).to have_link('Yahoo!')

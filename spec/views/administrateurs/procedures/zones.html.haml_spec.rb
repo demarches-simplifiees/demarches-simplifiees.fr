@@ -1,10 +1,12 @@
 describe 'administrateurs/procedures/zones' do
+  let(:administrateur) { create(:administrateur) }
   let(:procedure) { create(:procedure) }
-  let(:populate_zones_task) { Rake::Task['after_party:populate_zones'] }
+  let(:populate_zones_task) { Rake::Task['after_party:populate_zones_with_tchap_hs'] }
 
   before do
     Rails.application.config.ds_zonage_enabled = true
     populate_zones_task.invoke
+    allow(view).to receive(:current_administrateur).and_return(administrateur)
   end
 
   after do

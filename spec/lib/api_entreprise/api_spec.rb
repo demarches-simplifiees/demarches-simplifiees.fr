@@ -7,8 +7,8 @@ describe APIEntreprise::API do
     subject { described_class.new(procedure_id).entreprise(siren) }
 
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
-        .to_return(status: status, body: body)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
+        .to_return(body: body, status: status)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
 
@@ -68,7 +68,7 @@ describe APIEntreprise::API do
 
         it 'call api-entreprise with specfic token' do
           subject
-          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
         end
       end
 
@@ -78,7 +78,7 @@ describe APIEntreprise::API do
 
         it 'call api-entreprise with specfic token' do
           subject
-          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
+          expect(WebMock).to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
         end
       end
     end
@@ -115,7 +115,7 @@ describe APIEntreprise::API do
 
   describe '.exercices' do
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\//)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/dgfip\/etablissements\/#{siret}\/chiffres_affaires/)
         .to_return(status: status, body: body)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
@@ -211,7 +211,7 @@ describe APIEntreprise::API do
     before do
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles).and_return(roles)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/attestations_fiscales_dgfip\/#{siren}/)
+      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/dgfip\/unites_legales\/#{siren}\/attestation_fiscale/)
         .to_return(body: body, status: status)
     end
 

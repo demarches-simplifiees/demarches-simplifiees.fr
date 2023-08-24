@@ -1,19 +1,22 @@
 {
-  "exercices":[
+  "data": [
     {
-      "ca":"21009417",
-      "date_fin_exercice":"2013-12-31T00:00:00+01:00",
-      "date_fin_exercice_timestamp": 1388444400
+      "data": {
+        "chiffre_affaires": 900001,
+        "date_fin_exercice": "2015-12-01"
+      },
+      "links": {},
+      "meta": {}
     },
     {
-      "ca":"18968298",
-      "date_fin_exercice":"2012-12-31T00:00:00+01:00",
-      "date_fin_exercice_timestamp": 1356908400
-    },
-    {
-      "ca":"17768838",
-      "date_fin_exercice":"2011-12-31T00:00:00+01:00",
-      "date_fin_exercice_timestamp": 1325286000
+      "data": {
+        "chiffre_affaires": 1900051,
+        "date_fin_exercice": "2016-12-01"
+      },
+      "links": {},
+      "meta": {}
     }
-  ]
+  ],
+  "meta": {},
+  "links": {}
 }

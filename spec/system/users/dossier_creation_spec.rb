@@ -19,7 +19,6 @@ describe 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
-        expect(page).to have_procedure_description(procedure)
         expect(page).to have_title(libelle)
 
         choose 'Monsieur'
@@ -70,7 +69,7 @@ describe 'Creating a new dossier:' do
       before do
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/etablissements\/#{siret}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/etablissements.json'))
-        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
+        stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/entreprises.json'))
         stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/exercices\/#{siret}/)
           .to_return(status: 200, body: File.read('spec/fixtures/files/api_entreprise/exercices.json'))
@@ -91,7 +90,7 @@ describe 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path siret_dossier_path(dossier)
-        expect(page).to have_procedure_description(procedure)
+        expect(page).to have_content(procedure.libelle)
 
         fill_in 'Numéro TAHITI', with: siret
         click_on 'Valider'
@@ -108,7 +107,7 @@ describe 'Creating a new dossier:' do
         click_on 'Commencer la démarche'
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
-        expect(page).to have_procedure_description(procedure)
+        expect(page).to have_content(procedure.libelle)
 
         fill_in 'Numéro TAHITI', with: '0000'
         click_on 'Valider'

@@ -1,0 +1,81 @@
+{
+  "data": {
+    "siren": "130025265",
+    "date_radiation": "2019-01-01",
+    "date_extrait": "2022-07-11",
+    "date_immatriculation": "1998-07-12",
+    "mandataires_sociaux": [
+      {
+        "numero_identification": "784824153",
+        "type": "personne_morale",
+        "fonction": "COMMISSAIRE AUX COMPTES SUPPLEANT",
+        "nom": "Henri",
+        "prenom": "Martin",
+        "date_naissance": "1965-01",
+        "raison_sociale": "BCRH & ASSOCIES - SOCIETE A RESPONSABILITE LIMITEE A ASSOCIE UNIQUE"
+      }
+    ],
+    "observations": [
+      {
+        "numero": "123456",
+        "libelle": "LA SOCIETE NE CONSERVE AUCUNE ACTIVITE A SON ANCIEN SIEGE",
+        "date": "2000-01-01"
+      }
+    ],
+    "nom_commercial": "DECATHLON",
+    "etablissement_principal": {
+      "activite": "dummy",
+      "origine_fonds": "CREATION",
+      "mode_exploitation": "EXPLOITATION DIRECTE",
+      "code_ape": "6420Z"
+    },
+    "capital": {
+      "montant": 50123.6,
+      "devise": "EUROS",
+      "code_devise": "EUR"
+    },
+    "greffe": {
+      "valeur": "COLMAR",
+      "code": "6851"
+    },
+    "personne_physique": {
+      "adresse": {
+        "nom_postal": "22 RUE DE LA PAIX",
+        "numero": "22",
+        "type": "RUE",
+        "voie": "DE LA PAIX",
+        "ligne_1": "dummy",
+        "ligne_2": "dummy",
+        "localite": "dummy",
+        "code_postal": "75016\"",
+        "bureau_distributeur": "dummy",
+        "pays": "FRANCE"
+      },
+      "nationalite": {
+        "valeur": "FRANÇAISE",
+        "code": "FR"
+      },
+      "nom": "MARTIN",
+      "prenom": "JEAN-MARIE",
+      "naissance": {
+        "pays": {
+          "valeur": "FRANCE",
+          "code": "FR"
+        },
+        "date": "1972-01-30",
+        "lieu": "MONTPELLIER"
+      }
+    },
+    "personne_morale": {
+      "forme_juridique": {
+        "valeur": "SOCIETE PAR ACTIONS SIMPLIFIEES",
+        "code": "SASh"
+      },
+      "denomination": "2X INVEST",
+      "date_cloture_exercice_comptable": "02-24",
+      "date_fin_de_vie": "2075-05-18"
+    }
+  },
+  "links": {},
+  "meta": {}
+}

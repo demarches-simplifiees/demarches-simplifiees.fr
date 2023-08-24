@@ -17,8 +17,8 @@ fr:
         help_link: "Qu’est-ce que FranceConnect ?"
         separator: 'ou'
       social_login:
-        google: "Gmail, Google"
-        microsoft: "Outlook, Microsoft 365"
+        google: "Votre compte Gmail • Google"
+        microsoft: "Votre compte Outlook • Microsoft 365"
         tatou: "Votre numéro DN • Tatou"
         yahoo: "Yahoo!"
         sipf: "Agent de l'administration"

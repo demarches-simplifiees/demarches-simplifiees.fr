@@ -1,57 +1,61 @@
 - content_for(:title, @procedure.libelle)
 
-- if !user_signed_in?
-  = render partial: 'shared/social_login', locals: { title: t('views.commencer.show.social_title') }
+.commencer.form
+  - if !user_signed_in?
+    = render partial: 'shared/social_login', locals: { title: t('views.commencer.show.social_title') }
+    %p.fr-hr-or= t('views.shared.france_connect_login.separator')
+    %h2.fr-h3.center= t('views.shared.account.title', name: APPLICATION_NAME)
+    %br
+    %ul.fr-btns-group.fr-btns-group--inline
+      %li
+        = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--lg fr-my-2w' do
+          = t('views.shared.account.create')
+          %span.optional-on-small-screens.fr-ml-1v
+            #{APPLICATION_NAME}
+      %li
+        = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary fr-btn--lg fr-my-2w'
+  - else
+    - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
+    - dossiers = current_user.dossiers.visible_by_user.where(revision: revision)
+    - drafts = dossiers.merge(Dossier.state_brouillon)
+    - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
 
-.column.commencer
-  .form
-    - if !user_signed_in?
-      %h2.fr-h3.center= t('views.shared.account.title', name: APPLICATION_NAME)
-      %br
-      = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--lg fr-my-2w' do
-        = t('views.shared.account.create')
-        %span.optional-on-small-screens.fr-ml-1v
-          #{APPLICATION_NAME}
-      = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary fr-btn--lg fr-my-2w'
+    - if @prefilled_dossier
+      = render Dsfr::CalloutComponent.new(title: t("views.commencer.show.prefilled_draft"), heading_level: 'h2') do |c|
+        - c.body do
+          %p= t('views.commencer.show.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @procedure.libelle)
+          = link_to t('views.commencer.show.go_to_prefilled_file'), url_for_dossier(@prefilled_dossier), class: 'fr-btn fr-mb-2w'
+
+    - elsif dossiers.empty?
+      = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: 'fr-btn fr-mb-2w'
+
+    - elsif drafts.size == 1 && not_drafts.empty?
+      - dossier = drafts.first
+      = render Dsfr::CalloutComponent.new(title: t("views.commencer.show.already_draft"), heading_level: 'h2') do |c|
+        - c.body do
+          %p
+            = t('views.commencer.show.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: dossier.procedure.libelle)
+          = link_to t('views.commencer.show.continue_file'), url_for_dossier(dossier), class: 'fr-btn fr-mb-2w'
+          = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--secondary fr-mb-2w'
+
+    - elsif not_drafts.size == 1
+      - dossier = not_drafts.first
+      = render Dsfr::CalloutComponent.new(title: t("views.commencer.show.already_not_draft"), heading_level: 'h2') do |c|
+        - c.body do
+          %p
+            = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: dossier.procedure.libelle)
+          = link_to t('views.commencer.show.show_my_submitted_file'), url_for_dossier(dossier), class: 'fr-btn fr-mb-2w'
+          = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--secondary fr-mb-2w'
+
     - else
-      - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
-      - dossiers = current_user.dossiers.visible_by_user.where(revision: revision)
-      - drafts = dossiers.merge(Dossier.state_brouillon)
-      - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
+      = render Dsfr::CalloutComponent.new(title: t("views.commencer.show.existing_dossiers"), heading_level: 'h2') do |c|
+        - c.body do
+          = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: "fr-btn fr-mb-2w"
+          = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--secondary fr-mb-2w"
 
-      - if @prefilled_dossier
-        %h2.huge-title= t('views.commencer.show.prefilled_draft')
-        %p= t('views.commencer.show.prefilled_draft_detail_html', time_ago: time_ago_in_words(@prefilled_dossier.created_at), procedure: @procedure.libelle)
-        = link_to t('views.commencer.show.go_to_prefilled_file'), url_for_dossier(@prefilled_dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
+  - if @procedure.feature_enabled?(:dossier_pdf_vide)
+    %hr
+    %p= t('views.commencer.show.want_empty_pdf', service: @procedure&.service&.nom, adresse: @procedure&.service&.adresse)
 
-      - elsif dossiers.empty?
-        = link_to t('views.commencer.show.start_procedure'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-my-2w'
-
-      - elsif drafts.size == 1 && not_drafts.empty?
-        - dossier = drafts.first
-        %h2.huge-title= t('views.commencer.show.already_draft')
-        %p
-          = t('views.commencer.show.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: dossier.procedure.libelle)
-        = link_to t('views.commencer.show.continue_file'), url_for_dossier(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
-        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
-
-      - elsif not_drafts.size == 1
-        - dossier = not_drafts.first
-        %h2.huge-title= t('views.commencer.show.already_not_draft')
-        %p
-          = t('views.commencer.show.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: dossier.procedure.libelle)
-        = link_to t('views.commencer.show.show_my_submitted_file'), url_for_dossier(dossier), class: 'fr-btn fr-btn--lg fr-my-2w'
-        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--lg fr-btn--secondary fr-my-2w'
-
-      - else
-        %h2.huge-title= t('views.commencer.show.existing_dossiers')
-        = link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: "fr-btn fr-btn--lg fr-my-2w"
-        = link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
-
-    - if @procedure.feature_enabled?(:dossier_pdf_vide)
-      %hr
-      %p= t('views.commencer.show.want_empty_pdf', service: @procedure&.service&.nom, adresse: @procedure&.service&.adresse)
-
-      %br
-      = link_to t('views.commencer.show.download_empty_pdf'), commencer_dossier_vide_for_revision_path(@revision), class: "fr-btn fr-btn--lg fr-btn--secondary fr-my-2w"
-
+    %br
+    = link_to t('views.commencer.show.download_empty_pdf'), commencer_dossier_vide_for_revision_path(@revision), class: "fr-btn fr-btn--secondary fr-mb-2w"

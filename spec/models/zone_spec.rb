@@ -118,4 +118,18 @@ describe Zone do
       expect(Zone.available_at(start_previous_government + 1.day).map(&:label)).to eq ["Ministère de la Culture", "Ministère des Outre-mer"]
     end
   end
+
+  context 'with zones' do
+    before do
+      create(:zone, acronym: 'MEN', tchap_hs: ['agent.education.tchap.gouv.fr'])
+      create(:zone, acronym: 'ESR', tchap_hs: ['agent.education.tchap.gouv.fr'])
+    end
+
+    describe "#self.default_for" do
+      it 'returns zone related to tchap hs' do
+        expect(Zone.default_for('agent.education.tchap.gouv.fr').map(&:acronym)).to eq ['MEN', 'ESR']
+        expect(Zone.default_for('agent.tchap.gouv.fr').map(&:acronym)).to eq []
+      end
+    end
+  end
 end

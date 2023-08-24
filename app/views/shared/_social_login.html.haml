@@ -2,7 +2,7 @@
   .form-column.prior-border.ou-border.procedure-context-content
     .auth-form.sign-in-form.fr-py-5w
       .social-logins
-        %h1.fr-h3.center= title
+        %h1.fr-h3= title
         %br
         - OmniAuthService.providers.each do |provider|
           = link_to "/auth/#{provider}", class: "fr-btn fr-btn--lg fr-btn--secondary"  do

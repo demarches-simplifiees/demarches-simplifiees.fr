@@ -24,10 +24,10 @@ RSpec.describe 'commencer/show', type: :view do
       expect(rendered).to have_link("Créer un compte")
       expect(rendered).to have_link("J’ai déjà un compte")
       if ENV['GOOGLE_CLIENT_ID'].present?
-        expect(rendered).to have_link('Gmail, Google')
+        expect(rendered).to have_link('Google')
       end
       if ENV['MICROSOFT_CLIENT_ID'].present?
-        expect(rendered).to have_link('Outlook, Microsoft 365')
+        expect(rendered).to have_link('Microsoft')
       end
       if ENV['YAHOO_CLIENT_ID'].present?
         expect(rendered).to have_link('Yahoo!')
@@ -51,8 +51,8 @@ RSpec.describe 'commencer/show', type: :view do
       it 'renders a link to create a new dossier' do
         subject
         expect(rendered).to have_link(button_label, href: new_dossier_url(procedure_id: procedure.id))
-        expect(rendered).not_to have_link('Gmail, Google')
-        expect(rendered).not_to have_link('Outlook, Microsoft 365')
+        expect(rendered).not_to have_link('Google')
+        expect(rendered).not_to have_link('Microsoft')
         expect(rendered).not_to have_link('Yahoo!')
         expect(rendered).not_to have_link('Tatou')
         expect(rendered).not_to have_link('administration')
