@@ -7,11 +7,13 @@
     %h2.fr-h3.center= t('views.shared.account.title', name: APPLICATION_NAME)
     %br
     %ul.fr-btns-group.fr-btns-group--inline
-      = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--lg fr-my-2w' do
-        = t('views.shared.account.create')
-        %span.optional-on-small-screens.fr-ml-1v
-          #{APPLICATION_NAME}
-      = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary fr-btn--lg fr-my-2w'
+      %li
+        = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--lg fr-my-2w' do
+          = t('views.shared.account.create')
+          %span.optional-on-small-screens.fr-ml-1v
+            #{APPLICATION_NAME}
+      %li
+        = link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary fr-btn--lg fr-my-2w'
   - else
     - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
     - dossiers = current_user.dossiers.visible_by_user.where(revision: revision)
