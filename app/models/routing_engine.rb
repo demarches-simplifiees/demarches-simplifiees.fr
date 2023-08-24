@@ -2,7 +2,7 @@ module RoutingEngine
   def self.compute(dossier)
     return if !dossier.procedure.feature_enabled?(:routing_rules)
 
-    matching_groupe = dossier.procedure.groupe_instructeurs.active.find do |gi|
+    matching_groupe = dossier.procedure.groupe_instructeurs.active.reject(&:routing_to_configure?).find do |gi|
       gi.routing_rule&.compute(dossier.champs)
     end
     matching_groupe ||= dossier.procedure.defaut_groupe_instructeur

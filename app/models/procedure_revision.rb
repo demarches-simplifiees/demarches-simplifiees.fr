@@ -236,6 +236,10 @@ class ProcedureRevision < ApplicationRecord
     [coordinate, coordinate&.type_de_champ]
   end
 
+  def routable_types_de_champ
+    types_de_champ_public.filter { |tdc| [:drop_down_list].include?(tdc.type_champ.to_sym) }
+  end
+
   private
 
   def compute_estimated_fill_duration

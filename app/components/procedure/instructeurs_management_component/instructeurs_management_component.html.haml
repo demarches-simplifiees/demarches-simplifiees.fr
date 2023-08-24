@@ -1,0 +1,13 @@
+- content_for(:title, 'Instructeurs')
+%h1 Gestion des instructeurs
+
+= render partial: 'administrateurs/groupe_instructeurs/import_export',
+    locals: { procedure: @procedure,
+    groupe_instructeurs: @procedure.groupe_instructeurs }
+
+= render partial: 'administrateurs/groupe_instructeurs/instructeurs',
+    locals: { procedure: @procedure,
+    groupe_instructeur: @groupe_instructeur,
+    instructeurs: @instructeurs,
+    available_instructeur_emails: @available_instructeur_emails,
+    disabled_as_super_admin: @disabled_as_super_admin }
