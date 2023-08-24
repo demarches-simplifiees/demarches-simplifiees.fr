@@ -12,13 +12,15 @@ module Types
       end
 
       field :siren, String, null: false
+      field :nom_commercial, String, null: false
+      field :raison_sociale, String, null: false
+      field :siret_siege_social, String, null: false
+      field :inline_adresse, String, null: false
+
       field :capital_social, GraphQL::Types::BigInt, null: true, description: "capital social de l’entreprise. -1 si inconnu."
       field :numero_tva_intracommunautaire, String, null: true
       field :forme_juridique, String, null: true
       field :forme_juridique_code, String, null: true
-      field :nom_commercial, String, null: false
-      field :raison_sociale, String, null: false
-      field :siret_siege_social, String, null: false
       field :code_effectif_entreprise, String, null: true
       field :effectif_mensuel, EffectifType, null: true, description: "effectif pour un mois donné"
       field :effectif_annuel, EffectifType, null: true, description: "effectif moyen d’une année"
@@ -26,7 +28,6 @@ module Types
       field :etat_administratif, EntrepriseEtatAdministratifType, null: true
       field :nom, String, null: true
       field :prenom, String, null: true
-      field :inline_adresse, String, null: false
       field :attestation_sociale_attachment, Types::File, null: true
       field :attestation_fiscale_attachment, Types::File, null: true
 
@@ -51,6 +52,10 @@ module Types
         # capital_social is defined as a BigInt, so we can't return an empty string when value is unknown
         # 0 could appear to be a legitimate value, so a negative value helps to ensure the value is not known
         object.capital_social || '-1'
+      end
+
+      def nom_commercial
+        object.nom_commercial || ''
       end
 
       def code_effectif_entreprise
@@ -90,21 +95,21 @@ module Types
 
     field :siret, String, null: false
     field :siege_social, Boolean, null: true # TODO Pf no_tahiti with etablissements
-    field :naf, String, null: true # see: https://sentry.io/organizations/demarches-simplifiees/issues/2839832517/activity/?environment=production&project=1429550&query=is%3Aunresolved&referrer=issue-stream#
     field :libelle_naf, String, null: false
-
     field :address, Types::AddressType, null: false
 
+    field :naf, String, null: true # see: https://sentry.io/organizations/demarches-simplifiees/issues/2839832517/activity/?environment=production&project=1429550&query=is%3Aunresolved&referrer=issue-stream#
     field :entreprise, EntrepriseType, null: true
     field :association, AssociationType, null: true
 
     field :adresse, String, null: false, deprecation_reason: "Utilisez le champ `address.label` à la place."
-    field :numero_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_number` à la place."
-    field :type_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_address` à la place."
-    field :nom_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_name` à la place."
     field :code_postal, String, null: false, deprecation_reason: "Utilisez le champ `address.postal_code` à la place."
     field :localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_name` à la place."
     field :code_insee_localite, String, null: false, deprecation_reason: "Utilisez le champ `address.city_code` à la place." # TODO Pf ajouter city_code
+
+    field :numero_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_number` à la place."
+    field :type_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_address` à la place."
+    field :nom_voie, String, null: true, deprecation_reason: "Utilisez le champ `address.street_name` à la place."
     field :complement_adresse, String, null: true, deprecation_reason: "Utilisez le champ `address` à la place."
 
     def address

@@ -12,6 +12,10 @@ AUTHORIZED_CONTENT_TYPES = [
   'image/vnd.dwg', # multimedia x 137 auto desk
   'audio/mpeg', # multimedia x 26
   'video/x-ms-wm', # multimedia x 15 video microsoft ?
+  'audio/mp4', # audio .mp4, .m4a
+  'audio/x-m4a', # audio .m4a
+  'audio/aac', # audio .aac
+  'audio/x-wav', # audio .wav
 
   # application / program
   'application/json', # program x 6653577
