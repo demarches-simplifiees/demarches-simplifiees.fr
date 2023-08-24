@@ -57,7 +57,7 @@
     color: $dark-red;
   }
 
-  label,
+  label:not(.fr-label),
   legend.form-label {
     font-size: 18px;
     margin-bottom: $default-padding;

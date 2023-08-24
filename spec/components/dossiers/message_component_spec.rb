@@ -144,4 +144,32 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       end
     end
   end
+
+  describe '#correction_badge' do
+    let(:resolved_at) { nil }
+
+    before do
+      create(:dossier_correction, commentaire:, dossier:, resolved_at:)
+    end
+
+    it 'returns a badge à corriger' do
+      expect(subject).to have_text('à corriger')
+    end
+
+    context 'connected as instructeur' do
+      let(:connected_user) { create(:instructeur) }
+
+      it 'returns a badge en attente' do
+        expect(subject).to have_text('en attente')
+      end
+    end
+
+    context 'when the correction is resolved' do
+      let(:resolved_at) { 1.minute.ago }
+
+      it 'returns a badge corrigé' do
+        expect(subject).to have_text("corrigé")
+      end
+    end
+  end
 end

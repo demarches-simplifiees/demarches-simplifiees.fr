@@ -565,6 +565,16 @@ describe Users::DossiersController, type: :controller do
         expect(flash.alert).to eq("Les modifications ont déjà été déposées")
       end
     end
+
+    context "when there are pending correction" do
+      let!(:correction) { create(:dossier_correction, dossier: dossier) }
+
+      subject { post :submit_en_construction, params: { id: dossier.id, dossier: { pending_correction_confirm: "1" } } }
+
+      it "resolve correction" do
+        expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
+      end
+    end
   end
 
   describe '#update brouillon' do

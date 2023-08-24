@@ -246,6 +246,10 @@ module Users
         editing_fork_origin.merge_fork(@dossier)
         RoutingEngine.compute(editing_fork_origin)
 
+        if cast_bool(params.dig(:dossier, :pending_correction_confirm))
+          editing_fork_origin.resolve_pending_correction!
+        end
+
         redirect_to dossier_path(editing_fork_origin)
       else
         flash.now.alert = errors

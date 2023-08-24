@@ -496,6 +496,112 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe '#pending_correction' do
+    let(:message) { 'do that' }
+    let(:justificatif) { nil }
+
+    subject do
+      post :pending_correction, params: {
+        procedure_id: procedure.id, dossier_id: dossier.id,
+        dossier: { motivation: message, justificatif_motivation: justificatif }
+      }, format: :turbo_stream
+    end
+
+    before do
+      sign_in(instructeur.user)
+
+      allow(DossierMailer).to receive(:notify_pending_correction)
+        .and_return(double(deliver_later: nil))
+
+      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie)
+    end
+
+    context "dossier en instruction" do
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
+
+      before { subject }
+
+      it 'sends an email to user' do
+        expect(DossierMailer).to have_received(:notify_pending_correction).once
+        expect(DossierMailer).to have_received(:notify_pending_correction).with(dossier)
+      end
+
+      it 'pass en_construction and create a pending correction' do
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('en attente de correction')
+
+        expect(dossier.reload).to be_en_construction
+        expect(dossier).to be_pending_correction
+      end
+
+      it 'create a comment with text body' do
+        expect(dossier.commentaires.last.body).to eq("do that")
+        expect(dossier.commentaires.last).to be_flagged_pending_correction
+      end
+
+      context 'with an attachment' do
+        let(:justificatif) { fake_justificatif }
+
+        it 'attach file to comment' do
+          expect(dossier.commentaires.last.piece_jointe).to be_attached
+        end
+      end
+
+      context 'with an invalid comment / attachment' do
+        let(:justificatif) { Rack::Test::UploadedFile.new(Rails.root.join('Gemfile.lock'), 'text/lock') }
+
+        it 'does not save anything' do
+          expect(dossier.reload).not_to be_pending_correction
+          expect(dossier.commentaires.count).to eq(0)
+          expect(response.body).to include('pas d’un type accepté')
+        end
+      end
+
+      context 'with an empty message' do
+        let(:message) { '' }
+
+        it 'requires a message' do
+          expect(dossier.reload).not_to be_pending_correction
+          expect(dossier.commentaires.count).to eq(0)
+          expect(response.body).to include('Vous devez préciser')
+        end
+      end
+
+      context 'dossier already having pending corrections' do
+        before do
+          create(:dossier_correction, dossier:)
+        end
+
+        it 'does not create an new pending correction' do
+          expect { subject }.not_to change { DossierCorrection.count }
+        end
+
+        it 'shows a flash alert' do
+          subject
+
+          expect(response.body).to include('')
+        end
+      end
+    end
+
+    context 'dossier en_construction' do
+      it 'can create a pending correction' do
+        subject
+        expect(dossier.reload).to be_pending_correction
+        expect(dossier.commentaires.last).to be_flagged_pending_correction
+      end
+    end
+
+    context 'dossier is termine' do
+      let(:dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
+
+      it 'does not create a pending correction' do
+        expect { subject }.not_to change { DossierCorrection.count }
+        expect(response.body).to include('Impossible')
+      end
+    end
+  end
+
   describe '#messagerie' do
     before { expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie) }
     subject { get :messagerie, params: { procedure_id: procedure.id, dossier_id: dossier.id } }

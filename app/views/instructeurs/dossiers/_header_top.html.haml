@@ -5,6 +5,8 @@
         = "Dossier nº #{dossier.id}"
 
         = status_badge(dossier.state, 'super')
+        = pending_correction_badge(:for_instructeur) if dossier.pending_correction?
+
       = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
       = procedure_badge(dossier.procedure)
 

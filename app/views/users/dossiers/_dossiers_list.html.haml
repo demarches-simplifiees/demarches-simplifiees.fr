@@ -37,7 +37,11 @@
               %td
                 %span.cell-link= demandeur_dossier(dossier)
             %td.status-col
-              = status_badge(dossier.state)
+              - if dossier.pending_correction?
+                = pending_correction_badge(:for_user)
+              - else
+                = status_badge(dossier.state)
+
             %td.updated-at-col.cell-link
               = try_format_date(dossier.updated_at)
             %td.action-col.follow-col

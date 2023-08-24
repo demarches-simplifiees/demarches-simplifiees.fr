@@ -8,6 +8,9 @@
               = t('views.users.dossiers.show.status_overview.status_draft')
           %li.en-construction{ class: dossier.en_construction? ? 'active' : nil }
             = t('views.users.dossiers.show.status_overview.status_in_progress')
+
+            - if dossier.pending_correction.present?
+              = "(#{Dossier.human_attribute_name("pending_correction.for_user")})"
           %li.en-instruction{ class: dossier.en_instruction? ? 'active' : nil }
             = t('views.users.dossiers.show.status_overview.status_review')
           %li.termine{ class: dossier.termine? ? 'active' : nil }
@@ -23,6 +26,10 @@
       -# brouillon does not occure
       - if dossier.en_construction?
         .en-construction
+          - if dossier.pending_correction.present?
+            .message.inverted-background
+              = render Dossiers::MessageComponent.new(commentaire: dossier.pending_correction.commentaire, connected_user: current_user)
+
           %p{ role: 'status' }
             = t('views.users.dossiers.show.status_overview.en_construction_html')
 

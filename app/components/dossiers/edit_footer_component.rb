@@ -27,7 +27,8 @@ class Dossiers::EditFooterComponent < ApplicationComponent
     {
       class: 'fr-btn fr-btn--sm',
       method: :post,
-      data: { 'disable-with': t('.submitting'), controller: 'autosave-submit' }
+      data: { 'disable-with': t('.submitting'), controller: 'autosave-submit' },
+      form: { id: "form-submit-en-construction" }
     }
   end
 
