@@ -592,9 +592,6 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
-    rgeo (2.2.0)
-    rgeo-geojson (2.1.1)
-      rgeo (>= 1.0.0)
     rodf (1.1.1)
       builder (>= 3.0)
       dry-inflector (~> 0.1)
@@ -918,7 +915,6 @@ DEPENDENCIES
   rake-progressbar
   redcarpet
   rexml
-  rgeo-geojson
   rqrcode
   rspec-rails
   rspec_junit_formatter

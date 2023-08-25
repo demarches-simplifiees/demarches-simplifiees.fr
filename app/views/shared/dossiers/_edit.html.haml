@@ -17,18 +17,7 @@
             = t('views.shared.dossiers.edit.autosave')
 
           - if notice_url(dossier.procedure).present?
-            .fr-download
-              %p
-                = link_to notice_url(dossier.procedure), download: "", class: "fr-download__link mr-2", title: t("views.shared.dossiers.edit.notice_title") do
-                  = t("views.shared.dossiers.edit.notice")
-                  - if dossier.procedure.notice.attached?
-                    %span.fr-download__detail
-                      = download_details(dossier.procedure.notice)
-
-                - if administrateur_signed_in?
-                  %span.fr-text--xs.fr-text-mention--grey.visible-on-previous-hover
-                    %span.fr-text-action-high--blue-france.fr-icon-questionnaire-line{ "aria-hidden": "true" }
-                    = t('shared.ephemeral_link')
+            = render Dsfr::DownloadComponent.new(attachment: dossier.procedure.notice , url: notice_url(dossier.procedure), name: t("views.shared.dossiers.edit.notice"), ephemeral_link: administrateur_signed_in?)
 
     - if dossier.show_groupe_instructeur_selector?
       %span{ data: { controller: 'autosave' } }

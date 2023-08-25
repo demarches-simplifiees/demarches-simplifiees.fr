@@ -39,6 +39,7 @@ class Champs::CarteController < ApplicationController
   def destroy
     champ = policy_scope(Champ).find(params[:champ_id])
     champ.geo_areas.find(params[:id]).destroy!
+    champ.touch
 
     head :no_content
   end
@@ -80,6 +81,9 @@ class Champs::CarteController < ApplicationController
     if feature[:properties]
       geo_area.properties.merge!(feature[:properties])
     end
-    geo_area.save
+    if geo_area.save
+      geo_area.champ.touch
+      true
+    end
   end
 end

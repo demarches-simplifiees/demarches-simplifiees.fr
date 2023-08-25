@@ -14,16 +14,13 @@
       %span.fr-icon-timer-line
       = t('shared.procedure_description.estimated_fill_duration', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
+- if procedure.auto_archive_on
+  %p
+    %small
+      %span.fr-icon-calendar-line
+        Date limite : #{procedure_auto_archive_datetime(procedure)}.
 
 = yield
-
-- if procedure.auto_archive_on
-  %details.procedure-configuration--auto-archive
-    %summary
-      %span.icon.edit
-
-      %span.procedure-auto-archive-title Date limite : #{procedure_auto_archive_date(procedure)}
-    %p Vous pouvez déposer vos dossiers jusqu’au #{procedure_auto_archive_datetime(procedure)}.
 
 - unless @no_description
   .fr-accordions-group
@@ -49,3 +46,7 @@
             = t('shared.procedure_description.estimated_fill_duration_title')
         #accordion-116.fr-collapse.js_description_target_audience
           = t('shared.procedure_description.estimated_fill_duration_detail', estimated_minutes: estimated_fill_duration_minutes(procedure))
+
+- if notice_url(procedure).present?
+  .fr-my-3w
+    = render Dsfr::DownloadComponent.new(attachment: procedure.notice , url: notice_url(procedure), name: t("views.shared.dossiers.edit.notice"), ephemeral_link: administrateur_signed_in?)
