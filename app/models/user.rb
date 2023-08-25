@@ -26,6 +26,7 @@ class User < ApplicationRecord
   has_one :france_connect_information, dependent: :destroy
   has_one :instructeur, dependent: :destroy
   has_one :administrateur, dependent: :destroy
+  has_one :admins_group_manager, dependent: :destroy
   has_one :expert, dependent: :destroy
   belongs_to :requested_merge_into, class_name: 'User', optional: true
 
@@ -76,6 +77,10 @@ class User < ApplicationRecord
     UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
   end
 
+  def invite_admins_group_manager!(admins_group)
+    UserMailer.invite_admins_group_manager(self, set_reset_password_token, admins_group).deliver_later
+  end
+
   def invite_administrateur!(administration_id)
     AdministrationMailer.invite_admin(self, set_reset_password_token, administration_id).deliver_later
   end
@@ -98,6 +103,16 @@ class User < ApplicationRecord
       end
 
       user.instructeur.administrateurs << administrateurs
+    end
+
+    user
+  end
+
+  def self.create_or_promote_to_admins_group_manager(email, password)
+    user = User.create_or_promote_to_administrateur(email, password)
+
+    if user.valid? && user.admins_group_manager.nil?
+      user.create_admins_group_manager!
     end
 
     user
@@ -143,6 +158,10 @@ class User < ApplicationRecord
 
   def instructeur?
     instructeur.present?
+  end
+
+  def admins_group_manager?
+    admins_group_manager.present?
   end
 
   def expert?

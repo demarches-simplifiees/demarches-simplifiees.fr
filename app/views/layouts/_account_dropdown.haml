@@ -30,6 +30,11 @@
               = link_to admin_procedures_path, class: "fr-nav__link" do
                 %span.fr-icon-refresh-line.fr-icon--sm
                 = t('go_admin', scope: [:layouts])
+          - if admins_group_manager_signed_in? && nav_bar_profile != :admins_group_manager
+            %li
+              = link_to admins_group_manager_admins_groups_path, class: "fr-nav__link" do
+                %span.fr-icon-refresh-line.fr-icon--sm
+                = t('go_admins_group_manager', scope: [:layouts])
 
         - if super_admin_signed_in?
           %li

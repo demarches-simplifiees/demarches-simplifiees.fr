@@ -1,0 +1,4 @@
+fr:
+  admins_group_mailer:
+    notify_added_admins_group_managers:
+      email_body: "Vous venez d’être nommé gestionnaire du groupe %{admins_group_name} sur %{application_name} par « %{email} »."

@@ -8,12 +8,14 @@ fr:
     go_instructor: "Passer en instructeur"
     go_expert: "Passer en expert"
     go_admin: "Passer en administrateur"
+    go_admins_group_manager: "Passer en gestionnaire"
     profile: "Voir mon profil"
     logout: "Se déconnecter"
     my_account: "Mon compte"
     connected_as: "connecté en tant qu’%{profile}"
     instructeur: instructeur
     administrateur: administrateur
+    admins_group_manager: gestionnaire
     expert: expert
     user: usager
     guest: invité

@@ -1,0 +1,7 @@
+fr:
+  manager:
+    admins_groups:
+      add_admins_group_manager:
+        wrong_address:
+          one: "%{emails} n’est pas une adresse email valide"
+          other: "%{emails} ne sont pas des adresses emails valides"

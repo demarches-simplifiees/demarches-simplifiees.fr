@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    attributes:
+      admins_group_manager:
+        admins_groups: Groupes
+    models:
+      admins_group_manager:
+        one: Gestionnaire
+        other: Gestionnaires
