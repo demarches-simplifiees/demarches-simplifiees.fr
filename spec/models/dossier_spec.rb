@@ -1170,7 +1170,7 @@ describe Dossier do
 
       it "can't accepter_automatiquement" do
         expect(dossier_incomplete.may_accepter_automatiquement?(instructeur:, motivation:)).to be_falsey
-        expect(dossier_ok.accepter_automatiquement(instructeur:, motivation:)).to be_truthy
+        expect(dossier_ok.accepter_automatiquement.to be_truthy
       end
     end
 
