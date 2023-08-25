@@ -62,14 +62,14 @@ module DossierHelper
 
   def class_badge_state(state)
     case state
-    when Dossier.states.fetch(:en_construction), Dossier.states.fetch(:en_instruction)
-      'fr-badge--info'
+    when Dossier.states.fetch(:en_construction)
+      'fr-badge--purple-glycine'
+    when Dossier.states.fetch(:en_instruction)
+      'fr-badge--new'
     when Dossier.states.fetch(:accepte)
       'fr-badge--success'
-    when Dossier.states.fetch(:refuse)
+    when Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
       'fr-badge--warning'
-    when Dossier.states.fetch(:sans_suite)
-      'fr-badge--new'
     when Dossier.states.fetch(:brouillon)
       ''
     else
@@ -79,7 +79,12 @@ module DossierHelper
 
   def status_badge(state, alignment_class = '')
     status_text = dossier_display_state(state, lower: true)
-    tag.span(status_text, class: "fr-badge fr-badge--sm #{class_badge_state(state)} fr-badge--no-icon #{alignment_class}", role: 'status')
+    tag.span status_text, role: 'status', class: class_names(
+      'fr-badge fr-badge--sm' => true,
+      'fr-badge--no-icon' => [Dossier.states.fetch(:en_instruction), Dossier.states.fetch(:accepte)].include?(state),
+      class_badge_state(state) => true,
+      alignment_class => true
+    )
   end
 
   def deletion_reason_badge(reason)

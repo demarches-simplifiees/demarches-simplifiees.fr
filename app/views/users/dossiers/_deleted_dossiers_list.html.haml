@@ -13,14 +13,12 @@
           %th Date de suppression
       %tbody
         - deleted_dossiers.each do |dossier|
-          - libelle_demarche = Procedure.find(dossier.procedure_id).libelle
-
           %tr{ data: { 'dossier-id': dossier.dossier_id } }
             %td.number-col
               %span.icon.folder
               = dossier.dossier_id
             %td
-              = libelle_demarche
+              = dossier.procedure.libelle
 
             %td.cell-link
               = deletion_reason_badge(dossier.reason)

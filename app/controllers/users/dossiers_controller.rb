@@ -30,7 +30,7 @@ module Users
       @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
-      @dossiers_supprimes_definitivement = current_user.deleted_dossiers.order_by_updated_at
+      @dossiers_supprimes_definitivement = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
       @dossier_transfers = DossierTransfer.for_email(current_user.email)
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])

@@ -823,6 +823,14 @@ describe ProcedurePresentation do
         expect(subject).to eq("En construction")
       end
     end
+
+    context 'when filter is a date' do
+      let(:filters) { { "suivis" => [{ "table" => "self", "column" => "en_instruction_at", "value" => "15/06/2023" }] } }
+
+      it 'should get formatted value' do
+        expect(subject).to eq("15/06/2023")
+      end
+    end
   end
 
   describe "#add_filter" do

@@ -8,4 +8,4 @@
   autocompleteScreenReaderInstructions: t("combo_search_component.screen_reader_instructions"))
 
 .geo-areas{ id: dom_id(@champ, :geo_areas) }
-  = render partial: 'shared/champs/carte/geo_areas', locals: { champ: @champ, editing: true }
+  = render Dossiers::GeoAreasComponent.new(champ: @champ, editing: true)
