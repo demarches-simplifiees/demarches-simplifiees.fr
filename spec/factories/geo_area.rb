@@ -116,6 +116,15 @@ FactoryBot.define do
       end
     end
 
+    trait :point_with_z do
+      geometry do
+        {
+          "type": "Point",
+          "coordinates": [2.428439855575562, 46.538476837725796, 42]
+        }
+      end
+    end
+
     trait :invalid_point do
       geometry do
         {

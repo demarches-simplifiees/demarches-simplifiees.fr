@@ -110,7 +110,7 @@ class GeoArea < ApplicationRecord
 
   def location
     if point?
-      Geo::Coord.new(*geometry['coordinates'].reverse).to_s
+      Geo::Coord.new(*geometry['coordinates'][0..1].reverse).to_s
     end
   end
 
