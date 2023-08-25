@@ -319,10 +319,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_17_184741) do
 
   create_table "dossier_corrections", force: :cascade do |t|
     t.bigint "commentaire_id"
-    t.datetime "created_at", precision: 6, null: false
+    t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
-    t.datetime "resolved_at", precision: 6
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "resolved_at"
+    t.datetime "updated_at", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"
     t.index ["resolved_at"], name: "index_dossier_corrections_on_resolved_at", where: "((resolved_at IS NULL) OR (resolved_at IS NOT NULL))"
