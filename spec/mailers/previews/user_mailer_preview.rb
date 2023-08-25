@@ -24,6 +24,11 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.invite_instructeur(user, 'aedfa0d0')
   end
 
+  def invite_admins_group_manager
+    admins_group = AdminsGroup.new(name: 'Root admins group')
+    UserMailer.invite_admins_group_manager(user, 'aedfa0d0', admins_group)
+  end
+
   private
 
   def user

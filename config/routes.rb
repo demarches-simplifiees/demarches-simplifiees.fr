@@ -54,6 +54,14 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
     end
 
+    if ENV.fetch('ADMINS_GROUP_ENABLED') == 'enabled'
+      resources :admins_group_managers, path: 'gestionnaires', only: [:index, :show, :edit, :update]
+
+      resources :admins_groups, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
+        post 'add_admins_group_manager', on: :member
+      end
+    end
+
     resources :dossiers, only: [:show]
 
     resources :bill_signatures, only: [:index]
@@ -457,6 +465,17 @@ Rails.application.routes.draw do
 
         resources :batch_operations, only: [:create]
       end
+    end
+  end
+
+  if ENV.fetch('ADMINS_GROUP_ENABLED') == 'enabled'
+
+    #
+    # Admins Group Manager (gestionnaire)
+    #
+
+    scope module: 'admins_group_managers', path: 'gestionnaire', as: 'admins_group_manager' do
+      resources :admins_groups, path: 'groupe_administrateurs', only: [:index, :create]
     end
   end
 

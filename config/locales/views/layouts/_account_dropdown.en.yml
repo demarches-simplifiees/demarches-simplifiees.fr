@@ -8,12 +8,14 @@ en:
     go_instructor: "Switch to instructor"
     go_expert: "Switch to expert"
     go_admin: "Switch to administrator"
+    go_admins_group_manager: "Switch to admins group manager"
     profile: "See my profile"
     logout: "Log out"
     my_account: "My account"
     connected_as: "connected as %{profile}"
     instructeur: instructor
     administrateur: admin
+    admins_group_manager: admins group manager
     expert: expert
     user: user
     guest: guest
