@@ -25,7 +25,7 @@ fr:
       lost_user:
         question: Je ne trouve pas la démarche que je veux faire
         answer_html: "<p>Nous vous invitons à contacter l’administration en charge de votre démarche pour qu’elle vous indique le lien à suivre. Celui-ci devrait ressembler à cela : <code>%{base_url}/commencer/NOM_DE_LA_DEMARCHE</code>.</p>
-          <p>Vous pouvez aussi <a href=\"%{link_lost_user}\">consulter ici la liste de nos démarches les plus fréquentes (permis, detr etc)</a>.</p>"
+          <p>Vous pouvez aussi <a href=\"%{link_lost_user}\">consulter ici la liste de nos démarches les plus fréquentes (permis, detr, etc.)</a>.</p>"
       other:
         question: Autre sujet
     admin:

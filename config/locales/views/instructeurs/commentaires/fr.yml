@@ -3,5 +3,5 @@ fr:
     commentaires:
       destroy:
         notice: Votre message a été supprimé
-        alert_acl: Impossible de supprimer le message, celui ci ne vous appartient pas
+        alert_acl: Impossible de supprimer le message, celui-ci ne vous appartient pas
         alert_already_discarded: Ce message a déjà été supprimé

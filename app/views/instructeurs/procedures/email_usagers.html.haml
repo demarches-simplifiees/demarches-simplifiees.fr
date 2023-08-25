@@ -13,7 +13,7 @@
     - if @bulk_messages.present?
       %section.list-avis.mt-8
         %h1.tab-title
-          Messages envoyés précedemment
+          Messages envoyés précédemment
           %span.fr-badge= @bulk_messages.count
 
         %ul
@@ -29,4 +29,4 @@
                     = render Attachment::ShowComponent.new(attachment: message.piece_jointe.attachment)
   - else
     .page-title.center
-      %h2 Il n'y a aucun dossier en brouillon dans vos groupes instructeurs
+      %h2 Il n’y a aucun dossier en brouillon dans vos groupes d’instructeurs

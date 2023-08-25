@@ -654,7 +654,7 @@ describe API::V2::GraphqlController do
         context 'validation error' do
           it {
             expect(gql_errors).to be_nil
-            expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe instructeur actif sur chaque démarche')
+            expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe d’instructeurs actif sur chaque démarche')
           }
         end
       end

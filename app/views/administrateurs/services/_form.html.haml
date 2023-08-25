@@ -11,7 +11,7 @@
   = f.label :organisme do
     Organisme/s
     %span.mandatory *
-  %p.notice Indiquez les organismes depuis l’échelon territoriale jusqu’au ministère séparés par une virgule
+  %p.notice Indiquez les organismes depuis l’échelon territorial jusqu’au ministère séparés par une virgule
   = f.text_field :organisme, placeholder: "mairie de Mours, préfecture de l'Oise, ministère de la Culture", required: true
 
   = f.label :type_organisme do
@@ -25,9 +25,9 @@
     %span.mandatory *
 
   %p.notice
-    Veuillez saisir le numéro TAHITI de l'organisme dont ce service dépend.
+    Veuillez saisir le numéro TAHITI de l’organisme dont ce service dépend.
     %br
-    = link_to "➡ Rechercher le numéro TAHITI sur le site de « l'ISPF »", annuaire_link, target: "_blank"
+    = link_to "➡ Rechercher le numéro TAHITI sur le site de « l’ISPF »", annuaire_link, target: "_blank"
 
   = f.text_field :siret, placeholder: "Une lettre suivi de 5 chiffres OU 6 chiffres", required: true
 

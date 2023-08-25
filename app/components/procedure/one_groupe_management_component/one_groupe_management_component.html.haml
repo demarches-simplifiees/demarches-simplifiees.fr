@@ -17,7 +17,7 @@
       = f.check_box :closed, { id: 'closed', "aria-describedby" => "closed-messages", :name => "closed" }
       %label.fr-label{ :for => "closed" }
         Groupe inactif
-        %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d'instructeurs
+        %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d’instructeurs
 
   = form_tag admin_procedure_routing_rules_path(@procedure_id),
     method: :post,

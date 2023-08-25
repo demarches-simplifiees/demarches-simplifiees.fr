@@ -257,7 +257,7 @@ fr:
           siret_html: Un numéro de SIRET
           repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
           annuaire_education_html: Un code d'établissement scolaire, tel que défini par <a href="https://api.gouv.fr/les-api/api-annuaire-education" target="_blank" rel="noopener noreferrer">l'Annuaire de l'Éducation Nationale</a>
-          dossier_link_html: L'identifiant du dossier, sous forme de nombre entier
+          dossier_link_html: L’identifiant du dossier, sous forme de nombre entier
           epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>
         examples:
           title: Exemple
@@ -291,7 +291,7 @@ fr:
         prefill_query_copy: Copier la requête de préremplissage
         json_description_title: Description JSON de la démarche
         json_description_info: Copiez la requête grâce au bouton ci-dessous pour découvrir les détails de la démarche et de ses champs au format JSON
-        json_description_copy: Copier la requête d'obtention de la description JSON
+        json_description_copy: Copier la requête d’obtention de la description JSON
     registrations:
       new:
         title: "Créez-vous un compte %{name}"
@@ -358,7 +358,7 @@ fr:
           messaging: Messagerie
           involved_persons: Personnes impliquées
         tab_explainations:
-          a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
+          a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
           traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
           tous: Tous les dossiers déposés sur cette démarche, qu'ils soient à suivre, suivis par vous ou suivis par d'autres instructeurs.
@@ -375,7 +375,7 @@ fr:
           title: Sélectionner un filtre
         select_all: Tout selectionner
         batch_operation:
-          enabled: "Ajouter le dossier %{dossier_id} à la selection pour un traitement de masse"
+          enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
           disabled: "Impossible d'ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
         show_deleted_dossiers: Afficher les dossiers supprimés
         personalize: Personnaliser le tableau
@@ -395,7 +395,7 @@ fr:
           empty: "Aucun dossier"
           detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
           detail_two: "Celui ci doit ressembler à"
-        fix_champ: "corriger l'erreur"
+        fix_champ: "corriger l’erreur"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
@@ -407,7 +407,7 @@ fr:
           complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
           continue: Continuer
         merci:
-          thanks: Merci !
+          thanks: Merci !
           dossier_send_l1: Votre dossier sur la démarche
           dossier_send_l2: a bien été envoyé.
           dossier_acces_l1: Vous avez désormais accès à votre
@@ -479,8 +479,8 @@ fr:
           edit_draft: "Modifier le brouillon"
           actions: "Actions"
         transfers:
-          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier Nº %{id} pour %{email}"
-          receiver_demande_en_cours: "Demande de transfert pour le dossier Nº %{id} envoyé par %{email}"
+          sender_demande_en_cours: "Une demande de transfert est en cours sur le dossier Nº %{id} pour %{email}"
+          receiver_demande_en_cours: "Demande de transfert pour le dossier Nº %{id} envoyé par %{email}"
           revoke: Révoquer cette demande
           accept: Accepter
           reject: Rejeter
@@ -504,7 +504,7 @@ fr:
         reset_link_sent:
           email_sent_html: "Si un compte <strong>%{application_name}</strong> existe avec l’adresse <strong>%{email}</strong>, nous vous avons envoyé un email."
           click_link_to_reset_password: "Cliquez sur le lien contenu dans l’email pour changer votre mot de passe."
-          no_mail: "Vous n’avez pas reçu l’email ?"
+          no_mail: "Vous n’avez pas reçu l’email ?"
           check_spams: "Vérifiez la boite Indésirables ou Spam de votre boite email."
           check_account: "Avez-vous bien créé un compte %{application_name} avec l’adresse %{email} ? Si aucun compte n’existe avec cette adresse, vous ne recevrez pas de message."
           check_france_connect_html: "Vous êtes-vous connecté avec France Connect par le passé ? Dans ce cas <a href=\"%{href}\">essayez à nouveau avec France Connect</a>."
@@ -833,8 +833,8 @@ fr:
         token_description: "Il doit contenir au minimum 15 caractères."
       update:
         token_ok: "Le jeton a bien été mis à jour"
-        no_scopes_token: "Mise à jour impossible : le jeton n’a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
-        not_found_token: "Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        no_scopes_token: "Mise à jour impossible : le jeton n’a pas acces aux données.<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
+        not_found_token: "Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif<br /><br />Vérifiez-le auprès de <a href='https://datapass.api.gouv.fr/'>https://datapass.api.gouv.fr/</a>"
         network_error:  "Mise à jour impossible : une erreur réseau est survenue"
       api_particulier:
         already_configured: "Déjà rempli"

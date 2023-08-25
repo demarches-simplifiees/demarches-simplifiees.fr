@@ -9,10 +9,10 @@ fr:
         other: Des dossiers dont le traitement est terminé vont bientôt être supprimés
       header_en_construction:
         one: "Le dossier en construction suivant sera bientôt automatiquement supprimé :"
-        other: "Les dossiers en construction suivant seront bientôt automatiquement supprimés :"
+        other: "Les dossiers en construction suivants seront bientôt automatiquement supprimés :"
       header_termine:
         one: "Le dossier suivant dont le traitement est terminé sera bientôt automatiquement supprimé :"
-        other: "Les dossiers suivant dont le traitement est terminé seront bientôt automatiquement supprimés :"
+        other: "Les dossiers suivants dont le traitement est terminé seront bientôt automatiquement supprimés :"
       footer_en_construction:
         one: "Vous avez <b>deux semaines</b> pour commencer l’instruction du dossier."
         other: "Vous avez <b>deux semaines</b> pour commencer l’instruction des dossiers."

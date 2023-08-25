@@ -798,7 +798,7 @@ describe Users::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(flash.alert).to include("Le champ « l » n'est pas au format IBAN, #{anchor_to_first_champ}") }
+      it { expect(flash.alert).to include("Le champ « l » n’est pas au format IBAN, #{anchor_to_first_champ}") }
     end
 
     context 'when the user has an invitation but is not the owner' do
