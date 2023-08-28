@@ -46,10 +46,16 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
   def operator_tag
     select_tag('operator_name',
       options_for_select(
-        [['est égal à', Logic::Eq.name], ["n'est pas égal à", Logic::NotEq.name]],
+        options_for_operator_tag,
         selected: operator_name
       ),
       class: 'fr-select')
+  end
+
+  def options_for_operator_tag
+    [Eq, NotEq]
+      .map(&:name)
+      .map { |name| [t(name, scope: 'logic.operators'), name] }
   end
 
   def value_tag
