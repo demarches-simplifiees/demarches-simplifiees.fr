@@ -1,0 +1,9 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Connecteur Chorus']] }
+
+
+.container
+  %h1.mb-2
+    Cadre budgétaire
