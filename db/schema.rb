@@ -776,6 +776,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_083144) do
     t.string "cadre_juridique"
     t.bigint "canonical_procedure_id"
     t.boolean "cerfa_flag", default: false
+    t.jsonb "chorus", default: {}, null: false
     t.boolean "cloned_from_library", default: false
     t.datetime "closed_at", precision: 6
     t.datetime "created_at", precision: 6, null: false
