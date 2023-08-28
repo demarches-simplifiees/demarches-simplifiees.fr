@@ -60,6 +60,18 @@ describe RoutingEngine, type: :model do
 
         it { is_expected.to eq(defaut_groupe) }
       end
+
+      context 'with a non equals rule' do
+        before do
+          gi_2.update(routing_rule: ds_not_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
+          dossier.champs.first.update(value: 'Paris')
+        end
+
+        it do
+          is_expected.not_to eq(defaut_groupe)
+          is_expected.to eq(gi_2)
+        end
+      end
     end
 
     context 'with a departements type de champ' do
