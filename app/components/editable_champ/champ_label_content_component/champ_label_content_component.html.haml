@@ -1,6 +1,8 @@
-#{@champ.libelle}
-- if @champ.mandatory?
-  %span.mandatory *
+= @champ.libelle
+- if @champ.mandatory? && @champ.type_champ != "checkbox"
+  = render EditableChamp::AsteriskMandatoryComponent.new
+- elsif !@champ.mandatory?
+  = "#{t('.optional_champ')}"
 
 - if @champ.forked_with_changes?
   %span.updated-at.highlighted
@@ -8,6 +10,7 @@
 - elsif @champ.updated_at.present? && @seen_at.present?
   %span.updated-at{ class: highlight_if_unseen_class }
     = t('.modified_at', datetime: try_format_datetime(@champ.updated_at))
+
 
 - if @champ.rebased_at.present? && @champ.rebased_at > (@seen_at || @champ.updated_at) && current_user.owns_or_invite?(@champ.dossier)
   %span.updated-at.highlighted
