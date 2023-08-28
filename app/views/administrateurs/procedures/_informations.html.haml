@@ -27,7 +27,7 @@
 
   = f.number_field :duree_conservation_dossiers_dans_ds, { class: 'fr-input', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }
 
-- if @procedure.created_at.present?
+- if @procedure.persisted?
   = render Dsfr::InputComponent.new(form: f, attribute: :lien_site_web, input_type: :text_field, opts: {}, required: false)
 
 = render Dsfr::CalloutComponent.new(title: "Cadre juridique") do |c|
