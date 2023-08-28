@@ -4,6 +4,7 @@ class Procedure < ApplicationRecord
   include InitiationProcedureConcern
   include ProcedureGroupeInstructeurAPIHackConcern
   include ProcedureSVASVRConcern
+  include ProcedureChorusConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
