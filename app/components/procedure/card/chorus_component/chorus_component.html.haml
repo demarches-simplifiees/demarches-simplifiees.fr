@@ -1,0 +1,20 @@
+.fr-col-6.fr-col-md-4.fr-col-lg-3.chorus-component
+  = link_to edit_admin_procedure_chorus_path(@procedure), class: 'fr-tile fr-enlarge-link', title: error_messages do
+    .fr-tile__body.flex.column.align-center.justify-between
+      - if error_messages.present?
+        %div
+          %span.icon.refuse
+          %p.fr-tile-status-error À modifier
+      - elsif @count == 0
+        %div
+          %span.icon.clock
+          %p.fr-tile-status-todo À compléter
+      - else
+        %div
+          %span.icon.accept
+          %p.fr-tile-status-accept Configuré
+      %div
+        %h3.fr-h6.fr-mt-10v
+          Connecteur Chorus
+        %p.fr-tile-subtitle Vous traitez des données de subvention d'état ?
+      %p.fr-btn.fr-btn--tertiary Configurer
