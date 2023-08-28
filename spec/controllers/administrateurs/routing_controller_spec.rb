@@ -11,6 +11,7 @@ describe Administrateurs::RoutingController, type: :controller do
       {
         procedure_id: procedure.id,
         targeted_champ: champ_value(drop_down_tdc.stable_id).to_json,
+        operator_name: Logic::Eq.name,
         value: empty.to_json,
         groupe_instructeur_id: gi_2.id
       }
