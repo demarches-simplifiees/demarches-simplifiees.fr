@@ -1371,6 +1371,6 @@ describe Users::DossiersController, type: :controller do
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
-    dossier.champs_public.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+    dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
   end
 end
