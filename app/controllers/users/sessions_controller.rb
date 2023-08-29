@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
   layout 'login', only: [:new, :create]
 
   before_action :restore_procedure_context, only: [:new, :create]
-
+  skip_before_action :redirect_if_untrusted
   # POST /resource/sign_in
   def create
     user = User.find_by(email: params[:user][:email])
@@ -16,6 +16,12 @@ class Users::SessionsController < Devise::SessionsController
     end
 
     super
+  end
+
+  def reset_link_sent
+    send_login_token_or_bufferize(current_instructeur)
+    flash[:notice] = "Nous venons de vous renvoyer un nouveau lien de connexion sécurisée à #{APPLICATION_NAME}"
+    redirect_to link_sent_path(email: current_instructeur.email)
   end
 
   def link_sent

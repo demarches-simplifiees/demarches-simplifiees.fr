@@ -125,6 +125,7 @@ Rails.application.routes.draw do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
+    post '/instructeurs/reset-link-sent' => 'users/sessions#reset_link_sent'
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
