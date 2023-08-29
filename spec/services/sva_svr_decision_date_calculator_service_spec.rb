@@ -4,7 +4,8 @@ describe SVASVRDecisionDateCalculatorService do
   include ActiveSupport::Testing::TimeHelpers
 
   let(:procedure) { create(:procedure, sva_svr: config) }
-  let(:dossier) { create(:dossier, :en_instruction, procedure:, depose_at: DateTime.new(2023, 5, 15, 12)) }
+  let(:dossier) { create(:dossier, :en_instruction, procedure:, depose_at:) }
+  let(:depose_at) { DateTime.new(2023, 5, 15, 12) }
 
   describe '#decision_date' do
     subject { described_class.new(dossier, procedure).decision_date }
@@ -149,6 +150,46 @@ describe SVASVRDecisionDateCalculatorService do
 
         it 'calculates the date, like if resolution will be today and delay restarted' do
           expect(subject).to eq(Date.new(2023, 8, 6))
+        end
+      end
+    end
+
+    context 'when dossier is deposed at end of month with correction delay' do
+      let(:config) { { decision: :sva, period: 2, unit: :months, resume: :continue } }
+
+      let!(:correction) do # add 2 days
+        create(:dossier_correction, dossier:, created_at: depose_at + 1.day, resolved_at: depose_at + 2.days)
+      end
+
+      context 'start date = 30' do
+        let(:depose_at) { DateTime.new(2023, 6, 29, 12) }
+
+        it 'calculcates the date accordingly' do
+          expect(subject).to eq(Date.new(2023, 9, 1))
+        end
+      end
+
+      context 'start date = 31' do
+        let(:depose_at) { DateTime.new(2023, 7, 30, 12) }
+
+        it 'calculcates the date accordingly' do
+          expect(subject).to eq(Date.new(2023, 10, 2))
+        end
+      end
+
+      context 'start date = 1 in month having 31 days' do
+        let(:depose_at) { DateTime.new(2023, 7, 31, 12) }
+
+        it 'calculcates the date accordingly' do
+          expect(subject).to eq(Date.new(2023, 10, 3))
+        end
+      end
+
+      context 'start date = 1 in month having 30 days' do
+        let(:depose_at) { DateTime.new(2023, 6, 30, 12) }
+
+        it 'calculcates the date accordingly' do
+          expect(subject).to eq(Date.new(2023, 9, 3))
         end
       end
     end
