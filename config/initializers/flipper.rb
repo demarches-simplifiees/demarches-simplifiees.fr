@@ -21,7 +21,8 @@ features = [
   :attestation_v2,
   :procedure_routage_api,
   :routing_rules,
-  :groupe_instructeur_api_hack
+  :groupe_instructeur_api_hack,
+  :rerouting
 ]
 
 def database_exists?

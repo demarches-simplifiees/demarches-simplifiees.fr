@@ -358,6 +358,7 @@ en:
           external_opinion: External opinion
           messaging: Messaging
           involved_persons: Involved persons
+          reaffectation: reassignment
         tab_explainations:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.

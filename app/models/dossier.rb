@@ -17,6 +17,7 @@
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_instruction_at                                  :datetime
 #  for_procedure_preview                              :boolean          default(FALSE)
+#  forced_groupe_instructeur                          :boolean
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
 #  hidden_by_administration_at                        :datetime

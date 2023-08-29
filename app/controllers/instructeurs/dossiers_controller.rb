@@ -334,6 +334,31 @@ module Instructeurs
       end
     end
 
+    def reaffectation
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+
+      @groupe_instructeur = @dossier.groupe_instructeur
+
+      @groupes_instructeurs = Kaminari.paginate_array(@groupe_instructeur.other_groupe_instructeurs)
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+    end
+
+    def reaffecter
+      dossier = current_instructeur.dossiers.find(params[:dossier_id])
+
+      new_group = dossier
+        .procedure
+        .groupe_instructeurs.find(params[:groupe_instructeur_id])
+
+      dossier.assign_to_groupe_instructeur(new_group)
+
+      dossier.update!(forced_groupe_instructeur: true)
+
+      flash.notice = t('instructeurs.dossiers.reaffectation', dossier_id: dossier.id, label: new_group.label)
+      redirect_to instructeur_procedure_path(procedure)
+    end
+
     private
 
     def checked_visa?(c)

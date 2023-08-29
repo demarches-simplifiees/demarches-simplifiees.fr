@@ -1151,4 +1151,45 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
     end
   end
+
+  describe '#reaffectation' do
+    let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
+    let!(:gi_3) { GroupeInstructeur.create(label: 'troisième groupe', procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
+
+    before do
+      post :reaffectation,
+         params: {
+           procedure_id: procedure.id,
+           dossier_id: dossier.id
+         }
+    end
+
+    it do
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include("Vous pouvez réaffecter le dossier nº #{dossier.id} à l'un des groupes d'instructeurs suivants.")
+      expect(response.body).to include('2 groupes existent')
+    end
+  end
+
+  describe '#reaffecter' do
+    let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
+
+    before do
+      post :reaffecter,
+        params: {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          groupe_instructeur_id: gi_2.id
+        }
+    end
+
+    it do
+      expect(dossier.reload.groupe_instructeur.id).to eq(gi_2.id)
+      expect(dossier.forced_groupe_instructeur).to be_truthy
+      expect(response).to redirect_to(instructeur_procedure_path(procedure))
+      expect(flash.notice).to eq("Le dossier nº #{dossier.id} a été réaffecté au groupe d’instructeurs « deuxième groupe ».")
+    end
+  end
 end
