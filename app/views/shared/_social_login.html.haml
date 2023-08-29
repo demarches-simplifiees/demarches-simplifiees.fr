@@ -5,7 +5,7 @@
         %h1.fr-h3= title
         %br
         - OmniAuthService.providers.each do |provider|
-          = link_to "/auth/#{provider}", class: "fr-btn fr-btn--lg fr-btn--secondary"  do
+          = link_to url_for(controller: '/omniauth', action: 'login', provider:), class: "fr-btn fr-btn--lg fr-btn--secondary"  do
             = image_tag "icons/logo_#{provider}.svg", alt: "icone #{provider.camelize}"
             #{t("views.shared.social_login.#{provider}")}
     - if FranceConnectService.enabled?

@@ -20,7 +20,7 @@ module Users
         check_prefilled_dossier_ownership if @prefilled_dossier
       else
         # pf specific: allows social logins (google, france connect,...) to get back when logged
-        store_user_location!(@procedure, @prefilled_dossier&.prefill_token)
+        store_user_location!(@procedure, @prefilled_dossier)
       end
 
       render 'commencer/show'
@@ -132,8 +132,8 @@ module Users
         return
       elsif procedure&.close?
         flash.alert = procedure.service.presence ?
-                      t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
-                      t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
+          t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
+          t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
       else
         flash.alert = t('errors.messages.procedure_not_found')
       end
@@ -141,8 +141,10 @@ module Users
       redirect_to root_path
     end
 
-    def store_user_location!(procedure)
-      store_location_for(:user, commencer_path(procedure.path, **extra_query_params))
+    def store_user_location!(procedure, prefilled_dossier = nil)
+      parameters = extra_query_params
+      parameters[:prefill_token] = prefilled_dossier&.prefill_token if prefilled_dossier
+      store_location_for(:user, commencer_path(procedure.path, **parameters))
     end
 
     def generate_empty_pdf(revision)
