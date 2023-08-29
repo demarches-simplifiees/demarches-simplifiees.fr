@@ -118,10 +118,10 @@ en:
       line_two: "This accessibility statement applies to %{app_name} (%{host})."
       compliance:
         title: "Compliance status"
-        line_one_html: "The Démarches simplifiées website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
+        line_one_html: "The Mes-Démarches website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
       results:
         title: "Test results"
-        line_one: "As of 1 April 2023, the site's average compliance rate is 75%."
+        line_one: "As of August, 28th 2023, the site's average compliance rate is 80%."
         line_three: "Users can follow the measures taken by the service to improve the accessibility of the site at the following address:"
         programme:
           label: "Follow the DS accessibility continuous improvement programme"
