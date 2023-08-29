@@ -7,3 +7,5 @@
 .container
   %h1.mb-2
     Cadre budgétaire
+
+  = render Procedure::ChorusFormComponent.new(procedure: @procedure)

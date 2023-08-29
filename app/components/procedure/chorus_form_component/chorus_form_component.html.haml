@@ -1,0 +1,15 @@
+= form_for([procedure, procedure.chorus_configuration],url: admin_procedure_chorus_path(procedure), method: :put) do |f|
+
+  .fr-select-group
+    = f.label :centre_de_coup, class: 'fr-label'
+    = f.select :centre_de_coup, options_for_select(ChorusConfiguration.centre_de_coup_options, procedure.chorus_configuration.centre_de_coup), {}, class: 'fr-select'
+
+  .fr-select-group
+    = f.label :domaine_fonctionnel, class: 'fr-label'
+    = f.select :domaine_fonctionnel, options_for_select(ChorusConfiguration.domaine_fonctionnel_options, procedure.chorus_configuration.domaine_fonctionnel), {}, class: 'fr-select'
+
+  .fr-select-group
+    = f.label :referentiel_de_programmation, class: 'fr-label'
+    = f.select :referentiel_de_programmation, options_for_select(ChorusConfiguration.referentiel_de_programmation_options, procedure.chorus_configuration.referentiel_de_programmation), {}, class: 'fr-select'
+
+  = f.submit "Enregister", class: 'fr-btn'
