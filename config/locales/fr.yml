@@ -92,7 +92,7 @@ fr:
       user: 'Aller à la liste des dossiers'
       instructeur: 'Aller à la liste des démarches'
       admin: "Aller au panneau d’administration"
-      admins_group_manager: "Aller au panneau de gestionnaire"
+      gestionnaire: "Aller au panneau de gestionnaire"
   views:
     legal_notice:
       title: "Mentions légales"

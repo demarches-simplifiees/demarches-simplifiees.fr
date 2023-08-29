@@ -54,11 +54,12 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
     end
 
-    if ENV.fetch('ADMINS_GROUP_ENABLED') == 'enabled'
-      resources :admins_group_managers, path: 'gestionnaires', only: [:index, :show, :edit, :update]
+    if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
+      resources :gestionnaires, only: [:index, :show, :edit, :update, :destroy]
 
-      resources :admins_groups, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
-        post 'add_admins_group_manager', on: :member
+      resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
+        post 'add_gestionnaire', on: :member
+        delete 'remove_gestionnaire', on: :member
       end
     end
 
@@ -468,14 +469,14 @@ Rails.application.routes.draw do
     end
   end
 
-  if ENV.fetch('ADMINS_GROUP_ENABLED') == 'enabled'
+  if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
 
     #
-    # Admins Group Manager (gestionnaire)
+    # Gestionnaire
     #
 
-    scope module: 'admins_group_managers', path: 'gestionnaire', as: 'admins_group_manager' do
-      resources :admins_groups, path: 'groupe_administrateurs', only: [:index, :create]
+    scope module: 'gestionnaires', as: 'gestionnaire' do
+      resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :create]
     end
   end
 
