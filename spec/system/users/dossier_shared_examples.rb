@@ -10,7 +10,6 @@ RSpec.shared_examples 'the user can edit the submitted demande' do
 
     expect(page).to have_current_path(modifier_dossier_path(dossier))
     fill_in('Texte obligatoire', with: 'Nouveau texte')
-    wait_for_autosave(false)
 
     click_on 'Déposer les modifications'
     click_on 'Demande'

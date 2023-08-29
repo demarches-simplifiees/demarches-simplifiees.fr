@@ -466,7 +466,7 @@ describe 'The user' do
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age du candidat (facultatif)', with: '18')
-        wait_for_autosave(false)
+        wait_for_autosave
 
         # the champ keeps their previous value so they are all displayed
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
