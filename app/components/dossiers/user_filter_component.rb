@@ -15,9 +15,9 @@ class Dossiers::UserFilterComponent < ApplicationComponent
   def states_collection(statut)
     case statut
     when 'en-cours'
-      Dossier.states.values - Dossier::TERMINE
+      (Dossier.states.values - Dossier::TERMINE) << Dossier::A_CORRIGER
     when 'traites'
       Dossier::TERMINE
-    end
+    end.map { |state| [t("activerecord.attributes.dossier/state.#{state}"), state] }
   end
 end
