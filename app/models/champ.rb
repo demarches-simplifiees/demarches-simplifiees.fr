@@ -59,6 +59,7 @@ class Champ < ApplicationRecord
     :region?,
     :titre_identite?,
     :header_section?,
+    :checkbox?,
     :simple_drop_down_list?,
     :linked_drop_down_list?,
     :non_fillable?,
