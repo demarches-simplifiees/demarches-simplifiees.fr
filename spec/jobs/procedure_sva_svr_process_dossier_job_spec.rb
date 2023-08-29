@@ -2,6 +2,10 @@ RSpec.describe ProcedureSVASVRProcessDossierJob, type: :job do
   include ActiveJob::TestHelper
   include ActiveSupport::Testing::TimeHelpers
 
+  before do
+    travel_to Date.new(2023, 8, 15, 12)
+  end
+
   let(:procedure) { create(:procedure, :published, :sva, :for_individual) }
   let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, depose_at: 2.months.ago - 1.day, sva_svr_decision_on: Date.current) }
 
