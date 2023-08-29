@@ -74,7 +74,7 @@ describe RoutingEngine, type: :model do
 
       context 'with a matching rule' do
         before do
-          gi_2.update(routing_rule: ds_eq(champ_value(departements_tdc.stable_id), constant('43 – Haute-Loire')))
+          gi_2.update(routing_rule: ds_eq(champ_value(departements_tdc.stable_id), constant('43')))
           dossier.champs.first.update(value: 'Haute-Loire')
         end
 

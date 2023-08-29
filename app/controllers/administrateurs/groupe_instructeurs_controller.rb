@@ -40,19 +40,26 @@ module Administrateurs
 
       tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
-      tdc_options = case tdc.type_champ
+      case tdc.type_champ
       when TypeDeChamp.type_champs.fetch(:departements)
-        tdc.codes_and_names
-      when TypeDeChamp.type_champs.fetch(:drop_down_list)
-        tdc.drop_down_options.reject(&:empty?)
-      end
+        tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+        tdc_options.each do |code_and_name, code|
+          routing_rule = ds_eq(champ_value(stable_id), constant(code))
+          @procedure
+            .groupe_instructeurs
+            .find_or_create_by(label: code_and_name)
+            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+        end
 
-      tdc_options.each do |option_label|
-        routing_rule = ds_eq(champ_value(stable_id), constant(option_label))
-        @procedure
-          .groupe_instructeurs
-          .find_or_create_by(label: option_label)
-          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+      when TypeDeChamp.type_champs.fetch(:drop_down_list)
+        tdc_options = tdc.drop_down_options.reject(&:empty?)
+        tdc_options.each do |option_label|
+          routing_rule = ds_eq(champ_value(stable_id), constant(option_label))
+          @procedure
+            .groupe_instructeurs
+            .find_or_create_by(label: option_label)
+            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+        end
       end
 
       if tdc.drop_down_other?

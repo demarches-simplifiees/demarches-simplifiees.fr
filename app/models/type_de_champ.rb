@@ -477,12 +477,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def codes_and_names
-    if departement?
-      APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" }
-    end
-  end
-
   # historicaly we added a blank ("") option by default to avoid wrong selection
   #   see self.parse_drop_down_list_value
   #   then rails decided to add this blank ("") option when the select is required

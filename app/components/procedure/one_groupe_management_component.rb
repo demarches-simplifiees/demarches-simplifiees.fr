@@ -70,6 +70,6 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
   end
 
   def departements_for_select
-    APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", constant("#{_1[:code]} – #{_1[:name]}").to_json] }
+    APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", constant(_1[:code]).to_json] }
   end
 end

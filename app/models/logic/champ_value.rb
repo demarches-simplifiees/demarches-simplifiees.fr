@@ -45,7 +45,7 @@ class Logic::ChampValue < Logic::Term
     when "Champs::MultipleDropDownListChamp"
       targeted_champ.selected_options
     when "Champs::DepartementChamp"
-      targeted_champ.to_s
+      targeted_champ.code
     end
   end
 
