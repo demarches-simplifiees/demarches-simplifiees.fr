@@ -41,11 +41,11 @@ demarches-simplifiees.fr est **compliqué à héberger**. Parmi les problématiq
 - **Utilisation de services externes** : demarches-simplifiees.fr s’interconnecte à de nombreux services externes : des APIs (API Entreprise, API Carto, la Base Adresse Nationale, etc.) – mais aussi des services pour le stockage externe des pièces-jointes, l’analyse anti-virus ou l’envoi des emails. Le fonctionnement de demarches-simplifiees.fr dépend de la disponibilité de ces services externes.
 - **Mises à jour** : le schéma de la base de données change régulièrement. Nous codons également des scripts pour harmoniser les anciennes données. Parfois des modifications ponctuelles sont effectuées sur des démarches anciennes, pour les mettre en conformité avec de nouvelles règles métiers. Nous maintenons également les dépendances logicielles utilisées – notamment en réagissant rapidement lorsqu’une faille de sécurité est signalée. Ces mises à jour fréquentes en production sont indispensables au bon fonctionnement de l’outil.
 
-Si vous souhaitez adapter demarches-simplifiees.fr à votre besoin, nous vous recommandons de **proposer vos modifications à la base de code principale** (par exemple en créant une issue) **plutôt que d’héberger une autre instance vous-même**.
+Si vous souhaitez adapter demarches-simplifiees.fr à vos besoins, nous vous recommandons de **proposer vos modifications à la base de code principale** (par exemple en créant une issue) **plutôt que d’héberger une autre instance vous-même**.
 
-Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous n'avons malheureusement pas les moyens de vous accompagner, ni d’assurer de support technique concernant votre installation.
+Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous ne disposons malheureusement pas des moyens pour vous accompagner, ni d’assurer de support technique concernant votre installation.
 
-Toutefois, certains acteurs (le ministère des armées, l’administration autonome en Polynésie française) ont déployé des instances séparées. Nous proposons aux personnes intéressées de les mettre en relation avec ces acteurs existants, afin de disposer d’un retour d’expérience, et de bénéficier de leur retour.
+Toutefois, certains acteurs (le ministère des armées, l’administration autonome en Polynésie française) ont déployé des instances séparées. Nous proposons aux personnes intéressées de les mettre en relation avec ces acteurs existants, pour obtenir un retour d’expérience et bénéficier de leur retour.
 
 ## Bonnes pratiques de code
 
