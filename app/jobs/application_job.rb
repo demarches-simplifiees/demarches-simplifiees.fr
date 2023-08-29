@@ -5,6 +5,17 @@ class ApplicationJob < ActiveJob::Base
 
   attr_writer :request_id
 
+  before_perform do |job|
+    arg = job.arguments.first
+
+    case arg
+    when Dossier
+      Sentry.set_tags(dossier: arg.id, procedure: arg.procedure.id)
+    when Procedure
+      Sentry.set_tags(procedure: arg.id)
+    end
+  end
+
   around_perform do |job, block|
     Rails.logger.info("#{job.class.name} started at #{Time.zone.now}")
     Current.set(request_id: job.request_id) do
