@@ -1040,6 +1040,18 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def pieces_jointes_list?
+    pieces_jointes_list_without_conditionnal.present? || pieces_jointes_list_with_conditionnal.present?
+  end
+
+  def pieces_jointes_list_without_conditionnal
+    active_revision.types_de_champ_public.not_condition.filter(&:piece_justificative?)
+  end
+
+  def pieces_jointes_list_with_conditionnal
+    active_revision.types_de_champ_public.where.not(condition: nil).filter(&:piece_justificative?)
+  end
+
   private
 
   def validate_auto_archive_on_in_the_future
