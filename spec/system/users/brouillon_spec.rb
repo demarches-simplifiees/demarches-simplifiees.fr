@@ -12,9 +12,9 @@ describe 'The user' do
     fill_individual
 
     # fill data
-    fill_in('text *', with: 'super texte')
+    fill_in('text', with: 'super texte', match: :first)
     fill_in('textarea', with: 'super textarea')
-    fill_in('date *', with: '12-12-2012')
+    fill_in('date', with: '12-12-2012', match: :first)
     fill_in('datetime', with: Time.zone.parse('2023-01-06T07:05'))
     find("input[type=datetime-local]").send_keys(:arrow_up).send_keys(:arrow_down) # triggers onChange
     fill_in('number', with: '42')
@@ -341,7 +341,7 @@ describe 'The user' do
 
         fill_individual
 
-        fill_in('age', with: 10)
+        fill_in('age (facultatif)', with: 10)
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
@@ -412,9 +412,9 @@ describe 'The user' do
 
         fill_individual
 
-        fill_in('age', with: '18')
-        expect(page).to have_css('label', text: 'nom *', visible: :visible)
-
+        fill_in('age (facultatif)', with: '18')
+        expect(page).to have_css('label', text: 'nom', visible: :visible)
+        expect(page).to have_css('.icon.mandatory')
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
       end
@@ -449,7 +449,7 @@ describe 'The user' do
         expect(page).to have_no_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        fill_in('age', with: '18')
+        fill_in('age (facultatif)', with: '18')
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_css('legend h2', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
@@ -462,10 +462,10 @@ describe 'The user' do
         expect(page).to have_css('label', text: 'parking', visible: true)
 
         # try to fill with invalid data
-        fill_in('tonnage', with: 'a')
+        fill_in('tonnage (facultatif)', with: 'a')
         expect(page).to have_no_css('label', text: 'parking', visible: true)
 
-        fill_in('age', with: '2')
+        fill_in('age (facultatif)', with: '2')
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
@@ -477,7 +477,7 @@ describe 'The user' do
         expect(page).to have_no_css('label', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        fill_in('age', with: '18')
+        fill_in('age (facultatif)', with: '18')
         wait_for_autosave(false)
 
         # the champ keeps their previous value so they are all displayed

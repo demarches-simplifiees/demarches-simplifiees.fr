@@ -52,12 +52,12 @@ describe 'BatchOperation a dossier:', js: true do
 
       # ensure alert updates when jobs are run
       click_on "Recharger la page"
-      expect(page).to have_content("L'action de masse est terminée")
+      expect(page).to have_content("L’action de masse est terminée")
       expect(page).to have_content("1 dossier a été archivé")
 
       # clean alert after reload
       visit instructeur_procedure_path(procedure, statut: 'traites')
-      expect(page).not_to have_content("L'action de masse est terminée")
+      expect(page).not_to have_content("L’action de masse est terminée")
 
       # try checkall
       find("##{dom_id(BatchOperation.new, :checkbox_all)}").check

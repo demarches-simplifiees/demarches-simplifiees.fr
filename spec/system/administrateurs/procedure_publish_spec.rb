@@ -149,7 +149,7 @@ describe 'Publishing a procedure', js: true do
       click_on procedure.libelle
       find('#publish-procedure-link').click
 
-      expect(page).to have_content("Attention, certains champs ne peuvent être demandé par l'administration.")
+      expect(page).to have_content("Attention, certains champs ne peuvent être demandés par l’administration.")
       expect(page).to have_selector(".dubious-champs", count: dubious_champs.size)
     end
   end

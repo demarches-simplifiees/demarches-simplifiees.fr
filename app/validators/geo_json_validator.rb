@@ -4,9 +4,7 @@ class GeoJSONValidator < ActiveModel::EachValidator
       record.errors.add(attribute, :blank, message: options[:message] || "ne peut pas être vide")
     end
 
-    begin
-      RGeo::GeoJSON.decode(value.to_json, geo_factory: RGeo::Geographic.simple_mercator_factory)
-    rescue RGeo::Error::InvalidGeometry
+    unless value.blank? || GeojsonService.valid?(value)
       record.errors.add(attribute, :invalid_geometry, message: options[:message] || "n'est pas un GeoJSON valide")
     end
   end

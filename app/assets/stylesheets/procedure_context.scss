@@ -21,30 +21,6 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
     font-size: 12px;
   }
 
-  .procedure-configuration--auto-archive {
-    cursor: pointer;
-
-    summary {
-      font-size: 20px;
-
-      // Hide the default triangle details marker
-      list-style: none;
-      // (using the non-standard way for Chrome.)
-      &::-webkit-details-marker {
-        display: none;
-      }
-    }
-
-    p {
-      padding-top: 8px;
-      font-size: 16px;
-    }
-  }
-
-  .procedure-auto-archive-title {
-    border-bottom: 1px dotted $blue-france-500;
-  }
-
   .procedure-logos {
     display: flex;
     justify-content: space-around;

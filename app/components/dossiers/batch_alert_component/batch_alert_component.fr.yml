@@ -54,7 +54,7 @@ fr:
         one: 1 dossier sera repassé en construction
         other: "%{success_count}/%{count} dossiers ont été repassés en construction"
   title:
-    finish: L'action de masse est terminée
+    finish: L’action de masse est terminée
     in_progress: Une action de masse est en cours
   link_text: Recharger la page
   after_link_text: pour voir si l'opération est finie.

@@ -13,8 +13,8 @@ describe 'linked dropdown lists' do
       'Secondary 2.3'
     ]
   end
-
-  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :linked_drop_down_list, libelle: 'linked dropdown', options: options, mandatory: mandatory }]) }
+  let(:secondary_label) { 'level 2' }
+  let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :linked_drop_down_list, libelle: 'linked dropdown', options: options, mandatory: mandatory, secondary_libelle: secondary_label }]) }
 
   let(:user_dossier) { user.dossiers.first }
   context 'not mandatory' do
@@ -29,13 +29,13 @@ describe 'linked dropdown lists' do
       select('Primary 2', from: 'linked dropdown')
 
       # Secondary menu reflects chosen primary value
-      expect(page).to have_select('linked dropdown : précisez', options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
+      expect(page).to have_select(secondary_label, options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
 
       # Select another primary value
       select('Primary 1', from: 'linked dropdown')
 
       # Secondary menu gets updated
-      expect(page).to have_select("linked dropdown : précisez", options: ['', 'Secondary 1.1', 'Secondary 1.2'])
+      expect(page).to have_select(secondary_label, options: ['', 'Secondary 1.1', 'Secondary 1.2'])
     end
   end
 
@@ -49,16 +49,16 @@ describe 'linked dropdown lists' do
       expect(page).to have_select("linked dropdown", options: ['', 'Primary 1', 'Primary 2'])
 
       # Select a primary value
-      select('Primary 2', from: 'linked dropdown *')
+      select('Primary 2', from: 'linked dropdown')
 
       # Secondary menu reflects chosen primary value
-      expect(page).to have_select('linked dropdown : précisez', options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
+      expect(page).to have_select(secondary_label, options: ['', 'Secondary 2.1', 'Secondary 2.2', 'Secondary 2.3'])
 
       # Select another primary value
-      select('Primary 1', from: 'linked dropdown *')
+      select('Primary 1', from: 'linked dropdown')
 
       # Secondary menu gets updated
-      expect(page).to have_select("linked dropdown : précisez", options: ['', 'Secondary 1.1', 'Secondary 1.2'])
+      expect(page).to have_select(secondary_label, options: ['', 'Secondary 1.1', 'Secondary 1.2'])
     end
   end
 

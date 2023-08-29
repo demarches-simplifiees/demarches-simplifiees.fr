@@ -5,5 +5,4 @@ fr:
         champs/iban_champ:
           attributes:
             value:
-              invalid_iban: n'est pas au format IBAN
-
+              invalid_iban: n’est pas au format IBAN

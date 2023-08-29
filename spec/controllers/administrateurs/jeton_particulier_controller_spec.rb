@@ -105,7 +105,7 @@ describe Administrateurs::JetonParticulierController, type: :controller do
         let(:cassette) { "api_particulier/unauthorized/introspect" }
 
         it 'rejects the jeton' do
-          expect(flash.alert).to include("Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif")
+          expect(flash.alert).to include("Mise à jour impossible : le jeton n’a pas été trouvé ou n’est pas actif")
           expect(flash.notice).to be_nil
           expect(procedure.reload.api_particulier_token).not_to eql(token)
         end

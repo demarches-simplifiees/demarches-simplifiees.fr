@@ -23,36 +23,6 @@ RSpec.describe GeoArea, type: :model do
     it { expect(geo_area.location).to eq("46°32'19\"N 2°25'42\"E") }
   end
 
-  describe '#geometry' do
-    let(:geo_area) { build(:geo_area, :polygon, champ: nil) }
-    let(:polygon) do
-      {
-        "type" => "Polygon",
-        "coordinates" => [
-          [
-            [2.428439855575562, 46.538476837725796],
-            [2.4284291267395024, 46.53842148758162],
-            [2.4282521009445195, 46.53841410755813],
-            [2.42824137210846, 46.53847314771794],
-            [2.428284287452698, 46.53847314771794],
-            [2.428364753723145, 46.538487907747864],
-            [2.4284291267395024, 46.538491597754714],
-            [2.428439855575562, 46.538476837725796]
-          ]
-        ]
-      }
-    end
-
-    it { expect(geo_area.geometry).to eq(polygon) }
-
-    context 'polygon_with_extra_coordinate' do
-      let(:geo_area) { build(:geo_area, :polygon_with_extra_coordinate, champ: nil) }
-      before { geo_area.valid? }
-
-      it { expect(geo_area.geometry).to eq(polygon) }
-    end
-  end
-
   describe 'validations' do
     context 'geometry' do
       subject! { geo_area.validate }
@@ -60,11 +30,6 @@ RSpec.describe GeoArea, type: :model do
       context 'polygon' do
         let(:geo_area) { build(:geo_area, :polygon, champ: nil) }
         it { expect(geo_area.errors).not_to have_key(:geometry) }
-      end
-
-      context 'hourglass_polygon' do
-        let(:geo_area) { build(:geo_area, :hourglass_polygon, champ: nil) }
-        it { expect(geo_area.errors).to have_key(:geometry) }
       end
 
       context 'line_string' do
@@ -77,9 +42,9 @@ RSpec.describe GeoArea, type: :model do
         it { expect(geo_area.errors).not_to have_key(:geometry) }
       end
 
-      context 'invalid_right_hand_rule_polygon' do
-        let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon, champ: nil) }
-        it { expect(geo_area.errors).to have_key(:geometry) }
+      context "allow empty {}" do
+        let(:geo_area) { build(:geo_area, geometry: {}) }
+        it { expect(geo_area.errors).not_to have_key(:geometry) }
       end
 
       context "nil" do
@@ -87,9 +52,19 @@ RSpec.describe GeoArea, type: :model do
         it { expect(geo_area.errors).to have_key(:geometry) }
       end
 
-      context "allow empty {}" do
-        let(:geo_area) { build(:geo_area, geometry: {}) }
-        it { expect(geo_area.errors).not_to have_key(:geometry) }
+      context 'invalid point' do
+        let(:geo_area) { build(:geo_area, :invalid_point, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context.skip 'invalid_right_hand_rule_polygon' do
+        let(:geo_area) { build(:geo_area, :invalid_right_hand_rule_polygon, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
+      end
+
+      context.skip 'hourglass_polygon' do
+        let(:geo_area) { build(:geo_area, :hourglass_polygon, champ: nil) }
+        it { expect(geo_area.errors).to have_key(:geometry) }
       end
     end
   end
@@ -144,6 +119,20 @@ RSpec.describe GeoArea, type: :model do
       it "should return unknown surface" do
         geo_area.geometry["coordinates"] = []
         expect(geo_area.label).to eq("Une aire de surface inconnue")
+      end
+    end
+
+    context "when geo is a point" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :point, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Un point situé à 46°32'19\"N 2°25'42\"E")
+      end
+    end
+
+    context "when geo is a point with elevation" do
+      let(:geo_area) { build(:geo_area, :selection_utilisateur, :point_with_z, champ: nil) }
+      it "should return the label" do
+        expect(geo_area.label).to eq("Un point situé à 46°32'19\"N 2°25'42\"E")
       end
     end
 

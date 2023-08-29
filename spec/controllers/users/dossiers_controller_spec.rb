@@ -798,7 +798,7 @@ describe Users::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(flash.alert).to include("Le champ « l » n'est pas au format IBAN, #{anchor_to_first_champ}") }
+      it { expect(flash.alert).to include("Le champ « l » n’est pas au format IBAN, #{anchor_to_first_champ}") }
     end
 
     context 'when the user has an invitation but is not the owner' do
@@ -964,6 +964,18 @@ describe Users::DossiersController, type: :controller do
         expect(assigns(:dossiers_invites).first.updated_at.to_date).to eq(2.days.ago.to_date)
         expect(assigns(:dossiers_invites).second.updated_at.to_date).to eq(4.days.ago.to_date)
       end
+    end
+
+    context 'when the user has a deleted dossier on a discarded procedure' do
+      render_views
+
+      let!(:deleted_dossier) { create(:deleted_dossier, user_id: user.id) }
+
+      before { deleted_dossier.procedure.discard! }
+
+      subject { get(:index, params: { statut: 'dossiers-supprimes-definitivement' }) }
+
+      it { is_expected.to have_http_status(200) }
     end
   end
 

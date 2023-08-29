@@ -14,5 +14,5 @@ fr:
     zones_manuelles: Zones Manuelles
     batiments: Batiments
   character_limit:
-    unlimited: Pas de limite de caractère
+    unlimited: Pas de limite de caractères
     limit: Limité à %{limit} caractères

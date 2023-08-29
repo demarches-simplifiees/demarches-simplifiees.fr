@@ -29,6 +29,12 @@ export function useFeatureCollection(
   const [featureCollection, setFeatureCollection] = useState(
     initialFeatureCollection
   );
+  const refreshFeatureList = useCallback<() => void>(() => {
+    httpRequest(url)
+      .turbo()
+      .catch(() => null);
+  }, [url]);
+
   const updateFeatureCollection = useCallback<
     (callback: (features: Feature[]) => Feature[]) => void
   >(
@@ -37,11 +43,9 @@ export function useFeatureCollection(
         type: 'FeatureCollection',
         features: callback(features)
       }));
-      httpRequest(url)
-        .turbo()
-        .catch(() => null);
+      refreshFeatureList();
     },
-    [url, setFeatureCollection]
+    [refreshFeatureList, setFeatureCollection]
   );
 
   const addFeatures = useCallback(
@@ -153,13 +157,15 @@ export function useFeatureCollection(
         if (newFeatures.length > 0) {
           addFeatures(newFeatures, external);
           updateFeatureCollection((features) => [...features, ...newFeatures]);
+        } else {
+          refreshFeatureList();
         }
       } catch (error) {
         console.error(error);
         onError('Le polygone dessiné n’est pas valide.');
       }
     },
-    [url, updateFeatureCollection, addFeatures, onError]
+    [url, refreshFeatureList, updateFeatureCollection, addFeatures, onError]
   );
 
   const deleteFeatures = useCallback<DeleteFeatures>(

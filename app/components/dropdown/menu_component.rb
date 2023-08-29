@@ -1,5 +1,6 @@
 class Dropdown::MenuComponent < ApplicationComponent
   renders_one :button_inner_html
+  renders_one :menu_header_html
   # beware, items elements like button_to/link_to must include role: 'menuitem' for aria reason
   renders_many :items, -> (options = {}, &block) do
     tag.li(**options.merge(role: 'none'), &block)
