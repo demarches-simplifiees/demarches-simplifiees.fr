@@ -106,6 +106,7 @@ group :test do
   gem 'rack_session_access'
   gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
+  gem 'rspec-retry'
   gem 'selenium-devtools'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
