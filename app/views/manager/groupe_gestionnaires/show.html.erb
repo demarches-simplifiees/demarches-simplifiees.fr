@@ -15,8 +15,8 @@ as well as a link to its edit page.
 
 [1]: http://www.rubydoc.info/gems/administrate/Administrate/Page/Show
 %>
+
 <% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
-<% admins_group = page.resource %>
 
 <header class="main-content__header" role="banner">
   <h1 class="main-content__page-title">
@@ -28,9 +28,16 @@ as well as a link to its edit page.
       t("administrate.actions.edit_resource", name: page.page_title),
       [:edit, namespace, page.resource],
       class: "button",
-    ) if valid_action? :edit %>
-  </div>
+    ) if accessible_action?(page.resource, :edit) %>
 
+    <%= link_to(
+      t("administrate.actions.destroy"),
+      [namespace, page.resource],
+      class: "button button--danger",
+      method: :delete,
+      data: { confirm: t("administrate.actions.confirm") }
+    ) if accessible_action?(page.resource, :destroy) %>
+  </div>
 </header>
 
 <section class="main-content__body">
@@ -39,18 +46,21 @@ as well as a link to its edit page.
       <dt class="attribute-label" id="<%= attribute.name %>">
       <%= t(
         "helpers.label.#{resource_name}.#{attribute.name}",
-        default: attribute.name.titleize,
+        default: page.resource.class.human_attribute_name(attribute.name),
       ) %>
       </dt>
 
       <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
-        <%= render_field attribute, page: page %>
-        <% if attribute.name == 'admins_group_managers' %>
-          <%= form_tag(add_admins_group_manager_manager_admins_group_path(admins_group), style: 'margin-top: 1rem;') do %>
-            <%= email_field_tag(:emails, '', placeholder: 'Emails', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
-            <button>Ajouter un gestionnaire</button>
+          <% if attribute.name == 'gestionnaires' %>
+
+          <%= render(
+            "collection_gestionnaires",
+            page: page,
+            attribute: attribute
+          ) %>
+          <% else %>
+          <%= render_field attribute, page: page %>
           <% end %>
-        <% end %>
       </dd>
     <% end %>
   </dl>

@@ -1,0 +1,4 @@
+fr:
+  groupe_gestionnaire_mailer:
+    notify_removed_gestionnaire:
+      email_body: "Vous venez d’être supprimé(e) du groupe %{groupe_gestionnaire_name} sur %{application_name} par « %{email} »."

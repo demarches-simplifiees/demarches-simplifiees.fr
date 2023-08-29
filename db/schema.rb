@@ -61,7 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_083144) do
   end
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
-    t.bigint "admins_group_id"
     t.datetime "created_at", precision: 6
     t.bigint "groupe_gestionnaire_id"
     t.datetime "updated_at", precision: 6
@@ -89,29 +88,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_083144) do
     t.index ["administrateur_id", "procedure_id"], name: "index_unique_admin_proc_couple", unique: true
     t.index ["administrateur_id"], name: "index_administrateurs_procedures_on_administrateur_id"
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
-  end
-
-  create_table "admins_group_managers", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
-    t.index ["user_id"], name: "index_admins_group_managers_on_user_id"
-  end
-
-  create_table "admins_group_managers_groups", id: false, force: :cascade do |t|
-    t.bigint "admins_group_id", null: false
-    t.bigint "admins_group_manager_id", null: false
-    t.index ["admins_group_id", "admins_group_manager_id"], name: "index_on_admins_group_and_admins_group_manager"
-    t.index ["admins_group_manager_id", "admins_group_id"], name: "index_on_admins_group_manager_and_admins_group"
-  end
-
-  create_table "admins_groups", force: :cascade do |t|
-    t.bigint "admins_group_id"
-    t.datetime "created_at", null: false
-    t.string "name", null: false
-    t.datetime "updated_at", null: false
-    t.index ["admins_group_id"], name: "index_admins_groups_on_admins_group_id"
-    t.index ["name"], name: "index_admins_groups_on_name"
   end
 
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

@@ -1,0 +1,9 @@
+en:
+  manager:
+    groupe_gestionnaires:
+      add_gestionnaire:
+        wrong_address:
+          one: "%{emails} is not a valid email address"
+          other: "%{emails} are not valid email addresses"
+    gestionnaires:
+      manage_root_groupe_gestionnaire: Root group management
