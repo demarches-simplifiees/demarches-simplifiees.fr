@@ -882,8 +882,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         before do
           perform_enqueued_jobs do
-	          perform_request
-	          procedure.reload
+            perform_request
+            procedure.reload
           end
         end
 
