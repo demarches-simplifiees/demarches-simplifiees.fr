@@ -28,11 +28,7 @@ class ProcedureSerializer < ActiveModel::Serializer
   end
 
   def link
-    if object.brouillon?
-      commencer_test_url(path: object.path)
-    else
-      commencer_url(path: object.path)
-    end
+    commencer_url(path: object.path)
   end
 
   def state

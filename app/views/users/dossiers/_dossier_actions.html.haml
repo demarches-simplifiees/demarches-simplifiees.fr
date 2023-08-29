@@ -34,7 +34,7 @@
 
     - if has_new_dossier_action
       - menu.with_item do
-        = link_to(procedure_lien(dossier.procedure), role: 'menuitem') do
+        = link_to(commencer_url(dossier.procedure.path), role: 'menuitem') do
           %span.icon.new-folder
           .dropdown-description
             = t('views.users.dossiers.dossier_action.start_other_dossier')

@@ -45,24 +45,11 @@ RSpec.describe ProcedureContextConcern, type: :controller do
         end
       end
 
-      context 'when the procedure path exists, but not with the same publication status' do
-        let(:published_procedure) { create :procedure, :published }
-
-        before do
-          controller.store_location_for(:user, commencer_test_path(path: published_procedure.path))
-        end
-
-        it 'redirects with an error' do
-          expect(subject.status).to eq 302
-          expect(subject).to redirect_to root_path
-        end
-      end
-
       context 'when the stored procedure is in test' do
         let(:test_procedure) { create :procedure, :with_path }
 
         before do
-          controller.store_location_for(:user, commencer_test_path(path: test_procedure.path))
+          controller.store_location_for(:user, commencer_path(path: test_procedure.path))
         end
 
         it 'succeeds, and assigns the procedure on the controller' do
@@ -74,7 +61,7 @@ RSpec.describe ProcedureContextConcern, type: :controller do
           let(:dossier) { create :dossier, :prefilled, procedure: test_procedure }
 
           before do
-            controller.store_location_for(:user, commencer_test_path(path: test_procedure.path, prefill_token: dossier.prefill_token))
+            controller.store_location_for(:user, commencer_path(path: test_procedure.path, prefill_token: dossier.prefill_token))
           end
 
           it 'succeeds, and assigns the prefill token on the controller' do

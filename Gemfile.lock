@@ -661,7 +661,6 @@ GEM
     sanitize (6.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sanitize-url (0.1.4)
     sass (3.7.4)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
@@ -923,7 +922,6 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   saml_idp
-  sanitize-url
   sassc-rails
   scss_lint
   selenium-devtools

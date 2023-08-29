@@ -82,7 +82,6 @@ gem 'redcarpet'
 gem 'rexml' # add missing gem due to ruby3 (https://github.com/Shopify/bootsnap/issues/325)
 gem 'rqrcode'
 gem 'saml_idp'
-gem 'sanitize-url'
 gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-delayed_job'
 gem 'sentry-rails'
