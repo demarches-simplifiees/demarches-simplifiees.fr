@@ -20,7 +20,8 @@ features = [
   :visa,
   :attestation_v2,
   :procedure_routage_api,
-  :routing_rules
+  :routing_rules,
+  :groupe_instructeur_api_hack
 ]
 
 def database_exists?
