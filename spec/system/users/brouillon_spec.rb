@@ -163,7 +163,6 @@ describe 'The user' do
 
     # Check a dossier can be submitted when all mandatory fields are filled
     fill_in('texte obligatoire', with: 'super texte')
-    wait_for_autosave
 
     click_on 'Déposer le dossier'
     wait_until { user_dossier.reload.en_construction? }
