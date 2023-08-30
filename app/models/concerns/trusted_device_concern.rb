@@ -21,6 +21,9 @@ module TrustedDeviceConcern
     if !instructeur.young_login_token?
       token = instructeur.create_trusted_device_token
       InstructeurMailer.send_login_token(instructeur, token).deliver_later
+      true
+    else
+      false
     end
   end
 
