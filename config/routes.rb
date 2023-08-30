@@ -56,7 +56,7 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
     end
 
-    if ENV.fetch('ADMINS_GROUP_ENABLED') == 'enabled'
+    if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
       resources :admins_group_managers, path: 'gestionnaires', only: [:index, :show, :edit, :update]
 
       resources :admins_groups, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
@@ -473,7 +473,7 @@ Rails.application.routes.draw do
     end
   end
 
-  if ENV.fetch('ADMINS_GROUP_ENABLED') == 'enabled'
+  if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
 
     #
     # Admins Group Manager (gestionnaire)
