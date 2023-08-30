@@ -494,7 +494,6 @@ fr:
       sessions:
         new:
           sign_in: Connexion à %{application_name}
-          password: Mot de passe (%{min_length} caractères minimum)
           remember_me: Se souvenir de moi
           reset_password: Mot de passe oublié ?
           connection: Se connecter
@@ -552,6 +551,7 @@ fr:
         << : *default_attributes
       super_admin:
         << : *default_attributes
+        otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
       champs:
