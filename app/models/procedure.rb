@@ -1,69 +1,3 @@
-# == Schema Information
-#
-# Table name: procedures
-#
-#  id                                        :integer          not null, primary key
-#  aasm_state                                :string           default("brouillon")
-#  allow_expert_messaging                    :boolean          default(TRUE), not null
-#  allow_expert_review                       :boolean          default(TRUE), not null
-#  api_entreprise_token                      :string
-#  api_particulier_scopes                    :text             default([]), is an Array
-#  api_particulier_sources                   :jsonb
-#  ask_birthday                              :boolean          default(FALSE), not null
-#  auto_archive_on                           :date
-#  cadre_juridique                           :string
-#  cloned_from_library                       :boolean          default(FALSE)
-#  closed_at                                 :datetime
-#  declarative_with_state                    :string
-#  description                               :string
-#  description_pj                            :string
-#  description_target_audience               :string
-#  dossiers_count_computed_at                :datetime
-#  duree_conservation_dossiers_dans_ds       :integer
-#  duree_conservation_etendue_par_ds         :boolean          default(FALSE), not null
-#  encrypted_api_particulier_token           :string
-#  estimated_dossiers_count                  :integer
-#  estimated_duration_visible                :boolean          default(TRUE), not null
-#  euro_flag                                 :boolean          default(FALSE)
-#  experts_require_administrateur_invitation :boolean          default(FALSE)
-#  for_individual                            :boolean          default(FALSE)
-#  hidden_at                                 :datetime
-#  instructeurs_self_management_enabled      :boolean
-#  juridique_required                        :boolean          default(TRUE)
-#  libelle                                   :string
-#  lien_dpo                                  :string
-#  lien_dpo_error                            :text
-#  lien_notice                               :string
-#  lien_notice_error                         :text
-#  lien_site_web                             :string
-#  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
-#  migrated_champ_routage                    :boolean
-#  monavis_embed                             :text
-#  opendata                                  :boolean          default(TRUE)
-#  organisation                              :string
-#  path                                      :string           not null
-#  piece_justificative_multiple              :boolean          default(TRUE), not null
-#  procedure_expires_when_termine_enabled    :boolean          default(TRUE)
-#  published_at                              :datetime
-#  routing_criteria_name                     :text             default("Votre ville")
-#  routing_enabled                           :boolean
-#  sva_svr                                   :jsonb            not null
-#  tags                                      :text             default([]), is an Array
-#  unpublished_at                            :datetime
-#  web_hook_url                              :string
-#  whitelisted_at                            :datetime
-#  created_at                                :datetime         not null
-#  updated_at                                :datetime         not null
-#  canonical_procedure_id                    :bigint
-#  defaut_groupe_instructeur_id              :bigint
-#  draft_revision_id                         :bigint
-#  parent_procedure_id                       :bigint
-#  published_revision_id                     :bigint
-#  replaced_by_procedure_id                  :bigint
-#  service_id                                :bigint
-#  zone_id                                   :bigint
-#
-
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
@@ -78,8 +12,7 @@ class Procedure < ApplicationRecord
     :durees_conservation_required,
     :cerfa_flag,
     :test_started_at,
-    :lien_demarche,
-    :migrated_champ_routage
+    :lien_demarche
   ]
 
   default_scope -> { kept }
@@ -225,7 +158,9 @@ class Procedure < ApplicationRecord
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
-  has_one_attached :logo
+  has_one_attached :logo do |attachable|
+    attachable.variant :email, resize_to_limit: [150, 150]
+  end
   has_one_attached :notice
   has_one_attached :deliberation
 
@@ -731,12 +666,6 @@ class Procedure < ApplicationRecord
 
   def instructeurs_self_management?
     routing_enabled? || instructeurs_self_management_enabled?
-  end
-
-  def defaut_groupe_instructeur_for_new_dossier
-    if !routing_enabled? || feature_enabled?(:procedure_routage_api)
-      defaut_groupe_instructeur
-    end
   end
 
   def groupe_instructeurs_but_defaut

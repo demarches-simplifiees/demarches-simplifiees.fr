@@ -31,7 +31,7 @@ class Logic::ChampValue < Logic::Term
     targeted_champ = champ(champs)
 
     return nil if !targeted_champ.visible?
-    return nil if targeted_champ.blank?
+    return nil if targeted_champ.blank? & !targeted_champ.drop_down_other?
 
     # on dépense 22ms ici, à cause du map, mais on doit pouvoir passer par un champ type
     case targeted_champ.type
@@ -44,6 +44,8 @@ class Logic::ChampValue < Logic::Term
       targeted_champ.selected
     when "Champs::MultipleDropDownListChamp"
       targeted_champ.selected_options
+    when "Champs::DepartementChamp"
+      targeted_champ.code
     end
   end
 

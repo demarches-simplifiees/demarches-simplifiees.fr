@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: procedure_presentations
-#
-#  id               :integer          not null, primary key
-#  displayed_fields :jsonb            not null
-#  filters          :jsonb            not null
-#  sort             :jsonb            not null
-#  created_at       :datetime
-#  updated_at       :datetime
-#  assign_to_id     :integer
-#
 class ProcedurePresentation < ApplicationRecord
   EXTRA_SORT_COLUMNS = {
     'notifications' => ['notifications'],
@@ -65,7 +53,7 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('user', 'email', type: :text),
       field_hash('followers_instructeurs', 'email', type: :text),
       field_hash('groupe_instructeur', 'id', type: :enum),
-      field_hash('avis', 'answer', type: :text)
+      field_hash('avis', 'question_answer', filterable: false)
     )
 
     if procedure.for_individual
@@ -116,7 +104,9 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filterable_fields_options
-    fields.map do |field|
+    fields.filter_map do |field|
+      next if field['filterable'] == false
+
       [field['label'], field_id(field)]
     end
   end
@@ -459,7 +449,7 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value)
+  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true)
     {
       'label' => label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table]),
       TABLE => table,
@@ -468,7 +458,8 @@ class ProcedurePresentation < ApplicationRecord
       'virtual' => virtual,
       'type' => type,
       'scope' => scope,
-      'value_column' => value_column
+      'value_column' => value_column,
+      'filterable' => filterable
     }
   end
 

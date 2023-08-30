@@ -101,9 +101,6 @@ GEM
     aes_key_wrap (1.1.0)
     after_party (1.11.2)
     anchored (1.1.0)
-    annotate (3.2.0)
-      activerecord (>= 3.2, < 8.0)
-      rake (>= 10.4, < 14.0)
     ast (2.4.2)
     attr_required (1.0.1)
     axe-core-api (4.2.1)
@@ -490,7 +487,7 @@ GEM
     pry-rails (0.3.9)
       pry (>= 0.10.4)
     public_suffix (5.0.1)
-    puma (6.1.1)
+    puma (6.3.1)
       nio4r (~> 2.0)
     pundit (2.2.0)
       activesupport (>= 3.0.0)
@@ -604,6 +601,8 @@ GEM
       rspec-expectations (~> 3.11)
       rspec-mocks (~> 3.11)
       rspec-support (~> 3.11)
+    rspec-retry (0.6.2)
+      rspec-core (> 3.3)
     rspec-support (3.12.0)
     rspec_junit_formatter (0.4.1)
       rspec-core (>= 2, < 4, != 2.12.0)
@@ -813,7 +812,6 @@ DEPENDENCIES
   administrate-field-enum
   after_party
   anchored
-  annotate
   axe-core-rspec
   bcrypt
   bootsnap (>= 1.4.4)
@@ -872,6 +870,7 @@ DEPENDENCIES
   matrix
   memory_profiler
   mina
+  mini_magick
   net-imap
   net-pop
   net-smtp
@@ -898,6 +897,7 @@ DEPENDENCIES
   rexml
   rqrcode
   rspec-rails
+  rspec-retry
   rspec_junit_formatter
   rubocop
   rubocop-performance

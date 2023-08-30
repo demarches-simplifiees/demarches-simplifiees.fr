@@ -9,6 +9,7 @@ fr:
     other: "%{count} dossiers en cours de traitement portent ce champ. Les <strong>données</strong> associées avec ce champ seront <strong>supprimées</strong>."
   add_option: "ajoutés : %{items}"
   remove_option: "supprimés : %{items}"
+  invalid_routing_rules_alert: "Certains groupes d'instructeurs ont une règle de routage invalide. Veuillez mettre à jour la configuration des groupes d'instructeurs après avoir publié les modifications."
   public:
     add: Le champ « %{label} » a été ajouté.
     add_mandatory: Le champ obligatoire « %{label} » a été ajouté.

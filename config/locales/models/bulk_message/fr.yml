@@ -1,0 +1,9 @@
+fr:
+  activerecord:
+    models:
+      bulk_message:
+        one: "Message aux usagers"
+        other: "Messages aux usagers"
+    attributes:
+      bulk_message:
+        body: "Message envoyé aux destinataires :"

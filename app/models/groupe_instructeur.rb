@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: groupe_instructeurs
-#
-#  id           :bigint           not null, primary key
-#  closed       :boolean          default(FALSE)
-#  label        :text             not null
-#  routing_rule :jsonb
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  procedure_id :bigint           not null
-#
 class GroupeInstructeur < ApplicationRecord
   include Logic
   DEFAUT_LABEL = 'défaut'
@@ -42,7 +30,7 @@ class GroupeInstructeur < ApplicationRecord
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
   scope :active, -> { where(closed: false) }
   scope :closed, -> { where(closed: true) }
-
+  scope :for_dossiers, -> (dossiers) { joins(:dossiers).where(dossiers: dossiers).distinct(:id) }
   def add(instructeur)
     return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
@@ -117,7 +105,14 @@ class GroupeInstructeur < ApplicationRecord
 
   def routing_rule_matches_tdc?
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
-    routing_rule.right.value.in?(routing_tdc.options['drop_down_options'])
+
+    options = case routing_tdc.type_champ
+    when TypeDeChamp.type_champs.fetch(:departements)
+      APIGeoService.departements.map { _1[:code] }
+    when TypeDeChamp.type_champs.fetch(:drop_down_list)
+      routing_tdc.options_with_drop_down_other
+    end
+    routing_rule.right.value.in?(options)
   end
 
   serialize :routing_rule, LogicSerializer

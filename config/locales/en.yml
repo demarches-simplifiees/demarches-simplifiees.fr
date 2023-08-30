@@ -515,7 +515,7 @@ en:
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
           check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
       shared:
-        email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
+        email_can_take_a_while_html: <strong>Please note</strong> that this email can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
   modal:
     publish:
@@ -849,6 +849,8 @@ en:
       estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
       estimated_fill_duration_title: What is the procedure estimated fill time ?
       estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
+      usual_traitement_time_title: What are the processing times for this procedure?
+      usual_traitement_time_detail_html: Usually, files in this procedure are processed within %{traitement_time}. This estimate is calculated automatically from the processing times observed on %{percentile}% of requests that have been processed during the last %{days} days. Actual lead time may vary. For more information, you can <a href="%{href}" target="_blank" rel="noopener noreferrer">consult the statistics page</a> of this procedure.
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation
       sva_svr_title: "This procedure applies the « %{rule} »"

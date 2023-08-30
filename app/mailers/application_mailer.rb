@@ -8,18 +8,4 @@ class ApplicationMailer < ActionMailer::Base
   layout 'mailer'
 
   before_action -> { Sentry.set_tags(mailer: mailer_name, action: action_name) }
-
-  # Attach the procedure logo to the email (if any).
-  # Returns the attachment url.
-  def attach_logo(procedure)
-    if procedure.logo.attached?
-      logo_filename = procedure.logo.filename.to_s
-      attachments.inline[logo_filename] = procedure.logo.download
-      attachments[logo_filename].url
-    end
-  rescue StandardError => e
-    # A problem occured when reading logo, maybe the logo is missing and we should clean the procedure to remove logo reference ?
-    Sentry.capture_exception(e, extra: { procedure_id: procedure.id })
-    nil
-  end
 end

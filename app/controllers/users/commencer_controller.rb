@@ -20,6 +20,8 @@ module Users
         check_prefilled_dossier_ownership if @prefilled_dossier
       end
 
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+
       render 'commencer/show'
     end
 
@@ -94,7 +96,6 @@ module Users
     def build_prefilled_dossier
       @prefilled_dossier = Dossier.new(
         revision: @revision,
-        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
         state: Dossier.states.fetch(:brouillon),
         prefilled: true
       )

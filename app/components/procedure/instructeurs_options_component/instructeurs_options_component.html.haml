@@ -27,7 +27,7 @@
       class: 'fr-btn',
       method: :delete,
       title: t('.delete_title', defaut_label: @procedure.defaut_groupe_instructeur.label),
-      data: ( @procedure.publiee? ? { disable_with: "Suppression...", confirm: t('.delete_confirmation', defaut_label: @procedure.defaut_groupe_instructeur.label) } : nil)
+      data: ( @procedure.publiee? ? { disable_with: "Suppression…", confirm: t('.delete_confirmation', defaut_label: @procedure.defaut_groupe_instructeur.label) } : nil)
 
 - elsif @state == 'choix'
   = form_for :choice,

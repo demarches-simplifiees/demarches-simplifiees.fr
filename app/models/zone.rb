@@ -1,14 +1,3 @@
-# == Schema Information
-#
-# Table name: zones
-#
-#  id         :bigint           not null, primary key
-#  acronym    :string           not null
-#  label      :string
-#  tchap_hs   :string           default([]), is an Array
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
 class Zone < ApplicationRecord
   validates :acronym, presence: true, uniqueness: true
   has_many :labels, -> { order(designated_on: :desc) }, class_name: 'ZoneLabel', inverse_of: :zone

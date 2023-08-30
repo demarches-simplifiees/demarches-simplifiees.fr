@@ -1,13 +1,13 @@
-#invites-form
+#invites-form.fr-p-2w
   - if invites.present?
     #invite-list{ morphing ? { tabindex: "-1" } : {} }
-      %h4= t('views.invites.form.invite_to_participate')
+      %h4.fr-h6= t('views.invites.form.invite_to_participate')
       %ul
         - invites.each do |invite|
           %li
             = invite.email
             %small{ 'data-turbo': 'true' }
-              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission') }
+              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission') }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
 
     %p= t('views.invites.form.edit_dossier')
     - if dossier.brouillon?
@@ -17,15 +17,15 @@
     %p= t('views.invites.form.invite_to_edit_line1')
     %p= t('views.invites.form.invite_to_edit_line2')
 
-  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post, class: 'form' do
-    .row
-      .col
-        %span
-          = label_tag :invite_email, t('views.invites.form.email')
-        = email_field_tag :invite_email, '', class: 'small', placeholder: t('views.invites.form.email'), required: true
-      .col
-        %span
-          = label_tag :invite_message, t('views.invites.form.invite_message')
-        = text_area_tag :invite_message, '', class: 'small', placeholder: t('views.invites.form.invite_message')
-      .col
-        = submit_tag t('views.invites.form.send_invitation'), class: 'fr-btn fr-btn--secondary'
+  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post do
+    .fr-input-group
+      = label_tag :invite_email, class: "fr-label" do
+        = t('views.invites.form.email')
+        %span.fr-hint-text= t('views.invites.form.email_hint')
+      = email_field_tag :invite_email, '', required: true, class: "fr-input"
+
+    .fr-input-group
+      = label_tag :invite_message, t('views.invites.form.invite_message'), class: "fr-label"
+      = text_area_tag :invite_message, '', class: "fr-input"
+
+    = submit_tag t('views.invites.form.send_invitation'), class: 'fr-btn fr-btn--secondary'

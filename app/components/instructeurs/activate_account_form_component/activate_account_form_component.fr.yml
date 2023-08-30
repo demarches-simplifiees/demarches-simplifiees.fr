@@ -1,0 +1,7 @@
+---
+fr:
+  title: Création de compte sur %{application_name}
+  activate: Se créer un compte pour %{email} en choissant un mot de passe
+  email_disabled: Adresse instructeur non modifiable
+  submit: Définir le mot de passe
+

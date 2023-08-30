@@ -1,20 +1,15 @@
 = render NestedForms::FormOwnerComponent.new
-= form_for(commentaire, url: form_url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: @dossier.present? ? dom_id(@dossier) : dom_id(@procedure, :bulk_message) } }) do |f|
+= form_for(commentaire, url: form_url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier) } }) do |f|
   - dossier = commentaire.dossier
   - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
   - if instructeur_signed_in? || administrateur_signed_in? || expert_signed_in?
     - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
-  .fr-input-group
-    = label_tag :commentaire_body, class: 'fr-label' do
-      = t('message', scope: [:utils])
-      %span.mandatory *
-    = f.text_area :body, rows: 5, placeholder: placeholder, title: placeholder, required: true, class: 'fr-input message-textarea'
 
-  - disable_piece_jointe = defined?(disable_piece_jointe) ? disable_piece_jointe : false
-  - if !disable_piece_jointe
-    .fr-mt-3w
-      = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
+  = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
+
+  .fr-mt-3w
+    = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
 
   .fr-mt-3w
     = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }

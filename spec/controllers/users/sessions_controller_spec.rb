@@ -244,4 +244,36 @@ describe Users::SessionsController, type: :controller do
       end
     end
   end
+
+  describe '#reset_link_sent' do
+    let(:instructeur) { create(:instructeur, user: user) }
+    before { sign_in(user) }
+    subject { post :reset_link_sent }
+
+    context 'when the instructeur is signed without trust_device_token' do
+      it 'send InstructeurMailer.send_login_token' do
+        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything).and_return(double(deliver_later: true))
+        expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(1)
+      end
+    end
+
+    context 'when the instructeur is signed with an young trust_device_token' do
+      before { instructeur.create_trusted_device_token }
+      it 'doesnot send InstructeurMailer.send_login_token' do
+        expect(InstructeurMailer).not_to receive(:send_login_token)
+        expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(0)
+      end
+    end
+
+    context 'when the instructeur is signed with an old trust_device_token' do
+      let(:token) { instructeur.create_trusted_device_token }
+      before do
+        travel_to 15.minutes.from_now
+      end
+      it 'send InstructeurMailer.send_login_token' do
+        expect(InstructeurMailer).to receive(:send_login_token).with(instructeur, anything).and_return(double(deliver_later: true))
+        expect { subject }.to change { instructeur.trusted_device_tokens.count }.by(1)
+      end
+    end
+  end
 end

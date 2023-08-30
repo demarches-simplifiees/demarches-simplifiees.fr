@@ -1,18 +1,3 @@
-# == Schema Information
-#
-# Table name: exports
-#
-#  id                              :bigint           not null, primary key
-#  format                          :string           not null
-#  job_status                      :string           default("pending"), not null
-#  key                             :text             not null
-#  procedure_presentation_snapshot :jsonb
-#  statut                          :string           default("tous")
-#  time_span_type                  :string           default("everything"), not null
-#  created_at                      :datetime         not null
-#  updated_at                      :datetime         not null
-#  procedure_presentation_id       :bigint
-#
 class Export < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern
 

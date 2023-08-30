@@ -40,12 +40,34 @@ module Administrateurs
 
       tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
-      tdc_options = tdc.options["drop_down_options"].reject(&:empty?)
+      case tdc.type_champ
+      when TypeDeChamp.type_champs.fetch(:departements)
+        tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+        tdc_options.each do |code_and_name, code|
+          routing_rule = ds_eq(champ_value(stable_id), constant(code))
+          @procedure
+            .groupe_instructeurs
+            .find_or_create_by(label: code_and_name)
+            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+        end
 
-      tdc_options.each do |option_label|
-        gi = @procedure.groupe_instructeurs.find_by({ label: option_label }) || @procedure.groupe_instructeurs
-          .create({ label: option_label, instructeurs: [current_administrateur.instructeur] })
-        gi.update(routing_rule: ds_eq(champ_value(stable_id), constant(gi.label)))
+      when TypeDeChamp.type_champs.fetch(:drop_down_list)
+        tdc_options = tdc.drop_down_options.reject(&:empty?)
+        tdc_options.each do |option_label|
+          routing_rule = ds_eq(champ_value(stable_id), constant(option_label))
+          @procedure
+            .groupe_instructeurs
+            .find_or_create_by(label: option_label)
+            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+        end
+      end
+
+      if tdc.drop_down_other?
+        routing_rule = ds_eq(champ_value(stable_id), constant(Champs::DropDownListChamp::OTHER))
+        @procedure
+          .groupe_instructeurs
+          .find_or_create_by(label: 'Autre')
+          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
       end
 
       @procedure.toggle_routing

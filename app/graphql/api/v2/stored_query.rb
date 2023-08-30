@@ -43,6 +43,7 @@ class API::V2::StoredQuery
     $includeInstructeurs: Boolean = true
     $includeAvis: Boolean = false
     $includeMessages: Boolean = false
+    $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
   ) {
     demarche(number: $demarcheNumber) {
@@ -135,6 +136,7 @@ class API::V2::StoredQuery
     $includeInstructeurs: Boolean = true
     $includeAvis: Boolean = false
     $includeMessages: Boolean = false
+    $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
   ) {
     groupeInstructeur(number: $groupeInstructeurNumber) {
@@ -201,6 +203,7 @@ class API::V2::StoredQuery
     $includeInstructeurs: Boolean = true
     $includeAvis: Boolean = false
     $includeMessages: Boolean = false
+    $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
   ) {
     dossier(number: $dossierNumber) {
@@ -239,6 +242,7 @@ class API::V2::StoredQuery
   }
 
   fragment DossierFragment on Dossier {
+    __typename
     id
     number
     archived
@@ -250,6 +254,7 @@ class API::V2::StoredQuery
     dateTraitement
     dateExpiration
     dateSuppressionParUsager
+    dateDerniereCorrectionEnAttente @include(if: $includeCorrections)
     motivation
     motivationAttachment {
       ...FileFragment
@@ -318,8 +323,8 @@ class API::V2::StoredQuery
     dateFermeture
     notice { url }
     deliberation { url }
-    demarcheUrl
-    cadreJuridiqueUrl
+    demarcheURL
+    cadreJuridiqueURL
     service @include(if: $includeService) {
       ...ServiceFragment
     }
@@ -409,6 +414,10 @@ class API::V2::StoredQuery
     attachments {
       ...FileFragment
     }
+    correction @include(if: $includeCorrections) {
+      reason
+      dateResolution
+    }
   }
 
   fragment GeoAreaFragment on GeoArea {
@@ -455,6 +464,7 @@ class API::V2::StoredQuery
     __typename
     label
     stringValue
+    updatedAt
     ... on DateChamp {
       date
     }
@@ -584,11 +594,13 @@ class API::V2::StoredQuery
 
 
   fragment FileFragment on File {
+    __typename
     filename
     contentType
     checksum
     byteSize: byteSizeBigInt
     url
+    createdAt
   }
 
   fragment AddressFragment on Address {
@@ -635,6 +647,7 @@ class API::V2::StoredQuery
   fragment PageInfoFragment on PageInfo {
     hasPreviousPage
     hasNextPage
+    startCursor
     endCursor
   }
   GRAPHQL

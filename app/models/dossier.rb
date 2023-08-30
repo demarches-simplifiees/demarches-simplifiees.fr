@@ -1,54 +1,3 @@
-# == Schema Information
-#
-# Table name: dossiers
-#
-#  id                                                 :integer          not null, primary key
-#  api_entreprise_job_exceptions                      :string           is an Array
-#  archived                                           :boolean          default(FALSE)
-#  archived_at                                        :datetime
-#  archived_by                                        :string
-#  autorisation_donnees                               :boolean
-#  brouillon_close_to_expiration_notice_sent_at       :datetime
-#  conservation_extension                             :interval         default(0 seconds)
-#  declarative_triggered_at                           :datetime
-#  deleted_user_email_never_send                      :string
-#  depose_at                                          :datetime
-#  en_construction_at                                 :datetime
-#  en_construction_close_to_expiration_notice_sent_at :datetime
-#  en_instruction_at                                  :datetime
-#  for_procedure_preview                              :boolean          default(FALSE)
-#  forced_groupe_instructeur                          :boolean
-#  groupe_instructeur_updated_at                      :datetime
-#  hidden_at                                          :datetime
-#  hidden_by_administration_at                        :datetime
-#  hidden_by_reason                                   :string
-#  hidden_by_user_at                                  :datetime
-#  identity_updated_at                                :datetime
-#  last_avis_updated_at                               :datetime
-#  last_champ_private_updated_at                      :datetime
-#  last_champ_updated_at                              :datetime
-#  last_commentaire_updated_at                        :datetime
-#  migrated_champ_routage                             :boolean
-#  motivation                                         :text
-#  prefill_token                                      :string
-#  prefilled                                          :boolean
-#  private_search_terms                               :string
-#  processed_at                                       :datetime
-#  search_terms                                       :string
-#  state                                              :string
-#  sva_svr_decision_on                                :date
-#  sva_svr_decision_triggered_at                      :datetime
-#  termine_close_to_expiration_notice_sent_at         :datetime
-#  created_at                                         :datetime
-#  updated_at                                         :datetime
-#  batch_operation_id                                 :bigint
-#  dossier_transfer_id                                :bigint
-#  editing_fork_origin_id                             :bigint
-#  groupe_instructeur_id                              :bigint
-#  parent_dossier_id                                  :bigint
-#  revision_id                                        :bigint
-#  user_id                                            :integer
-#
 class Dossier < ApplicationRecord
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -57,8 +6,6 @@ class Dossier < ApplicationRecord
   include DossierRebaseConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
-
-  self.ignored_columns += [:migrated_champ_routage]
 
   enum state: {
     brouillon:       'brouillon',
@@ -268,7 +215,7 @@ class Dossier < ApplicationRecord
   }
   scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
   scope :for_editing_fork, -> { where.not(editing_fork_origin_id: nil) }
-
+  scope :for_groupe_instructeur, -> (groupe_instructeurs) { where(groupe_instructeur: groupe_instructeurs) }
   scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
   scope :updated_since,                  -> (since) { where('dossiers.updated_at >= ?', since) }
@@ -905,7 +852,6 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
-
     MailTemplatePresenterService.create_commentaire_for_state(self)
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
