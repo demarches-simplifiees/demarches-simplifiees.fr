@@ -6,7 +6,7 @@ class Users::SessionsController < Devise::SessionsController
   layout 'login', only: [:new, :create]
 
   before_action :restore_procedure_context, only: [:new, :create]
-  skip_before_action :redirect_if_untrusted
+  skip_before_action :redirect_if_untrusted, only: [:reset_link_sent]
   # POST /resource/sign_in
   def create
     user = User.find_by(email: params[:user][:email])
