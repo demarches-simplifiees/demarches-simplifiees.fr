@@ -15,4 +15,4 @@ fr:
               format: "Le libellé %{message}"
             closed:
               format: "%{message}"
-              accepted: Il doit y avoir au moins un groupe d’instructeurs actif sur chaque démarche
+              accepted: Il est impossible de désactiver le groupe d’instructeurs par défaut.
