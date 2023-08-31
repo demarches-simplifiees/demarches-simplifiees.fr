@@ -17,8 +17,10 @@ en:
             en_construction_since: Submitted since
             en_instruction_since: Instructed since
             processed_since: Finished since
-            sva_svr_decision_on: SVA decision date
-            sva_svr_decision_before: SVA decision date before
+            sva_decision_on: SVA decision date
+            sva_decision_before: SVA decision date before
+            svr_decision_on: SVR decision date
+            svr_decision_before: SVR decision date before
           user:
             email: Requester
           followers_instructeurs:

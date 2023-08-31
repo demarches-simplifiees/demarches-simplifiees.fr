@@ -2049,13 +2049,13 @@ describe Dossier, type: :model do
     context 'procedure sva' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
 
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date SVA", :sva_svr_decision_on]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVA", :sva_svr_decision_on]) }
     end
 
     context 'procedure svr' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :svr)) }
 
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date SVR", :sva_svr_decision_on]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVR", :sva_svr_decision_on]) }
     end
   end
 

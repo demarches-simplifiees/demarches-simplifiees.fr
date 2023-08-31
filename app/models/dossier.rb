@@ -1227,7 +1227,7 @@ class Dossier < ApplicationRecord
       ['Dernière mise à jour le', :updated_at],
       ['Déposé le', :depose_at],
       ['Passé en instruction le', :en_instruction_at],
-      procedure.sva_svr_enabled? ? ["Date #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
+      procedure.sva_svr_enabled? ? ["Date décision #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
