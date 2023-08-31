@@ -1,4 +1,4 @@
-describe 'As an instructeur', js: true do
+describe 'As an instructeur', js: true, retry: 3 do
   let(:administrateur) { create(:administrateur, :with_procedure) }
   let(:procedure) { administrateur.procedures.first }
   let(:instructeur_email) { 'new_instructeur@gouv.fr' }

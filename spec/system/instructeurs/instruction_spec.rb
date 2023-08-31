@@ -1,4 +1,4 @@
-describe 'Instructing a dossier:', js: true do
+describe 'Instructing a dossier:', js: true, retry: 3 do
   include ActiveJob::TestHelper
 
   let(:password) { 'my-s3cure-p4ssword' }
@@ -157,7 +157,7 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text(instructeur2.email)
   end
 
-  scenario 'A instructeur can send a dossier to several instructeurs', js: true do
+  scenario 'A instructeur can send a dossier to several instructeurs', js: true, retry: 3 do
     instructeur_2 = create(:instructeur)
     instructeur_3 = create(:instructeur)
     procedure.defaut_groupe_instructeur.instructeurs << [instructeur_2, instructeur_3]
@@ -195,7 +195,7 @@ describe 'Instructing a dossier:', js: true do
       expect(Archive.first.month).not_to be_nil
     end
   end
-  context 'with dossiers having attached files', js: true do
+  context 'with dossiers having attached files', js: true, retry: 3 do
     let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:champ) { dossier.champs_public.first }

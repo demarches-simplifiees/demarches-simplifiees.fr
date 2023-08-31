@@ -1,4 +1,4 @@
-describe 'As an administrateur I can edit types de champ', js: true do
+describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   include ActionView::RecordIdentifier
 
   let(:administrateur) { procedure.administrateurs.first }

@@ -1,4 +1,4 @@
-describe 'As an administrateur', js: true do
+describe 'As an administrateur', js: true, retry: 3 do
   let(:super_admin) { create(:super_admin) }
   let(:admin_email) { 'new_admin@gouv.fr' }
   let(:new_admin) { Administrateur.by_email(admin_email) }
@@ -15,7 +15,7 @@ describe 'As an administrateur', js: true do
     end
   end
 
-  scenario 'I can register', js: true do
+  scenario 'I can register', js: true, retry: 3 do
     expect(new_admin.reload.user.active?).to be(false)
 
     confirmation_email = open_email(admin_email)

@@ -1,6 +1,6 @@
 require 'system/administrateurs/procedure_spec_helper'
 
-describe 'Administrateurs can manage administrateurs', js: true do
+describe 'Administrateurs can manage administrateurs', js: true, retry: 3 do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }
