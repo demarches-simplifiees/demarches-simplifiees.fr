@@ -34,6 +34,7 @@ class Expert < ApplicationRecord
 
     procedure_with_new, procedure_without_new = old_expert
       .procedures
+      .with_discarded
       .partition { |p| p.experts.exists?(id) }
 
     ExpertsProcedure
