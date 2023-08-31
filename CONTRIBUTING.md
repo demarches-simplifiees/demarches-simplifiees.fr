@@ -45,7 +45,7 @@ Si vous souhaitez adapter demarches-simplifiees.fr à vos besoins, nous vous rec
 
 Dans le cas où vous envisagez d’héberger une instance de demarches-simplifiees.fr vous-même, nous ne disposons malheureusement pas des moyens pour vous accompagner, ni d’assurer de support technique concernant votre installation.
 
-Toutefois, certains acteurs (le ministère des armées, l’administration autonome en Polynésie française) ont déployé des instances séparées. Nous proposons aux personnes intéressées de les mettre en relation avec ces acteurs existants, pour obtenir un retour d’expérience et bénéficier de leur retour.
+Toutefois, certains acteurs (le ministère des armées, l’administration autonome en Polynésie française, l'association Adullact) ont déployé des instances séparées. Nous proposons aux personnes intéressées de les mettre en relation avec ces acteurs existants, pour obtenir un retour d’expérience et bénéficier de leur retour.
 
 ## Bonnes pratiques de code
 
