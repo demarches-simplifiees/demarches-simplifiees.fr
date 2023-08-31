@@ -1,0 +1,6 @@
+- if champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
+  %p
+    %span= champ.value
+    %span.fr-badge.fr-badge--warning.fr-badge--sm dossier réaffecté au groupe « #{champ.dossier.groupe_instructeur.label} »
+- else
+  %p= champ.value

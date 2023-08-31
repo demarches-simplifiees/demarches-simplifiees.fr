@@ -559,7 +559,7 @@ describe Experts::AvisController, type: :controller do
           procedure_id:,
           email: avis.expert.email,
           user: {
-            password: 'my-s3cure-p4ssword'
+            password: SECURE_PASSWORD
           }
         }
       end
@@ -575,7 +575,7 @@ describe Experts::AvisController, type: :controller do
 
         it 'saves the expert new password' do
           subject
-          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be true
+          expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be true
         end
 
         it { is_expected.to redirect_to expert_all_avis_path }
@@ -586,7 +586,7 @@ describe Experts::AvisController, type: :controller do
 
         it 'doesn’t change the expert password' do
           subject
-          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be false
+          expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be false
         end
 
         it { is_expected.to redirect_to new_user_session_url }

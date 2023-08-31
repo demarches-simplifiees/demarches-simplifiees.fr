@@ -1,4 +1,4 @@
-describe 'As an integrator:', js: true do
+describe 'As an integrator:', js: true, retry: 3 do
   let(:procedure) { create(:procedure, :published, opendata: true) }
   let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
 

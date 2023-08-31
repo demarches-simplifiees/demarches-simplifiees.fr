@@ -6,7 +6,7 @@ describe User, type: :model do
     let(:user) do
       create(:user,
         email: email,
-        password: 'my-s3cure-p4ssword',
+        password: SECURE_PASSWORD,
         confirmation_token: '123',
         confirmed_at: nil)
     end
@@ -125,11 +125,11 @@ describe User, type: :model do
     end
 
     context 'with an existing user' do
-      before { create(:user, email: email, password: 'my-s3cure-p4ssword') }
+      before { create(:user, email: email, password: SECURE_PASSWORD) }
 
       it 'keeps the previous password' do
         user = subject
-        expect(user.valid_password?('my-s3cure-p4ssword')).to be true
+        expect(user.valid_password?(SECURE_PASSWORD)).to be true
         expect(user.instructeur).to be_present
       end
 
@@ -189,11 +189,11 @@ describe User, type: :model do
     end
 
     context 'with an existing user' do
-      before { create(:user, email: email, password: 'my-s3cure-p4ssword') }
+      before { create(:user, email: email, password: SECURE_PASSWORD) }
 
       it 'keeps the previous password' do
         user = subject
-        expect(user.valid_password?('my-s3cure-p4ssword')).to be true
+        expect(user.valid_password?(SECURE_PASSWORD)).to be true
         expect(user.expert).to be_present
       end
 

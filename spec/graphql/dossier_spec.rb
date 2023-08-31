@@ -257,6 +257,28 @@ RSpec.describe Types::DossierType, type: :graphql do
     }
   end
 
+  describe 'dossier on sva procedure' do
+    let(:procedure) { create(:procedure, :sva) }
+    let(:query) { DOSSIER_WITH_SVA_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    context 'dossier en_instruction' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: 3.days.from_now.to_date) }
+
+      it {
+        expect(data[:dossier][:datePrevisionnelleDecisionSVASVR]).not_to be_nil
+      }
+    end
+
+    context 'dossier accepte' do
+      let(:dossier) { create(:dossier, :accepte, procedure:, sva_svr_decision_triggered_at: 24.hours.ago) }
+
+      it {
+        expect(data[:dossier][:dateTraitementSVASVR]).not_to be_nil
+      }
+    end
+  end
+
   DOSSIER_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
@@ -436,6 +458,15 @@ RSpec.describe Types::DossierType, type: :graphql do
           dateResolution
         }
       }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_SVA_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      datePrevisionnelleDecisionSVASVR
+      dateTraitementSVASVR
     }
   }
   GRAPHQL

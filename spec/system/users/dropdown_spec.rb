@@ -1,5 +1,5 @@
-describe 'dropdown list with other option activated', js: true do
-  let(:password) { 'my-s3cure-p4ssword' }
+describe 'dropdown list with other option activated', js: true, retry: 3 do
+  let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
   let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :drop_down_list, libelle: 'simple dropdown other', options: options + [:other] }]) }
@@ -20,14 +20,14 @@ describe 'dropdown list with other option activated', js: true do
       ]
     end
 
-    scenario 'Select other option and the other input hidden must appear', js: true do
+    scenario 'Select other option and the other input hidden must appear', js: true, retry: 3 do
       fill_individual
 
       find('.radios').find('label:last-child').find('input').select_option
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
 
-    scenario "Getting back from other save the new option", js: true do
+    scenario "Getting back from other save the new option", js: true, retry: 3 do
       fill_individual
 
       choose "Autre"

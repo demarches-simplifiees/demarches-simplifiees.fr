@@ -639,9 +639,9 @@ describe API::V2::GraphqlController do
         let(:variables) { { input: { groupeInstructeurId: dossier.groupe_instructeur.to_typed_id, closed: true } } }
 
         context 'with multiple groupes' do
-          before do
-            create(:groupe_instructeur, procedure: procedure)
-          end
+          let!(:defaut_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+
+          before { procedure.update(defaut_groupe_instructeur_id: defaut_groupe_instructeur.id) }
 
           it {
             expect(gql_errors).to be_nil
@@ -656,10 +656,11 @@ describe API::V2::GraphqlController do
           let(:types_de_champ_public) { [{ type: :drop_down_list }] }
           let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
           let(:routing_champ) { procedure.active_revision.types_de_champ.first }
+          let!(:defaut_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
 
           before do
             groupe_instructeur.update(routing_rule: ds_eq(champ_value(routing_champ.stable_id), constant(groupe_instructeur.label)))
-            create(:groupe_instructeur, procedure: procedure)
+            procedure.update(defaut_groupe_instructeur_id: defaut_groupe_instructeur.id)
             Flipper.enable(:groupe_instructeur_api_hack, procedure)
           end
 
@@ -675,7 +676,7 @@ describe API::V2::GraphqlController do
         context 'validation error' do
           it {
             expect(gql_errors).to be_nil
-            expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe d’instructeurs actif sur chaque démarche')
+            expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il est impossible de désactiver le groupe d’instructeurs par défaut.')
           }
         end
       end

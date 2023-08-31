@@ -62,6 +62,7 @@ class Champ < ApplicationRecord
   delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true
 
   delegate :revision, to: :dossier, prefix: true
+  delegate :used_by_routing_rules?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }

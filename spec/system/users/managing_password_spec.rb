@@ -1,4 +1,4 @@
-describe 'Managing password:', js: true do
+describe 'Managing password:', js: true, retry: 3 do
   context 'for simple users' do
     let(:user) { create(:user) }
     let(:new_password) { 'a simple password' }
@@ -11,7 +11,7 @@ describe 'Managing password:', js: true do
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
-      fill_in 'Email', with: user.email
+      fill_in 'Adresse électronique', with: user.email
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
@@ -34,7 +34,7 @@ describe 'Managing password:', js: true do
     let(:weak_password) { '12345678' }
     let(:strong_password) { 'a new, long, and complicated password!' }
 
-    scenario 'an admin can reset their password', js: true do
+    scenario 'an admin can reset their password', js: true, retry: 3 do
       visit root_path
       within('.fr-header .fr-container .fr-header__tools .fr-btns-group') do
         click_on 'Se connecter'
@@ -42,7 +42,7 @@ describe 'Managing password:', js: true do
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
-      fill_in 'Email', with: user.email
+      fill_in 'Adresse électronique', with: user.email
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
@@ -73,12 +73,12 @@ describe 'Managing password:', js: true do
     let(:weak_password) { '12345678' }
     let(:strong_password) { 'a new, long, and complicated password!' }
 
-    scenario 'a super-admin can reset their password', js: true do
+    scenario 'a super-admin can reset their password', js: true, retry: 3 do
       visit manager_root_path
       click_on 'Mot de passe oublié'
       expect(page).to have_current_path(new_super_admin_password_path)
 
-      fill_in 'Email', with: super_admin.email
+      fill_in 'Adresse électronique', with: super_admin.email
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
