@@ -20,7 +20,7 @@ describe 'As an instructeur', js: true, retry: 3 do
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"
-    fill_in :user_password, with: 'my-s3cure-p4ssword'
+    fill_in :user_password, with: SECURE_PASSWORD
 
     click_button 'Définir le mot de passe'
 
