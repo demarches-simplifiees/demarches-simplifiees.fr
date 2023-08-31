@@ -19,11 +19,16 @@ FileUtils.chdir APP_ROOT do
   system! 'bin/yarn install'
   system! 'bin/yarn clean'
 
-  if ENV["SKIP_UPDATE_WEBDRIVER"]
-    puts "\n== Ignoring webdrivers update because of local configuration. You may need to update it manually.=="
-  else
+  if ENV["UPDATE_WEBDRIVER"]
     puts "\n== Updating webdrivers =="
-    system! 'RAILS_ENV=test bin/rails webdrivers:chromedriver:update'
+    puts "\nyou must add ~/.local/bin to your path"
+    system! 'npx @puppeteer/browsers clear --path ~/.local/bin/headless_browsers'
+
+    system! 'npx @puppeteer/browsers install chromedriver --path ~/.local/bin/headless_browsers'
+    system! 'npx @puppeteer/browsers install chrome --path ~/.local/bin/headless_browsers'
+
+    system! 'rm -f ~/.local/bin/chromedriver && ln -s $(find ~/.local/bin/headless_browsers -type f -name chromedriver) ~/.local/bin/chromedriver'
+    system! 'rm -f ~/.local/bin/chrome && ln -s $(find ~/.local/bin/headless_browsers -type f -name chrome) ~/.local/bin/chrome'
   end
 
   puts "\n== Updating database =="
