@@ -62,8 +62,12 @@ class Champs::DropDownListChamp < Champ
     options.include?(value)
   end
 
-  def remove_option(options)
-    update_column(:value, nil)
+  def remove_option(options, touch = false)
+    if touch
+      update(value: nil)
+    else
+      update_column(:value, nil)
+    end
   end
 
   private

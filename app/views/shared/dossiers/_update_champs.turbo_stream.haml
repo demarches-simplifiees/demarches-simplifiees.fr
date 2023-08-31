@@ -13,3 +13,7 @@
 
 = turbo_stream.remove_all(".editable-champ .spinner-removable")
 = turbo_stream.hide_all(".editable-champ .spinner")
+
+- if dossier.present?
+  = turbo_stream.replace_all '.dossier-edit-sticky-footer' do
+    = render Dossiers::EditFooterComponent.new(dossier:, annotation: false)
