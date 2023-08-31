@@ -1,4 +1,1 @@
-= render partial: 'shared/dossiers/update_champs', locals: { to_show: @to_show, to_hide: @to_hide, to_update: @to_update, dossier: @dossier, annotation: false }
-
-= turbo_stream.replace_all '.dossier-edit-sticky-footer' do
-  = render Dossiers::EditFooterComponent.new(dossier: @dossier, annotation: false)
+= render partial: 'shared/dossiers/update_champs', locals: { to_show: @to_show, to_hide: @to_hide, to_update: @to_update, dossier: @dossier }
