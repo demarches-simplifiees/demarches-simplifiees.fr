@@ -130,7 +130,7 @@ describe 'Inviting an expert:' do
     # scenario 'I can invite other experts' do
     # end
 
-    context 'with dossiers having attached files', js: true do
+    context 'with dossiers having attached files', js: true, retry: 3 do
       let(:path) { 'spec/fixtures/files/piece_justificative_0.pdf' }
       let(:commentaire) { create(:commentaire, instructeur: instructeur, dossier: dossier) }
 

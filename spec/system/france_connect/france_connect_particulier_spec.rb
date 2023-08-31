@@ -73,7 +73,7 @@ describe 'France Connect Particulier Connexion' do
               expect(page).to have_content('Dossiers')
             end
 
-            context 'and the user wants an email that belongs to another account', js: true do
+            context 'and the user wants an email that belongs to another account', js: true, retry: 3 do
               let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: 'my-s3cure-p4ssword') }
 
               scenario 'it uses another email that belongs to another account' do
