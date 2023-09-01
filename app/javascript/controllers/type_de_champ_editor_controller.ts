@@ -7,7 +7,6 @@ import {
   isTextInputElement,
   getConfig
 } from '@utils';
-import { useIntersection } from 'stimulus-use';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
 import { ApplicationController } from './application_controller';
 
@@ -28,7 +27,6 @@ export class TypeDeChampEditorController extends ApplicationController {
   declare readonly moveUrlValue: string;
   declare readonly moveUpUrlValue: string;
   declare readonly moveDownUrlValue: string;
-  declare readonly typeDeChampStableIdValue: string;
   declare readonly isVisible: boolean;
 
   #latestPromise = Promise.resolve();
@@ -36,8 +34,6 @@ export class TypeDeChampEditorController extends ApplicationController {
   #inFlightForms: Map<HTMLFormElement, AbortController> = new Map();
 
   connect() {
-    useIntersection(this, { threshold: 0.6 });
-
     this.#latestPromise = Promise.resolve();
     this.on('change', (event) => this.onChange(event));
     this.on('input', (event) => this.onInput(event));
@@ -60,10 +56,6 @@ export class TypeDeChampEditorController extends ApplicationController {
       direction == 'up' ? this.moveUpUrlValue : this.moveDownUrlValue;
     const form = createForm(action, 'patch');
     this.requestSubmitForm(form);
-  }
-
-  appear() {
-    this.updateAfterId();
   }
 
   private onChange(event: Event) {
@@ -144,27 +136,7 @@ export class TypeDeChampEditorController extends ApplicationController {
     this.#inFlightForms.set(form, controller);
     return controller;
   }
-
-  private updateAfterId() {
-    const parent = this.element.closest<HTMLElement>(
-      '.editor-block, .editor-root'
-    );
-    if (parent) {
-      const selector = parent.classList.contains('editor-block')
-        ? '.add-to-block'
-        : '.add-to-root';
-      const input = parent.querySelector<HTMLInputElement>(
-        `${selector} ${AFTER_STABLE_ID_INPUT_SELECTOR}`
-      );
-      if (input) {
-        input.value = this.typeDeChampStableIdValue;
-      }
-    }
-  }
 }
-
-const AFTER_STABLE_ID_INPUT_SELECTOR =
-  'input[name="type_de_champ[after_stable_id]"]';
 
 function createForm(action: string, method: string) {
   const form = document.createElement('form');
