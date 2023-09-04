@@ -459,7 +459,6 @@ fr:
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
-          result: Résultat de la recherche pour « %{search_terms} »
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »
         secondary_menu: Menu secondaire
