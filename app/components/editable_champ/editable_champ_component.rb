@@ -1,9 +1,11 @@
 class EditableChamp::EditableChampComponent < ApplicationComponent
-  include Dsfr::InputErrorable
-
   def initialize(form:, champ:, seen_at: nil)
     @form, @champ, @seen_at = form, champ, seen_at
     @attribute = :value
+  end
+
+  def champ_component
+    @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
   end
 
   private
@@ -12,7 +14,8 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     types_without_label = [
       TypeDeChamp.type_champs.fetch(:header_section),
       TypeDeChamp.type_champs.fetch(:explication),
-      TypeDeChamp.type_champs.fetch(:repetition)
+      TypeDeChamp.type_champs.fetch(:repetition),
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
     ]
     !types_without_label.include?(@champ.type_champ)
   end
@@ -28,8 +31,8 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
           'editable-champ': true,
           "editable-champ-#{@champ.type_champ}": true,
           "hidden": !@champ.visible?,
-          "fr-input-group": true
-        }.merge(input_group_error_class_names)
+          champ_component.dsfr_group_classname => true
+        }.merge(champ_component.input_group_error_class_names)
       ),
       id: @champ.input_group_id,
       data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }

@@ -3,7 +3,7 @@
     "@coldwired/actions": "^0.11.2",
     "@coldwired/turbo-stream": "^0.11.1",
     "@coldwired/utils": "^0.11.1",
-    "@gouvfr/dsfr": "^1.7.2",
+    "@gouvfr/dsfr": "^1.10.0",
     "@graphiql/plugin-explorer": "^0.2.0",
     "@graphiql/toolkit": "^0.8.4",
     "@headlessui/react": "^1.6.6",
@@ -94,7 +94,7 @@
     "coverage": "vitest run --coverage"
   },
   "engines": {
-    "node": ">= 16.*"
+    "node": ">= 18.17.0"
   },
   "graphdoc": {
     "schemaFile": "./app/graphql/schema.json",

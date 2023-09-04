@@ -1,6 +1,10 @@
 class EditableChamp::CommunesComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
 
+  def dsfr_champ_container
+    :fieldset
+  end
+
   private
 
   def commune_options
