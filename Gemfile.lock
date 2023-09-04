@@ -677,7 +677,7 @@ GEM
     scss_lint (0.59.0)
       sass (~> 3.5, >= 3.5.5)
     selectize-rails (0.12.6)
-    selenium-devtools (0.106.0)
+    selenium-devtools (0.114.0)
       selenium-webdriver (~> 4.2)
     selenium-webdriver (4.10.0)
       rexml (~> 3.2, >= 3.2.5)
