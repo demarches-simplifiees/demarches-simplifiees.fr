@@ -11,41 +11,82 @@ describe Administrateurs::RoutingController, type: :controller do
       {
         procedure_id: procedure.id,
         targeted_champ: champ_value(drop_down_tdc.stable_id).to_json,
-        operator_name: Logic::Eq.name,
+        operator_name: operator_name,
         value: empty.to_json,
         groupe_instructeur_id: gi_2.id
       }
     end
 
-    before do
-      post :update, params: params, format: :turbo_stream
-    end
-
-    it do
-      expect(gi_2.reload.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), empty))
-    end
-
-    context '#update value' do
-      let(:value_updated_params) { params.merge(value: constant('Lyon').to_json) }
+    context 'with Eq operator' do
+      let(:operator_name) { Logic::Eq.name }
 
       before do
-        post :update, params: value_updated_params, format: :turbo_stream
+        post :update, params: params, format: :turbo_stream
       end
 
       it do
-        expect(gi_2.reload.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
+        expect(gi_2.reload.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), empty))
       end
 
-      context 'targeted champ changed' do
-        let(:last_tdc) { procedure.draft_revision.types_de_champ.last }
+      context '#update value' do
+        let(:value_updated_params) { params.merge(value: constant('Lyon').to_json) }
 
         before do
-          targeted_champ_updated_params = value_updated_params.merge(targeted_champ: champ_value(last_tdc.stable_id).to_json)
-          post :update, params: targeted_champ_updated_params, format: :turbo_stream
+          post :update, params: value_updated_params, format: :turbo_stream
         end
 
         it do
-          expect(gi_2.reload.routing_rule).to eq(ds_eq(champ_value(last_tdc.stable_id), empty))
+          expect(gi_2.reload.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
+        end
+
+        context 'targeted champ changed' do
+          let(:last_tdc) { procedure.draft_revision.types_de_champ.last }
+
+          before do
+            targeted_champ_updated_params = value_updated_params.merge(targeted_champ: champ_value(last_tdc.stable_id).to_json)
+            post :update, params: targeted_champ_updated_params, format: :turbo_stream
+          end
+
+          it do
+            expect(gi_2.reload.routing_rule).to eq(ds_eq(champ_value(last_tdc.stable_id), empty))
+          end
+        end
+      end
+    end
+
+    context 'with NotEq operator' do
+      let(:operator_name) { Logic::NotEq.name }
+
+      before do
+        post :update, params: params, format: :turbo_stream
+      end
+
+      it do
+        expect(gi_2.reload.routing_rule).to eq(ds_not_eq(champ_value(drop_down_tdc.stable_id), empty))
+      end
+
+      context '#update value' do
+        let(:value_updated_params) { params.merge(value: constant('Lyon').to_json) }
+
+        before do
+          post :update, params: value_updated_params, format: :turbo_stream
+        end
+
+        it do
+          expect(gi_2.reload.routing_rule).to eq(ds_not_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
+        end
+
+        context 'targeted champ changed' do
+          let(:last_tdc) { procedure.draft_revision.types_de_champ.last }
+
+          before do
+            targeted_champ_updated_params = value_updated_params.merge(targeted_champ: champ_value(last_tdc.stable_id).to_json)
+            post :update, params: targeted_champ_updated_params, format: :turbo_stream
+          end
+
+          it do
+            expect(gi_2.reload.routing_rule).to eq(ds_not_eq(champ_value(last_tdc.stable_id), empty))
+          end
         end
       end
     end
