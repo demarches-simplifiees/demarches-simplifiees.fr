@@ -4,8 +4,10 @@ module Users
 
     def commencer
       @procedure = retrieve_procedure
-      return procedure_not_found if @procedure.blank? || @procedure.brouillon?
-      @revision = @procedure.published_revision
+
+      return procedure_not_found if @procedure.blank?
+
+      @revision = params[:test] ? @procedure.draft_revision : @procedure.active_revision
 
       if params[:prefill_token].present? || commencer_page_is_reloaded?
         retrieve_prefilled_dossier(params[:prefill_token] || session[:prefill_token])
@@ -18,21 +20,14 @@ module Users
         check_prefilled_dossier_ownership if @prefilled_dossier
       else
         # pf specific: allows social logins (google, france connect,...) to get back when logged
-        store_user_location!(@procedure, @prefilled_dossier&.prefill_token)
+        store_user_location!(@procedure, @prefilled_dossier)
       end
 
       render 'commencer/show'
     end
 
     def commencer_test
-      @procedure = retrieve_procedure
-      return procedure_not_found if @procedure.blank? || (@procedure.publiee? && !@procedure.draft_changed?)
-      @revision = @procedure.draft_revision
-
-      if !user_signed_in?
-        store_user_location!(@procedure)
-      end
-      render 'commencer/show'
+      redirect_to commencer_path(params[:path], **extra_query_params)
     end
 
     def dossier_vide_pdf
@@ -79,8 +74,12 @@ module Users
 
     private
 
+    def extra_query_params
+      params.slice(:prefill_token, :test).to_unsafe_h.compact
+    end
+
     def commencer_page_is_reloaded?
-      session[:prefill_token].present? && session[:prefill_params] == params.to_unsafe_h
+      session[:prefill_token].present? && session[:prefill_params_digest] == PrefillParams.digest(params)
     end
 
     def prefill_params_present?
@@ -107,7 +106,7 @@ module Users
         @prefilled_dossier.prefill!(PrefillParams.new(@prefilled_dossier, params.to_unsafe_h).to_a)
       end
       session[:prefill_token] = @prefilled_dossier.prefill_token
-      session[:prefill_params] = params.to_unsafe_h
+      session[:prefill_params_digest] = PrefillParams.digest(params)
     end
 
     def retrieve_prefilled_dossier(prefill_token)
@@ -129,12 +128,12 @@ module Users
       procedure = Procedure.find_by(path: params[:path])
 
       if procedure&.replaced_by_procedure
-        redirect_to commencer_path(path: procedure.replaced_by_procedure.path)
+        redirect_to commencer_path(procedure.replaced_by_procedure.path, **extra_query_params)
         return
       elsif procedure&.close?
         flash.alert = procedure.service.presence ?
-                      t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
-                      t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
+          t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
+          t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
       else
         flash.alert = t('errors.messages.procedure_not_found')
       end
@@ -142,8 +141,10 @@ module Users
       redirect_to root_path
     end
 
-    def store_user_location!(procedure, prefill_token = nil)
-      store_location_for(:user, helpers.procedure_lien(procedure, prefill_token: prefill_token || params[:prefill_token]))
+    def store_user_location!(procedure, prefilled_dossier = nil)
+      parameters = extra_query_params
+      parameters[:prefill_token] = prefilled_dossier&.prefill_token if prefilled_dossier
+      store_location_for(:user, commencer_path(procedure.path, **parameters))
     end
 
     def generate_empty_pdf(revision)

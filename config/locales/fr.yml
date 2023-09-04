@@ -42,6 +42,7 @@ fr:
     pj: "Pièces jointes"
     asterisk_html: Les champs suivis d’un astérisque ( <span class = mandatory>*</span> ) sont obligatoires.
     mandatory_champs: Tous les champs sont obligatoires.
+    no_mandatory: (facultatif)
     file_number: Numéro de dossier
     subject: Sujet
     message: Message
@@ -117,7 +118,7 @@ fr:
         line_one_html: "Le site Démarches simplifiées est <strong>partiellement conforme</strong> avec le référentiel général d’amélioration de l’accessibilité (RGAA) version 4."
       results:
         title: "Résultats des tests"
-        line_one: "En date du 1er avril 2023, le taux moyen de conformité du site est de 75%."
+        line_one: "En date du 13 juin 2023, le taux moyen de conformité du site est de 80%."
         line_three: "Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site à l’adresse suivante :"
         programme:
           label: "Suivez le programme d'amélioration continue de DS en matière d'accessibilité"
@@ -357,6 +358,7 @@ fr:
           external_opinion: Avis externes
           messaging: Messagerie
           involved_persons: Personnes impliquées
+          reaffectation: Réaffectation
         tab_explainations:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
@@ -805,6 +807,10 @@ fr:
        deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
        impossible_deletion: "Supression impossible : le dossier n’est pas traité"
        restore: "Le dossier a bien été restauré"
+       reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+       existing_groupe:
+         one: "%{count} groupe existe"
+         other: "%{count} groupes existent"
        labels:
         to_follow: à suivre
         total: dossiers
@@ -913,3 +919,5 @@ fr:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
+      pieces_jointes : Quelles sont les pièces justificatives à fournir ?
+      pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation

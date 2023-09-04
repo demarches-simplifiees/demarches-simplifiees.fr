@@ -1,10 +1,6 @@
 class ArchiveCreationJob < ApplicationJob
   queue_as :archives
 
-  before_perform do |job|
-    Sentry.set_tags(procedure: job.arguments.first.id)
-  end
-
   def max_run_time
     Archive::MAX_DUREE_GENERATION
   end

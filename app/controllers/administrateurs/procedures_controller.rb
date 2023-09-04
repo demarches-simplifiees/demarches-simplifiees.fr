@@ -117,9 +117,6 @@ module Administrateurs
       @procedure.validate(:publication)
 
       @current_administrateur = current_administrateur
-      @procedure_lien = commencer_url(path: @procedure.path)
-      @procedure_lien_test = commencer_test_url(path: @procedure.path)
-      flash.now.notice = "Le bouton pour activer l'expiration des données est à nouveau actif." unless @procedure.procedure_expires_when_termine_enabled?
     end
 
     def edit
@@ -272,8 +269,6 @@ module Administrateurs
           draft_revision: :types_de_champ
         ).find(params[:procedure_id])
 
-      @procedure_lien = commencer_url(path: @procedure.path)
-      @procedure_lien_test = commencer_test_url(path: @procedure.path)
       @procedure.path = @procedure.suggested_path(current_administrateur)
       @current_administrateur = current_administrateur
       @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
@@ -287,8 +282,6 @@ module Administrateurs
           if @procedure.publish_or_reopen!(current_administrateur)
             @procedure.publish_revision!
             flash.notice = "Démarche publiée"
-          else
-            flash.alert = @procedure.errors.full_messages
           end
         else
           @procedure.publish_revision!
@@ -296,8 +289,6 @@ module Administrateurs
         end
       elsif @procedure.publish_or_reopen!(current_administrateur)
         flash.notice = "Démarche publiée"
-      else
-        flash.alert = @procedure.errors.full_messages
       end
 
       if params[:old_procedure].present? && @procedure.errors.empty?
@@ -310,10 +301,14 @@ module Administrateurs
       end
 
       redirect_to admin_procedure_path(@procedure)
+    rescue ActiveRecord::RecordInvalid
+      flash.alert = @procedure.errors.full_messages
+      redirect_to admin_procedure_publication_path(@procedure)
     end
 
     def reset_draft
       @procedure.reset_draft_revision!
+      flash.notice = 'Les modifications ont été annulées'
       redirect_to admin_procedure_path(@procedure)
     end
 

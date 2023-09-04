@@ -27,9 +27,7 @@ class GroupeInstructeur < ApplicationRecord
   validates :label, uniqueness: { scope: :procedure }
   validates :closed, acceptance: { accept: [false] }, if: -> do
     if closed
-      other_groupes = procedure.groupe_instructeurs - [self]
-
-      (other_groupes.map(&:closed) + [closed]).all?
+      (other_groupe_instructeurs.map(&:closed) + [closed]).all?
     else
       false
     end
@@ -90,6 +88,10 @@ class GroupeInstructeur < ApplicationRecord
     rule = routing_rule
     return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
     !routing_rule_matches_tdc?
+  end
+
+  def other_groupe_instructeurs
+    procedure.groupe_instructeurs - [self]
   end
 
   private

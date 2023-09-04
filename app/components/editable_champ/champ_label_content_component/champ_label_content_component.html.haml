@@ -1,8 +1,9 @@
 = @champ.libelle
-- if @champ.mandatory? && @champ.type_champ != "checkbox"
-  = render EditableChamp::AsteriskMandatoryComponent.new
-- elsif !@champ.mandatory?
-  = "#{t('.optional_champ')}"
+- if @champ.public? && !@champ.checkbox?
+  - if @champ.mandatory?
+    = render EditableChamp::AsteriskMandatoryComponent.new
+  - else
+    = "#{t('.optional_champ')}"
 
 - if @champ.forked_with_changes?
   %span.updated-at.highlighted

@@ -96,7 +96,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       create(:champ_text, dossier: dossier, type_de_champ: type_de_champ_text, value: text_value)
 
       page.set_rack_session(prefill_token: "token")
-      page.set_rack_session(prefill_params: { "action" => "commencer", "champ_#{type_de_champ_text.to_typed_id}" => text_value, "controller" => "users/commencer", "path" => procedure.path })
+      page.set_rack_session(prefill_params_digest: PrefillParams.digest({ "champ_#{type_de_champ_text.to_typed_id}" => text_value }))
 
       visit "/users/sign_in"
       sign_in_with user.email, password
@@ -117,7 +117,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
       expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
 
       expect(page.get_rack_session[:prefill_token]).to be_nil
-      expect(page.get_rack_session[:prefill_params]).to be_nil
+      expect(page.get_rack_session[:prefill_params_digest]).to be_nil
     end
   end
 

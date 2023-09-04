@@ -1,12 +1,4 @@
 module ProcedureHelper
-  def procedure_lien(procedure, prefill_token: nil)
-    if procedure.brouillon?
-      commencer_test_url(path: procedure.path, prefill_token: prefill_token)
-    else
-      commencer_url(path: procedure.path, prefill_token: prefill_token)
-    end
-  end
-
   def procedure_libelle(procedure)
     parts = procedure.brouillon? ? [procedure_badge(procedure)] : []
     parts << procedure.libelle

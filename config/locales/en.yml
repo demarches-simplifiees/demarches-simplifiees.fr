@@ -51,6 +51,7 @@ en:
     pj: "Attachments"
     asterisk_html: Fields marked by an asterisk ( <span class = mandatory>*</span> ) are mandatory.
     mandatory_champs: All fields are mandatory.
+    no_mandatory: (optional)
     file_number: File number
     subject: Subject
     message: Message
@@ -118,10 +119,10 @@ en:
       line_two: "This accessibility statement applies to %{app_name} (%{host})."
       compliance:
         title: "Compliance status"
-        line_one_html: "The Démarches simplifiées website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
+        line_one_html: "The Mes-Démarches website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
       results:
         title: "Test results"
-        line_one: "As of 1 April 2023, the site's average compliance rate is 75%."
+        line_one: "As of August, 28th 2023, the site's average compliance rate is 80%."
         line_three: "Users can follow the measures taken by the service to improve the accessibility of the site at the following address:"
         programme:
           label: "Follow the DS accessibility continuous improvement programme"
@@ -357,6 +358,7 @@ en:
           external_opinion: External opinion
           messaging: Messaging
           involved_persons: Involved persons
+          reaffectation: reassignment
         tab_explainations:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
@@ -856,3 +858,5 @@ en:
       estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
       estimated_fill_duration_title: What is the procedure estimated fill time ?
       estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
+      pieces_jointes : What are the required attachments ?
+      pieces_jointes_conditionnal_list_title : Attachments list according to your situation

@@ -17,6 +17,7 @@
 #  en_construction_close_to_expiration_notice_sent_at :datetime
 #  en_instruction_at                                  :datetime
 #  for_procedure_preview                              :boolean          default(FALSE)
+#  forced_groupe_instructeur                          :boolean
 #  groupe_instructeur_updated_at                      :datetime
 #  hidden_at                                          :datetime
 #  hidden_by_administration_at                        :datetime
@@ -1237,12 +1238,6 @@ class Dossier < ApplicationRecord
     en_brouillon_expired_to_delete.find_each(&:purge_discarded)
     en_construction_expired_to_delete.find_each(&:purge_discarded)
     termine_expired_to_delete.find_each(&:purge_discarded)
-  end
-
-  def find_champs_by_stable_ids(stable_ids)
-    return [] if stable_ids.compact.empty?
-
-    champs.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })
   end
 
   def skip_user_notification_email?

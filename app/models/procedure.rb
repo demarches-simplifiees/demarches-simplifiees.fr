@@ -64,6 +64,7 @@ class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
   include InitiationProcedureConcern
+  include ProcedureGroupeInstructeurAPIHackConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -490,23 +491,6 @@ class Procedure < ApplicationRecord
   def self.declarative_attributes_for_select
     declarative_with_states.map do |state, _|
       [I18n.t("activerecord.attributes.#{model_name.i18n_key}.declarative_with_state/#{state}"), state]
-    end
-  end
-
-  def process_stalled_dossiers!
-    case declarative_with_state
-    when Procedure.declarative_with_states.fetch(:en_instruction)
-      dossiers
-        .state_en_construction
-        .where(declarative_triggered_at: nil)
-        .find_each(&:passer_automatiquement_en_instruction!)
-    when Procedure.declarative_with_states.fetch(:accepte)
-      dossiers
-        .state_en_construction
-        .where(declarative_triggered_at: nil)
-        .find_each do |dossier|
-          dossier.accepter_automatiquement! if dossier.can_accepter_automatiquement?
-        end
     end
   end
 
@@ -1037,6 +1021,18 @@ class Procedure < ApplicationRecord
     else
       super
     end
+  end
+
+  def pieces_jointes_list?
+    pieces_jointes_list_without_conditionnal.present? || pieces_jointes_list_with_conditionnal.present?
+  end
+
+  def pieces_jointes_list_without_conditionnal
+    active_revision.types_de_champ_public.not_condition.filter(&:piece_justificative?)
+  end
+
+  def pieces_jointes_list_with_conditionnal
+    active_revision.types_de_champ_public.where.not(condition: nil).filter(&:piece_justificative?)
   end
 
   private

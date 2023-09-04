@@ -26,7 +26,7 @@
       - elsif @procedure.publiee?
         %p Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés.
         Pour y accéder vous pouvez utiliser le lien :
-        = link_to @procedure_lien, sanitize_url(@procedure_lien), target: :blank, rel: :noopener, class: "mb-4"
+        = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), target: :blank, rel: :noopener, class: "mb-4"
 
         %p.mb-4 Attention, diffusez toujours le <strong>lien complet</strong> affiché ci-dessus, et non pas un lien générique vers #{APPLICATION_NAME}. Ne dites pas non plus aux usagers de se rendre sur le site générique #{APPLICATION_NAME}, donnez-leur toujours le lien complet.
       - elsif @procedure.brouillon?
@@ -34,7 +34,7 @@
           %p
             Cette démarche est actuellement <strong>en test</strong>,
             pour y accéder vous pouvez utiliser le lien :
-            = link_to @procedure_lien_test, sanitize_url(@procedure_lien_test), target: :blank, rel: :noopener
+            = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), target: :blank, rel: :noopener
           %p.mb-4
             Toute personne ayant la connaissance de ce lien pourra ainsi remplir des dossiers de test sur votre démarche.
 
@@ -72,7 +72,7 @@
             %p
               Si vous êtes dans un service de l'administration de la <b>Polynésie</b>, envoyez le lien de votre démarche à
               - subject = "[#{APPLICATION_NAME}] test de '#{@procedure.libelle}'".gsub(/&/,' ')
-              - body = "Bonjour%0AQue pensez-vous de #{sanitize_url(@procedure_lien)}%0AD'avance merci.".gsub(/&/,' ')
+              - body = "Bonjour%0AQue pensez-vous de #{commencer_url(@procedure.path)}%0AD'avance merci.".gsub(/&/,' ')
               %a{ href:"mailto: #{EQUIPE_EMAIL}?subject=#{subject}&body=#{body}" }
                 l'équipe RGPD.
 

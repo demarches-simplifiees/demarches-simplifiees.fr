@@ -651,6 +651,27 @@ describe API::V2::GraphqlController do
           }
         end
 
+        context 'with api hack' do
+          include Logic
+          let(:types_de_champ_public) { [{ type: :drop_down_list }] }
+          let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+          let(:routing_champ) { procedure.active_revision.types_de_champ.first }
+
+          before do
+            groupe_instructeur.update(routing_rule: ds_eq(champ_value(routing_champ.stable_id), constant(groupe_instructeur.label)))
+            create(:groupe_instructeur, procedure: procedure)
+            Flipper.enable(:groupe_instructeur_api_hack, procedure)
+          end
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:groupeInstructeurModifier][:errors]).to be_nil
+            expect(gql_data[:groupeInstructeurModifier][:groupeInstructeur][:id]).to eq(dossier.groupe_instructeur.to_typed_id)
+            expect(routing_champ.reload.drop_down_list_options).to match_array(procedure.groupe_instructeurs.active.map(&:label))
+            expect(procedure.groupe_instructeurs.active.map(&:routing_rule)).to match_array(procedure.groupe_instructeurs.active.map { ds_eq(champ_value(routing_champ.stable_id), constant(_1.label)) })
+          }
+        end
+
         context 'validation error' do
           it {
             expect(gql_errors).to be_nil
@@ -682,6 +703,26 @@ describe API::V2::GraphqlController do
           expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
           expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
           expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:instructeurs]).to match_array([{ id: admin.instructeur.to_typed_id, email: admin.instructeur.email }, { id: Instructeur.last.to_typed_id, email: }])
+        }
+      end
+
+      context 'with api hack' do
+        include Logic
+        let(:types_de_champ_public) { [{ type: :drop_down_list }] }
+        let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
+        let(:routing_champ) { procedure.active_revision.types_de_champ.first }
+
+        before do
+          groupe_instructeur.update(routing_rule: ds_eq(champ_value(routing_champ.stable_id), constant(groupe_instructeur.label)))
+          Flipper.enable(:groupe_instructeur_api_hack, procedure)
+        end
+
+        it {
+          expect(gql_errors).to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:errors]).to be_nil
+          expect(gql_data[:groupeInstructeurCreer][:groupeInstructeur][:id]).not_to be_nil
+          expect(routing_champ.reload.drop_down_list_options).to match_array(procedure.groupe_instructeurs.map(&:label))
+          expect(procedure.groupe_instructeurs.map(&:routing_rule)).to match_array(procedure.groupe_instructeurs.map { ds_eq(champ_value(routing_champ.stable_id), constant(_1.label)) })
         }
       end
     end

@@ -2,7 +2,7 @@
   .flex.clipboard-container
     %h1
       = "#{procedure_libelle procedure} - n°#{procedure.id}"
-    = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: procedure_lien(procedure))
+    = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(procedure.path))
   = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(procedure), class: 'header-link'
   |
   = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(procedure), class: 'header-link'
