@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@coldwired/actions": "^0.11.1",
+    "@coldwired/actions": "^0.11.2",
     "@coldwired/turbo-stream": "^0.11.1",
     "@coldwired/utils": "^0.11.1",
     "@gouvfr/dsfr": "^1.7.2",
