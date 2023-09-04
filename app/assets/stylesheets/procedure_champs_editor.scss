@@ -14,12 +14,17 @@
 
   .type-de-champ {
     width: 100%;
-    background-color: #FAFDFF;
-    border: 1px solid $border-grey;
-    border-radius: 5px;
-    margin-bottom: $default-padding * 2;
-    box-shadow: 0px 2px 4px -4px;
+    margin-bottom: $default-padding;
     overflow: hidden;
+
+    .type-de-champ-container {
+      width: 100%;
+      background-color: #FAFDFF;
+      border: 1px solid $border-grey;
+      border-radius: 5px;
+      margin-bottom: $default-padding;
+      box-shadow: 0px 2px 4px -4px;
+    }
 
     .handle.icon {
       width: 32px;
@@ -71,6 +76,10 @@
       display: none;
     }
 
+    &.last .type-de-champ-add-button.root {
+      display: none;
+    }
+
     .head {
       background-color: #FAFDFF;
 
@@ -91,10 +100,6 @@
       &.section {
         padding: $default-spacer $default-spacer 0;
         margin-bottom: 8px;
-
-        input {
-          background-color: $white;
-        }
       }
 
       &.hr {
