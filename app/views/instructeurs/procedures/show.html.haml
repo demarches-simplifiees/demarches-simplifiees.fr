@@ -65,23 +65,7 @@
         = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
         .fr-ml-auto
-          = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', 'fr-btn--secondary'] }, menu_options: { id: 'custom-menu' }) do |menu|
-            - menu.with_button_inner_html do
-              = t('views.instructeurs.dossiers.personalize')
-            - menu.with_form do
-              = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
-                = hidden_field_tag :values, nil
-                = react_component("ComboMultiple",
-                  options: @displayable_fields_for_select,
-                  selected: @displayable_fields_selected,
-                  disabled: [],
-                  label: 'Colonne à afficher',
-                  group: '.columns-form',
-                  name: 'values')
 
-                = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
-
-        .fr-ml-2w
           - if @statut == 'archives'
             = link_to deleted_dossiers_instructeur_procedure_path(@procedure), class: "fr-link fr-icon-delete-line fr-link--icon-left fr-mr-2w" do
               = t('views.instructeurs.dossiers.show_deleted_dossiers')
@@ -122,10 +106,26 @@
                 - @procedure_presentation.displayed_fields_for_headers.each do |field|
                   = render partial: "header_field", locals: { field: field, classname: field['classname'] }
 
-                %th.action-col.follow-col
+                %th.follow-col
                   Actions
 
-              %tr
+                %th.text-right
+                  = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', 'fr-btn--tertiary-no-outline', 'fr-btn--icon-right', 'fr-icon-settings-5-line'] }, menu_options: { id: 'custom-menu' }) do |menu|
+                    - menu.with_button_inner_html do
+                      = t('views.instructeurs.dossiers.personalize')
+                    - menu.with_form do
+                      = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
+                        = hidden_field_tag :values, nil
+                        = react_component("ComboMultiple",
+                          options: @displayable_fields_for_select,
+                          selected: @displayable_fields_selected,
+                          disabled: [],
+                          label: 'Colonne à afficher',
+                          group: '.columns-form',
+                          name: 'values')
+
+                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
+
 
             %tbody
               = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
@@ -179,7 +179,7 @@
                       %span.cell-link
                         = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
 
-                  %td.action-col.follow-col
+                  %td.follow-col{colspan:'2'}
                     %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                       = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
                                   dossier_id: p.dossier_id,
@@ -191,6 +191,7 @@
                                   sva_svr: @procedure.sva_svr_enabled?,
                                   turbo: false,
                                   with_menu: false }
+
             %tfoot
               %tr
                 %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }

@@ -380,7 +380,7 @@ en:
         batch_operation:
           enabled: "Add file %{dossier_id} to the selection for the bulk operation"
           disabled: "Impossible to add file %{dossier_id} to the selection because it is already in a bulk operation"
-        personalize: Personalize the table
+        personalize: Personalize
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
         save: Save
