@@ -10,7 +10,6 @@ describe 'The user' do
     log_in(user, procedure)
 
     fill_individual
-
     # fill data
     fill_in('text', with: 'super texte', match: :first)
     fill_in('textarea', with: 'super textarea')
@@ -22,7 +21,7 @@ describe 'The user' do
     fill_in('integer_number', with: '12')
     scroll_to(find_field('checkbox'), align: :center)
     find('label', text: 'checkbox').click
-    choose('Madame')
+    find('label', text: 'Madame').click
     fill_in('email', with: 'loulou@yopmail.com')
     fill_in('phone', with: '0123456789')
     scroll_to(find_field('Non'), align: :center)
@@ -556,8 +555,8 @@ describe 'The user' do
 
   def fill_individual
     find('label', text: 'Monsieur').click
-    fill_in('individual_prenom', with: 'prenom')
-    fill_in('individual_nom', with: 'nom')
+    fill_in('identite_champ_first_name', with: 'prenom')
+    fill_in('identite_champ_last_name', with: 'nom')
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end

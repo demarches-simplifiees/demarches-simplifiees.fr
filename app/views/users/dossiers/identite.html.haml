@@ -15,13 +15,13 @@
         = f.label :gender, t('activerecord.attributes.individual.gender')
       .fr-fieldset__element.fr-fieldset__element--inline
         .fr-radio-group
-          = f.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "#identite_champ_radio_#{Individual::GENDER_FEMALE}"
-          %label.fr-label{ for: "#identite_champ_radio_#{Individual::GENDER_FEMALE}" }
+          = f.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
+          %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
             = Individual.human_attribute_name('gender.female')
       .fr-fieldset__element.fr-fieldset__element--inline
         .fr-radio-group
-          = f.radio_button :gender, Individual::GENDER_MALE, required: true, id: "#identite_champ_radio_#{Individual::GENDER_MALE}"
-          %label.fr-label{ for: "#identite_champ_radio_#{Individual::GENDER_MALE}" }
+          = f.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
+          %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
             = Individual.human_attribute_name('gender.male')
 
     .flex
