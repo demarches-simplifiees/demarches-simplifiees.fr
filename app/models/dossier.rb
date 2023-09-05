@@ -942,6 +942,7 @@ class Dossier < ApplicationRecord
       .processed_at
     attestation&.destroy
 
+    self.sva_svr_decision_on = nil
     self.motivation = nil
     self.justificatif_motivation.purge_later
 
@@ -1087,6 +1088,10 @@ class Dossier < ApplicationRecord
     elsif will_save_change_to_sva_svr_decision_on?
       save! # we always want the most up to date decision when there is a pending correction
     end
+  end
+
+  def previously_termine?
+    traitements.termine.exists?
   end
 
   def remove_titres_identite!
