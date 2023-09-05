@@ -179,7 +179,7 @@
                       %span.cell-link
                         = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
 
-                  %td.follow-col{colspan:'2'}
+                  %td.follow-col{ colspan:'2' }
                     %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                       = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
                                   dossier_id: p.dossier_id,
