@@ -646,11 +646,14 @@ class Dossier < ApplicationRecord
 
     previous_groupe_instructeur = self.groupe_instructeur
 
+    track_assigned_dossier_without_groupe_instructeur if groupe_instructeur.nil?
+
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
     update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
+    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
+
     if !brouillon?
-      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
@@ -1414,5 +1417,14 @@ class Dossier < ApplicationRecord
     logger = Lograge.logger || Rails.logger
 
     logger.info payload.to_json
+  end
+
+  def track_assigned_dossier_without_groupe_instructeur
+    Sentry.capture_message(
+      "Assigned dossier without groupe_instructeur",
+      extra: {
+        dossier_id: self.id
+      }
+    )
   end
 end
