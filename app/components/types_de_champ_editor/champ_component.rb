@@ -93,8 +93,8 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   def filter_featured_type_champ(type_champ)
-    feature_name = TypeDeChamp::FEATURE_FLAGS[type_champ]
-    feature_name.blank? || feature_enabled?(feature_name)
+    feature_name = TypeDeChamp::FEATURE_FLAGS[type_champ.to_sym]
+    feature_name.blank? || feature_enabled?(feature_name) || procedure.feature_enabled?(feature_name)
   end
 
   def filter_type_champ(type_champ)
