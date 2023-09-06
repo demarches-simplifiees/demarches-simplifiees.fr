@@ -1,12 +1,11 @@
 #errors-summary
   - if invalid?
-    .card.warning
-      .card-title Le formulaire contient des erreurs
+    = render Dsfr::AlertComponent.new(state: :warning, title: "Le formulaire contient des erreurs", extra_class_names: 'fr-mb-2w') do |c|
+      - c.body do
+        - if condition_errors?
+          %p= t('.fix_conditional', count: errors_for(:condition).size)
+          = error_message_for(:condition)
 
-      - if condition_errors?
-        %p.mb-2= t('.fix_conditional', count: errors_for(:condition).size)
-        = error_message_for(:condition)
-
-      - if header_section_errors?
-        %p.mb-2= t('.fix_header_section', count: errors_for(:header_section).size)
-        = error_message_for(:header_section)
+        - if header_section_errors?
+          %p= t('.fix_header_section', count: errors_for(:header_section).size)
+          = error_message_for(:header_section)

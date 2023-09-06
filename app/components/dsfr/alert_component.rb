@@ -12,14 +12,21 @@ class Dsfr::AlertComponent < ApplicationComponent
     end
   end
 
+  def alert_class(state)
+    ["fr-alert fr-alert--#{state}", extra_class_names].compact.flatten
+  end
+
   private
 
-  def initialize(state:, title:, heading_level: 'h3')
+  def initialize(state:, title:, extra_class_names: nil, heading_level: 'h3')
     @state = state
     @title = title
     @block = block
+    @extra_class_names = extra_class_names
     @heading_level = heading_level
   end
 
-  attr_reader :state, :title, :block, :heading_level
+  attr_reader :state, :title, :block, :extra_class_names, :heading_level
+
+  private
 end
