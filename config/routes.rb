@@ -223,6 +223,9 @@ Rails.application.routes.draw do
 
   namespace :data_sources do
     get :adresse, to: 'adresse#search', as: :data_source_adresse
+    get :search_domaine_fonct, to: 'chorus#search_domaine_fonct', as: :search_domaine_fonct
+    get :search_centre_couts, to: 'chorus#search_centre_couts', as: :search_centre_couts
+    get :search_ref_programmation, to: 'chorus#search_ref_programmation', as: :search_ref_programmation
   end
 
   #

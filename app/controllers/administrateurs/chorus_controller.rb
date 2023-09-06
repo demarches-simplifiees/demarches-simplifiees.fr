@@ -21,8 +21,13 @@ module Administrateurs
 
     private
 
+    def search_params
+      params.permit(:q)
+    end
+
     def configurations_params
-      params.require(:chorus_configuration).permit(:centre_de_coup, :domaine_fonctionnel, :referentiel_de_programmation)
+      params.require(:chorus_configuration)
+        .permit(:centre_de_coup, :domaine_fonctionnel, :referentiel_de_programmation)
     end
   end
 end

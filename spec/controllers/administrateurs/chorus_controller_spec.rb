@@ -52,11 +52,12 @@ describe Administrateurs::ChorusController, type: :controller do
       before { sign_in(admin.user) }
 
       context "valid payload" do
+        let(:centre_de_coup) { '{"code":"D00C8DX004","label":"Aumôniers+protestant","ville":null,"code_postal":null,"description":"Aumoniers+protestants"}' }
+        let(:domaine_fonctionnel) { '{"code":"0105-05-01","label":"Formation+des+élites+et+cadres+de+sécurité+et+de+défense","description":null,"code_programme":"105"}' }
+        let(:referentiel_de_programmation) { '{"code":"010101010101","label":"DOTATIONS+CARPA+AJ+ET+AUTRES+INTERVENTIONS","description":null,"code_programme":"101"}' }
         let(:chorus_configuration_params) do
           {
-            centre_de_coup: ChorusConfiguration.centre_de_coup_options.first,
-            domaine_fonctionnel: ChorusConfiguration.domaine_fonctionnel_options.first,
-            referentiel_de_programmation: ChorusConfiguration.referentiel_de_programmation_options.first
+            centre_de_coup:, domaine_fonctionnel:, referentiel_de_programmation:,
           }
         end
 
@@ -65,25 +66,9 @@ describe Administrateurs::ChorusController, type: :controller do
           subject
           expect(flash[:notice]).to eq("La configuration Chorus a été mise à jour et prend immédiatement effet pour les nouveaux dossiers.")
           procedure.reload
-          expect(procedure.chorus_configuration.centre_de_coup).to eq(ChorusConfiguration.centre_de_coup_options.first)
-          expect(procedure.chorus_configuration.domaine_fonctionnel).to eq(ChorusConfiguration.domaine_fonctionnel_options.first)
-          expect(procedure.chorus_configuration.referentiel_de_programmation).to eq(ChorusConfiguration.referentiel_de_programmation_options.first)
-        end
-      end
-
-      context "invalid payload" do
-        let(:chorus_configuration_params) do
-          {
-            centre_de_coup: 0
-          }
-        end
-
-        it { is_expected.to have_http_status(200) }
-        it 'updates params' do
-          subject
-          expect(flash[:notice]).to eq("Des erreurs empêchent la validation du connecteur chorus. Corrigez les erreurs")
-          procedure.reload
-          expect(procedure.chorus_configuration.centre_de_coup).to eq(nil)
+          expect(procedure.chorus_configuration.centre_de_coup).to eq(JSON.parse(centre_de_coup))
+          expect(procedure.chorus_configuration.domaine_fonctionnel).to eq(JSON.parse(domaine_fonctionnel))
+          expect(procedure.chorus_configuration.referentiel_de_programmation).to eq(JSON.parse(referentiel_de_programmation))
         end
       end
     end
