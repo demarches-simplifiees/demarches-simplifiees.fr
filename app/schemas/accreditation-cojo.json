@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/accreditation-cojo.schema.json",
+  "title": "Accreditation COJO",
+  "type": "object",
+  "properties": {
+    "firstName": { "type": "string" },
+    "lastName": { "type": "string" },
+    "individualExistance": {
+      "enum": ["Yes", "No"]
+    }
+  },
+  "required": ["individualExistance"]
+}
