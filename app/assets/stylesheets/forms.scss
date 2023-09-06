@@ -514,7 +514,7 @@
     }
   }
 
-  fieldset ~ .spinner {
+  fieldset + .spinner {
     position: relative;
     top: -($default-fields-spacer / 2);
   }
