@@ -651,8 +651,9 @@ class Dossier < ApplicationRecord
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
     update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
+    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
+
     if !brouillon?
-      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
