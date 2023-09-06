@@ -509,22 +509,19 @@ describe Instructeurs::DossiersController, type: :controller do
 
     before do
       sign_in(instructeur.user)
-
-      allow(DossierMailer).to receive(:notify_pending_correction)
-        .and_return(double(deliver_later: nil))
-
       expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :messagerie)
+    end
+
+    context "dossier en instruction sends an email to user" do
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
+
+      it { expect { subject }.to have_enqueued_mail(DossierMailer, :notify_pending_correction) }
     end
 
     context "dossier en instruction" do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure: procedure) }
 
       before { subject }
-
-      it 'sends an email to user' do
-        expect(DossierMailer).to have_received(:notify_pending_correction).once
-        expect(DossierMailer).to have_received(:notify_pending_correction).with(dossier)
-      end
 
       it 'pass en_construction and create a pending correction' do
         expect(response).to have_http_status(:ok)
