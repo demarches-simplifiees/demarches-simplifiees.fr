@@ -9,7 +9,7 @@
   - if field_type == :enum
     = select_tag :value, options_for_select(options_for_select_of_field), id: 'value', name: 'value', class: 'fr-select', data: { no_autosubmit: true }
   - else
-    %input#value.fr-input{ type: field_type, name: :value, disabled: field_id.nil? ? true : false, data: { no_autosubmit: true } }
+    %input#value.fr-input{ type: field_type, name: :value, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH, disabled: field_id.nil? ? true : false, data: { no_autosubmit: true } }
 
   = hidden_field_tag :statut, statut
   = submit_tag t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'
