@@ -9,7 +9,7 @@ module Instructeurs
       assign_procedure_and_groupe_instructeur
       @contact_information = @groupe_instructeur.build_contact_information(contact_information_params)
       if @contact_information.save
-        redirect_to instructeur_groupe_path(@groupe_instructeur, procedure_id: @procedure.id), notice: "Les informations de contact ont bien été ajoutées"
+        redirect_to_groupe_instructeur("Les informations de contact ont bien été ajoutées")
       else
         flash[:alert] = @contact_information.errors.full_messages
         render :new
@@ -25,7 +25,7 @@ module Instructeurs
       assign_procedure_and_groupe_instructeur
       @contact_information = @groupe_instructeur.contact_information
       if @contact_information.update(contact_information_params)
-        redirect_to instructeur_groupe_path(@groupe_instructeur, procedure_id: @procedure.id), notice: "Les informations de contact ont bien été modifiées"
+        redirect_to_groupe_instructeur("Les informations de contact ont bien été modifiées")
       else
         flash[:alert] = @contact_information.errors.full_messages
         render :edit
@@ -35,10 +35,18 @@ module Instructeurs
     def destroy
       assign_procedure_and_groupe_instructeur
       @groupe_instructeur.contact_information.destroy
-      redirect_to instructeur_groupe_path(@groupe_instructeur, procedure_id: @procedure.id), notice: "Les informations de contact ont bien été supprimées"
+      redirect_to_groupe_instructeur("Les informations de contact ont bien été supprimées")
     end
 
     private
+
+    def redirect_to_groupe_instructeur(notice)
+      if params[:from_admin] == "true"
+        redirect_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur), notice: notice
+      else
+        redirect_to instructeur_groupe_path(@procedure, @groupe_instructeur), notice: notice
+      end
+    end
 
     def assign_procedure_and_groupe_instructeur
       @procedure = current_instructeur.procedures.find params[:procedure_id]

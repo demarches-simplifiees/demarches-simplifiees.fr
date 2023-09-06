@@ -3,6 +3,7 @@ describe Instructeurs::ContactInformationsController, type: :controller do
   let(:procedure) { create(:procedure) }
   let(:assign_to) { create(:assign_to, instructeur: instructeur, groupe_instructeur: build(:groupe_instructeur, procedure: procedure)) }
   let(:gi) { assign_to.groupe_instructeur }
+  let(:from_admin) { nil }
 
   before do
     sign_in(instructeur.user)
@@ -20,7 +21,8 @@ describe Instructeurs::ContactInformationsController, type: :controller do
             adresse: 'adresse'
           },
           procedure_id: procedure.id,
-          groupe_id: gi.id
+          groupe_id: gi.id,
+          from_admin: from_admin
         }
       end
 
@@ -33,6 +35,14 @@ describe Instructeurs::ContactInformationsController, type: :controller do
         expect(ContactInformation.last.telephone).to eq('1234')
         expect(ContactInformation.last.horaires).to eq('horaires')
         expect(ContactInformation.last.adresse).to eq('adresse')
+      end
+
+      context 'from admin' do
+        let(:from_admin) { true }
+        it do
+          post :create, params: params
+          expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(gi, procedure_id: procedure.id))
+        end
       end
     end
 
@@ -69,7 +79,8 @@ describe Instructeurs::ContactInformationsController, type: :controller do
         id: contact_information.id,
         contact_information: contact_information_params,
         procedure_id: procedure.id,
-        groupe_id: gi.id
+        groupe_id: gi.id,
+        from_admin: from_admin
       }
     }
 
@@ -82,6 +93,11 @@ describe Instructeurs::ContactInformationsController, type: :controller do
       it { expect(flash.notice).to eq('Les informations de contact ont bien été modifiées') }
       it { expect(ContactInformation.last.nom).to eq('nom') }
       it { expect(response).to redirect_to(instructeur_groupe_path(gi, procedure_id: procedure.id)) }
+    end
+
+    context 'when updating a contact_information as an admin' do
+      let(:from_admin) { true }
+      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(gi, procedure_id: procedure.id)) }
     end
 
     context 'when updating a contact_information with invalid data' do
