@@ -1934,6 +1934,17 @@ describe Dossier, type: :model do
       expect { dossier.procedure.reset! }.not_to raise_error
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "call logger with context" do
+      json_message = nil
+
+      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
+      dossier.destroy
+
+      expect(JSON.parse(json_message)).to a_hash_including(
+        { message: "Dossier destroyed", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
+      )
+    end
   end
 
   describe "#spreadsheet_columns" do
