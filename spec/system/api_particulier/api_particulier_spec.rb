@@ -266,9 +266,9 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        choose 'Monsieur'
-        fill_in 'individual_nom',    with: 'Nom'
-        fill_in 'individual_prenom', with: 'Prenom'
+        find('label', text: 'Monsieur').click
+        fill_in('identite_champ_first_name', with: 'prenom')
+        fill_in('identite_champ_last_name', with: 'nom')
 
         click_button('Continuer')
 
@@ -325,9 +325,9 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        choose 'Monsieur'
-        fill_in 'individual_nom',    with: 'Moustaki'
-        fill_in 'individual_prenom', with: 'Georges'
+        find('label', text: 'Monsieur').click
+        fill_in('identite_champ_first_name', with: 'Georges')
+        fill_in('identite_champ_last_name', with: 'Moustaki')
 
         click_button('Continuer')
 
@@ -399,9 +399,9 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        choose 'Madame'
-        fill_in 'individual_nom',    with: 'Dubois'
-        fill_in 'individual_prenom', with: 'Angela Claire Louise'
+        find('label[for="identite_champ_radio_Mme"]').click
+        fill_in('identite_champ_last_name', with: 'Dubois')
+        fill_in('identite_champ_first_name', with: 'Angela Claire Louise')
 
         click_button('Continuer')
 
@@ -463,9 +463,9 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        choose 'Madame'
-        fill_in 'individual_nom',    with: 'FERRI'
-        fill_in 'individual_prenom', with: 'Karine'
+        find('label[for="identite_champ_radio_Mme"]').click
+        fill_in('identite_champ_last_name', with: 'FERRI')
+        fill_in('identite_champ_first_name', with: 'Karine')
 
         click_button('Continuer')
 
