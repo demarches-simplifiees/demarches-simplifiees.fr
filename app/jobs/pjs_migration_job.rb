@@ -1,3 +1,5 @@
+require 'fog/openstack'
+
 class PjsMigrationJob < ApplicationJob
   queue_as :pj_migration_jobs
 
@@ -7,7 +9,6 @@ class PjsMigrationJob < ApplicationJob
     return if already_moved?(blob)
 
     service = blob.service
-    client = service.client
     container = service.container
     old_key = blob.key
     new_key = "#{blob.created_at.strftime('%Y/%m/%d')}/#{old_key[0..1]}/#{old_key}"
@@ -27,5 +28,15 @@ class PjsMigrationJob < ApplicationJob
 
   def already_moved?(blob)
     blob.key.include?('/')
+  end
+
+  private
+
+  def client
+    @client ||= begin
+      credentials = Rails.application.config.active_storage
+        .service_configurations['openstack']['credentials']
+      Fog::OpenStack::Storage.new(credentials)
+    end
   end
 end
