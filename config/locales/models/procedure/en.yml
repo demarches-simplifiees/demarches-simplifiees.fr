@@ -9,12 +9,15 @@ en:
         hints:
           description: Describe in a few lines the context, the aim etc.
           description_target_audience: Describe in a few lines the final recipients of the process, the eligibility criteria if there are any, the prerequisites, etc.
+          description_pj: Describe the required attachments list if there is any
           lien_site_web: "Exemple: 'https://exemple.gouv.fr/ma_demarche'"
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
         path: Public link
         organisation: Service
         description: What is the purpose of this procedure?
         description_target_audience: Who is the procedure intended for?
+        description_pj: Required attachments list
+        description_pj_placeholder: If you leave this field blank and your form contains attachments, an automatically generated list will be displayed on the home page of your procedure.
         lien_site_web: Where will users find the link to the procedure?
         cadre_juridique: Link to the legal text
         lien_dpo: Link or email to contact the data protection officer (DPO)

@@ -1,13 +1,16 @@
 - if @procedure.locked?
-  .card.warning
-    .card-title Cette démarche est publiée.
-    Certains éléments de la description ne sont plus modifiables.
+  = render Dsfr::AlertComponent.new(state: :warning, title: "Cette démarche est publiée.", extra_class_names: 'fr-mb-2w') do |c|
+    - c.body do
+      %p
+        Certains éléments de la description ne sont plus modifiables.
 
 = render Dsfr::InputComponent.new(form: f, attribute: :libelle, input_type: :text_field, opts: {})
 
 = render Dsfr::InputComponent.new(form: f, attribute: :description, input_type: :text_area, opts: {})
 
 = render Dsfr::InputComponent.new(form: f, attribute: :description_target_audience, input_type: :text_area, opts: {}, required: false)
+
+= render Dsfr::InputComponent.new(form: f, attribute: :description_pj, input_type: :text_area, opts: {placeholder: t('activerecord.attributes.procedure.description_pj_placeholder')}, required: false)
 
 = f.label :logo, 'Ajouter un logo de la démarche (facultatif)', class: 'fr-label'
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)

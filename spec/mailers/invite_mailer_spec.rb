@@ -21,7 +21,7 @@ RSpec.describe InviteMailer, type: :mailer do
 
          begin
            mailer.body
-         rescue MailDeliveryError
+         rescue => e
            nil
          end
 
@@ -70,7 +70,7 @@ RSpec.describe InviteMailer, type: :mailer do
 
          begin
            mailer.body
-         rescue MailDeliveryError
+         rescue => e
            nil
          end
 

@@ -39,7 +39,15 @@
         #accordion-115.fr-collapse
           = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)
 
-    - if procedure.pieces_jointes_list?
+    - if procedure.description_pj.present?
+      %section.fr-accordion.pieces_jointes
+        %h2.fr-accordion__title
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
+            = t('shared.procedure_description.pieces_jointes')
+        #accordion-116.fr-collapse
+          = h render SimpleFormatComponent.new(procedure.description_pj, allow_a: true)
+
+    - elsif procedure.pieces_jointes_list?
       %section.fr-accordion.pieces_jointes
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }

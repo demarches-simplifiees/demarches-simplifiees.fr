@@ -114,7 +114,7 @@ class Commentaire < ApplicationRecord
 
   def notify_user(job_options = {})
     if flagged_pending_correction?
-      DossierMailer.notify_pending_correction(dossier).deliver_later(job_options)
+      DossierMailer.with(commentaire: self).notify_pending_correction.deliver_later(job_options)
     else
       DossierMailer.with(commentaire: self).notify_new_answer.deliver_later(job_options)
     end

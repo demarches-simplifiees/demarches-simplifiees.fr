@@ -32,13 +32,14 @@
 
 - if @procedure.draft_changed?
   .fr-container
-    .card.featured
-      .card-title
-        = t(:has_changes, scope: [:administrateurs, :revision_changes])
-      = render Procedure::RevisionChangesComponent.new changes: @procedure.revision_changes, previous_revision: @procedure.published_revision
-      .flex.mt-2.justify-end
-        = button_to "Réinitialiser les modifications", admin_procedure_reset_draft_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w', data: { confirm: 'Êtes-vous sûr de vouloir réinitialiser les modifications ?' }, method: :put
-        = button_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'fr-btn', id: 'publish-procedure-link', data: { disable_with: "Publication..." }, disabled: !@procedure.draft_revision.valid?, method: :get
+    = render Dsfr::CalloutComponent.new(title: t(:has_changes, scope: [:administrateurs, :revision_changes]), icon: "fr-fi-information-line") do |c|
+      - c.body do
+        = render Procedure::RevisionChangesComponent.new changes: @procedure.revision_changes, previous_revision: @procedure.published_revision
+
+      - c.bottom do
+        %ul.fr-mt-2w.fr-btns-group.fr-btns-group--inline
+          %li= button_to "Réinitialiser les modifications", admin_procedure_reset_draft_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w', data: { confirm: 'Êtes-vous sûr de vouloir réinitialiser les modifications ?' }, method: :put
+          %li= button_to 'Publier les modifications', admin_procedure_publication_path(@procedure), class: 'fr-btn', id: 'publish-procedure-link', data: { disable_with: "Publication..." }, disabled: !@procedure.draft_revision.valid?, method: :get
 
 - if !@procedure.procedure_expires_when_termine_enabled?
   = render partial: 'administrateurs/procedures/suggest_expires_when_termine', locals: { procedure: @procedure }

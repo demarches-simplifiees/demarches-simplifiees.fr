@@ -1,4 +1,4 @@
-%ul.etablissement-infos-entreprise
+%ul
   %li
     Numéro TAHITI :
     = pretty_siret(etablissement.siret)
@@ -17,18 +17,22 @@
       - etablissement.adresse.split(" | ").each do |line|
         %li= line
 
-  %p.etablissement-exercices
-    Nous allons également récupérer la forme juridique, la date de création, les effectifs de votre organisation.
+    - etablissement.adresse.split("\n").each do |line|
+      = line
 
-  -# %p.etablissement-exercices Les exercices comptables des trois dernières années pourront être joints à votre dossier.
+  %p
+    Nous allons également récupérer la forme juridique, la date de création, les effectifs.
+    Pour les associations, nous récupérerons également l'objet, la date de création, de déclaration et de publication.
+
+  -# %p Les exercices comptables des trois dernières années pourront être joints à votre dossier.
 
   - procedure = etablissement.dossier.procedure
   - if procedure.api_entreprise_role?("attestations_sociales")
-    %p.etablissement-exercices Une attestation sociale sera jointe à votre dossier
+    %p Une attestation sociale sera jointe à votre dossier
   - if procedure.api_entreprise_role?("attestations_fiscales")
-    %p.etablissement-exercices Une attestation fiscale sera jointe à votre dossier
+    %p Une attestation fiscale sera jointe à votre dossier
   - if procedure.api_entreprise_role?("bilans_bdf")
-    %p.etablissement-exercices Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
+    %p Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
 %p
   = link_to "➡ Autres informations sur le site de l\'ISPF",
   annuaire_link(etablissement.siret),
