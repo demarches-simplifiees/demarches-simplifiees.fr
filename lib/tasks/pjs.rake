@@ -22,4 +22,32 @@ namespace :pjs do
 
     blobs.in_batches { |batch| batch.ids.each { |id| PjsMigrationJob.perform_later(id) } }
   end
+
+  desc "Watermark demo. Usage: noglob rake pjs:watermark_demo[tmp/carte-identite-demo-1.jpg]"
+  task :watermark_demo, [:file_path] => :environment do |_t, args|
+    file = Pathname.new(args[:file_path])
+    output_file = Rails.root.join('tmp', "#{file.basename(file.extname)}_watermarked#{file.extname}")
+
+    processed = WatermarkService.new.process(file, output_file)
+
+    if processed
+      rake_puts "Watermarked: #{processed}"
+    else
+      rake_puts "File #{file} not watermarked. Read application log for more information"
+    end
+  end
+
+  desc "Watermark demo all defined demo files. Usage: noglob rake pjs:watermark_demo_all"
+  task :watermark_demo_all => :environment do
+    # You must have these filenames in tmp/ to run this demo (download id cards specimens)
+    filenames = [
+      "carte-identite-demo-1.jpg", "carte-identite-demo-2.jpg", "carte-identite-demo-3.png", "carte-identite-demo-4.jpg",
+      "carte-identite-demo-5.jpg", "passeport-1.jpg", "passeport-2.jpg"
+    ]
+
+    filenames.each do |file|
+      Rake::Task["pjs:watermark_demo"].invoke("tmp/#{file}")
+      Rake::Task["pjs:watermark_demo"].reenable
+    end
+  end
 end
