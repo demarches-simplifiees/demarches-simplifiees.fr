@@ -230,14 +230,25 @@ en:
         info_html: To do this, select the fields below that you want to prefill.<br> You will then find a prefill link at the bottom of this page, which you will just need to copy, adapt by replacing the default values, and share.<br> In the same way, you will find an example of a cURL request at the bottom of the page to adapt if you want to prefill the folders via API.
         champ_id: ID
         champ_type: Type
-        champ_add: Add
-        champ_remove: Remove
-        champ_unavailable: Unavailable
+        entity_add: Add
+        entity_remove: Remove
+        entity_unavailable: Unavailable
+        title:
+          prenom: First name (identity)
+          nom: Last name (identity)
+          genre: Gender (identity)
+        description:
+          prenom: The first name of the owner of the file
+          nom: The last name of the owner of the file
+          genre: The gender name of the owner of the file
         possible_values:
           link:
             title: All possible values
             text: See all possible values
           title: Values
+          prenom: A first name
+          nom: A last name
+          genre: '"M." for Mister, "Mme" for Madam'
           text_html: A short text
           textarea_html: A long text
           decimal_number_html: A decimal number
@@ -265,6 +276,9 @@ en:
           dossier_link_html: The file ID, as integer
         examples:
           title: Example
+          prenom: "Jean"
+          nom: "Dupont"
+          genre: "M."
           text: Short text
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
@@ -284,6 +298,7 @@ en:
           dossier_link: 42
           rna: "W503726238"
           siret: "13002526500013"
+          civilite: "M."
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.

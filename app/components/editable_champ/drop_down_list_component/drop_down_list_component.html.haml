@@ -1,22 +1,31 @@
 - if @champ.options?
   - if @champ.render_as_radios?
-    %fieldset.radios
-      - @champ.enabled_non_empty_options.each do |option|
-        %label
-          = @form.radio_button :value, option
-          = option
+    .fr-fieldset__content
+      - @champ.enabled_non_empty_options.each_with_index do |option, index|
+        .fr-radio-group
+          = @form.radio_button :value, option, id: "#{@champ.id}_radio_option_#{index}"
+          %label.fr-label{ for: "#{@champ.id}_radio_option_#{index}" }
+            = option
 
       - if !@champ.mandatory?
-        %label.blank-radio
-          = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?
-          Non renseigné
+        .fr-radio-group
+          = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: "#{@champ.id}_radio_option_blank"
+          %label.fr-label{ for: "#{@champ.id}_radio_option_blank" }
+            Non renseigné
 
       - if @champ.drop_down_other?
-        %label
-          = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?
-          Autre
+        .fr-radio-group
+          = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: "#{@champ.id}_radio_option_other"
+          %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
+            Autre
   - else
-    = @form.select :value, @champ.options_without_empty_value_when_mandatory(@champ.options), { selected: @champ.selected }, required: @champ.required?, id: @champ.input_id, class: select_class_names, aria: { describedby: @champ.describedby_id }
+    = @form.select :value,
+      @champ.options.compact_blank,
+      { selected: @champ.selected, include_blank: true },
+      required: @champ.required?,
+      id: @champ.input_id,
+      class: select_class_names,
+      aria: { describedby: @champ.describedby_id }
 
   - if @champ.drop_down_other?
     = render EditableChamp::DropDownOtherInputComponent.new(form: @form, champ: @champ)

@@ -1,8 +1,9 @@
 class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
-  def initialize(revision:, parent: nil, is_annotation: false)
+  def initialize(revision:, parent: nil, is_annotation: false, after_stable_id: nil)
     @revision = revision
     @parent = parent
     @is_annotation = is_annotation
+    @after_stable_id = after_stable_id
   end
 
   private
@@ -25,8 +26,7 @@ class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
 
   def button_options
     {
-      class: "button",
-      form: { class: @parent ? "add-to-block" : "add-to-root" },
+      class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line",
       method: :post,
       params: {
         type_de_champ: {
@@ -34,7 +34,7 @@ class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           private: annotations? ? true : nil,
           parent_stable_id: @parent&.stable_id,
-          after_stable_id: ''
+          after_stable_id: @after_stable_id
         }.compact
       }
     }

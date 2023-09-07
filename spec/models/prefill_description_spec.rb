@@ -51,17 +51,34 @@ RSpec.describe PrefillDescription, type: :model do
 
   describe '#include?' do
     let(:prefill_description) { described_class.new(build(:procedure)) }
-    let(:type_de_champ_id) { 1 }
-    subject(:included) { prefill_description.include?(type_de_champ_id) }
 
-    context 'when the id has been added to the prefill_description' do
-      before { prefill_description.update(selected_type_de_champ_ids: '1') }
+    context "type_de_champ id" do
+      let(:type_de_champ_id) { 1 }
+      subject(:included) { prefill_description.include?(type_de_champ_id.to_s) }
 
-      it { expect(included).to eq(true) }
+      context 'when the id of a type_de_champ has been added to the prefill_description' do
+        before { prefill_description.update(selected_type_de_champ_ids: '1') }
+
+        it { expect(included).to eq(true) }
+      end
+
+      context 'when the id has not be added to the prefill_description' do
+        it { expect(included).to eq(false) }
+      end
     end
 
-    context 'when the id has not be added to the prefill_description' do
-      it { expect(included).to eq(false) }
+    context "identity information" do
+      subject(:included) { prefill_description.include?('prenom') }
+
+      context 'when the first_name has been added to the prefill_description' do
+        before { prefill_description.update(identity_items_selected: 'prenom') }
+
+        it { expect(included).to eq(true) }
+      end
+
+      context 'when the first_name has not been added to the prefill_description' do
+        it { expect(included).to eq(false) }
+      end
     end
   end
 
@@ -96,7 +113,7 @@ RSpec.describe PrefillDescription, type: :model do
     let(:prefill_description) { described_class.new(procedure) }
 
     before do
-      prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id])
+      prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id], identity_items_selected: "prenom")
     end
 
     it "builds the URL to create a new prefilled dossier" do
@@ -106,7 +123,8 @@ RSpec.describe PrefillDescription, type: :model do
             path: procedure.path,
             "champ_#{type_de_champ_text.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_text, procedure.active_revision).example_value,
             "champ_#{type_de_champ_epci.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision).example_value,
-            "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value
+            "champ_#{type_de_champ_repetition.to_typed_id_for_query}" => TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_repetition, procedure.active_revision).example_value,
+            "identite_prenom" => I18n.t("views.prefill_descriptions.edit.examples.prenom")
           )
         )
       )
@@ -127,12 +145,12 @@ RSpec.describe PrefillDescription, type: :model do
       <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
              --header 'Content-Type: application/json' \\
-             --data '{"champ_#{type_de_champ_text.to_typed_id_for_query}":"Texte court","champ_#{type_de_champ_epci.to_typed_id_for_query}":["01","200042935"],"champ_#{type_de_champ_repetition.to_typed_id_for_query}":[{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"},{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"}]}'
+             --data '{"identite_prenom":"#{I18n.t("views.prefill_descriptions.edit.examples.prenom")}","champ_#{type_de_champ_text.to_typed_id_for_query}":"Texte court","champ_#{type_de_champ_epci.to_typed_id_for_query}":["01","200042935"],"champ_#{type_de_champ_repetition.to_typed_id_for_query}":[{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"},{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"}]}'
       TEXT
     end
 
     before do
-      prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id])
+      prefill_description.update(selected_type_de_champ_ids: [type_de_champ_text.id, type_de_champ_epci.id, type_de_champ_repetition.id], identity_items_selected: "prenom")
     end
 
     it "builds the query to create a new prefilled dossier" do

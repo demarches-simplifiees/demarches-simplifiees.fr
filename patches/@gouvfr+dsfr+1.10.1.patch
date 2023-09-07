@@ -1,0 +1,126 @@
+diff --git a/node_modules/@gouvfr/dsfr/dist/dsfr.module.js b/node_modules/@gouvfr/dsfr/dist/dsfr.module.js
+index 1ddc56c..2b489ff 100644
+--- a/node_modules/@gouvfr/dsfr/dist/dsfr.module.js
++++ b/node_modules/@gouvfr/dsfr/dist/dsfr.module.js
+@@ -3711,7 +3711,7 @@ const COLLAPSE$2 = api.internals.ns.selector('collapse');
+ const AccordionSelector = {
+   GROUP: api.internals.ns.selector('accordions-group'),
+   ACCORDION: ACCORDION,
+-  COLLAPSE: `${ACCORDION} > ${COLLAPSE$2}, ${ACCORDION} > *:not(${ACCORDION}, ${COLLAPSE$2}) > ${COLLAPSE$2}, ${ACCORDION} > *:not(${ACCORDION}, ${COLLAPSE$2}) > *:not(${ACCORDION}, ${COLLAPSE$2}) > ${COLLAPSE$2}`,
++  COLLAPSE: `${ACCORDION} > ${COLLAPSE$2}, ${ACCORDION} > *:not(${ACCORDION}):not(${COLLAPSE$2}) > ${COLLAPSE$2}, ${ACCORDION} > *:not(${ACCORDION}):not(${COLLAPSE$2}) > *:not(${ACCORDION}):not(${COLLAPSE$2}) > ${COLLAPSE$2}`,
+   COLLAPSE_LEGACY: `${ACCORDION} ${COLLAPSE$2}`,
+   BUTTON: `${ACCORDION}__btn`
+ };
+@@ -4114,7 +4114,7 @@ const COLLAPSE$1 = api.internals.ns.selector('collapse');
+ 
+ const SidemenuSelector = {
+   LIST: api.internals.ns.selector('sidemenu__list'),
+-  COLLAPSE: `${ITEM$1} > ${COLLAPSE$1}, ${ITEM$1} > *:not(${ITEM$1}, ${COLLAPSE$1}) > ${COLLAPSE$1}, ${ITEM$1} > *:not(${ITEM$1}, ${COLLAPSE$1}) > *:not(${ITEM$1}, ${COLLAPSE$1}) > ${COLLAPSE$1}`,
++  COLLAPSE: `${ITEM$1} > ${COLLAPSE$1}, ${ITEM$1} > *:not(${ITEM$1}):not(${COLLAPSE$1}) > ${COLLAPSE$1}, ${ITEM$1} > *:not(${ITEM$1}):not(${COLLAPSE$1}) > *:not(${ITEM$1}):not(${COLLAPSE$1}) > ${COLLAPSE$1}`,
+   COLLAPSE_LEGACY: `${ITEM$1} ${COLLAPSE$1}`,
+   ITEM: api.internals.ns.selector('sidemenu__item'),
+   BUTTON: api.internals.ns.selector('sidemenu__btn')
+@@ -4731,7 +4731,7 @@ const COLLAPSE = api.internals.ns.selector('collapse');
+ 
+ const NavigationSelector = {
+   NAVIGATION: api.internals.ns.selector('nav'),
+-  COLLAPSE: `${ITEM} > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}, ${COLLAPSE}) > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}, ${COLLAPSE}) > *:not(${ITEM}, ${COLLAPSE}) > ${COLLAPSE}`,
++  COLLAPSE: `${ITEM} > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}):not(${COLLAPSE}) > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}):not(${COLLAPSE}) > *:not(${ITEM}):not(${COLLAPSE}) > ${COLLAPSE}`,
+   COLLAPSE_LEGACY: `${ITEM} ${COLLAPSE}`,
+   ITEM: ITEM,
+   ITEM_RIGHT: `${ITEM}--align-right`,
+diff --git a/node_modules/@gouvfr/dsfr/dist/dsfr.nomodule.js b/node_modules/@gouvfr/dsfr/dist/dsfr.nomodule.js
+index ab11d6e..1acad53 100644
+--- a/node_modules/@gouvfr/dsfr/dist/dsfr.nomodule.js
++++ b/node_modules/@gouvfr/dsfr/dist/dsfr.nomodule.js
+@@ -4219,7 +4219,7 @@
+   var AccordionSelector = {
+     GROUP: api.internals.ns.selector('accordions-group'),
+     ACCORDION: ACCORDION,
+-    COLLAPSE: (ACCORDION + " > " + COLLAPSE$2 + ", " + ACCORDION + " > *:not(" + ACCORDION + ", " + COLLAPSE$2 + ") > " + COLLAPSE$2 + ", " + ACCORDION + " > *:not(" + ACCORDION + ", " + COLLAPSE$2 + ") > *:not(" + ACCORDION + ", " + COLLAPSE$2 + ") > " + COLLAPSE$2),
++    COLLAPSE: (ACCORDION + " > " + COLLAPSE$2 + ", " + ACCORDION + " > *:not(" + ACCORDION + "):not(" + COLLAPSE$2 + ") > " + COLLAPSE$2 + ", " + ACCORDION + " > *:not(" + ACCORDION + "):not(" + COLLAPSE$2 + ") > *:not(" + ACCORDION + "):not(" + COLLAPSE$2 + ") > " + COLLAPSE$2),
+     COLLAPSE_LEGACY: (ACCORDION + " " + COLLAPSE$2),
+     BUTTON: (ACCORDION + "__btn")
+   };
+@@ -4736,7 +4736,7 @@
+ 
+   var SidemenuSelector = {
+     LIST: api.internals.ns.selector('sidemenu__list'),
+-    COLLAPSE: (ITEM$1 + " > " + COLLAPSE$1 + ", " + ITEM$1 + " > *:not(" + ITEM$1 + ", " + COLLAPSE$1 + ") > " + COLLAPSE$1 + ", " + ITEM$1 + " > *:not(" + ITEM$1 + ", " + COLLAPSE$1 + ") > *:not(" + ITEM$1 + ", " + COLLAPSE$1 + ") > " + COLLAPSE$1),
++    COLLAPSE: (ITEM$1 + " > " + COLLAPSE$1 + ", " + ITEM$1 + " > *:not(" + ITEM$1 + "):not(" + COLLAPSE$1 + ") > " + COLLAPSE$1 + ", " + ITEM$1 + " > *:not(" + ITEM$1 + "):not(" + COLLAPSE$1 + ") > *:not(" + ITEM$1 + "):not(" + COLLAPSE$1 + ") > " + COLLAPSE$1),
+     COLLAPSE_LEGACY: (ITEM$1 + " " + COLLAPSE$1),
+     ITEM: api.internals.ns.selector('sidemenu__item'),
+     BUTTON: api.internals.ns.selector('sidemenu__btn')
+@@ -5493,7 +5493,7 @@
+ 
+   var NavigationSelector = {
+     NAVIGATION: api.internals.ns.selector('nav'),
+-    COLLAPSE: (ITEM + " > " + COLLAPSE + ", " + ITEM + " > *:not(" + ITEM + ", " + COLLAPSE + ") > " + COLLAPSE + ", " + ITEM + " > *:not(" + ITEM + ", " + COLLAPSE + ") > *:not(" + ITEM + ", " + COLLAPSE + ") > " + COLLAPSE),
++    COLLAPSE: (ITEM + " > " + COLLAPSE + ", " + ITEM + " > *:not(" + ITEM + "):not(" + COLLAPSE + ") > " + COLLAPSE + ", " + ITEM + " > *:not(" + ITEM + "):not(" + COLLAPSE + ") > *:not(" + ITEM + "):not(" + COLLAPSE + ") > " + COLLAPSE),
+     COLLAPSE_LEGACY: (ITEM + " " + COLLAPSE),
+     ITEM: ITEM,
+     ITEM_RIGHT: (ITEM + "--align-right"),
+diff --git a/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/transcription/transcription-selector.js b/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/transcription/transcription-selector.js
+index 3df9aff..b8462b9 100644
+--- a/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/transcription/transcription-selector.js
++++ b/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/transcription/transcription-selector.js
+@@ -5,7 +5,7 @@ const COLLAPSE = api.internals.ns.selector('collapse');
+ 
+ export const TranscriptionSelector = {
+   TRANSCRIPTION: TRANSCRIPTION,
+-  COLLAPSE: `${TRANSCRIPTION} > ${COLLAPSE}, ${TRANSCRIPTION} > *:not(${TRANSCRIPTION}, ${COLLAPSE}) > ${COLLAPSE}, ${TRANSCRIPTION} > *:not(${TRANSCRIPTION}, ${COLLAPSE}) > *:not(${TRANSCRIPTION}, ${COLLAPSE}) > ${COLLAPSE}`,
++  COLLAPSE: `${TRANSCRIPTION} > ${COLLAPSE}, ${TRANSCRIPTION} > *:not(${TRANSCRIPTION}):not(${COLLAPSE}) > ${COLLAPSE}, ${TRANSCRIPTION} > *:not(${TRANSCRIPTION}):not(${COLLAPSE}) > *:not(${TRANSCRIPTION}):not(${COLLAPSE}) > ${COLLAPSE}`,
+   COLLAPSE_LEGACY: `${TRANSCRIPTION} ${COLLAPSE}`,
+   TITLE: `${TRANSCRIPTION}__title`
+ };
+diff --git a/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/translate/translate-selector.js b/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/translate/translate-selector.js
+index a39f6b4..8c0c07d 100644
+--- a/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/translate/translate-selector.js
++++ b/node_modules/@gouvfr/dsfr/src/analytics/script/integration/component/translate/translate-selector.js
+@@ -5,6 +5,6 @@ const COLLAPSE = api.internals.ns.selector('collapse');
+ 
+ export const TranslateSelector = {
+   BUTTON: `${TRANSLATE}__btn`,
+-  COLLAPSE: `${TRANSLATE} > ${COLLAPSE}, ${TRANSLATE} > *:not(${TRANSLATE}, ${COLLAPSE}) > ${COLLAPSE}, ${TRANSLATE} > *:not(${TRANSLATE}, ${COLLAPSE}) > *:not(${TRANSLATE}, ${COLLAPSE}) > ${COLLAPSE}`,
++  COLLAPSE: `${TRANSLATE} > ${COLLAPSE}, ${TRANSLATE} > *:not(${TRANSLATE}):not(${COLLAPSE}) > ${COLLAPSE}, ${TRANSLATE} > *:not(${TRANSLATE}):not(${COLLAPSE}) > *:not(${TRANSLATE}):not(${COLLAPSE}) > ${COLLAPSE}`,
+   COLLAPSE_LEGACY: `${TRANSLATE} ${COLLAPSE}`
+ };
+diff --git a/node_modules/@gouvfr/dsfr/src/component/accordion/script/accordion/accordion-selector.js b/node_modules/@gouvfr/dsfr/src/component/accordion/script/accordion/accordion-selector.js
+index f0d42e0..8adffc7 100644
+--- a/node_modules/@gouvfr/dsfr/src/component/accordion/script/accordion/accordion-selector.js
++++ b/node_modules/@gouvfr/dsfr/src/component/accordion/script/accordion/accordion-selector.js
+@@ -6,7 +6,7 @@ const COLLAPSE = api.internals.ns.selector('collapse');
+ export const AccordionSelector = {
+   GROUP: api.internals.ns.selector('accordions-group'),
+   ACCORDION: ACCORDION,
+-  COLLAPSE: `${ACCORDION} > ${COLLAPSE}, ${ACCORDION} > *:not(${ACCORDION}, ${COLLAPSE}) > ${COLLAPSE}, ${ACCORDION} > *:not(${ACCORDION}, ${COLLAPSE}) > *:not(${ACCORDION}, ${COLLAPSE}) > ${COLLAPSE}`,
++  COLLAPSE: `${ACCORDION} > ${COLLAPSE}, ${ACCORDION} > *:not(${ACCORDION}):not(${COLLAPSE}) > ${COLLAPSE}, ${ACCORDION} > *:not(${ACCORDION}):not(${COLLAPSE}) > *:not(${ACCORDION}):not(${COLLAPSE}) > ${COLLAPSE}`,
+   COLLAPSE_LEGACY: `${ACCORDION} ${COLLAPSE}`,
+   BUTTON: `${ACCORDION}__btn`
+ };
+diff --git a/node_modules/@gouvfr/dsfr/src/component/navigation/script/navigation/navigation-selector.js b/node_modules/@gouvfr/dsfr/src/component/navigation/script/navigation/navigation-selector.js
+index 6e33241..388dbd3 100644
+--- a/node_modules/@gouvfr/dsfr/src/component/navigation/script/navigation/navigation-selector.js
++++ b/node_modules/@gouvfr/dsfr/src/component/navigation/script/navigation/navigation-selector.js
+@@ -5,7 +5,7 @@ const COLLAPSE = api.internals.ns.selector('collapse');
+ 
+ export const NavigationSelector = {
+   NAVIGATION: api.internals.ns.selector('nav'),
+-  COLLAPSE: `${ITEM} > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}, ${COLLAPSE}) > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}, ${COLLAPSE}) > *:not(${ITEM}, ${COLLAPSE}) > ${COLLAPSE}`,
++  COLLAPSE: `${ITEM} > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}):not(${COLLAPSE}) > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}):not(${COLLAPSE}) > *:not(${ITEM}):not(${COLLAPSE}) > ${COLLAPSE}`,
+   COLLAPSE_LEGACY: `${ITEM} ${COLLAPSE}`,
+   ITEM: ITEM,
+   ITEM_RIGHT: `${ITEM}--align-right`,
+diff --git a/node_modules/@gouvfr/dsfr/src/component/sidemenu/script/sidemenu/sidemenu-selector.js b/node_modules/@gouvfr/dsfr/src/component/sidemenu/script/sidemenu/sidemenu-selector.js
+index 19921b7..29f207d 100644
+--- a/node_modules/@gouvfr/dsfr/src/component/sidemenu/script/sidemenu/sidemenu-selector.js
++++ b/node_modules/@gouvfr/dsfr/src/component/sidemenu/script/sidemenu/sidemenu-selector.js
+@@ -5,7 +5,7 @@ const COLLAPSE = api.internals.ns.selector('collapse');
+ 
+ export const SidemenuSelector = {
+   LIST: api.internals.ns.selector('sidemenu__list'),
+-  COLLAPSE: `${ITEM} > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}, ${COLLAPSE}) > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}, ${COLLAPSE}) > *:not(${ITEM}, ${COLLAPSE}) > ${COLLAPSE}`,
++  COLLAPSE: `${ITEM} > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}):not(${COLLAPSE}) > ${COLLAPSE}, ${ITEM} > *:not(${ITEM}):not(${COLLAPSE}) > *:not(${ITEM}):not(${COLLAPSE}) > ${COLLAPSE}`,
+   COLLAPSE_LEGACY: `${ITEM} ${COLLAPSE}`,
+   ITEM: api.internals.ns.selector('sidemenu__item'),
+   BUTTON: api.internals.ns.selector('sidemenu__btn')

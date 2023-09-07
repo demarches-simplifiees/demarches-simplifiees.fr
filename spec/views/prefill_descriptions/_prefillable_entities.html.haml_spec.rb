@@ -1,8 +1,8 @@
-describe 'prefill_descriptions/types_de_champs', type: :view do
+describe 'prefill_descriptions/prefillable_entities.html.haml', type: :view do
   let(:prefill_description) { PrefillDescription.new(create(:procedure)) }
   let!(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure: prefill_description, drop_down_options: options) }
 
-  subject { render('prefill_descriptions/types_de_champs', prefill_description: prefill_description) }
+  subject { render('prefill_descriptions/prefillable_entities', prefill_description: prefill_description) }
 
   context 'when a type de champ has too many values' do
     let(:options) { (1..20).map(&:to_s) }

@@ -1494,7 +1494,7 @@ describe Dossier, type: :model do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now, sva_svr_decision_on: 1.day.ago) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1512,6 +1512,7 @@ describe Dossier, type: :model do
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
     it { expect(dossier.attestation).to be_nil }
+    it { expect(dossier.sva_svr_decision_on).to be_nil }
     it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
     it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
@@ -1932,6 +1933,17 @@ describe Dossier, type: :model do
     it "can reset demarche" do
       expect { dossier.procedure.reset! }.not_to raise_error
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    it "call logger with context" do
+      json_message = nil
+
+      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
+      dossier.destroy
+
+      expect(JSON.parse(json_message)).to a_hash_including(
+        { message: "Dossier destroyed", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
+      )
     end
   end
 

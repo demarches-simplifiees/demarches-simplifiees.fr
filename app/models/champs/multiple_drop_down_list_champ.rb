@@ -43,6 +43,18 @@ class Champs::MultipleDropDownListChamp < Champ
     enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
   end
 
+  def html_label?
+    !render_as_checkboxes?
+  end
+
+  def legend_label?
+    true
+  end
+
+  def single_checkbox?
+    render_as_checkboxes?
+  end
+
   def blank?
     selected_options.blank?
   end

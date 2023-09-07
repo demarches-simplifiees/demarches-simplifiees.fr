@@ -11,8 +11,8 @@
       = turbo_stream.update champ.labelledby_id do
         = render EditableChamp::ChampLabelContentComponent.new champ:, form:
 
-= turbo_stream.remove_all(".editable-champ .spinner-removable")
-= turbo_stream.hide_all(".editable-champ .spinner")
+= turbo_stream.remove_all(".editable-champ + .spinner-removable")
+= turbo_stream.hide_all(".editable-champ + .spinner")
 
 - if dossier.present?
   = turbo_stream.replace_all '.dossier-edit-sticky-footer' do

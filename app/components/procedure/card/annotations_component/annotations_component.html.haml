@@ -1,6 +1,6 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
   = link_to annotations_admin_procedure_path(@procedure), class: 'fr-tile fr-enlarge-link', title: error_messages do
-    .fr-tile__body.flex.justify-between
+    .fr-tile__body.flex.column.align-center.justify-between
       - if error_messages.present?
         %div
           %span.icon.refuse

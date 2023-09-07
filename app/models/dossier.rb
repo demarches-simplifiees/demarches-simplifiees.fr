@@ -125,11 +125,14 @@ class Dossier < ApplicationRecord
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
 
+  after_destroy_commit :log_destroy
+
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
   accepts_nested_attributes_for :champs_private_all
+  accepts_nested_attributes_for :individual
 
   include AASM
 
@@ -416,7 +419,6 @@ class Dossier < ApplicationRecord
   end
 
   scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
-  accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user, allow_nil: true
@@ -644,11 +646,14 @@ class Dossier < ApplicationRecord
 
     previous_groupe_instructeur = self.groupe_instructeur
 
+    track_assigned_dossier_without_groupe_instructeur if groupe_instructeur.nil?
+
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
     update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
+    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
+
     if !brouillon?
-      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
@@ -942,6 +947,7 @@ class Dossier < ApplicationRecord
       .processed_at
     attestation&.destroy
 
+    self.sva_svr_decision_on = nil
     self.motivation = nil
     self.justificatif_motivation.purge_later
 
@@ -1087,6 +1093,10 @@ class Dossier < ApplicationRecord
     elsif will_save_change_to_sva_svr_decision_on?
       save! # we always want the most up to date decision when there is a pending correction
     end
+  end
+
+  def previously_termine?
+    traitements.termine.exists?
   end
 
   def remove_titres_identite!
@@ -1389,5 +1399,32 @@ class Dossier < ApplicationRecord
     # rubocop:enable Lint/UnusedBlockArgument
 
     avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
+  end
+
+  def log_destroy
+    app_traces = caller.reject { _1.match?(%r{/ruby/.+/gems/}) }.map { _1.sub(Rails.root.to_s, "") }
+
+    payload = {
+      message: "Dossier destroyed",
+      dossier_id: id,
+      procedure_id: procedure.id,
+      request_id: Current.request_id,
+      user_id: Current.user&.id,
+      controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
+      caller: app_traces.first
+    }
+
+    logger = Lograge.logger || Rails.logger
+
+    logger.info payload.to_json
+  end
+
+  def track_assigned_dossier_without_groupe_instructeur
+    Sentry.capture_message(
+      "Assigned dossier without groupe_instructeur",
+      extra: {
+        dossier_id: self.id
+      }
+    )
   end
 end

@@ -88,6 +88,14 @@ class Champs::CommuneChamp < Champs::TextChamp
     end
   end
 
+  def html_label?
+    false
+  end
+
+  def legend_label?
+    true
+  end
+
   private
 
   def safe_to_s

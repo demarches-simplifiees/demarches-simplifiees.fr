@@ -23,7 +23,7 @@ describe 'dropdown list with other option activated', js: true, retry: 3 do
     scenario 'Select other option and the other input hidden must appear', js: true, retry: 3 do
       fill_individual
 
-      find('.radios').find('label:last-child').find('input').select_option
+      find('.fr-fieldset__content .fr-radio-group:last-of-type input').select_option
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
 
@@ -74,9 +74,9 @@ describe 'dropdown list with other option activated', js: true, retry: 3 do
   private
 
   def fill_individual
-    choose 'Monsieur'
-    fill_in('individual_prenom', with: 'prenom')
-    fill_in('individual_nom', with: 'nom')
+    find('label', text: 'Monsieur').click
+    fill_in('identite_champ_first_name', with: 'prenom')
+    fill_in('identite_champ_last_name', with: 'nom')
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end
