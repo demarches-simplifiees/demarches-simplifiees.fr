@@ -1,6 +1,6 @@
 describe Users::CommencerController, type: :controller do
   let(:user) { create(:user) }
-  let(:published_procedure) { create(:procedure, :published) }
+  let(:published_procedure) { create(:procedure, :for_individual, :published) }
   let(:draft_procedure) { create(:procedure, :with_path) }
 
   describe '#commencer' do
@@ -151,15 +151,16 @@ describe Users::CommencerController, type: :controller do
       let(:user) { create(:user) }
 
       context "when the dossier does not exists yet" do
-        subject { get :commencer, params: { path: path, "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
+        subject { get :commencer, params: { path: path, "champ_#{type_de_champ_text.to_typed_id}" => "blabla", "identite_nom" => "Dupont" } }
 
         shared_examples 'a prefilled brouillon dossier creator' do
           it 'creates a dossier' do
             subject
             expect(Dossier.count).to eq(1)
             expect(session[:prefill_token]).to eq(Dossier.last.prefill_token)
-            expect(session[:prefill_params_digest]).to eq(PrefillParams.digest({ "champ_#{type_de_champ_text.to_typed_id}" => "blabla" }))
+            expect(session[:prefill_params_digest]).to eq(PrefillChamps.digest({ "champ_#{type_de_champ_text.to_typed_id}" => "blabla" }))
             expect(Dossier.last.champs.where(type_de_champ: type_de_champ_text).first.value).to eq("blabla")
+            expect(Dossier.last.individual.nom).to eq("Dupont")
           end
         end
 
@@ -208,7 +209,7 @@ describe Users::CommencerController, type: :controller do
 
         before do
           session[:prefill_token] = "token"
-          session[:prefill_params_digest] = PrefillParams.digest({ "champ_#{type_de_champ_text.to_typed_id}" => "blabla" })
+          session[:prefill_params_digest] = PrefillChamps.digest({ "champ_#{type_de_champ_text.to_typed_id}" => "blabla" })
         end
 
         context "when the associated dossier exists" do

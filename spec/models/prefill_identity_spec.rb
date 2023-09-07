@@ -9,7 +9,7 @@ RSpec.describe PrefillIdentity do
         {
           "identite_prenom" => "Prénom",
           "identite_nom" => "Nom",
-          "identite_genre" => "Mme",
+          "identite_genre" => "Mme"
         }
       }
 
@@ -23,7 +23,7 @@ RSpec.describe PrefillIdentity do
         {
           "identite_prenom" => "Prénom",
           "identite_nom" => "Nom",
-          "identite_genre" => "error",
+          "identite_genre" => "error"
         }
       }
 

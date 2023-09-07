@@ -2,8 +2,8 @@
 
 RSpec.describe DossierPrefillableConcern do
   describe '.prefill!' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
-    let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+    let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:, types_de_champ_private:) }
+    let(:dossier) { create(:dossier, :brouillon, :with_individual, procedure: procedure) }
     let(:types_de_champ_public) { [] }
     let(:types_de_champ_private) { [] }
     let(:identity_attributes) { {} }
@@ -97,22 +97,6 @@ RSpec.describe DossierPrefillableConcern do
           it "still marks it as prefilled" do
             expect { fill }.to change { dossier.champs_public.first.prefilled }.from(nil).to(true)
           end
-        end
-      end
-    end
-
-    context "when dossier is for entreprise" do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
-      let(:dossier) { create(:dossier, :brouillon, :with_entreprise, procedure: procedure) }
-
-      context "when identity_attributes is present" do
-        let(:identity_attributes) { { "siret" => "50000123456789", id: dossier.user.id } }
-
-        it_behaves_like 'a dossier marked as prefilled'
-
-        it "updates the dossier user" do
-          fill
-          expect(dossier.user.siret).to eq("50000123456789")
         end
       end
     end

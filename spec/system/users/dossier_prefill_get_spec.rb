@@ -1,7 +1,7 @@
 describe 'Prefilling a dossier (with a GET request):', js: true, retry: 3 do
   let(:password) { SECURE_PASSWORD }
 
-  let(:procedure) { create(:procedure, :published, opendata: true) }
+  let(:procedure) { create(:procedure, :for_individual, :published, opendata: true) }
   let(:dossier) { procedure.dossiers.last }
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
@@ -39,6 +39,9 @@ describe 'Prefilling a dossier (with a GET request):', js: true, retry: 3 do
   let(:text_repetition_value) { "First repetition text" }
   let(:integer_repetition_value) { "42" }
   let(:annuaire_education_value) { '0050009H' }
+  let(:prenom_value) { 'Jean' }
+  let(:nom_value) { 'Dupont' }
+  let(:genre_value) { 'M.' }
 
   let(:entry_path) {
     commencer_path(
@@ -59,7 +62,10 @@ describe 'Prefilling a dossier (with a GET request):', js: true, retry: 3 do
           "champ_#{sub_type_de_champs_repetition.second.to_typed_id_for_query}": integer_repetition_value
         }
       ],
-      "champ_#{type_de_champ_annuaire_education.to_typed_id_for_query}" => annuaire_education_value
+      "champ_#{type_de_champ_annuaire_education.to_typed_id_for_query}" => annuaire_education_value,
+      "identite_prenom" => prenom_value,
+      "identite_nom" => nom_value,
+      "identite_genre" => genre_value
     )
   }
 
@@ -96,7 +102,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true, retry: 3 do
       create(:champ_text, dossier: dossier, type_de_champ: type_de_champ_text, value: text_value)
 
       page.set_rack_session(prefill_token: "token")
-      page.set_rack_session(prefill_params_digest: PrefillParams.digest({ "champ_#{type_de_champ_text.to_typed_id}" => text_value }))
+      page.set_rack_session(prefill_params_digest: PrefillChamps.digest({ "champ_#{type_de_champ_text.to_typed_id}" => text_value }))
 
       visit "/users/sign_in"
       sign_in_with user.email, password
