@@ -6,7 +6,7 @@ describe PingController, type: :controller do
 
     context 'when base is un-plug' do
       before do
-        allow(ActiveRecord::Base).to receive(:connected?).and_raise(ActiveRecord::ConnectionTimeoutError)
+        allow(ActiveRecord::Base).to receive(:connection).and_raise(ActiveRecord::ConnectionTimeoutError)
       end
 
       it { expect { subject }.to raise_error(ActiveRecord::ConnectionTimeoutError) }
