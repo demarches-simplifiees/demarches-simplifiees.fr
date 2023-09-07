@@ -1,11 +1,11 @@
-RSpec.describe PrefillParams do
-  describe "#to_a" do
+RSpec.describe PrefillChamps do
+  describe "#to_a", vcr: { cassette_name: 'api_geo_all' } do
     let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
     let(:types_de_champ_public) { [] }
     let(:types_de_champ_private) { [] }
 
-    subject(:prefill_params_array) { described_class.new(dossier, params).to_a }
+    subject(:prefill_champs_array) { described_class.new(dossier, params).to_a }
 
     context "when the stable ids match the TypeDeChamp of the corresponding procedure" do
       let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }
@@ -25,7 +25,7 @@ RSpec.describe PrefillParams do
       }
 
       it "builds an array of hash(id, value) matching all the given params" do
-        expect(prefill_params_array).to match([
+        expect(prefill_champs_array).to match_array([
           { id: champ_id_1, value: value_1 },
           { id: champ_id_2, value: value_2 }
         ])
@@ -39,7 +39,7 @@ RSpec.describe PrefillParams do
       let(:params) { { type_de_champ.to_typed_id_for_query => "value" } }
 
       it "filters out the champ" do
-        expect(prefill_params_array).to match([])
+        expect(prefill_champs_array).to match([])
       end
     end
 
@@ -47,7 +47,7 @@ RSpec.describe PrefillParams do
       let(:params) { { "champ_jane_doe" => "value" } }
 
       it "filters out the unknown params" do
-        expect(prefill_params_array).to match([])
+        expect(prefill_champs_array).to match([])
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe PrefillParams do
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => "value" } }
 
       it "filters out the param" do
-        expect(prefill_params_array).to match([])
+        expect(prefill_champs_array).to match([])
       end
     end
 
@@ -70,7 +70,7 @@ RSpec.describe PrefillParams do
         let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
         it "builds an array of hash matching the given params" do
-          expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
+          expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
     end
@@ -84,7 +84,7 @@ RSpec.describe PrefillParams do
         let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => value } }
 
         it "builds an array of hash matching the given params" do
-          expect(prefill_params_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
+          expect(prefill_champs_array).to match([{ id: champ.id }.merge(attributes(champ, value))])
         end
       end
     end
@@ -97,7 +97,7 @@ RSpec.describe PrefillParams do
 
       context "when the type de champ is unauthorized (#{type_de_champ_type})" do
         it "filters out the param" do
-          expect(prefill_params_array).to match([])
+          expect(prefill_champs_array).to match([])
         end
       end
     end
@@ -139,7 +139,7 @@ RSpec.describe PrefillParams do
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
-        expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
+        expect(prefill_champs_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
       end
     end
 
@@ -181,7 +181,7 @@ RSpec.describe PrefillParams do
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
-        expect(prefill_params_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
+        expect(prefill_champs_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
       end
     end
 
@@ -217,7 +217,7 @@ RSpec.describe PrefillParams do
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => "value" } }
 
       it "builds an array of hash(id, value) matching the given params" do
-        expect(prefill_params_array).to match([])
+        expect(prefill_champs_array).to match([])
       end
     end
 
@@ -229,7 +229,7 @@ RSpec.describe PrefillParams do
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => ["{\"wrong\":\"value\"}", "{\"wrong\":\"value2\"}"] } }
 
       it "builds an array of hash(id, value) matching the given params" do
-        expect(prefill_params_array).to match([])
+        expect(prefill_champs_array).to match([])
       end
     end
   end
