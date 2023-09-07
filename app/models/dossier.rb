@@ -132,6 +132,7 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
   accepts_nested_attributes_for :champs_private_all
+  accepts_nested_attributes_for :individual
 
   include AASM
 
@@ -418,7 +419,6 @@ class Dossier < ApplicationRecord
   end
 
   scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
-  accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user, allow_nil: true

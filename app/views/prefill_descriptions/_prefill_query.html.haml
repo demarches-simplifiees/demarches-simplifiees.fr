@@ -1,7 +1,5 @@
-= turbo_frame_tag "#{dom_id(prefill_description)}_query" do
-
-  - if prefill_description.prefilled_champs.any?
-
+= turbo_frame_tag dom_id(prefill_description, :query) do
+  - if prefill_description.prefilled_champs.any? || prefill_description.identity_items_selected.any?
     = render Dsfr::CalloutComponent.new(title: t("views.prefill_descriptions.edit.prefill_query_title"), theme: :success, icon: "fr-icon-code-box-fill") do |c|
       - c.with_html_body do
         %p= t("views.prefill_descriptions.edit.prefill_query_info")

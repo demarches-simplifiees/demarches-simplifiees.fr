@@ -47,11 +47,16 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
             let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
             let(:value_2) { "another value" }
 
+            let(:prenom_value) { "John" }
+            let(:genre_value) { "M." }
+
             let(:params) {
               {
                 id: procedure.id,
                 "champ_#{type_de_champ_1.to_typed_id_for_query}" => value_1,
-                "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2
+                "champ_#{type_de_champ_2.to_typed_id_for_query}" => value_2,
+                "identite_prenom" => prenom_value,
+                "identite_genre" => genre_value
               }
             }
 
@@ -61,6 +66,8 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
               dossier = Dossier.last
               expect(find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).value).to eq(value_1)
               expect(find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).value).to eq(value_2)
+              expect(dossier.individual.prenom).to eq(prenom_value)
+              expect(dossier.individual.gender).to eq(genre_value)
             end
           end
         end
@@ -92,19 +99,19 @@ RSpec.describe API::Public::V1::DossiersController, type: :controller do
       context 'when the procedure is found' do
         context 'when the procedure is publiee' do
           it_behaves_like 'the procedure is found' do
-            let(:procedure) { create(:procedure, :published) }
+            let(:procedure) { create(:procedure, :for_individual, :published) }
           end
         end
 
         context 'when the procedure is brouillon' do
           it_behaves_like 'the procedure is found' do
-            let(:procedure) { create(:procedure, :draft) }
+            let(:procedure) { create(:procedure, :for_individual, :draft) }
           end
         end
 
         context 'when the procedure is not publiee and not brouillon' do
           it_behaves_like 'the procedure is not found' do
-            let(:procedure) { create(:procedure, :closed) }
+            let(:procedure) { create(:procedure, :for_individual, :closed) }
           end
         end
       end
