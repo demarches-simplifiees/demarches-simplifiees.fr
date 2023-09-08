@@ -50,7 +50,15 @@ module Administrateurs
             .find_or_create_by(label: code_and_name)
             .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
         end
-
+      when TypeDeChamp.type_champs.fetch(:regions)
+        tdc_options = APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+        tdc_options.each do |code_and_name, code|
+          routing_rule = ds_eq(champ_value(stable_id), constant(code))
+          @procedure
+            .groupe_instructeurs
+            .find_or_create_by(label: code_and_name)
+            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+        end
       when TypeDeChamp.type_champs.fetch(:drop_down_list)
         tdc_options = tdc.drop_down_options.reject(&:empty?)
         tdc_options.each do |option_label|
