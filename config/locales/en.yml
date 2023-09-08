@@ -332,6 +332,8 @@ en:
         hello: Dear Sir or Madam,
         best_regards: Best Regards,
       dossiers:
+        form:
+          updated_at: "updated at %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           notice: "Download the notice of the procedure"

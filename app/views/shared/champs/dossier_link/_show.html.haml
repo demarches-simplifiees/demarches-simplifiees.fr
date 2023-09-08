@@ -2,10 +2,10 @@
 - if dossier
   - path = dossier_linked_path(current_instructeur || current_user, dossier)
   - if path.present?
-    = link_to("Dossier nº #{dossier.id}", path, target: '_blank', rel: 'noopener')
+    %p= link_to("Dossier nº #{dossier.id}", path, target: '_blank', rel: 'noopener')
   - else
-    Dossier nº #{dossier.id}
+    %p Dossier nº #{dossier.id}
   %br
-  = sanitize(dossier.text_summary)
+  %p= sanitize(dossier.text_summary)
 - else
-  Pas de dossier associé
+  %p Pas de dossier associé

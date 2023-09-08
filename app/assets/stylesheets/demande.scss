@@ -1,27 +1,25 @@
 @import "colors";
 @import "constants";
 
-.demande {
-  padding-top: 3 * $default-padding;
-  padding-bottom: 3 * $default-padding;
-
-  h1 {
-    margin-bottom: $default-padding;
-  }
-
-  .intro {
-    margin: $default-padding 0;
-  }
-
-  b {
-    font-weight: bold;
-  }
-
-  hr {
-    border: none;
-    height: 1px;
-    background-color: $grey;
-    margin-top: 2 * $default-padding;
-    margin-bottom: 2 * $default-padding;
+.container {
+  @media (max-width: 48em) {
+    .d-block-sm {
+      display: block;
+    }
   }
 }
+
+.champ-content {
+  padding: 0 0 ,5rem;
+
+  p {
+    padding: 0;
+    margin: 0;
+  }
+}
+
+.top-bordered {
+  border-top: 1px solid var(--border-default-grey);
+}
+
+
