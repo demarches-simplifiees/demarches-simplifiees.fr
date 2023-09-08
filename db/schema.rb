@@ -418,6 +418,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.index ["editing_fork_origin_id"], name: "index_dossiers_on_editing_fork_origin_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
     t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
+    t.index ["parent_dossier_id"], name: "index_dossiers_on_parent_dossier_id"
     t.index ["prefill_token"], name: "index_dossiers_on_prefill_token", unique: true
     t.index ["revision_id"], name: "index_dossiers_on_revision_id"
     t.index ["state"], name: "index_dossiers_on_state"
