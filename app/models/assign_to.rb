@@ -4,11 +4,11 @@
 #
 #  id                                              :integer          not null, primary key
 #  daily_email_notifications_enabled               :boolean          default(FALSE), not null
-#  instant_email_dossier_notifications_enabled     :boolean          default(TRUE), not null
-#  instant_email_message_notifications_enabled     :boolean          default(TRUE), not null
+#  instant_email_dossier_notifications_enabled     :boolean          default(FALSE), not null
+#  instant_email_message_notifications_enabled     :boolean          default(FALSE), not null
 #  instant_expert_avis_email_notifications_enabled :boolean          default(FALSE)
 #  manager                                         :boolean          default(FALSE)
-#  weekly_email_notifications_enabled              :boolean          default(FALSE), not null
+#  weekly_email_notifications_enabled              :boolean          default(TRUE), not null
 #  created_at                                      :datetime
 #  updated_at                                      :datetime
 #  groupe_instructeur_id                           :bigint

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_17_184741) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -122,13 +122,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "created_at"
     t.boolean "daily_email_notifications_enabled", default: false, null: false
     t.bigint "groupe_instructeur_id"
-    t.boolean "instant_email_dossier_notifications_enabled", default: true, null: false
-    t.boolean "instant_email_message_notifications_enabled", default: true, null: false
+    t.boolean "instant_email_dossier_notifications_enabled", default: false, null: false
+    t.boolean "instant_email_message_notifications_enabled", default: false, null: false
     t.boolean "instant_expert_avis_email_notifications_enabled", default: false
     t.integer "instructeur_id"
     t.boolean "manager", default: false
     t.datetime "updated_at"
-    t.boolean "weekly_email_notifications_enabled", default: false, null: false
+    t.boolean "weekly_email_notifications_enabled", default: true, null: false
     t.index ["groupe_instructeur_id", "instructeur_id"], name: "unique_couple_groupe_instructeur_instructeur", unique: true
     t.index ["groupe_instructeur_id"], name: "index_assign_tos_on_groupe_instructeur_id"
     t.index ["instructeur_id"], name: "index_assign_tos_on_instructeur_id"
