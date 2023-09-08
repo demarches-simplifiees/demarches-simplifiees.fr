@@ -2,7 +2,7 @@ class PjsMigrationJob < ApplicationJob
   queue_as :pj_migration_jobs
 
   def perform(blob_id)
-    blob = Blob.find(blob_id)
+    blob = ActiveStorage::Blob.find(blob_id)
 
     return if already_moved?(blob)
 
