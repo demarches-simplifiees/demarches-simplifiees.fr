@@ -333,7 +333,8 @@ en:
         best_regards: Best Regards,
       dossiers:
         form:
-          updated_at: "updated at %{datetime}"
+          submitted_at: "Submitted on %{datetime}"
+          updated_at: "Updated on %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
           notice: "Download the notice of the procedure"
@@ -346,6 +347,7 @@ en:
             write_message_to_administration_placeholder: "Write your message to the administration here"
         demande:
           requester_identity: "Identity of the requester"
+          requester_identity_updated_at: "updated on %{date}"
           my_identity: "My identity"
           form: "Form"
           edit_siret: "Edit Tahiti number"

@@ -62,6 +62,7 @@ module TPS
 
     # Set the queue name for the analysis jobs to 'active_storage_analysis'
     config.active_storage.queues.analysis = :active_storage_analysis
+    config.active_storage.queues.purge = :expires
 
     config.to_prepare do
       # Make main application helpers available in administrate

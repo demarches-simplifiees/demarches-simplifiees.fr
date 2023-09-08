@@ -1,27 +1,28 @@
 %div
-  %p.fr-my-4v.fr-px-4v.fr-text-action-high--grey
-    = l(dossier.depose_at, format: '%d %B %Y %H:%m')
+  %p.fr-my-2w.fr-px-4v
+    = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
+    %br
     - if dossier.updated_at != dossier.depose_at
-      = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.updated_at, format: :long))
+      = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.updated_at))
 
 
   - if dossier.justificatif_motivation.attached?
     .fr-my-4v.fr-px-4v
-      %p.fr-text-action-high--grey.fr-mb-0 Justificatif :
+      %p.champ-label Justificatif :
       .champ-content.fr-text-action-high--grey
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
   - if dossier.motivation.present?
     .fr-my-4v.fr-px-4v
-      %p.fr-text-action-high--grey.fr-mb-0 Motivation :
+      %p.champ-label Motivation :
       .champ-content.fr-text-action-high--grey
         .action
           = dossier.motivation
 
   - if dossier.attestation.present?
     .fr-my-4v.fr-px-4v
-      %p.fr-text-action-high--grey.fr-mb-0 Attestation :
+      %p.champ-label Attestation :
       .champ-content.fr-text-action-high--grey
         .action
           = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')
