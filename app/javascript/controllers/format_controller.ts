@@ -15,12 +15,6 @@ export class FormatController extends ApplicationController {
           const target = event.target as HTMLInputElement;
           target.value = this.formatIBAN(target.value);
         });
-        break;
-      case 'integer':
-        this.on('input', (event) => {
-          const target = event.target as HTMLInputElement;
-          target.value = this.formatInteger(target.value);
-        });
     }
   }
 
@@ -33,9 +27,5 @@ export class FormatController extends ApplicationController {
       .replace(/[^\dA-Z]/g, '')
       .replace(/(.{4})/g, '$1 ')
       .trim();
-  }
-
-  private formatInteger(value: string) {
-    return value.replace(/[^\d]/g, '');
   }
 }

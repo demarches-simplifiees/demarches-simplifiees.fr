@@ -109,8 +109,6 @@ module Types
           Types::Champs::Descriptor::MesriChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:epci)
           Types::Champs::Descriptor::EpciChampDescriptorType
-        when TypeDeChamp.type_champs.fetch(:cojo)
-          Types::Champs::Descriptor::COJOChampDescriptorType
         end
       end
     end

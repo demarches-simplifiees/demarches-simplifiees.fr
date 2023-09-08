@@ -271,10 +271,6 @@ FactoryBot.define do
       value { 'W173847273' }
     end
 
-    factory :champ_cojo, class: 'Champs::COJOChamp' do
-      type_de_champ { association :type_de_champ_cojo, procedure: dossier.procedure }
-    end
-
     factory :champ_repetition, class: 'Champs::RepetitionChamp' do
       type_de_champ { association :type_de_champ_repetition, procedure: dossier.procedure }
 

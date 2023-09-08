@@ -31,7 +31,6 @@ gem 'devise-i18n'
 gem 'devise-two-factor'
 gem 'discard'
 gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded before rails
-gem 'dry-monads'
 gem 'elastic-apm'
 gem 'flipper'
 gem 'flipper-active_record'
