@@ -116,6 +116,9 @@ describe Instructeur, type: :model do
 
       before :each do
         instructeur2.assign_to_procedure(procedure)
+        AssignTo
+          .where(instructeur: instructeur2, groupe_instructeur: procedure.groupe_instructeurs.first)
+          .update(weekly_email_notifications_enabled: true)
         expect_any_instance_of(Procedure).to receive(:procedure_overview).and_return(procedure_overview)
       end
 
@@ -262,7 +265,7 @@ describe Instructeur, type: :model do
     let(:seen_at_instructeur2) { now - 1.hour }
 
     before do
-      gi_p1.instructeurs << instructeur
+      # gi_p1.instructeurs << instructeur
       instructeur_2.followed_dossiers << dossier
       Timecop.freeze(now)
     end
