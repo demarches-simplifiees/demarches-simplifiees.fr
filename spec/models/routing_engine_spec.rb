@@ -92,6 +92,25 @@ describe RoutingEngine, type: :model do
       end
     end
 
+    context 'with a regions type de champ' do
+      let(:procedure) do
+        create(:procedure, types_de_champ_public: [{ type: :regions }]).tap do |p|
+          p.groupe_instructeurs.create(label: 'a third group')
+        end
+      end
+
+      let(:regions_tdc) { procedure.draft_revision.types_de_champ.first }
+
+      context 'with a matching rule' do
+        before do
+          gi_2.update(routing_rule: ds_eq(champ_value(regions_tdc.stable_id), constant('04')))
+          dossier.champs.first.update(value: 'La Réunion')
+        end
+
+        it { is_expected.to eq(gi_2) }
+      end
+    end
+
     context 'routing rules priorities' do
       let(:procedure) do
         create(:procedure,
