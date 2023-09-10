@@ -507,18 +507,27 @@ class TypeDeChamp < ApplicationRecord
     previous_section_level(tdcs.take(tdcs.find_index(self)))
   end
 
-  def self.options_for_select?(type_champs)
-    [
-      TypeDeChamp.type_champs.fetch(:departements),
-      TypeDeChamp.type_champs.fetch(:regions)
-    ].include?(type_champs)
+  def self.filter_hash_type(type_champ)
+    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+      :enum
+    else
+      :text
+    end
+  end
+
+  def self.filter_hash_value_column(type_champ)
+    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+      :external_id
+    else
+      :value
+    end
   end
 
   def options_for_select
     if departement?
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:name]] }
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
-      APIGeoService.regions.map { [_1[:name], _1[:name]] }
+      APIGeoService.regions.map { [_1[:name], _1[:code]] }
     end
   end
 
