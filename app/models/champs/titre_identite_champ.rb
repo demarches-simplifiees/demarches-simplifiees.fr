@@ -37,6 +37,10 @@ class Champs::TitreIdentiteChamp < Champ
     mandatory? && !piece_justificative_file.attached?
   end
 
+  def blank?
+    piece_justificative_file.blank?
+  end
+
   def for_export
     piece_justificative_file.attached? ? "présent" : "absent"
   end

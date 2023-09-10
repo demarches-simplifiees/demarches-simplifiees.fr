@@ -1,3 +1,6 @@
 ---
 fr:
-  blank: "non saisi (facultatif)"
+  blank: "non saisi"
+  blank_attachment: "pièce justificative non saisie"
+  blank_optional: "non saisi (facultatif)"
+  blank_optional_attachment: "pièce justificative non saisie (facultative)"

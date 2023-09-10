@@ -44,6 +44,10 @@ class Champs::PieceJustificativeChamp < Champ
     mandatory? && !piece_justificative_file.attached?
   end
 
+  def blank?
+    piece_justificative_file.blank?
+  end
+
   def for_export
     piece_justificative_file.map { _1.filename.to_s }.join(', ')
   end
