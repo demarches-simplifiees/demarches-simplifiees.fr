@@ -30,7 +30,7 @@ class Dossiers::ChampRowShowComponent < ApplicationComponent
   end
 
   def each_champ(&block)
-    @champs.filter { show_champ?(_1) }.each(&block)
+    @champs.filter { show_champ?(_1) && _1.visible? && !_1.exclude_from_view? }.each(&block)
   end
 
   private
