@@ -112,7 +112,7 @@ describe 'shared/dossiers/champs', type: :view do
     let(:champ) { create(:champ_dossier_link, dossier: dossier, value: nil) }
     let(:champs) { [champ] }
 
-    it { is_expected.to include("non saisi") }
+    it { is_expected.not_to include("non saisi") }
 
     context 'when profile is usager' do
       let(:profile) { "usager" }
@@ -125,7 +125,7 @@ describe 'shared/dossiers/champs', type: :view do
     let(:champ) { create(:champ_without_piece_justificative, dossier:) }
     let(:champs) { [champ] }
 
-    it { is_expected.to include("pièce justificative non saisie") }
+    it { is_expected.not_to include("pièce justificative non saisie") }
 
     context 'when profile is usager' do
       let(:profile) { "usager" }
