@@ -1,26 +1,28 @@
-%table.table.vertical.dossier-champs{ role: :presentation }
-  %tbody
-    %tr
-      %td.libelle Déposé le :
-      %td= l(dossier.depose_at, format: '%d %B %Y')
+%div
+  %p.fr-my-2w.fr-px-4v
+    = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
+    %br
+    - if dossier.updated_at != dossier.depose_at
+      = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.updated_at))
+
 
   - if dossier.justificatif_motivation.attached?
-    %tr
-      %td.libelle Justificatif :
-      %td
+    .fr-my-4v.fr-px-4v
+      %p.champ-label Justificatif :
+      .champ-content.fr-text-action-high--grey
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
   - if dossier.motivation.present?
-    %tr
-      %td.libelle Motivation :
-      %td
+    .fr-my-4v.fr-px-4v
+      %p.champ-label Motivation :
+      .champ-content.fr-text-action-high--grey
         .action
           = dossier.motivation
 
   - if dossier.attestation.present?
-    %tr
-      %td.libelle Attestation :
-      %td
+    .fr-my-4v.fr-px-4v
+      %p.champ-label Attestation :
+      .champ-content.fr-text-action-high--grey
         .action
           = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')

@@ -1,27 +1,29 @@
 @import "colors";
 @import "constants";
 
-.demande {
-  padding-top: 3 * $default-padding;
-  padding-bottom: 3 * $default-padding;
-
-  h1 {
-    margin-bottom: $default-padding;
+.dossier-show {
+  @media (max-width: 48em) {
+    .d-block-sm {
+      display: block;
+    }
   }
 
-  .intro {
-    margin: $default-padding 0;
+  .champ-label {
+    font-weight: 600;
+    margin-bottom: 0;
+    color: var(--text-action-high-grey);
   }
 
-  b {
-    font-weight: bold;
+  .champ-content {
+    padding: 0 0 0.5rem;
+
+    p {
+      padding: 0;
+      margin: 0;
+    }
   }
 
-  hr {
-    border: none;
-    height: 1px;
-    background-color: $grey;
-    margin-top: 2 * $default-padding;
-    margin-bottom: 2 * $default-padding;
+  .top-bordered {
+    border-top: 1px solid var(--border-default-grey);
   }
 }

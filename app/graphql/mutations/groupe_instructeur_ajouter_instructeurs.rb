@@ -13,7 +13,12 @@ module Mutations
       ids, emails = partition_instructeurs_by(instructeurs)
       _, invalid_emails = groupe_instructeur.add_instructeurs(ids:, emails:)
 
-      groupe_instructeur.reload
+      if instructeurs.present?
+        groupe_instructeur.reload
+        GroupeInstructeurMailer
+          .notify_added_instructeurs(groupe_instructeur, instructeurs, current_administrateur.email)
+          .deliver_later
+      end
 
       result = { groupe_instructeur: }
 

@@ -37,14 +37,14 @@ suite('@utils', () => {
 
   test('toggleExpandIcon', () => {
     const icon = document.createElement('icon');
-    icon.classList.add('fr-icon-add-line');
+    icon.classList.add('fr-icon-arrow-down-s-line');
 
     toggleExpandIcon(icon);
-    expect(icon.classList.contains('fr-icon-subtract-line')).toBeTruthy();
-    expect(icon.classList.contains('fr-icon-add-line')).toBeFalsy();
+    expect(icon.classList.contains('fr-icon-arrow-up-s-line')).toBeTruthy();
+    expect(icon.classList.contains('fr-icon-arrow-down-s-line')).toBeFalsy();
     toggleExpandIcon(icon);
-    expect(icon.classList.contains('fr-icon-add-line')).toBeTruthy();
-    expect(icon.classList.contains('fr-icon-subtract-line')).toBeFalsy();
+    expect(icon.classList.contains('fr-icon-arrow-down-s-line')).toBeTruthy();
+    expect(icon.classList.contains('fr-icon-arrow-up-s-line')).toBeFalsy();
   });
 
   test('isSelectElement', () => {

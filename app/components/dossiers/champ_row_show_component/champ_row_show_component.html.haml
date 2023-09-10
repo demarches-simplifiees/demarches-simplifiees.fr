@@ -1,0 +1,66 @@
+- @champs.each do |champ|
+  .fr-px-4v.fr-my-2v
+    - if champ.repetition?
+      %p.champ-label= "#{champ.libelle} :"
+      - champ.rows.each do |row|
+        = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+
+    - else
+      .flex.d-block-sm
+        %p.champ-label.flex-grow= "#{champ.libelle} :"
+
+        - if updated_after_deposer?(champ)
+          %p.fr-mb-0.fr-text--sm
+            %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
+              = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
+
+      - if champ.blank? && ![TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)].include?(champ.type_champ)
+        .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
+          %p
+            %em= t('.blank')
+      - else
+        .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
+          - case champ.type_champ
+          - when TypeDeChamp.type_champs.fetch(:carte)
+            = render partial: "shared/champs/carte/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:dossier_link)
+            = render partial: "shared/champs/dossier_link/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+            = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)
+            = render partial: "shared/champs/piece_justificative/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:siret)
+            = render partial: "shared/champs/siret/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:iban)
+            = render partial: "shared/champs/iban/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:textarea)
+            = render partial: "shared/champs/textarea/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:annuaire_education)
+            = render partial: "shared/champs/annuaire_education/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:cnaf)
+            = render partial: "shared/champs/cnaf/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:dgfip)
+            = render partial: "shared/champs/dgfip/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:pole_emploi)
+            = render partial: "shared/champs/pole_emploi/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:mesri)
+            = render partial: "shared/champs/mesri/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:address)
+            = render partial: "shared/champs/address/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:communes)
+            = render partial: "shared/champs/communes/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:regions)
+            = render partial: "shared/champs/regions/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:rna)
+            = render partial: "shared/champs/rna/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:epci)
+            = render partial: "shared/champs/epci/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:date)
+            %p= champ.to_s
+          - when TypeDeChamp.type_champs.fetch(:datetime)
+            %p= champ.to_s
+          - when TypeDeChamp.type_champs.fetch(:number)
+            %p= number_with_html_delimiter(champ.to_s)
+          - else
+            - if champ.present?
+              = format_text_value(champ.to_s.strip) # format already wrap in p

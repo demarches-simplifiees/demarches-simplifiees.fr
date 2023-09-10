@@ -1,5 +1,4 @@
-%table.table.vertical.dossier-champs{ role: :presentation }
-  %tbody
-    %tr
-      %td.libelle Email :
-      %td= user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+.fr-my-2v
+  %p.champ-label Email :
+  .champ-content
+    %p= user_deleted ? "#{email} (l’usager a supprimé son compte)" : email

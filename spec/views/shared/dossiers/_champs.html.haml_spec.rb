@@ -108,7 +108,7 @@ describe 'shared/dossiers/champs', type: :view do
     let(:champ) { create(:champ_dossier_link, dossier: dossier, value: nil) }
     let(:champs) { [champ] }
 
-    it { is_expected.to include("Pas de dossier associé") }
+    it { is_expected.to include("non saisi (facultatif)") }
   end
 
   context "with seen_at" do

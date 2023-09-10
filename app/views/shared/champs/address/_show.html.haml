@@ -1,4 +1,6 @@
-= format_text_value(champ.to_s)
+- if champ.to_s.present?
+  %p= format_text_value(champ.to_s)
 - if champ.data.present?
-  Code INSEE :
-  = champ.data['city_code']
+  %p
+    Code INSEE :
+    = champ.data['city_code']

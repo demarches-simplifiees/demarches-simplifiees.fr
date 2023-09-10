@@ -1,170 +1,193 @@
 - if etablissement.as_degraded_mode?
-  %table.table.vertical.dossier-champs{ role: :presentation }
-    %tbody
-      %tr
-        %td{ colspan: 2 }
-          .fr-alert.fr-alert--warning.fr-alert--sm
-            %p
-              Le répertoire des entreprise 'i-taiete' est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
-              - if profile == "instructeur"
-                %br
-                Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
-      %tr
-        %td.libelle Numéro TAHITI :
-        %td= etablissement.siret
+  .fr-alert.fr-alert--warning.fr-alert--sm
+    %p
+      Le répertoire des entreprise 'i-taiete' est indisponible, les informations sur lʼentreprise arriveront dʼici quelques heures.
+      - if profile == "instructeur"
+        %p
+          Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
+  .fr-my-2v
+    %p.champ-label SIRET :
+    .champ-content
+      %p= etablissement.siret
 - else
-  %table.table.vertical.dossier-champs{ role: :presentation }
-    %tbody
-      - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
-        %tr
-          %td= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret))
-      - else
-        %tr
-          %td.libelle Dénomination :
-          %td= raison_sociale_or_name(etablissement)
-        %tr
-          %td.libelle Numéro TAHITI :
-          %td #{pretty_siret(etablissement.siret)} #{ render Dsfr::CopyButtonComponent.new(text: etablissement.siret, title: "Copier le siret dans le presse-papier", success: "Le siret a été copié dans le presse-papier") }
+  - if etablissement.diffusable_commercialement == false && profile != 'instructeur'
+    .fr-my-2v
+      .champ-content
+        %p= t('warning_for_private_info', scope: 'views.shared.dossiers.identite_entreprise', siret: pretty_siret(etablissement.siret))
+  - else
+    .fr-my-2v
+      %p.champ-label Dénomination :
+      .champ-content
+        %p= raison_sociale_or_name(etablissement)
+    .fr-my-2v
+      %p.champ-label Numéro Tahiti :
+      .champ-content
+        %p #{pretty_siret(etablissement.siret)} #{ render Dsfr::CopyButtonComponent.new(text: etablissement.siret, title: "Copier le numéro Tahiti dans le presse-papier", success: "Le numéro Tahiti a été copié dans le presse-papier") }
 
 
-        - unless local_assigns[:short_identity]
-          - if etablissement.siret != etablissement.entreprise.siret_siege_social
-            %tr
-              %td.libelle Numéro TAHITI du siège social:
-              %td= etablissement.entreprise.siret_siege_social
-          %tr
-            %td.libelle Forme juridique :
-            %td= sanitize(etablissement.entreprise.forme_juridique)
-          %tr
-            %td.libelle Libellé NAF :
-            %td= etablissement.libelle_naf
-          %tr
-            %td.libelle Code NAF :
-            %td= etablissement.naf
-          %tr
-            %td.libelle Date de création :
-            %td
-              = try_format_date(etablissement.entreprise.date_creation)
+    - unless local_assigns[:short_identity]
+      - if etablissement.siret != etablissement.entreprise.siret_siege_social
+        .fr-my-2v
+          %p.champ-label SIRET du siège social:
+          .champ-content
+            %p= etablissement.entreprise.siret_siege_social
+      .fr-my-2v
+        %p.champ-label Forme juridique :
+        .champ-content
+          %p= sanitize(etablissement.entreprise.forme_juridique)
+      .fr-my-2v
+        %p.champ-label Libellé NAF :
+        .champ-content
+          %p= etablissement.libelle_naf
+      .fr-my-2v
+        %p.champ-label Code NAF :
+        .champ-content
+          %p= etablissement.naf
+      .fr-my-2v
+        %p.champ-label Date de création :
+        .champ-content
+          %p
+          = try_format_date(etablissement.entreprise.date_creation)
 
-              - if etablissement.entreprise_etat_administratif.present?
-                %span.label= humanized_entreprise_etat_administratif(etablissement)
+          - if etablissement.entreprise_etat_administratif.present?
+            %span.label= humanized_entreprise_etat_administratif(etablissement)
 
+      - if profile == 'instructeur'
+        .fr-my-2v
+          %p.champ-label
+            Effectif mensuel
+            = try_format_mois_effectif(etablissement)
+            (URSSAF) :
+          .champ-content
+            %p= etablissement.entreprise_effectif_mensuel
+        .fr-my-2v
+          %p.champ-label
+            Effectif moyen annuel
+            = etablissement.entreprise_effectif_annuel_annee
+            (URSSAF) :
+          .champ-content
+            %p= etablissement.entreprise_effectif_annuel
+      .fr-my-2v
+        %p.champ-label Effectif de l'organisation (INSEE) :
+        .champ-content
+          %p
+          = effectif(etablissement)
+      .fr-my-2v
+        %p.champ-label Numéro de TVA intracommunautaire :
+        .champ-content
+          %p= etablissement.entreprise.numero_tva_intracommunautaire
+      .fr-my-2v
+        %p.champ-label Adresse :
+        .champ-content
+          %p
+          - etablissement.adresse.split("\n").each do |line|
+            = line
+            %br
+      .fr-my-2v
+        %p.champ-label Capital social :
+        .champ-content
+          %p= pretty_currency(etablissement.entreprise.capital_social)
+      .fr-my-2v
+        %p.champ-label Chiffre d’affaires :
+        .champ-content
+          %p
           - if profile == 'instructeur'
-            %tr
-              %td.libelle
-                Effectif mensuel
-                = try_format_mois_effectif(etablissement)
-                (URSSAF) :
-              %td= etablissement.entreprise_effectif_mensuel
-            %tr
-              %td.libelle
-                Effectif moyen annuel
-                = etablissement.entreprise_effectif_annuel_annee
-                (URSSAF) :
-              %td= etablissement.entreprise_effectif_annuel
-          %tr
-            %td.libelle Effectif de l'organisation (INSEE) :
-            %td
-              = effectif(etablissement)
-          %tr
-            %td.libelle Numéro de TVA intracommunautaire :
-            %td= etablissement.entreprise.numero_tva_intracommunautaire
-          %tr
-            %td.libelle Adresse :
-            %td
-              - etablissement.adresse.split("\n").each do |line|
-                = line
+            %details
+              - etablissement.exercices.each_with_index do |exercice, index|
+                = "#{exercice.date_fin_exercice.year} : "
+                = pretty_currency(exercice.ca)
                 %br
-          %tr
-            %td.libelle Capital social :
-            %td= pretty_currency(etablissement.entreprise.capital_social)
-          %tr
-            %td.libelle Chiffre d’affaires :
-            %td
-              - if profile == 'instructeur'
-                %details
-                  - etablissement.exercices.each_with_index do |exercice, index|
-                    = "#{exercice.date_fin_exercice.year} : "
-                    = pretty_currency(exercice.ca)
-                    %br
-              - elsif etablissement.exercices.present?
-                = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
+          - elsif etablissement.exercices.present?
+            = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
 
-          - if etablissement.entreprise_bilans_bdf.present?
-            - if profile == 'instructeur'
-              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-                locals: { libelle: 'Résultat exercice', key: 'resultat_exercice', etablissement: etablissement }
+      - if etablissement.entreprise_bilans_bdf.present?
+        - if profile == 'instructeur'
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: 'Résultat exercice', key: 'resultat_exercice', etablissement: etablissement }
 
-              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-                locals: { libelle: "Excédent brut d’exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: "Excédent brut d’exploitation", key: 'excedent_brut_exploitation', etablissement: etablissement }
 
-              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-                locals: { libelle: 'Fonds de roulement net global', key: 'fonds_roulement_net_global', etablissement: etablissement }
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: 'Fonds de roulement net global', key: 'fonds_roulement_net_global', etablissement: etablissement }
 
-              = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
-                locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
-              %tr
-                %td.libelle
-                  Chiffres financiers clés (Banque de France)
-                  = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
+          = render partial: 'shared/dossiers/identite_entreprise_bilan_detail',
+            locals: { libelle: 'Besoin en fonds de roulement', key: 'besoin_en_fonds_de_roulement', etablissement: etablissement }
+          .fr-my-2v
+            %p.champ-label
+              Chiffres financiers clés (Banque de France)
+              = "en #{pretty_currency_unit(etablissement.entreprise_bilans_bdf_monnaie)} :"
 
-                - if controller.is_a?(Instructeurs::AvisController)
-                  %td
-                    Les consulter
-                    = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
-                    ,
-                    = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
-                    ou
-                    = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
-                - else
-                  %td
-                    Les consulter
-                    = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
-                    ,
-                    = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
-                    ou
-                    = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
+            - if controller.is_a?(Instructeurs::AvisController)
+              .champ-content
+                %p
+                Les consulter
+                = link_to "au format csv", bilans_bdf_instructeur_avis_path(@avis, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_avis_path(@avis, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_avis_path(@avis, format: 'ods')
             - else
-              %tr
-                %td.libelle
-                  Bilans Banque de France :
-                %td Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
-          - if etablissement.entreprise_attestation_sociale.attached?
-            %tr
-              %td.libelle Attestation sociale :
-              - if profile == 'instructeur'
-                %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
-              - else
-                %td Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
+              .champ-content
+                %p
+                Les consulter
+                = link_to "au format csv", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'csv')
+                ,
+                = link_to "au format xlsx", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'xlsx')
+                ou
+                = link_to "au format ods", bilans_bdf_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, format: 'ods')
+        - else
+          .fr-my-2v
+            %p.champ-label
+              Bilans Banque de France :
+            .champ-content
+              %p Les 3 derniers bilans connus de votre entreprise par la Banque de France ont été joints à votre dossier.
+      - if etablissement.entreprise_attestation_sociale.attached?
+        .fr-my-2v
+          %p.champ-label Attestation sociale :
+          - if profile == 'instructeur'
+            .champ-content
+              %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_sociale)
+          - else
+            .champ-content
+              %p Une attestation de vigilance délivrée par l'ACOSS a été jointe à votre dossier.
 
-          - if etablissement.entreprise_attestation_fiscale.attached?
-            %tr
-              %td.libelle Attestation fiscale :
-              - if profile == 'instructeur'
-                %td= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
-              - else
-                %td Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
+      - if etablissement.entreprise_attestation_fiscale.attached?
+        .fr-my-2v
+          %p.champ-label Attestation fiscale :
+          - if profile == 'instructeur'
+            .champ-content
+              %p= link_to "Consulter l'attestation", url_for(etablissement.entreprise_attestation_fiscale)
+          - else
+            .champ-content
+              %p Une attestation fiscale délivrée par l'URSSAF a été jointe à votre dossier.
 
-          - if etablissement.association?
-            %tr
-              %td.libelle Numéro RNA :
-              %td= etablissement.association_rna
-            %tr
-              %td.libelle Titre :
-              %td= etablissement.association_titre
-            %tr
-              %td.libelle Objet :
-              %td= etablissement.association_objet
-            %tr
-              %td.libelle Date de création :
-              %td= try_format_date(etablissement.association_date_creation)
-            %tr
-              %td.libelle Date de publication :
-              %td= try_format_date(etablissement.association_date_publication)
-            %tr
-              %td.libelle Date de déclaration :
-              %td= try_format_date(etablissement.association_date_declaration)
+      - if etablissement.association?
+        .fr-my-2v
+          %p.champ-label Numéro RNA :
+          .champ-content
+            %p= etablissement.association_rna
+        .fr-my-2v
+          %p.champ-label Titre :
+          .champ-content
+            %p= etablissement.association_titre
+        .fr-my-2v
+          %p.champ-label Objet :
+          .champ-content
+            %p= etablissement.association_objet
+        .fr-my-2v
+          %p.champ-label Date de création :
+          .champ-content
+            %p= try_format_date(etablissement.association_date_creation)
+        .fr-my-2v
+          %p.champ-label Date de publication :
+          .champ-content
+            %p= try_format_date(etablissement.association_date_publication)
+        .fr-my-2v
+          %p.champ-label Date de déclaration :
+          .champ-content
+            %p= try_format_date(etablissement.association_date_declaration)
 
 - unless local_assigns[:short_identity]
   %p

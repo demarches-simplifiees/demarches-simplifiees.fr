@@ -332,6 +332,9 @@ fr:
         hello: Bonjour,
         best_regards: Bonne journée,
       dossiers:
+        form:
+          submitted_at: "Déposé le %{datetime}"
+          updated_at: "Modifié le %{datetime}"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
           notice: Télécharger le guide de la démarche
@@ -343,9 +346,11 @@ fr:
             write_message_placeholder: "Écrivez votre message ici"
             write_message_to_administration_placeholder: "Écrivez votre message à l’administration ici"
         demande:
+          en_construction: "Date de dépôt du dossier"
           requester_identity: "Identité du demandeur"
+          requester_identity_updated_at: "modifiée le %{date}"
           my_identity: "Mon identité"
-          form: "Formulaire"
+          form: "Sections du formulaire"
           edit_siret: "Modifier le Numéro TAHITI"
           edit_identity: "Modifier l’identité"
     instructeurs:
@@ -705,6 +710,10 @@ fr:
   time:
     formats:
       default: "%d %B %Y %R"
+      long: "%d %B %y %H:%m"
+  datetime:
+    formats:
+      long: "%d %B %y %H:%m"
   pluralize:
     case:
       one: dossier

@@ -22,7 +22,7 @@ describe 'administrateurs/procedures/show', type: :view do
       end
 
       describe 'procedure path is not customized' do
-        it { expect(rendered).to have_content('Brouillon') }
+        it { expect(rendered).to have_content('En test') }
       end
 
       describe 'archive button' do
