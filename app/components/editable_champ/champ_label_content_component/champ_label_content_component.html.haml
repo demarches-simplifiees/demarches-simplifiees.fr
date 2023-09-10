@@ -2,6 +2,8 @@
 - if @champ.public? && !@champ.checkbox?
   - if @champ.mandatory?
     = render EditableChamp::AsteriskMandatoryComponent.new
+  - elsif @champ.dossier.procedure.feature_enabled?(:disable_label_optional_champ_2023_06_29)
+    -# noop here, allow admin to disable the optional_champ
   - else
     = "#{t('.optional_champ')}"
 
