@@ -88,6 +88,10 @@ class Export < ApplicationRecord
     end
   end
 
+  def self.find_all_exports_for_groupe_instructeurs(groupe_instructeurs_ids)
+    joins(:groupe_instructeurs).where(groupe_instructeurs: groupe_instructeurs_ids)
+  end
+
   def self.find_for_groupe_instructeurs(groupe_instructeurs_ids, procedure_presentation)
     exports = if procedure_presentation.present?
       where(key: generate_cache_key(groupe_instructeurs_ids, procedure_presentation))

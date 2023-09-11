@@ -1,0 +1,5 @@
+fr:
+  instructeurs:
+    procedures:
+      exports:
+        no_export_html: Vous n'avez pas d'export pour le moment. <br> Vous ne trouvez pas un export ? Il a peut-être expiré, les exports sont supprimés au bout de %{expiration_time} heures.

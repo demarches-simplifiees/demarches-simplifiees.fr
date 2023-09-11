@@ -1,0 +1,5 @@
+en:
+  instructeurs:
+    procedures:
+      exports:
+        no_export_html: You have no export at the moment. <br> Can't find an export? It may have expired, exports are deleted after %{expiration_time} hours.

@@ -1,0 +1,15 @@
+---
+en:
+  everything_csv_html: Request an export in .csv format<br>(only files, without repeatable fields)
+  everything_xlsx_html: Request an export in .xlsx format
+  everything_ods_html: Request an export in .ods format
+  everything_zip_html: Request an export in .zip format<br>(does not contains timestamp nor operation logs)
+  everything_json_html: Request an export in .json format (GeoJSON)
+  everything_short: Request an export in %{export_format} format
+  download_all: Download all files
+  download:
+    one: Download a file
+    other: Download %{count} files
+  macros_doc:
+    title: "Macros documentation"
+    url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/exports-et-macros"

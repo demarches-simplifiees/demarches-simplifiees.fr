@@ -226,6 +226,11 @@ module Instructeurs
       @usual_traitement_time_by_month = @procedure.stats_usual_traitement_time_by_month_in_days
     end
 
+    def exports
+      @procedure = procedure
+      @exports = Export.find_all_exports_for_groupe_instructeurs(groupe_instructeur_ids)
+    end
+
     def email_usagers
       @procedure = procedure
       @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { procedure: procedure })

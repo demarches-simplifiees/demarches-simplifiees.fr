@@ -1,0 +1,14 @@
+- title = "Exports · #{@procedure.libelle}"
+- content_for(:title, title)
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                    [t('.title')]] }
+
+.fr-container
+  %h1= title
+  - if @exports.present?
+    = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
+
+  - else
+    = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
