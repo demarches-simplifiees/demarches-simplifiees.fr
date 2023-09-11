@@ -17,7 +17,7 @@
     - elsif commentaire.sent_by_system?
       = sanitize(commentaire.body, scrubber: Sanitizers::MailScrubber.new)
     - else
-      = render SimpleFormatComponent.new(commentaire.body, allow_a: false)
+      = render SimpleFormatComponent.new(commentaire.body, allow_a: commentaire.sent_by_instructeur?)
 
 
   .message-extras.flex.justify-start
