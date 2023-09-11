@@ -69,10 +69,6 @@ class Champs::AddressChamp < Champs::TextChamp
     APIGeoService.departement_name(address.fetch('department_code'))
   end
 
-  def commune_name
-    APIGeoService.commune_name(address.fetch('department_code'), address.fetch('city_code'))
-  end
-
   def departement
     if full_address?
       { code: address.fetch('department_code'), name: departement_name }
@@ -81,7 +77,30 @@ class Champs::AddressChamp < Champs::TextChamp
 
   def commune
     if full_address?
-      { code: address.fetch('city_code'), name: commune_name, postal_code: address.fetch('postal_code') }
+      department_code = address.fetch('department_code')
+      city_code = address.fetch('city_code')
+      city_name = address.fetch('city_name')
+      postal_code = address.fetch('postal_code')
+
+      commune_name = APIGeoService.commune_name(department_code, city_code)
+      commune_code = APIGeoService.commune_code(department_code, city_name)
+
+      if commune_name.present?
+        {
+          code: city_code,
+          name: commune_name
+        }
+      elsif commune_code.present?
+        {
+          code: commune_code,
+          name: city_name
+        }
+      else
+        {
+          code: city_code,
+          name: city_name
+        }
+      end.merge(postal_code:)
     end
   end
 end

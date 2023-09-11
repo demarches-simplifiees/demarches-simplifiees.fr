@@ -1,14 +1,18 @@
 describe 'shared/dossiers/champs', type: :view do
   let(:instructeur) { create(:instructeur) }
   let(:demande_seen_at) { nil }
+  let(:profile) { "instructeur" }
 
   before do
     view.extend DossierHelper
     view.extend DossierLinkHelper
-    allow(view).to receive(:current_instructeur).and_return(instructeur)
+
+    if profile == "instructeur"
+      allow(view).to receive(:current_instructeur).and_return(instructeur)
+    end
   end
 
-  subject { render 'shared/dossiers/champs', champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: nil }
+  subject { render 'shared/dossiers/champs', champs:, dossier:, demande_seen_at:, profile: }
 
   context "there are some champs" do
     let(:dossier) { create(:dossier) }
@@ -108,7 +112,25 @@ describe 'shared/dossiers/champs', type: :view do
     let(:champ) { create(:champ_dossier_link, dossier: dossier, value: nil) }
     let(:champs) { [champ] }
 
-    it { is_expected.to include("non saisi (facultatif)") }
+    it { is_expected.not_to include("non saisi") }
+
+    context 'when profile is usager' do
+      let(:profile) { "usager" }
+      it { is_expected.to include("non saisi (facultatif)") }
+    end
+  end
+
+  context "with a piece justificative without value" do
+    let(:dossier) { create(:dossier) }
+    let(:champ) { create(:champ_without_piece_justificative, dossier:) }
+    let(:champs) { [champ] }
+
+    it { is_expected.not_to include("pièce justificative non saisie") }
+
+    context 'when profile is usager' do
+      let(:profile) { "usager" }
+      it { is_expected.to include("pièce justificative non saisie (facultative)") }
+    end
   end
 
   context "with seen_at" do

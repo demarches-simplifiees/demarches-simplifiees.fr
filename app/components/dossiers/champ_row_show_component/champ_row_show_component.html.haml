@@ -1,23 +1,25 @@
-- @champs.each do |champ|
+- each_champ do |champ|
   .fr-px-4v.fr-my-2v
     - if champ.repetition?
-      %p.champ-label= "#{champ.libelle} :"
-      - champ.rows.each do |row|
-        = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+      - champ.rows.each.with_index do |row, i|
+        .fr-background-alt--grey.fr-p-3v.fr-my-3w
+          %p.champ-label= "#{champ.libelle}  #{i +1}:"
 
-    - else
+          = render Dossiers::ChampRowShowComponent.new(champs: row, demande_seen_at: @demande_seen_at, profile: @profile, repetition: true)
+
+    - elsif !champ.header_section?
       .flex.d-block-sm
         %p.champ-label.flex-grow= "#{champ.libelle} :"
 
         - if updated_after_deposer?(champ)
           %p.fr-mb-0.fr-text--sm
-            %span{ class: highlight_if_unseen_class(@demande_seen_at, champ.updated_at) }
+            %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(@demande_seen_at, champ.updated_at) }
               = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(champ.updated_at))
 
-      - if champ.blank? && ![TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)].include?(champ.type_champ)
+      - if champ.blank?
         .champ-content.fr-text-mention--grey{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           %p
-            %em= t('.blank')
+            %em= t(blank_key(champ))
       - else
         .champ-content{ class: [highlight_if_unseen_class(@demande_seen_at, champ.updated_at), champ.type_champ] }
           - case champ.type_champ

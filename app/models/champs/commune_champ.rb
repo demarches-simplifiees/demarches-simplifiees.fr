@@ -60,17 +60,18 @@ class Champs::CommuneChamp < Champs::TextChamp
 
   def name
     if code?
-      APIGeoService.commune_name(code_departement, code)
+      APIGeoService.commune_name(code_departement, code).presence || safe_to_s
     else
-      value.present? ? value.to_s : ''
+      safe_to_s
     end
   end
 
   def to_s
     if code?
-      "#{APIGeoService.commune_name(code_departement, code)} (#{code_postal})"
+      name = APIGeoService.commune_name(code_departement, code)
+      name.present? ? "#{name} (#{code_postal})" : safe_to_s
     else
-      value.present? ? value.to_s : ''
+      safe_to_s
     end
   end
 
@@ -110,6 +111,10 @@ class Champs::CommuneChamp < Champs::TextChamp
   end
 
   private
+
+  def safe_to_s
+    value.present? ? value.to_s : ''
+  end
 
   def on_code_postal_change
     if code_postal_changed?

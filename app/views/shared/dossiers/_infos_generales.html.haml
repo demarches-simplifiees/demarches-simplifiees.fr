@@ -1,28 +1,33 @@
-%div
-  %p.fr-my-2w.fr-px-4v
-    = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
-    %br
-    - if dossier.updated_at != dossier.depose_at
-      = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.updated_at))
+.fr-px-2w
+  .fr-my-2w
+    %p
+      = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
+      %br
+      - if dossier.last_champ_updated_at.present? && dossier.last_champ_updated_at > dossier.depose_at
+        = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.last_champ_updated_at))
+
+    .fr-highlight
+      %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
 
 
   - if dossier.justificatif_motivation.attached?
-    .fr-my-4v.fr-px-4v
+    -# download component already has margin bottom
+    %div
       %p.champ-label Justificatif :
-      .champ-content.fr-text-action-high--grey
+      .champ-content
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
   - if dossier.motivation.present?
-    .fr-my-4v.fr-px-4v
+    .fr-mb-2w
       %p.champ-label Motivation :
-      .champ-content.fr-text-action-high--grey
+      .champ-content
         .action
           = dossier.motivation
 
   - if dossier.attestation.present?
-    .fr-my-4v.fr-px-4v
+    .fr-mb-2w
       %p.champ-label Attestation :
-      .champ-content.fr-text-action-high--grey
+      .champ-content
         .action
           = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')

@@ -28,6 +28,7 @@ yarn-debug.log*
 /.idea
 /public/assets
 /spec/support/spec_config.local.rb
+/config/initializers/config.local.rb
 
 # Local Netlify folder
 .netlify
