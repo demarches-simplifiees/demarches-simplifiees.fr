@@ -111,6 +111,25 @@ describe RoutingEngine, type: :model do
       end
     end
 
+    context 'with a communes type de champ' do
+      let(:procedure) do
+        create(:procedure, types_de_champ_public: [{ type: :communes }]).tap do |p|
+          p.groupe_instructeurs.create(label: 'a third group')
+        end
+      end
+
+      let(:communes_tdc) { procedure.draft_revision.types_de_champ.first }
+
+      context 'with a matching rule' do
+        before do
+          gi_2.update(routing_rule: ds_eq(champ_value(communes_tdc.stable_id), constant('92')))
+          dossier.champs.first.update(value: 'Rueil-Malmaison', value_json: { code_postal: '92500', code_departement: '92' })
+        end
+
+        it { is_expected.to eq(gi_2) }
+      end
+    end
+
     context 'routing rules priorities' do
       let(:procedure) do
         create(:procedure,
