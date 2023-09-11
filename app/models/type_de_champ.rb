@@ -102,7 +102,8 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:drop_down_list),
     type_champs.fetch(:communes),
     type_champs.fetch(:departements),
-    type_champs.fetch(:regions)
+    type_champs.fetch(:regions),
+    type_champs.fetch(:epci)
   ]
 
   store_accessor :options,
