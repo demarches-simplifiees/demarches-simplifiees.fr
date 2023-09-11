@@ -1,7 +1,10 @@
 # Favicons
-FAVICON_16PX_SRC = ENV.fetch("FAVICON_16PX_SRC", "favicons/16x16.png")
-FAVICON_32PX_SRC = ENV.fetch("FAVICON_32PX_SRC", "favicons/32x32.png")
-FAVICON_96PX_SRC = ENV.fetch("FAVICON_96PX_SRC", "favicons/96x96.png")
+FAVICONS_SRC = {
+  "16px" => ENV.fetch("FAVICON_16PX_SRC", "favicons/16x16.png"),
+  "32px" => ENV.fetch("FAVICON_32PX_SRC", "favicons/32x32.png"),
+  "96px" => ENV.fetch("FAVICON_96PX_SRC", "favicons/96x96.png"),
+  "apple_touch" => ENV.fetch("FAVICON_APPLE_TOUCH_152PX_SRC", "favicons/apple-touch-icon.png")
+}.compact_blank.freeze
 
 # Header logo
 HEADER_LOGO_SRC = ENV.fetch("HEADER_LOGO_SRC", "marianne.png")
