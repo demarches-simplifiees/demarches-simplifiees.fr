@@ -7,10 +7,10 @@ class Profile::APITokenComponent < ApplicationComponent
   private
 
   def procedures_to_allow_options
-    @api_token.procedures_to_allow.map { ["#{_1.id} – #{_1.libelle}", _1.id] }
+    @api_token.targetable_procedures.map { ["#{_1.id} – #{_1.libelle}", _1.id] }
   end
 
   def procedures_to_allow_select_options
-    { selected: @api_token.procedures_to_allow.first&.id }
+    { selected: @api_token.targetable_procedures.first&.id }
   end
 end

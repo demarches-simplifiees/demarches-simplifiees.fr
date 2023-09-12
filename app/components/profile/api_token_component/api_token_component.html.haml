@@ -40,13 +40,13 @@
                 = button_to t('.delete'), @api_token, method: :patch, params: { api_token: { disallow_procedure_id: procedure.id } }, class: "fr-btn fr-btn--secondary"
 
 .fr-card__end
-  = form_for @api_token, namespace: dom_id(@api_token, :allowed_procedures), html: { class: 'form form-ds-fr-white mb-3', data: { turbo: true } } do |f|
-    = f.label :allowed_procedure_ids do
+  = form_for @api_token, namespace: dom_id(@api_token, :allowed_procedures), html: { class: 'mb-3', data: { turbo: true } } do |f|
+    = f.label :allowed_procedure_ids, class: 'fr-label' do
       = t('.action_choice')
     - @api_token.allowed_procedures.each do |procedure|
       = f.hidden_field :allowed_procedure_ids, value: procedure.id, multiple: true, id: dom_id(procedure, :allowed_procedure)
     .flex.justify-between.align-center{ 'data-turbo-force': :server }
-      = f.select :allowed_procedure_ids, procedures_to_allow_options, {prompt: t('.prompt_choose_procedure')}, { class: 'no-margin width-66 small', name: "api_token[allowed_procedure_ids][]" }
+      = f.select :allowed_procedure_ids, procedures_to_allow_options, {prompt: t('.prompt_choose_procedure')}, { class: 'fr-select ', name: "api_token[allowed_procedure_ids][]" }
       = f.button type: :submit, class: "fr-btn fr-btn--secondary" do
         = t('.add')
 
