@@ -1,5 +1,6 @@
 class APITokensController < ApplicationController
   before_action :authenticate_administrateur!
+  before_action :set_api_token, only: [:update, :destroy]
 
   def create
     @api_token, @packed_token = APIToken.generate(current_administrateur)
@@ -11,8 +12,6 @@ class APITokensController < ApplicationController
   end
 
   def update
-    @api_token = current_administrateur.api_tokens.find(params[:id])
-
     disallow_procedure_id = api_token_params.fetch(:disallow_procedure_id, nil)
     if disallow_procedure_id.present?
       @api_token.disallow_procedure(disallow_procedure_id.to_i)
@@ -27,7 +26,6 @@ class APITokensController < ApplicationController
   end
 
   def destroy
-    @api_token = current_administrateur.api_tokens.find(params[:id])
     @api_token.destroy
 
     respond_to do |format|
@@ -37,6 +35,10 @@ class APITokensController < ApplicationController
   end
 
   private
+
+  def set_api_token
+    @api_token = current_administrateur.api_tokens.find(params[:id])
+  end
 
   def api_token_params
     params.require(:api_token).permit(:name, :write_access, :disallow_procedure_id, allowed_procedure_ids: [])
