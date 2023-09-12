@@ -586,7 +586,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       get :download_export, params: { export_format: :csv, procedure_id: procedure.id }
     end
 
-    context 'when the export is does not exist' do
+    context 'when the export does not exist' do
       it 'displays an notice' do
         is_expected.to redirect_to(instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
@@ -648,6 +648,38 @@ describe Instructeurs::ProceduresController, type: :controller do
     context 'when logged in through super admin' do
       let(:manager) { true }
       it { is_expected.to have_http_status(:forbidden) }
+    end
+  end
+
+  describe '#exports' do
+    let(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure) }
+    let!(:assign_to) { create(:assign_to, instructeur: instructeur, groupe_instructeur: build(:groupe_instructeur, procedure: procedure), manager: manager) }
+    let!(:gi_0) { assign_to.groupe_instructeur }
+    let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
+    let(:manager) { false }
+    before { sign_in(instructeur.user) }
+
+    subject do
+      get :exports, params: { procedure_id: procedure.id }
+    end
+
+    context 'when there is one export in the instructeurs group' do
+      let!(:export) {create(:export, groupe_instructeurs: [gi_1])}
+      it 'retrieves the export' do
+        subject
+        expect(assigns(:exports)).to eq([export])
+      end
+    end
+
+    context 'when there is one export in another instructeurs group' do
+      let!(:instructeur_2) { create(:instructeur) }
+      let!(:gi_2) { create(:groupe_instructeur, label: 'gi_2', procedure: procedure, instructeurs: [instructeur_2]) }
+      let!(:export) {create(:export, groupe_instructeurs: [gi_2])}
+      it 'does not retrieved the export' do
+        subject
+        expect(assigns(:exports)).to eq([])
+      end
     end
   end
 end
