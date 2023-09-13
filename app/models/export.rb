@@ -81,7 +81,7 @@ class Export < ApplicationRecord
     export = create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
 
     if export.available? && export.old? && force
-      export.destroy
+      export.destroy!
       create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
     else
       export
