@@ -5,10 +5,7 @@ class APITokensController < ApplicationController
   def create
     @api_token, @packed_token = APIToken.generate(current_administrateur)
 
-    respond_to do |format|
-      format.turbo_stream { render :index }
-      format.html { redirect_back(fallback_location: profil_path) }
-    end
+    render :index
   end
 
   def update
@@ -20,19 +17,13 @@ class APITokensController < ApplicationController
       @api_token.update!(api_token_params)
     end
 
-    respond_to do |format|
-      format.turbo_stream { render :index }
-      format.html { redirect_back(fallback_location: profil_path) }
-    end
+    render :index
   end
 
   def destroy
     @api_token.destroy
 
-    respond_to do |format|
-      format.turbo_stream { render :index }
-      format.html { redirect_back(fallback_location: profil_path) }
-    end
+    render :index
   end
 
   private
