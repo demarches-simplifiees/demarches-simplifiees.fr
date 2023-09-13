@@ -76,6 +76,12 @@ describe Logic::ChampValue do
     it { is_expected.to eq(true) }
   end
 
+  context 'region tdc' do
+    let(:champ) { create(:champ_regions, value: 'La Réunion') }
+
+    it { is_expected.to eq('04') }
+  end
+
   describe 'errors' do
     let(:champ) { create(:champ) }
 
