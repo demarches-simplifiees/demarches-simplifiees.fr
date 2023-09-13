@@ -1103,6 +1103,46 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#refuser_automatiquement' do
+    context 'as svr procedure' do
+      let(:last_operation) { dossier.dossier_operation_logs.last }
+      let(:procedure) { create(:procedure, :for_individual, :published, :svr) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, sva_svr_decision_on: Date.current, en_instruction_at: DateTime.new(2021, 5, 1, 12)) }
+
+      before {
+        freeze_time
+        allow(NotificationMailer).to receive(:send_refuse_notification).and_return(double(deliver_later: true))
+      }
+
+      subject {
+        dossier.refuser_automatiquement!
+        dossier.reload
+      }
+
+      it 'refuses dossier automatiquement' do
+        expect(subject.en_instruction_at).to eq(DateTime.new(2021, 5, 1, 12))
+        expect(subject.processed_at).to eq(Time.current)
+        expect(subject.declarative_triggered_at).to be_nil
+        expect(subject.sva_svr_decision_triggered_at).to eq(Time.current)
+        expect(subject.motivation).to include("dans le délai imparti")
+        expect(subject).to be_refuse
+        expect(last_operation.operation).to eq('refuser')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(NotificationMailer).to have_received(:send_refuse_notification).with(dossier)
+        expect(subject.attestation).to be_nil
+        expect(dossier.commentaires.count).to eq(1)
+      end
+
+      context 'for an user having english locale' do
+        before { dossier.user.update!(locale: 'en') }
+
+        it 'translates the motivation' do
+          expect(subject.motivation).to include('within the time limit')
+        end
+      end
+    end
+  end
+
   describe '#passer_en_instruction!' do
     let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
@@ -1320,6 +1360,60 @@ describe Dossier, type: :model do
         before { dossier.update!(sva_svr_decision_triggered_at: 1.hour.ago) }
 
         it { expect(dossier.can_accepter_automatiquement?).to be_falsey }
+      end
+    end
+  end
+
+  describe '#can_refuser_automatiquement?' do
+    let(:dossier) { create(:dossier, state: initial_state) }
+    let(:initial_state) { :en_instruction }
+
+    it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+
+    context 'when procedure is sva/svr' do
+      let(:decision) { :svr }
+
+      before do
+        dossier.procedure.update!(sva_svr: SVASVRConfiguration.new(decision:).attributes)
+        dossier.update!(sva_svr_decision_on: Date.current)
+      end
+
+      it { expect(dossier.can_refuser_automatiquement?).to be_truthy }
+
+      context 'when procedure is svr' do
+        let(:decision) { :svr }
+
+        before do
+          dossier.procedure.update!(sva_svr: SVASVRConfiguration.new(decision:).attributes)
+          dossier.update!(sva_svr_decision_on: Date.current)
+        end
+
+        it { expect(dossier.can_refuser_automatiquement?).to be_truthy }
+
+        context 'when sva_svr_decision_on is in the future' do
+          before { dossier.update!(sva_svr_decision_on: 1.day.from_now) }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+
+        context 'when dossier has pending correction' do
+          let(:dossier) { create(:dossier, :en_construction) }
+          let!(:dossier_correction) { create(:dossier_correction, dossier:) }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+
+        context 'when decision is sva' do
+          let(:decision) { :sva }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+
+        context 'when dossier was already processed by svr' do
+          before { dossier.update!(sva_svr_decision_triggered_at: 1.hour.ago) }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
       end
     end
   end
@@ -1955,7 +2049,13 @@ describe Dossier, type: :model do
     context 'procedure sva' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
 
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date SVA", :sva_svr_decision_on]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVA", :sva_svr_decision_on]) }
+    end
+
+    context 'procedure svr' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :svr)) }
+
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVR", :sva_svr_decision_on]) }
     end
   end
 
