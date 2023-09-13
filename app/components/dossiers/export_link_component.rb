@@ -14,11 +14,11 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
     item.fetch(:format) != :json || @procedure.active_revision.carte?
   end
 
-  def download_export_path(export_format:, force_export: false, no_progress_notification: nil)
+  def download_export_path(export_format:, statut:, force_export: false, no_progress_notification: nil)
     @export_url.call(@procedure,
       export_format: export_format,
-      statut: @statut,
       force_export: force_export,
+      statut: statut,
       no_progress_notification: no_progress_notification)
   end
 
@@ -54,7 +54,7 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
   def poll_controller_options(export)
     {
       controller: 'turbo-poll',
-      turbo_poll_url_value: download_export_path(export_format: export.format, no_progress_notification: true),
+      turbo_poll_url_value: download_export_path(export_format: export.format, statut: export.statut, no_progress_notification: true),
       turbo_poll_interval_value: 6000,
       turbo_poll_max_checks_value: 10
     }

@@ -5,11 +5,11 @@
         = link_to ready_link_label(export), export.file.url, target: "_blank", rel: "noopener", role: 'menuitem'
         %span= ready_link_label_extra_infos(export)
         - if export.old?
-          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, force_export: true), refresh_button_options(export).merge(role: 'menuitem')
+          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut, force_export: true), refresh_button_options(export).merge(role: 'menuitem')
     - elsif export.failed?
       %li.fr-mb-2w
         = failed_label(export)
-        = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, force_export: true), refresh_button_options(export).merge(role: 'menuitem')
+        = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format,  statut: export.statut, force_export: true), refresh_button_options(export).merge(role: 'menuitem')
     - else
       %li.fr-mb-2w
         %span{ data: poll_controller_options(export) }
