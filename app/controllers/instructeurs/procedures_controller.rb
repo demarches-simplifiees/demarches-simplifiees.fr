@@ -103,7 +103,6 @@ module Instructeurs
       @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
       @disable_checkbox_all = @projected_dossiers.all? { _1.batch_operation_id.present? }
 
-      assign_exports
       @batch_operations = BatchOperation.joins(:groupe_instructeurs)
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
         .where(seen_at: nil)
@@ -127,8 +126,6 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
 
       @statut = 'supprime'
-
-      assign_exports
     end
 
     def update_displayed_fields
@@ -178,7 +175,6 @@ module Instructeurs
       @procedure = procedure
       @statut = export_options[:statut]
       @dossiers_count = export.count
-      assign_exports
 
       if export.available?
         respond_to do |format|
@@ -280,10 +276,6 @@ module Instructeurs
     def assign_to_params
       params.require(:assign_to)
         .permit(:instant_expert_avis_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
-    end
-
-    def assign_exports
-      @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids, procedure_presentation)
     end
 
     def assign_tos

@@ -6,7 +6,6 @@ module Administrateurs
     def download
       export = Export.find_or_create_export(export_format, all_groupe_instructeurs, force: force_export?, **export_options)
       @dossiers_count = export.count
-      assign_exports
 
       if export.available?
         respond_to do |format|
@@ -52,10 +51,6 @@ module Administrateurs
 
     def all_groupe_instructeurs
       @procedure.groupe_instructeurs
-    end
-
-    def assign_exports
-      @exports = Export.find_for_groupe_instructeurs(all_groupe_instructeurs.map(&:id), nil)
     end
   end
 end

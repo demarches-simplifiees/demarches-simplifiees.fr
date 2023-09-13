@@ -8,7 +8,7 @@
   %h1.mb-2
     Archives
     -# index not renderable as administrateur flagged as manager, so render it anyway
-    = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, exports: @exports, export_url: method(:download_admin_procedure_exports_path))
+    = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_url: method(:download_admin_procedure_exports_path))
   = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, export_url: method(:download_admin_procedure_exports_path))
 
   = render partial: "shared/archives/notice"

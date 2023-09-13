@@ -1,33 +1,20 @@
 class Dossiers::ExportDropdownComponent < ApplicationComponent
   include ApplicationHelper
 
-  def initialize(procedure:, exports:, statut: nil, count: nil, class_btn: nil, export_url: nil)
+  def initialize(procedure:, statut: nil, count: nil, class_btn: nil, export_url: nil)
     @procedure = procedure
-    @exports = exports
     @statut = statut
     @count = count
     @class_btn = class_btn
     @export_url = export_url
   end
 
-  def exports
+  def formats
     if @statut
-      Export::FORMATS.filter(&method(:allowed_format?)).map do |item|
-        export = @exports
-          .fetch(item.fetch(:format))
-          .fetch(:statut)
-          .fetch(@statut, nil)
-        item.merge(export: export)
-      end
+      Export::FORMATS.filter(&method(:allowed_format?))
     else
-      Export::FORMATS_WITH_TIME_SPAN.map do |item|
-        export = @exports
-          .fetch(item.fetch(:format))
-          .fetch(:time_span_type)
-          .fetch(item.fetch(:time_span_type), nil)
-        item.merge(export: export)
-      end
-    end
+      Export::FORMATS_WITH_TIME_SPAN
+    end.map { _1[:format] }
   end
 
   def allowed_format?(item)
