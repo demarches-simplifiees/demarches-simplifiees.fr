@@ -5,7 +5,7 @@ fr:
         one: 'Service'
         other: 'Services'
     attributes:
-      service:
+      service: &service
         adresse: 'Adresse postale'
         email: 'Email de contact'
         telephone: 'Téléphone'
@@ -27,6 +27,7 @@ fr:
             Exemple : Du lundi au vendredi de 9h30 à 17h30, le samedi de 9h30 à 12h.
           adresse: |
             Indiquez l’adresse à laquelle un usager peut vous contacter, par exemple s’il n’est pas en capacité de compléter son formulaire en ligne.
+      contact_information: *service
 
     errors:
       models:

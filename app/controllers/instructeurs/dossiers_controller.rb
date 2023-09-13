@@ -73,6 +73,8 @@ module Instructeurs
       @avis = Avis.new
       if @dossier.procedure.experts_require_administrateur_invitation?
         @experts_emails = dossier.procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
+      else
+        @experts_emails = @dossier.procedure.experts.map(&:email).sort
       end
     end
 
@@ -81,6 +83,8 @@ module Instructeurs
       @avis = Avis.new
       if @dossier.procedure.experts_require_administrateur_invitation?
         @experts_emails = dossier.procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
+      else
+        @experts_emails = @dossier.procedure.experts.map(&:email).sort
       end
     end
 

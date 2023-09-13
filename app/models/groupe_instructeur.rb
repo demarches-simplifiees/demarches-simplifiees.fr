@@ -13,6 +13,7 @@ class GroupeInstructeur < ApplicationRecord
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 
   has_one :defaut_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :defaut_groupe_instructeur_id, dependent: :nullify, inverse_of: :defaut_groupe_instructeur
+  has_one :contact_information
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
@@ -106,6 +107,8 @@ class GroupeInstructeur < ApplicationRecord
     options = case routing_tdc.type_champ
     when TypeDeChamp.type_champs.fetch(:departements)
       APIGeoService.departements.map { _1[:code] }
+    when TypeDeChamp.type_champs.fetch(:regions)
+      APIGeoService.regions.map { _1[:code] }
     when TypeDeChamp.type_champs.fetch(:drop_down_list)
       routing_tdc.options_with_drop_down_other
     end

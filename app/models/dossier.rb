@@ -1304,6 +1304,10 @@ class Dossier < ApplicationRecord
     )
   end
 
+  def service
+    groupe_instructeur&.contact_information || procedure.service
+  end
+
   private
 
   def create_missing_traitemets

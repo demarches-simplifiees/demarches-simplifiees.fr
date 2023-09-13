@@ -13,3 +13,6 @@
       instructeurs: @instructeurs,
       available_instructeur_emails: @available_instructeur_emails,
       disabled_as_super_admin: administrateur_as_manager? }
+  = render partial: 'administrateurs/groupe_instructeurs/contact_information',
+    locals: { procedure: @procedure,
+      groupe_instructeur: @groupe_instructeur }

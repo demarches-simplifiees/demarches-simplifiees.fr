@@ -43,23 +43,13 @@ module Administrateurs
       case tdc.type_champ
       when TypeDeChamp.type_champs.fetch(:departements)
         tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
-        tdc_options.each do |code_and_name, code|
-          routing_rule = ds_eq(champ_value(stable_id), constant(code))
-          @procedure
-            .groupe_instructeurs
-            .find_or_create_by(label: code_and_name)
-            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
-        end
-
+        create_groups_from_territorial_tdc(tdc_options, stable_id)
+      when TypeDeChamp.type_champs.fetch(:regions)
+        tdc_options = APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+        create_groups_from_territorial_tdc(tdc_options, stable_id)
       when TypeDeChamp.type_champs.fetch(:drop_down_list)
         tdc_options = tdc.drop_down_options.reject(&:empty?)
-        tdc_options.each do |option_label|
-          routing_rule = ds_eq(champ_value(stable_id), constant(option_label))
-          @procedure
-            .groupe_instructeurs
-            .find_or_create_by(label: option_label)
-            .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
-        end
+        create_groups_from_drop_down_list_tdc(tdc_options, stable_id)
       end
 
       if tdc.drop_down_other?
@@ -459,6 +449,26 @@ module Administrateurs
 
     def flash_message_for_invalid_csv
       flash[:alert] = "Importation impossible, veuillez importer un csv suivant #{view_context.link_to('ce modèle', "/csv/import-instructeurs-test.csv")} pour une procédure sans routage ou #{view_context.link_to('celui-ci', "/csv/#{I18n.locale}/import-groupe-test.csv")} pour une procédure routée"
+    end
+
+    def create_groups_from_territorial_tdc(tdc_options, stable_id)
+      tdc_options.each do |label, code|
+        routing_rule = ds_eq(champ_value(stable_id), constant(code))
+        @procedure
+          .groupe_instructeurs
+          .find_or_create_by(label: label)
+          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+      end
+    end
+
+    def create_groups_from_drop_down_list_tdc(tdc_options, stable_id)
+      tdc_options.each do |label|
+        routing_rule = ds_eq(champ_value(stable_id), constant(label))
+        @procedure
+          .groupe_instructeurs
+          .find_or_create_by(label: label)
+          .update(instructeurs: [current_administrateur.instructeur], routing_rule:)
+      end
     end
   end
 end

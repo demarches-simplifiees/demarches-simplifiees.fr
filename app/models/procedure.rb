@@ -469,7 +469,7 @@ class Procedure < ApplicationRecord
         dossier_submitted_message: []
       }
     }
-    include_list[:groupe_instructeurs] = :instructeurs if !is_different_admin
+    include_list[:groupe_instructeurs] = [:instructeurs, :contact_information] if !is_different_admin
     procedure = self.deep_clone(include: include_list) do |original, kopy|
       PiecesJustificativesService.clone_attachments(original, kopy)
     end
