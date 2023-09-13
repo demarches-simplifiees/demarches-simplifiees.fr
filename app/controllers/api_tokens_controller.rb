@@ -12,7 +12,9 @@ class APITokensController < ApplicationController
   end
 
   def update
-    if disallow_procedure_id.present?
+    if become_full_access?
+      @api_token.become_full_access!
+    elsif disallow_procedure_id.present?
       @api_token.untarget_procedure(disallow_procedure_id.to_i)
     else
       @api_token.update!(api_token_params)
@@ -39,11 +41,15 @@ class APITokensController < ApplicationController
     @api_token = current_administrateur.api_tokens.find(params[:id])
   end
 
+  def become_full_access?
+    api_token_params[:become_full_access].present?
+  end
+
   def disallow_procedure_id
     api_token_params[:disallow_procedure_id]
   end
 
   def api_token_params
-    params.require(:api_token).permit(:name, :write_access, :disallow_procedure_id, allowed_procedure_ids: [])
+    params.require(:api_token).permit(:name, :write_access, :become_full_access, :disallow_procedure_id, allowed_procedure_ids: [])
   end
 end

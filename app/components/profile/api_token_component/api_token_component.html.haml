@@ -29,8 +29,8 @@
         %p.fr-text--lg
           = t('.allowed_procedures_html', count: @api_token.allowed_procedures.size)
 
-        - if @api_token.allowed_procedures.empty?
-          = button_to t('.action_all'), @api_token, method: :patch, params: { api_token: { disallow_procedure_id: '0' } }, class: "fr-btn fr-btn--secondary"
+        - if @api_token.procedures.empty?
+          = button_to t('.action_all'), @api_token, method: :patch, params: { api_token: { become_full_access: '1' } }, class: "fr-btn fr-btn--secondary"
         - else
           %ul
             - @api_token.allowed_procedures.each do |procedure|
