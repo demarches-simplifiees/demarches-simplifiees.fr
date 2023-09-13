@@ -12,9 +12,8 @@ class APITokensController < ApplicationController
   end
 
   def update
-    disallow_procedure_id = api_token_params.fetch(:disallow_procedure_id, nil)
     if disallow_procedure_id.present?
-      @api_token.disallow_procedure(disallow_procedure_id.to_i)
+      @api_token.untarget_procedure(disallow_procedure_id.to_i)
     else
       @api_token.update!(api_token_params)
     end
@@ -38,6 +37,10 @@ class APITokensController < ApplicationController
 
   def set_api_token
     @api_token = current_administrateur.api_tokens.find(params[:id])
+  end
+
+  def disallow_procedure_id
+    api_token_params[:disallow_procedure_id]
   end
 
   def api_token_params
