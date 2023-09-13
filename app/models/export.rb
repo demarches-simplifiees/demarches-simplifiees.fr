@@ -88,41 +88,15 @@ class Export < ApplicationRecord
     end
   end
 
-  def self.find_all_exports_for_groupe_instructeurs(groupe_instructeurs_ids)
+  def self.for_groupe_instructeurs(groupe_instructeurs_ids)
     joins(:groupe_instructeurs).where(groupe_instructeurs: groupe_instructeurs_ids)
   end
 
-  def self.find_for_groupe_instructeurs(groupe_instructeurs_ids, procedure_presentation)
-    exports = if procedure_presentation.present?
-      where(key: generate_cache_key(groupe_instructeurs_ids, procedure_presentation))
-        .or(where(key: generate_cache_key(groupe_instructeurs_ids)))
-    else
-      where(key: generate_cache_key(groupe_instructeurs_ids))
-    end
-    filtered, not_filtered = exports.partition(&:filtered?)
-
-    {
-      xlsx: {
-        time_span_type: not_filtered.filter(&:format_xlsx?).index_by(&:time_span_type),
-        statut: filtered.filter(&:format_xlsx?).index_by(&:statut)
-      },
-      ods: {
-        time_span_type: not_filtered.filter(&:format_ods?).index_by(&:time_span_type),
-        statut: filtered.filter(&:format_ods?).index_by(&:statut)
-      },
-      csv: {
-        time_span_type: not_filtered.filter(&:format_csv?).index_by(&:time_span_type),
-        statut: filtered.filter(&:format_csv?).index_by(&:statut)
-      },
-      zip: {
-        time_span_type: {},
-        statut: filtered.filter(&:format_zip?).index_by(&:statut)
-      },
-      json: {
-        time_span_type: {},
-        statut: filtered.filter(&:format_json?).index_by(&:statut)
-      }
-    }
+  def self.by_key(groupe_instructeurs_ids, procedure_presentation)
+    where(key: [
+      generate_cache_key(groupe_instructeurs_ids),
+      generate_cache_key(groupe_instructeurs_ids, procedure_presentation)
+    ])
   end
 
   def self.create_or_find_export(format, groupe_instructeurs, time_span_type:, statut:, procedure_presentation:)

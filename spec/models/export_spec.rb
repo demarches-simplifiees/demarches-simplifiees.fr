@@ -61,9 +61,9 @@ RSpec.describe Export, type: :model do
       context 'when an export is made for one groupe instructeur' do
         let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-        it { expect(Export.find_for_groupe_instructeurs([gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
-        it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: { 'everything' => export } }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
-        it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.by_key([gi_1.id], nil)).to be_empty }
+        it { expect(Export.by_key([gi_2.id, gi_1.id], nil)).to eq([export]) }
+        it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id], nil)).to be_empty }
       end
     end
 
@@ -73,14 +73,8 @@ RSpec.describe Export, type: :model do
       let!(:procedure_presentation) { create(:procedure_presentation, procedure: gi_1.procedure) }
 
       it 'find global exports as well as filtered one' do
-        expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
-          .to eq({
-            csv: { statut: { Export.statuts.fetch(:suivis) => export_with_filter }, time_span_type: { 'everything' => export_global } },
-                   xlsx: { statut: {}, time_span_type: {} },
-                   ods: { statut: {}, time_span_type: {} },
-                   zip: { statut: {}, time_span_type: {} },
-                   json: { statut: {}, time_span_type: {} }
-          })
+        expect(Export.by_key([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
+          .to contain_exactly(export_with_filter, export_global)
       end
     end
   end

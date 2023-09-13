@@ -665,7 +665,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when there is one export in the instructeurs group' do
-      let!(:export) {create(:export, groupe_instructeurs: [gi_1])}
+      let!(:export) { create(:export, groupe_instructeurs: [gi_1]) }
       it 'retrieves the export' do
         subject
         expect(assigns(:exports)).to eq([export])
@@ -675,7 +675,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     context 'when there is one export in another instructeurs group' do
       let!(:instructeur_2) { create(:instructeur) }
       let!(:gi_2) { create(:groupe_instructeur, label: 'gi_2', procedure: procedure, instructeurs: [instructeur_2]) }
-      let!(:export) {create(:export, groupe_instructeurs: [gi_2])}
+      let!(:export) { create(:export, groupe_instructeurs: [gi_2]) }
       it 'does not retrieved the export' do
         subject
         expect(assigns(:exports)).to eq([])

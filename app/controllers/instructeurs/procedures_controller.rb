@@ -228,7 +228,7 @@ module Instructeurs
 
     def exports
       @procedure = procedure
-      @exports = Export.find_all_exports_for_groupe_instructeurs(groupe_instructeur_ids)
+      @exports = Export.for_groupe_instructeurs(groupe_instructeur_ids).order(updated_at: :desc)
     end
 
     def email_usagers
