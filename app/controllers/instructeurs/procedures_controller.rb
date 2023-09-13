@@ -194,7 +194,7 @@ module Instructeurs
             end
           end
           format.html do
-            redirect_to instructeur_procedure_url(procedure), notice: export.flash_message
+            redirect_to exports_instructeur_procedure_path(procedure), notice: export.flash_message
           end
         end
       end

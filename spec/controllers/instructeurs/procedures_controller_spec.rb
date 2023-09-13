@@ -588,7 +588,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     context 'when the export does not exist' do
       it 'displays an notice' do
-        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
       end
 
@@ -601,7 +601,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it 'displays an notice' do
-        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
       end
     end
@@ -627,7 +627,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it 'displays an notice' do
-        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
       end
     end
