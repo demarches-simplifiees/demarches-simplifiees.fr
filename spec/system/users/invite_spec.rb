@@ -164,16 +164,18 @@ describe 'Invitations' do
         visit dossiers_path
       end
 
-      it "can search by id and it redirects to the dossier page" do
+      it "can search by id and it displays the dossier" do
         page.find_by_id('q').set(dossier.id)
         find('.fr-search-bar .fr-btn').click
-        expect(current_path).to eq(dossier_path(dossier))
+        expect(current_path).to eq(dossiers_path)
+        expect(page).to have_link(dossier.procedure.libelle)
       end
 
-      it "can search something inside the dossier and it redirects to the dossier page" do
+      it "can search something inside the dossier and it displays the dossier" do
         page.find_by_id('q').set(dossier_2.champs_public.first.value)
         find('.fr-search-bar .fr-btn').click
-        expect(current_path).to eq(dossier_path(dossier_2))
+        expect(current_path).to eq(dossiers_path)
+        expect(page).to have_link(dossier.procedure.libelle)
       end
     end
   end
