@@ -3,13 +3,6 @@ describe Champs::NumeroDnChamp do
   let!(:ddn) { '28/11/1983' }
   let!(:iso_ddn) { '1983-11-28' }
 
-  describe '#unpack_value' do
-    let(:champ) { described_class.new(value: "[\"#{dn}\", \"#{iso_ddn}\"]") }
-
-    it { expect(champ.numero_dn).to eq(dn) }
-    it { expect(champ.date_de_naissance).to eq(iso_ddn) }
-  end
-
   describe '#pack_value', vcr: { cassette_name: 'numero_dn_check' } do
     let(:champ) { described_class.new(numero_dn: dn, date_de_naissance: ddn) }
 
@@ -32,7 +25,7 @@ describe Champs::NumeroDnChamp do
     context 'with dn value' do
       let(:numero_dn) { dn }
 
-      it { is_expected.to eq(numero_dn) }
+      it { is_expected.to eq('') }
     end
 
     context 'with dn & ddn' do
@@ -55,7 +48,7 @@ describe Champs::NumeroDnChamp do
     context 'with dn value' do
       let(:champ) { described_class.new(numero_dn: dn) }
 
-      it { is_expected.to eq("#{dn};") }
+      it { is_expected.to be_nil }
     end
 
     context 'with dn & ddn values' do

@@ -16,7 +16,9 @@ export class NumeroDnController extends ApplicationController {
   connect(): void {
     this.onTarget(this.dnTarget, 'input', () => this.debounce(this.load, 200));
     this.onTarget(this.ddnTarget, 'input', () => this.debounce(this.load, 200));
+    this.load();
   }
+
   private load(): void {
     if (!this.dnTarget?.validity?.patternMismatch) {
       if (this.ddnTarget.checkValidity()) {

@@ -21,33 +21,23 @@
 #  type_de_champ_id               :integer
 #
 class Champs::NumeroDnChamp < Champ
-  validates_with NumeroDnValidator
+  store_accessor :value_json, :numero_dn, :date_de_naissance
 
-  def numero_dn
-    if value.present?
-      values[0]
-    else
-      ''
-    end
-  end
-
-  def date_de_naissance
-    tab = values
-    tab.present? ? tab[1] : nil
-  end
+  validates_with NumeroDnValidator, if: -> { validation_context != :brouillon }
 
   def numero_dn=(value)
     value = value.to_s.rjust(7, "0") if value.present?
-    pack_value(value, date_de_naissance)
+    super(value)
   end
 
   def date_de_naissance=(value)
     value = begin
-              Time.zone.parse(value).to_date.iso8601
+      Time.zone.parse(value).to_date.iso8601
             rescue
               nil
-            end
+    end
     pack_value(numero_dn, value)
+    super(value)
   end
 
   def displayed_date_de_naissance
@@ -76,20 +66,16 @@ class Champs::NumeroDnChamp < Champ
   end
 
   def blank?
-    value.blank? || values.any?(&:blank?)
+    value.blank?
   end
 
   def search_terms
-    values
+    [numero_dn, date_de_naissance]
   end
 
   private
 
-  def values
-    value.present? ? JSON.parse(value) : nil
-  end
-
   def pack_value(numero_dn, date_de_naissance)
-    self.value = JSON.generate([numero_dn, date_de_naissance])
+    self.value = numero_dn.blank? || date_de_naissance.blank? ? nil : JSON.generate([numero_dn, date_de_naissance])
   end
 end

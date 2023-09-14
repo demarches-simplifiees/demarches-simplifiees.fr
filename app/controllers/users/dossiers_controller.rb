@@ -571,22 +571,24 @@ module Users
       errors.map do |active_model_error|
         case active_model_error.class.name
         when "ActiveModel::NestedError"
-          append_anchor_link(active_model_error.full_message, active_model_error.inner_error.base)
+          append_anchor_link(active_model_error.inner_error)
         when "ActiveModel::Error"
-          append_anchor_link(active_model_error.full_message, active_model_error.base)
+          append_anchor_link(active_model_error)
         else # "String"
           active_model_error
         end
       end
     end
 
-    def append_anchor_link(str_error, model)
-      return str_error.full_message if !model.is_a?(Champ)
+    def append_anchor_link(error)
+      model = error.base
+      str_error = error.full_message
+      return str_error if !model.is_a?(Champ)
 
+      # attribute = error.attribute != :value ? ":" + error.attribute.to_s.gsub('_',' ') : nil
       route_helper = @dossier.editing_fork? ? :modifier_dossier_path : :brouillon_dossier_path
-
       [
-        "Le champ « #{model.libelle.truncate(200)} » #{str_error}",
+        t('views.users.dossiers.label_champ', champ: model.libelle.truncate(200), message: str_error),
         helpers.link_to(t('views.users.dossiers.fix_champ'), public_send(route_helper, anchor: model.labelledby_id), class: 'error-anchor')
       ].join(", ")
     rescue # case of invalid type de champ on champ

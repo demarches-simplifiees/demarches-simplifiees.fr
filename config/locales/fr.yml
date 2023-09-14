@@ -403,6 +403,7 @@ fr:
           detail_one: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche."
           detail_two: "Celui ci doit ressembler à"
         fix_champ: "corriger l’erreur"
+        label_champ: "Le champ « %{champ} » %{message}"
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
@@ -625,7 +626,11 @@ fr:
           attributes:
             value:
               format: "%{message}"
-
+        champ:
+          attributes:
+            value:
+              format: '%{message}'
+              missing: doit être rempli
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:
@@ -666,6 +671,14 @@ fr:
               not_in_departement_epci_codes: "doit être un code d'EPCI du département correspondant"
             value:
               not_in_departement_epci_names: "doit être un nom d'EPCI du département correspondant"
+        "champs/numero_dn_champ":
+          attributes:
+            date_de_naissance:
+              format: "%{message}"
+              inconsistent_date: ", la date de naissance n'est pas en accord avec le numéro DN"
+            value:
+              unknown_dn: "a un numéro DN inconnu"
+              service_unavailable: "ne peut être vérifié. Réssayez plus tard s'il vous plait."
         "champs/dossier_link_champ":
           attributes:
             value:

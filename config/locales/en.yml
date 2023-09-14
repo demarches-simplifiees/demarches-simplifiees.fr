@@ -12,6 +12,7 @@
 #
 # To use a different locale, set it with `I18n.locale`:
 #
+#
 #     I18n.locale = :es
 #
 # This would use the information in config/locales/es.yml.
@@ -401,6 +402,7 @@ en:
           detail_one: "To complete a procedure, contact your administration and ask for the link to the procedure."
           detail_two: "This one should look like"
         fix_champ: "fill in this field"
+        label_champ: "« %{champ} » field %{message}"
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           identity_data: Identity data
@@ -530,6 +532,13 @@ en:
       submit:
         publish: Publish
         reopen: Reopen
+  messages:
+    numero_dn:
+      bad_dn_format: DN number must be 6 to 7 characters long.
+      bad_dn: Unknown DN number.
+      bad_ddn_format: Fill in the date of birth.
+      bad_ddn: Date of birth doesn't match the DN number.
+      good_dn: DN number and date of birth are correct.
   activerecord:
     models:
       user:
@@ -617,6 +626,11 @@ en:
           attributes:
             value:
               format: "%{message}"
+        champ:
+          attributes:
+            value:
+              format: '%{message}'
+              missing: must be filled
         "champs/cnaf_champ":
           attributes:
             numero_allocataire:
@@ -657,12 +671,20 @@ en:
               not_in_departement_epci_codes: "must be a valid EPCI code of the matching department"
             value:
               not_in_departement_epci_names: "must be a valid EPCI name of the matching department"
+        "champs/numero_dn_champ":
+          attributes:
+            date_de_naissance:
+              format: "%{message}"
+              inconsistent_date: ", date of birth doesn't match the DN number"
+            value:
+              unknown_dn: "has unknown DN number"
+              service_unavailable: "service unavailable. Please, try again later."
         "champs/dossier_link_champ":
           attributes:
             value:
               not_integerable: "must be an integer"
   errors:
-    format: "Field « %{attribute} » %{message}"
+    format: "« %{attribute} » field %{message}"
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."

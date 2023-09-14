@@ -11,13 +11,12 @@ class NumeroDnValidator < ActiveModel::Validator
         when 'true'
           # everything is good
         when 'false'
-          record.errors[record.type_de_champ.libelle] << "La date de naissance ne correspond pas à ce numéro DN."
+          record.errors.add(:date_de_naissance, :inconsistent_date)
         else
-          record.errors[record.type_de_champ.libelle] << "Le numéro de DN est inconnu de la CPS."
+          record.errors.add(:value, :unknown_dn)
         end
-      rescue => e
-        # if CPS is not accessible, let user continue
-        Rails.logger.error('Unable to contact CPS:' + e.message)
+      rescue
+        record.errors.add(:value, :service_unavailable)
       end
     end
   end
