@@ -29,11 +29,12 @@
             = f.check_box :remember_me
             = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
 
-
-    = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
+      .fr-fieldset__element
+        %ul.fr-btns-group
+          %li= f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
 
   - if AgentConnectService.enabled?
     %p.fr-hr-or= t('views.shared.france_connect_login.separator')
-    .center
-      %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
-      = link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
+    %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
+    %ul.fr-btns-group
+      %li= link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
