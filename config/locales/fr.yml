@@ -563,8 +563,17 @@ fr:
         << : *default_attributes
       procedure:
         zone: La démarche est mise en œuvre par
-      champs:
+      champ:
         value: Valeur du champ
+      champs/numero_dn_champ:
+        date_de_naissance: la date de naissance
+      champs/dgfip_champ:
+        numero_fiscal: le numéro fiscal
+        reference_avis: la référence d’avis d’imposition
+      champs/cnaf_champ:
+        numero_allocataire: le numéro d’allocataire CAF
+        code_postal: le code postal
+
       default_mail_attributes: &default_mail_attributes
         hints:
           subject: "L’objet généré sera tronqué s’il dépasse 100 caractères."
@@ -621,12 +630,8 @@ fr:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               taken_can_be_claimed: est identique à celui d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public. Les utilisateurs qui ont commencé un brouillon vont pouvoir le déposer.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 50 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
-        "dossier/champs":
-          format: "%{message}"
-          attributes:
-            value:
-              format: "%{message}"
         champ:
+          format: "%{attribute} %{message}"
           attributes:
             value:
               format: '%{message}'
@@ -674,10 +679,9 @@ fr:
         "champs/numero_dn_champ":
           attributes:
             date_de_naissance:
-              format: "%{message}"
-              inconsistent_date: ", la date de naissance n'est pas en accord avec le numéro DN"
+              inconsistent_date: "n'est pas en accord avec le numéro DN"
             value:
-              unknown_dn: "a un numéro DN inconnu"
+              unknown_dn: "a un numéro inconnu"
               service_unavailable: "ne peut être vérifié. Réssayez plus tard s'il vous plait."
         "champs/dossier_link_champ":
           attributes:

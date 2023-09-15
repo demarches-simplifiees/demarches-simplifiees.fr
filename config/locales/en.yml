@@ -561,8 +561,16 @@ en:
         << : *default_attributes
       procedure:
         zone: This procedure is run by
-      champs:
+      champ:
         value: Value
+      champs/numero_dn_champ:
+        date_de_naissance: date of birth
+      champs/dgfip_champ:
+        numero_fiscal: Tax number
+        reference_avis: Tax notice reference
+      champs/cnaf_champ:
+        numero_allocataire: CAF benefit number
+        code_postal: Postal code
       default_mail_attributes: &default_mail_attributes
         hints:
           subject: The generated subject will be truncated if it exceeds 100 characters.
@@ -621,12 +629,8 @@ en:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
-        "dossier/champs":
-          format: "%{message}"
-          attributes:
-            value:
-              format: "%{message}"
         champ:
+          format: "%{attribute} %{message}"
           attributes:
             value:
               format: '%{message}'
@@ -674,8 +678,7 @@ en:
         "champs/numero_dn_champ":
           attributes:
             date_de_naissance:
-              format: "%{message}"
-              inconsistent_date: ", date of birth doesn't match the DN number"
+              inconsistent_date: "doesn't match the DN number"
             value:
               unknown_dn: "has unknown DN number"
               service_unavailable: "service unavailable. Please, try again later."
@@ -684,7 +687,7 @@ en:
             value:
               not_integerable: "must be an integer"
   errors:
-    format: "« %{attribute} » field %{message}"
+    format: "Field « %{attribute} » %{message}"
     messages:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
