@@ -1,13 +1,13 @@
 - content_for(:title, t('.cta'))
 
 #agentconnect
-  .two-columns
-    .columns-container
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters
 
-      .column
+      .fr-col-lg.fr-p-6w.fr-background-alt--grey
 
         #session-new.auth-form.sign-in-form
-          = form_for User.new, url: user_session_path, html: { class: "fr-pt-5w" }   do |f|
+          = form_for User.new, url: user_session_path do |f|
 
             %h1.fr-h2= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
 
@@ -60,7 +60,7 @@
           %ul.fr-btns-group
             %li= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary width-100"
 
-      .column.agent-intro
+      .fr-col-lg.fr-p-6w
         = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
           - c.with_body do
             = t('.full_deploy_body')

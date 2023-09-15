@@ -10,5 +10,5 @@ fr:
         citizen_page: Se connecter sur votre espace
         signin_with: "S’identifier avec"
         whats_agentconnect: 'Quʼest ce quʼAgentConnect ?'
-        whats_ds: '%{application_name}, la plate-forme nationale de dématérialisation des procédures administratives'
+        whats_ds: '%{application_name}, la plateforme nationale de dématérialisation des démarches administratives'
         pro_email: Adresse électronique professionnelle
