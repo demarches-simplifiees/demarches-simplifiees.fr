@@ -2,20 +2,13 @@ fr:
   agent_connect:
     agent:
       index:
-        cta: S’identifier avec AgentConnect
-        you_are_an_agent: Vous êtes agent de la fonction publique dʼÉtat ou dʼun opérateur de lʼÉtat ?
-        in_progress_html: |
-          <p>
-            <b class="bold">AgentConnect est en cours de déploiement.</b>
-            <br>
-            Les ministères et opérateurs qui peuvent lʼutiliser à ce jour sont&nbsp;:
-          </p>
-          <ul>
-            <li>lʼInsee</li>
-          </ul>
+        cta: Se connecter avec AgentConnect
+        explanation: AgentConnect est la solution proposée par l'État pour sécuriser et simplifier la connexion aux services en ligne
+        full_deploy_title: AgentConnect est désormais entièrement deployé
+        full_deploy_body: Tous les ministères et opérateurs peuvent l'utiliser à ce jour
         you_are_a_citizen: Vous êtes un particulier ?
-        citizen_page: Accéder à notre page dédiée
-        connect: Connectez-vous
+        citizen_page: Se connecter sur votre espace
         signin_with: "S’identifier avec"
         whats_agentconnect: 'Quʼest ce quʼAgentConnect ?'
+        whats_ds: '%{application_name}, la plate-forme nationale de dématérialisation des procédures administratives'
         pro_email: Adresse électronique professionnelle

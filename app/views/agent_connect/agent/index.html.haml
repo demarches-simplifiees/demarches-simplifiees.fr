@@ -3,33 +3,31 @@
 #agentconnect
   .two-columns
     .columns-container
-      .column.agent-intro
-        %h1.mt-2.mb-2.agent= t('.you_are_an_agent')
-        .box= t('.in_progress_html')
-
-        .center.mt-2
-          %span.citizen= t('.you_are_a_citizen')
-          %br
-          %br
-          = link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
 
       .column
-        %h1.fr-my-2w
-          = t('.connect')
-
-        .fr-connect-group.fr-my-2w
-          = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
-            %span.fr-connect__login
-              = t('.signin_with')
-            %span.fr-connect__brand AgentConnect
-          %p
-            = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
-
-
-        %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
         #session-new.auth-form.sign-in-form
-          = form_for User.new, url: user_session_path do |f|
+          = form_for User.new, url: user_session_path, html: { class: "fr-pt-5w" }   do |f|
+
+            %h1.fr-h2= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
+
+            .fr-mb-0.fr-fieldset
+              .fr-fieldset__legend
+                %h2.fr-h6= t('.cta')
+
+              .fr-fieldset__element
+                %p= t('.explanation')
+
+                .fr-connect-group.fr-my-2w
+                  = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
+                    %span.fr-connect__login
+                      = t('.signin_with')
+                    %span.fr-connect__brand AgentConnect
+                  %p
+                    = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
+
+
+            %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
             %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
               %legend.fr-fieldset__legend#new-account-legend
@@ -53,8 +51,22 @@
                     = f.check_box :remember_me
                     = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
 
+            %ul.fr-btns-group
+              %li= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
 
-            = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
+          %hr
+
+          %h2.fr-h6= t('.you_are_a_citizen')
+          %ul.fr-btns-group
+            %li= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary width-100"
+
+      .column.agent-intro
+        = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
+          - c.with_body do
+            = t('.full_deploy_body')
+        %h2.fr-h6= t('.whats_ds', application_name: APPLICATION_NAME)
+        = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo", alt: ""
+
 
 - content_for :footer do
   = render partial: 'users/dossiers/index_footer'

@@ -3,18 +3,12 @@ en:
     agent:
       index:
         cta: Connect with AgentConnect
-        you_are_an_agent: Are you an employee of the state civil service or of a state operator?
-        in_progress_html: |
-          <p>
-            <b class="bold">AgentConnect is currently being deployed.</b>
-            <br>
-            The ministries and operators that can currently benefit from it are&nbsp;:
-          </p>
-          <ul>
-            <li>the Insee</li>
-          </ul>
-        you_are_a_citizen: You are an individual ?
+        explanation: Agent connect is the solution powered by the state to secure and simplify the connection to online services
+        full_deploy_title: Agent connect is now fully available
+        full_deploy_body: All ministries and operators are able to use it
+        you_are_a_citizen: Are you a citizen ?
         citizen_page: Go to our dedicated page
-        connect: Connect
+        signin_with: "Sign in with"
         whats_agentconnect: 'What is AgentConnect?'
+        whats_ds: '%{application_name}, the national platform to dematerialize administrative procedures'
         pro_email: Professional email
