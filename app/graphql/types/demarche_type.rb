@@ -144,7 +144,19 @@ module Types
         dossiers = dossiers.hidden_since(deleted_since)
       end
 
-      dossiers.order(hidden_by_user_at: order, hidden_by_administration_at: order)
+      dossiers_table = Dossier.arel_table
+      case_statement = dossiers_table[:state]
+        .when(:en_construction)
+        .then(dossiers_table[:hidden_by_user_at])
+        .else(dossiers_table[:hidden_by_administration_at])
+
+      dossiers = dossiers.order(case_statement)
+
+      if order == :desc
+        dossiers = dossiers.reverse_order
+      end
+
+      dossiers
     end
 
     def champ_descriptors
