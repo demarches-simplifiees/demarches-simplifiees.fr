@@ -41,7 +41,7 @@ module Administrateurs
       tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
       case tdc.type_champ
-      when TypeDeChamp.type_champs.fetch(:departements)
+      when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements)
         tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
         create_groups_from_territorial_tdc(tdc_options, stable_id)
       when TypeDeChamp.type_champs.fetch(:regions)
