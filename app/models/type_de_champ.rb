@@ -98,6 +98,13 @@ class TypeDeChamp < ApplicationRecord
     cojo: 'cojo'
   }
 
+  ROUTABLE_TYPES = [
+    type_champs.fetch(:drop_down_list),
+    type_champs.fetch(:communes),
+    type_champs.fetch(:departements),
+    type_champs.fetch(:regions)
+  ]
+
   store_accessor :options,
                  :cadastres,
                  :old_pj,
@@ -564,6 +571,10 @@ class TypeDeChamp < ApplicationRecord
     else
       true
     end
+  end
+
+  def routable?
+    type_champ.in?(ROUTABLE_TYPES)
   end
 
   private
