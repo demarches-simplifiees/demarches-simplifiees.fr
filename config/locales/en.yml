@@ -412,12 +412,18 @@ en:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           identity_data: Identity data
+          identity_siret: Identify your establishment
           all_required: All fields are required.
           civility: Civility
           first_name: First Name
           last_name: Last Name
-          birthdate: Date de naissance
-          complete_data: Please complete your personal information to access the procedure.
+          birthdate: Birth date
+          complete_data: Complete your personal information to access the procedure.
+          complete_siret: Fill the SIRET number of your company, administration or association to start the procedure.
+          siret_help_html: To find your SIRET number, use %{annuaire_link} or ask your accounting department.
+          siret_placeholder: 14-digit SIRET number
+          annuaire_link_title: Search for a SIRET number in the Companies Directory
+          siret_loading: Information retrieval…
           continue: Continue
         merci:
           thanks: Thank you!
@@ -689,8 +695,8 @@ en:
       invalid_siret_checksum: "The SIRET number is invalid."
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
-      siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
-      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
+      siret_network_error: 'Sorry, SIRET information retrieval is temporarily unavailable. Please try again shortly.'
+      siret_not_found: "We haven't found an establishment corresponding to this SIRET number."
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."

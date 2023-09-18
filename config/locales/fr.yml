@@ -414,12 +414,18 @@ fr:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
+          identity_siret: Identifier votre établissement
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
-          complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
+          complete_data: Renseignez vos informations personnelles pour accéder à la démarche.
+          complete_siret: Renseignez le numéro de SIRET de votre entreprise, administration ou association pour commencer la démarche.
+          siret_help_html: Pour trouver votre numéro SIRET, utilisez %{annuaire_link} ou renseignez-vous auprès de votre service comptable.
+          siret_placeholder: Numéro SIRET à 14 chiffres
+          annuaire_link_title: Rechercher un numéro de SIRET sur l’Annuaire des Entreprises
+          siret_loading: Récupération des informations…
           continue: Continuer
         merci:
           thanks: Merci !
