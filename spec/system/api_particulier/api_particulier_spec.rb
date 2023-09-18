@@ -267,8 +267,8 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Monsieur').click
-        fill_in('identite_champ_first_name', with: 'prenom')
-        fill_in('identite_champ_last_name', with: 'nom')
+        fill_in('Prénom', with: 'prenom')
+        fill_in('Nom', with: 'nom')
 
         click_button('Continuer')
 
@@ -326,8 +326,8 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Monsieur').click
-        fill_in('identite_champ_first_name', with: 'Georges')
-        fill_in('identite_champ_last_name', with: 'Moustaki')
+        fill_in('Prénom', with: 'Georges')
+        fill_in('Nom', with: 'Moustaki')
 
         click_button('Continuer')
 
@@ -399,9 +399,9 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        find('label[for="identite_champ_radio_Mme"]').click
-        fill_in('identite_champ_last_name', with: 'Dubois')
-        fill_in('identite_champ_first_name', with: 'Angela Claire Louise')
+        find('label', text: 'Madame').click
+        fill_in('Prénom', with: 'Dubois')
+        fill_in('Nom', with: 'Angela Claire Louise')
 
         click_button('Continuer')
 
@@ -463,9 +463,9 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
-        find('label[for="identite_champ_radio_Mme"]').click
-        fill_in('identite_champ_last_name', with: 'FERRI')
-        fill_in('identite_champ_first_name', with: 'Karine')
+        find('label', text: 'Madame').click
+        fill_in('Nom', with: 'FERRI')
+        fill_in('Prénom', with: 'Karine')
 
         click_button('Continuer')
 
