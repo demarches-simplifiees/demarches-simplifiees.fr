@@ -10,7 +10,7 @@ module Administrateurs
       if export.available?
         respond_to do |format|
           format.turbo_stream do
-            flash.notice = export.flash_message
+            flash.notice = t('.export_available_html', file_format: export.format, file_url: export.file.url)
           end
 
           format.html do
@@ -21,11 +21,11 @@ module Administrateurs
         respond_to do |format|
           format.turbo_stream do
             if !params[:no_progress_notification]
-              flash.notice = export.flash_message
+              flash.notice = t('.export_pending')
             end
           end
           format.html do
-            redirect_to admin_procedure_archives_url(@procedure), notice: export.flash_message
+            redirect_to admin_procedure_archives_url(@procedure), notice: t('.export_pending')
           end
         end
       end

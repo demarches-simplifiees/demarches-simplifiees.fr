@@ -69,14 +69,6 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def flash_message
-    if available?
-      "L’export au format \"#{format}\" est prêt. Vous pouvez le <a href=\"#{file.url}\">télécharger</a>"
-    else
-      "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
-    end
-  end
-
   def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, force: false)
     export = create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
 

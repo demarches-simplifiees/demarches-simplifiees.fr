@@ -1,5 +1,7 @@
 fr:
   instructeurs:
     procedures:
+      export_available_html: L’export au format %{file_format} est prêt. Vous pouvez le <a href="%{file_url}">télécharger</a>
+      export_pending_html: Nous générons cet export. Vous pourrez le télécharger dans quelques minutes depuis <a href="%{url}">la liste des exports</a>.
       exports:
         no_export_html: Vous n'avez pas d'export pour le moment. <br> Vous ne trouvez pas un export ? Il a peut-être expiré, les exports sont supprimés au bout de %{expiration_time} heures.
