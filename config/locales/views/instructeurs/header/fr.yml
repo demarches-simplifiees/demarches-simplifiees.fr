@@ -13,6 +13,7 @@ fr:
           notification_management: gestion des notifications
           administrators_list: voir les administrateurs
           exports_list: voir les exports
+          exports_notification_label: Un nouvel export est prêt à être téléchargé
           statistics: statistiques
           instructeurs: instructeurs
           contact_users: contacter les usagers (brouillon)

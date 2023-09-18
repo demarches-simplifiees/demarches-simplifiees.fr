@@ -466,6 +466,48 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier].map(&:id)) }
         end
       end
+
+      context 'exports notification' do
+        context 'without generated export' do
+          before do
+            create(:export, :pending, groupe_instructeurs: [gi_2])
+
+            subject
+          end
+
+          it { expect(assigns(:has_export_notification)).to be(false) }
+        end
+
+        context 'with generated export' do
+          render_views
+          before do
+            create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago)
+
+            if exports_seen_at
+              cookies.encrypted["exports_#{procedure.id}_seen_at"] = exports_seen_at.to_datetime.to_s
+            end
+
+            subject
+          end
+
+          context 'without cookie' do
+            let(:exports_seen_at) { nil }
+            it { expect(assigns(:has_export_notification)).to be(true) }
+          end
+
+          context 'with cookie in past' do
+            let(:exports_seen_at) { 1.hour.ago }
+            it { expect(assigns(:has_export_notification)).to be(true) }
+
+            it { expect(response.body).to match(/Un nouvel export est prêt/) }
+          end
+
+          context 'with cookie set after last generated export' do
+            let(:exports_seen_at) { 10.seconds.ago }
+            it { expect(assigns(:has_export_notification)).to be(false) }
+          end
+        end
+      end
     end
   end
 

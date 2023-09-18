@@ -90,6 +90,8 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
+      @has_export_notification = notify_exports?
+
       @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
       page = params[:page].presence || 1
@@ -225,6 +227,10 @@ module Instructeurs
     def exports
       @procedure = procedure
       @exports = Export.for_groupe_instructeurs(groupe_instructeur_ids).order(updated_at: :desc)
+      cookies.encrypted[cookies_export_key] = {
+        value: DateTime.current,
+        expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT
+      }
     end
 
     def email_usagers
@@ -352,6 +358,23 @@ module Instructeurs
 
     def bulk_message_params
       params.require(:bulk_message).permit(:body)
+    end
+
+    def notify_exports?
+      last_seen_at = begin
+                       DateTime.parse(cookies.encrypted[cookies_export_key])
+                     rescue
+                       nil
+                     end
+
+      scope = Export.generated.for_groupe_instructeurs(groupe_instructeur_ids)
+      scope = scope.where(updated_at: last_seen_at...) if last_seen_at
+
+      scope.exists?
+    end
+
+    def cookies_export_key
+      "exports_#{@procedure.id}_seen_at"
     end
   end
 end
