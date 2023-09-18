@@ -181,7 +181,7 @@ module Instructeurs
       if export.available?
         respond_to do |format|
           format.turbo_stream do
-            flash.notice = t('.export_available_html', file_format: export.format, file_url: export.file.url)
+            flash.notice = t('instructeurs.procedures.export_available_html', file_format: export.format, file_url: export.file.url)
           end
 
           format.html do
@@ -192,11 +192,11 @@ module Instructeurs
         respond_to do |format|
           format.turbo_stream do
             if !params[:no_progress_notification]
-              flash.notice = t('.export_pending_html', url: exports_instructeur_procedure_path(procedure))
+              flash.notice = t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
             end
           end
           format.html do
-            redirect_to exports_instructeur_procedure_path(procedure), notice: t('.export_pending_html', url: exports_instructeur_procedure_path(procedure))
+            redirect_to exports_instructeur_procedure_path(procedure), notice: t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
           end
         end
       end
