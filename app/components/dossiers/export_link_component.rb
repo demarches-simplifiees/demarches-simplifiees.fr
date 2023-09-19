@@ -22,41 +22,43 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
       no_progress_notification: no_progress_notification)
   end
 
+  def time_info(export)
+    if export.available?
+      t(".ready_link_label_time_info", export_time: helpers.time_ago_in_words(export.updated_at))
+    else
+      t(".not_ready_link_label_time_info", export_time: helpers.time_ago_in_words(export.updated_at))
+    end
+  end
+
+  def export_title(export)
+    t(".export_title",
+      export_tabs: export.statut.to_s,
+      export_format: export.format)
+  end
+
+  def badge(export)
+    if export.available?
+      content_tag(:span, t(".success_label"), { class: "fr-badge fr-badge--success fr-text-right" })
+    elsif export.failed?
+      content_tag(:span, t(".failed_label"), { class: "fr-badge fr-badge--warning fr-text-right" })
+    else
+      content_tag(:span, t(".pending_label"), { class: "fr-badge fr-badge--info fr-text-right" })
+    end
+  end
+
+  def export_button(export)
+    if export.available?
+      title = t(".everything_ready", export_format: ".#{export.format}")
+      content_tag(:a, title, { href: export.file.url, title: new_tab_suffix(title), target: "_blank", rel: "noopener", class: 'fr-btn' })
+    elsif export.pending?
+      content_tag(:a, t('.refresh_page'), { href: "", class: 'fr-btn fr-btn fr-btn--tertiary' })
+    end
+  end
+
   def refresh_button_options(export)
     {
       title: t(".refresh_old_export", export_format: ".#{export.format}"),
-      class: "fr-btn  fr-btn--sm fr-icon-refresh-line fr-btn--icon-left fr-btn--tertiary fr-mt-1w"
-    }
-  end
-
-  def ready_link_label(export)
-    t(".everything_ready",
-      export_format: ".#{export.format}")
-  end
-
-  def ready_link_label_extra_infos(export)
-    t(".ready_link_label_extra_infos",
-      export_time: helpers.time_ago_in_words(export.updated_at),
-      export_tabs: export.statut.to_s)
-  end
-
-  def pending_label(export)
-    t(".everything_pending_html",
-      export_time: time_ago_in_words(export.created_at),
-      export_format: ".#{export.format}")
-  end
-
-  def failed_label(export)
-    t(".failed_label",
-      export_format: ".#{export.format}")
-  end
-
-  def poll_controller_options(export)
-    {
-      controller: 'turbo-poll',
-      turbo_poll_url_value: download_export_path(export_format: export.format, statut: export.statut, no_progress_notification: true),
-      turbo_poll_interval_value: 6000,
-      turbo_poll_max_checks_value: 10
+      class: "fr-btn fr-btn--tertiary"
     }
   end
 end

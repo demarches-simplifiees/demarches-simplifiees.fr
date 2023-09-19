@@ -122,7 +122,8 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
     expect(page).to have_text('Nous générons cet export.')
 
     click_on "voir les exports"
-    expect(page).to have_text('Un export au format .csv est en train d’être généré')
+    expect(page).to have_text("Export .csv pour les dossiers « a-suivre » - demandé il y a moins d'une minute")
+    expect(page).to have_text("En cours")
 
     assert_performed_jobs 2 do
       perform_enqueued_jobs(only: ExportJob)

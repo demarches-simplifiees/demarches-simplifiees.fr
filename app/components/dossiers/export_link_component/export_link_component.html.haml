@@ -1,12 +1,17 @@
-%ul
+%ul.fr-raw-list
   - @exports.each do |export|
-    - if export.available?
-      %li.fr-mb-2w
-        = link_to ready_link_label(export), export.file.url, target: "_blank", rel: "noopener", role: 'menuitem'
-        %span= ready_link_label_extra_infos(export)
+    %li.fr-mb-3w
+      .flex
+        %strong
+          = export_title(export)
+        %span.fr-text-mention--grey.fr-mb-1w
+          = time_info(export)
+        .fr-ml-auto
+          = badge(export)
+      %ul.fr-btns-group.fr-btns-group--inline-sm
+        %li
+          = export_button(export)
+
         - if export.old?
-          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut, force_export: true), refresh_button_options(export).merge(role: 'menuitem')
-    - elsif export.pending?
-      %li.fr-mb-2w
-        %span{ data: poll_controller_options(export) }
-          = pending_label(export)
+          %li
+            = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut, force_export: true), refresh_button_options(export)

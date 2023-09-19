@@ -7,10 +7,14 @@ fr:
   everything_json_html: Demander un export au format .json (GeoJSON)
   everything_short: Demander un export au format %{export_format}
   refresh_old_export: Recréer cet export
-  everything_pending_html: Un export au format %{export_format} est en train d’être généré<br>(demandé il y a %{export_time})
   everything_ready: Télécharger l’export au format %{export_format}
-  failed_label: L’export au format %{export_format}, n'a pas fonctionné
-  ready_link_label_extra_infos: généré il y a %{export_time} pour les dossiers "%{export_tabs}"
+  success_label: Prêt
+  failed_label: Erreur
+  pending_label: En cours
+  refresh_page: Recharger la page
+  export_title: Export .%{export_format} pour les dossiers « %{export_tabs} »
+  ready_link_label_time_info: " - généré il y a %{export_time}"
+  not_ready_link_label_time_info: " - demandé il y a %{export_time}"
   download_all: Télécharger tous les dossiers
   download:
     one: Télécharger un dossier
