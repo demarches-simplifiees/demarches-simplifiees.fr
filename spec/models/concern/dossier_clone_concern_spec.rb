@@ -272,6 +272,7 @@ RSpec.describe DossierCloneConcern do
     context 'with new revision' do
       let(:added_champ) { forked_dossier.champs.find { _1.libelle == "Un nouveau champ text" } }
       let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
+      let(:new_dossier) { dossier.clone }
 
       before do
         procedure.draft_revision.add_type_de_champ({
@@ -284,6 +285,7 @@ RSpec.describe DossierCloneConcern do
 
       it {
         expect(dossier.revision_id).to eq(procedure.revisions.first.id)
+        expect(new_dossier.revision_id).to eq(procedure.published_revision.id)
         expect(forked_dossier.revision_id).to eq(procedure.published_revision_id)
         is_expected.to eq(added: [added_champ], updated: [], removed: [removed_champ])
       }
