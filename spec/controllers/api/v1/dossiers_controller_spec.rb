@@ -43,28 +43,30 @@ describe API::V1::DossiersController do
       let!(:dossier) { Timecop.freeze(date_creation) { create(:dossier, :with_entreprise, :en_construction, procedure: procedure) } }
       let(:body) { JSON.parse(retour.body, symbolize_names: true) }
 
-      it 'return REST code 200', :show_in_doc do
+      it do
         expect(retour.code).to eq('200')
+        expect(body).to have_key :pagination
+        expect(body).to have_key :dossiers
       end
 
-      it { expect(body).to have_key :pagination }
+      context 'but the token is invalid' do
+        let(:token) { 'bad' }
 
-      it { expect(body).to have_key :dossiers }
+        it { expect(subject.code).to eq('401') }
+      end
 
       describe 'pagination' do
         subject { body[:pagination] }
-        it { is_expected.to have_key(:page) }
-        it { expect(subject[:page]).to eq(1) }
-        it { is_expected.to have_key(:resultats_par_page) }
-        it { expect(subject[:resultats_par_page]).to eq(described_class.const_get(:DEFAULT_PAGE_SIZE)) }
-        it { is_expected.to have_key(:nombre_de_page) }
-        it { expect(subject[:nombre_de_page]).to eq(1) }
+        it do
+          expect(subject[:page]).to eq(1)
+          expect(subject[:resultats_par_page]).to eq(described_class.const_get(:DEFAULT_PAGE_SIZE))
+          expect(subject[:nombre_de_page]).to eq(1)
+        end
       end
 
       describe 'with custom resultats_par_page' do
         let(:retour) { get :index, params: { token: token, procedure_id: procedure_id, resultats_par_page: 18 } }
         subject { body[:pagination] }
-        it { is_expected.to have_key(:resultats_par_page) }
         it { expect(subject[:resultats_par_page]).to eq(18) }
       end
 
@@ -73,11 +75,14 @@ describe API::V1::DossiersController do
         it { expect(subject).to be_an(Array) }
         describe 'dossier' do
           subject { super().first }
-          it { expect(subject[:id]).to eq(dossier.id) }
-          it { expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z") }
-          it { expect(subject[:initiated_at]).to eq("2008-09-01T08:06:00.000Z") }
-          it { expect(subject[:state]).to eq("initiated") }
-          it { expect(subject.keys.size).to eq(4) }
+
+          it do
+            expect(subject[:id]).to eq(dossier.id)
+            expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z")
+            expect(subject[:initiated_at]).to eq("2008-09-01T08:06:00.000Z")
+            expect(subject[:state]).to eq("initiated")
+            expect(subject.keys.size).to eq(4)
+          end
         end
 
         describe 'order' do
@@ -181,13 +186,14 @@ describe API::V1::DossiersController do
           expect(retour.code).to eq('200')
         end
 
-        it { expect(subject[:id]).to eq(dossier.id) }
-        it { expect(subject[:state]).to eq('closed') }
-        it { expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z') }
-        it { expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z') }
-        it { expect(subject[:archived]).to eq(dossier.archived) }
-
-        it { expect(subject.keys).to match_array(field_list) }
+        it do
+          expect(subject[:id]).to eq(dossier.id)
+          expect(subject[:state]).to eq('closed')
+          expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z')
+          expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z')
+          expect(subject[:archived]).to eq(dossier.archived)
+          expect(subject.keys).to match_array(field_list)
+        end
 
         describe 'entreprise' do
           let(:field_list) {
@@ -213,17 +219,19 @@ describe API::V1::DossiersController do
           }
           subject { super()[:entreprise] }
 
-          it { expect(subject[:siren]).to eq('440117620') }
-          it { expect(subject[:capital_social]).to eq(537_100_000) }
-          it { expect(subject[:numero_tva_intracommunautaire]).to eq('FR27440117620') }
-          it { expect(subject[:forme_juridique]).to eq('SA à conseil d\'administration (s.a.i.)') }
-          it { expect(subject[:forme_juridique_code]).to eq('5599') }
-          it { expect(subject[:nom_commercial]).to eq('GRTGAZ') }
-          it { expect(subject[:raison_sociale]).to eq('GRTGAZ') }
-          it { expect(subject[:siret_siege_social]).to eq('44011762001530') }
-          it { expect(subject[:code_effectif_entreprise]).to eq('51') }
-          it { expect(subject[:date_creation]).to eq('1990-04-24T00:00:00.000+00:00') }
-          it { expect(subject.keys).to match_array(field_list) }
+          it do
+            expect(subject[:siren]).to eq('440117620')
+            expect(subject[:capital_social]).to eq(537_100_000)
+            expect(subject[:numero_tva_intracommunautaire]).to eq('FR27440117620')
+            expect(subject[:forme_juridique]).to eq('SA à conseil d\'administration (s.a.i.)')
+            expect(subject[:forme_juridique_code]).to eq('5599')
+            expect(subject[:nom_commercial]).to eq('GRTGAZ')
+            expect(subject[:raison_sociale]).to eq('GRTGAZ')
+            expect(subject[:siret_siege_social]).to eq('44011762001530')
+            expect(subject[:code_effectif_entreprise]).to eq('51')
+            expect(subject[:date_creation]).to eq('1990-04-24T00:00:00.000+00:00')
+            expect(subject.keys).to match_array(field_list)
+          end
         end
 
         describe 'champs' do
@@ -250,11 +258,13 @@ describe API::V1::DossiersController do
               }
               subject { super()[:type_de_champ] }
 
-              it { expect(subject.key?(:id)).to be_truthy }
-              it { expect(subject[:libelle]).to include('Libelle du champ') }
-              it { expect(subject[:description]).to include('description du champ') }
-              it { expect(subject.key?(:order_place)).to be_truthy }
-              it { expect(subject[:type_champ]).to eq('text') }
+              it do
+                expect(subject.key?(:id)).to be_truthy
+                expect(subject[:libelle]).to include('Libelle du champ')
+                expect(subject[:description]).to include('description du champ')
+                expect(subject.key?(:order_place)).to be_truthy
+                expect(subject[:type_champ]).to eq('text')
+              end
             end
           end
 
@@ -310,11 +320,13 @@ describe API::V1::DossiersController do
               }
               subject { super()[:type_de_champ] }
 
-              it { expect(subject.key?(:id)).to be_truthy }
-              it { expect(subject[:libelle]).to include('Libelle champ privé') }
-              it { expect(subject[:description]).to include('description du champ privé') }
-              it { expect(subject.key?(:order_place)).to be_truthy }
-              it { expect(subject[:type_champ]).to eq('text') }
+              it do
+                expect(subject.key?(:id)).to be_truthy
+                expect(subject[:libelle]).to include('Libelle champ privé')
+                expect(subject[:description]).to include('description du champ privé')
+                expect(subject.key?(:order_place)).to be_truthy
+                expect(subject[:type_champ]).to eq('text')
+              end
             end
           end
         end
@@ -325,11 +337,12 @@ describe API::V1::DossiersController do
 
           subject { super()[:commentaires] }
 
-          it { expect(subject.size).to eq 2 }
-
-          it { expect(subject.first[:body]).to eq 'plop' }
-          it { expect(subject.first[:created_at]).to eq '2016-03-14T13:00:00.000Z' }
-          it { expect(subject.first[:email]).to eq 'plop@plip.com' }
+          it do
+            expect(subject.size).to eq 2
+            expect(subject.first[:body]).to eq 'plop'
+            expect(subject.first[:created_at]).to eq '2016-03-14T13:00:00.000Z'
+            expect(subject.first[:email]).to eq 'plop@plip.com'
+          end
         end
 
         describe 'avis' do
@@ -359,19 +372,21 @@ describe API::V1::DossiersController do
           }
           subject { super()[:etablissement] }
 
-          it { expect(subject[:siret]).to eq('44011762001530') }
-          it { expect(subject[:siege_social]).to eq(true) }
-          it { expect(subject[:naf]).to eq('4950Z') }
-          it { expect(subject[:libelle_naf]).to eq('Transports par conduites') }
-          it { expect(subject[:adresse]).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r") }
-          it { expect(subject[:numero_voie]).to eq('6') }
-          it { expect(subject[:type_voie]).to eq('RUE') }
-          it { expect(subject[:nom_voie]).to eq('RAOUL NORDLING') }
-          it { expect(subject[:complement_adresse]).to eq('IMMEUBLE BORA') }
-          it { expect(subject[:code_postal]).to eq('92270') }
-          it { expect(subject[:localite]).to eq('BOIS COLOMBES') }
-          it { expect(subject[:code_insee_localite]).to eq('92009') }
-          it { expect(subject.keys).to match_array(field_list) }
+          it do
+            expect(subject[:siret]).to eq('44011762001530')
+            expect(subject[:siege_social]).to eq(true)
+            expect(subject[:naf]).to eq('4950Z')
+            expect(subject[:libelle_naf]).to eq('Transports par conduites')
+            expect(subject[:adresse]).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r")
+            expect(subject[:numero_voie]).to eq('6')
+            expect(subject[:type_voie]).to eq('RUE')
+            expect(subject[:nom_voie]).to eq('RAOUL NORDLING')
+            expect(subject[:complement_adresse]).to eq('IMMEUBLE BORA')
+            expect(subject[:code_postal]).to eq('92270')
+            expect(subject[:localite]).to eq('BOIS COLOMBES')
+            expect(subject[:code_insee_localite]).to eq('92009')
+            expect(subject.keys).to match_array(field_list)
+          end
         end
       end
     end

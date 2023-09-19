@@ -37,25 +37,29 @@ describe API::V1::ProceduresController, type: :controller do
 
         subject { JSON.parse(response.body, symbolize_names: true)[:procedure] }
 
-        it { expect(subject[:id]).to eq(procedure.id) }
-        it { expect(subject[:label]).to eq(procedure.libelle) }
-        it { expect(subject[:description]).to eq(procedure.description) }
-        it { expect(subject[:organisation]).to eq(procedure.organisation) }
-        it { expect(subject[:archived_at]).to eq(procedure.closed_at) }
-        it { expect(subject[:direction]).to eq("") }
-        it { expect(subject[:total_dossier]).to eq(procedure.total_dossier) }
-        it { is_expected.to have_key(:types_de_champ) }
-        it { expect(subject[:types_de_champ]).to be_an(Array) }
+        it do
+          expect(subject[:id]).to eq(procedure.id)
+          expect(subject[:label]).to eq(procedure.libelle)
+          expect(subject[:description]).to eq(procedure.description)
+          expect(subject[:organisation]).to eq(procedure.organisation)
+          expect(subject[:archived_at]).to eq(procedure.closed_at)
+          expect(subject[:direction]).to eq("")
+          expect(subject[:total_dossier]).to eq(procedure.total_dossier)
+          is_expected.to have_key(:types_de_champ)
+          expect(subject[:types_de_champ]).to be_an(Array)
+        end
 
         describe 'type_de_champ' do
           subject { super()[:types_de_champ][0] }
 
           let(:champ) { procedure.active_revision.types_de_champ_public.first }
 
-          it { expect(subject[:id]).to eq(champ.id) }
-          it { expect(subject[:libelle]).to eq(champ.libelle) }
-          it { expect(subject[:type_champ]).to eq(champ.type_champ) }
-          it { expect(subject[:description]).to eq(champ.description) }
+          it do
+            expect(subject[:id]).to eq(champ.id)
+            expect(subject[:libelle]).to eq(champ.libelle)
+            expect(subject[:type_champ]).to eq(champ.type_champ)
+            expect(subject[:description]).to eq(champ.description)
+          end
         end
 
         describe 'service' do
@@ -63,14 +67,16 @@ describe API::V1::ProceduresController, type: :controller do
 
           let(:service) { procedure.service }
 
-          it { expect(subject[:id]).to eq(service.id) }
-          it { expect(subject[:email]).to eq(service.email) }
-          it { expect(subject[:name]).to eq(service.nom) }
-          it { expect(subject[:type_organization]).to eq(service.type_organisme) }
-          it { expect(subject[:organization]).to eq(service.organisme) }
-          it { expect(subject[:phone]).to eq(service.telephone) }
-          it { expect(subject[:schedule]).to eq(service.horaires) }
-          it { expect(subject[:address]).to eq(service.adresse) }
+          it do
+            expect(subject[:id]).to eq(service.id)
+            expect(subject[:email]).to eq(service.email)
+            expect(subject[:name]).to eq(service.nom)
+            expect(subject[:type_organization]).to eq(service.type_organisme)
+            expect(subject[:organization]).to eq(service.organisme)
+            expect(subject[:phone]).to eq(service.telephone)
+            expect(subject[:schedule]).to eq(service.horaires)
+            expect(subject[:address]).to eq(service.adresse)
+          end
         end
       end
     end
