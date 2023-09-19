@@ -240,7 +240,8 @@ end
 
 def add_etat_dossier(pdf, dossier)
   pdf.pad_bottom(default_margin) do
-    pdf.text "Ce dossier est <b>#{clean_string(dossier_display_state(dossier, lower: true))}</b>.", inline_format: true
+    pending_correction = dossier.pending_correction? ? " (en attente de correction)" : nil
+    pdf.text "Ce dossier est <b>#{clean_string(dossier_display_state(dossier, lower: true))}#{pending_correction}</b>.", inline_format: true
   end
 end
 
@@ -248,9 +249,15 @@ def add_etats_dossier(pdf, dossier)
   if dossier.depose_at.present?
     format_in_2_columns(pdf, "Déposé le", try_format_date(dossier.depose_at))
   end
+
+  if dossier.pending_correction?
+    format_in_2_columns(pdf, "Correction demandée le", try_format_date(dossier.pending_correction.created_at))
+  end
+
   if dossier.en_instruction_at.present?
     format_in_2_columns(pdf, "En instruction le", try_format_date(dossier.en_instruction_at))
   end
+
   if dossier.processed_at.present?
     format_in_2_columns(pdf, "Décision le", try_format_date(dossier.processed_at))
   end
