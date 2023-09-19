@@ -20,7 +20,6 @@ describe 'The routing with rules', js: true do
   let(:artistique_user) { create(:user, password: password) }
 
   before do
-    Flipper.enable(:routing_rules, procedure)
     procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
   end
 

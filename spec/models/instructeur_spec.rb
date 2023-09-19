@@ -245,7 +245,7 @@ describe Instructeur, type: :model do
   end
 
   describe '#notifications_for_groupe_instructeurs' do
-    # a procedure, one group, 2 instructeurs
+    # a procedure, two groups, 2 instructeurs
     let(:procedure) { create(:simple_procedure, :routee, :with_type_de_champ_private, :for_individual) }
     let(:gi_p1) { procedure.groupe_instructeurs.last }
     let!(:dossier) { create(:dossier, :en_construction, :with_individual, :followed, procedure: procedure, groupe_instructeur: gi_p1) }

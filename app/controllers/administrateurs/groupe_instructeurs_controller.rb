@@ -282,15 +282,6 @@ module Administrateurs
       end
     end
 
-    def update_routing_criteria_name
-      if procedure.update(routing_criteria_name: routing_criteria_name)
-        flash[:notice] = "Le libellé est maintenant « #{procedure.routing_criteria_name} »."
-      else
-        flash[:alert] = "Le libellé du routage doit être rempli."
-      end
-      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
-    end
-
     def update_instructeurs_self_management_enabled
       procedure.update!(instructeurs_self_management_enabled_params)
 
@@ -413,10 +404,6 @@ module Administrateurs
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(:email)
-    end
-
-    def routing_criteria_name
-      params[:procedure][:routing_criteria_name]
     end
 
     def available_instructeur_emails
