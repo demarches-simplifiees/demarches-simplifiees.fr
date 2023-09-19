@@ -341,5 +341,22 @@ RSpec.describe DossierCloneConcern do
         expect(Dossier.exists?(forked_dossier.id)).to be_falsey
       end
     end
+
+    context 'with old revision having repetition' do
+      let(:added_champ) { nil }
+      let(:removed_champ) { dossier.champs.find(&:repetition?) }
+      let(:updated_champ) { nil }
+
+      before do
+        dossier.champs.each do |champ|
+          champ.update(value: 'old value')
+        end
+        procedure.draft_revision.remove_type_de_champ(removed_champ.stable_id)
+        procedure.publish_revision!
+      end
+      it 'works' do
+        expect { subject }.not_to raise_error(ActiveRecord::InvalidForeignKey)
+      end
+    end
   end
 end
