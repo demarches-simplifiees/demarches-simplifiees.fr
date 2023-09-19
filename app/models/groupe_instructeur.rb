@@ -35,7 +35,6 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   before_validation -> { label&.strip! }
-  after_save :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
@@ -117,11 +116,6 @@ class GroupeInstructeur < ApplicationRecord
   def routing_rule_matches_tdc?
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
     routing_rule.right.value.in?(routing_tdc.options['drop_down_options'])
-  end
-
-  def toggle_routing
-    procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
-    procedure.update!(instructeurs_self_management_enabled: true) if procedure.routing_enabled?
   end
 
   serialize :routing_rule, LogicSerializer

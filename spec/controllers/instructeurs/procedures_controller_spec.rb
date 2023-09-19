@@ -241,8 +241,9 @@ describe Instructeurs::ProceduresController, type: :controller do
   describe "#show" do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure, :expirable, instructeurs: [instructeur]) }
-    let!(:gi_2) { procedure.groupe_instructeurs.create(label: '2') }
-    let!(:gi_3) { procedure.groupe_instructeurs.create(label: '3') }
+    let!(:gi_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
+    let!(:gi_3) { create(:groupe_instructeur, label: '3', procedure: procedure) }
+
     let(:statut) { nil }
 
     subject do

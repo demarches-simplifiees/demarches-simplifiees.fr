@@ -78,8 +78,9 @@ describe TagsSubstitutionConcern, type: :model do
       let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement, state: state) }
       context 'and the dossier has a groupe instructeur' do
         label = 'Ville de Bordeaux'
+        let(:gi) { create(:groupe_instructeur, label: label, procedure: procedure) }
+
         before do
-          gi = procedure.groupe_instructeurs.create(label: label)
           gi.dossiers << dossier
           dossier.update(groupe_instructeur: gi)
           dossier.reload

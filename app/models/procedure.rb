@@ -723,6 +723,10 @@ class Procedure < ApplicationRecord
     revisions.size - 2
   end
 
+  def instructeurs_self_management?
+    routing_enabled? || instructeurs_self_management_enabled?
+  end
+
   def defaut_groupe_instructeur_for_new_dossier
     if !routing_enabled? || feature_enabled?(:procedure_routage_api)
       defaut_groupe_instructeur
@@ -1040,6 +1044,10 @@ class Procedure < ApplicationRecord
 
   def pieces_jointes_list_with_conditionnal
     active_revision.types_de_champ_public.where.not(condition: nil).filter(&:piece_justificative?)
+  end
+
+  def toggle_routing
+    update!(routing_enabled: self.groupe_instructeurs.active.many?)
   end
 
   private
