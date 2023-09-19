@@ -1,5 +1,7 @@
 module Administrateurs
   class AttestationTemplatesController < AdministrateurController
+    include UninterlacePngConcern
+
     before_action :retrieve_procedure
 
     def show
@@ -63,23 +65,14 @@ module Administrateurs
         signature_file = params['attestation_template'].delete('signature')
 
         if logo_file.present?
-          @activated_attestation_params[:logo] = uninterlaced_png(logo_file)
+          @activated_attestation_params[:logo] = uninterlace_png(logo_file)
         end
         if signature_file.present?
-          @activated_attestation_params[:signature] = uninterlaced_png(signature_file)
+          @activated_attestation_params[:signature] = uninterlace_png(signature_file)
         end
       end
 
       @activated_attestation_params
-    end
-
-    def uninterlaced_png(uploaded_file)
-      if uploaded_file&.content_type == 'image/png'
-        chunky_img = ChunkyPNG::Image.from_io(uploaded_file.to_io)
-        chunky_img.save(uploaded_file.tempfile.to_path, interlace: false)
-        uploaded_file.tempfile.reopen(uploaded_file.tempfile.to_path, 'rb')
-      end
-      uploaded_file
     end
   end
 end
