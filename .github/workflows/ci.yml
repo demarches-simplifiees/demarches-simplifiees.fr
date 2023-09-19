@@ -100,7 +100,7 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     services:
       postgres:
         image: postgis/postgis:14-3.3
