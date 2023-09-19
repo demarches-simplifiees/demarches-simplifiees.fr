@@ -3,7 +3,6 @@
 # Table name: procedure_revisions
 #
 #  id                           :bigint           not null, primary key
-#  migrated_champ_routage       :boolean
 #  published_at                 :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
