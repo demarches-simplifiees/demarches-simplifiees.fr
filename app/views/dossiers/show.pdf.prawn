@@ -11,7 +11,7 @@ def maybe_start_new_page(pdf, size)
 end
 
 def clean_string(str)
-  str.tr(' ', ' ') # replace non breaking space, which are invalid in pdf
+  str&.gsub(/[[:space:]]/, ' ') # replace non breaking space, which are invalid in pdf
 end
 
 def text_box(pdf, text, x, width)
@@ -209,7 +209,7 @@ def add_message(pdf, message)
   end
 
   format_in_2_lines(pdf, "#{sender}, #{try_format_date(message.created_at)}",
-    ActionView::Base.full_sanitizer.sanitize(message.body))
+    ActionView::Base.full_sanitizer.sanitize(clean_string(message.body)))
 end
 
 def add_avis(pdf, avis)
@@ -276,7 +276,7 @@ prawn_document(page_size: "A4") do |pdf|
   add_etat_dossier(pdf, @dossier)
 
   if @dossier.motivation.present?
-    format_in_2_columns(pdf, "Motif de la décision", @dossier.motivation)
+    format_in_2_columns(pdf, "Motif de la décision", clean_string(@dossier.motivation))
   end
   add_title(pdf, 'Historique')
   add_etats_dossier(pdf, @dossier)

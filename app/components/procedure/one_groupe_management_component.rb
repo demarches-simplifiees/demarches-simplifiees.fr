@@ -79,7 +79,7 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
     return [] if targeted_champ.is_a?(Logic::Empty)
 
     case @revision.types_de_champ_public.find_by(stable_id: targeted_champ.stable_id).type_champ
-    when TypeDeChamp.type_champs.fetch(:departements)
+    when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:epci)
       departements_for_select
     when TypeDeChamp.type_champs.fetch(:regions)
       regions_for_select

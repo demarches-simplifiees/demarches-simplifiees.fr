@@ -101,6 +101,29 @@ RSpec.describe DossierPrefillableConcern do
       end
     end
 
+    context "when dossier is for etablissement" do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
+      let(:dossier) { create(:dossier, :brouillon, procedure: procedure) }
+
+      context 'when champs_attributes has values' do
+        context 'when the champs are valid' do
+          let(:types_de_champ_public) { [{ type: :text }] }
+          let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
+          let(:value_1) { "any value" }
+          let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
+          let(:values) { [{ id: champ_id_1, value: value_1 }] }
+
+          it "updates the champs with the new values and mark them as prefilled" do
+            fill
+            expect(dossier.champs_public.first.value).to eq(value_1)
+            expect(dossier.individual).to be_nil # Fix #9486
+          end
+
+          it_behaves_like 'a dossier marked as prefilled'
+        end
+      end
+    end
+
     private
 
     def find_champ_by_stable_id(dossier, stable_id)

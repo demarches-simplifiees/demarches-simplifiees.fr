@@ -25,5 +25,9 @@ module Manager
     def paginate_resources(_resources)
       super.without_count
     end
+
+    def find_resource(param)
+      DossierPreloader.load_one(Dossier.find(param))
+    end
   end
 end

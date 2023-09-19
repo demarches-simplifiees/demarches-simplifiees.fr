@@ -124,3 +124,33 @@ index 19921b7..29f207d 100644
    COLLAPSE_LEGACY: `${ITEM} ${COLLAPSE}`,
    ITEM: api.internals.ns.selector('sidemenu__item'),
    BUTTON: api.internals.ns.selector('sidemenu__btn')
+diff --git a/node_modules/@gouvfr/dsfr/dist/dsfr.module.js b/node_modules/@gouvfr/dsfr/dist/dsfr.module.js
+index 1ddc56c..bee3c5a 100644
+--- a/node_modules/@gouvfr/dsfr/dist/dsfr.module.js
++++ b/node_modules/@gouvfr/dsfr/dist/dsfr.module.js
+@@ -5506,12 +5506,6 @@ class HeaderLinks extends api.core.Instance {
+     const copySuffix = '-mobile';
+ 
+     const toolsHtml = this.toolsLinks.innerHTML.replace(/  +/g, ' ');
+-    const menuHtml = this.menuLinks.innerHTML.replace(/  +/g, ' ');
+-    // Pour éviter de dupliquer des id, on ajoute un suffixe aux id et aria-controls duppliqués.
+-    let toolsHtmlDuplicateId = toolsHtml.replace(/id="(.*?)"/gm, 'id="$1' + copySuffix + '"');
+-    toolsHtmlDuplicateId = toolsHtmlDuplicateId.replace(/(<nav[.\s\S]*-translate [.\s\S]*) aria-controls="(.*?)"([.\s\S]*<\/nav>)/gm, '$1 aria-controls="$2' + copySuffix + '"$3');
+-
+-    if (toolsHtmlDuplicateId === menuHtml) return;
+ 
+     switch (api.mode) {
+       case api.Modes.ANGULAR:
+@@ -5523,7 +5517,11 @@ ${api.header.doc}`);
+         break;
+ 
+       default:
+-        this.menuLinks.innerHTML = toolsHtmlDuplicateId;
++        this.menuLinks.innerHTML = toolsHtml;
++        for (const element of this.menuLinks.querySelectorAll('[id]')) element.id = `${element.id}${copySuffix}`;
++        for (const element of this.menuLinks.querySelectorAll('[aria-controls]')) {
++          element.setAttribute('aria-controls', `${element.getAttribute('aria-controls')}${copySuffix}`);
++        }
+     }
+   }
+ }

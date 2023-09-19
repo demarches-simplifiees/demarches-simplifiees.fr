@@ -1,0 +1,13 @@
+.fr-ds-combobox{ data: { controller: 'combobox', allows_custom_value: allows_custom_value } }
+  .fr-ds-combobox-input
+    %input{ **html_input_options }
+  - if form
+    = form.hidden_field name, value: selected, form: form_id
+  - else
+    %input{ type: 'hidden', name:, value: selected, form: form_id }
+  .fr-menu
+    %ul.fr-menu__list.hidden{ role: 'listbox', hidden: true, id: list_id, data: { turbo_force: :browser, options: options_json, selected:, hints: hints_json } }
+  .sr-only{ aria: { live: 'polite', atomic: 'true' }, data: { turbo_force: :browser } }
+  %template
+    %li.fr-menu__item{ role: 'option' }
+      %slot{ name: 'label' }
