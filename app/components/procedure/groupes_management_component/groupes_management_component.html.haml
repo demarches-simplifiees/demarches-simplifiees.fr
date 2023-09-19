@@ -1,7 +1,10 @@
 - content_for(:title, 'Groupes')
 %h1 Gestion des groupes
 
-= render Procedure::GroupesSearchComponent.new(procedure: @procedure, query: @query, to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count)
+= render Procedure::GroupesSearchComponent.new(procedure: @procedure,
+  query: @query,
+  to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count,
+  to_configure_filter: @to_configure_filter)
 
 .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-2w
   %table
@@ -21,8 +24,10 @@
                   %span= gi.label
                 - if gi.closed
                   %p.fr-badge.fr-badge--info.fr-badge--sm.fr-ml-1w inactif
-                - elsif gi.routing_to_configure?
-                  %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w à configurer
+                - elsif gi.invalid_rule?
+                  %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle invalide
+                - elsif gi.non_unique_rule?
+                  %p.fr-badge.fr-badge--warning.fr-badge--sm.fr-ml-1w règle déjà attribuée à #{gi.groups_with_same_rule}
 
               %span.fr-mr-1w
                 #{gi.dossiers.visible_by_administration.size}

@@ -66,7 +66,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('à configurer')
+        expect(response.body).to include('règle invalide')
       end
     end
 
@@ -81,7 +81,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to have_http_status(:ok)
-        expect(response.body).not_to include('à configurer')
+        expect(response.body).not_to include('règle invalide')
       end
     end
 
@@ -96,7 +96,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('à configurer')
+        expect(response.body).to include('règle invalide')
       end
     end
   end
