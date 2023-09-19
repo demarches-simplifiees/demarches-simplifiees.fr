@@ -532,6 +532,7 @@ Rails.application.routes.draw do
           delete 'remove_instructeur'
           get 'reaffecter_dossiers'
           post 'reaffecter'
+          post 'add_signature'
         end
 
         collection do

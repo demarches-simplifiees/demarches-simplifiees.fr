@@ -2,6 +2,7 @@ module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper
     include Logic
+    include UninterlacePngConcern
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
@@ -360,6 +361,26 @@ module Administrateurs
       end
     end
 
+    def add_signature
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
+
+      signature_file = params[:groupe_instructeur]&.delete('signature')
+
+      if params[:groupe_instructeur].nil? || signature_file.blank?
+        flash[:alert] = "Aucun fichier joint pour le tampon de l'attestation"
+        render :show
+      else
+        params[:groupe_instructeur][:signature] = uninterlace_png(signature_file)
+        if @groupe_instructeur.update(signature_params)
+          redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
+            notice: "Le tampon de l'attestation a bien été ajouté"
+        end
+      end
+    end
+
     private
 
     def closed_params?
@@ -387,6 +408,10 @@ module Administrateurs
 
     def groupe_instructeur_params
       params.require(:groupe_instructeur).permit(:label)
+    end
+
+    def signature_params
+      params.require(:groupe_instructeur).permit(:signature)
     end
 
     def paginated_groupe_instructeurs

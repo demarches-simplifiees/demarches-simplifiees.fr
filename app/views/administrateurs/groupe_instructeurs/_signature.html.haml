@@ -1,0 +1,10 @@
+.card.mt-2
+  = render NestedForms::FormOwnerComponent.new
+  = form_with url: { action: :add_signature }, method: :post, html: { multipart: true, class: 'form' } do |f|
+    .card-title Tampon de l'attestation
+    = render Attachment::EditComponent.new(attached_file: groupe_instructeur.signature, direct_upload: false)
+    %p.notice
+      Formats acceptés : JPG / JPEG / PNG.
+      %br
+      Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
+    = f.submit 'Ajouter signature', class: 'fr-btn'
