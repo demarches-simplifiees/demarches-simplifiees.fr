@@ -3,28 +3,21 @@
 
 .dossier-show {
   .champ-row {
-    @media (min-width: 48em) {
-      display: flex;
-    }
-
     padding: 0.5rem 1rem;
   }
 
   .champ-label {
-    font-weight: 600;
     margin-bottom: 0;
-
-    @media (min-width: 48em) {
-      flex: 3;
-      margin-right: 1rem;
-    }
+    font-size: 0.8rem;
+    font-weight: 300;
   }
 
   .champ-content {
     padding: 0 0 0.5rem;
+    font-weight: 600;
 
-    @media (min-width: 48em) {
-      flex: 4;
+    a {
+      font-weight: normal;
     }
 
     p {
@@ -35,6 +28,11 @@
     ul {
       margin-block-start: 0;
     }
+  }
+
+  .champ-blank {
+    font-weight: normal;
+    font-style: italic;
   }
 
   .champ-updated {
