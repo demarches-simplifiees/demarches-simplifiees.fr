@@ -1,22 +1,35 @@
 RSpec.describe NotificationMailer, type: :mailer do
   let(:administrateur) { create(:administrateur) }
   let(:user) { create(:user) }
-  let(:procedure) { create(:simple_procedure) }
+  let(:procedure) { create(:simple_procedure, :with_service) }
 
   describe 'send_en_construction_notification' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_service, user: user, procedure: procedure) }
-    let(:email_template) { create(:initiated_mail, subject: 'Email subject', body: 'Your dossier was received. Thanks.') }
-
-    before do
-      dossier.procedure.initiated_mail = email_template
-    end
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, user: user, procedure: procedure) }
 
     subject(:mail) { described_class.send_en_construction_notification(dossier) }
 
-    it 'renders the template' do
-      expect(mail.subject).to eq('Email subject')
-      expect((mail.html_part || mail).body).to include('Your dossier was received')
-      expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+    let(:body) { (mail.html_part || mail).body }
+
+    context "without custom template" do
+      it 'renders default template' do
+        expect(mail.subject).to eq("Votre dossier nº #{dossier.id} a bien été déposé (#{procedure.libelle})")
+        expect(body).to include("Votre dossier nº #{dossier.id}")
+        expect(body).to include(procedure.service.nom)
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+      end
+    end
+
+    context "with a custom template" do
+      let(:email_template) { create(:initiated_mail, subject: 'Email subject', body: 'Your dossier was received. Thanks.') }
+      before do
+        dossier.procedure.initiated_mail = email_template
+      end
+
+      it 'renders the template' do
+        expect(mail.subject).to eq('Email subject')
+        expect(body).to include('Your dossier was received')
+        expect(mail.attachments.first.filename).to eq("attestation-de-depot.pdf")
+      end
     end
   end
 
