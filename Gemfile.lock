@@ -822,6 +822,7 @@ DEPENDENCIES
   active_model_serializers
   active_storage_validations
   activestorage-openstack
+  addressable
   administrate
   administrate-field-enum
   after_party

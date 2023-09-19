@@ -8,6 +8,7 @@ gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'
+gem 'addressable'
 gem 'administrate'
 gem 'administrate-field-enum' # Allow using Field::Enum in administrate
 gem 'after_party'

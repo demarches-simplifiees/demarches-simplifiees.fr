@@ -745,7 +745,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.string "libelle"
     t.string "lien_demarche"
     t.string "lien_dpo"
+    t.text "lien_dpo_error"
     t.string "lien_notice"
+    t.text "lien_notice_error"
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
     t.boolean "migrated_champ_routage"

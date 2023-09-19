@@ -1534,6 +1534,59 @@ describe Procedure do
     end
   end
 
+  describe 'lien_notice' do
+    let(:procedure) { build(:procedure, lien_notice:) }
+
+    context 'when empty' do
+      let(:lien_notice) { '' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link' do
+      let(:lien_notice) { 'https://www.demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link with accents' do
+      let(:lien_notice) { 'https://www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when not a valid link' do
+      let(:lien_notice) { 'www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_falsey }
+    end
+  end
+
+  describe 'lien_dpo' do
+    let(:procedure) { build(:procedure, lien_dpo:) }
+
+    context 'when empty' do
+      let(:lien_dpo) { '' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link' do
+      let(:lien_dpo) { 'https://www.demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid link with accents' do
+      let(:lien_dpo) { 'https://www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when valid email' do
+      let(:lien_dpo) { 'test@demarches-simplifiees.fr' }
+      it { expect(procedure.valid?).to be_truthy }
+    end
+
+    context 'when not a valid link' do
+      let(:lien_dpo) { 'www.démarches-simplifiées.fr' }
+      it { expect(procedure.valid?).to be_falsey }
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
