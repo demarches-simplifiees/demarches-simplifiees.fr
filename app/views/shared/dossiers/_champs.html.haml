@@ -1,15 +1,1 @@
-- if dossier.show_groupe_instructeur_details?
-  .fr-my-4v.fr-px-4v
-    .flex
-
-      %p.champ-label.flex-grow= dossier.procedure.routing_criteria_name
-      %p.fr-mb-0.fr-text--xs
-        - if demande_seen_at && dossier.groupe_instructeur_updated_at && demande_seen_at < dossier.groupe_instructeur_updated_at
-          %span.fr-badge.fr-badge--sm{ class: badge_class_if_unseen(demande_seen_at, dossier.groupe_instructeur_updated_at) }
-            = t(:updated_at, scope: [:views, :shared, :dossiers, :form], datetime: try_format_datetime(dossier.groupe_instructeur_updated_at))
-
-    .champ-content{ class: highlight_if_unseen_class(demande_seen_at, dossier.groupe_instructeur_updated_at) }
-      %p= dossier.groupe_instructeur.label
-
-
 = render ViewableChamp::SectionComponent.new(champs: champs, demande_seen_at: demande_seen_at, profile: profile)

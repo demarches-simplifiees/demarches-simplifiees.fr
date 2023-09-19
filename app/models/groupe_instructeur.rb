@@ -11,6 +11,7 @@
 #  procedure_id :bigint           not null
 #
 class GroupeInstructeur < ApplicationRecord
+  include Logic
   DEFAUT_LABEL = 'défaut'
   belongs_to :procedure, -> { with_discarded }, inverse_of: :groupe_instructeurs, optional: false
   has_many :assign_tos, dependent: :destroy
@@ -34,7 +35,6 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   before_validation -> { label&.strip! }
-  after_save :toggle_routing
 
   scope :without_group, -> (group) { where.not(id: group) }
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
@@ -85,9 +85,26 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def routing_to_configure?
+    invalid_rule? || non_unique_rule?
+  end
+
+  def invalid_rule?
     rule = routing_rule
     return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
-    !routing_rule_matches_tdc?
+    return true if !routing_rule_matches_tdc?
+  end
+
+  def non_unique_rule?
+    return false if invalid_rule?
+    routing_rule.in?(other_groupe_instructeurs.map(&:routing_rule))
+  end
+
+  def groups_with_same_rule
+    return if routing_rule.nil?
+    other_groupe_instructeurs
+      .filter { |gi| !gi.routing_rule.nil? && gi.routing_rule.right != empty && gi.routing_rule == routing_rule }
+      .map(&:label)
+      .join(', ')
   end
 
   def other_groupe_instructeurs
@@ -99,11 +116,6 @@ class GroupeInstructeur < ApplicationRecord
   def routing_rule_matches_tdc?
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
     routing_rule.right.value.in?(routing_tdc.options['drop_down_options'])
-  end
-
-  def toggle_routing
-    procedure.update!(routing_enabled: procedure.groupe_instructeurs.active.many?)
-    procedure.update!(instructeurs_self_management_enabled: true) if procedure.routing_enabled?
   end
 
   serialize :routing_rule, LogicSerializer

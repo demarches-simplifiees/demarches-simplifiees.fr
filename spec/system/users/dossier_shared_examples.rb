@@ -6,7 +6,7 @@ RSpec.shared_examples 'the user can edit the submitted demande' do
     click_on 'Demande'
 
     expect(page).to have_current_path(demande_dossier_path(dossier))
-    click_on 'Modifier le dossier'
+    click_on 'Modifier le dossier', match: :first
 
     expect(page).to have_current_path(modifier_dossier_path(dossier))
     fill_in('Texte obligatoire', with: 'Nouveau texte')

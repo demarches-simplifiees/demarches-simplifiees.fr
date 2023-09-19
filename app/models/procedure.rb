@@ -32,10 +32,11 @@
 #  juridique_required                        :boolean          default(TRUE)
 #  libelle                                   :string
 #  lien_dpo                                  :string
+#  lien_dpo_error                            :text
 #  lien_notice                               :string
+#  lien_notice_error                         :text
 #  lien_site_web                             :string
 #  max_duree_conservation_dossiers_dans_ds   :integer          default(12), not null
-#  migrated_champ_routage                    :boolean
 #  monavis_embed                             :text
 #  opendata                                  :boolean          default(TRUE)
 #  organisation                              :string
@@ -69,7 +70,14 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
-  self.ignored_columns += [:direction, :durees_conservation_required, :cerfa_flag, :test_started_at, :lien_demarche]
+  self.ignored_columns += [
+    :direction,
+    :durees_conservation_required,
+    :cerfa_flag,
+    :test_started_at,
+    :lien_demarche,
+    :migrated_champ_routage
+  ]
 
   default_scope -> { kept }
 
@@ -225,6 +233,8 @@ class Procedure < ApplicationRecord
   scope :opendata,               -> { where(opendata: true) }
   scope :publiees_ou_closes,     -> { where(aasm_state: [:publiee, :close, :depubliee]) }
 
+  scope :with_external_urls,     -> { where.not(lien_notice: [nil, '']).or(where.not(lien_dpo: [nil, ''])) }
+
   scope :publiques,              -> do
     publiees_ou_closes
       .opendata
@@ -285,7 +295,12 @@ class Procedure < ApplicationRecord
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
+
   validates :lien_site_web, presence: true, if: :publiee?
+  validates :lien_notice, url: { no_local: true, allow_blank: true }
+  validates :lien_dpo, format: { with: Devise.email_regexp, message: "n'est pas valide" }, if: :lien_dpo_email?
+  validates :lien_dpo, url: { no_local: true, allow_blank: true }, unless: :lien_dpo_email?
+
   validates :draft_types_de_champ_public,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
@@ -311,7 +326,6 @@ class Procedure < ApplicationRecord
                                                     less_than_or_equal_to: 60
                                                   }
 
-  validates :lien_dpo, email_or_link: true, allow_nil: true
   validates_with MonAvisEmbedValidator
 
   validates_associated :draft_revision, on: :publication
@@ -356,7 +370,6 @@ class Procedure < ApplicationRecord
   validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
   validate :validate_auto_archive_on_in_the_future, if: :will_save_change_to_auto_archive_on?
-  validates :routing_criteria_name, presence: true, allow_blank: false
 
   before_save :update_juridique_required
   after_initialize :ensure_path_exists
@@ -717,6 +730,10 @@ class Procedure < ApplicationRecord
     revisions.size - 2
   end
 
+  def instructeurs_self_management?
+    routing_enabled? || instructeurs_self_management_enabled?
+  end
+
   def defaut_groupe_instructeur_for_new_dossier
     if !routing_enabled? || feature_enabled?(:procedure_routage_api)
       defaut_groupe_instructeur
@@ -1034,6 +1051,14 @@ class Procedure < ApplicationRecord
 
   def pieces_jointes_list_with_conditionnal
     active_revision.types_de_champ_public.where.not(condition: nil).filter(&:piece_justificative?)
+  end
+
+  def toggle_routing
+    update!(routing_enabled: self.groupe_instructeurs.active.many?)
+  end
+
+  def lien_dpo_email?
+    lien_dpo.present? && lien_dpo.match?(/@/)
   end
 
   private

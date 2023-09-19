@@ -3,7 +3,6 @@
 # Table name: procedure_revisions
 #
 #  id                           :bigint           not null, primary key
-#  migrated_champ_routage       :boolean
 #  published_at                 :datetime
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
@@ -13,6 +12,7 @@
 #
 class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
+  self.ignored_columns += [:migrated_champ_routage]
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
 

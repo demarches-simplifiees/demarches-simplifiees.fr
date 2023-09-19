@@ -28,7 +28,6 @@
 #  last_champ_private_updated_at                      :datetime
 #  last_champ_updated_at                              :datetime
 #  last_commentaire_updated_at                        :datetime
-#  migrated_champ_routage                             :boolean
 #  motivation                                         :text
 #  prefill_token                                      :string
 #  prefilled                                          :boolean
@@ -56,6 +55,8 @@ class Dossier < ApplicationRecord
   include DossierRebaseConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
+
+  self.ignored_columns += [:migrated_champ_routage]
 
   enum state: {
     brouillon:       'brouillon',
@@ -482,6 +483,7 @@ class Dossier < ApplicationRecord
       :traitement,
       :groupe_instructeur,
       :etablissement,
+      :pending_corrections,
       procedure: [:groupe_instructeurs],
       avis: [:claimant, :expert]
     ).ordered_for_export).in_batches
@@ -663,14 +665,6 @@ class Dossier < ApplicationRecord
 
   def show_procedure_state_warning?
     procedure.discarded? || (brouillon? && !procedure.dossier_can_transition_to_en_construction?)
-  end
-
-  def show_groupe_instructeur_details?
-    procedure.routing_enabled? && groupe_instructeur.present? && (!procedure.feature_enabled?(:procedure_routage_api) || !defaut_groupe_instructeur?) && !procedure.feature_enabled?(:routing_rules)
-  end
-
-  def show_groupe_instructeur_selector?
-    procedure.routing_enabled? && !procedure.feature_enabled?(:procedure_routage_api) && !procedure.feature_enabled?(:routing_rules)
   end
 
   def assign_to_groupe_instructeur(groupe_instructeur, author = nil)

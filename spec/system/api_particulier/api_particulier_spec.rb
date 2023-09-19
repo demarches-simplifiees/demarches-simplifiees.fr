@@ -288,11 +288,10 @@ describe 'fetch API Particulier Data', js: true do
           fill_in 'Le code postal', with: code_postal
           wait_for_autosave
           click_on 'Déposer le dossier'
+          expect(page).to have_current_path(merci_dossier_path(Dossier.last))
           perform_enqueued_jobs
         end
-        expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
-        perform_enqueued_jobs
         wait_until { cnaf_champ.reload.data.present? }
 
         visit demande_dossier_path(dossier)

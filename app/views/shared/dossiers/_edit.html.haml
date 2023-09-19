@@ -16,17 +16,7 @@
           - if dossier.brouillon?
             = t('views.shared.dossiers.edit.autosave')
 
-          - if dossier.procedure.notice.attached?
-            = render Dsfr::DownloadComponent.new(attachment: dossier.procedure.notice , url: notice_url(dossier.procedure), name: t("views.shared.dossiers.edit.notice"), ephemeral_link: administrateur_signed_in?)
-
-    - if dossier.show_groupe_instructeur_selector?
-      %span{ data: { controller: 'autosave' } }
-        = f.label :groupe_instructeur_id do
-          = dossier.procedure.routing_criteria_name
-          %span.mandatory *
-        = f.select :groupe_instructeur_id,
-          dossier.procedure.groupe_instructeurs.active.map { |gi| [gi.label, gi.id] },
-          { include_blank: dossier.brouillon? }
+          = render Procedure::NoticeComponent.new(procedure: dossier.procedure)
 
     = render EditableChamp::SectionComponent.new(champs: dossier_for_editing.champs_public)
 

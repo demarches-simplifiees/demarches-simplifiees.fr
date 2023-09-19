@@ -11,4 +11,7 @@
       available_instructeur_emails: @available_instructeur_emails,
       disabled_as_super_admin: administrateur_as_manager?)
   - else
-    = render Procedure::GroupesManagementComponent.new(procedure: @procedure, groupe_instructeurs: @groupes_instructeurs, query: params[:q])
+    = render Procedure::GroupesManagementComponent.new(procedure: @procedure,
+      groupe_instructeurs: @groupes_instructeurs,
+      query: params[:q],
+      to_configure_filter: params[:filter].present?)

@@ -34,6 +34,18 @@ describe 'shared/_procedure_description', type: :view do
     end
   end
 
+  context 'when procedure has notice' do
+    let(:procedure) { create(:procedure, :published, :with_notice) }
+    before do
+      allow(view).to receive(:administrateur_signed_in?).and_return(false)
+    end
+
+    it 'shows a link to the notice' do
+      subject
+      expect(rendered).to have_link("Télécharger le guide de la démarche")
+    end
+  end
+
   context 'when the procedure has pieces jointes' do
     let(:procedure) { create(:procedure, :draft, :with_titre_identite, :with_piece_justificative, :with_siret) }
     it 'shows the pieces jointes list for draft procedure' do

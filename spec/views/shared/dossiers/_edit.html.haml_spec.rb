@@ -133,16 +133,19 @@ describe 'shared/dossiers/edit', type: :view do
   end
 
   context 'with a routed procedure' do
-    let(:procedure) do
-      create(:procedure,
-        :routee,
-        routing_criteria_name: 'departement')
+    let(:procedure_routee) do
+      create(:procedure, :routee)
     end
-    let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:champs) { [] }
+    let!(:drop_down_tdc) { create(:type_de_champ_drop_down_list, procedure: procedure_routee, drop_down_options: options) }
+    let(:options) { procedure_routee.groupe_instructeurs.pluck(:label) }
+    let(:dossier) { create(:dossier, procedure: procedure_routee) }
+    let(:champs) { [champ_drop_down] }
+    let(:champ_drop_down) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: drop_down_tdc, value: options.first) }
 
-    it 'renders the routing criteria name and its value' do
-      expect(subject).to have_field(procedure.routing_criteria_name)
+    before { dossier.champs_public << champs }
+
+    it 'renders the libelle of the type de champ used for routing' do
+      expect(subject).to include(champ_drop_down.libelle)
     end
 
     context 'when groupe instructeur is selected' do
@@ -150,8 +153,8 @@ describe 'shared/dossiers/edit', type: :view do
         dossier.groupe_instructeur = dossier.procedure.defaut_groupe_instructeur
       end
 
-      it 'renders the routing criteria name and its value' do
-        expect(subject).to have_field(procedure.routing_criteria_name)
+      it 'renders the routing libelle and its value' do
+        expect(subject).to include(champ_drop_down.libelle)
         expect(subject).to include(dossier.groupe_instructeur.label)
       end
     end

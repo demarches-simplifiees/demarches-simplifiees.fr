@@ -338,7 +338,6 @@ en:
           updated_at: "Updated on %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
-          notice: "Download the notice of the procedure"
           pending_correction:
             confirm_label: I certify that I have made all corrections requested by the administration.
         messages:
@@ -427,8 +426,6 @@ en:
           submit_dossier: Submit an other file
         show:
           header:
-            edit_dossier: Edit my file
-            edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
             summary: "Summary"
             request: "Request"
             mailbox: "Mailbox"
@@ -458,7 +455,8 @@ en:
         messagerie:
           mailbox: "The mailbox allows you to contact the instructor in charge of your file."
         demande:
-          edit_dossier: "Edit file"
+          edit_dossier: Edit file
+          edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
         search:
           search_file: Search a file (File number, keywords)
           simple: Search
@@ -589,6 +587,7 @@ en:
       messages:
         not_a_phone: 'Invalid phone number'
         not_a_rna: 'Invalid RNA number'
+        url: 'is not a valid link'
       models:
         attestation_template:
           attributes:
@@ -784,6 +783,9 @@ en:
       no_longer_editable: "Your file can no longer be edited"
       verify_site: "Verify you are on "
       en_construction_submitted: "The modifications have already been submitted"
+      fill_identity:
+        individual: Complete the identity of the applicant to continue.
+        siret: Complete the identification of the establishment to continue.
       create_commentaire:
         message_send: "Your message has been sent to the instructor in charge of your file."
       cloned_success: "Your file has been duplicated. Please review it then you can submit it"

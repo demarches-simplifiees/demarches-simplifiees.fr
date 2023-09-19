@@ -8,6 +8,14 @@ module EtablissementHelper
     end
   end
 
+  def year_for_bilan(bilan)
+    if bilan_v3?(bilan)
+      bilan["data"].fetch("annee")
+    else
+      bilan["date_arret_exercice"]
+    end
+  end
+
   # trouver la declaration 2051, et prendre la premiere valeur du bilan identifié par le code code_nref: 300476
   # autrement connu comme le resultat d'un exercice dans un bilan comptable "funky magic accountant lingo"
   def extract_resultat_exercice(bilan)
@@ -90,6 +98,15 @@ module EtablissementHelper
       "en activité"
     when :fermé
       "fermé"
+    end
+  end
+
+  def entreprise_etat_administratif_badge_class(etablissement)
+    case etablissement.entreprise_etat_administratif&.to_sym
+    when :actif
+      "fr-badge--success"
+    when :fermé
+      "fr-badge--error"
     end
   end
 end

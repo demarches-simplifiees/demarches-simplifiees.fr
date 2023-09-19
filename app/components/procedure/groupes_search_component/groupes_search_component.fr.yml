@@ -1,0 +1,5 @@
+---
+fr:
+  to_configure_filter:
+    one: "Filtrer %{count} groupe à configurer"
+    other: "Filtrer les %{count} groupes à configurer"

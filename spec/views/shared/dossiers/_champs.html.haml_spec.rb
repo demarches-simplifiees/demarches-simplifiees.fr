@@ -57,46 +57,6 @@ describe 'shared/dossiers/champs', type: :view do
     end
   end
 
-  context "with a routed procedure" do
-    let(:procedure) do
-      create(:procedure,
-        :routee,
-        routing_criteria_name: 'departement')
-    end
-    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
-    let(:champs) { [] }
-
-    it "renders the routing criteria name and its value" do
-      expect(subject).to include(procedure.routing_criteria_name)
-      expect(subject).to include(dossier.groupe_instructeur.label)
-    end
-
-    context "with seen_at" do
-      let(:dossier) { create(:dossier) }
-      let(:nouveau_groupe_instructeur) { create(:groupe_instructeur, procedure: dossier.procedure) }
-      let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true') }
-      let(:champs) { [champ1] }
-
-      context "with a demande_seen_at after groupe_instructeur_updated_at" do
-        let(:demande_seen_at) { dossier.groupe_instructeur_updated_at + 1.hour }
-
-        it "expect to not highlight new group instructeur label" do
-          dossier.assign_to_groupe_instructeur(nouveau_groupe_instructeur)
-          expect(subject).not_to have_css(".highlighted")
-        end
-      end
-
-      context "with a demande_seen_at before groupe_instructeur_updated_at" do
-        let(:demande_seen_at) { dossier.groupe_instructeur_updated_at - 1.hour }
-
-        it "expect to not highlight new group instructeur label" do
-          dossier.assign_to_groupe_instructeur(nouveau_groupe_instructeur)
-          expect(subject).to have_css(".highlighted")
-        end
-      end
-    end
-  end
-
   context "with a dossier champ, but we are not authorized to acces the dossier" do
     let(:dossier) { create(:dossier) }
     let(:champ) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
@@ -134,20 +94,27 @@ describe 'shared/dossiers/champs', type: :view do
   end
 
   context "with seen_at" do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :en_construction, depose_at: 1.day.ago) }
     let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true') }
     let(:champs) { [champ1] }
 
     context "with a demande_seen_at after champ updated_at" do
       let(:demande_seen_at) { champ1.updated_at + 1.hour }
 
-      it { is_expected.not_to have_css(".highlighted") }
+      it { is_expected.not_to have_css(".fr-badge--new") }
+    end
+
+    context "with champ updated_at at depose_at" do
+      let(:champ1) { create(:champ_checkbox, dossier: dossier, value: 'true', updated_at: dossier.depose_at) }
+      let(:demande_seen_at) { champ1.updated_at - 1.hour }
+
+      it { is_expected.not_to have_css(".fr-badge--new") }
     end
 
     context "with a demande_seen_at after champ updated_at" do
       let(:demande_seen_at) { champ1.updated_at - 1.hour }
 
-      it { is_expected.to have_css(".highlighted") }
+      it { is_expected.to have_css(".fr-badge--new") }
     end
   end
 end

@@ -658,7 +658,7 @@ GEM
       nokogiri (>= 1.6.2)
       rexml
       xmlenc (>= 0.7.1)
-    sanitize (6.0.1)
+    sanitize (6.0.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     sass (3.7.4)
@@ -822,6 +822,7 @@ DEPENDENCIES
   active_model_serializers
   active_storage_validations
   activestorage-openstack
+  addressable
   administrate
   administrate-field-enum
   after_party
