@@ -4,7 +4,7 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
   def initialize(revision:, groupe_instructeur:)
     @revision = revision
     @groupe_instructeur = groupe_instructeur
-    @procedure_id = revision.procedure_id
+    @procedure = revision.procedure
   end
 
   private
