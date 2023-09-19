@@ -1,4 +1,4 @@
-.fr-px-2w
+.fr-px-2w.fr-mb-4w
   .fr-my-2w
     %p
       = t(:submitted_at, scope: [:views, :shared, :dossiers, :form], datetime: l(dossier.depose_at))
@@ -9,25 +9,18 @@
     .fr-highlight
       %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
 
-
   - if dossier.justificatif_motivation.attached?
-    -# download component already has margin bottom
-    %div
-      %p.champ-label Justificatif :
-      .champ-content
+    = render Dossiers::RowShowComponent.new(label: "Justificatif") do |c|
+      - c.with_value do
         .action
           = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
   - if dossier.motivation.present?
-    .fr-mb-2w
-      %p.champ-label Motivation :
-      .champ-content
-        .action
-          = dossier.motivation
+    = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
+      - c.with_value do
+        = dossier.motivation
 
   - if dossier.attestation.present?
-    .fr-mb-2w
-      %p.champ-label Attestation :
-      .champ-content
-        .action
-          = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), target: '_blank', rel: 'noopener')
+    = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
+      - c.with_value do
+        = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), **external_link_attributes)

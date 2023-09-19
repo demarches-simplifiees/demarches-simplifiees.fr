@@ -90,8 +90,8 @@ module ApplicationHelper
     date.present? ? I18n.l(date, format: :long) : ''
   end
 
-  def try_format_datetime(datetime)
-    datetime.present? ? I18n.l(datetime) : ''
+  def try_format_datetime(datetime, format: nil)
+    datetime.present? ? I18n.l(datetime, format:) : ''
   end
 
   def try_format_mois_effectif(etablissement)
