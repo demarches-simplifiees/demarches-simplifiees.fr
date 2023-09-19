@@ -120,7 +120,11 @@ module Users
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
-        redirect_to brouillon_dossier_path(@dossier)
+        if dossier.en_construction?
+          redirect_to demande_dossier_path(@dossier)
+        else
+          redirect_to brouillon_dossier_path(@dossier)
+        end
       else
         flash.now.alert = @dossier.individual.errors.full_messages
         render :identite
@@ -451,8 +455,10 @@ module Users
     def ensure_dossier_can_be_filled
       if !dossier.autorisation_donnees
         if dossier.procedure.for_individual
+          flash.alert = t('users.dossiers.fill_identity.individual')
           redirect_to identite_dossier_path(dossier)
         else
+          flash.alert = t('users.dossiers.fill_identity.siret')
           redirect_to siret_dossier_path(dossier)
         end
       end
