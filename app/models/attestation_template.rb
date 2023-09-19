@@ -68,7 +68,7 @@ class AttestationTemplate < ApplicationRecord
       body: dossier ? replace_tags(body, dossier) : params.fetch(:body, body),
       footer: params.fetch(:footer, footer),
       logo: params.fetch(:logo, logo.attached? ? logo : nil),
-      signature: params.fetch(:signature, signature.attached? ? signature : nil)
+      signature: signature_to_render(params)
     }
   end
 
@@ -89,6 +89,16 @@ class AttestationTemplate < ApplicationRecord
   end
 
   private
+
+  def signature_to_render(params)
+    dossier = params.fetch(:dossier, false)
+    groupe_instructeur = dossier ? dossier.groupe_instructeur : params[:groupe_instructeur]
+    if groupe_instructeur && groupe_instructeur.signature.attached?
+      groupe_instructeur.signature
+    else
+      signature
+    end
+  end
 
   def used_tags
     used_tags_for(title) + used_tags_for(body)
