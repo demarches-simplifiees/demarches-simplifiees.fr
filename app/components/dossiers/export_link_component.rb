@@ -1,5 +1,6 @@
 class Dossiers::ExportLinkComponent < ApplicationComponent
   include ApplicationHelper
+  include TabsHelper
 
   def initialize(procedure:, exports:, statut: nil, count: nil, class_btn: nil, export_url: nil)
     @procedure = procedure
@@ -35,10 +36,16 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
 
     case count
     when nil
-      t(".export_title", export_tabs: export.statut.to_s, export_format: export.format)
+      t(".export_title", export_tabs: human_export_status(export), export_format: export.format)
     else
-      t(".export_title_counted", export_tabs: export.statut.to_s, export_format: export.format, count: count)
+      t(".export_title_counted", export_tabs: human_export_status(export), export_format: export.format, count: count)
     end
+  end
+
+  def human_export_status(export)
+    key = tab_i18n_key_from_status(export.statut)
+
+    t(key, count: export.count) || export.statut
   end
 
   def badge(export)
