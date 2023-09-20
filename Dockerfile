@@ -1,4 +1,4 @@
-FROM ruby:3.1.2-slim AS base
+FROM ruby:3.2.2-slim AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
@@ -30,7 +30,7 @@ FROM base
 ENV APP_PATH /app
 #----- minimum set of packages including PostgreSQL client, yarn
 RUN apt-get update && apt-get install -y \
-  curl git postgresql-client libicu67 imagemagick gnupg zip &&\
+  curl git postgresql-client libicu72 imagemagick gnupg zip &&\
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
   curl -sL "https://deb.nodesource.com/setup_16.x" | bash - && \
