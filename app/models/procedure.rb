@@ -46,6 +46,7 @@
 #  published_at                              :datetime
 #  routing_criteria_name                     :text             default("Votre ville")
 #  routing_enabled                           :boolean
+#  sva_svr                                   :jsonb            not null
 #  tags                                      :text             default([]), is an Array
 #  unpublished_at                            :datetime
 #  web_hook_url                              :string
@@ -67,6 +68,7 @@ class Procedure < ApplicationRecord
   include EncryptableConcern
   include InitiationProcedureConcern
   include ProcedureGroupeInstructeurAPIHackConcern
+  include ProcedureSVASVRConcern
 
   include Discard::Model
   self.discard_column = :hidden_at

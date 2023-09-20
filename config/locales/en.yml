@@ -436,6 +436,10 @@ en:
             en_construction_html: Your file is in progress. It means that <strong>you can still edit it</strong>. You will no longer be able to edit the file when the administration will switch it to "review".
             status_review: undergoing review
             admin_review: The administration is reviewing your file. You are no longer able to edit it.
+            delay_title:
+              sva: "Your file is subject to the legislative framework « Silence Vaut Accord »"
+              svr: "Your file is subject to the legislative framework « Silence Vaut Rejet »"
+            delay_text_sva_svr: "You will receive a reply from the administration no later than %{date}."
             status_completed: completed
             use_mailbox_for_questions_html: "<strong>You have a question?</strong> Use the mailbox to <a href=\"%{mailbox_url}\">contact the administration directly</a>."
             acceptee_html: "Your file had been <strong>accepted</strong>."
@@ -891,9 +895,19 @@ en:
         dossiers_count: "Nb files"
         weekly_distribution: "Weekly distribution"
         weekly_distribution_details: "in the last 6 months"
+      sva_svr_rule_name:
+        sva: "Silence Vaut Accord"
+        svr: "Silence Vaut Rejet"
     procedure_description:
       estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
       estimated_fill_duration_title: What is the procedure estimated fill time ?
       estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation
+      sva_svr_title: "This procedure applies the « %{rule} »"
+      sva_text_html: "SVA, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically accepted after a certain period if your file is complete."
+      svr_text_html: "SVR, or « <strong>Silence Vaut Rejet</strong> » is a legislative principle that defines the behavior of a request in the event of silence from the administration: the request is automatically refused after a certain period if your file is complete."
+      sva_svr_prevision_date:
+        Thus, you will receive an answer to your request within %{delay} of submitting your complete file.
+        For example, if you submit your application today, you will receive a reply no later than %{date}.
+        If your file is incomplete, this date may be postponed until submitting a completed file.

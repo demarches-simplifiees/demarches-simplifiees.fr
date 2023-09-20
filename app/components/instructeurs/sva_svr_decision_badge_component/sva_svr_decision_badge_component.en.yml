@@ -1,0 +1,10 @@
+---
+ en:
+  no_sva: Submitted before SVA
+  no_svr: Submitted before SVR
+  in_days:
+    zero: Today
+    one: Tomorrow
+    other: in %{count} days
+  remaining_days_after_correction:
+    other: "%{count} d. after correction"

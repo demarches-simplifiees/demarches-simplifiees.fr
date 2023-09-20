@@ -63,5 +63,6 @@
     = render Procedure::Card::AnnotationsComponent.new(procedure: @procedure)
     = render Procedure::Card::APIEntrepriseComponent.new(procedure: @procedure)
     = render Procedure::Card::APIParticulierComponent.new(procedure: @procedure)
+    = render Procedure::Card::SVASVRComponent.new(procedure: @procedure) if @procedure.sva_svr_enabled? || @procedure.feature_enabled?(:sva)
     = render Procedure::Card::MonAvisComponent.new(procedure: @procedure)
     = render Procedure::Card::DossierSubmittedMessageComponent.new(procedure: @procedure)
