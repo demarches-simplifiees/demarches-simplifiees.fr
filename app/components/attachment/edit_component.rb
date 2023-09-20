@@ -83,7 +83,7 @@ class Attachment::EditComponent < ApplicationComponent
     if champ.present?
       auto_attach_url
     else
-      attachment_path(user_can_edit: true, view_as: @view_as, auto_attach_url: @auto_attach_url)
+      attachment_path(user_can_edit: true, view_as: @view_as, auto_attach_url: @auto_attach_url, direct_upload: @direct_upload)
     end
   end
 
