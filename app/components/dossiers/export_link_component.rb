@@ -11,10 +11,6 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
     @export_url = export_url
   end
 
-  def allowed_format?(item)
-    item.fetch(:format) != :json || @procedure.active_revision.carte?
-  end
-
   def download_export_path(export_format:, statut:, force_export: false, no_progress_notification: nil)
     @export_url.call(@procedure,
       export_format: export_format,
