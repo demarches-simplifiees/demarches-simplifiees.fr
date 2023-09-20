@@ -114,7 +114,7 @@ class Export < ApplicationRecord
 
   def count
     if procedure_presentation_id.present?
-      dossiers_for_export.size
+      dossiers_for_export.count
     end
   end
 

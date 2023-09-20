@@ -31,9 +31,14 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
   end
 
   def export_title(export)
-    t(".export_title",
-      export_tabs: export.statut.to_s,
-      export_format: export.format)
+    count = export.count
+
+    case count
+    when nil
+      t(".export_title", export_tabs: export.statut.to_s, export_format: export.format)
+    else
+      t(".export_title_counted", export_tabs: export.statut.to_s, export_format: export.format, count: count)
+    end
   end
 
   def badge(export)

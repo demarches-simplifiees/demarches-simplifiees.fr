@@ -2,10 +2,11 @@
   - @exports.each do |export|
     %li.fr-mb-3w
       .flex
-        %strong
-          = export_title(export)
-        %span.fr-text-mention--grey.fr-mb-1w
-          = time_info(export)
+        %span
+          %strong
+            = export_title(export)
+          %span.fr-text-mention--grey.fr-mb-1w
+            = time_info(export)
         .fr-ml-auto
           = badge(export)
       %ul.fr-btns-group.fr-btns-group--inline-sm
