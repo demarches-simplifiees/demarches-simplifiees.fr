@@ -1,15 +1,6 @@
 class APIController < ApplicationController
   before_action :default_format_json
-
-  protected
-
-  def find_administrateur_for_token(procedure)
-    api_token = APIToken.authenticate(authorization_bearer_token)
-    if api_token.present? && api_token.context.fetch(:procedure_ids).include?(procedure.id)
-      api_token.touch(:last_v1_authenticated_at)
-      api_token.administrateur
-    end
-  end
+  before_action :authenticate_from_token
 
   private
 
@@ -17,19 +8,24 @@ class APIController < ApplicationController
     request.format = "json" if !request.params[:format]
   end
 
-  def authorization_bearer_token
-    params_token.presence || header_token
-  end
-
-  def header_token
-    received_token = nil
-    authenticate_with_http_token do |token, _options|
-      received_token = token
+  def check_api_token
+    if @api_token.nil?
+      render json: {}, status: :unauthorized
     end
-    received_token
   end
 
-  def params_token
-    params[:token]
+  def authenticate_from_token
+    @api_token = authenticate_with_http_token { |t, _o| APIToken.authenticate(t) }
+
+    # legacy way of sending the token by url
+    # not available in api v2
+    if @api_token.nil?
+      @api_token = APIToken.authenticate(params[:token])
+    end
+
+    if @api_token.present?
+      @api_token.touch(:last_v1_authenticated_at)
+      @current_user = @api_token.administrateur.user
+    end
   end
 end

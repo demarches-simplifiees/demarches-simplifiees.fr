@@ -19,6 +19,13 @@ describe API::V1::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(401) }
     end
 
+    context 'when procedure exist but bad token' do
+      let(:token) { 'bad' }
+      let(:procedure_id) { create(:procedure, administrateur: admin).id }
+
+      it { is_expected.to have_http_status(401) }
+    end
+
     context 'when procedure exist' do
       let(:procedure_id) { create(:procedure, administrateur: admin).id }
 
