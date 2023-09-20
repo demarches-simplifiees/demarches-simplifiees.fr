@@ -1,6 +1,4 @@
 class API::V2::BaseController < ApplicationController
-  # Disable forgery protection for API controllers when the request is authenticated
-  # with a bearer token. Otherwise the session will be nullified and we'll lose curent_user
   skip_forgery_protection if: -> { request.headers.key?('HTTP_AUTHORIZATION') }
   skip_before_action :setup_tracking
   before_action :authenticate_from_token
