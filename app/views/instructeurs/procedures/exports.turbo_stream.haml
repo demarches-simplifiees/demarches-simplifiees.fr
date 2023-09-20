@@ -1,0 +1,3 @@
+= turbo_stream.replace "exports-list" do
+  - if @exports.present?
+    = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))

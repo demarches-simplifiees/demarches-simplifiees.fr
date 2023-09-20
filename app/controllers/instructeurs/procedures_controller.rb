@@ -231,6 +231,11 @@ module Instructeurs
         value: DateTime.current,
         expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT
       }
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html
+      end
     end
 
     def email_usagers
