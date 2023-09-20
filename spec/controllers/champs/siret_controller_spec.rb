@@ -133,7 +133,7 @@ describe Champs::SiretController, type: :controller do
         end
       end
 
-      context 'when the Numero TAHITI is valid but unknown', vcr: { cassette_name: 'pf_api_entreprise_not_found' } do
+      context 'when the Numéro TAHITI is valid but unknown', vcr: { cassette_name: 'pf_api_entreprise_not_found' } do
         let(:siret) { '111111' }
         let(:api_etablissement_status) { 404 }
 

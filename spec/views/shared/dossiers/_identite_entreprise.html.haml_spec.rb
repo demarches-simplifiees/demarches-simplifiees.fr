@@ -73,7 +73,7 @@ describe 'shared/dossiers/identite_entreprise', type: :view do
 
         it 'shows both sirets' do
           expect(subject).to include("123 456 789 00001")
-          expect(subject).to include("SIRET du siège social")
+          expect(subject).to include("Numéro TAHITI du siège social")
           expect(subject).to include("987 654 321 00001")
         end
       end
@@ -82,7 +82,7 @@ describe 'shared/dossiers/identite_entreprise', type: :view do
         let(:siret_siege_social) { nil }
 
         it 'does not duplicate siret' do
-          expect(subject).not_to include("SIRET du siège social")
+          expect(subject).not_to include("Numéro TAHITI du siège social")
         end
       end
     end

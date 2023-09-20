@@ -29,7 +29,7 @@
 
       - unless local_assigns[:short_identity]
         - if etablissement.entreprise.siret_siege_social.present? && etablissement.siret != etablissement.entreprise.siret_siege_social
-          = render Dossiers::RowShowComponent.new(label: "Numero TAHITI du siège social") do |c|
+          = render Dossiers::RowShowComponent.new(label: "Numéro TAHITI du siège social") do |c|
             - c.with_value do
               %p
                 = pretty_siret(etablissement.entreprise.siret_siege_social)
