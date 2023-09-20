@@ -61,16 +61,19 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
   def export_button(export)
     if export.available?
       title = t(".everything_ready", export_format: ".#{export.format}")
-      content_tag(:a, title, { href: export.file.url, title: new_tab_suffix(title), target: "_blank", rel: "noopener", class: 'fr-btn' })
+      render Dsfr::DownloadComponent.new(attachment: export.file, name: title)
     elsif export.pending?
-      content_tag(:a, t('.refresh_page'), { href: "", class: 'fr-btn fr-btn fr-btn--tertiary' })
+      content_tag(:a, t('.refresh_page'), { href: "", class: 'fr-btn fr-btn--sm fr-btn--tertiary' })
     end
   end
 
   def refresh_button_options(export)
     {
       title: t(".refresh_old_export", export_format: ".#{export.format}"),
-      class: "fr-btn fr-btn--tertiary"
+      "aria-label" =>  t(".refresh_old_export", export_format: ".#{export.format}"),
+      class: class_names("fr-btn fr-btn--sm fr-icon-refresh-line fr-btn--tertiary" => true,
+                         "fr-btn--icon" => !export.failed?,
+                         "fr-btn--icon-left" => export.failed?)
     }
   end
 end

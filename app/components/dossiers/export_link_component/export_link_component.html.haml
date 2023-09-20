@@ -9,10 +9,10 @@
             = time_info(export)
         .fr-ml-auto
           = badge(export)
-      %ul.fr-btns-group.fr-btns-group--inline-sm
-        %li
-          = export_button(export)
 
-        - if export.old?
-          %li
-            = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut, force_export: true), refresh_button_options(export)
+      .flex.flex-gap-2
+        = export_button(export)
+
+        - if export.old? || export.failed?
+          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut, force_export: true), refresh_button_options(export)
+

@@ -6,8 +6,8 @@ fr:
   everything_zip_html: Demander un export au format .zip<br>(ne contient pas l'horodatage ni le journal de log)
   everything_json_html: Demander un export au format .json (GeoJSON)
   everything_short: Demander un export au format %{export_format}
-  refresh_old_export: Recréer cet export
-  everything_ready: Télécharger au format %{export_format}
+  refresh_old_export: Regénérer cet export
+  everything_ready: Télécharger l’export %{export_format}
   success_label: Prêt
   failed_label: Erreur
   pending_label: En préparation
