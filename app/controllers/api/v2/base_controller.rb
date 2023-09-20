@@ -1,58 +1,45 @@
 class API::V2::BaseController < ApplicationController
-  # Disable forgery protection for API controllers when the request is authenticated
-  # with a bearer token. Otherwise the session will be nullified and we'll lose curent_user
-  protect_from_forgery with: :null_session, unless: :token?
+  skip_forgery_protection if: -> { request.headers.key?('HTTP_AUTHORIZATION') }
   skip_before_action :setup_tracking
-  prepend_before_action :authenticate_administrateur_from_token
+  before_action :authenticate_from_token
 
   private
 
   def context
-    # new token
-    if api_token.present?
-      api_token.context
+    if @api_token.present?
+      @api_token.context
     # web interface (/graphql) give current_administrateur
     elsif current_administrateur.present?
-      {
-        administrateur_id: current_administrateur.id,
-        procedure_ids: current_administrateur.procedure_ids,
-        write_access: true
-      }
-    # old token
+      graphql_web_interface_context
     else
-      {
-        token: authorization_bearer_token,
-        write_access: true
-      }
+      unauthenticated_request_context
     end
   end
 
-  def token?
-    authorization_bearer_token.present?
+  private
+
+  def graphql_web_interface_context
+    {
+      administrateur_id: current_administrateur.id,
+      procedure_ids: current_administrateur.procedure_ids,
+      write_access: true
+    }
   end
 
-  def authenticate_administrateur_from_token
-    if api_token.present?
-      @current_user = api_token.administrateur.user
-    end
+  def unauthenticated_request_context
+    {
+      administrateur_id: nil,
+      procedure_ids: [],
+      write_access: false
+    }
   end
 
-  def api_token
-    if @api_token.nil?
-      @api_token = APIToken
-        .find_and_verify(authorization_bearer_token)
-        &.tap { _1.touch(:last_v2_authenticated_at) } || false
-    end
-    @api_token
-  end
+  def authenticate_from_token
+    @api_token = authenticate_with_http_token { |t, _o| APIToken.authenticate(t) }
 
-  def authorization_bearer_token
-    @authorization_bearer_token ||= begin
-      received_token = nil
-      authenticate_with_http_token do |token, _options|
-        received_token = token
-      end
-      received_token
+    if @api_token.present?
+      @api_token.touch(:last_v2_authenticated_at)
+      @current_user = @api_token.administrateur.user
     end
   end
 end
