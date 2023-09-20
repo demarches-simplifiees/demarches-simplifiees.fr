@@ -533,6 +533,7 @@ Rails.application.routes.draw do
           get 'reaffecter_dossiers'
           post 'reaffecter'
           post 'add_signature'
+          get 'preview_attestation'
         end
 
         collection do
