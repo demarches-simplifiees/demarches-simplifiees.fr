@@ -56,46 +56,32 @@
             active: @statut == 'dossiers-supprimes-definitivement',
             badge: number_with_html_delimiter(@dossiers_supprimes_definitivement.count))
 
-          - if @dossier_transfers.present?
-            = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transfers.count),
+          - if @dossier_transferes.present?
+            = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transferes.count),
               dossiers_path(statut: 'dossiers-transferes'),
               active: @statut == 'dossiers-transferes',
-              badge: number_with_html_delimiter(@dossier_transfers.count))
+              badge: number_with_html_delimiter(@dossier_transferes.count))
 
 .fr-container
-  - if @statut == "en-cours"
-    - if @first_brouillon_recently_updated.present?
-      = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
-        - c.with_body do
-          %p
-            = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
-          = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-xl-10
+      - if @statut == "en-cours"
+        - if @first_brouillon_recently_updated.present?
+          = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
+            - c.with_body do
+              %p
+                = t('users.dossiers.header.callout.first_brouillon_recently_updated_text', time_ago: time_ago_in_words(@first_brouillon_recently_updated.created_at), libelle: @first_brouillon_recently_updated.procedure.libelle  )
+              = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
 
-  - if @search_terms.present?
-    %h2.page-title Résultat de la recherche pour « #{@search_terms} »
-    = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+      - if @search_terms.present?
+        %h2.page-title Résultat de la recherche pour « #{@search_terms} »
+        = render partial: "dossiers_list", locals: { dossiers: @dossiers }
 
-  - else
-    = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
+      - else
+        = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter)
 
-    - if @statut == "en-cours"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "traites"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "dossiers-invites"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
-
-    - if @statut == "dossiers-supprimes-recemment"
-      = render partial: "hidden_dossiers_list", locals: { hidden_dossiers: @dossiers }
-
-    - if @statut == "dossiers-supprimes-definitivement"
-      = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
-
-    - if @statut == "dossiers-transferes"
-      -# /!\ in this context, @dossiers is a collection of DossierTransfer not Dossier
-      = render partial: "transfered_dossiers_list", locals: { dossier_transfers: @dossiers }
-
-    - if @statut == "dossiers-expirant"
-      = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
+        - if @statut == "dossiers-supprimes-definitivement"
+          -# /!\ in this context, @dossiers is a collection of DeletedDossier not Dossier
+          = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
+        - else
+          = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }

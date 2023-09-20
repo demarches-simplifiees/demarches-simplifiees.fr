@@ -11,8 +11,8 @@ describe 'Transfer dossier:' do
   end
 
   scenario 'the user can transfer dossier to another user' do
-    within(:css, "tr[data-dossier-id=\"#{dossier.id}\"]") do
-      click_on 'Actions'
+    within(:css, ".card", match: :first) do
+      click_on 'Autres actions'
       click_on 'Transférer le dossier'
     end
 

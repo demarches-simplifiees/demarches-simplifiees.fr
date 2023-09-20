@@ -10,7 +10,7 @@ ActiveSupport.on_load(:active_storage_blob) do
 
   def self.generate_unique_secure_token(length: MINIMUM_TOKEN_LENGTH)
     token = super
-    "#{Time.current.year}/#{token[0..1]}/#{token[2..3]}/#{token}"
+    "#{Time.current.strftime('%Y/%m/%d')}/#{token[0..1]}/#{token}"
   end
 end
 

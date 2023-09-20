@@ -9,11 +9,11 @@ module Users
     INSTANCE_ACIONS_ALLOWED_TO_OWNER_OR_INVITE = []
 
     ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all] + INSTANCE_ACTIONS_ALLOWED_TO_ANY_USER
-    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore] + INSTANCE_ACIONS_ALLOWED_TO_OWNER_OR_INVITE
+    ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ] + INSTANCE_ACIONS_ALLOWED_TO_OWNER_OR_INVITE
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
     before_action :ensure_ownership_or_invitation!, only: ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
-    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update]
+    before_action :ensure_dossier_can_be_updated, only: [:update_identite, :update_siret, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :champ]
     before_action :ensure_dossier_can_be_filled, only: [:brouillon, :modifier, :submit_brouillon, :submit_en_construction, :update]
     before_action :ensure_dossier_can_be_viewed, only: [:show]
     before_action :forbid_invite_submission!, only: [:submit_brouillon]
@@ -31,9 +31,9 @@ module Users
       @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(dossiers)
       @dossiers_supprimes_definitivement = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
-      @dossier_transfers = DossierTransfer.for_email(current_user.email)
+      @dossier_transferes = dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
-      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transfers, @dossiers_close_to_expiration, params[:statut])
+      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 
       @dossiers = case @statut
       when 'en-cours'
@@ -47,7 +47,7 @@ module Users
       when 'dossiers-supprimes-definitivement'
         @dossiers_supprimes_definitivement
       when 'dossiers-transferes'
-        @dossier_transfers
+        @dossier_transferes
       when 'dossiers-expirant'
         @dossiers_close_to_expiration
       end.page(page)
@@ -293,6 +293,20 @@ module Users
       @dossier = current_user.dossiers.includes(:procedure).find(params[:id])
     end
 
+    def champ
+      @dossier = dossier_with_champs(pj_template: false)
+      champ = @dossier.champs_public_all.find(params[:champ_id])
+
+      respond_to do |format|
+        format.turbo_stream do
+          @to_show, @to_hide = []
+          @to_update = [champ]
+
+          render :update, layout: false
+        end
+      end
+    end
+
     def create_commentaire
       @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
 
@@ -411,14 +425,14 @@ module Users
     # if the status tab is filled, then this tab
     # else first filled tab
     # else en-cours
-    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transfers, dossiers_close_to_expiration, params_statut)
+    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transferes, dossiers_close_to_expiration, params_statut)
       tabs = {
         'en-cours' => mes_dossiers.present?,
         'traites' => dossiers_traites.present?,
         'dossiers-invites' => dossiers_invites.present?,
         'dossiers-supprimes-recemment' => dossiers_supprimes_recemment.present?,
         'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement.present?,
-        'dossiers-transferes' => dossier_transfers.present?,
+        'dossiers-transferes' => dossier_transferes.present?,
         'dossiers-expirant' => dossiers_close_to_expiration.present?
       }
       if tabs[params_statut]
@@ -476,17 +490,30 @@ module Users
 
     def champs_public_params
       champs_params = params.require(:dossier).permit(champs_public_attributes: [
-        :id, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :code_departement, value: [],
-          champs_attributes: [
-            :id, :_destroy, :value, :value_other, :external_id, :primary_value, :secondary_value, :numero_allocataire, :code_postal, :identifiant, :numero_fiscal, :reference_avis, :ine, :piece_justificative_file, :code_departement, value: []
-          ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
+        :id,
+        :value,
+        :value_other,
+        :external_id,
+        :primary_value,
+        :secondary_value,
+        :numero_allocataire,
+        :code_postal,
+        :identifiant,
+        :numero_fiscal,
+        :reference_avis,
+        :ine,
+        :piece_justificative_file,
+        :code_departement,
+        :accreditation_number,
+        :accreditation_birthdate,
+        value: []
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
       champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}
       champs_params
     end
 
     def dossier_scope
-      if action_name == 'update'
+      if action_name == 'update' || action_name == 'champ'
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user

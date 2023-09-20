@@ -1,5 +1,9 @@
 fr:
   activerecord:
+    models:
+      deleted_dossier:
+        one: "Dossier supprimé"
+        other: "Dossiers supprimés"
     attributes:
       deleted_dossier:
         reason:

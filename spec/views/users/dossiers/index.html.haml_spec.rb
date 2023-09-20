@@ -16,7 +16,7 @@ describe 'users/dossiers/index', type: :view do
     assign(:dossiers_supprimes_recemment, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_supprimes_definitivement, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_traites, Kaminari.paginate_array(user_dossiers).page(1))
-    assign(:dossier_transfers, Kaminari.paginate_array([]).page(1))
+    assign(:dossier_transferes, Kaminari.paginate_array([]).page(1))
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
     assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:statut, statut)
@@ -24,19 +24,19 @@ describe 'users/dossiers/index', type: :view do
     render
   end
 
-  it 'affiche la liste des dossiers' do
-    expect(rendered).to have_selector('.dossiers-table tbody tr', count: 3)
+  it 'affiche les dossiers' do
+    expect(rendered).to have_selector('.card', count: 3)
   end
 
   it 'affiche les informations des dossiers' do
     dossier = user_dossiers.first
     expect(rendered).to have_text(dossier_brouillon.id.to_s)
     expect(rendered).to have_text(dossier_brouillon.procedure.libelle)
-    expect(rendered).to have_link(dossier_brouillon.id.to_s, href: brouillon_dossier_path(dossier_brouillon))
+    expect(rendered).to have_link(dossier_brouillon.procedure.libelle, href: brouillon_dossier_path(dossier_brouillon))
 
     expect(rendered).to have_text(dossier_en_construction.id.to_s)
     expect(rendered).to have_text(dossier_en_construction.procedure.libelle)
-    expect(rendered).to have_link(dossier_en_construction.id.to_s, href: dossier_path(dossier_en_construction))
+    expect(rendered).to have_link(dossier_en_construction.procedure.libelle, href: dossier_path(dossier_en_construction))
   end
 
   it 'n’affiche pas une alerte pour continuer à remplir un dossier' do

@@ -56,5 +56,35 @@ describe 'shared/dossiers/identite_entreprise', type: :view do
         expect(rendered).to include("9 001")
       end
     end
+
+    context 'siret siege social' do
+      let(:etablissement) { create(:etablissement, siret: "12345678900001", entreprise_siret_siege_social: siret_siege_social) }
+
+      context 'when siege social has same siret' do
+        let(:siret_siege_social) { "12345678900001" }
+
+        it 'does not duplicate siret' do
+          expect(subject).to include("123 456 789 00001").once
+        end
+      end
+
+      context 'when siege social is different' do
+        let(:siret_siege_social) { "98765432100001" }
+
+        it 'shows both sirets' do
+          expect(subject).to include("123 456 789 00001")
+          expect(subject).to include("Numéro TAHITI du siège social")
+          expect(subject).to include("987 654 321 00001")
+        end
+      end
+
+      context 'when siege social has no siret' do
+        let(:siret_siege_social) { nil }
+
+        it 'does not duplicate siret' do
+          expect(subject).not_to include("Numéro TAHITI du siège social")
+        end
+      end
+    end
   end
 end
