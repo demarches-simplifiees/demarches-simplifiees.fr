@@ -204,12 +204,14 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def allowed_formats
-    return nil unless champ&.titre_identite?
-
     @allowed_formats ||= begin
-                           content_type_validator.options[:in].filter_map do |content_type|
+                           formats = content_type_validator.options[:in].filter_map do |content_type|
                              MiniMime.lookup_by_content_type(content_type)&.extension
                            end.uniq.sort_by { EXTENSIONS_ORDER.index(_1) || 999 }
+
+                           # When too many formats are allowed, consider instead manually indicating
+                           # above the input a more comprehensive of formats allowed, like "any image", or a simplified list.
+                           formats.size > 5 ? [] : formats
                          end
   end
 
