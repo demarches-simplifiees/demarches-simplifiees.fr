@@ -1,5 +1,6 @@
 class API::V1::DossiersController < APIController
-  before_action :fetch_procedure_and_check_token
+  before_action :check_api_token
+  before_action :fetch_dossiers
 
   DEFAULT_PAGE_SIZE = 100
   MAX_PAGE_SIZE = 1000
@@ -8,19 +9,17 @@ class API::V1::DossiersController < APIController
   def index
     dossiers = @dossiers.page(params[:page]).per(per_page)
 
-    render json: { dossiers: dossiers.map { |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }, status: 200
+    render json: { dossiers: dossiers.map { |dossier| DossiersSerializer.new(dossier) }, pagination: pagination(dossiers) }
   rescue ActiveRecord::RecordNotFound
-    render json: {}, status: 404
+    render json: {}, status: :not_found
   end
 
   def show
     dossier = @dossiers.for_api.find(params[:id])
 
-    respond_to do |format|
-      format.json { render json: { dossier: DossierSerializer.new(dossier).as_json }, status: 200 }
-    end
+    render json: { dossier: DossierSerializer.new(dossier).as_json }
   rescue ActiveRecord::RecordNotFound
-    render json: {}, status: 404
+    render json: {}, status: :not_found
   end
 
   private
@@ -42,24 +41,15 @@ class API::V1::DossiersController < APIController
     end
   end
 
-  def fetch_procedure_and_check_token
-    @procedure = Procedure.for_api.find(params[:procedure_id])
+  def fetch_dossiers
+    procedure = @api_token.procedures.find(params[:procedure_id])
 
-    administrateur = find_administrateur_for_token(@procedure)
-    if administrateur.nil?
-      render json: {}, status: :unauthorized
-    else
-      # allow BaseController append_info_to_payload
-      # to log info on current_user
-      @current_user = administrateur.user
+    order = ORDER_DIRECTIONS.fetch(params[:order], :asc)
+    @dossiers = procedure
+      .dossiers
+      .visible_by_administration
+      .order_by_created_at(order)
 
-      order = ORDER_DIRECTIONS.fetch(params[:order], :asc)
-      @dossiers = @procedure
-        .dossiers
-        .visible_by_administration
-        .order_by_created_at(order)
-
-    end
   rescue ActiveRecord::RecordNotFound
     render json: {}, status: :not_found
   end
