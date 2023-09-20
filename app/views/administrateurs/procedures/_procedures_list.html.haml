@@ -1,41 +1,70 @@
 - procedures.each do |procedure|
   .card
-    .admin-procedures-list-row.infos.flex
-      - if procedure.logo.present?
-        = image_tag procedure.logo, alt: procedure.libelle, width: '100'
-      .flex.column.ml-1
-        .card-title
-          = link_to procedure.libelle, admin_procedure_path(procedure), style: 'color: black;'
-        = link_to commencer_url(procedure.path), commencer_url(procedure.path), class: 'fr-link fr-mb-1w'
-
-      .admin-procedures-list-timestamps
-        %p.notice N° #{procedure.id}
-        %p.notice créée le #{procedure.created_at.strftime('%d/%m/%Y')}
-        - if procedure.published_at.present?
-          %p.notice publiée le #{procedure.published_at.strftime('%d/%m/%Y')}
-
-        - if procedure.updated_at.today?
-          %p.notice modifiée à #{procedure.updated_at.strftime('%H:%M')}
-        - else
-          %p.notice modifiée le #{procedure.updated_at.strftime('%d/%m/%Y %H:%M')}
-
-        - if procedure.closed_at.present?
-          %p.notice archivée le #{procedure.closed_at.strftime('%d/%m/%Y')}
-        - elsif procedure.auto_archive_on&.future?
-          %p.notice sera clôturée le #{procedure.auto_archive_on.strftime('%d/%m/%Y')}
-
-    .admin-procedures-list-row.actions.flex.justify-between
+    .flex.justify-between
       %div
-        - if procedure.routing_enabled?
-          %span.icon.person
-          %span.badge.baseline= procedure.groupe_instructeurs.count
+        .flex
+          - if procedure.logo.present?
+            = image_tag procedure.logo, alt: procedure.libelle, class: 'logo'
+
+          %div
+            .card-title
+              = link_to procedure.libelle, admin_procedure_path(procedure)
+
+            = link_to commencer_url(procedure.path), commencer_url(procedure.path), class: 'fr-link fr-mb-1w'
+
+            %p.fr-mt-1w.fr-mb-1w
+              = t('administrateurs.procedures.created_at')
+              = procedure.created_at.strftime('%d/%m/%Y')
+
+              - if procedure.published_at.present?
+                %span
+                  = t('administrateurs.procedures.published_at')
+                  = procedure.published_at.strftime('%d/%m/%Y')
+
+              - if procedure.updated_at.today?
+                %span
+                  = t('administrateurs.procedures.updated_at_today')
+                  = procedure.updated_at.strftime('%H:%M')
+              - else
+                %span
+                  = t('administrateurs.procedures.updated_at')
+                  = procedure.updated_at.strftime('%d/%m/%Y %H:%M')
+
+              - if procedure.closed_at.present?
+                %span
+                  = t('administrateurs.procedures.closed_at')
+                  = procedure.closed_at.strftime('%d/%m/%Y')
+              - elsif procedure.auto_archive_on&.future?
+                %span
+                  = t('administrateurs.procedures.auto_archive_on')
+                  = procedure.auto_archive_on.strftime('%d/%m/%Y')
+
+            %div
+              - if procedure.routing_enabled?
+                %span.icon.person
+                %span.fr-badge= procedure.groupe_instructeurs.count
+              - else
+                %span.icon.person
+                %span.fr-badge= procedure.instructeurs.count
+
+              %span.icon.folder.fr-ml-1w
+              %span.fr-badge= procedure.dossiers.state_not_brouillon.visible_by_administration.count
+
+      .text-right
+        %p.fr-mb-0 N° #{procedure.id}
+        - if procedure.close?
+          %span.fr-badge.fr-badge--sm.fr-badge--warning
+            = t('closed', scope: [:layouts, :breadcrumb])
+
+        - elsif procedure.locked?
+          %span.fr-badge.fr-badge--sm.fr-badge--success
+            = t('published', scope: [:layouts, :breadcrumb])
+
         - else
-          %span.icon.person
-          %span.badge.baseline= procedure.instructeurs.count
+          %span.fr-badge.fr-badge--sm.fr-badge--new
+            = t('draft', scope: [:layouts, :breadcrumb])
 
-        %span.icon.folder
-        %span.badge.baseline= procedure.dossiers.state_not_brouillon.visible_by_administration.count
-
+    .flex.justify-end
       %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
         - unless procedure.discarded?
           %li
@@ -80,4 +109,3 @@
                 %span.icon.unarchive
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.restore')
-

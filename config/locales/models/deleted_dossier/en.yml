@@ -1,0 +1,16 @@
+en:
+  activerecord:
+    models:
+      deleted_dossier:
+        one: "Deleted file"
+        other: "Deleted files"
+    attributes:
+      deleted_dossier:
+        reason:
+          user_request: User request
+          manager_request: Manager request
+          user_removed: User removed
+          procedure_removed: Procedure removed
+          expired: Expired
+          unknown: Unknow
+          instructeur_request: Deleted by instructor

@@ -66,18 +66,18 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Le nom est à présent « littéraire ». ')
 
     # add victor to littéraire groupe
-    fill_in 'Emails', with: 'victor@inst.com'
+    fill_in 'Emails', with: 'victor@gouv.fr'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur victor@inst.com a été affecté")
+    expect(page).to have_text("L’instructeur victor@gouv.fr a été affecté")
 
-    victor = User.find_by(email: 'victor@inst.com').instructeur
+    victor = User.find_by(email: 'victor@gouv.fr').instructeur
 
-    # add superwoman to littéraire groupe
-    fill_in 'Emails', with: 'superwoman@inst.com'
+    # add alain to littéraire groupe
+    fill_in 'Emails', with: 'alain@gouv.fr'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
+    expect(page).to have_text("L’instructeur alain@gouv.fr a été affecté")
 
-    superwoman = User.find_by(email: 'superwoman@inst.com').instructeur
+    alain = User.find_by(email: 'alain@gouv.fr').instructeur
 
     # add inactive groupe
     click_on 'Ajout de groupes'
@@ -94,16 +94,16 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Le nom est à présent « scientifique ». ')
 
     # add marie to scientifique groupe
-    fill_in 'Emails', with: 'marie@inst.com'
+    fill_in 'Emails', with: 'marie@gouv.fr'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur marie@inst.com a été affecté")
+    expect(page).to have_text("L’instructeur marie@gouv.fr a été affecté")
 
-    marie = User.find_by(email: 'marie@inst.com').instructeur
+    marie = User.find_by(email: 'marie@gouv.fr').instructeur
 
     # add superwoman to scientifique groupe
-    fill_in 'Emails', with: 'superwoman@inst.com'
+    fill_in 'Emails', with: 'alain@gouv.fr'
     perform_enqueued_jobs { click_on 'Affecter' }
-    expect(page).to have_text("L’instructeur superwoman@inst.com a été affecté")
+    expect(page).to have_text("L’instructeur alain@gouv.fr a été affecté")
 
     # add routing rules
     within('.target') { select('Spécialité') }
@@ -183,7 +183,7 @@ describe 'The routing with rules', js: true do
     visit new_user_session_path
     sign_in_with litteraire_user.email, password
 
-    click_on litteraire_user.dossiers.first.id.to_s
+    click_on litteraire_user.dossiers.first.procedure.libelle
     click_on 'Modifier mon dossier'
 
     fill_in litteraire_user.dossiers.first.champs_public.first.libelle, with: 'some value'
@@ -223,7 +223,7 @@ describe 'The routing with rules', js: true do
     log_out
 
     # the instructeurs who belong to scientifique AND litteraire groups manage scientifique and litteraire dossiers
-    register_instructeur_and_log_in(superwoman.email)
+    register_instructeur_and_log_in(alain.email)
     visit instructeur_procedure_path(procedure, params: { statut: 'tous' })
     expect(page).to have_text(litteraire_user.email)
     expect(page).to have_text(scientifique_user.email)
@@ -242,7 +242,7 @@ describe 'The routing with rules', js: true do
 
     # the instructeurs who belong to scientifique AND litteraire groups should have a notification
     visit new_user_session_path
-    sign_in_with superwoman.user.email, password
+    sign_in_with alain.user.email, password
 
     expect(page).to have_current_path(instructeur_procedures_path)
     expect(find('.procedure-stats')).to have_css('span.notifications')
@@ -282,7 +282,7 @@ describe 'The routing with rules', js: true do
   def user_update_group(user, new_group)
     login_as user, scope: :user
     visit dossiers_path
-    click_on user.dossiers.first.id.to_s
+    click_on user.dossiers.first.procedure.libelle
     click_on "Modifier mon dossier"
 
     choose(new_group)
