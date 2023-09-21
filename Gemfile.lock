@@ -570,7 +570,7 @@ GEM
     redcarpet (3.6.0)
     redis (5.0.6)
       redis-client (>= 0.9.0)
-    redis-client (0.14.1)
+    redis-client (0.18.0)
       connection_pool
     regexp_parser (2.8.1)
     request_store (1.5.0)
@@ -690,6 +690,11 @@ GEM
     sib-api-v3-sdk (7.4.0)
       json (~> 2.1, >= 2.1.0)
       typhoeus (~> 1.0, >= 1.0.1)
+    sidekiq (7.2.0)
+      concurrent-ruby (< 2)
+      connection_pool (>= 2.3.0)
+      rack (>= 2.2.4)
+      redis-client (>= 0.14.0)
     simple_xlsx_reader (1.0.4)
       nokogiri
       rubyzip
@@ -922,6 +927,7 @@ DEPENDENCIES
   sentry-ruby
   shoulda-matchers
   sib-api-v3-sdk
+  sidekiq
   simple_xlsx_reader
   skylight
   spreadsheet_architect
