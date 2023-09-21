@@ -396,6 +396,7 @@ Rails.application.routes.draw do
             post 'add_instructeur'
             delete 'remove_instructeur'
             post 'add_signature'
+            get 'preview_attestation'
           end
         end
 

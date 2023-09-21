@@ -65,18 +65,6 @@
         %p= service.telephone
       - if service.horaires.present?
         %p= service.horaires
-  .card.mt-2
-    = render NestedForms::FormOwnerComponent.new
-    = form_with url: { action: :add_signature }, method: :post, html: { multipart: true } do |f|
-      .card-title Tampon de l'attestation
 
-      .fr-upload-group.fr-mb-4w
-        %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
-          Dimensions conseillées : au minimum 500 px de largeur ou de hauteur.
-        = render Attachment::EditComponent.new(attached_file: @groupe_instructeur.signature, direct_upload: false)
-
-      .fr-btns-group.fr-btns-group--inline
-        = f.submit 'Ajouter le tampon', class: 'fr-btn'
-
-        - if @groupe_instructeur.signature.persisted?
-          = link_to("Prévisualiser", preview_attestation_admin_procedure_groupe_instructeur_path(@groupe_instructeur.procedure, @groupe_instructeur), class: "fr-btn fr-btn--secondary", **external_link_attributes)
+  = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
+    preview_path: preview_attestation_instructeur_groupe_path(@groupe_instructeur.procedure, @groupe_instructeur) }

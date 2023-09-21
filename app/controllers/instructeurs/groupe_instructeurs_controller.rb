@@ -1,6 +1,7 @@
 module Instructeurs
   class GroupeInstructeursController < InstructeurController
     include UninterlacePngConcern
+    include PreviewAttestationConcern
 
     ITEMS_PER_PAGE = 25
 
