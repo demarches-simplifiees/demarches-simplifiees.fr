@@ -17,6 +17,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 #### Tous environnements
 
 - postgresql
+- imagemagick et gsfonts pour générer les filigranes sur les titres d'identité.
 
 #### Développement
 
@@ -28,7 +29,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 - Chrome
 - chromedriver :
   * Mac : `brew install chromedriver`
-  * Linux : voir https://sites.google.com/a/chromium.org/chromedriver/downloads
+  * Linux : voir https://developer.chrome.com/blog/chrome-for-testing
 
 Si l'emplacement d'installation de Chrome n'est pas standard, ou que vous utilisez Brave ou Chromium à la place,
 il peut être nécessaire d'overrider pour votre machine le path vers le binaire Chrome, par exemple :
@@ -42,8 +43,7 @@ Selenium::WebDriver::Chrome.path = "/Applications/Brave Browser.app/Contents/Mac
 Webdrivers::Chromedriver.required_version = "103.0.5060.53"
 ```
 
-Il peut être également pertinent de désactiver la mise à jour automatique du webdriver
-en définissant une variable d'environnement `SKIP_UPDATE_WEBDRIVER` lors de l'exécution de `bin/update`.
+Il est également possible de faire une installation et mise à jour automatique lors de l'exécution de `bin/update` en définissant la variable d'environnement `UPDATE_WEBDRIVER`. Les binaires seront installés dans le repertoire `~/.local/bin/` qui doit être rajouté manuellement dans le path. 
 
 ### Création des rôles de la base de données
 

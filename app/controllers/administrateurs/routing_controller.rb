@@ -9,7 +9,13 @@ module Administrateurs
 
       right = targeted_champ_changed? ? empty : value
 
-      groupe_instructeur.update!(routing_rule: ds_eq(left, right))
+      new_routing_rule = case operator_name
+      when Eq.name
+        ds_eq(left, right)
+      when NotEq.name
+        ds_not_eq(left, right)
+      end
+      groupe_instructeur.update!(routing_rule: new_routing_rule)
     end
 
     def update_defaut_groupe_instructeur
@@ -25,6 +31,10 @@ module Administrateurs
 
     def targeted_champ
       Logic.from_json(params[:targeted_champ])
+    end
+
+    def operator_name
+      params[:operator_name]
     end
 
     def value

@@ -17,8 +17,10 @@ fr:
             en_construction_since: En construction depuis
             en_instruction_since: En instruction depuis
             processed_since: Terminé depuis
-            sva_svr_decision_on: Date décision SVA
-            sva_svr_decision_before: Date décision SVA avant
+            sva_decision_on: Date décision SVA
+            sva_decision_before: Date décision SVA avant
+            svr_decision_on: Date décision SVR
+            svr_decision_before: Date décision SVR avant
           user:
             email: Demandeur
           followers_instructeurs:
@@ -32,6 +34,7 @@ fr:
             gender: Civilité
           avis:
             answer: Avis
+            question_answer: Avis oui/non
           etablissement:
             entreprise_siren: SIREN
             entreprise_forme_juridique: Forme juridique

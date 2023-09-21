@@ -59,6 +59,7 @@ gem 'lograge'
 gem 'logstash-event'
 gem 'mailjet', require: false
 gem 'matrix' # needed by prawn and not default in ruby 3.1
+gem 'mini_magick'
 gem 'net-imap', require: false # See https://github.com/mikel/mail/pull/1439
 gem 'net-pop', require: false # same
 gem 'net-smtp', require: false # same
@@ -105,6 +106,7 @@ group :test do
   gem 'rack_session_access'
   gem 'rails-controller-testing'
   gem 'rspec_junit_formatter'
+  gem 'rspec-retry'
   gem 'selenium-devtools'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
@@ -114,7 +116,6 @@ group :test do
 end
 
 group :development do
-  gem 'annotate'
   gem 'brakeman', require: false
   gem 'haml-lint'
   gem 'letter_opener_web'

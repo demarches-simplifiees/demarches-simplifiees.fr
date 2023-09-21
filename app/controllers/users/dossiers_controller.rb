@@ -5,7 +5,7 @@ module Users
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
-    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :recherche, :new, :transferer_all]
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new, :transferer_all]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -33,21 +33,28 @@ module Users
         .distinct(:procedure_id)
         .order(:libelle)
         .pluck(:libelle, :id)
-      @procedure_id = params[:procedure_id]
 
+      @procedure_id = params[:procedure_id]
       if @procedure_id.present?
         ordered_dossiers = ordered_dossiers.where(procedures: { id: @procedure_id })
         deleted_dossiers = deleted_dossiers.where(procedures: { id: @procedure_id })
       end
 
-      dossiers_visibles = ordered_dossiers.visible_by_user
+      @search_terms = params[:q]
+      if @search_terms.present?
+        dossiers_filter_by_search = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page
+        ordered_dossiers = ordered_dossiers.merge(dossiers_filter_by_search)
+        deleted_dossiers = nil
+      end
 
-      @user_dossiers = current_user.dossiers.state_not_termine.merge(dossiers_visibles)
-      @dossiers_traites = current_user.dossiers.state_termine.merge(dossiers_visibles)
-      @dossiers_invites = current_user.dossiers_invites.merge(dossiers_visibles)
+      @dossiers_visibles = ordered_dossiers.visible_by_user
+
+      @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
+      @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
+      @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(ordered_dossiers)
-      @dossier_transferes = dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
-      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(dossiers_visibles)
+      @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
+      @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
       @dossiers_supprimes_definitivement = deleted_dossiers
 
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
@@ -337,28 +344,6 @@ module Users
       end
     end
 
-    def recherche
-      @procedures_for_select = nil
-
-      @search_terms = params[:q]
-      return redirect_to dossiers_path if @search_terms.blank?
-
-      @dossiers = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page(page)
-
-      if @dossiers.present?
-        # we need the page condition when accessing page n with n>1 when the page has only 1 result
-        # in order to avoid an unpleasant redirection when changing page
-        if @dossiers.count == 1 && page == 1
-          redirect_to url_for_dossier(@dossiers.first)
-        else
-          render :index
-        end
-      else
-        flash.alert = "Vous n’avez pas de dossiers contenant « #{@search_terms} »."
-        redirect_to dossiers_path
-      end
-    end
-
     def new
       erase_user_location!
 
@@ -375,7 +360,6 @@ module Users
 
       dossier = Dossier.new(
         revision: params[:brouillon] ? procedure.draft_revision : procedure.active_revision,
-        groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
       )
@@ -542,6 +526,7 @@ module Users
 
     def update_dossier_and_compute_errors
       errors = []
+
       @dossier.assign_attributes(champs_public_params)
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
@@ -559,7 +544,6 @@ module Users
       @dossier.valid?(**submit_validation_options)
       errors += format_errors(errors: @dossier.errors)
       errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
-
       errors
     end
 

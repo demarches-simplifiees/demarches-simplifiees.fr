@@ -3,18 +3,27 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-#link-sent.container
-  = image_tag('user/confirmation-email.svg', "aria-hidden": true)
-  %h1 Encore une petite étape :)
+.fr-container.fr-my-5w
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-1.fr-col-md-7
+      %h1.fr-mt-6w Encore une petite étape !
 
-  %section.link-sent-info
-    %p
-      Ouvrez votre boite email <strong>#{@email}</strong> puis cliquez sur le lien d’activation du message <strong>Connexion sécurisée à #{APPLICATION_NAME}</strong>.
-    %p
-      = t('views.users.shared.email_can_take_a_while_html')
+      %section
+        %p.fr-text--lead
+          Nous venons de vous envoyer un courriel sur votre boite email <strong>#{@email}</strong>.
+          Veuillez l’ouvrir et cliquer sur le lien de <strong>connexion sécurisée à #{APPLICATION_NAME}</strong>.
 
-  %section.link-sent-help
-    %p
-      Si vous voyez cette page trop souvent, consultez notre aide : #{link_to t("links.common.faq.confirmer_compte_chaque_connexion_url"), **external_link_attributes}
-    %p
-      = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_admin_url)
+        %p.fr-text--lead
+          Ce lien est <strong>valide une semaine</strong> et peut être réutilisé <strong>plusieurs fois</strong>.
+
+        %p.fr-text--sm.fr-text-mention--grey
+          Ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver. Si vous n’avez pas reçu de courriel (n’hésitez pas à vérifier dans les indésirables), cliquez sur le bouton ci-dessous.
+
+      = button_to instructeurs_reset_link_sent_path, class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-mail-line', method: 'POST' do
+        Renvoyer le courriel
+
+      %section
+        %p.fr-mt-3w
+          Si vous voyez cette page trop souvent, consultez notre aide : #{link_to t("links.common.faq.confirmer_compte_chaque_connexion_url"), t("links.common.faq.confirmer_compte_chaque_connexion_url"), **external_link_attributes}
+        %p.fr-mt-3w
+          = t('views.users.shared.contact_us_if_any_trouble_html', href: contact_admin_url)

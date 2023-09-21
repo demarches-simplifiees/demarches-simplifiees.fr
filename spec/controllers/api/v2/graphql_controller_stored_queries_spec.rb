@@ -185,17 +185,20 @@ describe API::V2::GraphqlController do
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
-          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          Timecop.travel(3.hours.ago) {
+            dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          }
         }
 
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
           expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression] < gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression])
         }
       end
     end
@@ -252,17 +255,20 @@ describe API::V2::GraphqlController do
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
-          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          Timecop.travel(3.hours.ago) {
+            dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          }
         }
 
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
           expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].size).to eq(2)
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression] < gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression])
         }
       end
     end
@@ -277,7 +283,7 @@ describe API::V2::GraphqlController do
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
-          expect(gql_data[:demarcheDescriptor][:demarcheUrl]).to match("commencer/#{procedure.path}")
+          expect(gql_data[:demarcheDescriptor][:demarcheURL]).to match("commencer/#{procedure.path}")
         }
       end
 
@@ -639,9 +645,9 @@ describe API::V2::GraphqlController do
         let(:variables) { { input: { groupeInstructeurId: dossier.groupe_instructeur.to_typed_id, closed: true } } }
 
         context 'with multiple groupes' do
-          before do
-            create(:groupe_instructeur, procedure: procedure)
-          end
+          let!(:defaut_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+
+          before { procedure.update(defaut_groupe_instructeur_id: defaut_groupe_instructeur.id) }
 
           it {
             expect(gql_errors).to be_nil
@@ -656,10 +662,11 @@ describe API::V2::GraphqlController do
           let(:types_de_champ_public) { [{ type: :drop_down_list }] }
           let(:groupe_instructeur) { procedure.groupe_instructeurs.first }
           let(:routing_champ) { procedure.active_revision.types_de_champ.first }
+          let!(:defaut_groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
 
           before do
             groupe_instructeur.update(routing_rule: ds_eq(champ_value(routing_champ.stable_id), constant(groupe_instructeur.label)))
-            create(:groupe_instructeur, procedure: procedure)
+            procedure.update(defaut_groupe_instructeur_id: defaut_groupe_instructeur.id)
             Flipper.enable(:groupe_instructeur_api_hack, procedure)
           end
 
@@ -675,7 +682,7 @@ describe API::V2::GraphqlController do
         context 'validation error' do
           it {
             expect(gql_errors).to be_nil
-            expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il doit y avoir au moins un groupe d’instructeurs actif sur chaque démarche')
+            expect(gql_data[:groupeInstructeurModifier][:errors].first[:message]).to eq('Il est impossible de désactiver le groupe d’instructeurs par défaut.')
           }
         end
       end

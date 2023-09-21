@@ -1,54 +1,3 @@
-# == Schema Information
-#
-# Table name: dossiers
-#
-#  id                                                 :integer          not null, primary key
-#  api_entreprise_job_exceptions                      :string           is an Array
-#  archived                                           :boolean          default(FALSE)
-#  archived_at                                        :datetime
-#  archived_by                                        :string
-#  autorisation_donnees                               :boolean
-#  brouillon_close_to_expiration_notice_sent_at       :datetime
-#  conservation_extension                             :interval         default(0 seconds)
-#  declarative_triggered_at                           :datetime
-#  deleted_user_email_never_send                      :string
-#  depose_at                                          :datetime
-#  en_construction_at                                 :datetime
-#  en_construction_close_to_expiration_notice_sent_at :datetime
-#  en_instruction_at                                  :datetime
-#  for_procedure_preview                              :boolean          default(FALSE)
-#  forced_groupe_instructeur                          :boolean
-#  groupe_instructeur_updated_at                      :datetime
-#  hidden_at                                          :datetime
-#  hidden_by_administration_at                        :datetime
-#  hidden_by_reason                                   :string
-#  hidden_by_user_at                                  :datetime
-#  identity_updated_at                                :datetime
-#  last_avis_updated_at                               :datetime
-#  last_champ_private_updated_at                      :datetime
-#  last_champ_updated_at                              :datetime
-#  last_commentaire_updated_at                        :datetime
-#  migrated_champ_routage                             :boolean
-#  motivation                                         :text
-#  prefill_token                                      :string
-#  prefilled                                          :boolean
-#  private_search_terms                               :string
-#  processed_at                                       :datetime
-#  search_terms                                       :string
-#  state                                              :string
-#  sva_svr_decision_on                                :date
-#  sva_svr_decision_triggered_at                      :datetime
-#  termine_close_to_expiration_notice_sent_at         :datetime
-#  created_at                                         :datetime
-#  updated_at                                         :datetime
-#  batch_operation_id                                 :bigint
-#  dossier_transfer_id                                :bigint
-#  editing_fork_origin_id                             :bigint
-#  groupe_instructeur_id                              :bigint
-#  parent_dossier_id                                  :bigint
-#  revision_id                                        :bigint
-#  user_id                                            :integer
-#
 class Dossier < ApplicationRecord
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -57,8 +6,6 @@ class Dossier < ApplicationRecord
   include DossierRebaseConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
-
-  self.ignored_columns += [:migrated_champ_routage]
 
   enum state: {
     brouillon:       'brouillon',
@@ -149,6 +96,12 @@ class Dossier < ApplicationRecord
         processed_at: processed_at)
     end
 
+    def refuser_automatiquement(processed_at: Time.zone.now, motivation:)
+      build(state: Dossier.states.fetch(:refuse),
+        motivation: motivation,
+        processed_at: processed_at)
+    end
+
     def classer_sans_suite(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:sans_suite),
         instructeur_email: instructeur&.email,
@@ -178,11 +131,14 @@ class Dossier < ApplicationRecord
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
 
+  after_destroy_commit :log_destroy
+
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
   accepts_nested_attributes_for :champs_private_all
+  accepts_nested_attributes_for :individual
 
   include AASM
 
@@ -227,6 +183,10 @@ class Dossier < ApplicationRecord
       transitions from: :en_instruction, to: :refuse, guard: :can_terminer?
     end
 
+    event :refuser_automatiquement, after: :after_refuser_automatiquement do
+      transitions from: :en_instruction, to: :refuse, guard: :can_refuser_automatiquement?
+    end
+
     event :classer_sans_suite, after: :after_classer_sans_suite do
       transitions from: :en_instruction, to: :sans_suite, guard: :can_terminer?
     end
@@ -268,7 +228,7 @@ class Dossier < ApplicationRecord
   }
   scope :for_procedure_preview, -> { where(for_procedure_preview: true) }
   scope :for_editing_fork, -> { where.not(editing_fork_origin_id: nil) }
-
+  scope :for_groupe_instructeur, -> (groupe_instructeurs) { where(groupe_instructeur: groupe_instructeurs) }
   scope :order_by_updated_at,            -> (order = :desc) { order(updated_at: order) }
   scope :order_by_created_at,            -> (order = :asc) { order(depose_at: order, created_at: order, id: order) }
   scope :updated_since,                  -> (since) { where('dossiers.updated_at >= ?', since) }
@@ -469,7 +429,6 @@ class Dossier < ApplicationRecord
   end
 
   scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
-  accepts_nested_attributes_for :individual
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connect_information, to: :user, allow_nil: true
@@ -577,7 +536,14 @@ class Dossier < ApplicationRecord
   def can_accepter_automatiquement?
     return false unless can_terminer?
     return true if declarative_triggered_at.nil? && procedure.declarative_accepte? && en_construction?
-    return true if procedure.sva? && sva_svr_decision_triggered_at.nil? && !pending_correction? && (sva_svr_decision_on.today? || sva_svr_decision_on.past?)
+    return true if procedure.sva? && can_terminer_automatiquement_by_sva_svr?
+
+    false
+  end
+
+  def can_refuser_automatiquement?
+    return false unless can_terminer?
+    return true if procedure.svr? && can_terminer_automatiquement_by_sva_svr?
 
     false
   end
@@ -608,6 +574,10 @@ class Dossier < ApplicationRecord
 
   def can_be_deleted_by_administration?(reason)
     termine? || reason == :procedure_removed
+  end
+
+  def can_terminer_automatiquement_by_sva_svr?
+    sva_svr_decision_triggered_at.nil? && !pending_correction? && (sva_svr_decision_on.today? || sva_svr_decision_on.past?)
   end
 
   def any_etablissement_as_degraded_mode?
@@ -697,11 +667,14 @@ class Dossier < ApplicationRecord
 
     previous_groupe_instructeur = self.groupe_instructeur
 
+    track_assigned_dossier_without_groupe_instructeur if groupe_instructeur.nil?
+
     update!(groupe_instructeur:, groupe_instructeur_updated_at: Time.zone.now)
     update!(forced_groupe_instructeur: true) if mode == DossierAssignment.modes.fetch(:manual)
 
+    create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
+
     if !brouillon?
-      create_assignment(mode, previous_groupe_instructeur, groupe_instructeur, author&.email)
       unfollow_stale_instructeurs
       if author.present?
         log_dossier_operation(author, :changer_groupe_instructeur, self)
@@ -905,7 +878,6 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
-
     MailTemplatePresenterService.create_commentaire_for_state(self)
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
@@ -996,6 +968,7 @@ class Dossier < ApplicationRecord
       .processed_at
     attestation&.destroy
 
+    self.sva_svr_decision_on = nil
     self.motivation = nil
     self.justificatif_motivation.purge_later
 
@@ -1044,7 +1017,7 @@ class Dossier < ApplicationRecord
     if procedure.declarative_accepte?
       self.en_instruction_at = self.processed_at
       self.declarative_triggered_at = self.processed_at
-    elsif procedure.sva_svr_enabled?
+    elsif procedure.sva?
       self.sva_svr_decision_triggered_at = self.processed_at
     end
 
@@ -1086,6 +1059,23 @@ class Dossier < ApplicationRecord
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
+  end
+
+  def after_refuser_automatiquement
+    # Only SVR can refuse automatically
+    I18n.with_locale(user.locale || I18n.default_locale) do
+      self.motivation = I18n.t("shared.dossiers.motivation.refused_by_svr")
+    end
+
+    self.processed_at = traitements.refuser_automatiquement(motivation:).processed_at
+    self.sva_svr_decision_triggered_at = self.processed_at
+
+    save!
+
+    remove_titres_identite!
+    MailTemplatePresenterService.create_commentaire_for_state(self)
+    NotificationMailer.send_refuse_notification(self).deliver_later
+    log_automatic_dossier_operation(:refuser, self)
   end
 
   def after_classer_sans_suite(h)
@@ -1138,9 +1128,15 @@ class Dossier < ApplicationRecord
       passer_automatiquement_en_instruction!
     elsif en_instruction? && procedure.sva? && may_accepter_automatiquement?
       accepter_automatiquement!
+    elsif en_instruction? && procedure.svr? && may_refuser_automatiquement?
+      refuser_automatiquement!
     elsif will_save_change_to_sva_svr_decision_on?
       save! # we always want the most up to date decision when there is a pending correction
     end
+  end
+
+  def previously_termine?
+    traitements.termine.exists?
   end
 
   def remove_titres_identite!
@@ -1231,7 +1227,7 @@ class Dossier < ApplicationRecord
       ['Dernière mise à jour le', :updated_at],
       ['Déposé le', :depose_at],
       ['Passé en instruction le', :en_instruction_at],
-      procedure.sva_svr_enabled? ? ["Date #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
+      procedure.sva_svr_enabled? ? ["Date décision #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
       ['Traité le', :processed_at],
       ['Motivation de la décision', :motivation],
       ['Instructeurs', followers_instructeurs.map(&:email).join(' ')]
@@ -1348,6 +1344,10 @@ class Dossier < ApplicationRecord
     )
   end
 
+  def service
+    groupe_instructeur&.contact_information || procedure.service
+  end
+
   private
 
   def create_missing_traitemets
@@ -1443,5 +1443,32 @@ class Dossier < ApplicationRecord
     # rubocop:enable Lint/UnusedBlockArgument
 
     avis.each { |a| ExpertMailer.send_dossier_decision_v2(a).deliver_later }
+  end
+
+  def log_destroy
+    app_traces = caller.reject { _1.match?(%r{/ruby/.+/gems/}) }.map { _1.sub(Rails.root.to_s, "") }
+
+    payload = {
+      message: "Dossier destroyed",
+      dossier_id: id,
+      procedure_id: procedure.id,
+      request_id: Current.request_id,
+      user_id: Current.user&.id,
+      controller: app_traces.find { _1.match?(%r{/controllers/|/jobs/}) },
+      caller: app_traces.first
+    }
+
+    logger = Lograge.logger || Rails.logger
+
+    logger.info payload.to_json
+  end
+
+  def track_assigned_dossier_without_groupe_instructeur
+    Sentry.capture_message(
+      "Assigned dossier without groupe_instructeur",
+      extra: {
+        dossier_id: self.id
+      }
+    )
   end
 end

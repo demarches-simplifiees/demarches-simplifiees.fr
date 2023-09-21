@@ -1,57 +1,54 @@
-# == Schema Information
-#
-# Table name: api_tokens
-#
-#  id                    :uuid             not null, primary key
-#  allowed_procedure_ids :bigint           is an Array
-#  encrypted_token       :string           not null
-#  name                  :string           not null
-#  write_access          :boolean          default(TRUE), not null
-#  version               :integer          default(3), not null
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  administrateur_id     :bigint           not null
-#
 class APIToken < ApplicationRecord
   include ActiveRecord::SecureToken
 
   belongs_to :administrateur, inverse_of: :api_tokens
-  has_many :procedures, through: :administrateur
 
-  before_save :check_allowed_procedure_ids_ownership
+  before_save :sanitize_targeted_procedure_ids
 
   def context
-    context = { administrateur_id: administrateur_id, write_access: write_access? }
+    {
+      administrateur_id:,
+      procedure_ids:,
+      write_access:
+    }
+  end
 
+  def procedure_ids
     if full_access?
-      context.merge procedure_ids:
+      administrateur.procedures.ids
     else
-      context.merge procedure_ids: procedure_ids & allowed_procedure_ids
+      sanitized_targeted_procedure_ids
     end
+  end
+
+  def procedures
+    Procedure.where(id: procedure_ids)
   end
 
   def full_access?
-    allowed_procedure_ids.nil?
+    targeted_procedure_ids.nil?
   end
 
-  def procedures_to_allow
-    procedures.select(:id, :libelle, :path).where.not(id: allowed_procedure_ids || []).order(:libelle)
+  def targetable_procedures
+    administrateur
+      .procedures
+      .where.not(id: targeted_procedure_ids)
+      .select(:id, :libelle, :path)
+      .order(:libelle)
   end
 
-  def allowed_procedures
-    if allowed_procedure_ids.present?
-      procedures.select(:id, :libelle, :path).where(id: allowed_procedure_ids).order(:libelle)
-    else
-      []
-    end
+  def untarget_procedure(procedure_id)
+    new_target_ids = targeted_procedure_ids - [procedure_id]
+
+    update!(allowed_procedure_ids: new_target_ids)
   end
 
-  def disallow_procedure(procedure_id)
-    allowed_procedure_ids = allowed_procedures.map(&:id) - [procedure_id]
-    if allowed_procedure_ids.empty?
-      allowed_procedure_ids = nil
-    end
-    update!(allowed_procedure_ids:)
+  def sanitized_targeted_procedure_ids
+    administrateur.procedures.ids.intersection(targeted_procedure_ids || [])
+  end
+
+  def become_full_access!
+    update_column(:allowed_procedure_ids, nil)
   end
 
   # Prefix is made of the first 6 characters of the uuid base64 encoded
@@ -65,67 +62,46 @@ class APIToken < ApplicationRecord
       plain_token = generate_unique_secure_token
       encrypted_token = BCrypt::Password.create(plain_token)
       api_token = create!(administrateur:, encrypted_token:, name: Date.today.strftime('Jeton d’API généré le %d/%m/%Y'))
-      packed_token = Base64.urlsafe_encode64([api_token.id, plain_token].join(';'))
-      [api_token, packed_token]
+      bearer = BearerToken.new(api_token.id, plain_token)
+      [api_token, bearer.to_string]
     end
 
-    def find_and_verify(maybe_packed_token, administrateurs = [])
-      token = case unpack(maybe_packed_token)
-      in { plain_token:, id: } # token v3
-        find_by(id:, version: 3)&.then(&ensure_valid_token(plain_token))
-      in { plain_token:, administrateur_id: } # token v2
-        # the migration to the APIToken model set `version: 1` for all the v1 and v2 token
-        # this is the only place where we can fix the version
-        where(administrateur_id:, version: 1).update_all(version: 2) # update to v2
-        find_by(administrateur_id:, version: 2)&.then(&ensure_valid_token(plain_token))
-      in { plain_token: } # token v1
-        where(administrateur: administrateurs, version: 1).find(&ensure_valid_token(plain_token))
-      end
+    def authenticate(bearer_string)
+      bearer = BearerToken.from_string(bearer_string)
 
-      # TODO:
-      # remove all the not v3 version code
-      # when everyone has migrated
-      # it should also be a good place in case we need to feature flag old token use
-      if token&.version == 3 || Rails.env.test?
-        token
-      else
-        nil
-      end
-    end
+      return if bearer.nil?
 
-    private
+      api_token = find_by(id: bearer.api_token_id, version: 3)
 
-    UUID_SIZE = SecureRandom.uuid.size
-    def unpack(maybe_packed_token)
-      case message_verifier.verified(maybe_packed_token)
-      in [administrateur_id, plain_token]
-        { plain_token:, administrateur_id: }
-      else
-        case Base64.urlsafe_decode64(maybe_packed_token).split(';')
-        in [id, plain_token] if id.size == UUID_SIZE # valid format "<uuid>;<random token>"
-          { plain_token:, id: }
-        else
-          { plain_token: maybe_packed_token }
-        end
-      end
-    rescue
-      { plain_token: maybe_packed_token }
-    end
+      return if api_token.nil?
 
-    def message_verifier
-      Rails.application.message_verifier('api_v2_token')
-    end
-
-    def ensure_valid_token(plain_token)
-      -> (api_token) { api_token if BCrypt::Password.new(api_token.encrypted_token) == plain_token }
+      BCrypt::Password.new(api_token.encrypted_token) == bearer.plain_token ? api_token : nil
     end
   end
 
   private
 
-  def check_allowed_procedure_ids_ownership
-    if allowed_procedure_ids.present?
-      self.allowed_procedure_ids = allowed_procedures.map(&:id)
+  def sanitize_targeted_procedure_ids
+    if targeted_procedure_ids.present?
+      write_attribute(:allowed_procedure_ids, sanitized_targeted_procedure_ids)
+    end
+  end
+
+  def targeted_procedure_ids
+    read_attribute(:allowed_procedure_ids)
+  end
+
+  class BearerToken < Data.define(:api_token_id, :plain_token)
+    def to_string
+      Base64.urlsafe_encode64([api_token_id, plain_token].join(';'))
+    end
+
+    def self.from_string(bearer_token)
+      return if bearer_token.nil?
+
+      api_token_id, plain_token = Base64.urlsafe_decode64(bearer_token).split(';')
+      BearerToken.new(api_token_id, plain_token)
+    rescue ArgumentError
     end
   end
 end

@@ -1,4 +1,8 @@
 class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampBaseComponent
+  def dsfr_champ_container
+    :fieldset
+  end
+
   private
 
   def secondary_label

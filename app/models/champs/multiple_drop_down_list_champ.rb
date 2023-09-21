@@ -1,25 +1,3 @@
-# == Schema Information
-#
-# Table name: champs
-#
-#  id                             :integer          not null, primary key
-#  data                           :jsonb
-#  fetch_external_data_exceptions :string           is an Array
-#  prefilled                      :boolean          default(FALSE)
-#  private                        :boolean          default(FALSE), not null
-#  rebased_at                     :datetime
-#  type                           :string
-#  value                          :string
-#  value_json                     :jsonb
-#  created_at                     :datetime
-#  updated_at                     :datetime
-#  dossier_id                     :integer
-#  etablissement_id               :integer
-#  external_id                    :string
-#  parent_id                      :bigint
-#  row_id                         :string
-#  type_de_champ_id               :integer
-#
 class Champs::MultipleDropDownListChamp < Champ
   validate :values_are_in_options, if: -> { value.present? }
 
@@ -65,6 +43,18 @@ class Champs::MultipleDropDownListChamp < Champ
     enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
   end
 
+  def html_label?
+    !render_as_checkboxes?
+  end
+
+  def legend_label?
+    true
+  end
+
+  def single_checkbox?
+    render_as_checkboxes?
+  end
+
   def blank?
     selected_options.blank?
   end
@@ -73,8 +63,13 @@ class Champs::MultipleDropDownListChamp < Champ
     (selected_options - options).size != selected_options.size
   end
 
-  def remove_option(options)
-    update_column(:value, (selected_options - options).to_json)
+  def remove_option(options, touch = false)
+    value = (selected_options - options).to_json
+    if touch
+      update(value:)
+    else
+      update_columns(value:)
+    end
   end
 
   def focusable_input_id

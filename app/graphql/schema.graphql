@@ -1066,7 +1066,8 @@ type DemarcheDescriptor {
   """
   URL du cadre juridique qui justifie le droit de collecter les données demandées dans la démarche
   """
-  cadreJuridiqueUrl: String
+  cadreJuridiqueURL: String
+  cadreJuridiqueUrl: String @deprecated(reason: "Utilisez le champ `cadreJuridiqueURL` à la place.")
 
   """
   Date de la création.
@@ -1106,7 +1107,8 @@ type DemarcheDescriptor {
   """
   URL pour commencer la démarche
   """
-  demarcheUrl: URL
+  demarcheURL: URL
+  demarcheUrl: URL @deprecated(reason: "Utilisez le champ `demarcheURL` à la place.")
 
   """
   Description de la démarche.
@@ -1116,7 +1118,8 @@ type DemarcheDescriptor {
   """
   URL ou email pour contacter le Délégué à la Protection des Données (DPO)
   """
-  dpoUrl: String
+  dpoURL: String
+  dpoUrl: String @deprecated(reason: "Utilisez le champ `dpoURL` à la place.")
 
   """
   Durée de conservation des dossiers en mois.
@@ -1129,7 +1132,8 @@ type DemarcheDescriptor {
   notice explicative de la démarche
   """
   notice: File
-  noticeUrl: URL
+  noticeURL: URL
+  noticeUrl: URL @deprecated(reason: "Utilisez le champ `noticeURL` à la place.")
 
   """
   Numero de la démarche.
@@ -1142,7 +1146,8 @@ type DemarcheDescriptor {
   """
   URL où les usagers trouvent le lien vers la démarche
   """
-  siteWebUrl: String
+  siteWebURL: String
+  siteWebUrl: String @deprecated(reason: "Utilisez le champ `siteWebURL` à la place.")
 
   """
   État de la démarche.
@@ -1344,6 +1349,11 @@ type Dossier {
   datePassageEnInstruction: ISO8601DateTime
 
   """
+  Date prévisionnelle de décision automatique par le SVA/SVR.
+  """
+  datePrevisionnelleDecisionSVASVR: ISO8601Date
+
+  """
   Date de la suppression par l’administration.
   """
   dateSuppressionParAdministration: ISO8601DateTime
@@ -1357,6 +1367,11 @@ type Dossier {
   Date du dernier traitement.
   """
   dateTraitement: ISO8601DateTime
+
+  """
+  Date du traitement automatique par le SVA/SVR.
+  """
+  dateTraitementSVASVR: ISO8601DateTime
   demandeur: Demandeur!
   demarche: DemarcheDescriptor!
 

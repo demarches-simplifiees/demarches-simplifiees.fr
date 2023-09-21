@@ -1,50 +1,72 @@
 - content_for(:title, t('.cta'))
 
 #agentconnect
-  .two-columns
-    .columns-container
-      .column.agent-intro
-        %h1.mt-2.mb-2.agent= t('.you_are_an_agent')
-        .box= t('.in_progress_html')
+  .fr-container
+    .fr-grid-row.fr-grid-row--gutters
 
-        .center.mt-2
-          %span.citizen= t('.you_are_a_citizen')
-          %br
-          %br
-          = link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
-
-      .column
-        %h1.fr-my-2
-          = t('.connect')
-
-        .fr-connect-group.fr-my-2w
-          = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
-            %span.fr-connect__login
-              = t('.signin_with')
-            %span.fr-connect__brand AgentConnect
-          %p
-            = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
-
-
-        %p.fr-hr-or= t('views.shared.france_connect_login.separator')
+      .fr-col-lg.fr-p-6w.fr-background-alt--grey
 
         #session-new.auth-form.sign-in-form
-          = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
-            = f.label :email, t('.pro_email')
-            = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
+          = form_for User.new, url: user_session_path do |f|
 
-            = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
-            = f.password_field :password, autocomplete: 'current-password'
+            %h1.fr-h2= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
 
-            .auth-options
-              .flex-no-shrink
-                = f.check_box :remember_me
-                = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+            .fr-mb-0.fr-fieldset
+              .fr-fieldset__legend
+                %h2.fr-h6= t('.cta')
 
-              .text-right
-                = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+              .fr-fieldset__element
+                %p= t('.explanation')
 
-            = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
+                .fr-connect-group.fr-my-2w
+                  = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
+                    %span.fr-connect__login
+                      = t('.signin_with')
+                    %span.fr-connect__brand AgentConnect
+                  %p
+                    = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
+
+
+            %p.fr-hr-or= t('views.shared.france_connect_login.separator')
+
+            %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
+              %legend.fr-fieldset__legend#new-account-legend
+                %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
+
+              .fr-fieldset__element
+                %p.fr-text--sm= t('utils.mandatory_champs')
+
+              .fr-fieldset__element
+                = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true }) do |c|
+                  - c.with_label { t('.pro_email') }
+
+              .fr-fieldset__element
+                = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
+
+                %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+
+              .fr-fieldset__element
+                .auth-options
+                  .flex-no-shrink
+                    = f.check_box :remember_me
+                    = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+
+            %ul.fr-btns-group
+              %li= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
+
+          %hr
+
+          %h2.fr-h6= t('.you_are_a_citizen')
+          %ul.fr-btns-group
+            %li= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary width-100"
+
+      .fr-col-lg.fr-p-6w
+        = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
+          - c.with_body do
+            = t('.full_deploy_body')
+        %h2.fr-h6= t('.whats_ds', application_name: APPLICATION_NAME)
+        = image_tag "landing/hero/dematerialiser.svg", class: "paperless-logo", alt: ""
+
 
 - content_for :footer do
   = render partial: 'users/dossiers/index_footer'

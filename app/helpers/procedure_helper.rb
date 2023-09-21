@@ -39,10 +39,10 @@ module ProcedureHelper
   end
 
   def can_send_groupe_message?(procedure)
-    procedure.dossiers
-      .state_brouillon
-      .includes(:groupe_instructeur)
-      .exists?(groupe_instructeur: current_instructeur.groupe_instructeurs)
+    groupe_instructeur_on_procedure_ids = procedure.groupe_instructeurs.active.ids.sort
+    groupe_instructeur_on_instructeur_ids = current_instructeur.groupe_instructeurs.active.where(procedure: procedure).ids.sort
+
+    groupe_instructeur_on_procedure_ids == groupe_instructeur_on_instructeur_ids
   end
 
   def url_or_email_to_lien_dpo(procedure)

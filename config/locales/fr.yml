@@ -226,14 +226,25 @@ fr:
         info_html: Pour cela, sélectionnez ci-dessous les champs que vous souhaitez préremplir.<br> Vous trouverez ensuite en bas de cette page un lien de préremplissage qu'il ne vous restera plus qu'à copier, à adapter en remplaçant les valeurs par défaut et à partager.<br> De la même façon, vous trouverez en bas de page un exemple de requête cURL à adapter si vous souhaitez préremplir les dossiers par API.
         champ_id: ID
         champ_type: Type
-        champ_add: Ajouter
-        champ_remove: Retirer
-        champ_unavailable: Indisponible
+        entity_add: Ajouter
+        entity_remove: Retirer
+        entity_unavailable: Indisponible
+        title:
+          prenom: Prénom (identité)
+          nom: Nom (identité)
+          genre: Genre (identité)
+        description:
+          prenom: Le prénom du ou de la propriétaire du dossier
+          nom: Le nom du ou de la propriétaire du dossier
+          genre: Le genre du ou de la propriétaire du dossier
         possible_values:
           link:
             title: Toutes les valeurs possibles
             text: Voir toutes les valeurs possibles
           title: Valeurs
+          prenom: Un prénom
+          nom: Un nom
+          genre: '"M." pour Monsieur, "Mme" pour Madame'
           text_html: Un texte court
           textarea_html: Un texte long
           decimal_number_html: Un nombre décimal
@@ -247,7 +258,7 @@ fr:
           pays_html: Un <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">code pays ISO 3166-2</a>
           regions_html: Un <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">code INSEE de région</a>
           departements_html: Un <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">numéro de département</a>
-          communes_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">le code INSEE de la commune</a>
+          communes_html: Un tableau contenant le code postal et <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">le code INSEE de la commune</a>
           address_html: Une adresse EXACTEMENT formatée telle que le label retourné par <a href="https://adresse.data.gouv.fr" target="_blank" rel="noopener noreferrer">la Base Adresse Nationale</a>
           drop_down_list_html: Un choix parmi ceux sélectionnés à la création de la procédure
           datetime_html: Datetime au format ISO8601
@@ -261,6 +272,9 @@ fr:
           epci_html: Un tableau contenant le code de département et <a href="https://geo.api.gouv.fr/epcis" target="_blank" rel="noopener noreferrer">celui de l'EPCI</a>
         examples:
           title: Exemple
+          prenom: "Jean"
+          nom: "Dupont"
+          genre: "M."
           text: Texte court
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
@@ -309,6 +323,7 @@ fr:
         invite_to_edit_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
         invite_to_edit_line2: Cette personne aura le droit de modifier votre dossier.
         email: Adresse mail
+        email_hint: "Exemple : camilya.martin@exemple.fr"
         invite_message: Ajouter un message à la personne invitée (optionnel)
         send_invitation: Envoyer une invitation
         invite_to_participate: "Personnes invitées à participer à ce dossier"
@@ -382,7 +397,7 @@ fr:
           enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
           disabled: "Impossible d'ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
         show_deleted_dossiers: Afficher les dossiers supprimés
-        personalize: Personnaliser le tableau
+        personalize: Personnaliser
         download: Télécharger un dossier
         follow_file: Suivre le dossier
         stop_follow: Ne plus suivre
@@ -399,12 +414,18 @@ fr:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
+          identity_siret: Identifier votre établissement
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
-          complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
+          complete_data: Renseignez vos informations personnelles pour accéder à la démarche.
+          complete_siret: Renseignez le numéro de SIRET de votre entreprise, administration ou association pour commencer la démarche.
+          siret_help_html: Pour trouver votre numéro SIRET, utilisez %{annuaire_link} ou renseignez-vous auprès de votre service comptable.
+          siret_placeholder: Numéro SIRET à 14 chiffres
+          annuaire_link_title: Rechercher un numéro de SIRET sur l’Annuaire des Entreprises
+          siret_loading: Récupération des informations…
           continue: Continuer
         merci:
           thanks: Merci !
@@ -458,13 +479,17 @@ fr:
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
+          result_term_title: Résultat de la recherche pour « %{search_terms} »
+          result_procedure_title: et pour la procédure « %{procedure_libelle} »
         secondary_menu: Menu secondaire
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
-          n_dossier: "Nº dossier"
+          n_dossier: "dossier Nº "
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
+          no_result_text_with_search: ne correspond aux termes recherchés
+          no_result_reset_search: Réinitialiser la recherche
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.
@@ -493,7 +518,6 @@ fr:
       sessions:
         new:
           sign_in: Connexion à %{application_name}
-          password: Mot de passe (%{min_length} caractères minimum)
           remember_me: Se souvenir de moi
           reset_password: Mot de passe oublié ?
           connection: Se connecter
@@ -518,7 +542,7 @@ fr:
           open_your_mailbox: "Maintenant ouvrez votre boite email."
           title: "Lien de réinitialisation du mot de passe envoyé"
       shared:
-        email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
+        email_can_take_a_while_html: "<strong>Attention</strong>, ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
         contact_us_if_any_trouble_html: 'En cas de difficultés, nous restons joignables <a href="%{href}">via ce formulaire</a>.'
   modal:
     publish:
@@ -551,6 +575,7 @@ fr:
         << : *default_attributes
       super_admin:
         << : *default_attributes
+        otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
       champs:
@@ -737,7 +762,7 @@ fr:
       other: demandes de transfert
     dossiers_close_to_expiration:
       one: expirant
-      other: expirant
+      other: expirants
     dossier_trouve:
       one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
@@ -903,6 +928,8 @@ fr:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
+      usual_traitement_time_title: Quels sont des délais d'instruction pour cette démarche ?
+      usual_traitement_time_detail_html: Habituellement, les dossiers de cette démarche sont traités dans un délai de %{traitement_time}. Cette estimation est calculée automatiquement à partir des délais d’instruction constatés sur %{percentile}% des demandes qui ont été traitées lors des %{days} derniers jours. Le délai réel peut être différent. Pour plus d'informations, vous pouvez <a href="%{href}" target="_blank" rel="noopener noreferrer">consulter la page statistiques</a> de cette démarche.
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
       sva_svr_title: "Cette démarche applique le « %{rule} »"

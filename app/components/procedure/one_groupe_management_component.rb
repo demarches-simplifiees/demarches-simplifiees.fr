@@ -17,6 +17,10 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
     @groupe_instructeur.routing_rule&.right || empty
   end
 
+  def operator_name
+    @groupe_instructeur.routing_rule&.class&.name || empty
+  end
+
   def targeted_champ_tag
     select_tag(
       'targeted_champ',
@@ -39,6 +43,21 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
   end
 
+  def operator_tag
+    select_tag('operator_name',
+      options_for_select(
+        options_for_operator_tag,
+        selected: operator_name
+      ),
+      class: 'fr-select')
+  end
+
+  def options_for_operator_tag
+    [Eq, NotEq]
+      .map(&:name)
+      .map { |name| [t(name, scope: 'logic.operators'), name] }
+  end
+
   def value_tag
     select_tag(
       'value',
@@ -58,8 +77,24 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
 
   def available_values_for_select(targeted_champ)
     return [] if targeted_champ.is_a?(Logic::Empty)
-    targeted_champ
-      .options(@revision.types_de_champ_public)
-      .map { |(label, value)| [label, constant(value).to_json] }
+
+    case @revision.types_de_champ_public.find_by(stable_id: targeted_champ.stable_id).type_champ
+    when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:epci)
+      departements_for_select
+    when TypeDeChamp.type_champs.fetch(:regions)
+      regions_for_select
+    when TypeDeChamp.type_champs.fetch(:drop_down_list)
+      targeted_champ
+        .options(@revision.types_de_champ_public)
+        .map { |(label, value)| [label, constant(value).to_json] }
+    end
+  end
+
+  def departements_for_select
+    APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", constant(_1[:code]).to_json] }
+  end
+
+  def regions_for_select
+    APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", constant(_1[:code]).to_json] }
   end
 end

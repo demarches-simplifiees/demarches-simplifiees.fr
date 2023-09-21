@@ -224,19 +224,18 @@ module Instructeurs
 
     def email_usagers
       @procedure = procedure
-      @commentaire = Commentaire.new
-      @email_usagers_dossiers = email_usagers_dossiers
-      @dossiers_count = @email_usagers_dossiers.count
-      @groupe_instructeurs = email_usagers_groupe_instructeurs_label
-      @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { id: current_instructeur.groupe_instructeur_ids, procedure: procedure })
+      @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { procedure: procedure })
+      @bulk_message = current_instructeur.bulk_messages.build
+      @dossiers_without_groupe_count = procedure.dossiers.state_brouillon.for_groupe_instructeur(nil).count
     end
 
     def create_multiple_commentaire
       @procedure = procedure
       errors = []
-
-      email_usagers_dossiers.each do |dossier|
-        commentaire = CommentaireService.create(current_instructeur, dossier, commentaire_params)
+      bulk_message = current_instructeur.bulk_messages.build(bulk_message_params)
+      dossiers = procedure.dossiers.state_brouillon.for_groupe_instructeur(nil)
+      dossiers.each do |dossier|
+        commentaire = CommentaireService.create(current_instructeur, dossier, bulk_message_params.except(:targets))
         if commentaire.errors.empty?
           commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
         else
@@ -244,8 +243,15 @@ module Instructeurs
         end
       end
 
-      valid_dossiers_count = email_usagers_dossiers.count - errors.count
-      create_bulk_message_mail(valid_dossiers_count, Dossier.states.fetch(:brouillon))
+      valid_dossiers_count = dossiers.count - errors.count
+      bulk_message.assign_attributes(
+        dossier_count: valid_dossiers_count,
+        dossier_state: Dossier.states.fetch(:brouillon),
+        sent_at: Time.zone.now,
+        instructeur_id: current_instructeur.id,
+        groupe_instructeurs: GroupeInstructeur.for_dossiers(dossiers)
+      )
+      bulk_message.save!
 
       if errors.empty?
         flash[:notice] = "Tous les messages ont été envoyés avec succès"
@@ -261,18 +267,6 @@ module Instructeurs
     end
 
     private
-
-    def create_bulk_message_mail(dossier_count, dossier_state)
-      BulkMessage.create(
-        dossier_count: dossier_count,
-        dossier_state: dossier_state,
-        body: commentaire_params[:body],
-        sent_at: Time.zone.now,
-        instructeur_id: current_instructeur.id,
-        piece_jointe: commentaire_params[:piece_jointe],
-        groupe_instructeurs: email_usagers_groupe_instructeurs
-      )
-    end
 
     def assign_to_params
       params.require(:assign_to)
@@ -355,20 +349,8 @@ module Instructeurs
       @current_filters ||= procedure_presentation.filters.fetch(statut, [])
     end
 
-    def email_usagers_dossiers
-      procedure.dossiers.state_brouillon.where(groupe_instructeur: current_instructeur.groupe_instructeur_ids).includes(:groupe_instructeur)
-    end
-
-    def email_usagers_groupe_instructeurs_label
-      email_usagers_dossiers.map(&:groupe_instructeur).uniq.map(&:label)
-    end
-
-    def email_usagers_groupe_instructeurs
-      email_usagers_dossiers.map(&:groupe_instructeur).uniq
-    end
-
-    def commentaire_params
-      params.require(:commentaire).permit(:body, :piece_jointe)
+    def bulk_message_params
+      params.require(:bulk_message).permit(:body)
     end
   end
 end

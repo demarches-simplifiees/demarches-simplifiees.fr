@@ -1,19 +1,5 @@
-# == Schema Information
-#
-# Table name: procedure_revisions
-#
-#  id                           :bigint           not null, primary key
-#  migrated_champ_routage       :boolean
-#  published_at                 :datetime
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  attestation_template_id      :bigint
-#  dossier_submitted_message_id :bigint
-#  procedure_id                 :bigint           not null
-#
 class ProcedureRevision < ApplicationRecord
   self.implicit_order_column = :created_at
-  self.ignored_columns += [:migrated_champ_routage]
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
 
@@ -164,7 +150,7 @@ class ProcedureRevision < ApplicationRecord
 
   def dossier_for_preview(user)
     dossier = Dossier
-      .create_with(groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier, autorisation_donnees: true)
+      .create_with(autorisation_donnees: true)
       .find_or_initialize_by(revision: self, user: user, for_procedure_preview: true, state: Dossier.states.fetch(:brouillon))
 
     if dossier.new_record?
@@ -238,7 +224,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def routable_types_de_champ
-    types_de_champ_public.filter { |tdc| [:drop_down_list].include?(tdc.type_champ.to_sym) }
+    types_de_champ_public.filter(&:routable?)
   end
 
   private

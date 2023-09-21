@@ -7,6 +7,7 @@ class Dsfr::InputComponent < ApplicationComponent
   # use it to indicate detailed about the inputs, ex: https://www.systeme-de-design.gouv.fr/elements-d-interface/modeles-et-blocs-fonctionnels/demande-de-mot-de-passe
   # it uses aria-describedby on input and link it to yielded content
   renders_one :describedby
+  renders_one :label
 
   def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true)
     @form = form
@@ -14,6 +15,10 @@ class Dsfr::InputComponent < ApplicationComponent
     @input_type = input_type
     @opts = opts
     @required = required
+  end
+
+  def dsfr_champ_container
+    :div
   end
 
   # add invalid class on input when input is invalid
@@ -46,7 +51,11 @@ class Dsfr::InputComponent < ApplicationComponent
 
   # i18n lookups
   def label
-    object.class.human_attribute_name(@attribute)
+    get_slot(:label).presence || default_label
+  end
+
+  def dsfr_input_classname
+    'fr-input'
   end
 
   # kind of input helpers
@@ -63,4 +72,8 @@ class Dsfr::InputComponent < ApplicationComponent
   end
 
   private
+
+  def default_label
+    object.class.human_attribute_name(@attribute)
+  end
 end

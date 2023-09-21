@@ -1,19 +1,3 @@
-# == Schema Information
-#
-# Table name: types_de_champ
-#
-#  id          :integer          not null, primary key
-#  condition   :jsonb
-#  description :text
-#  libelle     :string
-#  mandatory   :boolean          default(FALSE)
-#  options     :jsonb
-#  private     :boolean          default(FALSE), not null
-#  type_champ  :string
-#  created_at  :datetime
-#  updated_at  :datetime
-#  stable_id   :bigint
-#
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 
@@ -113,6 +97,14 @@ class TypeDeChamp < ApplicationRecord
     epci: 'epci',
     cojo: 'cojo'
   }
+
+  ROUTABLE_TYPES = [
+    type_champs.fetch(:drop_down_list),
+    type_champs.fetch(:communes),
+    type_champs.fetch(:departements),
+    type_champs.fetch(:regions),
+    type_champs.fetch(:epci)
+  ]
 
   store_accessor :options,
                  :cadastres,
@@ -493,14 +485,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  # historicaly we added a blank ("") option by default to avoid wrong selection
-  #   see self.parse_drop_down_list_value
-  #   then rails decided to add this blank ("") option when the select is required
-  #   so we revert this change
-  def options_without_empty_value_when_mandatory(options)
-    mandatory? ? options.compact_blank : options
-  end
-
   def drop_down_list_options?
     drop_down_list_options.any?
   end
@@ -588,6 +572,10 @@ class TypeDeChamp < ApplicationRecord
     else
       true
     end
+  end
+
+  def routable?
+    type_champ.in?(ROUTABLE_TYPES)
   end
 
   private

@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: groupe_instructeurs
-#
-#  id           :bigint           not null, primary key
-#  closed       :boolean          default(FALSE)
-#  label        :text             not null
-#  routing_rule :jsonb
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  procedure_id :bigint           not null
-#
 class GroupeInstructeur < ApplicationRecord
   include Logic
   DEFAUT_LABEL = 'défaut'
@@ -25,16 +13,11 @@ class GroupeInstructeur < ApplicationRecord
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 
   has_one :defaut_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :defaut_groupe_instructeur_id, dependent: :nullify, inverse_of: :defaut_groupe_instructeur
+  has_one :contact_information
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
-  validates :closed, acceptance: { accept: [false] }, if: -> do
-    if closed
-      (other_groupe_instructeurs.map(&:closed) + [closed]).all?
-    else
-      false
-    end
-  end
+  validates :closed, acceptance: { accept: [false] }, if: -> { (self == procedure.defaut_groupe_instructeur) }
 
   before_validation -> { label&.strip! }
 
@@ -42,7 +25,7 @@ class GroupeInstructeur < ApplicationRecord
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
   scope :active, -> { where(closed: false) }
   scope :closed, -> { where(closed: true) }
-
+  scope :for_dossiers, -> (dossiers) { joins(:dossiers).where(dossiers: dossiers).distinct(:id) }
   def add(instructeur)
     return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)
@@ -91,9 +74,12 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def invalid_rule?
-    rule = routing_rule
-    return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
-    return true if !routing_rule_matches_tdc?
+    !valid_rule?
+  end
+
+  def valid_rule?
+    return false if routing_rule.nil?
+    ([routing_rule.left, routing_rule, routing_rule.right] in [ChampValue, Eq | NotEq, Constant]) && routing_rule_matches_tdc?
   end
 
   def non_unique_rule?
@@ -117,7 +103,15 @@ class GroupeInstructeur < ApplicationRecord
 
   def routing_rule_matches_tdc?
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
-    options = routing_tdc.options_with_drop_down_other
+
+    options = case routing_tdc.type_champ
+    when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:epci)
+      APIGeoService.departements.map { _1[:code] }
+    when TypeDeChamp.type_champs.fetch(:regions)
+      APIGeoService.regions.map { _1[:code] }
+    when TypeDeChamp.type_champs.fetch(:drop_down_list)
+      routing_tdc.options_with_drop_down_other
+    end
     routing_rule.right.value.in?(options)
   end
 

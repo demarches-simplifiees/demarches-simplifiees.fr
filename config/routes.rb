@@ -58,8 +58,6 @@ Rails.application.routes.draw do
 
     resources :dossiers, only: [:show]
 
-    resources :demandes, only: [:index]
-
     resources :bill_signatures, only: [:index]
 
     resources :exports, only: [:index, :show]
@@ -81,9 +79,6 @@ Rails.application.routes.draw do
       patch :bulk_update, on: :collection
     end
     resources :safe_mailers, only: [:index, :edit, :update, :destroy, :new, :create, :show]
-
-    post 'demandes/create_administrateur'
-    post 'demandes/refuse_administrateur'
 
     authenticate :super_admin do
       mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
@@ -132,6 +127,7 @@ Rails.application.routes.draw do
     get '/users/no_procedure' => 'users/sessions#no_procedure'
     get 'connexion-par-jeton/:id' => 'users/sessions#sign_in_by_link', as: 'sign_in_by_link'
     get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
+    post '/instructeurs/reset-link-sent' => 'users/sessions#reset_link_sent'
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
   end
 
@@ -337,7 +333,6 @@ Rails.application.routes.draw do
 
       collection do
         get 'transferer', to: 'dossiers#transferer_all'
-        get 'recherche'
         resources :transfers, only: [:create, :update, :destroy]
       end
     end
@@ -352,6 +347,8 @@ Rails.application.routes.draw do
     post 'refuse_merge' => 'profil#refuse_merge'
     delete 'france_connect_information' => 'profil#destroy_fci'
   end
+
+  get 'procedures/:id/logo', to: 'procedures#logo', as: :procedure_logo
 
   #
   # Expert
@@ -396,6 +393,7 @@ Rails.application.routes.draw do
         resources :archives, only: [:index, :create]
 
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
+          resource :contact_information
           member do
             post 'add_instructeur'
             delete 'remove_instructeur'

@@ -73,6 +73,8 @@ module Instructeurs
       @avis = Avis.new
       if @dossier.procedure.experts_require_administrateur_invitation?
         @experts_emails = dossier.procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
+      else
+        @experts_emails = @dossier.procedure.experts.map(&:email).sort
       end
     end
 
@@ -81,11 +83,14 @@ module Instructeurs
       @avis = Avis.new
       if @dossier.procedure.experts_require_administrateur_invitation?
         @experts_emails = dossier.procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
+      else
+        @experts_emails = @dossier.procedure.experts.map(&:email).sort
       end
     end
 
     def personnes_impliquees
-      @following_instructeurs_emails = dossier.followers_instructeurs.map(&:email)
+      # sort following_instructeurs (last follower on top) for the API of Agence de l'Eau Loire-Bretagne
+      @following_instructeurs_emails = dossier.followers_instructeurs.joins(:follows).merge(Follow.order(id: :desc)).map(&:email)
       previous_followers = dossier.previous_followers_instructeurs - dossier.followers_instructeurs
       @previous_following_instructeurs_emails = previous_followers.map(&:email)
       @avis_emails = dossier.experts.map(&:email)

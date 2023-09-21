@@ -15,10 +15,6 @@ class Dossiers::NotifiedToggleComponent < ApplicationComponent
     sorted_by_notifications? && order_desc?
   end
 
-  def icon_class_name
-    active? ? 'fr-fi-checkbox' : 'fr-fi-checkbox-blank'
-  end
-
   def order_desc?
     current_order == 'desc'
   end

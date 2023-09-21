@@ -5,6 +5,8 @@ en:
         details_no_name: "The file was submitted by a FranceConnect account."
         details: "The file was submitted by the account of %{name}."
         details_updated: "The file was submitted by the account of %{name}, authenticated by FranceConnect on %{date}."
+      motivation:
+        refused_by_svr: "The service handling your file was unable to process it within the time limit set by the Silence Vaut Rejet law."
       header:
         expires_at:
           brouillon: "Expires on %{date} (%{duree_conservation_totale} months after this file was created)"

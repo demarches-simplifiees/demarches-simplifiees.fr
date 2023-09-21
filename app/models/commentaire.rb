@@ -1,22 +1,6 @@
-# == Schema Information
-#
-# Table name: commentaires
-#
-#  id             :integer          not null, primary key
-#  body           :string
-#  discarded_at   :datetime
-#  email          :string
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  dossier_id     :integer
-#  expert_id      :bigint
-#  instructeur_id :bigint
-#
 class Commentaire < ApplicationRecord
   include Discard::Model
-
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false
-
   belongs_to :instructeur, inverse_of: :commentaires, optional: true
   belongs_to :expert, inverse_of: :commentaires, optional: true
   has_one :dossier_correction, inverse_of: :commentaire, dependent: :nullify

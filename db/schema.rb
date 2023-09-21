@@ -93,6 +93,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
     t.bigint "allowed_procedure_ids", array: true
     t.datetime "created_at", precision: 6, null: false
     t.string "encrypted_token", null: false
+    t.datetime "last_v1_authenticated_at"
+    t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "version", default: 3, null: false
@@ -610,6 +612,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
     t.index ["source"], name: "index_geo_areas_on_source"
   end
 
+  create_table "contact_informations", force: :cascade do |t|
+    t.text "adresse", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.text "horaires", null: false
+    t.string "nom", null: false
+    t.string "telephone", null: false
+    t.datetime "updated_at", null: false
+    t.index ["groupe_instructeur_id", "nom"], name: "index_contact_informations_on_gi_and_nom", unique: true
+    t.index ["groupe_instructeur_id"], name: "index_contact_informations_on_groupe_instructeur_id"
+  end
+
   create_table "groupe_instructeurs", force: :cascade do |t|
     t.boolean "closed", default: false
     t.datetime "created_at", precision: 6, null: false
@@ -776,7 +791,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
     t.datetime "published_at", precision: 6
     t.bigint "published_revision_id"
     t.bigint "replaced_by_procedure_id"
-    t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
@@ -1044,6 +1058,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "contact_informations", "groupe_instructeurs"
   add_foreign_key "dossier_assignments", "dossiers"
   add_foreign_key "dossier_batch_operations", "batch_operations"
   add_foreign_key "dossier_batch_operations", "dossiers"

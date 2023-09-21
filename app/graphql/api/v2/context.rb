@@ -59,6 +59,7 @@ class API::V2::Context < GraphQL::Query::Context
     {
       graphql_query: query.query_string,
       graphql_variables: query.provided_variables&.to_json,
+      graphql_mutation: mutation?,
       graphql_null_error: errors.any? { _1.is_a? GraphQL::InvalidNullError }.presence,
       graphql_timeout_error: errors.any? { _1.is_a? GraphQL::Schema::Timeout::TimeoutError }.presence
     }.compact
@@ -66,21 +67,15 @@ class API::V2::Context < GraphQL::Query::Context
 
   private
 
+  def mutation?
+    query.lookahead.selections.any? { _1.field.type.respond_to?(:mutation) }.presence
+  rescue
+    false
+  end
+
   def compute_demarche_authorization(demarche)
     # procedure_ids and token are passed from graphql controller
-    if self[:procedure_ids].present?
-      self[:procedure_ids].include?(demarche.id)
-    elsif self[:token].present?
-      token = APIToken.find_and_verify(self[:token], demarche.administrateurs)
-      if token.present?
-        Current.user = token.administrateur.user
-        true
-      else
-        false
-      end
-    else
-      false
-    end
+    self[:procedure_ids].include?(demarche.id)
   end
 
   # This is a query AST visitor that we use to check

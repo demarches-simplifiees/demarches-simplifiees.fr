@@ -69,12 +69,22 @@
                   = pj.libelle
                   = t('utils.no_mandatory') if !pj.mandatory?
 
-    - if procedure.persisted? && procedure.estimated_duration_visible?
+    - if @usual_traitement_time.present?
       %section.fr-accordion
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-117", "aria-expanded" => "false" }
-            = t('shared.procedure_description.estimated_fill_duration_title')
+            = t('shared.procedure_description.usual_traitement_time_title')
+
         #accordion-117.fr-collapse
+          = t('shared.procedure_description.usual_traitement_time_detail_html', traitement_time: distance_of_time_in_words(@usual_traitement_time), percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, days: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS, href: statistiques_path(procedure.path) )
+
+
+    - if procedure.persisted? && procedure.estimated_duration_visible?
+      %section.fr-accordion
+        %h2.fr-accordion__title
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-118", "aria-expanded" => "false" }
+            = t('shared.procedure_description.estimated_fill_duration_title')
+        #accordion-118.fr-collapse
           = t('shared.procedure_description.estimated_fill_duration_detail', estimated_minutes: estimated_fill_duration_minutes(procedure))
 
   .fr-my-3w
@@ -89,4 +99,3 @@
           = t('shared.procedure_description.sva_svr_prevision_date',
             delay: t("x_#{procedure.sva_svr_configuration.unit}", count: procedure.sva_svr_configuration.period.to_i, scope: 'datetime.distance_in_words'),
             date: l(SVASVRDecisionDateCalculatorService.decision_date_from_today(procedure), format: :long).gsub(' ', " "))
-

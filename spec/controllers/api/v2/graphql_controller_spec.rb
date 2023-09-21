@@ -3,7 +3,6 @@ describe API::V2::GraphqlController do
   let(:generated_token) { APIToken.generate(admin) }
   let(:api_token) { generated_token.first }
   let(:token) { generated_token.second }
-  let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
   let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
@@ -113,20 +112,6 @@ describe API::V2::GraphqlController do
 
   subject { post :execute, params: { query: query, variables: variables, operationName: operation_name, queryId: query_id }.compact, as: :json }
 
-  context "when authenticated with legacy token" do
-    let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(legacy_token) }
-
-    before do
-      request.env['HTTP_AUTHORIZATION'] = authorization_header
-      admin.api_tokens.first.update(version: 1)
-    end
-
-    it "returns the demarche" do
-      expect(gql_errors).to eq(nil)
-      expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
-    end
-  end
-
   context "when authenticated" do
     let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
 
@@ -160,18 +145,6 @@ describe API::V2::GraphqlController do
 
         context 'v3' do
           let(:token) { token_v3 }
-          it {
-            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
-          }
-        end
-        context 'v2' do
-          let(:token) { APIToken.send(:message_verifier).generate([another_administrateur.id, plain_token]) }
-          it {
-            expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
-          }
-        end
-        context 'v1' do
-          let(:token) { plain_token }
           it {
             expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
           }
@@ -1499,13 +1472,15 @@ describe API::V2::GraphqlController do
             message {
               body
             }
+            errors {
+              message
+            }
           }
         }"
       end
 
       it "should return error" do
-        expect(gql_data[:dossierEnvoyerMessage]).to eq(nil)
-        expect(gql_errors).not_to eq(nil)
+        expect(gql_data[:dossierEnvoyerMessage][:errors].first[:message]).to eq("Le jeton utilisé est configuré seulement en lecture")
       end
     end
   end

@@ -4,13 +4,12 @@ class API::Public::V1::DossiersController < API::Public::V1::BaseController
   def create
     dossier = Dossier.new(
       revision: @procedure.active_revision,
-      groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
       state: Dossier.states.fetch(:brouillon),
       prefilled: true
     )
     dossier.build_default_individual
     if dossier.save
-      dossier.prefill!(PrefillParams.new(dossier, params.to_unsafe_h).to_a)
+      dossier.prefill!(PrefillChamps.new(dossier, params.to_unsafe_h).to_a, PrefillIdentity.new(dossier, params.to_unsafe_h).to_h)
       render json: serialize_dossier(dossier), status: :created
     else
       render_bad_request(dossier.errors.full_messages.to_sentence)

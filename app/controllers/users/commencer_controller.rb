@@ -20,6 +20,8 @@ module Users
         check_prefilled_dossier_ownership if @prefilled_dossier
       end
 
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+
       render 'commencer/show'
     end
 
@@ -76,11 +78,11 @@ module Users
     end
 
     def commencer_page_is_reloaded?
-      session[:prefill_token].present? && session[:prefill_params_digest] == PrefillParams.digest(params)
+      session[:prefill_token].present? && session[:prefill_params_digest] == PrefillChamps.digest(params)
     end
 
     def prefill_params_present?
-      params.keys.find { |param| param.split('_').first == "champ" }
+      params.keys.find { ['champ', 'identite'].include?(_1.split('_').first) }
     end
 
     def retrieve_procedure
@@ -94,16 +96,15 @@ module Users
     def build_prefilled_dossier
       @prefilled_dossier = Dossier.new(
         revision: @revision,
-        groupe_instructeur: @procedure.defaut_groupe_instructeur_for_new_dossier,
         state: Dossier.states.fetch(:brouillon),
         prefilled: true
       )
       @prefilled_dossier.build_default_individual
       if @prefilled_dossier.save
-        @prefilled_dossier.prefill!(PrefillParams.new(@prefilled_dossier, params.to_unsafe_h).to_a)
+        @prefilled_dossier.prefill!(PrefillChamps.new(@prefilled_dossier, params.to_unsafe_h).to_a, PrefillIdentity.new(@prefilled_dossier, params.to_unsafe_h).to_h)
       end
       session[:prefill_token] = @prefilled_dossier.prefill_token
-      session[:prefill_params_digest] = PrefillParams.digest(params)
+      session[:prefill_params_digest] = PrefillChamps.digest(params)
     end
 
     def retrieve_prefilled_dossier(prefill_token)

@@ -466,27 +466,63 @@ describe Dossier, type: :model do
     after { Timecop.return }
 
     context 'when dossier is en_construction' do
-      before do
-        dossier.passer_en_construction!
-        dossier.reload
+      context 'when the procedure.routing_enabled? is false' do
+        before do
+          dossier.passer_en_construction!
+          dossier.reload
+        end
+
+        it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
+        it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
+        it { expect(dossier.depose_at).to eq(beginning_of_day) }
+        it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
+        it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
+
+        it 'should keep first en_construction_at date' do
+          Timecop.return
+          dossier.passer_en_instruction!(instructeur: instructeur)
+          dossier.repasser_en_construction!(instructeur: instructeur)
+
+          expect(dossier.traitements.size).to eq(3)
+          expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
+          expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
+          expect(dossier.depose_at).to eq(beginning_of_day)
+          expect(dossier.en_construction_at).to be > beginning_of_day
+        end
       end
 
-      it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
-      it { expect(dossier.depose_at).to eq(beginning_of_day) }
-      it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
-      it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
+      context 'when the procedure.routing_enabled? is true' do
+        include Logic
+        let(:gi_libelle) { 'Paris' }
+        let!(:procedure) do
+          create(:procedure,
+                 types_de_champ_public: [
+                   { type: :drop_down_list, libelle: 'Votre ville', options: [gi_libelle, 'Lyon', 'Marseille'] },
+                   { type: :text, libelle: 'Un champ texte' }
+                 ])
+        end
+        let!(:drop_down_tdc) { procedure.draft_revision.types_de_champ.first }
+        let(:dossier) { create(:dossier, :brouillon, user:, procedure:, groupe_instructeur: nil) }
+        let(:gi) do
+          create(:groupe_instructeur,
+                   routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id),
+                                       constant(gi_libelle)))
+        end
 
-      it 'should keep first en_construction_at date' do
-        Timecop.return
-        dossier.passer_en_instruction!(instructeur: instructeur)
-        dossier.repasser_en_construction!(instructeur: instructeur)
+        before do
+          procedure.groupe_instructeurs = [gi]
+          procedure.defaut_groupe_instructeur = gi
+          procedure.save!
+          procedure.toggle_routing
+          dossier.champs.first.value = gi_libelle
+          dossier.save!
+          dossier.passer_en_construction!
+          dossier.reload
+        end
 
-        expect(dossier.traitements.size).to eq(3)
-        expect(dossier.traitements.first.processed_at).to eq(beginning_of_day)
-        expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
-        expect(dossier.depose_at).to eq(beginning_of_day)
-        expect(dossier.en_construction_at).to be > beginning_of_day
+        it 'RoutingEngine.compute' do
+          expect(dossier.groupe_instructeur).not_to be_nil
+        end
       end
     end
 
@@ -1067,6 +1103,46 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#refuser_automatiquement' do
+    context 'as svr procedure' do
+      let(:last_operation) { dossier.dossier_operation_logs.last }
+      let(:procedure) { create(:procedure, :for_individual, :published, :svr) }
+      let(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:, sva_svr_decision_on: Date.current, en_instruction_at: DateTime.new(2021, 5, 1, 12)) }
+
+      before {
+        freeze_time
+        allow(NotificationMailer).to receive(:send_refuse_notification).and_return(double(deliver_later: true))
+      }
+
+      subject {
+        dossier.refuser_automatiquement!
+        dossier.reload
+      }
+
+      it 'refuses dossier automatiquement' do
+        expect(subject.en_instruction_at).to eq(DateTime.new(2021, 5, 1, 12))
+        expect(subject.processed_at).to eq(Time.current)
+        expect(subject.declarative_triggered_at).to be_nil
+        expect(subject.sva_svr_decision_triggered_at).to eq(Time.current)
+        expect(subject.motivation).to include("dans le délai imparti")
+        expect(subject).to be_refuse
+        expect(last_operation.operation).to eq('refuser')
+        expect(last_operation.automatic_operation?).to be_truthy
+        expect(NotificationMailer).to have_received(:send_refuse_notification).with(dossier)
+        expect(subject.attestation).to be_nil
+        expect(dossier.commentaires.count).to eq(1)
+      end
+
+      context 'for an user having english locale' do
+        before { dossier.user.update!(locale: 'en') }
+
+        it 'translates the motivation' do
+          expect(subject.motivation).to include('within the time limit')
+        end
+      end
+    end
+  end
+
   describe '#passer_en_instruction!' do
     let(:dossier) { create(:dossier, :en_construction, en_construction_close_to_expiration_notice_sent_at: Time.zone.now) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
@@ -1288,6 +1364,60 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#can_refuser_automatiquement?' do
+    let(:dossier) { create(:dossier, state: initial_state) }
+    let(:initial_state) { :en_instruction }
+
+    it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+
+    context 'when procedure is sva/svr' do
+      let(:decision) { :svr }
+
+      before do
+        dossier.procedure.update!(sva_svr: SVASVRConfiguration.new(decision:).attributes)
+        dossier.update!(sva_svr_decision_on: Date.current)
+      end
+
+      it { expect(dossier.can_refuser_automatiquement?).to be_truthy }
+
+      context 'when procedure is svr' do
+        let(:decision) { :svr }
+
+        before do
+          dossier.procedure.update!(sva_svr: SVASVRConfiguration.new(decision:).attributes)
+          dossier.update!(sva_svr_decision_on: Date.current)
+        end
+
+        it { expect(dossier.can_refuser_automatiquement?).to be_truthy }
+
+        context 'when sva_svr_decision_on is in the future' do
+          before { dossier.update!(sva_svr_decision_on: 1.day.from_now) }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+
+        context 'when dossier has pending correction' do
+          let(:dossier) { create(:dossier, :en_construction) }
+          let!(:dossier_correction) { create(:dossier_correction, dossier:) }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+
+        context 'when decision is sva' do
+          let(:decision) { :sva }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+
+        context 'when dossier was already processed by svr' do
+          before { dossier.update!(sva_svr_decision_triggered_at: 1.hour.ago) }
+
+          it { expect(dossier.can_refuser_automatiquement?).to be_falsey }
+        end
+      end
+    end
+  end
+
   describe "can't transition to terminer when etablissement is in degraded mode" do
     let(:instructeur) { create(:instructeur) }
     let(:motivation) { 'motivation' }
@@ -1458,7 +1588,7 @@ describe Dossier, type: :model do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now, sva_svr_decision_on: 1.day.ago) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1476,6 +1606,7 @@ describe Dossier, type: :model do
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
     it { expect(dossier.attestation).to be_nil }
+    it { expect(dossier.sva_svr_decision_on).to be_nil }
     it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
     it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
@@ -1897,6 +2028,17 @@ describe Dossier, type: :model do
       expect { dossier.procedure.reset! }.not_to raise_error
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
+
+    it "call logger with context" do
+      json_message = nil
+
+      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
+      dossier.destroy
+
+      expect(JSON.parse(json_message)).to a_hash_including(
+        { message: "Dossier destroyed", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
+      )
+    end
   end
 
   describe "#spreadsheet_columns" do
@@ -1907,7 +2049,13 @@ describe Dossier, type: :model do
     context 'procedure sva' do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
 
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date SVA", :sva_svr_decision_on]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVA", :sva_svr_decision_on]) }
+    end
+
+    context 'procedure svr' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :svr)) }
+
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVR", :sva_svr_decision_on]) }
     end
   end
 

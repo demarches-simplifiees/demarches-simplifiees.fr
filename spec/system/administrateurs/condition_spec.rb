@@ -1,4 +1,4 @@
-describe 'As an administrateur I can edit types de champ condition', js: true do
+describe 'As an administrateur I can edit types de champ condition', js: true, retry: 3 do
   include Logic
 
   let(:administrateur) { procedure.administrateurs.first }

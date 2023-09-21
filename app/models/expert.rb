@@ -1,12 +1,3 @@
-# == Schema Information
-#
-# Table name: experts
-#
-#  id         :bigint           not null, primary key
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  user_id    :bigint           not null
-#
 class Expert < ApplicationRecord
   belongs_to :user
   has_many :experts_procedures
@@ -43,6 +34,7 @@ class Expert < ApplicationRecord
 
     procedure_with_new, procedure_without_new = old_expert
       .procedures
+      .with_discarded
       .partition { |p| p.experts.exists?(id) }
 
     ExpertsProcedure

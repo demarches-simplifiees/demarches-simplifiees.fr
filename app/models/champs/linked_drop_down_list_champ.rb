@@ -1,25 +1,3 @@
-# == Schema Information
-#
-# Table name: champs
-#
-#  id                             :integer          not null, primary key
-#  data                           :jsonb
-#  fetch_external_data_exceptions :string           is an Array
-#  prefilled                      :boolean          default(FALSE)
-#  private                        :boolean          default(FALSE), not null
-#  rebased_at                     :datetime
-#  type                           :string
-#  value                          :string
-#  value_json                     :jsonb
-#  created_at                     :datetime
-#  updated_at                     :datetime
-#  dossier_id                     :integer
-#  etablissement_id               :integer
-#  external_id                    :string
-#  parent_id                      :bigint
-#  row_id                         :string
-#  type_de_champ_id               :integer
-#
 class Champs::LinkedDropDownListChamp < Champ
   delegate :primary_options, :secondary_options, to: 'type_de_champ.dynamic_type'
 
@@ -92,8 +70,12 @@ class Champs::LinkedDropDownListChamp < Champ
     options.include?(primary_value) || options.include?(secondary_value)
   end
 
-  def remove_option(options)
-    update_column(:value, nil)
+  def remove_option(options, touch = false)
+    if touch
+      update(value: nil)
+    else
+      update_column(:value, nil)
+    end
   end
 
   private

@@ -47,7 +47,7 @@ describe 'France Connect Particulier Connexion' do
           end
 
           context 'and an user exists with the same email' do
-            let!(:user) { create(:user, email: email, password: 'my-s3cure-p4ssword') }
+            let!(:user) { create(:user, email: email, password: SECURE_PASSWORD) }
 
             before do
               page.find('.fr-connect').click
@@ -59,7 +59,7 @@ describe 'France Connect Particulier Connexion' do
 
             scenario 'it merges its account' do
               page.find('#it-is-mine').click
-              fill_in 'password', with: 'my-s3cure-p4ssword'
+              fill_in 'password', with: SECURE_PASSWORD
               click_on 'Fusionner les comptes'
 
               expect(page).to have_content('Dossiers')
@@ -73,8 +73,8 @@ describe 'France Connect Particulier Connexion' do
               expect(page).to have_content('Dossiers')
             end
 
-            context 'and the user wants an email that belongs to another account', js: true do
-              let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: 'my-s3cure-p4ssword') }
+            context 'and the user wants an email that belongs to another account', js: true, retry: 3 do
+              let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: SECURE_PASSWORD) }
 
               scenario 'it uses another email that belongs to another account' do
                 page.find('#it-is-not-mine').click
@@ -84,7 +84,7 @@ describe 'France Connect Particulier Connexion' do
                 expect(page).to have_css('#password-for-another-account', visible: true)
 
                 within '#new-account-password-confirmation' do
-                  fill_in 'password', with: 'my-s3cure-p4ssword'
+                  fill_in 'password', with: SECURE_PASSWORD
                   click_on 'Fusionner les comptes'
                 end
 

@@ -47,6 +47,16 @@ describe 'shared/_procedure_description', type: :view do
     end
   end
 
+  context 'when procedure has usual_traitement_time' do
+    before { assign(:usual_traitement_time, 1.day) }
+
+    it 'shows a usual traitement text' do
+      subject
+      expect(rendered).to have_text("Quels sont des délais d'instruction pour cette démarche ?")
+      expect(rendered).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 1 jour.")
+    end
+  end
+
   context 'when the procedure has pieces jointes' do
     let(:procedure) { create(:procedure, :draft, :with_titre_identite, :with_piece_justificative, :with_siret) }
     it 'shows the pieces jointes list for draft procedure' do

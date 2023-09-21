@@ -230,14 +230,25 @@ en:
         info_html: To do this, select the fields below that you want to prefill.<br> You will then find a prefill link at the bottom of this page, which you will just need to copy, adapt by replacing the default values, and share.<br> In the same way, you will find an example of a cURL request at the bottom of the page to adapt if you want to prefill the folders via API.
         champ_id: ID
         champ_type: Type
-        champ_add: Add
-        champ_remove: Remove
-        champ_unavailable: Unavailable
+        entity_add: Add
+        entity_remove: Remove
+        entity_unavailable: Unavailable
+        title:
+          prenom: First name (identity)
+          nom: Last name (identity)
+          genre: Gender (identity)
+        description:
+          prenom: The first name of the owner of the file
+          nom: The last name of the owner of the file
+          genre: The gender name of the owner of the file
         possible_values:
           link:
             title: All possible values
             text: See all possible values
           title: Values
+          prenom: A first name
+          nom: A last name
+          genre: '"M." for Mister, "Mme" for Madam'
           text_html: A short text
           textarea_html: A long text
           decimal_number_html: A decimal number
@@ -251,7 +262,7 @@ en:
           pays_html: An <a href="https://en.wikipedia.org/wiki/ISO_3166-2" target="_blank" rel="noopener noreferrer">ISO 3166-2 country code</a>
           regions_html: An <a href="https://fr.wikipedia.org/wiki/R%C3%A9gion_fran%C3%A7aise" target="_blank" rel="noopener noreferrer">INSEE region code</a>
           departements_html: A <a href="https://fr.wikipedia.org/wiki/Num%C3%A9rotation_des_d%C3%A9partements_fran%C3%A7ais" target="_blank">department number</a>
-          communes_html: An array of the department code and the <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">INSEE commune code</a>
+          communes_html: An array of the postal code and the <a href="https://geo.api.gouv.fr/communes" target="_blank" rel="noopener noreferrer">INSEE commune code</a>
           address_html: An address EXACTLY formated as the label returned by <a href="https://adresse.data.gouv.fr" target="_blank" rel="noopener noreferrer">the Base Adresse Nationale</a>
           drop_down_list_html: A choice among those selected when the procedure was created
           date_html: ISO8601 date
@@ -265,6 +276,9 @@ en:
           dossier_link_html: The file ID, as integer
         examples:
           title: Example
+          prenom: "Jean"
+          nom: "Dupont"
+          genre: "M."
           text: Short text
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
@@ -284,6 +298,7 @@ en:
           dossier_link: 42
           rna: "W503726238"
           siret: "13002526500013"
+          civilite: "M."
         prefill_link_title: Prefill link (GET)
         prefill_link_info: Use the button to copy the link, then remplace the values with your data.
         prefill_link_too_long: Warning, the prefill link is too long and may not work on all browsers.
@@ -380,7 +395,7 @@ en:
         batch_operation:
           enabled: "Add file %{dossier_id} to the selection for the bulk operation"
           disabled: "Impossible to add file %{dossier_id} to the selection because it is already in a bulk operation"
-        personalize: Personalize the table
+        personalize: Personalize
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
         save: Save
@@ -397,12 +412,18 @@ en:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           identity_data: Identity data
+          identity_siret: Identify your establishment
           all_required: All fields are required.
           civility: Civility
           first_name: First Name
           last_name: Last Name
-          birthdate: Date de naissance
-          complete_data: Please complete your personal information to access the procedure.
+          birthdate: Birth date
+          complete_data: Complete your personal information to access the procedure.
+          complete_siret: Fill the SIRET number of your company, administration or association to start the procedure.
+          siret_help_html: To find your SIRET number, use %{annuaire_link} or ask your accounting department.
+          siret_placeholder: 14-digit SIRET number
+          annuaire_link_title: Search for a SIRET number in the Companies Directory
+          siret_loading: Information retrieval…
           continue: Continue
         merci:
           thanks: Thank you!
@@ -456,6 +477,8 @@ en:
         search:
           search_file: Search a file (File number, keywords)
           simple: Search
+          result_term_title: Search result for « %{search_terms} »
+          result_procedure_title: and procedure « %{procedure_libelle} »
         secondary_menu: Secondary menu
         index:
           dossiers: "My files"
@@ -463,6 +486,8 @@ en:
           n_dossier: "File n."
           no_result_title: No files
           no_result_text_html: "To fill a procedure, contact your administration asking for the procedure link. <br> It should look like %{app_base}/commencer/xxx."
+          no_result_text_with_search: found with search terms
+          no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
           procedure_closed: This procedure has been closed, you will not be able to submit a file again from the procedure link, contact your administration for more information.
@@ -491,7 +516,6 @@ en:
       sessions:
         new:
           sign_in: Sign in on %{application_name}
-          password: Password (minimum length %{min_length} characters)
           remember_me: Remember me
           reset_password: Forgot password?
           connection: Sign in
@@ -515,7 +539,7 @@ en:
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
           check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
       shared:
-        email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
+        email_can_take_a_while_html: <strong>Please note</strong> that this email can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
   modal:
     publish:
@@ -548,6 +572,7 @@ en:
         << : *default_attributes
       super_admin:
         << : *default_attributes
+        otp_attempt: 'OTP code (only if you have already activated 2FA)'
       procedure:
         zone: This procedure is run by
       champs:
@@ -670,8 +695,8 @@ en:
       invalid_siret_checksum: "The SIRET number is invalid."
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'Sorry, we did not find any establishment registered under this SIRET number.'
-      siret_network_error: 'Désolé, la récupération des informations SIRET est temporairement indisponible. Veuillez réessayer dans quelques instants.'
-      siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.'
+      siret_network_error: 'Sorry, SIRET information retrieval is temporarily unavailable. Please try again shortly.'
+      siret_not_found: "We haven't found an establishment corresponding to this SIRET number."
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."
@@ -849,6 +874,8 @@ en:
       estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
       estimated_fill_duration_title: What is the procedure estimated fill time ?
       estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
+      usual_traitement_time_title: What are the processing times for this procedure?
+      usual_traitement_time_detail_html: Usually, files in this procedure are processed within %{traitement_time}. This estimate is calculated automatically from the processing times observed on %{percentile}% of requests that have been processed during the last %{days} days. Actual lead time may vary. For more information, you can <a href="%{href}" target="_blank" rel="noopener noreferrer">consult the statistics page</a> of this procedure.
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation
       sva_svr_title: "This procedure applies the « %{rule} »"

@@ -50,15 +50,31 @@ describe PrefillDescriptionsController, type: :controller do
   describe "#update" do
     render_views
 
-    let(:procedure) { create(:procedure, :published, opendata: true) }
+    let(:procedure) { create(:procedure, :for_individual, :published, opendata: true) }
     let(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }
     let(:type_de_champ2) { create(:type_de_champ_text, procedure: procedure) }
 
     subject(:update_request) do
-      patch :update, params: { path: procedure.path, type_de_champ: params }, format: :turbo_stream
+      patch :update, params: { path: procedure.path, procedure: params }, format: :turbo_stream
     end
 
     before { update_request }
+
+    context 'when adding identity information' do
+      let(:params) { { identity_items_selected: "prenom" } }
+
+      it { expect(response).to render_template(:update) }
+
+      it "includes the prefill URL" do
+        expect(response.body).to include(commencer_path(path: procedure.path))
+        expect(response.body).to include("identite_prenom=#{I18n.t("views.prefill_descriptions.edit.examples.prenom")}")
+      end
+
+      it "includes the prefill query" do
+        expect(response.body).to include(api_public_v1_dossiers_path(procedure))
+        expect(response.body).to include("&quot;identite_prenom&quot;:&quot;#{I18n.t("views.prefill_descriptions.edit.examples.prenom")}&quot;")
+      end
+    end
 
     context 'when adding a type_de_champ_id' do
       let(:type_de_champ_to_add) { create(:type_de_champ_text, procedure: procedure) }
@@ -113,7 +129,6 @@ describe PrefillDescriptionsController, type: :controller do
     end
 
     context 'when removing the last type de champ' do
-      let(:type_de_champ_to_remove) { type_de_champ }
       let(:params) { { selected_type_de_champ_ids: '' } }
 
       it { expect(response).to render_template(:update) }

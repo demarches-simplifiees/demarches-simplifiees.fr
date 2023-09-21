@@ -10,28 +10,32 @@
 
     %p.fr-hint-text.fr-mb-3w= t('views.users.dossiers.identite.all_required')
 
-    %fieldset
-      %legend
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend--regular.fr-fieldset__legend
         = f.label :gender, t('activerecord.attributes.individual.gender')
-      .radios
-        %label
-          = f.radio_button :gender, Individual::GENDER_FEMALE, required: true
-          = Individual.human_attribute_name('gender.female')
-        %label
-          = f.radio_button :gender, Individual::GENDER_MALE, required: true
-          = Individual.human_attribute_name('gender.male')
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-radio-group
+          = f.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
+          %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
+            = Individual.human_attribute_name('gender.female')
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-radio-group
+          = f.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
+          %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
+            = Individual.human_attribute_name('gender.male')
 
     .flex
       .inline-champ
-        = f.label :prenom
-        = f.text_field :prenom, class: "small", required: true, autocomplete: 'given-name'
+        = f.label :prenom, for: 'identite_champ_first_name', class: 'fr-label'
+        = f.text_field :prenom, class: 'fr-input', required: true, autocomplete: 'given-name', id: 'identite_champ_first_name'
       .inline-champ
-        = f.label :nom
-        = f.text_field :nom, class: "small", required: true, autocomplete: 'family-name'
+        = f.label :nom, class: 'fr-label', for: 'identite_champ_last_name'
+        = f.text_field :nom, class: "fr-input", required: true, autocomplete: 'family-name', id: 'identite_champ_last_name'
 
 
     - if @dossier.procedure.ask_birthday?
-      = f.label :birthdate
-      = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "small"
+      .fr-input-group
+        = f.label :birthdate, class: "fr-label", for: 'identite_champ_birthdate'
+        = f.date_field :birthdate, value: @dossier.individual.birthdate, placeholder: 'format : AAAA-MM-JJ', required: true, class: "fr-input", "aria-describedby" => "identite-champ-date-birthday", id: 'identite_champ_birthdate'
 
-    = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn fr-btn--lg"
+    = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn fr-btn--lg fr-mt-4w"

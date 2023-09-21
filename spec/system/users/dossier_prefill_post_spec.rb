@@ -1,7 +1,7 @@
-describe 'Prefilling a dossier (with a POST request):', js: true do
-  let(:password) { 'my-s3cure-p4ssword' }
+describe 'Prefilling a dossier (with a POST request):', js: true, retry: 3 do
+  let(:password) { SECURE_PASSWORD }
 
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :for_individual, :published) }
   let(:dossier) { procedure.dossiers.last }
 
   let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
@@ -39,6 +39,9 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:integer_repetition_value) { "42" }
   let(:dossier_link_value) { '42' }
   let(:annuaire_education_value) { '0050009H' }
+  let(:prenom_value) { 'Jean' }
+  let(:nom_value) { 'Dupont' }
+  let(:genre_value) { 'M.' }
 
   before do
     stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret_value}/)
@@ -152,7 +155,10 @@ describe 'Prefilling a dossier (with a POST request):', js: true do
         "champ_#{type_de_champ_dossier_link.to_typed_id_for_query}" => dossier_link_value,
         "champ_#{type_de_champ_commune.to_typed_id_for_query}" => commune_value,
         "champ_#{type_de_champ_address.to_typed_id_for_query}" => address_value,
-        "champ_#{type_de_champ_annuaire_education.to_typed_id_for_query}" => annuaire_education_value
+        "champ_#{type_de_champ_annuaire_education.to_typed_id_for_query}" => annuaire_education_value,
+        "identite_prenom" => prenom_value,
+        "identite_nom" => nom_value,
+        "identite_genre" => genre_value
       }.to_json
     JSON.parse(session.response.body)["dossier_url"].gsub("http://www.example.com", "")
   end

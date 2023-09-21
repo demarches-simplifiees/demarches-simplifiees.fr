@@ -356,6 +356,29 @@ describe Experts::AvisController, type: :controller do
       end
     end
 
+    describe '#avis_new' do
+      let!(:revoked_expert) { create(:experts_procedure, revoked_at: 2.days.ago, procedure: procedure, expert: create(:expert)).expert }
+      before do
+        get :avis_new, params: { procedure_id: procedure.id, id: avis_without_answer.id }
+      end
+      context 'when procedure experts need administrateur invitation' do
+        let!(:procedure) { create(:procedure, experts_require_administrateur_invitation: true) }
+
+        it 'limit invited email list to not revoked experts' do
+          expect(assigns(:experts_emails)).to include(experts_procedure.expert.user.email)
+          expect(assigns(:experts_emails)).not_to include(revoked_expert.user.email)
+        end
+      end
+      context 'when procedure experts can be anyone' do
+        let!(:procedure) { create(:procedure, experts_require_administrateur_invitation: false) }
+
+        it 'prefill autocomplete with all experts in the procedure' do
+          expect(assigns(:experts_emails)).to include(experts_procedure.expert.user.email)
+          expect(assigns(:experts_emails)).to include(revoked_expert.user.email)
+        end
+      end
+    end
+
     describe '#create_avis' do
       let(:previous_avis_confidentiel) { false }
       let(:previous_revoked_at) { nil }
@@ -559,7 +582,7 @@ describe Experts::AvisController, type: :controller do
           procedure_id:,
           email: avis.expert.email,
           user: {
-            password: 'my-s3cure-p4ssword'
+            password: SECURE_PASSWORD
           }
         }
       end
@@ -575,7 +598,7 @@ describe Experts::AvisController, type: :controller do
 
         it 'saves the expert new password' do
           subject
-          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be true
+          expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be true
         end
 
         it { is_expected.to redirect_to expert_all_avis_path }
@@ -586,7 +609,7 @@ describe Experts::AvisController, type: :controller do
 
         it 'doesn’t change the expert password' do
           subject
-          expect(expert.user.reload.valid_password?('my-s3cure-p4ssword')).to be false
+          expect(expert.user.reload.valid_password?(SECURE_PASSWORD)).to be false
         end
 
         it { is_expected.to redirect_to new_user_session_url }

@@ -18,11 +18,11 @@
         %h4= t('.request_correction')
         L’usager sera informé que des modifications sont attendues.
 
-        - if sva?
-          - if sva_resume_method == :reset
-            Le délai du SVA sera réinitialisé lorqu’il déclarera avoir complété le dossier.
+        - if sva_svr_enabled?
+          - if sva_svr_resume_method == :reset
+            Le délai du #{sva_svr_human_decision} sera réinitialisé lorqu’il déclarera avoir complété le dossier.
           - else
-            Le délai du SVA reprendra lorsqu’il déclarera avoir corrigé le dossier.
+            Le délai du #{sva_svr_human_decision} reprendra lorsqu’il déclarera avoir corrigé le dossier.
 
   - menu.with_item(class: "inactive form-inside fr-pt-1v") do
     = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier:,
@@ -36,14 +36,14 @@
         title: 'Marquer en attente de corrections',
         confirm: 'Envoyer la demande de corrections ?'}
 
-  - if sva?
+  - if sva_svr_enabled?
     - menu.with_item do
       = link_to('#', onclick: "DS.showMotivation(event, 'pending_completion');", role: 'menuitem') do
         %span.fr-icon.fr-icon-error-warning-line.fr-text-default--warning.fr-mt-1v{ "aria-hidden": "true" }
 
         .dropdown-description
           %h4= t('.request_completion')
-          L’usager sera informé que son dossier est incomplet. Le délai du SVA sera réinitialisé lorque il déclarera avoir complété le dossier.
+          L’usager sera informé que son dossier est incomplet. Le délai du #{sva_svr_human_decision} sera réinitialisé lorque il déclarera avoir complété le dossier.
 
     - menu.with_item(class: "inactive form-inside fr-pt-1v") do
       = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier:,

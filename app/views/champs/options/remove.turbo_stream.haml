@@ -1,3 +1,1 @@
-= fields_for @champ.input_name, @champ do |form|
-  = turbo_stream.replace @champ.input_group_id do
-    = render EditableChamp::EditableChampComponent.new champ: @champ, form:
+= render partial: 'shared/dossiers/update_champs', locals: { to_show: @to_show, to_hide: @to_hide, to_update: @to_update, dossier: @dossier }

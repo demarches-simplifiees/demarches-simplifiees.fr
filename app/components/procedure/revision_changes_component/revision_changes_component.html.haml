@@ -74,7 +74,7 @@
           - if !total_dossiers.zero? && !change.can_rebase?
             .fr-alert.fr-alert--warning.fr-mt-1v
               %p= t('.breaking_change', count: total_dossiers)
-          - if removed.present? && change.type_de_champ.used_by_routing_rules?
+          - if (removed.present? || added.present? ) && change.type_de_champ.used_by_routing_rules?
             .fr-alert.fr-alert--warning.fr-mt-1v
               = t(".#{prefix}.update_drop_down_options_alert", label: change.label)
       - when :drop_down_other
@@ -148,3 +148,7 @@
   - if @private_move_changes.present?
     - list.with_item do
       = t(".private.move", count: @private_move_changes.size)
+  - if @previous_revision.procedure.routing_enabled? && @previous_revision.procedure.groupe_instructeurs.any?(&:invalid_rule?)
+    - list.with_item do
+      .fr-alert.fr-alert--warning.fr-mt-1v
+        = t(".invalid_routing_rules_alert")

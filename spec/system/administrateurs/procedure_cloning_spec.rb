@@ -1,6 +1,6 @@
 require 'system/administrateurs/procedure_spec_helper'
 
-describe 'As an administrateur I wanna clone a procedure', js: true do
+describe 'As an administrateur I wanna clone a procedure', js: true, retry: 3 do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }
@@ -47,7 +47,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # select zone
       find("#zones .fr-btn").click
-      check Zone.last.current_label
+      check Zone.last.current_label, allow_label_click: true
       click_on 'Enregistrer'
 
       # then publish
@@ -82,7 +82,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # select zone
       find("#zones .fr-btn").click
-      check Zone.last.current_label
+      check Zone.last.current_label, allow_label_click: true
       click_on 'Enregistrer'
 
       # then publish

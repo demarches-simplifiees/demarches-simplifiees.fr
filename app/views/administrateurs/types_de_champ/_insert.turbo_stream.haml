@@ -26,3 +26,8 @@
     - render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @coordinate.revision, is_annotation: @coordinate.private?)
 
 = turbo_stream.dispatch 'sortable:sort'
+
+- if @created&.coordinate&.child?
+  = turbo_stream.hide dom_id(@created.coordinate.parent, :type_de_champ_add_button)
+- elsif @destroyed&.child? && @destroyed.parent.empty?
+  = turbo_stream.show dom_id(@destroyed.parent, :type_de_champ_add_button)

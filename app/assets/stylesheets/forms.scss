@@ -20,7 +20,8 @@
     font-style: italic;
   }
 
-  .fr-input-group {
+  .fr-input-group,
+  .fr-select-group {
     margin-bottom: 1rem;
   }
 
@@ -116,16 +117,8 @@
       visibility: visible;
     }
 
-    // Move checkbox to the top-left side of the label
-    &.editable-champ-checkbox {
-      label.admin-default-zone {
-        font-weight: bold;
-      }
-    }
-
     &.editable-champ-checkbox {
       label {
-        padding-left: 28px;
         font-weight: normal;
       }
 
@@ -210,18 +203,17 @@
     }
   }
 
-  .fr-label {
+  .fr-label .fr-hint-text > *,
+  .fr-fieldset__legend .fr-hint-text > * {
     // la description d'un champ peut contenir du markup (markdown->html),
     // on herite donc la fontsize/mrgin/padding du fr-hint-text
-    .fr-hint-text > * {
-      font-size: inherit;
-      margin: inherit;
-      padding: inherit;
-    }
+    font-size: inherit;
+    margin: inherit;
+    padding: inherit;
   }
 
   input[type=password],
-  select {
+  select:not(.fr-select) {
     display: block;
     margin-bottom: 0;
 
@@ -246,9 +238,7 @@
     }
   }
 
-  input[type=text]:not([data-address='true']),
-  select {
-    border-radius: 4px;
+  input[type=text]:not([data-address='true']) {
     border: solid 1px $border-grey;
     padding: $default-padding;
 
@@ -524,7 +514,7 @@
     }
   }
 
-  fieldset ~ .spinner {
+  fieldset + .spinner {
     position: relative;
     top: -($default-fields-spacer / 2);
   }
@@ -630,4 +620,19 @@ textarea::placeholder {
   padding: $default-padding 0;
   background-color: $white;
   z-index: 2;
+}
+
+.fr-menu__list {
+  padding: $default-spacer;
+  overflow-y: auto;
+  max-height: 300px;
+
+  .fr-menu__item {
+    list-style-type: none;
+    margin-bottom: $default-spacer;
+
+    &[aria-selected] {
+      font-weight: bold;
+    }
+  }
 }

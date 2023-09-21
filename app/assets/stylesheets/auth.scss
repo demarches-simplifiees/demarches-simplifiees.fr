@@ -10,12 +10,6 @@
   //
   // The procedure description can still be read from the /commencer
   // pages.
-  @media (max-width: $two-columns-breakpoint) {
-    .agent-intro {
-      display: none;
-    }
-  }
-
   .column {
     padding-top: $default-spacer;
   }
@@ -35,14 +29,6 @@
   .remember-me {
     display: inline-block;
     margin-bottom: 0;
-  }
-
-  hr {
-    margin-top: 30px;
-    margin-bottom: 30px;
-    background-color: $grey;
-    border: none;
-    height: 1px;
   }
 
   .register {

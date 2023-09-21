@@ -563,7 +563,7 @@ describe Procedure do
     let(:logo) { Rack::Test::UploadedFile.new('spec/fixtures/files/white.png', 'image/png') }
     let(:signature) { Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png') }
 
-    let(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1") }
+    let(:groupe_instructeur_1) { create(:groupe_instructeur, procedure: procedure, label: "groupe_1", contact_information: create(:contact_information)) }
     let(:instructeur_1) { create(:instructeur) }
     let(:instructeur_2) { create(:instructeur) }
     let!(:assign_to_1) { create(:assign_to, procedure: procedure, groupe_instructeur: groupe_instructeur_1, instructeur: instructeur_1) }
@@ -593,6 +593,11 @@ describe Procedure do
         procedure.groupe_instructeurs.last.update(closed: true)
 
         expect { subject }.not_to raise_error
+      end
+
+      it 'should clone groupe instructeur services' do
+        expect(procedure.groupe_instructeurs.last.contact_information).not_to eq nil
+        expect(subject.groupe_instructeurs.last.contact_information).not_to eq nil
       end
     end
 
@@ -705,6 +710,13 @@ describe Procedure do
 
       it 'should not clone service' do
         expect(subject.service).to eq(nil)
+      end
+
+      context 'with groupe instructeur services' do
+        it 'should not clone groupe instructeur services' do
+          expect(procedure.groupe_instructeurs.last.contact_information).not_to eq nil
+          expect(subject.groupe_instructeurs.last.contact_information).to eq nil
+        end
       end
 
       it 'should discard old pj information' do

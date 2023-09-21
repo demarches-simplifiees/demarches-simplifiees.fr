@@ -1,4 +1,4 @@
-describe 'The routing with rules', js: true do
+describe 'The routing with rules', js: true, retry: 3 do
   let(:password) { 'a very complicated password' }
 
   let(:procedure) do
@@ -187,7 +187,7 @@ describe 'The routing with rules', js: true do
     click_on 'Modifier mon dossier'
 
     fill_in litteraire_user.dossiers.first.champs_public.first.libelle, with: 'some value'
-    wait_for_autosave(false)
+    wait_for_autosave
 
     click_on 'Déposer les modifications'
 
@@ -262,9 +262,9 @@ describe 'The routing with rules', js: true do
     visit commencer_path(path: procedure.reload.path)
     click_on 'Commencer la démarche'
 
-    choose 'Monsieur'
-    fill_in 'individual_nom',    with: 'Nom'
-    fill_in 'individual_prenom', with: 'Prenom'
+    find('label', text: 'Monsieur').click
+    fill_in('identite_champ_first_name', with: 'Prenom')
+    fill_in('identite_champ_last_name', with: 'Nom')
     click_button('Continuer')
 
     # the old system should not be present
@@ -286,7 +286,7 @@ describe 'The routing with rules', js: true do
     click_on "Modifier mon dossier"
 
     choose(new_group)
-    wait_for_autosave(false)
+    wait_for_autosave
 
     expect(page).to have_text(new_group)
 

@@ -1,4 +1,4 @@
-describe 'As an instructeur', js: true do
+describe 'As an instructeur', js: true, retry: 3 do
   let(:administrateur) { create(:administrateur, :with_procedure) }
   let(:procedure) { administrateur.procedures.first }
   let(:instructeur_email) { 'new_instructeur@gouv.fr' }
@@ -20,7 +20,7 @@ describe 'As an instructeur', js: true do
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"
-    fill_in :user_password, with: 'my-s3cure-p4ssword'
+    fill_in :user_password, with: SECURE_PASSWORD
 
     click_button 'Définir le mot de passe'
 

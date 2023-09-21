@@ -21,10 +21,11 @@ class ApplicationController < ActionController::Base
   around_action :switch_locale
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
-    :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale
+    :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale, :current_expert_not_instructeur?
 
   before_action do
     Current.request_id = request.uuid
+    Current.user = current_user
   end
 
   def staging_authenticate
@@ -59,6 +60,10 @@ class ApplicationController < ActionController::Base
 
   def current_expert
     current_user&.expert
+  end
+
+  def current_expert_not_instructeur?
+    current_user&.expert? && !current_user&.instructeur?
   end
 
   def expert_signed_in?

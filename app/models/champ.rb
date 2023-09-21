@@ -1,25 +1,3 @@
-# == Schema Information
-#
-# Table name: champs
-#
-#  id                             :integer          not null, primary key
-#  data                           :jsonb
-#  fetch_external_data_exceptions :string           is an Array
-#  prefilled                      :boolean
-#  private                        :boolean          default(FALSE), not null
-#  rebased_at                     :datetime
-#  type                           :string
-#  value                          :string
-#  value_json                     :jsonb
-#  created_at                     :datetime
-#  updated_at                     :datetime
-#  dossier_id                     :integer
-#  etablissement_id               :integer
-#  external_id                    :string
-#  parent_id                      :bigint
-#  row_id                         :string
-#  type_de_champ_id               :integer
-#
 class Champ < ApplicationRecord
   include ChampConditionalConcern
 
@@ -84,6 +62,7 @@ class Champ < ApplicationRecord
   delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true
 
   delegate :revision, to: :dossier, prefix: true
+  delegate :used_by_routing_rules?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
@@ -179,6 +158,14 @@ class Champ < ApplicationRecord
 
   def html_label?
     true
+  end
+
+  def legend_label?
+    false
+  end
+
+  def single_checkbox?
+    false
   end
 
   def input_group_id
