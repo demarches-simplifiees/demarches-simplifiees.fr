@@ -3,7 +3,7 @@ module Administrateurs
     include ActiveSupport::NumberHelper
     include Logic
     include UninterlacePngConcern
-    include PreviewAttestationConcern
+    include GroupeInstructeursSignatureConcern
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
@@ -359,26 +359,6 @@ module Administrateurs
 
       respond_to do |format|
         format.csv { send_data data, filename: "#{procedure.id}-groupe-instructeurs-#{Date.today}.csv" }
-      end
-    end
-
-    def add_signature
-      @procedure = procedure
-      @groupe_instructeur = groupe_instructeur
-      @instructeurs = paginated_instructeurs
-      @available_instructeur_emails = available_instructeur_emails
-
-      signature_file = params[:groupe_instructeur]&.delete('signature')
-
-      if params[:groupe_instructeur].nil? || signature_file.blank?
-        flash[:alert] = "Aucun fichier joint pour le tampon de l'attestation"
-        render :show
-      else
-        params[:groupe_instructeur][:signature] = uninterlace_png(signature_file)
-        if @groupe_instructeur.update(signature_params)
-          redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur),
-            notice: "Le tampon de l'attestation a bien été ajouté"
-        end
       end
     end
 
