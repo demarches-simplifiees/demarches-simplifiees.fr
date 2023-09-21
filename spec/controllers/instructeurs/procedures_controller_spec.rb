@@ -723,5 +723,10 @@ describe Instructeurs::ProceduresController, type: :controller do
         expect(assigns(:exports)).to eq([])
       end
     end
+
+    context 'when logged in through super admin' do
+      let(:manager) { true }
+      it { is_expected.to have_http_status(:forbidden) }
+    end
   end
 end
