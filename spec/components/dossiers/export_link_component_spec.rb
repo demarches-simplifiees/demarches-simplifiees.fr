@@ -1,7 +1,7 @@
 RSpec.describe Dossiers::ExportLinkComponent, type: :component do
   let(:procedure) { create(:procedure) }
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
-  let(:export) { create(:export, groupe_instructeurs: [groupe_instructeur], updated_at: 5.minutes.ago) }
+  let(:export) { create(:export, groupe_instructeurs: [groupe_instructeur], updated_at: 5.minutes.ago, created_at: 10.minutes.ago) }
   let(:export_url) { double("ExportUrl", call: "/some/fake/path") }
 
   let(:component) { described_class.new(procedure:, exports: [export], export_url:) }
@@ -34,7 +34,7 @@ RSpec.describe Dossiers::ExportLinkComponent, type: :component do
       end
 
       it "displays the pending label" do
-        expect(subject).to include("demandé il y a 5 minutes")
+        expect(subject).to include("demandé il y a 10 minutes")
       end
 
       it "displays a refresh page button" do

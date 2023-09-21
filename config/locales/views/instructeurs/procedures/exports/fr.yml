@@ -5,5 +5,7 @@ fr:
       export_pending_html: Nous générons cet export. Vous pourrez le télécharger dans quelques minutes depuis <a href="%{url}">la liste des exports</a>.
       exports:
         title: Liste des exports
-        export_description: Cette liste d'exports contient les derniers exports que vous avez demandés ainsi que ceux demandés par les instructeurs appartenant au même groupe.
+        export_description: |
+          Cette liste d'exports contient les derniers exports que vous avez demandés ainsi que ceux demandés par les instructeurs appartenant au même groupe.
+          Ils sont disponibles pendant %{expiration_time} heures après leur génération.
         no_export_html: Vous n'avez pas d'export pour le moment. <br> Vous ne trouvez pas un export ? Il a peut-être expiré, les exports sont supprimés au bout de %{expiration_time} heures.

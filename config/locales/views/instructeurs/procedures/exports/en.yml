@@ -5,5 +5,7 @@ en:
       export_pending_html: We generate this export. You will be able to download it in a few minutes from <a href="%{url}">the exports list</a>.
       exports:
         title: Exports list
-        export_description: This list of exports contains the last exports you requested as well as those requested by instructors belonging to the same group.
-        no_export_html: You have no export at the moment. <br> Can't find an export? It may have expired, exports are deleted after %{expiration_time} hours.
+        export_description: |
+          This list of exports contains the last exports you requested as well as those requested by instructors belonging to the same group.
+          They are available for %{expiration_time} hours after generation.
+        no_export_html: You have no export at the moment. <br> Can't find an export? It may have expired, exports are deleted after %{expiration_time} hours.

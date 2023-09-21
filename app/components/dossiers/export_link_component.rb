@@ -23,18 +23,17 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
     if export.available?
       t(".ready_link_label_time_info", export_time: helpers.time_ago_in_words(export.updated_at))
     else
-      t(".not_ready_link_label_time_info", export_time: helpers.time_ago_in_words(export.updated_at))
+      t(".not_ready_link_label_time_info", export_time: helpers.time_ago_in_words(export.created_at))
     end
   end
 
   def export_title(export)
-    count = export.count
-
-    case count
-    when nil
-      t(".export_title", export_tabs: human_export_status(export), export_format: export.format)
+    if export.procedure_presentation_id.nil?
+      t(".export_title_everything", export_format: export.format)
+    elsif export.tous?
+      t(".export_title", export_format: export.format, count: export.count)
     else
-      t(".export_title_counted", export_tabs: human_export_status(export), export_format: export.format, count: count)
+      t(".export_title_with_tab", export_tabs: human_export_status(export), export_format: export.format, count: export.count)
     end
   end
 
@@ -56,8 +55,7 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
 
   def export_button(export)
     if export.available?
-      title = t(".everything_ready", export_format: ".#{export.format}")
-      render Dsfr::DownloadComponent.new(attachment: export.file, name: title)
+      render Dsfr::DownloadComponent.new(attachment: export.file, name: t('.download_export'))
     elsif export.pending?
       content_tag(:a, t('.refresh_page'), { href: "", class: 'fr-btn fr-btn--sm fr-btn--tertiary' })
     end

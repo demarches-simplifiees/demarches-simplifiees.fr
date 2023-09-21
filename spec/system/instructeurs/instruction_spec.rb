@@ -130,7 +130,7 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
     end
 
     page.driver.browser.navigate.refresh
-    expect(page).to have_text('Télécharger l’export .csv')
+    expect(page).to have_text('Télécharger l’export')
   end
 
   scenario 'A instructeur can see the personnes impliquées' do

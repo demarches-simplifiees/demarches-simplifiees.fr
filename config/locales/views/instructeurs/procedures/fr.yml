@@ -23,5 +23,3 @@ fr:
         title: "%{procedure_libelle} - n°%{procedure_id} - administrateurs"
       stats:
         title: Statistiques
-      exports:
-        title: Exports
