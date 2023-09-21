@@ -141,4 +141,28 @@ RSpec.describe Export, type: :model do
       end
     end
   end
+
+  describe '.for_groupe_instructeurs' do
+    let!(:groupe_instructeur1) { create(:groupe_instructeur) }
+    let!(:groupe_instructeur2) { create(:groupe_instructeur) }
+    let!(:groupe_instructeur3) { create(:groupe_instructeur) }
+
+    let!(:export1) { create(:export, groupe_instructeurs: [groupe_instructeur1, groupe_instructeur2]) }
+    let!(:export2) { create(:export, groupe_instructeurs: [groupe_instructeur2]) }
+    let!(:export3) { create(:export, groupe_instructeurs: [groupe_instructeur3]) }
+
+    it 'returns exports for the specified groupe instructeurs' do
+      expect(Export.for_groupe_instructeurs([groupe_instructeur1.id, groupe_instructeur2.id]))
+        .to match_array([export1, export2])
+    end
+
+    it 'does not return exports not associated with the specified groupe instructeurs' do
+      expect(Export.for_groupe_instructeurs([groupe_instructeur1.id])).not_to include(export2, export3)
+    end
+
+    it 'returns unique exports even if they belong to multiple matching groupe instructeurs' do
+      results = Export.for_groupe_instructeurs([groupe_instructeur1.id])
+      expect(results.count).to eq(1)
+    end
+  end
 end
