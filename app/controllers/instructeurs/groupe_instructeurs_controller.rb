@@ -1,5 +1,7 @@
 module Instructeurs
   class GroupeInstructeursController < InstructeurController
+    include UninterlacePngConcern
+
     ITEMS_PER_PAGE = 25
 
     def index
@@ -11,6 +13,26 @@ module Instructeurs
       @procedure = procedure
       @groupe_instructeur = groupe_instructeur
       @instructeurs = paginated_instructeurs
+    end
+
+    def add_signature
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @instructeurs = paginated_instructeurs
+
+      signature_file = params[:groupe_instructeur][:signature]
+
+      if params[:groupe_instructeur].nil? || signature_file.blank?
+        flash[:alert] = "Aucun fichier joint pour le tampon de l'attestation"
+        render :show
+      else
+        file = uninterlace_png(signature_file)
+        params[:groupe_instructeur][:signature] = file
+        if @groupe_instructeur.update(signature: file)
+          redirect_to instructeur_groupe_path(@procedure, @groupe_instructeur),
+            notice: "Le tampon de l'attestation a bien été ajouté"
+        end
+      end
     end
 
     def add_instructeur

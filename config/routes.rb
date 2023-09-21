@@ -395,6 +395,7 @@ Rails.application.routes.draw do
           member do
             post 'add_instructeur'
             delete 'remove_instructeur'
+            post 'add_signature'
           end
         end
 
