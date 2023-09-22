@@ -495,6 +495,7 @@ class Procedure < ApplicationRecord
       procedure.encrypted_api_particulier_token = nil
       procedure.opendata = true
       procedure.api_particulier_scopes = []
+      procedure.routing_enabled = false
     else
       procedure.administrateurs = administrateurs
     end
