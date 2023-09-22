@@ -107,9 +107,7 @@ module DossierCloneConcern
     transaction do
       cloned_dossier.save!(validate: !fork)
 
-      if fork
-        cloned_dossier.rebase!
-      end
+      cloned_dossier.rebase!
     end
 
     if fork
