@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
+        image: postgis/postgis:14-3.3
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
+        image: postgis/postgis:14-3.3
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test
@@ -107,7 +107,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:14
+        image: postgis/postgis:14-3.3
         env:
           POSTGRES_USER: tps_test
           POSTGRES_DB: tps_test

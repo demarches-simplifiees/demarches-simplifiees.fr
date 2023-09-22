@@ -322,7 +322,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "commentaire_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
-    t.string "kind", default: "correction", null: false
     t.datetime "resolved_at"
     t.datetime "updated_at", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
@@ -409,8 +408,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "revision_id"
     t.text "search_terms"
     t.string "state"
-    t.date "sva_svr_decision_on"
-    t.datetime "sva_svr_decision_triggered_at"
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.datetime "updated_at"
     t.integer "user_id"
@@ -768,7 +765,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
-    t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.datetime "test_started_at"
     t.datetime "unpublished_at"
@@ -852,14 +848,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "updated_at", null: false
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
-  end
-
-  create_table "spatial_ref_sys", primary_key: "srid", id: :integer, default: nil, force: :cascade do |t|
-    t.string "auth_name", limit: 256
-    t.integer "auth_srid"
-    t.string "proj4text", limit: 2048
-    t.string "srtext", limit: 2048
-    t.check_constraint "srid > 0 AND srid <= 998999", name: "spatial_ref_sys_srid_check"
   end
 
   create_table "stats", force: :cascade do |t|
