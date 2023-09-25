@@ -8,3 +8,8 @@ en:
           association_date_creation: Creation date
           association_date_declaration: Declaration date
           association_date_publication: Publication date
+  activerecord:
+    attributes:
+      champs/rna_champ:
+          hints:
+            value: "Expected format : W123456789. Exemple : W503726238"

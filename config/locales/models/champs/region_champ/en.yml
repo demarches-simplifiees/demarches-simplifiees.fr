@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/region_champ:
+        hints:
+          value: "Enter region"

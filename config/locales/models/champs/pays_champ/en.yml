@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/pays_champ:
+        hints:
+          value: "Enter country"

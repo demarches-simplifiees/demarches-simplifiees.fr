@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/decimal_number_champ:
+        hints:
+          value: "You can enter up to 3 decimal places after the decimal point"
