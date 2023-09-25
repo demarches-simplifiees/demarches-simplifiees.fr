@@ -105,8 +105,8 @@ Rails.application.configure do
       user_name:            ENV.fetch("SMTP_USER"),
       password:             ENV.fetch("SMTP_PASS"),
       authentication:       ENV.fetch("SMTP_AUTHENTICATION"),
-      enable_starttls_auto: ENV.fetch("SMTP_TLS").present?,
-      ssl:                  ENV.fetch("SMTP_SSL").present?
+      enable_starttls_auto: ENV.fetch("SMTP_STARTTLS", "enabled").present?,
+      tls:                  ENV.fetch("SMTP_TLS", "").present?
     }
   elsif ENV['SENDMAIL_ENABLED'] == 'enabled'
     config.action_mailer.delivery_method = :sendmail
