@@ -540,6 +540,19 @@ class Procedure < ApplicationRecord
     whitelisted_at.present?
   end
 
+  def hidden_as_template?
+    hidden_at_as_template.present?
+  end
+
+  def hide_as_template!
+    touch(:hidden_at_as_template)
+  end
+
+  def unhide_as_template!
+    self.hidden_at_as_template = nil
+    save
+  end
+
   def total_dossier
     self.dossiers.state_not_brouillon.size
   end

@@ -27,6 +27,18 @@ module Manager
       redirect_to manager_procedure_path(procedure)
     end
 
+    def hide_as_template
+      procedure.hide_as_template!
+      flash[:notice] = "Démarche non visible dans les modèles."
+      redirect_to manager_procedure_path(procedure)
+    end
+
+    def unhide_as_template
+      procedure.unhide_as_template!
+      flash[:notice] = "Démarche visible dans les modèles."
+      redirect_to manager_procedure_path(procedure)
+    end
+
     def discard
       procedure.discard_and_keep_track!(current_super_admin)
 

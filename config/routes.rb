@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   namespace :manager do
     resources :procedures, only: [:index, :show, :edit, :update] do
       post 'whitelist', on: :member
+      post 'hide_as_template', on: :member
+      post 'unhide_as_template', on: :member
       post 'draft', on: :member
       post 'discard', on: :member
       post 'restore', on: :member

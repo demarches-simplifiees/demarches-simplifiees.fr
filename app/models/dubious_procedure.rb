@@ -2,7 +2,7 @@ class DubiousProcedure
   extend ActiveModel::Naming
   extend ActiveModel::Translation
 
-  attr_accessor :id, :libelle, :dubious_champs, :aasm_state
+  attr_accessor :id, :libelle, :dubious_champs, :aasm_state, :hidden_at_as_template
 
   FORBIDDEN_KEYWORDS = [
     'NIR', 'RNIPP', 'race', 'religion', 'RIB',
@@ -19,7 +19,7 @@ class DubiousProcedure
   def self.all
     procedures_with_forbidden_tdcs_sql = TypeDeChamp
       .joins(:procedure)
-      .select("string_agg(types_de_champ.libelle, ' - ') as dubious_champs, procedures.id as procedure_id, procedures.libelle as procedure_libelle, procedures.aasm_state as procedure_aasm_state")
+      .select("string_agg(types_de_champ.libelle, ' - ') as dubious_champs, procedures.id as procedure_id, procedures.libelle as procedure_libelle, procedures.aasm_state as procedure_aasm_state, procedures.hidden_at_as_template as procedure_hidden_at_as_template")
       .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
       .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
       .where(procedures: { closed_at: nil, whitelisted_at: nil })
@@ -33,6 +33,7 @@ class DubiousProcedure
       p.dubious_champs = procedure["dubious_champs"]
       p.libelle = procedure["procedure_libelle"]
       p.aasm_state = procedure["procedure_aasm_state"]
+      p.hidden_at_as_template = procedure["procedure_hidden_at_as_template"]
       p
     end
   end

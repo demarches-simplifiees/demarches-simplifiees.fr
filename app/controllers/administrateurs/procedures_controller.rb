@@ -79,6 +79,7 @@ module Administrateurs
 
       significant_procedure_ids = Procedure
         .publiees_ou_closes
+        .where(hidden_at_as_template: nil)
         .where('unaccent(libelle) ILIKE unaccent(?)', "%#{query}%")
         .joins(:dossiers)
         .group("procedures.id")
@@ -402,7 +403,7 @@ module Administrateurs
     def administrateurs
       @filter = ProceduresFilter.new(current_administrateur, params)
       pids = AdministrateursProcedure.select(:administrateur_id).where(procedure: filter_procedures(@filter).map { |p| p["id"] })
-      @admins = Administrateur.includes(:user, :procedures).where(id: pids)
+      @admins = Administrateur.includes(:user, :procedures).where(id: pids, procedures: { hidden_at_as_template: nil })
       @admins = @admins.where('unaccent(users.email) ILIKE unaccent(?)', "%#{@filter.email}%") if @filter.email.present?
       @admins = paginate(@admins, 'users.email')
     end
@@ -417,6 +418,7 @@ module Administrateurs
 
       procedures_result = Procedure.select(:id).left_joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
+      procedures_result = procedures_result.where(hidden_at_as_template: nil)
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
