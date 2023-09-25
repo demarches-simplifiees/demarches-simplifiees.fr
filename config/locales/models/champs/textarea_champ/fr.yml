@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/textarea_champ:
+        hints:
+          value: "Redimensionnez le champ pour saisir plus de lignes"
