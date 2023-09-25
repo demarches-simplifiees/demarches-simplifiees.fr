@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/decimal_number_champ:
         hints:
-          value: "Vous pouvez saisir jusqu’à 3 décimales après la virgule"
+          value: "Vous pouvez saisir jusqu’à 3 décimales après la virgule. Exemple: 3,14"
