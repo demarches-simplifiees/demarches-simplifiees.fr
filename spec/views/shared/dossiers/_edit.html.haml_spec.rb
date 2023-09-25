@@ -30,9 +30,9 @@ describe 'shared/dossiers/edit', type: :view do
       let(:champ_phone) { create(:champ_phone, dossier: dossier) }
       let(:champs) { [champ_email, champ_phone] }
 
-      it "renders basic placeholders" do
-        expect(subject).to have_css('input[type="email"][placeholder$="exemple.fr"]')
-        expect(subject).to have_css('input[type="tel"][placeholder^="0612"]')
+      it "does not render basic placeholders" do
+        expect(subject).not_to have_css('input[type="email"][placeholder$="exemple.fr"]')
+        expect(subject).not_to have_css('input[type="tel"][placeholder^="0612"]')
       end
     end
   end
