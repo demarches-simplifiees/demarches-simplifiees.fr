@@ -296,6 +296,8 @@
     input[type=email],
     input[type=password],
     input[type=number],
+    input[inputmode=numeric],
+    input[inputmode=decimal],
     input[type=tel] {
       max-width: 500px;
     }
@@ -315,6 +317,8 @@
           &[type='date'],
           &[type='tel'],
           &[type='number'],
+          &[inputmode='numeric'],
+          &[inputmode='decimal'],
           &[type='datetime-local'] {
             width: 33.33%;
           }
