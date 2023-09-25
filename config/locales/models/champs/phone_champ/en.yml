@@ -3,4 +3,4 @@ en:
     attributes:
       champs/phone_champ:
         hints:
-          value: "Phone number must be valid"
+          value: "Phone number must be valid. Example : 0612345678"
