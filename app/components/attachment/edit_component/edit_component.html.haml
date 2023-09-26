@@ -20,7 +20,7 @@
         %p.fr-error-text= error_message
 
   - elsif first?
-    %p.fr-text--sm.fr-text-mention--grey.fr-mb-1w
+    %p.fr-hint-text.fr-mb-1w
       - if max_file_size.present?
         = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
       - if allowed_formats

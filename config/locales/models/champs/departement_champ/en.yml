@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/departement_champ:
+        hints:
+          value: "Enter department code or name"

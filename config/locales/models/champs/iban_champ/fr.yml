@@ -6,3 +6,7 @@ fr:
           attributes:
             value:
               invalid_iban: n’est pas au format IBAN
+    attributes:
+      champs/iban_champ:
+        hints:
+          value: "Exemple (France) : FR76 1234 1234 1234 1234 1234 123"

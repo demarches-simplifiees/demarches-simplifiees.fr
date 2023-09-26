@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/commune_champ:
+        hints:
+          value: "Enter the municipality's zip code, then select the municipality from the list"
