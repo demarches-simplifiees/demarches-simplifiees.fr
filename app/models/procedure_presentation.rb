@@ -209,6 +209,8 @@ class ProcedurePresentation < ApplicationRecord
           dossiers.filter_by_datetimes(column, dates)
         elsif field['column'] == "state" && values.include?("pending_correction")
           dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
+        elsif field['column'] == "state" && values.include?("en_construction")
+          dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
         else
           dossiers.where("dossiers.#{column} IN (?)", values)
         end
