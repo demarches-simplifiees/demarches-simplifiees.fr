@@ -19,6 +19,11 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 - postgresql
 - imagemagick et gsfonts pour générer les filigranes sur les titres d'identité.
 
+nous sommes en cours de migration de delayed_job vers sidekiq pour le traitement des jobs asynchrones.
+pour faire tourner sidekiq, vous aurez besoin de
+
+- redis
+
 #### Développement
 
 - rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
