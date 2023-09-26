@@ -39,6 +39,12 @@ describe Logic::ChampValue do
 
       it { is_expected.to be nil }
     end
+
+    context 'with invalid value' do
+      before { champ.value = 'environ 300' }
+
+      it { is_expected.to be nil }
+    end
   end
 
   context 'decimal tdc' do
@@ -46,6 +52,12 @@ describe Logic::ChampValue do
 
     it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:number) }
     it { is_expected.to eq(42.01) }
+
+    context 'with invalid value' do
+      before { champ.value = 'racine de 2' }
+
+      it { is_expected.to be nil }
+    end
   end
 
   context 'dropdown tdc' do

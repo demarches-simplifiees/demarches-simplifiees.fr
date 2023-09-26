@@ -20,6 +20,8 @@ class Champs::IntegerNumberChamp < Champ
   private
 
   def processed_value
+    return if invalid?
+
     value&.to_i
   end
 end

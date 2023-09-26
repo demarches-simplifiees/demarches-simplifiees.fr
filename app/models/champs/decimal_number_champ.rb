@@ -18,6 +18,8 @@ class Champs::DecimalNumberChamp < Champ
   private
 
   def processed_value
+    return if invalid?
+
     value&.to_f
   end
 end
