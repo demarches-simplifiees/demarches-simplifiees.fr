@@ -18,6 +18,7 @@ class TypeDeChamp < ApplicationRecord
     commune_de_polynesie: 'commune_de_polynesie',
     code_postal_de_polynesie: 'code_postal_de_polynesie',
     numero_dn: 'numero_dn',
+    table_row_selector: 'table_row_selector',
     te_fenua: 'te_fenua',
     visa: 'visa'
   }
@@ -39,6 +40,7 @@ class TypeDeChamp < ApplicationRecord
     code_postal_de_polynesie: LOCALISATION,
     numero_dn: REFERENTIEL_EXTERNE,
     te_fenua: REFERENTIEL_EXTERNE,
+    table_row_selector: REFERENTIEL_EXTERNE,
     visa: STRUCTURE
   }
 
@@ -130,7 +132,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }.merge(INSTANCE_TYPE_CHAMPS)
 
-  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
+  INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users, :table_id]
   INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
   ROUTABLE_TYPES = [
@@ -459,6 +461,10 @@ class TypeDeChamp < ApplicationRecord
 
   def visa?
     type_champ == TypeDeChamp.type_champs.fetch(:visa)
+  end
+
+  def table_row_selector?
+    type_champ == TypeDeChamp.type_champs.fetch(:table_row_selector)
   end
 
   def te_fenua?
