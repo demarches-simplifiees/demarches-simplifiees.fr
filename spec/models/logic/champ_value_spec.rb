@@ -95,6 +95,13 @@ describe Logic::ChampValue do
     end
   end
 
+  context 'departement tdc' do
+    let(:champ) { create(:champ_departements, value: '02') }
+
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
+    it { is_expected.to eq('02') }
+  end
+
   context 'region tdc' do
     let(:champ) { create(:champ_regions, value: 'La Réunion') }
 
