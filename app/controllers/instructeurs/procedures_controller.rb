@@ -21,7 +21,7 @@ module Instructeurs
       @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
       publiees_or_closes_with_dossiers_en_cours = all_procedures.publiees.or(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.ids }))
       @procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.pluck(:id) }))
+      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.ids }))
       @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
       @procedures_draft = all_procedures.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
       @procedures_en_cours_count = publiees_or_closes_with_dossiers_en_cours.count
