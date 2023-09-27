@@ -12,7 +12,7 @@
         = tab_item(t('pluralize.closed', count: @procedures_closes_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closes_count))
 
 .fr-container
-  - if @statut === "en-cours"
+  - if @statut.in? ["publiees", "en-cours"] # FIX ME: @statut === "en-cours" à partir du 1/11/2023
     = render Dsfr::CalloutComponent.new(title: nil) do |c|
       - c.with_body do
         = t(".procedure_en_cours_description")
