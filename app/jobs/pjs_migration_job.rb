@@ -24,6 +24,7 @@ class PjsMigrationJob < ApplicationJob
       client.delete_object(container, old_key)
     end
   rescue Fog::OpenStack::Storage::NotFound
+    blob.attachments.destroy_all
   end
 
   def already_moved?(blob)
