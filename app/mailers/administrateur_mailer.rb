@@ -22,6 +22,14 @@ class AdministrateurMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL)
   end
 
+  def notify_service_without_siret(user_email)
+    @subject = "Siret manquant sur un de vos services"
+
+    mail(to: user_email,
+      subject: @subject,
+      reply_to: CONTACT_EMAIL)
+  end
+
   def api_token_expiration(user, tokens)
     @subject = "Renouvellement de jeton d'API nécessaire"
     @tokens = tokens
