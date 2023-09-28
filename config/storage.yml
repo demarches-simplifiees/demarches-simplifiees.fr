@@ -19,3 +19,11 @@ amazon:
   secret_access_key: <%= ENV.fetch("S3_SECRET_ACCESS_KEY", "") %>
   region: <%= ENV.fetch("S3_REGION", "") %>
   bucket: <%= ENV.fetch("S3_BUCKET", "") %>
+garage:
+  service: S3
+  access_key_id: <%= ENV.fetch("S3_ACCESS_KEY_ID", "") %>
+  secret_access_key: <%= ENV.fetch("S3_SECRET_ACCESS_KEY", "") %>
+  region: <%= ENV.fetch("S3_REGION", "garage") %>
+  bucket: <%= ENV.fetch("S3_BUCKET", "") %>
+  endpoint: <%= ENV.fetch("S3_ENDPOINT", "") %>
+  force_path_style: <%= ENV.fetch("S3_FORCE_PATH_STYLE", "").present? %>
