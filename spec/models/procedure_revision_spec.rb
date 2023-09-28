@@ -908,6 +908,75 @@ describe ProcedureRevision do
     end
   end
 
+  describe "expressions_regulieres_are_valid" do
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :expression_reguliere, libelle: 'exemple', expression_reguliere:, expression_reguliere_exemple_text:)
+      end
+    end
+    let(:draft_revision) { procedure.draft_revision }
+
+    subject do
+      draft_revision.save
+      draft_revision.errors
+    end
+
+    context "When no regexp and no example" do
+      let(:expression_reguliere_exemple_text) { nil }
+      let(:expression_reguliere) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "When expression_reguliere but no example" do
+      let(:expression_reguliere) { "[A-Z]+" }
+      let(:expression_reguliere_exemple_text) { nil }
+
+      it { is_expected.to be_empty }
+    end
+
+    context "When expression_reguliere and bad example" do
+      let(:expression_reguliere_exemple_text) { "01234567" }
+      let(:expression_reguliere) { "[A-Z]+" }
+
+      it { is_expected.not_to be_empty }
+    end
+
+    context "When expression_reguliere and good example" do
+      let(:expression_reguliere_exemple_text) { "A" }
+      let(:expression_reguliere) { "[A-Z]+" }
+      it { is_expected.to be_empty }
+    end
+
+    context "When bad expression_reguliere" do
+      let(:expression_reguliere_exemple_text) { "0123456789" }
+      let(:expression_reguliere) { "(" }
+
+      it { is_expected.not_to be_empty }
+    end
+
+    context "When repetition" do
+      let(:procedure) do
+        create(:procedure,
+               types_de_champ_public: [{ type: :repetition, children: [{ type: :expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text: }] }])
+      end
+
+      context "When bad expression_reguliere" do
+        let(:expression_reguliere_exemple_text) { "0123456789" }
+        let(:expression_reguliere) { "(" }
+
+        it { is_expected.not_to be_empty }
+      end
+
+      context "When expression_reguliere and bad example" do
+        let(:expression_reguliere_exemple_text) { "01234567" }
+        let(:expression_reguliere) { "[A-Z]+" }
+
+        it { is_expected.not_to be_empty }
+      end
+    end
+  end
+
   describe "#dependent_conditions" do
     include Logic
 

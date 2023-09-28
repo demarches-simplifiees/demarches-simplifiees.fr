@@ -19,6 +19,7 @@ class ProcedureRevision < ApplicationRecord
 
   validate :conditions_are_valid?
   validate :header_sections_are_valid?
+  validate :expressions_regulieres_are_valid?
 
   delegate :path, to: :procedure, prefix: true
 
@@ -410,6 +411,13 @@ class ProcedureRevision < ApplicationRecord
       .map { errors_for_header_sections_order(_1) }
 
     repetition_tdcs_errors + root_tdcs_errors
+  end
+
+  def expressions_regulieres_are_valid?
+    types_de_champ_public.to_a
+      .flat_map { _1.repetition? ? children_of(_1) : _1 }
+      .filter { _1.expression_reguliere? && _1.invalid_regexp? }
+      .each { |tdc| errors.add(:expression_reguliere, type_de_champ: tdc) }
   end
 
   def errors_for_header_sections_order(tdcs)
