@@ -12,18 +12,22 @@ module Instructeurs
         .kept
         .with_attached_logo
         .includes(:defaut_groupe_instructeur)
-
-      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
-      @procedures_publiees = all_procedures.publiees.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_draft = all_procedures.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_closed = all_procedures.closes.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_publiees_count = all_procedures.publiees.count
-      @procedures_draft_count = all_procedures.brouillons.count
-      @procedures_closed_count = all_procedures.closes.count
+        .includes(:dossiers)
 
       dossiers = current_instructeur.dossiers
         .joins(groupe_instructeur: :procedure)
         .where(procedures: { hidden_at: nil })
+
+      @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
+      publiees_or_closes_with_dossiers_en_cours = all_procedures.publiees.or(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.ids }))
+      @procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.ids }))
+      @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_draft = all_procedures.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_en_cours_count = publiees_or_closes_with_dossiers_en_cours.count
+      @procedures_draft_count = all_procedures.brouillons.count
+      @procedures_closes_count = closes_with_no_dossier_en_cours.count
+
       @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_a_suivre_count_per_procedure = dossiers.by_statut('a-suivre').group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_archived_count_per_procedure = dossiers.by_statut('archives').group('groupe_instructeurs.procedure_id').count
@@ -55,7 +59,7 @@ module Instructeurs
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
       @statut = params[:statut]
-      @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
+      @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
     end
 
     def show

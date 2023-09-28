@@ -745,6 +745,9 @@ fr:
     en_cours:
       one: en cours
       other: en cours
+    en_test:
+      one: en test
+      other: en test
     traites:
       one: traité
       other: traités
@@ -767,17 +770,17 @@ fr:
       one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
     published:
-      one: Publiée
-      other: Publiées
+      one: publiée
+      other: publiées
     closed:
-      one: Close
-      other: Closes
+      one: terminée
+      other: terminées
     draft:
-      one: Brouillon
-      other: Brouillons
+      one: brouillon
+      other: brouillons
     deleted:
-      one: Supprimée
-      other: Supprimées
+      one: supprimée
+      other: supprimées
     procedures:
       one: Démarche
       other: Démarches

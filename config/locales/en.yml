@@ -733,6 +733,9 @@ en:
     en_cours:
       one: in progress
       other: in progress
+    en_test:
+      one: in testing
+      other: in testing
     traites:
       one: finished
       other: finished
@@ -755,17 +758,17 @@ en:
       one: "%{count} file found"
       other: "%{count} files found"
     published:
-      one: Published
-      other: Published
+      one: published
+      other: published
     closed:
-      one: Closed
-      other: Closed
+      one: finished
+      other: finished
     draft:
-      one: Draft
-      other: Drafts
+      one: draft
+      other: drafts
     deleted:
-      one: Deleted
-      other: Deleted
+      one: deleted
+      other: deleted
   administrateurs:
     activate:
       new:
