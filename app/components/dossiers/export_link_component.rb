@@ -11,10 +11,9 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
     @export_url = export_url
   end
 
-  def download_export_path(export_format:, statut:, force_export: false, no_progress_notification: nil)
+  def download_export_path(export_format:, statut:, no_progress_notification: nil)
     @export_url.call(@procedure,
       export_format: export_format,
-      force_export: force_export,
       statut: statut,
       no_progress_notification: no_progress_notification)
   end
@@ -63,11 +62,9 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
 
   def refresh_button_options(export)
     {
-      title: t(".refresh_old_export", export_format: ".#{export.format}"),
-      "aria-label" =>  t(".refresh_old_export", export_format: ".#{export.format}"),
-      class: class_names("fr-btn fr-btn--sm fr-icon-refresh-line fr-btn--tertiary" => true,
-                         "fr-btn--icon" => !export.failed?,
-                         "fr-btn--icon-left" => export.failed?)
+      title: t(".refresh_old_export"),
+      "aria-label" =>  t(".refresh_old_export"),
+      class: "fr-btn fr-btn--sm fr-icon-refresh-line fr-btn--tertiary fr-btn--icon-left"
     }
   end
 end

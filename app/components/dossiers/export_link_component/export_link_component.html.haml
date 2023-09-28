@@ -13,6 +13,6 @@
       .flex.flex-gap-2
         = export_button(export)
 
-        - if export.old? || export.failed?
-          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut, force_export: true), refresh_button_options(export)
+        - if export.failed?
+          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut), refresh_button_options(export)
 

@@ -79,7 +79,7 @@ RSpec.describe Export, type: :model do
     end
   end
 
-  describe '.find_or_create_export' do
+  describe '.find_or_create_fresh_export' do
     let!(:procedure) { create(:procedure) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
     let!(:pp) { gi_1.instructeurs.first.procedure_presentation_and_errors_for_procedure_id(procedure.id).first }
@@ -87,16 +87,48 @@ RSpec.describe Export, type: :model do
 
     context 'with procedure_presentation having different filters' do
       it 'works once' do
-        expect { Export.find_or_create_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end
 
       it 'works once, changes procedure_presentation, recreate a new' do
-        expect { Export.find_or_create_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
         pp.add_filter('tous', 'self/updated_at', '10/12/2021')
-        expect { Export.find_or_create_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
+      end
+    end
+
+    context 'with existing matching export' do
+      def find_or_create =
+        Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp)
+
+      context 'freshly generate export' do
+        before { find_or_create.update!(job_status: :generated, updated_at: 1.second.ago) }
+
+        it 'returns current pending export' do
+          current_export = find_or_create
+
+          expect(find_or_create).to eq(current_export)
+        end
+      end
+
+      context 'old generated export' do
+        before { find_or_create.update!(job_status: :generated, updated_at: 1.hour.ago) }
+
+        it 'returns a new export' do
+          expect { find_or_create }.to change { Export.count }.by(1)
+        end
+      end
+
+      context 'pending export' do
+        before { find_or_create.update!(updated_at: 1.hour.ago) }
+
+        it 'returns current pending export' do
+          current_export = find_or_create
+          expect(find_or_create).to eq(current_export)
+        end
       end
     end
   end

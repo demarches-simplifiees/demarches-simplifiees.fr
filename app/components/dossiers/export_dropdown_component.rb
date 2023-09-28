@@ -21,11 +21,10 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
     item.fetch(:format) != :json || @procedure.active_revision.carte?
   end
 
-  def download_export_path(export_format:, force_export: false, no_progress_notification: nil)
+  def download_export_path(export_format:, no_progress_notification: nil)
     @export_url.call(@procedure,
       export_format: export_format,
       statut: @statut,
-      force_export: force_export,
       no_progress_notification: no_progress_notification)
   end
 end

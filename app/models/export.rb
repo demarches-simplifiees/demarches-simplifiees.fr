@@ -59,27 +59,28 @@ class Export < ApplicationRecord
     time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
   end
 
-  def old?
-    updated_at < 10.minutes.ago || filters_changed?
-  end
-
-  def filters_changed?
-    procedure_presentation&.snapshot != procedure_presentation_snapshot
-  end
-
   def filtered?
     procedure_presentation_id.present?
   end
 
-  def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, force: false)
-    export = create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
+  def self.find_or_create_fresh_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
+    attributes = {
+      format:,
+      time_span_type:,
+      statut:,
+      key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation)
+    }
 
-    if export.available? && export.old? && force
-      export.destroy!
-      create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
-    else
-      export
-    end
+    recent_export = pending
+      .or(generated.where(updated_at: (5.minutes.ago)..))
+      .includes(:procedure_presentation)
+      .find_by(attributes)
+
+    return recent_export if recent_export.present?
+
+    create!(**attributes, groupe_instructeurs:,
+                          procedure_presentation:,
+                          procedure_presentation_snapshot: procedure_presentation&.snapshot)
   end
 
   def self.for_groupe_instructeurs(groupe_instructeurs_ids)
@@ -91,15 +92,6 @@ class Export < ApplicationRecord
       generate_cache_key(groupe_instructeurs_ids),
       generate_cache_key(groupe_instructeurs_ids, procedure_presentation)
     ])
-  end
-
-  def self.create_or_find_export(format, groupe_instructeurs, time_span_type:, statut:, procedure_presentation:)
-    create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
-      .includes(:procedure_presentation)
-      .create_or_find_by(format: format,
-        time_span_type: time_span_type,
-        statut: statut,
-        key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation))
   end
 
   def self.generate_cache_key(groupe_instructeurs_ids, procedure_presentation = nil)
