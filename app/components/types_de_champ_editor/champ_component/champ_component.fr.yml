@@ -13,3 +13,8 @@ fr:
   character_limit:
     unlimited: Pas de limite de caractères
     limit: Limité à %{limit} caractères
+  expression_reguliere:
+    labels:
+      regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com
+      valid_exemple: Exemple valide qui passe l'expression régulière
+      error_message: Message d'erreur à afficher à l'usager en cas de saisie invalide

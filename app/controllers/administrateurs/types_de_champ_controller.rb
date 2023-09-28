@@ -130,6 +130,9 @@ module Administrateurs
         :collapsible_explanation_text,
         :header_section_level,
         :character_limit,
+        :expression_reguliere,
+        :expression_reguliere_exemple_text,
+        :expression_reguliere_error_message,
         editable_options: [
           :cadastres,
           :unesco,

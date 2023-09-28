@@ -55,7 +55,8 @@ class TypeDeChamp < ApplicationRecord
     dgfip: REFERENTIEL_EXTERNE,
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
-    cojo: REFERENTIEL_EXTERNE
+    cojo: REFERENTIEL_EXTERNE,
+    expression_reguliere: STANDARD
   }
 
   enum type_champs: {
@@ -95,7 +96,8 @@ class TypeDeChamp < ApplicationRecord
     pole_emploi: 'pole_emploi',
     mesri: 'mesri',
     epci: 'epci',
-    cojo: 'cojo'
+    cojo: 'cojo',
+    expression_reguliere: 'expression_reguliere'
   }
 
   ROUTABLE_TYPES = [
@@ -116,6 +118,9 @@ class TypeDeChamp < ApplicationRecord
                  :drop_down_secondary_description,
                  :drop_down_other,
                  :character_limit,
+                 :expression_reguliere,
+                 :expression_reguliere_exemple_text,
+                 :expression_reguliere_error_message,
                  :collapsible_explanation_enabled,
                  :collapsible_explanation_text,
                  :header_section_level
@@ -184,6 +189,7 @@ class TypeDeChamp < ApplicationRecord
 
   before_validation :check_mandatory
   before_validation :normalize_libelle
+
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
   before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
   before_save :remove_block, if: -> { type_champ_changed? }
@@ -414,6 +420,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:checkbox)
   end
 
+  def expression_reguliere?
+    type_champ == TypeDeChamp.type_champs.fetch(:expression_reguliere)
+  end
+
   def public?
     !private?
   end
@@ -602,6 +612,24 @@ class TypeDeChamp < ApplicationRecord
 
   def routable?
     type_champ.in?(ROUTABLE_TYPES)
+  end
+
+  def invalid_regexp?
+    return false if expression_reguliere.blank?
+    return false if expression_reguliere_exemple_text.blank?
+    begin
+      if expression_reguliere_exemple_text.match?(Regexp.new(expression_reguliere, timeout: 2.0))
+        return false
+      end
+    rescue Regexp::TimeoutError
+      self.errors.add(:expression_reguliere, I18n.t('errors.messages.evil_regexp'))
+    end
+
+    self.errors.add(:expression_reguliere_exemple_text, I18n.t('errors.messages.mismatch_regexp'))
+    true
+  rescue RegexpError
+    self.errors.add(:expression_reguliere, I18n.t('errors.messages.syntax_error_regexp'))
+    true
   end
 
   private
