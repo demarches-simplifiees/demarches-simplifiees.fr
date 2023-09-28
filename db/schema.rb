@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_28_083809) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -539,7 +539,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_14_091648) do
     t.string "statut", default: "tous"
     t.string "time_span_type", default: "everything", null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["format", "time_span_type", "statut", "key"], name: "index_exports_on_format_and_time_span_type_and_statut_and_key", unique: true
+    t.index ["key"], name: "index_exports_on_key"
     t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"
   end
 
