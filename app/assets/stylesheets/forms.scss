@@ -138,6 +138,10 @@
         margin-bottom: $default-fields-spacer;
       }
     }
+
+    .fr-label {
+      scroll-margin: $default-spacer * 2;
+    }
   }
 
   .radios {
