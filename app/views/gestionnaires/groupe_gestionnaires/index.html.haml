@@ -1,9 +1,8 @@
-= render partial: 'gestionnaires/breadcrumbs',
-  locals: { steps: [['Groupes d\'administrateurs', gestionnaire_groupe_gestionnaires_path]] }
+= render 'main_menu'
 
-#groupe_gestionnaires-index.container
-  %h1.fr-h1 Liste des groupes d'administrateurs
+.sub-header
 
+.fr-container#groupe_gestionnaire
   %table.fr-table.width-100.mt-3
     %thead
       %tr
@@ -14,4 +13,4 @@
       - @groupe_gestionnaires.each do |groupe_gestionnaire|
         %tr
           %td
-            = groupe_gestionnaire.name
+            = link_to groupe_gestionnaire.name, gestionnaire_groupe_gestionnaire_path(groupe_gestionnaire)

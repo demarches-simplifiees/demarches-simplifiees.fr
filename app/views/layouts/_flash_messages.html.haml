@@ -9,6 +9,6 @@
             - value.each do |message|
               = sanitize_with_link(message)
               %br
-        - else
+        - elsif value.present?
           .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
             = sanitize_with_link(value)

@@ -7,3 +7,10 @@ fr:
       groupe_gestionnaire:
         one: Groupe d'administrateurs
         other: Groupes d'administrateurs
+    errors:
+      duplicate_email: 
+        one: "%{emails} est déjà gestionnaire de ce groupe"
+        other: "%{emails} sont déjà gestionnaires de ce groupe"
+    wrong_address:
+      one: "%{emails} n’est pas une adresse email valide"
+      other: "%{emails} ne sont pas des adresses emails valides"
