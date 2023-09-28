@@ -1148,7 +1148,7 @@ class Dossier < ApplicationRecord
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
-        champ.errors.add(:value, message: champ.errors.generate_message(:value, :missing))
+        champ.errors.add(:value, :missing)
       end
   end
 

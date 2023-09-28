@@ -109,7 +109,7 @@ describe 'The user' do
     fill_individual
     click_on 'Déposer le dossier'
 
-    expect(page).to have_selector("#flash_message")
+    expect(page).to have_selector("#sumup-errors")
     all('.error-anchor').map do |link_element|
       error_anchor = URI(link_element['href'])
       expect(page).to have_selector("##{error_anchor.fragment}")

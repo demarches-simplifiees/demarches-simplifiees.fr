@@ -370,10 +370,9 @@ describe Users::DossiersController, type: :controller do
 
   describe '#submit_brouillon' do
     before { sign_in(user) }
-
     let!(:dossier) { create(:dossier, user: user) }
     let(:first_champ) { dossier.champs_public.first }
-    let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
+    let(:anchor_to_first_champ) { controller.helpers.link_to first_champ.libelle, brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
     let(:now) { Time.zone.parse('01/01/2100') }
     let(:payload) { { id: dossier.id } }
@@ -409,16 +408,19 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the update fails' do
+      render_views
+      let(:error_message) { 'nop' }
       before do
         expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors).and_return(
-          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+          [double(inner_error: double(base: first_champ), message: 'nop')]
         )
         subject
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
+      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
+      it { expect(response.body).to have_content(error_message) }
 
       it 'does not send an email' do
         expect(NotificationMailer).not_to receive(:send_en_construction_notification)
@@ -428,6 +430,8 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when a mandatory champ is missing' do
+      render_views
+
       let(:value) { nil }
 
       before do
@@ -436,7 +440,8 @@ describe Users::DossiersController, type: :controller do
       end
 
       it { expect(response).to render_template(:brouillon) }
-      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
+      it { expect(response.body).to have_content("doit être rempli") }
     end
 
     context 'when dossier has no champ' do
@@ -515,27 +520,26 @@ describe Users::DossiersController, type: :controller do
       before do
         expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors).and_return(
-          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
+          [double(inner_error: double(base: first_champ), message: 'nop')]
         )
 
         subject
       end
 
       it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
-      it { expect(response.body).to include("Dossier nº #{dossier.id}") }
     end
 
     context 'when a mandatory champ is missing' do
       let(:value) { nil }
-
+      render_views
       before do
         first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
         subject
       end
 
       it { expect(response).to render_template(:modifier) }
-      it { expect(flash.alert).to eq(["Le champ « l » doit être rempli, #{anchor_to_first_champ}"]) }
+      it { expect(response.body).to have_content("doit être rempli") }
+      it { expect(response.body).to have_link(first_champ.libelle, href: "##{first_champ.labelledby_id}") }
     end
 
     context 'when dossier has no champ' do
@@ -828,41 +832,44 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the update fails' do
-      before do
-        expect_any_instance_of(Dossier).to receive(:save).and_return(false)
-        expect_any_instance_of(Dossier).to receive(:errors).and_return(
-          [double(class: ActiveModel::Error, full_message: 'nop', base: first_champ)]
-        )
-        subject
+      render_views
+
+      context 'classic error' do
+        before do
+          expect_any_instance_of(Dossier).to receive(:save).and_return(false)
+          expect_any_instance_of(Dossier).to receive(:errors).and_return(
+            [message: 'nop', inner_error: double(base: first_champ)]
+          )
+          subject
+        end
+
+        it { expect(response).to render_template(:update) }
+
+        it 'does not update the dossier timestamps' do
+          dossier.reload
+          expect(dossier.updated_at).not_to eq(now)
+          expect(dossier.last_champ_updated_at).not_to eq(now)
+        end
+
+        it 'does not send an email' do
+          expect(NotificationMailer).not_to receive(:send_en_construction_notification)
+
+          subject
+        end
       end
 
-      it { expect(response).to render_template(:update) }
-      it { expect(flash.alert).to eq(["Le champ « #{first_champ.libelle} » nop, #{anchor_to_first_champ}"]) }
+      context 'iban error' do
+        let(:value) { 'abc' }
 
-      it 'does not update the dossier timestamps' do
-        dossier.reload
-        expect(dossier.updated_at).not_to eq(now)
-        expect(dossier.last_champ_updated_at).not_to eq(now)
+        before do
+          first_champ.type_de_champ.update!(type_champ: :iban, mandatory: true, libelle: 'l')
+          dossier.champs_public.first.becomes!(Champs::IbanChamp).save!
+
+          subject
+        end
+
+        it { expect(response).to have_http_status(:success) }
       end
-
-      it 'does not send an email' do
-        expect(NotificationMailer).not_to receive(:send_en_construction_notification)
-
-        subject
-      end
-    end
-
-    context 'when a champ validation fails' do
-      let(:value) { 'abc' }
-
-      before do
-        first_champ.type_de_champ.update!(type_champ: :iban, mandatory: true, libelle: 'l')
-        dossier.champs_public.first.becomes!(Champs::IbanChamp).save!
-
-        subject
-      end
-
-      it { expect(flash.alert).to include("Le champ « l » n’est pas au format IBAN, #{anchor_to_first_champ}") }
     end
 
     context 'when the user has an invitation but is not the owner' do

@@ -29,7 +29,7 @@ class Champs::DateChamp < Champ
   def iso_8601
     return if parsable_iso8601? || value.blank?
     # i18n-tasks-use t('errors.messages.not_a_date')
-    errors.add :date, errors.generate_message(:value, :not_a_date)
+    errors.add :date, :not_a_date
   end
 
   def likely_iso8601_format?

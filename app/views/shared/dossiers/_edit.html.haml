@@ -1,13 +1,17 @@
 - dossier_for_editing = dossier.en_construction? ? dossier.owner_editing_fork : dossier
 
+
 - if dossier.france_connect_information.present?
   - content_for(:notice_info) do
     = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
+
 
 .dossier-edit.container.counter-start-header-section
   = render partial: "shared/dossiers/submit_is_over", locals: { dossier: dossier }
   = render NestedForms::FormOwnerComponent.new
   = form_for dossier_for_editing, url: brouillon_dossier_url(dossier), method: :patch, html: { id: 'dossier-edit-form', class: 'form', multipart: true, novalidate: 'novalidate' } do |f|
+
+    = render Dossiers::ErrorsFullMessagesComponent.new(dossier: @dossier, errors: @errors || [])
     %header.mb-6
       .fr-highlight
         %p.fr-text--sm

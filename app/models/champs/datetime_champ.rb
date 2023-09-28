@@ -40,7 +40,7 @@ class Champs::DatetimeChamp < Champ
   def iso_8601
     return if valid_iso8601? || value.blank?
     # i18n-tasks-use t('errors.messages.not_a_datetime')
-    errors.add :datetime, errors.generate_message(:value, :not_a_datetime)
+    errors.add :datetime, :not_a_datetime
   end
 
   def valid_iso8601?
