@@ -694,6 +694,36 @@ describe Users::DossiersController, type: :controller do
       it { expect(first_champ.reload.value).to eq('beautiful value') }
       it { expect(response).to have_http_status(:ok) }
     end
+
+    context 'decimal number champ separator' do
+      let (:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :decimal_number }]) }
+      let (:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            champs_public_attributes: { first_champ.id => { id: first_champ.id, value: value } }
+          }
+        }
+      end
+
+      context 'when spearator is dot' do
+        let(:value) { '3.14' }
+
+        it "saves the value" do
+          subject
+          expect(first_champ.reload.value).to eq('3.14')
+        end
+      end
+
+      context 'when spearator is comma' do
+        let(:value) { '3,14' }
+
+        it "saves the value" do
+          subject
+          expect(first_champ.reload.value).to eq('3.14')
+        end
+      end
+    end
   end
 
   describe '#update en_construction' do

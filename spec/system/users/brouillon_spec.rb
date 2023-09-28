@@ -144,7 +144,13 @@ describe 'The user' do
     end.to change { Champ.count }
   end
 
-  let(:simple_procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' }]) }
+  let(:simple_procedure) {
+    create(:procedure, :published, :for_individual, types_de_champ_public: [
+      { mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' },
+      { mandatory: false, libelle: "nombre entier", type: :integer_number },
+      { mandatory: false, libelle: "nombre décimal", type: :decimal_number }
+    ])
+  }
 
   scenario 'save an incomplete dossier as draft but cannot not submit it', js: true, retry: 3 do
     log_in(user, simple_procedure)
@@ -168,6 +174,26 @@ describe 'The user' do
     wait_until { user_dossier.reload.en_construction? }
     expect(champ_value_for('texte obligatoire')).to eq('super texte')
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
+  end
+
+  scenario 'numbers champs formatting', js: true, retry: 3 do
+    log_in(user, simple_procedure)
+    fill_individual
+
+    fill_in('nombre entier', with: '300 environ')
+    wait_until {
+      champ_value_for('nombre entier') == '300'
+    }
+
+    fill_in('nombre décimal', with: '123 456,78')
+    wait_until {
+      champ_value_for('nombre décimal') == '123456.78'
+    }
+
+    fill_in('nombre décimal', with: '1,234.56')
+    wait_until {
+      champ_value_for('nombre décimal') == '1234.56'
+    }
   end
 
   scenario 'extends dossier experation date more than one time, ', js: true, retry: 3 do

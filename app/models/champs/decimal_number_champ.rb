@@ -1,4 +1,5 @@
 class Champs::DecimalNumberChamp < Champ
+  before_validation :format_value
   validates :value, numericality: {
     allow_nil: true,
     allow_blank: true,
@@ -17,7 +18,15 @@ class Champs::DecimalNumberChamp < Champ
 
   private
 
+  def format_value
+    return if value.blank?
+
+    self.value = value.tr(",", ".")
+  end
+
   def processed_value
+    return if invalid?
+
     value&.to_f
   end
 end
