@@ -1,7 +1,7 @@
 module Instructeurs
   class ProceduresController < InstructeurController
     before_action :ensure_ownership!, except: [:index]
-    before_action :ensure_not_super_admin!, only: [:download_export]
+    before_action :ensure_not_super_admin!, only: [:download_export, :exports]
 
     ITEMS_PER_PAGE = 25
     BATCH_SELECTION_LIMIT = 500
@@ -90,6 +90,8 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
+      @has_export_notification = notify_exports?
+
       @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
       page = params[:page].presence || 1
@@ -103,7 +105,6 @@ module Instructeurs
       @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
       @disable_checkbox_all = @projected_dossiers.all? { _1.batch_operation_id.present? }
 
-      assign_exports
       @batch_operations = BatchOperation.joins(:groupe_instructeurs)
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
         .where(seen_at: nil)
@@ -127,8 +128,6 @@ module Instructeurs
       @has_termine_notifications = notifications[:termines].present?
 
       @statut = 'supprime'
-
-      assign_exports
     end
 
     def update_displayed_fields
@@ -173,17 +172,16 @@ module Instructeurs
         .visible_by_administration
         .exists?(groupe_instructeur_id: groupe_instructeur_ids) && !instructeur_as_manager?
 
-      export = Export.find_or_create_export(export_format, groupe_instructeurs, force: force_export?, **export_options)
+      export = Export.find_or_create_fresh_export(export_format, groupe_instructeurs, **export_options)
 
       @procedure = procedure
       @statut = export_options[:statut]
       @dossiers_count = export.count
-      assign_exports
 
       if export.available?
         respond_to do |format|
           format.turbo_stream do
-            flash.notice = export.flash_message
+            flash.notice = t('instructeurs.procedures.export_available_html', file_format: export.format, file_url: export.file.url)
           end
 
           format.html do
@@ -194,11 +192,11 @@ module Instructeurs
         respond_to do |format|
           format.turbo_stream do
             if !params[:no_progress_notification]
-              flash.notice = export.flash_message
+              flash.notice = t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
             end
           end
           format.html do
-            redirect_to instructeur_procedure_url(procedure), notice: export.flash_message
+            redirect_to exports_instructeur_procedure_path(procedure), notice: t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
           end
         end
       end
@@ -224,6 +222,20 @@ module Instructeurs
       @termines_states = @procedure.stats_termines_states
       @termines_by_week = @procedure.stats_termines_by_week
       @usual_traitement_time_by_month = @procedure.stats_usual_traitement_time_by_month_in_days
+    end
+
+    def exports
+      @procedure = procedure
+      @exports = Export.for_groupe_instructeurs(groupe_instructeur_ids).ante_chronological
+      cookies.encrypted[cookies_export_key] = {
+        value: DateTime.current,
+        expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT
+      }
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html
+      end
     end
 
     def email_usagers
@@ -277,10 +289,6 @@ module Instructeurs
         .permit(:instant_expert_avis_email_notifications_enabled, :instant_email_dossier_notifications_enabled, :instant_email_message_notifications_enabled, :daily_email_notifications_enabled, :weekly_email_notifications_enabled)
     end
 
-    def assign_exports
-      @exports = Export.find_for_groupe_instructeurs(groupe_instructeur_ids, procedure_presentation)
-    end
-
     def assign_tos
       @assign_tos ||= current_instructeur
         .assign_to
@@ -299,10 +307,6 @@ module Instructeurs
 
     def export_format
       @export_format ||= params[:export_format]
-    end
-
-    def force_export?
-      @force_export ||= params[:force_export].present?
     end
 
     def export_options
@@ -355,6 +359,23 @@ module Instructeurs
 
     def bulk_message_params
       params.require(:bulk_message).permit(:body)
+    end
+
+    def notify_exports?
+      last_seen_at = begin
+                       DateTime.parse(cookies.encrypted[cookies_export_key])
+                     rescue
+                       nil
+                     end
+
+      scope = Export.generated.for_groupe_instructeurs(groupe_instructeur_ids)
+      scope = scope.where(updated_at: last_seen_at...) if last_seen_at
+
+      scope.exists?
+    end
+
+    def cookies_export_key
+      "exports_#{@procedure.id}_seen_at"
     end
   end
 end

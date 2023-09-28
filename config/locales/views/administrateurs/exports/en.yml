@@ -1,0 +1,5 @@
+en:
+  administrateurs:
+    exports:
+      export_available_html: The export in %{file_format} format is ready. You can <a href="%{file_url}">download</a>
+      export_pending: We generate this export. Please come back in a few minutes to download it.

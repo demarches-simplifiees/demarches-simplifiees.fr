@@ -4,14 +4,13 @@ module Administrateurs
     before_action :ensure_not_super_admin!
 
     def download
-      export = Export.find_or_create_export(export_format, all_groupe_instructeurs, force: force_export?, **export_options)
+      export = Export.find_or_create_fresh_export(export_format, all_groupe_instructeurs, **export_options)
       @dossiers_count = export.count
-      assign_exports
 
       if export.available?
         respond_to do |format|
           format.turbo_stream do
-            flash.notice = export.flash_message
+            flash.notice = t('administrateurs.exports.export_available_html', file_format: export.format, file_url: export.file.url)
           end
 
           format.html do
@@ -22,11 +21,11 @@ module Administrateurs
         respond_to do |format|
           format.turbo_stream do
             if !params[:no_progress_notification]
-              flash.notice = export.flash_message
+              flash.notice = t('administrateurs.exports.export_pending')
             end
           end
           format.html do
-            redirect_to admin_procedure_archives_url(@procedure), notice: export.flash_message
+            redirect_to admin_procedure_archives_url(@procedure), notice: t('administrateurs.exports.export_pending')
           end
         end
       end
@@ -36,10 +35,6 @@ module Administrateurs
 
     def export_format
       @export_format ||= params[:export_format]
-    end
-
-    def force_export?
-      @force_export ||= params[:force_export].present?
     end
 
     def export_options
@@ -52,10 +47,6 @@ module Administrateurs
 
     def all_groupe_instructeurs
       @procedure.groupe_instructeurs
-    end
-
-    def assign_exports
-      @exports = Export.find_for_groupe_instructeurs(all_groupe_instructeurs.map(&:id), nil)
     end
   end
 end

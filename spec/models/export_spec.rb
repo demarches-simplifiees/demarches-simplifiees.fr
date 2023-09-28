@@ -61,9 +61,9 @@ RSpec.describe Export, type: :model do
       context 'when an export is made for one groupe instructeur' do
         let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-        it { expect(Export.find_for_groupe_instructeurs([gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
-        it { expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], nil)).to eq({ csv: { statut: {}, time_span_type: { 'everything' => export } }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
-        it { expect(Export.find_for_groupe_instructeurs([gi_1.id, gi_2.id, gi_3.id], nil)).to eq({ csv: { statut: {}, time_span_type: {} }, xlsx: { statut: {}, time_span_type: {} }, ods: { statut: {}, time_span_type: {} }, zip: { statut: {}, time_span_type: {} }, json: { statut: {}, time_span_type: {} } }) }
+        it { expect(Export.by_key([gi_1.id], nil)).to be_empty }
+        it { expect(Export.by_key([gi_2.id, gi_1.id], nil)).to eq([export]) }
+        it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id], nil)).to be_empty }
       end
     end
 
@@ -73,19 +73,13 @@ RSpec.describe Export, type: :model do
       let!(:procedure_presentation) { create(:procedure_presentation, procedure: gi_1.procedure) }
 
       it 'find global exports as well as filtered one' do
-        expect(Export.find_for_groupe_instructeurs([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
-          .to eq({
-            csv: { statut: { Export.statuts.fetch(:suivis) => export_with_filter }, time_span_type: { 'everything' => export_global } },
-                   xlsx: { statut: {}, time_span_type: {} },
-                   ods: { statut: {}, time_span_type: {} },
-                   zip: { statut: {}, time_span_type: {} },
-                   json: { statut: {}, time_span_type: {} }
-          })
+        expect(Export.by_key([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
+          .to contain_exactly(export_with_filter, export_global)
       end
     end
   end
 
-  describe '.find_or_create_export' do
+  describe '.find_or_create_fresh_export' do
     let!(:procedure) { create(:procedure) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
     let!(:pp) { gi_1.instructeurs.first.procedure_presentation_and_errors_for_procedure_id(procedure.id).first }
@@ -93,16 +87,48 @@ RSpec.describe Export, type: :model do
 
     context 'with procedure_presentation having different filters' do
       it 'works once' do
-        expect { Export.find_or_create_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end
 
       it 'works once, changes procedure_presentation, recreate a new' do
-        expect { Export.find_or_create_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
         pp.add_filter('tous', 'self/updated_at', '10/12/2021')
-        expect { Export.find_or_create_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
+      end
+    end
+
+    context 'with existing matching export' do
+      def find_or_create =
+        Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp)
+
+      context 'freshly generate export' do
+        before { find_or_create.update!(job_status: :generated, updated_at: 1.second.ago) }
+
+        it 'returns current pending export' do
+          current_export = find_or_create
+
+          expect(find_or_create).to eq(current_export)
+        end
+      end
+
+      context 'old generated export' do
+        before { find_or_create.update!(job_status: :generated, updated_at: 1.hour.ago) }
+
+        it 'returns a new export' do
+          expect { find_or_create }.to change { Export.count }.by(1)
+        end
+      end
+
+      context 'pending export' do
+        before { find_or_create.update!(updated_at: 1.hour.ago) }
+
+        it 'returns current pending export' do
+          current_export = find_or_create
+          expect(find_or_create).to eq(current_export)
+        end
       end
     end
   end
@@ -145,6 +171,30 @@ RSpec.describe Export, type: :model do
       it 'includes supprimes_recemment' do
         expect(export.send(:dossiers_for_export)).to include(dossier_recemment_supprime)
       end
+    end
+  end
+
+  describe '.for_groupe_instructeurs' do
+    let!(:groupe_instructeur1) { create(:groupe_instructeur) }
+    let!(:groupe_instructeur2) { create(:groupe_instructeur) }
+    let!(:groupe_instructeur3) { create(:groupe_instructeur) }
+
+    let!(:export1) { create(:export, groupe_instructeurs: [groupe_instructeur1, groupe_instructeur2]) }
+    let!(:export2) { create(:export, groupe_instructeurs: [groupe_instructeur2]) }
+    let!(:export3) { create(:export, groupe_instructeurs: [groupe_instructeur3]) }
+
+    it 'returns exports for the specified groupe instructeurs' do
+      expect(Export.for_groupe_instructeurs([groupe_instructeur1.id, groupe_instructeur2.id]))
+        .to match_array([export1, export2])
+    end
+
+    it 'does not return exports not associated with the specified groupe instructeurs' do
+      expect(Export.for_groupe_instructeurs([groupe_instructeur1.id])).not_to include(export2, export3)
+    end
+
+    it 'returns unique exports even if they belong to multiple matching groupe instructeurs' do
+      results = Export.for_groupe_instructeurs([groupe_instructeur1.id])
+      expect(results.count).to eq(1)
     end
   end
 end

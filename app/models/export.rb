@@ -34,6 +34,8 @@ class Export < ApplicationRecord
 
   validates :format, :groupe_instructeurs, :key, presence: true
 
+  scope :ante_chronological, -> { order(updated_at: :desc) }
+
   after_create_commit :compute_async
 
   FORMATS_WITH_TIME_SPAN = [:xlsx, :ods, :csv].flat_map do |format|
@@ -57,77 +59,39 @@ class Export < ApplicationRecord
     time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
   end
 
-  def old?
-    updated_at < 10.minutes.ago || filters_changed?
-  end
-
-  def filters_changed?
-    procedure_presentation&.snapshot != procedure_presentation_snapshot
-  end
-
   def filtered?
     procedure_presentation_id.present?
   end
 
-  def flash_message
-    if available?
-      "L’export au format \"#{format}\" est prêt. Vous pouvez le <a href=\"#{file.url}\">télécharger</a>"
-    else
-      "Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger."
-    end
-  end
-
-  def self.find_or_create_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, force: false)
-    export = create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
-
-    if export.available? && export.old? && force
-      export.destroy
-      create_or_find_export(format, groupe_instructeurs, time_span_type: time_span_type, statut: statut, procedure_presentation: procedure_presentation)
-    else
-      export
-    end
-  end
-
-  def self.find_for_groupe_instructeurs(groupe_instructeurs_ids, procedure_presentation)
-    exports = if procedure_presentation.present?
-      where(key: generate_cache_key(groupe_instructeurs_ids, procedure_presentation))
-        .or(where(key: generate_cache_key(groupe_instructeurs_ids)))
-    else
-      where(key: generate_cache_key(groupe_instructeurs_ids))
-    end
-    filtered, not_filtered = exports.partition(&:filtered?)
-
-    {
-      xlsx: {
-        time_span_type: not_filtered.filter(&:format_xlsx?).index_by(&:time_span_type),
-        statut: filtered.filter(&:format_xlsx?).index_by(&:statut)
-      },
-      ods: {
-        time_span_type: not_filtered.filter(&:format_ods?).index_by(&:time_span_type),
-        statut: filtered.filter(&:format_ods?).index_by(&:statut)
-      },
-      csv: {
-        time_span_type: not_filtered.filter(&:format_csv?).index_by(&:time_span_type),
-        statut: filtered.filter(&:format_csv?).index_by(&:statut)
-      },
-      zip: {
-        time_span_type: {},
-        statut: filtered.filter(&:format_zip?).index_by(&:statut)
-      },
-      json: {
-        time_span_type: {},
-        statut: filtered.filter(&:format_json?).index_by(&:statut)
-      }
+  def self.find_or_create_fresh_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
+    attributes = {
+      format:,
+      time_span_type:,
+      statut:,
+      key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation)
     }
+
+    recent_export = pending
+      .or(generated.where(updated_at: (5.minutes.ago)..))
+      .includes(:procedure_presentation)
+      .find_by(attributes)
+
+    return recent_export if recent_export.present?
+
+    create!(**attributes, groupe_instructeurs:,
+                          procedure_presentation:,
+                          procedure_presentation_snapshot: procedure_presentation&.snapshot)
   end
 
-  def self.create_or_find_export(format, groupe_instructeurs, time_span_type:, statut:, procedure_presentation:)
-    create_with(groupe_instructeurs: groupe_instructeurs, procedure_presentation: procedure_presentation, procedure_presentation_snapshot: procedure_presentation&.snapshot)
-      .includes(:procedure_presentation)
-      .create_or_find_by(format: format,
-        time_span_type: time_span_type,
-        statut: statut,
-        key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation))
+  def self.for_groupe_instructeurs(groupe_instructeurs_ids)
+    joins(:groupe_instructeurs).where(groupe_instructeurs: groupe_instructeurs_ids).distinct(:id)
+  end
+
+  def self.by_key(groupe_instructeurs_ids, procedure_presentation)
+    where(key: [
+      generate_cache_key(groupe_instructeurs_ids),
+      generate_cache_key(groupe_instructeurs_ids, procedure_presentation)
+    ])
   end
 
   def self.generate_cache_key(groupe_instructeurs_ids, procedure_presentation = nil)
@@ -144,7 +108,7 @@ class Export < ApplicationRecord
 
   def count
     if procedure_presentation_id.present?
-      dossiers_for_export.size
+      dossiers_for_export.count
     end
   end
 

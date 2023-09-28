@@ -415,6 +415,7 @@ Rails.application.routes.draw do
         get 'download_export'
         post 'download_export'
         get 'stats'
+        get 'exports'
         get 'email_notifications'
         get 'administrateurs'
         patch 'update_email_notifications'
