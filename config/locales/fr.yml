@@ -689,7 +689,10 @@ fr:
       procedure_archived:
         with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
         with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{organisation_name}
-
+      evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
+      mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie
+      syntax_error_regexp: La syntaxe de l'expression régulière n'est pas valide
+      invalid_regexp: "%{expression_reguliere_error_message}"
       empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
       empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
       # procedure_not_draft: "Cette démarche n’est maintenant plus en brouillon."

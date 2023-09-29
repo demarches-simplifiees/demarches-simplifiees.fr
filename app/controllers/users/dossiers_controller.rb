@@ -540,6 +540,9 @@ module Users
       @dossier.check_mandatory_and_visible_champs.map do |error_on_champ|
         errors.import(error_on_champ)
       end
+      @dossier.check_expressions_regulieres_champs.map do |error_on_champ|
+        errors.import(error_on_champ) if error_on_champ.present?
+      end
       errors
     end
 

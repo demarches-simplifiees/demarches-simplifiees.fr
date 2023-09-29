@@ -416,8 +416,11 @@ class ProcedureRevision < ApplicationRecord
   def expressions_regulieres_are_valid?
     types_de_champ_public.to_a
       .flat_map { _1.repetition? ? children_of(_1) : _1 }
-      .filter { _1.expression_reguliere? && _1.invalid_regexp? }
-      .each { |tdc| errors.add(:expression_reguliere, type_de_champ: tdc) }
+      .each do |tdc|
+        if tdc.expression_reguliere? && tdc.invalid_regexp?
+          errors.add(:expression_reguliere, type_de_champ: tdc)
+        end
+      end
   end
 
   def errors_for_header_sections_order(tdcs)
