@@ -843,4 +843,22 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       expect(procedure4.reload.routing_enabled).to be_truthy
     end
   end
+
+  describe '#add_signature' do
+    let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
+
+    before {
+      post :add_signature,
+      params: {
+        procedure_id: procedure.id,
+        id: gi_1_1.id,
+        groupe_instructeur: {
+          signature: signature
+        }
+      }
+    }
+
+    it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_1)) }
+    it { expect(gi_1_1.signature).to be_attached }
+  end
 end

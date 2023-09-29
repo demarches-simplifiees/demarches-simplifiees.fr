@@ -1,45 +1,4 @@
 describe AttestationTemplate, type: :model do
-  # describe 'validate' do
-  #   let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
-  #   let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte }
-  #   let(:fake_logo) { double(AttestationTemplateLogoUploader, file: double(size: logo_size)) }
-  #   let(:fake_signature) { double(AttestationTemplateSignatureUploader, file: double(size: signature_size)) }
-  #   let(:attestation_template) { AttestationTemplate.new }
-
-  #   before do
-  #     allow(attestation_template).to receive(:logo).and_return(fake_logo)
-  #     allow(attestation_template).to receive(:signature).and_return(fake_signature)
-  #     attestation_template.validate
-  #   end
-
-  #   subject { attestation_template.errors.details }
-
-  #   context 'when no files are present' do
-  #     let(:fake_logo) { nil }
-  #     let(:fake_signature) { nil }
-
-  #     it { is_expected.to match({}) }
-  #   end
-
-  #   context 'when the logo and the signature have the right size' do
-  #     it { is_expected.to match({}) }
-  #   end
-
-  #   context 'when the logo and the signature are too heavy' do
-  #     let(:logo_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
-  #     let(:signature_size) { AttestationTemplate::FILE_MAX_SIZE_IN_MB.megabyte + 1 }
-
-  #     it do
-  #       expected = {
-  #         signature: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }],
-  #         logo: [{ error: ' : vous ne pouvez pas charger une image de plus de 0,5 Mo' }]
-  #       }
-
-  #       is_expected.to match(expected)
-  #     end
-  #   end
-  # end
-
   describe 'validates footer length' do
     let(:attestation_template) { build(:attestation_template, footer: footer) }
 
@@ -171,6 +130,46 @@ describe AttestationTemplate, type: :model do
             expect(attestation.title).to eq('title libelle1')
             expect(attestation.pdf).to be_attached
           end
+        end
+      end
+    end
+  end
+
+  describe '#render_attributes_for' do
+    context 'signature' do
+      let(:dossier) { create(:dossier, procedure: attestation.procedure, groupe_instructeur: groupe_instructeur) }
+
+      subject { attestation.render_attributes_for(dossier: dossier)[:signature] }
+
+      context 'procedure with signature' do
+        let(:attestation) { create(:attestation_template, signature: Rack::Test::UploadedFile.new('spec/fixtures/files/logo_test_procedure.png', 'image/png')) }
+
+        context "groupe instructeur without signature" do
+          let(:groupe_instructeur) { create(:groupe_instructeur, signature: nil) }
+
+          it { expect(subject.blob.filename).to eq("logo_test_procedure.png") }
+        end
+
+        context 'groupe instructeur with signature' do
+          let(:groupe_instructeur) { create(:groupe_instructeur, signature: Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')) }
+
+          it { expect(subject.blob.filename).to eq("black.png") }
+        end
+      end
+
+      context 'procedure without signature' do
+        let(:attestation) { create(:attestation_template, signature: nil) }
+
+        context "groupe instructeur without signature" do
+          let(:groupe_instructeur) { create(:groupe_instructeur, signature: nil) }
+
+          it { expect(subject.attached?).to be_falsey }
+        end
+
+        context 'groupe instructeur with signature' do
+          let(:groupe_instructeur) { create(:groupe_instructeur, signature: Rack::Test::UploadedFile.new('spec/fixtures/files/black.png', 'image/png')) }
+
+          it { expect(subject.blob.filename).to eq("black.png") }
         end
       end
     end

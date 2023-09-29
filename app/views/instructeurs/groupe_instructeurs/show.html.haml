@@ -65,3 +65,6 @@
         %p= service.telephone
       - if service.horaires.present?
         %p= service.horaires
+
+  = render partial: "shared/groupe_instructeurs/signature_form", locals: { groupe_instructeur: @groupe_instructeur,
+    preview_path: preview_attestation_instructeur_groupe_path(@groupe_instructeur.procedure, @groupe_instructeur) }

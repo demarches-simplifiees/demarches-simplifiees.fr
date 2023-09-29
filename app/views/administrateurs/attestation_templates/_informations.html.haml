@@ -24,19 +24,22 @@
           = tag[:description]
 
 %h3.header-subsection Logo de l'attestation
+%p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+  Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
 = render Attachment::EditComponent.new(attached_file: @attestation_template.logo, direct_upload: false)
 
-%p.notice
-  Formats acceptés : JPG / JPEG / PNG.
-  %br
-  Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
 
-%h3.header-subsection Tampon de l'attestation
+%h3.header-subsection.fr-mt-5w Tampon de l'attestation
+%p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+  Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
 = render Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false)
 
-%p.notice
-  Formats acceptés : JPG / JPEG / PNG.
-  %br
-  Dimensions conseillées : au minimum 500 px de largeur ou de hauteur, poids maximum : 0,5 Mo.
 
-= render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_field, opts: { maxlength: 190, size: nil }, required: false)
+- if @attestation_template.procedure.routing_enabled?
+  %p.fr-text--sm.fr-text-mention--grey
+    À noter : chaque groupe instructeur peut apposer son propre tampon à la place de celui-ci.
+
+
+.fr-mt-4w
+  = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_field, opts: { maxlength: 190, size: nil }, required: false)
+

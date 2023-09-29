@@ -42,6 +42,8 @@ module Administrateurs
     end
 
     def alert_for_missing_siret_service
+      return if flash[:alert].present?
+
       procedures = missing_siret_services
       if procedures.any?
         errors = []
@@ -61,6 +63,8 @@ module Administrateurs
     end
 
     def alert_for_missing_service
+      return if flash[:alert].present?
+
       procedures = missing_service
       if procedures.any?
         errors = []

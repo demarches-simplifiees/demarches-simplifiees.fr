@@ -60,16 +60,27 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def render_attributes_for(params = {})
-    dossier = params.fetch(:dossier, false)
-
-    {
+    attributes = {
       created_at: Time.zone.now,
-      title: dossier ? replace_tags(title, dossier) : params.fetch(:title, title),
-      body: dossier ? replace_tags(body, dossier) : params.fetch(:body, body),
       footer: params.fetch(:footer, footer),
-      logo: params.fetch(:logo, logo.attached? ? logo : nil),
-      signature: params.fetch(:signature, signature.attached? ? signature : nil)
+      logo: params.fetch(:logo, logo.attached? ? logo : nil)
     }
+
+    dossier = params[:dossier]
+
+    if dossier.present?
+      attributes.merge({
+        title: replace_tags(title, dossier),
+        body: replace_tags(body, dossier),
+        signature: signature_to_render(dossier.groupe_instructeur)
+      })
+    else
+      attributes.merge({
+        title: params.fetch(:title, title),
+        body: params.fetch(:body, body),
+        signature: signature_to_render(params[:groupe_instructeur])
+      })
+    end
   end
 
   def logo_checksum
@@ -89,6 +100,14 @@ class AttestationTemplate < ApplicationRecord
   end
 
   private
+
+  def signature_to_render(groupe_instructeur)
+    if groupe_instructeur&.signature&.attached?
+      groupe_instructeur.signature
+    else
+      signature
+    end
+  end
 
   def used_tags
     used_tags_for(title) + used_tags_for(body)
