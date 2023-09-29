@@ -27,7 +27,7 @@
 
   .section-2 {
     margin-top: 1.5rem;
-    padding-top: 1rem;
+    padding-top: 2rem;
     border-top: 2px solid var(--border-default-grey);
   }
 
@@ -42,6 +42,11 @@
   .section-6 {
     margin-top: 1.5rem;
     margin-bottom: 1rem;
+  }
+
+  // Keep only bottom margin in nested (consecutive) header sections, ie. first legend for a same level
+  .fr-fieldset > .fr-fieldset__legend + .fr-fieldset__element > .fr-fieldset:first-of-type .header-section {
+    margin-top: 0 !important;
   }
 
   legend {
