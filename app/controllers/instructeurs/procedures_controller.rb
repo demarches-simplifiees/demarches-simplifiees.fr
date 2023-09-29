@@ -10,22 +10,25 @@ module Instructeurs
       all_procedures = current_instructeur
         .procedures
         .kept
+
+      all_procedures_for_listing = all_procedures
         .with_attached_logo
-        .includes(:defaut_groupe_instructeur)
-        .includes(:dossiers)
 
       dossiers = current_instructeur.dossiers
         .joins(groupe_instructeur: :procedure)
         .where(procedures: { hidden_at: nil })
 
+      # .uniq is much more faster than a distinct on a joint column
+      procedures_dossiers_en_cours = dossiers.joins(:revision).en_cours.pluck(ProcedureRevision.arel_table[:procedure_id]).uniq
+
       @procedures = all_procedures.order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
-      publiees_or_closes_with_dossiers_en_cours = all_procedures.publiees.or(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.ids }))
+      publiees_or_closes_with_dossiers_en_cours = all_procedures_for_listing.publiees.or(all_procedures.closes.where(id: procedures_dossiers_en_cours))
       @procedures_en_cours = publiees_or_closes_with_dossiers_en_cours.order(published_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(dossiers: { id: dossiers.en_cours.ids }))
+      closes_with_no_dossier_en_cours = all_procedures.closes.excluding(all_procedures.closes.where(id: procedures_dossiers_en_cours))
       @procedures_closes = closes_with_no_dossier_en_cours.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
-      @procedures_draft = all_procedures.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
+      @procedures_draft = all_procedures_for_listing.brouillons.order(created_at: :desc).page(params[:page]).per(ITEMS_PER_PAGE)
       @procedures_en_cours_count = publiees_or_closes_with_dossiers_en_cours.count
-      @procedures_draft_count = all_procedures.brouillons.count
+      @procedures_draft_count = all_procedures_for_listing.brouillons.count
       @procedures_closes_count = closes_with_no_dossier_en_cours.count
 
       @dossiers_count_per_procedure = dossiers.by_statut('tous').group('groupe_instructeurs.procedure_id').reorder(nil).count
