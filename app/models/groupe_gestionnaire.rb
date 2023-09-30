@@ -26,4 +26,8 @@ class GroupeGestionnaire < ApplicationRecord
   def parent_name
     parent&.name
   end
+
+  def can_be_deleted?(current_user)
+    (gestionnaires.empty? || (gestionnaires == [current_user]))&& administrateurs.empty? && children.empty?
+  end
 end
