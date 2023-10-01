@@ -113,8 +113,8 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
   describe "#show" do
     subject { get :show, params: { id: child_groupe_gestionnaire.id } }
-    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) } 
-    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_root, gestionnaires: [gestionnaire]) }
+    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
       before { subject }
@@ -134,8 +134,8 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
   describe "#edit" do
     subject { get :edit, params: { id: child_groupe_gestionnaire.id } }
-    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) } 
-    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_root, gestionnaires: [gestionnaire]) }
+    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
       before { subject }
@@ -155,8 +155,8 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
   describe "#update" do
     subject { post :update, params: { id: child_groupe_gestionnaire.id, groupe_gestionnaire: { name: 'new child name' } } }
-    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) } 
-    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_root, gestionnaires: [gestionnaire]) }
+    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
       before { subject }
@@ -176,8 +176,8 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
   describe "#destroy" do
     subject { post :destroy, params: { id: child_groupe_gestionnaire.id } }
-    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) } 
-    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire_root, gestionnaires: [gestionnaire]) }
+    let!(:groupe_gestionnaire_root) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
       before { subject }
