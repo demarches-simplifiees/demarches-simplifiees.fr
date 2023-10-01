@@ -1,0 +1,13 @@
+= form_for groupe_gestionnaire.children.new,
+  url: { controller: 'groupe_gestionnaire_children' },
+  html: { id: "new_child" },
+  data: { turbo: true, turbo_force: :server } do |f|
+  .fr-input-group
+    = f.label :email, class: "fr-label" do
+      Ajouter un groupe enfants
+      %span.fr-hint-text
+        = "Renseignez le nom du nouveau groupe enfants de « #{groupe_gestionnaire.name} »."
+
+    = f.text_field :name, required: true, class: "fr-input", autofocus: true
+
+  = f.submit 'Ajouter un nouveau groupe', class: 'fr-btn'

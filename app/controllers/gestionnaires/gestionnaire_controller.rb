@@ -8,8 +8,10 @@ module Gestionnaires
 
     def retrieve_groupe_gestionnaire
       id = params[:groupe_gestionnaire_id] || params[:id]
-
-      @groupe_gestionnaire = current_gestionnaire.groupe_gestionnaires.find(id)
+      @groupe_gestionnaire = GroupeGestionnaire.find(id)
+      if ((@groupe_gestionnaire.ancestor_ids + [@groupe_gestionnaire.id]) & current_gestionnaire.groupe_gestionnaire_ids).empty?
+        raise(ActiveRecord::RecordNotFound)
+      end
 
       Sentry.configure_scope do |scope|
         scope.set_tags(groupe_gestionnaire: @groupe_gestionnaire.id)

@@ -22,4 +22,16 @@ describe Manager::GestionnairesController, type: :controller do
 
     it { expect(response.body).to include(gestionnaire.email) }
   end
+
+  describe '#delete' do
+    before { sign_in super_admin }
+
+    subject { delete :delete, params: { id: gestionnaire.id } }
+
+    it 'deletes the gestionnaire' do
+      subject
+
+      expect(Gestionnaire.find_by(id: gestionnaire.id)).to be_nil
+    end
+  end
 end

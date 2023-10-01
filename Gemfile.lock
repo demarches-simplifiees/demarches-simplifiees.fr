@@ -100,6 +100,8 @@ GEM
       administrate (~> 0.12)
     aes_key_wrap (1.1.0)
     after_party (1.11.2)
+    ancestry (4.3.3)
+      activerecord (>= 5.2.6)
     anchored (1.1.0)
     ast (2.4.2)
     attr_required (1.0.1)
@@ -815,6 +817,7 @@ DEPENDENCIES
   administrate
   administrate-field-enum
   after_party
+  ancestry
   anchored
   axe-core-rspec
   bcrypt
