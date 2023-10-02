@@ -2,8 +2,8 @@
 fr:
   no_changes: Aucune modification
   breaking_change:
-    one: Un dossier en cours de traitement n’est pas compatible avec ce changement.
-    other: "%{count} dossiers en cours de traitement ne sont pas compatible avec ce changement."
+    one: "Les modifications apportées ne s'appliqueront pas au dossier déjà déposé."
+    other: "Les modifications apportées ne s'appliqueront pas aux %{count} dossiers déjà déposés."
   delete_champ_html:
     one: "Un dossier en cours de traitement porte ce champ. Les données associées à ce champ seront supprimées."
     other: "%{count} dossiers en cours de traitement portent ce champ. Les <strong>données</strong> associées avec ce champ seront <strong>supprimées</strong>."
