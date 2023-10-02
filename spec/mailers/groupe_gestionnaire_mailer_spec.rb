@@ -10,7 +10,7 @@ RSpec.describe GroupeGestionnaireMailer, type: :mailer do
 
     before { gestionnaires_to_add.each { groupe_gestionnaire.add(_1) } }
 
-    it { expect(subject.body).to include('Vous venez d’être nommé gestionnaire du groupe') }
+    it { expect(subject.body).to include('Vous venez d’être nommé gestionnaire du groupe gestionnaire') }
     it { expect(subject.bcc).to match_array(['int3@g', 'int4@g']) }
   end
 end

@@ -6,7 +6,7 @@ class GroupeGestionnaireMailer < ApplicationMailer
     @groupe_gestionnaire = groupe_gestionnaire
     @current_super_admin_email = current_super_admin_email
 
-    subject = "Vous avez été ajouté(e) en tant que gestionnaire du groupe d'administrateur \"#{groupe_gestionnaire.name}\""
+    subject = "Vous avez été ajouté(e) en tant que gestionnaire du groupe gestionnaire \"#{groupe_gestionnaire.name}\""
 
     mail(bcc: added_gestionnaire_emails, subject: subject)
   end

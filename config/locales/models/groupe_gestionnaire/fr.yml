@@ -1,9 +1,0 @@
-fr:
-  activerecord:
-    attributes:
-      groupe_gestionnaire:
-        gestionnaires: Gestionnaires
-    models:
-      groupe_gestionnaire:
-        one: Groupe d'administrateurs
-        other: Groupes d'administrateurs
