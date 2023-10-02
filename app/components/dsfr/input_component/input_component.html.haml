@@ -2,8 +2,13 @@
   = @form.label @attribute, label_opts do
     - capture do
       = label
+
+      - if required?
+        = render EditableChamp::AsteriskMandatoryComponent.new
+
       - if hint?
         %span.fr-hint-text= hint
+
   = @form.public_send(@input_type, @attribute, input_opts)
 
   - if errors_on_attribute?
