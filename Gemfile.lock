@@ -239,7 +239,7 @@ GEM
     excon (0.102.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
-    ffi (1.15.5)
+    ffi (1.16.2)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -658,7 +658,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scss_lint (0.59.0)
+    scss_lint (0.60.0)
       sass (~> 3.5, >= 3.5.5)
     selectize-rails (0.12.6)
     selenium-devtools (0.114.0)
