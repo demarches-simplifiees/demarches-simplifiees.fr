@@ -116,8 +116,7 @@
           .type-de-champ-add-button{ id: dom_id(coordinate, :type_de_champ_add_button), class: class_names(hidden: !coordinate.empty?) }
             = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate, is_annotation: coordinate.private?)
 
-    -  if conditional_enabled?
-      = render(TypesDeChampEditor::ConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
+    = render(TypesDeChampEditor::ConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
 
   .type-de-champ-add-button{ class: class_names(root: !coordinate.child?) }
     = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate&.parent, is_annotation: coordinate.private?, after_stable_id: type_de_champ.stable_id)

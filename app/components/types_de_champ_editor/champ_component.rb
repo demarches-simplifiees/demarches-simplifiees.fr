@@ -117,10 +117,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     revision.types_de_champ.any?(&:legacy_number?)
   end
 
-  def conditional_enabled?
-    !type_de_champ.private?
-  end
-
   def options_for_character_limit
     [
       [t('.character_limit.unlimited'), nil],
