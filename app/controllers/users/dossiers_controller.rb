@@ -94,7 +94,7 @@ module Users
     end
 
     def demande
-      @dossier = dossier
+      @dossier = dossier_with_champs(pj_template: false)
     end
 
     def messagerie
