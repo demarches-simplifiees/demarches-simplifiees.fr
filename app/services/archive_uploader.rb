@@ -14,12 +14,7 @@ class ArchiveUploader
     end
     archive.reload
     uploaded_blob.reload
-    ActiveStorage::Attachment.create(
-      name: 'file',
-      record_type: 'Archive',
-      record_id: archive.id,
-      blob_id: uploaded_blob.id
-    )
+    archive.file.attach(uploaded_blob.signed_id) # attaching a blob directly might run identify/virus scanner and wipe it
   end
 
   def blob
