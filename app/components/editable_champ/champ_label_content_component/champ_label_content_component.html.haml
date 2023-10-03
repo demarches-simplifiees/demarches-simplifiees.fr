@@ -5,7 +5,7 @@
   - elsif @champ.dossier.procedure.feature_enabled?(:disable_label_optional_champ_2023_06_29)
     -# noop here, allow admin to disable the optional_champ
   - else
-    = "#{t('.optional_champ')}"
+    %span.sr-only= t('.optional_champ')
 
 - if @champ.forked_with_changes?
   %span.updated-at.highlighted
