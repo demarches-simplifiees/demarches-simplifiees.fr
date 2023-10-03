@@ -2,7 +2,6 @@ class CreateReleaseNotes < ActiveRecord::Migration[7.0]
   def change
     create_table :release_notes do |t|
       t.date :released_on
-      t.text :body, default: nil
       t.boolean :published, default: false, null: false
       t.string :categories, array: true, default: []
 

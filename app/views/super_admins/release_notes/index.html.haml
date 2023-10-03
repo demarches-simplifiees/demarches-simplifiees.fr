@@ -1,0 +1,24 @@
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-10
+      %h1.fr-h2 Liste des annonces
+
+      = link_to("Créer une annonce", new_super_admins_release_note_path, class: "fr-btn")
+
+      %table.fr-table
+        %thead
+          %th Annoncé le
+          %th Publié?
+          %th Actions
+        %tbody
+          - @release_notes.each do |note|
+            %tr
+              %td= l(note.released_on) if note.released_on
+              %td
+                - if note.published?
+                  %span.fr-badge.fr-badge--success.fr-badge--no-icon Publié
+                - else
+                  %span.fr-badge.fr-badge--warning.fr-badge--no-icon Brouillon
+              %td
+                = link_to 'Modifier', edit_super_admins_release_note_path(note), class: 'fr-btn fr-btn--secondary'
+

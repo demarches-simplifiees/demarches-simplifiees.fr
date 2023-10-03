@@ -125,6 +125,10 @@ Rails.application.routes.draw do
     passwords: 'super_admins/passwords'
   }
 
+  namespace :super_admins do
+    resources :release_notes, only: [:index, :new, :create, :edit, :update, :show]
+  end
+
   get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'
   put 'super_admins/enable_otp', to: 'super_admins#enable_otp', as: 'enable_super_admin_otp'
 

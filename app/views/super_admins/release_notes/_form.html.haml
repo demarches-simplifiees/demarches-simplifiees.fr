@@ -1,0 +1,30 @@
+= form_for [:super_admins, release_note] do |f|
+  %fieldset#release_notes_fieldset.fr-fieldset{ 'data-controller': 'trix' }
+    .fr-fieldset__element
+      = render Dsfr::InputComponent.new(form: f, attribute: :released_on, input_type: :date_field)
+
+    .fr-fieldset__element
+      .fr-toggle
+        = f.check_box :published, class: "fr-toggle-input", id: dom_id(release_note, :published)
+        %label.fr-toggle__label{ for: dom_id(release_note, :published), data: { fr_checked_label: "Publié", fr_unchecked_label: "Brouillon" } }
+          Publier
+
+    .fr-fieldset__element
+      %fieldset.fr-fieldset{ "aria-labelledby": dom_id(release_note, :category_legend) }
+        %legend.fr-fieldset__legend.fr-fieldset__legend--regular{ id: dom_id(release_note, :category_legend) }
+          Catégories
+
+        - ReleaseNote::CATEGORIES.each do |category|
+          .fr-fieldset__element.fr-fieldset__element--inline
+            .fr-checkbox-group
+              = f.check_box :categories, { multiple: true, include_hidden: false, id: dom_id(release_note, "category_#{category}"), "aria-describedby" => "#{dom_id(release_note, "category_#{category}_messages")}" }, category, nil
+              %label.fr-label{ for: dom_id(release_note, "category_#{category}") }
+                = category.humanize
+
+    .fr-fieldset__element
+      .fr-input-group
+        = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :rich_text_area)
+
+
+    .fr-fieldset__element
+      = f.submit "Valider", class: "fr-btn fr-btn--lg"
