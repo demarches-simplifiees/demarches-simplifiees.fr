@@ -50,7 +50,7 @@ class Export < ApplicationRecord
   def compute
     load_snapshot!
 
-    file.attach(blob)
+    file.attach(blob.signed_id) # attaching a blob directly might run identify/virus scanner and wipe it
   end
 
   def since
