@@ -56,6 +56,14 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
     end
 
+    if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
+      resources :gestionnaires, only: [:index, :show, :edit, :update]
+
+      resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
+        post 'add_gestionnaire', on: :member
+      end
+    end
+
     resources :dossiers, only: [:show]
 
     resources :bill_signatures, only: [:index]
@@ -462,6 +470,17 @@ Rails.application.routes.draw do
 
         resources :batch_operations, only: [:create]
       end
+    end
+  end
+
+  if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
+
+    #
+    # Gestionnaire
+    #
+
+    scope module: 'gestionnaires', as: 'gestionnaire' do
+      resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :create]
     end
   end
 

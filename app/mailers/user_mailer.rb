@@ -38,6 +38,17 @@ class UserMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL)
   end
 
+  def invite_gestionnaire(user, reset_password_token, groupe_gestionnaire)
+    @reset_password_token = reset_password_token
+    @user = user
+    @groupe_gestionnaire = groupe_gestionnaire
+    subject = "Activez votre compte gestionnaire"
+
+    mail(to: user.email,
+      subject: subject,
+      reply_to: CONTACT_EMAIL)
+  end
+
   def send_archive(administrateur_or_instructeur, procedure, archive)
     @archive = archive
     @procedure = procedure

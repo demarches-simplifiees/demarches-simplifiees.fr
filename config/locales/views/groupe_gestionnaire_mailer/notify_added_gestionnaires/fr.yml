@@ -1,0 +1,4 @@
+fr:
+  groupe_gestionnaire_mailer:
+    notify_added_gestionnaires:
+      email_body: "Vous venez d’être nommé gestionnaire du groupe gestionnaire %{groupe_gestionnaire_name} sur %{application_name} par « %{email} »."

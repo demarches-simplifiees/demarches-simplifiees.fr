@@ -47,7 +47,8 @@ module ApplicationHelper
   def current_email
     current_user&.email ||
       current_instructeur&.email ||
-      current_administrateur&.email
+      current_administrateur&.email ||
+      current_gestionnaire&.email
   end
 
   def staging?
@@ -77,6 +78,8 @@ module ApplicationHelper
     case nav_bar_profile
     when :administrateur
       [admin_procedures_path, t("admin", scope: "layouts.root_path_link_title")]
+    when :gestionnaire
+      [gestionnaire_groupe_gestionnaires_path, t("gestionnaire", scope: "layouts.root_path_link_title")]
     when :instructeur
       [instructeur_procedures_path, t("instructeur", scope: "layouts.root_path_link_title")]
     when :user

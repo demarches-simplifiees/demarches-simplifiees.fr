@@ -9,6 +9,7 @@ class Administrateur < ApplicationRecord
   has_and_belongs_to_many :default_zones, class_name: 'Zone', join_table: 'default_zones_administrateurs'
 
   belongs_to :user
+  belongs_to :groupe_gestionnaire, optional: true
 
   default_scope { eager_load(:user) }
 

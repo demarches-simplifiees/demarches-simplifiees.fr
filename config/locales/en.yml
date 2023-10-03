@@ -101,6 +101,7 @@ en:
       user: 'Go to files list'
       instructeur: 'Go to procedures list'
       admin: 'Go to administration panel'
+      gestionnaire: "Go to admins group panel"
   views:
     legal_notice:
       title: "Legal Notices"

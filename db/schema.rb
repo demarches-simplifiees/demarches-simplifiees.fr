@@ -62,8 +62,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_28_083809) do
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: 6
+    t.bigint "groupe_gestionnaire_id"
     t.datetime "updated_at", precision: 6
     t.bigint "user_id", null: false
+    t.index ["groupe_gestionnaire_id"], name: "index_administrateurs_on_groupe_gestionnaire_id"
     t.index ["user_id"], name: "index_administrateurs_on_user_id"
   end
 
@@ -625,6 +627,29 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_28_083809) do
     t.index ["groupe_instructeur_id"], name: "index_contact_informations_on_groupe_instructeur_id"
   end
 
+  create_table "gestionnaires", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_gestionnaires_on_user_id"
+  end
+
+  create_table "gestionnaires_groupe_gestionnaires", id: false, force: :cascade do |t|
+    t.bigint "gestionnaire_id", null: false
+    t.bigint "groupe_gestionnaire_id", null: false
+    t.index ["gestionnaire_id", "groupe_gestionnaire_id"], name: "index_on_gestionnaire_and_groupe_gestionnaire"
+    t.index ["groupe_gestionnaire_id", "gestionnaire_id"], name: "index_on_groupe_gestionnaire_and_gestionnaire"
+  end
+
+  create_table "groupe_gestionnaires", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "groupe_gestionnaire_id"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["groupe_gestionnaire_id"], name: "index_groupe_gestionnaires_on_groupe_gestionnaire_id"
+    t.index ["name"], name: "index_groupe_gestionnaires_on_name"
+  end
+
   create_table "groupe_instructeurs", force: :cascade do |t|
     t.boolean "closed", default: false
     t.datetime "created_at", precision: 6, null: false
@@ -1034,6 +1059,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_28_083809) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "administrateurs", "groupe_gestionnaires"
   add_foreign_key "administrateurs", "users"
   add_foreign_key "administrateurs_instructeurs", "administrateurs"
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
