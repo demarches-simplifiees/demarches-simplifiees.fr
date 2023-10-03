@@ -213,11 +213,50 @@ def add_message(pdf, message)
 end
 
 def add_avis(pdf, avis)
-  format_in_2_lines(pdf, "Avis de #{avis.email_to_display}#{avis.confidentiel? ? ' (confidentiel)' : ''}",
-    avis.answer || 'En attente de réponse')
+  title = "Avis demandé à #{avis.email_to_display}#{avis.confidentiel? ? ' (confidentiel)' : ''} :"
 
-  if [true, false].include? avis.question_answer
-    format_in_2_columns(pdf, "Réponse oui/non ", t("question_answer.#{avis.question_answer}", scope: 'helpers.label'))
+  message = "« #{avis.introduction} »"
+  answer = avis.answer || 'En attente de réponse'
+
+  binary_question = avis.question_label ? "« #{avis.question_label} »" : nil
+  binary_answer = if binary_question.present?
+    [true, false].include?(avis.question_answer) ? t("question_answer.#{avis.question_answer}", scope: 'helpers.label') : 'En attente de réponse'
+  else
+    nil
+  end
+
+  min_height = [
+    pdf.height_of_formatted([{ text: title, style: :bold, size: 12 }]),
+
+    pdf.height_of_formatted([{ text: message, size: 12 }]),
+    pdf.height_of_formatted([{ text: answer, size: 12 }]),
+
+    binary_question.present? ? pdf.height_of_formatted([{ text: binary_question, size: 12 }]) : nil,
+    binary_answer.present? ? pdf.height_of_formatted([{ text: binary_answer, size: 12 }]) : nil
+  ].compact.sum
+
+  maybe_start_new_page(pdf, min_height)
+
+  pdf.pad_bottom(default_margin) do
+    pdf.pad_bottom(2) do
+      pdf.font 'marianne', style: :bold, size: 12 do
+        pdf.text title
+      end
+    end
+
+    pdf.font 'marianne', size: 12 do
+      pdf.text clean_string(message), color: "666666"
+      pdf.text clean_string(answer)
+    end
+
+    if binary_question.present?
+      pdf.pad_top(4) do
+        pdf.font 'marianne', size: 12 do
+          pdf.text clean_string(binary_question), color: "666666"
+          pdf.text binary_answer
+        end
+      end
+    end
   end
 end
 
