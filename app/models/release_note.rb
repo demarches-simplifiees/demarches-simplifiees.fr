@@ -1,0 +1,2 @@
+class ReleaseNote < ApplicationRecord
+end

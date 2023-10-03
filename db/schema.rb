@@ -896,6 +896,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_26_161609) do
     t.index ["procedure_id"], name: "index_refused_mails_on_procedure_id"
   end
 
+  create_table "release_notes", force: :cascade do |t|
+    t.text "body"
+    t.string "categories", default: [], array: true
+    t.datetime "created_at", null: false
+    t.boolean "published", default: false, null: false
+    t.date "released_on"
+    t.datetime "updated_at", null: false
+    t.index ["categories"], name: "index_release_notes_on_categories", using: :gin
+    t.index ["published"], name: "index_release_notes_on_published"
+  end
+
   create_table "safe_mailers", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.string "forced_delivery_method"
