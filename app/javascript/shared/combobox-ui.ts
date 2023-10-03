@@ -3,15 +3,23 @@ import { isElement, dispatch, isInputElement } from '@coldwired/utils';
 import { dispatchAction } from '@coldwired/actions';
 import { createPopper, Instance as Popper } from '@popperjs/core';
 
-import { Combobox, State, Action, Option, Hint } from './combobox';
+import {
+  Combobox,
+  Action,
+  type State,
+  type Option,
+  type Hint,
+  type Fetcher
+} from './combobox';
 
 const ctrlBindings = !!navigator.userAgent.match(/Macintosh/);
 
 export type ComboboxUIOptions = {
   input: HTMLInputElement;
-  valueInput: HTMLInputElement;
+  selectedValueInput: HTMLInputElement;
   list: HTMLUListElement;
   item: HTMLTemplateElement;
+  valueSlots?: HTMLInputElement[] | NodeListOf<HTMLInputElement>;
   allowsCustomValue?: boolean;
   hint?: HTMLElement;
   getHintText?: (hint: Hint) => string;
@@ -25,7 +33,8 @@ export class ComboboxUI implements EventListenerObject {
   #isComposing = false;
 
   #input: HTMLInputElement;
-  #valueInput: HTMLInputElement;
+  #selectedValueInput: HTMLInputElement;
+  #valueSlots: HTMLInputElement[];
   #list: HTMLUListElement;
   #item: HTMLTemplateElement;
   #hint?: HTMLElement;
@@ -35,7 +44,8 @@ export class ComboboxUI implements EventListenerObject {
 
   constructor({
     input,
-    valueInput,
+    selectedValueInput,
+    valueSlots,
     list,
     item,
     hint,
@@ -43,7 +53,8 @@ export class ComboboxUI implements EventListenerObject {
     allowsCustomValue
   }: ComboboxUIOptions) {
     this.#input = input;
-    this.#valueInput = valueInput;
+    this.#selectedValueInput = selectedValueInput;
+    this.#valueSlots = valueSlots ? Array.from(valueSlots) : [];
     this.#list = list;
     this.#item = item;
     this.#hint = hint;
@@ -52,20 +63,39 @@ export class ComboboxUI implements EventListenerObject {
   }
 
   init() {
-    const selectedValue = this.#list.dataset.selected;
-    const options = JSON.parse(this.#list.dataset.options ?? '[]') as Option[];
-    this.#list.removeAttribute('data-options');
-    this.#list.removeAttribute('data-selected');
-    const selected =
-      options.find(({ value }) => value == selectedValue) ?? null;
+    if (this.#list.dataset.url) {
+      const fetcher = createFetcher(this.#list.dataset.url);
 
-    this.#combobox = new Combobox({
-      options,
-      selected,
-      allowsCustomValue: this.#allowsCustomValue,
-      value: this.#input.value,
-      render: (state) => this.render(state)
-    });
+      this.#list.removeAttribute('data-url');
+
+      const selected: Option | null = this.#input.value
+        ? { label: this.#input.value, value: this.#selectedValueInput.value }
+        : null;
+      this.#combobox = new Combobox({
+        options: fetcher,
+        selected,
+        allowsCustomValue: this.#allowsCustomValue,
+        render: (state) => this.render(state)
+      });
+    } else {
+      const selectedValue = this.#selectedValueInput.value;
+      const options = JSON.parse(
+        this.#list.dataset.options ?? '[]'
+      ) as Option[];
+      const selected =
+        options.find(({ value }) => value == selectedValue) ?? null;
+
+      this.#list.removeAttribute('data-options');
+      this.#list.removeAttribute('data-selected');
+
+      this.#combobox = new Combobox({
+        options,
+        selected,
+        allowsCustomValue: this.#allowsCustomValue,
+        render: (state) => this.render(state)
+      });
+    }
+
     this.#combobox.init();
 
     this.#input.addEventListener('blur', this);
@@ -192,18 +222,20 @@ export class ComboboxUI implements EventListenerObject {
       this.#input.value = state.inputValue;
     }
     this.dispatchChange(() => {
-      if (this.#valueInput.value != state.inputValue) {
+      if (this.#selectedValueInput.value != state.inputValue) {
         if (state.allowsCustomValue || !state.inputValue) {
-          this.#valueInput.value = state.inputValue;
+          this.#selectedValueInput.value = state.inputValue;
         }
       }
+      return state.selection?.data;
     });
   }
 
   private renderSelect(state: State): void {
     this.dispatchChange(() => {
-      this.#valueInput.value = state.selection?.value ?? '';
+      this.#selectedValueInput.value = state.selection?.value ?? '';
       this.#input.value = state.selection?.label ?? '';
+      return state.selection?.data;
     });
   }
 
@@ -252,12 +284,28 @@ export class ComboboxUI implements EventListenerObject {
     }
   }
 
-  private dispatchChange(cb: () => void): void {
-    const value = this.#valueInput.value;
-    cb();
-    if (value != this.#valueInput.value) {
-      console.debug('combobox change', this.#valueInput.value);
-      dispatch('change', { target: this.#valueInput });
+  private dispatchChange(cb: () => Option['data']): void {
+    const value = this.#selectedValueInput.value;
+    const data = cb();
+    if (value != this.#selectedValueInput.value) {
+      for (const input of this.#valueSlots) {
+        switch (input.dataset.valueSlot) {
+          case 'value':
+            input.value = this.#selectedValueInput.value;
+            break;
+          case 'label':
+            input.value = this.#input.value;
+            break;
+          case 'data':
+            input.value = data ? JSON.stringify(data) : '';
+            break;
+        }
+      }
+      console.debug('combobox change', this.#selectedValueInput.value);
+      dispatch('change', {
+        target: this.#selectedValueInput,
+        detail: data ? { data } : undefined
+      });
     }
   }
 
@@ -353,7 +401,12 @@ function inViewport(container: HTMLElement, element: HTMLElement): boolean {
 }
 
 function optionId(value: string) {
-  return `option-${value.replace(/\s/g, '-')}`;
+  return `option-${value
+    .toLowerCase()
+    // Replace spaces and special characters with underscores
+    .replace(/[^a-z0-9]/g, '_')
+    // Remove non-alphanumeric characters at start and end
+    .replace(/^[^a-z]+|[^\w]$/g, '')}`;
 }
 
 function defaultGetHintText(hint: Hint): string {
@@ -368,4 +421,38 @@ function defaultGetHintText(hint: Hint): string {
     case 'selected':
       return `${hint.label} selected.`;
   }
+}
+
+function createFetcher(source: string, param = 'q'): Fetcher {
+  const url = new URL(source, location.href);
+
+  const fetcher: Fetcher = (term: string, options) => {
+    url.searchParams.set(param, term);
+    return fetch(url.toString(), {
+      headers: { accept: 'application/json' },
+      signal: options?.signal
+    }).then<Option[]>((response) => {
+      if (response.ok) {
+        return response.json();
+      }
+      return [];
+    });
+  };
+
+  return async (term: string, options) => {
+    await wait(500, options?.signal);
+    return fetcher(term, options);
+  };
+}
+
+function wait(ms: number, signal?: AbortSignal) {
+  return new Promise((resolve, reject) => {
+    const abort = () => reject(new DOMException('Aborted', 'AbortError'));
+    if (signal?.aborted) {
+      abort();
+    } else {
+      signal?.addEventListener('abort', abort);
+      setTimeout(resolve, ms);
+    }
+  });
 }

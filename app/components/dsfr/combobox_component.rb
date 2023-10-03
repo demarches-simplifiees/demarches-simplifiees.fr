@@ -1,9 +1,9 @@
 class Dsfr::ComboboxComponent < ApplicationComponent
-  def initialize(form: nil, options:, selected: nil, allows_custom_value: false, **html_options)
-    @form, @options, @selected, @allows_custom_value, @html_options = form, options, selected, allows_custom_value, html_options
+  def initialize(form: nil, options: nil, url: nil, selected: nil, allows_custom_value: false, **html_options)
+    @form, @options, @url, @selected, @allows_custom_value, @html_options = form, options, url, selected, allows_custom_value, html_options
   end
 
-  attr_reader :form, :options, :selected, :allows_custom_value
+  attr_reader :form, :options, :url, :selected, :allows_custom_value
 
   private
 
@@ -22,7 +22,7 @@ class Dsfr::ComboboxComponent < ApplicationComponent
       spellcheck: 'false',
       id: input_id,
       class: input_class,
-      value: input_value,
+      role: 'combobox',
       'aria-expanded': 'false',
       'aria-describedby': @html_options[:describedby]
     }.compact
@@ -36,8 +36,22 @@ class Dsfr::ComboboxComponent < ApplicationComponent
     "#{@html_options[:class].presence || ''} fr-select"
   end
 
-  def input_value
-    selected.present? ? options_with_values.find { _1.last == selected }&.first : nil
+  def selected_option_label_input_value
+    if selected.is_a?(Array) && selected.size == 2
+      selected.first
+    elsif options.present?
+      selected.present? ? options_with_values.find { _1.last == selected }&.first : nil
+    else
+      selected
+    end
+  end
+
+  def selected_option_value_input_value
+    if selected.is_a?(Array) && selected.size == 2
+      selected.last
+    else
+      selected
+    end
   end
 
   def list_id
@@ -45,10 +59,12 @@ class Dsfr::ComboboxComponent < ApplicationComponent
   end
 
   def options_with_values
+    return [] if url.present?
     options.map { _1.is_a?(Array) ? _1 : [_1, _1] }
   end
 
   def options_json
+    return nil if url.present?
     options_with_values.map { |(label, value)| { label:, value: } }.to_json
   end
 
