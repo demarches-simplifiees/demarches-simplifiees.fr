@@ -83,18 +83,20 @@ module Users
     end
 
     def show
-      @dossier = dossier
       respond_to do |format|
         format.pdf do
+          @dossier = dossier_with_champs(pj_template: false)
           @include_infos_administration = false
           render(template: 'dossiers/show', formats: [:pdf])
         end
-        format.all
+        format.all do
+          @dossier = dossier
+        end
       end
     end
 
     def demande
-      @dossier = dossier
+      @dossier = dossier_with_champs(pj_template: false)
     end
 
     def messagerie
