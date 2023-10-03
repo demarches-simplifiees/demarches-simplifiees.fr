@@ -902,6 +902,32 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #publication' do
+    subject(:perform_request) { get :publication, params: { procedure_id: procedure.id } }
+
+    context 'when procedure is closed' do
+      let(:procedure) { create(:procedure, :closed, administrateur: admin) }
+
+      it 'assigns procedure' do
+        perform_request
+        expect(response).to have_http_status(:ok)
+      end
+
+      context 'with auto_archive on past' do
+        before do
+          procedure.auto_archive_on = Date.today - 1.week
+          procedure.save(validate: false)
+        end
+
+        it 'suggest to update autoarchive' do
+          perform_request
+          expect(response).to redirect_to(admin_procedure_path(procedure.id))
+          expect(flash.alert).to include('La date limite de dépôt des dossiers doit être postérieure à la date du jour pour réactiver la procédure.')
+        end
+      end
+    end
+  end
+
   describe 'PUT #publish' do
     let(:procedure) { create(:procedure, administrateur: admin, lien_site_web: lien_site_web) }
     let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
