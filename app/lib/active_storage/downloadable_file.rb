@@ -9,7 +9,7 @@ class ActiveStorage::DownloadableFile
     include_avis_for_expert: false
   )
     PiecesJustificativesService.generate_dossier_export(dossiers, include_infos_administration:, include_avis_for_expert:) +
-      PiecesJustificativesService.liste_documents(dossiers, with_bills:, with_champs_private:)
+      PiecesJustificativesService.liste_documents(dossiers, with_bills:, with_champs_private:, with_avis_piece_justificative: include_infos_administration)
   end
 
   def self.cleanup_list_from_dossier(files)
@@ -79,6 +79,8 @@ class ActiveStorage::DownloadableFile
       'horodatage/'
     when 'Commentaire'
       'messagerie/'
+    when 'Avis'
+      'avis/'
     else
       'pieces_justificatives/'
     end

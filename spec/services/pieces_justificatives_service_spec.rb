@@ -2,10 +2,11 @@ describe PiecesJustificativesService do
   describe '.liste_documents' do
     let(:with_champs_private) { true }
     let(:with_bills) { true }
+    let(:with_avis_piece_justificative) { true }
 
     subject do
       PiecesJustificativesService
-        .liste_documents(Dossier.where(id: dossier.id), with_bills:, with_champs_private:)
+        .liste_documents(Dossier.where(id: dossier.id), with_bills:, with_champs_private:, with_avis_piece_justificative:)
         .map(&:first)
     end
 
@@ -64,6 +65,50 @@ describe PiecesJustificativesService do
         let(:with_champs_private) { false }
 
         it { expect(subject).to be_empty }
+      end
+    end
+
+    context 'with avis.piece_justificative being confidentiel' do
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:avis) { create(:avis, dossier: dossier, confidentiel: true) }
+      let(:with_avis_piece_justificative) { false }
+
+      before do
+        to_be_attached = {
+          io: StringIO.new("toto"),
+          filename: "toto.png",
+          content_type: "image/png",
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        }
+
+        avis.piece_justificative_file.attach(to_be_attached)
+      end
+
+      it "doesn't return confidentiel avis.piece_justificative_file" do
+        expect(subject).to be_empty
+      end
+    end
+
+    context 'with avis.piece_justificative being public' do
+      let(:procedure) { create(:procedure) }
+      let(:dossier) { create(:dossier, procedure: procedure) }
+      let(:avis) { create(:avis, dossier: dossier) }
+      let(:with_avis_piece_justificative) { false }
+
+      before do
+        to_be_attached = {
+          io: StringIO.new("toto"),
+          filename: "toto.png",
+          content_type: "image/png",
+          metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+        }
+
+        avis.piece_justificative_file.attach(to_be_attached)
+      end
+
+      it "return avis.piece_justificative_file not confidentiel" do
+        expect(subject).not_to be_empty
       end
     end
 
