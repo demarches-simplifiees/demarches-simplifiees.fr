@@ -43,7 +43,7 @@ describe 'Signin in:' do
 
       expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
       expect(page).to have_content(procedure.libelle)
-      expect(page).to have_content "Données d’identité"
+      expect(page).to have_content "Identité du demandeur"
     end
   end
 

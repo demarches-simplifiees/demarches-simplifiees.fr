@@ -649,3 +649,19 @@ textarea::placeholder {
     }
   }
 }
+
+.fr-fieldset__element {
+  @media (min-width: 48em) {
+    // Logic taken from DSFR source code to limit width of fieldset element.
+    // Cf dsfr/src/component/form/style/_scheme.scss
+    $short-text-width: 32rem;
+
+    &--short-text {
+      flex: 0 0 #{$short-text-width};
+    }
+
+    &--short-text:not(&--inline) {
+      margin-right: calc(100% - #{$short-text-width});
+    }
+  }
+}
