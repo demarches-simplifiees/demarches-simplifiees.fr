@@ -5,6 +5,7 @@
 .types-de-champ-editor {
   > .types-de-champ-block {
     padding-bottom: 50px;
+    padding-left: 0;
 
     .types-de-champ-errors {
       background-color: $background-red;
@@ -19,7 +20,6 @@
 
     .type-de-champ-container {
       width: 100%;
-      background-color: #FAFDFF;
       border: 1px solid $border-grey;
       border-radius: 5px;
       margin-bottom: $default-padding;
@@ -81,8 +81,6 @@
     }
 
     .head {
-      background-color: #FAFDFF;
-
       select {
         margin-bottom: 0px;
       }
@@ -104,7 +102,7 @@
         border-bottom: 1px solid $border-grey;
 
         &.head {
-          border-bottom: 1px solid #D4E5F5;
+          border-bottom: 1px solid var(--border-default-grey);
           padding-bottom: 10px;
         }
       }
@@ -127,14 +125,17 @@
     }
   }
 
+  .bottom-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
   .buttons {
     display: flex;
     justify-content: space-between;
-    margin-left: -30px;
-    position: fixed;
-    bottom: 0px;
     background-color: $white;
-    max-width: 1100px;
     width: 100%;
     border: 1px solid $border-grey;
     padding: 30px;
