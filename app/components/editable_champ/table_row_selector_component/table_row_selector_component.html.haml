@@ -1,0 +1,10 @@
+- render_parent
+
+= @form.hidden_field :value
+= @form.hidden_field :external_id
+= react_component("ComboTableRowSelectorSearch",
+  required: @champ.required?,
+  id: @champ.input_id,
+  scopeExtra: @champ.table_id,
+  describedby: @champ.describedby_id,
+  **react_combo_props)
