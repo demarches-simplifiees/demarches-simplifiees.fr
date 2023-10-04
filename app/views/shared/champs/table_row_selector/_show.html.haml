@@ -1,0 +1,40 @@
+- if champ.data.blank?
+  = champ.to_s
+- else
+  = tag.div(class: "fr-my-2w", 'data-controller': 'expand') do
+    %div{ class: "flex top-bordered" }
+      = champ.value
+      %button{ type: "button", aria: { controls: champ.id, "expanded": "false", label: t('.toggle_champ', champ: champ.libelle) }, href: champ.id, 'data-action': 'click->expand#toggle', class: "fr-btn fr-btn--tertiary-no-outline" }
+        %i.fr-icon-arrow-down-s-line{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+
+    .hidden{ id: champ.object_id, 'data-expand-target': 'content' }
+      %table.table.vertical.dossier-champs
+        %tbody
+          - data = champ.data
+          - row = data['row']
+          - fields = data["#{profile}_fields"].presence || row.keys
+          - fields.each do |name|
+            - value = row.key?(name) ? (row[name] || "") : "Champ #{name} inconnu"
+            %tr
+              %td.libelle #{name} :
+              - case value
+                - when TrueClass
+                  %td Oui
+                - when FalseClass
+                  %td Non
+                - when String
+                  %td= value
+                - when Array
+                  %td
+                    - value.map do |row|
+                      - if row.is_a?(Hash)
+                        - if row['value']
+                          %span= row['value']
+                        - elsif row['url']
+                          %span
+                            %a{ href: row['url'], target:'_blank' }= row['visible_name']
+                - when Hash
+                  - if value['value']
+                    %td= value['value']
+                - else
+                  %td= value.to_s
