@@ -11,6 +11,10 @@ class Champs::CheckboxChamp < Champs::BooleanChamp
     false
   end
 
+  def self.options
+    [[I18n.t('activerecord.attributes.type_de_champ.type_champs.checkbox_true'), true], [I18n.t('activerecord.attributes.type_de_champ.type_champs.checkbox_false'), false]]
+  end
+
   # TODO remove when normalize_checkbox_values is over
   def true?
     value_with_legacy == TRUE_VALUE

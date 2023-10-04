@@ -18,4 +18,8 @@ class Champs::YesNoChamp < Champs::BooleanChamp
   def focusable_input_id
     yes_input_id
   end
+
+  def self.options
+    [[I18n.t('activerecord.attributes.type_de_champ.type_champs.yes_no_true'), true], [I18n.t('activerecord.attributes.type_de_champ.type_champs.yes_no_false'), false]]
+  end
 end
