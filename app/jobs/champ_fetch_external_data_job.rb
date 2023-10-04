@@ -1,3 +1,5 @@
+require 'dry/monads/result/fixed'
+
 class ChampFetchExternalDataJob < ApplicationJob
   discard_on ActiveJob::DeserializationError
 
