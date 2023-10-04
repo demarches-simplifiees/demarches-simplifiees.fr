@@ -204,6 +204,8 @@ Rails.application.routes.draw do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
 
+    get 'table_row_selector/search', to: 'table_row_selector#search'
+
     get ':dossier_id/:stable_id/siret', to: 'siret#show', as: :siret
     get ':dossier_id/:stable_id/rna', to: 'rna#show', as: :rna
     delete ':dossier_id/:stable_id/options', to: 'options#remove', as: :options
