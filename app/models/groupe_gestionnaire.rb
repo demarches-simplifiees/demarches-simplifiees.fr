@@ -62,7 +62,7 @@ class GroupeGestionnaire < ApplicationRecord
     if gestionnaires_duplicate.present?
       alert = I18n.t('activerecord.errors.duplicate_email',
         count: invalid_emails.size,
-        emails: gestionnaires_duplicate.map{ |gestionnaire| gestionnaire.email })
+        emails: gestionnaires_duplicate.map(&:email))
     end
 
     if gestionnaires_to_add.present?
