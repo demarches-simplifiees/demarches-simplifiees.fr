@@ -669,6 +669,10 @@ class TypeDeChamp < ApplicationRecord
     accredited_users.presence || []
   end
 
+  def available_tables
+    TableRowSelector::API.available_tables.map { [_1[:name], _1[:id]] }
+  end
+
   def to_typed_id
     GraphQL::Schema::UniqueWithinType.encode('Champ', stable_id)
   end
@@ -826,6 +830,7 @@ class TypeDeChamp < ApplicationRecord
   private
 
   DEFAULT_EMPTY = ['']
+
   def parse_drop_down_list_value(value)
     value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
     result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
