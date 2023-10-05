@@ -17,11 +17,26 @@ describe Administrateur, type: :model do
       it { is_expected.to be true }
     end
 
-    context "when the administrateur has a procedure where they is the only admin" do
+    context "when the administrateur has a procedure with dossiers where they is the only admin" do
+      let!(:administrateur) { create(:administrateur) }
+      let!(:procedure) { create(:procedure_with_dossiers, administrateurs: [administrateur]) }
+
+      it { is_expected.to be false }
+    end
+
+    context "when the administrateur has a procedure with dossiers and with other admins" do
+      let!(:administrateur) { create(:administrateur) }
+      let!(:administrateur2) { create(:administrateur) }
+      let!(:procedure) { create(:procedure_with_dossiers, administrateurs: [administrateur, administrateur2]) }
+
+      it { is_expected.to be true }
+    end
+
+    context "when the administrateur has a procedure without dossiers" do
       let!(:administrateur) { create(:administrateur) }
       let!(:procedure) { create(:procedure, administrateurs: [administrateur]) }
 
-      it { is_expected.to be false }
+      it { is_expected.to be true }
     end
 
     context "when the administrateur has no procedure" do
