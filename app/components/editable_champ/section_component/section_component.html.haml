@@ -6,7 +6,7 @@
       - splitted_tail.each do |section, champ|
         - if section.present?
           = render section
-        - else
+        - elsif champ.visible?
           = fields_for champ.input_name, champ do |form|
             .fr-fieldset__element
               = render EditableChamp::EditableChampComponent.new form:, champ:
@@ -18,7 +18,7 @@
     - splitted_tail.each do |section, champ|
       - if section.present?
         = render section
-      - else
+      - elsif champ.visible?
         = fields_for champ.input_name, champ do |form|
           .fr-fieldset__element
             = render EditableChamp::EditableChampComponent.new form:, champ:
