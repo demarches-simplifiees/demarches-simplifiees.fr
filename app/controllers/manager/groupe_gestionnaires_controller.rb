@@ -7,7 +7,7 @@ module Manager
     end
 
     def remove_gestionnaire
-      _gestionnaire, flash[:alert], flash[:notice] = groupe_gestionnaire.remove(gestionnaire_id, current_super_admin)
+      _gestionnaire, flash[:alert], flash[:notice] = groupe_gestionnaire.remove_gestionnaire(gestionnaire_id, current_super_admin)
 
       redirect_to manager_groupe_gestionnaire_path(groupe_gestionnaire)
     end

@@ -11,6 +11,9 @@ fr:
       duplicate_email: 
         one: "%{emails} est déjà gestionnaire de ce groupe"
         other: "%{emails} sont déjà gestionnaires de ce groupe"
+      administrateurs_already_in_groupe_gestionnaire: 
+        one: Cet administrateur est déjà dans un groupe gestionnaire dont vous n'avez pas la gestion.
+        other: Ces administrateurs sont déjà dans un groupe gestionnaire dont vous n'avez pas la gestion.
     wrong_address:
       one: "%{emails} n’est pas une adresse email valide"
       other: "%{emails} ne sont pas des adresses emails valides"

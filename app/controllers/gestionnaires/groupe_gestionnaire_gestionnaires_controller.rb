@@ -11,7 +11,7 @@ module Gestionnaires
     end
 
     def destroy
-      @gestionnaire, flash[:alert], flash[:notice] = @groupe_gestionnaire.remove(params[:id], current_gestionnaire)
+      @gestionnaire, flash[:alert], flash[:notice] = @groupe_gestionnaire.remove_gestionnaire(params[:id], current_gestionnaire)
     end
   end
 end
