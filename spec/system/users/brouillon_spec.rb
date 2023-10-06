@@ -199,6 +199,11 @@ describe 'The user' do
     wait_until {
       champ_value_for('nombre décimal') == '1234.56'
     }
+
+    fill_in('nombre décimal', with: '-1,234.56')
+    wait_until {
+      champ_value_for('nombre décimal') == '-1234.56'
+    }
   end
 
   scenario 'extends dossier experation date more than one time, ', js: true, retry: 3 do

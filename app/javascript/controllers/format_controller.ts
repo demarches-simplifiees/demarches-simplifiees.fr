@@ -54,6 +54,6 @@ export class FormatController extends ApplicationController {
     const decimalSeparator =
       value.lastIndexOf(',') > value.lastIndexOf('.') ? ',' : '.';
 
-    return value.replace(new RegExp(`[^\\d${decimalSeparator}]`, 'g'), '');
+    return value.replace(new RegExp(`[^-?\\d${decimalSeparator}]`, 'g'), '');
   }
 }
