@@ -36,7 +36,7 @@ describe 'service tasks' do
 
     it 'emails admins with published procedures with services without siret' do
       message = double("message")
-      allow(message).to receive(:deliver)
+      allow(message).to receive(:deliver_later)
       allow(AdministrateurMailer).to receive(:notify_service_without_siret).with(administrateur.email).and_return(message)
       allow(AdministrateurMailer).to receive(:notify_service_without_siret).with(administrateur_with_siret_service.email).and_return(message)
 
