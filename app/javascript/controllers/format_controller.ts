@@ -44,7 +44,7 @@ export class FormatController extends ApplicationController {
   }
 
   private formatInteger(value: string) {
-    return value.replace(/[^\d]/g, '');
+    return value.replace(/[^-?\d]/g, '');
   }
 
   private formatDecimal(value: string) {
