@@ -185,6 +185,11 @@ describe 'The user' do
       champ_value_for('nombre entier') == '300'
     }
 
+    fill_in('nombre entier', with: '-256')
+    wait_until {
+      champ_value_for('nombre entier') == '-256'
+    }
+
     fill_in('nombre décimal', with: '123 456,78')
     wait_until {
       champ_value_for('nombre décimal') == '123456.78'
@@ -193,6 +198,11 @@ describe 'The user' do
     fill_in('nombre décimal', with: '1,234.56')
     wait_until {
       champ_value_for('nombre décimal') == '1234.56'
+    }
+
+    fill_in('nombre décimal', with: '-1,234.56')
+    wait_until {
+      champ_value_for('nombre décimal') == '-1234.56'
     }
   end
 
