@@ -198,4 +198,31 @@ RSpec.describe Export, type: :model do
       expect(results.count).to eq(1)
     end
   end
+
+  describe '.dossiers_count' do
+    let(:export) { create(:export, :pending) }
+
+    before do
+      blob_double = instance_double("ActiveStorage::Blob", signed_id: "some_signed_id_value")
+      attachment_double = instance_double("ActiveStorage::Attached::One", attach: true)
+
+      allow(export).to receive(:blob).and_return(blob_double)
+      allow(export).to receive(:file).and_return(attachment_double)
+
+      create_list(:dossier, 3, :en_construction, groupe_instructeur: export.groupe_instructeurs.first)
+    end
+
+    it 'is not set until generation' do
+      expect(export.dossiers_count).to be_nil
+    end
+
+    it 'is persisted after generation' do
+      export.compute_with_safe_stale_for_purge do
+        export.compute
+      end
+
+      export.reload
+      expect(export.dossiers_count).to eq(3)
+    end
+  end
 end
