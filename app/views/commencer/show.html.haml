@@ -15,9 +15,9 @@
 
   - else
     - revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
-    - dossiers = current_user.dossiers.visible_by_user.where(revision: revision)
-    - drafts = dossiers.merge(Dossier.state_brouillon)
-    - not_drafts = dossiers.merge(Dossier.state_not_brouillon)
+    - dossiers = current_user.dossiers.visible_by_user.where(revision:)
+    - drafts = dossiers.brouillon
+    - not_drafts = dossiers.state_not_brouillon
 
     - if @prefilled_dossier
       = render Dsfr::CalloutComponent.new(title: t(".prefilled_draft"), heading_level: 'h2') do |c|
