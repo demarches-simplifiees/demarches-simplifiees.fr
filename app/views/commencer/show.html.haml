@@ -52,7 +52,7 @@
       = render Dsfr::CalloutComponent.new(title: t("views.commencer.show.existing_dossiers"), heading_level: 'h2') do |c|
         - c.body do
           %ul.fr-btns-group.fr-btns-group--inline
-            %li= link_to t('views.commencer.show.show_dossiers'), dossiers_path, class: "fr-btn"
+            %li= link_to t('views.commencer.show.show_dossiers'), dossiers_path(procedure_id: @procedure.id), class: "fr-btn"
             %li= link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--secondary"
 
 

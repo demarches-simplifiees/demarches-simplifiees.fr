@@ -74,7 +74,7 @@ RSpec.describe 'commencer/show', type: :view do
 
       it 'renders a link to the dossiers list' do
         subject
-        expect(rendered).to have_link('Voir mes dossiers en cours', href: dossiers_path)
+        expect(rendered).to have_link('Voir mes dossiers en cours', href: dossiers_path(procedure_id: procedure.id))
       end
     end
 
