@@ -1,11 +1,15 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossiers, with_bills:, with_champs_private:)
+  def self.liste_documents(dossiers,
+    with_bills:,
+    with_champs_private:,
+    with_avis_piece_justificative:)
     bill_ids = []
 
     docs = dossiers.in_batches.flat_map do |batch|
       pjs = pjs_for_champs(batch, with_champs_private:) +
         pjs_for_commentaires(batch) +
-        pjs_for_dossier(batch)
+        pjs_for_dossier(batch) +
+        pjs_for_avis(batch, with_avis_piece_justificative:)
 
       if with_bills
         # some bills are shared among operations
@@ -202,6 +206,22 @@ class PiecesJustificativesService
       .where(record_type: "Attestation", record_id: attestation_id_dossier_id.keys)
       .map do |a|
         dossier_id = attestation_id_dossier_id[a.record_id]
+        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      end
+  end
+
+  def self.pjs_for_avis(dossiers, with_avis_piece_justificative:)
+    avis_ids_dossier_id_query = Avis.joins(:dossier)
+      .where(dossier: dossiers)
+    avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false) if !with_avis_piece_justificative
+    avis_ids_dossier_id = avis_ids_dossier_id_query.pluck(:id, :dossier_id).to_h
+
+    ActiveStorage::Attachment
+      .includes(:blob)
+      .where(record_type: "Avis", name: "piece_justificative_file", record_id: avis_ids_dossier_id.keys)
+      .filter { |a| safe_attachment(a) }
+      .map do |a|
+        dossier_id = avis_ids_dossier_id[a.record_id]
         ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
       end
   end
