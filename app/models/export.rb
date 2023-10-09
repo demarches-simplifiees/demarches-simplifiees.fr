@@ -64,7 +64,7 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def self.find_or_create_fresh_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
+  def self.find_or_create_fresh_export(format, groupe_instructeurs, instructeur, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
     attributes = {
       format:,
       time_span_type:,
@@ -80,6 +80,7 @@ class Export < ApplicationRecord
     return recent_export if recent_export.present?
 
     create!(**attributes, groupe_instructeurs:,
+                          instructeur:,
                           procedure_presentation:,
                           procedure_presentation_snapshot: procedure_presentation&.snapshot)
   end
