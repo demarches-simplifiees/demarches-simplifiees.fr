@@ -54,6 +54,15 @@
           %ul.fr-btns-group.fr-btns-group--inline
             %li= link_to t('views.commencer.show.show_dossiers'), dossiers_path(procedure_id: @procedure.id), class: "fr-btn"
             %li= link_to t('views.commencer.show.start_new_file'), url_for_new_dossier(@revision), class: "fr-btn fr-btn--secondary"
+          - preview_dossiers = dossiers.order(created_at: :desc).limit(3)
+          %p= t('views.commencer.show.already_created', count: preview_dossiers.size)
+          %ul
+            - preview_dossiers.each do |dossier|
+              %li= link_to t('views.commencer.show.already_created_details_html',
+                id: number_with_html_delimiter(dossier.id),
+                created_at: time_ago_in_words(dossier.created_at),
+                state: dossier_display_state(dossier.state, lower: true)),
+                dossier_path(dossier)
 
 
   - if @procedure.feature_enabled?(:dossier_pdf_vide)

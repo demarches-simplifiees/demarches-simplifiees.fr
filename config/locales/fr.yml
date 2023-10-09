@@ -221,6 +221,11 @@ fr:
         show_my_submitted_file: 'Voir mon dossier déposé'
         want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l’envoyer à l’administration concernée : %{service} - %{adresse}"
         download_empty_pdf: 'Télécharger un dossier vide au format PDF'
+        already_created:
+          one: "Votre dernier dossier :"
+          other: "Vos %{count} derniers dossiers créés :" 
+        already_created_details_html:
+          "N° %{id}, créé il y a %{created_at} et %{state}"
     prefill_descriptions:
       edit:
         intro_html: "Vous souhaitez permettre à vos usager·ères la <strong>création d'un dossier prérempli</strong>, à partir de données dont vous disposez déjà, pour la démarche « %{libelle} »."
