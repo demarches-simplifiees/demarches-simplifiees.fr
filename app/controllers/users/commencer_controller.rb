@@ -20,10 +20,9 @@ module Users
         check_prefilled_dossier_ownership if @prefilled_dossier
 
         revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
-        @dossiers = current_user.dossiers.visible_by_user.where(revision:)
-        @drafts = @dossiers.brouillon
-        @not_drafts = @dossiers.state_not_brouillon
-        @preview_dossiers = @dossiers.order(created_at: :desc).limit(3)
+        @dossiers = current_user.dossiers.select(:id, :created_at, :depose_at, :state).visible_by_user.where(revision:).order(created_at: :desc).to_a
+        @drafts, @not_drafts = @dossiers.partition(&:brouillon?)
+        @preview_dossiers = @dossiers.take(3)
       end
 
       @usual_traitement_time = @procedure.stats_usual_traitement_time

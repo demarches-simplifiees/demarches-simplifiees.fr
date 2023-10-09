@@ -28,7 +28,7 @@
       = render Dsfr::CalloutComponent.new(title: t(".already_draft"), heading_level: 'h2') do |c|
         - c.body do
           %p
-            = t('.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: dossier.procedure.libelle)
+            = t('.already_draft_detail_html', time_ago: time_ago_in_words(dossier.created_at), procedure: @procedure.libelle)
           %ul.fr-btns-group.fr-btns-group--inline
             %li= link_to t('.continue_file'), url_for_dossier(dossier), class: 'fr-btn'
             %li= link_to t('.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--secondary'
@@ -38,7 +38,7 @@
       = render Dsfr::CalloutComponent.new(title: t(".already_not_draft"), heading_level: 'h2') do |c|
         - c.body do
           %p
-            = t('.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: dossier.procedure.libelle)
+            = t('.already_not_draft_detail_html', time_ago: time_ago_in_words(dossier.depose_at), procedure: @procedure.libelle)
           %ul.fr-btns-group.fr-btns-group--inline
             %li= link_to t('.show_my_submitted_file'), url_for_dossier(dossier), class: 'fr-btn'
             %li= link_to t('.start_new_file'), url_for_new_dossier(@revision), class: 'fr-btn fr-btn--secondary'
