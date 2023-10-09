@@ -1,9 +1,10 @@
 class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurComponent < ApplicationComponent
   include ApplicationHelper
 
-  def initialize(groupe_gestionnaire:, administrateur:)
+  def initialize(groupe_gestionnaire:, administrateur:, is_gestionnaire: true)
     @groupe_gestionnaire = groupe_gestionnaire
     @administrateur = administrateur
+    @is_gestionnaire = is_gestionnaire
   end
 
   def email
@@ -23,7 +24,7 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
   end
 
   def remove_button
-    if is_there_at_least_another_active_admin?
+    if is_there_at_least_another_active_admin? && @is_gestionnaire
       button_to 'Retirer',
        remove_gestionnaire_groupe_gestionnaire_administrateur_path(@groupe_gestionnaire, @administrateur),
        method: :delete,

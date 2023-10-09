@@ -18,10 +18,12 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
         subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaires)).to include(groupe_gestionnaire) }
-      it { expect(assigns(:groupe_gestionnaires)).to include(other_groupe_gestionnaire) }
-      it { expect(assigns(:groupe_gestionnaires)).not_to include(not_my_groupe_gestionnaire) }
+      it do
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaires)).to include(groupe_gestionnaire)
+        expect(assigns(:groupe_gestionnaires)).to include(other_groupe_gestionnaire)
+        expect(assigns(:groupe_gestionnaires)).not_to include(not_my_groupe_gestionnaire)
+      end
     end
   end
 

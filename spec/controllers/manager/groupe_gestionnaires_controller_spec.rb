@@ -37,9 +37,11 @@ describe Manager::GroupeGestionnairesController, type: :controller do
     context 'of a new gestionnaire' do
       let(:new_gestionnaire_email) { 'new_gestionnaire@mail.com' }
 
-      it { expect(groupe_gestionnaire.gestionnaires.map(&:email)).to include(new_gestionnaire_email) }
-      it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(manager_groupe_gestionnaire_path(groupe_gestionnaire)) }
+      it do
+        expect(groupe_gestionnaire.gestionnaires.map(&:email)).to include(new_gestionnaire_email)
+        expect(flash.notice).to be_present
+        expect(response).to redirect_to(manager_groupe_gestionnaire_path(groupe_gestionnaire))
+      end
     end
   end
 
@@ -62,9 +64,11 @@ describe Manager::GroupeGestionnairesController, type: :controller do
     context 'when there are many gestionnaires' do
       before { remove_gestionnaire(new_gestionnaire) }
 
-      it { expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire) }
-      it { expect(groupe_gestionnaire.reload.gestionnaires.count).to eq(1) }
-      it { expect(response).to redirect_to(manager_groupe_gestionnaire_path(groupe_gestionnaire)) }
+      it do
+        expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire)
+        expect(groupe_gestionnaire.reload.gestionnaires.count).to eq(1)
+        expect(response).to redirect_to(manager_groupe_gestionnaire_path(groupe_gestionnaire))
+      end
     end
 
     context 'when there is only one gestionnaire' do
@@ -73,10 +77,12 @@ describe Manager::GroupeGestionnairesController, type: :controller do
         remove_gestionnaire(gestionnaire)
       end
 
-      it { expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire) }
-      it { expect(groupe_gestionnaire.gestionnaires.count).to eq(1) }
-      it { expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine') }
-      it { expect(response).to redirect_to(manager_groupe_gestionnaire_path(groupe_gestionnaire)) }
+      it do
+        expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire)
+        expect(groupe_gestionnaire.gestionnaires.count).to eq(1)
+        expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine')
+        expect(response).to redirect_to(manager_groupe_gestionnaire_path(groupe_gestionnaire))
+      end
     end
   end
 end
