@@ -18,6 +18,12 @@ module Users
       if user_signed_in?
         set_prefilled_dossier_ownership if @prefilled_dossier&.orphan?
         check_prefilled_dossier_ownership if @prefilled_dossier
+
+        revision = @revision.draft? ? @revision : @procedure.revisions.where.not(id: @procedure.draft_revision_id)
+        @dossiers = current_user.dossiers.visible_by_user.where(revision:)
+        @drafts = @dossiers.brouillon
+        @not_drafts = @dossiers.state_not_brouillon
+        @preview_dossiers = @dossiers.order(created_at: :desc).limit(3)
       end
 
       @usual_traitement_time = @procedure.stats_usual_traitement_time

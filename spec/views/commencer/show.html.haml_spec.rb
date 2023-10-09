@@ -3,10 +3,18 @@ RSpec.describe 'commencer/show', type: :view do
 
   let(:stored_query_params) { false }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service) }
+  let(:dossiers) { drafts + not_drafts }
+  let(:drafts) { [] }
+  let(:not_drafts) { [] }
+  let(:preview_dossiers) { dossiers.take(3) }
 
   before do
     assign(:procedure, procedure)
     assign(:revision, procedure.published_revision)
+    assign(:dossiers, dossiers)
+    assign(:drafts, drafts)
+    assign(:not_drafts, not_drafts)
+    assign(:preview_dossiers, preview_dossiers)
     if user
       sign_in user
     end
@@ -42,33 +50,33 @@ RSpec.describe 'commencer/show', type: :view do
     end
 
     context 'and they have a pending draft' do
-      let!(:brouillon) { create(:dossier, user: user, procedure: procedure) }
+      let!(:drafts) { [create(:dossier, user: user, procedure: procedure)] }
 
       it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
 
       it 'renders a link to resume the pending draft' do
         subject
-        expect(rendered).to have_text(time_ago_in_words(brouillon.created_at))
-        expect(rendered).to have_link('Continuer à remplir mon dossier', href: brouillon_dossier_path(brouillon))
+        expect(rendered).to have_text(time_ago_in_words(drafts.first.created_at))
+        expect(rendered).to have_link('Continuer à remplir mon dossier', href: brouillon_dossier_path(drafts.first))
       end
     end
 
     context 'and they have a submitted dossier' do
-      let!(:brouillon) { create(:dossier, user: user, procedure: procedure) }
-      let!(:dossier) { create(:dossier, :en_construction, :with_individual, user: user, procedure: procedure) }
+      let!(:drafts) { [create(:dossier, user: user, procedure: procedure)] }
+      let!(:not_drafts) { [create(:dossier, :en_construction, :with_individual, user: user, procedure: procedure)] }
 
       it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
 
       it 'renders a link to the submitted dossier' do
         subject
-        expect(rendered).to have_text(time_ago_in_words(dossier.depose_at))
-        expect(rendered).to have_link('Voir mon dossier', href: dossier_path(dossier))
+        expect(rendered).to have_text(time_ago_in_words(not_drafts.first.depose_at))
+        expect(rendered).to have_link('Voir mon dossier', href: dossier_path(not_drafts.first))
       end
     end
 
     context 'and they have several submitted dossiers' do
-      let!(:brouillon) { create(:dossier, user: user, procedure: procedure) }
-      let!(:dossiers) { create_list(:dossier, 2, :en_construction, :with_individual, user: user, procedure: procedure) }
+      let!(:drafts) { [create(:dossier, user: user, procedure: procedure)] }
+      let!(:not_drafts) { create_list(:dossier, 2, :en_construction, :with_individual, user: user, procedure: procedure) }
 
       it_behaves_like 'it renders a link to create a new dossier', 'Commencer un nouveau dossier'
 
