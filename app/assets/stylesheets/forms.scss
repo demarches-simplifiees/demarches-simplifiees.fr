@@ -49,6 +49,11 @@
     margin-top: 0 !important;
   }
 
+  // Don't cumulate margin-bottoms for inlined elements (radio...), because .fr-fieldset has already its own
+  .fr-fieldset__element > .fr-fieldset > .fr-fieldset__element.fr-fieldset__element--inline {
+    margin-bottom: 0;
+  }
+
   legend {
     width: 100%;
   }

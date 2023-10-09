@@ -1,9 +1,10 @@
-= content_tag((champ_component.dsfr_champ_container), html_options) do
-  - if has_label?(@champ)
-    = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at
+.fr-fieldset__element{ **fieldset_element_attributes }
+  = content_tag((champ_component.dsfr_champ_container), html_options) do
+    - if has_label?(@champ)
+      = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at
 
-  = render champ_component
+    = render champ_component
 
-  = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, described_by: @champ.describedby_id)
+    = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, described_by: @champ.describedby_id)
 
-  = @form.hidden_field :id, value: @champ.id
+    = @form.hidden_field :id, value: @champ.id

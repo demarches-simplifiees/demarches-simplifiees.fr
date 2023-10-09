@@ -8,5 +8,6 @@
 - elsif @champ.single_checkbox?
   -# no label to add
 - else
-  .fr-label.mb-4{ id: @champ.labelledby_id }
+  -# champ civilite (and other?)
+  .fr-label.fr-mb-1w{ id: @champ.labelledby_id }
     = render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
