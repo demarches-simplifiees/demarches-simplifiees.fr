@@ -1,0 +1,23 @@
+fr:
+  commencer:
+    show:
+      start_procedure: Commencer la démarche
+      existing_dossiers: Vous avez déjà des dossiers pour cette démarche
+      show_dossiers: Voir mes dossiers en cours
+      prefilled_draft: "Vous avez un dossier prérempli"
+      prefilled_draft_detail_html: "Vous êtes prêt·e à poursuivre un dossier prérempli sur la démarche « %{procedure} », commencé il y a <strong>%{time_ago}</strong>."
+      already_draft: "Vous avez déjà commencé à remplir un dossier"
+      already_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez commencé à remplir un dossier sur la démarche « %{procedure} »."
+      already_not_draft: "Vous avez déjà déposé un dossier"
+      already_not_draft_detail_html: "Il y a <strong>%{time_ago}</strong>, vous avez déposé un dossier sur la démarche « %{procedure} »."
+      go_to_prefilled_file: 'Poursuivre mon dossier prérempli'
+      continue_file: 'Continuer à remplir mon dossier'
+      start_new_file: 'Commencer un nouveau dossier'
+      show_my_submitted_file: 'Voir mon dossier déposé'
+      want_empty_pdf: "Vous souhaitez effectuer une demande par papier ? Vous pouvez télécharger un dossier vide au format PDF, et l’envoyer à l’administration concernée : %{service} - %{adresse}"
+      download_empty_pdf: 'Télécharger un dossier vide au format PDF'
+      already_created:
+        one: "Votre dernier dossier :"
+        other: "Vos %{count} derniers dossiers créés :" 
+      already_created_details_html:
+        "N° %{id}, créé il y a %{created_at} et %{state}"
