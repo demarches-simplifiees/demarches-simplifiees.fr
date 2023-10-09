@@ -29,6 +29,7 @@ class Export < ApplicationRecord
 
   has_and_belongs_to_many :groupe_instructeurs
   belongs_to :procedure_presentation, optional: true
+  belongs_to :instructeur, optional: true
 
   has_one_attached :file
 

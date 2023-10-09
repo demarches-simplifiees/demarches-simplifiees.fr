@@ -7,6 +7,8 @@ FactoryBot.define do
 
     after(:build) do |export, _evaluator|
       export.key = Export.generate_cache_key(export.groupe_instructeurs.map(&:id), export.procedure_presentation)
+      export.instructeur = export.groupe_instructeurs.first&.instructeurs&.first
+      export.dossiers_count = 10 if !export.pending?
     end
   end
 end
