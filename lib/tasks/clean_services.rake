@@ -14,7 +14,7 @@ namespace :service do
     progress = ProgressReport.new(admins.count)
 
     admins.each do |admin|
-      AdministrateurMailer.notify_service_without_siret(admin.email).deliver
+      AdministrateurMailer.notify_service_without_siret(admin.email).deliver_later
       progress.inc
     end
   end
