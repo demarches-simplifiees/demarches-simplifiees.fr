@@ -56,7 +56,7 @@ class ProcedureExportService
       content_type: content_type(format),
       identify: false,
       # We generate the exports ourselves, so they are safe
-      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE, identified: true }
     )
   end
 
