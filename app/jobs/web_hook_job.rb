@@ -18,7 +18,7 @@ class WebHookJob < ApplicationJob
     if !response.success?
       Sentry.set_tags(procedure: procedure_id, dossier: dossier_id)
       Sentry.set_extras(web_hook_url: procedure.web_hook_url)
-      Sentry.capture_message("Webhook error: #{response.status} // Response: #{response.body}")
+      Sentry.capture_message("Webhook error code: #{response.code} (#{response.return_message}) // Response: #{response.body}")
     end
   end
 end
