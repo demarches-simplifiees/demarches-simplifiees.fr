@@ -31,6 +31,7 @@ module Experts
       expert_avis = current_expert
         .avis
         .not_revoked
+        .includes(:procedure)
         .includes(dossier: :user)
         .not_hidden_by_administration
         .where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure) })
@@ -55,6 +56,7 @@ module Experts
     end
 
     def show
+      @dossier = dossier_with_champs
     end
 
     def instruction
@@ -157,6 +159,8 @@ module Experts
     end
 
     def telecharger_pjs
+      @dossier = dossier_with_champs
+
       files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: @dossier.id), include_avis_for_expert: current_expert)
       cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
 
@@ -200,6 +204,11 @@ module Experts
       @avis = current_expert.avis.find_by(id: params[:id])
       redirect_to(expert_all_avis_path, flash: { alert: "Vous n’avez pas accès à cet avis." }) and return unless @avis
       @dossier = @avis.dossier
+      set_sentry_dossier(@dossier)
+    end
+
+    def dossier_with_champs
+      DossierPreloader.load_one(@dossier, pj_template: false)
     end
 
     def avis_params
