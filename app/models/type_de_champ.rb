@@ -3,7 +3,8 @@ class TypeDeChamp < ApplicationRecord
 
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
-    cojo: :cojo_type_de_champ
+    cojo: :cojo_type_de_champ,
+    expression_reguliere: :expression_reguliere_type_de_champ
   }
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
 
