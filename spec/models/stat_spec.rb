@@ -21,6 +21,40 @@ describe Stat, type: :model do
     end
   end
 
+  describe '.dossiers_states' do
+    let(:procedure) { create(:procedure, :published) }
+    before do
+      create_list(:dossier, 2, :en_construction, depose_at: 10.days.ago, procedure:)
+      create_list(:dossier, 3, :en_construction, depose_at: 40.days.ago, procedure:)
+
+      create_list(:dossier, 3, :brouillon, procedure:, for_procedure_preview: nil)
+      create_list(:dossier, 1, :brouillon, procedure:, for_procedure_preview: false)
+
+      create_list(:dossier, 6, :en_instruction, procedure:)
+
+      create_list(:dossier, 5, :accepte, procedure:)
+      create_list(:dossier, 1, :refuse, procedure:)
+      create_list(:dossier, 1, :sans_suite, procedure:)
+
+      # ignored dossiers
+      create(:dossier, :brouillon, editing_fork_origin: Dossier.en_construction.first)
+      create(:dossier, :brouillon, procedure: create(:procedure, :draft))
+      create(:dossier, :brouillon, for_procedure_preview: true)
+    end
+
+    subject(:stats) { Stat.send(:dossiers_states) }
+
+    it 'works' do
+      expect(stats["not_brouillon"]).to eq(18)
+      expect(stats["dossiers_depose_avant_30_jours"]).to eq(2)
+      expect(stats["dossiers_deposes_entre_60_et_30_jours"]).to eq(3)
+      expect(stats["brouillon"]).to eq(4)
+      expect(stats["en_construction"]).to eq(5)
+      expect(stats["en_instruction"]).to eq(6)
+      expect(stats["termines"]).to eq(7)
+    end
+  end
+
   describe '.update_stats' do
     it 'merges dossiers_states and deleted_dossiers_states' do
       stats = {

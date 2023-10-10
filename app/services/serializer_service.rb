@@ -41,6 +41,15 @@ class SerializerService
     end
   end
 
+  def self.message(commentaire)
+    Sentry.with_scope do |scope|
+      scope.set_tags(dossier_id: commentaire.dossier_id)
+
+      data = execute_query('serializeMessage', { number: commentaire.dossier_id, id: commentaire.to_typed_id })
+      data && data['dossier']["messages"].first
+    end
+  end
+
   def self.execute_query(operation_name, variables)
     result = API::V2::Schema.execute(QUERY,
       variables: variables,
@@ -109,6 +118,14 @@ class SerializerService
           ...ChampFragment
           ...RepetitionChampFragment
           ...CarteChampFragment
+        }
+      }
+    }
+
+    query serializeMessage($number: Int!, $id: ID!) {
+      dossier(number: $number) {
+        messages(id: $id) {
+          ...MessageFragment
         }
       }
     }
@@ -357,6 +374,16 @@ class SerializerService
             }
           }
         }
+      }
+    }
+
+    fragment MessageFragment on Message {
+      id
+      email
+      body
+      createdAt
+      attachments {
+        ...FileFragment
       }
     }
   GRAPHQL

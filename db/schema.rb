@@ -14,6 +14,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "postgis"
   enable_extension "unaccent"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -321,6 +322,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "commentaire_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
+    t.string "kind", default: "correction", null: false
     t.datetime "resolved_at"
     t.datetime "updated_at", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
@@ -407,6 +409,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "revision_id"
     t.text "search_terms"
     t.string "state"
+    t.date "sva_svr_decision_on"
+    t.datetime "sva_svr_decision_triggered_at"
     t.datetime "termine_close_to_expiration_notice_sent_at"
     t.datetime "updated_at"
     t.integer "user_id"
@@ -764,6 +768,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
+    t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.datetime "test_started_at"
     t.datetime "unpublished_at"

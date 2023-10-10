@@ -2,6 +2,7 @@ FactoryBot.define do
   factory :dossier_correction do
     dossier
     commentaire
+    kind { :correction }
     resolved_at { nil }
 
     trait :resolved do

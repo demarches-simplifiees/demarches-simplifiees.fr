@@ -1,13 +1,19 @@
-%fieldset.fr-fieldset{ 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages' }
+%fieldset{ class: class_names("fr-fieldset": true, "fr-fieldset--error": error?), 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages', role: error? ? :group : nil }
   %legend.fr-fieldset__legend--regular.fr-fieldset__legend
     = content
 
-  - @buttons.map { _1.values_at(:label, :value, :hint) }.each do |label, value, hint|
+  - each_button do |label, value, hint, **button_options|
     .fr-fieldset__element
       .fr-radio-group
-        = @form.radio_button @target, value
+        = @form.radio_button @target, value, **button_options
         = @form.label @target, value: value, class: 'fr-label' do
           - capture do
             = label
-            %span.fr-hint-text= hint
-    .fr-messages-group{ 'aria-live': 'assertive' }
+
+            = button_options[:after_label] if button_options[:after_label]
+
+            %span.fr-hint-text= hint if hint
+
+  .fr-messages-group{ 'aria-live': 'assertive' }
+    - if error?
+      %p.fr-message.fr-message--error= error

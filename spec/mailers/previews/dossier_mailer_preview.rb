@@ -9,7 +9,13 @@ class DossierMailerPreview < ActionMailer::Preview
   end
 
   def notify_pending_correction
-    DossierMailer.with(dossier: dossier_en_construction).notify_pending_correction
+    commentaire = commentaire(on: dossier_en_construction(sva_svr_decision: :sva)).tap { _1.build_dossier_correction(kind: :correction) }
+    DossierMailer.with(commentaire:).notify_pending_correction
+  end
+
+  def notify_pending_correction_sva_correction
+    commentaire = commentaire(on: dossier_en_construction(sva_svr_decision: :sva)).tap { _1.build_dossier_correction(kind: :correction) }
+    DossierMailer.with(commentaire:).notify_pending_correction
   end
 
   def notify_revert_to_instruction
@@ -99,8 +105,17 @@ class DossierMailerPreview < ActionMailer::Preview
     Dossier.new(id: 47882, state: :en_instruction, procedure: procedure, user: user)
   end
 
-  def dossier_en_construction
-    Dossier.new(id: 47882, state: :en_construction, procedure: procedure, user: user)
+  def dossier_en_construction(sva_svr_decision: nil)
+    local_procedure = procedure
+
+    dossier = Dossier.new(id: 47882, state: :en_construction, procedure: local_procedure, user: user)
+
+    if sva_svr_decision
+      local_procedure.sva_svr = { decision: sva_svr_decision, period: 2, unit: :months }
+      dossier.sva_svr_decision_on = 10.days.from_now.to_date
+    end
+
+    dossier
   end
 
   def dossier_accepte

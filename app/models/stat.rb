@@ -50,12 +50,13 @@ class Stat < ApplicationRecord
           COUNT(*) FILTER ( WHERE state != 'brouillon' ) AS "not_brouillon",
           COUNT(*) FILTER ( WHERE state != 'brouillon' and depose_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
           COUNT(*) FILTER ( WHERE state != 'brouillon' and depose_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
-          COUNT(*) FILTER ( WHERE state = 'brouillon' ) AS "brouillon",
+          COUNT(*) FILTER ( WHERE state = 'brouillon' AND editing_fork_origin_id IS NULL AND (for_procedure_preview IS NULL OR for_procedure_preview = false)) AS "brouillon",
           COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "en_construction",
           COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "en_instruction",
           COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "termines"
         FROM dossiers
-        WHERE hidden_at IS NULL
+          WHERE hidden_at IS NULL
+          AND revision_id NOT IN (SELECT r.id FROM procedure_revisions r LEFT JOIN procedures p ON r.procedure_id=p.id WHERE p.aasm_state = 'brouillon')
       EOF
       )
     end

@@ -4,11 +4,15 @@
       %h1.fr-h3.fr-mb-1w
         = "Dossier nº #{dossier.id}"
 
-        = status_badge(dossier.state, 'super')
-        = pending_correction_badge(:for_instructeur) if dossier.pending_correction?
-
       = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
-      = procedure_badge(dossier.procedure)
+      .fr-mt-2w.badge-group
+        = procedure_badge(dossier.procedure)
+
+        = status_badge(dossier.state)
+        = pending_correction_badge(:for_instructeur) if dossier.pending_correction?
+        = render Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: dossier, procedure: dossier.procedure, with_label: true)
+
+
 
     .header-actions.fr-ml-auto
       = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: }
