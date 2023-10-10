@@ -307,7 +307,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.is_choice_type_from(type_champ)
-    TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == CHOICE
+    TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == CHOICE || type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
   end
 
   def drop_down_list?
@@ -480,7 +480,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.filter_hash_type(type_champ)
-    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)]) || is_choice_type_from(type_champ)
+    if is_choice_type_from(type_champ)
       :enum
     else
       :text
