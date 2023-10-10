@@ -44,7 +44,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       # click CTA for publication screen
       click_on("Publier")
       # validate publication
-      click_on("Publier")
+      within('form') { click_on 'Publier' }
 
       # now process to disable attestation
       find_attestation_card.click
