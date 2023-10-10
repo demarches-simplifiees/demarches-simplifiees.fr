@@ -2,16 +2,16 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-.suivi
-  %h1.new-h1 Cookies déposés et configuration du suivi
+.fr-container
+  %h1.fr-my-4w Cookies déposés et configuration du suivi
 
-  %p.new-p
+  %p
     Ce site dépose un petit fichier texte (un « cookie ») sur votre ordinateur lorsque vous le consultez. Cela nous permet de mesurer le nombre de visites et de comprendre quelles sont les pages les plus consultées.
 
   %iframe{ :src => MATOMO_IFRAME_URL }
 
-  %h2.new-h2 Ce site n’affiche pas de bannière de consentement aux cookies, pourquoi ?
-  %p.new-p
+  %h2.fr-my-4w Ce site n’affiche pas de bannière de consentement aux cookies, pourquoi ?
+  %p
     C’est vrai, vous n’avez pas eu à cliquer sur un bloc qui recouvre la moitié de la page pour dire que vous êtes d’accord avec le dépôt de cookies.
     %br
     %br
@@ -20,6 +20,6 @@
     %br
     Nous utilisons pour cela <a href="https://matomo.org/" target="_blank" rel="noopener">Matomo</a>, un outil <a href="https://matomo.org/free-software/" target="_blank" rel="noopener">libre</a>, paramétré pour être en conformité avec la <a href="https://www.cnil.fr/fr/solutions-pour-la-mesure-daudience">recommandation « Cookies » </a>de la CNIL. Cela signifie que votre adresse IP, par exemple, est anonymisée avant d’être enregistrée. Il est donc impossible d’associer vos visites sur ce site à votre personne.
 
-  %h2.new-h2 Comment désactiver le suivi statistique sur mon navigateur ?
-  %p.new-p
+  %h2.fr-my-4w Comment désactiver le suivi statistique sur mon navigateur ?
+  %p
     Si vous souhaitez désactiver ce suivi statistique, il vous suffit d’activer la fonctionnalité « Ne pas me pister » de votre navigateur. Notre outil de suivi le prendra en compte, et cessera d’inclure vos visites dans les statistiques.
