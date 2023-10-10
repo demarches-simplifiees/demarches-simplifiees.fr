@@ -208,23 +208,6 @@ en:
           url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
           title: "Contact the delegate of the Human Rights Defender in your region - new tab"
         remedies_three: "Send a letter by post (free of charge, do not put a stamp) Défenseur des droits Libre réponse 71120 75342 Paris CEDEX 07"
-    commencer:
-      show:
-        start_procedure: Start the procedure
-        existing_dossiers: You already have files for this procedure
-        show_dossiers: View my current files
-        prefilled_draft: "You have a prefilled file"
-        prefilled_draft_detail_html: "You are ready to continue a prefilled file for the \"%{procedure}\" procedure, started <strong>%{time_ago} ago</strong>."
-        already_draft: "You already started to fill a file"
-        already_draft_detail_html: "You started to fill a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>"
-        already_not_draft: "You already submitted a file"
-        already_not_draft_detail_html: "You submitted a file for the \"%{procedure}\" procedure <strong>%{time_ago} ago</strong>."
-        go_to_prefilled_file: 'Continue to fill my prefilled file'
-        continue_file: "Continue to fill my file"
-        start_new_file: "Start a new file"
-        show_my_submitted_file: 'Show my submitted file'
-        want_empty_pdf: "You prefer to submit a paper form? You can download an empty PDF file, and send it to the right administration : %{service} - %{adresse}"
-        download_empty_pdf: 'Download an empty PDF file'
     prefill_descriptions:
       edit:
         intro_html: "You'd like to allow your users to <strong>create a prefilled file</strong>, with data you already have, for the procedure « %{libelle} »."
