@@ -15,7 +15,8 @@ module Experts
     def index
       avis = current_expert.avis
         .not_revoked
-        .includes(dossier: [groupe_instructeur: :procedure])
+        .includes(:dossier)
+        .includes(procedure: { logo_attachment: :blob })
         .not_hidden_by_administration
       @avis_by_procedure = avis.to_a.group_by(&:procedure)
     end
@@ -30,7 +31,7 @@ module Experts
       expert_avis = current_expert
         .avis
         .not_revoked
-        .includes(:dossier)
+        .includes(dossier: :user)
         .not_hidden_by_administration
         .where(dossiers: { groupe_instructeur: GroupeInstructeur.where(procedure: @procedure) })
 
