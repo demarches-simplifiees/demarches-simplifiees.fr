@@ -4,12 +4,12 @@
   - if champ.data.blank?
     %p= t('.not_found', rna: champ.value)
   - else
-    %div.fr-background-alt--grey.fr-p-3v
+    .fr-background-alt--grey.fr-p-3v
       = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rna_champ.value")) do |c|
         - c.with_value do
           %p
             = champ.value
-            =render Dsfr::CopyButtonComponent.new(text: champ.value, title: t("activemodel.attributes.rna_champ.paste"), success: t("activemodel.attributes.rna_champ.paste_success"))
+            = render Dsfr::CopyButtonComponent.new(text: champ.value, title: t("activemodel.attributes.rna_champ.paste"), success: t("activemodel.attributes.rna_champ.paste_success"))
 
       - ['association_titre', 'association_objet', ].each do |scope|
         - if champ.data[scope].present?
