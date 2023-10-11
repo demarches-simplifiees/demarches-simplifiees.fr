@@ -594,6 +594,9 @@ Rails.application.routes.draw do
       resource :attestation_template, only: [:show, :edit, :update, :create] do
         get 'preview', on: :member
       end
+
+      resource :attestation_template_v2, only: [:show]
+
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
       get 'attestation_template/preview' => 'attestation_templates#preview'
