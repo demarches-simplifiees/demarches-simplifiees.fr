@@ -306,6 +306,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.is_choice_type_from(type_champ)
+    return false if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list) # To remove when we stop using linked_drop_down_list
     TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == CHOICE || type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
   end
 
@@ -501,7 +502,7 @@ class TypeDeChamp < ApplicationRecord
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
     elsif choice_type?
       if drop_down_list?
-        enabled_non_empty_options
+        drop_down_list_enabled_non_empty_options
       elsif yes_no?
         Champs::YesNoChamp.options
       elsif checkbox?
