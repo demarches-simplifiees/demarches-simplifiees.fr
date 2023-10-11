@@ -33,7 +33,7 @@ class COJOService
   end
 
   def url
-    "#{API_COJO_URL}/api/accreditation"
+    "#{API_COJO_URL}/api/accreditation-pf"
   end
 
   def authorization_token
@@ -50,7 +50,7 @@ class COJOService
 
   def rsa_private_key
     if ENV['COJO_JWT_RSA_PRIVATE_KEY'].present?
-      OpenSSL::PKey::RSA.new(ENV['COJO_JWT_RSA_PRIVATE_KEY'])
+      OpenSSL::PKey::RSA.new((ENV['COJO_JWT_RSA_PRIVATE_KEY'] + "\n").gsub("\\n", "\n"))
     end
   end
 end

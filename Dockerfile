@@ -64,6 +64,7 @@ ENV \
     AGENT_CONNECT_JWKS=""\
     AGENT_CONNECT_REDIRECT=""\
     API_ADRESSE_URL="https://api-adresse.data.gouv.fr"\
+    API_COJO_URL=""\
     API_CPS_AUTH=""\
     API_CPS_CLIENT_ID=""\
     API_CPS_CLIENT_SECRET=""\
@@ -88,7 +89,8 @@ ENV \
     BASIC_AUTH_PASSWORD=""\
     BASIC_AUTH_USERNAME=""\
     CARRIERWAVE_CACHE_DIR="$APP_PATH/tmp/carrierwave"\
-    CLAMAV_ENABLED='disabled'\
+    CLAMAV_ENABLED="disabled"\
+    COJO_JWT_RSA_PRIVATE_KEY=""\
     CRISP_CLIENT_KEY=""\
     CRISP_ENABLED="disabled"\
     DB_DATABASE="tps"\
