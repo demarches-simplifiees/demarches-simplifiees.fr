@@ -83,7 +83,7 @@ describe 'shared/_procedure_description', type: :view do
   end
 
   context 'when the procedure is sva' do
-    before { travel_to DateTime.new(2023, 1, 1) }
+    before { travel_to Time.zone.local(2023, 1, 1) }
     let(:procedure) { create(:procedure, :published, :sva) }
 
     it 'shows an explanation text' do

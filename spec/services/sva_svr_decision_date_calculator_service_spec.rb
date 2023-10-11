@@ -5,7 +5,7 @@ describe SVASVRDecisionDateCalculatorService do
 
   let(:procedure) { create(:procedure, sva_svr: config) }
   let(:dossier) { create(:dossier, :en_instruction, procedure:, depose_at:) }
-  let(:depose_at) { DateTime.new(2023, 5, 15, 12) }
+  let(:depose_at) { Time.zone.local(2023, 5, 15, 12) }
 
   describe '#decision_date' do
     subject { described_class.new(dossier, procedure).decision_date }
@@ -39,8 +39,8 @@ describe SVASVRDecisionDateCalculatorService do
 
       context 'when a dossier is corrected and resolved' do
         let!(:correction) do
-          created_at = DateTime.new(2023, 5, 20, 15)
-          resolved_at = DateTime.new(2023, 5, 25, 12)
+          created_at = Time.zone.local(2023, 5, 20, 15)
+          resolved_at = Time.zone.local(2023, 5, 25, 12)
           create(:dossier_correction, dossier:, created_at:, resolved_at:)
         end
 
@@ -50,8 +50,8 @@ describe SVASVRDecisionDateCalculatorService do
 
         context 'when there are multiple corrections' do
           let!(:correction2) do
-            created_at = DateTime.new(2023, 5, 30, 18)
-            resolved_at = DateTime.new(2023, 6, 3, 8)
+            created_at = Time.zone.local(2023, 5, 30, 18)
+            resolved_at = Time.zone.local(2023, 6, 3, 8)
             create(:dossier_correction, dossier:, created_at:, resolved_at:)
           end
 
@@ -62,11 +62,11 @@ describe SVASVRDecisionDateCalculatorService do
 
         context 'there is a pending correction reason = incorrect' do
           before do
-            travel_to DateTime.new(2023, 5, 30, 18) do
+            travel_to Time.zone.local(2023, 5, 30, 18) do
               dossier.flag_as_pending_correction!(build(:commentaire, dossier:))
             end
 
-            travel_to DateTime.new(2023, 6, 5, 8) # 6 days elapsed, restart 1 day after resolved
+            travel_to Time.zone.local(2023, 6, 5, 8) # 6 days elapsed, restart 1 day after resolved
           end
 
           it 'calculates the date, like if resolution will be today' do
@@ -76,11 +76,11 @@ describe SVASVRDecisionDateCalculatorService do
 
         context 'there is a pending correction reason = incomplete' do
           before do
-            travel_to DateTime.new(2023, 5, 30, 18) do
+            travel_to Time.zone.local(2023, 5, 30, 18) do
               dossier.flag_as_pending_correction!(build(:commentaire, dossier:), :incomplete)
             end
 
-            travel_to DateTime.new(2023, 6, 5, 8) # 6 days elapsed
+            travel_to Time.zone.local(2023, 6, 5, 8) # 6 days elapsed
           end
 
           it 'calculates the date, like if resolution will be today' do
@@ -90,8 +90,8 @@ describe SVASVRDecisionDateCalculatorService do
 
         context 'when correction was for an incomplete dossier' do
           let!(:correction) do
-            created_at = DateTime.new(2023, 5, 20, 15)
-            resolved_at = DateTime.new(2023, 5, 25, 12)
+            created_at = Time.zone.local(2023, 5, 20, 15)
+            resolved_at = Time.zone.local(2023, 5, 25, 12)
             create(:dossier_correction, :incomplete, dossier:, created_at:, resolved_at:)
           end
 
@@ -101,8 +101,8 @@ describe SVASVRDecisionDateCalculatorService do
 
           context 'when there are multiple corrections' do
             let!(:correction2) do
-              created_at = DateTime.new(2023, 5, 30, 18)
-              resolved_at = DateTime.new(2023, 6, 3, 8)
+              created_at = Time.zone.local(2023, 5, 30, 18)
+              resolved_at = Time.zone.local(2023, 6, 3, 8)
               create(:dossier_correction, dossier:, created_at:, resolved_at:)
             end
 
@@ -125,12 +125,12 @@ describe SVASVRDecisionDateCalculatorService do
 
       context 'there are multiple resolved correction' do
         before do
-          created_at = DateTime.new(2023, 5, 16, 15)
-          resolved_at = DateTime.new(2023, 5, 17, 12)
+          created_at = Time.zone.local(2023, 5, 16, 15)
+          resolved_at = Time.zone.local(2023, 5, 17, 12)
           create(:dossier_correction, :incomplete, dossier:, created_at:, resolved_at:)
 
-          created_at = DateTime.new(2023, 5, 20, 15)
-          resolved_at = DateTime.new(2023, 5, 25, 12)
+          created_at = Time.zone.local(2023, 5, 20, 15)
+          resolved_at = Time.zone.local(2023, 5, 25, 12)
           create(:dossier_correction, dossier:, created_at:, resolved_at:)
         end
 
@@ -141,11 +141,11 @@ describe SVASVRDecisionDateCalculatorService do
 
       context 'there is a pending correction' do
         before do
-          travel_to DateTime.new(2023, 5, 30, 18) do
+          travel_to Time.zone.local(2023, 5, 30, 18) do
             dossier.flag_as_pending_correction!(build(:commentaire, dossier:))
           end
 
-          travel_to DateTime.new(2023, 6, 5, 8)
+          travel_to Time.zone.local(2023, 6, 5, 8)
         end
 
         it 'calculates the date, like if resolution will be today and delay restarted' do
@@ -162,7 +162,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 30' do
-        let(:depose_at) { DateTime.new(2023, 6, 29, 12) }
+        let(:depose_at) { Time.zone.local(2023, 6, 29, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 9, 1))
@@ -170,7 +170,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 31' do
-        let(:depose_at) { DateTime.new(2023, 7, 30, 12) }
+        let(:depose_at) { Time.zone.local(2023, 7, 30, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 10, 2))
@@ -178,7 +178,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 1 in month having 31 days' do
-        let(:depose_at) { DateTime.new(2023, 7, 31, 12) }
+        let(:depose_at) { Time.zone.local(2023, 7, 31, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 10, 3))
@@ -186,7 +186,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 1 in month having 30 days' do
-        let(:depose_at) { DateTime.new(2023, 6, 30, 12) }
+        let(:depose_at) { Time.zone.local(2023, 6, 30, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 9, 3))
@@ -197,7 +197,7 @@ describe SVASVRDecisionDateCalculatorService do
 
   describe '#decision_date_from_today' do
     let(:config) { { decision: :sva, period: 2, unit: :months, resume: :continue } }
-    before { travel_to DateTime.new(2023, 4, 15, 12) }
+    before { travel_to Time.zone.local(2023, 4, 15, 12) }
 
     subject { described_class.decision_date_from_today(procedure) }
 

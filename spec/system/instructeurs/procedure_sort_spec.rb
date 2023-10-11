@@ -33,8 +33,8 @@ describe "procedure sort", js: true, retry: 3 do
 
   scenario "should be able to sort with header with sva date" do
     procedure.update!(sva_svr: SVASVRConfiguration.new(decision: :sva).attributes)
-    followed_dossier_2.update!(sva_svr_decision_on: Date.tomorrow)
-    followed_dossier.update!(sva_svr_decision_on: Date.today)
+    followed_dossier_2.update!(sva_svr_decision_on: Time.zone.tomorrow)
+    followed_dossier.update!(sva_svr_decision_on: Time.zone.today)
 
     visit instructeur_procedure_path(procedure, statut: "suivis")
     # sorted by notifications (updated_at desc) by default, filtered by followed
