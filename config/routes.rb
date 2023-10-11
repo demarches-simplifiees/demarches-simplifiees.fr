@@ -481,7 +481,9 @@ Rails.application.routes.draw do
     #
 
     scope module: 'gestionnaires', as: 'gestionnaire' do
-      resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :create]
+      resources :groupe_gestionnaires, path: 'groupes', only: [:index, :show, :create, :edit, :update, :destroy] do
+        resources :gestionnaires, controller: 'groupe_gestionnaire_gestionnaires', only: [:index, :create, :destroy]
+      end
     end
   end
 

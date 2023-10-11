@@ -11,6 +11,8 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
     context "when logged in" do
       let!(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+      let!(:other_groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+      let!(:not_my_groupe_gestionnaire) { create(:groupe_gestionnaire) }
       before do
         sign_in(gestionnaire.user)
         subject
@@ -18,6 +20,8 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
       it { expect(response).to have_http_status(:ok) }
       it { expect(assigns(:groupe_gestionnaires)).to include(groupe_gestionnaire) }
+      it { expect(assigns(:groupe_gestionnaires)).to include(other_groupe_gestionnaire) }
+      it { expect(assigns(:groupe_gestionnaires)).not_to include(not_my_groupe_gestionnaire) }
     end
   end
 end
