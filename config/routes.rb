@@ -56,11 +56,12 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
     end
 
-    if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
-      resources :gestionnaires, only: [:index, :show, :edit, :update]
+    if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' || Rails.env.test? # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
+      resources :gestionnaires, only: [:index, :show, :edit, :update, :destroy]
 
       resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
         post 'add_gestionnaire', on: :member
+        delete 'remove_gestionnaire', on: :member
       end
     end
 
@@ -473,7 +474,7 @@ Rails.application.routes.draw do
     end
   end
 
-  if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
+  if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' || Rails.env.test? # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
 
     #
     # Gestionnaire

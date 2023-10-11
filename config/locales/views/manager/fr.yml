@@ -5,3 +5,5 @@ fr:
         wrong_address:
           one: "%{emails} n’est pas une adresse email valide"
           other: "%{emails} ne sont pas des adresses emails valides"
+    gestionnaires:
+      manage_root_groupe_gestionnaire: Gestion du groupe racine
