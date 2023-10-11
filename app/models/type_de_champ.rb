@@ -501,7 +501,7 @@ class TypeDeChamp < ApplicationRecord
     elsif region?
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
     elsif choice_type?
-      if drop_down_list_options?
+      if drop_down_list?
         enabled_non_empty_options
       elsif yes_no?
         Champs::YesNoChamp.options
