@@ -75,9 +75,11 @@ export class AutosaveController extends ApplicationController {
     if (!target.disabled) {
       if (target.type == 'file') {
         if (target.dataset.autoAttachUrl && target.files?.length) {
+          this.globalDispatch('autosave:input');
           this.enqueueAutouploadRequest(target, target.files[0]);
         }
       } else if (target.type == 'hidden') {
+        this.globalDispatch('autosave:input');
         // In React comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
         // We want to debounce them.
         this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
@@ -85,6 +87,7 @@ export class AutosaveController extends ApplicationController {
         isSelectElement(target) ||
         isCheckboxOrRadioInputElement(target)
       ) {
+        this.globalDispatch('autosave:input');
         // Wait next tick so champs having JS can interact
         // with form elements before extracting form data.
         setTimeout(() => {
@@ -103,6 +106,7 @@ export class AutosaveController extends ApplicationController {
       target.getAttribute('role') != 'combobox' &&
       isTextInputElement(target)
     ) {
+      this.globalDispatch('autosave:input');
       this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
 
       this.showConditionnalSpinner(target);
