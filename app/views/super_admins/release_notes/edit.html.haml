@@ -2,5 +2,5 @@
   .fr-grid-row.fr-grid-row--center
     .fr-col-lg-10
       %h1.fr-h2 Annonce
-      = render partial: 'form', object: @release_note, as: :release_note
+      = render ReleaseNote::FormComponent.new(release_note: @release_note)
 
