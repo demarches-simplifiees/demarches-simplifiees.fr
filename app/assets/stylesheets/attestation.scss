@@ -1,0 +1,55 @@
+@page {
+  size: A4;
+  margin: 17mm;
+
+  @bottom-center {
+    font-family: Arial;
+    font-size: 8pt;
+    content: counter(page) " sur " counter(pages);
+  }
+}
+
+#attestation {
+  font-family: Arial;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .issuer {
+    font-size: 10pt;
+    margin: 0;
+  }
+
+  .direction {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0 0 23.3mm;
+  }
+
+  .date {
+    font-size: 8pt;
+    margin: 0 0 14mm;
+  }
+
+  .title {
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 0 12.6mm;
+  }
+
+  .main {
+    font-size: 10pt;
+  }
+
+  .notice {
+    font-size: 10pt;
+    font-style: italic;
+  }
+}

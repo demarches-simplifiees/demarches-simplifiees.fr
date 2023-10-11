@@ -4,3 +4,4 @@
 //= link administrate/application.css
 //= link administrate/application.js
 //= link manager.css
+//= link attestation.css
