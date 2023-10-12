@@ -57,6 +57,7 @@ class Champ < ApplicationRecord
     :refresh_after_update?,
     :character_limit?,
     :character_limit,
+    :yes_no?,
     to: :type_de_champ
 
   delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true

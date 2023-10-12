@@ -296,6 +296,20 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
+  def choice_type?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:checkbox),
+      TypeDeChamp.type_champs.fetch(:drop_down_list),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
+      TypeDeChamp.type_champs.fetch(:yes_no)
+    ])
+  end
+
+  def self.is_choice_type_from(type_champ)
+    return false if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list) # To remove when we stop using linked_drop_down_list
+    TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == CHOICE || type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+  end
+
   def drop_down_list?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:drop_down_list),
@@ -310,6 +324,10 @@ class TypeDeChamp < ApplicationRecord
 
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+  end
+
+  def yes_no?
+    type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
   end
 
   def block?
@@ -462,7 +480,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.filter_hash_type(type_champ)
-    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+    if is_choice_type_from(type_champ)
       :enum
     else
       :text
@@ -482,6 +500,14 @@ class TypeDeChamp < ApplicationRecord
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
+    elsif choice_type?
+      if drop_down_list?
+        drop_down_list_enabled_non_empty_options
+      elsif yes_no?
+        Champs::YesNoChamp.options
+      elsif checkbox?
+        Champs::CheckboxChamp.options
+      end
     end
   end
 

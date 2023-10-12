@@ -1,6 +1,6 @@
 describe "procedure filters" do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_departement, :with_region, instructeurs: [instructeur]) }
+  let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_departement, :with_region, :with_drop_down_list, instructeurs: [instructeur]) }
   let!(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
@@ -95,11 +95,19 @@ describe "procedure filters" do
     click_button "Ajouter le filtre"
     expect(page).to have_no_css("select#field", visible: true)
 
-    # use enum filter
+    # use statut dropdown filter
     click_on 'Sélectionner un filtre'
     select "Statut", from: "Colonne"
     find("select#value", visible: false)
     select 'En construction', from: "Valeur"
+    click_button "Ajouter le filtre"
+    expect(page).to have_no_css("select#field", visible: true)
+
+    # use choice dropdown filter
+    click_on 'Sélectionner un filtre'
+    select "Choix unique", from: "Colonne"
+    find("select#value", visible: false)
+    select 'val1', from: "Valeur"
     click_button "Ajouter le filtre"
   end
 
