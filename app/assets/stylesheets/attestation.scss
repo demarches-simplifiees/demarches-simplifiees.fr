@@ -7,6 +7,18 @@
     font-size: 8pt;
     content: counter(page) " sur " counter(pages);
   }
+
+  @bottom-left {
+    content: element(footer);
+  }
+}
+
+@media screen {
+  body {
+    max-width: 21cm;
+    padding: 17mm;
+    margin: 0 auto;
+  }
 }
 
 #attestation {
@@ -51,5 +63,10 @@
   .notice {
     font-size: 10pt;
     font-style: italic;
+  }
+
+  .footer {
+    position: running(footer);
+    font-size: 7pt;
   }
 }
