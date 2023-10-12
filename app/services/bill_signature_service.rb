@@ -8,6 +8,7 @@ class BillSignatureService
   end
 
   def self.sign_operations(operations, day)
+    return unless Certigna::API.enabled?
     bill = BillSignature.build_with_operations(operations, day)
     signature = Certigna::API.timestamp(bill.digest)
     bill.set_signature(signature, day)
