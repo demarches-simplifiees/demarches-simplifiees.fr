@@ -628,14 +628,13 @@ textarea::placeholder {
   color: $dark-grey;
 }
 
-.sticky-action-footer {
+.fixed-footer {
   border-top: 2px solid $blue-france-500;
-  position: sticky;
-  // scss-lint:disable VendorPrefix
-  position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
-  // scss-lint:enable VendorPrefix
+  position: fixed;
   bottom: 0;
-  padding: $default-padding 0;
+  left: 0;
+  right: 0;
+  padding-top: $default-padding;
   background-color: $white;
   z-index: 2;
 }

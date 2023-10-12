@@ -5,6 +5,7 @@ fr:
       you_are_here: "Vous êtes ici"
       show: "Voir le fil d’Ariane"
       preview: "Prévisualiser le formulaire"
+      preview_annotations: "Prévisualiser les annotations"
       continue: "Continuer"
       continue_title: "Vous pourrez revenir ici par la suite"
       since: "depuis le %{date}"
