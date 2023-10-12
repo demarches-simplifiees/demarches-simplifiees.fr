@@ -1,6 +1,5 @@
 describe PhoneFixer do
   describe '#fix' do
-
     subject { described_class.fix(phone_str) }
 
     context 'when separated evenly with space between and after dash' do
@@ -22,7 +21,6 @@ describe PhoneFixer do
   end
 
   describe '#fixable' do
-
     subject { described_class.fixable?(phone_str) }
 
     context 'when separated evenly with space between and after dash' do
