@@ -376,6 +376,25 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.character_limit,
           to_type_de_champ.character_limit)
       end
+    elsif to_type_de_champ.expression_reguliere?
+      if from_type_de_champ.expression_reguliere != to_type_de_champ.expression_reguliere
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere,
+          from_type_de_champ.expression_reguliere,
+          to_type_de_champ.expression_reguliere)
+      end
+      if from_type_de_champ.expression_reguliere_exemple_text != to_type_de_champ.expression_reguliere_exemple_text
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere_exemple_text,
+          from_type_de_champ.expression_reguliere_exemple_text,
+          to_type_de_champ.expression_reguliere_exemple_text)
+      end
+      if from_type_de_champ.expression_reguliere_error_message != to_type_de_champ.expression_reguliere_error_message
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere_error_message,
+          from_type_de_champ.expression_reguliere_error_message,
+          to_type_de_champ.expression_reguliere_error_message)
+      end
     end
     changes
   end

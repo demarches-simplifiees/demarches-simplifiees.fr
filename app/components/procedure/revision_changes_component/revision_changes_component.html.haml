@@ -141,6 +141,27 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_character_limit", label: change.label, to: change.to)
+      - when :expression_reguliere
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_expression_reguliere", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_expression_reguliere", label: change.label, to: change.to)
+      - when :expression_reguliere_exemple_text
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_expression_reguliere_exemple_text", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_expression_reguliere_exemple_text", label: change.label, to: change.to)
+      - when :expression_reguliere_error_message
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_expression_reguliere_error_message", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_expression_reguliere_error_message", label: change.label, to: change.to)
 
   - if @public_move_changes.present?
     - list.with_item do
