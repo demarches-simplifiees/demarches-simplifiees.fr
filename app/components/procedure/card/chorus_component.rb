@@ -7,7 +7,7 @@ class Procedure::Card::ChorusComponent < ApplicationComponent
     @procedure.chorusable?
   end
 
-  def error_messages
-    []
+  def complete?
+    @procedure.chorus_configuration.complete?
   end
 end

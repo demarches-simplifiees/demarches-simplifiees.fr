@@ -57,7 +57,7 @@ describe Administrateurs::ChorusController, type: :controller do
         let(:referentiel_de_programmation) { '{"code":"010101010101","label":"DOTATIONS+CARPA+AJ+ET+AUTRES+INTERVENTIONS","description":null,"code_programme":"101"}' }
         let(:chorus_configuration_params) do
           {
-            centre_de_coup:, domaine_fonctionnel:, referentiel_de_programmation:,
+            centre_de_coup:, domaine_fonctionnel:, referentiel_de_programmation:
           }
         end
 

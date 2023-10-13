@@ -1,19 +1,16 @@
 describe ChorusConfiguration do
-  subject { create(:procedure) }
-  it { is_expected.to be_valid }
-
   context 'empty' do
-    subject { create(:procedure, chorus: {}) }
+    subject { create(:procedure, :empty_chorus) }
     it { is_expected.to be_valid }
   end
 
   context 'partially filled chorus_configuration' do
-    subject { create(:procedure, chorus: { 'centre_de_cout' => '1' }) }
+    subject { create(:procedure, :partial_chorus) }
     it { is_expected.to be_valid }
   end
 
   context 'fully filled chorus_configuration' do
-    subject { create(:procedure, chorus: { 'centre_de_coup' => {}, 'domaine_fonctionnel' => {}, 'referentiel_de_programmation' => {} }) }
+    subject { create(:procedure, :filled_chorus) }
     it { is_expected.to be_valid }
   end
 
@@ -31,6 +28,25 @@ describe ChorusConfiguration do
         cc = ChorusConfiguration.new()
         cc.assign_attributes(centre_de_coup: {}, domaine_fonctionnel: {}, referentiel_de_programmation: {})
       end.not_to raise_error
+    end
+  end
+
+  describe '#complete?' do
+    subject { procedure.chorus_configuration.complete? }
+
+    context 'without data' do
+      let(:procedure) { create(:procedure, :empty_chorus) }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'with partial data' do
+      let(:procedure) { create(:procedure, :partial_chorus) }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'with all data' do
+      let(:procedure) { create(:procedure, :filled_chorus) }
+      it { is_expected.to be_truthy }
     end
   end
 end

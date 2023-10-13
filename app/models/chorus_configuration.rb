@@ -49,4 +49,12 @@ class ChorusConfiguration
     api_result = api_result.symbolize_keys
     "#{api_result[:label]} - #{api_result[:code]}"
   end
+
+  def complete?
+    [
+      centre_de_coup,
+      domaine_fonctionnel,
+      referentiel_de_programmation
+    ].all?(&:present?)
+  end
 end
