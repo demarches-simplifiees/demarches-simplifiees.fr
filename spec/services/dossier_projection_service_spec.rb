@@ -62,8 +62,7 @@ describe DossierProjectionService do
       end
 
       before do
-        dossier.champs_public.first.update(code_postal: '63290')
-        dossier.champs_public.first.update(value: '63102')
+        dossier.champs_public.first.update(code_postal: '63290', external_id: '63102')
       end
 
       let(:result) { subject }
