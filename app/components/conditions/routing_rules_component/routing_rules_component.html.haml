@@ -1,0 +1,25 @@
+.flex.justify-start.section{ id: dom_id(@groupe_instructeur, :routing_rule) }
+  = form_tag admin_procedure_routing_rule_path(@procedure_id, @groupe_instructeur.id),
+    method: :patch,
+    data: { turbo: true, controller: 'autosave' },
+    class: 'form width-100' do
+    .conditionnel.mt-2.width-100
+
+      %table.condition-table.mt-2
+        %thead
+          %tr
+            %th.far-left
+            %th.target Champ Cible
+            %th.operator Opérateur
+            %th.value Valeur
+            %th.delete-column
+        %tbody
+          - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
+            %tr
+              %td.far-left= far_left_tag(row_index)
+              %td.target= left_operand_tag(targeted_champ, row_index)
+              %td.operator= operator_tag(operator_name, targeted_champ, row_index)
+              %td.value= right_operand_tag(targeted_champ, value, row_index)
+              %td.delete-column= delete_condition_tag(row_index)
+
+      .flex.justify-end.mt-2= add_condition_tag

@@ -6,7 +6,7 @@
           Logique conditionnelle
           = logic_conditionnel_button
 
-      = render TypesDeChampEditor::ConditionsErrorsComponent.new(conditions: condition_per_row, upper_tdcs: @upper_tdcs)
+      = render TypesDeChampEditor::ConditionsErrorsComponent.new(conditions: condition_per_row, upper_tdcs: @source_tdcs)
 
       - if @condition.present?
         %table.condition-table.mt-2.width-100
