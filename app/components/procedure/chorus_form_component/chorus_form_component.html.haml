@@ -5,7 +5,7 @@
     - label_class_name = "#{chorus_configuration_attribute}-label"
     .fr-select-group
       = f.label chorus_configuration_attribute, class: 'fr-label', id: label_class_name
-      = render Dsfr::ComboboxComponent.new form: f, name: :chorus_configuration_attribute, url: datasource_endpoint, value: procedure.chorus_configuration.format_displayed_value(chorus_configuration_attribute), id: chorus_configuration_attribute, class: 'fr-select', describedby: label_class_name do
+      = render Dsfr::ComboboxComponent.new form: f, name: :chorus_configuration_attribute, url: datasource_endpoint, selected: procedure.chorus_configuration.format_displayed_value(chorus_configuration_attribute), id: chorus_configuration_attribute, class: 'fr-select', describedby: label_class_name do
         = f.hidden_field chorus_configuration_attribute, data: { value_slot: 'data' }, value: procedure.chorus_configuration.format_hidden_value(chorus_configuration_attribute)
 
   = f.submit "Enregister", class: 'fr-btn'
