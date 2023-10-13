@@ -221,6 +221,10 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :data_sources do
+    get :adresse, to: 'adresse#search', as: :data_source_adresse
+  end
+
   #
   # Deprecated UI
   #

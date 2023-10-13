@@ -86,7 +86,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.4)
+    addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
     administrate (0.18.0)
       actionpack (>= 5.0)
@@ -103,13 +103,10 @@ GEM
     anchored (1.1.0)
     ast (2.4.2)
     attr_required (1.0.1)
-    axe-core-api (4.2.1)
-      capybara
+    axe-core-api (4.8.0)
       dumb_delegator
-      selenium-webdriver
       virtus
-      watir
-    axe-core-rspec (4.2.1)
+    axe-core-rspec (4.8.0)
       axe-core-api
       dumb_delegator
       virtus
@@ -487,7 +484,7 @@ GEM
       pry (>= 0.13, < 0.15)
     pry-rails (0.3.9)
       pry (>= 0.10.4)
-    public_suffix (5.0.1)
+    public_suffix (5.0.3)
     puma (6.3.1)
       nio4r (~> 2.0)
     pundit (2.2.0)
@@ -576,7 +573,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.2.5)
+    rexml (3.2.6)
     rodf (1.1.1)
       builder (>= 3.0)
       dry-inflector (~> 0.1)
@@ -666,7 +663,7 @@ GEM
     selectize-rails (0.12.6)
     selenium-devtools (0.114.0)
       selenium-webdriver (~> 4.2)
-    selenium-webdriver (4.10.0)
+    selenium-webdriver (4.13.1)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
@@ -763,9 +760,6 @@ GEM
       zeitwerk (~> 2.2)
     warden (1.2.9)
       rack (>= 2.0.9)
-    watir (6.19.1)
-      regexp_parser (>= 1.2, < 3)
-      selenium-webdriver (>= 3.142.7)
     web-console (4.1.0)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -778,7 +772,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
-    websocket (1.2.9)
+    websocket (1.2.10)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
