@@ -1152,20 +1152,6 @@ class Dossier < ApplicationRecord
       end
   end
 
-  def check_expressions_regulieres_champs
-    champs_public.filter { _1.expression_reguliere && _1.visible? }.map do |champ|
-      if champ.value.present?
-        begin
-          if !champ.value.match(Regexp.new(champ.expression_reguliere, timeout: 5.0))
-            champ.errors.add(:value, :invalid)
-          end
-        rescue Regexp::TimeoutError
-          self.errors.add(:value, I18n.t('errors.messages.evil_regexp'))
-        end
-      end
-    end
-  end
-
   def demander_un_avis!(avis)
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end

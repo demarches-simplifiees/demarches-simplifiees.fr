@@ -618,15 +618,12 @@ class TypeDeChamp < ApplicationRecord
   def invalid_regexp?
     return false if expression_reguliere.blank?
     return false if expression_reguliere_exemple_text.blank?
-    begin
-      if expression_reguliere_exemple_text.match?(Regexp.new(expression_reguliere, timeout: 2.0))
-        return false
-      end
-    rescue Regexp::TimeoutError
-      self.errors.add(:expression_reguliere, I18n.t('errors.messages.evil_regexp'))
-    end
+    return false if expression_reguliere_exemple_text.match?(Regexp.new(expression_reguliere, timeout: 2.0))
 
     self.errors.add(:expression_reguliere_exemple_text, I18n.t('errors.messages.mismatch_regexp'))
+    true
+  rescue Regexp::TimeoutError
+    self.errors.add(:expression_reguliere, I18n.t('errors.messages.evil_regexp'))
     true
   rescue RegexpError
     self.errors.add(:expression_reguliere, I18n.t('errors.messages.syntax_error_regexp'))
