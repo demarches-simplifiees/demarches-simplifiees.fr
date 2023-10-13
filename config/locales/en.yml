@@ -687,7 +687,6 @@ en:
       evil_regexp: The regular expression you have entered is potentially dangerous and could lead to performance issues.
       mismatch_regexp: The provided example must match the regular expression
       syntax_error_regexp: The syntax of the regular expression is invalid
-      invalid_regexp: "%{expression_reguliere_error_message}"
       # # procedure_not_draft: "This procedure is not a draft anymore."
       # cadastres_empty:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"

@@ -1604,13 +1604,11 @@ describe Dossier, type: :model do
       before do
         champ = dossier.champs_public.first
         champ.value = expression_reguliere_exemple_text
-        champ.save!
-        dossier.reload
+        dossier.save
       end
 
       it 'should not have errors' do
-        expect(errors).not_to be_empty
-        expect(errors.first).to be_nil
+        expect(dossier.errors).to be_empty
       end
     end
   end

@@ -124,6 +124,21 @@ describe DossierRebaseConcern do
         end
       end
 
+      context 'with type de champ regexp and regexp change' do
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :expression_reguliere }], types_de_champ_private: [{}]) }
+
+        before do
+          procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(expression_reguliere: /\d+/)
+          procedure.publish_revision!
+          dossier.reload
+        end
+
+        it 'should be false' do
+          expect(dossier.pending_changes).not_to be_empty
+          expect(dossier.can_rebase?).to be_falsey
+        end
+      end
+
       context 'with removed type de champ' do
         before do
           procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
