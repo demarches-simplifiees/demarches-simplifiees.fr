@@ -195,14 +195,19 @@ describe 'The user' do
       champ_value_for('nombre décimal') == '123456.78'
     }
 
-    fill_in('nombre décimal', with: '1,234.56')
+    champ_past_value_for('nombre décimal', '1,234.56')
     wait_until {
       champ_value_for('nombre décimal') == '1234.56'
     }
 
-    fill_in('nombre décimal', with: '-1,234.56')
+    champ_past_value_for('nombre décimal', '-1,234.56')
     wait_until {
       champ_value_for('nombre décimal') == '-1234.56'
+    }
+
+    champ_past_value_for('nombre décimal', '1.234,56')
+    wait_until {
+      champ_value_for('nombre décimal') == '1234.56'
     }
   end
 
@@ -582,6 +587,18 @@ describe 'The user' do
 
   def champ_value_for(libelle)
     champ_for(libelle).value
+  end
+
+  def champ_id_for(libelle)
+    champ_for(libelle).input_id
+  end
+
+  def champ_past_value_for(libelle, value)
+    execute_script("{
+      let target = document.querySelector('##{champ_id_for(libelle)}');
+      target.value = \"#{value}\";
+      target.dispatchEvent(new CustomEvent('input', { bubbles: true }));
+    }")
   end
 
   def champ_for(libelle)
