@@ -1,11 +1,11 @@
 require Rails.root.join("lib", "tasks", "task_helper")
 
-namespace :phone_fixer do
+namespace :data_fixer do
   desc <<~EOD
     Given a procedure_id in argument, run the PhoneFixer.
-    ex: rails phone_fixer:run\[1\]
+    ex: rails data_fixer:fix_phones\[1\]
   EOD
-  task :run, [:procedure_id] => :environment do |_t, args|
+  task :fix_phones, [:procedure_id] => :environment do |_t, args|
     procedure = Procedure.find(args[:procedure_id])
 
     phone_champs = Champ
