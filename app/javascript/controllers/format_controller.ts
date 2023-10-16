@@ -7,25 +7,29 @@ export class FormatController extends ApplicationController {
       case 'list':
         this.on('change', (event) => {
           const target = event.target as HTMLInputElement;
-          target.value = this.formatList(target.value);
+          const value = this.formatList(target.value);
+          replaceValue(target, value);
         });
         break;
       case 'iban':
         this.on('input', (event) => {
           const target = event.target as HTMLInputElement;
-          target.value = this.formatIBAN(target.value);
+          const value = this.formatIBAN(target.value);
+          replaceValue(target, value);
         });
         break;
       case 'integer':
         this.on('input', (event) => {
           const target = event.target as HTMLInputElement;
-          target.value = this.formatInteger(target.value);
+          const value = this.formatInteger(target.value);
+          replaceValue(target, value);
         });
         break;
       case 'decimal':
         this.on('input', (event) => {
           const target = event.target as HTMLInputElement;
-          target.value = this.formatDecimal(target.value);
+          const value = this.formatDecimal(target.value);
+          replaceValue(target, value);
         });
         break;
     }
@@ -48,12 +52,34 @@ export class FormatController extends ApplicationController {
   }
 
   private formatDecimal(value: string) {
-    // Le séparateur de décimales est toujours après le séparateur de milliers (un point ou une virgule).
-    // S'il n'y a qu'un seul séparateur, on considère que c'est celui des décimales.
-    // S'il n'y en a pas, ça n'a pas d'effet.
-    const decimalSeparator =
-      value.lastIndexOf(',') > value.lastIndexOf('.') ? ',' : '.';
-
-    return value.replace(new RegExp(`[^-?\\d${decimalSeparator}]`, 'g'), '');
+    const decimalSeparator = getDecimalSeparator(value);
+    const number =
+      decimalSeparator == ','
+        ? value.replace(/\./g, '').replace(/,/g, '.')
+        : value.replace(/,/g, '');
+    return number.replace(new RegExp(`[^-?\\d.]`, 'g'), '');
   }
+}
+
+function replaceValue(target: HTMLInputElement, value: string) {
+  const delta = target.value.length - value.length;
+  const start = target.selectionStart;
+  const end = target.selectionEnd;
+  const dir = target.selectionDirection;
+  target.value = value;
+  target.selectionStart = start ? start - delta : 0;
+  target.selectionEnd = end ? end - delta : 0;
+  target.selectionDirection = dir;
+}
+
+function getDecimalSeparator(value: string) {
+  if (value.indexOf('.') != -1 && value.indexOf(',') != -1) {
+    if (value.lastIndexOf('.') < value.lastIndexOf(',')) {
+      return ',';
+    }
+    return '.';
+  } else if (value.indexOf(',') != -1) {
+    return ',';
+  }
+  return (1.1).toLocaleString().indexOf('.') != -1 ? '.' : ',';
 }
