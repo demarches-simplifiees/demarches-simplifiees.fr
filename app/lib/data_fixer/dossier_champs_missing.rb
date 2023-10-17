@@ -20,21 +20,46 @@ class DataFixer::DossierChampsMissing
   end
 
   def apply_fix(dossier)
-    dossier_champs = dossier.champs_public.includes(:type_de_champ)
-    revision_type_de_champ = TypeDeChamp.joins(:revision_type_de_champ).where(revision_type_de_champ: { revision: dossier.revision })
+    added_champs_root = fix_champs_root(dossier)
+    added_champs_in_repetition = fix_champs_in_repetition(dossier)
 
-    dossier_tdc_stable_ids = dossier_champs.map(&:type_de_champ).map(&:stable_id)
-
-    missing_tdcs = revision_type_de_champ.filter { !dossier_tdc_stable_ids.include?(_1.stable_id) }
-    missing_tdcs.map do |missing_champ|
-      dossier.champs_public << missing_champ.build_champ
-    end
-
-    if !missing_tdcs.empty?
+    added_champs = added_champs_root + added_champs_in_repetition
+    if !added_champs.empty?
       dossier.save!
-      missing_tdcs.size
+      added_champs.size
     else
       0
+    end
+  end
+
+  def fix_champs_root(dossier)
+    champs_root, _ = dossier.champs.partition { _1.parent_id.blank? }
+    expected_tdcs = dossier.revision.revision_types_de_champ.filter { _1.parent.blank? }.map(&:type_de_champ)
+
+    expected_tdcs.filter { !champs_root.map(&:stable_id).include?(_1.stable_id) }
+      .map do |missing_tdc|
+                    champ_root_missing = missing_tdc.build_champ
+
+                    dossier.champs_public << champ_root_missing
+                    champ_root_missing
+                  end
+  end
+
+  def fix_champs_in_repetition(dossier)
+    champs_repetition, _ = dossier.champs.partition(&:repetition?)
+
+    champs_repetition.flat_map do |champ_repetition|
+      champ_repetition_missing = champ_repetition.rows.flat_map do |row|
+        row_id = row.first.row_id
+        expected_tdcs = dossier.revision.children_of(champ_repetition.type_de_champ)
+        row_tdcs = row.map(&:type_de_champ)
+
+        (expected_tdcs - row_tdcs).map do |missing_tdc|
+          champ_repetition_missing = missing_tdc.build_champ(row_id: row_id)
+          champ_repetition.champs << champ_repetition_missing
+          champ_repetition_missing
+        end
+      end
     end
   end
 end

@@ -32,5 +32,25 @@ describe DataFixer::DossierChampsMissing do
         expect(subject).to eq(2)
       end
     end
+
+    context 'when dossier have missing champ on repetition' do
+      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:champ_repetition) { dossier.champs_public.first }
+      let(:initial_champ_count) { dossier.champs.count }
+      before do
+        initial_champ_count
+        champ_repetition.champs.first.destroy
+      end
+      subject { described_class.new(dossier:).fix }
+
+      it 'add missing champs to repetition' do
+        expect { subject }.to change { dossier.champs.count }.from(initial_champ_count - 1).to(initial_champ_count)
+      end
+
+      it 'counts number of added champs for dossier.repetitions' do
+        expect(subject).to eq(1)
+      end
+    end
   end
 end
