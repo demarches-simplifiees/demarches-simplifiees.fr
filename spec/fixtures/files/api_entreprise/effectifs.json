@@ -1,6 +1,17 @@
 {
-  "siren": "418166096",
-  "annee": "2020",
-  "mois": "02",
-  "effectifs_mensuels": 100.5
+  "data": {
+    "siret": "41816609600069",
+    "effectifs_mensuels": [
+      {
+        "regime": "regime_general",
+        "value": 12.34,
+        "nature": "effectif_moyen_mensuel",
+        "annee": "2020",
+        "mois": "02",
+        "date_derniere_mise_a_jour": "2018-01-01"
+      }
+    ]
+  },
+  "links": {},
+  "meta": {}
 }
