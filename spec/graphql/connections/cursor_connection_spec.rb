@@ -83,4 +83,31 @@ RSpec.describe Connections::CursorConnection do
       it { is_expected.to be true }
     end
   end
+
+  describe '.next_page?' do
+    let(:before) { nil }
+    let(:result_size) { nil }
+    let(:limit) { nil }
+    let(:inverted) { false }
+
+    subject do
+      cursor = Connections::CursorConnection.new(Dossier)
+      cursor.send(:next_page?, before, result_size, limit, inverted)
+    end
+
+    context 'when before is present' do
+      let(:before) { :before }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when not inverted and result_size == limit' do
+      let(:inverted) { false }
+      let(:result_size) { 3 }
+      let(:limit) { 3 }
+
+      it { is_expected.to be true }
+    end
+  end
+
 end
