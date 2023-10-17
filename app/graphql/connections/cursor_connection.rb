@@ -27,6 +27,7 @@ module Connections
 
     def load_nodes
       @nodes ||= begin
+        ensure_valid_params
         page_info = compute_page_info(before:, after:, first:, last:)
         nodes = resolve_nodes(**page_info.slice(:before, :after, :limit, :inverted))
         result_size = nodes.size
@@ -36,6 +37,24 @@ module Connections
         trimmed_nodes = nodes.first(page_info[:expected_size])
         trimmed_nodes.reverse! if page_info[:inverted]
         trimmed_nodes
+      end
+    end
+
+    def ensure_valid_params
+      if first.present? && last.present?
+        raise GraphQL::ExecutionError.new('Arguments "first" and "last" are exclusive', extensions: { code: :bad_request })
+      end
+
+      if before.present? && after.present?
+        raise GraphQL::ExecutionError.new('Arguments "before" and "after" are exclusive', extensions: { code: :bad_request })
+      end
+
+      if first.present? && first < 0
+        raise GraphQL::ExecutionError.new('Argument "first" must be a non-negative integer', extensions: { code: :bad_request })
+      end
+
+      if last.present? && last < 0
+        raise GraphQL::ExecutionError.new('Argument "last" must be a non-negative integer', extensions: { code: :bad_request })
       end
     end
 
@@ -76,22 +95,6 @@ module Connections
     # first is a number (n) and mean take n element in order ascendant
     # last : n element in order descendant
     def compute_page_info(before: nil, after: nil, first: nil, last: nil)
-      if first.present? && last.present?
-        raise GraphQL::ExecutionError.new('Arguments "first" and "last" are exclusive', extensions: { code: :bad_request })
-      end
-
-      if before.present? && after.present?
-        raise GraphQL::ExecutionError.new('Arguments "before" and "after" are exclusive', extensions: { code: :bad_request })
-      end
-
-      if first.present? && first < 0
-        raise GraphQL::ExecutionError.new('Argument "first" must be a non-negative integer', extensions: { code: :bad_request })
-      end
-
-      if last.present? && last < 0
-        raise GraphQL::ExecutionError.new('Argument "last" must be a non-negative integer', extensions: { code: :bad_request })
-      end
-
       if @deprecated_order == :desc
         if last.present?
           first = [last, max_page_size].min
