@@ -92,6 +92,18 @@ describe TypesDeChampEditor::ConditionsComponent, type: :component do
             expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + departement_options))
           end
         end
+
+        context 'regions' do
+          let(:regions) { create(:type_de_champ_regions) }
+          let(:upper_tdcs) { [regions] }
+          let(:condition) { empty_operator(champ_value(regions.stable_id), constant(true)) }
+          let(:region_options) { APIGeoService.regions.map { "#{_1[:code]} – #{_1[:name]}" } }
+
+          it do
+            expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + region_options))
+          end
+        end
       end
 
       context 'and 2 conditions' do
