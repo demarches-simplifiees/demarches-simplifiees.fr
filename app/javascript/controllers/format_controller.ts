@@ -30,9 +30,10 @@ export class FormatController extends ApplicationController {
 
   private formatIBAN(value: string) {
     return value
-      .replace(/[^\dA-Z]/g, '')
+      .replace(/[^\dA-Z]/gi, '')
       .replace(/(.{4})/g, '$1 ')
-      .trim();
+      .trim()
+      .toUpperCase();
   }
 
   private formatInteger(value: string) {

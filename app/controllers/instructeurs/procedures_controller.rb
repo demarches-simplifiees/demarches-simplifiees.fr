@@ -14,6 +14,13 @@ module Instructeurs
         .includes(:defaut_groupe_instructeur)
         .order(closed_at: :desc, unpublished_at: :desc, published_at: :desc, created_at: :desc)
 
+      @procedures_publiees = paginated_published_procedures
+      @procedures_draft = paginated_draft_procedures
+      @procedures_closed = paginated_closed_procedures
+      @procedures_publiees_count = current_instructeur.procedures.publiees.count
+      @procedures_draft_count = current_instructeur.procedures.brouillons.count
+      @procedures_closed_count = current_instructeur.procedures.closes.count
+
       dossiers = current_instructeur.dossiers
         .joins(groupe_instructeur: :procedure)
         .where(procedures: { hidden_at: nil })
@@ -47,6 +54,35 @@ module Instructeurs
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
+      @statut = params[:statut]
+      @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
+    end
+
+    def paginated_published_procedures
+      current_instructeur
+        .procedures
+        .publiees
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(published_at: :desc)
+    end
+
+    def paginated_draft_procedures
+      current_instructeur
+        .procedures
+        .brouillons
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(created_at: :desc)
+    end
+
+    def paginated_closed_procedures
+      current_instructeur
+        .procedures
+        .closes
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+        .order(created_at: :desc)
     end
 
     def show

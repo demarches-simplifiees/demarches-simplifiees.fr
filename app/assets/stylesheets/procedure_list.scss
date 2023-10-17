@@ -3,10 +3,6 @@
 @import "mixins";
 
 .procedure-list {
-  .procedure-item {
-    background-color: rgba(0, 0, 0, 0.02);
-  }
-
   .procedure-logo-link {
     background-image: none;
   }
@@ -20,9 +16,6 @@
     background-position: 95% 50%;
   }
 
-  .procedure-status {
-    margin-left: auto;
-  }
 
   .procedure-stats {
     list-style-type: none;

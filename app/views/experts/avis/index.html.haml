@@ -3,9 +3,9 @@
 .container
   %h1.page-title Avis
 
-  %ul.procedure-list
+  %ul.procedure-list.fr-pl-0
     - @avis_by_procedure.each do |p, procedure_avis|
-      %li.procedure-item.flex.align-start.fr-my-3w.fr-p-2w{ id: dom_id(p) }
+      %li.flex.align-start.fr-my-3w.fr-p-2w{ id: dom_id(p) }
         .flex
           = link_to instructeur_procedure_path(p), class: 'procedure-logo-link' do
             .procedure-logo{ style: "background-image: url(#{p.logo_url})" }
@@ -35,10 +35,10 @@
                       = pluralize(with_answer_count, "avis donné")
 
           - if p.close?
-            .procedure-status
+            .ml-auto
               %span.label
                 = t('helpers.procedure.close')
           - elsif p.depubliee?
-            .procedure-status
+            .ml-auto
               %span.label
                 = t('helpers.procedure.unpublished')

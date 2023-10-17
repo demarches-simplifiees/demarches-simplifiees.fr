@@ -5,6 +5,7 @@ module Types
     global_id_field :id
     field :label, String, "Libellé du champ.", null: false, method: :libelle
     field :string_value, String, "La valeur du champ sous forme texte.", null: true, method: :for_api_v2
+    field :updated_at, GraphQL::Types::ISO8601DateTime, "Date de dernière modification du champ.", null: false
 
     definition_methods do
       def resolve_type(object, context)

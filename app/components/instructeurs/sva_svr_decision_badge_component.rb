@@ -53,4 +53,14 @@ class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
   def label_for_badge
     sva? ? "SVA :" : "SVR :"
   end
+
+  def title
+    return if without_date?
+
+    if pending_correction?
+      t(".dossier_terminated_x_days_after_correction", count: days_count)
+    else
+      t(".dossier_terminated_on", date: helpers.l(object.sva_svr_decision_on))
+    end
+  end
 end
