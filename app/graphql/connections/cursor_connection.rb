@@ -51,6 +51,17 @@ module Connections
     #
     # last: 2, order: desc => first 2
     # -> d1, d2
+    def limit_and_inverted(first: nil, last: nil, after: nil, before: nil, order: nil)
+      limit = [first, last, max_page_size].compact.min + 1
+      inverted = last.present? || before.present?
+
+      if order == :desc && after.nil? && before.nil?
+        inverted = !inverted
+      end
+
+      [limit, inverted]
+    end
+
     def load_nodes
       @nodes ||= begin
         ensure_valid_params
