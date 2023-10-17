@@ -112,10 +112,10 @@ def add_identite_etablissement(pdf, etablissement)
 
     if @include_infos_administration
       if etablissement.entreprise_effectif_mensuel.present?
-        format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} (URSSAF) ", number_with_delimiter(etablissement.entreprise_effectif_mensuel.to_s))
+        format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} de l'établissement (URSSAF ou MSA) ", number_with_delimiter(etablissement.entreprise_effectif_mensuel.to_s))
       end
       if etablissement.entreprise_effectif_annuel_annee.present?
-        format_in_2_columns(pdf, "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} (URSSAF) ", number_with_delimiter(etablissement.entreprise_effectif_annuel.to_s))
+        format_in_2_columns(pdf, "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} de l'unité légale (URSSAF ou MSA) ", number_with_delimiter(etablissement.entreprise_effectif_annuel.to_s))
       end
     end
 
