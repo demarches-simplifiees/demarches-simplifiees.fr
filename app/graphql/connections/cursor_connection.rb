@@ -74,18 +74,17 @@ module Connections
       @nodes ||= begin
         ensure_valid_params
 
-        limit = compute_limit(first:, last:)
+        limit, inverted = limit_and_inverted(first:, last:, after:, before:, order: @deprecated_order)
         expected_size = limit - 1
 
-        page_info = compute_page_info(limit:, before:, after:, first:, last:)
-        nodes = resolve_nodes(limit:, **page_info.slice(:before, :after, :inverted))
+        nodes = resolve_nodes(limit:, before:, after:, inverted:)
 
         result_size = nodes.size
-        @has_previous_page = page_info[:has_previous_page].(result_size)
-        @has_next_page = page_info[:has_next_page].(result_size)
+        @has_previous_page = previous_page?(after, result_size, limit, inverted)
+        @has_next_page = next_page?(before, result_size, limit, inverted)
 
         trimmed_nodes = nodes.first(expected_size)
-        trimmed_nodes.reverse! if page_info[:inverted]
+        trimmed_nodes.reverse! if inverted
         trimmed_nodes
       end
     end
