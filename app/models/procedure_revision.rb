@@ -19,6 +19,7 @@ class ProcedureRevision < ApplicationRecord
 
   validate :conditions_are_valid?
   validate :header_sections_are_valid?
+  validate :expressions_regulieres_are_valid?
 
   delegate :path, to: :procedure, prefix: true
 
@@ -375,6 +376,25 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.character_limit,
           to_type_de_champ.character_limit)
       end
+    elsif to_type_de_champ.expression_reguliere?
+      if from_type_de_champ.expression_reguliere != to_type_de_champ.expression_reguliere
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere,
+          from_type_de_champ.expression_reguliere,
+          to_type_de_champ.expression_reguliere)
+      end
+      if from_type_de_champ.expression_reguliere_exemple_text != to_type_de_champ.expression_reguliere_exemple_text
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere_exemple_text,
+          from_type_de_champ.expression_reguliere_exemple_text,
+          to_type_de_champ.expression_reguliere_exemple_text)
+      end
+      if from_type_de_champ.expression_reguliere_error_message != to_type_de_champ.expression_reguliere_error_message
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :expression_reguliere_error_message,
+          from_type_de_champ.expression_reguliere_error_message,
+          to_type_de_champ.expression_reguliere_error_message)
+      end
     end
     changes
   end
@@ -410,6 +430,16 @@ class ProcedureRevision < ApplicationRecord
       .map { errors_for_header_sections_order(_1) }
 
     repetition_tdcs_errors + root_tdcs_errors
+  end
+
+  def expressions_regulieres_are_valid?
+    types_de_champ_public.to_a
+      .flat_map { _1.repetition? ? children_of(_1) : _1 }
+      .each do |tdc|
+        if tdc.expression_reguliere? && tdc.invalid_regexp?
+          errors.add(:expression_reguliere, type_de_champ: tdc)
+        end
+      end
   end
 
   def errors_for_header_sections_order(tdcs)

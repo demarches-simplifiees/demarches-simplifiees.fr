@@ -243,6 +243,10 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_cojo, procedure: dossier.procedure }
     end
 
+    factory :champ_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do
+      type_de_champ { association :type_de_champ_expression_reguliere, procedure: dossier.procedure }
+    end
+
     factory :champ_repetition, class: 'Champs::RepetitionChamp' do
       type_de_champ { association :type_de_champ_repetition, procedure: dossier.procedure }
 

@@ -1,0 +1,8 @@
+en:
+  activerecord:
+    errors:
+      models:
+        champs/expression_reguliere_champ:
+          attributes:
+            value:
+              invalid_regexp: does not match expected format
