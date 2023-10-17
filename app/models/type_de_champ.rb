@@ -637,19 +637,19 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.refresh_after_update?(type_champ)
+    # We should refresh all champs after update except for champs using react or custom refresh
+    # logic (RNA, SIRET, etc.)
     case type_champ
-    when type_champs.fetch(:epci),
-      type_champs.fetch(:communes),
-      type_champs.fetch(:visa),
-      type_champs.fetch(:multiple_drop_down_list),
-      type_champs.fetch(:dossier_link),
-      type_champs.fetch(:linked_drop_down_list),
-      type_champs.fetch(:drop_down_list),
-      type_champs.fetch(:textarea),
-      type_champs.fetch(:cojo)
-      true
-    else
+    when type_champs.fetch(:address),
+      type_champs.fetch(:annuaire_education),
+      type_champs.fetch(:carte),
+      type_champs.fetch(:piece_justificative),
+      type_champs.fetch(:titre_identite),
+      type_champs.fetch(:rna),
+      type_champs.fetch(:siret)
       false
+    else
+      true
     end
   end
 
