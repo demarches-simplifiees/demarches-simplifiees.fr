@@ -168,7 +168,8 @@ module Types
         url: Rails.application.routes.url_helpers.api_v2_dossier_pdf_url(id: sgid),
         byte_size: 0,
         byte_size_big_int: '0',
-        checksum: ''
+        checksum: '',
+        created_at: Time.zone.now
       }
     end
 
@@ -180,7 +181,8 @@ module Types
         url: Rails.application.routes.url_helpers.api_v2_dossier_geojson_url(id: sgid),
         byte_size: 0,
         byte_size_big_int: '0',
-        checksum: ''
+        checksum: '',
+        created_at: Time.zone.now
       }
     end
 

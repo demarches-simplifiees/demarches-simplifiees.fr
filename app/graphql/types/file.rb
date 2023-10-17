@@ -6,6 +6,7 @@ module Types
     field :byte_size_big_int, GraphQL::Types::BigInt, null: false, method: :byte_size
     field :checksum, String, null: false
     field :content_type, String, null: false
+    field :created_at, GraphQL::Types::ISO8601DateTime, "Date de création du fichier.", null: false
 
     def url
       if object.is_a?(Hash)
