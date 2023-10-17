@@ -1,8 +1,8 @@
 - if OmniAuthService.providers.present? || FranceConnectService.enabled?
-  .form-column.prior-border.ou-border.procedure-context-content
+  .form-column.procedure-context-content
     .auth-form.sign-in-form.fr-py-5w
       .social-logins
-        %h1.fr-h3= title
+        %h2.fr-h5= title
         %br
         - OmniAuthService.providers.each do |provider|
           = link_to url_for(controller: '/omniauth', action: 'login', provider:), class: "fr-btn fr-btn--lg fr-btn--secondary"  do

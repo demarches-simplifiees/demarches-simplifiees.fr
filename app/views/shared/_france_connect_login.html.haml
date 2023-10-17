@@ -1,11 +1,11 @@
 - if FranceConnectService.enabled?
   .france-connect-login
     %p.fr-hr-or= t('views.shared.france_connect_login.separator')
-    %h2.fr-h6.mb-0.center
+    %h2.fr-h5.mb-0
       = t('views.shared.france_connect_login.title')
     %p
       = t('views.shared.france_connect_login.description')
-    .flex.column.align-center
+    .flex.column
       .fr-connect-group.fr-my-2w
         = link_to(url, class: "fr-btn fr-connect") do
           %span.fr-connect__login

@@ -30,3 +30,44 @@
     opacity: 1;
   }
 }
+
+.editable-champ {
+  ul {
+    list-style-type: square;
+    list-style-position: outside;
+    padding-left: 30px;
+  }
+
+  ul ul {
+    list-style-type: circle;
+  }
+
+
+  ol {
+    list-style-type: decimal;
+    list-style-position: outside;
+    padding-left: 30px;
+  }
+
+  table {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  td {
+    border-bottom: 1px solid $border-grey;
+  }
+
+  th {
+    font-weight: bold;
+    text-align: center;
+    padding: (2 * $default-spacer) 2px;
+    vertical-align: middle;
+    border-bottom: 1px solid $border-grey;
+  }
+
+  tbody tr:hover {
+    background-color: $border-grey;
+  }
+}
