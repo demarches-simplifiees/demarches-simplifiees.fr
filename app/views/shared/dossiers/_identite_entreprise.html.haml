@@ -6,7 +6,7 @@
         %p
           Il nʼest pas possible dʼaccepter ou de refuser un dossier sans cette étape.
 
-.fr-background-alt--grey.fr-p-3v
+%div{ class: class_names("fr-background-alt--grey fr-p-3v" => !local_assigns[:short_identity]) }
   - if etablissement.as_degraded_mode?
     = render Dossiers::RowShowComponent.new(label: "Numéro TAHITI") do |c|
       - c.with_value do
