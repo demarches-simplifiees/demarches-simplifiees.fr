@@ -13,4 +13,16 @@ class Traitement < ApplicationRecord
       .where.not(processed_at: nil)
       .order(:processed_at)
   end
+
+  def browser=(browser)
+    if browser == 'api'
+      self.browser_name = browser
+      self.browser_version = 2
+      self.browser_supported = true
+    elsif browser.present?
+      self.browser_name = browser.name
+      self.browser_version = browser.version
+      self.browser_supported = BrowserSupport.supported?(browser)
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_25_161609) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_26_161609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -979,6 +979,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_25_161609) do
   end
 
   create_table "traitements", force: :cascade do |t|
+    t.string "browser_name"
+    t.boolean "browser_supported"
+    t.integer "browser_version"
     t.bigint "dossier_id"
     t.string "instructeur_email"
     t.string "motivation"
