@@ -64,7 +64,7 @@ module Connections
     end
 
     def compute_limit(first: nil, last: nil)
-      [first || last || default_page_size, max_page_size].min + 1
+      [first || last || default_page_size].min + 1
     end
 
     def timestamp_and_id_from_cursor(cursor)
@@ -109,7 +109,7 @@ module Connections
           first = [last, max_page_size].min
           last = nil
         else
-          last = [first || default_page_size, max_page_size].min
+          last = [first || default_page_size].min
           first = nil
         end
       end
