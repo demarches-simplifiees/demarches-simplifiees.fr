@@ -72,6 +72,9 @@ module Connections
       end
     end
 
+    # before and after are a serialized version of (timestamp, id)
+    # first is a number (n) and mean take n element in order ascendant
+    # last : n element in order descendant
     def compute_page_info(before: nil, after: nil, first: nil, last: nil)
       if first.present? && last.present?
         raise GraphQL::ExecutionError.new('Arguments "first" and "last" are exclusive', extensions: { code: :bad_request })
