@@ -6,6 +6,7 @@ class Logic::ChampValue < Logic::Term
     :decimal_number,
     :drop_down_list,
     :multiple_drop_down_list,
+    :epci,
     :departements,
     :regions
   )
@@ -62,8 +63,11 @@ class Logic::ChampValue < Logic::Term
       CHAMP_VALUE_TYPE.fetch(:boolean)
     when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
       CHAMP_VALUE_TYPE.fetch(:number)
-    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list),MANAGED_TYPE_DE_CHAMP.fetch(:departements), MANAGED_TYPE_DE_CHAMP.fetch(:regions)
-      CHAMP_VALUE_TYPE.fetch(:enum)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list),
+      MANAGED_TYPE_DE_CHAMP.fetch(:departements),
+      MANAGED_TYPE_DE_CHAMP.fetch(:regions),
+      MANAGED_TYPE_DE_CHAMP.fetch(:epci)
+        CHAMP_VALUE_TYPE.fetch(:enum)
     when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
       CHAMP_VALUE_TYPE.fetch(:enums)
     else
@@ -98,7 +102,7 @@ class Logic::ChampValue < Logic::Term
     tdc = type_de_champ(type_de_champs)
 
     case tdc.type_champ
-    when MANAGED_TYPE_DE_CHAMP.fetch(:departements)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:departements), MANAGED_TYPE_DE_CHAMP.fetch(:epci)
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     when MANAGED_TYPE_DE_CHAMP.fetch(:regions)
       APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
