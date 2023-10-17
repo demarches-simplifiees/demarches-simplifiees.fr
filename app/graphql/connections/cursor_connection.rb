@@ -106,11 +106,9 @@ module Connections
     def compute_page_info(limit:, before: nil, after: nil, first: nil, last: nil)
       if @deprecated_order == :desc
         if last.present?
-          first = [last, max_page_size].min
           last = nil
         else
           last = [first || default_page_size].min
-          first = nil
         end
       end
 
