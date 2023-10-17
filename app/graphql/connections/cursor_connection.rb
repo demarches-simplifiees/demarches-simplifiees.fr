@@ -107,10 +107,6 @@ module Connections
       end
     end
 
-    def compute_limit(first: nil, last: nil)
-      [first || last || default_page_size].min + 1
-    end
-
     def timestamp_and_id_from_cursor(cursor)
       timestamp, id = decode(cursor).split(';')
       [Time.zone.parse(timestamp), id.to_i]
@@ -142,29 +138,6 @@ module Connections
       else
         nodes
       end
-    end
-
-    # before and after are a serialized version of (timestamp, id)
-    # first is a number (n) and mean take n element in order ascendant
-    # last : n element in order descendant
-    def compute_page_info(limit:, before: nil, after: nil, first: nil, last: nil)
-      if @deprecated_order == :desc
-        if last.present?
-          last = nil
-        else
-          last = [first || default_page_size].min
-        end
-      end
-
-      inverted = last.present? || before.present?
-
-      {
-        before:,
-        after:,
-        inverted:,
-        has_previous_page: -> (result_size) { after.present? || (result_size >= limit && inverted) },
-        has_next_page: -> (result_size) { before.present? || (result_size >= limit && !inverted) }
-      }
     end
   end
 end
