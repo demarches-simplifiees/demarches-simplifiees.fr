@@ -57,4 +57,30 @@ RSpec.describe Connections::CursorConnection do
       it { is_expected.to eq(limit: 3, inverted: true) }
     end
   end
+
+  describe '.previous_page?' do
+    let(:after) { nil }
+    let(:result_size) { nil }
+    let(:limit) { nil }
+    let(:inverted) { false }
+
+    subject do
+      cursor = Connections::CursorConnection.new(Dossier)
+      cursor.send(:previous_page?, after, result_size, limit, inverted)
+    end
+
+    context 'when after is present' do
+      let(:after) { :after }
+
+      it { is_expected.to be true }
+    end
+
+    context 'when inverted and result_size == limit' do
+      let(:inverted) { true }
+      let(:result_size) { 3 }
+      let(:limit) { 3 }
+
+      it { is_expected.to be true }
+    end
+  end
 end

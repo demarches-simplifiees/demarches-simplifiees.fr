@@ -62,6 +62,10 @@ module Connections
       [limit, inverted]
     end
 
+    def previous_page?(after, result_size, limit, inverted)
+      after.present? || (result_size == limit && inverted)
+    end
+
     def load_nodes
       @nodes ||= begin
         ensure_valid_params
