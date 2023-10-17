@@ -25,6 +25,32 @@ module Connections
 
     private
 
+    # [d1, d2, d3, d4, d5, d6]
+    #
+    # first: 2
+    # -> d1, d2
+    # first: 2, after: d2
+    # -> d3, d4
+    # first: 2, before: d3
+    # -> d1, d2
+    #
+    # last: 2
+    # -> d5, d6
+    # last: 2, before: d5
+    # -> d3, d4
+    # last: 2, after: d4
+    # -> d5, d6
+    #
+    # si after ou before present, last ou first donne juste limit
+    #
+    # order:
+    # order, ne sert rien si after ou before
+    #
+    # first: 2, order: desc => last: 2
+    # -> d5, d6
+    #
+    # last: 2, order: desc => first 2
+    # -> d1, d2
     def load_nodes
       @nodes ||= begin
         ensure_valid_params
