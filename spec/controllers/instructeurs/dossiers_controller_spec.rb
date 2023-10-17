@@ -300,6 +300,10 @@ describe Instructeurs::DossiersController, type: :controller do
 
           subject
         end
+
+        it 'creates a commentaire' do
+          expect { subject }.to change { Commentaire.count }.by(1)
+        end
       end
 
       context 'refusal with a justificatif' do

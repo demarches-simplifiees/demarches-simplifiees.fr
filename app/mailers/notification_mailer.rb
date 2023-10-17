@@ -6,12 +6,8 @@
 # The subject and body of a Notification can be customized by each demarche.
 #
 class NotificationMailer < ApplicationMailer
-  include ActionView::Helpers::SanitizeHelper
-  include ActionView::Helpers::TextHelper
-
   before_action :set_dossier
   before_action :set_services_publics_plus, only: :send_notification
-  after_action :create_commentaire_for_notification
 
   helper ServiceHelper
   helper MailerHelper
@@ -22,11 +18,9 @@ class NotificationMailer < ApplicationMailer
   def send_notification
     @service = @dossier.procedure.service
     @logo_url = attach_logo(@dossier.procedure)
-    @rendered_template = sanitize(@body, scrubber: Sanitizers::MailScrubber.new)
     attachments[@attachment[:filename]] = @attachment[:content] if @attachment.present?
-
     I18n.with_locale(@dossier.user_locale) do
-      mail(subject: Nokogiri::HTML.parse(@subject).text, to: @email, template_name: 'send_notification')
+      mail(subject: @subject, to: @email, template_name: 'send_notification')
     end
   end
 
@@ -69,19 +63,15 @@ class NotificationMailer < ApplicationMailer
       mail.perform_deliveries = false
     else
       I18n.with_locale(@dossier.user_locale) do
-        mail_template = @dossier.procedure.mail_template_for(params[:state])
+        mail_template = @dossier.mail_template_for_state
+        mail_template_presenter = MailTemplatePresenterService.new(@dossier)
 
         @email = @dossier.user_email_for(:notification)
-        @subject = truncate(mail_template.subject_for_dossier(@dossier), length: 100)
-        @body = mail_template.body_for_dossier(@dossier)
+        @rendered_template = mail_template_presenter.safe_body
+        @subject = mail_template_presenter.safe_subject
         @actions = mail_template.actions_for_dossier(@dossier)
         @attachment = mail_template.attachment_for_dossier(@dossier)
       end
     end
-  end
-
-  def create_commentaire_for_notification
-    body = ["[#{@subject}]", @body].join("<br><br>")
-    CommentaireService.create!(CONTACT_EMAIL, @dossier, body: body)
   end
 end

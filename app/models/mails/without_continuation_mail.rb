@@ -10,6 +10,7 @@
 #  procedure_id :integer
 #
 module Mails
+  # classe_sans_suite
   class WithoutContinuationMail < ApplicationRecord
     include MailTemplateConcern
 
