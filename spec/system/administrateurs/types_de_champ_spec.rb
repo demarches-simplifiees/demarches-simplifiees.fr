@@ -29,7 +29,12 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
 
   scenario "adding multiple champs" do
     # Champs are created when clicking the 'Add field' button
-    add_champs(count: 3)
+    add_champ
+    page.refresh
+    add_champ
+    within(find('.type-de-champ-add-button', match: :first)) {
+      add_champ
+    }
 
     # Champs are automatically saved
     expect(page).to have_button('Ajouter un champ', disabled: false)
@@ -64,7 +69,8 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   end
 
   scenario "removing champs" do
-    add_champ(remove_flash_message: true)
+    add_champ
+    remove_flash_message
 
     fill_in 'Libellé du champ', with: 'libellé de champ'
     expect(page).to have_content('Formulaire enregistré')
@@ -82,7 +88,8 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   end
 
   scenario "adding an invalid champ" do
-    add_champ(remove_flash_message: true)
+    add_champ
+    remove_flash_message
 
     fill_in 'Libellé du champ', with: ''
     fill_in 'Description du champ (optionnel)', with: 'description du champ'
@@ -93,7 +100,8 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   end
 
   scenario "adding a repetition champ" do
-    add_champ(remove_flash_message: true)
+    add_champ
+    remove_flash_message
 
     select('Bloc répétable', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'libellé de champ'
@@ -110,9 +118,7 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
     expect(page).to have_content('Formulaire enregistré')
     expect(page).to have_content('Supprimer', count: 2)
 
-    within '.buttons' do
-      click_on 'Ajouter un champ'
-    end
+    page.all('.fr-icon-add-line')[2].click
 
     within '.type-de-champ:nth-child(2)' do
       select('Bloc répétable', from: 'Type de champ')
@@ -123,7 +129,8 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   end
 
   scenario "adding a carte champ" do
-    add_champ(remove_flash_message: true)
+    add_champ
+    remove_flash_message
 
     select('Carte', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ carte', fill_options: { clear: :backspace }
@@ -133,6 +140,7 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
     wait_until { procedure.active_revision.types_de_champ_public.first.libelle == 'Libellé de champ carte' }
     expect(page).to have_content('Formulaire enregistré')
 
+    page.refresh
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
     within_window(preview_window) do
       expect(page).to have_content('Libellé de champ carte')
@@ -143,7 +151,8 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   end
 
   scenario "adding a dropdown champ" do
-    add_champ(remove_flash_message: true)
+    add_champ
+    remove_flash_message
 
     select('Choix simple', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }
@@ -203,6 +212,7 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
       first_header = procedure.active_revision.types_de_champ_public.first
       select('Titre de niveau 1', from: dom_id(first_header, :header_section_level))
 
+      page.refresh
       add_champ
       wait_until { procedure.reload.active_revision.types_de_champ_public.count == 2 }
       second_header = procedure.active_revision.types_de_champ_public.last
