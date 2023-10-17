@@ -19,10 +19,10 @@ describe 'instructeurs/procedures/_synthese', type: :view do
     }
 
     it { is_expected.to have_text('Synthèse des dossiers') }
-    it { is_expected.to have_text('suivis') }
+    it { is_expected.not_to have_text('suivis') }
     it { is_expected.to have_text('traités') }
     it { is_expected.to have_text('dossiers') }
-    it { is_expected.to have_text('archivés') }
+    it { is_expected.not_to have_text('archivés') }
   end
 
   context 'when instructeur has 1 procedure and 1 file, table is not shown' do
