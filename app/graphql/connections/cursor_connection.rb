@@ -28,13 +28,18 @@ module Connections
     def load_nodes
       @nodes ||= begin
         ensure_valid_params
-        page_info = compute_page_info(before:, after:, first:, last:)
-        nodes = resolve_nodes(**page_info.slice(:before, :after, :limit, :inverted))
+
+        limit = compute_limit(first:, last:)
+        expected_size = limit - 1
+
+        page_info = compute_page_info(limit:, before:, after:, first:, last:)
+        nodes = resolve_nodes(limit:, **page_info.slice(:before, :after, :inverted))
+
         result_size = nodes.size
         @has_previous_page = page_info[:has_previous_page].(result_size)
         @has_next_page = page_info[:has_next_page].(result_size)
 
-        trimmed_nodes = nodes.first(page_info[:expected_size])
+        trimmed_nodes = nodes.first(expected_size)
         trimmed_nodes.reverse! if page_info[:inverted]
         trimmed_nodes
       end
@@ -56,6 +61,10 @@ module Connections
       if last.present? && last < 0
         raise GraphQL::ExecutionError.new('Argument "last" must be a non-negative integer', extensions: { code: :bad_request })
       end
+    end
+
+    def compute_limit(first: nil, last: nil)
+      [first || last || default_page_size, max_page_size].min + 1
     end
 
     def timestamp_and_id_from_cursor(cursor)
@@ -94,7 +103,7 @@ module Connections
     # before and after are a serialized version of (timestamp, id)
     # first is a number (n) and mean take n element in order ascendant
     # last : n element in order descendant
-    def compute_page_info(before: nil, after: nil, first: nil, last: nil)
+    def compute_page_info(limit:, before: nil, after: nil, first: nil, last: nil)
       if @deprecated_order == :desc
         if last.present?
           first = [last, max_page_size].min
@@ -105,15 +114,12 @@ module Connections
         end
       end
 
-      limit = [first || last || default_page_size, max_page_size].min + 1
       inverted = last.present? || before.present?
 
       {
         before:,
         after:,
-        limit:,
         inverted:,
-        expected_size: limit - 1,
         has_previous_page: -> (result_size) { after.present? || (result_size >= limit && inverted) },
         has_next_page: -> (result_size) { before.present? || (result_size >= limit && !inverted) }
       }
