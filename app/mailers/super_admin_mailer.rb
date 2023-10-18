@@ -4,4 +4,8 @@ class SuperAdminMailer < ApplicationMailer
 
     mail(to: to, subject: "Dolist report", body: "Ci-joint le rapport d'emails récents envoyés via Dolist.")
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end

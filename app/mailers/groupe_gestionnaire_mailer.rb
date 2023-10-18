@@ -18,4 +18,8 @@ class GroupeGestionnaireMailer < ApplicationMailer
 
     mail(bcc: added_gestionnaire_emails, subject: subject)
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end
