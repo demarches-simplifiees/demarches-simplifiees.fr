@@ -1032,6 +1032,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_26_161609) do
   create_table "users", id: :serial, force: :cascade do |t|
     t.datetime "confirmation_sent_at", precision: 6
     t.datetime "blocked_at", precision: 6
+    t.datetime "announces_seen_at", precision: 6
     t.text "blocked_reason"
     t.string "confirmation_token"
     t.datetime "confirmed_at", precision: 6
