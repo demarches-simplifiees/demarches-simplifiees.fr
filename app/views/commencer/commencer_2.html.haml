@@ -1,6 +1,7 @@
 .fr-container.fr-mt-5w{ data: { controller: 'tiers' } }
   .fr-grid-row
     .fr-col-12.fr-col-md-8.fr-col-offset-md-2
+      %h1.fr-h2 Choix du bénéficiaire
       %fieldset#radio-rich-hint.fr-fieldset{"aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages"}
         %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
           Ce dossier est
@@ -24,15 +25,26 @@
               -# %img{alt: "[2 b]", src: "/img/placeholder.1x1.png"}
         #radio-rich-hint-messages.fr-messages-group{"aria-live" => "assertive"}
 
-      #self-dossier{ data: { tiers_target: 'selfContinue' } }
-        %button.fr-btn{ data: { tiers_target: 'otherContinue', action: 'click->tiers#nextPage'} } continuer
+      #self-dossier{ style: 'display: block;' }
+        %button.fr-btn{ data: { tiers_target: 'selfContinue', action: 'click->tiers#nextPage'} } continuer
 
       #other-dossier{ style: 'display: none;', data: { tiers_target: 'other' } }
+        %h2 Identité du tiers
         .fr-input-group
           %label.fr-label{for: "text-input-groups1"}
-            Adresse électronique du tiers bénéficiaire (facultatif)
-            %span.fr-hint-text Le tiers pourra suivre et modifier son dossier avec cette adresse.
+            Nom
           %input#text-input-groups1.fr-input{name: "text-input-groups1", type: "email"}
+
+        .fr-input-group
+          %label.fr-label{for: "text-input-groups3"}
+            Prénom
+          %input#text-input-groups3.fr-input{name: "text-input-groups3", type: "email"}
+
+        .fr-input-group
+          %label.fr-label{for: "text-input-groups2"}
+            Adresse électronique (facultatif)
+            %span.fr-hint-text Le tiers pourra suivre et modifier son dossier avec cette adresse.
+          %input#text-input-groups2.fr-input{name: "text-input-groups2", type: "email"}
 
         %fieldset#checkboxes.fr-fieldset{"aria-labelledby" => "checkboxes-legend checkboxes-messages"}
           .fr-fieldset__element
@@ -42,4 +54,9 @@
               #checkboxes-1-messages.fr-messages-group{"aria-live" => "assertive"}
           #checkboxes-messages.fr-messages-group{"aria-live" => "assertive"}
 
-        %button.fr-btn{ data: { tiers_target: 'otherContinue', action: 'click->tiers#nextPage' }, disabled: true } continuer
+        %ul.fr-btns-group.fr-btns-group--inline
+          %li
+            %button.fr-btn--secondary{href: "/dossiers?procedure_id=7592", style: 'display: none;'} Voir ses dossiers en cours
+          %li
+            %button.fr-btn{ data: { tiers_target: 'otherContinue', action: 'click->tiers#nextPage' }, disabled: true } Commencer un nouveau dossier
+

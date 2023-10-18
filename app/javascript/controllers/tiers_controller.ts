@@ -19,10 +19,14 @@ export class TiersController extends ApplicationController {
   }
 
   toggleOtherContinue() {
-    this.otherContinueTarget.disabled = !this.iSwearTarget.checked
+    if (this.iSwearTarget.checked) {
+      this.otherContinueTarget.removeAttribute('disabled')
+    } else {
+      this.otherContinueTarget.setAttribute("disabled", "disabled");;
+    }
   }
 
   nextPage() {
-    window.location.pathname = window.location.pathname.replace(/\/commencer_2\//, '/commencer/');
+    window.location = "http://localhost:3000/dossiers/new?procedure_id=7592";
   }
 }
