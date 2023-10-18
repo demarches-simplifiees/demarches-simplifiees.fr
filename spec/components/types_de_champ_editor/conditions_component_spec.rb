@@ -81,6 +81,30 @@ describe TypesDeChampEditor::ConditionsComponent, type: :component do
           end
         end
 
+        context 'communes' do
+          let(:communes) { create(:type_de_champ_communes) }
+          let(:upper_tdcs) { [communes] }
+          let(:condition) { empty_operator(champ_value(communes.stable_id), constant(true)) }
+          let(:departement_options) { APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" } }
+
+          it do
+            expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + departement_options))
+          end
+        end
+
+        context 'epcis' do
+          let(:epcis) { create(:type_de_champ_epci) }
+          let(:upper_tdcs) { [epcis] }
+          let(:condition) { empty_operator(champ_value(epcis.stable_id), constant(true)) }
+          let(:departement_options) { APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" } }
+
+          it do
+            expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + departement_options))
+          end
+        end
+
         context 'departements' do
           let(:departements) { create(:type_de_champ_departements) }
           let(:upper_tdcs) { [departements] }
@@ -90,6 +114,18 @@ describe TypesDeChampEditor::ConditionsComponent, type: :component do
           it do
             expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
             expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + departement_options))
+          end
+        end
+
+        context 'regions' do
+          let(:regions) { create(:type_de_champ_regions) }
+          let(:upper_tdcs) { [regions] }
+          let(:condition) { empty_operator(champ_value(regions.stable_id), constant(true)) }
+          let(:region_options) { APIGeoService.regions.map { "#{_1[:code]} – #{_1[:name]}" } }
+
+          it do
+            expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + region_options))
           end
         end
       end
