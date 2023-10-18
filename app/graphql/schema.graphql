@@ -1,3 +1,8 @@
+"""
+Requires that exactly one field must be supplied and that field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
 type Address {
   """
   code INSEE de la commune
@@ -895,7 +900,7 @@ type Demarche {
     """
     L’ordre des dossiers supprimés.
     """
-    order: Order = ASC
+    order: Order = ASC @deprecated(reason: "Utilisez l’argument `last` à la place.")
   ): DeletedDossierConnection!
 
   """
@@ -950,7 +955,7 @@ type Demarche {
     """
     L’ordre des dossiers.
     """
-    order: Order = ASC
+    order: Order = ASC @deprecated(reason: "Utilisez l’argument `last` à la place.")
 
     """
     Seulement les dossiers pour la révision donnée.
@@ -1008,7 +1013,7 @@ type Demarche {
     """
     L’ordre des dossiers en attente de suppression.
     """
-    order: Order = ASC
+    order: Order = ASC @deprecated(reason: "Utilisez l’argument `last` à la place.")
   ): DeletedDossierConnection!
   publishedRevision: Revision
   revisions: [Revision!]!
@@ -2580,7 +2585,7 @@ type GroupeInstructeurWithDossiers {
     """
     L’ordre des dossiers supprimés.
     """
-    order: Order = ASC
+    order: Order = ASC @deprecated(reason: "Utilisez l’argument `last` à la place.")
   ): DeletedDossierConnection!
 
   """
@@ -2630,7 +2635,7 @@ type GroupeInstructeurWithDossiers {
     """
     L’ordre des dossiers.
     """
-    order: Order = ASC
+    order: Order = ASC @deprecated(reason: "Utilisez l’argument `last` à la place.")
 
     """
     Seulement les dossiers pour la révision donnée.
@@ -2692,7 +2697,7 @@ type GroupeInstructeurWithDossiers {
     """
     L’ordre des dossiers en attente de suppression.
     """
-    order: Order = ASC
+    order: Order = ASC @deprecated(reason: "Utilisez l’argument `last` à la place.")
   ): DeletedDossierConnection!
 }
 

@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 232,
+          "line": 291,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -39,6 +39,9 @@
       },
       "user_input": "current_user.dossiers.includes(:procedure)",
       "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
       "note": ""
     },
     {
@@ -70,26 +73,55 @@
       },
       "user_input": "FranceConnectInformation.find_by(:merge_token => merge_token_params).email_france_connect",
       "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
       "note": "explicitely sanitized even if we are using html_safe"
     },
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "8a1ccc92988486094b2c89e586902a3b6fcbd43910d6363dce14b9981ca8ddeb",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/instructeurs/procedures_controller.rb",
-      "line": 175,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), :force => force_export?, **export_options).file.service_url)",
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "737aa4f7931ece068cce98d7cc66057a1ec81b9be43e469c3569ff1be91bbf09",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/graphql/connections/cursor_connection.rb",
+      "line": 66,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "items.order(order_column => ((:desc or :asc)), :id => ((:desc or :asc))).limit(limit).where(\"(#{order_table}.#{order_column}, #{order_table}.id) < (?, ?)\", timestamp, id)",
       "render_path": null,
       "location": {
         "type": "method",
-        "class": "Instructeurs::ProceduresController",
-        "method": "download_export"
+        "class": "Connections::CursorConnection",
+        "method": "resolve_nodes"
       },
-      "user_input": "Export.find_or_create_export(export_format, current_instructeur.groupe_instructeurs.where(:procedure => procedure), :force => force_export?, **export_options).file.service_url",
-      "confidence": "High",
+      "user_input": "order_table",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "a94939cb1e551341f443c6414634816e335bbfb03f0836ebd8b3ad8564d7f343",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/graphql/connections/cursor_connection.rb",
+      "line": 69,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "items.order(order_column => ((:desc or :asc)), :id => ((:desc or :asc))).limit(limit).where(\"(#{order_table}.#{order_column}, #{order_table}.id) > (?, ?)\", timestamp, id)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Connections::CursorConnection",
+        "method": "resolve_nodes"
+      },
+      "user_input": "order_table",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
       "note": ""
     },
     {
@@ -99,7 +131,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 30,
+      "line": 32,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
       "render_path": null,
@@ -110,29 +142,12 @@
       },
       "user_input": "values.count",
       "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
       "note": "The table and column are escaped, which should make this safe"
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "e2220b7cda7df5d02de77e7c3ce137653126e0d8e91ce445676b63ec4c94bbcb",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/administrateurs/exports_controller.rb",
-      "line": 18,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Export.find_or_create_export(export_format, all_groupe_instructeurs, :force => force_export?, **export_options).file.service_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Administrateurs::ExportsController",
-        "method": "download"
-      },
-      "user_input": "Export.find_or_create_export(export_format, all_groupe_instructeurs, :force => force_export?, **export_options).file.service_url",
-      "confidence": "High",
-      "note": ""
     }
   ],
-  "updated": "2022-11-15 23:04:53 +0100",
-  "brakeman_version": "5.2.2"
+  "updated": "2023-08-28 12:16:04 +0200",
+  "brakeman_version": "5.4.1"
 }

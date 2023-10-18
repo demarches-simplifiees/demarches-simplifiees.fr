@@ -6,10 +6,13 @@ describe API::V2::GraphqlController do
   let(:legacy_token) { APIToken.send(:unpack, token)[:plain_token] }
   let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin], types_de_champ_public:) }
   let(:types_de_champ_public) { [] }
-  let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
-  let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
-  let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
-  let(:dossier_accepte) { create(:dossier, :accepte, :with_individual, procedure: procedure) }
+  let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure:, depose_at: 4.days.ago) }
+  let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure:, en_construction_at: 1.day.ago, depose_at: 3.days.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure:, en_construction_at: 3.days.ago, depose_at: 2.days.ago) }
+  let(:dossier3) { create(:dossier, :accepte, :with_individual, procedure:, depose_at: 1.day.ago) }
+  let(:dossier_accepte) { create(:dossier, :accepte, :with_individual, procedure:) }
+  let(:dossier_accepte1) { create(:dossier, :accepte, :with_individual, procedure:) }
+  let(:dossier_accepte2) { create(:dossier, :accepte, :with_individual, procedure:) }
   let(:dossiers) { [dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
   let(:authorization_header) { ActionController::HttpAuthentication::Token.encode_credentials(token) }
@@ -45,7 +48,7 @@ describe API::V2::GraphqlController do
   end
 
   describe 'ds-query-v2' do
-    let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, depose_at: 4.days.ago) }
     let(:query_id) { 'ds-query-v2' }
 
     context 'not found operation id' do
@@ -145,16 +148,6 @@ describe API::V2::GraphqlController do
         }
       end
 
-      context 'include Dossiers' do
-        let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true } }
-
-        it {
-          expect(gql_errors).to be_nil
-          expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
-          expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(1)
-        }
-      end
-
       context 'include Revision' do
         let(:variables) { { demarcheNumber: procedure.id, includeRevision: true } }
 
@@ -165,41 +158,513 @@ describe API::V2::GraphqlController do
         }
       end
 
-      context 'include deleted Dossiers' do
-        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedSince: 2.weeks.ago.iso8601 } }
-        let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier_accepte, DeletedDossier.reasons.fetch(:user_request)) }
+      context 'include Dossiers' do
+        def cursor_for(item, column)
+          cursor = [item.read_attribute(column).utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
+          API::V2::Schema.cursor_encoder.encode(cursor, nonce: true)
+        end
 
-        before { deleted_dossier }
+        let(:order_column) { :depose_at }
+        let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true } }
+        let(:start_cursor) { cursor_for(dossier, order_column) }
+        let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+        before { dossier1; dossier2; dossier3 }
+
+        context 'depose_at' do
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
+            expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(4)
+            expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+            expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+            expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+            expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+          }
+
+          context 'first' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2 } }
+            let(:end_cursor) { cursor_for(dossier1, order_column) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+
+            context 'with deprecated order' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, order: 'DESC' } }
+              let(:start_cursor) { cursor_for(dossier2, order_column) }
+              let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+
+            context 'after' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, after: current_cursor } }
+              let(:current_cursor) { cursor_for(dossier1, order_column) }
+              let(:start_cursor) { cursor_for(dossier2, order_column) }
+              let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+
+              context 'with deleted' do
+                let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true } }
+
+                before { dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request)) }
+
+                it {
+                  expect(gql_errors).to be_nil
+                  expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(3)
+                }
+
+                context 'second page not changed' do
+                  let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, after: current_cursor } }
+
+                  it {
+                    expect(gql_errors).to be_nil
+                    expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                    expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                    expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                    expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                    expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+                  }
+                end
+              end
+            end
+
+            context 'before' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, before: current_cursor } }
+              let(:current_cursor) { cursor_for(dossier2, order_column) }
+              let(:start_cursor) { cursor_for(dossier, order_column) }
+              let(:end_cursor) { cursor_for(dossier1, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+          end
+
+          context 'last' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, last: 2 } }
+            let(:start_cursor) { cursor_for(dossier2, order_column) }
+            let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+
+            context 'before' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, last: 2, before: current_cursor } }
+              let(:current_cursor) { cursor_for(dossier2, order_column) }
+              let(:start_cursor) { cursor_for(dossier, order_column) }
+              let(:end_cursor) { cursor_for(dossier1, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+
+            context 'after' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, last: 2, after: current_cursor } }
+              let(:current_cursor) { cursor_for(dossier1, order_column) }
+              let(:start_cursor) { cursor_for(dossier2, order_column) }
+              let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+          end
+        end
+
+        context 'updated_at' do
+          let(:order_column) { :updated_at }
+
+          context 'first' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, updatedSince: 10.days.ago.iso8601 } }
+            let(:end_cursor) { cursor_for(dossier1, order_column) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+
+            context 'after' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, after: current_cursor, updatedSince: 10.days.ago.iso8601 } }
+              let(:current_cursor) { cursor_for(dossier1, order_column) }
+              let(:start_cursor) { cursor_for(dossier2, order_column) }
+              let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+
+            context 'before' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, before: current_cursor, updatedSince: 10.days.ago.iso8601 } }
+              let(:current_cursor) { cursor_for(dossier2, order_column) }
+              let(:start_cursor) { cursor_for(dossier, order_column) }
+              let(:end_cursor) { cursor_for(dossier1, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+          end
+
+          context 'last' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, last: 2, updatedSince: 10.days.ago.iso8601 } }
+            let(:start_cursor) { cursor_for(dossier2, order_column) }
+            let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+
+            context 'before' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, last: 2, before: current_cursor, updatedSince: 10.days.ago.iso8601 } }
+              let(:current_cursor) { cursor_for(dossier2, order_column) }
+              let(:start_cursor) { cursor_for(dossier, order_column) }
+              let(:end_cursor) { cursor_for(dossier1, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+
+            context 'after' do
+              let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, last: 2, after: current_cursor, updatedSince: 10.days.ago.iso8601 } }
+              let(:current_cursor) { cursor_for(dossier1, order_column) }
+              let(:start_cursor) { cursor_for(dossier2, order_column) }
+              let(:end_cursor) { cursor_for(dossier3, order_column) }
+
+              it {
+                expect(gql_errors).to be_nil
+                expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+              }
+            end
+          end
+        end
+      end
+
+      context 'include deleted Dossiers' do
+        def cursor_for(item)
+          cursor = [item.deleted_at.utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
+          API::V2::Schema.cursor_encoder.encode(cursor, nonce: true)
+        end
+
+        let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedSince: 2.weeks.ago.iso8601 } }
+        let(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier_accepte, DeletedDossier.reasons.fetch(:user_request)).tap { _1.update(deleted_at: 4.days.ago) } }
+        let(:deleted_dossier1) { DeletedDossier.create_from_dossier(dossier_accepte1, DeletedDossier.reasons.fetch(:user_request)).tap { _1.update(deleted_at: 3.days.ago) } }
+        let(:deleted_dossier2) { DeletedDossier.create_from_dossier(dossier_accepte2, DeletedDossier.reasons.fetch(:user_request)).tap { _1.update(deleted_at: 2.days.ago) } }
+        let(:deleted_dossier3) { DeletedDossier.create_from_dossier(dossier3, DeletedDossier.reasons.fetch(:user_request)).tap { _1.update(deleted_at: 1.day.ago) } }
+
+        let(:start_cursor) { cursor_for(deleted_dossier) }
+        let(:end_cursor) { cursor_for(deleted_dossier3) }
+
+        before { deleted_dossier; deleted_dossier1; deleted_dossier2; deleted_dossier3 }
 
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
-          expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(1)
+          expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(4)
           expect(gql_data[:demarche][:deletedDossiers][:nodes].first[:id]).to eq(deleted_dossier.to_typed_id)
           expect(gql_data[:demarche][:deletedDossiers][:nodes].first[:dateSupression]).to eq(deleted_dossier.deleted_at.iso8601)
         }
+
+        context 'first' do
+          let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedFirst: 2 } }
+          let(:end_cursor) { cursor_for(deleted_dossier1) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(2)
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasNextPage]).to be_truthy
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+          }
+
+          context 'after' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedFirst: 2, deletedAfter: current_cursor } }
+            let(:current_cursor) { cursor_for(deleted_dossier1) }
+            let(:start_cursor) { cursor_for(deleted_dossier2) }
+            let(:end_cursor) { cursor_for(deleted_dossier3) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasNextPage]).to be_falsey
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+
+          context 'before' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedFirst: 2, deletedBefore: current_cursor } }
+            let(:current_cursor) { cursor_for(deleted_dossier2) }
+            let(:start_cursor) { cursor_for(deleted_dossier) }
+            let(:end_cursor) { cursor_for(deleted_dossier1) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasNextPage]).to be_truthy
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+        end
+
+        context 'last' do
+          let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedLast: 2 } }
+          let(:start_cursor) { cursor_for(deleted_dossier2) }
+          let(:end_cursor) { cursor_for(deleted_dossier3) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(2)
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasNextPage]).to be_falsey
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+            expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+          }
+
+          context 'before' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedLast: 2, deletedBefore: current_cursor } }
+            let(:current_cursor) { cursor_for(deleted_dossier2) }
+            let(:start_cursor) { cursor_for(deleted_dossier) }
+            let(:end_cursor) { cursor_for(deleted_dossier1) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasNextPage]).to be_truthy
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+
+          context 'after' do
+            let(:variables) { { demarcheNumber: procedure.id, includeDeletedDossiers: true, deletedLast: 2, deletedAfter: current_cursor } }
+            let(:current_cursor) { cursor_for(deleted_dossier1) }
+            let(:start_cursor) { cursor_for(deleted_dossier2) }
+            let(:end_cursor) { cursor_for(deleted_dossier3) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:deletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasNextPage]).to be_falsey
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:deletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+        end
       end
 
       context 'include pending deleted Dossiers' do
+        def cursor_for(item)
+          cursor = [(item.en_construction? ? item.hidden_by_user_at : item.hidden_by_administration_at).utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
+          API::V2::Schema.cursor_encoder.encode(cursor, nonce: true)
+        end
+
         let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedSince: 2.weeks.ago.iso8601 } }
 
-        before {
+        let(:pending_deleted_dossier) do
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
-          Timecop.travel(3.hours.ago) {
-            dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
-          }
-        }
+          dossier.tap { _1.update(hidden_by_user_at: 4.days.ago) }
+        end
+        let(:pending_deleted_dossier1) do
+          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          dossier_accepte.tap { _1.update(hidden_by_administration_at: 3.days.ago) }
+        end
+        let(:pending_deleted_dossier2) do
+          dossier1.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
+          dossier1.tap { _1.update(hidden_by_user_at: 2.days.ago) }
+        end
+        let(:pending_deleted_dossier3) do
+          dossier_accepte1.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          dossier_accepte1.tap { _1.update(hidden_by_administration_at: 1.day.ago) }
+        end
+
+        let(:start_cursor) { cursor_for(pending_deleted_dossier) }
+        let(:end_cursor) { cursor_for(pending_deleted_dossier3) }
+
+        before { pending_deleted_dossier; pending_deleted_dossier1; pending_deleted_dossier2; pending_deleted_dossier3 }
 
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression] < gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression])
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(4)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(pending_deleted_dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(pending_deleted_dossier1.hidden_by_administration_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression] < gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to be_truthy
         }
+
+        context 'first' do
+          let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedFirst: 2 } }
+          let(:end_cursor) { cursor_for(pending_deleted_dossier1) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasNextPage]).to be_truthy
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+          }
+
+          context 'after' do
+            let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedFirst: 2, pendingDeletedAfter: current_cursor } }
+            let(:current_cursor) { cursor_for(pending_deleted_dossier1) }
+            let(:start_cursor) { cursor_for(pending_deleted_dossier2) }
+            let(:end_cursor) { cursor_for(pending_deleted_dossier3) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasNextPage]).to be_falsey
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+
+          context 'before' do
+            let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedFirst: 2, pendingDeletedBefore: current_cursor } }
+            let(:current_cursor) { cursor_for(pending_deleted_dossier2) }
+            let(:start_cursor) { cursor_for(pending_deleted_dossier) }
+            let(:end_cursor) { cursor_for(pending_deleted_dossier1) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasNextPage]).to be_truthy
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+        end
+
+        context 'last' do
+          let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedLast: 2 } }
+          let(:start_cursor) { cursor_for(pending_deleted_dossier2) }
+          let(:end_cursor) { cursor_for(pending_deleted_dossier3) }
+
+          it {
+            expect(gql_errors).to be_nil
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasNextPage]).to be_falsey
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+            expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+          }
+
+          context 'before' do
+            let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedLast: 2, pendingDeletedBefore: current_cursor } }
+            let(:current_cursor) { cursor_for(pending_deleted_dossier2) }
+            let(:start_cursor) { cursor_for(pending_deleted_dossier) }
+            let(:end_cursor) { cursor_for(pending_deleted_dossier1) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasNextPage]).to be_truthy
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+
+          context 'after' do
+            let(:variables) { { demarcheNumber: procedure.id, includePendingDeletedDossiers: true, pendingDeletedLast: 2, pendingDeletedAfter: current_cursor } }
+            let(:current_cursor) { cursor_for(pending_deleted_dossier1) }
+            let(:start_cursor) { cursor_for(pending_deleted_dossier2) }
+            let(:end_cursor) { cursor_for(pending_deleted_dossier3) }
+
+            it {
+              expect(gql_errors).to be_nil
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasNextPage]).to be_falsey
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+              expect(gql_data[:demarche][:pendingDeletedDossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+            }
+          end
+        end
       end
     end
 
