@@ -309,6 +309,8 @@ Rails.application.routes.draw do
       get '/:path', action: 'statistiques'
     end
 
+    get 'commencer_2/:path', controller: 'commencer', action: 'commencer_2'
+
     namespace :commencer do
       get '/test/:path/dossier_vide', action: :dossier_vide_pdf_test, as: :dossier_vide_test
       get '/test/:path', action: 'commencer_test', as: :test

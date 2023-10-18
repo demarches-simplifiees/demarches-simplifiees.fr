@@ -1,0 +1,45 @@
+.fr-container.fr-mt-5w{ data: { controller: 'tiers' } }
+  .fr-grid-row
+    .fr-col-12.fr-col-md-8.fr-col-offset-md-2
+      %fieldset#radio-rich-hint.fr-fieldset{"aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages"}
+        %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          Ce dossier est
+          -# %span.fr-hint-text Texte de description additionnel
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            %input#radio-rich-hint-1{name: "radio-rich-hint", type: "radio", checked: true, data: { action: 'click->tiers#hideTiers' } }
+            %label.fr-label{for: "radio-rich-hint-1"}
+              pour vous
+              %span.fr-hint-text Vous serez seul à modifier et suivre le dossier.
+            .fr-radio-rich__img
+              %span.fr-icon-user-fill
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            %input#radio-rich-hint-2{name: "radio-rich-hint", type: "radio", data: { action: 'click->tiers#showTiers' } }
+            %label.fr-label{for: "radio-rich-hint-2"}
+              pour un tiers : membre de la famille, relation, mandant ...
+              %span.fr-hint-text Vous pourrez tous les deux modifier et suivre le dossier.
+            .fr-radio-rich__img
+              %span.fr-icon-parent-fill
+              -# %img{alt: "[2 b]", src: "/img/placeholder.1x1.png"}
+        #radio-rich-hint-messages.fr-messages-group{"aria-live" => "assertive"}
+
+      #self-dossier{ data: { tiers_target: 'selfContinue' } }
+        %button.fr-btn{ data: { tiers_target: 'otherContinue', action: 'click->tiers#nextPage'} } continuer
+
+      #other-dossier{ style: 'display: none;', data: { tiers_target: 'other' } }
+        .fr-input-group
+          %label.fr-label{for: "text-input-groups1"}
+            Adresse électronique du tiers bénéficiaire (facultatif)
+            %span.fr-hint-text Le tiers pourra suivre et modifier son dossier avec cette adresse.
+          %input#text-input-groups1.fr-input{name: "text-input-groups1", type: "email"}
+
+        %fieldset#checkboxes.fr-fieldset{"aria-labelledby" => "checkboxes-legend checkboxes-messages"}
+          .fr-fieldset__element
+            .fr-checkbox-group
+              %input#checkboxes-1{"aria-describedby" => "checkboxes-1-messages", name: "checkboxes-1", type: "checkbox", data: { action: 'click->tiers#toggleOtherContinue', tiers_target: 'iSwear' } }
+              %label.fr-label{for: "checkboxes-1"} Je m'engage sur l'honneur, et en responsabilité, à ne pas faire de la merde au nom de quelqu'un d'autre. Et aussi à manger moins de vache. Même si la vache, c'est bon quand même. Surtout avec des frites. Mais chut ! Sandrine arrive. Avouer qu'il en faut peu pour faire un texte plus intéressant qu'un pavé juridique. Et aussi pour être heureux.
+              #checkboxes-1-messages.fr-messages-group{"aria-live" => "assertive"}
+          #checkboxes-messages.fr-messages-group{"aria-live" => "assertive"}
+
+        %button.fr-btn{ data: { tiers_target: 'otherContinue', action: 'click->tiers#nextPage' }, disabled: true } continuer

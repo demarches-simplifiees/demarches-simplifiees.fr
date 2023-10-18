@@ -2,6 +2,12 @@ module Users
   class CommencerController < ApplicationController
     layout 'procedure_context'
 
+    def commencer_2
+      @procedure = retrieve_procedure
+
+      render 'commencer/commencer_2', layout: 'application'
+    end
+
     def commencer
       @procedure = retrieve_procedure
 
@@ -145,7 +151,7 @@ module Users
     end
 
     def store_user_location!(procedure)
-      store_location_for(:user, commencer_path(procedure.path, **extra_query_params))
+      store_location_for(:user, "/commencer_2/#{procedure.path}")
     end
 
     def generate_empty_pdf(revision)

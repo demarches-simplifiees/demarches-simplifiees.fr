@@ -19,7 +19,7 @@ module ProcedureContextConcern
   private
 
   def has_stored_procedure_path?
-    get_stored_location_for(:user)&.start_with?('/commencer/')
+    get_stored_location_for(:user)&.start_with?('/commencer/') || get_stored_location_for(:user)&.start_with?('/commencer_2/')
   end
 
   def find_procedure_in_context
