@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 7.0.5' # allows update to security fixes at any time
+gem 'rails'
 
 gem 'aasm'
 gem 'acsv'
