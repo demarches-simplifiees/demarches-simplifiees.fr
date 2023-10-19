@@ -9,6 +9,13 @@ class RechercheController < ApplicationController
 
   def index
     @search_terms = search_terms
+    @dossiers_count = 0
+
+    if instructeur_signed_in? && DossierSearchService.id_compatible?(@search_terms)
+      @deleted_dossier = current_instructeur.deleted_dossiers.find_by(dossier_id: @search_terms)
+    end
+
+    return if @deleted_dossier.present?
 
     @instructeur_dossiers_ids = DossierSearchService
       .matching_dossiers(current_instructeur&.dossiers, @search_terms, with_annotation: true)
