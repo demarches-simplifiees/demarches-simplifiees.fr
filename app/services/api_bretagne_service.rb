@@ -14,16 +14,19 @@ class APIBretagneService
 
   def search_domaine_fonct(code_or_label: "")
     url = build_url(ENDPOINTS.fetch('domaine-fonct'))
+    return [] if code_or_label.size < 3
     fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
   end
 
   def search_centre_couts(code_or_label: "")
     url = build_url(ENDPOINTS.fetch('centre-couts'))
+    return [] if code_or_label.size < 3
     fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
   end
 
   def search_ref_programmation(code_or_label: "")
     url = build_url(ENDPOINTS.fetch('ref-programmation'))
+    return [] if code_or_label.size < 3
     fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
   end
 
@@ -46,22 +49,6 @@ class APIBretagneService
     end
   end
 
-  # QUESTION TECH, on a des API av 18k reponse potentielles,
-  #   sur de l'autocomplete je suppose qu'on cherche pas a paginer le resultat.
-  #   vous avez une autre idée en tête ?
-
-  # def fetch_all_page(url:, code_or_label:)
-  #   first_page = fetch_page(url:, params: { page_number: 1, query: code_or_label })
-  #   return [] if first_page.empty?
-
-  #   total_pages = (first_page[:pageInfo][:totalRows].to_f / first_page[:pageInfo][:pageSize].to_f).ceil
-  #   all = first_page[:items]
-  #   (2..total_pages).map do |page_number|
-  #     page = fetch_page(url:, params: { page_number: })
-  #     all.concat(page[:items])
-  #   end
-  #   all
-  # end
 
   def call(url:, params:)
     API::Client.new.(url:, params:, authorization_token:, method:)
