@@ -2,9 +2,9 @@ class ChorusConfiguration
   include ActiveModel::Model
   include ActiveModel::Attributes
 
-  attribute :centre_de_coup, :json, default: '{}'
-  attribute :domaine_fonctionnel, :json, default: '{}'
-  attribute :referentiel_de_programmation, :json, default: '{}'
+  attribute :centre_de_coup, :simple_json, default: '{}'
+  attribute :domaine_fonctionnel, :simple_json, default: '{}'
+  attribute :referentiel_de_programmation, :simple_json, default: '{}'
 
   def format_displayed_value(attribute_name)
     case attribute_name

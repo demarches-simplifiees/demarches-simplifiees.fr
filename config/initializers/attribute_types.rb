@@ -1,4 +1,4 @@
-class JsonType < ActiveModel::Type::Value
+class SimpleJsonType < ActiveModel::Type::Value
   def cast(value)
     return nil if value.blank?
     return value if value.is_a?(Hash)
@@ -8,4 +8,4 @@ class JsonType < ActiveModel::Type::Value
   end
 end
 
-ActiveModel::Type.register(:json, JsonType)
+ActiveModel::Type.register(:simple_json, SimpleJsonType)

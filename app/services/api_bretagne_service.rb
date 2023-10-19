@@ -50,7 +50,6 @@ class APIBretagneService
     end
   end
 
-
   def call(url:, params:)
     API::Client.new.(url:, params:, authorization_token:, method:)
   end
