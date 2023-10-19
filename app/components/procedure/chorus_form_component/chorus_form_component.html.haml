@@ -1,5 +1,3 @@
-- map_attribute_to_autocomplete_endpoint = { centre_de_coup: data_sources_search_centre_couts_path, domaine_fonctionnel: data_sources_search_domaine_fonct_path, referentiel_de_programmation: data_sources_search_ref_programmation_path }
-
 = form_for([procedure, procedure.chorus_configuration],url: admin_procedure_chorus_path(procedure), method: :put) do |f|
   - map_attribute_to_autocomplete_endpoint.map do |chorus_configuration_attribute, datasource_endpoint|
     - label_class_name = "#{chorus_configuration_attribute}-label"

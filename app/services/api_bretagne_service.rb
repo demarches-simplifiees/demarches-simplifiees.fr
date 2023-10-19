@@ -13,33 +13,33 @@ class APIBretagneService
   }
 
   def search_domaine_fonct(code_or_label: "")
-    url = build_url(ENDPOINTS.fetch('domaine-fonct'))
-    return [] if code_or_label.size < 3
-    fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
+    request(endpoint: ENDPOINTS.fetch('domaine-fonct'), code_or_label:)
   end
 
   def search_centre_couts(code_or_label: "")
-    url = build_url(ENDPOINTS.fetch('centre-couts'))
-    return [] if code_or_label.size < 3
-    fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
+    request(endpoint: ENDPOINTS.fetch('centre-couts'), code_or_label:)
   end
 
   def search_ref_programmation(code_or_label: "")
-    url = build_url(ENDPOINTS.fetch('ref-programmation'))
-    return [] if code_or_label.size < 3
-    fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
+    request(endpoint: ENDPOINTS.fetch('ref-programmation'), code_or_label:)
   end
 
   private
 
-  def fetch_page(url:, params:, retry_count: 1)
+  def request(endpoint:, code_or_label:)
+    return [] if (code_or_label || "").strip.size < 3
+    url = build_url(endpoint)
+    fetch_page(url:, params: { query: code_or_label, page_number: 1 })[:items] || []
+  end
+
+  def fetch_page(url:, params:, remaining_retry_count: 1)
     result = call(url:, params:)
 
     case result
     in Failure(code:, reason:) if code.in?(401..403)
-      if retry_count > 0
+      if remaining_retry_count > 0
         login
-        fetch_page(url:, params:, retry_count: 0)
+        fetch_page(url:, params:, remaining_retry_count: 0)
       else
         fail "APIBretagneService, #{reason} #{code}"
       end
@@ -72,7 +72,7 @@ class APIBretagneService
     result = API::Client.new.call(url: build_url(ENDPOINTS.fetch("login")),
                                   json: {
                                     email: ENV['API_DATABRETAGE_USERNAME'],
-                                          password: ENV['API_DATABRETAGE_PASSWORD']
+                                    password: ENV['API_DATABRETAGE_PASSWORD']
                                   },
                                   method: :post)
     case result
