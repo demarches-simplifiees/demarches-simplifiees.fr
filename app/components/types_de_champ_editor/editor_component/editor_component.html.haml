@@ -2,6 +2,5 @@
   .types-de-champ-editor.editor-root
     = render TypesDeChampEditor::ErrorsSummary.new(revision: @revision)
     = render TypesDeChampEditor::BlockComponent.new(block: @revision, coordinates: coordinates)
-  - if coordinates.empty?
-    #empty-coordinates
-      = render TypesDeChampEditor::AddChampButtonComponent.new(revision: @revision, is_annotation: annotations?)
+  #empty-coordinates{ hidden: coordinates.present? }
+    = render TypesDeChampEditor::AddChampButtonComponent.new(revision: @revision, is_annotation: annotations?)
