@@ -1,7 +1,11 @@
-.fr-container.fr-mt-5w{ data: { controller: 'tiers' } }
+.fr-container.fr-mt-5w{ data: { controller: 'tiers', 'tiers-procedureid-value': @procedure.id } }
   .fr-grid-row
     .fr-col-12.fr-col-md-8.fr-col-offset-md-2
-      %h1.fr-h2 Choix du bénéficiaire
+      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
+        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
+      %h1= @procedure.libelle
+
+      %h2.fr-h2 Choix du bénéficiaire
       %fieldset#radio-rich-hint.fr-fieldset{"aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages"}
         %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
           Ce dossier est
@@ -18,7 +22,7 @@
           .fr-radio-group.fr-radio-rich
             %input#radio-rich-hint-2{name: "radio-rich-hint", type: "radio", data: { action: 'click->tiers#showTiers' } }
             %label.fr-label{for: "radio-rich-hint-2"}
-              pour un tiers : membre de la famille, relation, mandant ...
+              pour un tiers : membre de la famille, proche, mandant ...
               %span.fr-hint-text Vous pourrez tous les deux modifier et suivre le dossier.
             .fr-radio-rich__img
               %span.fr-icon-parent-fill
@@ -26,7 +30,7 @@
         #radio-rich-hint-messages.fr-messages-group{"aria-live" => "assertive"}
 
       #self-dossier{ style: 'display: block;' }
-        %button.fr-btn{ data: { tiers_target: 'selfContinue', action: 'click->tiers#nextPage'} } continuer
+        %button.fr-btn{ data: { tiers_target: 'selfContinue', action: 'click->tiers#nextPage'} } Commencer un nouveau dossier
 
       #other-dossier{ style: 'display: none;', data: { tiers_target: 'other' } }
         %h2 Identité du tiers

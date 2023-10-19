@@ -1,6 +1,8 @@
 import { ApplicationController } from './application_controller';
 
 export class TiersController extends ApplicationController {
+   static values = { procedureid: Number }
+
   static targets = ['other', 'selfContinue', 'iSwear', 'otherContinue'];
 
   declare otherTarget: HTMLElement;
@@ -27,6 +29,6 @@ export class TiersController extends ApplicationController {
   }
 
   nextPage() {
-    window.location = "http://localhost:3000/dossiers/new?procedure_id=7592";
+    window.location = `http://localhost:3000/dossiers/new?procedure_id=${this.procedureidValue}`;
   }
 }
