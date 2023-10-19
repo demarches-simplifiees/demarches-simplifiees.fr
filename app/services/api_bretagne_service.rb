@@ -34,6 +34,7 @@ class APIBretagneService
 
   def fetch_page(url:, params:, retry_count: 1)
     result = call(url:, params:)
+
     case result
     in Failure(code:, reason:) if code.in?(401..403)
       if retry_count > 0
@@ -42,10 +43,10 @@ class APIBretagneService
       else
         fail "APIBretagneService, #{reason} #{code}"
       end
-    in Failure(code:) if code == 204
-      []
     in Success(body:)
       body
+    else  # no response gives back a 204, so we don't try to JSON.parse(nil) to avoid error
+      { items: [] }
     end
   end
 
