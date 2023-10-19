@@ -5,7 +5,6 @@
         role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
       %h1= @procedure.libelle
 
-      %h2.fr-h2 Choix du bénéficiaire
       %fieldset#radio-rich-hint.fr-fieldset{"aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages"}
         %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
           Ce dossier est
@@ -29,8 +28,18 @@
               -# %img{alt: "[2 b]", src: "/img/placeholder.1x1.png"}
         #radio-rich-hint-messages.fr-messages-group{"aria-live" => "assertive"}
 
-      #self-dossier{ style: 'display: block;' }
-        %button.fr-btn{ data: { tiers_target: 'selfContinue', action: 'click->tiers#nextPage'} } Commencer un nouveau dossier
+      #self-dossier{ style: 'display: block;',  data: { tiers_target: 'selfContinue'} }
+        %h2 Votre identité
+        .fr-input-group
+          %label.fr-label{for: "text-input-groups1"}
+            Nom
+          %input#text-input-groups1.fr-input{name: "text-input-groups1", type: "email"}
+
+        .fr-input-group
+          %label.fr-label{for: "text-input-groups3"}
+            Prénom
+          %input#text-input-groups3.fr-input{name: "text-input-groups3", type: "email"}
+        %button.fr-btn{ data: { action: 'click->tiers#nextPage'} } Commencer un nouveau dossier
 
       #other-dossier{ style: 'display: none;', data: { tiers_target: 'other' } }
         %h2 Identité du tiers
