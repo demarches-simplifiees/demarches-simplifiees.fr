@@ -30,8 +30,9 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
   scenario "adding multiple champs" do
     # Champs are created when clicking the 'Add field' button
     add_champ
-    page.refresh
-    add_champ
+    within(find('.type-de-champ-add-button', match: :first)) {
+      add_champ
+    }
     within(find('.type-de-champ-add-button', match: :first)) {
       add_champ
     }
@@ -212,8 +213,10 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
       first_header = procedure.active_revision.types_de_champ_public.first
       select('Titre de niveau 1', from: dom_id(first_header, :header_section_level))
 
-      page.refresh
-      add_champ
+      within(find('.type-de-champ-add-button', match: :first)) {
+        add_champ
+      }
+
       wait_until { procedure.reload.active_revision.types_de_champ_public.count == 2 }
       second_header = procedure.active_revision.types_de_champ_public.last
       select('Titre de section', from: dom_id(second_header, :type_champ))

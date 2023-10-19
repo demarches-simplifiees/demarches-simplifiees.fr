@@ -40,8 +40,9 @@ describe 'Creating a new procedure', js: true, retry: 3 do
       expect(page).to have_content('Formulaire enregistré')
       expect(page).to have_selector('select > optgroup', count: 8)
 
-      page.refresh
-      add_champ
+      within(find('.type-de-champ-add-button', match: :first)) {
+        add_champ
+      }
       expect(page).to have_selector('.type-de-champ', count: 1)
     end
 
