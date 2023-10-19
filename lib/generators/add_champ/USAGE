@@ -1,0 +1,20 @@
+Description:
+    Génère le squelette pour ajouter un champs
+
+Example:
+    bin/rails generate add_champ ExpressionReguliere
+
+    Ce qui va :
+        create file   app/components/editable_champ/${name}_component.rb
+        create dir    app/components/editable_champ/${name}_component
+        create file   app/components/editable_champ/${name}_component/${name}_component.html.haml
+        create file   app/components/editable_champ/${name}_component/${name}_component.fr.yml
+        create file   app/components/editable_champ/${name}_component/${name}_component.en.yml
+        create file   app/models/champs/${name}_champ.rb
+        create file   app/graphql/types/champs/descriptor/${name}_champ_descriptor_type.rb
+        populate      app/graphql/types/champ_descriptor_type.rb
+        run           dump graphql schema
+        populate      app/models/type_de_champ.rb (enum type_champs:)
+        populate      TYPE_DE_CHAMP_TO_CATEGORIE, choose in: CATEGORIES = [STRUCTURE, ETAT_CIVIL, LOCALISATION, PAIEMENT_IDENTIFICATION, STANDARD, PIECES_JOINTES, CHOICE, REFERENTIEL_EXTERNE]
+        create file   app/models/types_de_champ/${name}_type_de_champ.rb
+        populate      spec/factories/type_de_champ.rb

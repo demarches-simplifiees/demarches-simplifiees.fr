@@ -130,6 +130,7 @@ group :development do
   gem 'rubocop-rspec', require: false
   gem 'scss_lint', require: false
   gem 'stackprof'
+  gem 'tty-prompt'
   gem 'web-console'
 end
 
