@@ -26,6 +26,7 @@ class DataFixer::DossierChampsMissing
     added_champs = added_champs_root + added_champs_in_repetition
     if !added_champs.empty?
       dossier.save!
+      log_champs_added(dossier, added_champs)
       added_champs.size
     else
       0
@@ -61,5 +62,20 @@ class DataFixer::DossierChampsMissing
         end
       end
     end
+  end
+
+  def log_champs_added(dossier, added_champs)
+    app_traces = caller.reject { _1.match?(%r{/ruby/.+/gems/}) }.map { _1.sub(Rails.root.to_s, "") }
+
+    payload = {
+      message: "DataFixer::DossierChampsMissing",
+      dossier_id: dossier.id,
+      champs_ids: added_champs.map(&:id).join(","),
+      caller: app_traces
+    }
+
+    logger = Lograge.logger || Rails.logger
+
+    logger.info payload.to_json
   end
 end
