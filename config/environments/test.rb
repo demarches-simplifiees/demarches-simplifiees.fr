@@ -90,3 +90,7 @@ Rails.application.configure do
 
   config.middleware.use RackSessionAccess::Middleware
 end
+
+ActiveSupport.on_load(:active_record_postgresqladapter) do
+  self.create_unlogged_tables = true
+end
