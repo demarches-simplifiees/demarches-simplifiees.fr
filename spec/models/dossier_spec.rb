@@ -1579,11 +1579,12 @@ describe Dossier, type: :model do
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { [type_de_champ] }
-    let(:type_de_champ) { { type: :expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text: } }
+    let(:type_de_champ) { { type: :expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text:, expression_reguliere_error_message: } }
 
     context "with bad example" do
       let(:expression_reguliere_exemple_text) { "01234567" }
       let(:expression_reguliere) { "[A-Z]+" }
+      let(:expression_reguliere_error_message) { "Le champ doit être composé de lettres majuscules" }
 
       before do
         champ = dossier.champs_public.first
@@ -1593,13 +1594,14 @@ describe Dossier, type: :model do
 
       it 'should have errors' do
         expect(dossier.errors).not_to be_empty
-        expect(dossier.errors.full_messages.join(',')).to include("ne correspond pas au format attendu")
+        expect(dossier.errors.full_messages.join(',')).to include(dossier.champs_public.first.expression_reguliere_error_message)
       end
     end
 
     context "with good example" do
       let(:expression_reguliere_exemple_text) { "AZERTY" }
       let(:expression_reguliere) { "[A-Z]+" }
+      let(:expression_reguliere_error_message) { "Le champ doit être composé de lettres majuscules" }
 
       before do
         champ = dossier.champs_public.first
