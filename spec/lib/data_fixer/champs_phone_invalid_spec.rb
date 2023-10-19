@@ -1,4 +1,4 @@
-describe PhoneFixer do
+describe DataFixer::ChampsPhoneInvalid do
   describe '#fix' do
     subject { described_class.fix(phone_str) }
 
