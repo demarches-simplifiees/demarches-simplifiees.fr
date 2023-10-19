@@ -48,6 +48,10 @@ class NotificationMailer < ApplicationMailer
     with(dossier: dossier).send_notification
   end
 
+  def self.critical_email?(action_name)
+    false
+  end
+
   private
 
   def set_services_publics_plus

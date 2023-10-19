@@ -184,6 +184,10 @@ class DossierMailer < ApplicationMailer
     end
   end
 
+  def self.critical_email?(action_name)
+    false
+  end
+
   protected
 
   def prevent_perform_deliveries

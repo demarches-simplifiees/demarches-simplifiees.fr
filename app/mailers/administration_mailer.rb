@@ -20,4 +20,8 @@ class AdministrationMailer < ApplicationMailer
       subject: subject,
       reply_to: CONTACT_EMAIL)
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end
