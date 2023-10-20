@@ -3,6 +3,7 @@ class Procedure::ChorusFormComponent < ApplicationComponent
 
   def initialize(procedure:)
     @procedure = procedure
+    @chorus_configuration = @procedure.chorus_configuration
   end
 
   def map_attribute_to_autocomplete_endpoint
@@ -11,5 +12,31 @@ class Procedure::ChorusFormComponent < ApplicationComponent
       domaine_fonctionnel: data_sources_search_domaine_fonct_path,
       referentiel_de_programmation: data_sources_search_ref_programmation_path
     }
+  end
+
+  def format_displayed_value(attribute_name)
+    case attribute_name
+    when :centre_de_coup
+      ChorusConfiguration.format_centre_de_coup_label(@chorus_configuration.centre_de_coup)
+    when :domaine_fonctionnel
+      ChorusConfiguration.format_domaine_fonctionnel_label(@chorus_configuration.domaine_fonctionnel)
+    when :referentiel_de_programmation
+      ChorusConfiguration.format_ref_programmation_label(@chorus_configuration.referentiel_de_programmation)
+    else
+      raise 'unknown attribute_name'
+    end
+  end
+
+  def format_hidden_value(attribute_name)
+    case attribute_name
+    when :centre_de_coup
+      @chorus_configuration.centre_de_coup.to_json
+    when :domaine_fonctionnel
+      @chorus_configuration.domaine_fonctionnel.to_json
+    when :referentiel_de_programmation
+      @chorus_configuration.referentiel_de_programmation.to_json
+    else
+      raise 'unknown attribute_name'
+    end
   end
 end

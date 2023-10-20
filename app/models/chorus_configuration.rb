@@ -6,32 +6,6 @@ class ChorusConfiguration
   attribute :domaine_fonctionnel, :simple_json, default: '{}'
   attribute :referentiel_de_programmation, :simple_json, default: '{}'
 
-  def format_displayed_value(attribute_name)
-    case attribute_name
-    when :centre_de_coup
-      ChorusConfiguration.format_centre_de_coup_label(centre_de_coup)
-    when :domaine_fonctionnel
-      ChorusConfiguration.format_domaine_fonctionnel_label(domaine_fonctionnel)
-    when :referentiel_de_programmation
-      ChorusConfiguration.format_ref_programmation_label(referentiel_de_programmation)
-    else
-      raise 'unknown attribute_name'
-    end
-  end
-
-  def format_hidden_value(attribute_name)
-    case attribute_name
-    when :centre_de_coup
-      centre_de_coup.to_json
-    when :domaine_fonctionnel
-      domaine_fonctionnel.to_json
-    when :referentiel_de_programmation
-      referentiel_de_programmation.to_json
-    else
-      raise 'unknown attribute_name'
-    end
-  end
-
   def self.format_centre_de_coup_label(api_result)
     return "" if api_result.blank?
     api_result = api_result.symbolize_keys
