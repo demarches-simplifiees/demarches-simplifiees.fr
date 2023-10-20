@@ -615,7 +615,9 @@ Rails.application.routes.draw do
       resource :attestation_template, only: [:show, :edit, :update, :create] do
         get 'preview', on: :member
       end
-      resource :chorus, only: [:edit, :update]
+      resource :chorus, only: [:edit, :update] do
+        get 'add_champ_engagement_juridique'
+      end
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
       get 'attestation_template/preview' => 'attestation_templates#preview'
