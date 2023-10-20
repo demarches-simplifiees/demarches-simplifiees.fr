@@ -238,9 +238,12 @@ FactoryBot.define do
       value { 'W173847273' }
     end
 
+    factory :champ_engagement_juridique, class: 'Champs::EngagementJuridiqueChamp' do
+  type_de_champ { association :type_de_champ_engagement_juridique, procedure: dossier.procedure }
+end
     factory :champ_cojo, class: 'Champs::COJOChamp' do
-      type_de_champ { association :type_de_champ_cojo, procedure: dossier.procedure }
-    end
+          type_de_champ { association :type_de_champ_cojo, procedure: dossier.procedure }
+        end
 
     factory :champ_rnf, class: 'Champs::RNFChamp' do
       type_de_champ { association :type_de_champ_rnf, procedure: dossier.procedure }
