@@ -16,9 +16,12 @@
 
         = render partial: 'administrateurs/procedures/informations', locals: { f: f }
 
-  .sticky-action-footer
+  .fixed-footer
     .fr-container
       .fr-grid-row
         .fr-col-12.fr-col-offset-md-2.fr-col-md-8
-          = f.button 'Enregistrer', class: 'fr-btn fr-mr-2w'
-          = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+          %ul.fr-btns-group.fr-btns-group--inline-md
+            %li
+              = f.button 'Enregistrer', class: 'fr-btn'
+            %li
+              = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}

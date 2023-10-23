@@ -34,6 +34,10 @@
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id
 
-  .sticky-action-footer
-    = f.submit "Enregistrer", class: "fr-btn fr-mr-2w"
-    = link_to "Annuler et revenir à la page de suivi", admin_procedure_path(id: @procedure.id), class: "fr-btn fr-btn--secondary"
+  .fixed-footer
+    .fr-container
+      %ul.fr-btns-group.fr-btns-group--inline-md
+        %li
+          = f.submit "Enregistrer", class: "fr-btn"
+        %li
+          = link_to "Annuler et revenir à la page de suivi", admin_procedure_path(id: @procedure.id), class: "fr-btn fr-btn--secondary"
