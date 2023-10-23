@@ -205,6 +205,28 @@ describe 'The user' do
     wait_until {
       champ_value_for('nombre décimal') == '123456.78'
     }
+    champ_past_value_for('nombre décimal', '123 456,78')
+    wait_until {
+      champ_value_for('nombre décimal') == '123456.78'
+    }
+
+    fill_in('nombre décimal', with: '123 456.78')
+    wait_until {
+      champ_value_for('nombre décimal') == '123456.78'
+    }
+    champ_past_value_for('nombre décimal', '123 456.78')
+    wait_until {
+      champ_value_for('nombre décimal') == '123456.78'
+    }
+
+    fill_in('nombre décimal', with: '123 456.002')
+    wait_until {
+      champ_value_for('nombre décimal') == '123456.002'
+    }
+    fill_in('nombre décimal', with: '123 456,002')
+    wait_until {
+      champ_value_for('nombre décimal') == '123456.002'
+    }
 
     champ_past_value_for('nombre décimal', '1,234.56')
     wait_until {
