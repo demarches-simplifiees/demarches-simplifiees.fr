@@ -4,6 +4,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
     let(:routing_rules_stable_ids) { [] }
 
     before do
+      Flipper.enable_actor(:engagement_juridique_type_de_champ, procedure)
       allow_any_instance_of(Procedure).to receive(:stable_ids_used_by_routing_rules).and_return(routing_rules_stable_ids)
       render_inline(component)
     end

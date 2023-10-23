@@ -91,7 +91,8 @@ describe ProcedureExportService do
           "epci (Département)",
           "cojo",
           "expression_reguliere",
-          "rnf"
+          "rnf",
+          "engagement_juridique"
         ]
       end
 
@@ -204,7 +205,8 @@ describe ProcedureExportService do
           "epci (Département)",
           "cojo",
           "expression_reguliere",
-          "rnf"
+          "rnf",
+          "engagement_juridique"
         ]
       end
 
@@ -300,7 +302,8 @@ describe ProcedureExportService do
             "epci (Département)",
             "cojo",
             "expression_reguliere",
-            "rnf"
+            "rnf",
+            "engagement_juridique"
           ]
         end
 

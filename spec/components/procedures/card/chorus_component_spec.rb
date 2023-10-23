@@ -13,7 +13,7 @@ describe Procedure::Card::ChorusComponent, type: :component do
       end
     end
     context 'feature flag active' do
-      before { Flipper.enable_actor :chorus, procedure }
+      before { Flipper.enable_actor :engagement_juridique_type_de_champ, procedure }
 
       it 'render the template' do
         subject
