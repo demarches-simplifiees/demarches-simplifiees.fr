@@ -8,7 +8,7 @@ class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
   private
 
   def departement_options
-    APIGeoService.departements.filter { _1[:code] != '99' }.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+    APIGeoService.departements.filter(&method(:departement_with_epci?)).map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
   end
 
   def epci_options
@@ -25,5 +25,10 @@ class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
 
   def epci_select_options
     { selected: @champ.code }.merge(@champ.mandatory? ? { prompt: '' } : { include_blank: '' })
+  end
+
+  def departement_with_epci?(departement)
+    code = departement[:code]
+    !code.start_with?('98') && !code.in?(['99', '975', '977', '978'])
   end
 end
