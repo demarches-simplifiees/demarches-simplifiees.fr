@@ -7,7 +7,8 @@ import {
   toggleExpandIcon,
   isSelectElement,
   isTextInputElement,
-  isCheckboxOrRadioInputElement
+  isCheckboxOrRadioInputElement,
+  formatDecimal
 } from './utils';
 
 suite('@utils', () => {
@@ -120,5 +121,69 @@ suite('@utils', () => {
 
     input.type = 'file';
     expect(isCheckboxOrRadioInputElement(input)).toBeFalsy();
+  });
+
+  suite('formatDecimal', () => {
+    const expectedFloat = "4294967295.05";
+
+    test('formatDecimal getting a Canadian (English and French) format', () => {
+      const stringValue = "4 294 967 295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Danish format', () => {
+      const stringValue = "4 294 967 295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Finnish format', () => {
+      const stringValue = "4 294 967 295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a French format', () => {
+      const stringValue = "4 294 967 295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a German format', () => {
+      const stringValue = "4 294 967.295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Italian format', () => {
+      const stringValue = "4.294.967.295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Norwegian format', () => {
+      const stringValue = "4.294.967.295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Spanish format', () => {
+      const stringValue = "4.294.967.295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Swedish format', () => {
+      const stringValue = "4 294 967 295,050";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a GB-English format', () => {
+      const stringValue = "4,294,967,295.05";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a US-English format', () => {
+      const stringValue = "4,294,967,295.05";
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat);
+    })
+
+    test('formatDecimal getting a Thai format', () => {
+      const stringValue = "4,294,967,295.05"
+      expect(formatDecimal(stringValue)).toEqual(expectedFloat)
+    })
   });
 });

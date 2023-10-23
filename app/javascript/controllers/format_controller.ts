@@ -1,4 +1,5 @@
 import { ApplicationController } from './application_controller';
+import { formatDecimal } from '@utils';
 
 export class FormatController extends ApplicationController {
   connect() {
@@ -28,7 +29,7 @@ export class FormatController extends ApplicationController {
       case 'decimal':
         this.on('input', (event) => {
           const target = event.target as HTMLInputElement;
-          const value = this.formatDecimal(target.value);
+          const value = formatDecimal(target.value);
           replaceValue(target, value);
         });
         break;
@@ -51,14 +52,6 @@ export class FormatController extends ApplicationController {
     return value.replace(/[^-?\d]/g, '');
   }
 
-  private formatDecimal(value: string) {
-    const decimalSeparator = getDecimalSeparator(value);
-    const number =
-      decimalSeparator == ','
-        ? value.replace(/\./g, '').replace(/,/g, '.')
-        : value.replace(/,/g, '');
-    return number.replace(new RegExp(`[^-?\\d.]`, 'g'), '');
-  }
 }
 
 function replaceValue(target: HTMLInputElement, value: string) {
@@ -70,16 +63,4 @@ function replaceValue(target: HTMLInputElement, value: string) {
   target.selectionStart = start ? start - delta : 0;
   target.selectionEnd = end ? end - delta : 0;
   target.selectionDirection = dir;
-}
-
-function getDecimalSeparator(value: string) {
-  if (value.indexOf('.') != -1 && value.indexOf(',') != -1) {
-    if (value.lastIndexOf('.') < value.lastIndexOf(',')) {
-      return ',';
-    }
-    return '.';
-  } else if (value.indexOf(',') != -1) {
-    return ',';
-  }
-  return (1.1).toLocaleString().indexOf('.') != -1 ? '.' : ',';
 }

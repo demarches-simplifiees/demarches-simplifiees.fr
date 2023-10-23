@@ -350,3 +350,25 @@ function delegateEvent<E extends Event = Event>(
   element.addEventListener(eventType, listener);
   return () => element.removeEventListener(eventType, listener);
 }
+
+export function formatDecimal(value: string) {
+  const normalizedValue = value.replaceAll(' ', '')
+  const decimalSeparator = getDecimalSeparator(value);
+  const number =
+    decimalSeparator == ','
+      ? value.replace(/\./g, '').replace(/,/g, '.')
+      : value.replace(/,/g, '');
+  return parseFloat(number.replace(new RegExp(`[^-?\\d.]`, 'g'), '')).toString();
+}
+
+function getDecimalSeparator(value: string) {
+  if (value.indexOf('.') != -1 && value.indexOf(',') != -1) {
+    if (value.lastIndexOf('.') < value.lastIndexOf(',')) {
+      return ',';
+    }
+    return '.';
+  } else if (value.indexOf(',') != -1) {
+    return ',';
+  }
+  return (1.1).toLocaleString().indexOf('.') != -1 ? '.' : ',';
+}
