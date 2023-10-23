@@ -185,5 +185,13 @@ suite('@utils', () => {
       const stringValue = "4,294,967,295.05"
       expect(formatDecimal(stringValue)).toEqual(expectedFloat)
     })
+
+    test('formatDecimal with prod format, having dot as separator', () => {
+      expect(formatDecimal('10.4')).toEqual('10,4')
+    })
+
+    test('formatDecimal with prod format, having comma as separator', () => {
+      expect(formatDecimal('10,4')).toEqual('10.4')
+    })
   });
 });
