@@ -1,5 +1,6 @@
 import { session } from '@hotwired/turbo';
 import { z } from 'zod';
+import { NumberParser, NumberFormatter } from '@internationalized/number';
 
 const Gon = z
   .object({
@@ -349,4 +350,48 @@ function delegateEvent<E extends Event = Event>(
   };
   element.addEventListener(eventType, listener);
   return () => element.removeEventListener(eventType, listener);
+}
+
+export function formatDecimal(value: string) {
+  if (value.endsWith('.') || value.endsWith(',')) {
+    return value;
+  }
+  const detectedLocale = getLocale(value);
+  // Try first with detected format when fallback to other locales
+  const localesInPriorityOrder = [
+    detectedLocale,
+    ...locales.filter((locale) => !locale.startsWith(detectedLocale))
+  ];
+  const parsedNumber = localesInPriorityOrder.reduce((parsedNumber, locale) => {
+    if (Number.isNaN(parsedNumber)) {
+      return parseDecimal(locale, value);
+    }
+    return parsedNumber;
+  }, NaN);
+
+  if (Number.isNaN(parsedNumber)) {
+    return value;
+  }
+  return formatter.format(parsedNumber).replace(/,/g, '');
+}
+
+const formatter = new NumberFormatter('en', { style: 'decimal' });
+const locales = ['fr', 'es', 'en'];
+
+function parseDecimal(locale: string, value: string) {
+  return new NumberParser(locale, { style: 'decimal' }).parse(value);
+}
+
+function getLocale(value: string) {
+  const lastDotIndex = value.lastIndexOf('.');
+  const lastCommaIndex = value.lastIndexOf(',');
+  if (lastDotIndex != -1 && lastCommaIndex != -1) {
+    if (lastDotIndex < lastCommaIndex) {
+      return 'es';
+    }
+    return 'en';
+  } else if (lastCommaIndex != -1) {
+    return 'fr';
+  }
+  return document.querySelector('html')?.lang ?? 'fr';
 }
