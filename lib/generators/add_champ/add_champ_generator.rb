@@ -55,7 +55,6 @@ CONTENT
     insert_into_file "app/graphql/api/v2/schema.rb",
                      ",\nTypes::Champs::Descriptor::#{graphql_type}\n",
                      after: "Types::Champs::Descriptor::ExpressionReguliereChampDescriptorType"
-
   end
 
   def add_champ_to_type_de_champ
@@ -97,6 +96,14 @@ CONTENT
     insert_into_file "spec/factories/champ.rb",
                      factory,
                      before: 'factory :champ_cojo'
+  end
+
+  def feature_flag_champ
+    if @prompt.yes?("Ce type de champ est t'il FeatureFlip ?")
+      insert_into_file "app/models/type_de_champ.rb",
+                     "\n    #{champ_to_path}: :#{champ_to_path}_type_de_champ,\n",
+                     after: "FEATURE_FLAGS = {"
+    end
   end
 
   def dump_sql_schema
