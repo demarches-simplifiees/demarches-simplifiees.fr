@@ -176,6 +176,17 @@ describe 'The user' do
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
+  scenario 'fill address not in BAN', js: true, retry: 3 do
+    log_in(user, procedure)
+    fill_individual
+
+    fill_in('address', with: '2 rue de la paix, 92094 Belgique')
+    wait_until {
+      champ_value_for('address') == '2 rue de la paix, 92094 Belgique'
+    }
+    expect(champ_for('address').full_address?).to be_falsey
+  end
+
   scenario 'numbers champs formatting', js: true, retry: 3 do
     log_in(user, simple_procedure)
     fill_individual
