@@ -538,6 +538,17 @@
   }
 }
 
+.type-de-champ-expression-reguliere {
+  display: flex;
+  align-items: center;
+
+  &:before,
+  &:after {
+    font-weight: bold;
+    content: "/";
+  }
+}
+
 [data-react-component-value^="ComboMultiple"] {
   margin-bottom: $default-fields-spacer;
 
