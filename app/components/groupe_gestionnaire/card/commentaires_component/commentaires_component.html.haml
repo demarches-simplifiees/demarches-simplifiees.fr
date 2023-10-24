@@ -1,6 +1,7 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
   = link_to @path, id: 'administrateurs', class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.column.align-center.justify-between
+      %p.fr-badge.fr-badge--success Validé
       %div
         .line-count.fr-my-1w
           %p.fr-tag= @administrateur.commentaire_groupe_gestionnaires.size
