@@ -13,6 +13,7 @@ development:
   <<: *default
   database: <%= ENV["DB_DATABASE"] %>
   host: <%= ENV["DB_HOST"] %>
+  port: <%= ENV["DB_PORT"]&.presence&.to_i || 5432 %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
   # Workaround for https://github.com/ged/ruby-pg/issues/311
@@ -33,3 +34,4 @@ production: &production
   host: <%= ENV["DB_HOST"] %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  port: <%= ENV["DB_PORT"]&.presence&.to_i || 5432 %>
