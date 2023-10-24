@@ -628,6 +628,20 @@ textarea::placeholder {
   color: $dark-grey;
 }
 
+@media (max-width: 62em) {
+
+  .padded-fixed-footer {
+    padding-top: 120px;
+  }
+}
+
+@media (min-width: 62em) {
+
+  .padded-fixed-footer {
+    padding-top: 60px;
+  }
+}
+
 .fixed-footer {
   border-top: 2px solid $blue-france-500;
   position: fixed;

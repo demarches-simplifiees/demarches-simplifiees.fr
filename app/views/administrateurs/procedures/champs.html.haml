@@ -8,14 +8,15 @@
   = render NestedForms::FormOwnerComponent.new
 = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)
 
-.fixed-footer
-  .fr-container
-    .flex
-      %ul.fr-btns-group.fr-btns-group--inline-md
-        %li
-          = link_to t('continue', scope: [:layouts, :breadcrumb]), admin_procedure_path(@procedure), title: t('continue_title', scope: [:layouts, :breadcrumb]), class: 'fr-btn'
-        - if @procedure.draft_revision.revision_types_de_champ_public.count > 0
+.padded-fixed-footer
+  .fixed-footer
+    .fr-container
+      .flex
+        %ul.fr-btns-group.fr-btns-group--inline-md
           %li
-            = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--secondary'
-      .fr-ml-auto
-        = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @procedure.draft_revision, is_annotation: false)
+            = link_to t('continue', scope: [:layouts, :breadcrumb]), admin_procedure_path(@procedure), title: t('continue_title', scope: [:layouts, :breadcrumb]), class: 'fr-btn'
+          - if @procedure.draft_revision.revision_types_de_champ_public.count > 0
+            %li
+              = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--secondary'
+        .fr-ml-auto
+          = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @procedure.draft_revision, is_annotation: false)

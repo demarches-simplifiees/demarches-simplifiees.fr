@@ -34,10 +34,11 @@
   - if procedure_id.present?
     = hidden_field_tag :procedure_id, procedure_id
 
-  .fixed-footer
-    .fr-container
-      %ul.fr-btns-group.fr-btns-group--inline-md
-        %li
-          = f.submit "Enregistrer", class: "fr-btn"
-        %li
-          = link_to "Annuler et revenir à la page de suivi", admin_procedure_path(id: @procedure.id), class: "fr-btn fr-btn--secondary"
+  .padded-fixed-footer
+    .fixed-footer
+      .fr-container
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = f.submit "Enregistrer", class: "fr-btn"
+          %li
+            = link_to "Annuler et revenir à la page de suivi", admin_procedure_path(id: @procedure.id), class: "fr-btn fr-btn--secondary"
