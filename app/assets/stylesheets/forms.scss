@@ -293,7 +293,7 @@
   input[type=number],
   input[type=datetime-local],
   textarea,
-  input[type=tel], {
+  input[type=tel] {
     @media (max-width: $two-columns-breakpoint) {
       width: 100%;
     }
