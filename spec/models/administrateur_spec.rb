@@ -2,6 +2,7 @@ describe Administrateur, type: :model do
   let(:administration) { create(:administration) }
 
   describe 'associations' do
+    it { is_expected.to have_many(:commentaire_groupe_gestionnaires) }
     it { is_expected.to have_and_belong_to_many(:instructeurs) }
     it { is_expected.to belong_to(:groupe_gestionnaire).optional }
   end

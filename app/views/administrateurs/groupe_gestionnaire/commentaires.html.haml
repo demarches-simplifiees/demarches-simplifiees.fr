@@ -1,0 +1,13 @@
+= render partial: 'gestionnaires/breadcrumbs',
+  locals: { steps: [['Mon groupe gestionnaire', admin_groupe_gestionnaire_path],
+                    ['Messagerie']], preview: false }
+
+.container
+  %h1 Messagerie de « #{@groupe_gestionnaire.name} »
+.messagerie.container
+  - if current_administrateur.commentaire_groupe_gestionnaires.where(groupe_gestionnaire: @groupe_gestionnaire).present?
+    %ul.messages-list{ data: { controller: 'scroll-to' } }
+      - current_administrateur.commentaire_groupe_gestionnaires.where(groupe_gestionnaire: @groupe_gestionnaire).each do |commentaire|
+        %li.message{ class: commentaire_is_from_me_class(commentaire, current_administrateur), id: dom_id(commentaire) }
+          = render(GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent.new(commentaire: commentaire, connected_user: current_administrateur, is_gestionnaire: false))
+  = render partial: "shared/groupe_gestionnaires/commentaires/form", locals: { commentaire: @commentaire, form_url: admin_groupe_gestionnaire_create_commentaire_path }

@@ -1,6 +1,7 @@
 class Gestionnaire < ApplicationRecord
   include UserFindByConcern
   has_and_belongs_to_many :groupe_gestionnaires
+  has_many :commentaire_groupe_gestionnaires
 
   belongs_to :user
 
