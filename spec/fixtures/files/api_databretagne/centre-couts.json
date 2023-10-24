@@ -1,0 +1,709 @@
+{
+  "items": [
+    {
+      "ville": null,
+      "code": "#",
+      "description": null,
+      "label": null,
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "16GY991",
+      "description": "(R) Hors Armee de Terre",
+      "label": "(R)HORS ADT",
+      "code_postal": "75000"
+    },
+    {
+      "ville": "Nice",
+      "code": "2",
+      "description": "Unites Csfa  BA 943 Nice",
+      "label": "Unites Csfa  BA 943",
+      "code_postal": "6000"
+    },
+    {
+      "ville": null,
+      "code": "3070ATE012",
+      "description": "Centre de coût mutualisé de l’ATE 12",
+      "label": "PRF0ATE012",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "AAIAC00075",
+      "description": "AC",
+      "label": "AC",
+      "code_postal": "75001"
+    },
+    {
+      "ville": "PARIS",
+      "code": "AAIACNU075",
+      "description": "ACNUSA",
+      "label": "ACNUSA",
+      "code_postal": "75006"
+    },
+    {
+      "ville": "PARIS",
+      "code": "AAIASN1075",
+      "description": "Autorite de Surete Nucleaire",
+      "label": "ASN",
+      "code_postal": "75012"
+    },
+    {
+      "ville": "Paris 07",
+      "code": "AAICADA075",
+      "description": "CADA",
+      "label": "CADA",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "Paris 07",
+      "code": "AAICCNE075",
+      "description": "CCNE",
+      "label": "CCNE",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "Paris 07",
+      "code": "AAICCSD075",
+      "description": "CCSDN",
+      "label": "CCSDN",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "Paris 19",
+      "code": "AAICGLP075",
+      "description": "CGLPL",
+      "label": "CGLPL",
+      "code_postal": "75019"
+    },
+    {
+      "ville": "Paris 07",
+      "code": "AAICNCD075",
+      "description": "CNCDH",
+      "label": "CNCDH",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "Paris 07",
+      "code": "AAICNCI075",
+      "description": "CNCIS",
+      "label": "CNCIS",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "PARIS",
+      "code": "AAICNDP075",
+      "description": "Commission Nationale du Débat Public",
+      "label": "CNDP",
+      "code_postal": "75007"
+    },
+    {
+      "ville": "Paris 07",
+      "code": "AAICNDS075",
+      "description": "CNDS",
+      "label": "CNDS",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "Paris cedex 15",
+      "code": "AAIRCEP075",
+      "description": "ARCEP",
+      "label": "ARCEP",
+      "code_postal": "75730"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE00075",
+      "description": "CRE commun",
+      "label": "CRE",
+      "code_postal": "75379"
+    },
+    {
+      "ville": null,
+      "code": "AAIRE01075",
+      "description": "CRE-PRESIDENT",
+      "label": "CRE-PRESIDENT",
+      "code_postal": null
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE02075",
+      "description": "CRE Collège/DG",
+      "label": "CRE01 Collège/DG",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE03075",
+      "description": "CRE DRH",
+      "label": "CRE02 DRH",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE04075",
+      "description": "CRE-Direction des Réseaux",
+      "label": "CRE-DR",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE05075",
+      "description": "CRE-Secrétaire Général",
+      "label": "CRE-SG",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE06075",
+      "description": "CRE-Dir Dév Marchés et Transition Energ",
+      "label": "CRE-DDMTE",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE07075",
+      "description": "CRE DSMG",
+      "label": "CRE DSMG",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE08075",
+      "description": "CRE-Direction des Affaires Juridiques",
+      "label": "CRE-DAJ",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE09075",
+      "description": "CRE-Dir affaires europ, inter et coop",
+      "label": "CRE-DAEIC",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE10075",
+      "description": "CRE -  DCRI Comm et Relations Instit",
+      "label": "CRE - DCRI",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE11075",
+      "description": "CRE PAYE",
+      "label": "CRE10 PAYE",
+      "code_postal": "75379"
+    },
+    {
+      "ville": null,
+      "code": "AAIRE12075",
+      "description": "CRE-COMMISSAIRE1",
+      "label": "CRE-COMMISSAIRE1",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE13075",
+      "description": "CRE-COMMISSAIRE2",
+      "label": "CRE-COMMISSAIRE2",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE14075",
+      "description": "CRE-COMMISSAIRE3",
+      "label": "CRE-COMMISSAIRE3",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE15075",
+      "description": "CRE-COMMISSAIRE4",
+      "label": "CRE-COMMISSAIRE4",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE16075",
+      "description": "CRE-COMMISSAIRE5",
+      "label": "CRE-COMMISSAIRE5",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE17075",
+      "description": "CRE-Service Prospective et Innovation",
+      "label": "CRE-SPI",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE18075",
+      "description": "CRE-CS2",
+      "label": "CRE-CS2",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE19075",
+      "description": "CRE-RI",
+      "label": "CRE-RI",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE20075",
+      "description": "CRE-AUTRES",
+      "label": "CRE-AUTRES",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE21075",
+      "description": "CRE-CORDIS",
+      "label": "CRE-CORDIS",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE22075",
+      "description": "CRE-SIGR",
+      "label": "CRE-SIGR",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE23075",
+      "description": "CRE-Direction des Affaires Financières",
+      "label": "CRE-DAF",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE24075",
+      "description": "CRE-SGS",
+      "label": "CRE-SGS",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE25075",
+      "description": "CRE-ACTION SOCIALE",
+      "label": "CRE-ACTION SOCIALE",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "AAIRE26075",
+      "description": "CRE-FONCTIONNEMENT COURANT",
+      "label": "CRE-FONCTIONNEMENT",
+      "code_postal": null
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE27075",
+      "description": "CRE - STP Service Transfo et Projets",
+      "label": "CRE - STP",
+      "code_postal": "75379"
+    },
+    {
+      "ville": "Paris",
+      "code": "AAIRE28075",
+      "description": "CRE-DAEF",
+      "label": "CRE-DAEF",
+      "code_postal": "75379"
+    },
+    {
+      "ville": null,
+      "code": "AAIRE75ASP",
+      "description": "CRE Contentieux MESSER",
+      "label": "CRE Cont MESSER",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "ACCELER001",
+      "description": "Accélérateur TE2",
+      "label": "Accélérat TE2",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ACI0DTA075",
+      "description": "Direction du Transport Aerien",
+      "label": "DTA",
+      "code_postal": "75720"
+    },
+    {
+      "ville": "ST PIERRE ET MIQUELON",
+      "code": "ACIAERO975",
+      "description": "SAC SPM Aérogare",
+      "label": "SAC SPM Aérogare",
+      "code_postal": "97500"
+    },
+    {
+      "ville": "NOUMEA",
+      "code": "ACIDC98098",
+      "description": "Directionn de l'Aviation Civile NC",
+      "label": "DAC NC",
+      "code_postal": "98845"
+    },
+    {
+      "ville": "FORT-DE-FRANCE CEDEX",
+      "code": "ACIDCA2972",
+      "description": "DSAC ANTILLES-GUYANE",
+      "label": "DSAC ANTILLES-GUYANE",
+      "code_postal": "97262"
+    },
+    {
+      "ville": "SAINT-DENIS MESSAG CEDEX 9",
+      "code": "ACIDCA4974",
+      "description": "DSAC OCEAN INDIEN REUNION MAYOTTE",
+      "label": "DSAC OI REUNION MAYO",
+      "code_postal": "97408"
+    },
+    {
+      "ville": "SAINT-PIERRE-ET-MIQUELON",
+      "code": "ACIDCA5975",
+      "description": "SAC SAINT-PIERRE-ET-MIQUELON",
+      "label": "SAC SPMI",
+      "code_postal": "97500"
+    },
+    {
+      "ville": "UVEA-WALLIS",
+      "code": "ACIDCB6986",
+      "description": "SAC WALLIS FUTUNA",
+      "label": "SAC WALLIS FUTUNA",
+      "code_postal": "98600"
+    },
+    {
+      "ville": "FAA-A TAHITI",
+      "code": "ACIDCB7987",
+      "description": "SAC POLYNESIE",
+      "label": "SAC POLYNESIE",
+      "code_postal": "98702"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ACIDSAC075",
+      "description": "Dir de la Sécurité de l Aviation Civile",
+      "label": "DSAC",
+      "code_postal": "75720"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ACIDSNA075",
+      "description": "DSNA",
+      "label": "DSNA",
+      "code_postal": "75015"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ACIOCAC075",
+      "description": "Direction Generale de l'Aviation Civile",
+      "label": "DGAC",
+      "code_postal": "75720"
+    },
+    {
+      "ville": "ST PIERRE ET MIQUELON",
+      "code": "ACISLIA975",
+      "description": "SAC SPM SSLIA",
+      "label": "SAC SPM SSLIA",
+      "code_postal": "97500"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ACISNIA075",
+      "description": "Service National d'Ingénierie Aéro",
+      "label": "SNIA",
+      "code_postal": "75700"
+    },
+    {
+      "ville": "VBONNEUIL SUR MARNE CEDEX",
+      "code": "ACISTAC094",
+      "description": "Service Technique de l'Aviation civile",
+      "label": "STAC",
+      "code_postal": "94381"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCACTF075",
+      "description": "Serv. gest. bien ADC",
+      "label": "CC S. gest. bien ADC",
+      "code_postal": "75105"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCAIAC075",
+      "description": "BAIAC",
+      "label": "CC BAIAC",
+      "code_postal": "75105"
+    },
+    {
+      "ville": null,
+      "code": "ADCAISC075",
+      "description": "Centre de cout BAIATSC",
+      "label": "BAIATSC",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "ADCAJCX075",
+      "description": "CC DLPAJ suivi du contentieux",
+      "label": "CC DLPAJ CTX",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBAFE075",
+      "description": "BAFED",
+      "label": "CC BAFED",
+      "code_postal": "75105"
+    },
+    {
+      "ville": null,
+      "code": "ADCBCAM075",
+      "description": "BCAM",
+      "label": "BCAM",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBEEP075",
+      "description": "BEEP",
+      "label": "CC BEEP",
+      "code_postal": "75008"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBFAC075",
+      "description": "BBFAC",
+      "label": "CC BBFAC",
+      "code_postal": "75105"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBFPP075",
+      "description": "BFPP",
+      "label": "CC BFPP",
+      "code_postal": "75105"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBGCP075",
+      "description": "BGCPAC",
+      "label": "CC BGCPAC",
+      "code_postal": "75008"
+    },
+    {
+      "ville": null,
+      "code": "ADCBMAT075",
+      "description": "BMAT",
+      "label": "BMAT",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBPAI075",
+      "description": "BPAI",
+      "label": "CC BPAI",
+      "code_postal": "75105"
+    },
+    {
+      "ville": null,
+      "code": "ADCBQPA075",
+      "description": "BQPPAT",
+      "label": "BQPPAT",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCBRH1075",
+      "description": "BRH (T2)",
+      "label": "CC DRH (T2)",
+      "code_postal": "75105"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCCBMI075",
+      "description": "BBFAC CABMIN",
+      "label": "CC BBFAC CABMIN",
+      "code_postal": "75105"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCCBOM075",
+      "description": "BBFAC CABOM",
+      "label": "CC BBFAC CABOM",
+      "code_postal": "75105"
+    },
+    {
+      "ville": null,
+      "code": "ADCCCSP075",
+      "description": "BBFAC JAS-CCSP",
+      "label": "BBFAC JAS-CCSP",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS cedex 17",
+      "code": "ADCCNCC075",
+      "description": "CNCCFP",
+      "label": "CC CNCCFP",
+      "code_postal": "75176"
+    },
+    {
+      "ville": null,
+      "code": "ADCCOMM075",
+      "description": "Dép. T2 agents GN DICOM",
+      "label": "T2 agents GN DICOM",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "ADCCPFI075",
+      "description": "Dép. T2 agents CPFi DEPAFI",
+      "label": "T2 agents GN CPFi",
+      "code_postal": null
+    },
+    {
+      "ville": "AGEN CEDEX",
+      "code": "ADCCSAI075",
+      "description": "Centre de coût SAILMI",
+      "label": "CC SAILMI",
+      "code_postal": "47004"
+    },
+    {
+      "ville": null,
+      "code": "ADCCSAT075",
+      "description": "DEPENSES FONCTIONNEMENT PREFETS CSATE",
+      "label": "DEP FC PREFETS CSATE",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCCSER075",
+      "description": "CC FNPC",
+      "label": "CC FNPC",
+      "code_postal": "75015"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDDE1075",
+      "description": "CC DDE ADC DEGEOM",
+      "label": "CC DDE ADC DEGEOM",
+      "code_postal": "75007"
+    },
+    {
+      "ville": "AGEN CEDEX",
+      "code": "ADCDDI0075",
+      "description": "MI 0333 DDI",
+      "label": "MI 0333 ADCDDI0075",
+      "code_postal": "47004"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDGCL075",
+      "description": "DGCL",
+      "label": "DGCL",
+      "code_postal": "75000"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDGOM075",
+      "description": "DEGEOM (T2)",
+      "label": "CC DEGEOM (T2)",
+      "code_postal": "75105"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDICO075",
+      "description": "DICOM",
+      "label": "CC DICOM",
+      "code_postal": "75008"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDLPA075",
+      "description": "DLPAJ",
+      "label": "CC DLPAJ",
+      "code_postal": "75008"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDMA1075",
+      "description": "DMAT",
+      "label": "DMAT",
+      "code_postal": "75008"
+    },
+    {
+      "ville": "AGEN CEDEX",
+      "code": "ADCDNUM075",
+      "description": "Centre de cout DNUM",
+      "label": "CC DNUM",
+      "code_postal": "47004"
+    },
+    {
+      "ville": null,
+      "code": "ADCDPSU075",
+      "description": "Projet site unique",
+      "label": "Projet site unique",
+      "code_postal": null
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDPTS075",
+      "description": "CC FAETON",
+      "label": "CC FAETON",
+      "code_postal": "75015"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCDSIC075",
+      "description": "CC DSIC",
+      "label": "CC DSIC",
+      "code_postal": "75015"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCELEG075",
+      "description": "Vacations Elections Personnel  GN",
+      "label": "CC Vac Elec GN",
+      "code_postal": "75008"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCELEP075",
+      "description": "Vacations Elections Personnel  PN",
+      "label": "CC Vac Elec PN",
+      "code_postal": "75008"
+    },
+    {
+      "ville": "PARIS",
+      "code": "ADCELEX075",
+      "description": "Vacations Elections Personnel  Autre",
+      "label": "CC Vac Elec Autre",
+      "code_postal": "75008"
+    },
+    {
+      "ville": null,
+      "code": "ADCEM01075",
+      "description": "BBFAC CAB SG",
+      "label": "BBFAC CAB SG",
+      "code_postal": null
+    },
+    {
+      "ville": null,
+      "code": "ADCEM02075",
+      "description": "BBFAC SHFD SG",
+      "label": "BBFAC SHFD SG",
+      "code_postal": null
+    }
+  ],
+  "pageInfo": {
+    "totalRows": 18988,
+    "page": 1,
+    "pageSize": 100
+  }
+}

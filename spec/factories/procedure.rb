@@ -422,6 +422,22 @@ FactoryBot.define do
     trait :svr do
       sva_svr { SVASVRConfiguration.new(decision: :svr).attributes }
     end
+
+    trait :empty_chorus do
+      chorus { ChorusConfiguration.new }
+    end
+
+    trait :partial_chorus do
+      chorus { ChorusConfiguration.new(centre_de_coup: { a: 1 }) }
+    end
+
+    trait :filled_chorus do
+      chorus do
+        ChorusConfiguration.new(centre_de_coup: { a: 1 },
+                                domaine_fonctionnel: { b: 2 },
+                                referentiel_de_programmation: { c: 3 })
+      end
+    end
   end
 end
 
