@@ -50,7 +50,8 @@
               .cell.mt-1
                 = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere) do
                   = t('.expression_reguliere.labels.regex')
-                = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
+                .type-de-champ-expression-reguliere
+                  = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
 
               .cell.mt-1
                 = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do

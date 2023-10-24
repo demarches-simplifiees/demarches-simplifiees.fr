@@ -293,7 +293,7 @@
   input[type=number],
   input[type=datetime-local],
   textarea,
-  input[type=tel], {
+  input[type=tel] {
     @media (max-width: $two-columns-breakpoint) {
       width: 100%;
     }
@@ -535,6 +535,17 @@
   fieldset + .spinner {
     position: relative;
     top: -($default-fields-spacer / 2);
+  }
+}
+
+.type-de-champ-expression-reguliere {
+  display: flex;
+  align-items: center;
+
+  &:before,
+  &:after {
+    font-weight: bold;
+    content: "/";
   }
 }
 

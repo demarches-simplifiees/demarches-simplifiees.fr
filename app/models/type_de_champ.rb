@@ -618,7 +618,7 @@ class TypeDeChamp < ApplicationRecord
   def invalid_regexp?
     return false if expression_reguliere.blank?
     return false if expression_reguliere_exemple_text.blank?
-    return false if expression_reguliere_exemple_text.match?(Regexp.new(expression_reguliere, timeout: 2.0))
+    return false if expression_reguliere_exemple_text.match?(Regexp.new(expression_reguliere, timeout: ExpressionReguliereValidator::TIMEOUT))
 
     self.errors.add(:expression_reguliere_exemple_text, I18n.t('errors.messages.mismatch_regexp'))
     true
