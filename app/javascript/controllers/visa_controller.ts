@@ -20,20 +20,36 @@ export class VisaController extends ApplicationController {
   private updateVisibilityOfAboveFields(visa: HTMLInputElement) {
     if (visa == null) return;
 
-    let champ: Element | null | undefined;
-    champ = visa.closest(VisaController.CHAMP_SELECTOR);
-    while ((champ = champ?.previousElementSibling) != null) {
-      this.updateVisibility(champ, visa.checked);
+    let element: Element | null | undefined;
+    element = visa.closest(VisaController.CHAMP_SELECTOR);
+    while ((element = element?.previousElementSibling) != null) {
+      if (this.isTitle(element)) {
+        if (this.isSubTitle(element)) {
+          element = element.parentElement;
+        }
+      } else {
+        // champ
+        this.updateVisibility(element, visa.checked);
 
-      if (
-        !visa.checked &&
-        champ.classList.contains(VisaController.REPETITION)
-      ) {
-        this.updateVisibilityOfRepetition(champ);
-      } else if (this.checked_visa(champ)) {
-        break;
+        if (!visa.checked && this.isRepetition(element)) {
+          this.updateVisibilityOfRepetition(element);
+        } else if (this.checked_visa(element)) {
+          break;
+        }
       }
     }
+  }
+
+  private isTitle(element: Element) {
+    return element.tagName === 'LEGEND';
+  }
+
+  private isSubTitle(champ: Element) {
+    return champ.children.length > 0 && champ.children[0].tagName !== 'H2';
+  }
+
+  private isRepetition(champ: Element) {
+    return champ.classList.contains(VisaController.REPETITION);
   }
 
   private updateVisibilityOfRepetition(champ: Element) {
