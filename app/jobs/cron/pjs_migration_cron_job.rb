@@ -8,6 +8,7 @@ class Cron::PjsMigrationCronJob < Cron::CronJob
 
     blobs = ActiveStorage::Blob
       .where.not("key LIKE '%/%'")
+      .where(service_name: "s3")
       .limit(200_000)
 
     blobs.in_batches { |batch| batch.ids.each { |id| PjsMigrationJob.perform_later(id) } }
