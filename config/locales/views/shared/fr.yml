@@ -21,3 +21,5 @@ fr:
         already_user: 'J’ai déjà un compte'
         create: 'Créer un compte'
         signin: 'Se connecter'
+      messages:
+        remove_file: 'Supprimer le fichier'
