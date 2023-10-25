@@ -9,8 +9,9 @@
   = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
 
   .fr-mt-3w{ data: { controller: "file-input-reset" } }
-    %button.hidden.fr-btn.fr-btn--tertiary.fr-btn--sm.fr-icon-delete-line.fr-mr-1w{ 'aria-label': t('views.shared.messages.remove_file'), data: { 'file-input-reset-target': 'reset', action: 'file-input-reset#reset' } }
-    = f.file_field :piece_jointe, direct_upload: true, data: { 'file-input-reset-target': 'input', action: 'change->file-input-reset#showResetButton' }
+    = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
+    %button.hidden.fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line{ data: { 'file-input-reset-target': 'reset', action: 'file-input-reset#reset' } }
+      = t('views.shared.messages.remove_file')
 
   .fr-mt-3w
     = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }

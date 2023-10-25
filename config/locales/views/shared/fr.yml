@@ -22,4 +22,4 @@ fr:
         create: 'Créer un compte'
         signin: 'Se connecter'
       messages:
-        remove_file: 'Supprime le fichier'
+        remove_file: 'Supprimer le fichier'
