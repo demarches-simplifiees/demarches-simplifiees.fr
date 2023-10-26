@@ -197,17 +197,49 @@ describe API::V2::GraphqlController do
 
             context 'with deprecated order' do
               let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, order: 'DESC' } }
-              let(:start_cursor) { cursor_for(dossier2, order_column) }
-              let(:end_cursor) { cursor_for(dossier3, order_column) }
+              let(:start_cursor) { cursor_for(dossier3, order_column) }
+              let(:end_cursor) { cursor_for(dossier2, order_column) }
 
               it {
                 expect(gql_errors).to be_nil
                 expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
-                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
-                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+                expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
                 expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
                 expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
               }
+
+              context 'after' do
+                let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, after: current_cursor, order: 'DESC' } }
+                let(:current_cursor) { cursor_for(dossier2, order_column) }
+                let(:start_cursor) { cursor_for(dossier1, order_column) }
+                let(:end_cursor) { cursor_for(dossier, order_column) }
+
+                it {
+                  expect(gql_errors).to be_nil
+                  expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_truthy
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+                }
+              end
+
+              context 'before' do
+                let(:variables) { { demarcheNumber: procedure.id, includeDossiers: true, first: 2, before: current_cursor, order: 'DESC' } }
+                let(:current_cursor) { cursor_for(dossier1, order_column) }
+                let(:start_cursor) { cursor_for(dossier3, order_column) }
+                let(:end_cursor) { cursor_for(dossier2, order_column) }
+
+                it {
+                  expect(gql_errors).to be_nil
+                  expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:hasPreviousPage]).to be_falsey
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:startCursor]).to eq(start_cursor)
+                  expect(gql_data[:demarche][:dossiers][:pageInfo][:endCursor]).to eq(end_cursor)
+                }
+              end
             end
 
             context 'after' do
