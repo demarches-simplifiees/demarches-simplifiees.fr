@@ -204,7 +204,7 @@ module Users
       session.delete(:prefill_token)
       session.delete(:prefill_params)
       @dossier = dossier_with_champs
-      @dossier.valid?(context: :prefilling)
+      @dossier.validate(:champs_public_value)
     end
 
     def submit_brouillon
@@ -519,27 +519,28 @@ module Users
     end
 
     def update_dossier_and_compute_errors
-      errors = []
-
       @dossier.assign_attributes(champs_public_params)
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end
 
-      if !@dossier.save(**validation_options)
-        errors = @dossier.errors
+      # We save the dossier without validating fields, and if it is successful and the client
+      # requests it, we ask for field validation errors.
+      if @dossier.save && params[:validate].present?
+        @dossier.valid?(:champs_public_value)
       end
 
-      errors
+      @dossier.errors
     end
 
     def submit_dossier_and_compute_errors
-      @dossier.valid?(**submit_validation_options)
+      @dossier.validate(:champs_public_value)
 
       errors = @dossier.errors
       @dossier.check_mandatory_and_visible_champs.map do |error_on_champ|
         errors.import(error_on_champ)
       end
+
       errors
     end
 
@@ -587,21 +588,6 @@ module Users
 
     def commentaire_params
       params.require(:commentaire).permit(:body, :piece_jointe)
-    end
-
-    def submit_validation_options
-      # rubocop:disable Lint/BooleanSymbol
-      # Force ActiveRecord to re-validate associated records.
-      { context: :false }
-      # rubocop:enable Lint/BooleanSymbol
-    end
-
-    def validation_options
-      if dossier.brouillon?
-        { context: :brouillon }
-      else
-        submit_validation_options
-      end
     end
   end
 end

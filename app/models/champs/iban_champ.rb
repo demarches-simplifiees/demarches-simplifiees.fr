@@ -1,5 +1,5 @@
 class Champs::IbanChamp < Champ
-  validates_with IbanValidator, if: -> { validation_context != :brouillon }
+  validates_with IbanValidator, if: :validate_champ_value?
   after_validation :format_iban
 
   def for_api

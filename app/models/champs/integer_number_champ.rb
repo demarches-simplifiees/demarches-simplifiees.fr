@@ -20,7 +20,7 @@ class Champs::IntegerNumberChamp < Champ
   private
 
   def processed_value
-    return if invalid?
+    return unless valid_champ_value?
 
     value&.to_i
   end

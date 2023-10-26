@@ -262,7 +262,7 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
     before { login_as user, scope: :user }
 
     context 'CNAF' do
-      scenario 'it can fill an cnaf champ' do
+      scenario 'it can fill an cnaf champ', vcr: { cassette_name: 'api_particulier/success/composition_familiale' } do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
@@ -274,7 +274,6 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
 
         fill_in 'Le numéro d’allocataire CAF', with: numero_allocataire
         fill_in 'Le code postal', with: 'wrong_code'
-        wait_for_autosave
 
         dossier = Dossier.last
         cnaf_champ = dossier.champs_public.find(&:cnaf?)
@@ -284,12 +283,12 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         click_on 'Déposer le dossier'
         expect(page).to have_content("cnaf doit posséder 5 caractères")
 
-        VCR.use_cassette('api_particulier/success/composition_familiale') do
-          fill_in 'Le code postal', with: code_postal
-          wait_for_autosave
-          click_on 'Déposer le dossier'
-          perform_enqueued_jobs
-        end
+        fill_in 'Le code postal', with: code_postal
+        wait_until { cnaf_champ.reload.external_id.present? }
+
+        click_on 'Déposer le dossier'
+        perform_enqueued_jobs
+
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         perform_enqueued_jobs
@@ -321,7 +320,7 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
     context 'Pôle emploi' do
       let(:api_particulier_token) { '06fd8675601267d2988cbbdef56ecb0de1d45223' }
 
-      scenario 'it can fill a Pôle emploi field' do
+      scenario 'it can fill a Pôle emploi field', vcr: { cassette_name: 'api_particulier/success/situation_pole_emploi' } do
         visit commencer_path(path: procedure.path)
         click_on 'Commencer la démarche'
 
@@ -332,7 +331,6 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         click_button('Continuer')
 
         fill_in "Identifiant", with: 'wrong code'
-        wait_for_autosave
 
         dossier = Dossier.last
         pole_emploi_champ = dossier.champs_public.find(&:pole_emploi?)
@@ -342,12 +340,12 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         clear_enqueued_jobs
         pole_emploi_champ.update(external_id: nil, identifiant: nil)
 
-        VCR.use_cassette('api_particulier/success/situation_pole_emploi') do
-          fill_in "Identifiant", with: identifiant
-          wait_until { pole_emploi_champ.reload.external_id.present? }
-          click_on 'Déposer le dossier'
-          perform_enqueued_jobs
-        end
+        fill_in "Identifiant", with: identifiant
+        wait_until { pole_emploi_champ.reload.external_id.present? }
+
+        click_on 'Déposer le dossier'
+        perform_enqueued_jobs
+
         expect(page).to have_current_path(merci_dossier_path(Dossier.last))
 
         perform_enqueued_jobs
@@ -406,7 +404,6 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         click_button('Continuer')
 
         fill_in "INE", with: 'wrong code'
-        wait_for_autosave
 
         dossier = Dossier.last
         mesri_champ = dossier.champs_public.find(&:mesri?)
@@ -471,7 +468,6 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
 
         fill_in 'Le numéro fiscal', with: numero_fiscal
         fill_in "La référence d’avis d’imposition", with: 'wrong_code'
-        wait_for_autosave
 
         dossier = Dossier.last
         dgfip_champ = dossier.champs_public.find(&:dgfip?)
@@ -482,7 +478,8 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
         expect(page).to have_content(/dgfip doit posséder 13 ou 14 caractères/)
 
         fill_in "La référence d’avis d’imposition", with: reference_avis
-        wait_for_autosave
+        wait_until { dgfip_champ.reload.external_id.present? }
+
         click_on 'Déposer le dossier'
         perform_enqueued_jobs
 

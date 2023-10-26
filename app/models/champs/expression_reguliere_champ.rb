@@ -1,3 +1,3 @@
 class Champs::ExpressionReguliereChamp < Champ
-  validates_with ExpressionReguliereValidator, if: -> { validation_context != :brouillon }
+  validates_with ExpressionReguliereValidator, if: :validate_champ_value?
 end
