@@ -5,7 +5,7 @@ module Connections
       @lookahead = lookahead
     end
 
-    def nodes
+    def load_nodes
       if @nodes.nil? && preload?
         DossierPreloader.new(super).all
       else
