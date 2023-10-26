@@ -42,22 +42,9 @@ module Connections
     # -> d5, d6
     #
     # si after ou before present, last ou first donne juste limit
-    #
-    # order:
-    # order, ne sert rien si after ou before
-    #
-    # first: 2, order: desc => last: 2
-    # -> d5, d6
-    #
-    # last: 2, order: desc => first 2
-    # -> d1, d2
-    def limit_and_inverted(first: nil, last: nil, after: nil, before: nil, order: nil)
+    def limit_and_inverted(first: nil, last: nil, after: nil, before: nil)
       limit = [first, last, max_page_size].compact.min + 1
       inverted = last.present? || before.present?
-
-      if order == :desc && after.nil? && before.nil?
-        inverted = !inverted
-      end
 
       [limit, inverted]
     end
@@ -73,8 +60,10 @@ module Connections
     def load_nodes
       @nodes ||= begin
         ensure_valid_params
+        limit, inverted = limit_and_inverted(first:, last:, after:, before:)
 
-        limit, inverted = limit_and_inverted(first:, last:, after:, before:, order: @deprecated_order)
+        return load_nodes_deprecated_order(limit, inverted) if @deprecated_order == :desc
+
         expected_size = limit - 1
 
         nodes = resolve_nodes(limit:, before:, after:, inverted:)
@@ -87,6 +76,22 @@ module Connections
         trimmed_nodes.reverse! if inverted
         trimmed_nodes
       end
+    end
+
+    def load_nodes_deprecated_order(limit, inverted)
+      expected_size = limit - 1
+
+      if @deprecated_order == :desc && before.nil?
+        inverted = !inverted
+      end
+
+      nodes = resolve_nodes(limit:, before: after, after: before, inverted:)
+
+      result_size = nodes.size
+      @has_next_page = previous_page?(before, result_size, limit, inverted)
+      @has_previous_page = next_page?(after, result_size, limit, inverted)
+
+      nodes.first(expected_size)
     end
 
     def ensure_valid_params
@@ -104,6 +109,10 @@ module Connections
 
       if last.present? && last < 0
         raise GraphQL::ExecutionError.new('Argument "last" must be a non-negative integer', extensions: { code: :bad_request })
+      end
+
+      if last.present? && @deprecated_order == :desc
+        raise GraphQL::ExecutionError.new('Argument "last" is not supported with order "desc"', extensions: { code: :bad_request })
       end
     end
 
