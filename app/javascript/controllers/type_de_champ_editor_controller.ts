@@ -1,12 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { ActionEvent } from '@hotwired/stimulus';
-import {
-  httpRequest,
-  isSelectElement,
-  isCheckboxOrRadioInputElement,
-  isTextInputElement,
-  getConfig
-} from '@utils';
+import { httpRequest, getConfig } from '@utils';
+import { matchInputElement } from '@coldwired/utils';
+
 import { AutoUpload } from '../shared/activestorage/auto-upload';
 import { ApplicationController } from './application_controller';
 
@@ -59,29 +55,26 @@ export class TypeDeChampEditorController extends ApplicationController {
   }
 
   private onChange(event: Event) {
-    const target = event.target as HTMLElement & { form?: HTMLFormElement };
-
-    if (
-      target.form &&
-      (isSelectElement(target) || isCheckboxOrRadioInputElement(target))
-    ) {
-      this.save(target.form);
-    }
+    matchInputElement(event.target, {
+      file: (target) => {
+        if (target.files?.length) {
+          const autoupload = new AutoUpload(target, target.files[0]);
+          autoupload.start();
+        }
+      },
+      changeable: (target) => this.save(target.form)
+    });
   }
 
   private onInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-
-    // mark input as touched so we know to not overwrite it's value with next re-render
-    target.setAttribute('data-touched', 'true');
-
-    if (target.form && isTextInputElement(target)) {
-      this.#dirtyForms.add(target.form);
-      this.debounce(this.save, AUTOSAVE_DEBOUNCE_DELAY);
-    } else if (target.form && target.type == 'file' && target.files?.length) {
-      const autoupload = new AutoUpload(target, target.files[0]);
-      autoupload.start();
-    }
+    matchInputElement(event.target, {
+      inputable: (target) => {
+        if (target.form) {
+          this.#dirtyForms.add(target.form);
+          this.debounce(this.save, AUTOSAVE_DEBOUNCE_DELAY);
+        }
+      }
+    });
   }
 
   private onSortableEnd(event: CustomEvent<{ position: number }>) {
