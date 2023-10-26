@@ -645,10 +645,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_10_103144) do
   end
 
   create_table "groupe_gestionnaires", force: :cascade do |t|
+    t.string "ancestry", default: "/", null: false, collation: "C"
     t.datetime "created_at", null: false
     t.bigint "groupe_gestionnaire_id"
     t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.index ["ancestry"], name: "index_groupe_gestionnaires_on_ancestry"
     t.index ["groupe_gestionnaire_id"], name: "index_groupe_gestionnaires_on_groupe_gestionnaire_id"
     t.index ["name"], name: "index_groupe_gestionnaires_on_name"
   end
