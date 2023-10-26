@@ -32,7 +32,15 @@ RSpec.describe APIEntreprise::ServiceJob, type: :job do
     expect(infos["adresse"]).to eq(adresse)
     expect(infos["numero_voie"]).to eq("22")
     expect(infos["code_postal"]).to eq("75016")
+    expect(infos["code_insee_localite"]).to eq("75112")
     expect(infos["localite"]).to eq("PARIS 12")
+  end
+
+  it 'updates departement' do
+    subject
+    service.reload
+
+    expect(service.departement).to eq "75"
   end
 
   it "geocode address" do
