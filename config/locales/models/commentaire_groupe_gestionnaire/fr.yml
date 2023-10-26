@@ -1,0 +1,5 @@
+fr:
+  activerecord:
+    attributes:
+      commentaire_groupe_gestionnaire:
+        body: 'Votre message'

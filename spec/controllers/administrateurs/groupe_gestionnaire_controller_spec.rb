@@ -90,7 +90,7 @@ describe Administrateurs::GroupeGestionnaireController, type: :controller do
 
     subject {
       post :create_commentaire, params: {
-        commentaire: {
+        commentaire_groupe_gestionnaire: {
           body: body
         }
       }

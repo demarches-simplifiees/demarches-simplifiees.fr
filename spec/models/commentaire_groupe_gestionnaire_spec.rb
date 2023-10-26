@@ -5,6 +5,29 @@ describe CommentaireGroupeGestionnaire, type: :model do
     it { is_expected.to belong_to(:sender) }
   end
 
+  describe "#create" do
+    let(:commentaire_groupe_gestionnaire) { create :commentaire_groupe_gestionnaire, sender: sender, gestionnaire: gestionnaire }
+
+    context 'when created by an administrateur' do
+      let(:sender) { create(:administrateur) }
+      let(:gestionnaire) { nil }
+      it 'set correctly sender_email and gestionnaire_email' do
+        expect(commentaire_groupe_gestionnaire.sender_email).to eq(sender.email)
+        expect(commentaire_groupe_gestionnaire.gestionnaire_email).to eq(nil)
+      end
+    end
+
+    context 'when answer by a gestionnaire' do
+      let(:sender) { create(:administrateur) }
+      let(:gestionnaire) { create(:gestionnaire) }
+
+      it 'set correctly sender_email and gestionnaire_email' do
+        expect(commentaire_groupe_gestionnaire.sender_email).to eq(sender.email)
+        expect(commentaire_groupe_gestionnaire.gestionnaire_email).to eq(gestionnaire.email)
+      end
+    end
+  end
+
   describe "#soft_deletable?" do
     subject { commentaire_groupe_gestionnaire.soft_deletable?(user) }
 

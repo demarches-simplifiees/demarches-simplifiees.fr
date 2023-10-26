@@ -5,6 +5,7 @@ class GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent <
     @commentaire = commentaire
     @connected_user = connected_user
     @is_gestionnaire = is_gestionnaire
+    @groupe_gestionnaire = commentaire.groupe_gestionnaire
   end
 
   private
@@ -13,7 +14,7 @@ class GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent <
     if @commentaire.sent_by?(@connected_user)
       t('.you')
     else
-      (@commentaire.gestionnaire || @commentaire.sender).email
+      @commentaire.gestionnaire_id ? @commentaire.gestionnaire_email : @commentaire.sender_email
     end
   end
 

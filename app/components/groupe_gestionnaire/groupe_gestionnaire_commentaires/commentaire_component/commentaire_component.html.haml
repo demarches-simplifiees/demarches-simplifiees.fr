@@ -10,3 +10,9 @@
       %p= t('.deleted_body')
     - else
       = render SimpleFormatComponent.new(@commentaire.body, allow_a: false)
+
+  .message-extras.flex.justify-start
+    - if @commentaire.soft_deletable?(@connected_user)
+      = button_to gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire), method: :delete,  class: 'button danger', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
+        %span.icon.delete
+        = t('.delete_button')

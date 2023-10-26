@@ -1,0 +1,7 @@
+en:
+  gestionnaires:
+    groupe_gestionnaire_commentaires:
+      destroy:
+        notice: Your message had been deleted
+        alert_acl: "Can not destroy message: it does not belong to you"
+        alert_already_discarded: "Can not destroy message: it was already destroyed"
