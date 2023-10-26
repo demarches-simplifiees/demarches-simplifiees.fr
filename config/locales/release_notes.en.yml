@@ -14,6 +14,8 @@ en:
         error: Release note was not saved.
       update:
         <<: *save
+      destroy:
+        success: Release note was successfully deleted.
   activerecord:
     attributes:
       release_note:

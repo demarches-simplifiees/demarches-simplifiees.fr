@@ -40,4 +40,14 @@
 
 
     .fr-fieldset__element
-      = f.submit "Valider", class: "fr-btn fr-btn--lg"
+      %ul.fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
+        %li= f.button "Valider", class: "fr-btn fr-icon-check-line"
+
+        - if release_note.persisted?
+          %li= link_to t(".new"), new_super_admins_release_note_path(date: release_note.released_on), class: "fr-btn fr-btn--secondary fr-icon-add-line"
+
+        - if release_note.persisted?
+          %li
+            = link_to t('.delete'), super_admins_release_note_path(release_note),
+              class: "fr-btn fr-btn--secondary fr-icon-delete-line",
+              data: { method: :delete, confirm: "Supprimer cette note ?" }

@@ -39,16 +39,24 @@ describe SuperAdmins::ReleaseNotesController, type: :controller do
         expect(response.status).to eq(302)
         expect(flash[:alert]).to be_present
       end
+
+      it 'is not allowed to destroy' do
+        delete :destroy, params: { id: release_note.id }
+        expect(response.status).to eq(302)
+        expect(flash[:alert]).to be_present
+        expect(release_note.reload).to be_persisted
+      end
     end
 
     context 'when user is signed as super admin' do
+      let(:release_note) { create(:release_note, published: false) }
+
       it 'is allowed to post' do
         expect { post :create, params: { release_note: { categories: ['api'], released_on: Date.current, published: "0", body: "bam" } } }.to change(ReleaseNote, :count).by(1)
         expect(flash[:notice]).to be_present
       end
 
       it 'is allowed to put' do
-        release_note = create(:release_note, published: false)
         put :update, params: {
           id: release_note.id,
           release_note: {
@@ -62,6 +70,12 @@ describe SuperAdmins::ReleaseNotesController, type: :controller do
         release_note.reload
         expect(release_note.body.to_plain_text).to eq("new body")
         expect(release_note.published).to be_truthy
+      end
+
+      it 'is allowed to destroy' do
+        delete :destroy, params: { id: release_note.id }
+        expect(flash[:notice]).to be_present
+        expect { release_note.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

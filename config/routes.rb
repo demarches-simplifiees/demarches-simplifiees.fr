@@ -126,7 +126,7 @@ Rails.application.routes.draw do
   }
 
   namespace :super_admins do
-    resources :release_notes, only: [:index, :new, :create, :edit, :update, :show]
+    resources :release_notes
   end
 
   get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'

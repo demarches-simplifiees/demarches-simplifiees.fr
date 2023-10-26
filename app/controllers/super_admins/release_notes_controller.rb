@@ -1,6 +1,6 @@
 class SuperAdmins::ReleaseNotesController < ApplicationController
   before_action :authenticate_super_admin!
-  before_action :set_note, only: [:edit, :update]
+  before_action :set_note, only: [:edit, :update, :destroy]
 
   def index
     @release_notes = ReleaseNote
@@ -14,7 +14,7 @@ class SuperAdmins::ReleaseNotesController < ApplicationController
   end
 
   def new
-    @release_note = ReleaseNote.new(released_on: Date.current)
+    @release_note = ReleaseNote.new(released_on: params[:date].presence || Date.current, published: true)
   end
 
   def create
@@ -38,6 +38,12 @@ class SuperAdmins::ReleaseNotesController < ApplicationController
       flash.now[:alert] = [t('.error'), @release_note.errors.full_messages].flatten
       render :edit
     end
+  end
+
+  def destroy
+    @release_note.destroy!
+
+    redirect_to super_admins_release_notes_path, notice: t('.success')
   end
 
   private
