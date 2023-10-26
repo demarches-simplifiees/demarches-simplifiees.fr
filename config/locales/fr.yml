@@ -349,6 +349,9 @@ fr:
           form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
+    gestionnaires:
+      groupe_gestionnaires:
+        delete: Supprimer
     instructeurs:
       dossiers:
         tab_steps:
