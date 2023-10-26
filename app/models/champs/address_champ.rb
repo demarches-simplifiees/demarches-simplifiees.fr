@@ -47,6 +47,10 @@ class Champs::AddressChamp < Champs::TextChamp
     APIGeoService.departement_name(address.fetch('department_code'))
   end
 
+  def departement_code_and_name
+    "#{address.fetch('department_code')} – #{departement_name}"
+  end
+
   def departement
     if full_address?
       { code: address.fetch('department_code'), name: departement_name }
