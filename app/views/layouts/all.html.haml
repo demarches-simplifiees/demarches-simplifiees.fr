@@ -51,6 +51,18 @@
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     %div
                       = f.text_field :service_siret, placeholder: 'Indiquez le SIRET', class: 'fr-input'
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Département
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    %div
+                      = f.select :service_departement,
+                        APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] },
+                        { selected: @filter.service_departement, include_blank: ''},
+                        id: "service_dep_select",
+                        class: 'fr-select'
                 %li.fr-py-2w{ 'data-controller': "expand" }
                   .fr-mb-1w.fr-pl-2w
                     %button{ 'data-action': 'click->expand#toggle' }

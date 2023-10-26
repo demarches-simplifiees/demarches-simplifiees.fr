@@ -421,6 +421,8 @@ module Administrateurs
         return Procedure.none if service.nil?
       end
 
+      services = Service.where(departement: filter.service_departement) if filter.service_departement.present?
+
       procedures_result = Procedure.select(:id).left_joins(:procedures_zones).distinct.publiees_ou_closes
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(hidden_at_as_template: nil)
@@ -428,6 +430,7 @@ module Administrateurs
       procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
       procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
+      procedures_result = procedures_result.where(service: services) if services
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 

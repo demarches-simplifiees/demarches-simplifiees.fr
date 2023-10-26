@@ -210,6 +210,19 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
+    context 'with service departement' do
+      let(:service) { create(:service, departement: '63') }
+      let(:service2) { create(:service, departement: '75') }
+      let!(:procedure) { create(:procedure, :published, service: service) }
+      let!(:procedure2) { create(:procedure, :published, service: service2) }
+
+      it 'returns procedures with correct departement' do
+        get :all, params: { service_departement: '63' }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_falsey
+      end
+    end
+
     context 'with specific tag' do
       let!(:tags_procedure) { create(:procedure, :published, tags: ['environnement', 'diplomatie']) }
 
