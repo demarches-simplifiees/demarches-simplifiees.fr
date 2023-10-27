@@ -27,7 +27,7 @@
           = link_to @filter.service_siret, all_admin_procedures_path(@filter.without(:service_siret)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
       - if @filter.service_departement
         .selected-query.fr-mb-2w
-          = link_to @filter.service_departement, all_admin_procedures_path(@filter.without(:service_departement)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+          = link_to "#{@filter.service_departement} – #{APIGeoService.departement_name(@filter.service_departement)}", all_admin_procedures_path(@filter.without(:service_departement)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
       - if @filter.selected_zones.present?
         .selected-zones.fr-mb-2w
           - @filter.selected_zones.each do |zone|
