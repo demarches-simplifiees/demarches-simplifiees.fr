@@ -72,6 +72,8 @@ module Types
           Types::Champs::Descriptor::PieceJustificativeChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:rna)
           Types::Champs::Descriptor::RNAChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:rnf)
+          Types::Champs::Descriptor::RNFChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:carte)
           Types::Champs::Descriptor::CarteChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:repetition)

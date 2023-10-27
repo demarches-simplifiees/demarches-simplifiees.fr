@@ -110,6 +110,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::RegionChampDescriptorType,
     Types::Champs::Descriptor::RepetitionChampDescriptorType,
     Types::Champs::Descriptor::RNAChampDescriptorType,
+    Types::Champs::Descriptor::RNFChampDescriptorType,
     Types::Champs::Descriptor::SiretChampDescriptorType,
     Types::Champs::Descriptor::TextareaChampDescriptorType,
     Types::Champs::Descriptor::TextChampDescriptorType,
