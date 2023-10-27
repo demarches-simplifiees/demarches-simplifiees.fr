@@ -1,0 +1,21 @@
+en:
+  activemodel:
+    attributes:
+      rnf_champ:
+        rnf_id: RNF id
+        data:
+          title: Foundation name
+          email: Email
+          phone: Phone
+          createdAt: Created at
+          updatedAt: Updated at
+          dissolvedAt: Dissolved at
+          address: Address
+          status: Status
+        paste: Copy the RNF to the clipboard
+        paste_success: The RNF has been copied to the clipboard
+  activerecord:
+    attributes:
+      champs/rnf_champ:
+          hints:
+            value: "Expected format : 075-FDD-00003-01"
