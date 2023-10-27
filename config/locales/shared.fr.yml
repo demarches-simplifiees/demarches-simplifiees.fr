@@ -50,3 +50,5 @@ fr:
           fetching_data: "La récupération automatique des données pour l’INE %{ine} est en cours."
           data_fetched: "Des données concernant %{sources} liées à l’INE %{ine} ont été reçues depuis le MESRI."
           data_fetched_title: "Données obtenues du MESRI"
+      drop_down_list:
+        other: Autre

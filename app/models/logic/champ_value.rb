@@ -109,12 +109,7 @@ class Logic::ChampValue < Logic::Term
     when MANAGED_TYPE_DE_CHAMP.fetch(:regions)
       APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     else
-      opts = tdc.drop_down_list_enabled_non_empty_options.map { |option| [option, option] }
-      if tdc.drop_down_other?
-        opts + [["Autre", Champs::DropDownListChamp::OTHER]]
-      else
-        opts
-      end
+      tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1 : [_1, _1] }
     end
   end
 
