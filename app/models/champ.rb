@@ -205,9 +205,7 @@ class Champ < ApplicationRecord
   end
 
   def log_fetch_external_data_exception(exception)
-    exceptions = self.fetch_external_data_exceptions ||= []
-    exceptions << exception.inspect
-    update_column(:fetch_external_data_exceptions, exceptions)
+    update_column(:fetch_external_data_exceptions, [exception.inspect])
   end
 
   def fetch_external_data?
@@ -218,10 +216,12 @@ class Champ < ApplicationRecord
     false
   end
 
+  def fetch_external_data_error?
+    fetch_external_data_exceptions.present? && self.external_id.present?
+  end
+
   def fetch_external_data_pending?
-    # We don't have a good mechanism right now to know if the last fetch has errored. So, in order
-    # to ensure we don't poll to infinity, we stop after 5 minutes no matter what.
-    fetch_external_data? && poll_external_data? && external_id.present? && data.nil? && updated_at > 5.minutes.ago
+    fetch_external_data? && poll_external_data? && external_id.present? && data.nil? && !fetch_external_data_error?
   end
 
   def fetch_external_data
@@ -289,6 +289,7 @@ class Champ < ApplicationRecord
 
   def fetch_external_data_later
     if fetch_external_data? && external_id.present? && data.nil?
+      update_column(:fetch_external_data_exceptions, [])
       ChampFetchExternalDataJob.perform_later(self, external_id)
     end
   end
