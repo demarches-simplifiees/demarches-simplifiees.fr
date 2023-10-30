@@ -99,4 +99,8 @@
             - if current_user.expert && current_expert.avis_summary[:total] > 0
               = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
 
+  - if content_for?(:navigation_principale)
+    .fr-container
+      = yield(:navigation_principale)
+
   = yield(:notice_info)

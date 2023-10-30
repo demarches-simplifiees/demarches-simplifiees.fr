@@ -2,6 +2,10 @@ class SuperAdmins::ReleaseNotesController < ApplicationController
   before_action :authenticate_super_admin!
   before_action :set_note, only: [:edit, :update, :destroy]
 
+  def nav_bar_profile
+    :superadmin
+  end
+
   def index
     @release_notes = ReleaseNote
       .order(released_on: :desc, id: :asc)
