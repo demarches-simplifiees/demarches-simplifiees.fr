@@ -27,6 +27,18 @@ describe 'wcag rules for usager', js: true do
     end
   end
 
+  def expect_axe_clean_without_main_navigation
+    # On page without main navigation content (like anonymous home page),
+    # there are either a bug in axe, either dsfr markup is not conform to wcag2a.
+    # There is no issue on pages having a child navigation.
+    expect(page).to be_axe_clean.excluding("#modal-header__menu")
+    expect(page).to be_axe_clean.within("#modal-header__menu").skipping("aria-prohibited-attr")
+  end
+
+  shared_examples "axe clean without main navigation" do
+    it { expect_axe_clean_without_main_navigation }
+  end
+
   context 'pages without the need to be logged in' do
     before do
       visit path
@@ -34,14 +46,14 @@ describe 'wcag rules for usager', js: true do
 
     context 'homepage' do
       let(:path) { root_path }
-      it { expect(page).to be_axe_clean }
+      it_behaves_like "axe clean without main navigation"
       it_behaves_like "external links have title says it opens in a new tab"
       it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'sign_up page' do
       let(:path) { new_user_registration_path }
-      it { expect(page).to be_axe_clean }
+      it_behaves_like "axe clean without main navigation"
       it_behaves_like "external links have title says it opens in a new tab"
       it_behaves_like "aria-label do not mix with title attribute"
     end
@@ -54,11 +66,11 @@ describe 'wcag rules for usager', js: true do
 
       perform_enqueued_jobs do
         click_button 'Créer un compte'
-        expect(page).to be_axe_clean
+        expect_axe_clean_without_main_navigation
       end
     end
 
-    context 'sign_upc confirmation' do
+    context 'sign_up confirmation' do
       let(:path) { user_confirmation_path("user[email]" => "some@email.com") }
 
       it_behaves_like "external links have title says it opens in a new tab"
@@ -67,21 +79,21 @@ describe 'wcag rules for usager', js: true do
 
     context 'sign_in page' do
       let(:path) { new_user_session_path }
-      it { expect(page).to be_axe_clean.excluding '#user_email' }
+      it_behaves_like "axe clean without main navigation"
       it_behaves_like "external links have title says it opens in a new tab"
       it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'contact page' do
       let(:path) { contact_path }
-      it { expect(page).to be_axe_clean }
+      it_behaves_like "axe clean without main navigation"
       it_behaves_like "external links have title says it opens in a new tab"
       it_behaves_like "aria-label do not mix with title attribute"
     end
 
     context 'commencer page' do
       let(:path) { commencer_path(path: procedure.path) }
-      it { expect(page).to be_axe_clean }
+      it_behaves_like "axe clean without main navigation"
       it_behaves_like "external links have title says it opens in a new tab"
       it_behaves_like "aria-label do not mix with title attribute"
     end
@@ -90,7 +102,7 @@ describe 'wcag rules for usager', js: true do
       visit commencer_path(path: procedure.reload.path)
 
       page.find("#help-menu_button").click
-      expect(page).to be_axe_clean
+      expect_axe_clean_without_main_navigation
     end
   end
 

@@ -47,7 +47,6 @@ fr:
     subject: Sujet
     message: Message
     send_mail: Envoyer le message
-    procedure: Démarches
     new_tab: "Nouvel onglet"
   helpers:
     procedure:
