@@ -22,6 +22,7 @@ en:
         description_pj_placeholder: If you leave this field blank and your form contains attachments, an automatically generated list will be displayed on the home page of your procedure.
         lien_site_web: Where will users find the link to the procedure?
         old_procedure: Replaced procedure number
+        new_procedure: New procedure number
         procedure_path: Procedure link to disseminate to users
         procedure_path_placeholder: procedure-name
         cadre_juridique: Link to the legal text

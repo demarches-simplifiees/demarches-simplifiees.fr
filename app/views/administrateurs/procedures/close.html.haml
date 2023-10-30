@@ -1,13 +1,22 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
-                    ["#{@procedure.libelle.truncate_words(10)} - archiver"]],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],[t('administrateurs.procedures.close.page_title')]],
             metadatas: true }
 
-.container
-  .card
-    %h2.card-title
-      = t('administrateurs.procedures.close.replacement_procedure_title')
-    = form_tag admin_procedure_archive_path(@procedure), method: :put, class: "form" do
-      - options_from_collection_for_select = current_administrateur.procedures.publiees.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
-      = select_tag :new_procedure, options_for_select(options_from_collection_for_select), include_blank: true
-      = submit_tag  t('administrateurs.procedures.close.actions.close_procedure'), { class: "button primary", id: 'publish', data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} }
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      %h1= t('administrateurs.procedures.close.page_title')
+
+      %p= t('administrateurs.procedures.close.replacement_procedure_title')
+
+      = form_tag admin_procedure_archive_path(@procedure), method: :put, class: "form" do
+        - if @published_procedures.present?
+          .fr-select-group
+            = label_tag :new_procedure, class: 'fr-label' do
+              = t('activerecord.attributes.procedure.new_procedure')
+              = t('utils.no_mandatory')
+
+            = select_tag :new_procedure, options_for_select(@published_procedures), include_blank: true, class: 'fr-select'
+
+        = submit_tag  t('administrateurs.procedures.close.actions.close_procedure'), { class: "fr-btn", id: 'publish', data: { confirm:  "Voulez-vous vraiment clore la démarche ? \nLes dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.", disable_with: "Archivage..."} }
