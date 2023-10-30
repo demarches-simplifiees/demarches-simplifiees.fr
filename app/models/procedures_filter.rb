@@ -5,7 +5,7 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
-    @params = params.permit(:page, :libelle, :email, :from_publication_date, :service_siret, tags: [], zone_ids: [], statuses: [])
+    @params = params.permit(:page, :libelle, :email, :from_publication_date, :service_siret, :service_departement, tags: [], zone_ids: [], statuses: [])
   end
 
   def admin_zones
@@ -34,6 +34,10 @@ class ProceduresFilter
 
   def service_siret
     params[:service_siret].presence
+  end
+
+  def service_departement
+    params[:service_departement].presence
   end
 
   def from_publication_date
