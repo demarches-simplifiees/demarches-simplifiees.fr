@@ -154,7 +154,7 @@ def render_single_champ(pdf, champ)
     add_libelle(pdf, champ)
     add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, une seule valeur possible')
-    champ.options.compact_blank.each do |option|
+    champ.enabled_non_empty_options.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
@@ -162,7 +162,7 @@ def render_single_champ(pdf, champ)
     add_libelle(pdf, champ)
     add_optionnal_description(pdf, champ)
     add_explanation(pdf, 'Cochez la mention applicable, plusieurs valeurs possibles')
-    champ.options.compact_blank.each do |option|
+    champ.enabled_non_empty_options.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"

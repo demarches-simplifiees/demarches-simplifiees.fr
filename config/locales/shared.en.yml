@@ -48,3 +48,5 @@ en:
           fetching_data: "Fetching data for INE %{ine}."
           data_fetched: "Data concerning %{sources} linked to the INE %{ine} has been received from the MESRI."
           data_fetched_title: "Data received from the MESRI"
+      drop_down_list:
+        other: Other

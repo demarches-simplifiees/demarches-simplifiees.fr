@@ -41,7 +41,6 @@ describe 'shared/dossiers/edit', type: :view do
     let(:dossier) { create(:dossier) }
     let(:type_de_champ) { create(:type_de_champ_drop_down_list, mandatory: mandatory, procedure: dossier.procedure) }
     let(:champ) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: type_de_champ, value: value) }
-    let(:options) { type_de_champ.drop_down_list_options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
     let(:mandatory) { true }
 
@@ -49,6 +48,7 @@ describe 'shared/dossiers/edit', type: :view do
 
     context 'when the list is short' do
       let(:value) { 'val1' }
+
       it 'renders the list as radio buttons' do
         expect(subject).to have_selector('input[type=radio]', count: enabled_options.count)
       end
@@ -68,7 +68,7 @@ describe 'shared/dossiers/edit', type: :view do
       let(:type_de_champ) { create(:type_de_champ_drop_down_list, :long, procedure: dossier.procedure) }
 
       it 'renders the list as a dropdown' do
-        expect(subject).to have_select(type_de_champ.libelle, options: options)
+        expect(subject).to have_select(type_de_champ.libelle, options: enabled_options + [''])
       end
     end
   end
