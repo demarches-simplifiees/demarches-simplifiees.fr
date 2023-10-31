@@ -11,7 +11,7 @@ def maybe_start_new_page(pdf, size)
 end
 
 def clean_string(str)
-  str&.gsub(/[[:space:]]/, ' ') # replace non breaking space, which are invalid in pdf
+  str&.each_line { _1.gsub(/[[:space:]]/, ' ') } # replace non breaking space, which are invalid in pdf
 end
 
 def text_box(pdf, text, x, width)
@@ -189,6 +189,9 @@ def add_single_champ(pdf, champ)
     format_in_2_lines(pdf, tdc.libelle, value)
     format_in_2_lines(pdf, "Code Postal :", champ.code_postal) if champ.code_postal?
     format_in_2_lines(pdf, "Département :", champ.departement_code_and_name) if champ.departement?
+  when 'Champs::TextareaChamp'
+    value = champ.blank? ? 'Non communiqué' : champ.to_s
+    format_in_2_lines(pdf, tdc.libelle, clean_string(value))
   else
     value = champ.blank? ? 'Non communiqué' : champ.to_s
     format_in_2_lines(pdf, tdc.libelle, value)
