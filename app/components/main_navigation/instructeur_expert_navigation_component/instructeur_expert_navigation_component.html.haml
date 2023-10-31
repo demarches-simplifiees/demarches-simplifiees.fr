@@ -10,3 +10,5 @@
           = Avis.model_name.human(count: 10)
           - if helpers.current_expert.avis_summary[:unanswered] > 0
             %span.badge.warning= helpers.current_expert.avis_summary[:unanswered]
+
+    = render MainNavigation::AnnouncesLinkComponent.new

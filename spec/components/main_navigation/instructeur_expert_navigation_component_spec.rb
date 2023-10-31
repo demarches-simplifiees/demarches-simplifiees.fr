@@ -42,6 +42,14 @@ describe MainNavigation::InstructeurExpertNavigationComponent, type: :component 
         expect(subject).not_to have_selector('a[aria-current="page"]', text: 'Avis')
       end
     end
+
+    context 'when there are release notes' do
+      let!(:release_note) { create(:release_note, categories: ['instructeur']) }
+
+      it 'renders a link to Announces page' do
+        expect(subject).to have_link('Nouveautés')
+      end
+    end
   end
 
   describe 'when expert is signed in' do
