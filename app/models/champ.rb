@@ -250,7 +250,24 @@ class Champ < ApplicationRecord
     public? && dossier.champ_forked_with_changes?(self)
   end
 
+  protected
+
+  def valid_champ_value?
+    valid?(public? ? :champs_public_value : :champs_private_value)
+  end
+
   private
+
+  def validate_champ_value?
+    case validation_context
+    when :champs_public_value
+      public?
+    when :champs_private_value
+      private?
+    else
+      false
+    end
+  end
 
   def html_id
     "champ-#{stable_id}-#{id}"

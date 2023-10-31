@@ -1218,6 +1218,11 @@
   resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.11.1.tgz#d126246ab66591467e9e4c765769f133f6236ddb"
   integrity sha512-vuW1hVhD5U4NX/0dl+fT4RL92T5fEITwc9l/DnaBoP5SAuCAVRnHCWcdyROGz55E4WvSXFqAHD6qkxRwOKG2og==
 
+"@coldwired/utils@^0.11.4":
+  version "0.11.4"
+  resolved "https://registry.yarnpkg.com/@coldwired/utils/-/utils-0.11.4.tgz#4889103dc73c1d86eff7d21574a0bde37b1f3c03"
+  integrity sha512-JvYosEc++zcuZmyfHAKG1cZ/jEIBM8ciJsD2ZcgFdzjSla1wtG+p6GOYiIVXZpCKO2oWGR4EmiYFYpBNIy3WDw==
+
 "@emotion/is-prop-valid@^0.8.2":
   version "0.8.8"
   resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz#db28b1c4368a259b60a97311d6a952d4fd01ac1a"

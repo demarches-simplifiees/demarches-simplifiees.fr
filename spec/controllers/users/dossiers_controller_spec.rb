@@ -411,7 +411,7 @@ describe Users::DossiersController, type: :controller do
       render_views
       let(:error_message) { 'nop' }
       before do
-        expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:validate).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors).and_return(
           [double(inner_error: double(base: first_champ), message: 'nop')]
         )
@@ -518,7 +518,7 @@ describe Users::DossiersController, type: :controller do
       render_views
 
       before do
-        expect_any_instance_of(Dossier).to receive(:valid?).and_return(false)
+        expect_any_instance_of(Dossier).to receive(:validate).and_return(false)
         expect_any_instance_of(Dossier).to receive(:errors).and_return(
           [double(inner_error: double(base: first_champ), message: 'nop')]
         )

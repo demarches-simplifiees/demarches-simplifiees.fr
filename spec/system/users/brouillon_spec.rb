@@ -148,7 +148,9 @@ describe 'The user' do
     create(:procedure, :published, :for_individual, types_de_champ_public: [
       { mandatory: true, libelle: 'texte obligatoire' }, { mandatory: false, libelle: 'texte optionnel' },
       { mandatory: false, libelle: "nombre entier", type: :integer_number },
-      { mandatory: false, libelle: "nombre décimal", type: :decimal_number }
+      { mandatory: false, libelle: "nombre décimal", type: :decimal_number },
+      { mandatory: false, libelle: 'address', type: :address },
+      { mandatory: false, libelle: 'IBAN', type: :iban }
     ])
   }
 
@@ -162,6 +164,17 @@ describe 'The user' do
 
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
 
+    fill_in('IBAN', with: 'FR')
+    wait_until { champ_value_for('IBAN') == 'FR' }
+
+    expect(page).not_to have_content 'n’est pas au format IBAN'
+    blur
+    expect(page).to have_content 'n’est pas au format IBAN'
+
+    fill_in('IBAN', with: 'FR7630006000011234567890189')
+    wait_until { champ_value_for('IBAN') == 'FR76 3000 6000 0112 3456 7890 189' }
+    expect(page).not_to have_content 'n’est pas au format IBAN'
+
     # Check an incomplete dossier cannot be submitted when mandatory fields are missing
     click_on 'Déposer le dossier'
     expect(user_dossier.reload.brouillon?).to be(true)
@@ -169,15 +182,15 @@ describe 'The user' do
 
     # Check a dossier can be submitted when all mandatory fields are filled
     fill_in('texte obligatoire', with: 'super texte')
+    wait_until { champ_value_for('texte obligatoire') == 'super texte' }
 
     click_on 'Déposer le dossier'
     wait_until { user_dossier.reload.en_construction? }
-    expect(champ_value_for('texte obligatoire')).to eq('super texte')
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
   scenario 'fill address not in BAN', js: true, retry: 3 do
-    log_in(user, procedure)
+    log_in(user, simple_procedure)
     fill_individual
 
     fill_in('address', with: '2 rue de la paix, 92094 Belgique')

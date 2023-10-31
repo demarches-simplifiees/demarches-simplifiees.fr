@@ -440,7 +440,7 @@ class Dossier < ApplicationRecord
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
 
-  validates_associated :prefilled_champs_public, on: :prefilling
+  validates_associated :prefilled_champs_public, on: :champs_public_value
 
   def types_de_champ_public
     types_de_champ

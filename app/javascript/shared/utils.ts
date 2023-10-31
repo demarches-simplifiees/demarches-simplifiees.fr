@@ -269,50 +269,6 @@ export function isNumeric(s: string) {
   return !isNaN(n) && isFinite(n);
 }
 
-export function isButtonElement(
-  element: Element
-): element is HTMLButtonElement {
-  return (
-    element.tagName == 'BUTTON' ||
-    (element.tagName == 'INPUT' &&
-      (element as HTMLInputElement).type == 'submit')
-  );
-}
-
-export function isSelectElement(
-  element: HTMLElement
-): element is HTMLSelectElement {
-  return element.tagName == 'SELECT';
-}
-
-export function isCheckboxOrRadioInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    element.tagName == 'INPUT' &&
-    (element.type == 'checkbox' || element.type == 'radio')
-  );
-}
-
-export function isDateInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    element.tagName == 'INPUT' &&
-    (element.type == 'date' || element.type == 'datetime-local')
-  );
-}
-
-export function isTextInputElement(
-  element: HTMLElement & { type?: string }
-): element is HTMLInputElement {
-  return (
-    ['INPUT', 'TEXTAREA'].includes(element.tagName) &&
-    typeof element.type == 'string' &&
-    !['checkbox', 'radio', 'file'].includes(element.type)
-  );
-}
-
 export function fire<T>(obj: EventTarget, name: string, data?: T) {
   const event = new CustomEvent(name, {
     bubbles: true,

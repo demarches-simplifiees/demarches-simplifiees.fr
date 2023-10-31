@@ -292,9 +292,8 @@ module Instructeurs
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
-      if !dossier.save(context: :annotations)
-        flash.now.alert = dossier.errors.full_messages
-      end
+
+      dossier.save(context: :champs_private_value)
 
       respond_to do |format|
         format.turbo_stream do

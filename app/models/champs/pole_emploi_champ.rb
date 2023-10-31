@@ -11,7 +11,7 @@ class Champs::PoleEmploiChamp < Champs::TextChamp
   end
 
   def fetch_external_data
-    return if !valid?
+    return unless valid_champ_value?
 
     APIParticulier::PoleEmploiAdapter.new(
       procedure.api_particulier_token,

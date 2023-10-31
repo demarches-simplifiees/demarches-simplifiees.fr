@@ -1,10 +1,4 @@
-import {
-  isSelectElement,
-  isCheckboxOrRadioInputElement,
-  isTextInputElement,
-  isDateInputElement
-} from '@utils';
-import { isFormInputElement } from '@coldwired/utils';
+import { isFormInputElement, matchInputElement } from '@coldwired/utils';
 
 import { ApplicationController } from './application_controller';
 
@@ -28,14 +22,9 @@ export class AutosubmitController extends ApplicationController {
 
   private onChange(event: Event) {
     const target = this.findTargetElement(event);
-    if (!target) return;
 
-    if (
-      isSelectElement(target) ||
-      isCheckboxOrRadioInputElement(target) ||
-      isTextInputElement(target)
-    ) {
-      if (isDateInputElement(target)) {
+    matchInputElement(target, {
+      date: (target) => {
         if (target.value.trim() == '' || !isNaN(Date.parse(target.value))) {
           this.#dateTimeChangedInputs.add(target);
           this.debounce(this.submit, AUTOSUBMIT_DATE_DEBOUNCE_DELAY);
@@ -43,34 +32,34 @@ export class AutosubmitController extends ApplicationController {
           this.#dateTimeChangedInputs.delete(target);
           this.cancelDebounce(this.submit);
         }
-      } else {
-        this.cancelDebounce(this.submit);
-        this.submit();
-      }
-    }
+      },
+      text: () => this.submitNow(),
+      changeable: () => this.submitNow()
+    });
   }
 
   private onInput(event: Event) {
     const target = this.findTargetElement(event);
-    if (!target) return;
 
-    if (!isDateInputElement(target) && isTextInputElement(target)) {
-      this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY);
-    }
+    matchInputElement(target, {
+      date: () => {},
+      inputable: () => this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY)
+    });
   }
 
   private onBlur(event: Event) {
     const target = this.findTargetElement(event);
     if (!target) return;
 
-    if (isDateInputElement(target)) {
-      Promise.resolve().then(() => {
-        if (this.#dateTimeChangedInputs.has(target)) {
-          this.cancelDebounce(this.submit);
-          this.submit();
-        }
-      });
-    }
+    matchInputElement(target, {
+      date: () => {
+        Promise.resolve().then(() => {
+          if (this.#dateTimeChangedInputs.has(target)) {
+            this.submitNow();
+          }
+        });
+      }
+    });
   }
 
   private findTargetElement(event: Event) {
@@ -109,6 +98,11 @@ export class AutosubmitController extends ApplicationController {
       .map((token) => token.trim())
       .filter((eventType) => AUTOSUBMIT_EVENTS.includes(eventType));
     return eventTypes.length == 0 ? true : eventTypes;
+  }
+
+  private submitNow() {
+    this.cancelDebounce(this.submit);
+    this.submit();
   }
 
   private submit() {
