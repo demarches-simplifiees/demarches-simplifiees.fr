@@ -2,7 +2,7 @@ import {
   createBatimentLayer,
   createDefaultMap,
   createManualZoneLayer,
-  createMarkerFeature,
+  // createMarkerFeature,
   createMarkerLayer,
   createParcelleLayer,
   createTeFenuaLayer,
@@ -15,7 +15,7 @@ import Select from 'ol/interaction/Select.js';
 import { GeoJSON } from 'ol/format';
 import Geolocation from 'ol/Geolocation';
 import Control from 'ol/control/Control';
-import { delegate } from '../../shared/utils';
+// import { delegate } from '../../shared/utils';
 import {
   createEmpty as olCreateEmpty,
   extend as olExtend,
@@ -41,28 +41,28 @@ async function initialize() {
     }
   }
 
-  delegate('autocomplete:select', '[data-te-fenua-place]', (event) => {
-    let map = getMapFromAddress(event.target);
-    if (map) {
-      if (event.detail.extent) fitExtent(map, event.detail.extent);
-      else if (event.detail.point) moveMapTo(map, event.detail.point);
-      if (event.detail.point) {
-        const marker = createMarkerFeature(event.detail.point);
-        map.markerLayer.getSource().addFeature(marker);
-      }
-    }
-  });
+  // delegate('change', '[data-te-fenua-place]', (event) => {
+  //   let map = getMapFromAddress(event.target);
+  //   if (map) {
+  //     if (event.detail.extent) fitExtent(map, event.detail.extent);
+  //     else if (event.detail.point) moveMapTo(map, event.detail.point);
+  //     if (event.detail.point) {
+  //       const marker = createMarkerFeature(event.detail.point);
+  //       map.markerLayer.getSource().addFeature(marker);
+  //     }
+  //   }
+  // });
 }
 
 function getInputFromMap(mapElement) {
   return mapElement.parentElement.querySelector('input.features');
 }
 
-function getMapFromAddress(element) {
-  element = element.closest('.te-fenua');
-  return MAPS.get(element);
-}
-
+// function getMapFromAddress(element) {
+//   element = element.closest('.te-fenua');
+//   return MAPS.get(element);
+// }
+//
 // We load leaflet dynamically, ramda and freedraw and assign them to globals.
 // Latest freedraw version build needs globals.
 // async function loadOpenLayers(editable) {
@@ -151,9 +151,9 @@ function centerMap(map) {
   else fitExtent(map, extent);
 }
 
-function moveMapTo(map, point) {
-  map.getView().animate({ center: point });
-}
+// function moveMapTo(map, point) {
+//   map.getView().animate({ center: point });
+// }
 
 function fitExtent(map, extent) {
   let view = map.getView();

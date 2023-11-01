@@ -13,7 +13,7 @@ class APITeFenua::Adapter
   def get_features
     response = self.class.search(@address)
     result = JSON.parse(response, symbolize_names: true)
-    result[:content]
+    result[:content][:hits][:hits]
   rescue RestClient::Exception, JSON::ParserError, TypeError
     @blank_return
   end
@@ -36,7 +36,7 @@ class APITeFenua::Adapter
     search_url = [API_TE_FENUA_URL, "recherche"].join("/")
     RestClient::Request.execute(method: :get,
                                 url: search_url,
-                                timeout: 8,
+                                timeout: 68,
                                 headers: {
                                   params: {
                                     # mandatory but unused parameters

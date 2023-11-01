@@ -1,3 +1,5 @@
+// MES CONTRROLES
+
 .ol-control-add {
   left: 0.5em;
   top: 5em;
@@ -18,6 +20,8 @@
 
 .te-fenua {
   position: relative;
+  width: 100%;
+  height: 500px;
 }
 
 .te-fenua-header {
@@ -28,12 +32,16 @@
   background-color: rgba(0, 60, 136, 0.7);
   border-radius: 5px;
   left: 4em;
-  padding: 2px 2px 2px 2px;
+  padding: 5px 5px 5px 5px;
   position: absolute;
   right: 4em;
   top: 0.4em;
   z-index: 20;
 
+  input {
+    padding: 10px 10px 10px 10px;
+    width: 100%;
+  }
 }
 
 .te-fenua-help {

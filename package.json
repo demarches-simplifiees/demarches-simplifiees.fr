@@ -34,7 +34,7 @@
     "is-hotkey": "^0.2.0",
     "maplibre-gl": "^1.15.2",
     "match-sorter": "^6.2.0",
-    "ol": "^5.3.3",
+    "ol": "^8.1.0",
     "patch-package": "^7.0.0",
     "react": "^18.2.0",
     "react-coordinate-input": "^1.0.0",

@@ -147,11 +147,10 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
     select('Carte de Polynésie', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ Te Fenua', fill_options: { clear: :backspace }
-    check 'Batiments'
     check 'Parcelles du cadastre'
     check 'Zones Manuelles'
 
-    wait_until { procedure.active_revision.types_de_champ_public.first.batiments == '1' }
+    wait_until { procedure.active_revision.types_de_champ_public.first.parcelles == '1' }
     expect(page).to have_content('Formulaire enregistré')
 
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }

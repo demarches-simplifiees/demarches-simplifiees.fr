@@ -1,3 +1,3 @@
 class TypesDeChamp::TeFenuaTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  LAYERS = [:parcelles, :batiments, :zones_manuelles]
+  LAYERS = [:parcelles, :zones_manuelles] # , :batiments
 end
