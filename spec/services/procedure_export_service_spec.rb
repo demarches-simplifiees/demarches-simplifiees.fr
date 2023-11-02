@@ -141,6 +141,21 @@ describe ProcedureExportService do
         end
         it { expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size) }
       end
+
+      context 'with procedure chorus' do
+        let(:procedure) { create(:procedure, :published, :for_individual, :filled_chorus, :with_all_champs) }
+        let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, procedure: procedure) }
+
+        it 'includes chorus headers' do
+          expected_headers = [
+            'Domaine Fonctionnel',
+            'Referentiel De Programmation',
+            'Centre De Coup'
+          ]
+
+          expect(dossiers_sheet.headers).to match_array(nominal_headers)
+        end
+      end
     end
 
     describe 'Etablissement sheet' do

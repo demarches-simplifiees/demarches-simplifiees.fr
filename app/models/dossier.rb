@@ -1228,6 +1228,13 @@ class Dossier < ApplicationRecord
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
     end
 
+    if procedure.chorusable? && procedure.chorus.complete?
+      columns += [
+        ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel.code],
+        ['Referentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation.code],
+        ['Centre De Coup', procedure.chorus_configuration.centre_de_coup.code]
+      ]
+    end
     columns += [
       ['Archivé', :archived],
       ['État du dossier', Dossier.human_attribute_name("state.#{state}")],
