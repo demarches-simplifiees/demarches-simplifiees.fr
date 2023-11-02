@@ -609,6 +609,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
     t.index ["feature_key", "key", "value"], name: "index_flipper_gates_on_feature_key_and_key_and_value", unique: true
   end
 
+  create_table "follow_commentaire_groupe_gestionnaires", force: :cascade do |t|
+    t.datetime "commentaire_seen_at", precision: 6
+    t.datetime "created_at", precision: 6, null: false
+    t.bigint "gestionnaire_id", null: false
+    t.bigint "groupe_gestionnaire_id"
+    t.bigint "sender_id"
+    t.string "sender_type"
+    t.datetime "unfollowed_at", precision: 6, precision: nil
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["gestionnaire_id", "groupe_gestionnaire_id", "sender_id", "sender_type", "unfollowed_at"], name: "index_follow_commentaire_on_groupe_gestionnaire_unfollow", unique: true
+    t.index ["gestionnaire_id"], name: "index_follow_commentaire_on_gestionnaire"
+    t.index ["groupe_gestionnaire_id"], name: "index_follow_commentaire_on_groupe_gestionnaire"
+  end
+
   create_table "follows", id: :serial, force: :cascade do |t|
     t.datetime "annotations_privees_seen_at", precision: nil, null: false
     t.datetime "avis_seen_at", precision: nil, null: false

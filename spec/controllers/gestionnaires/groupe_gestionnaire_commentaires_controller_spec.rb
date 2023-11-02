@@ -4,7 +4,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
   let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire], administrateurs: [administrateur]) }
   let!(:commentaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur) }
 
-  describe "yyyy#index" do
+  describe "#index" do
     render_views
     subject { get :index, params: { groupe_gestionnaire_id: groupe_gestionnaire.id } }
 
@@ -27,7 +27,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
     end
   end
 
-  describe "yyyy#show" do
+  describe "#show" do
     render_views
     subject { get :show, params: { groupe_gestionnaire_id: groupe_gestionnaire.id, id: commentaire.id } }
 
@@ -50,7 +50,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
     end
   end
 
-  describe "yyyy#create" do
+  describe "#create" do
     before do
       sign_in(gestionnaire.user)
       post :create,
@@ -69,7 +69,7 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
     end
   end
 
-  describe "yyyy#destroy" do
+  describe "#destroy" do
     before do
       sign_in(gestionnaire.user)
     end
