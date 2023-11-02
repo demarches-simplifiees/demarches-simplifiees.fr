@@ -40,6 +40,7 @@ class API::V2::BaseController < ApplicationController
     if @api_token.present?
       @api_token.touch(:last_v2_authenticated_at)
       @current_user = @api_token.administrateur.user
+      Current.user = @current_user
     end
   end
 end

@@ -201,6 +201,9 @@ describe API::V2::GraphqlController do
               let(:end_cursor) { cursor_for(dossier2, order_column) }
 
               it {
+                allow(Rails.logger).to receive(:info)
+                expect(Rails.logger).to receive(:info).with("{\"message\":\"CursorConnection: using deprecated order [#{admin.email}]\",\"user_id\":#{admin.user.id}}")
+
                 expect(gql_errors).to be_nil
                 expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
                 expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
@@ -216,6 +219,9 @@ describe API::V2::GraphqlController do
                 let(:end_cursor) { cursor_for(dossier, order_column) }
 
                 it {
+                  allow(Rails.logger).to receive(:info)
+                  expect(Rails.logger).to receive(:info).with("{\"message\":\"CursorConnection: using deprecated order [#{admin.email}]\",\"user_id\":#{admin.user.id}}")
+
                   expect(gql_errors).to be_nil
                   expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
                   expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_falsey
@@ -232,6 +238,9 @@ describe API::V2::GraphqlController do
                 let(:end_cursor) { cursor_for(dossier2, order_column) }
 
                 it {
+                  allow(Rails.logger).to receive(:info)
+                  expect(Rails.logger).to receive(:info).with("{\"message\":\"CursorConnection: using deprecated order [#{admin.email}]\",\"user_id\":#{admin.user.id}}")
+
                   expect(gql_errors).to be_nil
                   expect(gql_data[:demarche][:dossiers][:nodes].size).to eq(2)
                   expect(gql_data[:demarche][:dossiers][:pageInfo][:hasNextPage]).to be_truthy
