@@ -1,0 +1,18 @@
+- content_for(:title, @subject)
+
+%p
+  Bonjour,
+
+%p
+  Cela fait plus de deux ans que vous ne vous êtes pas connecté à #{APPLICATION_NAME}.
+  %br
+  Dans le respect du RGPD, nous allons
+  %strong supprimer votre compte d'ici #{distance_of_time_in_words(ExpiredUsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK.weeks)}.
+
+%p
+  %strong Ne vous en faites pas,
+  vos dossiers restent conservé par l'administration. À tout moment vous pourrez re-créer une compte sur notre plateforme.
+  %br
+  Mais dans l'attente, nous tenons a respecter le RGPD et protéger ainsi votre vie privée.
+
+= render partial: "layouts/mailers/signature"

@@ -67,7 +67,19 @@ class UserMailer < ApplicationMailer
     mail(to: administrateur_or_instructeur.email, subject: subject)
   end
 
+  def notify_inactive_close_to_deletion(user)
+    @user = user
+    @subject = "Votre compte sera supprimé dans #{ExpiredUsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK} semaines"
+
+    mail(to: user.email, subject: @subject)
+  end
+
   def self.critical_email?(action_name)
-    ['france_connect_merge_confirmation', "new_account_warning", "ask_for_merge", "invite_instructeur"].include?(action_name)
+    [
+      'france_connect_merge_confirmation',
+      "new_account_warning",
+      "ask_for_merge",
+      "invite_instructeur"
+    ].include?(action_name)
   end
 end

@@ -112,4 +112,19 @@ RSpec.describe UserMailer, type: :mailer do
       end
     end
   end
+
+  describe '.notify_inactive_close_to_deletion' do
+    subject { described_class.notify_inactive_close_to_deletion(user) }
+
+    it { expect(subject.to).to eq([user.email]) }
+    it { expect(subject.body).to include("Cela fait plus de deux ans que vous ne vous êtes pas connecté à #{APPLICATION_NAME}.") }
+
+    context 'when perform_later is called' do
+      let(:custom_queue) { 'low_priority' }
+      before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
+      it 'enqueues email is custom queue for low priority delivery' do
+        expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
+      end
+    end
+  end
 end

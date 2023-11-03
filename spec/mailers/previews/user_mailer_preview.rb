@@ -29,6 +29,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.invite_gestionnaire(user, 'aedfa0d0', groupe_gestionnaire)
   end
 
+  def notify_inactive_close_to_deletion
+    UserMailer.notify_inactive_close_to_deletion(user)
+  end
+
   private
 
   def user

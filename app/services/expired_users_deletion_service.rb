@@ -1,5 +1,5 @@
 class ExpiredUsersDeletionService
-  RETENTION_AFTER_NOTICE = 2.weeks
+  RETENTION_AFTER_NOTICE_IN_WEEK = 2
 
   def self.process_expired
     delete_expired_users
@@ -35,6 +35,6 @@ class ExpiredUsersDeletionService
   end
 
   def self.expiring_user_notified
-    expiring_users.where.not(inactive_close_to_expiration_notice_sent_at: RETENTION_AFTER_NOTICE.ago..)
+    expiring_users.where.not(inactive_close_to_expiration_notice_sent_at: RETENTION_AFTER_NOTICE_IN_WEEK.weeks.ago..)
   end
 end
