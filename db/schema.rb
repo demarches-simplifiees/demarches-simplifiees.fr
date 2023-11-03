@@ -1053,8 +1053,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_113317) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.integer "failed_attempts", default: 0, null: false
+    t.datetime "inactive_close_to_expiration_notice_sent_at"
     t.datetime "last_sign_in_at", precision: 6
     t.string "last_sign_in_ip"
+
     t.string "locale"
     t.datetime "locked_at", precision: 6
     t.string "loged_in_with_france_connect", default: "false"
