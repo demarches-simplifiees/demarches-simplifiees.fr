@@ -383,6 +383,11 @@ module Administrateurs
           revision: [],
           procedure: []
         },
+        revision_types_de_champ_public: {
+          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+          revision: [],
+          procedure: []
+        },
         procedure: []
       }).find(@procedure.id)
     end

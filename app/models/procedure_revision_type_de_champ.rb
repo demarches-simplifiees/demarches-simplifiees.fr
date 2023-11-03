@@ -46,6 +46,10 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
       upper += parent.upper_coordinates
     end
 
+    if type_de_champ.private?
+      upper += revision.revision_types_de_champ_public
+    end
+
     upper
   end
 
