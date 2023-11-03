@@ -52,8 +52,8 @@ RGPD_URL = [CGU_URL, "rgpd"].join("#")
 
 API_TE_FENUA_URL = ENV.fetch("API_TE_FENUA_URL", "https://www.tefenua.gov.pf/api")
 
-API_ENTREPRISE_PF_AUTH = ENV.fetch("API_ENTREPRISE_PF_AUTH", "https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token")
-API_ENTREPRISE_PF_URL = ENV.fetch("API_ENTREPRISE_PF_URL", "https://www.i-taiete.gov.pf/api/v2")
+API_ISPF_AUTH_URL = ENV.fetch("API_ISPF_AUTH_URL", "https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token")
+API_ISPF_URL = ENV.fetch("API_ISPF_URL", "https://api.gov.pf/i-taiete")
 
 API_CPS_AUTH = ENV.fetch("API_CPS_AUTH", "https://connect.cps.pf/auth/realms/TatouAssures/protocol/openid-connect/token")
 API_CPS_URL = ENV.fetch("API_CPS_URL", "https://tatouapi.cps.pf")

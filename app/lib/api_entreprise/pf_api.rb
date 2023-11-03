@@ -11,7 +11,7 @@ class APIEntreprise::PfAPI
   end
 
   def self.api_up?
-    (200...500).cover?(Typhoeus.get(API_ENTREPRISE_PF_URL, timeout: 2, ssl_verifypeer: false, verbose: false).code)
+    (200...500).cover?(Typhoeus.get(API_ISPF_URL, timeout: 2, ssl_verifypeer: false, verbose: false).code)
   end
 
   private
@@ -20,11 +20,11 @@ class APIEntreprise::PfAPI
     url = url(resource_name)
     params = params(no_tahiti)
 
-    parse_response_body(Typhoeus.get(url, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: false))
+    parse_response_body(Typhoeus.get(url, headers: headers, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: true))
   end
 
   def url(resource_name)
-    base_url = [API_ENTREPRISE_PF_URL, resource_name].join("/")
+    base_url = [API_ISPF_URL, resource_name].join("/")
 
     base_url
   end
@@ -36,23 +36,10 @@ class APIEntreprise::PfAPI
   end
 
   def headers
-    {
-      'Authorization': "Bearer #{access_token}",
+    @header ||= {
+      'X-Gravitee-Api-Key': Rails.application.secrets.api_ispf_entreprise[:gravitee],
       'Content-Type': 'application/json; charset=UTF-8'
     }
-  end
-
-  def access_token
-    if !@expires_at || Time.zone.now >= @expires_at
-      body = parse_response_body(fetch_access_token)
-      if (body[:error])
-        Rails.logger.error "Unable to connect to I-taiete : #{body[:error_description]}"
-        raise APIEntreprise::API::Error::ServiceUnavailable.new(response)
-      end
-      @access_token = body[:access_token]
-      @expires_at = Time.zone.now + body[:expires_in].seconds - 1.minute
-    end
-    @access_token
   end
 
   def parse_response_body(response)
@@ -71,13 +58,5 @@ class APIEntreprise::PfAPI
     else
       raise APIEntreprise::API::Error::RequestFailed.new(response)
     end
-  end
-
-  def user_password
-    [Rails.application.secrets.api_ispf_entreprise[:user], Rails.application.secrets.api_ispf_entreprise[:pwd]].join(':')
-  end
-
-  def fetch_access_token
-    Typhoeus.post(API_ENTREPRISE_PF_AUTH, body: { grant_type: 'client_credentials' }, userpwd: user_password)
   end
 end

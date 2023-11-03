@@ -125,7 +125,7 @@ describe APIEntrepriseService do
 
     context "when api entreprise is up" do
       before do
-        stub_request(:get, "https://www.i-taiete.gov.pf/api/v2").to_return(body: body, status: status)
+        stub_request(:get, API_ISPF_URL).to_return(body: body, status: status)
       end
 
       it "returns true" do
@@ -135,7 +135,7 @@ describe APIEntrepriseService do
 
     context "when api entreprise is down" do
       before do
-        stub_request(:get, "https://www.i-taiete.gov.pf/api/v2").to_timeout
+        stub_request(:get, API_ISPF_URL).to_timeout
       end
 
       it "returns false" do

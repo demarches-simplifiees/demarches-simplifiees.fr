@@ -18,8 +18,8 @@ version: '3.3'
 #
 # APP_HOST: host:port pointing to the application to allows creation of absolute links
 #
-# API_ENTREPRISE_PF_AUTH keycloak URL to connect to iteiete realm
-# API_ENTREPRISE_PF_URL itaiete url
+# API_ISPF_AUTH_URL keycloak URL to connect to iteiete realm
+# API_ISPF_URL itaiete url
 # API_ISPF_USER: ISPF API configuration
 # API_ISPF_PASSWORD
 #
@@ -63,8 +63,8 @@ services:
       - API_CPS_USERNAME
       - API_EDUCATION_URL
       - API_ENTREPRISE_DEFAULT_SIRET
-      - API_ENTREPRISE_PF_AUTH
-      - API_ENTREPRISE_PF_URL
+      - API_ISPF_AUTH_URL
+      - API_ISPF_URL
       - API_GEO_URL
       - API_ISPF_PASSWORD
       - API_ISPF_USER
@@ -178,8 +178,8 @@ services:
       - API_CPS_USERNAME
       - API_EDUCATION_URL
       - API_ENTREPRISE_DEFAULT_SIRET
-      - API_ENTREPRISE_PF_AUTH
-      - API_ENTREPRISE_PF_URL
+      - API_ISPF_AUTH_URL
+      - API_ISPF_URL
       - APPLICATION_BASE_URL
       - APPLICATION_NAME
       - APP_HOST

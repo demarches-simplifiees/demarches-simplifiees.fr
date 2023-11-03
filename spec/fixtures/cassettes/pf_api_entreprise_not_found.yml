@@ -1,59 +1,18 @@
 ---
 http_interactions:
 - request:
-    method: post
-    uri: https://auth.gov.pf/auth/realms/Itaiete/protocol/openid-connect/token
-    body:
-      encoding: UTF-8
-      string: grant_type=client_credentials
-    headers:
-      User-Agent:
-      - Mes-Démarches
-      Expect:
-      - ''
-      Authorization:
-      - Basic TUVTLURFTUFSQ0hFUzo4NGI1YjdmMS1lYzNjLTRhYTQtOGJkOS03NGM5ODAyMjMzYTk=
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Date:
-      - Fri, 22 Jan 2021 21:02:38 GMT
-      Server:
-      - Apache
-      Strict-Transport-Security:
-      - max-age=63072000; includeSubdomains; preload
-      - max-age=63072000; includeSubdomains; preload
-      Cache-Control:
-      - no-store
-      Pragma:
-      - no-cache
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '1961'
-      Set-Cookie:
-      - KC_RESTART=; Version=1; Expires=Thu, 01-Jan-1970 00:00:10 GMT; Max-Age=0;
-        Path=/auth/realms/Itaiete/; Secure; HttpOnly
-    body:
-      encoding: UTF-8
-      string: '{"access_token":"eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwWVBEUkxuRVBTNVQyaFVMZkpseWN2SjhId1Q4LUF1YUtBTktOcVhCZXhzIn0.eyJqdGkiOiJjNWYzNjhiOC00ZjI0LTRlZmMtYTQ3Ni1lZWIwNTZhMWIyNzkiLCJleHAiOjE2MTEzODUzNTgsIm5iZiI6MCwiaWF0IjoxNjExMzQ5MzU4LCJpc3MiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJzdWIiOiIzNjUzMjA3Zi1hNGVmLTQ5MjQtODNhYy01NjFmZmFlNTk4ZDkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJNRVMtREVNQVJDSEVTIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNWU2N2JhZjMtMmY0YS00Yzg2LTg2ZTYtODhjMWE1MzQ5YjEyIiwiYWNyIjoiMSIsInNjb3BlIjoiRXRhYmxpc3NlbWVudHMuUmVhZCBFbnRyZXByaXNlcy5SZWFkIFZlcnNpb24uUmVhZCIsImNsaWVudElkIjoiTUVTLURFTUFSQ0hFUyIsImNsaWVudEhvc3QiOiIxMDMuNC43NS44MSIsImNsaWVudEFkZHJlc3MiOiIxMDMuNC43NS44MSJ9.HZrn2B6_QQQtq9rYE2UKuZjUdV6wNcXrPgpBHpwDaCkiOga4RiAUzzDd7doo7lAtRj0rrhlRcSu2S5sZDfrIpASptOT_7SWLauAjWj3pheo0pgP2MbYdhWVJuY9g3Glj-rBYU6MwFHbTpgj486gDgLSoMPAc4EAR7SG7lZ7Na6vfZQEx27h1fMoH2YDbZSM53mNIpjZ5ic7FSVARZ5C2uKBs9XpjT_8vt5ymcoLU_U8rZjo2qRLxm5lHhFlJjd0_M8llZNRbX1gvFYFC8CWmaBewoN9xM1ulnPRYx7bDHfGqaQ_7bUnBDCX6997A0QHEo-5KeE1fH12uYvmv_Z3k9A","expires_in":36000,"refresh_expires_in":36000,"refresh_token":"eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJhNjk1ZDhmNy1iYzcyLTQ5YjktOGEwNy0zMGI0M2VhY2E1Y2EifQ.eyJqdGkiOiJiNWI2ZTY1ZS00Nzg1LTQ5NzAtOGM1My0wZWU0MTc5NGI4NmYiLCJleHAiOjE2MTEzODUzNTgsIm5iZiI6MCwiaWF0IjoxNjExMzQ5MzU4LCJpc3MiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJhdWQiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJzdWIiOiIzNjUzMjA3Zi1hNGVmLTQ5MjQtODNhYy01NjFmZmFlNTk4ZDkiLCJ0eXAiOiJSZWZyZXNoIiwiYXpwIjoiTUVTLURFTUFSQ0hFUyIsImF1dGhfdGltZSI6MCwic2Vzc2lvbl9zdGF0ZSI6IjVlNjdiYWYzLTJmNGEtNGM4Ni04NmU2LTg4YzFhNTM0OWIxMiIsInNjb3BlIjoiRXRhYmxpc3NlbWVudHMuUmVhZCBFbnRyZXByaXNlcy5SZWFkIFZlcnNpb24uUmVhZCJ9.uzz8fiRsP6lggbJIBVQtKJjwNQh1EkWUHgGFinWHPvE","token_type":"bearer","not-before-policy":0,"session_state":"5e67baf3-2f4a-4c86-86e6-88c1a5349b12","scope":"Etablissements.Read
-        Entreprises.Read Version.Read"}'
-  recorded_at: Fri, 22 Jan 2021 21:02:38 GMT
-- request:
     method: get
-    uri: https://www.i-taiete.gov.pf/api/v2/etablissements/Entreprise?numeroTahiti=111111
+    uri: https://api.gov.pf/i-taiete/etablissements/Entreprise?numeroTahiti=111111
     body:
       encoding: US-ASCII
       string: ''
     headers:
       User-Agent:
       - Mes-Démarches
-      Authorization:
-      - Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwWVBEUkxuRVBTNVQyaFVMZkpseWN2SjhId1Q4LUF1YUtBTktOcVhCZXhzIn0.eyJqdGkiOiJjNWYzNjhiOC00ZjI0LTRlZmMtYTQ3Ni1lZWIwNTZhMWIyNzkiLCJleHAiOjE2MTEzODUzNTgsIm5iZiI6MCwiaWF0IjoxNjExMzQ5MzU4LCJpc3MiOiJodHRwczovL2F1dGguZ292LnBmL2F1dGgvcmVhbG1zL0l0YWlldGUiLCJzdWIiOiIzNjUzMjA3Zi1hNGVmLTQ5MjQtODNhYy01NjFmZmFlNTk4ZDkiLCJ0eXAiOiJCZWFyZXIiLCJhenAiOiJNRVMtREVNQVJDSEVTIiwiYXV0aF90aW1lIjowLCJzZXNzaW9uX3N0YXRlIjoiNWU2N2JhZjMtMmY0YS00Yzg2LTg2ZTYtODhjMWE1MzQ5YjEyIiwiYWNyIjoiMSIsInNjb3BlIjoiRXRhYmxpc3NlbWVudHMuUmVhZCBFbnRyZXByaXNlcy5SZWFkIFZlcnNpb24uUmVhZCIsImNsaWVudElkIjoiTUVTLURFTUFSQ0hFUyIsImNsaWVudEhvc3QiOiIxMDMuNC43NS44MSIsImNsaWVudEFkZHJlc3MiOiIxMDMuNC43NS44MSJ9.HZrn2B6_QQQtq9rYE2UKuZjUdV6wNcXrPgpBHpwDaCkiOga4RiAUzzDd7doo7lAtRj0rrhlRcSu2S5sZDfrIpASptOT_7SWLauAjWj3pheo0pgP2MbYdhWVJuY9g3Glj-rBYU6MwFHbTpgj486gDgLSoMPAc4EAR7SG7lZ7Na6vfZQEx27h1fMoH2YDbZSM53mNIpjZ5ic7FSVARZ5C2uKBs9XpjT_8vt5ymcoLU_U8rZjo2qRLxm5lHhFlJjd0_M8llZNRbX1gvFYFC8CWmaBewoN9xM1ulnPRYx7bDHfGqaQ_7bUnBDCX6997A0QHEo-5KeE1fH12uYvmv_Z3k9A
       Content-Type:
       - application/json; charset=UTF-8
+      X-Gravitee-Api-Key:
+      - "<GRAVITEE>"
       Expect:
       - ''
   response:
@@ -63,30 +22,37 @@ http_interactions:
     headers:
       Cache-Control:
       - no-cache, no-store, max-age=0, must-revalidate
+      Content-Length:
+      - '2'
       Content-Type:
       - application/json
       Date:
-      - Fri, 22 Jan 2021 21:02:38 GMT
+      - Mon, 06 Nov 2023 20:06:32 GMT
       Expires:
       - '0'
       Pragma:
       - no-cache
-      Server:
-      - Apache
+      Set-Cookie:
+      - cookiesession1=678A3E2349455005285D6EA3C6558A2C;Expires=Tue, 05 Nov 2024 20:06:32
+        GMT;Path=/;HttpOnly
+      - cookiesession1=678A3E36A1A653E5629F91DEA59F8200;Expires=Tue, 05 Nov 2024 20:06:29
+        GMT;Path=/;HttpOnly
       Vary:
-      - Origin,Access-Control-Request-Method,Access-Control-Request-Headers
+      - Access-Control-Request-Headers
+      - Access-Control-Request-Method
+      - Origin
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
       - DENY
+      X-Gravitee-Request-Id:
+      - 574b8a80-feff-4c9e-8b8a-80feffac9e78
+      X-Gravitee-Transaction-Id:
+      - 574b8a80-feff-4c9e-8b8a-80feffac9e78
       X-Xss-Protection:
       - 1; mode=block
-      Content-Length:
-      - '2'
-      Set-Cookie:
-      - cookiesession1=0ED25FDCEJJ4MY80RHGYFXMJDAMK2252;Path=/;HttpOnly
     body:
-      encoding: UTF-8
+      encoding: ASCII-8BIT
       string: "[]"
-  recorded_at: Fri, 22 Jan 2021 21:02:38 GMT
-recorded_with: VCR 6.0.0
+  recorded_at: Mon, 06 Nov 2023 20:06:32 GMT
+recorded_with: VCR 6.1.0

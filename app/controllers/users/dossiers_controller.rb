@@ -633,7 +633,7 @@ module Users
     end
 
     def siret_params
-      params.require(:user).permit(:siret)
+      params.require(:user).permit(:siret, :dossier_id)
     end
 
     def commentaire_params

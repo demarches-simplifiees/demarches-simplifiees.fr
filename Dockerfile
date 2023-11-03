@@ -74,8 +74,8 @@ ENV \
     API_EDUCATION_URL="https://data.education.gouv.fr/api/records/1.0"\
     API_ENTREPRISE_DEFAULT_SIRET=""\
     API_ENTREPRISE_KEY=""\
-    API_ENTREPRISE_PF_AUTH=""\
-    API_ENTREPRISE_PF_URL=""\
+    API_ISPF_AUTH_URL=""\
+    API_ISPF_URL=""\
     API_GEO_URL="https://geo.api.gouv.fr"\
     API_ISPF_PASSWORD=""\
     API_ISPF_USER=""\
