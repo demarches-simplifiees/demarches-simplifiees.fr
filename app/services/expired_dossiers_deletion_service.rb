@@ -1,7 +1,5 @@
 class ExpiredDossiersDeletionService
-  def initialize(rate_limiter: MailRateLimiter.new(limit: 200, window: 10.minutes))
-    @rate_limiter = rate_limiter
-  end
+  include MailRateLimitable
 
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
@@ -16,10 +14,6 @@ class ExpiredDossiersDeletionService
   def process_expired_dossiers_termine
     send_termine_expiration_notices
     delete_expired_termine_and_notify
-  end
-
-  def safe_send_email(mail)
-    @rate_limiter.send_with_delay(mail)
   end
 
   def send_brouillon_expiration_notices
