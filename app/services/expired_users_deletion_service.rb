@@ -9,6 +9,8 @@ class ExpiredUsersDeletionService
       delete_expired_users(expiring_segment)
       send_inactive_close_to_expiration_notice(expiring_segment)
     end
+  rescue => e
+    Sentry.capture_exception(e, extra: { user_id: user.id })
   end
 
   def send_inactive_close_to_expiration_notice(users)
@@ -22,7 +24,11 @@ class ExpiredUsersDeletionService
 
   def delete_expired_users(users)
     to_delete_only(users).find_each do |user|
-      user.delete_and_keep_track_dossiers_also_delete_user(nil)
+      begin
+        user.delete_and_keep_track_dossiers_also_delete_user(nil)
+      rescue => e
+        Sentry.capture_exception(e, extra: { user_id: user.id })
+      end
     end
   end
 
@@ -44,9 +50,14 @@ class ExpiredUsersDeletionService
 
   def to_notify_only(users)
     users.where(inactive_close_to_expiration_notice_sent_at: nil)
+      .limit(limit)
   end
 
   def to_delete_only(users)
     users.where.not(inactive_close_to_expiration_notice_sent_at: RETENTION_AFTER_NOTICE_IN_WEEK.weeks.ago..)
+  end
+
+  def limit
+    (ENV['EXPIRE_USER_DELETION_JOB_LIMIT'] || 10_000).to_i
   end
 end
