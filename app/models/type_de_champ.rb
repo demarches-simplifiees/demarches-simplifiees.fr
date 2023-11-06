@@ -646,7 +646,8 @@ class TypeDeChamp < ApplicationRecord
       type_champs.fetch(:piece_justificative),
       type_champs.fetch(:titre_identite),
       type_champs.fetch(:rna),
-      type_champs.fetch(:siret)
+      type_champs.fetch(:siret),
+      type_champs.fetch(:numero_dn)
       false
     else
       true
