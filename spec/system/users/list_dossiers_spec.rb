@@ -1,4 +1,4 @@
-describe 'user access to the list of their dossiers', js: true, retry: 3 do
+describe 'user access to the list of their dossiers', js: true do
   let(:user) { create(:user) }
   let!(:dossier_brouillon)          { create(:dossier, user: user) }
   let!(:dossier_en_construction)    { create(:dossier, :with_populated_champs, :en_construction, user: user) }
@@ -155,7 +155,7 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
       expect(page).not_to have_link('Supprimer le dossier', href: dossier_path(dossier_en_instruction))
     end
 
-    context 'when user clicks on delete button', js: true, retry: 3 do
+    context 'when user clicks on delete button', js: true do
       scenario 'the dossier is deleted' do
         expect(page).to have_content(dossier_en_construction.procedure.libelle)
         within(:css, ".card", match: :first) do
@@ -177,7 +177,7 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
         expect(page).to have_link(nil, href: clone_dossier_path(dossier_en_instruction))
       end
 
-      context 'when user clicks on clone button', js: true, retry: 3 do
+      context 'when user clicks on clone button', js: true do
         scenario 'the dossier is cloned' do
           within(:css, ".card", match: :first) do
             click_on 'Autres actions'

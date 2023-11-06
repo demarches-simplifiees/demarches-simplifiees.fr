@@ -1,6 +1,6 @@
 require 'system/administrateurs/procedure_spec_helper'
 
-describe 'As an administrateur I wanna clone a procedure', js: true, retry: 3 do
+describe 'As an administrateur I wanna clone a procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }

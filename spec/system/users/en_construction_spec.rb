@@ -11,7 +11,7 @@ describe "Dossier en_construction" do
     dossier.find_editing_fork(dossier.user).champs_public.find { _1.type_de_champ_id == tdc.id }
   }
 
-  scenario 'delete a non mandatory piece justificative', js: true, retry: 3 do
+  scenario 'delete a non mandatory piece justificative', js: true do
     visit_dossier(dossier)
 
     expect(page).not_to have_button("Remplacer")
@@ -26,7 +26,7 @@ describe "Dossier en_construction" do
       tdc.update_attribute(:mandatory, true)
     end
 
-    scenario 'remplace a mandatory piece justificative', js: true, retry: 3 do
+    scenario 'remplace a mandatory piece justificative', js: true do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.txt"
@@ -50,7 +50,7 @@ describe "Dossier en_construction" do
       tdc.update_attribute(:mandatory, true)
     end
 
-    scenario 'remplace a mandatory titre identite', js: true, retry: 3 do
+    scenario 'remplace a mandatory titre identite', js: true do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.png"

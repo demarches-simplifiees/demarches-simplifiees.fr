@@ -1,6 +1,6 @@
 require 'system/administrateurs/procedure_spec_helper'
 
-describe 'Creating a new procedure', js: true, retry: 3 do
+describe 'Creating a new procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }

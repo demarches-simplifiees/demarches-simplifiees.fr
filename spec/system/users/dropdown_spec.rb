@@ -1,4 +1,4 @@
-describe 'dropdown list with other option activated', js: true, retry: 3 do
+describe 'dropdown list with other option activated', js: true do
   let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
@@ -20,14 +20,14 @@ describe 'dropdown list with other option activated', js: true, retry: 3 do
       ]
     end
 
-    scenario 'Select other option and the other input hidden must appear', js: true, retry: 3 do
+    scenario 'Select other option and the other input hidden must appear', js: true do
       fill_individual
 
       find('.fr-fieldset__content .fr-radio-group:last-of-type input').select_option
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
 
-    scenario "Getting back from other save the new option", js: true, retry: 3 do
+    scenario "Getting back from other save the new option", js: true do
       fill_individual
 
       choose "Autre"
