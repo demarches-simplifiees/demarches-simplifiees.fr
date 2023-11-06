@@ -10,7 +10,7 @@
 
       %p= t('administrateurs.procedures.close.replacement_procedure_title')
 
-      = form_tag admin_procedure_archive_path(@procedure), method: :put, class: "form" do
+      = form_tag admin_procedure_archive_path(@procedure), method: :put do
         - if @published_procedures.present?
           .fr-select-group
             = label_tag :new_procedure, class: 'fr-label' do
