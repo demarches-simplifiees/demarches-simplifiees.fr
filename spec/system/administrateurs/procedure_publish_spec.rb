@@ -43,7 +43,8 @@ describe 'Publishing a procedure', js: true, retry: 3 do
       fill_in 'lien_site_web', with: 'http://some.website'
       within('form') { click_on 'Publier' }
 
-      expect(page).to have_text('Démarche publiée')
+      expect(page).to have_text('Votre démarche est désormais publiée !')
+      expect(page).to have_button(title: 'Copiez le lien de la procédure')
     end
 
     context 'when the procedure has invalid champs' do
@@ -91,7 +92,7 @@ describe 'Publishing a procedure', js: true, retry: 3 do
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
 
-      expect(page).to have_text('Démarche publiée')
+      expect(page).to have_text('Votre démarche est désormais publiée !')
     end
   end
 
@@ -122,7 +123,7 @@ describe 'Publishing a procedure', js: true, retry: 3 do
       fill_in 'lien_site_web', with: 'http://some.website'
       find('#publish').click
 
-      expect(page).to have_text('Démarche publiée')
+      expect(page).to have_text('Votre démarche est désormais publiée !')
     end
   end
 

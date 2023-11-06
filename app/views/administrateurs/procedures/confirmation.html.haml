@@ -1,0 +1,23 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Confirmation']] }
+
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      %h1= t('administrateurs.procedures.publication.confirmation')
+
+      = render Dsfr::CalloutComponent.new(title: nil) do |c|
+        - c.with_body do
+          %p= t('administrateurs.procedures.publication.share_link')
+          %p
+            %strong= commencer_url(@procedure.path)
+            = render Dsfr::CopyButtonComponent.new(text: commencer_url(@procedure.path), title: t("administrateurs.procedures.publication.copy_url"))
+
+      %ul.fr-mt-2w.fr-btns-group.fr-btns-group--inline
+        %li= link_to t('administrateurs.procedures.publication.back_to_procedure'), admin_procedure_path(id: @procedure), class: 'fr-btn'
+        %li= link_to t('administrateurs.procedures.publication.new_procedure'), new_from_existing_admin_procedures_path, class: 'fr-btn fr-btn--secondary'
+
+      .text-center
+        = image_tag('landing/hero/dematerialiser.svg', "aria-hidden": true)

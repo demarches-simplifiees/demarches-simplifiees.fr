@@ -254,7 +254,7 @@ describe 'The routing with rules', js: true, retry: 3 do
     fill_in 'lien_site_web', with: 'http://some.website'
     within('form') { click_on 'Publier' }
 
-    expect(page).to have_text('Démarche publiée')
+    expect(page).to have_text('Votre démarche est désormais publiée !')
   end
 
   def user_send_dossier(user, groupe)

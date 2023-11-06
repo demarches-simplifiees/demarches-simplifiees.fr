@@ -230,7 +230,7 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
       fill_in 'lien_site_web', with: 'http://some.website'
       within('form') { click_on 'Publier' }
 
-      expect(page).to have_text('Démarche publiée')
+      expect(page).to have_text('Votre démarche est désormais publiée !')
     end
   end
 

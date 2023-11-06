@@ -554,8 +554,10 @@ Rails.application.routes.draw do
       get 'publication' => 'procedures#publication', as: :publication
       put 'publish' => 'procedures#publish', as: :publish
       put 'reset_draft' => 'procedures#reset_draft', as: :reset_draft
+      put 'publish_revision' => 'procedures#publish_revision', as: :publish_revision
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
+      get 'confirmation' => 'procedures#confirmation', as: :confirmation
       post 'transfer' => 'procedures#transfer', as: :transfer
       resources :mail_templates, only: [:edit, :update, :show]
 

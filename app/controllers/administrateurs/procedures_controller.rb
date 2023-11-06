@@ -3,7 +3,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -277,18 +277,10 @@ module Administrateurs
     def publish
       @procedure.assign_attributes(publish_params)
 
+      @procedure.publish_or_reopen!(current_administrateur)
+
       if @procedure.draft_changed?
-        if @procedure.close?
-          if @procedure.publish_or_reopen!(current_administrateur)
-            @procedure.publish_revision!
-            flash.notice = "Démarche publiée"
-          end
-        else
-          @procedure.publish_revision!
-          flash.notice = "Nouvelle version de la démarche publiée"
-        end
-      elsif @procedure.publish_or_reopen!(current_administrateur)
-        flash.notice = "Démarche publiée"
+        @procedure.publish_revision!
       end
 
       if params[:old_procedure].present? && @procedure.errors.empty?
@@ -300,7 +292,7 @@ module Administrateurs
           .update!(replaced_by_procedure: @procedure)
       end
 
-      redirect_to admin_procedure_path(@procedure)
+      redirect_to admin_procedure_confirmation_path(@procedure)
     rescue ActiveRecord::RecordInvalid
       flash.alert = @procedure.errors.full_messages
       redirect_to admin_procedure_publication_path(@procedure)
@@ -312,10 +304,22 @@ module Administrateurs
       redirect_to admin_procedure_path(@procedure)
     end
 
+    def publish_revision
+      if @procedure.draft_changed?
+        @procedure.publish_revision!
+        flash.notice = "Nouvelle version de la démarche publiée"
+
+        redirect_to admin_procedure_path(@procedure)
+      end
+    end
+
     def transfert
     end
 
     def close
+    end
+
+    def confirmation
     end
 
     def allow_expert_review
