@@ -21,11 +21,18 @@ class SimpleFormatComponent < ApplicationComponent
     no_images: true
   }
 
-  SIMPLE_URL_REGEX = %r{https?://\S+}
+  SIMPLE_URL_REGEX = %r{https?://[^\s<>]+}
   EMAIL_IN_TEXT_REGEX = Regexp.new(Devise.email_regexp.source.gsub(/\\A|\\z/, '\b'))
 
-  def initialize(text, allow_a: true, class_names_map: {})
+  def initialize(text, allow_a: true, allow_autolink: true, class_names_map: {})
     @allow_a = allow_a
+    @allow_autolink = allow_a || allow_autolink
+
+    # Logic for html links/autolinks:
+    # Sometimes we want to allow autolinking of urls, without allowing html/markdown links from users.
+    # Because we sanitize the rendered markdown, when html links are not allowed, we can't enable redcarpet autolink
+    # (it would be sanitized), so we manually autolink after sanitization.
+    # At the contrary, when links are allowed, autolinking is always made with redcarpet.
 
     list_item = false
     lines = (text || "")
@@ -54,6 +61,15 @@ class SimpleFormatComponent < ApplicationComponent
       Redcarpet::BareRenderer.new(class_names_map: { list: 'fr-ol-content--override' }),
       REDCARPET_EXTENSIONS.merge(autolink: @allow_a)
     )
+  end
+
+  def autolink(text)
+    return text if !@allow_autolink
+    return text if @allow_a # already autolinked
+
+    text.gsub(SIMPLE_URL_REGEX) do |url|
+      helpers.link_to(ERB::Util.html_escape(url), ERB::Util.html_escape(url), title: helpers.new_tab_suffix(nil), **helpers.external_link_attributes)
+    end
   end
 
   def tags
