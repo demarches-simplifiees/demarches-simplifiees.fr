@@ -90,6 +90,21 @@ describe ExpiredUsersDeletionService do
       let(:user) { create(:user, last_sign_in_at: 3.years.ago) }
       it { is_expected.to include(user) }
     end
+
+    context 'when expert last sign in at is 3 years ago' do
+      let(:user) { create(:user, expert: create(:expert), last_sign_in_at: 3.years.ago) }
+      it { is_expected.not_to include(user) }
+    end
+
+    context 'when instructeur last sign in at is 3 years ago' do
+      let(:user) { create(:user, instructeur: create(:instructeur), last_sign_in_at: 3.years.ago) }
+      it { is_expected.not_to include(user) }
+    end
+
+    context 'when admin last sign in at is 3 years ago' do
+      let(:user) { create(:user, administrateur: create(:administrateur), last_sign_in_at: 3.years.ago) }
+      it { is_expected.not_to include(user) }
+    end
   end
 
   describe '#expiring_users_with_dossiers' do
@@ -104,6 +119,24 @@ describe ExpiredUsersDeletionService do
     context 'when user has a dossier created 3 years ago' do
       let(:dossier) { create(:dossier, user:, created_at: 3.years.ago) }
       it { is_expected.to include(user) }
+    end
+
+    context 'when expert last sign in at is 3 years ago' do
+      let(:dossier) { create(:dossier, user:, created_at: 3.years.ago) }
+      let(:user) { create(:user, expert: create(:expert), last_sign_in_at: 3.years.ago) }
+      it { is_expected.not_to include(user) }
+    end
+
+    context 'when instructeur last sign in at is 3 years ago' do
+      let(:dossier) { create(:dossier, user:, created_at: 3.years.ago) }
+      let(:user) { create(:user, instructeur: create(:instructeur), last_sign_in_at: 3.years.ago) }
+      it { is_expected.not_to include(user) }
+    end
+
+    context 'when admin last sign in at is 3 years ago' do
+      let(:dossier) { create(:dossier, user:, created_at: 3.years.ago) }
+      let(:user) { create(:user, administrateur: create(:administrateur), last_sign_in_at: 3.years.ago) }
+      it { is_expected.not_to include(user) }
     end
   end
 end

@@ -35,6 +35,7 @@ class ExpiredUsersDeletionService
   # rubocop:disable DS/Unscoped
   def expiring_users_with_dossiers
     User.unscoped # avoid default_scope eager_loading :export, :instructeur, :administrateur
+      .where.missing(:expert, :instructeur, :administrateur)
       .joins(:dossiers)
       .having('MAX(dossiers.created_at) < ?', EXPIRABLE_AFTER_IN_YEAR.years.ago)
       .group('users.id')
@@ -42,8 +43,7 @@ class ExpiredUsersDeletionService
 
   def expiring_users_without_dossiers
     User.unscoped
-      .where
-      .missing(:dossiers)
+      .where.missing(:expert, :instructeur, :administrateur, :dossiers)
       .where(last_sign_in_at: ..EXPIRABLE_AFTER_IN_YEAR.years.ago)
   end
   # rubocop:enable DS/Unscoped
