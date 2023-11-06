@@ -5,13 +5,13 @@ class ExpiredUsersDeletionService
   EXPIRABLE_AFTER_IN_YEAR = 2
 
   def process_expired
-    [expiring_users_without_dossiers, expiring_users_with_dossiers].map do |expiring_segment|
+    [expiring_users_without_dossiers, expiring_users_with_dossiers].each do |expiring_segment|
       delete_expired_users(expiring_segment)
       send_inactive_close_to_expiration_notice(expiring_segment)
     end
-  rescue => e
-    Sentry.capture_exception(e, extra: { user_id: user.id })
   end
+
+  private
 
   def send_inactive_close_to_expiration_notice(users)
     to_notify_only(users).in_batches do |batch|
