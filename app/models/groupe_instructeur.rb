@@ -116,23 +116,8 @@ class GroupeInstructeur < ApplicationRecord
   private
 
   def routing_rule_matches_tdc?(rule)
-    routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: rule.left.stable_id)
-
-    options = case routing_tdc.type_champ
-    when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:epci)
-      APIGeoService.departements.map { _1[:code] }
-    when TypeDeChamp.type_champs.fetch(:regions)
-      APIGeoService.regions.map { _1[:code] }
-    when TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-      routing_tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1.last : _1 }
-    when TypeDeChamp.type_champs.fetch(:checkbox), TypeDeChamp.type_champs.fetch(:yes_no)
-      [true, false]
-    when TypeDeChamp.type_champs.fetch(:integer_number)
-      return rule.right.value.is_a? Integer
-    when TypeDeChamp.type_champs.fetch(:decimal_number)
-      return rule.right.value.is_a? Float
-    end
-    rule.right.value.in?(options)
+    tdcs = procedure.active_revision.types_de_champ_public
+    rule.errors(tdcs).blank?
   end
 
   serialize :routing_rule, LogicSerializer
