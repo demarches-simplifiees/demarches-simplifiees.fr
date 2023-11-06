@@ -45,6 +45,38 @@ describe ExpiredUsersDeletionService do
           expect { subject }.to change { Dossier.count }.by(-1)
           expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
         end
+
+        context 'when dossier brouillon' do
+          let(:dossier) { create(:dossier, :brouillon, user:, created_at: last_signed_in_expired) }
+          it 'destroys user and dossier' do
+            expect { subject }.to change { Dossier.count }.by(-1)
+            expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          end
+        end
+
+        context 'when dossier en_construction' do
+          let(:dossier) { create(:dossier, :en_construction, user:, created_at: last_signed_in_expired) }
+          it 'destroys user and dossier' do
+            expect { subject }.to change { Dossier.count }.by(-1)
+            expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          end
+        end
+
+        context 'when dossier en_instruction' do
+          let(:dossier) { create(:dossier, :en_instruction, user:, created_at: last_signed_in_expired) }
+          it 'does not do anything' do
+            expect { subject }.not_to change { Dossier.count }
+            expect { user.reload }.not_to raise_error
+          end
+        end
+
+        context 'when dossier termine' do
+          let(:dossier) { create(:dossier, :accepte, user:, created_at: last_signed_in_expired) }
+          it 'marks dossier as hidden_at due to user_removal and remove user' do
+            expect { subject }.to change { dossier.reload.hidden_by_user_at }.from(nil).to(anything)
+            expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
+          end
+        end
       end
     end
 
@@ -122,7 +154,7 @@ describe ExpiredUsersDeletionService do
     end
 
     context 'when user has a dossier created 3 years ago' do
-      let(:dossier) { create(:dossier, user:, created_at: last_signed_in_expired) }
+      let(:dossier) { create(:dossier, :brouillon, user:, created_at: last_signed_in_expired) }
       it { is_expected.to include(user) }
     end
 

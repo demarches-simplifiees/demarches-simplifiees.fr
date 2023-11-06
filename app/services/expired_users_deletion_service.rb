@@ -34,9 +34,17 @@ class ExpiredUsersDeletionService
 
   # rubocop:disable DS/Unscoped
   def expiring_users_with_dossiers
+    users = User.arel_table
+    dossiers = Dossier.arel_table
+
     User.unscoped # avoid default_scope eager_loading :export, :instructeur, :administrateur
       .where.missing(:expert, :instructeur, :administrateur)
-      .joins(:dossiers)
+      .joins(
+        users.join(dossiers, Arel::Nodes::InnerJoin)
+          .on(users[:id].eq(dossiers[:user_id])
+          .and(dossiers[:state].not_eq(Dossier.states.fetch(:en_instruction))))
+          .join_sources
+      )
       .having('MAX(dossiers.created_at) < ?', EXPIRABLE_AFTER_IN_YEAR.years.ago)
       .group('users.id')
   end
