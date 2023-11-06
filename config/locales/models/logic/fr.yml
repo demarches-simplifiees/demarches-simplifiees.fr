@@ -1,6 +1,7 @@
 fr:
   logic:
     empty: un membre vide
+    empty_operator: un opérateur vide
     is: Est
     is_not: N’est pas
     operators:
