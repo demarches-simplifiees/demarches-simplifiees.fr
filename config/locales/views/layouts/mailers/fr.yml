@@ -25,3 +25,5 @@ fr:
         accepte: a été accepté le %{processed_at}.
         refuse: a été refusé le %{processed_at}.
         sans_suite: a été classé sans suite le %{processed_at}.
+      commentaire_groupe_gestionnaire_footer:
+        do_not_reply_html: Merci de ne pas répondre à cet email. Consultez votre message sur %{application_name} ou contactez votre expéditeur par <a href="mailto:%{sender_email}">mail</a>

@@ -145,4 +145,12 @@ class Administrateur < ApplicationRecord
   # required to display feature flags field in manager
   def features
   end
+
+  def unread_commentaires?
+    commentaire_seen_at.nil? || commentaire_seen_at < commentaire_groupe_gestionnaires.last.created_at
+  end
+
+  def mark_commentaire_as_seen
+    update(commentaire_seen_at: Time.zone.now)
+  end
 end
