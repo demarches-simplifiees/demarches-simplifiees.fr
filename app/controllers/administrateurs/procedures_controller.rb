@@ -322,6 +322,7 @@ module Administrateurs
     end
 
     def close
+      @published_procedures = current_administrateur.procedures.publiees.to_h { |p| ["#{p.libelle} (#{p.id})", p.id] }
     end
 
     def allow_expert_review
