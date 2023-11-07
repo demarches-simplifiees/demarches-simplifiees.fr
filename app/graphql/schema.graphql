@@ -4077,12 +4077,12 @@ enum TypeDeChamp {
   repetition
 
   """
-  RNA
+  RNA (Répertoire national des associations)
   """
   rna
 
   """
-  RNF
+  RNF (Répertoire national des fondations)
   """
   rnf
 
