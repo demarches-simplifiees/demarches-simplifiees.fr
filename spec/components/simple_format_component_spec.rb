@@ -1,6 +1,7 @@
 describe SimpleFormatComponent, type: :component do
   let(:allow_a) { false }
-  before { render_inline(described_class.new(text, allow_a: allow_a)) }
+  let(:allow_autolink) { false }
+  before { render_inline(described_class.new(text, allow_a: allow_a, allow_autolink: allow_autolink)) }
 
   context 'one line' do
     let(:text) do
@@ -108,10 +109,12 @@ TEXT
         bonjour https://www.demarches-simplifiees.fr
         nohttp www.ds.io
         ecrivez à ds@rspec.io
+        <a href="https://demarches.gouv.fr">lien html</a>
+        [lien markdown](https://github.com)
       TEXT
     end
 
-    context 'enabled' do
+    context 'enabled with html links' do
       let(:allow_a) { true }
       it { expect(page).to have_selector("a") }
       it "inject expected attributes" do
@@ -132,9 +135,46 @@ TEXT
         expect(link[:rel]).to eq("noopener noreferrer")
         expect(link[:title]).to eq("Nouvel onglet")
       end
+
+      it "render html link" do
+        link = page.find_link("lien html").native
+        expect(link[:href]).to eq("https://demarches.gouv.fr")
+      end
+
+      it "convert markdown link" do
+        link = page.find_link("lien markdown").native
+        expect(link[:href]).to eq("https://github.com")
+        expect(link[:rel]).to eq("noopener noreferrer")
+        expect(link[:title]).to eq("Nouvel onglet")
+      end
     end
 
-    context 'disabled' do
+    context 'enabled only without html links' do
+      let(:allow_autolink) { true }
+
+      it "convert only visible http link, not html links" do
+        expect(page).to have_link("https://www.demarches-simplifiees.fr")
+        expect(page).to have_selector("a", count: 1)
+      end
+
+      it "inject expected attributes" do
+        link = page.find_link("https://www.demarches-simplifiees.fr").native
+        expect(link[:rel]).to eq("noopener noreferrer")
+        expect(link[:title]).to include("Nouvel onglet")
+      end
+
+      context 'url ending the paragraph' do
+        let(:text) { "bonjour https://www.demarches-simplifiees.fr" }
+
+        it "does not include the closing p" do
+          link = page.find_link("https://www.demarches-simplifiees.fr").native
+          expect(link[:href]).to eq("https://www.demarches-simplifiees.fr")
+          expect(link.text).to eq("https://www.demarches-simplifiees.fr")
+        end
+      end
+    end
+
+    context 'completely disabled' do
       it { expect(page).not_to have_selector("a") }
     end
   end

@@ -1,1 +1,1 @@
-= sanitize(@renderer.render(@text), tags:, attributes:)
+= autolink(sanitize(@renderer.render(@text), tags:, attributes:)).html_safe
