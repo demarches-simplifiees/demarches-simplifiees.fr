@@ -1,5 +1,0 @@
----
-fr:
-  postal_code: "Renseignez le <strong>code postal</strong>"
-  commune: "Sélectionnez la commune dans la liste"
-  not_found: Aucune commune trouvée pour le code postal %{postal_code}. Verifiez que vous n'avez pas fait d’erreur.

@@ -32,7 +32,7 @@ class TypesDeChamp::PrefillCommuneTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   end
 
   def code_postal_and_commune_attributes(champ, postal_code, commune_code)
-    code_postal_attributes(champ, postal_code).merge(value: commune_code)
+    code_postal_attributes(champ, postal_code).merge(external_id: commune_code)
   end
 
   def departements

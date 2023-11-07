@@ -6,7 +6,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier', js: true do
+  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'communes' } do
     log_in(user, procedure)
 
     fill_individual
@@ -36,9 +36,8 @@ describe 'The user' do
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
     select('02 – Aisne', from: form_id_for('departements'))
-    fill_in('Renseignez le code postal', with: '60400')
-    # wait_until { all('label', text: 'Sélectionnez la commune dans la liste').size == 1 }
-    select('Brétigny (60400)', from: form_id_for('commune'))
+    fill_in('communes', with: '60400')
+    find('li', text: 'Brétigny (60400)').click
 
     # communes needs more time to be updated
     wait_until { champ_value_for('communes') == "Brétigny" }
@@ -97,7 +96,7 @@ describe 'The user' do
       expect(page).to have_button('alpha')
       expect(page).to have_button('charly')
     end
-    expect(page).to have_selected_value('commune', selected: 'Brétigny (60400)')
+    expect(page).to have_field('communes', with: 'Brétigny (60400)')
     expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_field('dossier_link', with: '123')
     expect(page).to have_text('file.pdf')

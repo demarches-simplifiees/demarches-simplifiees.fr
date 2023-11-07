@@ -122,9 +122,8 @@ FactoryBot.define do
 
     factory :champ_communes, class: 'Champs::CommuneChamp' do
       type_de_champ { association :type_de_champ_communes, procedure: dossier.procedure }
-      value { 'Coye-la-Forêt (60580)' }
-      value_json { { "departement" => "Oise", "code_departement" => "60" } }
-      external_id { "60172" }
+      external_id { '60172' }
+      code_postal { '60580' }
     end
 
     factory :champ_epci, class: 'Champs::EpciChamp' do

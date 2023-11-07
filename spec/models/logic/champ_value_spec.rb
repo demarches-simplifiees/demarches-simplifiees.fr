@@ -89,7 +89,7 @@ describe Logic::ChampValue do
   end
 
   context 'commune tdc' do
-    let(:champ) { create(:champ_communes, value: 'Rueil-Malmaison', value_json: { code_postal: '92500', code_departement: '92' }) }
+    let(:champ) { create(:champ_communes, code_postal: '92500', external_id: '92063') }
 
     it { is_expected.to eq('92') }
   end

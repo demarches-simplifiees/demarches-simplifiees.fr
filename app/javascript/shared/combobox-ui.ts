@@ -296,6 +296,9 @@ export class ComboboxUI implements EventListenerObject {
           case 'label':
             input.value = this.#input.value;
             break;
+          case 'data:string':
+            input.value = data ? String(data) : '';
+            break;
           case 'data':
             input.value = data ? JSON.stringify(data) : '';
             break;
