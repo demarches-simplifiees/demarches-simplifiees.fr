@@ -65,7 +65,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def focusable_input_id
-    render_as_checkboxes? ? checkbox_id(options.find(&:present?)) : input_id
+    render_as_checkboxes? ? checkbox_id(enabled_non_empty_options.first) : input_id
   end
 
   def checkbox_id(value)
