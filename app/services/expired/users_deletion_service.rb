@@ -1,4 +1,4 @@
-class ExpiredUsersDeletionService
+class Expired::UsersDeletionService
   include MailRateLimitable
 
   RETENTION_AFTER_NOTICE_IN_WEEK = 2

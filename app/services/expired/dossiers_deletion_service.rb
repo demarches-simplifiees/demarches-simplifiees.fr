@@ -1,4 +1,4 @@
-class ExpiredDossiersDeletionService
+class Expired::DossiersDeletionService
   include MailRateLimitable
 
   def process_expired_dossiers_brouillon

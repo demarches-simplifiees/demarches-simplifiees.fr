@@ -69,7 +69,7 @@ class UserMailer < ApplicationMailer
 
   def notify_inactive_close_to_deletion(user)
     @user = user
-    @subject = "Votre compte sera supprimé dans #{ExpiredUsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK} semaines"
+    @subject = "Votre compte sera supprimé dans #{Expired::UsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK} semaines"
 
     mail(to: user.email, subject: @subject)
   end

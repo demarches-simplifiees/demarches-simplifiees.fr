@@ -3,6 +3,6 @@ class Cron::ExpiredUsersDeletionJob < Cron::CronJob
 
   def perform(*args)
     return if ENV['EXPIRE_USER_DELETION_JOB_LIMIT'].blank?
-    ExpiredUsersDeletionService.process_expired
+    Expired::UsersDeletionService.process_expired
   end
 end

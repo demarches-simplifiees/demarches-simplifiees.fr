@@ -7,7 +7,7 @@ namespace :after_party do
       .en_construction_close_to_expiration
       .without_en_construction_expiration_notice_sent
 
-    ExpiredDossiersDeletionService.send_expiration_notices(dossiers_close_to_expiration, :en_construction_close_to_expiration_notice_sent_at)
+    Expired::DossiersDeletionService.send_expiration_notices(dossiers_close_to_expiration, :en_construction_close_to_expiration_notice_sent_at)
 
     BATCH_SIZE = 1000
 

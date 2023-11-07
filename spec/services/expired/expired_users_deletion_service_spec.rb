@@ -1,9 +1,9 @@
-describe ExpiredUsersDeletionService do
-  let(:last_signed_in_not_expired) { (ExpiredUsersDeletionService::EXPIRABLE_AFTER_IN_YEAR - 1).years.ago }
-  let(:last_signed_in_expired) { (ExpiredUsersDeletionService::EXPIRABLE_AFTER_IN_YEAR + 1).years.ago }
+describe Expired::UsersDeletionService do
+  let(:last_signed_in_not_expired) { (Expired::UsersDeletionService::EXPIRABLE_AFTER_IN_YEAR - 1).years.ago }
+  let(:last_signed_in_expired) { (Expired::UsersDeletionService::EXPIRABLE_AFTER_IN_YEAR + 1).years.ago }
   let(:before_close_to_expiration) { nil }
-  let(:notified_close_to_expiration) { (ExpiredUsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK - 1).weeks.ago }
-  let(:due_close_to_expiration) { (ExpiredUsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK + 1).weeks.ago }
+  let(:notified_close_to_expiration) { (Expired::UsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK - 1).weeks.ago }
+  let(:due_close_to_expiration) { (Expired::UsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK + 1).weeks.ago }
   let(:mail_double) do
     dbl = double()
     expect(dbl).to receive(:deliver_later).with(wait: 0)
@@ -13,7 +13,7 @@ describe ExpiredUsersDeletionService do
   before { user && dossier }
 
   describe '#process_expired' do
-    subject { ExpiredUsersDeletionService.new.process_expired }
+    subject { Expired::UsersDeletionService.new.process_expired }
 
     context 'when user has an expirable dossier' do
       let(:dossier) { create(:dossier, user:, created_at: last_signed_in_expired) }
@@ -116,7 +116,7 @@ describe ExpiredUsersDeletionService do
 
   describe '#expiring_users_without_dossiers' do
     let(:dossier) { nil }
-    subject { ExpiredUsersDeletionService.new.send(:expiring_users_without_dossiers) }
+    subject { Expired::UsersDeletionService.new.send(:expiring_users_without_dossiers) }
 
     context 'when user last_sign_in_at is 1 year ago and has no dossier' do
       let(:user) { create(:user, last_sign_in_at: last_signed_in_not_expired) }
@@ -146,7 +146,7 @@ describe ExpiredUsersDeletionService do
 
   describe '#expiring_users_with_dossiers' do
     let(:user) { create(:user) }
-    subject { ExpiredUsersDeletionService.new.send(:expiring_users_with_dossiers) }
+    subject { Expired::UsersDeletionService.new.send(:expiring_users_with_dossiers) }
 
     context 'when user has a dossier created 1 year ago' do
       let(:dossier) { create(:dossier, user:, created_at: last_signed_in_not_expired) }
