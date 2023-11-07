@@ -53,14 +53,15 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
 
   def to_notify_only(users)
     users.where(inactive_close_to_expiration_notice_sent_at: nil)
-      .limit(limit)
+      .limit(daily_limit) # ensure to not send too much email
   end
 
   def to_delete_only(users)
     users.where.not(inactive_close_to_expiration_notice_sent_at: Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago..)
+      .limit(daily_limit) # event if we do not send email, avoid to destroy 800k user in one batch
   end
 
-  def limit
+  def daily_limit
     (ENV['EXPIRE_USER_DELETION_JOB_LIMIT'] || 10_000).to_i
   end
 end
