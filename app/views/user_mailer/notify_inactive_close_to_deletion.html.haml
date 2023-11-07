@@ -8,11 +8,15 @@
   %br
   Dans le respect du RGPD, nous allons
   %strong supprimer votre compte d'ici #{distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)}.
-
 %p
   %strong Ne vous en faites pas,
   vos dossiers restent conservé par l'administration. À tout moment vous pourrez re-créer une compte sur notre plateforme.
   %br
   Mais dans l'attente, nous tenons a respecter le RGPD et protéger ainsi votre vie privée.
+
+- if @user.dossiers.not_brouillon.count > 0
+  %p
+    Au besoin, vous pouvez télécharger vos dossiers en suivant ce lien :
+    = link_to dossiers_url, dossiers_url
 
 = render partial: "layouts/mailers/signature"
