@@ -2,8 +2,8 @@ describe Expired::UsersDeletionService do
   let(:last_signed_in_not_expired) { (Expired::UsersDeletionService::EXPIRABLE_AFTER_IN_YEAR - 1).years.ago }
   let(:last_signed_in_expired) { (Expired::UsersDeletionService::EXPIRABLE_AFTER_IN_YEAR + 1).years.ago }
   let(:before_close_to_expiration) { nil }
-  let(:notified_close_to_expiration) { (Expired::UsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK - 1).weeks.ago }
-  let(:due_close_to_expiration) { (Expired::UsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK + 1).weeks.ago }
+  let(:notified_close_to_expiration) { (Expired::REMAINING_WEEKS_BEFORE_EXPIRATION - 1).weeks.ago }
+  let(:due_close_to_expiration) { (Expired::REMAINING_WEEKS_BEFORE_EXPIRATION + 1).weeks.ago }
   let(:mail_double) do
     dbl = double()
     expect(dbl).to receive(:deliver_later).with(wait: 0)

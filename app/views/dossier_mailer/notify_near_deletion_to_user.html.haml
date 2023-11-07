@@ -17,8 +17,8 @@
 
 %p
   - if @state == Dossier.states.fetch(:en_construction)
-    = sanitize(t('.footer_en_construction', count: @dossiers.size))
+    = sanitize(t('.footer_en_construction', count: @dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)))
   - else
-    = sanitize(t('.footer_termine', count: @dossiers.size, dossiers_url: dossiers_url))
+    = sanitize(t('.footer_termine', count: @dossiers.size, dossiers_url: dossiers_url, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)))
 
 = render partial: "layouts/mailers/signature"

@@ -1,4 +1,6 @@
 module Expired
+  REMAINING_WEEKS_BEFORE_EXPIRATION = 2
+
   def self.schedule_at(caller)
     case caller.name
     when 'Cron::ExpiredPrefilledDossiersDeletionJob'

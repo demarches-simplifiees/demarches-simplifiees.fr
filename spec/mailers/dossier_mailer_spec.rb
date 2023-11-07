@@ -152,7 +152,7 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("N° #{dossier.id} ") }
       it { expect(subject.body).to include(dossier.procedure.libelle) }
       it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous avez <b>deux semaines</b> pour commencer l’instruction du dossier.") }
+      it { expect(subject.body).to include("Vous avez <b>14 jours</b> pour commencer l’instruction du dossier.") }
     end
 
     describe 'termine' do

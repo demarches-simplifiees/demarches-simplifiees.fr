@@ -7,7 +7,7 @@
   Cela fait plus de deux ans que vous ne vous êtes pas connecté à #{APPLICATION_NAME}.
   %br
   Dans le respect du RGPD, nous allons
-  %strong supprimer votre compte d'ici #{distance_of_time_in_words(ExpiredUsersDeletionService::RETENTION_AFTER_NOTICE_IN_WEEK.weeks)}.
+  %strong supprimer votre compte d'ici #{distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks)}.
 
 %p
   %strong Ne vous en faites pas,

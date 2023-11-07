@@ -1,5 +1,4 @@
 class Expired::UsersDeletionService < Expired::MailRateLimiter
-  RETENTION_AFTER_NOTICE_IN_WEEK = 2
   EXPIRABLE_AFTER_IN_YEAR = 2
 
   def process_expired
@@ -60,7 +59,7 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
   end
 
   def to_delete_only(users)
-    users.where.not(inactive_close_to_expiration_notice_sent_at: RETENTION_AFTER_NOTICE_IN_WEEK.weeks.ago..)
+    users.where.not(inactive_close_to_expiration_notice_sent_at: Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago..)
   end
 
   def limit
