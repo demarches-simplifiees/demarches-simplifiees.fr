@@ -80,6 +80,7 @@ type AddressChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -236,6 +237,7 @@ type CarteChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -283,6 +285,7 @@ interface Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -330,6 +333,7 @@ type CheckboxChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -390,6 +394,7 @@ type CiviliteChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -485,6 +490,7 @@ type CommuneChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -621,6 +627,7 @@ type DateChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -677,6 +684,7 @@ type DatetimeChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -724,6 +732,7 @@ type DecimalNumberChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -1210,6 +1219,7 @@ type DepartementChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -1400,6 +1410,7 @@ type Dossier {
   L’URL du dossier au format PDF.
   """
   pdf: File
+  prefilled: Boolean!
   revision: Revision! @deprecated(reason: "Utilisez le champ `demarche.revision` à la place.")
 
   """
@@ -1639,6 +1650,7 @@ type DossierLinkChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -2219,6 +2231,7 @@ type EpciChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -2774,6 +2787,7 @@ type IntegerNumberChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -2822,6 +2836,7 @@ type LinkedDropDownListChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
   primaryValue: String
   secondaryValue: String
 
@@ -2914,6 +2929,7 @@ type MultipleDropDownListChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -3265,6 +3281,7 @@ type PaysChamp implements Champ {
   """
   label: String!
   pays: Pays
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -3379,6 +3396,7 @@ type PieceJustificativeChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -3547,6 +3565,7 @@ type RegionChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
   region: Region
 
   """
@@ -3601,6 +3620,7 @@ type RepetitionChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
   rows: [Row!]!
 
   """
@@ -3702,6 +3722,7 @@ type SiretChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -3749,6 +3770,7 @@ type TextChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -3827,6 +3849,7 @@ type TitreIdentiteChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
