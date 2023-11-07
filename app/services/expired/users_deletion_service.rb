@@ -1,6 +1,4 @@
-class Expired::UsersDeletionService
-  include MailRateLimitable
-
+class Expired::UsersDeletionService < Expired::MailRateLimiter
   RETENTION_AFTER_NOTICE_IN_WEEK = 2
   EXPIRABLE_AFTER_IN_YEAR = 2
 
@@ -16,7 +14,7 @@ class Expired::UsersDeletionService
   def send_inactive_close_to_expiration_notice(users)
     to_notify_only(users).in_batches do |batch|
       batch.each do |user|
-        safe_send_email(UserMailer.notify_inactive_close_to_deletion(user))
+        send_with_delay(UserMailer.notify_inactive_close_to_deletion(user))
       end
       batch.update_all(inactive_close_to_expiration_notice_sent_at: Time.zone.now.utc)
     end

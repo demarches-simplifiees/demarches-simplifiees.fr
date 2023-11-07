@@ -1,6 +1,4 @@
-class Expired::DossiersDeletionService
-  include MailRateLimitable
-
+class Expired::DossiersDeletionService < Expired::MailRateLimiter
   def process_expired_dossiers_brouillon
     send_brouillon_expiration_notices
     delete_expired_brouillons_and_notify
@@ -30,7 +28,7 @@ class Expired::DossiersDeletionService
         dossiers,
         email
       )
-      safe_send_email(mail)
+      send_with_delay(mail)
     end
   end
 
@@ -59,7 +57,7 @@ class Expired::DossiersDeletionService
         dossiers_hash,
         email
       )
-      safe_send_email(mail)
+      send_with_delay(mail)
     end
   end
 
@@ -81,11 +79,11 @@ class Expired::DossiersDeletionService
 
     user_notifications.each do |(email, dossiers)|
       mail = DossierMailer.notify_near_deletion_to_user(dossiers, email)
-      safe_send_email(mail)
+      send_with_delay(mail)
     end
     administration_notifications.each do |(email, dossiers)|
       mail = DossierMailer.notify_near_deletion_to_administration(dossiers, email)
-      safe_send_email(mail)
+      send_with_delay(mail)
     end
   end
 
@@ -108,7 +106,7 @@ class Expired::DossiersDeletionService
           DeletedDossier.where(dossier_id: dossier_ids).to_a,
           email
         )
-        safe_send_email(mail)
+        send_with_delay(mail)
       end
     end
     administration_notifications.each do |(email, dossier_ids)|
@@ -118,7 +116,7 @@ class Expired::DossiersDeletionService
           DeletedDossier.where(dossier_id: dossier_ids).to_a,
           email
         )
-        safe_send_email(mail)
+        send_with_delay(mail)
       end
     end
   end
