@@ -266,6 +266,7 @@ class API::V2::StoredQuery
     id
     number
     archived
+    prefilled
     state
     dateDerniereModification
     dateDepot
@@ -485,6 +486,7 @@ class API::V2::StoredQuery
     label
     stringValue
     updatedAt
+    prefilled
     ... on DateChamp {
       date
     }
