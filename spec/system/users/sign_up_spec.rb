@@ -25,21 +25,21 @@ describe 'Signing up:' do
       fill_in 'Mot de passe', with: '12345'
     end
 
-    scenario 'they can accept the suggestion', js: true, retry: 3 do
+    scenario 'they can accept the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Oui'
       expect(page).to have_field("Adresse électronique", :with => 'bidou@yahoo.fr')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
 
-    scenario 'they can discard the suggestion', js: true, retry: 3 do
+    scenario 'they can discard the suggestion', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       click_on 'Non'
       expect(page).to have_field("Adresse électronique", :with => 'bidou@yahoo.rf')
       expect(page).to have_selector('.suspect-email', visible: false)
     end
 
-    scenario 'they can fix the typo themselves', js: true, retry: 3 do
+    scenario 'they can fix the typo themselves', js: true do
       expect(page).to have_selector('.suspect-email', visible: true)
       fill_in 'Adresse électronique', with: 'bidou@yahoo.fr'
       blur

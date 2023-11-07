@@ -69,6 +69,14 @@ RSpec.configure do |config|
   # show exception that triggers a retry if verbose_retry is set to true
   config.display_try_failure_messages = true
 
+  config.retry_count_condition = proc do |ex|
+    if ENV["CI"] == "true" && ex.metadata[:js]
+      3
+    else # in dev we want to have real error fast
+      1
+    end
+  end
+
   # callback to be run between retries
   config.retry_callback = proc do |ex|
     # run some additional clean up task - can be filtered by example metadata

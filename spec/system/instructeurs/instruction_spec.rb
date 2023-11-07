@@ -1,4 +1,4 @@
-describe 'Instructing a dossier:', js: true, retry: 3 do
+describe 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
   include Logic
 
@@ -211,7 +211,7 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
       expect(Archive.first.month).not_to be_nil
     end
   end
-  context 'with dossiers having attached files', js: true, retry: 3 do
+  context 'with dossiers having attached files', js: true do
     let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:champ) { dossier.champs_public.first }

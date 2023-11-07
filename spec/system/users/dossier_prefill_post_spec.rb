@@ -1,4 +1,4 @@
-describe 'Prefilling a dossier (with a POST request):', js: true, retry: 3 do
+describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:password) { SECURE_PASSWORD }
 
   let(:procedure) { create(:procedure, :for_individual, :published) }
