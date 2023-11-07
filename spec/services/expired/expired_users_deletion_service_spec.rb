@@ -1,6 +1,6 @@
 describe Expired::UsersDeletionService do
-  let(:last_signed_in_not_expired) { (Expired::UsersDeletionService::EXPIRABLE_AFTER_IN_YEAR - 1).years.ago }
-  let(:last_signed_in_expired) { (Expired::UsersDeletionService::EXPIRABLE_AFTER_IN_YEAR + 1).years.ago }
+  let(:last_signed_in_not_expired) { (Expired::INACTIVE_USER_RETATION_IN_YEAR - 1).years.ago }
+  let(:last_signed_in_expired) { (Expired::INACTIVE_USER_RETATION_IN_YEAR + 1).years.ago }
   let(:before_close_to_expiration) { nil }
   let(:notified_close_to_expiration) { (Expired::REMAINING_WEEKS_BEFORE_EXPIRATION - 1).weeks.ago }
   let(:due_close_to_expiration) { (Expired::REMAINING_WEEKS_BEFORE_EXPIRATION + 1).weeks.ago }

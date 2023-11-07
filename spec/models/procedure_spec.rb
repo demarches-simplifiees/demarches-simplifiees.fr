@@ -604,7 +604,7 @@ describe Procedure do
 
     it 'should reset duree_conservation_etendue_par_ds' do
       expect(subject.duree_conservation_etendue_par_ds).to eq(false)
-      expect(subject.duree_conservation_dossiers_dans_ds).to eq(Procedure::NEW_MAX_DUREE_CONSERVATION)
+      expect(subject.duree_conservation_dossiers_dans_ds).to eq(Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH)
     end
 
     it 'should duplicate specific objects with different id' do

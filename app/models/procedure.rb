@@ -19,7 +19,7 @@ class Procedure < ApplicationRecord
   default_scope -> { kept }
 
   OLD_MAX_DUREE_CONSERVATION = 36
-  NEW_MAX_DUREE_CONSERVATION = ENV.fetch('NEW_MAX_DUREE_CONSERVATION') { 12 }.to_i
+  NEW_MAX_DUREE_CONSERVATION = Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
 
   MIN_WEIGHT = 350000
 
@@ -262,7 +262,7 @@ class Procedure < ApplicationRecord
                                                   numericality: {
                                                     only_integer: true,
                                                     greater_than_or_equal_to: 1,
-                                                    less_than_or_equal_to: 60
+                                                    less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH
                                                   }
 
   validates_with MonAvisEmbedValidator

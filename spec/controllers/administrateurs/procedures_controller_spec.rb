@@ -442,7 +442,7 @@ describe Administrateurs::ProceduresController, type: :controller do
         let(:duree_conservation_dossiers_dans_ds) { 17 }
 
         before do
-          stub_const("Procedure::NEW_MAX_DUREE_CONSERVATION", 18)
+          stub_const("Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH", 18)
         end
 
         subject { post :create, params: { procedure: procedure_params } }
@@ -453,7 +453,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           subject
           last_procedure = Procedure.last
           expect(last_procedure.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
-          expect(last_procedure.max_duree_conservation_dossiers_dans_ds).to eq(Procedure::NEW_MAX_DUREE_CONSERVATION)
+          expect(last_procedure.max_duree_conservation_dossiers_dans_ds).to eq(Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH)
         end
       end
 

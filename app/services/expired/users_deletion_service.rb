@@ -1,6 +1,4 @@
 class Expired::UsersDeletionService < Expired::MailRateLimiter
-  EXPIRABLE_AFTER_IN_YEAR = 2
-
   def process_expired
     [expiring_users_without_dossiers, expiring_users_with_dossiers].each do |expiring_segment|
       delete_expired_users(expiring_segment)
@@ -42,14 +40,14 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
           .and(dossiers[:state].not_eq(Dossier.states.fetch(:en_instruction))))
           .join_sources
       )
-      .having('MAX(dossiers.created_at) < ?', EXPIRABLE_AFTER_IN_YEAR.years.ago)
+      .having('MAX(dossiers.created_at) < ?', Expired::INACTIVE_USER_RETATION_IN_YEAR.years.ago)
       .group('users.id')
   end
 
   def expiring_users_without_dossiers
     User.unscoped
       .where.missing(:expert, :instructeur, :administrateur, :dossiers)
-      .where(last_sign_in_at: ..EXPIRABLE_AFTER_IN_YEAR.years.ago)
+      .where(last_sign_in_at: ..Expired::INACTIVE_USER_RETATION_IN_YEAR.years.ago)
   end
   # rubocop:enable DS/Unscoped
 
