@@ -1,0 +1,76 @@
+describe Champs::RNFChamp, type: :model do
+  let(:champ) { build(:champ_rnf, external_id:) }
+  let(:stub) { stub_request(:get, "#{url}/#{external_id}").to_return(body:, status:) }
+  let(:url) { RNFService.new.send(:url) }
+  let(:body) { Rails.root.join('spec', 'fixtures', 'files', 'api_rnf', "#{response_type}.json").read }
+  let(:external_id) { '075-FDD-00003-01' }
+  let(:status) { 200 }
+  let(:response_type) { 'valid' }
+
+  describe 'fetch_external_data' do
+    subject { stub; champ.fetch_external_data }
+
+    context 'success' do
+      it do
+        expect(subject.value!).to eq({
+          id: 3,
+          rnfId: '075-FDD-00003-01',
+          type: 'FDD',
+          department: '75',
+          title: 'Fondation SFR',
+          dissolvedAt: nil,
+          phone: '+33185060000',
+          email: 'fondation@sfr.fr',
+          addressId: 3,
+          createdAt: "2023-09-07T13:26:10.358Z",
+          updatedAt: "2023-09-07T13:26:10.358Z",
+          address: {
+            id: 3,
+            createdAt: "2023-09-07T13:26:10.358Z",
+            updatedAt: "2023-09-07T13:26:10.358Z",
+            label: "16 Rue du Général de Boissieu 75015 Paris",
+            type: "housenumber",
+            streetAddress: "16 Rue du Général de Boissieu",
+            streetNumber: "16",
+            streetName: "Rue du Général de Boissieu",
+            postalCode: "75015",
+            cityName: "Paris",
+            cityCode: "75115",
+            departmentName: "Paris",
+            departmentCode: "75",
+            regionName: "Île-de-France",
+            regionCode: "11"
+          },
+          status: nil,
+          persons: []
+        })
+      end
+    end
+
+    context 'failure (schema)' do
+      let(:response_type) { 'invalid' }
+      it {
+        expect(subject.failure.retryable).to be_falsey
+        expect(subject.failure.reason).to be_a(API::Client::SchemaError)
+      }
+    end
+
+    context 'failure (http 500)' do
+      let(:status) { 500 }
+      let(:response_type) { 'invalid' }
+      it {
+        expect(subject.failure.retryable).to be_truthy
+        expect(subject.failure.reason).to be_a(API::Client::HTTPError)
+      }
+    end
+
+    context 'failure (http 401)' do
+      let(:status) { 401 }
+      let(:response_type) { 'invalid' }
+      it {
+        expect(subject.failure.retryable).to be_falsey
+        expect(subject.failure.reason).to be_a(API::Client::HTTPError)
+      }
+    end
+  end
+end

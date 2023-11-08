@@ -48,6 +48,8 @@
             = render partial: "shared/champs/regions/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:rna)
             = render partial: "shared/champs/rna/show", locals: { champ: champ, profile: @profile }
+          - when TypeDeChamp.type_champs.fetch(:rnf)
+            = render partial: "shared/champs/rnf/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:epci)
             = render partial: "shared/champs/epci/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:cojo)
@@ -60,4 +62,3 @@
             %p= helpers.number_with_html_delimiter(champ.to_s)
           - else
             = helpers.format_text_value(champ.to_s.strip) # format already wrap in p
-

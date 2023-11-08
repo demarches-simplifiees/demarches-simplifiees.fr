@@ -90,7 +90,8 @@ describe ProcedureExportService do
           "epci (Code)",
           "epci (Département)",
           "cojo",
-          "expression_reguliere"
+          "expression_reguliere",
+          "rnf"
         ]
       end
 
@@ -202,7 +203,8 @@ describe ProcedureExportService do
           "epci (Code)",
           "epci (Département)",
           "cojo",
-          "expression_reguliere"
+          "expression_reguliere",
+          "rnf"
         ]
       end
 
@@ -297,7 +299,8 @@ describe ProcedureExportService do
             "epci (Code)",
             "epci (Département)",
             "cojo",
-            "expression_reguliere"
+            "expression_reguliere",
+            "rnf"
           ]
         end
 
