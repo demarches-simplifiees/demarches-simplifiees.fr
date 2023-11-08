@@ -18,10 +18,10 @@ class API::V2::GraphqlController < API::V2::BaseController
 
   private
 
-  def append_info_to_payload(payload)
+  def request_logs(logs)
     super
 
-    payload.merge!(@query_info.presence || {})
+    logs.merge!(@query_info.presence || {})
   end
 
   def process_action(*args)

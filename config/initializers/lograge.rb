@@ -6,30 +6,18 @@ Rails.application.configure do
   # injected by ansible.
   if !config.lograge.custom_options
     config.lograge.custom_options = lambda do |event|
-      {
+      hash = {
         type: 'tps',
         source: ENV['SOURCE'],
         tags: ['request', event.payload[:exception] ? 'exception' : nil].compact,
-        user_id: event.payload[:user_id],
-        user_email: event.payload[:user_email],
-        user_roles: event.payload[:user_roles],
-        user_agent: event.payload[:user_agent],
-        graphql_query: event.payload[:graphql_query],
-        graphql_variables: event.payload[:graphql_variables],
-        graphql_null_error: event.payload[:graphql_null_error],
-        graphql_timeout_error: event.payload[:graphql_timeout_error],
-        graphql_mutation: event.payload[:graphql_mutation],
-        ds_procedure_id: event.payload[:ds_procedure_id],
-        ds_dossier_id: event.payload[:ds_dossier_id],
-        browser: event.payload[:browser],
-        browser_version: event.payload[:browser_version],
-        platform: event.payload[:platform],
-        client_ip: event.payload[:client_ip],
-        request_id: event.payload[:request_id],
         process: {
           pid: Process.pid
         }
-      }.compact
+      }
+
+      hash.merge!(event.payload[:to_log])
+
+      hash.compact
     end
 
     config.lograge.custom_payload do |controller|
