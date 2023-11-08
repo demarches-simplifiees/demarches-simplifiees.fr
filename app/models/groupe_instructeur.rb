@@ -84,7 +84,15 @@ class GroupeInstructeur < ApplicationRecord
 
   def valid_rule?
     return false if routing_rule.nil?
-    ([routing_rule.left, routing_rule, routing_rule.right] in [ChampValue, Eq | NotEq, Constant]) && routing_rule_matches_tdc?
+    if [And, Or].include?(routing_rule.class)
+      routing_rule.operands.all? { |rule_line| valid_rule_line?(rule_line) }
+    else
+      valid_rule_line?(routing_rule)
+    end
+  end
+
+  def valid_rule_line?(rule)
+    ([rule.left, rule, rule.right] in [ChampValue, (LessThan | LessThanEq | Eq | NotEq | GreaterThanEq | GreaterThan | IncludeOperator), Constant]) && routing_rule_matches_tdc?(rule)
   end
 
   def non_unique_rule?
@@ -95,7 +103,8 @@ class GroupeInstructeur < ApplicationRecord
   def groups_with_same_rule
     return if routing_rule.nil?
     other_groupe_instructeurs
-      .filter { |gi| !gi.routing_rule.nil? && gi.routing_rule.right != empty && gi.routing_rule == routing_rule }
+      .filter { _1.routing_rule.present? }
+      .filter { _1.routing_rule == routing_rule }
       .map(&:label)
       .join(', ')
   end
@@ -106,18 +115,9 @@ class GroupeInstructeur < ApplicationRecord
 
   private
 
-  def routing_rule_matches_tdc?
-    routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
-
-    options = case routing_tdc.type_champ
-    when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:epci)
-      APIGeoService.departements.map { _1[:code] }
-    when TypeDeChamp.type_champs.fetch(:regions)
-      APIGeoService.regions.map { _1[:code] }
-    when TypeDeChamp.type_champs.fetch(:drop_down_list)
-      routing_tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1.last : _1 }
-    end
-    routing_rule.right.value.in?(options)
+  def routing_rule_matches_tdc?(rule)
+    tdcs = procedure.active_revision.types_de_champ_public
+    rule.errors(tdcs).blank?
   end
 
   serialize :routing_rule, LogicSerializer

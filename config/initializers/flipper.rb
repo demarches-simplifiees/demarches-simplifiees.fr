@@ -20,7 +20,8 @@ features = [
   :groupe_instructeur_api_hack,
   :rerouting,
   :cojo_type_de_champ,
-  :sva
+  :sva,
+  :multi_line_routing
 ]
 
 def database_exists?

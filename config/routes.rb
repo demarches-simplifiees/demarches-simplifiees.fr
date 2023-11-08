@@ -548,8 +548,13 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
-      patch :update, controller: 'routing', as: :routing_rules
-      patch :update_defaut_groupe_instructeur, controller: 'routing', as: :update_defaut_groupe_instructeur
+      resources :routing_rules, only: [:update, :destroy], param: :groupe_instructeur_id do
+        patch :add_row, on: :member
+        patch :change_targeted_champ, on: :member
+        delete :delete_row, on: :member
+      end
+
+      patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 
       put 'clone'
       put 'archive'

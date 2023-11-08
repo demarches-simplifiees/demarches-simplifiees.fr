@@ -1,10 +1,5 @@
-class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
+class Conditions::ConditionsComponent < ApplicationComponent
   include Logic
-
-  def initialize(tdc:, upper_tdcs:, procedure_id:)
-    @tdc, @condition, @upper_tdcs = tdc, tdc.condition, upper_tdcs
-    @procedure_id = procedure_id
-  end
 
   private
 
@@ -17,26 +12,6 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
       @condition.operands
     else
       [@condition].compact
-    end
-  end
-
-  def logic_conditionnel_button
-    html_class = 'fr-btn fr-btn--tertiary fr-btn--sm'
-
-    if @condition.nil?
-      submit_tag(
-        t('.enable_conditionnel'),
-        formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id),
-        class: html_class
-      )
-    else
-      submit_tag(
-        t('.disable_conditionnel'),
-        formmethod: 'delete',
-        formnovalidate: true,
-        data: { confirm: t('.disable_conditionnel_alert') },
-        class: html_class
-      )
     end
   end
 
@@ -85,7 +60,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def available_targets_for_select
-    @upper_tdcs
+    @source_tdcs
       .filter { |tdc| ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(tdc.type_champ) }
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
   end
@@ -108,7 +83,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def compatibles_operators_for_select(left)
-    case left.type(@upper_tdcs)
+    case left.type(@source_tdcs)
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:boolean)
       [
         [t('is', scope: 'logic'), Eq.name]
@@ -138,7 +113,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   def right_operand_tag(left, right, row_index)
     right_invalid = !current_right_valid?(left, right)
 
-    case left.type(@upper_tdcs)
+    case left.type(@source_tdcs)
     when :boolean
       booleans_for_select = [[t('utils.yes'), constant(true).to_json], [t('utils.no'), constant(false).to_json]]
 
@@ -160,7 +135,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         class: 'fr-select'
       )
     when :enum, :enums
-      enums_for_select = left.options(@upper_tdcs)
+      enums_for_select = left.options(@source_tdcs)
 
       if right_invalid
         enums_for_select = empty_target_for_select + enums_for_select
@@ -186,13 +161,13 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   end
 
   def current_right_valid?(left, right)
-    Logic.compatible_type?(left, right, @upper_tdcs)
+    Logic.compatible_type?(left, right, @source_tdcs)
   end
 
   def add_condition_tag
     tag.button(
       t('.add_condition'),
-      formaction: add_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id),
+      formaction: add_condition_path,
       formnovalidate: true,
       class: 'fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-circle-line fr-btn--icon-left'
     )
@@ -201,7 +176,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
   def delete_condition_tag(row_index)
     tag.button(
       tag.span('', class: 'icon delete') + tag.span(t('.remove_a_row'), class: 'sr-only'),
-      formaction: delete_row_admin_procedure_condition_path(@procedure_id, @tdc.stable_id, row_index: row_index),
+      formaction: delete_condition_path(row_index),
       formmethod: 'delete',
       formnovalidate: true
     )
@@ -213,13 +188,5 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
 
   def input_name_for(name)
     "#{input_prefix}[rows][][#{name}]"
-  end
-
-  def input_id_for(name, row_index)
-    "#{@tdc.stable_id}-#{name}-#{row_index}"
-  end
-
-  def input_prefix
-    'type_de_champ[condition_form]'
   end
 end

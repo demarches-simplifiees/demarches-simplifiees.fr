@@ -60,26 +60,18 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       end
     end
 
-    context 'group without routing rule' do
-      before { get :show, params: { procedure_id: procedure.id, id: gi_1_1.id } }
-
-      it do
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to include('règle invalide')
-      end
-    end
-
     context 'group with routing rule matching tdc' do
       let!(:drop_down_tdc) { create(:type_de_champ_drop_down_list, procedure: procedure, drop_down_options: options) }
-      let(:options) { procedure.groupe_instructeurs.pluck(:label) }
+      let(:options) { ['Premier choix', 'Deuxième choix', 'Troisième choix'] }
 
       before do
-        gi_1_1.update(routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id), constant(gi_1_1.label)))
+        gi_1_1.update(routing_rule: ds_eq(champ_value(drop_down_tdc.stable_id), constant('Deuxième choix')))
         get :show, params: { procedure_id: procedure.id, id: gi_1_1.id }
       end
 
       it do
         expect(response).to have_http_status(:ok)
+        expect(response.body).to include('Deuxième choix')
         expect(response.body).not_to include('règle invalide')
       end
     end
