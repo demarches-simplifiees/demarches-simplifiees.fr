@@ -57,7 +57,9 @@ Rails.application.routes.draw do
     end
 
     if ENV['ADMINS_GROUP_ENABLED'] == 'enabled' || Rails.env.test? # can be removed if needed when EVERY PARTS of the feature will be merged / from env.example.optional
-      resources :gestionnaires, only: [:index, :show, :edit, :update, :destroy]
+      resources :gestionnaires, only: [:index, :show, :edit, :update] do
+        delete 'delete', on: :member
+      end
 
       resources :groupe_gestionnaires, path: 'groupe_administrateurs', only: [:index, :show, :new, :create, :edit, :update] do
         post 'add_gestionnaire', on: :member
@@ -493,6 +495,7 @@ Rails.application.routes.draw do
     scope module: 'gestionnaires', as: 'gestionnaire' do
       resources :groupe_gestionnaires, path: 'groupes', only: [:index, :show, :create, :edit, :update, :destroy] do
         resources :gestionnaires, controller: 'groupe_gestionnaire_gestionnaires', only: [:index, :create, :destroy]
+        resources :children, controller: 'groupe_gestionnaire_children', only: [:index, :create, :destroy]
       end
     end
   end

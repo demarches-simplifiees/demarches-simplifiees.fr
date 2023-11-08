@@ -34,7 +34,10 @@ class Gestionnaire < ApplicationRecord
   end
 
   def can_be_deleted?
-    !(root_groupe_gestionnaire = groupe_gestionnaires.where(groupe_gestionnaire: nil).first) || root_groupe_gestionnaire.gestionnaires.size > 1
+    groupe_gestionnaires.roots.each do |rt|
+      return false unless rt.gestionnaires.size > 1
+    end
+    true
   end
 
   def registration_state
