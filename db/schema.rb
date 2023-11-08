@@ -65,6 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_113317) do
     t.bigint "groupe_gestionnaire_id"
     t.datetime "updated_at", precision: nil
     t.bigint "user_id", null: false
+    t.index ["groupe_gestionnaire_id"], name: "index_administrateurs_on_groupe_gestionnaire_id"
     t.index ["user_id"], name: "index_administrateurs_on_user_id"
   end
 
