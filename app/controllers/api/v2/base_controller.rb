@@ -3,6 +3,10 @@ class API::V2::BaseController < ApplicationController
   skip_before_action :setup_tracking
   before_action :authenticate_from_token
 
+  before_action do
+    Current.browser = 'api'
+  end
+
   private
 
   def context

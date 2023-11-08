@@ -964,6 +964,9 @@ describe API::V2::GraphqlController do
         expect(gql_data[:dossierAccepter][:dossier][:state]).to eq('accepte')
         perform_enqueued_jobs
         expect(ActionMailer::Base.deliveries.size).to eq(1)
+
+        expect(dossier.traitements.last.browser_name).to eq('api')
+        expect(dossier.traitements.last.browser_version).to eq(2)
       }
 
       context 'without notifications' do

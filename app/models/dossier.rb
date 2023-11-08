@@ -64,49 +64,56 @@ class Dossier < ApplicationRecord
     def passer_en_construction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_construction),
         instructeur_email: instructeur&.email,
-        processed_at: processed_at)
+        processed_at:,
+        browser: Current.browser)
     end
 
     def submit_en_construction(processed_at: Time.zone.now)
-      build(state: Dossier.states.fetch(:en_construction), processed_at:)
+      build(state: Dossier.states.fetch(:en_construction),
+        processed_at:,
+        browser: Current.browser)
     end
 
     def passer_en_instruction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_instruction),
         instructeur_email: instructeur&.email,
-        processed_at: processed_at)
+        processed_at:,
+        browser: Current.browser)
     end
 
     def accepter_automatiquement(processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:accepte),
-        processed_at: processed_at)
+        processed_at:)
     end
 
     def accepter(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:accepte),
         instructeur_email: instructeur&.email,
-        motivation: motivation,
-        processed_at: processed_at)
+        motivation:,
+        processed_at:,
+        browser: Current.browser)
     end
 
     def refuser(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:refuse),
         instructeur_email: instructeur&.email,
-        motivation: motivation,
-        processed_at: processed_at)
+        motivation:,
+        processed_at:,
+        browser: Current.browser)
     end
 
     def refuser_automatiquement(processed_at: Time.zone.now, motivation:)
       build(state: Dossier.states.fetch(:refuse),
-        motivation: motivation,
-        processed_at: processed_at)
+        motivation:,
+        processed_at:)
     end
 
     def classer_sans_suite(motivation: nil, instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:sans_suite),
         instructeur_email: instructeur&.email,
-        motivation: motivation,
-        processed_at: processed_at)
+        motivation:,
+        processed_at:,
+        browser: Current.browser)
     end
   end
   has_one :traitement, -> { order(processed_at: :desc) }, inverse_of: false

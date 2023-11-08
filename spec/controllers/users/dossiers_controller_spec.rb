@@ -481,6 +481,7 @@ describe Users::DossiersController, type: :controller do
         expect(dossier).to be_en_instruction
         expect(dossier.pending_correction?).to be_falsey
         expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
+        expect(dossier.traitements.last.browser_name).to eq('Unknown Browser')
       end
     end
   end

@@ -2,6 +2,10 @@ class APIController < ApplicationController
   before_action :default_format_json
   before_action :authenticate_from_token
 
+  before_action do
+    Current.browser = 'api'
+  end
+
   private
 
   def default_format_json
