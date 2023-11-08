@@ -14,7 +14,7 @@ describe APIToken, type: :model do
       expect(api_token.version).to eq(3)
       expect(api_token.write_access?).to eq(true)
       expect(api_token.procedure_ids).to eq([])
-      expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
+      expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true, api_token_id: api_token.id)
       expect(api_token.full_access?).to be_truthy
     end
 
@@ -22,7 +22,7 @@ describe APIToken, type: :model do
       before { api_token.update(write_access: false) }
 
       it do
-        expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: false)
+        expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: false, api_token_id: api_token.id)
       end
     end
 
@@ -38,7 +38,7 @@ describe APIToken, type: :model do
         expect(api_token.full_access?).to be_truthy
         expect(api_token.procedure_ids).to eq([procedure.id])
         expect(api_token.procedures).to eq([procedure])
-        expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true)
+        expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true, api_token_id: api_token.id)
       end
 
       context 'and another procedure, but access only to the first one' do
@@ -54,7 +54,7 @@ describe APIToken, type: :model do
           expect(api_token.full_access?).to be_falsey
           expect(api_token.procedure_ids).to match_array([procedure.id])
           expect(api_token.targetable_procedures).to eq([other_procedure])
-          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true)
+          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true, api_token_id: api_token.id)
         end
 
         context 'and then gain full access' do
@@ -83,7 +83,7 @@ describe APIToken, type: :model do
           expect(api_token.full_access?).to be_falsey
           expect(api_token.procedure_ids).to eq([])
           expect(api_token.targetable_procedures).to eq([procedure])
-          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
+          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true, api_token_id: api_token.id)
         end
       end
 
@@ -100,7 +100,7 @@ describe APIToken, type: :model do
           expect(api_token.full_access?).to be_falsey
           expect(api_token.procedure_ids).to eq([])
           expect(api_token.targetable_procedures).to eq([])
-          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
+          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true, api_token_id: api_token.id)
         end
       end
 
@@ -119,7 +119,7 @@ describe APIToken, type: :model do
           expect(api_token.full_access?).to be_falsey
           expect(api_token.procedure_ids).to eq([])
           expect(api_token.targetable_procedures).to eq([other_procedure])
-          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true)
+          expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [], write_access: true, api_token_id: api_token.id)
         end
       end
     end
