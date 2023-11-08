@@ -13,7 +13,7 @@ describe Manager::ApplicationController, type: :controller do
       [:db_runtime, :view_runtime, :variant, :rendered_format].each do |key|
         payload.delete(key)
       end
-      expect(payload).to eq({
+      expect(payload[:to_log]).to eq({
         user_agent: 'Rails Testing',
         user_id: current_user.id,
         user_email: current_user.email

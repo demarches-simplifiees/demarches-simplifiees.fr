@@ -224,23 +224,26 @@ class ApplicationController < ActionController::Base
   def append_info_to_payload(payload)
     super
 
-    payload.merge!({
+    payload[:to_log] = {}
+    request_logs(payload[:to_log])
+  end
+
+  def request_logs(logs)
+    logs.merge!({
       user_agent: request.user_agent,
       user_id: current_user&.id,
       user_roles: current_user_roles,
       client_ip: request.headers['X-Forwarded-For'],
       request_id: request.headers['X-Request-ID']
-    }.compact)
+    })
 
     if browser.known?
-      payload.merge!({
+      logs.merge!({
         browser: browser.name,
         browser_version: browser.version.to_s,
         platform: browser.platform.name
       })
     end
-
-    payload
   end
 
   def reject
