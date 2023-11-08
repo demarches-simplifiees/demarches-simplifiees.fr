@@ -1,6 +1,4 @@
 class GroupeGestionnaire < ApplicationRecord
-  # belongs_to :groupe_gestionnaire, optional: true # parent
-  # has_many :children, class_name: "GroupeGestionnaire", inverse_of: :groupe_gestionnaire
   has_many :administrateurs
   has_and_belongs_to_many :gestionnaires
 
