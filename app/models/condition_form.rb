@@ -48,9 +48,10 @@ class ConditionForm
     return empty if value.blank?
 
     if left_type == :number
-      # in this special case, we try to cast as Integer
+      # in this special case, we try to cast as Float, then Integer
       # but it can still be a previous string value or a mistap
-      number = Integer(value) rescue nil
+      number = parse_to_number(value)
+
       return constant(number) if number
     end
 
@@ -61,5 +62,12 @@ class ConditionForm
 
     # if anything else, save it as a constant of string
     constant(value)
+  end
+
+  def parse_to_number(str)
+    float = Float(str)
+    float % 1 == 0 ? float.to_i : float
+  rescue ArgumentError
+    nil
   end
 end
