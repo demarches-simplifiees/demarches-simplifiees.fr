@@ -81,21 +81,6 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_revert_to_instruction(dossier)
-    I18n.with_locale(dossier.user_locale) do
-      @dossier = dossier
-      @service = dossier.procedure.service
-      @logo_url = procedure_logo_url(@dossier.procedure)
-      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
-
-      MailTemplatePresenterService.create_commentaire_for_state(dossier)
-
-      mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
-        format.html { render layout: 'mailers/notifications_layout' }
-      end
-    end
-  end
-
   def notify_brouillon_near_deletion(dossiers, to_email)
     I18n.with_locale(dossiers.first.user_locale) do
       @subject = default_i18n_subject(count: dossiers.size)

@@ -116,7 +116,8 @@ module Administrateurs
           received_mail: [],
           closed_mail: [],
           refused_mail: [],
-          without_continuation_mail: []
+          without_continuation_mail: [],
+          re_instructed_mail: []
         )
         .find(params[:id])
 

@@ -876,7 +876,7 @@ class Dossier < ApplicationRecord
   end
 
   def mail_template_for_state
-    procedure.mail_template_for(state)
+    procedure.mail_template_for(self)
   end
 
   def after_passer_en_construction
@@ -978,12 +978,14 @@ class Dossier < ApplicationRecord
     self.sva_svr_decision_on = nil
     self.motivation = nil
     self.justificatif_motivation.purge_later
+    self.re_instructed_at = Time.zone.now
 
     save!
     rebase_later
+
+    MailTemplatePresenterService.create_commentaire_for_state(self)
     if !disable_notification
-      # pourquoi pas de commentaire automatique ici ?
-      DossierMailer.notify_revert_to_instruction(self).deliver_later
+      NotificationMailer.send_repasser_en_instruction_notification(self).deliver_later
     end
     log_dossier_operation(instructeur, :repasser_en_instruction)
   end
