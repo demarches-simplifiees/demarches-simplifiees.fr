@@ -3,12 +3,8 @@ import invariant from 'tiny-invariant';
 
 import cadastreLayers from './layers/cadastre';
 
-function ignServiceURL(
-  layer: string,
-  env = 'decouverte',
-  format = 'image/png'
-) {
-  const url = `https://wxs.ign.fr/${env}/geoportail/wmts`;
+function ignServiceURL(layer: string, format = 'image/png') {
+  const url = `https://data.geopf.fr/wmts`;
   const query =
     'service=WMTS&request=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}&style=normal';
 
@@ -127,10 +123,7 @@ function buildSources() {
       .flatMap(({ layers }) => layers.map(([, code]) => code))
       .map((code) => [
         getLayerCode(code),
-        rasterSource(
-          [ignServiceURL(code, 'environnement')],
-          'IGN-F/Géoportail/MNHN'
-        )
+        rasterSource([ignServiceURL(code)], 'IGN-F/Géoportail/MNHN')
       ])
   );
 }
@@ -215,7 +208,7 @@ export default {
       url: 'https://openmaptiles.geo.data.gouv.fr/data/france-vector.json'
     },
     'photographies-aeriennes': rasterSource(
-      [ignServiceURL('ORTHOIMAGERY.ORTHOPHOTOS', 'decouverte', 'image/jpeg')],
+      [ignServiceURL('ORTHOIMAGERY.ORTHOPHOTOS', 'image/jpeg')],
       'IGN-F/Géoportail'
     ),
     cadastre: {
@@ -223,7 +216,7 @@ export default {
       url: 'https://openmaptiles.geo.data.gouv.fr/data/cadastre.json'
     },
     'plan-ign': rasterSource(
-      [ignServiceURL('GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2', 'decouverte')],
+      [ignServiceURL('GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2')],
       'IGN-F/Géoportail'
     ),
     ...buildSources()
