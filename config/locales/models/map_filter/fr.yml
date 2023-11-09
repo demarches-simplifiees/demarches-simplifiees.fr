@@ -1,0 +1,14 @@
+fr:
+  activemodel:
+    attributes:
+      map_filter:
+        year: Année
+        from_beginning: Depuis le début
+        specific_year_add_on: "(en %{year})"
+
+        kind:
+          nb_demarches: Nombre de démarches
+          nb_dossiers: Nombre de dossiers
+        detailed_title_for_nb_demarches: "Nombre de démarches publiées ou closes %{add_on}"
+        detailed_title_for_nb_dossiers: "Nombre de dossiers déposés %{add_on}"
+        legend: "Entre %{min_thresold} et %{max_thresold}"
