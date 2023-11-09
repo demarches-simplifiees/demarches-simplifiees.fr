@@ -35,7 +35,7 @@ module Administrateurs
 
     def configurations_params
       params.require(:chorus_configuration)
-        .permit(:centre_de_coup, :domaine_fonctionnel, :referentiel_de_programmation)
+        .permit(:centre_de_cout, :domaine_fonctionnel, :referentiel_de_programmation)
     end
   end
 end

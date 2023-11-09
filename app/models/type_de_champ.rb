@@ -118,7 +118,7 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:epci)
   ]
 
-  PRIVATE_TYPES = [
+  PRIVATE_ONLY_TYPES = [
     type_champs.fetch(:engagement_juridique)
   ]
 

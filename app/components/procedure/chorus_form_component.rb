@@ -8,7 +8,7 @@ class Procedure::ChorusFormComponent < ApplicationComponent
 
   def map_attribute_to_autocomplete_endpoint
     {
-      centre_de_coup: data_sources_search_centre_couts_path,
+      centre_de_cout: data_sources_search_centre_couts_path,
       domaine_fonctionnel: data_sources_search_domaine_fonct_path,
       referentiel_de_programmation: data_sources_search_ref_programmation_path
     }
@@ -16,8 +16,8 @@ class Procedure::ChorusFormComponent < ApplicationComponent
 
   def format_displayed_value(attribute_name)
     case attribute_name
-    when :centre_de_coup
-      ChorusConfiguration.format_centre_de_coup_label(@chorus_configuration.centre_de_coup)
+    when :centre_de_cout
+      ChorusConfiguration.format_centre_de_cout_label(@chorus_configuration.centre_de_cout)
     when :domaine_fonctionnel
       ChorusConfiguration.format_domaine_fonctionnel_label(@chorus_configuration.domaine_fonctionnel)
     when :referentiel_de_programmation
@@ -29,8 +29,8 @@ class Procedure::ChorusFormComponent < ApplicationComponent
 
   def format_hidden_value(attribute_name)
     case attribute_name
-    when :centre_de_coup
-      @chorus_configuration.centre_de_coup.to_json
+    when :centre_de_cout
+      @chorus_configuration.centre_de_cout.to_json
     when :domaine_fonctionnel
       @chorus_configuration.domaine_fonctionnel.to_json
     when :referentiel_de_programmation

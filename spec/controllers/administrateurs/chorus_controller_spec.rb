@@ -52,10 +52,10 @@ describe Administrateurs::ChorusController, type: :controller do
       let(:referentiel_de_programmation) { nil }
 
       context "partial valid payload" do
-        let(:centre_de_coup) { '{"code":"D00C8DX004","label":"Aumôniers+protestant","ville":null,"code_postal":null,"description":"Aumoniers+protestants"}' }
+        let(:centre_de_cout) { '{"code":"D00C8DX004","label":"Aumôniers+protestant","ville":null,"code_postal":null,"description":"Aumoniers+protestants"}' }
         let(:chorus_configuration_params) do
           {
-            centre_de_coup:, domaine_fonctionnel:, referentiel_de_programmation:
+            centre_de_cout:, domaine_fonctionnel:, referentiel_de_programmation:
           }
         end
         it 'updates params and redirect back to complete all infos' do
@@ -64,19 +64,19 @@ describe Administrateurs::ChorusController, type: :controller do
 
           procedure.reload
 
-          expect(procedure.chorus_configuration.centre_de_coup).to eq(JSON.parse(centre_de_coup))
+          expect(procedure.chorus_configuration.centre_de_cout).to eq(JSON.parse(centre_de_cout))
           expect(procedure.chorus_configuration.domaine_fonctionnel).to eq(nil)
           expect(procedure.chorus_configuration.referentiel_de_programmation).to eq(nil)
         end
       end
 
       context "full valid payload" do
-        let(:centre_de_coup) { '{"code":"D00C8DX004","label":"Aumôniers+protestant","ville":null,"code_postal":null,"description":"Aumoniers+protestants"}' }
+        let(:centre_de_cout) { '{"code":"D00C8DX004","label":"Aumôniers+protestant","ville":null,"code_postal":null,"description":"Aumoniers+protestants"}' }
         let(:domaine_fonctionnel) { '{"code":"0105-05-01","label":"Formation+des+élites+et+cadres+de+sécurité+et+de+défense","description":null,"code_programme":"105"}' }
         let(:referentiel_de_programmation) { '{"code":"010101010101","label":"DOTATIONS+CARPA+AJ+ET+AUTRES+INTERVENTIONS","description":null,"code_programme":"101"}' }
         let(:chorus_configuration_params) do
           {
-            centre_de_coup:, domaine_fonctionnel:, referentiel_de_programmation:
+            centre_de_cout:, domaine_fonctionnel:, referentiel_de_programmation:
           }
         end
 
@@ -86,7 +86,7 @@ describe Administrateurs::ChorusController, type: :controller do
 
           procedure.reload
 
-          expect(procedure.chorus_configuration.centre_de_coup).to eq(JSON.parse(centre_de_coup))
+          expect(procedure.chorus_configuration.centre_de_cout).to eq(JSON.parse(centre_de_cout))
           expect(procedure.chorus_configuration.domaine_fonctionnel).to eq(JSON.parse(domaine_fonctionnel))
           expect(procedure.chorus_configuration.referentiel_de_programmation).to eq(JSON.parse(referentiel_de_programmation))
         end

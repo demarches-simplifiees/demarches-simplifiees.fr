@@ -38,7 +38,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         let(:coordinate) { procedure.draft_revision.revision_types_de_champ_public.first }
 
         it 'does not include Engagement Juridique' do
-          expect(page).not_to have_css(:option, text: "Engagement Juridique")
+          expect(page).not_to have_css('option', text: "Engagement Juridique")
         end
       end
 
@@ -46,7 +46,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         let(:coordinate) { procedure.draft_revision.revision_types_de_champ_private.first }
 
         it 'includes Engagement Juridique' do
-          expect(page).to have_css(:option, text: "Engagement Juridique")
+          expect(page).to have_css('option', text: "Engagement Juridique")
         end
       end
     end

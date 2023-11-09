@@ -96,7 +96,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     if coordinate.private?
       true
     else
-      !TypeDeChamp::PRIVATE_TYPES.include?(type_champ)
+      !TypeDeChamp::PRIVATE_ONLY_TYPES.include?(type_champ)
     end
   end
 

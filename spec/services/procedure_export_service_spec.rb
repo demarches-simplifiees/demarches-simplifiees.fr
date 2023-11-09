@@ -149,7 +149,7 @@ describe ProcedureExportService do
         it 'includes chorus headers' do
           expected_headers = [
             'Domaine Fonctionnel',
-            'Referentiel De Programmation',
+            'Référentiel De Programmation',
             'Centre De Coup'
           ]
 

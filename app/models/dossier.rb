@@ -1231,8 +1231,8 @@ class Dossier < ApplicationRecord
     if procedure.chorusable? && procedure.chorus.complete?
       columns += [
         ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel.code],
-        ['Referentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation.code],
-        ['Centre De Coup', procedure.chorus_configuration.centre_de_coup.code]
+        ['Référentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation.code],
+        ['Centre De Coup', procedure.chorus_configuration.centre_de_cout.code]
       ]
     end
     columns += [
