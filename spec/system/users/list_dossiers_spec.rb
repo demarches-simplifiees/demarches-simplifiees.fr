@@ -231,7 +231,7 @@ describe 'user access to the list of their dossiers', js: true do
       it "appears in the result list" do
         expect(current_path).to eq(dossiers_path)
         expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.id} »")
-        expect(page).not_to have_css('.tabs')
+        expect(page).not_to have_css('.fr-tabs')
         expect(page).to have_content(dossier_en_construction.id)
       end
     end

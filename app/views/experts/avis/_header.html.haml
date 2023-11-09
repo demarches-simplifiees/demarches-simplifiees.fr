@@ -18,8 +18,8 @@
             %span.fr-download__detail
               ZIP
 
-    %nav.tabs
-      %ul
+    %nav.fr-tabs
+      %ul.fr-tabs__list
         = dynamic_tab_item('Demande', expert_avis_path(avis.procedure, avis))
         = dynamic_tab_item('Avis', instruction_expert_avis_path(avis.procedure, avis), notification: avis.answer.blank?)
         - if avis.procedure.allow_expert_messaging

@@ -72,7 +72,7 @@ describe 'Inviting an expert:' do
 
       click_on '1 avis à donner'
       click_on avis.dossier.user.email
-      within('.tabs') { click_on 'Avis' }
+      within('.fr-tabs') { click_on 'Avis' }
       expect(page).to have_text("Demandeur : #{avis.claimant.email}")
       expect(page).to have_text('Cet avis est confidentiel')
 
@@ -102,7 +102,7 @@ describe 'Inviting an expert:' do
 
       click_on '1 avis à donner'
       click_on avis.dossier.user.email
-      within('.tabs') { click_on 'Avis' }
+      within('.fr-tabs') { click_on 'Avis' }
       expect(page).to have_text("Demandeur : #{avis.claimant.email}")
       expect(page).to have_text('Question ?')
       expect(page).to have_text('Cet avis est confidentiel')
@@ -200,7 +200,7 @@ describe 'Inviting an expert:' do
 
       click_on '1 avis à donner'
       click_on avis_1.dossier.user.email
-      within('.tabs') { click_on 'Avis' }
+      within('.fr-tabs') { click_on 'Avis' }
       expect(page).to have_text("Demandeur : #{avis_1.claimant.email}")
       click_on 'Voir les avis'
       expect(page).to have_text("Vous")
@@ -216,7 +216,7 @@ describe 'Inviting an expert:' do
 
       click_on '1 avis à donner'
       click_on avis_2.dossier.user.email
-      within('.tabs') { click_on 'Avis' }
+      within('.fr-tabs') { click_on 'Avis' }
       expect(page).to have_text("Demandeur : #{avis_2.claimant.email}")
       click_on 'Voir les avis'
       expect(page).to have_text("Vous")
