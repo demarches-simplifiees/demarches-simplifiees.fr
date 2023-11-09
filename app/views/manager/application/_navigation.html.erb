@@ -24,6 +24,7 @@ as defined by the routes in the `admin/` namespace
   <hr />
 
   <%= link_to "Delayed Jobs", manager_delayed_job_path, class: "navigation__link" %>
+  <%= link_to "Sidekiq", manager_sidekiq_web_path, class: "navigation__link" %>
   <%= link_to "Maintenance Tasks", manager_maintenance_tasks_path, class: "navigation__link" %>
   <%= link_to "Features", manager_flipper_path, class: "navigation__link" %>
   <%= link_to "Annonces", super_admins_release_notes_path, class: "navigation__link" %>
