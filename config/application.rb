@@ -86,10 +86,10 @@ module TPS
     # @see https://guides.rubyonrails.org/configuring.html#custom-configuration
     config.x.clamav.enabled = ENV.fetch("CLAMAV_ENABLED", "enabled") == "enabled"
 
-    config.view_component.generate_sidecar = true
-    config.view_component.generate_locale = true
-    config.view_component.generate_distinct_locale_files = true
-    config.view_component.generate_preview = true
+    config.view_component.generate.sidecar = true
+    config.view_component.generate.locale = true
+    config.view_component.generate.distinct_locale_files = true
+    config.view_component.generate.preview = true
     config.view_component.show_previews_source = true
     config.view_component.default_preview_layout = 'component_preview'
     config.view_component.preview_paths << "#{Rails.root}/spec/components/previews"

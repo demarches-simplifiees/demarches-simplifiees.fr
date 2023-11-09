@@ -1,0 +1,17 @@
+- content_for(:navigation_principale) do
+  .fr-container
+    %nav.fr-nav#header-navigation{ role: "navigation", aria: { label: 'Menu principal annonces' } }
+      %ul.fr-nav__list
+        %li.fr-nav__item
+          = link_to "Toutes les annonces", super_admins_release_notes_path, class: "fr-nav__link", target: "_self", aria: { current: action == :index ? "page" : nil }
+
+        %li.fr-nav__item
+          = link_to("Nouvelle annonce", new_super_admins_release_note_path(date: @release_note&.released_on), class: "fr-nav__link", target: "_self", aria: { current: action == :new ? "page" : nil })
+
+        - if action == :edit
+          %li.fr-nav__item
+            = link_to "Annonce", '', class: "fr-nav__link", target: "_self", aria: { current: "page" }
+
+        %li.fr-nav__item
+          = link_to "Annonces publiées", release_notes_path, class: "fr-nav__link", target: "_self"
+

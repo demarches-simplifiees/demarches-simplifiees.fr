@@ -1,0 +1,7 @@
+= render "main_navigation", action: :new
+
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-10
+      %h1.fr-h2 Nouvelle Annonce
+      = render ReleaseNote::FormComponent.new(release_note: @release_note)

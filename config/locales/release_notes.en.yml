@@ -1,0 +1,31 @@
+---
+en:
+  release_notes:
+    index:
+      title: What’s new on %{app_name} ? 🚀
+      forbidden: You are not authorized to view the News page.
+      no_content: No announcement here.
+    page:
+      previous_page: Previous announcements
+  super_admins:
+    release_notes:
+      create: &save
+        success: Release note was successfully saved.
+        error: Release note was not saved.
+      update:
+        <<: *save
+      destroy:
+        success: Release note was successfully deleted.
+  activerecord:
+    attributes:
+      release_note:
+        body: Announce
+        categories: Categories
+        released_on: Publication date
+      release_note/categories:
+        administrateur: Administrator
+        instructeur: Instructor
+        expert: Expert
+        api: API
+        usager: User
+
