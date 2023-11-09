@@ -23,7 +23,7 @@ describe ExportJob do
     let(:format) { :zip }
 
     it 'does not try to identify file' do
-      expect { subject }.not_to raise_error(ActiveStorage::FileNotFoundError)
+      expect { subject }.not_to raise_error
     end
   end
 end
