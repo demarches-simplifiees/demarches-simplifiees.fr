@@ -1809,6 +1809,116 @@ describe Dossier, type: :model do
         it { is_expected.to eq(expected) }
       end
     end
+
+    context 'with type_de_champ_commune_de_polynesie' do
+      let(:types_de_champ) { [{ type: :yes_no }, { type: :text }, { type: :commune_de_polynesie, libelle: 'commune' }] }
+      let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
+      let(:dossier) { create(:dossier, procedure:) }
+      let(:yes_no_tdc) { procedure.active_revision.types_de_champ_public.first }
+      let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
+      let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
+      context 'with no value for commune_de_polynesie' do
+        let(:expected) do
+          [
+            [yes_no_tdc.libelle, "Oui"],
+            [text_tdc.libelle, "text"],
+            ["commune", ''],
+            ["commune (Code postal)", ''],
+            ["commune (Ile)", ""],
+            ["commune (Archipel)", ""]
+          ]
+        end
+
+        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+
+        before do
+          yes_no, text, commune_de_polynesie = dossier.champs_public
+          yes_no.update(value: 'true')
+          text.update(value: 'text')
+        end
+
+        it { is_expected.to eq(expected) }
+      end
+
+      context 'with value for commune_de_polynesie' do
+        let(:expected) do
+          [
+            [yes_no_tdc.libelle, "Oui"],
+            [text_tdc.libelle, "text"],
+            ["commune", 'Avera'],
+            ["commune (Code postal)", '98736'],
+            ["commune (Ile)", "Raiatea"],
+            ["commune (Archipel)", "Iles Sous Le Vent"]
+          ]
+        end
+
+        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+
+        before do
+          yes_no, text, commune_de_polynesie = dossier.champs_public
+          yes_no.update(value: 'true')
+          commune_de_polynesie.update(value: 'Avera - Raiatea - 98736')
+          text.update(value: 'text')
+        end
+
+        it { is_expected.to eq(expected) }
+      end
+    end
+
+    context 'with type_de_champ_code_postal_de_polynesie' do
+      let(:types_de_champ) { [{ type: :yes_no }, { type: :text }, { type: :code_postal_de_polynesie, libelle: 'code postal' }] }
+      let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
+      let(:dossier) { create(:dossier, procedure:) }
+      let(:yes_no_tdc) { procedure.active_revision.types_de_champ_public.first }
+      let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
+      let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
+      context 'with no value for code_postal_de_polynesie' do
+        let(:expected) do
+          [
+            [yes_no_tdc.libelle, "Oui"],
+            [text_tdc.libelle, "text"],
+            ["code postal", ''],
+            ["code postal (Commune)", ''],
+            ["code postal (Ile)", ""],
+            ["code postal (Archipel)", ""]
+          ]
+        end
+
+        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+
+        before do
+          yes_no, text, code_postal_de_polynesie = dossier.champs_public
+          yes_no.update(value: 'true')
+          text.update(value: 'text')
+        end
+
+        it { is_expected.to eq(expected) }
+      end
+
+      context 'with value for code_postal_de_polynesie' do
+        let(:expected) do
+          [
+            [yes_no_tdc.libelle, "Oui"],
+            [text_tdc.libelle, "text"],
+            ["code postal", '98736'],
+            ["code postal (Commune)", 'Avera'],
+            ["code postal (Ile)", "Raiatea"],
+            ["code postal (Archipel)", "Iles Sous Le Vent"]
+          ]
+        end
+
+        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+
+        before do
+          yes_no, text, code_postal_de_polynesie = dossier.champs_public
+          yes_no.update(value: 'true')
+          code_postal_de_polynesie.update(value: '98736 - Avera - Raiatea')
+          text.update(value: 'text')
+        end
+
+        it { is_expected.to eq(expected) }
+      end
+    end
   end
 
   describe "remove_titres_identite!" do

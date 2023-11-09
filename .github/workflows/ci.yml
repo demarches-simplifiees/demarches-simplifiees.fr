@@ -1,9 +1,9 @@
 name: Continuous Integration
 on:
   push:
-    branches: ['main', 'devpf', 'masterpf', 'issue/*', 'feature/*', 'hotfix/*']
+    branches: ['main', 'devpf', 'masterpf', 'issue/*', 'feature/*', 'feature-ouidou/*', 'hotfix/*']
   pull_request:
-    branches: ['main', 'devpf', 'masterpf', 'issue/*', 'feature/*']
+    branches: ['main', 'devpf', 'masterpf', 'issue/*', 'feature/*', 'feature-ouidou/*']
   merge_group:
     branches: ['main', 'devpf']
 

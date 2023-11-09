@@ -12,6 +12,10 @@ describe ProcedureExportService do
         'simple_drop_down_list'
       when 'communes'
         ['communes', "communes (Code insee)", "communes (Département)"]
+      when 'commune_de_polynesie'
+        ["commune_de_polynesie", "commune_de_polynesie (Archipel)", "commune_de_polynesie (Code postal)", "commune_de_polynesie (Ile)"]
+      when 'code_postal_de_polynesie'
+        ["code_postal_de_polynesie", "code_postal_de_polynesie (Archipel)", "code_postal_de_polynesie (Commune)", "code_postal_de_polynesie (Ile)"]
       when 'departements', 'regions', 'pays'
         [tdc, "#{tdc} (Code)"]
       when 'epci'

@@ -11,24 +11,26 @@ class APIGeo::API
   end
 
   def self.polynesian_cities
-    result = []
-    headers = []
-    File.foreach('app/lib/api_geo/polynesian_postal_codes.txt', encoding: "windows-1252").with_index do |l, i|
-      fields = l.split("\t")
-      if i == 0
-        headers = fields.map { |f| f.gsub(/\s+/, "_").downcase.to_sym }
-      else
-        entry = {}
-        [1, 6, 7].each do |f|
-          entry[headers[f]] = fields[f]
+    Rails.cache.fetch('api_polynesian_cities', expires_in: 1.week) do
+      result = []
+      headers = []
+      File.foreach('app/lib/api_geo/polynesian_postal_codes.txt', encoding: "windows-1252").with_index do |l, i|
+        fields = l.split("\t")
+        if i == 0
+          headers = fields.map { |f| f.gsub(/\s+/, "_").downcase.to_sym }
+        else
+          entry = {}
+          [1, 6, 7].each do |f|
+            entry[headers[f]] = fields[f]
+          end
+          [2, 3].each do |f|
+            entry[headers[f]] = fields[f].to_i
+          end
+          result << entry
         end
-        [2, 3].each do |f|
-          entry[headers[f]] = fields[f].to_i
-        end
-        result << entry
       end
+      result
     end
-    result
   end
 
   def self.codes_postaux_de_polynesie
@@ -43,6 +45,14 @@ class APIGeo::API
     big_cities = cities[0].sort_by { |e| [e[:commune], e[:code_postal]] }.map(&method(:city_postal_code))
     small_cities = cities[1].sort_by { |e| [e[:commune], e[:code_postal]] }.map(&method(:city_postal_code))
     big_cities + ['------------------------'] + small_cities
+  end
+
+  def self.commune_by_city_postal_code(value)
+    polynesian_cities.find { city_postal_code(_1) == value }
+  end
+
+  def self.commune_by_postal_code_city_label(value)
+    polynesian_cities.find { postal_code_city_label(_1) == value }
   end
 
   private
