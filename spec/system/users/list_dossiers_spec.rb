@@ -263,8 +263,8 @@ describe 'user access to the list of their dossiers', js: true do
 
         it "can be filtered by procedure and display the result - no item" do
           select dossier_brouillon.procedure.libelle, from: 'procedure_id'
-          expect(page).not_to have_link(dossier_en_construction.id)
-          expect(page).not_to have_link(dossier_with_champs.id)
+          expect(page).not_to have_link(String(dossier_en_construction.id))
+          expect(page).not_to have_link(String(dossier_with_champs.id))
           expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.champs_public.first.value} » et pour la procédure « #{dossier_brouillon.procedure.libelle} » ")
           expect(page).to have_text("Aucun dossier")
         end
