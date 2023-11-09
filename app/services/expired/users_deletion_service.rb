@@ -1,5 +1,8 @@
 class Expired::UsersDeletionService < Expired::MailRateLimiter
   def process_expired
+    # we are working on two dataset because we apply two incompatible join on the same query
+    #   inner join on users not having dossier.en_instruction [so we do not destroy users with dossiers.en_instruction]
+    #   outer join on users not having dossier at all [so we destroy users without dossiers]
     [expiring_users_without_dossiers, expiring_users_with_dossiers].each do |expiring_segment|
       delete_expired_users(expiring_segment)
       send_inactive_close_to_expiration_notice(expiring_segment)
@@ -32,21 +35,22 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
     users = User.arel_table
     dossiers = Dossier.arel_table
 
-    User.unscoped # avoid default_scope eager_loading :export, :instructeur, :administrateur
-      .where.missing(:expert, :instructeur, :administrateur)
+    expiring_users
       .joins(
         users.join(dossiers, Arel::Nodes::InnerJoin)
           .on(users[:id].eq(dossiers[:user_id])
           .and(dossiers[:state].not_eq(Dossier.states.fetch(:en_instruction))))
           .join_sources
       )
-      .having('MAX(dossiers.created_at) < ?', Expired::INACTIVE_USER_RETATION_IN_YEAR.years.ago)
-      .group('users.id')
   end
 
   def expiring_users_without_dossiers
+    expiring_users.where.missing(:dossiers)
+  end
+
+  def expiring_users
     User.unscoped
-      .where.missing(:expert, :instructeur, :administrateur, :dossiers)
+      .where.missing(:expert, :instructeur, :administrateur)
       .where(last_sign_in_at: ..Expired::INACTIVE_USER_RETATION_IN_YEAR.years.ago)
   end
   # rubocop:enable DS/Unscoped
