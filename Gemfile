@@ -86,6 +86,7 @@ gem 'sentry-delayed_job'
 gem 'sentry-rails'
 gem 'sentry-ruby'
 gem 'sib-api-v3-sdk'
+gem 'sidekiq'
 gem 'skylight'
 gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
