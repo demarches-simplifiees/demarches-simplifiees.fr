@@ -8,6 +8,11 @@ describe Cron::ExpiredUsersDeletionJob do
       expect(Expired::UsersDeletionService).to receive(:process_expired)
       subject
     end
+
+    it 'fails gracefuly by catching any error (to prevent re-enqueue and sending too much email)' do
+      expect(Expired::UsersDeletionService).to receive(:process_expired).and_raise(StandardError)
+      expect { subject }.not_to raise_error
+    end
   end
 
   context 'when env[EXPIRE_USER_DELETION_JOB_LIMIT] is absent' do

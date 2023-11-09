@@ -11,6 +11,11 @@ describe Cron::EnableProcedureExpiresWhenTermineEnabledJob, type: :job do
     it 'performs' do
       expect { subject }.to change { procedure.reload.procedure_expires_when_termine_enabled }.from(false).to(true)
     end
+
+    it 'fails gracefuly by catching any error (to prevent re-enqueue and sending too much email)' do
+      expect(Procedure).to receive(:where).and_raise(StandardError)
+      expect { subject }.not_to raise_error
+    end
   end
 
   context 'when env[ENABLE_PROCEDURE_EXPIRES_WHEN_TERMINE_ENABLED_JOB_LIMIT] is absent' do
