@@ -63,6 +63,7 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
       .filter(&method(:filter_type_champ))
       .filter(&method(:filter_featured_type_champ))
       .filter(&method(:filter_block_type_champ))
+      .filter(&method(:filter_public_or_private_only_type_champ))
       .group_by { TypeDeChamp::TYPE_DE_CHAMP_TO_CATEGORIE.fetch(_1.to_sym) }
       .sort_by { |k, _v| TypeDeChamp::CATEGORIES.find_index(k) }
       .to_h do |cat, tdc|
@@ -89,6 +90,14 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
 
   def filter_block_type_champ(type_champ)
     !coordinate.child? || !EXCLUDE_FROM_BLOCK.include?(type_champ)
+  end
+
+  def filter_public_or_private_only_type_champ(type_champ)
+    if coordinate.private?
+      true
+    else
+      !TypeDeChamp::PRIVATE_ONLY_TYPES.include?(type_champ)
+    end
   end
 
   def filter_featured_type_champ(type_champ)

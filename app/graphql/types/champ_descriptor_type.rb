@@ -22,6 +22,9 @@ module Types
     definition_methods do
       def resolve_type(object, context)
         case object.type_champ
+        when TypeDeChamp.type_champs.fetch(:engagement_juridique)
+          Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType
+
         when TypeDeChamp.type_champs.fetch(:text)
           Types::Champs::Descriptor::TextChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:textarea)
