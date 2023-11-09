@@ -272,7 +272,7 @@ GEM
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     geo_coord (0.2.0)
-    geocoder (1.6.5)
+    geocoder (1.8.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
     gon (6.4.0)
