@@ -86,7 +86,7 @@ RSpec.configure do |config|
 
     ActionMailer::Base.deliveries.clear
 
-    ActiveStorage::Current.host = 'http://test.host'
+    ActiveStorage::Current.url_options = { host: 'http://test.host' }
 
     Geocoder.configure(lookup: :test)
   end
