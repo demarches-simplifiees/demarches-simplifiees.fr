@@ -18,7 +18,7 @@
       .types-de-champ-errors
         = @errors
 
-    .flex.justify-start.section.ml-1
+    .flex.justify-start.section.fr-ml-1w.fr-mb-2w
       = form_for(type_de_champ, form_options) do |form|
         .flex.justify-start
           .flex.justify-start.width-33
@@ -125,10 +125,10 @@
             .cell
               = form.label :character_limit, for: dom_id(type_de_champ, :character_limit) do
                 Spécifier un nombre maximal conseillé de caractères :
-              = form.select :character_limit, options_for_character_limit, id: dom_id(type_de_champ, :character_limit), class: 'fr-select'
+              = form.select :character_limit, options_for_character_limit, {}, { id: dom_id(type_de_champ, :character_limit), class: 'fr-select' }
 
     - if type_de_champ.block?
-      .flex.justify-start.section.ml-1
+      .flex.justify-start.section.fr-ml-1w.fr-mb-2w
         .editor-block.flex-grow.cell
           = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ, upper_coordinates: @upper_coordinates)
           .type-de-champ-add-button{ id: dom_id(coordinate, :type_de_champ_add_button), class: class_names(hidden: !coordinate.empty?) }
