@@ -619,11 +619,7 @@ class Dossier < ApplicationRecord
   end
 
   def expiration_date_with_extention
-    [
-      expiration_date_reference,
-      conservation_extension,
-      procedure.duree_conservation_dossiers_dans_ds.months
-    ].sum
+    expiration_date_reference + conservation_extension + procedure.duree_conservation_dossiers_dans_ds.months
   end
 
   def expiration_notification_date
