@@ -58,7 +58,8 @@ module Administrateurs
         procedure.received_mail_template,
         procedure.closed_mail_template,
         procedure.refused_mail_template,
-        procedure.without_continuation_mail_template
+        procedure.without_continuation_mail_template,
+        procedure.re_instructed_mail_template
       ]
     end
 

@@ -156,6 +156,7 @@ class Procedure < ApplicationRecord
   has_one :closed_mail, class_name: "Mails::ClosedMail", dependent: :destroy
   has_one :refused_mail, class_name: "Mails::RefusedMail", dependent: :destroy
   has_one :without_continuation_mail, class_name: "Mails::WithoutContinuationMail", dependent: :destroy
+  has_one :re_instructed_mail, class_name: "Mails::ReInstructedMail", dependent: :destroy
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
@@ -272,6 +273,7 @@ class Procedure < ApplicationRecord
   validates_associated :closed_mail, on: :publication
   validates_associated :refused_mail, on: :publication
   validates_associated :without_continuation_mail, on: :publication
+  validates_associated :re_instructed_mail, on: :publication
   validates_associated :attestation_template, on: :publication, if: -> { attestation_template&.activated? }
 
   FILE_MAX_SIZE = 20.megabytes
@@ -506,6 +508,7 @@ class Procedure < ApplicationRecord
     procedure.closed_mail = closed_mail&.dup
     procedure.refused_mail = refused_mail&.dup
     procedure.without_continuation_mail = without_continuation_mail&.dup
+    procedure.re_instructed_mail = re_instructed_mail&.dup
     procedure.ask_birthday = false # see issue #4242
 
     procedure.cloned_from_library = from_library
@@ -582,12 +585,16 @@ class Procedure < ApplicationRecord
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
-  def mail_template_for(state)
-    case state
+  def re_instructed_mail_template
+    re_instructed_mail || Mails::ReInstructedMail.default_for_procedure(self)
+  end
+
+  def mail_template_for(dossier)
+    case dossier.state
     when Dossier.states.fetch(:en_construction)
       initiated_mail_template
     when Dossier.states.fetch(:en_instruction)
-      received_mail_template
+      dossier.re_instructed_at.present? ? re_instructed_mail_template : received_mail_template
     when Dossier.states.fetch(:accepte)
       closed_mail_template
     when Dossier.states.fetch(:refuse)
