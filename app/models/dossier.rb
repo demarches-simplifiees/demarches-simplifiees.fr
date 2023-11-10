@@ -618,12 +618,12 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def expiration_date_with_extention
+  def expiration_date_with_extension
     expiration_date_reference + conservation_extension + procedure.duree_conservation_dossiers_dans_ds.months
   end
 
   def expiration_notification_date
-    expiration_date_with_extention - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    expiration_date_with_extension - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
   def close_to_expiration?
@@ -642,7 +642,7 @@ class Dossier < ApplicationRecord
   end
 
   def expiration_date
-    after_notification_expiration_date.presence || expiration_date_with_extention
+    after_notification_expiration_date.presence || expiration_date_with_extension
   end
 
   def duration_after_notice
