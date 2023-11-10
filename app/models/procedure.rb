@@ -709,7 +709,7 @@ class Procedure < ApplicationRecord
       close!
     end
 
-    dossiers.visible_by_administration.each do |dossier|
+    dossiers.visible_by_administration.find_each do |dossier|
       dossier.hide_and_keep_track!(author, :procedure_removed)
     end
 
