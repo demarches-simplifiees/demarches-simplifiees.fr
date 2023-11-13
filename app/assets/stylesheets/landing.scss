@@ -3,10 +3,6 @@
 @import "mixins";
 @import "placeholders";
 
-.landing-panel {
-  @include vertical-padding(60px);
-}
-
 $landing-breakpoint: 1040px;
 
 .hero-wrapper {
@@ -25,16 +21,6 @@ $landing-breakpoint: 1040px;
   @media (max-width: $landing-breakpoint) {
     margin: auto;
   }
-}
-
-.hero-tagline {
-  margin-bottom: 0px;
-}
-
-.hero-tagline-em {
-  color: $blue-france-500;
-  font-style: normal;
-  font-weight: bold;
 }
 
 .hero-illustration {
@@ -74,7 +60,6 @@ $landing-breakpoint: 1040px;
 }
 
 .feature-text {
-  color: #FFFFFF;
   font-size: 20px;
   text-align: center;
 }
@@ -139,17 +124,7 @@ $landing-breakpoint: 1040px;
   font-weight: bold;
 }
 
-.usagers-panel,
-.numbers-panel,
-.cta-panel-2 {
-  background-color: var(--background-alt-blue-france);
-}
-
-
 .landing {
-  .more-info {
-    background-color: #FFFFFF;
-  }
 
   .numbers {
     @extend %horizontal-list;
@@ -229,15 +204,6 @@ $users-breakpoint: 950px;
   height: 180px;
 }
 
-.cta-panel {
-  background-color: $blue-france-500;
-  color: #FFFFFF;
-
-  .fr-btn {
-    box-shadow: inset 0 0 0 1px var(--text-inverted-blue-france);
-  }
-}
-
 .role-panel-wrapper {
   width: 100%;
   display: flex;
@@ -274,25 +240,6 @@ $users-breakpoint: 950px;
   }
 }
 
-.cta-panel-title {
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 13px;
-  color: #FFFFFF;
-
-  &.grey {
-    color: $g700;
-  }
-}
-
-.cta-panel-explanation {
-  font-size: 22px;
-  margin-bottom: 10px;
-
-  &.grey {
-    color: $g700;
-  }
-}
 
 .role-administrations-image {
   text-align: right;
