@@ -20,7 +20,7 @@
       .fr-fieldset__element
         = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
 
-        %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+        %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "fr-link"
 
 
       .fr-fieldset__element
