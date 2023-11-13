@@ -69,6 +69,9 @@ fr:
       stats:
         label: "Statistiques"
         title: "Statistiques d’usage"
+      carte:
+        label: "Carte de déploiement"
+        title: "Carte de déploiement par département"
       status_page:
         label: "Disponibilité"
         title: "Disponibilité du site demarches-simplifiees"
