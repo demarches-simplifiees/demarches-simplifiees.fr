@@ -56,6 +56,17 @@
   width: calc(100vw);
 }
 
+[data-fr-theme="dark"]
+  .fr-table--bordered {
+    .table {
+      &.hoverable {
+        tbody tr:hover {
+          background-color: rgb(74, 74, 125);
+        }
+      }
+    }
+}
+
 .fr-table--bordered {
   .table {
     &.hoverable {

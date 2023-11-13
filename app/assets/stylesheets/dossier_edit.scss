@@ -3,6 +3,12 @@
 
 $dossier-actions-bar-border-width: 1px;
 
+[data-fr-theme="dark"]
+  .dossier-edit
+    .dossier-edit-sticky-footer {
+      background-color:  rgb(74, 74, 125);
+      border: none
+}
 .dossier-header {
   .fr-container {
     padding-bottom: $default-padding;
