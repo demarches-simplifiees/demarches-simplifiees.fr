@@ -17,8 +17,7 @@
     .header-actions {
       margin-bottom: $default-spacer;
       display: flex;
-      justify-content: flex-end;
-      column-gap: $default-spacer * 2;
+
     }
   }
 
@@ -51,6 +50,29 @@
 
     .button.send {
       align-self: flex-end;
+    }
+  }
+}
+
+@media (min-width: 48em) {
+  .dossier-container {
+    .header-actions {
+      flex-direction: row;
+      justify-content: flex-end;
+      gap: 0 $default-spacer * 2;
+    }
+  }
+}
+
+@media (max-width: 48em) {
+  .dossier-container .header-actions {
+    flex-direction: column;
+    justify-content: stretch;
+    gap: $default-spacer * 2 0;
+
+    .dropdown-button {
+      min-width: 100%;
+      white-space: normal;
     }
   }
 }
