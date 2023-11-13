@@ -53,7 +53,7 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
     describe 'edge cases' do
       context 'when the environment is development' do
-        before { Rails.env.stub(development?: true) }
+        before { allow(Rails.env).to receive(:development?).and_return(true) }
 
         context 'when the current admin is the inviter' do
           before { sign_in inviter_super_admin }
@@ -130,7 +130,7 @@ RSpec.describe Manager::AdministrateurConfirmationsController, type: :controller
 
     describe 'edge cases' do
       context 'when the environment is development' do
-        before { Rails.env.stub(development?: true) }
+        before { allow(Rails.env).to receive(:development?).and_return(true) }
 
         context 'when the current admin is the inviter' do
           before { sign_in inviter_super_admin }

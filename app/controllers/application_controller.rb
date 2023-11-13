@@ -177,7 +177,8 @@ class ApplicationController < ActionController::Base
   private
 
   def set_active_storage_host
-    ActiveStorage::Current.host = request.base_url
+    ActiveStorage::Current.url_options ||= {}
+    ActiveStorage::Current.url_options[:host] = request.base_url
   end
 
   def setup_javascript_settings

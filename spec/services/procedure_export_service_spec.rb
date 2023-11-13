@@ -489,7 +489,7 @@ describe ProcedureExportService do
     subject { service.to_zip }
     context 'without files' do
       it 'does not raises in_batches' do
-        expect { subject }.not_to raise_error(NoMethodError)
+        expect { subject }.not_to raise_error
       end
 
       it 'returns an empty blob' do

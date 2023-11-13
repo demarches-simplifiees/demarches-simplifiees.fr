@@ -30,7 +30,7 @@ describe 'Recovery::Revision::LifeCycle' do
         expect(dossier.champs_public.size).to eq(1)
         expect(dossier.champs.size).to eq(2)
         importer.load
-        expect { DossierPreloader.load_one(dossier) }.not_to raise_error(ArgumentError)
+        expect { DossierPreloader.load_one(dossier) }.not_to raise_error
         expect(dossier.champs_public.size).to eq(2)
       end
     end
