@@ -174,6 +174,28 @@
   }
 }
 
+[data-fr-theme="dark"]
+  .dropdown-content {
+      border: none;
+      background: var(--background-action-low-blue-france);
+  }
+
+[data-fr-theme="dark"]
+  .dropdown-items {
+    li {
+      &:not(.inactive) {
+        &:hover,
+        &.selected {
+          background: var(--background-action-low-blue-france-hover);
+        }
+      }
+
+      &.form-inside {
+        background-color: var(--background-action-low-blue-france);
+      }
+    }
+  }
+
 .dropdown-content {
   border: 1px solid $border-grey;
   background: #FFFFFF;
@@ -226,7 +248,6 @@ ul.dropdown-items {
   li {
     display: flex;
     padding: $default-padding;
-    color: $dark-grey;
     border-bottom: 1px solid $border-grey;
     font-size: 12px;
     min-width: 300px;
@@ -293,7 +314,6 @@ ul.dropdown-items {
 
   h4 {
     font-size: 14px;
-    color: $black;
     margin-bottom: $default-spacer;
   }
 
