@@ -1,14 +1,17 @@
 namespace :after_party do
-  desc 'Deployment task: remove_orphan_dossier_operation_logs'
+  desc 'Deployment task: remove_orphan_dossier_operation_logs. You can add JOB_LIMIT env var to limit the load and manually relaunch the process if needed.'
   task remove_orphan_dossier_operation_logs: :environment do
     puts "Running deploy task 'remove_orphan_dossier_operation_logs'"
 
-    job_limit = 200_000
+    job_limit = ENV['JOB_LIMIT']
 
     not_deletion_orphans = DossierOperationLog
       .not_deletion
       .where.missing(:dossier)
-      .limit(job_limit)
+
+    if job_limit.present?
+      not_deletion_orphans = not_deletion_orphans.limit(job_limit)
+    end
 
     batch_size = 1_000
 
@@ -23,9 +26,11 @@ namespace :after_party do
 
     rake_puts "Supression des serialized des dols avec operation == supprimer"
 
-    deletion_orphans = DossierOperationLog
-      .supprimer
-      .limit(job_limit)
+    deletion_orphans = DossierOperationLog.supprimer
+
+    if job_limit.present?
+      deletion_orphans = deletion_orphans.limit(job_limit)
+    end
 
     progress = ProgressReport.new(deletion_orphans.count)
 
