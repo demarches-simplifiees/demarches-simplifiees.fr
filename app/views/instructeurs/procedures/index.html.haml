@@ -6,7 +6,7 @@
     = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
-      %ul.fr-tabs__list
+      %ul.fr-tabs__list{ role: 'tablist' }
         = tab_item(t('pluralize.en_cours', count: @procedures_en_cours_count), instructeur_procedures_path(statut: 'en-cours'), active: @statut == 'en-cours', badge: number_with_html_delimiter(@procedures_en_cours_count))
         = tab_item(t('pluralize.en_test', count: @procedures_draft_count), instructeur_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
         = tab_item(t('pluralize.closed', count: @procedures_closes_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closes_count))

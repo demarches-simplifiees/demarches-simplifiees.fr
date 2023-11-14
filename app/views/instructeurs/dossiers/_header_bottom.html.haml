@@ -1,6 +1,6 @@
 #header-bottom.fr-container
   %nav.fr-tabs
-    %ul.fr-tabs__list
+    %ul.fr-tabs__list{ role: 'tablist' }
       - notifications_summary = current_instructeur.notifications_for_dossier(dossier)
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.request'),

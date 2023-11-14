@@ -3,7 +3,7 @@
     %h1.page-title Prévisualisation de la démarche «&nbsp;#{@dossier.procedure.libelle}&nbsp;»
 
     %nav.fr-tabs
-      %ul.fr-tabs__list
+      %ul.fr-tabs__list{ role: 'tablist' }
         = tab_item('le dossier',
           apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),
           active: @tab == 'dossier')

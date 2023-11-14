@@ -26,7 +26,7 @@
 
     - if @search_terms.blank?
       %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
-        %ul.fr-tabs__list
+        %ul.fr-tabs__list{ role: 'tablist' }
           - if @user_dossiers.present?
             = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
               dossiers_path(statut: 'en-cours', procedure_id: params[:procedure_id]),

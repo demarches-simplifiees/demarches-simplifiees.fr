@@ -22,7 +22,7 @@
         = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
 
     %nav.fr-tabs
-      %ul.fr-tabs__list
+      %ul.fr-tabs__list{ role: 'tablist' }
         = dynamic_tab_item(t('views.users.dossiers.show.header.summary'), dossier_path(dossier))
         = dynamic_tab_item(t('views.users.dossiers.show.header.request'), [demande_dossier_path(dossier), modifier_dossier_path(dossier)])
         = dynamic_tab_item(t('views.users.dossiers.show.header.mailbox'), messagerie_dossier_path(dossier))
