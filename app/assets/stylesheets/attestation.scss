@@ -1,0 +1,112 @@
+@font-face {
+  font-family: "Marianne";
+  src: url("marianne-regular.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: url("marianne-bold.ttf");
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Marianne";
+  src: url("marianne-thin.ttf");
+  font-weight: 100; // weasy print n"accepte pas lighter
+  font-style: normal;
+}
+
+@page {
+  size: A4;
+  margin: 17mm 17mm 34mm; // add margin at the bottom to add address
+
+  @bottom-center {
+    font-size: 8pt;
+    content: counter(page) " / " counter(pages);
+    margin-top: 17mm;
+  }
+
+  @bottom-left {
+    content: element(footer);
+  }
+}
+
+#attestation {
+  @media screen {
+    max-width: 21cm;
+    padding: 17mm;
+    margin: 0 auto;
+  }
+
+  font-family: Marianne;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .right {
+    text-align: right;
+  }
+
+  .bloc-marque {
+    margin-bottom: 14mm;
+  }
+
+  .marianne {
+    height: 4.25mm;
+    margin-bottom: 1mm;
+  }
+
+  .intitule {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0 0 1mm;
+  }
+
+  .devise {
+    height: 8.5mm;
+    margin: 0;
+  }
+
+  .issuer {
+    font-size: 10pt;
+    margin: 0 0 14mm; // pas sur, pour mettre une marge si issuer plus bas que date
+  }
+
+  .direction {
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 0 0 23.3mm;
+  }
+
+  .date {
+    font-size: 8pt;
+    margin: 0 0 14mm;
+  }
+
+  .title {
+    font-size: 12pt;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 0 12.6mm;
+  }
+
+  .main {
+    font-size: 10pt;
+  }
+
+  .notice {
+    font-size: 10pt;
+    font-style: italic;
+  }
+
+  .footer {
+    position: running(footer);
+    font-size: 7pt;
+    font-weight: 100;
+  }
+}
