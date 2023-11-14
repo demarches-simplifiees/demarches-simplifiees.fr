@@ -83,14 +83,18 @@ module ProcedureStatsConcern
 
   def usual_traitement_time_for_recent_dossiers(nb_days)
     now = Time.zone.now
+    clusters_count = 3
+
     traitement_time =
       traitement_times((now - nb_days.days)..now)
         .map { |times| times[:processed_at] - times[:depose_at] }
-        .percentile(USUAL_TRAITEMENT_TIME_PERCENTILE)
-        .ceil
-
-    traitement_time = nil if traitement_time == 0
-    traitement_time
+        .sort
+    if traitement_time.size >= clusters_count
+      traitement_time.each_slice((traitement_time.size.to_f / clusters_count.to_f).ceil)
+        .map { _1.percentile(USUAL_TRAITEMENT_TIME_PERCENTILE) }
+    else
+      nil
+    end
   end
 
   private

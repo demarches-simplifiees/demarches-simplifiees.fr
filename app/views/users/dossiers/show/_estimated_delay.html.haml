@@ -1,10 +1,5 @@
-/ FIXME: remove the custom procedure switch at some point
-- procedure_id_for_which_we_hide_the_estimated_delay = 6547
-- procedure_path_for_which_we_hide_the_estimated_delay = 'deposer-une-offre-de-stage'
-- show_time_means = procedure.id != procedure_id_for_which_we_hide_the_estimated_delay && procedure.path != procedure_path_for_which_we_hide_the_estimated_delay
-
 - cache(procedure.id, expires_in: 1.day) do
-  - if procedure.usual_traitement_time_for_recent_dossiers(ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS) && show_time_means
+  - if procedure.usual_traitement_time_for_recent_dossiers(ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS)
     %p
       Habituellement, les dossiers de cette démarche sont traités dans un délai de #{distance_of_time_in_words(procedure.usual_traitement_time_for_recent_dossiers(ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS))}.
     %p
