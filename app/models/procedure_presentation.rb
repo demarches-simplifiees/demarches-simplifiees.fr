@@ -419,7 +419,7 @@ class ProcedurePresentation < ApplicationRecord
     TypeDeChamp
       .joins(:revision_types_de_champ)
       .where(revision_types_de_champ: { revision_id: procedure.revisions })
-      .order(:created_at)
+      .order(created_at: :desc)
       .find_by(stable_id: column)
   end
 

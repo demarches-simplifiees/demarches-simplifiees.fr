@@ -994,5 +994,21 @@ describe ProcedurePresentation do
 
       it { is_expected.to eq([['défaut', procedure.defaut_groupe_instructeur.id], ['gi2', gi_2.id]]) }
     end
+
+    context 'when field is dropdown' do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text }], types_de_champ_private: [{}]) }
+      let(:tdc) { procedure.published_revision.types_de_champ_public.first }
+      before do
+        procedure.draft_revision
+          .find_and_ensure_exclusive_use(tdc.stable_id)
+          .update(type_champ: :drop_down_list,
+                  drop_down_list_value: "Paris\nLyon\nMarseille")
+        procedure.publish_revision!
+      end
+      subject { procedure_presentation.field_enum("type_de_champ/#{tdc.id}") }
+      it 'find most recent tdc' do
+        expect(subject).to eq(["Paris", "Lyon", "Marseille"])
+      end
+    end
   end
 end
