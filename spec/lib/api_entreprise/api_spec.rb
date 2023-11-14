@@ -300,7 +300,7 @@ describe APIEntreprise::API do
     before do
       api.token = token
 
-      stub_request(:get, "https://entreprise.api.gouv.fr/v2/privileges")
+      stub_request(:get, "https://entreprise.api.gouv.fr/privileges")
         .to_return(body: body, status: status)
     end
 

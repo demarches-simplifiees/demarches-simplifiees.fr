@@ -10,7 +10,7 @@ class APIEntreprise::API
   ATTESTATION_SOCIALE_RESOURCE_NAME = "v4/urssaf/unites_legales/%{id}/attestation_vigilance"
   ATTESTATION_FISCALE_RESOURCE_NAME = "v4/dgfip/unites_legales/%{id}/attestation_fiscale"
   BILANS_BDF_RESOURCE_NAME = "v3/banque_de_france/unites_legales/%{id}/bilans"
-  PRIVILEGES_RESOURCE_NAME = "v2/privileges"
+  PRIVILEGES_RESOURCE_NAME = "privileges"
 
   TIMEOUT = 20
   DEFAULT_API_ENTREPRISE_DELAY = 0.0
