@@ -9,6 +9,11 @@ class Individual < ApplicationRecord
   GENDER_MALE = "M."
   GENDER_FEMALE = 'Mme'
 
+  enum notification_method: {
+    email: 'email',
+    no_notification: 'no_notification'
+  }
+
   def self.from_france_connect(fc_information)
     new(
       nom: fc_information.family_name,
