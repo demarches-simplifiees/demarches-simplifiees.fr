@@ -79,7 +79,7 @@ describe API::V1::DossiersController do
           it do
             expect(subject[:id]).to eq(dossier.id)
             expect(subject[:updated_at]).to eq("2008-09-01T08:05:00.000Z")
-            expect(subject[:initiated_at]).to eq("2008-09-01T08:06:00.000Z")
+            expect(subject[:initiated_at]).to eq("2008-09-01T07:56:00.000Z")
             expect(subject[:state]).to eq("initiated")
             expect(subject.keys.size).to eq(4)
           end
@@ -189,7 +189,7 @@ describe API::V1::DossiersController do
         it do
           expect(subject[:id]).to eq(dossier.id)
           expect(subject[:state]).to eq('closed')
-          expect(subject[:created_at]).to eq('2008-09-01T08:05:00.000Z')
+          expect(subject[:created_at]).to eq('2008-09-01T07:55:00.000Z')
           expect(subject[:updated_at]).to eq('2008-09-01T08:05:00.000Z')
           expect(subject[:archived]).to eq(dossier.archived)
           expect(subject.keys).to match_array(field_list)

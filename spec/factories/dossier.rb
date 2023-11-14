@@ -141,8 +141,10 @@ FactoryBot.define do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_construction)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
-        dossier.en_construction_at ||= dossier.created_at + 1.minute
-        dossier.depose_at ||= dossier.en_construction_at
+
+        processed_at = DossierWithReferenceDate.assign(dossier)
+        dossier.traitements.passer_en_construction(processed_at:)
+
         dossier.save!
       end
     end
@@ -151,9 +153,10 @@ FactoryBot.define do
       after(:create) do |dossier, _evaluator|
         dossier.state = Dossier.states.fetch(:en_instruction)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
-        dossier.en_construction_at ||= dossier.created_at + 1.minute
-        dossier.depose_at ||= dossier.en_construction_at
-        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
+
+        processed_at = DossierWithReferenceDate.assign(dossier)
+        dossier.traitements.passer_en_instruction(processed_at:)
+
         dossier.save!
       end
     end
@@ -166,42 +169,42 @@ FactoryBot.define do
       after(:create) do |dossier, evaluator|
         dossier.state = Dossier.states.fetch(:accepte)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
-        if dossier.processed_at.present?
-          dossier.en_construction_at ||= dossier.processed_at - 2.minutes
-          dossier.depose_at ||= dossier.en_construction_at
-          dossier.en_instruction_at ||= dossier.processed_at - 1.minute
-          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.processed_at)
-        else
-          dossier.en_construction_at ||= dossier.created_at + 1.minute
-          dossier.depose_at ||= dossier.en_construction_at
-          dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-          dossier.processed_at = dossier.en_instruction_at + 1.minute
-          dossier.traitements.accepter(motivation: evaluator.motivation, processed_at: dossier.processed_at)
-        end
+
+        processed_at = DossierWithReferenceDate.assign(dossier)
+        dossier.traitements.accepter(motivation: evaluator.motivation, processed_at:)
+
         dossier.save!
       end
     end
 
     trait :refuse do
-      after(:create) do |dossier, _evaluator|
+      transient do
+        motivation { nil }
+      end
+
+      after(:create) do |dossier, evaluator|
         dossier.state = Dossier.states.fetch(:refuse)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
-        dossier.en_construction_at ||= dossier.created_at + 1.minute
-        dossier.depose_at ||= dossier.en_construction_at
-        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-        dossier.traitements.refuser(processed_at: dossier.en_instruction_at + 1.minute)
+
+        processed_at = DossierWithReferenceDate.assign(dossier)
+        dossier.traitements.refuser(motivation: evaluator.motivation, processed_at:)
+
         dossier.save!
       end
     end
 
     trait :sans_suite do
-      after(:create) do |dossier, _evaluator|
+      transient do
+        motivation { nil }
+      end
+
+      after(:create) do |dossier, evaluator|
         dossier.state = Dossier.states.fetch(:sans_suite)
         dossier.groupe_instructeur ||= dossier.procedure&.defaut_groupe_instructeur
-        dossier.en_construction_at ||= dossier.created_at + 1.minute
-        dossier.depose_at ||= dossier.en_construction_at
-        dossier.en_instruction_at ||= dossier.en_construction_at + 1.minute
-        dossier.traitements.classer_sans_suite(processed_at: dossier.en_instruction_at + 1.minute)
+
+        processed_at = DossierWithReferenceDate.assign(dossier)
+        dossier.traitements.classer_sans_suite(motivation: evaluator.motivation, processed_at:)
+
         dossier.save!
       end
     end

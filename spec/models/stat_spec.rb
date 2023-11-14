@@ -45,7 +45,7 @@ describe Stat, type: :model do
 
     it 'works' do
       expect(stats["not_brouillon"]).to eq(18)
-      expect(stats["dossiers_depose_avant_30_jours"]).to eq(2)
+      expect(stats["dossiers_depose_avant_30_jours"]).to eq(15)
       expect(stats["dossiers_deposes_entre_60_et_30_jours"]).to eq(3)
       expect(stats["brouillon"]).to eq(1)
       expect(stats["en_construction"]).to eq(5)
