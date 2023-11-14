@@ -61,7 +61,7 @@
     .table {
       &.hoverable {
         tbody tr:hover {
-          background-color: rgb(74, 74, 125);
+          background-color: var(--background-action-low-blue-france);
         }
       }
     }

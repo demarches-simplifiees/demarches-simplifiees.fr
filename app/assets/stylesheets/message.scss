@@ -3,10 +3,10 @@
 
 [data-fr-theme="dark"]
   .message {
-    background: rgb(74, 74, 125);
+    background: var(--background-action-low-blue-france);
 
     &.inverted-background {
-      background: rgb(74, 74, 125);
+      background: var(--background-action-low-blue-france);
     }
 }
 
