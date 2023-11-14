@@ -128,12 +128,12 @@ describe 'The user' do
     expect(page).to have_field('sub type de champ', with: 'super texte')
 
     click_on 'Ajouter un élément pour'
+    expect(page).to have_content('Supprimer', count: 2)
 
     within '.repetition .row:first-child' do
       fill_in('sub type de champ', with: 'un autre texte')
+      blur
     end
-
-    expect(page).to have_content('Supprimer', count: 2)
 
     expect do
       within '.repetition .row:first-child' do
