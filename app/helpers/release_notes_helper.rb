@@ -27,4 +27,18 @@ module ReleaseNotesHelper
       ReleaseNote.default_categories_for_role(:usager)
     end
   end
+
+  def render_release_note_content(content)
+    allowed_attributes.merge ["rel", "target"] # title already allowed
+
+    content.body.fragment.source.css("a[href]").each do |link|
+      uri = URI.parse(link['href'])
+
+      link.set_attribute('rel', 'noreferrer noopener')
+      link.set_attribute('target', '_blank')
+      link.set_attribute('title', new_tab_suffix(uri.host))
+    end
+
+    content
+  end
 end
