@@ -108,6 +108,10 @@ module DossierHelper
   end
 
   def demandeur_dossier(dossier)
+    if dossier.procedure.for_individual? && dossier.for_tiers?
+      return t('shared.dossiers.beneficiaire', mandataire: dossier.mandataire_full_name, beneficiaire: "#{dossier&.individual&.prenom} #{dossier&.individual&.nom}")
+    end
+
     if dossier.procedure.for_individual?
       return "#{dossier&.individual&.nom} #{dossier&.individual&.prenom}"
     end

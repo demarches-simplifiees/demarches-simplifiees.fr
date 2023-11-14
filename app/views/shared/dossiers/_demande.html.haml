@@ -27,10 +27,11 @@
             = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
 
 
-      = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display) }
+      = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), for_tiers: dossier.for_tiers? }
+
 
       - if dossier.individual.present?
-        = render partial: "shared/dossiers/identite_individual", locals: { individual: dossier.individual }
+        = render partial: "shared/dossiers/identite_individual", locals: { dossier: dossier }
 
       - if dossier.etablissement.present?
         .fr-mt-1w.fr-mb-4w.fr-px-2w

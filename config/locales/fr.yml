@@ -342,7 +342,7 @@ fr:
           en_construction: "Date de dépôt du dossier"
           requester_identity: "Identité du demandeur"
           requester_identity_updated_at: "modifiée le %{date}"
-          my_identity: "Mon identité"
+          individual_identity: "Votre identité"
           form: "Sections du formulaire"
           edit_siret: "Modifier le SIRET"
           edit_identity: "Modifier l’identité"
@@ -397,7 +397,11 @@ fr:
       dossiers:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
-          identity_data: Identité du demandeur
+          self_title: Votre identité
+          mandataire: Mandataire
+          mandataire_email: Email du mandataire
+          callout_text: Vous agissez en tant que mandataire, soit professionnellement (comme expert-comptable, avocat) soit personnellement (famille). Assurez-vous de respecter les conditions des Articles 1984 à 1990 du Code civil.
+          beneficiaire_title: Identité du bénéficiaire
           identity_siret: Identifier votre établissement
           civility: Civilité
           first_name: Prénom
@@ -409,6 +413,7 @@ fr:
           annuaire_link_title: Rechercher un numéro de SIRET sur l’Annuaire des Entreprises
           siret_loading: Récupération des informations…
           continue: Continuer
+          act_as_mandataire: '%{mandataire}'
         merci:
           thanks: Merci !
           dossier_send_l1: Votre dossier sur la démarche
@@ -509,6 +514,7 @@ fr:
           state_civil_servant: Vous êtes agent de la fonction publique d’État ?
           connect_with_agent_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
+          for_tiers_alert: Si vous remplissez un dossier pour un tiers, vous devez uitliser vos propres identifiants.
       passwords:
         edit:
           subtitle: Changement de mot de passe
