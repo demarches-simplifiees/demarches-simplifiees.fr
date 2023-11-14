@@ -23,6 +23,6 @@
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.involved_persons'),
         personnes_impliquees_instructeur_dossier_path(dossier.procedure, dossier))
 
-      - if dossier.procedure.routing_enabled? && dossier.procedure.feature_enabled?(:rerouting)
+      - if dossier.procedure.routing_enabled?
         = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.reaffectation'),
           reaffectation_instructeur_dossier_path(dossier.procedure, dossier))
