@@ -81,7 +81,11 @@ module SystemHelpers
   end
 
   def blur
-    page.find('body').click
+    if page.has_css?('body', wait: 0)
+      page.find('body').click
+    else # page after/inside a `within` block does not match body
+      page.first('div').click
+    end
   end
 
   def pause
