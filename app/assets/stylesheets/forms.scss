@@ -623,6 +623,16 @@
   outline-color: $light-blue;
 }
 
+[data-fr-theme="dark"]
+  [data-reach-combobox-popover] {
+      border: none;
+      background: var(--background-action-low-blue-france);
+  }
+[data-fr-theme="dark"]
+  [data-reach-combobox-option]:hover {
+    background: var(--background-action-low-blue-france-hover);
+  }
+
 [data-reach-combobox-popover] {
   z-index: 20;
 }
