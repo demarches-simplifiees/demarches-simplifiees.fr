@@ -174,27 +174,26 @@
   }
 }
 
-[data-fr-theme="dark"]
-  .dropdown-content {
-      border: none;
-      background: var(--background-action-low-blue-france);
-  }
 
-[data-fr-theme="dark"]
-  .dropdown-items {
-    li {
-      &:not(.inactive) {
-        &:hover,
-        &.selected {
-          background: var(--background-action-low-blue-france-hover);
-        }
-      }
+[data-fr-theme="dark"] .dropdown-content {
+  border: none;
+  background: var(--background-action-low-blue-france);
+}
 
-      &.form-inside {
-        background-color: var(--background-action-low-blue-france);
+[data-fr-theme="dark"] .dropdown-items {
+  li {
+    &:not(.inactive) {
+      &:hover,
+      &.selected {
+        background: var(--background-action-low-blue-france-hover);
       }
     }
+
+    &.form-inside {
+      background-color: var(--background-action-low-blue-france);
+    }
   }
+}
 
 .dropdown-content {
   border: 1px solid $border-grey;

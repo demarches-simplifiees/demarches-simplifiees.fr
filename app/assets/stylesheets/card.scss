@@ -1,11 +1,11 @@
 @import "colors";
 @import "constants";
 
-[data-fr-theme="dark"]
-  .card {
-    background: none;
-    border: 1px solid var(--background-action-low-blue-france);
-  }
+
+[data-fr-theme="dark"] .card {
+  background: none;
+  border: 1px solid var(--background-action-low-blue-france);
+}
 
 .card {
   padding: ($default-spacer * 3) ($default-spacer * 2);

@@ -3,12 +3,11 @@
 
 $dossier-actions-bar-border-width: 1px;
 
-[data-fr-theme="dark"]
-  .dossier-edit
-    .dossier-edit-sticky-footer {
-      background-color: var(--background-action-low-blue-france);
-      border: none
+[data-fr-theme="dark"] .dossier-edit .dossier-edit-sticky-footer {
+  background-color: var(--background-action-low-blue-france);
+  border: none;
 }
+
 .dossier-header {
   .fr-container {
     padding-bottom: $default-padding;
