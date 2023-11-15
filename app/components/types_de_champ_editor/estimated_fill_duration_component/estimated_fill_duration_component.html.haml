@@ -1,4 +1,4 @@
-%span.fill-duration{ id: dom_id(@revision, :estimated_fill_duration) }
+%span.fr-text--sm.fill-duration{ id: dom_id(@revision, :estimated_fill_duration) }
   - if show?
     = t('.estimated_fill_duration')
     = link_to "#{DOC_URL}/tutoriels/tutoriel-administrateur#g.-estimation-de-la-duree-de-remplissage", target: "_blank", rel: "noopener noreferrer" do

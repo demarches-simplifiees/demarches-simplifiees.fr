@@ -47,3 +47,5 @@ fr:
         dpd_part_4: Comment faire ? Vous pouvez soit lui communiquer par email le lien vers la démarche en test, ou bien le nommer « administrateur ». Dans tous les cas, ne publiez votre démarche qu’après avoir eu son avis.
         back_to_procedure: 'Annuler et revenir à la page de la démarche'
         submit: Publier
+    autosave_notice:
+      form_saved: "Formulaire enregistré"

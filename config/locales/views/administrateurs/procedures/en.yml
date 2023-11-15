@@ -47,3 +47,5 @@ en:
         dpd_part_4: How to do ? You can either send him the link to the procedure on test stage by email, or name him "administrator". In any case, publish your approach only after having had his opinion.
         back_to_procedure: 'Cancel and return to the procedure page'
         submit: Publish
+    autosave_notice:
+      form_saved: "Form saved"

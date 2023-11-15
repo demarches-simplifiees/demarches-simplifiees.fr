@@ -6,6 +6,11 @@
 
 = turbo_stream.replace 'errors-summary', render(TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision))
 
+- unless flash.alert
+  = turbo_stream.show 'autosave-notice'
+  = turbo_stream.replace 'autosave-notice', render(partial: 'administrateurs/autosave_notice')
+  = turbo_stream.hide 'autosave-notice', delay: 30000
+
 - if @destroyed.present?
   = turbo_stream.remove dom_id(@destroyed, :type_de_champ_editor)
 
