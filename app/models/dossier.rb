@@ -1,4 +1,6 @@
 class Dossier < ApplicationRecord
+  self.ignored_columns += [:re_instructed_at]
+
   include DossierCloneConcern
   include DossierCorrectableConcern
   include DossierFilteringConcern
@@ -974,7 +976,6 @@ class Dossier < ApplicationRecord
     self.sva_svr_decision_on = nil
     self.motivation = nil
     self.justificatif_motivation.purge_later
-    self.re_instructed_at = Time.zone.now
 
     save!
     rebase_later

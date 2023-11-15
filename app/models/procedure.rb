@@ -594,7 +594,11 @@ class Procedure < ApplicationRecord
     when Dossier.states.fetch(:en_construction)
       initiated_mail_template
     when Dossier.states.fetch(:en_instruction)
-      dossier.re_instructed_at.present? ? re_instructed_mail_template : received_mail_template
+      if dossier.traitements.where(state: Dossier.states.fetch(:en_instruction)).one?
+        received_mail_template
+      else
+        re_instructed_mail_template
+      end
     when Dossier.states.fetch(:accepte)
       closed_mail_template
     when Dossier.states.fetch(:refuse)
