@@ -73,7 +73,7 @@
     "@vitejs/plugin-legacy": "^4.0.3",
     "@vitejs/plugin-react": "^4.0.0",
     "autoprefixer": "^10.4.15",
-    "axe-core": "^4.7.2",
+    "axe-core": "^4.8.2",
     "del-cli": "^5.1.0",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
