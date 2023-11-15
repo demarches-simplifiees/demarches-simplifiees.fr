@@ -6,7 +6,21 @@ module Administrateurs
       json_body = @attestation_template.json_body&.deep_symbolize_keys
       @body = TiptapService.to_html(json_body, {})
 
-      render layout: 'attestation'
+      respond_to do |format|
+        format.html do
+          render layout: 'attestation'
+        end
+
+        format.pdf do
+          html = render_to_string('/administrateurs/attestation_template_v2s/show', layout: 'attestation', formats: [:html])
+
+          result = Typhoeus.post(WEASYPRINT_URL,
+                                 headers: { 'content-type': 'application/json' },
+                                 body: { html: html }.to_json)
+
+          send_data(result.body, filename: 'attestation.pdf', type: 'application/pdf', disposition: 'inline')
+        end
+      end
     end
 
     def edit
