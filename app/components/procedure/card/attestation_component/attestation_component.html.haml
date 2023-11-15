@@ -4,15 +4,11 @@
       - if @procedure.attestation_template&.activated?
         %div
           - if error_messages.present?
-            %span.icon.refuse
-            %p.fr-tile-status-error À modifier
+            %p.fr-badge.fr-badge--warning À modifier
           - else
-            %span.icon.accept
-            %p.fr-tile-status-accept Activée
+            %p.fr-badge.fr-badge--success Activée
       - else
-        %div
-          %span.icon.clock
-          %p.fr-tile-status-todo Désactivée
+        %p.fr-badge Désactivée
       %div
         %h3.fr-h6.fr-mt-10v= t('.title')
         %p.fr-tile-subtitle Délivrance automatique pour les dossiers acceptés

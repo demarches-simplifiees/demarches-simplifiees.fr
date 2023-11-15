@@ -25,7 +25,8 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
     scenario do
       visit admin_procedure_path(procedure)
       # start with no attestation
-      find_attestation_card(with_nested_selector: ".icon.clock")
+      expect(page).to have_content('Désactivée')
+      find_attestation_card(with_nested_selector: ".fr-badge")
 
       # now process to enable attestation
       find_attestation_card.click
@@ -38,7 +39,8 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       # check attestation
       visit admin_procedure_path(procedure)
-      find_attestation_card(with_nested_selector: ".icon.accept")
+      expect(page).to have_content('Activée')
+      find_attestation_card(with_nested_selector: ".fr-badge--success")
 
       # publish procedure
       # click CTA for publication screen
@@ -54,7 +56,8 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       # check attestation is now disabled
       visit admin_procedure_path(procedure)
-      find_attestation_card(with_nested_selector: ".icon.clock")
+      expect(page).to have_content('Désactivée')
+      find_attestation_card(with_nested_selector: ".fr-badge")
     end
   end
 end
