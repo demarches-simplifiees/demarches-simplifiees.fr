@@ -18,6 +18,10 @@
       = link_to 'Accepter la fusion', accept_merge_path, method: :post, class: 'fr-btn fr-btn--secondary', data: { confirm: "Confirmez-vous la fusion des comptes ?" }
 
   .card
+    .card-title Choisissez un thème pour personnaliser l’apparence du site
+    = link_to t('links.footer.display_params'),'#', { aria: {controls: "fr-theme-modal" }, data: {'fr-opened': "false" }, class: 'fr-icon-theme-fill fr-link--icon-left fr-link' }
+
+  .card
     .card-title= t('.contact')
     %p
       = t('.your_email')
