@@ -30,6 +30,7 @@ module Types
       field :prenom, String, null: true
       field :attestation_sociale_attachment, Types::File, null: true
       field :attestation_fiscale_attachment, Types::File, null: true
+      field :enseigne, String, null: true
 
       def attestation_sociale_attachment
         load_attachment_for(:entreprise_attestation_sociale_attachment)

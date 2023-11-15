@@ -2220,6 +2220,7 @@ type Entreprise {
   effectif pour un mois donné
   """
   effectifMensuel: Effectif
+  enseigne: String
   etatAdministratif: EntrepriseEtatAdministratif
   formeJuridique: String
   formeJuridiqueCode: String
