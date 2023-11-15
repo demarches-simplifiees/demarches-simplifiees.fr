@@ -8,7 +8,7 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, IncludeOperator, And, Or]
+    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, IncludeOperator, ExcludeOperator, And, Or]
       .find { |c| c.name == name }
   end
 
@@ -87,6 +87,8 @@ module Logic
   def less_than_eq(left, right) = Logic::LessThanEq.new(left, right)
 
   def ds_include(left, right) = Logic::IncludeOperator.new(left, right)
+
+  def ds_exclude(left, right) = Logic::ExcludeOperator.new(left, right)
 
   def constant(value) = Logic::Constant.new(value)
 

@@ -92,7 +92,7 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def valid_rule_line?(rule)
-    ([rule.left, rule, rule.right] in [ChampValue, (LessThan | LessThanEq | Eq | NotEq | GreaterThanEq | GreaterThan | IncludeOperator), Constant]) && routing_rule_matches_tdc?(rule)
+    ([rule.left, rule, rule.right] in [ChampValue, (LessThan | LessThanEq | Eq | NotEq | GreaterThanEq | GreaterThan | IncludeOperator | ExcludeOperator), Constant]) && routing_rule_matches_tdc?(rule)
   end
 
   def non_unique_rule?

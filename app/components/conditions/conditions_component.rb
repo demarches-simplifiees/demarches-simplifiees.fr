@@ -99,7 +99,8 @@ class Conditions::ConditionsComponent < ApplicationComponent
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enums)
       [
-        [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name]
+        [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name],
+        [t(ExcludeOperator.name, scope: 'logic.operators'), ExcludeOperator.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:number)
       [Eq, LessThan, GreaterThan, LessThanEq, GreaterThanEq]
