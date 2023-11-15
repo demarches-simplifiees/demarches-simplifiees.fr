@@ -1,0 +1,10 @@
+#attestation-edit.fr-container.mt-2{
+    data: {
+      controller: 'attestation',
+      attestation_tags_value: @attestation_template.tags.map { _1[:libelle] },
+      attestation_url_value: admin_procedure_attestation_template_v2_path(@procedure)} }
+
+  %button.fr-btn{ data: { action: 'click->attestation#bold', attestation_target: 'bold' } } Gras
+  .editor.mt-2{ data: { attestation_target: 'editor' } }
+
+  %button.fr-btn.mt-2{ data: { action: 'click->attestation#send' } } Envoyer

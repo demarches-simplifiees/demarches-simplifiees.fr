@@ -9,9 +9,22 @@ module Administrateurs
       render layout: 'attestation'
     end
 
+    def edit
+    end
+
+    def update
+      @attestation_template
+        .update(json_body: editor_params)
+    end
+
     private
 
     def retrieve_attestation_template
       @attestation_template = @procedure.attestation_template || @procedure.build_attestation_template
     end
+
+    def editor_params
+      params.permit(content: [:type, content: [:type, :text, attrs: [:id, :label]]])
+    end
+  end
 end

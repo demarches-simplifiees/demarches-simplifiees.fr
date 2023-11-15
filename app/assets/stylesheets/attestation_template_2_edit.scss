@@ -1,0 +1,16 @@
+#attestation-edit {
+  .mention {
+    border: 1px solid var(--text-default-grey);
+    padding: 8px;
+  }
+
+  .selected {
+    border: 1px solid #000000;
+  }
+
+  .tiptap {
+    padding: 8px;
+
+    min-height: 300px;
+  }
+}
