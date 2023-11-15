@@ -1,6 +1,8 @@
 class TiptapService
   class << self
     def to_html(node, tags)
+      return '' if node.nil?
+
       children(node[:content], tags)
     end
 

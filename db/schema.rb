@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_10_135533) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_14_113317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -145,6 +145,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_10_135533) do
     t.text "body"
     t.datetime "created_at", precision: 6, null: false
     t.text "footer"
+    t.jsonb "json_body"
     t.integer "procedure_id"
     t.text "title"
     t.datetime "updated_at", precision: 6, null: false
