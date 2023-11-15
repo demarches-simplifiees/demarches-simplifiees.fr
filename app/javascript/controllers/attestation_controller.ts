@@ -2,7 +2,7 @@ import { ApplicationController } from './application_controller';
 import { Editor } from '@tiptap/core';
 import StarterKit from '@tiptap/starter-kit';
 import Mention from '@tiptap/extension-mention';
-import tippy from 'tippy.js';
+import tippy, { type Instance } from 'tippy.js';
 import { httpRequest } from '@utils';
 
 export class AttestationController extends ApplicationController {
@@ -43,7 +43,7 @@ export class AttestationController extends ApplicationController {
             },
 
             render: () => {
-              let popup: { setProps: Function, hide: Function, destroy: Function }[];
+              let popup: Instance;
               let div: HTMLElement;
               let selectedIndex = 0;
               let items: string[];
@@ -73,10 +73,14 @@ export class AttestationController extends ApplicationController {
                     return;
                   }
 
-                  let body: Element = document.body;
-
-                  popup = tippy(body, {
-                    getReferenceClientRect: props.clientRect,
+                  popup = tippy(document.body, {
+                    getReferenceClientRect: () => {
+                      const domrect = props.clientRect?.();
+                      if (!domrect) {
+                        throw new Error('No client rect');
+                      }
+                      return domrect;
+                    },
                     appendTo: () => this.element,
                     content: div,
                     showOnCreate: true,
@@ -96,14 +100,20 @@ export class AttestationController extends ApplicationController {
                     return;
                   }
 
-                  popup[0].setProps({
-                    getReferenceClientRect: props.clientRect
+                  popup.setProps({
+                    getReferenceClientRect: () => {
+                      const domrect = props.clientRect?.();
+                      if (!domrect) {
+                        throw new Error('No client rect');
+                      }
+                      return domrect;
+                    }
                   });
                 },
 
                 onKeyDown(props) {
                   if (props.event.key === 'Escape') {
-                    popup[0].hide();
+                    popup.hide();
 
                     return true;
                   }
@@ -134,7 +144,7 @@ export class AttestationController extends ApplicationController {
                 },
 
                 onExit() {
-                  popup[0].destroy();
+                  popup.destroy();
                   div.remove();
                 }
               };
