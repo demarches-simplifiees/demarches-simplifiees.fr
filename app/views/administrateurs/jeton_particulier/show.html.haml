@@ -11,12 +11,14 @@
 .container
   %h1
   = form_with model: @procedure, url: admin_procedure_api_particulier_jeton_path, local: true, html: { class: 'form' } do |f|
-    %p.explication
-      = t('.api_particulier_description_html', app_name: APPLICATION_NAME)
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      - c.body do
+        %p
+          = t('.api_particulier_description_html', app_name: APPLICATION_NAME)
 
     = f.label :api_particulier_token
     .desc.mb-2
       %p= t('.token_description')
     = f.password_field :api_particulier_token, class: 'form-control', required: :required
     .text-right
-      = f.button t('views.shared.actions.save'), class: 'button primary send'
+      = f.button t('views.shared.actions.save'), class: 'fr-btn send'
