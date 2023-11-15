@@ -1,6 +1,6 @@
 module Administrateurs
   class AttestationTemplateV2sController < AdministrateurController
-    before_action :retrieve_procedure, :retrieve_attestation_template
+    before_action :retrieve_procedure, :retrieve_attestation_template, :ensure_feature_active
 
     def show
       json_body = @attestation_template.json_body&.deep_symbolize_keys
@@ -32,6 +32,10 @@ module Administrateurs
     end
 
     private
+
+    def ensure_feature_active
+      redirect_to root_path if !@procedure.feature_enabled?(:attestation_v2)
+    end
 
     def retrieve_attestation_template
       @attestation_template = @procedure.attestation_template || @procedure.build_attestation_template
