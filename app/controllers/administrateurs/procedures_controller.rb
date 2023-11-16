@@ -305,12 +305,10 @@ module Administrateurs
     end
 
     def publish_revision
-      if @procedure.draft_changed?
-        @procedure.publish_revision!
-        flash.notice = "Nouvelle version de la démarche publiée"
+      @procedure.publish_revision!
+      flash.notice = "Nouvelle version de la démarche publiée"
 
-        redirect_to admin_procedure_path(@procedure)
-      end
+      redirect_to admin_procedure_path(@procedure)
     end
 
     def transfert
