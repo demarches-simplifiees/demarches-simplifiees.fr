@@ -386,7 +386,6 @@
 
   [data-reach-combobox-token] button {
     border: solid 1px $border-grey;
-    color: $black;
     border-radius: 4px;
     padding: $default-spacer;
     margin-right: $default-spacer;
@@ -447,22 +446,6 @@
     font-size: 22px;
     color: $blue-france-500;
     margin-bottom: $default-padding;
-  }
-
-  .explication-libelle {
-    font-weight: bold;
-    font-size: 20px;
-    margin-bottom: $default-padding;
-  }
-
-  .explication {
-    margin-bottom: $default-fields-spacer;
-    padding: $default-spacer;
-    background-color: $light-grey;
-
-    p:not(:last-child) {
-      margin-bottom: $default-padding;
-    }
   }
 
   .send-wrapper {
@@ -623,6 +606,15 @@
   outline-color: $light-blue;
 }
 
+[data-fr-theme="dark"] [data-reach-combobox-popover] {
+  border: none;
+  background: var(--background-action-low-blue-france);
+}
+
+[data-fr-theme="dark"] [data-reach-combobox-option]:hover {
+  background: var(--background-action-low-blue-france-hover);
+}
+
 [data-reach-combobox-popover] {
   z-index: 20;
 }
@@ -651,6 +643,11 @@ textarea::placeholder {
   .padded-fixed-footer {
     padding-top: 60px;
   }
+}
+
+[data-fr-theme="dark"] .fixed-footer {
+  border-top: 2px solid var(--background-action-low-blue-france-hover);
+  background-color: var(--background-action-low-blue-france);
 }
 
 .fixed-footer {

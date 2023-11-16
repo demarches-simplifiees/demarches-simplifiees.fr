@@ -1,9 +1,7 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
   = link_to admin_procedure_administrateurs_path(@procedure), id: 'administrateurs', class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.column.align-center.justify-between
-      %div
-        %span.icon.accept
-        %p.fr-tile-status-accept Validé
+      %p.fr-badge.fr-badge--success Validé
       %div
         .line-count.fr-my-1w
           %p.fr-tag= @procedure.administrateurs.size

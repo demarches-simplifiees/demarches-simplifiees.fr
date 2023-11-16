@@ -3,10 +3,9 @@
 @import "placeholders";
 
 .two-columns {
-  background-color: $white;
 
   @media (min-width: $two-columns-breakpoint) {
-    background: linear-gradient(to right, #FFFFFF 0%, #FFFFFF 50%, $light-grey 50%, $light-grey 100%);
+    background: linear-gradient(to right, transparent 0%, transparent 50%, var(--background-alt-blue-france) 50%, var(--background-alt-blue-france) 100%);
   }
 
   .columns-container { // TODO: https://github.com/betagouv/demarches-simplifiees.fr/issues/7882, once implemented, we won't need container anymore

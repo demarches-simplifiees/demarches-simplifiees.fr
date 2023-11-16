@@ -7,3 +7,9 @@ span.notifications {
   border-radius: 4px;
   background-color: $orange;
 }
+
+.fr-tabs__list span.notifications {
+  z-index: 2;
+  top: 5px;
+  right: 8px;
+}

@@ -9,7 +9,7 @@
   .procedure-form__columns.container
     = form_for @dossier_submitted_message,
       url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }),
-      html: { class: 'form procedure-form__column--form' } do |f|
+      html: { class: 'form procedure-form__column--form fr-background-alt--blue-france' } do |f|
 
       %h1.page-title
         Fin du dépot
@@ -18,10 +18,9 @@
 
       = render partial: 'administrateurs/dossier_submitted_messages/informations', locals: { f: f }
 
-
       .procedure-form__actions
         .actions-left
-          = f.submit 'Enregistrer', class: 'button primary send'
+          = f.submit 'Enregistrer', class: 'fr-btn send'
 
     .procedure-form__column--preview
       %h3

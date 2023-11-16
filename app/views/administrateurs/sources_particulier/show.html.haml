@@ -9,13 +9,16 @@
 
 .container#sources-particulier-form.mb-2
   = form_with model: @procedure, url: admin_procedure_api_particulier_sources_path, local: true, html: { class: 'form' } do |f|
-    .explication= t('.explication_html')
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      - c.body do
+        %p
+          = t('.explication_html')
 
     - @available_sources.each do |provider_key, scopes|
       %h2.header-section= t("api_particulier.providers.#{provider_key}.libelle")
 
       - scopes.each do |scope_key, sources|
-        %h3.explication-libelle= t("api_particulier.providers.#{provider_key}.scopes.#{scope_key}.libelle")
+        %h3= t("api_particulier.providers.#{provider_key}.scopes.#{scope_key}.libelle")
         %ul.procedure-admin-api-particulier-sources{ id: "#{provider_key}-#{scope_key}" }
           - sources.each do |source_key, enabled_hash|
             - enabled = (@procedure.api_particulier_sources.dig(provider_key, scope_key)&.include?(source_key)).present?
@@ -25,4 +28,4 @@
                 #{t("api_particulier.providers.#{provider_key}.scopes.#{scope_key}.#{source_key}")}
 
     .text-right
-      = f.button t('views.shared.actions.save'), class: 'button primary send'
+      = f.button t('views.shared.actions.save'), class: 'fr-btn send'

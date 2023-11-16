@@ -56,6 +56,17 @@
   width: calc(100vw);
 }
 
+
+[data-fr-theme="dark"] .fr-table--bordered {
+  .table {
+    &.hoverable {
+      tbody tr:hover {
+        background-color: var(--background-action-low-blue-france);
+      }
+    }
+  }
+}
+
 .fr-table--bordered {
   .table {
     &.hoverable {

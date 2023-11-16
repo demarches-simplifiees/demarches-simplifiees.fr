@@ -1,5 +1,5 @@
 !!! 5
-%html{ lang: html_lang, class: yield(:root_class) }
+%html{ lang: html_lang, data: { fr_scheme: 'system' }, class: yield(:root_class) }
   %head
     %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
     %meta{ "http-equiv": "X-UA-Compatible", content: "IE=edge" }
@@ -38,6 +38,8 @@
 
   %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo number-input' } }.compact }
     = render partial: 'layouts/skiplinks'
+    = render partial: 'layouts/display_theme_modal'
+
     .page-wrapper
       - if feature_enabled?(:team_on_strike)
         = render partial: 'layouts/strike_banner'

@@ -10,6 +10,7 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules', 'trix',
 Rails.application.config.assets.paths << Rails.root.join('node_modules', 'mapbox-gl', 'dist')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', '@reach', 'combobox')
 Rails.application.config.assets.paths << Rails.root.join('node_modules', '@mapbox', 'mapbox-gl-draw', 'dist')
+Rails.application.config.assets.paths << Rails.root.join('node_modules', '@gouvfr', 'dsfr', 'dist', 'artwork')
 
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets

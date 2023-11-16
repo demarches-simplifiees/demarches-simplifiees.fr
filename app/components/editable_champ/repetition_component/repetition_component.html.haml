@@ -1,5 +1,5 @@
 %fieldset
-  %legend.header-subsection{ legend_params }= @champ.libelle
+  %legend.fr-h5{ legend_params }= @champ.libelle
   - if @champ.description.present?
     .notice{ notice_params }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
 

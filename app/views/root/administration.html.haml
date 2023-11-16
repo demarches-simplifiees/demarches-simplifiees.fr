@@ -2,18 +2,18 @@
   = render partial: "root/footer"
 
 .landing
-  .landing-panel.hero-panel
+  .fr-py-6w
     .container
       .hero-wrapper
         .hero-text
-          %h1.hero-tagline
-            %em.hero-tagline-em Dématérialisez et simplifiez
+          %h1.fr-mb-0
+            Dématérialisez et simplifiez
             vos démarches administratives
 
         .hero-illustration
           %img{ :src => image_url("landing/hero/dematerialiser.svg"), alt: "" }
 
-  .landing-panel.more-info
+  .fr-py-6w.fr-background-alt--blue-france
     .container
       .role-panel-wrapper.role-administrations-panel
         .role-panel-70
@@ -26,7 +26,7 @@
         .role-panel-30.role-more-info-image.fr-mt-2w
           %img.role-image{ :src => image_url("landing/roles/usagers.svg"), alt: "" }
 
-  .landing-panel.usagers-panel
+  .fr-py-6w
     .container
       .role-panel-wrapper.role-administrations-panel
         .role-panel-30.role-administrations-image
@@ -44,9 +44,7 @@
           %br
 
 
-
-
-  .landing-panel.features-panel
+  .fr-py-6w.fr-background-flat--blue-france.fr-text-inverted--blue-france
     .container
       %ul.features
         %li.feature
@@ -73,7 +71,7 @@
   = render partial: "root/testimonials" if LANDING_TESTIMONIALS_ENABLED
 
   - cache "numbers-panel", :expires_in => 3.hours do
-    .landing-panel.numbers-panel
+    .fr-py-6w.fr-background-alt--blue-france
       .container
         %h2.center.fr-mb-4w #{APPLICATION_NAME} en chiffres
         %ul.numbers
@@ -113,11 +111,11 @@
           - c.with_footer_button do
             = link_to("Inscription à notre prochain webinaire", INSCRIPTION_WEBINAIRE_URL, class: "fr-btn", **external_link_attributes)
 
-  .landing-panel.cta-panel
+  .fr-py-6w.fr-background-alt--blue-france
     .container
       .cta-panel-wrapper
         %div
-          %h1.cta-panel-title Une question, un problème ?
-          %p.cta-panel-explanation Consultez notre FAQ
+          %h2 Une question, un problème ?
+          %p.fr-h5 Consultez notre FAQ
         %div
           = link_to "Voir la FAQ", t("links.common.faq.url"), class: "fr-btn fr-btn--lg", **external_link_attributes
