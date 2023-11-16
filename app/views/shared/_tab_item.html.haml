@@ -1,4 +1,4 @@
-%li{ class: (active ? 'active' : nil), role: 'presentation' }
+%li{ class: "relative #{(active ? 'active' : nil)}", role: 'presentation' }
   - if notification
     %span.notifications{ 'aria-label': 'notifications' }
   = link_to(url, 'aria-selected': active ? true : nil, class: 'fr-tabs__tab', role: 'tab' ) do
