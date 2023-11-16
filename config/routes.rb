@@ -217,6 +217,8 @@ Rails.application.routes.draw do
   get "mentions-legales", to: "static_pages#legal_notice"
   get "declaration-accessibilite", to: "static_pages#accessibility_statement"
 
+  get "carte", to: "carte#show"
+
   post "webhooks/sendinblue", to: "webhook#sendinblue"
   post "webhooks/helpscout", to: "webhook#helpscout"
   post "webhooks/helpscout_support_dev", to: "webhook#helpscout_support_dev"

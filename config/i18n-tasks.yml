@@ -100,6 +100,7 @@ ignore_unused:
 - 'errors.format'
 - 'activerecord.models.*'
 - 'activerecord.attributes.*'
+- 'activemodel.attributes.map_filter.*'
 - 'activerecord.errors.*'
 - 'errors.messages.blank'
 - 'errors.messages.content_type_invalid'

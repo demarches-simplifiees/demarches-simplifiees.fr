@@ -61,6 +61,9 @@ en:
         label: "Security"
         title: "Security policy"
         url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
+      carte:
+        label: "Deployment map"
+        title: "Deployment map by department"
       status_page:
         label: "Disponibility"
         title: "Disponibility and availability"
