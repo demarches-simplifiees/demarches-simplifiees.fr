@@ -11,6 +11,16 @@ class EditableChamp::SectionComponent < ApplicationComponent
     first_champ_is_an_header_section?
   end
 
+  def container_attributes
+    {
+      class: class_names(
+        "fr-my-0" => true,
+        "hidden" => (header_section && !header_section.visible?)
+      ),
+      id: header_section&.input_group_id
+    }
+  end
+
   def header_section
     @nodes.first if @nodes.first.is_a?(Champs::HeaderSectionChamp)
   end

@@ -1,18 +1,19 @@
 describe EditableChamp::SectionComponent, type: :component do
   include TreeableConcern
+  include Logic
   let(:component) { described_class.new(champs: champs) }
-  before { render_inline(component).to_html }
+  subject { render_inline(component).to_html }
 
   context 'list of champs without an header_section' do
     let(:champs) { [build(:champ_text), build(:champ_textarea)] }
 
     it 'render in a fieldset' do
-      expect(page).to have_selector("fieldset", count: 1)
+      expect(subject).to have_selector("fieldset", count: 1)
     end
 
     it 'renders champs' do
-      expect(page).to have_selector("input[type=text]", count: 1)
-      expect(page).to have_selector("textarea", count: 1)
+      expect(subject).to have_selector("input[type=text]", count: 1)
+      expect(subject).to have_selector("textarea", count: 1)
     end
   end
 
@@ -20,13 +21,13 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:champs) { [build(:champ_header_section_level_1), build(:champ_text), build(:champ_textarea)] }
 
     it 'renders fieldset' do
-      expect(page).to have_selector("fieldset")
-      expect(page).to have_selector("legend h2")
+      expect(subject).to have_selector("fieldset")
+      expect(subject).to have_selector("legend h2")
     end
 
     it 'renders champs within fieldset' do
-      expect(page).to have_selector("fieldset input[type=text]")
-      expect(page).to have_selector("fieldset textarea")
+      expect(subject).to have_selector("fieldset input[type=text]")
+      expect(subject).to have_selector("fieldset textarea")
     end
   end
 
@@ -34,13 +35,41 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:champs) { [build(:champ_text), build(:champ_header_section_level_1), build(:champ_text)] }
 
     it 'renders fieldset' do
-      expect(page).to have_selector("fieldset", count: 2)
-      expect(page).to have_selector("legend h2")
+      expect(subject).to have_selector("fieldset", count: 2)
+      expect(subject).to have_selector("legend h2")
     end
 
     it 'renders all champs, each in its fieldset' do
-      expect(page).to have_selector("input[type=text]", count: 2)
-      expect(page).to have_selector("fieldset > .fr-fieldset__element input[type=text]", count: 2)
+      expect(subject).to have_selector("input[type=text]", count: 2)
+      expect(subject).to have_selector("fieldset > .fr-fieldset__element input[type=text]", count: 2)
+    end
+
+    context 'when champ before section is conditionnable and section have a condition' do
+      let(:dossier) { create(:dossier) }
+      let(:tdc_header_section) { champs[1].type_de_champ }
+      let(:tdc_checkbox) { champs[0].type_de_champ }
+      let(:condition) { ds_eq(champ_value(tdc_checkbox.stable_id), constant(true)) }
+
+      before do
+        tdc_header_section.condition = condition
+        tdc_header_section.save!
+      end
+
+      context 'when condition is true' do
+        let(:champs) { [create(:champ_checkbox, dossier:, value: 'true'), create(:champ_header_section_level_1, dossier:), create(:champ_text, dossier:)] }
+
+        it 'renders fieldset' do
+          expect(subject).to have_selector(".hidden", count: 0)
+        end
+      end
+
+      context 'when condition is false' do
+        let(:champs) { [create(:champ_checkbox, dossier:, value: 'false'), create(:champ_header_section_level_1, dossier:), create(:champ_text, dossier:)] }
+
+        it 'renders fieldset' do
+          expect(subject).to have_selector(".hidden", count: 1)
+        end
+      end
     end
   end
 
@@ -48,10 +77,10 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:champs) { [build(:champ_header_section_level_1), build(:champ_header_section_level_2), build(:champ_header_section_level_3)] }
 
     it 'render header within fieldset' do
-      expect(page).to have_selector("fieldset > legend", count: 3)
-      expect(page).to have_selector("h2")
-      expect(page).to have_selector("h3")
-      expect(page).to have_selector("h4")
+      expect(subject).to have_selector("fieldset > legend", count: 3)
+      expect(subject).to have_selector("h2")
+      expect(subject).to have_selector("h3")
+      expect(subject).to have_selector("h4")
     end
   end
 
@@ -59,10 +88,10 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:champs) { [build(:champ_header_section_level_1), build(:champ_explication), build(:champ_header_section_level_1), build(:champ_text)] }
 
     it 'render fieldset, header_section, also render explication' do
-      expect(page).to have_selector("h2", count: 2)
-      expect(page).to have_selector("h3") # explication
-      expect(page).to have_selector("fieldset > legend > h2", count: 2)
-      expect(page).to have_selector("fieldset input[type=text]", count: 1)
+      expect(subject).to have_selector("h2", count: 2)
+      expect(subject).to have_selector("h3") # explication
+      expect(subject).to have_selector("fieldset > legend > h2", count: 2)
+      expect(subject).to have_selector("fieldset input[type=text]", count: 1)
     end
   end
 
@@ -70,15 +99,15 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:champs) { [build(:champ_header_section_level_1), build(:champ_text), build(:champ_header_section_level_2), build(:champ_textarea)] }
 
     it 'render nested fieldsets' do
-      expect(page).to have_selector("fieldset")
-      expect(page).to have_selector("legend h2")
-      expect(page).to have_selector("fieldset fieldset")
-      expect(page).to have_selector("fieldset fieldset legend h3")
+      expect(subject).to have_selector("fieldset")
+      expect(subject).to have_selector("legend h2")
+      expect(subject).to have_selector("fieldset fieldset")
+      expect(subject).to have_selector("fieldset fieldset legend h3")
     end
 
     it 'contains all champs' do
-      expect(page).to have_selector("fieldset input[type=text]", count: 1)
-      expect(page).to have_selector("fieldset fieldset textarea", count: 1)
+      expect(subject).to have_selector("fieldset input[type=text]", count: 1)
+      expect(subject).to have_selector("fieldset fieldset textarea", count: 1)
     end
   end
 
@@ -100,14 +129,14 @@ describe EditableChamp::SectionComponent, type: :component do
     let(:champs) { dossier.champs_public }
 
     it 'render nested fieldsets, increase heading level for repetition header_section' do
-      expect(page).to have_selector("fieldset")
-      expect(page).to have_selector("legend h2")
-      expect(page).to have_selector("fieldset fieldset")
-      expect(page).to have_selector("fieldset fieldset legend h3")
+      expect(subject).to have_selector("fieldset")
+      expect(subject).to have_selector("legend h2")
+      expect(subject).to have_selector("fieldset fieldset")
+      expect(subject).to have_selector("fieldset fieldset legend h3")
     end
 
     it 'contains as many text champ as repetition.rows' do
-      expect(page).to have_selector("fieldset fieldset input[type=text]", count: dossier.champs_public.find(&:repetition?).rows.size)
+      expect(subject).to have_selector("fieldset fieldset input[type=text]", count: dossier.champs_public.find(&:repetition?).rows.size)
     end
   end
 

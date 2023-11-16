@@ -1,5 +1,5 @@
 - if render_within_fieldset?
-  .fr-fieldset__element{ class: class_names("fr-my-0" => render_within_fieldset?) }
+  .fr-fieldset__element{ **container_attributes }
     %fieldset.fr-fieldset.fr-my-0{ class: "reset-#{tag_for_depth}" }
       %legend.fr-fieldset__legend
         = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
@@ -10,7 +10,7 @@
           = fields_for champ.input_name, champ do |form|
             = render EditableChamp::EditableChampComponent.new form:, champ:
 - else
-  %fieldset.fr-fieldset.fr-my-0
+  %fieldset.fr-fieldset{ **container_attributes }
     - if header_section
       %legend.fr-fieldset__legend.fr-my-0{ class: "reset-#{tag_for_depth}" }
         = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
