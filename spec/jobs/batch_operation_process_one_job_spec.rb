@@ -196,6 +196,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "supprimer"' do
+      let(:batch_operation) do
+        create(:batch_operation, :supprimer,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'changed the dossier to en construction' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.hidden_by_administration? }
+          .from(false)
+          .to(true)
+      end
+    end
+
     context 'when the dossier is out of sync (ie: someone applied a transition somewhere we do not know)' do
       let(:instructeur) { create(:instructeur) }
       let(:procedure) { create(:simple_procedure, instructeurs: [instructeur]) }

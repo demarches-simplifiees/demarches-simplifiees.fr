@@ -4,6 +4,7 @@ fr:
     passer_en_instruction: 'Change selected files to instructing'
     instruction: Instructing files
     accepter: 'Accept seleted files'
+    supprimer: Delete seleted files
     accepter_description: Users will be notified that their file has been accepted
     refuser: 'Refuse seleted files'
     refuser_description: Users will be notified that their file has been refused

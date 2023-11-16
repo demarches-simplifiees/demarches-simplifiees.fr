@@ -35,6 +35,15 @@ fr:
       text_success:
         one: "1 dossier est en cours de refus"
         other: "%{success_count}/%{count} dossiers ont été refusés"
+  supprimer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier a été supprimé"
+        other: "%{success_count}/%{count} dossiers ont été supprimés"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours de suppression"
+        other: "%{success_count}/%{count} dossiers ont été supprimés"
   classer_sans_suite:
     finish:
       text_success:
