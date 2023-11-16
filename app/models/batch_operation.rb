@@ -7,7 +7,8 @@ class BatchOperation < ApplicationRecord
     follow: 'follow',
     passer_en_instruction: 'passer_en_instruction',
     repasser_en_construction: 'repasser_en_construction',
-    unfollow: 'unfollow'
+    unfollow: 'unfollow',
+    supprimer: 'supprimer'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -56,6 +57,8 @@ class BatchOperation < ApplicationRecord
       query.state_en_instruction
     when BatchOperation.operations.fetch(:unfollow) then
       query.with_followers.en_cours
+    when BatchOperation.operations.fetch(:supprimer) then
+      query.state_termine
     end
   end
 
@@ -82,6 +85,8 @@ class BatchOperation < ApplicationRecord
       dossier.repasser_en_construction!(instructeur: instructeur)
     when BatchOperation.operations.fetch(:unfollow)
       instructeur.unfollow(dossier)
+    when BatchOperation.operations.fetch(:supprimer)
+      dossier.hide_and_keep_track!(instructeur, :instructeur_request)
     end
   end
 

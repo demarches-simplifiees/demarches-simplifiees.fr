@@ -35,6 +35,15 @@ en:
       text_success:
         one: "1 is being refused"
         other: "%{success_count}/%{count} files have been refused"
+  supprimer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file has been deleted"
+        other: "%{success_count}/%{count} files have been deleted"
+    in_progress:
+      text_success:
+        one: "1 is being deleted"
+        other: "%{success_count}/%{count} files have been deleted"
   classer_sans_suite:
     finish:
       text_success:
