@@ -114,9 +114,9 @@ describe Expired::UsersDeletionService do
     end
   end
 
-  describe '#expiring_users_without_dossiers' do
+  describe '#expired_users_without_dossiers' do
     let(:dossier) { nil }
-    subject { Expired::UsersDeletionService.new.send(:expiring_users_without_dossiers) }
+    subject { Expired::UsersDeletionService.new.send(:expired_users_without_dossiers) }
 
     context 'when user last_sign_in_at is 1 year ago and has no dossier' do
       let(:user) { create(:user, last_sign_in_at: last_signed_in_not_expired) }
@@ -150,10 +150,10 @@ describe Expired::UsersDeletionService do
     end
   end
 
-  describe '#expiring_users_with_dossiers' do
+  describe '#expired_users_with_dossiers' do
     let(:user) { create(:user, last_sign_in_at: last_signed_in_expired) }
     let(:dossier) { create(:dossier, :brouillon, user:, created_at: last_signed_in_expired) }
-    subject { Expired::UsersDeletionService.new.send(:expiring_users_with_dossiers) }
+    subject { Expired::UsersDeletionService.new.send(:expired_users_with_dossiers) }
 
     context 'when user is not expired' do
       let(:user) { create(:user, last_sign_in_at: last_signed_in_not_expired) }
