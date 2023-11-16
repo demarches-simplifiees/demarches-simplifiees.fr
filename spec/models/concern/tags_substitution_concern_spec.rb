@@ -487,7 +487,7 @@ describe TagsSubstitutionConcern, type: :model do
       ]
     end
 
-    it { is_expected.to eq(["tdc#{procedure.draft_revision.types_de_champ.first.stable_id}", 'numéro du dossier', 'yolo']) }
+    it { is_expected.to eq(["tdc#{procedure.draft_revision.types_de_champ.first.stable_id}", 'dossier_number', 'yolo']) }
   end
 
   describe 'used_type_de_champ_tags' do
