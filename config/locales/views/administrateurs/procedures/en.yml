@@ -23,6 +23,9 @@ en:
           other: "%{count} files « instructing » on this procedure version."
       publication:
         publish_title: Publish your procedure
+        confirmation: Your procedure is now published !
+        copy_url: Copy procedure URL
+        share_link: "To share your procedure, always use the full link below:"
         closed_procedure_html: "This procedure is <strong>closed</strong> and is therefore no longer accessible to the public. You can publish it back"
         draft_changed_procedure_html: "This procedure is already <strong>published</strong>. It has been <strong>edited</strong> since publication. You can publish the changes made in a new version."
         published_procedure_html: "This procedure is <strong>published</strong>, some elements can no longer be modified. To access it you can use the link:"
@@ -35,6 +38,7 @@ en:
         dubious_fields: "Please note that some fields cannot be requested by the administration. Here are the fields that look suspicious to us:"
         click_here: Click here
         back_to_procedure: Return to the procedure page
+        new_procedure: Create a new procedure
       publication_form:
         faq_test_alert: Have you thought about testing your procedure before publishing it? To help you in this test phase, you can
         faq_test_alert_link: consult our best practices guide.
