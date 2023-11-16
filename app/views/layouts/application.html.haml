@@ -38,7 +38,7 @@
 
   %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo number-input' } }.compact }
     = render partial: 'layouts/skiplinks'
-    = render partial: 'layouts/display_modal'
+    = render partial: 'layouts/display_theme_modal'
 
     .page-wrapper
       - if feature_enabled?(:team_on_strike)
