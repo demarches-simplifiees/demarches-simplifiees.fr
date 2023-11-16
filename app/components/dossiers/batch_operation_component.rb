@@ -17,7 +17,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     when Dossier.states.fetch(:en_instruction)
       [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser), BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction)]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
-      [BatchOperation.operations.fetch(:archiver)]
+      [BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:supprimer)]
     else
       []
     end.append(BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow))
@@ -44,6 +44,10 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.archiver"),
               operation: BatchOperation.operations.fetch(:archiver)
+            },
+            {
+              label: t(".operations.supprimer"),
+              operation: BatchOperation.operations.fetch(:supprimer)
             }
           ]
       }
@@ -113,6 +117,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       follow: 'fr-icon-star-line',
       passer_en_instruction: 'fr-icon-edit-line',
       repasser_en_construction: 'fr-icon-draft-line',
+      supprimer: 'fr-icon-delete-line',
       unfollow: 'fr-icon-star-fill'
     }
   end

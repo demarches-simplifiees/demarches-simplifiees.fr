@@ -4,6 +4,7 @@ fr:
     passer_en_instruction: 'Passer les dossiers en instruction'
     instruction: Instruire les dossiers
     accepter: 'Accepter les dossiers'
+    supprimer: 'Supprimer les dossiers'
     accepter_description: Les usagers seront informés que leur dossier a été accepté
     refuser: 'Refuser les dossiers'
     refuser_description: Les usagers seront informés que leur dossier a été refusé

@@ -94,5 +94,16 @@ FactoryBot.define do
         ]
       end
     end
+
+    trait :supprimer do
+      operation { BatchOperation.operations.fetch(:supprimer) }
+      after(:build) do |batch_operation, evaluator|
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        batch_operation.dossiers = [
+          create(:dossier, :with_individual, :accepte, procedure: procedure),
+          create(:dossier, :with_individual, :refuse, procedure: procedure)
+        ]
+      end
+    end
   end
 end
