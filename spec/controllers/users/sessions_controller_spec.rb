@@ -25,7 +25,7 @@ describe Users::SessionsController, type: :controller do
 
     context 'when the credentials are right' do
       it 'signs in' do
-        subject
+        expect { subject }.to change { user.reload.last_sign_in_at }
 
         expect(response).to redirect_to(root_path)
         expect(controller.current_user).to eq(user)

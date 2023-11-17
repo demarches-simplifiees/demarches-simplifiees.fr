@@ -25,8 +25,7 @@ class Dossier < ApplicationRecord
 
   REMAINING_DAYS_BEFORE_CLOSING = 2
   INTERVAL_BEFORE_CLOSING = "#{REMAINING_DAYS_BEFORE_CLOSING} days"
-  REMAINING_WEEKS_BEFORE_EXPIRATION = 2
-  INTERVAL_BEFORE_EXPIRATION = "#{REMAINING_WEEKS_BEFORE_EXPIRATION} weeks"
+  INTERVAL_BEFORE_EXPIRATION = "#{Expired::REMAINING_WEEKS_BEFORE_EXPIRATION} weeks"
   MONTHS_AFTER_EXPIRATION = 1
   DAYS_AFTER_EXPIRATION = 5
   INTERVAL_EXPIRATION = "#{MONTHS_AFTER_EXPIRATION} month #{DAYS_AFTER_EXPIRATION} days"
@@ -625,7 +624,7 @@ class Dossier < ApplicationRecord
   end
 
   def expiration_notification_date
-    expiration_date_with_extension - REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
+    expiration_date_with_extension - Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks
   end
 
   def close_to_expiration?

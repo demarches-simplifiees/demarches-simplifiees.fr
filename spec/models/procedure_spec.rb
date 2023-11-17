@@ -604,7 +604,7 @@ describe Procedure do
 
     it 'should reset duree_conservation_etendue_par_ds' do
       expect(subject.duree_conservation_etendue_par_ds).to eq(false)
-      expect(subject.duree_conservation_dossiers_dans_ds).to eq(Procedure::NEW_MAX_DUREE_CONSERVATION)
+      expect(subject.duree_conservation_dossiers_dans_ds).to eq(Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH)
     end
 
     it 'should duplicate specific objects with different id' do
@@ -1653,6 +1653,43 @@ describe Procedure do
     context 'when not a valid link' do
       let(:lien_dpo) { 'www.démarches-simplifiées.fr' }
       it { expect(procedure.valid?).to be_falsey }
+    end
+  end
+
+  describe 'extend_conservation_for_dossiers' do
+    let(:duree_conservation_dossiers_dans_ds) { 2 }
+    let(:procedure) { create(:procedure, duree_conservation_dossiers_dans_ds:) }
+    let(:expiring_dossier_brouillon) { create(:dossier, :brouillon, procedure: procedure, brouillon_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago) }
+    let(:expiring_dossier_en_construction) { create(:dossier, :en_construction, procedure: procedure, en_construction_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago) }
+    let(:expiring_dossier_en_termine) { create(:dossier, :accepte, procedure: procedure, termine_close_to_expiration_notice_sent_at: duree_conservation_dossiers_dans_ds.months.ago) }
+    let(:not_expiring_dossie) { create(:dossier, :accepte, procedure: procedure, created_at: duree_conservation_dossiers_dans_ds.months.ago) }
+    before do
+      procedure
+      expiring_dossier_brouillon
+      expiring_dossier_en_construction
+      expiring_dossier_en_termine
+      not_expiring_dossie
+    end
+
+    context 'when duree_conservation_dossiers_dans_ds does not changes' do
+      it 'does not enqueues any job' do
+        expect(ResetExpiringDossiersJob).not_to receive(:perform_later)
+        procedure.update!(libelle: 'does not change duree_conservation_dossiers_dans_ds')
+      end
+    end
+
+    context 'when duree_conservation_dossiers_dans_ds decreases' do
+      it 'calls extend_conservation_for_dossiers' do
+        expect(ResetExpiringDossiersJob).not_to receive(:perform_later)
+        procedure.update(duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds - 1)
+      end
+    end
+
+    context 'when duree_conservation_dossiers_dans_ds increases' do
+      it 'calls extend_conservation_for_dossiers' do
+        expect(ResetExpiringDossiersJob).not_to receive(:perform_later)
+        procedure.update(duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds + 1)
+      end
     end
   end
 

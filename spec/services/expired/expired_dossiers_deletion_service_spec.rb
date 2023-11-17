@@ -1,4 +1,4 @@
-describe ExpiredDossiersDeletionService do
+describe Expired::DossiersDeletionService do
   let(:warning_period) { 1.month + 5.days }
   let(:conservation_par_defaut) { 3.months }
   let(:user) { create(:user) }
@@ -6,7 +6,7 @@ describe ExpiredDossiersDeletionService do
   let(:procedure) { create(:procedure, :published, procedure_opts) }
   let(:procedure_2) { create(:procedure, :published, procedure_opts) }
   let(:reference_date) { Date.parse("March 8") }
-  let(:service) { ExpiredDossiersDeletionService.new }
+  let(:service) { Expired::DossiersDeletionService.new }
   describe '#process_expired_dossiers_brouillon' do
     before { Timecop.freeze(reference_date) }
     after  { Timecop.return }

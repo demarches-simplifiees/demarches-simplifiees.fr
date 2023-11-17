@@ -19,7 +19,7 @@ class Procedure < ApplicationRecord
   default_scope -> { kept }
 
   OLD_MAX_DUREE_CONSERVATION = 36
-  NEW_MAX_DUREE_CONSERVATION = ENV.fetch('NEW_MAX_DUREE_CONSERVATION') { 12 }.to_i
+  NEW_MAX_DUREE_CONSERVATION = Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
 
   MIN_WEIGHT = 350000
 
@@ -262,7 +262,7 @@ class Procedure < ApplicationRecord
                                                   numericality: {
                                                     only_integer: true,
                                                     greater_than_or_equal_to: 1,
-                                                    less_than_or_equal_to: 60
+                                                    less_than_or_equal_to: Expired::MAX_DOSSIER_RENTENTION_IN_MONTH
                                                   }
 
   validates_with MonAvisEmbedValidator
@@ -312,6 +312,8 @@ class Procedure < ApplicationRecord
   validate :validate_auto_archive_on_in_the_future, if: :will_save_change_to_auto_archive_on?
 
   before_save :update_juridique_required
+  after_save :extend_conservation_for_dossiers
+
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
   after_create :ensure_defaut_groupe_instructeur
@@ -902,6 +904,15 @@ class Procedure < ApplicationRecord
     if self.path.blank?
       self.path = SecureRandom.uuid
     end
+  end
+
+  def extend_conservation_for_dossiers
+    return if previous_changes.include?(:duree_conservation_dossiers_dans_ds)
+    before, after = duree_conservation_dossiers_dans_ds_previous_change
+    return if [before, after].any?(&:nil?)
+    return if (after - before).negative?
+
+    ResetExpiringDossiersJob.perform_later(self)
   end
 
   def ensure_defaut_groupe_instructeur

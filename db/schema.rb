@@ -1053,8 +1053,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_113317) do
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.integer "failed_attempts", default: 0, null: false
+    t.datetime "inactive_close_to_expiration_notice_sent_at"
     t.datetime "last_sign_in_at", precision: 6
     t.string "last_sign_in_ip"
+
     t.string "locale"
     t.datetime "locked_at", precision: 6
     t.string "loged_in_with_france_connect", default: "false"
@@ -1070,6 +1072,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_113317) do
     t.datetime "updated_at", precision: 6
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["last_sign_in_at"], name: "index_users_on_last_sign_in_at"
     t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true

@@ -176,7 +176,7 @@ class User < ApplicationRecord
     !administrateur? && !instructeur? && !expert?
   end
 
-  def delete_and_keep_track_dossiers_also_delete_user(super_admin)
+  def delete_and_keep_track_dossiers_also_delete_user(super_admin, reason:)
     if !can_be_deleted?
       raise "Cannot delete this user because they are also instructeur, expert or administrateur"
     end
@@ -185,29 +185,29 @@ class User < ApplicationRecord
       # delete invites
       Invite.where(dossier: dossiers).destroy_all
 
-      delete_and_keep_track_dossiers(super_admin)
+      delete_and_keep_track_dossiers(super_admin, reason: :user_removed)
 
       destroy!
     end
   end
 
-  def delete_and_keep_track_dossiers(super_admin)
+  def delete_and_keep_track_dossiers(super_admin, reason:)
     transaction do
       # delete dossiers brouillon
       dossiers.state_brouillon.each do |dossier|
-        dossier.hide_and_keep_track!(dossier.user, :user_removed)
+        dossier.hide_and_keep_track!(dossier.user, reason)
       end
       dossiers.state_brouillon.find_each(&:purge_discarded)
 
       # delete dossiers en_construction
       dossiers.state_en_construction.each do |dossier|
-        dossier.hide_and_keep_track!(dossier.user, :user_removed)
+        dossier.hide_and_keep_track!(dossier.user, reason)
       end
       dossiers.state_en_construction.find_each(&:purge_discarded)
 
       # delete dossiers terminé
       dossiers.state_termine.each do |dossier|
-        dossier.hide_and_keep_track!(dossier.user, :user_removed)
+        dossier.hide_and_keep_track!(dossier.user, reason)
       end
       dossiers.update_all(deleted_user_email_never_send: email, user_id: nil, dossier_transfer_id: nil)
     end

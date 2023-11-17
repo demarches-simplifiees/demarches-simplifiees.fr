@@ -19,7 +19,7 @@
   - c.with_body do
     %p
       = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
-    - if f.object.duree_conservation_dossiers_dans_ds.to_i < Procedure::NEW_MAX_DUREE_CONSERVATION
+    - if f.object.duree_conservation_dossiers_dans_ds.to_i < Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
       %p
         = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
 

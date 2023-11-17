@@ -1,4 +1,4 @@
-class MailRateLimiter
+class Expired::MailRateLimiter
   attr_reader :delay, :current_window
 
   def send_with_delay(mail)
@@ -15,7 +15,7 @@ class MailRateLimiter
 
   private
 
-  def initialize(limit:, window:)
+  def initialize(limit: 200, window: 10.minutes)
     @limit = limit
     @window = window
     @current_window = { started_at: Time.current, sent: 0 }

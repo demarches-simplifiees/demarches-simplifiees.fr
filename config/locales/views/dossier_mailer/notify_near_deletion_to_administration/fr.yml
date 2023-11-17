@@ -14,8 +14,8 @@ fr:
         one: "Le dossier suivant dont le traitement est terminé sera bientôt automatiquement supprimé :"
         other: "Les dossiers suivants dont le traitement est terminé seront bientôt automatiquement supprimés :"
       footer_en_construction:
-        one: "Vous avez <b>deux semaines</b> pour commencer l’instruction du dossier."
-        other: "Vous avez <b>deux semaines</b> pour commencer l’instruction des dossiers."
+        one: "Vous avez <b>%{remaining_weeks_before_expiration}</b> pour commencer l’instruction du dossier."
+        other: "Vous avez <b>%{remaining_weeks_before_expiration}</b> pour commencer l’instruction des dossiers."
       footer_termine:
-        one: "Vous avez <b>deux semaines</b> pour archiver le dossier."
-        other: "Vous avez <b>deux semaines</b> pour archiver les dossiers."
+        one: "Vous avez <b>%{remaining_weeks_before_expiration}</b> pour archiver le dossier."
+        other: "Vous avez <b>%{remaining_weeks_before_expiration}</b> pour archiver les dossiers."
