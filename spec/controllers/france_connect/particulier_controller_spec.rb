@@ -56,6 +56,7 @@ describe FranceConnect::ParticulierController, type: :controller do
           let(:fc_user) { create(:user, email: 'associated_user@a.com') }
 
           it { expect { subject }.not_to change { FranceConnectInformation.count } }
+          it { expect { subject }.to change { fc_user.reload.last_sign_in_at } }
 
           it 'signs in with the fci associated user' do
             subject
