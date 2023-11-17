@@ -23,7 +23,7 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
   def delete_notified_users(users)
     only_notified(users).find_each do |user|
       begin
-        user.delete_and_keep_track_dossiers_also_delete_user(nil)
+        user.delete_and_keep_track_dossiers_also_delete_user(nil, reason: :user_expired)
       rescue => e
         Sentry.capture_exception(e, extra: { user_id: user.id })
       end

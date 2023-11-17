@@ -15,7 +15,7 @@ namespace :support do
     user = User.find_by!(email: user_email)
     administration = Administration.find_by!(email: administration_email)
 
-    user.delete_and_keep_track_dossiers_also_delete_user(administration)
+    user.delete_and_keep_track_dossiers_also_delete_user(administration, reason: :user_removed)
     user.destroy
   end
 
@@ -59,7 +59,7 @@ namespace :support do
 
       # remove all the other dossier from the user side
       rake_puts "hide #{user.reload.dossiers.count} dossiers"
-      user.delete_and_keep_track_dossiers(super_admin)
+      user.delete_and_keep_track_dossiers(super_admin, reason: :user_removed)
 
       owned_procedures, shared_procedures = user.administrateur
         .procedures
