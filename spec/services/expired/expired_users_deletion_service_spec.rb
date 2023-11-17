@@ -165,6 +165,14 @@ describe Expired::UsersDeletionService do
       it { is_expected.to include(user) }
     end
 
+    context 'when user is expired and has a many dossier brouillon' do
+      before do
+        create(:dossier, :brouillon, user:, created_at: last_signed_in_expired)
+        create(:dossier, :brouillon, user:, created_at: last_signed_in_expired)
+      end
+      it { is_expected.to eq([user]) }
+    end
+
     context 'when user is expired and has a dossier en_construction' do
       let(:dossier) { create(:dossier, :en_construction, user:, created_at: last_signed_in_expired) }
       it { is_expected.to include(user) }
@@ -173,6 +181,14 @@ describe Expired::UsersDeletionService do
     context 'when user is expired and has a dossier en_instruction' do
       let(:dossier) { create(:dossier, :en_instruction, user:, created_at: last_signed_in_expired) }
       it { is_expected.not_to include(user) }
+    end
+
+    context 'when user is expired and has a dossier en_instruction plus another one brouillon' do
+      before do
+        create(:dossier, :en_instruction, user:, created_at: last_signed_in_expired)
+        create(:dossier, :brouillon, user:, created_at: last_signed_in_expired)
+      end
+      it { is_expected.to eq([]) }
     end
 
     context 'when user is expired and has a dossier termine' do

@@ -32,16 +32,10 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
 
   # rubocop:disable DS/Unscoped
   def expired_users_with_dossiers
-    users = User.arel_table
-    dossiers = Dossier.arel_table
-
     expired_users
-      .joins(
-        users.join(dossiers, Arel::Nodes::InnerJoin)
-          .on(users[:id].eq(dossiers[:user_id])
-          .and(dossiers[:state].not_eq(Dossier.states.fetch(:en_instruction))))
-          .join_sources
-      )
+      .joins(:dossiers)
+      .group("users.id")
+      .having("NOT 'en_instruction' = ANY(ARRAY_AGG(dossiers.state))")
   end
 
   def expired_users_without_dossiers
