@@ -11,7 +11,9 @@ class Champs::CommuneChamp < Champs::TextChamp
   end
 
   def departement_code_and_name
-    "#{code_departement} – #{departement_name}"
+    if departement?
+      "#{code_departement} – #{departement_name}"
+    end
   end
 
   def departement

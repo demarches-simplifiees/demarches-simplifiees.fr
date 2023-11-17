@@ -568,6 +568,12 @@ class API::V2::StoredQuery
       rnf {
         ...RNFFragment
       }
+      commune {
+        ...CommuneFragment
+      }
+      departement {
+        ...DepartementFragment
+      }
     }
   }
 
