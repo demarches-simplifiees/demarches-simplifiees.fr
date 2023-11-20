@@ -1,0 +1,4 @@
+%li.fr-nav__item.fr-nav__notifiable
+  = link_to t('.news'), release_notes_path, class: "fr-nav__link",'aria-current': current_page?(release_notes_path) ? 'page' : nil
+  - if something_new?
+    %span.notifications{ 'aria-label': t('.something_new') }

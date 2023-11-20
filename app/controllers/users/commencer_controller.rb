@@ -76,6 +76,10 @@ module Users
       retrieve_procedure
     end
 
+    def nav_bar_profile
+      current_user ? :user : :guest
+    end
+
     private
 
     def extra_query_params
