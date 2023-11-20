@@ -1,0 +1,42 @@
+name: Rails Schema Check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'db/migrate/**'
+      - 'db/schema.rb'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'db/migrate/**'
+      - 'db/schema.rb'
+
+jobs:
+  check-migration-and-schema:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2  # Fetch the last 2 commits to be able to compare with the base branch
+
+    - name: Check for migration and schema.rb changes
+      run: |
+        #!/bin/bash
+        set -e
+
+        latest_migration_file=$(ls -v db/migrate/*.rb | tail -n 1)
+        latest_migration_version=$(basename $latest_migration_file | grep -oE '^[0-9]+')
+
+        # Get the schema version, without underscores
+        schema_version=$(grep -oE 'define.version: [0-9_]+' db/schema.rb | cut -d ' ' -f 2 | tr -d _)
+
+        if [ "$latest_migration_version" != "$schema_version" ]; then
+          echo "schema.rb version does not match the latest migration version. Have you forgotten to update the schema.rb?"
+          echo "            SCHEMA VERSION = $schema_version (config/schema.rb)"
+          echo "  LATEST MIGRATION VERSION = $latest_migration_version ($latest_migration_file)"
+          exit 1
+        fi
+

@@ -160,7 +160,7 @@ describe API::V2::GraphqlController do
 
       context 'include Dossiers' do
         def cursor_for(item, column)
-          cursor = [item.read_attribute(column).utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
+          cursor = [item.reload.read_attribute(column).utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
           API::V2::Schema.cursor_encoder.encode(cursor, nonce: true)
         end
 
@@ -456,7 +456,7 @@ describe API::V2::GraphqlController do
 
       context 'include deleted Dossiers' do
         def cursor_for(item)
-          cursor = [item.deleted_at.utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
+          cursor = [item.reload.deleted_at.utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
           API::V2::Schema.cursor_encoder.encode(cursor, nonce: true)
         end
 
@@ -575,7 +575,7 @@ describe API::V2::GraphqlController do
 
       context 'include pending deleted Dossiers' do
         def cursor_for(item)
-          cursor = [(item.en_construction? ? item.hidden_by_user_at : item.hidden_by_administration_at).utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
+          cursor = [(item.reload.en_construction? ? item.hidden_by_user_at : item.hidden_by_administration_at).utc.strftime("%Y-%m-%dT%H:%M:%S.%NZ"), item.id].join(';')
           API::V2::Schema.cursor_encoder.encode(cursor, nonce: true)
         end
 
