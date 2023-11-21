@@ -40,14 +40,14 @@ describe ProcedureStatsConcern do
       let(:delays) { [1.day, 2.days, 2.days, 2.days, 2.days, 3.days, 3.days, 3.days, 3.days, 12.days] }
 
       it 'returns a time representative of the dossier instruction delay' do
-        expect(procedure.usual_traitement_time_for_recent_dossiers(30)[0]).to be_between(1.days, 2.days)
+        expect(procedure.usual_traitement_time_for_recent_dossiers(30)[0]).to be_between(1.day, 2.days)
         expect(procedure.usual_traitement_time_for_recent_dossiers(30)[1]).to be_between(2.days, 3.days)
         expect(procedure.usual_traitement_time_for_recent_dossiers(30)[2]).to be_between(11.days, 12.days)
       end
     end
 
     context 'when there are very old dossiers' do
-      let(:delays) { [1.days, 2.days, 3.days, 3.days, 4.days] }
+      let(:delays) { [1.day, 2.days, 3.days, 3.days, 4.days] }
       let!(:old_dossier) { create_dossier(depose_at: 3.months.ago, en_instruction_at: 2.months.ago, processed_at: 2.months.ago) }
 
       it 'ignores dossiers older than 1 month' do
@@ -58,7 +58,7 @@ describe ProcedureStatsConcern do
     end
 
     context 'when there is a dossier with bad data' do
-      let(:delays) { [1.days, 2.days, 3.days, 3.days, 4.days] }
+      let(:delays) { [1.day, 2.days, 3.days, 3.days, 4.days] }
       let!(:bad_dossier) { create_dossier(depose_at: nil, en_instruction_at: nil, processed_at: 10.days.ago) }
 
       it 'ignores bad dossiers' do
@@ -83,14 +83,14 @@ describe ProcedureStatsConcern do
       let(:delays) { [] }
       before do
         csv = CSV.read(Rails.root.join('spec/fixtures/files/data/treatment-expected-3months.csv'))
-        traitement_times = csv[1..] #strip header
+        traitement_times = csv[1..] # strip header
           .flatten
-          .map{ { processed_at: _1.to_f, depose_at: 0 } }
+          .map { { processed_at: _1.to_f, depose_at: 0 } }
         allow(procedure).to receive(:traitement_times).and_return(traitement_times)
       end
 
       it 'works' do
-        expect(procedure.usual_traitement_time_for_recent_dossiers(30).map {distance_of_time_in_words(_1)}).to eq(["3 mois", "6 mois", "environ un an"])
+        expect(procedure.usual_traitement_time_for_recent_dossiers(30).map { distance_of_time_in_words(_1) }).to eq(["3 mois", "6 mois", "environ un an"])
       end
     end
   end

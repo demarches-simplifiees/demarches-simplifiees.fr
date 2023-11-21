@@ -1,0 +1,10 @@
+- cache(@procedure.id, expires_in: 1.day) do
+  - if estimation_present?
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      - c.body do
+        %p= t('.explanation', percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, nb_recent_dossiers: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS)
+        %ul
+          %li= t('.fast_html', estimation: distance_of_time_in_words(@fastest))
+          %li= t('.mean_html', estimation: distance_of_time_in_words(@mean))
+          %li= t('.slow_html', estimation: distance_of_time_in_words(@slow))
+
