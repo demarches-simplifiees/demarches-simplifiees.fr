@@ -3,6 +3,7 @@ class SidekiqAgainJob < ApplicationJob
   queue_as :default
 
   def perform(user)
+    Sentry.capture_message('this is a message from sidekiq')
     UserMailer.new_account_warning(user).deliver_now
   end
 end
