@@ -61,42 +61,49 @@ module TagsSubstitutionConcern
 
   DOSSIER_TAGS = [
     {
+      id: 'dossier_motivation',
       libelle: 'motivation',
       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
       target: :motivation,
       available_for_states: Dossier::TERMINE
     },
     {
+      id: 'dossier_depose_at',
       libelle: 'date de dépôt',
       description: 'Date de dépôt du dossier par l’usager',
       lambda: -> (d) { format_date(d.depose_at) },
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'dossier_en_instruction_at',
       libelle: 'date de passage en instruction',
       description: '',
       lambda: -> (d) { format_date(d.en_instruction_at) },
       available_for_states: Dossier::INSTRUCTION_COMMENCEE
     },
     {
+      id: 'dossier_processed_at',
       libelle: 'date de décision',
       description: 'Date de la décision d’acceptation, refus, ou classement sans suite',
       lambda: -> (d) { format_date(d.processed_at) },
       available_for_states: Dossier::TERMINE
     },
     {
+      id: 'dossier_procedure_libelle',
       libelle: 'libellé démarche',
       description: '',
       lambda: -> (d) { d.procedure.libelle },
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'dossier_number',
       libelle: 'numéro du dossier',
       description: '',
       target: :id,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'dossier_service_name',
       libelle: 'nom du service',
       description: 'Le nom du service instructeur qui traite le dossier',
       lambda: -> (d) { d.procedure.organisation_name || '' },
@@ -106,18 +113,21 @@ module TagsSubstitutionConcern
 
   DOSSIER_TAGS_FOR_MAIL = [
     {
+      id: 'dossier_url',
       libelle: 'lien dossier',
       description: '',
       lambda: -> (d) { external_link(dossier_url(d)) },
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'dossier_attestation_url',
       libelle: 'lien attestation',
       description: '',
       lambda: -> (d) { external_link(attestation_dossier_url(d)) },
       available_for_states: [Dossier.states.fetch(:accepte)]
     },
     {
+      id: 'dossier_motivation_url',
       libelle: 'lien document justificatif',
       description: '',
       lambda: -> (d) {
@@ -133,18 +143,21 @@ module TagsSubstitutionConcern
 
   INDIVIDUAL_TAGS = [
     {
+      id: 'individual_gender',
       libelle: 'civilité',
       description: 'M., Mme',
       target: :gender,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'individual_first_name',
       libelle: 'nom',
       description: "nom de l'usager",
       target: :nom,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'individual_last_name',
       libelle: 'prénom',
       description: "prénom de l'usager",
       target: :prenom,
@@ -154,30 +167,35 @@ module TagsSubstitutionConcern
 
   ENTREPRISE_TAGS = [
     {
+      id: 'entreprise_siren',
       libelle: 'SIREN',
       description: '',
       target: :siren,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'entreprise_numero_tva_intracommunautaire',
       libelle: 'numéro de TVA intracommunautaire',
       description: '',
       target: :numero_tva_intracommunautaire,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'entreprise_siret_siege_social',
       libelle: 'SIRET du siège social',
       description: '',
       target: :siret_siege_social,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'entreprise_raison_sociale',
       libelle: 'raison sociale',
       description: '',
       target: :raison_sociale,
       available_for_states: Dossier::SOUMIS
     },
     {
+      id: 'entreprise_adresse',
       libelle: 'adresse',
       description: '',
       target: :inline_adresse,
@@ -187,6 +205,7 @@ module TagsSubstitutionConcern
 
   ROUTAGE_TAGS = [
     {
+      id: 'dossier_groupe_instructeur',
       libelle: 'groupe instructeur',
       description: 'Le groupe instructeur en charge du dossier',
       lambda: -> (d) { d.groupe_instructeur&.label },
@@ -194,37 +213,40 @@ module TagsSubstitutionConcern
     }
   ]
 
-  SHARED_TAG_LIBELLES = (DOSSIER_TAGS + DOSSIER_TAGS_FOR_MAIL + INDIVIDUAL_TAGS + ENTREPRISE_TAGS + ROUTAGE_TAGS).map { |tag| tag[:libelle] }
+  SHARED_TAG_IDS = (DOSSIER_TAGS + DOSSIER_TAGS_FOR_MAIL + INDIVIDUAL_TAGS + ENTREPRISE_TAGS + ROUTAGE_TAGS).map { _1[:id] }
+
+  def identity_tags
+    if procedure.for_individual?
+      INDIVIDUAL_TAGS
+    else
+      ENTREPRISE_TAGS
+    end
+  end
+
+  def routage_tags
+    if procedure.routing_enabled?
+      ROUTAGE_TAGS
+    else
+      []
+    end
+  end
 
   def tags
-    if procedure.for_individual?
-      identity_tags = INDIVIDUAL_TAGS
-    else
-      identity_tags = ENTREPRISE_TAGS
-    end
-
-    routage_tags = []
-    if procedure.routing_enabled?
-      routage_tags = ROUTAGE_TAGS
-    end
-
-    filter_tags(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
+    tags_for_dossier_state(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
   def used_type_de_champ_tags(text)
     used_tags_and_libelle_for(text).filter_map do |(tag, libelle)|
-      if !tag.in?(SHARED_TAG_LIBELLES)
-        if tag.start_with?('tdc')
-          [libelle, tag.gsub('tdc', '').to_i]
-        else
-          [tag]
-        end
+      if tag.nil?
+        [libelle]
+      elsif !tag.in?(SHARED_TAG_IDS) && tag.start_with?('tdc')
+        [libelle, tag.gsub(/^tdc/, '').to_i]
       end
     end
   end
 
   def used_tags_for(text)
-    used_tags_and_libelle_for(text).map { |(tag, _)| tag }
+    used_tags_and_libelle_for(text).map { _1.first.nil? ? _1.second : _1.first }
   end
 
   private
@@ -252,7 +274,7 @@ module TagsSubstitutionConcern
     DOSSIER_TAGS
   end
 
-  def filter_tags(tags)
+  def tags_for_dossier_state(tags)
     # Implementation note: emails and attestation generations are generally
     # triggerred by changes to the dossier’s state. The email or attestation
     # is generated right after the dossier has reached its new state.
@@ -302,7 +324,7 @@ module TagsSubstitutionConcern
       [INDIVIDUAL_TAGS, dossier.individual],
       [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
     ].filter_map do |(tags, data)|
-      data && [filter_tags(tags).index_by { _1[:id].presence || _1[:libelle] }, data]
+      data && [tags_for_dossier_state(tags).index_by { _1[:id] }, data]
     end
 
     tags_and_datas.reduce(tokens) do |tokens, (tags, data)|
@@ -337,13 +359,17 @@ module TagsSubstitutionConcern
   end
 
   def procedure_types_de_champ_tags
-    filter_tags(types_de_champ_tags(procedure.types_de_champ_public_for_tags, Dossier::SOUMIS) + types_de_champ_tags(procedure.types_de_champ_private_for_tags, Dossier::INSTRUCTION_COMMENCEE))
+    tags_for_dossier_state(types_de_champ_tags(procedure.types_de_champ_public_for_tags, Dossier::SOUMIS) +
+      types_de_champ_tags(procedure.types_de_champ_private_for_tags, Dossier::INSTRUCTION_COMMENCEE) +
+      identity_tags + dossier_tags + ROUTAGE_TAGS)
   end
 
   def parse_tags(text)
     tags = procedure_types_de_champ_tags.index_by { _1[:libelle] }
 
-    TagsParser.parse(text).map do |token|
+    # MD5 should be enough and it avoids long key
+    tokens = Rails.cache.fetch(["parse_tags_v2", Digest::MD5.hexdigest(text)], expires_in: 1.day) { TagsParser.parse(text) }
+    tokens.map do |token|
       case token
       in { tag: tag } if tags.key?(tag)
         { tag: tag, id: tags.fetch(tag).fetch(:id) }
@@ -354,18 +380,15 @@ module TagsSubstitutionConcern
   end
 
   def used_tags_and_libelle_for(text)
-    # MD5 should be enough and it avoids long key
-    Rails.cache.fetch(["parse_tags", Digest::MD5.hexdigest(text)], expires_in: 1.day) do
-      parse_tags(text).filter_map do |token|
-          case token
-          in { tag: tag, id: id }
-            [id, tag]
-          in { tag: tag }
-            [tag]
-          else
-            nil
-          end
-        end
+    parse_tags(text).filter_map do |token|
+      case token
+      in { tag: tag, id: id }
+        [id, tag]
+      in { tag: tag }
+        [nil, tag]
+      else
+        nil
+      end
     end
   end
 end
