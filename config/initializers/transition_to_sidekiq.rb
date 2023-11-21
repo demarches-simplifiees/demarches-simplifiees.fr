@@ -5,5 +5,9 @@ if Rails.env.production? && sidekiq_enabled
     class ActiveStorage::PurgeJob < ActiveStorage::BaseJob
       self.queue_adapter = :sidekiq
     end
+
+    class VirusScannerJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
