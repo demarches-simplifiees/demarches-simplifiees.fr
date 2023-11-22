@@ -28,7 +28,7 @@ describe RoutingEngine, type: :model do
       context 'without any matching rules' do
         before do
           procedure.groupe_instructeurs.each do |gi|
-            gi.update(routing_rule: ds_eq(constant(false), constant(false)))
+            gi.update(routing_rule: ds_eq(constant(false), constant(true)))
           end
         end
 

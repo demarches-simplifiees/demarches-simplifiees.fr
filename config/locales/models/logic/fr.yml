@@ -14,3 +14,4 @@ fr:
       'Logic::Or': Ou
       'Logic::NotEq': N’est pas
       'Logic::IncludeOperator': Contient
+      'Logic::ExcludeOperator': Ne contient pas
