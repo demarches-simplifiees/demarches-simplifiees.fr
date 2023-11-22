@@ -75,6 +75,8 @@ module Types
           Types::Champs::TitreIdentiteChampType
         when ::Champs::EpciChamp
           Types::Champs::EpciChampType
+        when ::Champs::RNFChamp
+          Types::Champs::RNFChampType
         else
           Types::Champs::TextChampType
         end
