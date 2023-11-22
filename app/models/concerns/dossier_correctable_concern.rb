@@ -9,6 +9,8 @@ module DossierCorrectableConcern
 
     scope :with_pending_corrections, -> { joins(:corrections).where(corrections: { resolved_at: nil }) }
 
+    validate :validate_pending_correction, on: :champs_public_value
+
     def flag_as_pending_correction!(commentaire, reason = nil)
       return unless may_flag_as_pending_correction?
 
@@ -38,9 +40,24 @@ module DossierCorrectableConcern
       pending_corrections.exists?
     end
 
+    def resolve_pending_correction
+      return if pending_correction.nil?
+
+      pending_correction.resolved_at = Time.current
+    end
+
     def resolve_pending_correction!
-      pending_corrections.update!(resolved_at: Time.current)
+      resolve_pending_correction
+      pending_correction&.save!
+
       pending_corrections.reset
+    end
+
+    def validate_pending_correction
+      return unless procedure.sva_svr_enabled?
+      return if pending_correction.nil? || pending_correction.resolved?
+
+      errors.add(:pending_correction, :blank)
     end
 
     private
