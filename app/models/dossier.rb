@@ -447,6 +447,9 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
+  validates :mandataire_first_name, presence: true, if: :for_tiers?
+  validates :mandataire_last_name, presence: true, if: :for_tiers?
+  validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
 
   validates_associated :prefilled_champs_public, on: :champs_public_value
 
@@ -1364,6 +1367,10 @@ class Dossier < ApplicationRecord
 
   def service
     groupe_instructeur&.contact_information || procedure.service
+  end
+
+  def mandataire_full_name
+    "#{mandataire_first_name} #{mandataire_last_name}"
   end
 
   private
