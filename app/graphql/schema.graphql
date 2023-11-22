@@ -568,6 +568,11 @@ enum CorrectionReason {
   Le dossier n’est pas valide et nécessite une correction
   """
   incorrect
+
+  """
+  Le dossier doit être mis à jour et revalidé
+  """
+  outdated
 }
 
 """
