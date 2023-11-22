@@ -12,6 +12,7 @@ class GroupeInstructeurDashboard < Administrate::BaseDashboard
     label: Field::String,
     closed: Field::Boolean,
     instructeurs: Field::HasMany,
+    humanized_routing_rule: Field::String,
     created_at: Field::DateTime,
     updated_at: Field::DateTime
   }.freeze
@@ -32,6 +33,7 @@ class GroupeInstructeurDashboard < Administrate::BaseDashboard
     :label,
     :closed,
     :instructeurs,
+    :humanized_routing_rule,
     :created_at,
     :updated_at
   ].freeze

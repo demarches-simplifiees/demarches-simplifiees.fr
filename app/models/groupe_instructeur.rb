@@ -113,6 +113,10 @@ class GroupeInstructeur < ApplicationRecord
     procedure.groupe_instructeurs - [self]
   end
 
+  def humanized_routing_rule
+    routing_rule&.to_s(procedure.active_revision.types_de_champ)
+  end
+
   private
 
   def routing_rule_matches_tdc?(rule)
