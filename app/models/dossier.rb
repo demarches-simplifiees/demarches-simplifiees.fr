@@ -1226,11 +1226,11 @@ class Dossier < ApplicationRecord
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
     end
 
-    if procedure.chorusable? && procedure.chorus.complete?
+    if procedure.chorusable? && procedure.chorus_configuration.complete?
       columns += [
-        ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel.code],
-        ['Référentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation.code],
-        ['Centre De Coup', procedure.chorus_configuration.centre_de_cout.code]
+        ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' }],
+        ['Référentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation&.fetch("code") { '' }],
+        ['Centre De Coup', procedure.chorus_configuration.centre_de_cout&.fetch("code") { '' }]
       ]
     end
     columns += [
