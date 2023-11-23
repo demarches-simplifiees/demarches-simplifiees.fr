@@ -564,6 +564,11 @@ class API::V2::StoredQuery
         ...PersonneMoraleFragment
       }
     }
+    ... on RNFChamp {
+      rnf {
+        ...RNFFragment
+      }
+    }
   }
 
   fragment PersonneMoraleFragment on PersonneMorale {
@@ -664,6 +669,14 @@ class API::V2::StoredQuery
     name
     code
     postalCode
+  }
+
+  fragment RNFFragment on RNF {
+    id
+    title
+    address {
+      ...AddressFragment
+    }
   }
 
   fragment PageInfoFragment on PageInfo {
