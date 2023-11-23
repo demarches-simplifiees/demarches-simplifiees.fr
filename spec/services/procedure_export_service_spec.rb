@@ -92,6 +92,10 @@ describe ProcedureExportService do
           "cojo",
           "expression_reguliere",
           "rnf",
+          "rnf (Nom)",
+          "rnf (Adresse)",
+          "rnf (Code insee Ville)",
+          "rnf (Département)",
           "engagement_juridique"
         ]
       end
@@ -221,6 +225,10 @@ describe ProcedureExportService do
           "cojo",
           "expression_reguliere",
           "rnf",
+          "rnf (Nom)",
+          "rnf (Adresse)",
+          "rnf (Code insee Ville)",
+          "rnf (Département)",
           "engagement_juridique"
         ]
       end
@@ -318,6 +326,10 @@ describe ProcedureExportService do
             "cojo",
             "expression_reguliere",
             "rnf",
+            "rnf (Nom)",
+            "rnf (Adresse)",
+            "rnf (Code insee Ville)",
+            "rnf (Département)",
             "engagement_juridique"
           ]
         end

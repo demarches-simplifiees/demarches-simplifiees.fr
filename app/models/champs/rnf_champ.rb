@@ -20,4 +20,12 @@ class Champs::RNFChamp < Champ
   def blank?
     rnf_id.blank?
   end
+
+  def for_export
+    if data
+      [rnf_id, data['title'], data.dig('address', 'label'), data.dig('address', 'cityCode'), "#{data['department']} - #{APIGeoService.departement_name(data['department'])}"]
+    else
+      [rnf_id, nil, nil, nil, nil]
+    end
+  end
 end
