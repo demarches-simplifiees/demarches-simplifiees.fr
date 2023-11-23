@@ -80,7 +80,7 @@ module TPS
 
     config.ds_zonage_enabled = ENV.fetch("ZONAGE_ENABLED", nil) == "enabled"
 
-    config.skylight.probes += [:graphql]
+    config.skylight.probes += [:graphql, :active_job]
 
     # Custom Configuration
     # @see https://guides.rubyonrails.org/configuring.html#custom-configuration
