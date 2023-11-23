@@ -34,7 +34,8 @@ describe 'Creating a new procedure', js: true do
       visit champs_admin_procedure_path(procedure)
 
       add_champ
-      remove_flash_message
+      hide_autonotice_message
+
       fill_in 'Libellé du champ', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
@@ -51,7 +52,7 @@ describe 'Creating a new procedure', js: true do
 
       # Add an empty repetition type de champ
       add_champ
-      remove_flash_message
+      hide_autonotice_message
       select('Bloc répétable', from: 'Type de champ')
       fill_in 'Libellé du champ', with: 'libellé de champ'
       blur

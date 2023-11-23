@@ -81,6 +81,11 @@ module SystemHelpers
     execute_script("document.querySelector('#autosave-notice').remove();")
   end
 
+  def hide_autonotice_message
+    expect(page).to have_text('Formulaire enregistré')
+    execute_script("document.querySelector('#autosave-notice').classList.add('hidden');")
+  end
+
   def blur
     page.find('body').click
   end
