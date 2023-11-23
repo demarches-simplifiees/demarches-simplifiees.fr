@@ -19,4 +19,5 @@
             %li
               = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--secondary'
         .fr-ml-auto
+          #autosave-notice.hidden
           = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @procedure.draft_revision, is_annotation: false)
