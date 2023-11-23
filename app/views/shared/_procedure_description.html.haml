@@ -55,19 +55,13 @@
         #accordion-116.fr-collapse
           - if procedure.pieces_jointes_list_without_conditionnal.present?
             %ul
-              - procedure.pieces_jointes_list_without_conditionnal.each do |pj|
-                %li
-                  = pj.libelle
-                  = t('utils.no_mandatory') if !pj.mandatory?
+              = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_without_conditionnal, as: :pj
 
           - if procedure.pieces_jointes_list_with_conditionnal.present?
             %h3.fr-text--sm.fr-mb-0.fr-mt-2w
               = t('shared.procedure_description.pieces_jointes_conditionnal_list_title')
             %ul
-              - procedure.pieces_jointes_list_with_conditionnal.each do |pj|
-                %li
-                  = pj.libelle
-                  = t('utils.no_mandatory') if !pj.mandatory?
+              = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_with_conditionnal, as: :pj
 
     - if @usual_traitement_time.present?
       %section.fr-accordion

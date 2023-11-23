@@ -1693,6 +1693,32 @@ describe Procedure do
     end
   end
 
+  describe '#pieces_jointes_list' do
+    include Logic
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :integer_number, stable_id: 900 },
+        { type: :piece_justificative, libelle: "PJ", mandatory: true, stable_id: 910 },
+        { type: :piece_justificative, libelle: "PJ-cond", mandatory: true, stable_id: 911, condition: ds_eq(champ_value(900), constant(1)) },
+        { type: :repetition, libelle: "Répétition", stable_id: 920, children: [{ type: :piece_justificative, libelle: "PJ2", stable_id: 921 }] }
+      ]
+    end
+
+    let(:pj1) { procedure.active_revision.types_de_champ.find { _1.stable_id == 910 } }
+    let(:pjcond) { procedure.active_revision.types_de_champ.find { _1.stable_id == 911 } }
+    let(:repetition) { procedure.active_revision.types_de_champ.find { _1.stable_id == 920 } }
+    let(:pj2) { procedure.active_revision.types_de_champ.find { _1.stable_id == 921 } }
+
+    it "returns the list of pieces jointes without conditional" do
+      expect(procedure.pieces_jointes_list_without_conditionnal).to match_array([[pj1], [pj2, repetition]])
+    end
+
+    it "returns the list of pieces jointes having conditional" do
+      expect(procedure.pieces_jointes_list_with_conditionnal).to match_array([[pjcond]])
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
