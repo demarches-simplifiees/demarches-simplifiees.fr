@@ -7,6 +7,8 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:instructeurs) { [instructeur] }
   let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+  let(:dossier_for_tiers) { create(:dossier, :en_construction, :for_tiers_with_notification, procedure: procedure) }
+  let(:dossier_for_tiers_without_notif) { create(:dossier, :en_construction, :for_tiers_without_notification, procedure: procedure) }
   let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
   before { sign_in(instructeur.user) }
@@ -333,6 +335,58 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
+    context "with for_tiers" do
+      before do
+        dossier_for_tiers.passer_en_instruction!(instructeur: instructeur)
+        sign_in(instructeur.user)
+      end
+      context 'without continuation' do
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier_for_tiers.id }, format: :turbo_stream }
+
+        it 'Notification email is sent' do
+          expect(NotificationMailer).to receive(:send_sans_suite_notification)
+            .with(dossier_for_tiers).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          expect(NotificationMailer).to receive(:send_notification_for_tiers)
+            .with(dossier_for_tiers).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          subject
+        end
+
+        it '2 emails are sent' do
+          expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(2)
+        end
+      end
+    end
+
+    context "with for_tiers_without_notif" do
+      before do
+        dossier_for_tiers_without_notif.passer_en_instruction!(instructeur: instructeur)
+        sign_in(instructeur.user)
+      end
+      context 'without continuation' do
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure.id, dossier_id: dossier_for_tiers_without_notif.id }, format: :turbo_stream }
+
+        it 'Notification email is sent' do
+          expect(NotificationMailer).to receive(:send_sans_suite_notification)
+            .with(dossier_for_tiers_without_notif).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          expect(NotificationMailer).to receive(:send_notification_for_tiers)
+            .with(dossier_for_tiers_without_notif).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          subject
+        end
+
+        it 'only one email is sent' do
+          expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(1)
+        end
+      end
+    end
+
     context "with classer_sans_suite" do
       before do
         dossier.passer_en_instruction!(instructeur: instructeur)
@@ -353,6 +407,9 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(NotificationMailer).to receive(:send_sans_suite_notification)
             .with(dossier).and_return(NotificationMailer)
           expect(NotificationMailer).to receive(:deliver_later)
+
+          expect(NotificationMailer).not_to receive(:send_notification_for_tiers)
+            .with(dossier)
 
           subject
         end

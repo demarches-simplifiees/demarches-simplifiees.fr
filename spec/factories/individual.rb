@@ -12,5 +12,14 @@ FactoryBot.define do
       prenom { nil }
       birthdate { nil }
     end
+
+    trait :with_notification do
+      notification_method { :email }
+      email { 'julien.xavier@test.com' }
+    end
+
+    trait :without_notification do
+      notification_method { :no_notification }
+    end
   end
 end
