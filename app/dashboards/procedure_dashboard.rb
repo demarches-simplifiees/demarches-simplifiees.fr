@@ -16,7 +16,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     administrateurs: Field::HasMany,
     instructeurs: Field::HasMany,
     groupe_instructeurs: Field::HasMany,
-    routing_champs: Field::String,
+    routing_champs: Field::Text,
     id: Field::Number.with_options(searchable: true),
     libelle: Field::String,
     description: Field::String,
