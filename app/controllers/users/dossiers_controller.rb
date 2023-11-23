@@ -128,7 +128,7 @@ module Users
       @dossier = dossier
       @no_description = true
 
-      if @dossier.update(dossier_params)
+      if @dossier.update(dossier_params) && @dossier.individual.valid?
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
@@ -138,7 +138,7 @@ module Users
           redirect_to brouillon_dossier_path(@dossier)
         end
       else
-        flash.now.alert = @dossier.individual.errors.full_messages
+        flash.now.alert = @dossier.individual.errors.full_messages + @dossier.errors.full_messages
         render :identite
       end
     end

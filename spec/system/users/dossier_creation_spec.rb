@@ -22,8 +22,8 @@ describe 'Creating a new dossier:' do
         expect(page).to have_title(libelle)
 
         find('label', text: 'Monsieur').click
-        fill_in('Prénom', with: 'Prenom')
-        fill_in('Nom', with: 'Nom')
+        fill_in('dossier[individual_attributes][prenom]', with: 'prenom', visible: true)
+        fill_in('dossier[individual_attributes][nom]', with: 'prenom', visible: true)
       end
 
       shared_examples 'the user can create a new draft' do

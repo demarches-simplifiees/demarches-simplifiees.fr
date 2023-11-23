@@ -267,8 +267,8 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Monsieur').click
-        fill_in('Prénom', with: 'prenom')
-        fill_in('Nom', with: 'nom')
+        fill_in('indiv_first_name', with: 'prenom', visible: true)
+        fill_in('indiv_last_name', with: 'nom', visible: true)
 
         click_button('Continuer')
 
@@ -325,8 +325,8 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Monsieur').click
-        fill_in('Prénom', with: 'Georges')
-        fill_in('Nom', with: 'Moustaki')
+        fill_in('indiv_first_name', with: 'Georges', visible: true)
+        fill_in('indiv_last_name', with: 'Moustaki', visible: true)
 
         click_button('Continuer')
 
@@ -398,8 +398,8 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Madame').click
-        fill_in('Prénom', with: 'Dubois')
-        fill_in('Nom', with: 'Angela Claire Louise')
+        fill_in('indiv_first_name', with: 'Dubois', visible: true)
+        fill_in('indiv_last_name', with: 'Angela Claire Louise', visible: true)
 
         click_button('Continuer')
 
@@ -461,8 +461,8 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Madame').click
-        fill_in('Nom', with: 'FERRI')
-        fill_in('Prénom', with: 'Karine')
+        fill_in('indiv_last_name', with: 'FERRI', visible: true)
+        fill_in('indiv_first_name', with: 'Karine', visible: true)
 
         click_button('Continuer')
 

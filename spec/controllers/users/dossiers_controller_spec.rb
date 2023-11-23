@@ -164,7 +164,7 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
-    subject { post :update_identite, params: { id: dossier.id, individual: individual_params } }
+    subject { post :update_identite, params: { id: dossier.id, dossier: dossier_params } }
 
     before do
       sign_in(user)
@@ -174,7 +174,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with correct individual and dossier params' do
-      let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
+      let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
 
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
@@ -184,7 +184,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'when the identite cannot be updated by the user' do
       let(:dossier) { create(:dossier, :with_individual, :en_instruction, user: user, procedure: procedure) }
-      let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
+      let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
 
       it 'redirects to the dossiers list' do
         expect(response).to redirect_to(dossier_path(dossier))
@@ -193,7 +193,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with incorrect individual and dossier params' do
-      let(:individual_params) { { gender: '', nom: '', prenom: '' } }
+      let(:dossier_params) { { individual_attributes: { gender: '', nom: '', prenom: '' } } }
 
       it do
         expect(response).not_to have_http_status(:redirect)
