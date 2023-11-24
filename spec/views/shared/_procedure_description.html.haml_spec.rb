@@ -48,7 +48,9 @@ describe 'shared/_procedure_description', type: :view do
   end
 
   context 'when procedure has usual_traitement_time' do
-    before { assign(:usual_traitement_time, 1.day) }
+    before do
+      allow(procedure).to receive(:stats_usual_traitement_time).and_return(1.day)
+    end
 
     it 'shows a usual traitement text' do
       subject
@@ -103,6 +105,24 @@ describe 'shared/_procedure_description', type: :view do
         expect(rendered).to have_text('dans les 2 semaines')
         expect(rendered).to have_text("16 janvier 2023")
       end
+    end
+  end
+
+  context 'caching', caching: true do
+    it "works" do
+      expect(procedure).to receive(:pieces_jointes_list?).once
+      2.times { render partial: 'shared/procedure_description', locals: { procedure: } }
+    end
+
+    it 'cache_key depends of revision' do
+      render partial: 'shared/procedure_description', locals: { procedure: }
+      expect(rendered).not_to have_text('new pj')
+
+      procedure.draft_revision.add_type_de_champ(type_champ: :piece_justificative, libelle: 'new pj')
+      procedure.publish_revision!
+
+      render partial: 'shared/procedure_description', locals: { procedure: }
+      expect(rendered).to have_text('new pj')
     end
   end
 end

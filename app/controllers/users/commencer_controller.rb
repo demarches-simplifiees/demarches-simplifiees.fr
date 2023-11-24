@@ -25,8 +25,6 @@ module Users
         @preview_dossiers = @dossiers.take(3)
       end
 
-      @usual_traitement_time = @procedure.stats_usual_traitement_time
-
       render 'commencer/show'
     end
 

@@ -24,53 +24,54 @@
 
 - unless @no_description
   .fr-accordions-group.fr-mb-3w
-    %section.fr-accordion
-      %h2.fr-accordion__title
-        %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" }
-          = t('activerecord.attributes.procedure.description')
-      #accordion-114.fr-collapse
-        = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
-
-    - if procedure.description_target_audience.present?
+    - cache [procedure, "description"] do
       %section.fr-accordion
         %h2.fr-accordion__title
-          %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" }
-            = t('activerecord.attributes.procedure.description_target_audience')
-        #accordion-115.fr-collapse
-          = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)
+          %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" }
+            = t('activerecord.attributes.procedure.description')
+        #accordion-114.fr-collapse
+          = h render SimpleFormatComponent.new(procedure.description, allow_a: true)
 
-    - if procedure.description_pj.present?
-      %section.fr-accordion.pieces_jointes
-        %h2.fr-accordion__title
-          %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
-            = t('shared.procedure_description.pieces_jointes')
-        #accordion-116.fr-collapse
-          = h render SimpleFormatComponent.new(procedure.description_pj, allow_a: true)
+      - if procedure.description_target_audience.present?
+        %section.fr-accordion
+          %h2.fr-accordion__title
+            %button.fr-accordion__btn{ "aria-controls" => "accordion-115", "aria-expanded" => "false" }
+              = t('activerecord.attributes.procedure.description_target_audience')
+          #accordion-115.fr-collapse
+            = h render SimpleFormatComponent.new(procedure.description_target_audience, allow_a: true)
 
-    - elsif procedure.pieces_jointes_list?
-      %section.fr-accordion.pieces_jointes
-        %h2.fr-accordion__title
-          %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
-            = t('shared.procedure_description.pieces_jointes')
-        #accordion-116.fr-collapse
-          - if procedure.pieces_jointes_list_without_conditionnal.present?
-            %ul
-              = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_without_conditionnal, as: :pj
+      - if procedure.description_pj.present?
+        %section.fr-accordion.pieces_jointes
+          %h2.fr-accordion__title
+            %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
+              = t('shared.procedure_description.pieces_jointes')
+          #accordion-116.fr-collapse
+            = h render SimpleFormatComponent.new(procedure.description_pj, allow_a: true)
 
-          - if procedure.pieces_jointes_list_with_conditionnal.present?
-            %h3.fr-text--sm.fr-mb-0.fr-mt-2w
-              = t('shared.procedure_description.pieces_jointes_conditionnal_list_title')
-            %ul
-              = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_with_conditionnal, as: :pj
+      - elsif procedure.pieces_jointes_list?
+        %section.fr-accordion.pieces_jointes
+          %h2.fr-accordion__title
+            %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
+              = t('shared.procedure_description.pieces_jointes')
+          #accordion-116.fr-collapse
+            - if procedure.pieces_jointes_list_without_conditionnal.present?
+              %ul
+                = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_without_conditionnal, as: :pj
 
-    - if @usual_traitement_time.present?
+            - if procedure.pieces_jointes_list_with_conditionnal.present?
+              %h3.fr-text--sm.fr-mb-0.fr-mt-2w
+                = t('shared.procedure_description.pieces_jointes_conditionnal_list_title')
+              %ul
+                = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_with_conditionnal, as: :pj
+
+    - if procedure.stats_usual_traitement_time
       %section.fr-accordion
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-117", "aria-expanded" => "false" }
             = t('shared.procedure_description.usual_traitement_time_title')
 
         #accordion-117.fr-collapse
-          = t('shared.procedure_description.usual_traitement_time_detail_html', traitement_time: distance_of_time_in_words(@usual_traitement_time), percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, days: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS, href: statistiques_path(procedure.path) )
+          = t('shared.procedure_description.usual_traitement_time_detail_html', traitement_time: distance_of_time_in_words(procedure.stats_usual_traitement_time), percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, days: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS, href: statistiques_path(procedure.path) )
 
 
     - if procedure.persisted? && procedure.estimated_duration_visible?
