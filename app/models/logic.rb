@@ -92,7 +92,7 @@ module Logic
 
   def constant(value) = Logic::Constant.new(value)
 
-  def champ_value(stable_id) = Logic::ChampValue.new(stable_id)
+  def champ_value(stable_id, territory = nil) = Logic::ChampValue.new(stable_id, territory)
 
   def empty = Logic::Empty.new
 

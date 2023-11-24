@@ -21,10 +21,11 @@ class Logic::ChampValue < Logic::Term
     unmanaged: :unmanaged
   }
 
-  attr_reader :stable_id
+  attr_reader :stable_id, :territory
 
-  def initialize(stable_id)
+  def initialize(stable_id, territory = nil)
     @stable_id = stable_id
+    @territory = territory
   end
 
   def sources
@@ -38,19 +39,21 @@ class Logic::ChampValue < Logic::Term
     return nil if targeted_champ.blank? & !targeted_champ.drop_down_other?
 
     # on dépense 22ms ici, à cause du map, mais on doit pouvoir passer par un champ type
-    case targeted_champ.type
-    when "Champs::YesNoChamp",
-      "Champs::CheckboxChamp"
+    if ["Champs::YesNoChamp", "Champs::CheckboxChamp"].include?(targeted_champ.type)
       targeted_champ.true?
-    when "Champs::IntegerNumberChamp", "Champs::DecimalNumberChamp"
+    elsif ["Champs::IntegerNumberChamp", "Champs::DecimalNumberChamp"].include?(targeted_champ.type)
       targeted_champ.for_api
-    when "Champs::DropDownListChamp"
+    elsif targeted_champ.type == "Champs::DropDownListChamp"
       targeted_champ.selected
-    when "Champs::MultipleDropDownListChamp"
+    elsif targeted_champ.type == "Champs::MultipleDropDownListChamp"
       targeted_champ.selected_options
-    when "Champs::DepartementChamp", "Champs::RegionChamp"
+    elsif (targeted_champ.type == "Champs::DepartementChamp") && (territory == 'region')
+      targeted_champ.code_region
+    elsif (targeted_champ.type == "Champs::DepartementChamp")
       targeted_champ.code
-    when "Champs::CommuneChamp", "Champs::EpciChamp"
+    elsif targeted_champ.type == "Champs::RegionChamp"
+      targeted_champ.code
+    elsif ["Champs::CommuneChamp", "Champs::EpciChamp"].include?(targeted_champ.type)
       targeted_champ.code_departement
     end
   end

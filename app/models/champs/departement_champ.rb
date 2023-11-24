@@ -30,6 +30,10 @@ class Champs::DepartementChamp < Champs::TextChamp
     external_id || APIGeoService.departement_code(name)
   end
 
+  def code_region
+    APIGeoService.region_code_by_departement(name)
+  end
+
   def name
     maybe_code_and_name = value&.match(/^(\w{2,3}) - (.+)/)
     if maybe_code_and_name
