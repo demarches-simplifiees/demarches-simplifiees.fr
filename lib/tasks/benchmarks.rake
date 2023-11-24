@@ -78,6 +78,11 @@ namespace :benchmarks do
   #
   #     Attention : penser à refaire les étapes 1 et 2 sur la seconde branche !
   #
+  # 5.  Pour passer des paramètres d'urls, utiliser la variable d'environnement `PARAMS`
+  #     sous forme key=value, séparables par des virgules :
+  #
+  #     rake benchmarks:action[Users::CommencerController,commencer,commencer] PARAMS=path=my-demarche,other=value
+  #
   desc "Benchmark a Rails action"
   task :action, [:controller, :action1, :action2] => :environment do |_, args|
     require 'benchmark/ips'
@@ -97,6 +102,13 @@ namespace :benchmarks do
       controller.request = ActionDispatch::TestRequest.create
       controller.response = ActionDispatch::TestResponse.new
       controller.request.env['warden'] = warden
+
+      params = ENV.fetch("PARAMS") { "" }.split(",")
+      params.each do |param|
+        key, value = param.split("=")
+        controller.params[key.strip] = value.strip
+      end
+
       controller
     end
 
