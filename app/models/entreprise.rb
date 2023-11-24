@@ -22,6 +22,7 @@ class Entreprise < Hashie::Dash
   property :date_creation, default: nil
   property :nom, default: nil
   property :prenom, default: nil
+  property :enseigne, default: nil
 
   property :inline_adresse
 end

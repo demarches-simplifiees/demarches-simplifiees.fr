@@ -133,7 +133,8 @@ class Etablissement < ApplicationRecord
       etat_administratif: entreprise_etat_administratif,
       nom: entreprise_nom,
       prenom: entreprise_prenom,
-      inline_adresse: inline_adresse
+      inline_adresse: inline_adresse,
+      enseigne: enseigne
     )
   end
 
