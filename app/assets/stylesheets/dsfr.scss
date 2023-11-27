@@ -138,3 +138,25 @@ button.fr-tag-bug {
     align-items: flex-end;
   }
 }
+
+
+// improve readability in Windows High Contrast Mode
+@media screen and (forced-colors: active) {
+  .fr-input,
+  .fr-select,
+  .fr-btn {
+    border: 2px solid var(--border-action-high-grey);
+  }
+
+  .fr-radio-group input[type="radio"] {
+    opacity: 1;
+  }
+
+  .fr-tabs__tab[aria-selected=true]:not(:disabled) {
+    border: 5px solid var(--border-action-high-grey);
+  }
+
+  .fr-tabs__tab {
+    border: 2px solid var(--border-action-high-grey);
+  }
+}
