@@ -143,4 +143,12 @@ module ApplicationHelper
   def download_details(attachment)
     "#{attachment.filename.extension.upcase} – #{number_to_human_size(attachment.byte_size)}"
   end
+
+  def dsfr_icon(classes, *options)
+    sm = options.include?(:sm)
+    mr = options.include?(:mr)
+
+    tag.span(class: class_names(classes, 'fr-icon--sm': sm, 'fr-mr-1v': mr),
+             "aria-hidden" => true)
+  end
 end

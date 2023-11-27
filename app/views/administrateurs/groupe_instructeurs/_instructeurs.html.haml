@@ -28,7 +28,7 @@
       - instructeurs.each do |instructeur|
         %tr
           %td
-            %span.icon.person
+            = dsfr_icon('fr-icon-user-fill')
             #{instructeur.email}
 
           - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"

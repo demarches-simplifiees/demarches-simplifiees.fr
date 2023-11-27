@@ -43,11 +43,10 @@
                   = procedure.auto_archive_on.strftime('%d/%m/%Y')
 
             %div
+              = dsfr_icon('fr-icon-team-fill')
               - if procedure.routing_enabled?
-                %span.icon.person
                 %span.fr-badge= procedure.groupe_instructeurs.count
               - else
-                %span.icon.person
                 %span.fr-badge= procedure.instructeurs.count
 
               %span.icon.folder.fr-ml-1w
