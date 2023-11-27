@@ -26,6 +26,13 @@ as well as a link to its edit page.
       (Supprimé)
     <% end %>
   </h1>
+  <div>
+    <%= link_to(
+      "Transférer le dossier",
+      [:transfer_edit, namespace, page.resource],
+      class: "button",
+    ) if valid_action? :transfer_edit %>
+  </div>
 </header>
 
 <section class="main-content__body">

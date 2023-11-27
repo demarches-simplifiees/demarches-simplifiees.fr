@@ -69,7 +69,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :dossiers, only: [:show]
+    resources :dossiers, only: [:show] do
+      get 'transfer_edit', on: :member
+      post 'transfer', on: :member
+    end
 
     resources :bill_signatures, only: [:index]
 

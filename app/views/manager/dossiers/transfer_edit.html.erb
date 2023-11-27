@@ -1,0 +1,46 @@
+<% content_for(:title) { "Transfert d'un dossier vers un autre utilisateur" } %>
+
+<header class="main-content__header" role="banner">
+  <h1 class="main-content__page-title">
+    <%= content_for(:title) %>
+  </h1>
+
+</header>
+
+<section class="main-content__body">
+  <dl>
+    <dt class="attribute-label" id="user">User</dt>
+
+    <dd class="attribute-data attribute-data--belongs-to">
+      <%= link_to @dossier.user.email, manager_user_path(@dossier.user) %>
+    </dd>
+
+    <dt class="attribute-label" id="text_summary">Text summary</dt>
+
+    <dd class="attribute-data attribute-data--string">
+        <%= @dossier.text_summary %>
+    </dd>
+
+    <dt class="attribute-label" id="state">State</dt>
+
+    <dd class="attribute-data attribute-data--enum">
+      <%= dossier_display_state(@dossier) %>
+    </dd>
+  </dl>
+</section>
+<section>
+  <%= form_for([namespace, DossierTransfer.new], method: :post, url: transfer_manager_dossier_path(@dossier), html: { class: "form" }) do |f| %>
+    <div class="field-unit field-unit--string field-unit--optional">
+      <div class="field-unit__label">
+        <label for="user_email">A qui souhaitez-vous transferer le dossier ?</label>
+      </div>
+      <div class="field-unit__field">
+        <input type="text" name="email"  required placeholder="chouette.gars@laposte.net">
+      </div>
+
+    </div>
+    <div class="form-actions">
+      <%= f.submit "Transférer le dossier" %>
+    </div>
+  <% end %>
+</section>
