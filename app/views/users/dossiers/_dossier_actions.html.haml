@@ -31,13 +31,13 @@
     - if has_new_dossier_action
       - menu.with_item do
         = link_to(commencer_url(dossier.procedure.path), role: 'menuitem') do
-          %span.icon.new-folder
+          = dsfr_icon('fr-icon-file-fill', :sm)
           .dropdown-description
             = t('views.users.dossiers.dossier_action.start_other_dossier')
 
       - menu.with_item do
         = link_to(clone_dossier_path(dossier), method: :post, role: 'menuitem') do
-          %span.icon.new-folder
+          = dsfr_icon('fr-icon-file-copy-line', :sm)
           .dropdown-description
             = t('views.users.dossiers.dossier_action.clone')
 
