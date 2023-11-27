@@ -770,11 +770,8 @@ describe ProcedureRevision do
       end
     end
 
-    describe 'caching behavior' do
+    describe 'caching behavior', caching: true do
       let(:procedure) { create(:procedure, :published, types_de_champ_public: types_de_champ_public) }
-
-      before { Rails.cache = ActiveSupport::Cache::MemoryStore.new }
-      after { Rails.cache = ActiveSupport::Cache::NullStore.new }
 
       context 'when a type de champ belonging to a draft revision is updated' do
         let(:draft_revision) { procedure.draft_revision }
