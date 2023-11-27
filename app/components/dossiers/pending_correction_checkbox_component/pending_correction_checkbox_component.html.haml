@@ -1,0 +1,10 @@
+.fr-checkbox-group.fr-my-3w{ class: class_names("fr-checkbox-group--error" => error?) }
+  = check_box_tag field_name(:dossier, :pending_correction), "1", false, form: "form-submit-en-construction", required: true, aria: check_box_aria_attributes
+  %label.fr-label{ for: :dossier_pending_correction }
+    = t('.confirm_label')
+    = render EditableChamp::AsteriskMandatoryComponent.new
+
+  - if error?
+    #dossier_pending_correction_error_messages.fr-messages-group{ aria: { live: "assertlive" } }
+      %p.fr-message.fr-message--error= error_message
+

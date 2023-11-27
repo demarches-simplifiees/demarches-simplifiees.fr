@@ -8,6 +8,7 @@ en:
       dossier:
         id: "File number"
         state: "State"
+        pending_correction: Requested correction
       dossier/state: &state
         brouillon: "Draft"
         en_construction: "In progress"
@@ -24,3 +25,9 @@ en:
         state: "State"
       traitement/state:
         <<: *state
+    errors:
+      models:
+        dossier:
+          attributes:
+            pending_correction:
+              blank: Check to confirm that you have made the requested corrections.
