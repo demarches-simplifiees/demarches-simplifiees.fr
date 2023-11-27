@@ -58,6 +58,14 @@ describe 'user access to the list of their dossiers', js: true do
     end
   end
 
+  context 'when the dossier is for_tiers' do
+    let(:dossier) { create(:dossier, :for_tiers_without_notification, user: user) }
+    let(:individual) { dossier.individual }
+    it 'displays the name of the mandataire' do
+      expect(page).to have_content("#{individual.prenom} #{individual.nom}, dossier rempli par le mandataire #{dossier.mandataire_full_name}")
+    end
+  end
+
   context 'when user uses filter' do
     scenario 'user filters state on tab "en-cours"' do
       expect(page).to have_text('5 en cours')

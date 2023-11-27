@@ -22,8 +22,8 @@ describe 'Creating a new dossier:' do
         expect(page).to have_title(libelle)
 
         find('label', text: 'Monsieur').click
-        fill_in('dossier[individual_attributes][prenom]', with: 'prenom', visible: true)
-        fill_in('dossier[individual_attributes][nom]', with: 'prenom', visible: true)
+        fill_in('indiv_first_name', with: 'prenom')
+        fill_in('indiv_last_name', with: 'nom')
       end
 
       shared_examples 'the user can create a new draft' do
@@ -59,6 +59,44 @@ describe 'Creating a new dossier:' do
         let(:ask_birthday) { false }
         let(:expected_birthday) { nil }
         it_behaves_like 'the user can create a new draft'
+      end
+    end
+
+    context 'when identifying as mandataire' do
+      let(:libelle) { "[title] with characters to escape : '@*^$" }
+      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, ask_birthday: ask_birthday, libelle: libelle) }
+      let(:ask_birthday) { false }
+      let(:expected_birthday) { nil }
+
+      before do
+        visit commencer_path(path: procedure.path)
+        click_on 'Commencer la démarche'
+
+        expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
+        expect(page).to have_title(libelle)
+
+        find('#radio-tiers-manage').click
+        fill_in('mandataire_first_name', with: 'John')
+        fill_in('mandataire_last_name', with: 'Doe')
+
+        find('label', text: 'Monsieur').click
+        fill_in('indiv_first_name', with: 'prenom')
+        fill_in('indiv_last_name', with: 'nom')
+      end
+
+      it 'completes the form with email notification method selected' do
+        find('#notification_method_email').click
+        fill_in('dossier_individual_attributes_email', with: 'prenom.nom@mail.com')
+        click_button('Continuer')
+        expect(procedure.dossiers.last.individual.notification_method == 'email')
+        expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
+      end
+
+      it 'completes the form with no notification method selected' do
+        find('#notification_method_no_notification').click
+        click_button('Continuer')
+        expect(procedure.dossiers.last.individual.notification_method.empty?)
+        expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
       end
     end
 

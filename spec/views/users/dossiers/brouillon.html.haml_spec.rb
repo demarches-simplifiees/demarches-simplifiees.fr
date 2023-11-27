@@ -35,6 +35,24 @@ describe 'users/dossiers/brouillon', type: :view do
       let(:procedure) { create(:procedure) }
       it { is_expected.not_to have_link("Télécharger le guide de la démarche") }
     end
+
+    context 'when a dossier is for_tiers and the dossier is in brouillon with email notification' do
+      let(:dossier) { create(:dossier, :for_tiers_with_notification) }
+
+      it 'displays the informations of the mandataire and the beneficiaire email' do
+        expect(rendered).to have_text("#{dossier.mandataire_full_name} agit pour le compte du bénéficiaire :")
+        expect(rendered).to have_text("Email :\n\n\n#{dossier.individual.email}")
+      end
+    end
+
+    context 'when a dossier is for_tiers and the dossier is in brouillon with no notification' do
+      let!(:dossier) { create(:dossier, :for_tiers_without_notification) }
+
+      it 'displays the informations of the mandataire and do not display the beneficiary email' do
+        expect(rendered).to have_text("#{dossier.mandataire_full_name} agit pour le compte du bénéficiaire :")
+        expect(rendered).not_to have_text("Email :\n\n\n#{dossier.individual.email}")
+      end
+    end
   end
 
   context "as an administrateur" do
