@@ -69,6 +69,12 @@ RSpec.describe DossierHelper, type: :helper do
       context "when the company has name information" do
         it { is_expected.to eq raison_sociale_or_name(etablissement) }
       end
+
+      context "when the company is not diffusable" do
+        let(:etablissement) { build(:etablissement, :non_diffusable, siret: "12345678901234") }
+
+        it { is_expected.to include("123 456 789 01234") }
+      end
     end
   end
 

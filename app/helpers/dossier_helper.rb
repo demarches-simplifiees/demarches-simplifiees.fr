@@ -109,13 +109,15 @@ module DossierHelper
 
   def demandeur_dossier(dossier)
     if dossier.procedure.for_individual?
-      "#{dossier&.individual&.nom} #{dossier&.individual&.prenom}"
+      return "#{dossier&.individual&.nom} #{dossier&.individual&.prenom}"
+    end
+
+    return "" if dossier.etablissement.blank?
+
+    if dossier.etablissement.diffusable_commercialement == false
+      "SIRET #{pretty_siret(dossier.etablissement.siret)}"
     else
-      if dossier.etablissement.present?
-        raison_sociale_or_name(dossier.etablissement)
-      else
-        ""
-      end
+      raison_sociale_or_name(dossier.etablissement)
     end
   end
 
