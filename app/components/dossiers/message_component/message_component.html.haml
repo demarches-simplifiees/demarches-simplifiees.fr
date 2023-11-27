@@ -23,7 +23,7 @@
   .message-extras.flex.justify-start
     - if commentaire.soft_deletable?(connected_user)
       = button_to instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete,  class: 'button danger', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
-        %span.icon.delete
+        = dsfr_icon('fr-icon-delete-line', :sm)
         = t('.delete_button')
 
     - if commentaire.piece_jointe.attached?

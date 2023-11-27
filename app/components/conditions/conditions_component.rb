@@ -176,7 +176,8 @@ class Conditions::ConditionsComponent < ApplicationComponent
 
   def delete_condition_tag(row_index)
     tag.button(
-      tag.span('', class: 'icon delete') + tag.span(t('.remove_a_row'), class: 'sr-only'),
+      class: "fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line",
+      title: t('.remove_a_row'),
       formaction: delete_condition_path(row_index),
       formmethod: 'delete',
       formnovalidate: true

@@ -11,7 +11,6 @@
       - else
         .flex.justify-start.delete
           = button_to type_de_champ_path, class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
-            .icon.delete
             %span.sr-only Supprimer
 
     - if @errors.present?
