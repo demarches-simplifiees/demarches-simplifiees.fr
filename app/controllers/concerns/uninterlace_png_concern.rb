@@ -14,6 +14,6 @@ module UninterlacePngConcern
 
   def interlaced?(png_path)
     png = MiniMagick::Image.open(png_path)
-    png.data["interlace"] != "None"
+    png.details["interlace"] != "None"
   end
 end
