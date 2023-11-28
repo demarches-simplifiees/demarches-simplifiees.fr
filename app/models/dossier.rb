@@ -1391,6 +1391,20 @@ class Dossier < ApplicationRecord
     user.france_connect_information.present?
   end
 
+  def champs_by_stable_id_with_row
+    champs_for_revision.index_by(&:stable_id_with_row)
+  end
+
+  def champs_for_revision(scope = nil, root = false)
+    champs_index = champs.group_by(&:stable_id)
+
+    if scope.is_a?(TypeDeChamp)
+      revision.children_of(scope)
+    else
+      revision.types_de_champ_for(scope, root)
+    end.flat_map { champs_index[_1.stable_id] || [] }
+  end
+
   private
 
   def create_missing_traitemets
