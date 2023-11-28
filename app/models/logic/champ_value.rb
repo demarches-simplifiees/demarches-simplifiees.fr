@@ -91,12 +91,13 @@ class Logic::ChampValue < Logic::Term
   def to_h
     {
       "term" => self.class.name,
-      "stable_id" => @stable_id
+      "stable_id" => @stable_id,
+      "territory" => @territory
     }
   end
 
   def self.from_h(h)
-    self.new(h['stable_id'])
+    self.new(h['stable_id'], h['territory'])
   end
 
   def ==(other)
@@ -106,10 +107,13 @@ class Logic::ChampValue < Logic::Term
   def options(type_de_champs)
     tdc = type_de_champ(type_de_champs)
 
-    case tdc.type_champ
-    when MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci), MANAGED_TYPE_DE_CHAMP.fetch(:departements)
+    if [MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci)].include?(tdc.type_champ)
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
-    when MANAGED_TYPE_DE_CHAMP.fetch(:regions)
+    elsif (tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:departements)) && territory == 'region'
+      APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+    elsif (tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:departements))
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+    elsif tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:regions)
       APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     else
       tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1 : [_1, _1] }

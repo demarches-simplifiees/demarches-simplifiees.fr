@@ -62,7 +62,16 @@ class Conditions::ConditionsComponent < ApplicationComponent
   def available_targets_for_select
     @source_tdcs
       .filter { |tdc| ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(tdc.type_champ) }
-      .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
+      .flat_map do |tdc|
+      if tdc.departement?
+        [
+          ["#{tdc.libelle} -- par département", champ_value(tdc.stable_id, 'departement').to_json],
+          ["#{tdc.libelle} -- par région", champ_value(tdc.stable_id, 'region').to_json]
+        ]
+      else
+        [[tdc.libelle, champ_value(tdc.stable_id).to_json]]
+      end
+    end
   end
 
   def operator_tag(operator_name, targeted_champ, row_index)
