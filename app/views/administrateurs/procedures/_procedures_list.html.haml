@@ -94,7 +94,7 @@
           - if procedure.publiee?
             - menu.with_item do
               = link_to(admin_procedure_close_path(procedure_id: procedure.id), role: 'menuitem') do
-                %span.icon.archive
+                = dsfr_icon('fr-icon-calendar-close-fill')
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.to_close')
 

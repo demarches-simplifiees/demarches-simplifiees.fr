@@ -24,7 +24,7 @@
         = link_to 'Réactiver', admin_procedure_publication_path(@procedure), class: 'fr-btn fr-btn--primary fr-btn--icon-left fr-icon-success-line', id: 'publish-procedure-link', data: { disable_with: "Publication..." }
 
       - if @procedure.locked? && !@procedure.close?
-        = link_to 'Clore', admin_procedure_close_path(procedure_id: @procedure.id), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-archive-line', id: "close-procedure-link"
+        = link_to 'Clore', admin_procedure_close_path(procedure_id: @procedure.id), class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-calendar-close-fill', id: "close-procedure-link"
 
 .fr-container
   = render TypesDeChampEditor::ErrorsSummary.new(revision: @procedure.draft_revision)
