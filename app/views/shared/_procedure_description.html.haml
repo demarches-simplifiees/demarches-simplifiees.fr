@@ -64,14 +64,15 @@
               %ul
                 = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_with_conditionnal, as: :pj
 
-    - if procedure.stats_usual_traitement_time
+    - estimated_delay_component = Procedure::EstimatedDelayComponent.new(procedure: procedure)
+    - if estimated_delay_component.render?
       %section.fr-accordion
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-117", "aria-expanded" => "false" }
             = t('shared.procedure_description.usual_traitement_time_title')
 
         #accordion-117.fr-collapse
-          = t('shared.procedure_description.usual_traitement_time_detail_html', traitement_time: distance_of_time_in_words(procedure.stats_usual_traitement_time), percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, days: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS, href: statistiques_path(procedure.path) )
+          = render estimated_delay_component
 
 
     - if procedure.persisted? && procedure.estimated_duration_visible?

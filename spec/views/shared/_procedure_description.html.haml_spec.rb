@@ -49,13 +49,13 @@ describe 'shared/_procedure_description', type: :view do
 
   context 'when procedure has usual_traitement_time' do
     before do
-      allow(procedure).to receive(:stats_usual_traitement_time).and_return(1.day)
+      allow(procedure).to receive(:stats_usual_traitement_time).and_return([1.day, 1.day, 1.day])
     end
 
     it 'shows a usual traitement text' do
       subject
       expect(rendered).to have_text("Quels sont les délais d'instruction pour cette démarche ?")
-      expect(rendered).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 1 jour.")
+      expect(rendered).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour.")
     end
   end
 

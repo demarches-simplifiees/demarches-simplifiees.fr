@@ -22,13 +22,11 @@ describe 'Dossier details:' do
   end
 
   describe "the user can see the mean time they are expected to wait" do
-    let(:other_dossier) { create(:dossier, :accepte, :with_individual, procedure: procedure, depose_at: 10.days.ago, en_instruction_at: 9.days.ago, processed_at: Time.zone.now) }
-
     context "when the dossier is in construction" do
       it "displays the estimated wait duration" do
-        other_dossier
+        allow_any_instance_of(Procedure).to receive(:stats_usual_traitement_time).and_return([1.day, 1.day, 1.day])
         visit dossier_path(dossier)
-        expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 10 jours.")
+        expect(page).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour")
       end
     end
 
@@ -36,9 +34,9 @@ describe 'Dossier details:' do
       let(:dossier) { create(:dossier, :en_instruction, :with_individual, :with_commentaires, user: user, procedure: procedure) }
 
       it "displays the estimated wait duration" do
-        other_dossier
+        allow_any_instance_of(Procedure).to receive(:stats_usual_traitement_time).and_return([1.day, 1.day, 1.day])
         visit dossier_path(dossier)
-        expect(page).to have_text("Habituellement, les dossiers de cette démarche sont traités dans un délai de 10 jours.")
+        expect(page).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour")
       end
     end
   end
