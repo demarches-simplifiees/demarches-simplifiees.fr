@@ -77,13 +77,13 @@
 
                   - menu.with_item do
                     = link_to(instructeur_dossier_path(procedure_id, p.dossier_id), role: 'menuitem') do
-                      %span.icon.in-progress>
+                      = dsfr_icon('fr-icon-file-text-fill', :sm)
                       .dropdown-description
                         Voir le dossier
 
                   - menu.with_item do
                     = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id]), role: 'menuitem') do
-                      %span.icon.in-progress>
+                      = dsfr_icon('fr-icon-chat-3-fill', :sm)
                       .dropdown-description
                         Donner mon avis
 
