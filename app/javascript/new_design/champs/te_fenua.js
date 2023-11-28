@@ -10,8 +10,8 @@ import {
   getBatimentFeatureInfo,
   getCadastreFeatureInfo
 } from './te_fenua_lib';
-import { Draw, Modify } from 'ol/interaction.js';
-import Select from 'ol/interaction/Select.js';
+import { Draw, Modify } from 'ol/interaction';
+import Select from 'ol/interaction/Select';
 import { GeoJSON } from 'ol/format';
 import Geolocation from 'ol/Geolocation';
 import Control from 'ol/control/Control';
@@ -340,6 +340,8 @@ function addInteractions(mapElement, map) {
       layer.getSource().getFeatures()
     );
     champ.value = JSON.stringify(geodata);
+    const event = new Event('change', { bubbles: true });
+    champ.dispatchEvent(event);
     updateInformations(informations, map);
   }
 

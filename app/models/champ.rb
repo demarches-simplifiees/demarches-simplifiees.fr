@@ -71,6 +71,7 @@ class Champ < ApplicationRecord
     :rna?,
     :siret?,
     :carte?,
+    :te_fenua?,
     :datetime?,
     :stable_id,
     :mandatory?,
