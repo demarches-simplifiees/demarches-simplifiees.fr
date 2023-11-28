@@ -21,11 +21,11 @@ class Logic::ChampValue < Logic::Term
     unmanaged: :unmanaged
   }
 
-  attr_reader :stable_id, :territory
+  attr_reader :stable_id, :level
 
-  def initialize(stable_id, territory = nil)
+  def initialize(stable_id, level = nil)
     @stable_id = stable_id
-    @territory = territory
+    @level = level
   end
 
   def sources
@@ -47,7 +47,7 @@ class Logic::ChampValue < Logic::Term
       targeted_champ.selected
     elsif targeted_champ.type == "Champs::MultipleDropDownListChamp"
       targeted_champ.selected_options
-    elsif (targeted_champ.type == "Champs::DepartementChamp") && (territory == 'region')
+    elsif (targeted_champ.type == "Champs::DepartementChamp") && (level == 'region')
       targeted_champ.code_region
     elsif (targeted_champ.type == "Champs::DepartementChamp")
       targeted_champ.code
@@ -92,12 +92,12 @@ class Logic::ChampValue < Logic::Term
     {
       "term" => self.class.name,
       "stable_id" => @stable_id,
-      "territory" => @territory
+      "level" => @level
     }
   end
 
   def self.from_h(h)
-    self.new(h['stable_id'], h['territory'])
+    self.new(h['stable_id'], h['level'])
   end
 
   def ==(other)
@@ -109,7 +109,7 @@ class Logic::ChampValue < Logic::Term
 
     if [MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci)].include?(tdc.type_champ)
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
-    elsif (tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:departements)) && territory == 'region'
+    elsif (tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:departements)) && level == 'region'
       APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif (tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:departements))
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }

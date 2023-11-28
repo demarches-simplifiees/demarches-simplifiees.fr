@@ -108,22 +108,22 @@ describe Logic::ChampValue do
   end
 
   context 'departement tdc by region' do
-    let(:territory) { 'region' }
+    let(:level) { 'region' }
     let(:champ) { create(:champ_departements, value: '02') }
 
-    subject { champ_value(champ.stable_id, territory).compute([champ]) }
+    subject { champ_value(champ.stable_id, level).compute([champ]) }
 
-    it { expect(champ_value(champ.stable_id, territory).type([champ.type_de_champ])).to eq(:enum) }
+    it { expect(champ_value(champ.stable_id, level).type([champ.type_de_champ])).to eq(:enum) }
     it { is_expected.to eq('32') }
   end
 
   context 'departement tdc dy departement' do
-    let(:territory) { 'departement' }
+    let(:level) { 'departement' }
     let(:champ) { create(:champ_departements, value: '02') }
 
-    subject { champ_value(champ.stable_id, territory).compute([champ]) }
+    subject { champ_value(champ.stable_id, level).compute([champ]) }
 
-    it { expect(champ_value(champ.stable_id, territory).type([champ.type_de_champ])).to eq(:enum) }
+    it { expect(champ_value(champ.stable_id, level).type([champ.type_de_champ])).to eq(:enum) }
     it { is_expected.to eq('02') }
   end
 
