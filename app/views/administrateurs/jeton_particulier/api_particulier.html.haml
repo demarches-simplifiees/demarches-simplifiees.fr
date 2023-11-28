@@ -8,27 +8,23 @@
     = link_to admin_procedure_api_particulier_jeton_path, class: 'card-admin', id: 'add-jeton' do
       - if @procedure.api_particulier_token.blank?
         %div
-          %span.icon.clock
-          %p.fr-text-default--info= t('.needs_configuration')
+          %p.fr-badge.fr-badge--info= t('.needs_configuration')
       - else
         %div
-          %span.icon.accept
-          %p.fr-text-default--success= t('.already_configured')
+          %p.fr-badge.fr-badge--success= t('.already_configured')
       %div
         %h3.fr-h6
           = Procedure.human_attribute_name(:jeton_api_particulier)
-      %p.button= t('views.shared.actions.edit')
+      %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')
 
     - if @procedure.api_particulier_scopes.present?
       = link_to admin_procedure_api_particulier_sources_path, class: 'card-admin' do
         - if @procedure.api_particulier_token.blank?
           %div
-            %span.icon.clock
-            %p.fr-text-default--info= t('.needs_configuration')
+            %p.fr-badge.fr-badge--info= t('.needs_configuration')
         - else
           %div
-            %span.icon.accept
-            %p.fr-text-default--success= t('.already_configured')
+            %p.fr-badge.fr-badge--success= t('.already_configured')
         %div
           %p.card-admin-title= t('administrateurs.sources_particulier.show.data_sources')
-        %p.button= t('views.shared.actions.edit')
+        %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')
