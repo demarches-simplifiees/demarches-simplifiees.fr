@@ -33,13 +33,13 @@ class Dossiers::MessageComponent < ApplicationComponent
     end
   end
 
-  def icon_path
+  def icon
     if commentaire.sent_by_system?
-      'icons/mail.svg'
+      dsfr_icon('fr-icon-message-2-fill', :sm, :mr)
     elsif commentaire.sent_by?(connected_user)
-      'icons/account-circle.svg'
+      dsfr_icon('fr-icon-user-fill', :sm, :mr)
     else
-      'icons/blue-person.svg'
+      dsfr_icon('fr-icon-discuss-fill', :sm, :mr)
     end
   end
 
