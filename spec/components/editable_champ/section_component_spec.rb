@@ -1,6 +1,8 @@
 describe EditableChamp::SectionComponent, type: :component do
   include TreeableConcern
-  let(:component) { described_class.new(champs: champs) }
+  let(:types_de_champ) { champs.map(&:type_de_champ) }
+  let(:champs_by_stable_id_with_row) { champs.index_by(&:stable_id_with_row) }
+  let(:component) { described_class.new(types_de_champ:, champs_by_stable_id_with_row:) }
   before { render_inline(component).to_html }
 
   context 'list of champs without an header_section' do
@@ -98,6 +100,7 @@ describe EditableChamp::SectionComponent, type: :component do
     end
     let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
     let(:champs) { dossier.champs_public }
+    let(:champs_by_stable_id_with_row) { dossier.champs_by_stable_id_with_row }
 
     it 'render nested fieldsets, increase heading level for repetition header_section' do
       expect(page).to have_selector("fieldset")
