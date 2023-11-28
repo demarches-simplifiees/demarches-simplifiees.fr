@@ -63,10 +63,10 @@ class Conditions::ConditionsComponent < ApplicationComponent
     @source_tdcs
       .filter { |tdc| ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(tdc.type_champ) }
       .flat_map do |tdc|
-      if tdc.departement?
+      if tdc.levelable?
         [
-          ["#{tdc.libelle} -- par département", champ_value(tdc.stable_id, 'departement').to_json],
-          ["#{tdc.libelle} -- par région", champ_value(tdc.stable_id, 'region').to_json]
+          ["#{tdc.libelle} -- par département", champ_value(tdc.stable_id, TypeDeChamp::CONDITION_LEVELS.fetch(:departement)).to_json],
+          ["#{tdc.libelle} -- par région", champ_value(tdc.stable_id, TypeDeChamp::CONDITION_LEVELS.fetch(:region)).to_json]
         ]
       else
         [[tdc.libelle, champ_value(tdc.stable_id).to_json]]

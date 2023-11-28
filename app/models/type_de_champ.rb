@@ -110,6 +110,11 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }
 
+  CONDITION_LEVELS = {
+    departement: 'departement',
+    region: 'region'
+  }
+
   ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
     type_champs.fetch(:communes),
@@ -120,6 +125,10 @@ class TypeDeChamp < ApplicationRecord
 
   PRIVATE_ONLY_TYPES = [
     type_champs.fetch(:engagement_juridique)
+  ]
+
+  MANY_LEVELS_OF_CONDITION_TYPES = [
+    type_champs.fetch(:departements)
   ]
 
   store_accessor :options,
@@ -623,6 +632,10 @@ class TypeDeChamp < ApplicationRecord
 
   def routable?
     type_champ.in?(ROUTABLE_TYPES)
+  end
+
+  def levelable?
+    type_champ.in?(MANY_LEVELS_OF_CONDITION_TYPES)
   end
 
   def invalid_regexp?
