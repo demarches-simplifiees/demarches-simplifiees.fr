@@ -122,8 +122,10 @@ describe 'wcag rules for usager', js: true do
       click_on 'Commencer la démarche'
 
       find('label', text: 'Monsieur')
-      fill_in('Prénom', with: 'prenom', visible: true)
-      fill_in('Nom', with: 'nom', visible: true)
+      within('.individual-infos') do
+        fill_in('Prénom', with: 'prenom')
+        fill_in('Nom', with: 'nom')
+      end
       click_on 'Continuer'
 
       expect(page).to be_axe_clean

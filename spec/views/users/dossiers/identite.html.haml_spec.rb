@@ -10,8 +10,10 @@ describe 'users/dossiers/identite', type: :view do
   subject! { render }
 
   it 'has identity fields' do
-    expect(rendered).to have_field(id: 'indiv_first_name')
-    expect(rendered).to have_field(id: 'indiv_last_name')
+    within('.individual-infos') do
+      expect(rendered).to have_field(id: 'Prenom')
+      expect(rendered).to have_field(id: 'Nom')
+    end
   end
 
   context 'when the demarche asks for the birthdate' do

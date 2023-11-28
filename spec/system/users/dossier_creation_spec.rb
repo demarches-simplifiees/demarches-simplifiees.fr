@@ -1,4 +1,4 @@
-describe 'Creating a new dossier:' do
+describe 'Creating a new dossier:', js: true do
   let(:user)  { create(:user) }
   let(:siret) { '41816609600051' }
   let(:siren) { siret[0...9] }
@@ -22,8 +22,8 @@ describe 'Creating a new dossier:' do
         expect(page).to have_title(libelle)
 
         find('label', text: 'Monsieur').click
-        fill_in('indiv_first_name', with: 'prenom')
-        fill_in('indiv_last_name', with: 'nom')
+        fill_in('Prénom', with: 'prenom', visible: true)
+        fill_in('Nom', with: 'nom', visible: true)
       end
 
       shared_examples 'the user can create a new draft' do
@@ -31,26 +31,20 @@ describe 'Creating a new dossier:' do
           click_button('Continuer')
 
           expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
-
           expect(user.dossiers.first.individual.birthdate).to eq(expected_birthday)
         end
       end
 
       context 'when the birthday is asked' do
         let(:ask_birthday) { true }
-        let(:expected_birthday) { Date.new(1987, 10, 14) }
+        let(:expected_birthday) { Date.new(1987, 12, 10) }
 
         before do
           fill_in 'Date de naissance', with: birthday_format
         end
 
-        context 'when the browser supports `type=date` input fields' do
-          let(:birthday_format) { '1987-10-14' }
-          it_behaves_like 'the user can create a new draft'
-        end
-
-        context 'when the browser does not support `type=date` input fields' do
-          let(:birthday_format) { '1987-10-14' }
+        context 'when the birthday is asked' do
+          let(:birthday_format) { '12-10-1987' }
           it_behaves_like 'the user can create a new draft'
         end
       end
@@ -60,43 +54,49 @@ describe 'Creating a new dossier:' do
         let(:expected_birthday) { nil }
         it_behaves_like 'the user can create a new draft'
       end
-    end
 
-    context 'when identifying as mandataire' do
-      let(:libelle) { "[title] with characters to escape : '@*^$" }
-      let(:procedure) { create(:procedure, :published, :for_individual, :with_service, ask_birthday: ask_birthday, libelle: libelle) }
-      let(:ask_birthday) { false }
-      let(:expected_birthday) { nil }
+      context 'when individual fill dossier for a tiers' do
+        it 'completes the form with email notification method selected' do
+          find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant...').click
 
-      before do
-        visit commencer_path(path: procedure.path)
-        click_on 'Commencer la démarche'
+          within('.mandataire-infos') do
+            fill_in('Prénom', with: 'John')
+            fill_in('Nom', with: 'Doe')
+          end
 
-        expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
-        expect(page).to have_title(libelle)
+          find('label', text: 'Monsieur').click
 
-        find('#radio-tiers-manage').click
-        fill_in('mandataire_first_name', with: 'John')
-        fill_in('mandataire_last_name', with: 'Doe')
+          within('.individual-infos') do
+            fill_in('Prénom', with: 'prenom')
+            fill_in('Nom', with: 'nom')
+          end
 
-        find('label', text: 'Monsieur').click
-        fill_in('indiv_first_name', with: 'prenom')
-        fill_in('indiv_last_name', with: 'nom')
-      end
+          find('label', text: 'Par e-mail').click
+          fill_in('dossier_individual_attributes_email', with: 'prenom.nom@mail.com')
+          click_button('Continuer')
+          expect(procedure.dossiers.last.individual.notification_method == 'email')
+          expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
+        end
 
-      it 'completes the form with email notification method selected' do
-        find('#notification_method_email').click
-        fill_in('dossier_individual_attributes_email', with: 'prenom.nom@mail.com')
-        click_button('Continuer')
-        expect(procedure.dossiers.last.individual.notification_method == 'email')
-        expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
-      end
+        it 'completes the form with no notification method selected' do
+          find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant...').click
 
-      it 'completes the form with no notification method selected' do
-        find('#notification_method_no_notification').click
-        click_button('Continuer')
-        expect(procedure.dossiers.last.individual.notification_method.empty?)
-        expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
+          within('.mandataire-infos') do
+            fill_in('Prénom', with: 'John')
+            fill_in('Nom', with: 'Doe')
+          end
+
+          find('label', text: 'Monsieur').click
+          within('.individual-infos') do
+            fill_in('Prénom', with: 'prenom')
+            fill_in('Nom', with: 'nom')
+          end
+
+          find('label', text: 'Pas de notification').click
+          click_button('Continuer')
+          expect(procedure.dossiers.last.individual.notification_method.empty?)
+          expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
+        end
       end
     end
 
