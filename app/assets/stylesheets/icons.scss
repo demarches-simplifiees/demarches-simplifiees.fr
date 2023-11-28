@@ -31,10 +31,6 @@
     background-image: image-url("icons/accept.svg");
   }
 
-  &.without-continuation {
-    background-image: image-url("icons/without-continuation.svg");
-  }
-
   &.edit {
     background-image: image-url("icons/edit-folder-blue.svg");
   }
@@ -144,19 +140,27 @@
 // 1. Find it on https://remixicon.com/
 // 2. Take its DataURL (copy the url background-image value).
 // 2b. No need to download the file !
-// 3. Follow the first example :
-//    - create the class
-//    - add the mask-image property with data url you copied
+// 3. Follow the first example : create the class then add the mask-image property with data url you copied
+// 4. Keep this list alphabetic :)
 .fr-icon {
+  &-calendar-close-fill {
+    &:before,
+    &:after {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 3V1H7V3H3C2.44772 3 2 3.44772 2 4V20C2 20.5523 2.44772 21 3 21H21C21.5523 21 22 20.5523 22 20V4C22 3.44772 21.5523 3 21 3H17V1H15V3H9ZM4 8H20V19H4V8ZM9.87852 9.9643L11.9999 12.0858L14.1211 9.96432L15.5354 11.3785L13.4141 13.5L15.5353 15.6211L14.1212 17.0354L11.9999 14.9142L9.87845 17.0354L8.46432 15.6211L10.5856 13.5L8.46426 11.3785L9.87852 9.9643Z'%3E%3C/path%3E%3C/svg%3E");
+    }
+  }
+
   &-file-copy-line {
-    &:before, &:after {
+    &:before,
+    &:after {
       mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6.9998 6V3C6.9998 2.44772 7.44752 2 7.9998 2H19.9998C20.5521 2 20.9998 2.44772 20.9998 3V17C20.9998 17.5523 20.5521 18 19.9998 18H16.9998V20.9991C16.9998 21.5519 16.5499 22 15.993 22H4.00666C3.45059 22 3 21.5554 3 20.9991L3.0026 7.00087C3.0027 6.44811 3.45264 6 4.00942 6H6.9998ZM5.00242 8L5.00019 20H14.9998V8H5.00242ZM8.9998 6H16.9998V16H18.9998V4H8.9998V6Z'%3E%3C/path%3E%3C/svg%3E");
     }
   }
 
-  &-calendar-close-fill {
-    &:before, &:after {
-      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 3V1H7V3H3C2.44772 3 2 3.44772 2 4V20C2 20.5523 2.44772 21 3 21H21C21.5523 21 22 20.5523 22 20V4C22 3.44772 21.5523 3 21 3H17V1H15V3H9ZM4 8H20V19H4V8ZM9.87852 9.9643L11.9999 12.0858L14.1211 9.96432L15.5354 11.3785L13.4141 13.5L15.5353 15.6211L14.1212 17.0354L11.9999 14.9142L9.87845 17.0354L8.46432 15.6211L10.5856 13.5L8.46426 11.3785L9.87852 9.9643Z'%3E%3C/path%3E%3C/svg%3E");
+  &-intermediate-circle-fill {
+    &:before,
+    &:after {
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM7 11V13H17V11H7Z'%3E%3C/path%3E%3C/svg%3E");
     }
   }
 }

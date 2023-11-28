@@ -14,7 +14,7 @@
 
   - menu.with_item do
     = link_to('#', onclick: "DS.showMotivation(event, 'without-continuation');", role: 'menuitem') do
-      %span.icon.without-continuation
+      = dsfr_icon('fr-icon-intermediate-circle-fill fr-text-mention--grey')
       .dropdown-description
         %h4 Classer sans suite
         L’usager sera informé que son dossier a été classé sans suite
