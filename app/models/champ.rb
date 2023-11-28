@@ -99,10 +99,6 @@ class Champ < ApplicationRecord
     [row_id, stable_id].compact
   end
 
-  def sections
-    @sections ||= dossier.sections_for(self)
-  end
-
   # used for the `required` html attribute
   # check visibility to avoid hidden required input
   # which prevent the form from being sent.
