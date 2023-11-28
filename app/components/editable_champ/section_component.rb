@@ -2,8 +2,10 @@ class EditableChamp::SectionComponent < ApplicationComponent
   include ApplicationHelper
   include TreeableConcern
 
-  def initialize(nodes: nil, champs: nil)
-    nodes ||= to_tree(champs:)
+  def initialize(nodes: nil, types_de_champ: nil, row_id: nil, champs_by_stable_id_with_row:)
+    nodes ||= to_tree(types_de_champ:)
+    @champs_by_stable_id_with_row = champs_by_stable_id_with_row
+    @row_id = row_id
     @nodes = to_fieldset(nodes:)
   end
 
@@ -12,7 +14,8 @@ class EditableChamp::SectionComponent < ApplicationComponent
   end
 
   def header_section
-    @nodes.first if @nodes.first.is_a?(Champs::HeaderSectionChamp)
+    node = @nodes.first
+    champ_for_type_de_champ(node) if node.is_a?(TypeDeChamp) && node.header_section?
   end
 
   def splitted_tail
@@ -35,17 +38,21 @@ class EditableChamp::SectionComponent < ApplicationComponent
     when EditableChamp::SectionComponent
       [node, nil]
     else
-      [nil, node]
+      [nil, champ_for_type_de_champ(node)]
     end
   end
 
   private
 
   def to_fieldset(nodes:)
-    nodes.map { _1.is_a?(Array) ? EditableChamp::SectionComponent.new(nodes: _1) : _1 }
+    nodes.map { _1.is_a?(Array) ? EditableChamp::SectionComponent.new(nodes: _1, row_id: @row_id, champs_by_stable_id_with_row: @champs_by_stable_id_with_row) : _1 }
   end
 
   def first_champ_is_an_header_section?
     header_section.present?
+  end
+
+  def champ_for_type_de_champ(type_de_champ)
+    @champs_by_stable_id_with_row[[@row_id, type_de_champ.stable_id].compact]
   end
 end
