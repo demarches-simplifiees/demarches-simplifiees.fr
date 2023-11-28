@@ -108,24 +108,17 @@ class Instructeur < ApplicationRecord
   end
 
   def notifications_for_dossier(dossier)
-    follow = Follow
-      .includes(dossier: [:champs_public, :champs_private, :avis, :commentaires])
-      .find_by(instructeur: self, dossier: dossier)
+    follow = Follow.find_by(instructeur: self, dossier:)
 
     if follow.present?
-      demande = follow.dossier.champs_public.updated_since?(follow.demande_seen_at).any? ||
-        follow.dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
+      demande = dossier.last_champ_updated_at&.>(follow.demande_seen_at) ||
+        dossier.groupe_instructeur_updated_at&.>(follow.demande_seen_at) ||
         dossier.identity_updated_at&.>(follow.demande_seen_at) ||
         false
 
-      annotations_privees = follow.dossier.champs_private.updated_since?(follow.annotations_privees_seen_at).any?
-
-      avis_notif = follow.dossier.avis.updated_since?(follow.avis_seen_at).any?
-
-      messagerie = dossier.commentaires
-        .where.not(email: OLD_CONTACT_EMAIL)
-        .where.not(email: CONTACT_EMAIL)
-        .updated_since?(follow.messagerie_seen_at).any?
+      annotations_privees = dossier.last_champ_private_updated_at&.>(follow.annotations_privees_seen_at) || false
+      avis_notif = dossier.last_avis_updated_at&.>(follow.avis_seen_at) || false
+      messagerie = dossier.last_commentaire_updated_at&.>(follow.messagerie_seen_at) || false
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie)
     else

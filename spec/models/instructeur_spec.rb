@@ -196,7 +196,10 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on public champs' do
-      before { dossier.champs_public.first.update_attribute('value', 'toto') }
+      before {
+        dossier.champs_public.first.update(value: 'toto')
+        dossier.update(last_champ_updated_at: Time.zone.now)
+      }
 
       it { is_expected.to match({ demande: true, annotations_privees: false, avis: false, messagerie: false }) }
     end
@@ -215,20 +218,29 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on private champs' do
-      before { dossier.champs_private.first.update_attribute('value', 'toto') }
+      before {
+        dossier.champs_private.first.update(value: 'toto')
+        dossier.update(last_champ_private_updated_at: Time.zone.now)
+      }
 
       it { is_expected.to match({ demande: false, annotations_privees: true, avis: false, messagerie: false }) }
     end
 
     context 'when there is a modification on avis' do
-      before { create(:avis, dossier: dossier) }
+      before {
+        create(:avis, dossier: dossier)
+        dossier.update(last_avis_updated_at: Time.zone.now)
+      }
 
       it { is_expected.to match({ demande: false, annotations_privees: false, avis: true, messagerie: false }) }
     end
 
     context 'messagerie' do
       context 'when there is a new commentaire' do
-        before { create(:commentaire, dossier: dossier, email: 'a@b.com') }
+        before {
+          create(:commentaire, dossier: dossier, email: 'a@b.com')
+          dossier.update(last_commentaire_updated_at: Time.zone.now)
+        }
 
         it { is_expected.to match({ demande: false, annotations_privees: false, avis: false, messagerie: true }) }
       end
