@@ -47,7 +47,7 @@ module Users
         deleted_dossiers = nil
       end
 
-      @dossiers_visibles = ordered_dossiers.visible_by_user
+      @dossiers_visibles = ordered_dossiers.visible_by_user.preload(:etablissement, :individual, :invites)
 
       @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
