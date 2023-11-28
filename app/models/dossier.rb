@@ -610,7 +610,7 @@ class Dossier < ApplicationRecord
 
   def any_etablissement_as_degraded_mode?
     return true if etablissement&.as_degraded_mode?
-    return true if champs_public_all.any? { _1.etablissement&.as_degraded_mode? }
+    return true if champs_for_revision(:public).any? { _1.etablissement&.as_degraded_mode? }
 
     false
   end
@@ -1165,7 +1165,8 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_and_visible_champs
-    (champs_public + champs_public.filter(&:block?).filter(&:visible?).flat_map(&:champs))
+    champs_for_revision(:public)
+      .filter { _1.child? ? _1.parent.visible? : true }
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
@@ -1268,15 +1269,15 @@ class Dossier < ApplicationRecord
     if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
-    columns + self.class.champs_for_export(champs_public + champs_private, types_de_champ)
+    columns + self.class.champs_for_export(types_de_champ, champs_by_stable_id_with_row)
   end
 
   # Get all the champs values for the types de champ in the final list.
   # Dossier might not have corresponding champ – display nil.
   # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
-  def self.champs_for_export(champs, types_de_champ)
+  def self.champs_for_export(types_de_champ, champs, row_id = nil)
     types_de_champ.flat_map do |type_de_champ|
-      champ = champs.find { |champ| champ.stable_id == type_de_champ.stable_id }
+      champ = champs[[row_id, type_de_champ.stable_id].compact]
 
       exported_values = if champ.nil? || !champ.visible?
         # some champs export multiple columns
@@ -1299,7 +1300,7 @@ class Dossier < ApplicationRecord
   end
 
   def linked_dossiers_for(instructeur_or_expert)
-    dossier_ids = champs_public.filter(&:dossier_link?).filter_map(&:value)
+    dossier_ids = champs_for_revision.filter(&:dossier_link?).filter_map(&:value)
     instructeur_or_expert.dossiers.where(id: dossier_ids)
   end
 
@@ -1308,7 +1309,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_data?
-    GeoArea.exists?(champ_id: champs_public.ids + champs_private.ids)
+    GeoArea.exists?(champ_id: champs_for_revision)
   end
 
   def to_feature_collection
@@ -1426,7 +1427,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_areas
-    champs_public.flat_map(&:geo_areas) + champs_private.flat_map(&:geo_areas)
+    champs_for_revision.flat_map(&:geo_areas)
   end
 
   def bounding_box

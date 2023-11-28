@@ -3,7 +3,7 @@
     %section.counter-start-header-section
       = render NestedForms::FormOwnerComponent.new
       = form_for dossier, url: annotations_instructeur_dossier_path(dossier.procedure, dossier), html: { class: 'form', multipart: true } do |f|
-        = render EditableChamp::SectionComponent.new(champs: dossier.champs_private)
+        = render EditableChamp::SectionComponent.new(types_de_champ: dossier.revision.types_de_champ_private, champs_by_stable_id_with_row: dossier.champs_by_stable_id_with_row)
 
       = render Dossiers::EditFooterComponent.new(dossier: dossier, annotation: true)
   - else

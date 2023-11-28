@@ -42,6 +42,7 @@ module DossierCloneConcern
   end
 
   def make_diff(editing_fork)
+    # TODO: remove champs_public_all usage
     origin_champs_index = champs_public_all.index_by(&:stable_id_with_row)
     forked_champs_index = editing_fork.champs_public_all.index_by(&:stable_id_with_row)
     updated_champs_index = editing_fork

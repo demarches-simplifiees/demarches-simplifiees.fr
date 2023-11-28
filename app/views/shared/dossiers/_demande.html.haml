@@ -51,6 +51,6 @@
       %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
         .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.form')
 
-      - champs = dossier.champs_public
-      - if champs.any? || dossier.procedure.routing_enabled?
-        = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: dossier, demande_seen_at: demande_seen_at, profile: profile }
+      - types_de_champ = dossier.revision.types_de_champ_public
+      - if types_de_champ.any? || dossier.procedure.routing_enabled?
+        = render partial: "shared/dossiers/champs", locals: { types_de_champ:, dossier:, demande_seen_at:, profile: }

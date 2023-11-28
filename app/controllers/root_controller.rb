@@ -26,7 +26,7 @@ class RootController < ApplicationController
     description = "Allez voir le super site : #{APPLICATION_BASE_URL}"
 
     all_champs = TypeDeChamp.type_champs
-      .map { |name, _| TypeDeChamp.new(type_champ: name, private: false, libelle: name.humanize, description: description, mandatory: true) }
+      .map.with_index { |(name, _), i| TypeDeChamp.new(type_champ: name, private: false, libelle: name.humanize, description:, mandatory: true, stable_id: i) }
       .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
 
     all_champs
@@ -76,7 +76,7 @@ class RootController < ApplicationController
         .each { |champ| champ.value = value }
     end
 
-    @dossier = Dossier.new(champs_public: all_champs)
+    @dossier = Dossier.new(champs: all_champs)
     @dossier.association(:procedure).target = Procedure.new
     all_champs.each do |champ|
       champ.association(:dossier).target = @dossier
@@ -85,7 +85,7 @@ class RootController < ApplicationController
       end
     end
 
-    draft_revision = @dossier.procedure.build_draft_revision(types_de_champ_public: all_champs.map(&:type_de_champ))
+    draft_revision = @dossier.procedure.build_draft_revision(types_de_champ: all_champs.map(&:type_de_champ))
     @dossier.association(:revision).target = draft_revision
     @dossier.champs_public.map(&:type_de_champ).map do |tdc|
       tdc.association(:revision_type_de_champ).target = tdc.build_revision_type_de_champ(revision: draft_revision)
