@@ -77,7 +77,7 @@
       - elsif dossier.refuse?
         .refuse
           %p.decision{ role: 'status' }
-            %span.icon.refuse
+            = dsfr_icon('fr-icon-close-circle-fill fr-text-default--error')
             = t('views.users.dossiers.show.status_overview.refuse_html')
 
           - if dossier.motivation.present?
