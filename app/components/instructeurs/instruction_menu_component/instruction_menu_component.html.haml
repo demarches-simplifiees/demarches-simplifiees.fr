@@ -4,7 +4,7 @@
 
   - menu.with_item do
     = link_to('#', onclick: "DS.showMotivation(event, 'accept');", role: 'menuitem') do
-      %span.icon.accept
+      = dsfr_icon('fr-icon-checkbox-circle-fill fr-text-default--success')
       .dropdown-description
         %h4 Accepter
         L’usager sera informé que son dossier a été accepté

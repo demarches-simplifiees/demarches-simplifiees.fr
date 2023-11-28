@@ -58,7 +58,7 @@
       - elsif dossier.accepte?
         .accepte
           %p.decision{ role: 'status' }
-            %span.icon.accept
+            = dsfr_icon('fr-icon-checkbox-circle-fill fr-text-default--success')
             = t('views.users.dossiers.show.status_overview.acceptee_html')
 
           - if dossier.motivation.present?
