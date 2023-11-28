@@ -25,7 +25,7 @@ class Logic::ChampValue < Logic::Term
 
   def initialize(stable_id, level = nil)
     @stable_id = stable_id
-    @level = level
+    @level = level if level.present?
   end
 
   def sources
