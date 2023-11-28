@@ -41,24 +41,7 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
-  config.active_storage.service = case ENV.fetch('OUTSCALE_STEP', "")
-  when '-1'
-    :local
-  when '3'
-    :s3_mirror
-  when '2'
-    :s3_mirror
-  when '1'
-    :local_mirror
-  when '0'
-    :local_mirror
-  when '4'
-    :s3
-  when '5'
-    :s3
-  else
-    ENV.fetch("ACTIVE_STORAGE_SERVICE", 'local').to_sym
-  end
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", 'local').to_sym
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

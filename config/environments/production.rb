@@ -118,24 +118,7 @@ Rails.application.configure do
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
 
-  config.active_storage.service = case ENV.fetch('OUTSCALE_STEP', "")
-  when '-1'
-    :local
-  when '3'
-    :s3_mirror
-  when '2'
-    :s3_mirror
-  when '1'
-    :local_mirror
-  when '0'
-    :local_mirror
-  when '4'
-    :s3
-  when '5'
-    :s3
-  else
-    ENV.fetch("ACTIVE_STORAGE_SERVICE", 'local').to_sym
-  end
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", 's3').to_sym
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
