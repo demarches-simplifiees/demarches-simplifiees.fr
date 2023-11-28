@@ -72,6 +72,7 @@ Rails.application.routes.draw do
     resources :dossiers, only: [:show] do
       get 'transfer_edit', on: :member
       post 'transfer', on: :member
+      delete 'transfer_destroy', on: :member
     end
 
     resources :bill_signatures, only: [:index]

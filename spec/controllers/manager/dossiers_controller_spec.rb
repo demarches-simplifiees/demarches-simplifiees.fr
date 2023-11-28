@@ -55,4 +55,14 @@ describe Manager::DossiersController, type: :controller do
       it { expect(DossierMailer).not_to have_received(:notify_transfer) }
     end
   end
+
+  describe "DELETE #transfer_destroy" do
+    before do
+      DossierTransfer.create(email: 'coucou@laposte.net', dossiers: [@dossier])
+      delete :transfer_destroy, params: { id: @dossier.id }
+    end
+
+    it { expect(@dossier.transfer).to be_nil }
+    it { expect(flash[:notice]).to eq "La demande de transfert a été supprimée avec succès" }
+  end
 end

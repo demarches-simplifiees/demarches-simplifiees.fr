@@ -31,6 +31,12 @@ module Manager
       redirect_to manager_dossier_path(params[:id])
     end
 
+    def transfer_destroy
+      dossier = Dossier.find(params[:id])
+      dossier.transfer.destroy_and_nullify
+      redirect_to manager_dossier_path(dossier), notice: t("users.dossiers.transferer.destroy")
+    end
+
     private
 
     def unfiltered_list?
