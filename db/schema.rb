@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_27_102633) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_28_071043) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -386,6 +386,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_27_102633) do
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
     t.string "from", null: false
+    t.boolean "from_support", default: false, null: false
     t.string "to", null: false
     t.datetime "updated_at", null: false
     t.index ["dossier_id"], name: "index_dossier_transfer_logs_on_dossier_id"
