@@ -29,6 +29,7 @@ class DossierTransfer < ApplicationRecord
         {
           dossier: dossier,
           from: dossier.user.email,
+          from_support: transfer.from_support,
           to: transfer.email
         }
       end)
