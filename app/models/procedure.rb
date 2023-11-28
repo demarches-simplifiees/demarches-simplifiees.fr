@@ -911,7 +911,7 @@ class Procedure < ApplicationRecord
   end
 
   def extend_conservation_for_dossiers
-    return if previous_changes.include?(:duree_conservation_dossiers_dans_ds)
+    return if !previous_changes.include?(:duree_conservation_dossiers_dans_ds)
     before, after = duree_conservation_dossiers_dans_ds_previous_change
     return if [before, after].any?(&:nil?)
     return if (after - before).negative?
