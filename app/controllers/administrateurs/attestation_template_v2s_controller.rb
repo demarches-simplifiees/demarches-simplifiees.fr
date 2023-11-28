@@ -24,11 +24,35 @@ module Administrateurs
     end
 
     def edit
+      @buttons = [
+        [
+          ['Gras', 'bold', 'bold'],
+          ['Italic', 'italic', 'italic'],
+          ['Souligner', 'underline', 'underline']
+        ],
+        [
+          ['Titre', 'title', 'h-1'],
+          ['Sous titre', 'heading2', 'h-2'],
+          ['Titre de section', 'heading3', 'h-3']
+        ],
+        [
+          ['Liste à puces', 'bulletList', 'list-unordered'],
+          ['Liste numérotée', 'orderedList', 'list-ordered']
+        ],
+        [
+          ['Aligner à gauche', 'left', 'align-left'],
+          ['Aligner au centre', 'center', 'align-center'],
+          ['Aligner à droite', 'right', 'align-right']
+        ],
+        [
+          ['Undo', 'undo', 'arrow-go-back-line'],
+          ['Redo', 'redo', 'arrow-go-forward-line']
+        ]
+      ]
     end
 
     def update
-      @attestation_template
-        .update(json_body: editor_params)
+      @attestation_template.update!(editor_params)
     end
 
     private
@@ -42,7 +66,7 @@ module Administrateurs
     end
 
     def editor_params
-      params.permit(content: [:type, content: [:type, :text, attrs: [:id, :label]]])
+      params.required(:attestation_template).permit(:tiptap_body)
     end
   end
 end
