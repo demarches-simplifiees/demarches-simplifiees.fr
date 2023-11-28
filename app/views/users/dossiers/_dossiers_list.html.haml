@@ -68,7 +68,10 @@
           = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
             - c.body do
               %p
-                = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: dossier.user.email)
+                - if dossier.transfer.from_support?
+                  = t('views.users.dossiers.transfers.receiver_demande_en_cours_from_support', id: dossier.id, email: dossier.user.email)
+                - else
+                  = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: dossier.user.email)
               %p
                 = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link fr-mr-1w", method: :put
                 = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete
@@ -76,7 +79,10 @@
           = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
             - c.body do
               %p
-                = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
+                - if dossier.transfer.from_support?
+                  = t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email)
+                - else
+                  = t('views.users.dossiers.transfers.sender_demande_en_cours', id: dossier.id, email: dossier.transfer.email)
               %p
                 = link_to t('views.users.dossiers.transfers.revoke'), transfer_path(dossier.transfer), class: 'fr-link', method: :delete
 
