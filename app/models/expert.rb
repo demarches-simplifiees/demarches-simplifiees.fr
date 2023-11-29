@@ -8,8 +8,10 @@ class Expert < ApplicationRecord
 
   default_scope { eager_load(:user) }
 
-  def email
-    user.email
+  delegate :email, :active?, to: :user
+
+  def autocompletable?
+    active? || created_at > 1.day.ago
   end
 
   def self.by_email(email)

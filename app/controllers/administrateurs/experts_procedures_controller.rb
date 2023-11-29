@@ -58,7 +58,7 @@ module Administrateurs
     private
 
     def experts_procedure_emails
-      @procedure.experts.map(&:email).sort
+      @procedure.experts.filter(&:autocompletable?).map(&:email).sort
     end
 
     def expert_procedure_params

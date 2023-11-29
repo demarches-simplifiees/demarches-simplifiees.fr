@@ -4,9 +4,11 @@ FactoryBot.define do
     email { generate(:user_email) }
     password { '{My-$3cure-p4ssWord}' }
     confirmed_at { Time.zone.now }
+    last_sign_in_at { Time.zone.now }
 
     trait :unconfirmed do
       confirmed_at { nil }
+      last_sign_in_at { nil }
     end
 
     trait :with_strong_password do
