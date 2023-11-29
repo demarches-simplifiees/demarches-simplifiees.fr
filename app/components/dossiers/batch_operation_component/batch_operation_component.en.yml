@@ -5,6 +5,7 @@ fr:
     instruction: Instructing files
     accepter: 'Accept seleted files'
     supprimer: Delete seleted files
+    restaurer: Restore seleted files
     accepter_description: Users will be notified that their file has been accepted
     refuser: 'Refuse seleted files'
     refuser_description: Users will be notified that their file has been refused

@@ -44,6 +44,15 @@ fr:
       text_success:
         one: "1 dossier est en cours de suppression"
         other: "%{success_count}/%{count} dossiers ont été supprimés"
+  restaurer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier a été restauré"
+        other: "%{success_count}/%{count} dossiers ont été restaurés"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours de restauration"
+        other: "%{success_count}/%{count} dossiers ont été restaurés"
   classer_sans_suite:
     finish:
       text_success:

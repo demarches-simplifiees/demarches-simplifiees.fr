@@ -44,6 +44,15 @@ en:
       text_success:
         one: "1 is being deleted"
         other: "%{success_count}/%{count} files have been deleted"
+  restaurer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file has been restored"
+        other: "%{success_count}/%{count} files have been restored"
+    in_progress:
+      text_success:
+        one: "1 is being restored"
+        other: "%{success_count}/%{count} files have been restored"
   classer_sans_suite:
     finish:
       text_success:
