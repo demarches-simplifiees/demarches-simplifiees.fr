@@ -1,6 +1,7 @@
 fr:
   operations:
     archiver: 'Archiver les dossiers'
+    desarchiver: 'Désarchiver les dossiers'
     passer_en_instruction: 'Passer les dossiers en instruction'
     instruction: Instruire les dossiers
     accepter: 'Accepter les dossiers'

@@ -8,6 +8,15 @@ en:
       text_success:
         one: "1 is being archived"
         other: "%{success_count}/%{count} files have been archived"
+  desarchiver:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file has been unarchived"
+        other: "%{success_count}/%{count} files have been unarchived"
+    in_progress:
+      text_success:
+        one: "1 is being unarchived"
+        other: "%{success_count}/%{count} files have been unarchived"
   passer_en_instruction:
     finish:
       text_success:
