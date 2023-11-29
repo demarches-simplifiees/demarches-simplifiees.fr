@@ -1,6 +1,7 @@
 fr:
   operations:
     archiver: 'Archive selected files'
+    desarchiver: 'Unarchive selected files'
     passer_en_instruction: 'Change selected files to instructing'
     instruction: Instructing files
     accepter: 'Accept seleted files'

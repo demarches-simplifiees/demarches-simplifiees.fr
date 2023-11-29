@@ -4,6 +4,7 @@ class BatchOperation < ApplicationRecord
     refuser: 'refuser',
     classer_sans_suite: 'classer_sans_suite',
     archiver: 'archiver',
+    desarchiver: 'desarchiver',
     follow: 'follow',
     passer_en_instruction: 'passer_en_instruction',
     repasser_en_construction: 'repasser_en_construction',
@@ -43,6 +44,8 @@ class BatchOperation < ApplicationRecord
     case operation
     when BatchOperation.operations.fetch(:archiver) then
       query.visible_by_administration.not_archived.state_termine
+    when BatchOperation.operations.fetch(:desarchiver) then
+      query.visible_by_administration.archived.state_termine
     when BatchOperation.operations.fetch(:passer_en_instruction) then
       query.visible_by_administration.state_en_construction
     when BatchOperation.operations.fetch(:accepter) then
@@ -73,6 +76,8 @@ class BatchOperation < ApplicationRecord
     case operation
     when BatchOperation.operations.fetch(:archiver)
       dossier.archiver!(instructeur)
+    when BatchOperation.operations.fetch(:desarchiver)
+      dossier.desarchiver!
     when BatchOperation.operations.fetch(:passer_en_instruction)
       dossier.passer_en_instruction(instructeur: instructeur)
     when BatchOperation.operations.fetch(:accepter)

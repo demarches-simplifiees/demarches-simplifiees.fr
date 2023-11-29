@@ -32,6 +32,19 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "desarchiver"' do
+      let(:batch_operation) do
+        create(:batch_operation, :desarchiver,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+      it 'archives the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.archived? }
+          .from(true)
+          .to(false)
+      end
+    end
+
     context 'when operation is "passer_en_instruction"' do
       let(:batch_operation) do
         create(:batch_operation, :passer_en_instruction,
