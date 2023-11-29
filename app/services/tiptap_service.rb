@@ -14,8 +14,16 @@ class TiptapService
 
     def node_to_html(node, tags)
       case node
+      in type: 'header', content:
+        "<header>#{children(content, tags)}</header>"
+      in type: 'footer', content:, **rest
+        "<footer#{text_align(rest[:attrs])}>#{children(content, tags)}</footer>"
+      in type: 'headerColumn', content:, **rest
+        "<div#{text_align(rest[:attrs])} class=\"column\">#{children(content, tags)}</div>"
       in type: 'paragraph', content:, **rest
         "<p#{text_align(rest[:attrs])}>#{children(content, tags)}</p>"
+      in type: 'title', content:, **rest
+        "<h1#{text_align(rest[:attrs])}>#{children(content, tags)}</h1>"
       in type: 'heading', attrs: { level:, **attrs }, content:
         "<h#{level}#{text_align(attrs)}>#{children(content, tags)}</h#{level}>"
       in type: 'bulletList', content:

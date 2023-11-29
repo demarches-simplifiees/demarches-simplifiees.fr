@@ -60,6 +60,10 @@
   flex-shrink: 0;
 }
 
+.flex-gap-1 {
+  gap: $default-spacer;
+}
+
 .flex-gap-2 {
   gap: 2 * $default-spacer;
 }

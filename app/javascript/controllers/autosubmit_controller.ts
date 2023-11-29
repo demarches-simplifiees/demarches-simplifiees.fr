@@ -43,7 +43,8 @@ export class AutosubmitController extends ApplicationController {
 
     matchInputElement(target, {
       date: () => {},
-      inputable: () => this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY)
+      inputable: () => this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY),
+      hidden: () => this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY)
     });
   }
 

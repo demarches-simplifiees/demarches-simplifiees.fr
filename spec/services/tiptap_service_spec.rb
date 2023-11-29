@@ -5,6 +5,23 @@ RSpec.describe TiptapService do
         type: 'doc',
         content: [
           {
+            type: 'header',
+            content: [
+              {
+                type: 'headerColumn',
+                content: [{ type: 'text', text: 'Left' }]
+              },
+              {
+                type: 'headerColumn',
+                content: [{ type: 'text', text: 'Right' }]
+              }
+            ]
+          },
+          {
+            type: 'title',
+            content: [{ type: 'text', text: 'Title' }]
+          },
+          {
             type: 'paragraph',
             attrs: { textAlign: 'right' },
             content: [
@@ -118,6 +135,10 @@ RSpec.describe TiptapService do
                 ]
               }
             ]
+          },
+          {
+            type: 'footer',
+            content: [{ type: 'text', text: 'Footer' }]
           }
         ]
       }
@@ -125,13 +146,16 @@ RSpec.describe TiptapService do
     let(:tags) { { 'name' => 'Paul' } }
     let(:html) do
       [
+        '<header><div class="column">Left</div><div class="column">Right</div></header>',
+        '<h1>Title</h1>',
         '<p style="text-align: right">Hello world!</p>',
         '<p><s><em>Bonjour </em></s><u><strong>Paul</strong></u> <mark>!</mark></p>',
         '<h1>Heading 1</h1>',
         '<h2 style="text-align: center">Heading 2</h2>',
         '<h3>Heading 3</h3>',
         '<ul><li><p>Item 1</p></li><li><p>Item 2</p></li></ul>',
-        '<ol><li><p>Item 1</p></li><li><p>Item 2</p></li></ol>'
+        '<ol><li><p>Item 1</p></li><li><p>Item 2</p></li></ol>',
+        '<footer>Footer</footer>'
       ].join
     end
 

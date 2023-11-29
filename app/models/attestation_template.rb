@@ -99,6 +99,14 @@ class AttestationTemplate < ApplicationRecord
     signature.attached? ? signature.filename : nil
   end
 
+  def tiptap_body
+    json_body&.to_json
+  end
+
+  def tiptap_body=(json)
+    self.json_body = JSON.parse(json)
+  end
+
   private
 
   def signature_to_render(groupe_instructeur)
