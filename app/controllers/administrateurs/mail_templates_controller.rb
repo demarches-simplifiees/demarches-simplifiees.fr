@@ -54,12 +54,12 @@ module Administrateurs
 
     def mail_templates
       [
-        procedure.initiated_mail_template,
-        procedure.received_mail_template,
-        procedure.closed_mail_template,
-        procedure.refused_mail_template,
-        procedure.without_continuation_mail_template,
-        procedure.re_instructed_mail_template
+        procedure.passer_en_construction_email_template,
+        procedure.passer_en_instruction_email_template,
+        procedure.accepter_email_template,
+        procedure.refuser_email_template,
+        procedure.classer_sans_suite_email_template,
+        procedure.repasser_en_instruction_email_template
       ]
     end
 

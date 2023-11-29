@@ -45,11 +45,7 @@ class NotificationMailer < ApplicationMailer
   end
 
   def self.send_repasser_en_instruction_notification(dossier)
-    with(dossier: dossier, state: Dossier.states.fetch(:en_instruction)).send_notification
-  end
-
-  def self.send_pending_correction(dossier)
-    with(dossier: dossier).send_notification
+    with(dossier: dossier, state: DossierOperationLog.operations.fetch(:repasser_en_instruction)).send_notification
   end
 
   def self.critical_email?(action_name)
@@ -71,14 +67,14 @@ class NotificationMailer < ApplicationMailer
       mail.perform_deliveries = false
     else
       I18n.with_locale(@dossier.user_locale) do
-        mail_template = @dossier.mail_template_for_state
-        mail_template_presenter = MailTemplatePresenterService.new(@dossier)
+        email_template = @dossier.email_template_for(params[:state])
+        email_template_presenter = MailTemplatePresenterService.new(@dossier, params[:state])
 
         @email = @dossier.user_email_for(:notification)
-        @rendered_template = mail_template_presenter.safe_body
-        @subject = mail_template_presenter.safe_subject
-        @actions = mail_template.actions_for_dossier(@dossier)
-        @attachment = mail_template.attachment_for_dossier(@dossier)
+        @rendered_template = email_template_presenter.safe_body
+        @subject = email_template_presenter.safe_subject
+        @actions = email_template.actions_for_dossier(@dossier)
+        @attachment = email_template.attachment_for_dossier(@dossier)
       end
     end
   end
