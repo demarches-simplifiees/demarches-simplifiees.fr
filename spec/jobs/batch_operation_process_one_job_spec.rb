@@ -175,6 +175,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "restaurer"' do
+      let(:batch_operation) do
+        create(:batch_operation, :restaurer,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'changed the dossier to en construction' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.hidden_by_administration? }
+          .from(true)
+          .to(false)
+      end
+    end
+
     context 'when operation is "classer_sans_suite"' do
       let(:batch_operation) do
         create(:batch_operation, :classer_sans_suite,

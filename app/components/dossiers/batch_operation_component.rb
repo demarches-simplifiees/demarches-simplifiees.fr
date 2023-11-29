@@ -7,7 +7,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def render?
-    ['a-suivre', 'traites', 'suivis'].include?(@statut)
+    ['a-suivre', 'traites', 'suivis', 'supprimes_recemment'].include?(@statut)
   end
 
   def operations_for_dossier(dossier)
@@ -17,7 +17,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
     when Dossier.states.fetch(:en_instruction)
       [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser), BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction)]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
-      [BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:supprimer)]
+      [BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:supprimer), BatchOperation.operations.fetch(:restaurer)]
     else
       []
     end.append(BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow))
@@ -48,6 +48,16 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.supprimer"),
               operation: BatchOperation.operations.fetch(:supprimer)
+            }
+          ]
+      }
+    when 'supprimes_recemment' then
+      {
+        options:
+          [
+            {
+              label: t(".operations.restaurer"),
+              operation: BatchOperation.operations.fetch(:restaurer)
             }
           ]
       }
@@ -115,6 +125,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
       passer_en_instruction: 'fr-icon-edit-line',
       repasser_en_construction: 'fr-icon-draft-line',
       supprimer: 'fr-icon-delete-line',
+      restaurer: 'fr-icon-refresh-line',
       unfollow: 'fr-icon-star-fill'
     }
   end
