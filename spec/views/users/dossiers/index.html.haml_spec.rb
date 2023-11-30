@@ -3,15 +3,15 @@ describe 'users/dossiers/index', type: :view do
   let(:dossier_brouillon) { create(:dossier, state: Dossier.states.fetch(:brouillon), user: user) }
   let(:dossier_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user) }
   let(:dossier_termine) { create(:dossier, state: Dossier.states.fetch(:accepte), user: user) }
-  let(:user_dossiers) { [dossier_brouillon, dossier_en_construction, dossier_termine] }
   let(:dossiers_invites) { [] }
+  let(:user_dossiers) { Kaminari.paginate_array([dossier_brouillon, dossier_en_construction, dossier_termine]).page(1) }
   let(:statut) { 'en-cours' }
   let(:filter) { DossiersFilter.new(user, ActionController::Parameters.new(random_param: 'random_param')) }
 
-  before do
+  before do |config|
     allow(view).to receive(:new_demarche_url).and_return('#')
     allow(controller).to receive(:current_user) { user }
-    assign(:user_dossiers, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:user_dossiers, user_dossiers)
     assign(:dossiers_invites, Kaminari.paginate_array(dossiers_invites).page(1))
     assign(:dossiers_supprimes_recemment, Kaminari.paginate_array(user_dossiers).page(1))
     assign(:dossiers_supprimes_definitivement, Kaminari.paginate_array(user_dossiers).page(1))
@@ -22,7 +22,8 @@ describe 'users/dossiers/index', type: :view do
     assign(:statut, statut)
     assign(:filter, filter)
     assign(:all_dossiers_uniq_procedures_count, 0)
-    render
+
+    render if !config.metadata[:caching]
   end
 
   it 'affiche les dossiers' do
@@ -56,7 +57,7 @@ describe 'users/dossiers/index', type: :view do
   end
 
   context 'quand il n’y a aucun dossier' do
-    let(:user_dossiers)    { [] }
+    let(:user_dossiers) { [] }
     let(:dossiers_invites) { [] }
 
     it 'n’affiche pas la table' do
@@ -99,6 +100,64 @@ describe 'users/dossiers/index', type: :view do
 
     it "displays the hide by user at button" do
       expect(rendered).to have_text("Supprimer le dossier")
+    end
+  end
+
+  context 'caching', caching: true do
+    it "works" do
+      expect(user_dossiers).to receive(:present?).once
+      2.times { render; user.reload }
+    end
+
+    it "cache key depends on statut" do
+      expect(user_dossiers).to receive(:present?).twice
+      render
+
+      assign(:statut, "termines")
+      user.reload
+
+      render
+    end
+
+    it "cache key depends on dossier updated_at" do
+      expect(user_dossiers).to receive(:present?).twice
+      render
+
+      dossier_termine.touch
+      user.reload
+
+      render
+    end
+
+    it "cache key depends on dossiers list" do
+      render
+      expect(rendered).to have_text(/3\s+en cours/)
+
+      assign(:user_dossiers, Kaminari.paginate_array(user_dossiers.concat([create(:dossier, :en_construction, user: user)])).page(1))
+      user.reload
+
+      render
+      expect(rendered).to have_text(/4\s+en cours/)
+    end
+
+    it "cache key dpeends on dossier invites" do
+      expect(user_dossiers).to receive(:present?).twice
+      render
+
+      create(:invite, user:)
+      user.reload
+
+      render
+    end
+
+    it "cache key depends on dossier deletion" do
+      expect(user_dossiers).to receive(:present?).twice
+      render
+
+      dossier_termine.expired_keep_track_and_destroy!
+      user.reload
+
+      render
     end
   end
 end
