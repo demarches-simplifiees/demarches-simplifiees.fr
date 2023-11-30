@@ -97,7 +97,10 @@ class DossierPreloader
   end
 
   def load_champs(parent, name, champs, dossier, children_by_parent)
-    return if champs.empty?
+    if champs.empty?
+      parent.association(name).target = [] # tells to Rails association has been loaded
+      return
+    end
 
     champs.each do |champ|
       champ.association(:dossier).target = dossier
