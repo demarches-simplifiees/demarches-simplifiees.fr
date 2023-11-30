@@ -32,6 +32,10 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
         options:
           [
             {
+              label: t(".operations.passer_en_instruction"),
+              operation: BatchOperation.operations.fetch(:passer_en_instruction)
+            },
+            {
               label: t(".operations.follow"),
               operation: BatchOperation.operations.fetch(:follow)
             }
