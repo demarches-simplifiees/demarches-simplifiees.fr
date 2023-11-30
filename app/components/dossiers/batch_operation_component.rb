@@ -7,17 +7,25 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def render?
-    ['a-suivre', 'traites', 'suivis', 'archives', 'supprimes_recemment'].include?(@statut)
+    ['a-suivre', 'traites', 'suivis', 'archives', 'supprimes_recemment', 'expirant'].include?(@statut)
   end
 
   def operations_for_dossier(dossier)
     case dossier.state
+    when Dossier.states.fetch(:brouillon)
+      [BatchOperation.operations.fetch(:repousser_expiration)]
     when Dossier.states.fetch(:en_construction)
-      [BatchOperation.operations.fetch(:passer_en_instruction)]
+      [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:repousser_expiration)]
     when Dossier.states.fetch(:en_instruction)
-      [BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser), BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction)]
+      [
+        BatchOperation.operations.fetch(:accepter), BatchOperation.operations.fetch(:refuser),
+        BatchOperation.operations.fetch(:classer_sans_suite), BatchOperation.operations.fetch(:repasser_en_construction)
+      ]
     when Dossier.states.fetch(:accepte), Dossier.states.fetch(:refuse), Dossier.states.fetch(:sans_suite)
-      [BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:desarchiver), BatchOperation.operations.fetch(:supprimer), BatchOperation.operations.fetch(:restaurer)]
+      [
+        BatchOperation.operations.fetch(:archiver), BatchOperation.operations.fetch(:desarchiver), BatchOperation.operations.fetch(:supprimer),
+        BatchOperation.operations.fetch(:restaurer), BatchOperation.operations.fetch(:repousser_expiration)
+      ]
     else
       []
     end.append(BatchOperation.operations.fetch(:follow), BatchOperation.operations.fetch(:unfollow))
@@ -62,6 +70,16 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             {
               label: t(".operations.supprimer"),
               operation: BatchOperation.operations.fetch(:supprimer)
+            }
+          ]
+      }
+    when 'expirant' then
+      {
+        options:
+          [
+            {
+              label: t(".operations.repousser_expiration"),
+              operation: BatchOperation.operations.fetch(:repousser_expiration)
             }
           ]
       }

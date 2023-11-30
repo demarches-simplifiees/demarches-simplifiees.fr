@@ -7,6 +7,7 @@ class BatchOperation < ApplicationRecord
     desarchiver: 'desarchiver',
     follow: 'follow',
     passer_en_instruction: 'passer_en_instruction',
+    repousser_expiration: 'repousser_expiration',
     repasser_en_construction: 'repasser_en_construction',
     restaurer: 'restaurer',
     unfollow: 'unfollow',
@@ -56,6 +57,8 @@ class BatchOperation < ApplicationRecord
       query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:follow) then
       query.visible_by_administration.without_followers.en_cours
+    when BatchOperation.operations.fetch(:repousser_expiration) then
+      query.visible_by_administration.close_to_expiration
     when BatchOperation.operations.fetch(:repasser_en_construction) then
       query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:unfollow) then
@@ -88,6 +91,8 @@ class BatchOperation < ApplicationRecord
       dossier.classer_sans_suite(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
     when BatchOperation.operations.fetch(:follow)
       instructeur.follow(dossier)
+    when BatchOperation.operations.fetch(:repousser_expiration)
+      dossier.extend_conservation(1.month)
     when BatchOperation.operations.fetch(:repasser_en_construction)
       dossier.repasser_en_construction!(instructeur: instructeur)
     when BatchOperation.operations.fetch(:unfollow)

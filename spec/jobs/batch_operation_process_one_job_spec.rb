@@ -59,6 +59,19 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "repousser_expiration"' do
+      let(:batch_operation) do
+        create(:batch_operation, :repousser_expiration,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+      it 'archives the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.conservation_extension }
+          .from(dossier_job.conservation_extension)
+          .to(dossier_job.conservation_extension + 1.month)
+      end
+    end
+
     context 'when operation is "follow"' do
       let(:batch_operation) do
         create(:batch_operation, :follow,

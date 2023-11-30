@@ -26,6 +26,15 @@ fr:
       text_success:
         one: "1 dossier est en cours d'instruction"
         other: "%{success_count}/%{count} dossiers ont été passés en instruction"
+  repousser_expiration:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier sera conservé 1 mois supplémentaire"
+        other: "%{success_count}/%{count} dossiers seront conservé 1 mois supplémentaire"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours d'être conservé 1 mois supplémentaire"
+        other: "%{success_count}/%{count} dossiers seront conservé 1 mois supplémentaire"
   accepter:
     finish:
       text_success:

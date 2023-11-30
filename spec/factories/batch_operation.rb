@@ -41,6 +41,17 @@ FactoryBot.define do
       end
     end
 
+    trait :repousser_expiration do
+      operation { BatchOperation.operations.fetch(:repousser_expiration) }
+      after(:build) do |batch_operation, evaluator|
+        procedure = create(:simple_procedure, :published, instructeurs: [evaluator.invalid_instructeur.presence || batch_operation.instructeur], administrateurs: [create(:administrateur)])
+        batch_operation.dossiers = [
+          create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago),
+          create(:dossier, :with_individual, :accepte, procedure: procedure, processed_at: 12.months.ago)
+        ]
+      end
+    end
+
     trait :accepter do
       operation { BatchOperation.operations.fetch(:accepter) }
       after(:build) do |batch_operation, evaluator|

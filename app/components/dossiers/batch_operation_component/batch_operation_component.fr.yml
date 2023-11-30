@@ -4,6 +4,7 @@ fr:
     desarchiver: 'Désarchiver les dossiers'
     passer_en_instruction: 'Passer les dossiers en instruction'
     instruction: Instruire les dossiers
+    repousser_expiration: Conserver un mois de plus
     accepter: 'Accepter les dossiers'
     supprimer: 'Supprimer les dossiers'
     restaurer: 'Restaurer les dossiers'
