@@ -408,21 +408,20 @@ module Users
     # else en-cours
     def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transferes, dossiers_close_to_expiration, params_statut)
       tabs = {
-        'en-cours' => mes_dossiers.present?,
-        'traites' => dossiers_traites.present?,
-        'dossiers-invites' => dossiers_invites.present?,
-        'dossiers-supprimes-recemment' => dossiers_supprimes_recemment.present?,
-        'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement.present?,
-        'dossiers-transferes' => dossier_transferes.present?,
-        'dossiers-expirant' => dossiers_close_to_expiration.present?
+        'en-cours' => mes_dossiers,
+        'traites' => dossiers_traites,
+        'dossiers-invites' => dossiers_invites,
+        'dossiers-supprimes-recemment' => dossiers_supprimes_recemment,
+        'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement,
+        'dossiers-transferes' => dossier_transferes,
+        'dossiers-expirant' => dossiers_close_to_expiration
       }
-      if tabs[params_statut]
+
+      if tabs[params_statut]&.present?
         params_statut
       else
-        tabs
-          .filter { |_tab, filled| filled }
-          .map { |tab, _| tab }
-          .first || 'en-cours'
+        tab = tabs.find { |_tab, scope| scope.present? }
+        tab&.first || 'en-cours'
       end
     end
 
