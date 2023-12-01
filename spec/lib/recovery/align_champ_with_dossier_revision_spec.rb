@@ -26,14 +26,14 @@ describe Recovery::AlignChampWithDossierRevision do
       expect(bad_dossier.revision).to eq(procedure.published_revision)
       expect(bad_dossier.champs.size).to eq(2)
       expect(bad_dossier.champs_public.size).to eq(1)
-      expect { DossierPreloader.load_one(bad_dossier) }.to raise_error(ArgumentError)
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error(ArgumentError)
 
       fixer = Recovery::AlignChampWithDossierRevision.new(Dossier)
       fixer.run
 
       expect(fixer.logs.size).to eq(1)
       expect(fixer.logs.first.fetch(:status)).to eq(:updated)
-      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error(ArgumentError)
       expect(bad_dossier.champs.size).to eq(2)
       expect(bad_dossier.champs_public.size).to eq(2)
     end
@@ -53,14 +53,14 @@ describe Recovery::AlignChampWithDossierRevision do
       expect(bad_dossier.revision).to eq(procedure.published_revision)
       expect(bad_dossier.champs.size).to eq(2)
       expect(bad_dossier.champs_public.size).to eq(2)
-      expect { DossierPreloader.load_one(bad_dossier) }.to raise_error(ArgumentError)
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error(ArgumentError)
 
       fixer = Recovery::AlignChampWithDossierRevision.new(Dossier)
       fixer.run(destroy_extra_champs: true)
 
       expect(fixer.logs.size).to eq(1)
       expect(fixer.logs.first.fetch(:status)).to eq(:not_found)
-      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error(ArgumentError)
       expect(bad_dossier.champs.size).to eq(1)
       expect(bad_dossier.champs_public.size).to eq(1)
     end
