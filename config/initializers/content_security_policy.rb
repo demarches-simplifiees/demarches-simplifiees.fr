@@ -43,6 +43,8 @@ Rails.application.config.content_security_policy do |policy|
   default_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   policy.default_src(:self, :data, :blob, :report_sample, *default_whitelist)
 
+  policy.connect_src(*policy.connect_src, "http://127.0.0.1:11434") # ollama default host
+
   if Rails.env.development?
     # Allow LiveReload requests
     policy.connect_src(*policy.connect_src, "ws://localhost:3035", "http://localhost:3035")

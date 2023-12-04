@@ -59,6 +59,12 @@
 
   .fr-container--fluid.fr-mx-4w.overflow-y-visible
     %hr
+
+    .fr-mb-4w{ "data-controller" => "langchain-instructeurs-filters" }
+      = label_tag :prompt, "Exprimez les filtres à appliquer", class: "fr-label"
+      = text_field_tag :prompt, "", class: "fr-input fr-col-xl-8", "data-langchain-instructeurs-filters-target" => "prompt", placeholder: "en construction déposés entre le 15 et 25 novembre, montant de la subvention < 10 000 €"
+      %pre{ style: "white-space: pre-wrap", "data-langchain-instructeurs-filters-target" => "result" }
+
     .flex.align-center
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
         = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut}
