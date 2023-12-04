@@ -241,6 +241,19 @@ RSpec.describe Types::DossierType, type: :graphql do
 
     it {
       expect(data[:dossier][:messages]).not_to be_nil
+      expect(data[:dossier][:messages][0][:correction]).to be_nil
+    }
+  end
+
+  describe 'dossier with pending correction' do
+    let(:dossier) { create(:dossier, :en_construction) }
+    let!(:correction) { create(:dossier_correction, dossier:) }
+    let(:query) { DOSSIER_WITH_CORRECTION_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it {
+      expect(data[:dossier][:messages][0][:correction]).to eq({ reason: "incorrect", dateResolution: nil })
+      expect(data[:dossier][:dateDerniereCorrectionEnAttente]).not_to be_nil
     }
   end
 
@@ -406,6 +419,21 @@ RSpec.describe Types::DossierType, type: :graphql do
         body
         attachments {
           filename
+        }
+      }
+    }
+  }
+  GRAPHQL
+
+  DOSSIER_WITH_CORRECTION_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      dateDerniereCorrectionEnAttente
+      messages {
+        body
+        correction {
+          reason
+          dateResolution
         }
       }
     }

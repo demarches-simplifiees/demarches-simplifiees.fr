@@ -237,7 +237,7 @@ module Instructeurs
         commentaire = CommentaireService.build(current_instructeur, dossier, { body: message, piece_jointe: })
 
         if commentaire.valid?
-          dossier.flag_as_pending_correction!(commentaire, params[:kind].presence)
+          dossier.flag_as_pending_correction!(commentaire, params[:reason].presence)
           dossier.update!(last_commentaire_updated_at: Time.zone.now)
           current_instructeur.follow(dossier)
 

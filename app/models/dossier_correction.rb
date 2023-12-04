@@ -3,7 +3,7 @@
 # Table name: dossier_corrections
 #
 #  id             :bigint           not null, primary key
-#  kind           :string           default("correction"), not null
+#  reason         :string           default("incorrect"), not null
 #  resolved_at    :datetime
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
@@ -14,11 +14,13 @@ class DossierCorrection < ApplicationRecord
   belongs_to :dossier
   belongs_to :commentaire
 
+  self.ignored_columns += ['kind']
+
   validates_associated :commentaire
 
   scope :pending, -> { where(resolved_at: nil) }
 
-  enum kind: { correction: 'correction', incomplete: 'incomplete' }
+  enum reason: { incorrect: 'incorrect', incomplete: 'incomplete' }, _prefix: :dossier
 
   def resolved?
     resolved_at.present?

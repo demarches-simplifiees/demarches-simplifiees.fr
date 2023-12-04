@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    attributes:
+      dossier_correction:
+        reasons:
+          incorrect: "The file is invalid and needs to be corrected"
+          incomplete: "The file is incomplete and needs to be completed"

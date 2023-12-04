@@ -36,12 +36,12 @@ describe DossierCorrectableConcern do
     context 'when dossier is en_construction' do
       it 'creates a correction' do
         expect { flag }.to change { dossier.corrections.pending.count }.by(1)
-        expect(dossier.corrections.last).to be_correction
+        expect(dossier.corrections.last).to be_dossier_incorrect
       end
 
       it 'created a correction of incomplete kind' do
         expect { dossier.flag_as_pending_correction!(commentaire, "incomplete") }.to change { dossier.corrections.pending.count }.by(1)
-        expect(dossier.corrections.last).to be_incomplete
+        expect(dossier.corrections.last).to be_dossier_incomplete
       end
 
       it 'does not change dossier state' do

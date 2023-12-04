@@ -3,7 +3,7 @@ en:
   dossier_mailer:
     notify_pending_correction:
       subject: You need to modify your file no. %{dossier_id} « %{libelle_demarche} »
-      correction:
+      incorrect:
         explanation_html:
           In order to continue its instruction, <strong>an instructor requested you to edit information</strong> to your file no. %{dossier_id} of the « %{libelle_demarche} » procedure.
         sva_svr:

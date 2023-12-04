@@ -48,7 +48,7 @@
     - menu.with_item(class: "inactive form-inside fr-pt-1v") do
       = render partial: 'instructeurs/dossiers/instruction_button_motivation', locals: { dossier:,
           visible: false,
-          form_path: pending_correction_instructeur_dossier_path(dossier.procedure, dossier, kind: :incomplete),
+          form_path: pending_correction_instructeur_dossier_path(dossier.procedure, dossier, reason: :incomplete),
           placeholder: 'Expliquez au demandeur comment compléter son dossier',
           popup_class: 'pending_completion',
           button_justificatif_label: "Ajouter une pièce jointe (facultatif)",
