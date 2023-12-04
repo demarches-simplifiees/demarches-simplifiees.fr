@@ -3,6 +3,16 @@ RSpec.describe NotificationMailer, type: :mailer do
   let(:user) { create(:user) }
   let(:procedure) { create(:simple_procedure, :with_service) }
 
+  describe 'send_notification_for_tiers' do
+    let(:dossier_for_tiers) { create(:dossier, :en_construction, :for_tiers_with_notification, procedure: create(:simple_procedure)) }
+
+    subject { described_class.send_notification_for_tiers(dossier_for_tiers) }
+
+    it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
+    it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
+    it { expect(subject.body).to include("Pour en savoir plus, veuillez-vous rapprocher du mandataire #{dossier_for_tiers.user.email}.") }
+  end
+
   describe 'send_en_construction_notification' do
     let(:dossier) { create(:dossier, :en_construction, :with_individual, user: user, procedure:) }
 
