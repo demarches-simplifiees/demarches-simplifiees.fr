@@ -1,7 +1,13 @@
 class GeojsonService
   def self.valid?(json)
     schemer = JSONSchemer.schema(Rails.root.join('app/schemas/geojson.json'))
-    schemer.valid?(json)
+    if schemer.valid?(json)
+      if ActiveRecord::Base.connection.execute("SELECT 1 as one FROM pg_extension WHERE extname = 'postgis';").count.zero?
+        true
+      else
+        ActiveRecord::Base.connection.exec_query('select ST_IsValid(ST_GeomFromGeoJSON($1)) as valid;', 'ValidateGeoJSON', [json.to_json]).first['valid']
+      end
+    end
   end
 
   def self.to_json_polygon_for_cadastre(coordinates)

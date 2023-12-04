@@ -7,18 +7,18 @@
   .card
     .card-title Réaffectation du dossier nº #{@dossier.id} du groupe « #{@groupe_instructeur.label} »
     %p
-      Vous pouvez réaffecter le dossier nº #{@dossier.id} à l'un des groupes d'instructeurs suivants.
+      Vous pouvez réaffecter le dossier nº #{@dossier.id} à l’un des groupes d’instructeurs suivants.
     %table.table.mt-2
       %thead
         %tr
           %th{ colspan: 2 }= t("instructeurs.dossiers.existing_groupe", count: @groupes_instructeurs.total_count)
       %tbody
         - @groupes_instructeurs.each do |group|
-          %tr
-            %td= group.label
-            %td.actions= button_to 'Réaffecter le dossier à ce groupe',
+          .flex.justify-between.align-center.fr-mb-2w
+            %p.fr-mb-0= group.label
+            = button_to 'Réaffecter le dossier à ce groupe',
               reaffecter_instructeur_dossier_path(procedure_id: @dossier.procedure.id, dossier_id: @dossier.id, groupe_instructeur_id: group.id),
-              { class: 'button',
+              { class: 'fr-btn fr-btn--secondary fr-btn--sm',
                 data: { confirm: "Êtes-vous sûr de vouloir réaffecter le dossier nº #{@dossier.id} du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
 
     = paginate @groupes_instructeurs, views_prefix: 'shared'

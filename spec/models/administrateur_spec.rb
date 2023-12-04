@@ -166,6 +166,27 @@ describe Administrateur, type: :model do
       end
     end
 
+    context 'when the old admin has an v3 api token' do
+      let(:old_admin) { create(:administrateur, :with_api_token) }
+
+      it 'transferts the api token' do
+        token = old_admin.api_tokens.first
+        subject
+        expect(new_admin.api_tokens.count).to eq 1
+        expect(new_admin.api_tokens.first).to eq token
+      end
+    end
+
+    context 'when the old admin has an old api token' do
+      let(:old_admin) { create(:administrateur, :with_api_token) }
+
+      it 'does not transfer the api token' do
+        old_admin.api_tokens.first.update(version: 2)
+        subject
+        expect(new_admin.api_tokens.count).to eq 0
+      end
+    end
+
     context 'when both admins share an instructeur' do
       let(:instructeur) { create(:instructeur) }
 
