@@ -26,6 +26,61 @@
     margin-right: auto;
   }
 
+  input.unstyled {
+    padding: 0 !important;
+    background: none !important;
+    border: none !important;
+    width: auto !important;
+
+    &:focus {
+      box-shadow: none !important;
+      background-color: $white !important;
+    }
+  }
+
+  .placeholder {
+    color: $dark-grey;
+    font-style: italic;
+  }
+
+  .fr-input-group,
+  .fr-select-group {
+    margin-bottom: 1rem;
+  }
+
+  .section-2 {
+    margin-top: 1.5rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-default-grey);
+  }
+
+  .section-2,
+  .section-3 {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-4,
+  .section-5,
+  .section-6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  // Keep only bottom margin in nested (consecutive) header sections, ie. first legend for a same level
+  .fr-fieldset > .fr-fieldset__legend + .fr-fieldset__element > .fr-fieldset:first-of-type .header-section {
+    margin-top: 0 !important;
+  }
+
+  // Don't cumulate margin-bottoms for inlined elements (radio...), because .fr-fieldset has already its own
+  .fr-fieldset__element > .fr-fieldset > .fr-fieldset__element.fr-fieldset__element--inline {
+    margin-bottom: 0;
+  }
+
+  legend {
+    width: 100%;
+  }
+
   hr {
     width: 100%;
     height: 0;
@@ -381,36 +436,6 @@
     margin-left: 5px;
     margin-right: 4px;
     margin-bottom: $default-fields-spacer;
-  }
-
-  select {
-    // hack found here: https://stackoverflow.com/questions/1895476/how-to-style-a-select-dropdown-with-css-only-without-javascript
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-color: #FFFFFF;
-    background-image: image-url("icons/chevron-down.svg");
-    background-repeat: no-repeat;
-    background-size: 14px;
-    background-position: right 10px center;
-    padding-right: 4 * $default-spacer;
-    max-width: 100%;
-
-    &.small {
-      padding-right: 3 * $default-spacer;
-    }
-
-    // CAUTION: IE hackery ahead
-    &::-ms-expand {
-      display: none; // remove default arrow in IE 10 and 11 */
-    }
-
-    // target Internet Explorer 9 to undo the custom arrow */
-    @media screen and (min-width:0\0) {
-      select {
-        background: none\9;
-      }
-    }
   }
 
   [data-reach-combobox-input] {

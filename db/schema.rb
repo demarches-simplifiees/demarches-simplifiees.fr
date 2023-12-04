@@ -960,9 +960,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.datetime "confirmation_sent_at"
-    t.datetime "blocked_at", precision: 6
+    t.datetime "blocked_at"
     t.text "blocked_reason"
+    t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "created_at"
