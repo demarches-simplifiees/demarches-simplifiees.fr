@@ -52,7 +52,7 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = ENV["DS_ENV"] == "staging" ? :debug : :info
+  config.log_level = ENV["DS_LOG_LEVEL"].presence&.to_sym || :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
