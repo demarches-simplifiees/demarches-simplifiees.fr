@@ -27,7 +27,7 @@ class Procedure::ProcedureAdministrateurs::AdministrateurComponent < Application
       button_to 'Retirer',
        admin_procedure_administrateur_path(@procedure, @administrateur),
        method: :delete,
-       class: 'button',
+       class: 'fr-btn fr-btn--tertiary fr-btn--sm',
        form: { data: { turbo: true, turbo_confirm: "Retirer « #{@administrateur.email} » des administrateurs de « #{@procedure.libelle} » ?" } }
     end
   end

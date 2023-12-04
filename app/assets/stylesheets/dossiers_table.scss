@@ -30,15 +30,6 @@
     padding: (2 * $default-spacer) $default-spacer;
   }
 
-  .icon.folder {
-    position: relative;
-
-    .notifications {
-      top: -3px;
-      right: -6px;
-    }
-  }
-
   .notification-col {
     a {
       font-size: 16px;

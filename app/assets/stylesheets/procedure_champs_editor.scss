@@ -26,11 +26,10 @@
     }
 
     .handle {
-      align-self: center;
       cursor: grab;
 
       &:hover {
-        opacity: 0.4;
+        background-color: var(--hover-tint);
       }
     }
 
@@ -38,27 +37,6 @@
       flex-grow: 1;
       display: flex;
       justify-content: flex-end;
-    }
-
-    .move-up,
-    .move-down {
-      @extend %outline;
-
-      display: inline-block;
-      width: 30px;
-      padding-bottom: 5px;
-      border-radius: 5px;
-      border: 1px solid $border-grey;
-      background-color: #FFFFFF;
-      color: $black;
-      text-align: center;
-      -webkit-appearance: none;
-
-      &:hover:not(:disabled) {
-        cursor: pointer;
-        background: $light-grey;
-        text-decoration: none;
-      }
     }
 
     &.first .move-up {
@@ -82,24 +60,22 @@
     }
 
     .flex {
-      &.section {
-        padding: $default-spacer $default-spacer 0;
-        margin-bottom: 8px;
+      &.flex-gap {
+        column-gap: $default-spacer * 2;
       }
 
-      &.hr {
-        border-bottom: 1px solid $border-grey;
+      &.section {
+        margin-bottom: 8px;
+        padding: $default-spacer / 2 $default-spacer * 2;
+      }
 
-        &.head {
-          border-bottom: 1px solid var(--border-default-grey);
-          padding-bottom: 10px;
-        }
+      &.head {
+        border-bottom: 1px solid var(--border-default-grey);
+        padding: $default-spacer / 2 $default-spacer; // due to no-outline button horizontal padding, don't add twice the padding so it's aligned with section
       }
     }
 
     .cell {
-      margin-right: $default-padding;
-
       label {
         margin-bottom: 8px;
         text-transform: uppercase;

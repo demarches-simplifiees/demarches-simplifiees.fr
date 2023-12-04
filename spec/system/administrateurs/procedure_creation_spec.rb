@@ -62,7 +62,7 @@ describe 'Creating a new procedure', js: true do
       expect(page).to have_current_path(admin_procedure_path(procedure))
 
       champs_card = find('.fr-tile', text: 'Champs du formulaire')
-      expect(champs_card).to have_selector('.icon.refuse')
+      expect(champs_card).to have_selector('.fr-badge--error')
       expect(champs_card).to have_content('À modifier')
     end
   end
