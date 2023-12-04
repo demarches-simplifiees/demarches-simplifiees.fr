@@ -1,26 +1,12 @@
 @import "colors";
 @import "constants";
 
-
-[data-fr-theme="dark"] .message {
-  background: var(--background-action-low-blue-france);
-
-  &.inverted-background {
-    background: var(--background-action-low-blue-france);
-  }
-}
-
 .message {
   display: flex;
   align-items: flex-start;
   margin-bottom: $default-padding;
   padding: $default-padding;
-  background: $light-grey;
   border-radius: 3px;
-
-  &.inverted-background {
-    background: $light-grey;
-  }
 
   h2 {
     margin-bottom: $default-spacer;
@@ -32,9 +18,5 @@
 
   .date {
     float: right;
-  }
-
-  .message-answer-button {
-    margin-left: auto;
   }
 }

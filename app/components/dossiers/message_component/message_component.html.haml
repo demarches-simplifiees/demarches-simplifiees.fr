@@ -22,8 +22,7 @@
 
   .message-extras.flex.justify-start
     - if commentaire.soft_deletable?(connected_user)
-      = button_to instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete,  class: 'button danger', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
-        = dsfr_icon('fr-icon-delete-line', :sm)
+      = button_to instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
         = t('.delete_button')
 
     - if commentaire.piece_jointe.attached?
@@ -31,6 +30,5 @@
         = render Attachment::ShowComponent.new(attachment: commentaire.piece_jointe.attachment, new_tab: true)
 
     - if show_reply_button?
-      = button_tag type: 'button', class: 'button small message-answer-button', onclick: 'document.querySelector("#commentaire_body").focus()' do
-        %span.icon.reply
+      = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-go-back-line fr-btn--icon-left', onclick: 'document.querySelector("#commentaire_body").focus()' do
         = t('.reply')

@@ -27,7 +27,7 @@
       - if dossier.en_construction?
         .en-construction
           - if dossier.pending_correction.present?
-            .message.inverted-background
+            .message.fr-background-alt--grey
               = render Dossiers::MessageComponent.new(commentaire: dossier.pending_correction.commentaire, connected_user: current_user)
 
           %p{ role: 'status' }
