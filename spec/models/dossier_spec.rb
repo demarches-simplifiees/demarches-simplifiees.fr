@@ -578,12 +578,12 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
 
     it "can change groupe instructeur" do
-      dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure)
+      dossier.assign_to_groupe_instructeur(new_groupe_instructeur_new_procedure, DossierAssignment.modes.fetch(:auto))
       expect(dossier.groupe_instructeur).not_to eq(new_groupe_instructeur_new_procedure)
     end
 
     it "can not change groupe instructeur if new groupe is from another procedure" do
-      dossier.assign_to_groupe_instructeur(new_groupe_instructeur)
+      dossier.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto))
       expect(dossier.groupe_instructeur).to eq(new_groupe_instructeur)
     end
   end
@@ -603,7 +603,7 @@ describe Dossier, type: :model do
     it "unfollows stale instructeurs when groupe instructeur change" do
       instructeur.follow(dossier)
       instructeur2.follow(dossier)
-      dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, procedure.administrateurs.first)
+      dossier.reload.assign_to_groupe_instructeur(new_groupe_instructeur, DossierAssignment.modes.fetch(:auto), procedure.administrateurs.first)
 
       expect(dossier.reload.followers_instructeurs).not_to include(instructeur)
       expect(dossier.reload.followers_instructeurs).to include(instructeur2)

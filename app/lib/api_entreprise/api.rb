@@ -91,6 +91,10 @@ class APIEntreprise::API
 
   private
 
+  def recipient
+    @procedure&.service && @procedure.service.siret.presence || ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET')
+  end
+
   def call_with_siret(resource_name, siret_or_siren, user_id: nil)
     url = make_url(resource_name, siret_or_siren)
 
@@ -157,7 +161,7 @@ class APIEntreprise::API
   def base_params
     {
       context: APPLICATION_NAME,
-      recipient: ENV.fetch('API_ENTREPRISE_DEFAULT_SIRET'),
+      recipient: recipient,
       non_diffusables: true
     }
   end

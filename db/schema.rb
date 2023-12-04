@@ -308,6 +308,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
   end
 
+  create_table "dossier_assignments", force: :cascade do |t|
+    t.datetime "assigned_at", precision: nil, null: false
+    t.string "assigned_by"
+    t.bigint "dossier_id", null: false
+    t.bigint "groupe_instructeur_id"
+    t.string "groupe_instructeur_label"
+    t.string "mode", null: false
+    t.bigint "previous_groupe_instructeur_id"
+    t.string "previous_groupe_instructeur_label"
+    t.index ["dossier_id"], name: "index_dossier_assignments_on_dossier_id"
+  end
+
   create_table "dossier_batch_operations", force: :cascade do |t|
     t.bigint "batch_operation_id", null: false
     t.datetime "created_at", null: false
@@ -1041,6 +1053,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "dossier_assignments", "dossiers"
   add_foreign_key "dossier_batch_operations", "batch_operations"
   add_foreign_key "dossier_batch_operations", "dossiers"
   add_foreign_key "dossier_corrections", "commentaires"
