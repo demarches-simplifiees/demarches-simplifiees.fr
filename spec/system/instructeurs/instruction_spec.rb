@@ -107,11 +107,12 @@ describe 'Instructing a dossier:', js: true do
   end
 
   scenario 'A instructeur can request an export' do
-    log_in(instructeur.email, password)
+    assert_performed_jobs 1 do
+      log_in(instructeur.email, password)
+    end
 
     click_on procedure.libelle
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
-    assert_performed_jobs 1
 
     click_on "Télécharger un dossier"
     within(:css, '.dossiers-export') do
@@ -121,8 +122,9 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text('Nous générons cet export.')
     click_on "Télécharger un dossier"
     expect(page).to have_text('Un export au format .csv est en train d’être généré')
-    perform_enqueued_jobs(only: ExportJob)
-    assert_performed_jobs 2
+    assert_performed_jobs 2 do
+      perform_enqueued_jobs(only: ExportJob)
+    end
     page.driver.browser.navigate.refresh
 
     click_on "Télécharger un dossier"
