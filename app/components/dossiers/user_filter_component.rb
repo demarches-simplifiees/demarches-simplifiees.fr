@@ -1,12 +1,13 @@
 class Dossiers::UserFilterComponent < ApplicationComponent
   include DossierHelper
 
-  def initialize(statut:, filter:)
+  def initialize(statut:, filter:, procedure_id:)
     @statut = statut
     @filter = filter
+    @procedure_id = procedure_id
   end
 
-  attr_reader :statut, :filter
+  attr_reader :statut, :filter, :procedure_id
 
   def render?
     ['en-cours', 'traites'].include?(@statut)

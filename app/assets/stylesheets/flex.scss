@@ -63,3 +63,7 @@
 .flex-gap-2 {
   gap: 2 * $default-spacer; // scss-lint:disable PropertySpelling
 }
+
+.flex-1 {
+  flex: 1;
+}

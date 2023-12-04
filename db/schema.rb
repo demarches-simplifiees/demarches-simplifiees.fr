@@ -334,9 +334,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "commentaire_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
-    t.string "kind", default: "correction", null: false
     t.datetime "resolved_at"
     t.datetime "updated_at", null: false
+    t.string "kind", default: "correction", null: false
+    t.string "reason", default: "incorrect", null: false
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"
     t.index ["resolved_at"], name: "index_dossier_corrections_on_resolved_at", where: "((resolved_at IS NULL) OR (resolved_at IS NOT NULL))"
@@ -960,9 +961,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.datetime "confirmation_sent_at"
-    t.datetime "blocked_at", precision: 6
+    t.datetime "blocked_at"
     t.text "blocked_reason"
+    t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "created_at"

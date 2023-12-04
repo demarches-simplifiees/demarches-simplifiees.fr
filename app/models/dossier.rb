@@ -120,6 +120,10 @@ class Dossier < ApplicationRecord
         processed_at: processed_at)
     end
 
+    def submit_en_construction(processed_at: Time.zone.now)
+      build(state: Dossier.states.fetch(:en_construction), processed_at:)
+    end
+
     def passer_en_instruction(instructeur: nil, processed_at: Time.zone.now)
       build(state: Dossier.states.fetch(:en_instruction),
         instructeur_email: instructeur&.email,
@@ -916,6 +920,18 @@ class Dossier < ApplicationRecord
     RoutingEngine.compute(self)
   end
 
+  def submit_en_construction!(pending_correction_confirm: false)
+    self.traitements.submit_en_construction
+    save!
+
+    RoutingEngine.compute(self)
+
+    if pending_correction_confirm
+      resolve_pending_correction!
+      process_sva_svr!
+    end
+  end
+
   def after_passer_en_instruction(h)
     instructeur = h[:instructeur]
     disable_notification = h.fetch(:disable_notification, false)
@@ -987,6 +1003,9 @@ class Dossier < ApplicationRecord
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
     attestation&.destroy
+
+    self.motivation = nil
+    self.justificatif_motivation.purge_later
 
     save!
     rebase_later

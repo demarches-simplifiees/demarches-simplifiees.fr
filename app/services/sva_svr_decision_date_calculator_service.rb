@@ -47,13 +47,13 @@ class SVASVRDecisionDateCalculatorService
   def determine_start_date
     return dossier.depose_at.to_date if dossier.corrections.empty?
     return latest_correction_date if resume_method == :reset
-    return latest_incomplete_correction_date if dossier.corrections.any?(&:incomplete?)
+    return latest_incomplete_correction_date if dossier.corrections.any?(&:dossier_incomplete?)
 
     dossier.depose_at.to_date
   end
 
   def latest_incomplete_correction_date
-    correction_date dossier.corrections.filter(&:incomplete?).max_by(&:resolved_at)
+    correction_date dossier.corrections.filter(&:dossier_incomplete?).max_by(&:resolved_at)
   end
 
   def latest_correction_date

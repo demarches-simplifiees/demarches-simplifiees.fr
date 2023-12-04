@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    attributes:
+      dossier_correction:
+        reasons:
+          incorrect: "Le dossier n’est pas valide et nécessite une correction"
+          incomplete: "Le dossier est incomplet et nécessite d’être complété"

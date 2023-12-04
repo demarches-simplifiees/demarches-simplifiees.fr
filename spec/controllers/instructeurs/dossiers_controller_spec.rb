@@ -503,13 +503,13 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#pending_correction' do
     let(:message) { 'do that' }
     let(:justificatif) { nil }
-    let(:kind) { nil }
+    let(:reason) { nil }
 
     subject do
       post :pending_correction, params: {
         procedure_id: procedure.id, dossier_id: dossier.id,
         dossier: { motivation: message, justificatif_motivation: justificatif },
-        kind:
+        reason:
       }, format: :turbo_stream
     end
 
@@ -535,7 +535,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
         expect(dossier.reload).to be_en_construction
         expect(dossier).to be_pending_correction
-        expect(dossier.corrections.last).to be_correction
+        expect(dossier.corrections.last).to be_dossier_incorrect
       end
 
       it 'create a comment with text body' do
@@ -544,10 +544,10 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'flagged as incomplete' do
-        let(:kind) { 'incomplete' }
+        let(:reason) { 'incomplete' }
 
-        it 'create a correction of incomplete kind' do
-          expect(dossier.corrections.last).to be_incomplete
+        it 'create a correction of incomplete reason' do
+          expect(dossier.corrections.last).to be_dossier_incomplete
         end
       end
 
