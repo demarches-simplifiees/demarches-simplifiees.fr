@@ -1709,7 +1709,7 @@ describe Procedure do
 
     context 'when duree_conservation_dossiers_dans_ds increases' do
       it 'calls extend_conservation_for_dossiers' do
-        expect(ResetExpiringDossiersJob).not_to receive(:perform_later)
+        expect(ResetExpiringDossiersJob).to receive(:perform_later)
         procedure.update(duree_conservation_dossiers_dans_ds: duree_conservation_dossiers_dans_ds + 1)
       end
     end
