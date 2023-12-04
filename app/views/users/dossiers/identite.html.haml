@@ -24,10 +24,11 @@
           .fr-radio-rich__img
             %span.fr-icon-parent-fill
 
-      .mandataire-infos{ "data-for-tiers-target" => "mandataireBlock" }
-        .fr-alert.fr-alert--info.fr-mb-2w
-          %p.fr-notice__text= t('views.users.dossiers.identite.callout_text')
+    .mandataire-infos{ "data-for-tiers-target" => "mandataireBlock" }
+      .fr-alert.fr-alert--info.fr-mb-2w
+        %p.fr-notice__text= t('views.users.dossiers.identite.callout_text')
 
+      %fieldset.fr-fieldset
         %legend.fr-fieldset__legend--regular.fr-fieldset__legend
           %h2.fr-h4= t('views.users.dossiers.identite.self_title')
 
@@ -38,42 +39,39 @@
           = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_last_name, opts: { "data-for-tiers-target" => "mandataireLastName" })
 
     = f.fields_for :individual do |individual|
-      .individual-infos.mt-3
+      .individual-infos
         %fieldset.fr-fieldset
           %legend.fr-fieldset__legend--regular.fr-fieldset__legend{ "data-for-tiers-target" => "mandataireTitle" }
             %h2.fr-h4= t('views.users.dossiers.identite.self_title')
 
           %legend.fr-fieldset__legend--regular.fr-fieldset__legend.hidden{ "data-for-tiers-target" => "beneficiaireTitle" }
             %h2.fr-h4= t('views.users.dossiers.identite.beneficiaire_title')
+
+
+          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            = t('activerecord.attributes.individual.gender')
+            = render EditableChamp::AsteriskMandatoryComponent.new
           .fr-fieldset__element
-            %fieldset.fr-fieldset
-              %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-                = t('activerecord.attributes.individual.gender')
-                = render EditableChamp::AsteriskMandatoryComponent.new
-              .fr-fieldset__element
-                .fr-radio-group
-                  = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
-                  %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
-                    = Individual.human_attribute_name('gender.female')
-              .fr-fieldset__element
-                .fr-radio-group
-                  = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
-                  %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
-                    = Individual.human_attribute_name('gender.male')
-
-            .fr-fieldset__element.fr-fieldset__element--short-text
-              = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
-
-            .fr-fieldset__element.fr-fieldset__element--short-text
-              = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: 'family-name' })
-
-        .width-100{ "data-for-tiers-target" => "beneficiaireNotificationBlock" }
-
+            .fr-radio-group
+              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
+              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
+                = Individual.human_attribute_name('gender.female')
           .fr-fieldset__element
-            %fieldset.fr-fieldset
-              %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-                = t('activerecord.attributes.individual.notification_method')
-                = render EditableChamp::AsteriskMandatoryComponent.new
+            .fr-radio-group
+              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
+              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
+                = Individual.human_attribute_name('gender.male')
+
+          .fr-fieldset__element.fr-fieldset__element--short-text
+            = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
+
+          .fr-fieldset__element.fr-fieldset__element--short-text
+            = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: 'family-name' })
+
+        %fieldset.fr-fieldset{ "data-for-tiers-target" => "beneficiaireNotificationBlock" }
+          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            = t('activerecord.attributes.individual.notification_method')
+            = render EditableChamp::AsteriskMandatoryComponent.new
 
           - Individual.notification_methods.each do |method, _|
             .fr-fieldset__element
@@ -92,5 +90,5 @@
             = render Dsfr::InputComponent.new(form: individual, attribute: :birthdate, input_type: :date_field,
               opts: { placeholder: 'Format : AAAA-MM-JJ', max: Date.today.iso8601, min: "1900-01-01", autocomplete: 'bday' })
 
-    .fr-fieldset__element
-      = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn fr-btn--lg fr-my-2w"
+
+    = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn"
