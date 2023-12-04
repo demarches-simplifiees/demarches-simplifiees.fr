@@ -988,6 +988,9 @@ class Dossier < ApplicationRecord
       .processed_at
     attestation&.destroy
 
+    self.motivation = nil
+    self.justificatif_motivation.purge_later
+
     save!
     rebase_later
     if !disable_notification
