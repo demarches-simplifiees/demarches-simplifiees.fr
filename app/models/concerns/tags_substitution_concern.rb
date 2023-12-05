@@ -3,6 +3,7 @@ module TagsSubstitutionConcern
 
   include Rails.application.routes.url_helpers
   include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::TextHelper
 
   module TagsParser
     include Parsby::Combinators
@@ -64,7 +65,7 @@ module TagsSubstitutionConcern
       id: 'dossier_motivation',
       libelle: 'motivation',
       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
-      target: :motivation,
+      lambda: -> (d) { simple_format(d.motivation) },
       available_for_states: Dossier::TERMINE
     },
     {
