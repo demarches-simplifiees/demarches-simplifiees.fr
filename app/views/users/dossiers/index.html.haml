@@ -25,7 +25,7 @@
           = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
 
     - if @search_terms.blank?
-      - cache([current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
+      - cache([I18n.locale, current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
         %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
           %ul.fr-tabs__list{ role: 'tablist' }
             - if @user_dossiers.present?
