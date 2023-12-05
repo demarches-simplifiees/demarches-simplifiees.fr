@@ -70,7 +70,7 @@
 
   = render partial: "root/testimonials" if LANDING_TESTIMONIALS_ENABLED
 
-  - cache "numbers-panel", :expires_in => 3.hours do
+  - cache([I18n.locale, "numbers-panel"], expires_in: 3.hours) do
     .fr-py-6w.fr-background-alt--blue-france
       .container
         %h2.center.fr-mb-4w #{APPLICATION_NAME} en chiffres
