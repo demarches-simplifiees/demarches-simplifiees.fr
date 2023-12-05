@@ -20,8 +20,7 @@ class APIEntreprise::Job < ApplicationJob
   # so we retry few seconds later (exponentially to avoid overload)
   retry_on APIEntreprise::API::Error::TimedOut, wait: :exponentially_longer
 
-  # If by the time the job runs the Etablissement has been deleted
-  # (it can happen through EtablissementUpdateJob for instance), ignore the job
+  # If by the time the job runs the instance has been deleted
   discard_on ActiveRecord::RecordNotFound
 
   rescue_from(APIEntreprise::API::Error::ResourceNotFound) do |exception|
