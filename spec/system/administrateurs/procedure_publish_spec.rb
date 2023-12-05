@@ -168,7 +168,7 @@ describe 'Publishing a procedure', js: true do
 
     scenario 'an error message prevents the publication' do
       visit admin_procedure_path(procedure)
-      expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
+      expect(page).to have_content('Des problèmes empêchent la publication des modifications')
       expect(page).to have_link('corriger', href: edit_admin_procedure_mail_template_path(procedure, Mails::InitiatedMail::SLUG))
       expect(page).to have_button('Publier les modifications', disabled: true)
     end

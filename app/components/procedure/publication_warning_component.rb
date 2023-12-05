@@ -3,6 +3,12 @@ class Procedure::PublicationWarningComponent < ApplicationComponent
     @procedure = procedure
   end
 
+  def title
+    return "Des problèmes empêchent la publication des modifications" if @procedure.publiee?
+
+    "Des problèmes empêchent la publication de la démarche"
+  end
+
   private
 
   def render?
@@ -26,7 +32,8 @@ class Procedure::PublicationWarningComponent < ApplicationComponent
     when :attestation_template
       edit_admin_procedure_attestation_template_path(@procedure)
     when :initiated_mail, :received_mail, :closed_mail, :refused_mail, :without_continuation_mail, :re_instructed_mail
-      admin_procedure_mail_templates_path(@procedure)
+      klass = "Mails::#{attribute.to_s.classify}".constantize
+      edit_admin_procedure_mail_template_path(@procedure, klass.const_get(:SLUG))
     end
   end
 end
