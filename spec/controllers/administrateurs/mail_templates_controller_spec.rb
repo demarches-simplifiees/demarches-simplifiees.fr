@@ -59,7 +59,7 @@ describe Administrateurs::MailTemplatesController, type: :controller do
     it { expect(response).to redirect_to edit_admin_procedure_mail_template_path(procedure, initiated_mail.class.const_get(:SLUG)) }
 
     context 'with valid email template' do
-      subject { procedure.reload; procedure.initiated_mail_template }
+      subject { procedure.reload; procedure.passer_en_construction_email_template }
 
       it do
         expect(subject.subject).to eq(mail_subject)
@@ -68,7 +68,7 @@ describe Administrateurs::MailTemplatesController, type: :controller do
     end
 
     context 'with invalid email template' do
-      subject { procedure.reload; procedure.initiated_mail_template }
+      subject { procedure.reload; procedure.passer_en_construction_email_template }
       let(:mail_body) { '<div>Une mise à jour a été effectuée sur votre démarche n° --numéro--.</div>' }
 
       it do

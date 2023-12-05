@@ -573,46 +573,44 @@ class Procedure < ApplicationRecord
     ProcedureOverview.new(self, start_date, groups)
   end
 
-  def initiated_mail_template
+  def passer_en_construction_email_template
     initiated_mail || Mails::InitiatedMail.default_for_procedure(self)
   end
 
-  def received_mail_template
+  def passer_en_instruction_email_template
     received_mail || Mails::ReceivedMail.default_for_procedure(self)
   end
 
-  def closed_mail_template
+  def accepter_email_template
     closed_mail || Mails::ClosedMail.default_for_procedure(self)
   end
 
-  def refused_mail_template
+  def refuser_email_template
     refused_mail || Mails::RefusedMail.default_for_procedure(self)
   end
 
-  def without_continuation_mail_template
+  def classer_sans_suite_email_template
     without_continuation_mail || Mails::WithoutContinuationMail.default_for_procedure(self)
   end
 
-  def re_instructed_mail_template
+  def repasser_en_instruction_email_template
     re_instructed_mail || Mails::ReInstructedMail.default_for_procedure(self)
   end
 
-  def mail_template_for(dossier)
-    case dossier.state
+  def email_template_for(state)
+    case state
     when Dossier.states.fetch(:en_construction)
-      initiated_mail_template
+      passer_en_construction_email_template
     when Dossier.states.fetch(:en_instruction)
-      if dossier.traitements.where(state: Dossier.states.fetch(:en_instruction)).one?
-        received_mail_template
-      else
-        re_instructed_mail_template
-      end
+      passer_en_instruction_email_template
+    when DossierOperationLog.operations.fetch(:repasser_en_instruction)
+      repasser_en_instruction_email_template
     when Dossier.states.fetch(:accepte)
-      closed_mail_template
+      accepter_email_template
     when Dossier.states.fetch(:refuse)
-      refused_mail_template
+      refuser_email_template
     when Dossier.states.fetch(:sans_suite)
-      without_continuation_mail_template
+      classer_sans_suite_email_template
     else
       raise "Unknown dossier state: #{state}"
     end
