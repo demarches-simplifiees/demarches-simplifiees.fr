@@ -484,6 +484,14 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def expiration_started?
+    [
+      brouillon_close_to_expiration_notice_sent_at,
+      en_construction_close_to_expiration_notice_sent_at,
+      termine_close_to_expiration_notice_sent_at
+    ].any?(&:present?)
+  end
+
   def motivation
     if termine?
       traitement&.motivation || read_attribute(:motivation)
