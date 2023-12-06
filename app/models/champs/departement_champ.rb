@@ -1,4 +1,5 @@
 class Champs::DepartementChamp < Champs::TextChamp
+  store_accessor :value_json,  :code_region
   validate :value_in_departement_names, unless: -> { value.nil? }
   validate :external_id_in_departement_codes, unless: -> { external_id.nil? }
 
@@ -37,6 +38,10 @@ class Champs::DepartementChamp < Champs::TextChamp
     else
       value
     end
+  end
+
+  def code_region(departement_name)
+    APIGeoService.region_code_by_departement(name)
   end
 
   def value=(code)

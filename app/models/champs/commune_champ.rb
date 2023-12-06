@@ -1,5 +1,5 @@
 class Champs::CommuneChamp < Champs::TextChamp
-  store_accessor :value_json, :code_departement, :code_postal
+  store_accessor :value_json, :code_departement, :code_postal, :code_region
   before_save :on_codes_change, if: :should_refresh_after_code_change?
 
   def for_export
@@ -82,6 +82,7 @@ class Champs::CommuneChamp < Champs::TextChamp
 
     if commune.present?
       self.code_departement = commune[:departement_code]
+      self.code_region = commune[:region_code]
       self.value = commune[:name]
     else
       self.code_departement = nil
