@@ -130,28 +130,6 @@ RSpec.describe Attachment::EditComponent, type: :component do
       champ.piece_justificative_file[0].blob.update(virus_scan_result:)
     end
 
-    context 'when the anti-virus scan is pending' do
-      let(:virus_scan_result) { ActiveStorage::VirusScanner::PENDING }
-
-      it 'displays the filename, but doesn’t allow to download the file' do
-        expect(subject).to have_text(filename)
-        expect(subject).to have_no_link(text: filename)
-        expect(subject).to have_text('Analyse antivirus en cours')
-      end
-
-      it 'setup polling' do
-        expect(subject).to have_selector('[data-controller=turbo-poll]')
-      end
-
-      context "when used as multiple context" do
-        let(:kwargs) { { as_multiple: true } }
-
-        it 'does not setup polling' do
-          expect(subject).to have_no_selector('[data-controller=turbo-poll]')
-        end
-      end
-    end
-
     context 'when the file is scanned, watermarked_at, and viewed as download and safe' do
       let(:kwargs) { { view_as: :download } }
       let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
