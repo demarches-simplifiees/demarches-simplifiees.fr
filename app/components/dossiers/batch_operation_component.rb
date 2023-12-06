@@ -12,8 +12,6 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
 
   def operations_for_dossier(dossier)
     case dossier.state
-    when Dossier.states.fetch(:brouillon)
-      [BatchOperation.operations.fetch(:repousser_expiration)]
     when Dossier.states.fetch(:en_construction)
       [BatchOperation.operations.fetch(:passer_en_instruction), BatchOperation.operations.fetch(:repousser_expiration)]
     when Dossier.states.fetch(:en_instruction)

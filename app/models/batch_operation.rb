@@ -58,7 +58,7 @@ class BatchOperation < ApplicationRecord
     when BatchOperation.operations.fetch(:follow) then
       query.visible_by_administration.without_followers.en_cours
     when BatchOperation.operations.fetch(:repousser_expiration) then
-      query.visible_by_administration.close_to_expiration
+      query.visible_by_administration.termine_or_en_construction_close_to_expiration
     when BatchOperation.operations.fetch(:repasser_en_construction) then
       query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:unfollow) then
