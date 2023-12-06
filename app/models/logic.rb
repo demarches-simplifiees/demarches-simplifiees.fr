@@ -8,7 +8,7 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, IncludeOperator, ExcludeOperator, And, Or]
+    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, IncludeOperator, ExcludeOperator, And, Or, InDepartementOperator, InRegionOperator]
       .find { |c| c.name == name }
   end
 
@@ -24,6 +24,10 @@ module Logic
       operator_class = EmptyOperator
     in [:enum, _]
       operator_class = Eq
+    in [:commune_enum, _] | [:epci_enum, _]
+      operator_class = InDepartementOperator
+    in [:departement_enum, _]
+      operator_class = Eq
     in [:enums, _]
       operator_class = IncludeOperator
     in [:number, EmptyOperator]
@@ -37,7 +41,7 @@ module Logic
         Constant.new(true)
       when :empty
         Empty.new
-      when :enum, :enums
+      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum
         Constant.new(left.options(type_de_champs).first.second)
       when :number
         Constant.new(0)
@@ -51,7 +55,7 @@ module Logic
     case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
-    in [:enum, :string] | [:enums, :string]
+    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string]
       true
     else
       false
@@ -87,6 +91,10 @@ module Logic
   def less_than_eq(left, right) = Logic::LessThanEq.new(left, right)
 
   def ds_include(left, right) = Logic::IncludeOperator.new(left, right)
+
+  def ds_in_departement(left, right) = Logic::InDepartementOperator.new(left, right)
+
+  def ds_in_region(left, right) = Logic::InRegionOperator.new(left, right)
 
   def ds_exclude(left, right) = Logic::ExcludeOperator.new(left, right)
 
