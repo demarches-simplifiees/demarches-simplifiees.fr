@@ -25,10 +25,20 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
   def remove_button
     if is_there_at_least_another_active_admin?
       button_to 'Retirer',
+       remove_gestionnaire_groupe_gestionnaire_administrateur_path(@groupe_gestionnaire, @administrateur),
+       method: :delete,
+       class: 'fr-btn fr-btn--sm fr-btn--tertiary',
+       form: { data: { turbo: true, turbo_confirm: "Retirer « #{@administrateur.email} » des administrateurs de « #{@groupe_gestionnaire.name} » ?" } }
+    end
+  end
+
+  def destroy_button
+    if is_there_at_least_another_active_admin?
+      button_to 'Supprimer',
        gestionnaire_groupe_gestionnaire_administrateur_path(@groupe_gestionnaire, @administrateur),
        method: :delete,
-       class: 'button',
-       form: { data: { turbo: true, turbo_confirm: "Retirer « #{@administrateur.email} » des administrateurs de « #{@groupe_gestionnaire.name} » ?" } }
+       class: 'fr-btn fr-btn--sm fr-btn--tertiary',
+       form: { data: { turbo: true, turbo_confirm: "Supprimer « #{@administrateur.email} » en tant qu'administrateurs ?" } }
     end
   end
 

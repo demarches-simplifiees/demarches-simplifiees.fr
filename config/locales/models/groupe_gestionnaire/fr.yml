@@ -17,3 +17,6 @@ fr:
     wrong_address:
       one: "%{emails} n’est pas une adresse email valide"
       other: "%{emails} ne sont pas des adresses emails valides"
+    not_found: 
+      one: "%{emails} n'a pas encore de compte."
+      other: "%{emails} n'ont pas encore de compte."

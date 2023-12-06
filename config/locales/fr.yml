@@ -886,6 +886,23 @@ fr:
         invalid_password: "Mauvais mot de passe"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+  groupe_gestionnaires:
+    flash:
+      alert:
+        groupe_gestionnaire_administrateur:
+          cannot_be_deleted: "L'administrateur « %{email} » ne peut pas être supprimé du groupe gestionnaire."
+          not_in_groupe_gestionnaire: "L'administrateur « %{email} » n’est pas dans le groupe gestionnaire."
+        groupe_gestionnaire_gestionnaire:
+          destroy_at_least_one: "Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine"
+          not_in_groupe_gestionnaire: "Le gestionnaire « %{email} » n’est pas dans le groupe gestionnaire."
+      notice:
+        groupe_gestionnaire_administrateur:
+          create: "Les administrateurs ont bien été affectés au groupe gestionnaire"
+          destroy: "L'administrateur « %{email} » a été supprimé."
+          remove: "L'administrateur « %{email} » a été retiré du groupe gestionnaire."
+        groupe_gestionnaire_gestionnaire:
+          create: "Les gestionnaires ont bien été affectés au groupe gestionnaire"
+          destroy: "Le gestionnaire « %{email} » a été retiré du groupe gestionnaire."
   shared:
     procedures:
       no_siret: "Vous n’avez pas renseigné le siret du service pour certaines de vos démarches. Merci de les modifier."

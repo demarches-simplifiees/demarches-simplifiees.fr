@@ -13,6 +13,7 @@
         %th= 'Enregistré le'
         %th= 'État'
         %th
+        %th
     %tbody#administrateurs
       = render(GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurComponent.with_collection(@groupe_gestionnaire.administrateurs.order('users.email'), groupe_gestionnaire: @groupe_gestionnaire))
 
