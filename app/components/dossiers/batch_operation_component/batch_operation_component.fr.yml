@@ -16,5 +16,5 @@ fr:
     confirm: Confirmez-vous le traitement multiple des dossiers sélectionnés ?
   placeholders:
     accepter: "Expliquez aux demandeurs pourquoi leur dossier est accepté (facultatif)"
-    refuser: "Expliquez aux demandeurs pourquoi leur dossier est accepté (obligatoire)"
-    classer_sans_suite: "Expliquez aux demandeurs pourquoi leur dossier est accepté (obligatoire)"
+    refuser: "Expliquez aux demandeurs pourquoi leur dossier est refusé (obligatoire)"
+    classer_sans_suite: "Expliquez aux demandeurs pourquoi leur dossier est classé sans suite (obligatoire)"

@@ -64,24 +64,27 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
                                 label: t(".operations.accepter"),
                                 operation_description: t(".operations.accepter_description"),
                                 operation: BatchOperation.operations.fetch(:accepter),
-                                operation_class_name: 'accept',
-                                placeholder: t(".placeholders.accepter")
-                              },
-
-                              {
-                                label: t(".operations.refuser"),
-                                operation_description: t(".operations.refuser_description"),
-                                operation: BatchOperation.operations.fetch(:refuser),
-                                operation_class_name: 'refuse',
-                                placeholder: t(".placeholders.refuser")
+                                operation_class_name: 'fr-icon-checkbox-circle-fill fr-text-default--success',
+                                placeholder: t(".placeholders.accepter"),
+                                instruction_operation: 'accept'
                               },
 
                               {
                                 label: t(".operations.classer_sans_suite"),
                                 operation_description: t(".operations.classer_sans_suite_description"),
                                 operation: BatchOperation.operations.fetch(:classer_sans_suite),
-                                operation_class_name: 'without-continuation',
-                                placeholder: t(".placeholders.classer_sans_suite")
+                                operation_class_name: 'fr-icon-intermediate-circle-fill fr-text-mention--grey',
+                                placeholder: t(".placeholders.classer_sans_suite"),
+                                instruction_operation: 'without-continuation'
+                              },
+
+                              {
+                                label: t(".operations.refuser"),
+                                operation_description: t(".operations.refuser_description"),
+                                operation: BatchOperation.operations.fetch(:refuser),
+                                operation_class_name: 'fr-icon-close-circle-fill fr-text-default--warning',
+                                placeholder: t(".placeholders.refuser"),
+                                instruction_operation: 'refuse'
                               }
                             ]
             },
