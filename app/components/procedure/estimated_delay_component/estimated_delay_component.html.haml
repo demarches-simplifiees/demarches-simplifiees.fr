@@ -1,0 +1,5 @@
+%p= t('.explanation', percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, nb_recent_dossiers: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS)
+%ul
+  - cleaned_nearby_estimation do |estimation, i18n_key|
+    %li= t(".#{i18n_key}", estimation: estimation)
+
