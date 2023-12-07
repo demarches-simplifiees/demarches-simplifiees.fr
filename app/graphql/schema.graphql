@@ -1423,6 +1423,10 @@ type Dossier {
   """
   state: DossierState!
   traitements: [Traitement!]!
+
+  """
+  Profile de l'usager déposant le dossier
+  """
   usager: Profile!
 }
 
@@ -3504,7 +3508,13 @@ type PoleEmploiChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+"""
+Profil d'un usager connecté (déposant un dossier, instruisant un dossier...)
+"""
 type Profile {
+  """
+  Email de l'usager
+  """
   email: String!
   id: ID!
 }
