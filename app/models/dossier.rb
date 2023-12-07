@@ -163,7 +163,7 @@ class Dossier < ApplicationRecord
     end
 
     event :passer_en_instruction, after: :after_passer_en_instruction do
-      transitions from: :en_construction, to: :en_instruction
+      transitions from: :en_construction, to: :en_instruction, guard: :can_passer_en_instruction?
     end
 
     event :passer_automatiquement_en_instruction, after: :after_passer_automatiquement_en_instruction do
@@ -564,10 +564,17 @@ class Dossier < ApplicationRecord
     false
   end
 
+  def can_passer_en_instruction?
+    return false if pending_correction?
+
+    true
+  end
+
   def can_passer_automatiquement_en_instruction?
+    return false if !can_passer_en_instruction?
     return true if declarative_triggered_at.nil? && procedure.declarative_en_instruction?
     return true if procedure.auto_archive_on? && !procedure.auto_archive_on.future?
-    return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil? && !pending_correction?
+    return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil?
 
     false
   end
@@ -918,8 +925,6 @@ class Dossier < ApplicationRecord
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
     save!
-
-    resolve_pending_correction!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     if !disable_notification

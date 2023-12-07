@@ -1148,7 +1148,6 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
-    let!(:correction) { create(:dossier_correction, dossier:) } # correction has a commentaire
 
     subject(:passer_en_instruction) { dossier.passer_en_instruction!(instructeur: instructeur) }
 
@@ -1166,13 +1165,6 @@ describe Dossier, type: :model do
     end
 
     it { expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1) }
-
-    it "resolve pending correction" do
-      passer_en_instruction
-
-      expect(dossier.pending_correction?).to be_falsey
-      expect(correction.reload.resolved_at).to be_present
-    end
 
     it 'creates a commentaire in the messagerie with expected wording' do
       passer_en_instruction
@@ -1250,6 +1242,24 @@ describe Dossier, type: :model do
       let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
 
       it { expect(dossier.can_repasser_en_construction?).to be_falsey }
+    end
+  end
+
+  describe '#can_passer_en_instruction?' do
+    let(:dossier) { create(:dossier, :en_construction) }
+
+    it { expect(dossier.can_passer_en_instruction?).to be_truthy }
+
+    context 'when there is a pending correction' do
+      before { create(:dossier_correction, dossier:) }
+
+      it { expect(dossier.can_passer_en_instruction?).to be_falsey }
+    end
+
+    context 'when there is a resolved correction' do
+      before { create(:dossier_correction, :resolved, dossier:) }
+
+      it { expect(dossier.can_passer_en_instruction?).to be_truthy }
     end
   end
 
