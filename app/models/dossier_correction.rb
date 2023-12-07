@@ -15,4 +15,15 @@ class DossierCorrection < ApplicationRecord
   def resolved?
     resolved_at.present?
   end
+
+  def resolve
+    self.resolved_at = Time.current
+  end
+
+  def resolve!
+    resolve
+    save!
+  end
+
+  def pending? = !resolved?
 end

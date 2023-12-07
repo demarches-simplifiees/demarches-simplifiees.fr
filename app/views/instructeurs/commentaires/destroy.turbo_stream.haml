@@ -1,3 +1,6 @@
 - if @commentaire.discarded?
   = turbo_stream.update @commentaire do
     = render Dossiers::MessageComponent.new(commentaire: @commentaire, connected_user: @commentaire.instructeur || @commentaire.expert)
+
+  - if current_user.instructeur? && @commentaire.dossier_correction.present?
+    = turbo_stream.replace 'header-top', partial: 'instructeurs/dossiers/header_top', locals: { dossier: @commentaire.dossier }
