@@ -375,6 +375,23 @@ type CheckboxChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+type ChorusConfiguration {
+  """
+  Le code du centre de cout auquel est rattaché la démarche.
+  """
+  centreDeCout: String
+
+  """
+  Le code du domaine fonctionnel auquel est rattaché la démarche.
+  """
+  domaineFonctionnel: String
+
+  """
+  Le code du référentiel de programmation auquel est rattaché la démarche..
+  """
+  referentielDeProgrammation: String
+}
+
 enum Civilite {
   """
   Monsieur
@@ -851,6 +868,11 @@ type Demarche {
   activeRevision: Revision!
   annotationDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `activeRevision.annotationDescriptors` à la place.")
   champDescriptors: [ChampDescriptor!]! @deprecated(reason: "Utilisez le champ `activeRevision.champDescriptors` à la place.")
+
+  """
+  Cadre budgétaire Chorus
+  """
+  chorusConfiguration: ChorusConfiguration
 
   """
   Date de la création.
