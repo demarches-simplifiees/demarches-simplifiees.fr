@@ -17,10 +17,24 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 #### Tous environnements
 
 - postgresql
-- imagemagick et gsfonts pour générer les filigranes sur les titres d'identité.
+- imagemagick et gsfonts pour générer les filigranes sur les titres d'identité ou générer des minitiatures d'images.
 
-nous sommes en cours de migration de delayed_job vers sidekiq pour le traitement des jobs asynchrones.
-pour faire tourner sidekiq, vous aurez besoin de
+> [!WARNING]
+> Pensez à restreindre la policy d'ImageMagick pour bloquer l'exploitation d'images malveillantes.
+> La configuration par défaut est généralement insuffisante pour des images provenant du web.
+> Par exemple sous debian/ubuntu dans `/etc/ImageMagick-6/policy.xml` :
+
+```xml
+<!-- en plus de la policy par défaut, ajoutez à la fin du fichier -->
+<policymap>
+    <policy domain="coder" rights="none" pattern="*"/>
+    <policy domain="coder" rights="read | write" pattern="{JPG,JPEG,PNG}"/>
+    <policy domain="module" rights="none" pattern="{MSL,MVG,PS,SVG,URL,XPS}"/>
+</policymap>
+```
+
+Nous sommes en cours de migration de `delayed_job` vers `sidekiq` pour le traitement des jobs asynchrones.
+Pour faire tourner sidekiq, vous aurez besoin de :
 
 - redis
 
