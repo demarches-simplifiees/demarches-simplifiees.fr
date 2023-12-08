@@ -1,2 +1,1 @@
-.datetime
-  = @form.datetime_field(:value, value: formatted_value_for_datetime_locale, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: { controller: 'datetime' })
+= @form.datetime_field(:value, input_opts(value: formatted_value_for_datetime_locale, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: { controller: 'datetime' }))
