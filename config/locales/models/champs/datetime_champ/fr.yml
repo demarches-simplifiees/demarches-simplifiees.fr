@@ -1,0 +1,7 @@
+fr:
+  activerecord:
+    attributes:
+      champs/datetime_champ:
+          hints:
+            value: "Format attendu : jj/mm/aaaa hh:mm"
+
