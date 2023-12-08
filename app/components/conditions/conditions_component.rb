@@ -100,13 +100,16 @@ class Conditions::ConditionsComponent < ApplicationComponent
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:commune_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:epci_enum)
       [
         [t(InDepartementOperator.name, scope: 'logic.operators'), InDepartementOperator.name],
-        [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name]
+        [t(NotInDepartementOperator.name, scope: 'logic.operators'), NotInDepartementOperator.name],
+        [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
+        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:departement_enum)
       [
         [t('is', scope: 'logic'), Eq.name],
         [t('is_not', scope: 'logic'), NotEq.name],
-        [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name]
+        [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
+        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
       ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enums)
       [

@@ -8,8 +8,26 @@ module Logic
   end
 
   def self.class_from_name(name)
-    [ChampValue, Constant, Empty, LessThan, LessThanEq, Eq, NotEq, GreaterThanEq, GreaterThan, EmptyOperator, IncludeOperator, ExcludeOperator, And, Or, InDepartementOperator, InRegionOperator]
-      .find { |c| c.name == name }
+    [
+      ChampValue,
+      Constant,
+      Empty,
+      LessThan,
+      LessThanEq,
+      Eq,
+      NotEq,
+      GreaterThanEq,
+      GreaterThan,
+      EmptyOperator,
+      IncludeOperator,
+      ExcludeOperator,
+      And,
+      Or,
+      InDepartementOperator,
+      NotInDepartementOperator,
+      InRegionOperator,
+      NotInRegionOperator
+    ].find { |c| c.name == name }
   end
 
   def self.ensure_compatibility_from_left(condition, type_de_champs)
@@ -94,7 +112,11 @@ module Logic
 
   def ds_in_departement(left, right) = Logic::InDepartementOperator.new(left, right)
 
+  def ds_not_in_departement(left, right) = Logic::NotInDepartementOperator.new(left, right)
+
   def ds_in_region(left, right) = Logic::InRegionOperator.new(left, right)
+
+  def ds_not_in_region(left, right) = Logic::NotInRegionOperator.new(left, right)
 
   def ds_exclude(left, right) = Logic::ExcludeOperator.new(left, right)
 
