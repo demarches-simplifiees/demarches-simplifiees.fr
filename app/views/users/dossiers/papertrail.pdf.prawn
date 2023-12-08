@@ -58,6 +58,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
         pdf.fill_color grey
         pdf.text "Dénomination : " + raison_sociale_or_name(@dossier.etablissement), size: 10, character_spacing: -0.2, align: :justify
         pdf.text "SIRET : " + @dossier.etablissement.siret, size: 10, character_spacing: -0.2, align: :justify
+        pdf.text "#{User.human_attribute_name(:email)} :  #{@dossier.user.email}", size: 10, character_spacing: -0.2, align: :justify
       end
     end
 
