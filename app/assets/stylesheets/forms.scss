@@ -287,7 +287,8 @@
     .fr-hint-text > * {
       font-size: inherit;
       margin: inherit;
-      padding: inherit;
+      // disabled for pf to allow ul/ol tags to work
+      //padding: inherit;
     }
   }
 

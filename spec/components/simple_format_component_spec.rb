@@ -47,11 +47,59 @@ TEXT
       <<~TEXT
         1. 1er paragraphe
         2. paragraphe
+        4. 4eme paragraphe
       TEXT
     end
 
     it { expect(page).to have_selector("ol", count: 1) }
-    it { expect(page).to have_selector("li", count: 2) }
+    it { expect(page).to have_selector("li", count: 3) }
+    it { expect(page.native.inner_html).to match('value="1"') }
+    it { expect(page.native.inner_html).to match('value="4"') }
+  end
+
+  context 'multi line lists' do
+    let(:text) do
+      <<~TEXT
+        Lorsque nous souhaitons envoyer ce message :
+
+        1. Premier point de la recette
+        Commentaire 1
+        2. Deuxième point de la recette
+          Commentaire 2
+
+        4. Troisième point de la recette
+        Commentaire 3
+
+        trois nouveaux paragraphes
+        sur plusieures
+        lignes
+
+        - 1er point de la recette
+        * 2eme point de la recette
+        avec des détailles
+        + 3eme point de la recette
+        beaucoup
+        de détails
+
+        conclusion
+      TEXT
+    end
+
+    it { expect(page).to have_selector("ol", count: 1) }
+    it { expect(page).to have_selector("ul", count: 1) }
+    it { expect(page).to have_selector("li", count: 6) }
+    it { expect(page).to have_selector("p", count: 5) }
+  end
+
+  context 'strong' do
+    let(:text) do
+      <<~TEXT
+        1er paragraphe **fort** un_mot_pas_italic
+      TEXT
+    end
+
+    it { expect(page).to have_selector("strong", count: 1) }
+    it { expect(page).not_to have_selector("em") }
   end
 
   context 'auto-link' do
