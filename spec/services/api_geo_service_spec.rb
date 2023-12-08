@@ -47,9 +47,9 @@ describe APIGeoService do
   describe 'communes_by_postal_code' do
     it 'return results' do
       expect(APIGeoService.communes_by_postal_code('01500').size).to eq(8)
-      expect(APIGeoService.communes_by_postal_code('75019').size).to eq(2)
-      expect(APIGeoService.communes_by_postal_code('69005').size).to eq(2)
-      expect(APIGeoService.communes_by_postal_code('13006').size).to eq(2)
+      expect(APIGeoService.communes_by_postal_code('75019').size).to eq(1)
+      expect(APIGeoService.communes_by_postal_code('69005').size).to eq(1)
+      expect(APIGeoService.communes_by_postal_code('13006').size).to eq(1)
       expect(APIGeoService.communes_by_postal_code('73480').size).to eq(3)
       expect(APIGeoService.communes_by_postal_code('20000').first[:code]).to eq('2A004')
       expect(APIGeoService.communes_by_postal_code('37160').size).to eq(7)

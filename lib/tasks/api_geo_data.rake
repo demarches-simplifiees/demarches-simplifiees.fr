@@ -21,7 +21,9 @@ namespace :api_geo_data do
     data = []
     PATH.join("#{filename}.json").open('w') do |f|
       response = Typhoeus.get("#{API_GEO_URL}/#{query}")
-      json = JSON.parse(response.body).map(&:symbolize_keys).flat_map do |result|
+      json = JSON.parse(response.body).map(&:symbolize_keys).filter do |result|
+        !result[:code].in?(['75056', '13055', '69123'])
+      end.flat_map do |result|
         item = {
           name: result[:nom].tr("'", '’'),
           code: result[:code],
