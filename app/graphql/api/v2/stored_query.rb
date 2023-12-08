@@ -592,6 +592,7 @@ class API::V2::StoredQuery
       dateCreation
       nom
       prenom
+      enseigne
       attestationFiscaleAttachment {
         ...FileFragment
       }
