@@ -94,7 +94,7 @@
 
 
 - else
-  - if filter.present?
+  - if filter.present? && filter.filter_params_count > 0
     .blank-tab
       %h2.empty-text= t('views.users.dossiers.dossiers_list.no_result_title')
       %p.empty-text-details
@@ -114,3 +114,5 @@
       %h2.empty-text= t('views.users.dossiers.dossiers_list.no_result_title')
       %p.empty-text-details
         = t('views.users.dossiers.dossiers_list.no_result_text_html', app_base: APPLICATION_BASE_URL)
+      %p
+        = link_to t("root.landing.how_to_find_procedure"), t("links.common.faq.comment_trouver_ma_demarche_url"), class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", **external_link_attributes
