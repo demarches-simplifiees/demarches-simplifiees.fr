@@ -89,23 +89,29 @@ describe "procedure filters" do
   scenario "should be able to user custom fiters", js: true do
     # use date filter
     click_on 'Sélectionner un filtre'
-    select "En construction le", from: "Colonne"
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter', wait: 5).click
+    find('.fr-menu__item', text: "En construction le", wait: 5).click
     find("input#value[type=date]", visible: true)
     fill_in "Valeur", with: "10/10/2010"
     click_button "Ajouter le filtre"
-    expect(page).to have_no_css("select#field", visible: true)
+    expect(page).to have_no_css("#search-filter", visible: true)
 
     # use statut dropdown filter
     click_on 'Sélectionner un filtre'
-    select "Statut", from: "Colonne"
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter', wait: 5).click
+    find('.fr-menu__item', text: "Statut", wait: 5).click
     find("select#value", visible: false)
     select 'En construction', from: "Valeur"
     click_button "Ajouter le filtre"
-    expect(page).to have_no_css("select#field", visible: true)
+    expect(page).to have_no_css("#search-filter", visible: true)
 
     # use choice dropdown filter
     click_on 'Sélectionner un filtre'
-    select "Choix unique", from: "Colonne"
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter', wait: 5).click
+    find('.fr-menu__item', text: "Choix unique", wait: 5).click
     find("select#value", visible: false)
     select 'val1', from: "Valeur"
     click_button "Ajouter le filtre"
@@ -119,7 +125,9 @@ describe "procedure filters" do
       champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
 
       click_on 'Sélectionner un filtre'
-      select departement_champ.libelle, from: "Colonne"
+      wait_until { all("#search-filter").size == 1 }
+      find('#search-filter', wait: 5).click
+      find('.fr-menu__item', text: departement_champ.libelle, wait: 5).click
       find("select#value", visible: true)
       select champ_select_value, from: "Valeur"
       click_button "Ajouter le filtre"
@@ -133,7 +141,9 @@ describe "procedure filters" do
       region_champ.reload
 
       click_on 'Sélectionner un filtre'
-      select region_champ.libelle, from: "Colonne"
+      wait_until { all("#search-filter").size == 1 }
+      find('#search-filter', wait: 5).click
+      find('.fr-menu__item', text: region_champ.libelle, wait: 5).click
       find("select#value", visible: true)
       select region_champ.value, from: "Valeur"
       click_button "Ajouter le filtre"
@@ -181,18 +191,22 @@ describe "procedure filters" do
 
   def add_filter(column_name, filter_value)
     click_on 'Sélectionner un filtre'
-    select column_name, from: "Colonne"
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter', wait: 5).click
+    find('.fr-menu__item', text: column_name, wait: 5).click
     fill_in "Valeur", with: filter_value
     click_button "Ajouter le filtre"
-    expect(page).to have_no_css("select#field", visible: true)
+    expect(page).to have_no_css("#search-filter", visible: true)
   end
 
   def add_enum_filter(column_name, filter_value)
     click_on 'Sélectionner un filtre'
-    select column_name, from: "Colonne"
+    wait_until { all("#search-filter").size == 1 }
+    find('#search-filter', wait: 5).click
+    find('.fr-menu__item', text: column_name, wait: 5).click
     select filter_value, from: "Valeur"
     click_button "Ajouter le filtre"
-    expect(page).to have_no_css("select#field", visible: true)
+    expect(page).to have_no_css("#search-filter", visible: true)
   end
 
   def add_column(column_name)

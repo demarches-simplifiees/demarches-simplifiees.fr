@@ -23,6 +23,7 @@ class Dsfr::ComboboxComponent < ApplicationComponent
       id: input_id,
       class: input_class,
       role: 'combobox',
+      data: @html_options[:data],
       'aria-expanded': 'false',
       'aria-describedby': @html_options[:describedby]
     }.compact

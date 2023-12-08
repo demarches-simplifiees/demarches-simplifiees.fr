@@ -1,7 +1,7 @@
 = form_tag add_filter_instructeur_procedure_path(procedure), method: :post, class: 'dropdown-form large', id: 'filter-component', data: { turbo: true, controller: 'autosubmit' } do
   .fr-select-group
-    = label_tag :field,  t('.column'), class: 'fr-label fr-m-0'
-    = select_tag :field, options_for_select(filterable_fields_for_select, field_id), include_blank: field_id.nil?, class: 'fr-select'
+    = label_tag :field,  t('.column'), class: 'fr-label fr-m-0', id: 'instructeur-filter-combo-label', for: 'search-filter'
+    = render Dsfr::ComboboxComponent.new form: nil, name: :field, options: filterable_fields_for_select, selected: field_id, id: 'search-filter', class: 'fr-select', describedby: 'instructeur-filter-combo-label', allows_custom_value: false, allows_blank: false, form_id: 'filter-component', data: { no_autosubmit: ['input', 'blur'].join(' '), no_autosubmit_on_empty: "true" }
 
     %input.hidden{ type: 'submit', formaction: update_filter_instructeur_procedure_path(procedure), data: { autosubmit_target: 'submitter' } }
 

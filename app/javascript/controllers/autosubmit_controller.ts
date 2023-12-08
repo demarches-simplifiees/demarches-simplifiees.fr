@@ -34,7 +34,8 @@ export class AutosubmitController extends ApplicationController {
         }
       },
       text: () => this.submitNow(),
-      changeable: () => this.submitNow()
+      changeable: () => this.submitNow(),
+      hidden: () => this.submitNow()
     });
   }
 
@@ -75,12 +76,19 @@ export class AutosubmitController extends ApplicationController {
   }
 
   private preventAutosubmit(
-    target: HTMLElement & { disabled?: boolean },
+    target: HTMLElement & { disabled?: boolean } & { value?: string },
     type: string
   ) {
     if (target.disabled) {
       return true;
     }
+    if (
+      Boolean(target.getAttribute('data-no-autosubmit-on-empty')) &&
+      target.value == ''
+    ) {
+      return true;
+    }
+
     const noAutosubmit = this.parseNoAutosubmit(
       target.getAttribute('data-no-autosubmit')
     );
