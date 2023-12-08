@@ -154,4 +154,23 @@ describe 'Publishing a procedure', js: true do
       expect(page).to have_selector(".dubious-champs", count: dubious_champs.size)
     end
   end
+
+  context 'when the procedure has other validation error' do
+    let(:procedure) { create(:procedure, :published, :with_service, :with_type_de_champ, administrateur:) }
+    let(:initiated_mail) { create(:initiated_mail, procedure:, body: "Hey!") }
+
+    before do
+      initiated_mail.body += "\n--invalid balise--"
+      initiated_mail.save!(validate: false)
+
+      procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: "Nouveau champ")
+    end
+
+    scenario 'an error message prevents the publication' do
+      visit admin_procedure_path(procedure)
+      expect(page).to have_content('Des problèmes empêchent la publication des modifications')
+      expect(page).to have_link('corriger', href: edit_admin_procedure_mail_template_path(procedure, Mails::InitiatedMail::SLUG))
+      expect(page).to have_button('Publier les modifications', disabled: true)
+    end
+  end
 end
