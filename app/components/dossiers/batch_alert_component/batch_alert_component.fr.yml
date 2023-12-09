@@ -8,6 +8,15 @@ fr:
       text_success:
         one: "1 dossier est en cours d'archivage"
         other: "%{success_count}/%{count} dossiers ont été archivés"
+  desarchiver:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier a été désarchivé"
+        other: "%{success_count}/%{count} dossiers ont été désarchivés"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours d'désarchivage"
+        other: "%{success_count}/%{count} dossiers ont été désarchivés"
   passer_en_instruction:
     finish:
       text_success:
@@ -17,6 +26,15 @@ fr:
       text_success:
         one: "1 dossier est en cours d'instruction"
         other: "%{success_count}/%{count} dossiers ont été passés en instruction"
+  repousser_expiration:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier sera conservé 1 mois supplémentaire"
+        other: "%{success_count}/%{count} dossiers seront conservé 1 mois supplémentaire"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours d'être conservé 1 mois supplémentaire"
+        other: "%{success_count}/%{count} dossiers seront conservé 1 mois supplémentaire"
   accepter:
     finish:
       text_success:
@@ -35,6 +53,24 @@ fr:
       text_success:
         one: "1 dossier est en cours de refus"
         other: "%{success_count}/%{count} dossiers ont été refusés"
+  supprimer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier a été supprimé"
+        other: "%{success_count}/%{count} dossiers ont été supprimés"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours de suppression"
+        other: "%{success_count}/%{count} dossiers ont été supprimés"
+  restaurer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 dossier a été restauré"
+        other: "%{success_count}/%{count} dossiers ont été restaurés"
+    in_progress:
+      text_success:
+        one: "1 dossier est en cours de restauration"
+        other: "%{success_count}/%{count} dossiers ont été restaurés"
   classer_sans_suite:
     finish:
       text_success:

@@ -32,6 +32,19 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "desarchiver"' do
+      let(:batch_operation) do
+        create(:batch_operation, :desarchiver,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+      it 'archives the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.archived? }
+          .from(true)
+          .to(false)
+      end
+    end
+
     context 'when operation is "passer_en_instruction"' do
       let(:batch_operation) do
         create(:batch_operation, :passer_en_instruction,
@@ -43,6 +56,19 @@ describe BatchOperationProcessOneJob, type: :job do
           .to change { dossier_job.reload.en_instruction? }
           .from(false)
           .to(true)
+      end
+    end
+
+    context 'when operation is "repousser_expiration"' do
+      let(:batch_operation) do
+        create(:batch_operation, :repousser_expiration,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+      it 'archives the dossier in the batch' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.conservation_extension }
+          .from(dossier_job.conservation_extension)
+          .to(dossier_job.conservation_extension + 1.month)
       end
     end
 
@@ -175,6 +201,20 @@ describe BatchOperationProcessOneJob, type: :job do
       end
     end
 
+    context 'when operation is "restaurer"' do
+      let(:batch_operation) do
+        create(:batch_operation, :restaurer,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'changed the dossier to en construction' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.hidden_by_administration? }
+          .from(true)
+          .to(false)
+      end
+    end
+
     context 'when operation is "classer_sans_suite"' do
       let(:batch_operation) do
         create(:batch_operation, :classer_sans_suite,
@@ -193,6 +233,20 @@ describe BatchOperationProcessOneJob, type: :job do
           .to change { dossier_job.reload.motivation }
           .from(nil)
           .to('motivation')
+      end
+    end
+
+    context 'when operation is "supprimer"' do
+      let(:batch_operation) do
+        create(:batch_operation, :supprimer,
+                                 options.merge(instructeur: create(:instructeur)))
+      end
+
+      it 'changed the dossier to en construction' do
+        expect { subject.perform_now }
+          .to change { dossier_job.reload.hidden_by_administration? }
+          .from(false)
+          .to(true)
       end
     end
 
