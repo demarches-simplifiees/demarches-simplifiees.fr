@@ -20,6 +20,10 @@ class CommentaireGroupeGestionnaire < ApplicationRecord
     gestionnaire_id.present?
   end
 
+  def sent_by_system?
+    false
+  end
+
   def sent_by?(someone)
     if gestionnaire
       someone == gestionnaire

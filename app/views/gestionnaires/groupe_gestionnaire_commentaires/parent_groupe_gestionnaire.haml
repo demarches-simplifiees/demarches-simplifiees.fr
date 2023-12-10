@@ -11,5 +11,5 @@
     %ul.messages-list{ data: { controller: 'scroll-to' } }
       - commentaires.each do |commentaire|
         %li.message{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire), id: dom_id(commentaire) }
-          = render(GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent.new(commentaire: commentaire, connected_user: current_gestionnaire, commentaire_seen_at: @commentaire_seen_at))
-  = render partial: "shared/groupe_gestionnaires/commentaires/form", locals: { commentaire: @commentaire, form_url: create_parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire) }
+          = render(Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: @commentaire_seen_at, groupe_gestionnaire: @groupe_gestionnaire))
+  = render partial: "shared/dossiers/messages/form", locals: { commentaire: @commentaire, form_url: create_parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire) }

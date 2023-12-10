@@ -35,4 +35,12 @@ class GroupeGestionnaire < ApplicationRecord
     end
     commentaires
   end
+
+  def gestionnaire_commentaires(gestionnaire)
+    commentaires = self.current_commentaires_groupe_and_children_commentaires_groupe
+    if self.parent_id && !gestionnaire.groupe_gestionnaires.exists?(id: self.parent_id)
+      commentaires = commentaires.or(CommentaireGroupeGestionnaire.where(groupe_gestionnaire_id: self.id, sender: gestionnaire))
+    end
+    commentaires
+  end
 end

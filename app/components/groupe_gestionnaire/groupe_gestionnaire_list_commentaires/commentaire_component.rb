@@ -21,7 +21,11 @@ class GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireCompone
   def see_button
     link_to 'Voir',
       @commentaire.sender == current_gestionnaire ? parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire) : gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire),
-      class: 'fr-btn fr-btn--sm fr-btn--tertiary'
+      class: 'fr-btn'
+  end
+
+  def groupe_gestionnaire_name
+    @commentaire.groupe_gestionnaire.name
   end
 
   def highlight?
