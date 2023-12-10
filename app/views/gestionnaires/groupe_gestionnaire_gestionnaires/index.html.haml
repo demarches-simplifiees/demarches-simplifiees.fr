@@ -18,4 +18,4 @@
       = render(GroupeGestionnaire::GroupeGestionnaireGestionnaires::GestionnaireComponent.with_collection(@groupe_gestionnaire.gestionnaires.order('users.email'), groupe_gestionnaire: @groupe_gestionnaire))
 
   .fr-mt-4w
-    = render 'add_admin_form', groupe_gestionnaire: @groupe_gestionnaire
+    = render 'add_gestionnaire_form', groupe_gestionnaire: @groupe_gestionnaire

@@ -5,8 +5,10 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
     subject { get :index }
 
     context "when not logged" do
-      before { subject }
-      it { expect(response).to redirect_to(new_user_session_path) }
+      it do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
     context "when logged in" do
@@ -15,10 +17,10 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
       let!(:not_my_groupe_gestionnaire) { create(:groupe_gestionnaire) }
       before do
         sign_in(gestionnaire.user)
-        subject
       end
 
       it do
+        subject
         expect(response).to have_http_status(:ok)
         expect(assigns(:groupe_gestionnaires)).to include(groupe_gestionnaire)
         expect(assigns(:groupe_gestionnaires)).to include(other_groupe_gestionnaire)
@@ -33,18 +35,22 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
     let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
-      before { subject }
-      it { expect(response).to redirect_to(new_user_session_path) }
+      it do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
     context "when logged in" do
       before do
         sign_in(gestionnaire.user)
-        subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaire)).to eq(child_groupe_gestionnaire) }
+      it do
+        subject
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaire)).to eq(child_groupe_gestionnaire)
+      end
     end
   end
 
@@ -54,18 +60,22 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
     let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
-      before { subject }
-      it { expect(response).to redirect_to(new_user_session_path) }
+      it do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
     context "when logged in" do
       before do
         sign_in(gestionnaire.user)
-        subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaire)).to eq(child_groupe_gestionnaire) }
+      it do
+        subject
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaire)).to eq(child_groupe_gestionnaire)
+      end
     end
   end
 
@@ -75,18 +85,22 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
     let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
-      before { subject }
-      it { expect(response).to redirect_to(new_user_session_path) }
+      it do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
     context "when logged in" do
       before do
         sign_in(gestionnaire.user)
-        subject
       end
 
-      it { expect(child_groupe_gestionnaire.reload.name).to eq('new child name') }
-      it { expect(response).to redirect_to(gestionnaire_groupe_gestionnaire_path(child_groupe_gestionnaire)) }
+      it do
+        subject
+        expect(child_groupe_gestionnaire.reload.name).to eq('new child name')
+        expect(response).to redirect_to(gestionnaire_groupe_gestionnaire_path(child_groupe_gestionnaire))
+      end
     end
   end
 
@@ -96,18 +110,47 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
     let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire_root.id}/", gestionnaires: [gestionnaire]) }
 
     context "when not logged" do
-      before { subject }
-      it { expect(response).to redirect_to(new_user_session_path) }
+      it do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
     end
 
     context "when logged in" do
       before do
         sign_in(gestionnaire.user)
-        subject
       end
 
-      it { expect(GroupeGestionnaire.all.count).to eq(1) }
-      it { expect(response).to redirect_to(gestionnaire_groupe_gestionnaires_path) }
+      it do
+        subject
+        expect(GroupeGestionnaire.all.count).to eq(1)
+        expect(response).to redirect_to(gestionnaire_groupe_gestionnaires_path)
+      end
+    end
+  end
+
+  describe "#tree_structure" do
+    let!(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
+    subject { get :tree_structure, params: { id: groupe_gestionnaire.id } }
+
+    context "when not logged" do
+      it do
+        subject
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when logged in" do
+      let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire.id}/", gestionnaires: []) }
+      before do
+        sign_in(gestionnaire.user)
+      end
+
+      it do
+        subject
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:tree_structure)).to eq(groupe_gestionnaire => { child_groupe_gestionnaire => {} })
+      end
     end
   end
 end

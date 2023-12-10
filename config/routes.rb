@@ -516,6 +516,9 @@ Rails.application.routes.draw do
         end
         resources :children, controller: 'groupe_gestionnaire_children', only: [:index, :create, :destroy]
         resources :commentaires, controller: 'groupe_gestionnaire_commentaires', only: [:index, :show, :create, :destroy]
+        member do
+          get :tree_structure, path: 'arborescence'
+        end
       end
     end
 

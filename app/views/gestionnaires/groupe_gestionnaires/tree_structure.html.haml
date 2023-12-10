@@ -1,0 +1,14 @@
+= render partial: 'gestionnaires/breadcrumbs',
+  locals: { steps: [['Groupes gestionnaire', gestionnaire_groupe_gestionnaires_path],
+                    ["#{@groupe_gestionnaire.name.truncate_words(10)}", gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire)],
+                    ['Arborescence']], preview: false }
+
+.fr-container
+  %h1 Arborescence de « #{@groupe_gestionnaire.name} »
+
+  .fr-mt-4w
+    %ul
+      - @tree_structure.each do |parent, children|
+        %li
+          = render(GroupeGestionnaire::GroupeGestionnaireTreeStructures::TreeStructureComponent.new(parent: parent, children: children))
+
