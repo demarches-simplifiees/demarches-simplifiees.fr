@@ -27,4 +27,12 @@ class GroupeGestionnaire < ApplicationRecord
   def parent_name
     parent&.name
   end
+
+  def current_commentaires_groupe_and_children_commentaires_groupe
+    commentaires = CommentaireGroupeGestionnaire.where(groupe_gestionnaire_id: id, sender_type: "Administrateur")
+    unless child_ids.empty?
+      commentaires = commentaires.or(CommentaireGroupeGestionnaire.where(groupe_gestionnaire_id: child_ids, sender_type: "Gestionnaire"))
+    end
+    commentaires
+  end
 end

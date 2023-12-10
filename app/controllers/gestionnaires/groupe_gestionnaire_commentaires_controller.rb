@@ -2,23 +2,24 @@ module Gestionnaires
   class GroupeGestionnaireCommentairesController < GestionnaireController
     before_action :retrieve_groupe_gestionnaire
     before_action :retrieve_last_commentaire, only: [:show, :create, :destroy]
+    before_action :retrieve_last_parent_groupe_gestionnaire_commentaire, only: [:index, :parent_groupe_gestionnaire, :create_parent_groupe_gestionnaire]
 
     def index
     end
 
     def show
-      @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
+      @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@last_commentaire.groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
       @commentaire = CommentaireGroupeGestionnaire.new
-      current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
+      current_gestionnaire.mark_commentaire_as_seen(@last_commentaire.groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
     end
 
     def create
-      @commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type, gestionnaire: current_gestionnaire))
+      @commentaire = @last_commentaire.groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type, gestionnaire: current_gestionnaire))
 
       if @commentaire.errors.empty?
-        GroupeGestionnaireMailer.notify_new_commentaire_groupe_gestionnaire(@groupe_gestionnaire, @commentaire, current_gestionnaire.email, @commentaire.sender_email, admin_groupe_gestionnaire_commentaires_path).deliver_later
+        GroupeGestionnaireMailer.notify_new_commentaire_groupe_gestionnaire(@last_commentaire.groupe_gestionnaire, @commentaire, current_gestionnaire.email, @commentaire.sender_email, @commentaire.sender_type == "Administrateur" ? admin_groupe_gestionnaire_commentaires_path : parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@last_commentaire.groupe_gestionnaire)).deliver_later
         flash.notice = "Message envoyé"
-        current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @commentaire.sender_id, @commentaire.sender_type)
+        current_gestionnaire.mark_commentaire_as_seen(@last_commentaire.groupe_gestionnaire, @commentaire.sender_id, @commentaire.sender_type)
         redirect_to gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire)
       else
         flash.alert = @commentaire.errors.full_messages
@@ -26,11 +27,35 @@ module Gestionnaires
       end
     end
 
+    def parent_groupe_gestionnaire
+      if (@last_commentaire)
+        @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, current_gestionnaire.id, "Gestionnaire")
+        current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, current_gestionnaire.id, "Gestionnaire")
+      end
+      @commentaire = CommentaireGroupeGestionnaire.new
+    end
+
+    def create_parent_groupe_gestionnaire
+      @commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender: current_gestionnaire))
+
+      if @commentaire.errors.empty?
+        commentaire_url = gestionnaire_groupe_gestionnaire_commentaire_url(@groupe_gestionnaire.parent, @commentaire)
+        @groupe_gestionnaire.parent.gestionnaires.each do |gestionnaire|
+          GroupeGestionnaireMailer.notify_new_commentaire_groupe_gestionnaire(@groupe_gestionnaire.parent, @commentaire, @commentaire.sender_email, gestionnaire.email, commentaire_url).deliver_later
+        end
+        current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @commentaire.sender_id, @commentaire.sender_type)
+        flash.notice = "Message envoyé"
+        redirect_to parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire)
+      else
+        flash.alert = @commentaire.errors.full_messages
+        render :parent_groupe_gestionnaire
+      end
+    end
+
     def destroy
       if @last_commentaire.soft_deletable?(current_gestionnaire)
         @last_commentaire.soft_delete!
-        @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
-
+        @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@last_commentaire.groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
         flash.notice = t('.notice')
       else
         flash.alert = t('.alert_acl')
@@ -42,7 +67,11 @@ module Gestionnaires
     private
 
     def retrieve_last_commentaire
-      @last_commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires.find(params[:id])
+      @last_commentaire = @groupe_gestionnaire.current_commentaires_groupe_and_children_commentaires_groupe.find(params[:id])
+    end
+
+    def retrieve_last_parent_groupe_gestionnaire_commentaire
+      @last_commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires&.where(sender_id: current_gestionnaire.id, sender_type: "Gestionnaire")&.last
     end
 
     def commentaire_params
