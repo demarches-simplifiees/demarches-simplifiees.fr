@@ -13,7 +13,7 @@
       = commentaire_date
   .rich-text
     - if commentaire.discarded?
-      %p= t('.deleted_body')
+      %p= "(#{t('.deleted_body')})"
     - elsif commentaire.sent_by_system?
       = sanitize(commentaire.body, scrubber: Sanitizers::MailScrubber.new)
     - else
@@ -21,9 +21,9 @@
 
 
   .message-extras.flex.justify-start
-    - if commentaire.soft_deletable?(connected_user)
+    - if soft_deletable?
       = button_to instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
-        = t('.delete_button')
+        = delete_button_text
 
     - if commentaire.piece_jointe.attached?
       .fr-ml-2w
