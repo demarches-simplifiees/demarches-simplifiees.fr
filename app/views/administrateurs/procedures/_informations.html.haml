@@ -118,8 +118,9 @@
     = f.label :web_hook_url, class: 'fr-label' do
       Lien de rappel HTTP (webhook)
     %p.fr-hint-text
-      Vous pouvez définir un lien de rappel HTTP (aussi appelé webhook) pour informer un service tiers du changement de l'état d’un dossier de cette démarche sur #{APPLICATION_NAME}.
-      = link_to("Consulter la documentation du webhook", WEBHOOK_DOC_URL, target: "_blank", rel: "noopener")
+      %strong Les webhooks sont maintenant dépréciés
+      Nous vous recommandons d'utiliser l'API GraphQL en faisant du polling,
+      = link_to "voici un exemple d'implementation ", WEBHOOK_ALTERNATIVE_DOC_URL, rel: "noopener", target: "_blank", title: "Voir une implémentation alternative à l'ancien système de webhook"
     = f.text_field :web_hook_url, class: 'fr-input', placeholder: 'https://callback.exemple.fr/'
 
   = render Dsfr::CalloutComponent.new(title: "Date limite de dépôt des dossiers") do |c|

@@ -2,8 +2,7 @@
   .card-title
     = t('.tokens_title')
   %p
-    = t('.first_paragraph')
-    #{APPLICATION_NAME}.
+    = t('.first_paragraph_html', application_name: APPLICATION_NAME, api_doc_url: API_DOC_URL)
   %p
     = t('.second_paragraph')
 
