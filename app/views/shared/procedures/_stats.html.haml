@@ -4,10 +4,7 @@
     - if @usual_traitement_time.present?
       .stat-card.big-number-card
         %span.big-number-card-title= t('.usual_processing_time')
-        %span.big-number-card-number
-          = distance_of_time_in_words(@usual_traitement_time)
-        %span.big-number-card-detail
-          = t('.processing_time_description', percentile: ProcedureStatsConcern::USUAL_TRAITEMENT_TIME_PERCENTILE, span: ProcedureStatsConcern::NB_DAYS_RECENT_DOSSIERS, days: distance_of_time_in_words(@usual_traitement_time))
+        = render Procedure::EstimatedDelayComponent.new(procedure: @procedure)
 
   .stat-cards
     .stat-card.stat-card-half.pull-left
