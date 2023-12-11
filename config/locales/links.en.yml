@@ -25,7 +25,7 @@ en:
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: The source code
       description_2: is available under a free license.
-      copy_html: "Unless otherwise stated, all content on this site is %{link}"
+      copy_html: "Unless otherwise stated, all public data on this site are %{link}"
       license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
