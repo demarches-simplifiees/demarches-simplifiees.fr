@@ -11,6 +11,17 @@
       - if dossier.depose_at.present?
         = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
 
+
+      - if dossier.for_tiers?
+        %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
+          .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.mandataire_identity')
+
+          - if dossier.individual.present? && profile == 'usager' && !dossier.read_only?
+            = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
+
+
+        = render partial: "shared/dossiers/mandataire_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), dossier: dossier }
+
       .tab-title
         %h2.fr-h6.fr-background-alt--grey.fr-mb-0.flex
           .flex-grow.fr-py-3v.fr-px-2w
@@ -27,7 +38,7 @@
             = link_to t('views.shared.dossiers.demande.edit_identity'), identite_dossier_path(dossier), class: 'fr-py-3v fr-btn fr-btn--tertiary-no-outline'
 
 
-      = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), for_tiers: dossier.for_tiers? }
+      = render partial: "shared/dossiers/user_infos", locals: { user_deleted: dossier.user_deleted?, email: dossier.user_email_for(:display), for_tiers: dossier.for_tiers?, beneficiaire_mail: dossier.for_tiers? ? dossier.individual.email : ""}
 
 
       - if dossier.individual.present?

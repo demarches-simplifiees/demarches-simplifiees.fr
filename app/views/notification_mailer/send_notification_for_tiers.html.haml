@@ -4,11 +4,15 @@
 %p
   Bonjour,
 
-%p= "#{ t("instructeurs.dossiers.decisions_rendues_block.without_email.#{@dossier.state}", processed_at: l(@dossier.updated_at.to_date))}."
-
-%p= "Le dossier nº #{@dossier.id} est rempli en votre nom par #{@dossier.mandataire_first_name} #{@dossier.mandataire_last_name} sur la procédure #{@dossier.procedure.libelle}."
-
-%p= "Pour en savoir plus, veuillez vous rapprocher #{mail_to(@dossier.user.email)}."
+%p
+  Nous vous informons que le dossier nº
+  = number_with_delimiter(@dossier.id)
+  rempli en votre nom par #{@dossier.mandataire_first_name}
+  #{@dossier.mandataire_last_name} sur la démarche
+  %span{ :style => "font-weight: bold;" }
+    = @dossier.procedure.libelle
+  est passé en phase #{t("instructeurs.dossiers.decisions_rendues_block.without_email.#{@dossier.state}")} le #{l(@dossier.updated_at.to_date)}.
+%p= "Pour en savoir plus, veuillez vous rapprocher de #{mail_to(@dossier.user.email)}."
 
 %p
   = t(:best_regards, scope: [:views, :shared, :greetings])

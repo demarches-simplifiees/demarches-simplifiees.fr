@@ -590,7 +590,7 @@ module Users
     end
 
     def dossier_params
-      params.require(:dossier).permit(:for_tiers, :mandataire_first_name, :mandataire_last_name, individual_attributes: [:gender, :nom, :prenom, :birthdate, :email, :notification_method])
+      params.require(:dossier).permit(:for_tiers, :mandataire_first_name, :mandataire_last_name, individual_attributes: [:gender, :nom, :prenom, :birthdate, :email, :notification_method, :id])
     end
 
     def siret_params

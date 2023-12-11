@@ -53,8 +53,9 @@ describe 'users/dossiers/demande', type: :view do
     let(:dossier) { create(:dossier, :en_construction, :for_tiers_with_notification) }
 
     it 'displays the informations of the mandataire' do
-      expect(rendered).to have_text('Email du mandataire')
-      expect(rendered).to have_text("#{dossier.mandataire_full_name} agit pour le compte du bénéficiaire :")
+      expect(rendered).to have_text('Identité du mandataire')
+      expect(rendered).to have_text(dossier.mandataire_first_name.to_s)
+      expect(rendered).to have_text(dossier.mandataire_last_name.to_s)
       expect(rendered).to have_text(dossier.individual.email.to_s)
     end
   end

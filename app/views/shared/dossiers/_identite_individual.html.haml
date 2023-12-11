@@ -1,8 +1,3 @@
-- if dossier.for_tiers?
-
-  = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.mandataire')) do |c|
-    - c.with_value do
-      %p= t('views.users.dossiers.identite.act_as_mandataire', mandataire: dossier.mandataire_full_name)
 
 = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.civility')) do |c|
   - c.with_value do
@@ -20,8 +15,3 @@
   = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.birthdate')) do |c|
     - c.with_value do
       %p= try_format_date(dossier.individual.birthdate)
-
-- if dossier.for_tiers? && dossier.individual.email?
-  = render Dossiers::RowShowComponent.new(label: t('activerecord.attributes.individual.email')) do |c|
-    - c.with_value do
-      %p= dossier.individual.email

@@ -6,8 +6,8 @@ fr:
     dossiers:
       decisions_rendues_block:
         without_email:
-          en_construction: Le %{processed_at} ce dossier a été passé en construction
-          en_instruction: Le %{processed_at} ce dossier a été passé en instruction
+          en_construction: de construction
+          en_instruction: d'instruction
           accepte: Le %{processed_at} ce dossier a été accepté
           refuse: Le %{processed_at} ce dossier a été refusé
           classe_sans_suite: Le %{processed_at} ce dossier a été classé sans suite

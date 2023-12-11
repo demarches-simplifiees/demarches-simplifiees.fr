@@ -341,6 +341,7 @@ fr:
         demande:
           en_construction: "Date de dépôt du dossier"
           requester_identity: "Identité du demandeur"
+          mandataire_identity: "Identité du mandataire"
           requester_identity_updated_at: "modifiée le %{date}"
           individual_identity: "Votre identité"
           form: "Sections du formulaire"
@@ -372,6 +373,7 @@ fr:
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
         deleted_by_user: "Dossier supprimé par l’usager"
+        acts_on_behalf: "agit pour"
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
         filters:
@@ -398,8 +400,6 @@ fr:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           self_title: Votre identité
-          mandataire: Mandataire
-          mandataire_email: Email du mandataire
           callout_text: Vous agissez en tant que mandataire, soit professionnellement (comme expert-comptable, avocat) soit personnellement (famille). Assurez-vous de respecter les conditions des Articles 1984 à 1990 du Code civil.
           beneficiaire_title: Identité du bénéficiaire
           identity_siret: Identifier votre établissement
@@ -413,7 +413,6 @@ fr:
           annuaire_link_title: Rechercher un numéro de SIRET sur l’Annuaire des Entreprises
           siret_loading: Récupération des informations…
           continue: Continuer
-          act_as_mandataire: '%{mandataire}'
         merci:
           thanks: Merci !
           dossier_send_l1: Votre dossier sur la démarche

@@ -1,6 +1,9 @@
 = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: { class: ['dossier-show', 'edit-identity-action'] }, menu_options: {  class:['edit-identity-content'] }) do |menu|
   - menu.with_button_inner_html do
-    = t("views.shared.dossiers.demande.individual_identity")
+    - if dossier.for_tiers?
+      = t("views.shared.dossiers.demande.requester_identity")
+    - else
+      = t("views.shared.dossiers.demande.individual_identity")
 
   - menu.with_form do
     - if dossier.procedure.for_individual
