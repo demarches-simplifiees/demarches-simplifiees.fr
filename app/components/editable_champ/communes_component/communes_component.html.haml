@@ -1,2 +1,2 @@
-= render Dsfr::ComboboxComponent.new form: @form, name: :external_id, url: data_sources_data_source_commune_path, selected: [@champ.to_s, @champ.selected], id: @champ.input_id, class: 'fr-select', describedby: @champ.describedby_id do
+= render Dsfr::ComboboxComponent.new form: @form, url: data_sources_data_source_commune_path, selected: [@champ.to_s, @champ.selected], input_html_options: { name: :external_id, id: @champ.input_id, class: 'fr-select', describedby: @champ.describedby_id } do
   = @form.hidden_field :code_postal, data: { value_slot: 'data:string' }

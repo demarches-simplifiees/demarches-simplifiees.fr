@@ -1,2 +1,2 @@
-= render Dsfr::ComboboxComponent.new form: @form, name: :value, url: data_sources_data_source_adresse_path, selected: @champ.value, id: @champ.input_id, class: 'fr-select', describedby: @champ.describedby_id, allows_custom_value: true do
+= render Dsfr::ComboboxComponent.new form: @form, url: data_sources_data_source_adresse_path, selected: @champ.value, allows_custom_value: true, input_html_options: { name: :value, id: @champ.input_id, class: 'fr-select', describedby: @champ.describedby_id } do
   = @form.hidden_field :external_id, data: { value_slot: 'value' }
