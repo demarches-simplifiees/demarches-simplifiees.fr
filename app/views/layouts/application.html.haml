@@ -59,6 +59,8 @@
 
       - if content_for?(:footer)
         = content_for(:footer)
+      - else
+        = render 'footer'
 
       - if Rails.env.development?
         = vite_typescript_tag 'axe-core'
