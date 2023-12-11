@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
   curl -sL "https://deb.nodesource.com/setup_16.x" | bash - && \
   apt-get install -y nodejs yarn
 
+#cf https://imagetragick.com/
+ADD image_magick_policy.xml /etc/ImageMagick-6/policy.xml
+
 ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
 WORKDIR ${INSTALL_PATH}
