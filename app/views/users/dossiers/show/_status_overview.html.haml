@@ -62,7 +62,7 @@
 
           - if dossier.motivation.present?
             %h3= t('views.users.dossiers.show.status_overview.accepte_motivation')
-            %blockquote= dossier.motivation
+            %blockquote= simple_format(dossier.motivation)
 
           = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
 
@@ -81,7 +81,7 @@
 
           - if dossier.motivation.present?
             %h3= t('views.users.dossiers.show.status_overview.refuse_motivation')
-            %blockquote= dossier.motivation
+            %blockquote= simple_format(dossier.motivation)
 
           = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }
           .action
@@ -97,4 +97,4 @@
 
           - if dossier.motivation.present?
             %h3= t('views.users.dossiers.show.status_overview.sans_suite_motivation')
-            %blockquote= dossier.motivation
+            %blockquote= simple_format(dossier.motivation)

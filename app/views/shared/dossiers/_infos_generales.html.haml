@@ -18,7 +18,7 @@
   - if dossier.motivation.present?
     = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
       - c.with_value do
-        = dossier.motivation
+        = simple_format dossier.motivation
 
   - if dossier.attestation.present?
     = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
