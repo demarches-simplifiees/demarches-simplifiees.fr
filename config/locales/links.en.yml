@@ -50,6 +50,9 @@ en:
         label: "Documentation"
         title: "Our Documentation"
         url: "https://doc.demarches-simplifiees.fr"
+      vote_feature:
+        label: "Improve the site"
+        title: "Vote for your priority improvements or share your own ideas"
       mentions_legales:
         label: "Legal notices"
         title: "Legal notices regarding our platform"

@@ -55,6 +55,9 @@ fr:
         label: "Documentation"
         title: "Documentation utilisateur"
         url: "https://doc.demarches-simplifiees.fr"
+      vote_feature:
+        label: "Améliorer le site"
+        title: "Votez pour vos améliorations prioritaires ou proposez votre propre idée"
       mentions_legales:
         label: "Mentions légales"
         title: "Consulter nos Mentions légales"
