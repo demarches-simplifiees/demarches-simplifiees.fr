@@ -31,7 +31,7 @@
         .fr-header__tools
           .fr-header__tools-links.relative
 
-            %ul.fr-btns-group
+            %ul.fr-btns-group.flex.align-center
               - if instructeur_signed_in? || user_signed_in?
                 %li
                   = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
