@@ -61,6 +61,7 @@ module Types
     field :draft_revision, Types::RevisionType, null: false
     field :published_revision, Types::RevisionType, null: true
     field :revisions, [Types::RevisionType], null: false
+    field :chorus_configuration, Types::ChorusConfigurationType, null: true, description: "Cadre budgétaire Chorus"
 
     def state
       object.aasm.current_state

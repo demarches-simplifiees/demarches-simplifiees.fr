@@ -58,6 +58,11 @@ class API::V2::StoredQuery
       declarative
       dateCreation
       dateFermeture
+      chorusConfiguration {
+        centreDeCout
+        domaineFonctionnel
+        referentielDeProgrammation
+      }
       activeRevision @include(if: $includeRevision) {
         ...RevisionFragment
       }
