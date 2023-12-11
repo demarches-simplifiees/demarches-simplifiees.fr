@@ -2,9 +2,9 @@
   .fr-ds-combobox-input
     %input{ value: selected_option_label_input_value, **html_input_options }
   - if form
-    = form.hidden_field name, value: selected_option_value_input_value, form: form_id, data: html_input_options[:data]
+    = form.hidden_field name, value: selected_option_value_input_value, form: form_id, **hidden_html_options
   - else
-    %input{ type: 'hidden', name: name, value: selected_option_value_input_value, form: form_id, data: html_input_options[:data] }
+    %input{ type: 'hidden', name: name, value: selected_option_value_input_value, form: form_id, **hidden_html_options }
   .fr-menu
     %ul.fr-menu__list.hidden{ role: 'listbox', hidden: true, id: list_id, data: { turbo_force: :browser, options: options_json, url:, hints: hints_json }.compact }
   .sr-only{ aria: { live: 'polite', atomic: 'true' }, data: { turbo_force: :browser } }

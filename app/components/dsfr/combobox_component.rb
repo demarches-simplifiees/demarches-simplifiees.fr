@@ -1,6 +1,6 @@
 class Dsfr::ComboboxComponent < ApplicationComponent
-  def initialize(form: nil, options: nil, url: nil, selected: nil, allows_custom_value: false, **html_options)
-    @form, @options, @url, @selected, @allows_custom_value, @html_options = form, options, url, selected, allows_custom_value, html_options
+  def initialize(form: nil, options: nil, url: nil, selected: nil, allows_custom_value: false, input_html_options: {}, hidden_html_options: {})
+    @form, @options, @url, @selected, @allows_custom_value, @input_html_options, @hidden_html_options = form, options, url, selected, allows_custom_value, input_html_options, hidden_html_options
   end
 
   attr_reader :form, :options, :url, :selected, :allows_custom_value
@@ -8,11 +8,11 @@ class Dsfr::ComboboxComponent < ApplicationComponent
   private
 
   def name
-    @html_options[:name]
+    @input_html_options[:name]
   end
 
   def form_id
-    @html_options[:form_id]
+    @input_html_options[:form_id]
   end
 
   def html_input_options
@@ -23,18 +23,21 @@ class Dsfr::ComboboxComponent < ApplicationComponent
       id: input_id,
       class: input_class,
       role: 'combobox',
-      data: @html_options[:data],
       'aria-expanded': 'false',
-      'aria-describedby': @html_options[:describedby]
+      'aria-describedby': @input_html_options[:describedby]
     }.compact
   end
 
+  def hidden_html_options
+    @hidden_html_options || {}
+  end
+
   def input_id
-    @html_options[:id]
+    @input_html_options[:id]
   end
 
   def input_class
-    "#{@html_options[:class].presence || ''} fr-select"
+    "#{@input_html_options[:class].presence || ''} fr-select"
   end
 
   def selected_option_label_input_value

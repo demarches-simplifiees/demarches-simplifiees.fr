@@ -7,10 +7,11 @@ const AUTOSUBMIT_DATE_DEBOUNCE_DELAY = 5000;
 const AUTOSUBMIT_EVENTS = ['input', 'change', 'blur'];
 
 export class AutosubmitController extends ApplicationController {
-  static targets = ['submitter'];
+  static targets = ['submitter', 'input'];
 
   declare readonly submitterTarget: HTMLButtonElement | HTMLInputElement;
   declare readonly hasSubmitterTarget: boolean;
+  declare readonly inputTarget: HTMLInputElement;
 
   #dateTimeChangedInputs = new WeakSet<HTMLElement>();
 
@@ -66,6 +67,7 @@ export class AutosubmitController extends ApplicationController {
 
   private findTargetElement(event: Event) {
     const target = event.target;
+
     if (
       !isFormInputElement(target) ||
       this.preventAutosubmit(target, event.type)
@@ -80,6 +82,9 @@ export class AutosubmitController extends ApplicationController {
     type: string
   ) {
     if (target.disabled) {
+      return true;
+    }
+    if (this.hasInputTarget && this.inputTarget != target) {
       return true;
     }
     if (
