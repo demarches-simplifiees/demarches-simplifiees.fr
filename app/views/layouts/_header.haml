@@ -31,7 +31,7 @@
         .fr-header__tools
           .fr-header__tools-links.relative
 
-            %ul.fr-btns-group
+            %ul.fr-btns-group.flex.align-center
               - if instructeur_signed_in? || user_signed_in?
                 %li
                   = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile }
@@ -39,6 +39,7 @@
                 - if request.path == new_user_registration_path
                   %li
                     .fr-hidden-sm.fr-unhidden-lg.fr-link--sm= t('views.shared.account.already_user_question')
+                %li= link_to 'Agent', agent_connect_path, class: "fr-btn fr-btn--tertiary fr-icon-government-fill fr-btn--icon-left"
                 %li= link_to t('views.shared.account.signin'), new_user_session_path, class: "fr-btn fr-btn--tertiary fr-icon-account-circle-fill fr-btn--icon-left"
 
               %li
