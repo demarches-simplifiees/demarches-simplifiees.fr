@@ -27,7 +27,7 @@ class GroupeGestionnaire::GroupeGestionnaireGestionnaires::GestionnaireComponent
       button_to 'Retirer',
        gestionnaire_groupe_gestionnaire_gestionnaire_path(@groupe_gestionnaire, @gestionnaire),
        method: :delete,
-       class: 'button',
+       class: 'fr-btn fr-btn--sm fr-btn--tertiary',
        form: { data: { turbo: true, turbo_confirm: "Retirer « #{@gestionnaire.email} » des gestionnaires de « #{@groupe_gestionnaire.name} » ?" } }
     end
   end

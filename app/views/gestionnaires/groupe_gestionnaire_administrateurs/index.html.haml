@@ -1,5 +1,6 @@
+= render 'gestionnaires/groupe_gestionnaires/main_navigation'
 = render partial: 'gestionnaires/breadcrumbs',
-  locals: { steps: [['Groupes gestionnaire', gestionnaire_groupe_gestionnaires_path],
+  locals: { steps: [['Groupes gestionnaires', gestionnaire_groupe_gestionnaires_path],
                     ["#{@groupe_gestionnaire.name.truncate_words(10)}", gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire)],
                     ['Administrateurs']], preview: false }
 
