@@ -37,7 +37,11 @@ class Dsfr::ComboboxComponent < ApplicationComponent
   end
 
   def input_class
-    "#{@input_html_options[:class].presence || ''} fr-select"
+    class_names(
+      "#{@input_html_options[:class]}": @input_html_options[:class].presence,
+      'fr-select': true,
+      'fr-autocomplete': @url.presence
+    )
   end
 
   def selected_option_label_input_value
