@@ -1299,6 +1299,15 @@ describe Dossier, type: :model do
 
         it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
       end
+
+      context 'when there are pending correction' do
+        before { create(:dossier_correction, dossier:) }
+
+        it "passes en instruction and keep the correction request" do
+          expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy
+          expect(dossier.pending_correction?).to be_truthy
+        end
+      end
     end
 
     context 'when procedure has sva or svr enabled' do
