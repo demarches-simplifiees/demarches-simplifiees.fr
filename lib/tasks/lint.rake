@@ -6,6 +6,7 @@ task :lint do
   sh "bundle exec i18n-tasks unused --locale en" # TODO: check for all locales
   sh "bundle exec i18n-tasks check-consistent-interpolations"
   sh "bundle exec brakeman --no-pager"
+  sh "bundle exec rake anonymizer:lint"
   sh "yarn lint:js"
   sh "yarn lint:types"
 end
