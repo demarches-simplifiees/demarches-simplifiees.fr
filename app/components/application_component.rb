@@ -4,15 +4,14 @@ class ApplicationComponent < ViewComponent::Base
 
   delegate :rich_text_area_tag, :dsfr_icon, to: :helpers
 
-  def current_user
-    controller.current_user
-  end
+  delegate :administrateur_signed_in?,
+           :expert_signed_in?,
+           :gestionnaire_signed_in?,
+           :instructeur_signed_in?,
+           to: :helpers
 
-  def current_administrateur
-    controller.current_administrateur
-  end
-
-  def current_gestionnaire
-    controller.current_gestionnaire
-  end
+  delegate :current_user,
+           :current_administrateur,
+           :current_gestionnaire,
+           to: :controller
 end

@@ -75,14 +75,7 @@
       .fr-header__menu-links
         -# populated by dsfr js
 
-      - if content_for?(:main_navigation)
-        = yield(:main_navigation)
-      - elsif is_administrateur_context
-        = render 'administrateurs/main_navigation'
-      - elsif is_instructeur_context || is_expert_context
-        = render MainNavigation::InstructeurExpertNavigationComponent.new
-      - elsif is_user_context
-        = render 'users/main_navigation'
+      = render MainNavigationComponent.new(current_user:)
 
 
   = yield(:notice_info)

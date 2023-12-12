@@ -1,5 +1,8 @@
 .sub-header
   .procedure-admin-listing-container
+    - if Rails.application.config.ds_zonage_enabled
+      = link_to 'Toutes les démarches', all_admin_procedures_path(zone_ids: current_administrateur.zones), class:'fr-btn fr-btn--secondary fr-mr-1w'
+
     = link_to "Nouvelle Démarche", new_from_existing_admin_procedures_path, id: 'new-procedure', class: 'fr-btn'
   .fr-container
 
