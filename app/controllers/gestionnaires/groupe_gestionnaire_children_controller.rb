@@ -1,6 +1,6 @@
 module Gestionnaires
   class GroupeGestionnaireChildrenController < GestionnaireController
-    before_action :retrieve_groupe_gestionnaire, except: [:new]
+    before_action :retrieve_groupe_gestionnaire
 
     def index
     end

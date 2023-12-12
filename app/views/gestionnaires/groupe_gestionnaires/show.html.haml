@@ -1,5 +1,7 @@
+= render 'main_navigation'
+
 = render partial: 'gestionnaires/breadcrumbs',
-    locals: { steps: [['Groupes gestionnaire', gestionnaire_groupe_gestionnaires_path],
+    locals: { steps: [['Groupes gestionnaires', gestionnaire_groupe_gestionnaires_path],
                       ["#{@groupe_gestionnaire.name.truncate_words(10)}"]],
               metadatas: true }
 
@@ -18,4 +20,5 @@
       %a{ href: gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire.groupe_gestionnaire) }= @groupe_gestionnaire.groupe_gestionnaire.name
   .fr-grid-row.fr-grid-row--gutters.fr-mb-5w
     = render GroupeGestionnaire::Card::GestionnairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire)
+    = render GroupeGestionnaire::Card::AdministrateursComponent.new(groupe_gestionnaire: @groupe_gestionnaire)
     = render GroupeGestionnaire::Card::ChildrenComponent.new(groupe_gestionnaire: @groupe_gestionnaire)

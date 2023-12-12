@@ -44,7 +44,7 @@ describe Gestionnaires::GroupeGestionnaireGestionnairesController, type: :contro
 
       it { expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire) }
       it { expect(groupe_gestionnaire.reload.gestionnaires.count).to eq(1) }
-      it { expect(flash.notice).to eq("Le gestionnaire « #{new_gestionnaire.email} » a été retiré du groupe.") }
+      it { expect(flash.notice).to eq("Le gestionnaire « #{new_gestionnaire.email} » a été retiré du groupe gestionnaire.") }
     end
 
     context 'when there is only one gestionnaire' do
