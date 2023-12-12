@@ -13,8 +13,8 @@ class AgentConnectService
 
     uri = client.authorization_uri(
       scope: [:openid, :email],
-      state: state,
-      nonce: nonce,
+      state:,
+      nonce:,
       acr_values: 'eidas1'
     )
 
