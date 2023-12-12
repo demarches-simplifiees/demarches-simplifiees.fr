@@ -1,11 +1,6 @@
 fr:
   links:
     provider:
-      logo:
-        src: "footer/logo-dmra-carre-120x164.png"
-        alt: "Logo DMRA"
-        height: 164
-        width: 120
       provided_by: "la DINUM"
       title: "Direction Interministérielle au Numérique"
       url: "https://numerique.gouv.fr"
