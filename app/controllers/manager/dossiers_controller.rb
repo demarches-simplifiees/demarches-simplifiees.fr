@@ -16,6 +16,27 @@ module Manager
       end
     end
 
+    def transfer_edit
+      @dossier = Dossier.find params[:id]
+    end
+
+    def transfer
+      transfer = DossierTransfer.create(email: params[:email], dossiers: [Dossier.find(params[:id])], from_support: true)
+      if transfer.persisted?
+        flash[:success] = "Une invitation de transfert a été envoyée à #{params[:email]}"
+      else
+        flash[:alert] = transfer.errors.full_messages.join("<br>")
+      end
+
+      redirect_to manager_dossier_path(params[:id])
+    end
+
+    def transfer_destroy
+      dossier = Dossier.find(params[:id])
+      dossier.transfer.destroy_and_nullify
+      redirect_to manager_dossier_path(dossier), notice: t("users.dossiers.transferer.destroy")
+    end
+
     private
 
     def unfiltered_list?
