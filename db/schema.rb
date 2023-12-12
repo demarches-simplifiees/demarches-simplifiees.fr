@@ -334,7 +334,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "commentaire_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
-    t.string "kind", default: "correction", null: false
     t.string "reason", default: "incorrect", null: false
     t.datetime "resolved_at"
     t.datetime "updated_at", null: false
