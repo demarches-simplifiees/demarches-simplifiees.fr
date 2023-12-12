@@ -2197,7 +2197,7 @@ describe Dossier, type: :model do
         let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
         let(:stable_ids) { [type_de_champ_1.stable_id, type_de_champ_2.stable_id] }
 
-        it { expect(subject).to match(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
+        it { expect(subject).to match_array(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
       end
     end
   end
