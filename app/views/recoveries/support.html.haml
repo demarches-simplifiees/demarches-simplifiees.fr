@@ -11,3 +11,14 @@
       'Contactez le support',
       subject: 'Récupération de dossiers',
       class: 'fr-btn')
+
+  - when 'must_use_agent_connect'
+    %p Vous devez utiliser le portail AgentConnect pour récupérer vos dossiers.
+
+    = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
+      %span.fr-connect__login
+        = t('signin_with', scope: [:agent_connect, :agent, :index])
+      %span.fr-connect__brand AgentConnect
+
+    %p Vous n'avez pas encore de compte AgentConnect ? Vous pouvez en créer un en utilisant MonComptePro.
+    = link_to 'MonComptePro', 'https://moncomptepro.beta.gouv.fr', class: 'fr-btn'

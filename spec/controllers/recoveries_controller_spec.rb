@@ -26,4 +26,22 @@ describe RecoveriesController, type: :controller do
 
     it { is_expected.to have_http_status(:success) }
   end
+
+  describe 'ensure_agent_connect_is_used' do
+    subject { post :selection }
+
+    context 'when agent connect is used' do
+      let(:instructeur) { create(:instructeur, :with_agent_connect_information) }
+
+      before do
+        allow(controller).to receive(:current_instructeur).and_return(instructeur)
+      end
+
+      it { is_expected.to have_http_status(:success) }
+    end
+
+    context 'when agent connect is not used' do
+      it { is_expected.to redirect_to(support_recovery_path(error: :must_use_agent_connect)) }
+    end
+  end
 end
