@@ -25,7 +25,7 @@ en:
       link_1_url: "https://www.numerique.gouv.fr/dinum/"
       link_2_label: The source code
       description_2: is available under a free license.
-      copy_html: "Unless otherwise stated, all content on this site is %{link}"
+      copy_html: "Unless otherwise stated, all public data on this site are %{link}"
       license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
@@ -50,6 +50,9 @@ en:
         label: "Documentation"
         title: "Our Documentation"
         url: "https://doc.demarches-simplifiees.fr"
+      vote_feature:
+        label: "Improve the site"
+        title: "Vote for your priority improvements or share your own ideas"
       mentions_legales:
         label: "Legal notices"
         title: "Legal notices regarding our platform"

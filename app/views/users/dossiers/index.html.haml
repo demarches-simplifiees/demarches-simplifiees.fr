@@ -3,9 +3,6 @@
 - else
   - content_for(:title, t(".title", scope: :metas))
 
-- content_for :footer do
-  = render partial: "users/dossiers/index_footer"
-
 .dossiers-headers.sub-header
   .fr-container
     %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
