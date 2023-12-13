@@ -2,15 +2,15 @@ module ReleaseNotesHelper
   def announce_category_badge(category)
     color_class = case category.to_sym
     when :administrateur
-      'fr-background-flat--blue-france fr-text-inverted--blue-france'
+      'fr-badge--blue-cumulus'
     when :instructeur
-      'fr-background-contrast--yellow-tournesol'
+      'fr-badge--yellow-tournesol'
     when :expert
-      'fr-background-contrast--purple-glycine'
+      'fr-badge--purple-glycine'
     when :usager
-      'fr-background-contrast--green-emeraude'
+      'fr-badge--green-emeraude'
     when :api
-      'fr-background-contrast--blue-ecume'
+      'fr-badge--pink-macaron'
     end
 
     content_tag(:span, ReleaseNote.human_attribute_name("categories.#{category}"), class: "fr-badge #{color_class}")
