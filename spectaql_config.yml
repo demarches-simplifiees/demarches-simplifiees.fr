@@ -11,6 +11,7 @@ extensions:
 
 info:
   title: Schema de l'API GraphQL de demarches-simplifiees.fr
+  description: détails des apis
   contact:
     name: équipe support
     url: https://doc.demarches-simplifiees.fr/api-graphql
