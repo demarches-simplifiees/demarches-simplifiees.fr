@@ -1148,7 +1148,6 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
-    let!(:correction) { create(:dossier_correction, dossier:) } # correction has a commentaire
 
     subject(:passer_en_instruction) { dossier.passer_en_instruction!(instructeur: instructeur) }
 
@@ -1166,13 +1165,6 @@ describe Dossier, type: :model do
     end
 
     it { expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1) }
-
-    it "resolve pending correction" do
-      passer_en_instruction
-
-      expect(dossier.pending_correction?).to be_falsey
-      expect(correction.reload.resolved_at).to be_present
-    end
 
     it 'creates a commentaire in the messagerie with expected wording' do
       passer_en_instruction
@@ -1253,6 +1245,24 @@ describe Dossier, type: :model do
     end
   end
 
+  describe '#can_passer_en_instruction?' do
+    let(:dossier) { create(:dossier, :en_construction) }
+
+    it { expect(dossier.can_passer_en_instruction?).to be_truthy }
+
+    context 'when there is a pending correction' do
+      before { create(:dossier_correction, dossier:) }
+
+      it { expect(dossier.can_passer_en_instruction?).to be_falsey }
+    end
+
+    context 'when there is a resolved correction' do
+      before { create(:dossier_correction, :resolved, dossier:) }
+
+      it { expect(dossier.can_passer_en_instruction?).to be_truthy }
+    end
+  end
+
   describe '#can_passer_automatiquement_en_instruction?' do
     let(:dossier) { create(:dossier, :en_construction, declarative_triggered_at: declarative_triggered_at) }
     let(:declarative_triggered_at) { nil }
@@ -1288,6 +1298,15 @@ describe Dossier, type: :model do
         let(:declarative_triggered_at) { 1.day.ago }
 
         it { expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy }
+      end
+
+      context 'when there are pending correction' do
+        before { create(:dossier_correction, dossier:) }
+
+        it "passes en instruction and keep the correction request" do
+          expect(dossier.can_passer_automatiquement_en_instruction?).to be_truthy
+          expect(dossier.pending_correction?).to be_truthy
+        end
       end
     end
 
@@ -2178,7 +2197,7 @@ describe Dossier, type: :model do
         let!(:type_de_champ_2) { create(:type_de_champ_textarea, procedure: procedure) }
         let(:stable_ids) { [type_de_champ_1.stable_id, type_de_champ_2.stable_id] }
 
-        it { expect(subject).to match(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
+        it { expect(subject).to match_array(dossier.champs_public.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids })) }
       end
     end
   end
