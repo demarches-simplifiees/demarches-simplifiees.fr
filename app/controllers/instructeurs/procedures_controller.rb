@@ -94,6 +94,7 @@ module Instructeurs
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
       @has_export_notification = notify_exports?
+      @has_last_export = last_export_for(@statut)
 
       @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
@@ -180,6 +181,8 @@ module Instructeurs
       @procedure = procedure
       @statut = export_options[:statut]
       @dossiers_count = export.count
+
+      @has_last_export = last_export_for(@statut)
 
       if export.available?
         respond_to do |format|
@@ -375,6 +378,10 @@ module Instructeurs
       scope = scope.where(updated_at: last_seen_at...) if last_seen_at
 
       scope.exists?
+    end
+
+    def last_export_for(statut)
+      Export.for_groupe_instructeurs(groupe_instructeur_ids).where(statut: statut).last
     end
 
     def cookies_export_key
