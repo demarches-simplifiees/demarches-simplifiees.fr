@@ -12,6 +12,7 @@ export class AutosubmitController extends ApplicationController {
   declare readonly submitterTarget: HTMLButtonElement | HTMLInputElement;
   declare readonly hasSubmitterTarget: boolean;
   declare readonly inputTarget: HTMLInputElement;
+  declare readonly hasInputTarget: boolean;
 
   #dateTimeChangedInputs = new WeakSet<HTMLElement>();
 

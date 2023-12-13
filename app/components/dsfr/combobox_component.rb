@@ -28,10 +28,6 @@ class Dsfr::ComboboxComponent < ApplicationComponent
     }.compact
   end
 
-  def hidden_html_options
-    @hidden_html_options || {}
-  end
-
   def input_id
     @input_html_options[:id]
   end
