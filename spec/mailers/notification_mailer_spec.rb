@@ -10,7 +10,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
     it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
-    it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de <a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
+    it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
   end
 
   describe 'send_en_construction_notification' do

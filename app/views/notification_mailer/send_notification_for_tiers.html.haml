@@ -2,17 +2,22 @@
   = render 'layouts/mailers/logo', url: @logo_url
 
 %p
-  Bonjour,
+  = t("layouts.mailers.for_tiers.good_morning")
 
 %p
-  Nous vous informons que le dossier nº
-  = number_with_delimiter(@dossier.id)
-  rempli en votre nom par #{@dossier.mandataire_first_name}
-  #{@dossier.mandataire_last_name} sur la démarche
+  = t("layouts.mailers.for_tiers.first_part",
+  dossier_id: number_with_delimiter(@dossier.id),
+  mandataire_first_name: @dossier.mandataire_first_name,
+  mandataire_last_name: @dossier.mandataire_last_name)
+
   %span{ :style => "font-weight: bold;" }
     = @dossier.procedure.libelle
-  est passé en phase #{t("instructeurs.dossiers.decisions_rendues_block.without_email.#{@dossier.state}")} le #{l(@dossier.updated_at.to_date)}.
-%p= "Pour en savoir plus, veuillez vous rapprocher de #{mail_to(@dossier.user.email)}."
+
+  = t("layouts.mailers.for_tiers.#{@dossier.state}", processed_at: l(@dossier.updated_at.to_date) )
+
+%p
+  = t("layouts.mailers.for_tiers.second_part")
+  = "#{mail_to(@dossier.user.email)}."
 
 %p
   = t(:best_regards, scope: [:views, :shared, :greetings])
