@@ -1,4 +1,6 @@
 describe RecoveriesController, type: :controller do
+  include Dry::Monads[:result]
+
   describe 'GET #nature' do
     subject { get :nature }
 
@@ -73,6 +75,34 @@ describe RecoveriesController, type: :controller do
       end
 
       it { is_expected.to redirect_to(support_recovery_path(error: 'not_collectivite_territoriale')) }
+    end
+  end
+
+  context 'when the current instructeur used agent connect and works for a collectivite territoriale' do
+    let(:instructeur) { create(:instructeur, :with_agent_connect_information) }
+    let(:api_recherche_result) do
+      { nom_complet: 'name', complements: { collectivite_territoriale: { is: :present } } }
+    end
+
+    before do
+      allow(controller).to receive(:current_instructeur).and_return(instructeur)
+      allow_any_instance_of(APIRechercheEntreprisesService).to receive(:call)
+        .and_return(Success(api_recherche_result))
+    end
+
+    describe 'GET #identification' do
+      subject { get :identification }
+
+      it { is_expected.to have_http_status(:success) }
+    end
+
+    describe 'POST #post_identification' do
+      subject { post :post_identification, params: { previous_email: 'email@a.com' } }
+
+      it do
+        is_expected.to redirect_to(selection_recovery_path)
+        expect(cookies[:recover_previous_email]).to eq('email@a.com')
+      end
     end
   end
 end

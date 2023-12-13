@@ -14,9 +14,14 @@ class RecoveriesController < ApplicationController
   end
 
   def identification
+    @structure_name = structure_name
   end
 
   def post_identification
+    # cookies are used to avoid leaking
+    # email in url
+    cookies[:recover_previous_email] = previous_email
+
     redirect_to selection_recovery_path
   end
 
@@ -38,6 +43,12 @@ class RecoveriesController < ApplicationController
   def nature_params = params[:nature]
   def siret = current_instructeur.agent_connect_information.siret
   def previous_email = params[:previous_email]
+
+  def structure_name
+    # we know that the structure exists because
+    # of the ensure_collectivite_territoriale guard
+    APIRechercheEntreprisesService.new.(siret:).value![:nom_complet]
+  end
 
   def ensure_agent_connect_is_used
     if current_instructeur&.agent_connect_information.nil?
