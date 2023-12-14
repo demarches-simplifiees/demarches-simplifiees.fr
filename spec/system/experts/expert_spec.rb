@@ -52,6 +52,7 @@ describe 'Inviting an expert:' do
         expect(page).to have_current_path(new_user_session_path)
         login_as avis.expert.user, scope: :user
         sign_in_with(avis.expert.email, 'This is a very complicated password !')
+        expect(page).to have_content("connecté en tant qu’expert")
         click_on 'Passer en usager'
         expect(page).to have_current_path(dossiers_path)
       end
