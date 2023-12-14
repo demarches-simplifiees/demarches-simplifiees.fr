@@ -43,6 +43,40 @@ FactoryBot.define do
       end
     end
 
+    trait :for_tiers_with_notification do
+      for_tiers { true }
+      mandataire_first_name { 'John' }
+      mandataire_last_name { 'Doe' }
+
+      transient do
+        for_individual? { true }
+      end
+
+      after(:build) do |dossier, _evaluator|
+        if !dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
+        end
+        dossier.individual = build(:individual, :with_notification, dossier: dossier)
+      end
+    end
+
+    trait :for_tiers_without_notification do
+      for_tiers { true }
+      mandataire_first_name { 'John' }
+      mandataire_last_name { 'Doe' }
+
+      transient do
+        for_individual? { true }
+      end
+
+      after(:build) do |dossier, _evaluator|
+        if !dossier.procedure.for_individual?
+          raise 'Inconsistent factory: attempting to create a dossier :with_individual on a procedure that is not `for_individual?`'
+        end
+        dossier.individual = build(:individual, :without_notification, dossier: dossier)
+      end
+    end
+
     trait :with_individual do
       transient do
         for_individual? { true }

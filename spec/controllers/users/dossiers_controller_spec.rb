@@ -164,7 +164,7 @@ describe Users::DossiersController, type: :controller do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
-    subject { post :update_identite, params: { id: dossier.id, individual: individual_params } }
+    subject { post :update_identite, params: { id: dossier.id, dossier: dossier_params } }
 
     before do
       sign_in(user)
@@ -174,7 +174,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with correct individual and dossier params' do
-      let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
+      let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
 
       it do
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
@@ -184,7 +184,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'when the identite cannot be updated by the user' do
       let(:dossier) { create(:dossier, :with_individual, :en_instruction, user: user, procedure: procedure) }
-      let(:individual_params) { { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } }
+      let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey' } } }
 
       it 'redirects to the dossiers list' do
         expect(response).to redirect_to(dossier_path(dossier))
@@ -193,11 +193,38 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with incorrect individual and dossier params' do
-      let(:individual_params) { { gender: '', nom: '', prenom: '' } }
+      let(:dossier_params) { { individual_attributes: { gender: '', nom: '', prenom: '' } } }
 
       it do
         expect(response).not_to have_http_status(:redirect)
         expect(flash[:alert]).to include("Le champ « Civilité » doit être rempli", "Le champ « Nom » doit être rempli", "Le champ « Prénom » doit être rempli")
+      end
+    end
+
+    context 'when a dossier is in broullon, for_tiers and we want to update the individual' do
+      let(:dossier) { create(:dossier, :for_tiers_without_notification, state: "brouillon", user: user, procedure: procedure) }
+      let(:dossier_params) { { individual_attributes: { gender: 'M', nom: 'Mouse', prenom: 'Mickey', email: 'mickey@gmail.com', notification_method: 'email' } } }
+
+      it 'updates the individual with valid notification_method' do
+        dossier.reload
+        individual = dossier.individual.reload
+        expect(individual.errors.full_messages).to be_empty
+        expect(individual.notification_method).to eq('email')
+        expect(individual.email).to eq('mickey@gmail.com')
+        expect(response).to redirect_to(brouillon_dossier_path(dossier))
+      end
+
+      context 'when we want to change the mandataire' do
+        let(:dossier_params) { { mandataire_first_name: "Jean", mandataire_last_name: "Dupont" } }
+
+        it 'updates the dossier mandataire first and last name' do
+          dossier.reload
+          individual = dossier.individual.reload
+          expect(dossier.errors.full_messages).to be_empty
+          expect(dossier.mandataire_first_name).to eq('Jean')
+          expect(dossier.mandataire_last_name).to eq('Dupont')
+          expect(dossier.mandataire_full_name).to eq('Jean Dupont')
+        end
       end
     end
   end

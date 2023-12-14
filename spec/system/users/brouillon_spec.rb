@@ -626,7 +626,7 @@ describe 'The user' do
     visit "/commencer/#{procedure.path}"
     click_on 'Commencer la démarche'
 
-    expect(page).to have_content("Identité du demandeur")
+    expect(page).to have_content("Votre identité")
     expect(page).to have_current_path(identite_dossier_path(user_dossier))
   end
 
@@ -653,8 +653,8 @@ describe 'The user' do
 
   def fill_individual
     find('label', text: 'Monsieur').click
-    fill_in('Prénom', with: 'prenom')
-    fill_in('Nom', with: 'nom')
+    fill_in('Prénom', with: 'prenom', visible: true)
+    fill_in('Nom', with: 'Nom', visible: true)
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end

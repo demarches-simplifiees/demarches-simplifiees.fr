@@ -1,3 +1,6 @@
 = render Dossiers::RowShowComponent.new(label: 'Email', profile: @profile) do |c|
   - c.with_value do
-    = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email
+    - if for_tiers
+      = beneficiaire_mail
+    - else
+      = user_deleted ? "#{email} (l’usager a supprimé son compte)" : email

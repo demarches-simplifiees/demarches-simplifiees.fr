@@ -13,6 +13,11 @@ fr:
         state: "État"
         autorisation_donnees: Acceptation des CGU
         pending_correction: Demande de correction
+        mandataire_first_name: Prénom
+        mandataire_last_name: Nom
+        for_tiers:
+          false: Pour vous
+          true: "Pour un bénéficiaire : membre de la famille, proche, mandant..."
       dossier/state: &state
         brouillon: "Brouillon"
         en_construction: "En construction"

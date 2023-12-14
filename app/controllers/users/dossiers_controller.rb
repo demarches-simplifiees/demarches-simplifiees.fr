@@ -128,7 +128,7 @@ module Users
       @dossier = dossier
       @no_description = true
 
-      if @dossier.individual.update(individual_params)
+      if @dossier.update(dossier_params) && @dossier.individual.valid?
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
@@ -138,7 +138,7 @@ module Users
           redirect_to brouillon_dossier_path(@dossier)
         end
       else
-        flash.now.alert = @dossier.individual.errors.full_messages
+        flash.now.alert = @dossier.individual.errors.full_messages + @dossier.errors.full_messages
         render :identite
       end
     end
@@ -589,8 +589,8 @@ module Users
       render :siret
     end
 
-    def individual_params
-      params.require(:individual).permit(:gender, :nom, :prenom, :birthdate)
+    def dossier_params
+      params.require(:dossier).permit(:for_tiers, :mandataire_first_name, :mandataire_last_name, individual_attributes: [:gender, :nom, :prenom, :birthdate, :email, :notification_method])
     end
 
     def siret_params

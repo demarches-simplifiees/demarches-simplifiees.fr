@@ -48,4 +48,15 @@ describe 'users/dossiers/demande', type: :view do
       expect(view.content_for(:notice_info)).to have_text("Le dossier a été déposé par le compte de #{france_connect_information.given_name} #{france_connect_information.family_name}, authentifié par FranceConnect le #{france_connect_information.updated_at.strftime('%d/%m/%Y')}")
     end
   end
+
+  context 'when a dossier is for_tiers and the dossier is en_construction with email notification' do
+    let(:dossier) { create(:dossier, :en_construction, :for_tiers_with_notification) }
+
+    it 'displays the informations of the mandataire' do
+      expect(rendered).to have_text('Identité du mandataire')
+      expect(rendered).to have_text(dossier.mandataire_first_name.to_s)
+      expect(rendered).to have_text(dossier.mandataire_last_name.to_s)
+      expect(rendered).to have_text(dossier.individual.email.to_s)
+    end
+  end
 end
