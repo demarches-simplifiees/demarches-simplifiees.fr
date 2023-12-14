@@ -2,12 +2,7 @@ fr:
   links:
     provider:
       logo:
-        src: "footer/logo-dmra-horisontal-1-1x.webp"
-        srcset:
-          - "footer/logo-dmra-horisontal-1-1x.webp"
-          - "footer/logo-dmra-horisontal-1-2x.webp"
-          - "footer/logo-dmra-horisontal-1-3x.webp"
-          - "footer/logo-dmra-horisontal-1-4x.webp"
+        src: "footer/logo-dmra-horisontal.webp"
         alt: "Logo DMRA"
         height: 90
         width: 240
