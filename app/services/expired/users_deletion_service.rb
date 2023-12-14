@@ -11,17 +11,21 @@ class Expired::UsersDeletionService < Expired::MailRateLimiter
 
   private
 
+  # in case of perf downside :
+  #  consider using perform_all_later
+  #  consider changing notify_inactive_close_to_deletion method, taking a user_id, and updating inactive_close_to_expiration_notice_sent_at
   def send_inactive_close_to_expiration_notice(users)
-    to_notify_only(users).in_batches do |batch|
-      batch.each do |user|
-        send_with_delay(UserMailer.notify_inactive_close_to_deletion(user))
-      end
-      batch.update_all(inactive_close_to_expiration_notice_sent_at: Time.zone.now.utc)
+    user_ids = to_notify_only(users).pluck(:id)
+    user_ids.each do |user_id|
+      send_with_delay(UserMailer.notify_inactive_close_to_deletion(User.find(user_id)))
     end
+    User.where(id: user_ids).update_all(inactive_close_to_expiration_notice_sent_at: Time.zone.now.utc)
   end
 
   def delete_notified_users(users)
-    only_notified(users).find_each do |user|
+    user_ids = only_notified(users).pluck(:id)
+    user_ids.each do |user_id|
+      user = User.find(user_id)
       begin
         user.delete_and_keep_track_dossiers_also_delete_user(nil, reason: :user_expired)
       rescue => e
