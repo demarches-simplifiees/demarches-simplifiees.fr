@@ -38,7 +38,7 @@
         .fr-fieldset__element.fr-fieldset__element--short-text
           = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_last_name, opts: { "data-for-tiers-target" => "mandataireLastName" })
 
-    = f.fields_for :individual do |individual|
+    = f.fields_for :individual, include_id: false do |individual|
       .individual-infos
         %fieldset.fr-fieldset
           %legend.fr-fieldset__legend--regular.fr-fieldset__legend{ "data-for-tiers-target" => "mandataireTitle" }
