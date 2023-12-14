@@ -4,7 +4,7 @@ class Cron::CronJob < ApplicationJob
 
   class << self
     def schedulable?
-      true
+      true && ENV['CRON_JOBS_DISABLED'].blank?
     end
 
     def schedule
