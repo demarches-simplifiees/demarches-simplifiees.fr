@@ -15,6 +15,7 @@ describe TargetedUserLinksController, type: :controller do
 
         it 'redirects to expert_avis_url' do
           expect(response).to redirect_to(expert_avis_path(target_model.procedure, target_model))
+          expect(controller.stored_location_for(:user)).to eq(controller.request.path)
         end
       end
 
