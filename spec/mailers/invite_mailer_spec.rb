@@ -44,6 +44,13 @@ RSpec.describe InviteMailer, type: :mailer do
         expect { invite }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name)
       end
     end
+
+    context 'message contains malicious link' do
+      let(:invite) { create(:invite, user: create(:user), message: "Coucou\n<a href=\"https://malicious.site\">trusted anchor</a>") }
+      it 'sanitize message' do
+        expect(subject.body.decoded).to match(%r{<p>Coucou\s+<br />trusted anchor</p>})
+      end
+    end
   end
 
   describe '.invite_guest' do
@@ -86,6 +93,13 @@ RSpec.describe InviteMailer, type: :mailer do
     context 'when perform_later is called' do
       it 'enqueues email in default queue for high priority delivery' do
         expect { invite }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name)
+      end
+    end
+
+    context 'message contains malicious link' do
+      let(:invite) { create(:invite, user: create(:user), message: "Coucou\n<a href=\"https://malicious.site\">trusted anchor</a>") }
+      it 'sanitize message' do
+        expect(subject.body.decoded).to match(%r{<p>Coucou\s+<br />trusted anchor</p>})
       end
     end
   end
