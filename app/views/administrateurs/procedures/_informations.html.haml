@@ -74,27 +74,36 @@
   - c.with_body do
     %p Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
 
-= f.label :notice, 'Notice', class: 'fr-label'
-%p.fr-hint-text
-  Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
-= render Attachment::EditComponent.new(attached_file: @procedure.notice, view_as: :download)
+.fr-mb-3w
+  = f.label :notice, 'Notice', class: 'fr-label'
+  %p.fr-hint-text
+    Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
+  = render Attachment::EditComponent.new(attached_file: @procedure.notice, view_as: :download)
 
 - if !@procedure.locked?
-  %h3.fr-h6 À qui s’adresse ma démarche ?
-  .radios.vertical
-    = f.label :for_individual, value: true do
-      = f.radio_button :for_individual, true
-      Ma démarche s’adresse à un particulier
-      %p.fr-hint-text En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+  %fieldset.fr-fieldset{ "aria-labelledby": "for-individual-legend" }
+    %legend#for-individual-legend.fr-fieldset__legend.fr-fieldset__legend--regular À qui s’adresse ma démarche ?
+    .fr-fieldset__element
+      .fr-radio-group
+        = f.radio_button :for_individual, true
+        = f.label :for_individual, value: true, class: "fr-label" do
+          Ma démarche s’adresse à un particulier
+          %span.fr-hint-text En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
 
-    = f.label :for_individual, value: false, class: 'fr-label' do
-      = f.radio_button :for_individual, false
-      Ma démarche s’adresse à une personne morale
-      %p.fr-hint-text
-        En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
-  .fr-highlight
-    %p
-      Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
+    .fr-fieldset__element
+      .fr-radio-group
+        = f.radio_button :for_individual, false
+        = f.label :for_individual, value: false, class: 'fr-label' do
+          Ma démarche s’adresse à une personne morale
+          %span.fr-hint-text
+            En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
+
+    .fr-fieldset__element
+      .fr-highlight
+        %p.fr-text--sm
+          Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ».
+          Vous pourrez ajouter un champ SIRET directement dans le formulaire.
+
 
 = f.label :tags, 'Associez les tags à la démarche (facultatif)', class: 'fr-label'
 %p.fr-hint-text Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
