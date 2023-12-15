@@ -18,7 +18,7 @@ class AttestationTemplate < ApplicationRecord
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
   def attestation_for(dossier)
-    attestation = Attestation.new(title: replace_tags(title, dossier))
+    attestation = Attestation.new(title: replace_tags(title, dossier, escape: false))
     attestation.pdf.attach(
       io: build_pdf(dossier),
       filename: "attestation-dossier-#{dossier.id}.pdf",
@@ -70,8 +70,8 @@ class AttestationTemplate < ApplicationRecord
 
     if dossier.present?
       attributes.merge({
-        title: replace_tags(title, dossier),
-        body: replace_tags(body, dossier),
+        title: replace_tags(title, dossier, escape: false),
+        body: replace_tags(body, dossier, escape: false),
         signature: signature_to_render(dossier.groupe_instructeur)
       })
     else
