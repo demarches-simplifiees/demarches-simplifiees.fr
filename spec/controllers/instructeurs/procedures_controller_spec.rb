@@ -534,7 +534,19 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(response.body).to include("Votre dernier export au format csv est prêt") }
         end
 
-        context 'with generated export more than hour ago' do
+        context 'with failed export ' do
+          let(:statut) { 'tous' }
+          let!(:export) { create(:export, :failed, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago) }
+          render_views
+          before do
+            subject
+          end
+
+          it { expect(assigns(:has_last_export)).to eq(export) }
+          it { expect(response.body).to include("Votre dernier export au format csv n&#39;a pas fonctionné") }
+        end
+
+        context 'with export more than hour ago' do
           let(:statut) { 'tous' }
           let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 2.hours.ago) }
           before do

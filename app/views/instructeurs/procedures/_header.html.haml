@@ -35,5 +35,7 @@
           %p
             - if @has_last_export.pending?
               = t('instructeurs.procedures.last_export_pending')
-            - else
+            - if @has_last_export.generated?
               = t('instructeurs.procedures.last_export_available_html', file_format: @has_last_export.format, file_url: @has_last_export.file.url)
+            - if @has_last_export.failed?
+              = t('instructeurs.procedures.last_export_failed', file_format: @has_last_export.format)
