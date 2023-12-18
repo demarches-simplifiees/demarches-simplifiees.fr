@@ -106,7 +106,7 @@ function getEditorOptions(
     extensions.push(
       Mention.configure({
         renderLabel({ node }) {
-          return `--${node.attrs.label}--`;
+          return node.attrs.label;
         },
         HTMLAttributes: {
           class: 'fr-badge fr-badge--sm fr-badge--info fr-badge--no-icon'
