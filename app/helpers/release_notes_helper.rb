@@ -1,6 +1,12 @@
 module ReleaseNotesHelper
   def announce_category_badge(category)
-    color_class = case category.to_sym
+    color_class = color_by_role(category)
+
+    content_tag(:span, ReleaseNote.human_attribute_name("categories.#{category}"), class: "fr-badge #{color_class}")
+  end
+
+  def color_by_role(role)
+    case role.to_sym
     when :administrateur
       'fr-badge--blue-cumulus'
     when :instructeur
@@ -12,8 +18,6 @@ module ReleaseNotesHelper
     when :api
       'fr-badge--pink-macaron'
     end
-
-    content_tag(:span, ReleaseNote.human_attribute_name("categories.#{category}"), class: "fr-badge #{color_class}")
   end
 
   def infer_default_announce_categories
