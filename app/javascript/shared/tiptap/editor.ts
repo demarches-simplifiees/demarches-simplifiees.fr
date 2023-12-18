@@ -25,13 +25,7 @@ import {
   type Extensions
 } from '@tiptap/core';
 
-import {
-  DocumentWithHeader,
-  Title,
-  Header,
-  Footer,
-  HeaderColumn
-} from './nodes';
+import { DocumentWithHeader, Title, Header, HeaderColumn } from './nodes';
 import { createSuggestionMenu, type TagSchema } from './tags';
 
 export function createEditor({
@@ -90,13 +84,13 @@ function getEditorOptions(
         extensions.push(
           TextAlign.configure({
             types: actions.includes('title')
-              ? ['headerColumn', 'title', 'footer', 'heading', 'paragraph']
+              ? ['headerColumn', 'title', 'heading', 'paragraph']
               : ['heading', 'paragraph']
           })
         );
         break;
       case 'title':
-        extensions.push(Header, HeaderColumn, Title, Footer);
+        extensions.push(Header, HeaderColumn, Title);
         break;
       case 'heading2':
       case 'heading3':
