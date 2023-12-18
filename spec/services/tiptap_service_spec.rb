@@ -22,6 +22,9 @@ RSpec.describe TiptapService do
             content: [{ type: 'text', text: 'Title' }]
           },
           {
+            type: 'title' # remained empty in editor
+          },
+          {
             type: 'paragraph',
             attrs: { textAlign: 'right' },
             content: [
@@ -30,6 +33,10 @@ RSpec.describe TiptapService do
                 text: 'Hello world!'
               }
             ]
+          },
+          {
+            type: 'paragraph'
+            # no content, empty line
           },
           {
             type: 'paragraph',
@@ -69,6 +76,10 @@ RSpec.describe TiptapService do
             type: 'heading',
             attrs: { level: 3 },
             content: [{ type: 'text', text: 'Heading 3' }]
+          },
+          {
+            type: 'heading',
+            attrs: { level: 3 } # remained empty in editor
           },
           {
             type: 'bulletList',
