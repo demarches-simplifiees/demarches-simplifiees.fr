@@ -5,9 +5,6 @@ require 'selenium/webdriver'
 
 def setup_driver(app, download_path, options)
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-
     if ENV['MAKE_IT_SLOW'].present?
       driver.browser.network_conditions = {
         offline: false,
@@ -72,9 +69,6 @@ Capybara::Screenshot.autosave_on_failure = true
 Capybara::Screenshot.prune_strategy = :keep_last_run
 # Tell Capybara::Screenshot how to take screenshots when using the headless_chrome driver
 Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
-  driver.browser.save_screenshot(path)
-end
-Capybara::Screenshot.register_driver :wsl do |driver, path|
   driver.browser.save_screenshot(path)
 end
 
