@@ -193,7 +193,7 @@
                                   close_to_expiration: @statut == 'expirant',
                                   hidden_by_administration: @statut == 'supprimes_recemment',
                                   sva_svr: @procedure.sva_svr_enabled?,
-                                  has_pending_correction: p.pending_correction?,
+                                  has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,
                                   turbo: false,
                                   with_menu: false }
 
