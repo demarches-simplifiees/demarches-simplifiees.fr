@@ -129,7 +129,9 @@ function getEditorOptions(
     extensions: [
       actions.includes('title') ? DocumentWithHeader : Document,
       Hystory,
-      Typography,
+      Typography.configure({
+        emDash: false
+      }),
       Gapcursor,
       Paragraph,
       Text,
