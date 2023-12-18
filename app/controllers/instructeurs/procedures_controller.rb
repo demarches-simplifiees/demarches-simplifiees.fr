@@ -381,7 +381,11 @@ module Instructeurs
     end
 
     def last_export_for(statut)
-      Export.for_groupe_instructeurs(groupe_instructeur_ids).where(statut: statut).last
+      export = Export.where(instructeur_id: current_instructeur.id, statut: statut).last
+      if export.present?
+        return nil if export.updated_at < 1.hour.ago
+      end
+      export
     end
 
     def cookies_export_key

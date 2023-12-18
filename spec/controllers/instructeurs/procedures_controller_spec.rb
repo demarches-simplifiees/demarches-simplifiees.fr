@@ -508,6 +508,56 @@ describe Instructeurs::ProceduresController, type: :controller do
           end
         end
       end
+
+      context 'exports alert' do
+        context 'without generated export' do
+          let(:statut) { 'tous' }
+          let!(:export) { create(:export, :pending, groupe_instructeurs: [gi_2]) }
+          render_views
+          before do
+            subject
+          end
+
+          it { expect(assigns(:has_last_export)).to eq(export) }
+          it { expect(response.body).to include("Votre dernier export est en cours de création") }
+        end
+
+        context 'with recent generated export' do
+          let(:statut) { 'tous' }
+          let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago) }
+          render_views
+          before do
+            subject
+          end
+
+          it { expect(assigns(:has_last_export)).to eq(export) }
+          it { expect(response.body).to include("Votre dernier export au format csv est prêt") }
+        end
+
+        context 'with generated export more than hour ago' do
+          let(:statut) { 'tous' }
+          let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 2.hours.ago) }
+          before do
+            subject
+          end
+
+          it { expect(assigns(:has_last_export)).to eq(nil) }
+        end
+
+        context 'logged in with another instructeur' do
+          let(:instructeur_2) { create(:instructeur) }
+          let(:statut) { 'tous' }
+          let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago) }
+
+          before do
+            sign_in(instructeur_2.user)
+            instructeur_2.groupe_instructeurs << gi_2
+            subject
+          end
+
+          it { expect(assigns(:has_last_export)).to eq(nil) }
+        end
+      end
     end
   end
 
