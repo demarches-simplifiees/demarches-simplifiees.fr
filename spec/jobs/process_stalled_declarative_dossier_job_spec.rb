@@ -31,18 +31,6 @@ RSpec.describe ProcessStalledDeclarativeDossierJob, type: :job do
 
           it { expect(subject.state).to eq('en_construction') }
         end
-
-        context 'with pending correction' do
-          let!(:correction) { create(:dossier_correction, dossier:) }
-
-          it { expect(subject.state).to eq('en_construction') }
-        end
-
-        context 'with resolved correction' do
-          let!(:correction) { create(:dossier_correction, :resolved, dossier:) }
-
-          it { expect(subject.state).to eq('en_instruction') }
-        end
       end
 
       context 'dossier already en_instruction' do

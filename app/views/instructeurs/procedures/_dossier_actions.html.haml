@@ -45,10 +45,10 @@
   - if Dossier.states[:en_construction] == state
     %li{ 'data-turbo': turbo ? 'true' : 'false' }
       = button_to passer_en_instruction_instructeur_dossier_path(procedure_id, dossier_id), method: :post, class: 'fr-btn fr-icon-edit-line',
-        disabled: has_pending_correction, "aria-describedby" => has_pending_correction ? "tooltip-passer-en-instruction" : nil do
+        disabled: has_blocking_pending_correction, "aria-describedby" => has_blocking_pending_correction ? "tooltip-passer-en-instruction" : nil do
         = t('views.instructeurs.dossiers.passer_en_instruction')
 
-      - if has_pending_correction
+      - if has_blocking_pending_correction
         %span#tooltip-passer-en-instruction.fr-tooltip.fr-placement{ role: :tooltip, "aria-hidden" => "true" }
           = t('views.instructeurs.dossiers.passer_en_instruction_blocked_by_pending_correction')
 
