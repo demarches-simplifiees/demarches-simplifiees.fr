@@ -44,6 +44,8 @@ class TiptapService
         else
           tags[id]
         end
+      in { type: type } if ["paragraph", "title", "heading"].include?(type) && !node.key?(:content)
+        # noop
       end
     end
 
