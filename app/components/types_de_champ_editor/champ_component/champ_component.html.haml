@@ -94,7 +94,9 @@
               = render Attachment::EditComponent.new(**piece_justificative_template_options)
 
               - if type_de_champ.titre_identite?
-                %p Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation du dossier
+                = render Dsfr::AlertComponent.new(state: :info, heading_level: 'p') do |c|
+                  - c.body do
+                    Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation, du refus ou du classement sans suite du dossier. Aussi, pour des raisons de sécurités, un filigrane est automatiquement ajouté aux images.
               - elsif procedure.piece_justificative_multiple?
                 %p Les usagers pourront envoyer plusieurs fichiers si nécessaire.
           - if type_de_champ.carte?
