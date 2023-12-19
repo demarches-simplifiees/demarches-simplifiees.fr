@@ -70,6 +70,10 @@ RSpec.describe RecoveryService, type: :service do
       it 'moves the files to the next user' do
         subject
         expect(next_user.dossiers.count).to eq(3)
+
+        dossier_transfer_log = next_user.dossiers.first.transfer_logs.first
+        expect(dossier_transfer_log.from).to eq(previous_user.email)
+        expect(dossier_transfer_log.to).to eq(next_user.email)
       end
     end
   end

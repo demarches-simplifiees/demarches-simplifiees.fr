@@ -16,12 +16,22 @@ class RecoveryService
     recoverable_procedure_ids = recoverable_procedures(previous_user: previous_user, siret: siret)
       .map { _1[:procedure_id] }
 
-    procedure_ids
-      .select { |id| id.in?(recoverable_procedure_ids) }
+    dossiers = procedure_ids
+      .filter { |id| id.in?(recoverable_procedure_ids) }
       .then do |p_ids|
         previous_user.dossiers.joins(:procedure)
           .where(procedure: { id: p_ids })
-          .update_all(user_id: next_user.id)
       end
+
+    dossiers.pluck(:id).map do |id|
+      {
+        dossier_id: id,
+        from: previous_user.email,
+        from_support: false,
+        to: next_user.email
+      }
+    end.then { |array| DossierTransferLog.create(array) }
+
+    dossiers.update_all(user_id: next_user.id)
   end
 end
