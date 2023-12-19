@@ -16,6 +16,9 @@ class Users::SessionsController < Devise::SessionsController
     end
 
     super
+    if current_account.count > 1
+      flash[:notice] = t("devise.sessions.signed_in_multiple_profile", roles: current_account.keys.map { |role| t("layouts.#{role}") }.join(', '))
+    end
   end
 
   def reset_link_sent

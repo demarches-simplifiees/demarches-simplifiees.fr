@@ -12,6 +12,22 @@ describe 'Signin in:' do
 
     sign_in_with user.email, password
     expect(page).to have_current_path dossiers_path
+    expect(page).to have_content('Connecté(e).')
+    expect(page).not_to have_content('Vous pouvez à tout moment alterner')
+  end
+
+  context 'user has multiple profiles' do
+    let!(:instructeur) { create(:instructeur,    user: user) }
+    let!(:admin)       { create(:administrateur, user: user, instructeur: instructeur) }
+
+    scenario 'he can sign-in and he is notified in flash' do
+      visit root_path
+      click_on 'Se connecter', match: :first
+
+      sign_in_with user.email, password
+      expect(page).to have_current_path admin_procedures_path
+      expect(page).to have_content('Vous êtes connecté(e) ! Vous pouvez à tout moment alterner entre vos différents profils : administrateur, instructeur, usager.')
+    end
   end
 
   scenario 'an existing user can lock its account' do
