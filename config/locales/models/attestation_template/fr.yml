@@ -4,6 +4,8 @@ fr:
       attestation_template: 'Attestation'
     attributes:
       attestation_template:
+        label_logo: Intitulé du logo Marianne
+        label_direction: Intitulé de la direction
         title: Titre de l’attestation
         body: Contenu de l’attestation
         footer: Pied de page

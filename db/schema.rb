@@ -147,6 +147,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "created_at", precision: nil, null: false
     t.text "footer"
     t.jsonb "json_body"
+    t.string "label_direction"
+    t.string "label_logo"
     t.integer "procedure_id"
     t.text "title"
     t.datetime "updated_at", precision: nil, null: false
