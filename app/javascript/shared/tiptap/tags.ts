@@ -92,9 +92,9 @@ class SuggestionMenu {
 
     const html = this.#props.items
       .map((item, i) => {
-        return `<li class="fr-badge fr-badge--sm fr-badge--no-icon${
-          i == this.#selectedIndex ? ' fr-badge--info' : ''
-        }">${item.label}</li>`;
+        return `<li><button class="fr-tag fr-tag--sm" aria-pressed="${
+          i == this.#selectedIndex ? 'true' : 'false'
+        }">${item.label}</button></li>`;
       })
       .join('');
 
@@ -107,7 +107,7 @@ class SuggestionMenu {
     const menu = document.createElement('div');
     const list = document.createElement('ul');
     menu.classList.add('fr-menu');
-    list.classList.add('fr-menu__list');
+    list.classList.add('fr-menu__list', 'fr-tags-group');
     menu.appendChild(list);
 
     return menu;

@@ -1,16 +1,65 @@
-#attestation-edit.fr-container.mt-2{ data: { controller: 'tiptap' } }
-  = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), data: { turbo: 'true', controller: 'autosubmit' } do |form|
-    .flex.flex-gap-2
-      - @buttons.each do |buttons|
-        .flex.flex-gap-1
-          - buttons.each do |(label, action, icon)|
-            %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
-              = label
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Attestation']] }
 
-    .editor.mt-2{ data: { tiptap_target: 'editor' } }
-    = form.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
+#attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap' } }
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-12.fr-col-md-8
+      = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), data: { turbo: 'true', controller: 'autosubmit' } do |f|
+        %fieldset.fr-fieldset{ aria: { labelledby: 'edit-attestation' } }
+          %legend.fr-fieldset__legend#edit-attestation
+            %h1.fr-h2 Attestation
+            %p.fr-text--regular
+              L’attestation est émise au moment où un dossier est accepté, elle est jointe à l’email d’accusé d’acceptation.
+              Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
-    %ul.mt-2.flex.wrap.flex-gap-1
-      - @attestation_template.tags.each do |tag|
-        %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
-          = tag[:libelle]
+          .fr-fieldset__element.fr-mt-2w
+            %h6 En-tête
+
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
+              - c.with_hint { "Exemple: Ministère de la Mer. 3 lignes maximum" }
+
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_direction, input_type: :text_area, required: false, opts: { rows: 2 }) do |c|
+              - c.with_hint { "Exemple: Direction interministérielle du numérique. 2 lignes maximum" }
+
+          .fr-fieldset__element.fr-mt-2w
+            %label.fr-label.fr-h6
+              = AttestationTemplate.human_attribute_name :body
+              = render EditableChamp::AsteriskMandatoryComponent.new
+
+            .editor.mt-2{ data: { tiptap_target: 'editor' } }
+            = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
+
+          .fr-fieldset__element
+            .flex.flex-gap-2
+              - @buttons.each do |buttons|
+                .flex.flex-gap-1
+                  - buttons.each do |(label, action, icon)|
+                    %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
+                      = label
+
+          .fr-fieldset__element
+            %ul.fr-tags-group
+              - @attestation_template.tags.each do |tag|
+                %li
+                  %button.fr-tag.fr-tag--sm{ title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
+                    = tag[:libelle]
+
+          .fr-fieldset__element.fr-mt-2w
+            %h6 Pied de page
+
+          .fr-fieldset__element
+            %label.fr-label Tampon ou signature
+            %span.fr-hint-text
+              Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
+            = render Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false)
+
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
+              - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
+
+    .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+      Image d'exemple ici

@@ -31,7 +31,7 @@ export const Header = Node.create({
   renderHTML({ HTMLAttributes }) {
     return [
       'header',
-      mergeAttributes(HTMLAttributes, { class: 'header flex' }),
+      mergeAttributes(HTMLAttributes, { class: 'header flex flex-gap-1' }),
       0
     ];
   }
@@ -39,7 +39,7 @@ export const Header = Node.create({
 
 export const HeaderColumn = Node.create({
   name: 'headerColumn',
-  content: 'paragraph',
+  content: 'paragraph{1,2}',
   defining: true,
 
   parseHTML() {
