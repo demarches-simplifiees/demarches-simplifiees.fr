@@ -110,7 +110,7 @@ describe Logic::ChampValue do
   context 'departement tdc' do
     let(:champ) { create(:champ_departements, value: '02') }
 
-    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:enum) }
+    it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:departement_enum) }
     it { is_expected.to eq('02') }
   end
 
