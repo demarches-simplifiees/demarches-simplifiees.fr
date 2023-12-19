@@ -65,6 +65,18 @@
             - if type_de_champ.header_section?
               .cell.mt-1
                 = render TypesDeChampEditor::HeaderSectionComponent.new(form: form, tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ))
+            - if type_de_champ.explication?
+              .cell.fr-mt-1w
+                = form.label :collapsible_explanation_enabled, for: dom_id(type_de_champ, :collapsible_explanation_enabled) do
+                  Afficher un texte complementaire affichable au clic
+                = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
+                - if form.object.collapsible_explanation_enabled?
+                  = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
+                    = "Texte à afficher quand l'utiliser a choisi de l'afficher"
+                  = form.text_area :collapsible_explanation_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
+              .cell.fr-mt-1w
+                = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
+                = render Attachment::EditComponent.new(**notice_explicative_options)
 
 
 
@@ -97,10 +109,6 @@
                 %p Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation du dossier
               - elsif procedure.piece_justificative_multiple?
                 %p Les usagers pourront envoyer plusieurs fichiers si nécessaire.
-          - if type_de_champ.explication?
-            .cell
-              = form.label :notice_explicative, "Notice explicative", for: dom_id(type_de_champ, :notice_explicative)
-              = render Attachment::EditComponent.new(**notice_explicative_options)
 
           - if type_de_champ.carte?
             - type_de_champ.editable_options.each do |slice|
@@ -111,15 +119,6 @@
                       = form.label name, for: dom_id(type_de_champ, "layer_#{name}") do
                         = form.check_box name, checked: checked, class: 'small-margin small', id: dom_id(type_de_champ, "layer_#{name}")
                         = t(".layers.#{name}")
-          - if type_de_champ.explication?
-            .cell.width-66
-              = form.label :collapsible_explanation_enabled, for: dom_id(type_de_champ, :collapsible_explanation_enabled) do
-                Afficher un texte complementaire affichable au clic
-              = form.check_box :collapsible_explanation_enabled, class: "small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_enabled)
-              - if form.object.collapsible_explanation_enabled?
-                = form.label :collapsible_explanation_text, for: dom_id(type_de_champ, :collapsible_explanation_text) do
-                  = "Texte à afficher quand l'utiliser a choisi de l'afficher"
-                = form.text_area :collapsible_explanation_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :collapsible_explanation_text)
           - if type_de_champ.textarea?
             .cell
               = form.label :character_limit, for: dom_id(type_de_champ, :character_limit) do
