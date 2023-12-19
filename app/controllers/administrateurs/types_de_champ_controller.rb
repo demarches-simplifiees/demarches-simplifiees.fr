@@ -46,7 +46,7 @@ module Administrateurs
 
     def notice_explicative
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
-      byebug
+
       if type_de_champ.notice_explicative.attach(params[:blob_signed_id])
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = [champ_component_from(@coordinate)]

@@ -461,15 +461,17 @@ class TypeDeChamp < ApplicationRecord
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
 
-  def piece_justificative_template_filename
-    if piece_justificative_template.attached?
-      piece_justificative_template.filename
+  def filename_for_attachement(attachment_sym)
+    attachment = send(attachment_sym)
+    if attachment.attached?
+      attachment.filename
     end
   end
 
-  def piece_justificative_template_checksum
-    if piece_justificative_template.attached?
-      piece_justificative_template.checksum
+  def checksum_for_attachment(attachment_sym)
+    attachment = send(attachment_sym)
+    if attachment.attached?
+      attachment.checksum
     end
   end
 
