@@ -27,6 +27,5 @@
   - if @has_export_notification
     %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
 
-
   #last-export-alert
-    = render partial: "last_export_alert"
+    = render partial: "last_export_alert", locals: { export: @last_export, statut: @statut }

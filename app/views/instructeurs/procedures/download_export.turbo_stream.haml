@@ -8,4 +8,4 @@
       = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
 
 = turbo_stream.update "last-export-alert" do
-  = render partial: "last_export_alert"
+  = render partial: "last_export_alert", locals: { export: @last_export, statut: @statut }

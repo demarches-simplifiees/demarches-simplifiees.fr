@@ -94,7 +94,7 @@ module Instructeurs
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
       @has_export_notification = notify_exports?
-      @has_last_export = last_export_for(@statut)
+      @last_export = last_export_for(statut)
 
       @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
@@ -182,7 +182,7 @@ module Instructeurs
       @statut = export_options[:statut]
       @dossiers_count = export.count
 
-      @has_last_export = last_export_for(@statut)
+      @last_export = last_export_for(@statut)
 
       if export.available?
         respond_to do |format|
@@ -209,28 +209,12 @@ module Instructeurs
     end
 
     def polling_last_export
-      @has_last_export = last_export_for(params[:statut])
-      if @has_last_export.available?
-        respond_to do |format|
-          format.turbo_stream do
-            flash.notice = t('instructeurs.procedures.export_available_html', file_format: @has_last_export.format, file_url: @has_last_export.file.url)
-          end
-
-          format.html do
-            redirect_to url_from(@has_last_export.file.url)
-          end
-        end
+      @statut = statut
+      @last_export = last_export_for(@statut)
+      if @last_export.available?
+        flash.notice = t('instructeurs.procedures.export_available_html', file_format: @last_export.format, file_url: @last_export.file.url)
       else
-        respond_to do |format|
-          format.turbo_stream do
-            if !params[:no_progress_notification]
-              flash.notice = t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
-            end
-          end
-          format.html do
-            redirect_to exports_instructeur_procedure_path(procedure), notice: t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
-          end
-        end
+        flash.notice = t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
       end
     end
 

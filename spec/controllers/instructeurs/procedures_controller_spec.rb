@@ -518,7 +518,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:has_last_export)).to eq(export) }
+          it { expect(assigns(:last_export)).to eq(export) }
           it { expect(response.body).to include("Votre dernier export est en cours de création") }
         end
 
@@ -530,7 +530,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:has_last_export)).to eq(export) }
+          it { expect(assigns(:last_export)).to eq(export) }
           it { expect(response.body).to include("Votre dernier export au format csv est prêt") }
         end
 
@@ -542,7 +542,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:has_last_export)).to eq(export) }
+          it { expect(assigns(:last_export)).to eq(export) }
           it { expect(response.body).to include("Votre dernier export au format csv n&#39;a pas fonctionné") }
         end
 
@@ -553,7 +553,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:has_last_export)).to eq(nil) }
+          it { expect(assigns(:last_export)).to eq(nil) }
         end
 
         context 'logged in with another instructeur' do
@@ -567,7 +567,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             subject
           end
 
-          it { expect(assigns(:has_last_export)).to eq(nil) }
+          it { expect(assigns(:last_export)).to eq(nil) }
         end
       end
     end
