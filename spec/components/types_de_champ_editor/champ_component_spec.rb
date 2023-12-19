@@ -50,5 +50,14 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         end
       end
     end
+
+    describe 'tdc explication' do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :explication }]) }
+      let(:coordinate) { procedure.draft_revision.revision_types_de_champ_public.first }
+      it 'includes an uploader for notice_explicative' do
+        expect(page).to have_css('label', text: 'Notice explicative')
+        expect(page).to have_css('input[type=file]')
+      end
+    end
   end
 end

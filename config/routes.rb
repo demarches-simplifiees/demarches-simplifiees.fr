@@ -625,6 +625,7 @@ Rails.application.routes.draw do
           patch :move_up
           patch :move_down
           put :piece_justificative_template
+          put :notice_explicative
         end
       end
 

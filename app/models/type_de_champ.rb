@@ -193,6 +193,21 @@ class TypeDeChamp < ApplicationRecord
   validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }
   validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES
 
+  has_one_attached :notice_explicative
+  validates :notice_explicative, content_type: [
+    "application/msword",
+    "application/pdf",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "text/plain"
+  ], size: { less_than: 20.megabytes }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
   validates :character_limit, numericality: {
