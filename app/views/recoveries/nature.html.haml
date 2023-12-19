@@ -4,15 +4,15 @@
   %h1.fr-h1 Récupération de dossiers
 
   %h2.fr-h2 Nature des dossiers
-  = form_with data: { controller: 'radio-enabled-submit' } do |f|
+  = form_with data: { controller: 'enable-submit-if-checked' } do |f|
 
     - buttons = [{ label: 'des dossiers concernant une collectivité territoriale',
                   value: 'collectivite',
                   hint: '(DETR, autres demandes de subvention, consultation du domaine, ...)' },
                 { label: 'autre', value: 'autre'}]
 
-    %div{ data: { 'action': "click->radio-enabled-submit#click" } }
+    %div{ data: { 'action': "click->enable-submit-if-checked#click" } }
       = render Dsfr::RadioButtonListComponent.new(form: f, target: :nature, buttons: buttons) do
         %legend#radio-hint-element-legend.fr-fieldset__legend--regular.fr-fieldset__legend Quel type de dossier souhaitez vous récupérer ?
 
-      %button.fr-btn{ disabled: true,  data: { 'radio-enabled-submit-target': 'submit' } } Continuer
+      %button.fr-btn{ disabled: true,  data: { 'enable-submit-if-checked-target': 'submit' } } Continuer
