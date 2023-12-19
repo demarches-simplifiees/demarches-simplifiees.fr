@@ -363,11 +363,18 @@ class ProcedureRevision < ApplicationRecord
           to_type_de_champ.carte_optional_layers)
       end
     elsif to_type_de_champ.piece_justificative?
-      if from_type_de_champ.piece_justificative_template_checksum != to_type_de_champ.piece_justificative_template_checksum
+      if from_type_de_champ.checksum_for_attachment(:piece_justificative_template) != to_type_de_champ.checksum_for_attachment(:piece_justificative_template)
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :piece_justificative_template,
-          from_type_de_champ.piece_justificative_template_filename,
-          to_type_de_champ.piece_justificative_template_filename)
+          from_type_de_champ.filename_for_attachement(:piece_justificative_template),
+          to_type_de_champ.filename_for_attachement(:piece_justificative_template))
+      end
+    elsif to_type_de_champ.explication?
+      if from_type_de_champ.checksum_for_attachment(:notice_explicative) != to_type_de_champ.checksum_for_attachment(:notice_explicative)
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :notice_explicative,
+          from_type_de_champ.filename_for_attachement(:notice_explicative),
+          to_type_de_champ.filename_for_attachement(:notice_explicative))
       end
     elsif to_type_de_champ.textarea?
       if from_type_de_champ.character_limit != to_type_de_champ.character_limit

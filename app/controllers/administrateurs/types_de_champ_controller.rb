@@ -44,6 +44,19 @@ module Administrateurs
       end
     end
 
+    def notice_explicative
+      type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+
+      if type_de_champ.notice_explicative.attach(params[:blob_signed_id])
+        @coordinate = draft.coordinate_for(type_de_champ)
+        @morphed = [champ_component_from(@coordinate)]
+
+        render :create
+      else
+        render json: { errors: @champ.errors.full_messages }, status: 422
+      end
+    end
+
     def move
       draft.move_type_de_champ(params[:stable_id], params[:position].to_i)
     end

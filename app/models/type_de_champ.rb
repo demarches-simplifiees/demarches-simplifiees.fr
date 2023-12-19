@@ -193,6 +193,21 @@ class TypeDeChamp < ApplicationRecord
   validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }
   validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES
 
+  has_one_attached :notice_explicative
+  validates :notice_explicative, content_type: [
+    "application/msword",
+    "application/pdf",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.oasis.opendocument.presentation",
+    "application/vnd.oasis.opendocument.text",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "image/jpeg",
+    "image/jpg",
+    "image/png",
+    "text/plain"
+  ], size: { less_than: 20.megabytes }
+
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
   validates :character_limit, numericality: {
@@ -446,15 +461,17 @@ class TypeDeChamp < ApplicationRecord
     "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
 
-  def piece_justificative_template_filename
-    if piece_justificative_template.attached?
-      piece_justificative_template.filename
+  def filename_for_attachement(attachment_sym)
+    attachment = send(attachment_sym)
+    if attachment.attached?
+      attachment.filename
     end
   end
 
-  def piece_justificative_template_checksum
-    if piece_justificative_template.attached?
-      piece_justificative_template.checksum
+  def checksum_for_attachment(attachment_sym)
+    attachment = send(attachment_sym)
+    if attachment.attached?
+      attachment.checksum
     end
   end
 

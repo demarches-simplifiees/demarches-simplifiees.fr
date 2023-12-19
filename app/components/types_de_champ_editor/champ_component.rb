@@ -82,6 +82,14 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     }
   end
 
+  def notice_explicative_options
+    {
+      attached_file: type_de_champ.notice_explicative,
+      auto_attach_url: helpers.auto_attach_url(type_de_champ),
+      view_as: :download
+    }
+  end
+
   EXCLUDE_FROM_BLOCK = [
     TypeDeChamp.type_champs.fetch(:carte),
     TypeDeChamp.type_champs.fetch(:dossier_link),

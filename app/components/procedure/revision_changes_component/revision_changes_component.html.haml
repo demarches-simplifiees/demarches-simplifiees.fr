@@ -59,6 +59,9 @@
       - when :piece_justificative_template
         - list.with_item do
           = t(".#{prefix}.update_piece_justificative_template", label: change.label)
+      - when :notice_explicative
+        - list.with_item do
+          = t(".#{prefix}.update_notice_explicative", label: change.label)
       - when :drop_down_options
         - added = change.to.sort - change.from.sort
         - removed = change.from.sort - change.to.sort
