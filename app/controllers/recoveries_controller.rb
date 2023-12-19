@@ -6,7 +6,7 @@ class RecoveriesController < ApplicationController
     if nature_params == 'collectivite'
       redirect_to identification_recovery_path
     else
-      redirect_to support_recovery_path
+      redirect_to support_recovery_path(error: :other_nature)
     end
   end
 

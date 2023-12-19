@@ -3,4 +3,11 @@
 .fr-container.fr-my-6w
   %h1.fr-h1 Récupération de dossiers
 
-  %h2.fr-h2 Veuillez contacter le support
+  - case params[:error]
+  - when 'other_nature'
+    %p Votre situation nécessite un traitement particulier.
+
+    = mail_to(CONTACT_EMAIL,
+      'Contactez le support',
+      subject: 'Récupération de dossiers',
+      class: 'fr-btn')
