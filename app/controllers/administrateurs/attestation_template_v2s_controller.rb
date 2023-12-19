@@ -66,7 +66,7 @@ module Administrateurs
     end
 
     def editor_params
-      params.required(:attestation_template).permit(:tiptap_body)
+      params.required(:attestation_template).permit(:label_logo, :label_direction, :tiptap_body, :footer)
     end
   end
 end

@@ -8,7 +8,7 @@ fr:
         label_direction: Intitulé de la direction
         title: Titre de l’attestation
         body: Contenu de l’attestation
-        footer: Pied de page
+        footer: Contenu du pied de page
 
     errors:
       models:

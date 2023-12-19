@@ -109,7 +109,7 @@ function getEditorOptions(
           return node.attrs.label;
         },
         HTMLAttributes: {
-          class: 'fr-badge fr-badge--sm fr-badge--info fr-badge--no-icon'
+          class: 'fr-tag fr-tag--sm'
         },
         suggestion: createSuggestionMenu(tags, element)
       })
