@@ -104,5 +104,35 @@ describe RecoveriesController, type: :controller do
         expect(cookies[:recover_previous_email]).to eq('email@a.com')
       end
     end
+
+    describe 'GET #selection' do
+      subject { get :selection }
+
+      context 'when there are no recoverable procedures' do
+        before do
+          allow(RecoveryService).to receive(:recoverable_procedures).and_return([])
+        end
+
+        it { is_expected.to redirect_to(support_recovery_path(error: :no_dossier)) }
+      end
+
+      context 'when there are recoverable procedures' do
+        let(:recoverable_procedures) { [[1, 'libelle', 2]] }
+
+        before do
+          allow(RecoveryService).to receive(:recoverable_procedures).and_return(recoverable_procedures)
+        end
+
+        it { is_expected.to have_http_status(:success) }
+      end
+    end
+
+    describe 'POST #post_selection' do
+      subject { post :post_selection, params: { procedure_ids: [1] } }
+
+      before { expect(RecoveryService).to receive(:recover_procedure!) }
+
+      it { is_expected.to redirect_to(terminee_recovery_path) }
+    end
   end
 end

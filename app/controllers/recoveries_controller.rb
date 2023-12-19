@@ -26,9 +26,22 @@ class RecoveriesController < ApplicationController
   end
 
   def selection
+    previous_user = User.find_by(email: cookies[:recover_previous_email])
+
+    @recoverables = RecoveryService
+      .recoverable_procedures(previous_user:, siret:)
+
+    redirect_to support_recovery_path(error: :no_dossier) if @recoverables.empty?
   end
 
   def post_selection
+    previous_user = User.find_by(email: cookies[:recover_previous_email])
+
+    RecoveryService.recover_procedure!(previous_user:,
+                          next_user: current_user,
+                          siret:,
+                          procedure_ids:)
+
     redirect_to terminee_recovery_path
   end
 
@@ -43,6 +56,7 @@ class RecoveriesController < ApplicationController
   def nature_params = params[:nature]
   def siret = current_instructeur.agent_connect_information.siret
   def previous_email = params[:previous_email]
+  def procedure_ids = params[:procedure_ids].map(&:to_i)
 
   def structure_name
     # we know that the structure exists because

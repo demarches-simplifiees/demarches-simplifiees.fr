@@ -4,5 +4,15 @@
   %h1.fr-h1 Récupération de dossiers
 
   %h2.fr-h2 Sélection des démarches
-  = form_tag do
+  = form_tag nil do
+    %fieldset#checkboxes.fr-fieldset{ 'aria-labelledby': "checkboxes-legend checkboxes-messages" }
+      %legend#checkboxes-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+        Sélectionner les démarches que vous souhaitez récuperer.
+
+      - recoverable_id_and_libelles(@recoverables).each do |procedure_id, libelle|
+        .fr-fieldset__element
+          .fr-checkbox-group
+            = check_box_tag 'procedure_ids[]', procedure_id, false, class: 'fr-checkbox', id: procedure_id
+            = label_tag procedure_id, libelle, class: 'fr-label'
+
     %button.fr-btn Continuer
