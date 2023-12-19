@@ -1,9 +1,9 @@
 %nav.fr-translate.fr-nav{ role: "navigation", "aria-label"=> t('menu_aria_label', scope: [:layouts]) }
   .fr-nav__item
     %button.account-btn.fr-translate__btn.fr-btn{ "aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts]) }
-      %div{ class: "fr-badge fr-badge--sm fr-mr-1w #{color_by_role(nav_bar_profile)}" }
-        = t("layouts.#{nav_bar_profile}")
       = " #{current_email}"
+      %div{ class: "fr-badge fr-badge--sm fr-ml-1w #{color_by_role(nav_bar_profile)}" }
+        = t("layouts.#{nav_bar_profile}")
     #account.fr-collapse.fr-menu
       %ul.fr-menu__list.max-content
         - if multiple_devise_profile_connect?
