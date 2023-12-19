@@ -448,6 +448,7 @@ Rails.application.routes.draw do
         get 'remove_filter'
         get 'download_export'
         post 'download_export'
+        get 'polling_last_export'
         get 'stats'
         get 'exports'
         get 'email_notifications'

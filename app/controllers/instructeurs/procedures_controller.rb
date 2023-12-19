@@ -208,6 +208,32 @@ module Instructeurs
       end
     end
 
+    def polling_last_export
+      @has_last_export = last_export_for(params[:statut])
+      if @has_last_export.available?
+        respond_to do |format|
+          format.turbo_stream do
+            flash.notice = t('instructeurs.procedures.export_available_html', file_format: @has_last_export.format, file_url: @has_last_export.file.url)
+          end
+
+          format.html do
+            redirect_to url_from(@has_last_export.file.url)
+          end
+        end
+      else
+        respond_to do |format|
+          format.turbo_stream do
+            if !params[:no_progress_notification]
+              flash.notice = t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
+            end
+          end
+          format.html do
+            redirect_to exports_instructeur_procedure_path(procedure), notice: t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
+          end
+        end
+      end
+    end
+
     def email_notifications
       @procedure = procedure
       @assign_to = assign_tos.first
@@ -381,11 +407,7 @@ module Instructeurs
     end
 
     def last_export_for(statut)
-      export = Export.where(instructeur_id: current_instructeur.id, statut: statut).last
-      if export.present?
-        return nil if export.updated_at < 1.hour.ago
-      end
-      export
+      Export.where(instructeur_id: current_instructeur.id, statut: statut, updated_at: 1.hour.ago..).last
     end
 
     def cookies_export_key
