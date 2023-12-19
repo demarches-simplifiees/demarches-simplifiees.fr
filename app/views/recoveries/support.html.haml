@@ -4,7 +4,7 @@
   %h1.fr-h1 Récupération de dossiers
 
   - case params[:error]
-  - when 'other_nature'
+  - when 'other_nature', 'not_collectivite_territoriale'
     %p Votre situation nécessite un traitement particulier.
 
     = mail_to(CONTACT_EMAIL,
