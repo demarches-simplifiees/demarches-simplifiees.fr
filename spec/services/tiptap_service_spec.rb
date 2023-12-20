@@ -25,18 +25,28 @@ RSpec.describe TiptapService do
             type: 'title' # remained empty in editor
           },
           {
-            type: 'paragraph',
-            attrs: { textAlign: 'right' },
-            content: [
-              {
-                type: 'text',
-                text: 'Hello world!'
-              }
-            ]
+            type: 'heading',
+            attrs: { level: 1 },
+            content: [{ type: 'text', text: 'Heading 1' }]
           },
           {
-            type: 'paragraph'
-            # no content, empty line
+            type: 'heading',
+            attrs: { level: 2, textAlign: 'center' },
+            content: [{ type: 'text', text: 'Heading 2' }]
+          },
+          {
+            type: 'heading',
+            attrs: { level: 3 },
+            content: [{ type: 'text', text: 'Heading 3' }]
+          },
+          {
+            type: 'heading',
+            attrs: { level: 3 } # remained empty in editor
+          },
+          {
+            type: 'paragraph',
+            attrs: { textAlign: 'right' },
+            content: [{ type: 'text', text: 'First paragraph' }]
           },
           {
             type: 'paragraph',
@@ -63,23 +73,8 @@ RSpec.describe TiptapService do
             ]
           },
           {
-            type: 'heading',
-            attrs: { level: 1 },
-            content: [{ type: 'text', text: 'Heading 1' }]
-          },
-          {
-            type: 'heading',
-            attrs: { level: 2, textAlign: 'center' },
-            content: [{ type: 'text', text: 'Heading 2' }]
-          },
-          {
-            type: 'heading',
-            attrs: { level: 3 },
-            content: [{ type: 'text', text: 'Heading 3' }]
-          },
-          {
-            type: 'heading',
-            attrs: { level: 3 } # remained empty in editor
+            type: 'paragraph'
+            # no content, empty line
           },
           {
             type: 'bulletList',
@@ -157,13 +152,13 @@ RSpec.describe TiptapService do
     let(:tags) { { 'name' => 'Paul' } }
     let(:html) do
       [
-        '<header><div class="column">Left</div><div class="column">Right</div></header>',
+        '<header><div>Left</div><div>Right</div></header>',
         '<h1>Title</h1>',
-        '<p style="text-align: right">Hello world!</p>',
-        '<p><s><em>Bonjour </em></s><u><strong>Paul</strong></u> <mark>!</mark></p>',
         '<h1>Heading 1</h1>',
         '<h2 style="text-align: center">Heading 2</h2>',
         '<h3>Heading 3</h3>',
+        '<p class="body-start" style="text-align: right">First paragraph</p>',
+        '<p><s><em>Bonjour </em></s><u><strong>Paul</strong></u> <mark>!</mark></p>',
         '<ul><li><p>Item 1</p></li><li><p>Item 2</p></li></ul>',
         '<ol><li><p>Item 1</p></li><li><p>Item 2</p></li></ol>',
         '<footer>Footer</footer>'
@@ -171,7 +166,7 @@ RSpec.describe TiptapService do
     end
 
     it 'returns html' do
-      expect(described_class.to_html(json, tags)).to eq(html)
+      expect(described_class.new.to_html(json, tags)).to eq(html)
     end
   end
 end
