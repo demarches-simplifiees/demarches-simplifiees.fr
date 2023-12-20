@@ -4,7 +4,7 @@ module Administrateurs
 
     def show
       json_body = @attestation_template.json_body&.deep_symbolize_keys
-      @body = TiptapService.to_html(json_body, {})
+      @body = TiptapService.new.to_html(json_body, {})
 
       respond_to do |format|
         format.html do
