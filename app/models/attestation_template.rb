@@ -107,6 +107,10 @@ class AttestationTemplate < ApplicationRecord
     self.json_body = JSON.parse(json)
   end
 
+  def french_state_layout?
+    label_logo.present?
+  end
+
   private
 
   def signature_to_render(groupe_instructeur)

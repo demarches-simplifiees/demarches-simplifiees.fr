@@ -1,23 +1,19 @@
-= image_tag('centered_marianne.svg', alt: '', class: 'marianne')
-.header
-  .left
-    - if @attestation_template.label_logo.present?
-      .bloc-marque
-        = simple_format @attestation_template.label_logo, class: "intitule"
-        = image_tag('liberte2.svg', alt: '', class: 'devise')
+.a4-container{ class: class_names("french-state-layout": @attestation_template.french_state_layout?) }
+  .content
+    %header.first-header
+      .left
+        - if @attestation_template.label_logo.present?
+          = image_tag('centered_marianne.svg', alt: '', class: 'marianne')
+          .bloc-marque
+            = simple_format @attestation_template.label_logo, class: "intitule"
+            = image_tag('liberte2.svg', alt: '', class: 'devise')
 
-    %p.issuer
-      Service Hébergement et Accès au Logement<br />
-      Bureau de l'Accès au Logement
+      .right
+        - if @attestation_template.label_direction.present?
+          = simple_format @attestation_template.label_direction, class: "direction"
 
-  .right
-    - if @attestation_template.label_direction.present?
-      = simple_format @attestation_template.label_direction, class: "direction"
+    .main
+      = sanitize(@body, attributes: %w[class style], tags: Rails.configuration.action_view.sanitized_allowed_tags + %w[header])
 
-    %p.date Créteil, le 20 mars 2023
-
-.main
-  = sanitize(@body)
-
-- if @attestation_template.footer.present?
-  = simple_format @attestation_template.footer, class: "footer"
+  - if @attestation_template.footer.present?
+    = simple_format @attestation_template.footer, class: "footer"
