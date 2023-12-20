@@ -1003,6 +1003,7 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self, DossierOperationLog.operations.fetch(:repasser_en_instruction))
     if !disable_notification
       NotificationMailer.send_repasser_en_instruction_notification(self).deliver_later
+      NotificationMailer.send_notification_for_tiers(self, repasser_en_instruction: true).deliver_later if self.for_tiers?
     end
     log_dossier_operation(instructeur, :repasser_en_instruction)
   end
