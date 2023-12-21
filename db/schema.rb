@@ -93,6 +93,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "administrateur_id", null: false
     t.bigint "allowed_procedure_ids", array: true
+    t.inet "authorized_networks", default: [], array: true
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
     t.datetime "last_v1_authenticated_at"
