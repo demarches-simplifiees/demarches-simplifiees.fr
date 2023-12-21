@@ -2,11 +2,6 @@
   %b= "#{@api_token.name} "
   %span.fr-text--sm= @api_token.prefix
 
-  -# TODO: remove after 01/07/2023
-  - if @api_token.version != 3 && Time.zone.now < Time.zone.parse('01/07/2023')
-    .fr-alert.fr-alert--info.fr-alert--sm.mt-2
-      %p Attention, ce jeton ne sera plus valide à partir du 01/07/2023
-
 .fr-card__desc
   - if @packed_token.present?
     .fr-text--sm{ style: "width: 80%; word-break: break-all;" }
