@@ -13,6 +13,3 @@
         %th= 'État'
     %tbody#gestionnaires
       = render(GroupeGestionnaire::GroupeGestionnaireGestionnaires::GestionnaireComponent.with_collection(@groupe_gestionnaire.gestionnaires.order('users.email'), groupe_gestionnaire: @groupe_gestionnaire, is_gestionnaire: false))
-
-  .fr-mt-4w
-    = #render 'add_admin_form', groupe_gestionnaire: @groupe_gestionnaire

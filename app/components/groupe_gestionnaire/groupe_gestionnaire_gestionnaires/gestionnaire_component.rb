@@ -24,7 +24,7 @@ class GroupeGestionnaire::GroupeGestionnaireGestionnaires::GestionnaireComponent
   end
 
   def remove_button
-    if is_there_at_least_another_active_admin? && @is_gestionnaire
+    if is_there_at_least_another_active_admin?
       button_to 'Retirer',
        gestionnaire_groupe_gestionnaire_gestionnaire_path(@groupe_gestionnaire, @gestionnaire),
        method: :delete,
