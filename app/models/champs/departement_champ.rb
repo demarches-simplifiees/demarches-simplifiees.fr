@@ -2,6 +2,7 @@ class Champs::DepartementChamp < Champs::TextChamp
   store_accessor :value_json,  :code_region
   validate :value_in_departement_names, unless: -> { value.nil? }
   validate :external_id_in_departement_codes, unless: -> { external_id.nil? }
+  before_save :store_code_region
 
   def for_export
     [name, code]
@@ -40,7 +41,7 @@ class Champs::DepartementChamp < Champs::TextChamp
     end
   end
 
-  def code_region(departement_name)
+  def code_region
     APIGeoService.region_code_by_departement(name)
   end
 
@@ -73,5 +74,9 @@ class Champs::DepartementChamp < Champs::TextChamp
     return if external_id.in?(APIGeoService.departements.pluck(:code))
 
     errors.add(:external_id, :not_in_departement_codes)
+  end
+
+  def store_code_region
+    self.code_region = code_region
   end
 end
