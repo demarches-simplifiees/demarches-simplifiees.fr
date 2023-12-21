@@ -574,6 +574,11 @@ class API::V2::StoredQuery
         ...RNFFragment
       }
     }
+    ... on EngagementJuridiqueChamp {
+      engagementJuridique {
+        ...EngagementJuridiqueFragment
+      }
+    }
   }
 
   fragment PersonneMoraleFragment on PersonneMorale {
@@ -682,6 +687,11 @@ class API::V2::StoredQuery
     address {
       ...AddressFragment
     }
+  }
+
+  fragment EngagementJuridiqueFragment on EngagementJuridique {
+    montantEngage
+    montantPaye
   }
 
   fragment PageInfoFragment on PageInfo {

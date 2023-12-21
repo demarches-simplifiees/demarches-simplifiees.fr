@@ -77,6 +77,8 @@ module Types
           Types::Champs::EpciChampType
         when ::Champs::RNFChamp
           Types::Champs::RNFChampType
+        when ::Champs::EngagementJuridiqueChamp
+          Types::Champs::EngagementJuridiqueChampType
         else
           Types::Champs::TextChampType
         end

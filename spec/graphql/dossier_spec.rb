@@ -75,6 +75,17 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
   end
 
+  describe 'dossier with annotations' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_private: [{ type: :engagement_juridique }]) }
+    let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
+    let(:query) { DOSSIER_WITH_ANNOTATIONS_QUERY }
+    let(:variables) { { number: dossier.id } }
+
+    it do
+      expect(data[:dossier][:annotations][0][:__typename]).to eq "EngagementJuridiqueChamp"
+    end
+  end
+
   describe 'dossier with selected champ' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ libelle: 'yolo' }, { libelle: 'toto' }]) }
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
@@ -324,7 +335,35 @@ RSpec.describe Types::DossierType, type: :graphql do
     }
   }
   GRAPHQL
+  DOSSIER_WITH_ANNOTATIONS_QUERY = <<-GRAPHQL
+  query($number: Int!) {
+    dossier(number: $number) {
+      id
+      number
+      revision {
+        champDescriptors {
+          id
+          label
+        }
+      }
+      annotations {
+        id
+        label
+        __typename
+        ... on EngagementJuridiqueChamp {
+          engagementJuridique {
+            ...EngagementJuridiqueFragment
+          }
+        }
+      }
+    }
+  }
+  fragment EngagementJuridiqueFragment on EngagementJuridique {
+    montantEngage
+    montantPaye
+  }
 
+  GRAPHQL
   DOSSIER_WITH_CHAMPS_QUERY = <<-GRAPHQL
   query($number: Int!) {
     dossier(number: $number) {
