@@ -58,6 +58,13 @@ class APIToken < ApplicationRecord
     Base64.urlsafe_encode64(id).slice(0, 5)
   end
 
+  def store_new_ip(ip)
+    set = Set.new(stored_ips)
+    if set.add?(IPAddr.new(ip))
+      update!(stored_ips: set.to_a)
+    end
+  end
+
   class << self
     def generate(administrateur)
       plain_token = generate_unique_secure_token
