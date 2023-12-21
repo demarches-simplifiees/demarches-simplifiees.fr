@@ -24,8 +24,9 @@ class NotificationMailer < ApplicationMailer
     end
   end
 
-  def send_notification_for_tiers(dossier)
+  def send_notification_for_tiers(dossier, repasser_en_instruction: false)
     @dossier = dossier
+    @repasser_en_instruction = repasser_en_instruction
 
     if @dossier.individual.no_notification?
       mail.perform_deliveries = false
