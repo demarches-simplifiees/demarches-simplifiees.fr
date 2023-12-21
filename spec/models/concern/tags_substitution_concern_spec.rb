@@ -411,6 +411,24 @@ describe TagsSubstitutionConcern, type: :model do
         end
       end
     end
+
+    context 'when data contains malicious code' do
+      let(:template) { '--libelleA-- --nom--' }
+      context 'in individual data' do
+        let(:for_individual) { true }
+        let(:individual) { create(:individual, nom: '<a href="https://oops.com">name</a>') }
+
+        it { is_expected.to eq('--libelleA-- &lt;a href=&quot;https://oops.com&quot;&gt;name&lt;/a&gt;') }
+      end
+
+      context 'in a champ' do
+        let(:types_de_champ_public) { [{ libelle: 'libelleA' }] }
+
+        before { dossier.champs_public.first.update(value: 'hey <a href="https://oops.com">anchor</a>') }
+
+        it { is_expected.to eq('hey &lt;a href=&quot;https://oops.com&quot;&gt;anchor&lt;/a&gt; --nom--') }
+      end
+    end
   end
 
   describe 'tags' do

@@ -142,7 +142,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     context "subject has a special character" do
       let(:subject) { '--libellé démarche--' }
-      it { expect(mail.subject).to eq("Mon titre avec l'apostrophe") }
+      it { expect(mail.subject).to eq("Mon titre avec l&#39;apostrophe") }
     end
   end
 end
