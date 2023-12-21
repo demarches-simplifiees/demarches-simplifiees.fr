@@ -6,10 +6,7 @@
       = render Dsfr::ComboboxComponent.new form: f,
          url: datasource_endpoint,
          selected: format_displayed_value(chorus_configuration_attribute),
-         id: chorus_configuration_attribute,
-         class: 'fr-select',
-         describedby: label_id,
-         name: :chorus_configuration_attribute do
+         input_html_options: { id: chorus_configuration_attribute, class: 'fr-select', describedby: label_id, name: :chorus_configuration_attribute } do
         = f.hidden_field chorus_configuration_attribute, data: { value_slot: 'data' }, value: format_hidden_value(chorus_configuration_attribute)
 
   = f.submit "Enregister", class: 'fr-btn'

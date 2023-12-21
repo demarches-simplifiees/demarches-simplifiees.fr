@@ -103,10 +103,10 @@ class Dsfr::ComboboxComponentPreview < ViewComponent::Preview
   ]
 
   def simple_select_with_options
-    render Dsfr::ComboboxComponent.new(name: :value, options: OPTIONS, selected: OPTIONS.sample, id: 'simple-select', class: 'width-33')
+    render Dsfr::ComboboxComponent.new(options: OPTIONS, selected: OPTIONS.sample, input_html_options: { name: :value, id: 'simple-select', class: 'width-33' })
   end
 
   def simple_select_with_options_and_allows_custom_value
-    render Dsfr::ComboboxComponent.new(name: :value, options: OPTIONS, selected: OPTIONS.sample, id: 'simple-select', class: 'width-33', allows_custom_value: true)
+    render Dsfr::ComboboxComponent.new(options: OPTIONS, selected: OPTIONS.sample, allows_custom_value: true, input_html_options: { id: 'simple-select', class: 'width-33', name: :value })
   end
 end

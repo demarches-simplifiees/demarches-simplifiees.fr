@@ -18,7 +18,7 @@
         %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
           = t('shared.champs.drop_down_list.other')
 - elsif @champ.render_as_combobox?
-  = render Dsfr::ComboboxComponent.new form: @form, name: :value, options: @champ.enabled_non_empty_options(other: true), selected: @champ.selected, id: @champ.input_id, class: select_class_names, describedby: @champ.describedby_id
+  = render Dsfr::ComboboxComponent.new form: @form, options: @champ.enabled_non_empty_options(other: true), selected: @champ.selected, input_html_options: { name: :value, id: @champ.input_id, class: select_class_names, describedby: @champ.describedby_id }
 - else
   = @form.select :value,
     @champ.enabled_non_empty_options(other: true),
