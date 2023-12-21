@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_28_071043) do
+ActiveRecord::Schema[7.0].define(version: 2023_12_21_142727) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_28_071043) do
     t.datetime "last_v1_authenticated_at"
     t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
+    t.inet "stored_ips", default: [], array: true
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false
     t.boolean "write_access", default: true, null: false

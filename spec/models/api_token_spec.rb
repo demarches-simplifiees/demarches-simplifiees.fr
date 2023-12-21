@@ -157,4 +157,24 @@ describe APIToken, type: :model do
       it { is_expected.to be_nil }
     end
   end
+
+  describe '#store_new_ip' do
+    let(:api_token) { APIToken.generate(administrateur).first }
+    let(:ip) { '192.168.0.1' }
+
+    subject do
+      api_token.store_new_ip(ip)
+      api_token.stored_ips
+    end
+
+    context 'when none ip is stored' do
+      it { is_expected.to eq([IPAddr.new(ip)]) }
+    end
+
+    context 'when the ip is already stored' do
+      before { api_token.update!(stored_ips: [ip]) }
+
+      it { is_expected.to eq([IPAddr.new(ip)]) }
+    end
+  end
 end
