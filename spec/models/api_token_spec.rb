@@ -177,4 +177,36 @@ describe APIToken, type: :model do
       it { is_expected.to eq([IPAddr.new(ip)]) }
     end
   end
+
+  describe '#forbidden_network?' do
+    let(:api_token_and_packed_token) { APIToken.generate(administrateur) }
+    let(:api_token) { api_token_and_packed_token.first }
+    let(:authorized_networks) { [] }
+
+    before { api_token.update!(authorized_networks: authorized_networks) }
+
+    subject { api_token.forbidden_network?(ip) }
+
+    context 'when no authorized networks are defined' do
+      let(:ip) { '192.168.1.1' }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when a single authorized network is defined' do
+      let(:authorized_networks) { [IPAddr.new('192.168.1.0/24')] }
+
+      context 'and the request comes from it' do
+        let(:ip) { '192.168.1.1' }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and the request does not come from it' do
+        let(:ip) { '192.168.2.1' }
+
+        it { is_expected.to be_truthy }
+      end
+    end
+  end
 end

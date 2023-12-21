@@ -65,6 +65,12 @@ class APIToken < ApplicationRecord
     end
   end
 
+  def forbidden_network?(ip)
+    return false if authorized_networks.blank?
+
+    authorized_networks.none? { |range| range.include?(ip) }
+  end
+
   class << self
     def generate(administrateur)
       plain_token = generate_unique_secure_token
