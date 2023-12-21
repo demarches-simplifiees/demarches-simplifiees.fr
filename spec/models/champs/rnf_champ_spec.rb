@@ -77,7 +77,7 @@ describe Champs::RNFChamp, type: :model do
   describe 'for_export' do
     let(:champ) { build(:champ_rnf, external_id:, data: JSON.parse(body)) }
     it do
-      expect(champ.for_export).to eq(['075-FDD-00003-01', 'Fondation SFR', '16 Rue du Général de Boissieu 75015 Paris', '75115', '75 - Paris'])
+      expect(champ.for_export).to eq(['075-FDD-00003-01', 'Fondation SFR', '16 Rue du Général de Boissieu 75015 Paris', '75115', '75 – Paris'])
     end
   end
 end
