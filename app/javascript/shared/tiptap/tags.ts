@@ -84,6 +84,7 @@ class SuggestionMenu {
   destroy() {
     this.#popup?.destroy();
     this.#element?.remove();
+    this.#element?.removeEventListener('click', this.handleItemClick);
   }
 
   private render() {
@@ -94,24 +95,39 @@ class SuggestionMenu {
       .map((item, i) => {
         return `<li><button class="fr-tag fr-tag--sm" aria-pressed="${
           i == this.#selectedIndex ? 'true' : 'false'
-        }">${item.label}</button></li>`;
+        }" data-tag-index="${i}">${item.label}</button></li>`;
       })
       .join('');
 
-    this.#element.classList.add('fr-menu__list');
-    list.innerHTML = html;
+    const hint =
+      '<li><span class="fr-hint-text">Tapez le nom d’une balise, naviguez avec les flèches du clavier, validez avec Entrée ou en cliquant sur la balise.</span></li>';
+    list.innerHTML = hint + html;
     list.querySelector<HTMLElement>('.selected')?.focus();
   }
 
   private createMenu() {
     const menu = document.createElement('div');
-    const list = document.createElement('ul');
     menu.classList.add('fr-menu');
-    list.classList.add('fr-menu__list', 'fr-tags-group');
+
+    const list = document.createElement('ul');
+    list.classList.add('fr-menu__list', 'fr-tag-list');
+
     menu.appendChild(list);
+
+    menu.addEventListener('click', this.handleItemClick);
 
     return menu;
   }
+
+  private handleItemClick = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (!target || target.dataset.tagIndex === undefined) {
+      return;
+    }
+
+    this.#props.command(this.#props.items[Number(target.dataset.tagIndex)]);
+    this.#popup?.hide();
+  };
 
   private up() {
     this.#selectedIndex =
@@ -145,6 +161,7 @@ export function createSuggestionMenu(
 ): Omit<SuggestionOptions<TagSchema>, 'editor'> {
   return {
     char: '@',
+    allowSpaces: true,
     items: ({ query }) => {
       return matchSorter(tags, query, { keys: ['label'] }).slice(0, 6);
     },
