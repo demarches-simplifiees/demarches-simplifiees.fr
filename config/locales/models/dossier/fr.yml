@@ -7,11 +7,7 @@ fr:
     attributes:
       dossier:
         id: "Numéro de dossier"
-        montant_projet: 'Le montant du projet'
-        montant_aide_demande: "Le montant d’aide demandée"
-        date_previsionnelle: "La date de début prévisionnelle"
         state: "État"
-        autorisation_donnees: Acceptation des CGU
         pending_correction: Demande de correction
         mandataire_first_name: Prénom
         mandataire_last_name: Nom
