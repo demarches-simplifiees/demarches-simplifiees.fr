@@ -7,6 +7,7 @@
   .fr-grid-row.fr-grid-row--gutters
     .fr-col-12.fr-col-md-8
       = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), data: { turbo: 'true', controller: 'autosubmit' } do |f|
+= render NestedForms::FormOwnerComponent.new
         %fieldset.fr-fieldset{ aria: { labelledby: 'edit-attestation' } }
           %legend.fr-fieldset__legend#edit-attestation
             %h1.fr-h2 Attestation
@@ -20,6 +21,9 @@
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
               - c.with_hint { "Exemple: Ministère de la Mer. 3 lignes maximum" }
+
+            %div{ id: dom_id(@attestation_template, :logo_attachment) }
+              = render Attachment::EditComponent.new(attached_file: @attestation_template.logo, direct_upload: false)
 
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :label_direction, input_type: :text_area, required: false, opts: { rows: 2 }) do |c|
@@ -55,7 +59,9 @@
             %label.fr-label Tampon ou signature
             %span.fr-hint-text
               Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
-            = render Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false)
+
+            %div{ id: dom_id(@attestation_template, :signature_attachment) }
+              = render Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false)
 
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
