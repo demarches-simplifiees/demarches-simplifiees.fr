@@ -650,6 +650,10 @@ Rails.application.routes.draw do
       resource :sva_svr, only: [:show, :edit, :update], controller: 'sva_svr'
     end
 
+    get 'mon-groupe' => 'groupe_gestionnaire#show', as: :groupe_gestionnaire
+    get 'mon-groupe/administrateurs' => 'groupe_gestionnaire#administrateurs', as: :groupe_gestionnaire_administrateurs
+    get 'mon-groupe/gestionnaires' => 'groupe_gestionnaire#gestionnaires', as: :groupe_gestionnaire_gestionnaires
+
     resources :services, except: [:show] do
       collection do
         patch 'add_to_procedure'

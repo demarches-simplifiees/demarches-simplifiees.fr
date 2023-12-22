@@ -42,9 +42,11 @@ describe Gestionnaires::GroupeGestionnaireGestionnairesController, type: :contro
     context 'when there are many gestionnaires' do
       before { remove_gestionnaire(new_gestionnaire) }
 
-      it { expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire) }
-      it { expect(groupe_gestionnaire.reload.gestionnaires.count).to eq(1) }
-      it { expect(flash.notice).to eq("Le gestionnaire « #{new_gestionnaire.email} » a été retiré du groupe gestionnaire.") }
+      it do
+        expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire)
+        expect(groupe_gestionnaire.reload.gestionnaires.count).to eq(1)
+        expect(flash.notice).to eq("Le gestionnaire « #{new_gestionnaire.email} » a été retiré du groupe gestionnaire.")
+      end
     end
 
     context 'when there is only one gestionnaire' do
@@ -53,9 +55,11 @@ describe Gestionnaires::GroupeGestionnaireGestionnairesController, type: :contro
         remove_gestionnaire(gestionnaire)
       end
 
-      it { expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire) }
-      it { expect(groupe_gestionnaire.gestionnaires.count).to eq(1) }
-      it { expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine') }
+      it do
+        expect(groupe_gestionnaire.gestionnaires).to include(gestionnaire)
+        expect(groupe_gestionnaire.gestionnaires.count).to eq(1)
+        expect(flash.alert).to eq('Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine')
+      end
     end
   end
 end

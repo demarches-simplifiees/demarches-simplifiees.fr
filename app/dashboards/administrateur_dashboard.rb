@@ -13,6 +13,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     procedures: Field::HasMany.with_options(limit: 20),
+    groupe_gestionnaire: Field::BelongsTo,
     registration_state: Field::String.with_options(searchable: false),
     features: FeaturesField,
     email: Field::Email.with_options(searchable: false)
@@ -28,6 +29,7 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :user,
     :created_at,
     :procedures,
+    :groupe_gestionnaire,
     :registration_state
   ].freeze
 
@@ -40,7 +42,8 @@ class AdministrateurDashboard < Administrate::BaseDashboard
     :updated_at,
     :registration_state,
     :features,
-    :procedures
+    :procedures,
+    :groupe_gestionnaire
   ].freeze
 
   # FORM_ATTRIBUTES

@@ -1,9 +1,10 @@
 class GroupeGestionnaire::GroupeGestionnaireGestionnaires::GestionnaireComponent < ApplicationComponent
   include ApplicationHelper
 
-  def initialize(groupe_gestionnaire:, gestionnaire:)
+  def initialize(groupe_gestionnaire:, gestionnaire:, is_gestionnaire: true)
     @groupe_gestionnaire = groupe_gestionnaire
     @gestionnaire = gestionnaire
+    @is_gestionnaire = is_gestionnaire
   end
 
   def email

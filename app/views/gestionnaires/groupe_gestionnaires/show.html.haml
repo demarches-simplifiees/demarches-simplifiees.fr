@@ -19,6 +19,6 @@
       groupe parent :
       %a{ href: gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire.groupe_gestionnaire) }= @groupe_gestionnaire.groupe_gestionnaire.name
   .fr-grid-row.fr-grid-row--gutters.fr-mb-5w
-    = render GroupeGestionnaire::Card::GestionnairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire)
-    = render GroupeGestionnaire::Card::AdministrateursComponent.new(groupe_gestionnaire: @groupe_gestionnaire)
-    = render GroupeGestionnaire::Card::ChildrenComponent.new(groupe_gestionnaire: @groupe_gestionnaire)
+    = render GroupeGestionnaire::Card::GestionnairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: gestionnaire_groupe_gestionnaire_gestionnaires_path(@groupe_gestionnaire))
+    = render GroupeGestionnaire::Card::AdministrateursComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: gestionnaire_groupe_gestionnaire_administrateurs_path(@groupe_gestionnaire))
+    = render GroupeGestionnaire::Card::ChildrenComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: gestionnaire_groupe_gestionnaire_children_path(@groupe_gestionnaire))
