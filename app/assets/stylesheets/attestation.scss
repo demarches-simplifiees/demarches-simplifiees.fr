@@ -141,6 +141,17 @@
     margin: 0.25rem 0;
   }
 
+  .signature {
+    text-align: right;
+    margin-top: 14mm;
+    margin-right: 25mm;
+
+    img {
+      max-height: 60mm;
+      max-width: 60mm;
+    }
+  }
+
   .footer {
     position: running(footer);
     font-size: 7pt;
