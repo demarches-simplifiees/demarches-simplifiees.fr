@@ -71,7 +71,7 @@ export function MapLibre({ children, layers }: MapLibreProps) {
         <div className="container">
           <div className="site-banner-icon">⚠️</div>
           <div className="site-banner-text">
-            Nous ne pouvons pas afficher la carte car elle est imcompatible avec
+            Nous ne pouvons pas afficher la carte car elle est incompatible avec
             votre navigateur. Nous vous conseillons de le mettre à jour ou
             d’utiliser{' '}
             <a
