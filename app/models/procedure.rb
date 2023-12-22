@@ -104,8 +104,13 @@ class Procedure < ApplicationRecord
 
       TypeDeChamp
         .joins(:revision_types_de_champ)
-        .where(revision_types_de_champ: { id: recents_prtdc })
-        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+        .where(revision_types_de_champ: { id: recents_prtdc }).then do |relation|
+          if feature_enabled?(:export_order_by_revision) # Fonds Verts, en attente d'exports personnalisables
+            relation.order(:private, 'revision_types_de_champ.revision_id': :desc, position: :asc)
+          else
+            relation.order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+          end
+        end
     end
   end
 
