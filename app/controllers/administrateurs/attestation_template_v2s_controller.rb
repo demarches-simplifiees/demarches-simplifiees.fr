@@ -1,5 +1,7 @@
 module Administrateurs
   class AttestationTemplateV2sController < AdministrateurController
+    include UninterlacePngConcern
+
     before_action :retrieve_procedure, :retrieve_attestation_template, :ensure_feature_active
 
     def show
@@ -52,7 +54,19 @@ module Administrateurs
     end
 
     def update
-      @attestation_template.update!(editor_params)
+      attestation_params = editor_params
+      logo_file = attestation_params.delete(:logo)
+      signature_file = attestation_params.delete(:signature)
+
+      if logo_file
+        attestation_params[:logo] = uninterlace_png(logo_file)
+      end
+
+      if signature_file
+        attestation_params[:signature] = uninterlace_png(signature_file)
+      end
+
+      @attestation_template.update!(attestation_params)
     end
 
     private
@@ -66,7 +80,7 @@ module Administrateurs
     end
 
     def editor_params
-      params.required(:attestation_template).permit(:label_logo, :label_direction, :tiptap_body, :footer)
+      params.required(:attestation_template).permit(:official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated)
     end
   end
 end

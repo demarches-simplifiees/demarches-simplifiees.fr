@@ -1,0 +1,7 @@
+- if @attestation_template.logo_blob&.previously_new_record?
+  = turbo_stream.update dom_id(@attestation_template, :logo_attachment) do
+    = render(Attachment::EditComponent.new(attached_file: @attestation_template.logo, direct_upload: false))
+
+- if @attestation_template.signature_blob&.previously_new_record?
+  = turbo_stream.update dom_id(@attestation_template, :signature_attachment) do
+    = render(Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false))
