@@ -60,18 +60,15 @@
     }
   }
 
-  .right {
-    text-align: right;
-  }
-
-  .french-state-layout & {
-    .right {
+  .official-layout & {
+    .direction {
       margin-top: 5.25mm;
     }
   }
 
   .bloc-marque {
     margin-bottom: 14mm;
+    margin-right: 17mm; // 4x 4.25mm
   }
 
   .marianne {
@@ -89,6 +86,21 @@
   .devise {
     height: 8.5mm;
     margin: 0;
+  }
+
+  // weasyprint flexbox with img is broken
+  // so we're using old inline tricks
+  .logo-co-emetteur,
+  .direction {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .logo-co-emetteur {
+    img {
+      max-height: 28mm;
+      margin-right: 5mm;
+    }
   }
 
   .direction {

@@ -6,6 +6,8 @@ fr:
       attestation_template:
         label_logo: Intitulé du logo Marianne
         label_direction: Intitulé de la direction
+        logo: Logo
+        logo_additional: Logo additionnel
         title: Titre de l’attestation
         body: Contenu de l’attestation
         footer: Contenu du pied de page

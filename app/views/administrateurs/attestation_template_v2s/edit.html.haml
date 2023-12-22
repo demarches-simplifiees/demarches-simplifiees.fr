@@ -3,11 +3,16 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Attestation']] }
 
-#attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap' } }
-  .fr-grid-row.fr-grid-row--gutters
-    .fr-col-12.fr-col-md-8
-      = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), data: { turbo: 'true', controller: 'autosubmit' } do |f|
 = render NestedForms::FormOwnerComponent.new
+= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), html: { multipart: true },
+  data: { turbo: 'true',
+    controller: 'autosubmit attestation',
+    attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
+    attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
+
+  #attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap' } }
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-8
         %fieldset.fr-fieldset{ aria: { labelledby: 'edit-attestation' } }
           %legend.fr-fieldset__legend#edit-attestation
             %h1.fr-h2 Attestation
@@ -15,12 +20,28 @@
               L’attestation est émise au moment où un dossier est accepté, elle est jointe à l’email d’accusé d’acceptation.
               Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
+          .fr-fieldset__element
+            .fr-toggle
+              = f.check_box :official_layout, class: "fr-toggle-input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
+              %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
+                Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
+
           .fr-fieldset__element.fr-mt-2w
             %h6 En-tête
 
-          .fr-fieldset__element
+          .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
             = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
               - c.with_hint { "Exemple: Ministère de la Mer. 3 lignes maximum" }
+
+          .fr-fieldset__element{ data: { attestation_target: 'logoAttachmentFieldset' } }
+            %label.fr-label{ for: field_id(@attestation_template, :logo) }
+              - if @attestation_template.official_layout?
+                = AttestationTemplate.human_attribute_name(:logo_additional)
+              - else
+                = AttestationTemplate.human_attribute_name(:logo)
+
+            %span.fr-hint-text
+              Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
 
             %div{ id: dom_id(@attestation_template, :logo_attachment) }
               = render Attachment::EditComponent.new(attached_file: @attestation_template.logo, direct_upload: false)
@@ -67,8 +88,9 @@
             = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
               - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
 
-    .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
-      Image d'exemple ici
+      .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+        Image d'exemple ici
+
 
   .padded-fixed-footer
     .fixed-footer

@@ -1,14 +1,21 @@
-.a4-container{ class: class_names("french-state-layout": @attestation_template.french_state_layout?) }
+.a4-container{ class: class_names("official-layout": @attestation_template.official_layout?) }
   .content
     %header.first-header
       .left
-        - if @attestation_template.label_logo.present?
+        - if @attestation_template.official_layout?
           = image_tag('centered_marianne.svg', alt: '', class: 'marianne')
           .bloc-marque
-            = simple_format @attestation_template.label_logo, class: "intitule"
+            = simple_format @attestation_template.label_logo.presence || "VOTRE INTITULE\ndu LOGO MARIANNE", class: "intitule"
             = image_tag('liberte2.svg', alt: '', class: 'devise')
+        - elsif @attestation_template.logo.present?
+          .bloc-marque
+            = image_tag(@attestation_template.logo_url)
 
       .right
+        - if @attestation_template.official_layout? && @attestation_template.logo.present?
+          .logo-co-emetteur
+            = image_tag(@attestation_template.logo_url)
+
         - if @attestation_template.label_direction.present?
           = simple_format @attestation_template.label_direction, class: "direction"
 
