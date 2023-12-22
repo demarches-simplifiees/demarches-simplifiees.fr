@@ -69,3 +69,20 @@
 
     .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
       Image d'exemple ici
+
+  .padded-fixed-footer
+    .fixed-footer
+      .fr-container
+        .fr-grid-row
+          .fr-col-11
+            %ul.fr-btns-group.fr-btns-group--inline-md
+              %li
+                = f.button 'Enregistrer', class: 'fr-btn'
+              %li
+                = link_to 'Prévisualiser l’attestation PDF', admin_procedure_attestation_template_v2_path(@procedure), class: 'fr-btn fr-btn--secondary', target: '_blank', rel: 'noopener'
+              %li
+                = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--tertiary-no-outline', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+          .fr-col-1
+            .fr-toggle
+              = f.check_box :activated, class: "fr-toggle-input", id: dom_id(@attestation_template, :activated)
+              %label.fr-toggle__label{ for: dom_id(@attestation_template, :activated), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
