@@ -17,6 +17,8 @@ class AttestationTemplate < ApplicationRecord
 
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
 
+  attribute :official_layout, :boolean, default: true
+
   def attestation_for(dossier)
     attestation = Attestation.new(title: replace_tags(title, dossier, escape: false))
     attestation.pdf.attach(
@@ -105,10 +107,6 @@ class AttestationTemplate < ApplicationRecord
 
   def tiptap_body=(json)
     self.json_body = JSON.parse(json)
-  end
-
-  def french_state_layout?
-    label_logo.present?
   end
 
   private
