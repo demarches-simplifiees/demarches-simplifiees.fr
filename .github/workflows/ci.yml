@@ -56,6 +56,8 @@ jobs:
   unit_tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    env:
+      RUBY_YJIT_ENABLE: "1"
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -101,6 +103,8 @@ jobs:
   system_tests:
     name: System tests
     runs-on: self-hosted
+    env:
+      RUBY_YJIT_ENABLE: "1"
     services:
       postgres:
         image: postgis/postgis:14-3.3
