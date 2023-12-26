@@ -12,6 +12,7 @@ class FranceConnectInformation < ApplicationRecord
         password: Devise.friendly_token[0, 20],
         confirmed_at: Time.zone.now
       )
+      user.after_confirmation
     rescue ActiveRecord::RecordNotUnique
       # ignore this exception because we check before is user is nil.
       # exception can be raised in race conditions, when FranceConnect calls callback 2 times.
