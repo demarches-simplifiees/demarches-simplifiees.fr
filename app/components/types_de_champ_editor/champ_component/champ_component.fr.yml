@@ -15,6 +15,7 @@ fr:
     limit: Limité à %{limit} caractères
   expression_reguliere:
     labels:
-      regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com
+      regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com. 
+      hint: "Pensez aux ancres de début (^) et fin ($) : `12 km serait accepté par /[[:digit:]]+/ mais rejeté par /^[[:digit:]]+$/"
       valid_exemple: Exemple valide qui passe l'expression régulière
       error_message: Message d'erreur à afficher à l'usager en cas de saisie invalide
