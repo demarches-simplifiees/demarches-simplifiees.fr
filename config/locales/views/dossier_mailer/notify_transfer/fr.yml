@@ -2,7 +2,7 @@ fr:
   dossier_mailer:
     notify_transfer:
       subject: Vous avez une demande de transfert en attente.
-      transfer_text: "Accéder à la demande de transfert du dossier en cliquant sur le lien suivant :"
+      transfer_text: "Accéder à la demande de transfert en cliquant sur le lien suivant :"
       transfer_link: demande de transfert
       transfert_multiple: "%{sender} vous adresse une demande de transfert pour %{count} dossiers."
       transfert_simple: "%{sender} vous adresse une demande de transfert pour le dossier n° %{dossier_id} sur la démarche"
