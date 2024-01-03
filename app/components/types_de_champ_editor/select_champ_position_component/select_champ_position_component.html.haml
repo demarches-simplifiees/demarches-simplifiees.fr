@@ -1,0 +1,3 @@
+.fr-ml-3w.flex.select-position
+  = label_tag :target_stable_id, "Déplacer le champ", for: describedby_id, class: 'flex align-center flex-no-shrink fr-mr-3w' 
+  = select_tag :target_stable_id, options_for_select(options), id: describedby_id, class: 'fr-select', aria: { discribedby: describedby_id }, data: { action: 'change->type-de-champ-editor#onMoveAndMorphChange', selected: @coordinate.stable_id } 

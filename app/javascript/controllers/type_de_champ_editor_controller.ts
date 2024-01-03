@@ -17,12 +17,14 @@ export class TypeDeChampEditorController extends ApplicationController {
     typeDeChampStableId: String,
     moveUrl: String,
     moveUpUrl: String,
-    moveDownUrl: String
+    moveDownUrl: String,
+    moveAndMorphUrl: String
   };
 
   declare readonly moveUrlValue: string;
   declare readonly moveUpUrlValue: string;
   declare readonly moveDownUrlValue: string;
+  declare readonly moveAndMorphUrlValue: string;
   declare readonly isVisible: boolean;
 
   #latestPromise = Promise.resolve();
@@ -51,6 +53,14 @@ export class TypeDeChampEditorController extends ApplicationController {
     const action =
       direction == 'up' ? this.moveUpUrlValue : this.moveDownUrlValue;
     const form = createForm(action, 'patch');
+    this.requestSubmitForm(form);
+  }
+
+  onMoveAndMorphChange(event: ActionEvent) {
+    const form = createForm(this.moveAndMorphUrlValue, 'patch');
+    const target = event.target as HTMLSelectElement;
+
+    createHiddenInput(form, target.name, target.value);
     this.requestSubmitForm(form);
   }
 

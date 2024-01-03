@@ -136,5 +136,6 @@
 
     = render(Conditions::ChampsConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
 
-  .type-de-champ-add-button{ class: class_names(root: !coordinate.child?) }
+  .type-de-champ-add-button{ class: class_names(root: !coordinate.child?, flex: true) }
     = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate&.parent, is_annotation: coordinate.private?, after_stable_id: type_de_champ.stable_id)
+    = render TypesDeChampEditor::SelectChampPositionComponent.new(revision:, coordinate:)
