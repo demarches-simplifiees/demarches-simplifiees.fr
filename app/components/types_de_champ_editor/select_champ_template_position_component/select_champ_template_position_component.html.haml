@@ -1,0 +1,5 @@
+%div{ id: block_id, data: { 'select-champ-position-template-target': 'template', turbo_force: :server } }
+  %select
+    %option{ selected: :selected } Selectionner une option
+    - @coordinates.each do |coordinate|
+      %option{ value: coordinate.stable_id }= "#{coordinate.position} #{coordinate.libelle}"
