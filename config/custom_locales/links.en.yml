@@ -6,7 +6,6 @@ en:
         alt: "Logo DMRA"
         height: 90
         width: 240
-      name: "DMRA"
       provided_by: "DMRA"
       title: "Direction de la Modernisation et des Réformes de l'Administration"
       url: "https://www.service-public.pf/voir/annuaire/dmra-direction-modernisation-et-reformes-administration/"
@@ -14,8 +13,6 @@ en:
       description_1: |
         Mes-Démarches is supported by Direction of Modernization and Reform of the Administration and forked from
         demarches-simplifiees.fr, led by
-      aide:
-        url: "https://faq.demarches-simplifiees.fr"
       cgu:
         url: "https://mes-demarches.gitbook.io/documentation/cgu"
       rgpd:
@@ -24,18 +21,7 @@ en:
         url: "https://mes-demarches.gitbook.io/documentation/cgu#rgpd"
       doc:
         url: "https://mes-demarches.gitbook.io/documentation"
-      faq:
-        url: "https://mes-demarches.gitbook.io/documentation/questions-frequentes"
-      mentions_legales:
-        url: "https://mes-demarches.gitbook.io/documentation/cgu#mentions-legales"
       releases:
         url: "https://github.com/govpf/mes-demarches/releases"
       status_page:
         url: "https://updown.io/cugq"
-      suivi:
-        label: "Audience tracking and privacy"
-        title: "Audience tracking and privacy"
-      webinaire:
-        label: "Online workshop registration"
-        title: "Online workshop registration"
-        url: "https://app.livestorm.co/demarches-simplifiees"
