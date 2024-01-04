@@ -1,6 +1,6 @@
 .flex.justify-start.section{ id: dom_id(@tdc.stable_self, :condition) }
-  = form_tag admin_procedure_condition_path(@procedure_id, @tdc.stable_id), method: :patch, class: 'form width-100' do
-    .conditionnel.mt-2.width-100
+  = form_tag admin_procedure_condition_path(@procedure_id, @tdc.stable_id), method: :patch, class: 'form' do
+    .conditionnel.mt-2
       .flex
         %p
           Logique conditionnelle
@@ -9,7 +9,7 @@
       = render Conditions::ConditionsErrorsComponent.new(conditions: condition_per_row, source_tdcs: @source_tdcs)
 
       - if @condition.present?
-        %table.condition-table.mt-2.width-100
+        %table.condition-table.mt-2
           %thead
             %tr
               %th.far-left
