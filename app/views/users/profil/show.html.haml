@@ -65,7 +65,7 @@
 
       - if @waiting_transfers.present?
         = render Dsfr::AlertComponent.new(title: t('.waiting_transfers'), state: :warning, heading_level: 'h2', extra_class_names: 'fr-mt-2w') do |c|
-          - c.body do
+          - c.with_body do
             %ul
               - @waiting_transfers.each do |email, nb_dossier|
                 %li= t('.one_waiting_transfer', email: email, count: nb_dossier)

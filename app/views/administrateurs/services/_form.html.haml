@@ -16,7 +16,7 @@
       = link_to("annuaire-entreprises.data.gouv.fr", annuaire_link, **external_link_attributes)
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
-    - c.body do
+    - c.with_body do
       Votre démarche sera hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se poseront parfois des questions légitimes sur le processus administratif.
       %br
       %br

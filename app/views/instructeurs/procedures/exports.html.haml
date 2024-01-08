@@ -17,7 +17,7 @@
 
     - if @exports.any?{_1.format == Export.formats.fetch(:zip)}
       = render Dsfr::AlertComponent.new(title: t('.title_zip'), state: :info, extra_class_names: 'fr-mb-3w') do |c|
-        - c.body do
+        - c.with_body do
           %p= t('.export_description_zip_html')
 
   - else

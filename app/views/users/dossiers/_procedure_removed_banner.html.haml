@@ -1,6 +1,6 @@
 - title = dossier.procedure.discarded? ? "procedure_deleted_title" : "procedure_close_title"
 = render Dsfr::AlertComponent.new(state: :warning, title: t("users.dossiers.header.banner.#{title}"), extra_class_names: 'fr-mb-2w') do |c|
-  - c.body do
+  - c.with_body do
     - if dossier.termine? && dossier.procedure.discarded?
       %p
         = t('users.dossiers.header.banner.procedure_deleted_dossier_termine_content')

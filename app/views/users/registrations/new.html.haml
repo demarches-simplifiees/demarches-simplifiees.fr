@@ -19,7 +19,7 @@
 
       .fr-fieldset__element
         = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH }) do |c|
-          - c.describedby do
+          - c.with_describedby do
             = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
     %ul.fr-btns-group

@@ -34,7 +34,7 @@
                 %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
 
               = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-                - c.body do
+                - c.with_body do
                   = t('views.users.sessions.new.for_tiers_alert')
 
               .fr-fieldset__element

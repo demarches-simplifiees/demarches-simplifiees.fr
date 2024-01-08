@@ -20,7 +20,7 @@ RSpec.describe MainNavigation::AnnouncesLinkComponent, type: :component do
       user.build_instructeur
     end
 
-    allow(controller).to receive(:current_user).and_return(user)
+    allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
   end
 
   subject { render_inline(described_class.new) }

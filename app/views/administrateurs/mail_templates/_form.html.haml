@@ -8,7 +8,7 @@
     Insérer une balise
 
   = render Dsfr::AlertComponent.new(state: :info, title: "Balises sur le conditionnel", heading_level: 'h3') do |c|
-    - c.body do
+    - c.with_body do
       Les balises pour les champs conditionnés ne sont pour le moment pas supportées.
 
   %p.notice.fr-mt-3w

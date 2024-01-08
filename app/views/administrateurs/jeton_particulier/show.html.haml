@@ -12,7 +12,7 @@
   %h1
   = form_with model: @procedure, url: admin_procedure_api_particulier_jeton_path, local: true do |f|
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-      - c.body do
+      - c.with_body do
         %p
           = t('.api_particulier_description_html', app_name: APPLICATION_NAME)
 
