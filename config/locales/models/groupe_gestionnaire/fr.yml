@@ -12,8 +12,8 @@ fr:
         one: "%{emails} est déjà gestionnaire de ce groupe"
         other: "%{emails} sont déjà gestionnaires de ce groupe"
       administrateurs_already_in_groupe_gestionnaire: 
-        one: Ajout impossible. Cet administrateur fait déjà parti d'un groupe.
-        other: Ajout impossible. Ces administrateurs font déjà parti d'un groupe.
+        one: Ajout impossible. Cet administrateur fait déjà partie d'un groupe.
+        other: Ajout impossible. Ces administrateurs font déjà partie d'un groupe.
     wrong_address:
       one: "%{emails} n’est pas une adresse email valide"
       other: "%{emails} ne sont pas des adresses emails valides"
