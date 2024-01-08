@@ -1,5 +1,5 @@
 = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-  - c.body do
+  - c.with_body do
     %p
       Proposez aux usagers de donner un avis sur votre démarche. Pour ce faire, vous devez précédemment aller sur «
       %a{ :href => "https://monavis.numerique.gouv.fr" } https://monavis.numerique.gouv.fr

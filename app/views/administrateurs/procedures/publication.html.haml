@@ -8,7 +8,7 @@
     .fr-col-12.fr-col-offset-md-2.fr-col-md-8
       - if @procedure.draft_revision.types_de_champ_public.dubious.present?
         = render Dsfr::AlertComponent.new(state: :warning, title: t('.dubious_fields'), extra_class_names: 'fr-mb-2w') do |c|
-          - c.body do
+          - c.with_body do
             %ul
               - @procedure.draft_revision.types_de_champ_public.dubious.each do |dubious_champs|
                 %li.dubious-champs= "#{dubious_champs.libelle} (#{dubious_champs.description})"
@@ -28,7 +28,7 @@
             = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), target: :blank, rel: :noopener, class: "mb-4"
 
             = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-my-2w') do |c|
-              - c.body do
+              - c.with_body do
                 %p= t('.public_link_procedure_html', link: APPLICATION_NAME)
 
           - elsif @procedure.brouillon?
@@ -37,7 +37,7 @@
 
             - else
               = render Dsfr::AlertComponent.new(state: :warning, title: t('.missing_information_title'), heading_level: :h2) do |c|
-                - c.body do
+                - c.with_body do
                   %p= t('.missing_information_content')
                   %ul
                     - if @procedure.missing_zones?
@@ -51,19 +51,19 @@
           - else
             - if @procedure.missing_steps.include?(:service)
               = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-2w') do |c|
-                - c.body do
+                - c.with_body do
                   %p
                     = t('.missing_information_service')
                     = link_to t('.click_here'), (@current_administrateur.services.present? ? url_for(admin_services_path(procedure_id: @procedure.id)) : url_for(new_admin_service_path(procedure_id: @procedure.id)))
 
             - if @procedure.missing_steps.include?(:instructeurs)
               = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-2w') do |c|
-                - c.body do
+                - c.with_body do
                   %p
                     = t('.missing_information_instructeurs')
                     = link_to t('.click_here'), admin_procedure_groupe_instructeur_path(@procedure, @procedure.defaut_groupe_instructeur)
             = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-my-2w') do |c|
-              - c.body do
+              - c.with_body do
                 %p
                   = t('.missing_link')
 

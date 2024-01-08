@@ -21,7 +21,7 @@
       = t('.security_two')
 
   = render Dsfr::AlertComponent.new(state: :info, title: t(".security_title"), heading_level: :h4) do |c|
-    - c.body do
+    - c.with_body do
       - if @api_token.full_access?
         %p.fr-text--lg
           = t('.allowed_full_access_html')

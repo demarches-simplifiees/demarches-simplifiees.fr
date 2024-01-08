@@ -1,7 +1,7 @@
 #errors-summary
   - if invalid?
     = render Dsfr::AlertComponent.new(state: :warning, title: "Le formulaire contient des erreurs", extra_class_names: 'fr-mb-2w') do |c|
-      - c.body do
+      - c.with_body do
         - if condition_errors?
           %p= t('.fix_conditional', count: errors_for(:condition).size)
           = error_message_for(:condition)
