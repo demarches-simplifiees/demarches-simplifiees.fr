@@ -110,10 +110,10 @@ describe Champs::EpciChamp, type: :model do
           it { is_expected.to be_valid }
         end
 
-        context 'when value is empty' do
-          let(:value) { '' }
+        context 'when value is in departement epci names' do
+          let(:value) { 'CA Haut - Bugey Agglomération' }
 
-          it { is_expected.not_to be_valid }
+          it { is_expected.to be_valid }
         end
 
         context 'when value is in departement epci names' do
@@ -122,10 +122,22 @@ describe Champs::EpciChamp, type: :model do
           it { is_expected.to be_valid }
         end
 
-        context 'when value is not in departement epci names' do
+        context 'when epci name had been renamed' do
           let(:value) { 'totoro' }
 
-          it { is_expected.not_to be_valid }
+          it 'is valid and updates its own value' do
+            expect(subject).to be_valid
+            expect(subject.value).to eq('CA Haut - Bugey Agglomération')
+          end
+        end
+
+        context 'when value is not in departement epci names nor in departement epci codes' do
+          let(:value) { 'totoro' }
+
+          it 'is invalid' do
+            allow(APIGeoService).to receive(:epcis).with(champ.code_departement).and_return([])
+            expect(subject).not_to be_valid
+          end
         end
       end
     end
