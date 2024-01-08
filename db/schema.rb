@@ -152,6 +152,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
     t.jsonb "json_body"
     t.string "label_direction"
     t.string "label_logo"
+    t.boolean "official_layout", default: true, null: false
     t.integer "procedure_id"
     t.text "title"
     t.datetime "updated_at", precision: nil, null: false
