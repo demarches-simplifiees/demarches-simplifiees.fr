@@ -779,7 +779,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "published_at"
     t.bigint "published_revision_id"
     t.bigint "replaced_by_procedure_id"
-    t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
