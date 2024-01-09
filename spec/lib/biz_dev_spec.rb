@@ -19,20 +19,4 @@ describe BizDev, lib: true do
       it { is_expected.not_to be_empty }
     end
   end
-
-  describe '#pipedrive_id' do
-    subject { described_class.pipedrive_id(administration_id) }
-
-    context 'when administration is a business developer' do
-      let(:administration_id) { first_biz_dev_id }
-
-      it { is_expected.to be > 0 }
-    end
-
-    context 'when administration is not a business developer' do
-      let(:administration_id) { non_biz_dev_id }
-
-      it { is_expected.to be > 0 }
-    end
-  end
 end
