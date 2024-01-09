@@ -54,7 +54,7 @@
               %span.fr-badge= procedure.dossiers.state_not_brouillon.visible_by_administration.count
 
       .text-right
-        %p.fr-mb-0 N° #{procedure.id}
+        %p.fr-mb-0.width-max-content N° #{number_with_html_delimiter(procedure.id)}
         - if procedure.close?
           %span.fr-badge.fr-badge--sm.fr-badge--warning
             = t('closed', scope: [:layouts, :breadcrumb])

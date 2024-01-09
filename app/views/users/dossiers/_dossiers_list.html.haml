@@ -37,9 +37,9 @@
                 = dossier.invites.map(&:email).join(', ')
 
         .text-right
-          %p.fr-mb-0
+          %p.fr-mb-0.width-max-content
             = t('views.users.dossiers.dossiers_list.n_dossier')
-            = dossier.id
+            = number_with_html_delimiter(dossier.id)
 
           - if @statut == "dossiers-supprimes-recemment"
             %span.fr-badge.fr-badge--sm.fr-badge--warning
