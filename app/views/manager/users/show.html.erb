@@ -20,8 +20,9 @@ as well as a link to its edit page.
 <% user = page.resource %>
 
 <header class="main-content__header" role="banner">
-  <h1 class="main-content__page-title">
+  <h1 class="main-content__page-title" style="<%= "background-color: red;color: white;" if user.blocked_at %>">
     <%= content_for(:title) %>
+    <%= "Bloqué" if user.blocked_at %>
   </h1>
 
   <div>
