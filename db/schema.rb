@@ -93,6 +93,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "allowed_procedure_ids", array: true
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
+    t.datetime "last_v1_authenticated_at"
+    t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false

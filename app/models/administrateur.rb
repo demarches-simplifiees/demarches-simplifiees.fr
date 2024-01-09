@@ -20,7 +20,10 @@ class Administrateur < ApplicationRecord
       .where.missing(:services)
       .left_outer_joins(:administrateurs_procedures) # needed to bypass procedure hidden default scope
       .where(administrateurs_procedures: { procedure_id: nil })
-      .where("users.last_sign_in_at < ? ", UNUSED_ADMIN_THRESHOLD.ago)
+      .includes(:api_tokens)
+      .where(users: { last_sign_in_at: ..UNUSED_ADMIN_THRESHOLD.ago })
+      .merge(APIToken.where(last_v1_authenticated_at: nil).or(APIToken.where(last_v1_authenticated_at: ..UNUSED_ADMIN_THRESHOLD.ago)))
+      .merge(APIToken.where(last_v2_authenticated_at: nil).or(APIToken.where(last_v2_authenticated_at: ..UNUSED_ADMIN_THRESHOLD.ago)))
   end
 
   def self.by_email(email)
