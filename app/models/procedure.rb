@@ -158,7 +158,9 @@ class Procedure < ApplicationRecord
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
-  has_one_attached :logo
+  has_one_attached :logo do |attachable|
+    attachable.variant :email, resize_to_limit: [150, 150]
+  end
   has_one_attached :notice
   has_one_attached :deliberation
 

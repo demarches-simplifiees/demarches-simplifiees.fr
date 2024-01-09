@@ -12,7 +12,7 @@ class DossierMailer < ApplicationMailer
     @dossier = params[:dossier]
     I18n.with_locale(@dossier.user_locale) do
       @service = @dossier.procedure.service
-      @logo_url = attach_logo(@dossier.procedure)
+      @logo_url = procedure_logo_url(@dossier.procedure)
       @subject = default_i18n_subject(libelle_demarche: @dossier.procedure.libelle)
 
       mail(to: @dossier.user_email_for(:notification), subject: @subject) do |format|
@@ -27,7 +27,7 @@ class DossierMailer < ApplicationMailer
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
       @service = dossier.procedure.service
-      @logo_url = attach_logo(dossier.procedure)
+      @logo_url = procedure_logo_url(@dossier.procedure)
       @body = commentaire.body
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
@@ -52,7 +52,7 @@ class DossierMailer < ApplicationMailer
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
       @service = dossier.procedure.service
-      @logo_url = attach_logo(dossier.procedure)
+      @logo_url = procedure_logo_url(@dossier.procedure)
       @correction = commentaire.dossier_correction
 
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
@@ -85,7 +85,7 @@ class DossierMailer < ApplicationMailer
     I18n.with_locale(dossier.user_locale) do
       @dossier = dossier
       @service = dossier.procedure.service
-      @logo_url = attach_logo(dossier.procedure)
+      @logo_url = procedure_logo_url(@dossier.procedure)
       @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
 
       mail(to: dossier.user_email_for(:notification), subject: @subject) do |format|
