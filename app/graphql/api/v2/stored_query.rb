@@ -43,6 +43,7 @@ class API::V2::StoredQuery
     $includeInstructeurs: Boolean = true
     $includeAvis: Boolean = false
     $includeMessages: Boolean = false
+    $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
   ) {
     demarche(number: $demarcheNumber) {
@@ -135,6 +136,7 @@ class API::V2::StoredQuery
     $includeInstructeurs: Boolean = true
     $includeAvis: Boolean = false
     $includeMessages: Boolean = false
+    $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
   ) {
     groupeInstructeur(number: $groupeInstructeurNumber) {
@@ -201,6 +203,7 @@ class API::V2::StoredQuery
     $includeInstructeurs: Boolean = true
     $includeAvis: Boolean = false
     $includeMessages: Boolean = false
+    $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
   ) {
     dossier(number: $dossierNumber) {
@@ -250,6 +253,7 @@ class API::V2::StoredQuery
     dateTraitement
     dateExpiration
     dateSuppressionParUsager
+    dateDerniereCorrectionEnAttente @include(if: $includeCorrections)
     motivation
     motivationAttachment {
       ...FileFragment
@@ -408,6 +412,10 @@ class API::V2::StoredQuery
     createdAt
     attachments {
       ...FileFragment
+    }
+    correction @include(if: $includeCorrections) {
+      reason
+      dateResolution
     }
   }
 
