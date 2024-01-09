@@ -1,19 +1,3 @@
-# == Schema Information
-#
-# Table name: deleted_dossiers
-#
-#  id                    :bigint           not null, primary key
-#  deleted_at            :datetime
-#  reason                :string
-#  state                 :string
-#  created_at            :datetime         not null
-#  updated_at            :datetime         not null
-#  dossier_id            :bigint
-#  groupe_instructeur_id :bigint
-#  procedure_id          :bigint
-#  revision_id           :bigint
-#  user_id               :bigint
-#
 class DeletedDossier < ApplicationRecord
   belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers, optional: false
   belongs_to :groupe_instructeur, inverse_of: :deleted_dossiers, optional: true

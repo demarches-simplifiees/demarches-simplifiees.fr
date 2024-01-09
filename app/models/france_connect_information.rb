@@ -1,22 +1,3 @@
-# == Schema Information
-#
-# Table name: france_connect_informations
-#
-#  id                            :integer          not null, primary key
-#  birthdate                     :date
-#  birthplace                    :string
-#  data                          :jsonb
-#  email_france_connect          :string
-#  family_name                   :string
-#  gender                        :string
-#  given_name                    :string
-#  merge_token                   :string
-#  merge_token_created_at        :datetime
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  france_connect_particulier_id :string
-#  user_id                       :integer
-#
 class FranceConnectInformation < ApplicationRecord
   MERGE_VALIDITY = 15.minutes
 
