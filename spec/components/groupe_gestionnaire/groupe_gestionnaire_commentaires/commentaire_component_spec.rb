@@ -1,5 +1,5 @@
 RSpec.describe GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent, type: :component do
-    let(:component) do
+    let!(:component) do
       described_class.new(
         commentaire: commentaire,
         connected_user: connected_user
@@ -10,7 +10,10 @@ RSpec.describe GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireCo
 
     subject { render_inline(component).to_html }
 
-    it { is_expected.to include("plop") }
+    it do
+      is_expected.to include("plop")
+      is_expected.to include("Vous")
+    end
 
     describe '#commentaire_date' do
       let(:present_date) { Time.zone.local(2018, 9, 2, 10, 5, 0) }
@@ -43,13 +46,14 @@ RSpec.describe GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireCo
     end
 
     describe '#commentaire_issuer' do
-      let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: connected_user) }
+      let(:gestionnaire) { create(:gestionnaire) }
+      let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: connected_user, gestionnaire: gestionnaire) }
 
       subject { component.send(:commentaire_issuer) }
 
       context 'issuer is connected_user' do
-        it 'returns "Vous"' do
-          expect(subject).to include 'Vous'
+        it 'returns gestionnaire s email' do
+          expect(subject).to eq gestionnaire.email
         end
       end
     end
