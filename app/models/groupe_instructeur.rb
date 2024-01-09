@@ -30,7 +30,7 @@ class GroupeInstructeur < ApplicationRecord
   scope :for_api_v2, -> { includes(procedure: [:administrateurs]) }
   scope :active, -> { where(closed: false) }
   scope :closed, -> { where(closed: true) }
-
+  scope :for_dossiers, -> (dossiers) { joins(:dossiers).where(dossiers: dossiers).distinct(:id) }
   def add(instructeur)
     return if instructeur.nil?
     return if in?(instructeur.groupe_instructeurs)

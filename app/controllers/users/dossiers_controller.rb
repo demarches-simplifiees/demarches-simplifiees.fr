@@ -394,7 +394,6 @@ module Users
 
       dossier = Dossier.new(
         revision: params[:brouillon] ? procedure.draft_revision : procedure.active_revision,
-        groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier,
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
       )
@@ -561,6 +560,7 @@ module Users
 
     def update_dossier_and_compute_errors
       errors = []
+
       @dossier.assign_attributes(champs_public_params)
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
@@ -578,7 +578,6 @@ module Users
       @dossier.valid?(**submit_validation_options)
       errors += format_errors(errors: @dossier.errors)
       errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
-
       errors
     end
 

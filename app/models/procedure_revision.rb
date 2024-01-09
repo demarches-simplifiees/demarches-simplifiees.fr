@@ -150,7 +150,7 @@ class ProcedureRevision < ApplicationRecord
 
   def dossier_for_preview(user)
     dossier = Dossier
-      .create_with(groupe_instructeur: procedure.defaut_groupe_instructeur_for_new_dossier, autorisation_donnees: true)
+      .create_with(autorisation_donnees: true)
       .find_or_initialize_by(revision: self, user: user, for_procedure_preview: true, state: Dossier.states.fetch(:brouillon))
 
     if dossier.new_record?

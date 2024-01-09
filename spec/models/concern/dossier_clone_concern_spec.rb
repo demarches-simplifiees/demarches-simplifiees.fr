@@ -15,7 +15,8 @@ RSpec.describe DossierCloneConcern do
   describe '#clone' do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:new_dossier) { dossier.clone }
+    let(:fork) { false }
+    let(:new_dossier) { dossier.clone(fork:) }
 
     context 'reset most attributes' do
       it { expect(new_dossier.id).not_to eq(dossier.id) }
@@ -49,7 +50,14 @@ RSpec.describe DossierCloneConcern do
     end
 
     context 'copies some attributes' do
-      it { expect(new_dossier.groupe_instructeur).to eq(dossier.groupe_instructeur) }
+      context 'when fork' do
+        let(:fork) { true }
+        it { expect(new_dossier.groupe_instructeur).to eq(dossier.groupe_instructeur) }
+      end
+
+      context 'when not forked' do
+        it { expect(new_dossier.groupe_instructeur).to be_nil }
+      end
       it { expect(new_dossier.autorisation_donnees).to eq(dossier.autorisation_donnees) }
       it { expect(new_dossier.revision_id).to eq(dossier.revision_id) }
       it { expect(new_dossier.user_id).to eq(dossier.user_id) }
