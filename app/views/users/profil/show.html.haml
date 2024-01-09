@@ -39,8 +39,8 @@
           application_name: APPLICATION_NAME,
           legit_admin_domains: LEGIT_ADMIN_DOMAINS.join(', '))
 
-    = form_for current_user, url: update_email_path, method: :patch, html: { class: 'form' } do |f|
-      = f.email_field :email, value: nil, placeholder: t('.new_email_address'), required: true
+    = form_for current_user, url: update_email_path, method: :patch do |f|
+      = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { value: nil, placeholder: t('.new_email_address') })
       = f.submit t('.change_address'), class: 'fr-btn fr-btn--secondary'
 
   - if !instructeur_signed_in?

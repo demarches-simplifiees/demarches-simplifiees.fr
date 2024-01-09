@@ -93,6 +93,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "allowed_procedure_ids", array: true
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
+    t.datetime "last_v1_authenticated_at"
+    t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false
@@ -334,7 +336,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "commentaire_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
-    t.string "kind", default: "correction", null: false
     t.string "reason", default: "incorrect", null: false
     t.datetime "resolved_at"
     t.datetime "updated_at", null: false
@@ -412,7 +413,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
-    t.boolean "migrated_champ_routage"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
@@ -715,7 +715,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.bigint "attestation_template_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_submitted_message_id"
-    t.boolean "migrated_champ_routage"
     t.bigint "procedure_id", null: false
     t.datetime "published_at"
     t.datetime "updated_at", null: false
@@ -767,7 +766,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.text "lien_notice_error"
     t.string "lien_site_web"
     t.integer "max_duree_conservation_dossiers_dans_ds", default: 12, null: false
-    t.boolean "migrated_champ_routage"
     t.text "monavis_embed"
     t.boolean "opendata", default: true
     t.string "organisation"
@@ -778,7 +776,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "published_at"
     t.bigint "published_revision_id"
     t.bigint "replaced_by_procedure_id"
-    t.text "routing_criteria_name", default: "Votre ville"
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false

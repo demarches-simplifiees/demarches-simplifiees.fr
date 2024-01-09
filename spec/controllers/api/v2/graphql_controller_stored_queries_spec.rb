@@ -277,7 +277,7 @@ describe API::V2::GraphqlController do
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarcheDescriptor][:id]).to eq(procedure.to_typed_id)
-          expect(gql_data[:demarcheDescriptor][:demarcheUrl]).to match("commencer/#{procedure.path}")
+          expect(gql_data[:demarcheDescriptor][:demarcheURL]).to match("commencer/#{procedure.path}")
         }
       end
 

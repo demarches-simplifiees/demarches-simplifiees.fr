@@ -311,6 +311,7 @@ fr:
         invite_to_edit_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
         invite_to_edit_line2: Cette personne aura le droit de modifier votre dossier.
         email: Adresse mail
+        email_hint: "Exemple : camilya.martin@exemple.fr"
         invite_message: Ajouter un message à la personne invitée (optionnel)
         send_invitation: Envoyer une invitation
         invite_to_participate: "Personnes invitées à participer à ce dossier"
@@ -465,7 +466,7 @@ fr:
         index:
           dossiers: "Mes dossiers"
         dossiers_list:
-          n_dossier: "Nº dossier"
+          n_dossier: "dossier Nº "
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
@@ -769,7 +770,7 @@ fr:
       other: demandes de transfert
     dossiers_close_to_expiration:
       one: expirant
-      other: expirant
+      other: expirants
     dossier_trouve:
       one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
@@ -964,6 +965,8 @@ fr:
       estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
+      usual_traitement_time_title: Quels sont des délais d'instruction pour cette démarche ?
+      usual_traitement_time_detail_html: Habituellement, les dossiers de cette démarche sont traités dans un délai de %{traitement_time}. Cette estimation est calculée automatiquement à partir des délais d’instruction constatés sur %{percentile}% des demandes qui ont été traitées lors des %{days} derniers jours. Le délai réel peut être différent. Pour plus d'informations, vous pouvez <a href="%{href}" target="_blank" rel="noopener noreferrer">consulter la page statistiques</a> de cette démarche.
       pieces_jointes : Quelles sont les pièces justificatives à fournir ?
       pieces_jointes_conditionnal_list_title : Liste des pièces en fonction de votre situation
       sva_svr_title: "Cette démarche applique le « %{rule} »"

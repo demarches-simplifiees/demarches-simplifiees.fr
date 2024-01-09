@@ -23,6 +23,8 @@ module Users
         store_user_location!(@procedure, @prefilled_dossier)
       end
 
+      @usual_traitement_time = @procedure.stats_usual_traitement_time
+
       render 'commencer/show'
     end
 

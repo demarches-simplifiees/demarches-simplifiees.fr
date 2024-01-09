@@ -1,15 +1,4 @@
 # == Schema Information
-#
-# Table name: archives
-#
-#  id             :bigint           not null, primary key
-#  job_status     :string           not null
-#  key            :text             not null
-#  month          :date
-#  time_span_type :string           not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#
 class Archive < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern
 

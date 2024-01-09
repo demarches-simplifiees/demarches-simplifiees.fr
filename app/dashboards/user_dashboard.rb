@@ -13,6 +13,8 @@ class UserDashboard < Administrate::BaseDashboard
     confirmed?: Field::Boolean,
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
+    blocked_at: Field::DateTime,
+    blocked_reason: Field::String,
     current_sign_in_at: Field::DateTime,
     dossiers: Field::HasMany
   }.freeze
@@ -36,7 +38,9 @@ class UserDashboard < Administrate::BaseDashboard
     :email,
     :confirmed?,
     :current_sign_in_at,
-    :created_at
+    :created_at,
+    :blocked_at,
+    :blocked_reason
   ].freeze
 
   # FORM_ATTRIBUTES

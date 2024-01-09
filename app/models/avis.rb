@@ -1,23 +1,3 @@
-# == Schema Information
-#
-# Table name: avis
-#
-#  id                   :integer          not null, primary key
-#  answer               :text
-#  claimant_type        :string
-#  confidentiel         :boolean          default(FALSE), not null
-#  email                :string
-#  introduction         :text
-#  question_answer      :boolean
-#  question_label       :string
-#  reminded_at          :datetime
-#  revoked_at           :datetime
-#  created_at           :datetime         not null
-#  updated_at           :datetime         not null
-#  claimant_id          :integer          not null
-#  dossier_id           :integer
-#  experts_procedure_id :bigint
-#
 class Avis < ApplicationRecord
   include EmailSanitizableConcern
 

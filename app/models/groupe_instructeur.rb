@@ -1,15 +1,3 @@
-# == Schema Information
-#
-# Table name: groupe_instructeurs
-#
-#  id           :bigint           not null, primary key
-#  closed       :boolean          default(FALSE)
-#  label        :text             not null
-#  routing_rule :jsonb
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#  procedure_id :bigint           not null
-#
 class GroupeInstructeur < ApplicationRecord
   include Logic
   DEFAUT_LABEL = 'défaut'
@@ -117,7 +105,8 @@ class GroupeInstructeur < ApplicationRecord
 
   def routing_rule_matches_tdc?
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
-    routing_rule.right.value.in?(routing_tdc.options['drop_down_options'])
+    options = routing_tdc.options_with_drop_down_other
+    routing_rule.right.value.in?(options)
   end
 
   serialize :routing_rule, LogicSerializer

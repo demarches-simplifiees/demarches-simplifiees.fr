@@ -1,21 +1,3 @@
-# == Schema Information
-#
-# Table name: stats
-#
-#  id                                    :bigint           not null, primary key
-#  administrations_partenaires           :bigint           default(0)
-#  dossiers_brouillon                    :bigint           default(0)
-#  dossiers_cumulative                   :jsonb            not null
-#  dossiers_depose_avant_30_jours        :bigint           default(0)
-#  dossiers_deposes_entre_60_et_30_jours :bigint           default(0)
-#  dossiers_en_construction              :bigint           default(0)
-#  dossiers_en_instruction               :bigint           default(0)
-#  dossiers_in_the_last_4_months         :jsonb            not null
-#  dossiers_not_brouillon                :bigint           default(0)
-#  dossiers_termines                     :bigint           default(0)
-#  created_at                            :datetime         not null
-#  updated_at                            :datetime         not null
-#
 class Stat < ApplicationRecord
   class << self
     def update_stats
