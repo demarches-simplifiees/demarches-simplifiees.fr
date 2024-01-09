@@ -12,11 +12,10 @@ describe 'administrateurs/services/edit.html.haml', type: :view do
       assign(:procedure, procedure)
       render
     end
-    it 'contains placeholder at papeete' do
-      expect(rendered).to match(/Papeete/)
-    end
     it 'contains placeholder gov.pf for mails' do
       expect(rendered).to match(/gov.pf/)
+      expect(rendered).to match(/7h30/)
+      expect(rendered).to match(/Raiatea/)
     end
   end
 end
