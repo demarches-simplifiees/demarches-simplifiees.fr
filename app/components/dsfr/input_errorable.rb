@@ -1,9 +1,12 @@
 module Dsfr
   module InputErrorable
     extend ActiveSupport::Concern
+
     included do
       delegate :object, to: :@form
       delegate :errors, to: :object
+
+      renders_one :hint
 
       private
 
@@ -89,6 +92,10 @@ module Dsfr
       end
 
       def hint
+        get_slot(:hint).presence || default_hint
+      end
+
+      def default_hint
         I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
       end
 
@@ -101,6 +108,8 @@ module Dsfr
       end
 
       def hint?
+        return true if get_slot(:hint).present?
+
         I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
       end
     end
