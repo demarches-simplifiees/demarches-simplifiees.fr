@@ -35,7 +35,7 @@ module Extensions
     # is a lazy value (e.g., a Promise – like in our case)
     def after_resolve(value:, **_rest)
       if value.respond_to?(:map)
-        attachments = value.map { after_resolve_attachment(_1) }
+        attachments = value.map { after_resolve_attachment(_1) }.compact
 
         if options[:as] == :single
           attachments.first
