@@ -17,6 +17,8 @@ class Logic::Constant < Logic::Term
       I18n.t('utils.yes')
     when FalseClass
       I18n.t('utils.no')
+    when Champs::DropDownListChamp::OTHER
+      'Autre'
     else
       @value.to_s
     end
