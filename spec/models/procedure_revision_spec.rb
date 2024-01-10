@@ -941,4 +941,16 @@ describe ProcedureRevision do
       expect(type_de_champ.revisions.count).to eq(1)
     }
   end
+
+  describe '#routable_types_de_champ' do
+    let(:procedure) do
+      create(:procedure).tap do |p|
+        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
+        p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l2')
+        p.draft_revision.add_type_de_champ(type_champ: :departements, libelle: 'l3')
+      end
+    end
+
+    it { expect(draft.routable_types_de_champ.pluck(:libelle)).to eq(['l2', 'l3']) }
+  end
 end

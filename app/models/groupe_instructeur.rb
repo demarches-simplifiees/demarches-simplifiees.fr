@@ -105,7 +105,13 @@ class GroupeInstructeur < ApplicationRecord
 
   def routing_rule_matches_tdc?
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
-    options = routing_tdc.options_with_drop_down_other
+
+    options = case routing_tdc.type_champ
+    when TypeDeChamp.type_champs.fetch(:departements)
+      APIGeoService.departements.map { _1[:code] }
+    when TypeDeChamp.type_champs.fetch(:drop_down_list)
+      routing_tdc.options_with_drop_down_other
+    end
     routing_rule.right.value.in?(options)
   end
 
