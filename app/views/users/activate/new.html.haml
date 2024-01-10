@@ -1,27 +1,9 @@
-- content_for(:title, t('.title'))
-
-- content_for :footer do
-  = render partial: "root/footer"
+= content_for(:page_id, 'activate_account')
+= content_for(:title, t('metas.users.activate.title', application_name: APPLICATION_NAME))
 
 .fr-container.fr-my-5w
-  .fr-grid-row.fr-grid-row--center
-    .fr-col-lg-6
-      - controller_action = defined?(action) ? action : :create
-      = form_for @user, url: { controller: 'users/activate', action: controller_action } do |f|
-        = f.hidden_field :reset_password_token, value: params[:token]
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      = render Instructeurs::ActivateAccountFormComponent.new(user: @user)
 
-        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-password-legend' } }
-          %legend.fr-fieldset__legend#edit-password-legend
-            %h1.fr-h2= t('.title')
-
-          .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :email, opts: { disabled: true })
-
-          .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-              opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path(@user.min_password_complexity) }})
-
-            #password_complexity
-              = render PasswordComplexityComponent.new
-
-        = f.submit t('.continue'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
+= render partial: 'users/dossiers/index_footer'

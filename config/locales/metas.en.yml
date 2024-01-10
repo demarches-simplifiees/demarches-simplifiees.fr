@@ -17,3 +17,5 @@ en:
           title: "Modification of draft nº %{number} (%{procedure_label})"
         merci:
           title: "File submitted (%{procedure_label})"
+      activate:
+        title: Activate my account on %{application_name}

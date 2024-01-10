@@ -7,8 +7,7 @@
   #session-new.auth-form.sign-in-form
     = form_for resource, url: user_session_path, html: { class: "fr-py-5w" } do |f|
 
-      -# %p.fr-hr-or= t('views.shared.france_connect_login.separator')
-      %h1.fr-h3.center= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
+      %h1.fr-h4= t('views.users.sessions.new.sign_in', application_name: APPLICATION_NAME)
 
       %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
         %legend.fr-fieldset__legend#new-account-legend

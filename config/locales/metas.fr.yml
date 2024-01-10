@@ -17,3 +17,5 @@ fr:
           title: "Modification du brouillon nº %{number} (%{procedure_label})"
         merci:
           title: "Dossier envoyé (%{procedure_label})"
+      activate:
+        title: Activer mon compte sur %{application_name}
