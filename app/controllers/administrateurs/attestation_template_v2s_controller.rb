@@ -76,7 +76,7 @@ module Administrateurs
     end
 
     def retrieve_attestation_template
-      @attestation_template = @procedure.attestation_template || @procedure.build_attestation_template
+      @attestation_template = @procedure.attestation_template_v2 || @procedure.build_attestation_template_v2
     end
 
     def editor_params

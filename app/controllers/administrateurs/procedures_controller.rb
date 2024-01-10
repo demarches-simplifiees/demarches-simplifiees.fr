@@ -111,7 +111,8 @@ module Administrateurs
             types_de_champ: [],
             revision_types_de_champ: { type_de_champ: { piece_justificative_template_attachment: :blob } }
           },
-          attestation_template: [],
+          attestation_template_v1: [],
+          attestation_template_v2: [],
           initiated_mail: [],
           received_mail: [],
           closed_mail: [],

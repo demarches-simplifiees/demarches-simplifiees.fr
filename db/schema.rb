@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_10_122422) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -153,7 +153,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.integer "procedure_id"
     t.text "title"
     t.datetime "updated_at", precision: nil, null: false
-    t.index ["procedure_id"], name: "index_attestation_templates_on_procedure_id", unique: true
+    t.integer "version", default: 1, null: false
+    t.index ["procedure_id", "version"], name: "index_attestation_templates_on_procedure_id_and_version", unique: true
   end
 
   create_table "attestations", id: :serial, force: :cascade do |t|
