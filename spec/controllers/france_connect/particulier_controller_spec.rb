@@ -340,6 +340,8 @@ describe FranceConnect::ParticulierController, type: :controller do
     context 'when an account with the same email exists' do
       let!(:user) { create(:user, email: email) }
 
+      before { allow(controller).to receive(:sign_in).and_call_original }
+
       render_views
 
       it 'asks for the corresponding password' do
@@ -351,6 +353,15 @@ describe FranceConnect::ParticulierController, type: :controller do
         expect(controller.current_user).to be_nil
 
         expect(response.body).to include('entrez votre mot de passe')
+      end
+
+      it 'cannot use the merge token in the email confirmation route' do
+        subject
+        fci.reload
+
+        get :mail_merge_with_existing_account, params: { merge_token: fci.merge_token }
+        expect(controller).not_to have_received(:sign_in)
+        expect(flash[:alert]).to be_present
       end
     end
   end
