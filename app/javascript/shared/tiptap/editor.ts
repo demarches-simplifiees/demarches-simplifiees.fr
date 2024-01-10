@@ -77,24 +77,8 @@ function getEditorOptions(
       case 'orderedList':
         extensions.push(OrderedList);
         break;
-      case 'left':
-      case 'center':
-      case 'right':
-      case 'justify':
-        extensions.push(
-          TextAlign.configure({
-            types: actions.includes('title')
-              ? ['headerColumn', 'title', 'heading', 'paragraph']
-              : ['heading', 'paragraph']
-          })
-        );
-        break;
       case 'title':
         extensions.push(Header, HeaderColumn, Title);
-        break;
-      case 'heading2':
-      case 'heading3':
-        extensions.push(Heading.configure({ levels: [2, 3] }));
         break;
     }
   }
@@ -102,6 +86,26 @@ function getEditorOptions(
   if (actions.includes('bulletList') || actions.includes('orderedList')) {
     extensions.push(ListItem);
   }
+
+  if (actions.includes('heading2') || actions.includes('heading3')) {
+    extensions.push(Heading.configure({ levels: [2, 3] }));
+  }
+
+  if (
+    actions.includes('left') ||
+    actions.includes('center') ||
+    actions.includes('right') ||
+    actions.includes('justify')
+  ) {
+    extensions.push(
+      TextAlign.configure({
+        types: actions.includes('title')
+          ? ['headerColumn', 'title', 'heading', 'paragraph']
+          : ['heading', 'paragraph']
+      })
+    );
+  }
+
   if (tags.length > 0) {
     extensions.push(
       Mention.configure({

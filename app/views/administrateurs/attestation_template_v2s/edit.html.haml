@@ -27,7 +27,7 @@
                 Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
 
           .fr-fieldset__element.fr-mt-2w
-            %h6 En-tête
+            %h2.fr-h6 En-tête
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
             = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
@@ -74,7 +74,7 @@
                     = tag[:libelle]
 
           .fr-fieldset__element.fr-mt-2w
-            %h6 Pied de page
+            %h2.fr-h6 Pied de page
 
           .fr-fieldset__element
             %label.fr-label{ for: field_id(@attestation_template, :signature) } Tampon ou signature
