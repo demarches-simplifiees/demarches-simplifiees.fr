@@ -30,7 +30,7 @@
             %h6 En-tête
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
-            = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
               - c.with_hint { "Exemple: Ministère de la Mer. 3 lignes maximum" }
 
           .fr-fieldset__element{ data: { attestation_target: 'logoAttachmentFieldset' } }
@@ -47,7 +47,7 @@
               = render Attachment::EditComponent.new(attached_file: @attestation_template.logo, direct_upload: false)
 
           .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :label_direction, input_type: :text_area, required: false, opts: { rows: 2 }) do |c|
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_direction, input_type: :text_area, required: false, opts: { rows: 2, data: { controller: :textarea, textarea_max_rows_value: 2 } }) do |c|
               - c.with_hint { "Exemple: Direction interministérielle du numérique. 2 lignes maximum" }
 
           .fr-fieldset__element.fr-mt-2w
@@ -85,7 +85,7 @@
               = render Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false)
 
           .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3 }) do |c|
+            = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
               - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
 
       .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
