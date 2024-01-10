@@ -13,6 +13,7 @@ class ArchiveUploader
       archive.file.detach
     end
     archive.reload
+    uploaded_blob.reload
     ActiveStorage::Attachment.create(
       name: 'file',
       record_type: 'Archive',
@@ -68,7 +69,7 @@ class ArchiveUploader
       key: namespaced_object_key,
       filename: filename,
       content_type: 'application/zip',
-      metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      metadata: { analyzed: true, virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     }
   end
 

@@ -76,7 +76,8 @@ module DossierCloneConcern
   end
 
   def clone(user: nil, fork: false)
-    dossier_attributes = [:autorisation_donnees, :revision_id, :groupe_instructeur_id]
+    dossier_attributes = [:autorisation_donnees, :revision_id]
+    dossier_attributes += [:groupe_instructeur_id] if fork
     relationships = [:individual, :etablissement]
 
     cloned_champs = champs
@@ -95,7 +96,6 @@ module DossierCloneConcern
 
         kopy.user = user || original.user
         kopy.state = Dossier.states.fetch(:brouillon)
-
         kopy.champs = cloned_champs.values.map do |(_, champ)|
           champ.dossier = kopy
           champ.parent = cloned_champs[champ.parent_id].second if champ.child?

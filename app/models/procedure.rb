@@ -158,7 +158,9 @@ class Procedure < ApplicationRecord
 
   belongs_to :defaut_groupe_instructeur, class_name: 'GroupeInstructeur', inverse_of: false, optional: true
 
-  has_one_attached :logo
+  has_one_attached :logo do |attachable|
+    attachable.variant :email, resize_to_limit: [150, 150]
+  end
   has_one_attached :notice
   has_one_attached :deliberation
 
@@ -667,12 +669,6 @@ class Procedure < ApplicationRecord
 
   def instructeurs_self_management?
     routing_enabled? || instructeurs_self_management_enabled?
-  end
-
-  def defaut_groupe_instructeur_for_new_dossier
-    if !routing_enabled? || feature_enabled?(:procedure_routage_api)
-      defaut_groupe_instructeur
-    end
   end
 
   def groupe_instructeurs_but_defaut

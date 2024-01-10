@@ -1,0 +1,9 @@
+en:
+  activerecord:
+    models:
+      bulk_message:
+        one: "Bulk message to users"
+        other: "Bulk message to users"
+    attributes:
+      bulk_message:
+        body: Content
