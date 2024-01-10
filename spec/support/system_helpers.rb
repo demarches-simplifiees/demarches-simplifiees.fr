@@ -172,7 +172,7 @@ module SystemHelpers
     find(:xpath, ".//label[contains(text()[normalize-space()], '#{libelle}')]")[:for]
   end
 
-  def wait_for_autosave(brouillon = true)
+  def wait_for_autosave
     blur
     expect(page).to have_css('.debounced-empty') # no more debounce
     expect(page).to have_css('.autosave-state-idle') # no more in flight promise
