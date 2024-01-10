@@ -14,7 +14,7 @@ class FranceConnect::ParticulierController < ApplicationController
     fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
 
     if fci.user.nil?
-      preexisting_unlinked_user = User.find_by(email: fci.email_france_connect.downcase)
+      preexisting_unlinked_user = User.find_by(email: sanitize(fci.email_france_connect))
 
       if preexisting_unlinked_user.nil?
         fci.associate_user!(fci.email_france_connect)
@@ -67,7 +67,7 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def mail_merge_with_existing_account
-    user = User.find_by(email: @fci.email_france_connect.downcase)
+    user = User.find_by(email: sanitize(@fci.email_france_connect.downcase))
     if user.can_france_connect?
       @fci.update(user: user)
       @fci.delete_merge_token!
@@ -146,6 +146,10 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def sanitized_email_params
-    params[:email]&.gsub(/[[:space:]]/, ' ')&.strip&.downcase
+    sanitize(params[:email])
+  end
+
+  def sanitize(string)
+    string&.gsub(/[[:space:]]/, ' ')&.strip&.downcase
   end
 end
