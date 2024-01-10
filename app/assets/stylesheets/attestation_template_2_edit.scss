@@ -13,7 +13,7 @@
     h1,
     h2,
     h3 {
-      background-color: var(--background-contrast-grey-hover);
+      border: 1px solid var(--background-contrast-grey-hover);
       padding: $default-spacer / 2;
     }
 
