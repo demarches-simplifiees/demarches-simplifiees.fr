@@ -28,7 +28,7 @@ class SVASVRDecisionDateCalculatorService
     start_date = determine_start_date + 1.day
     correction_delay = calculate_correction_delay(start_date)
 
-    start_date + correction_delay + duration
+    start_date + duration + correction_delay
   end
 
   private
