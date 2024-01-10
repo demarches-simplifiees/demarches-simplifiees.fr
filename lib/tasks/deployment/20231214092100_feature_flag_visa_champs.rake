@@ -7,11 +7,8 @@ namespace :after_party do
     User.all.each do |user|
       if Flipper.enabled?(:visa, user) && user.administrateur?
         user.administrateur.procedures.each do |procedure|
-          procedure.types_de_champ_for_tags.each do |types_de_champ_for_tags|
-            if types_de_champ_for_tags.type_champ == 'visa'
-              Flipper.enable(:visa, procedure)
-              break
-            end
+          if procedure.types_de_champ_for_tags.where(type_champ: 'visa').any?
+            Flipper.enable(:visa, procedure)
           end
         end
         Flipper.disable(:visa, user)
