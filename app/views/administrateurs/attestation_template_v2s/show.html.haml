@@ -8,7 +8,7 @@
             = simple_format @attestation_template.label_logo.presence || "VOTRE INTITULE\ndu LOGO MARIANNE", class: "intitule"
             = image_tag('liberte2.svg', alt: '', class: 'devise')
         - elsif @attestation_template.logo.present?
-          .bloc-marque
+          .bloc-marque.logo-free-layout
             = image_tag(@attestation_template.logo_url)
 
       .right
