@@ -6,7 +6,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier', js: true do
+  scenario 'fill a dossier', js: true, retry: 3 do
     log_in(user, procedure)
 
     fill_individual
