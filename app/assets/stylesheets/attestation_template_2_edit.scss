@@ -1,6 +1,11 @@
 @import "constants";
 
 #attestation-edit {
+  .attestation-schema {
+    width: 100%;
+    margin-top: 3em;
+  }
+
   .tiptap {
     padding: $default-spacer;
     overflow-y: scroll;
