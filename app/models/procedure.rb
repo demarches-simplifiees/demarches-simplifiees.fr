@@ -47,7 +47,11 @@ class Procedure < ApplicationRecord
   foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
   has_one :module_api_carto, dependent: :destroy
-  has_one :attestation_template, dependent: :destroy
+  has_many :attestation_templates, dependent: :destroy
+  has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+
+  has_one :attestation_template, -> { AttestationTemplate.v1.or(AttestationTemplate.v2) }, dependent: :destroy, inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true

@@ -2,13 +2,14 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, inverse_of: :attestation_template
+  belongs_to :procedure, inverse_of: :attestation_template_v2
 
   has_one_attached :logo
   has_one_attached :signature
 
-  validates :title, tags: true, if: -> { procedure.present? }
-  validates :body, tags: true, if: -> { procedure.present? }
+  validates :title, tags: true, if: -> { procedure.present? && version == 1 }
+  validates :body, tags: true, if: -> { procedure.present? && version == 1 }
+  validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
   validates :footer, length: { maximum: 190 }
 
   FILE_MAX_SIZE = 1.megabytes
@@ -16,6 +17,9 @@ class AttestationTemplate < ApplicationRecord
   validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: FILE_MAX_SIZE }
 
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
+
+  scope :v1, -> { where(version: 1) }
+  scope :v2, -> { where(version: 2) }
 
   def attestation_for(dossier)
     attestation = Attestation.new(title: replace_tags(title, dossier, escape: false))
