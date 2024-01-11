@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -602,6 +602,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "created_at", null: false
     t.jsonb "data"
     t.string "email_france_connect"
+    t.string "email_merge_token"
+    t.datetime "email_merge_token_created_at"
     t.string "family_name"
     t.string "france_connect_particulier_id"
     t.string "gender"
@@ -610,6 +612,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.datetime "merge_token_created_at"
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.index ["email_merge_token"], name: "index_france_connect_informations_on_email_merge_token"
     t.index ["merge_token"], name: "index_france_connect_informations_on_merge_token"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end

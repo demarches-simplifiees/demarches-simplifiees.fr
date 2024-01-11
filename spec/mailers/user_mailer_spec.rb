@@ -53,7 +53,7 @@ RSpec.describe UserMailer, type: :mailer do
     subject { described_class.france_connect_merge_confirmation(email, code, 15.minutes.from_now) }
 
     it { expect(subject.to).to eq([email]) }
-    it { expect(subject.body).to include(france_connect_particulier_mail_merge_with_existing_account_url(merge_token: code)) }
+    it { expect(subject.body).to include(france_connect_particulier_mail_merge_with_existing_account_url(email_merge_token: code)) }
 
     context 'without SafeMailer configured' do
       it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }

@@ -20,9 +20,9 @@ class UserMailer < ApplicationMailer
     mail(to: requested_email, subject: @subject)
   end
 
-  def france_connect_merge_confirmation(email, merge_token, merge_token_created_at)
-    @merge_token = merge_token
-    @merge_token_created_at = merge_token_created_at
+  def france_connect_merge_confirmation(email, email_merge_token, email_merge_token_created_at)
+    @email_merge_token = email_merge_token
+    @email_merge_token_created_at = email_merge_token_created_at
     @subject = "Veuillez confirmer la fusion de compte"
 
     mail(to: email, subject: @subject)
