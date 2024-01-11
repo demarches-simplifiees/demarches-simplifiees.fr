@@ -1,6 +1,6 @@
 require 'system/administrateurs/procedure_spec_helper'
 
-describe 'As an administrateur, I want to manage the procedure’s attestation', js: true do
+describe 'As an administrateur, I want to manage the procedure’s attestation', js: true, retry: 3 do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }

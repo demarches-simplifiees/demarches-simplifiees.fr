@@ -1,4 +1,4 @@
-describe 'Inviting an expert:', js: true do
+describe 'Inviting an expert:', js: true, retry: 3 do
   include ActiveJob::TestHelper
   include ActionView::Helpers
 

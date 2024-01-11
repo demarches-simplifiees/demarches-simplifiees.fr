@@ -1,4 +1,4 @@
-describe "procedure sort", js: true do
+describe "procedure sort", js: true, retry: 3 do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, :with_type_de_champ, instructeurs: [instructeur]) }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }

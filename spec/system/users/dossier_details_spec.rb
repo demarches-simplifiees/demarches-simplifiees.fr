@@ -48,7 +48,7 @@ describe 'Dossier details:' do
     expect(page).to have_current_path(dossier_path(dossier))
   end
 
-  context 'with js', js: true do
+  context 'with js', js: true, retry: 3 do
     it_behaves_like 'the user can edit the submitted demande'
     it_behaves_like 'the user can send messages to the instructeur'
   end

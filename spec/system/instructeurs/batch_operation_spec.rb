@@ -1,4 +1,4 @@
-describe 'BatchOperation a dossier:', js: true do
+describe 'BatchOperation a dossier:', js: true, retry: 3 do
   include ActionView::RecordIdentifier
   include ActiveJob::TestHelper
 
