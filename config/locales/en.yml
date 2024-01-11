@@ -496,7 +496,6 @@ en:
         new:
           sign_in: "Sign in on %{application_name}"
           social_sign_in: "Sign in quickly and securely using"
-          password: "Password (minimum length %{min_length} characters)"
           remember_me: Remember me
           reset_password: Forgot password?
           connection: Sign in
