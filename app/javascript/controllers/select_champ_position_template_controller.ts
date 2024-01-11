@@ -7,18 +7,14 @@ export class SelectChampPositionTemplateController extends ApplicationController
   };
   // this element is updated via turbostream as the source of truth for all select
   declare readonly templateIdValue: string;
-
   declare readonly selectTargets: HTMLSelectElement[];
 
   selectTargetConnected(selectElement: HTMLSelectElement) {
-    selectElement.addEventListener('blur', this);
     selectElement.addEventListener('focus', this);
     selectElement.addEventListener('change', this);
   }
 
   selectTargetDisconnected(selectElement: HTMLSelectElement) {
-    console.log('selectTargetDisconnected');
-    selectElement.removeEventListener('blur', this);
     selectElement.removeEventListener('focus', this);
     selectElement.removeEventListener('change', this);
   }
@@ -62,9 +58,8 @@ export class SelectChampPositionTemplateController extends ApplicationController
     const stableIdDidChange =
       changedSelectTarget.value !=
       this.getStableIdForSelect(changedSelectTarget);
-    if (!stableIdDidChange) {
-      // prevent to bulble up
-      event.stopImmediatePropagation();
+    if (stableIdDidChange) {
+      changedSelectTarget.form?.requestSubmit();
     }
   }
 

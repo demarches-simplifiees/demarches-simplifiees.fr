@@ -233,4 +233,38 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_content("Le titre de section suivant est invalide, veuillez le corriger :")
     end
   end
+
+  context 'move and morph champs' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'first_tdc' }, { type: :text, libelle: 'middle_tdc' }, { type: :text, libelle: 'last_tdc' }]) }
+    let!(:initial_first_coordinate) { procedure.draft_revision.revision_types_de_champ[0] }
+    let!(:initial_second_coordinate) { procedure.draft_revision.revision_types_de_champ[1] }
+    let!(:initial_third_coordinate) { procedure.draft_revision.revision_types_de_champ[2] }
+    # TODO: check no select when 1 champs
+    # TODO: check empty select when 1 champs
+    # TODO: check select is seeding on focus
+    # TODO: check select.change move champ and keep order
+    # TODO: select options are segmented by block
+    scenario 'root champs' do
+      initial_order = [initial_first_coordinate, initial_second_coordinate, initial_third_coordinate].map(&:stable_id)
+      initial_first_coordinate_selector = "##{ActionView::RecordIdentifier.dom_id(initial_first_coordinate, :move_and_morph)}"
+      # at first, select only contains the current coordinate
+      expect(page).to have_selector("#{initial_first_coordinate_selector} option", count: 1)
+      expect(page.find(initial_first_coordinate_selector).all("option").first.value.to_s).to eq(initial_first_coordinate.stable_id.to_s)
+
+      # once clicked, the select is updated other options
+      page.find(initial_first_coordinate_selector).click
+      expect(page).to have_selector("#{initial_first_coordinate_selector} option", count: 4)
+      #   also we re-hydrate the selected value
+      expect(page.find(initial_first_coordinate_selector).find("option[selected]").value.to_s).to eq(initial_first_coordinate.stable_id.to_s)
+      page.find(initial_first_coordinate_selector).select(initial_third_coordinate.libelle)
+      wait_until do
+        procedure.reload.draft_revision.revision_types_de_champ.last.type_de_champ.libelle == initial_first_coordinate.type_de_champ.libelle
+      end
+      expect(procedure.reload.draft_revision.revision_types_de_champ.map(&:stable_id))
+        .to eq([initial_second_coordinate, initial_third_coordinate, initial_first_coordinate].map(&:stable_id))
+    end
+
+    scenario 'repetition champs' do
+    end
+  end
 end
