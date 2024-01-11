@@ -58,6 +58,7 @@ class FranceConnect::ParticulierController < ApplicationController
       else
         @fci.update(user: user)
         @fci.delete_merge_token!
+        @fci.delete_email_merge_token!
 
         flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
         connect_france_connect_particulier(user)
