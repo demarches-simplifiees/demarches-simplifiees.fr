@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 7.0.5' # allows update to security fixes at any time
+gem 'rails', '~> 7.0.8' # allows update to security fixes at any time
 
 gem 'aasm'
 gem 'acsv'
@@ -137,9 +137,8 @@ end
 
 group :development, :test do
   gem 'graphql-schema_comparator'
+  gem 'irb'
   gem 'mina', require: false # Deploy
-  gem 'pry-byebug' # Call 'byebug' anywhere in the code to stop execution and get a debugger console
-  gem 'pry-rails'
   gem 'rspec-rails'
   gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background

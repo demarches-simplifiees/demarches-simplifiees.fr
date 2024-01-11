@@ -56,6 +56,8 @@ jobs:
   unit_tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    env:
+      RUBY_YJIT_ENABLE: "1"
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -72,11 +74,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install build dependancies
+        # - fonts pickable by ImageMagick
+        # - rust for YJIT support
+        run: sudo apt-get install -y gsfonts rustc
+
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
-
-      - name: Install fonts pickable by ImageMagick
-        run: sudo apt-get install -y gsfonts
 
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
@@ -101,6 +105,8 @@ jobs:
   system_tests:
     name: System tests
     runs-on: self-hosted
+    env:
+      RUBY_YJIT_ENABLE: "1"
     services:
       postgres:
         image: postgis/postgis:14-3.3

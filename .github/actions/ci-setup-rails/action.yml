@@ -9,6 +9,12 @@ runs:
       with:
         bundler-cache: true
 
+    - name: Check YJIT support
+      run: |
+        ruby --yjit -v
+      shell: bash
+
+
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
