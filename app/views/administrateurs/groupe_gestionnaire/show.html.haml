@@ -7,3 +7,4 @@
   .fr-grid-row.fr-grid-row--gutters.fr-mb-5w
     = render GroupeGestionnaire::Card::GestionnairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: admin_groupe_gestionnaire_gestionnaires_path)
     = render GroupeGestionnaire::Card::AdministrateursComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: admin_groupe_gestionnaire_administrateurs_path)
+    = render GroupeGestionnaire::Card::CommentairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire, administrateur: current_administrateur, path: admin_groupe_gestionnaire_commentaires_path)

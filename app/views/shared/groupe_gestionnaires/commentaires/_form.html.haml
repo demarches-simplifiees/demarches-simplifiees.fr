@@ -1,0 +1,12 @@
+= render NestedForms::FormOwnerComponent.new
+= form_for(commentaire, url: form_url) do |f|
+  - dossier = commentaire.dossier
+  - placeholder = t('views.shared.dossiers.messages.form.write_message_to_administration_placeholder')
+  - if instructeur_signed_in? || administrateur_signed_in? || expert_signed_in?
+    - placeholder = t('views.shared.dossiers.messages.form.write_message_placeholder')
+  %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
+
+  = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
+
+  .fr-mt-3w
+    = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }

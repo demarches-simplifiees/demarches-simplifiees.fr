@@ -38,12 +38,4 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
       class: 'fr-btn fr-btn--sm fr-btn--tertiary',
       form: { data: { turbo: true, turbo_confirm: "Supprimer « #{@administrateur.email} » en tant qu'administrateurs ?" } }
   end
-
-  def is_there_at_least_another_active_admin?
-    if @administrateur.active?
-      @groupe_gestionnaire.administrateurs.count(&:active?) > 1
-    else
-      @groupe_gestionnaire.administrateurs.count(&:active?) >= 1
-    end
-  end
 end

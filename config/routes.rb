@@ -653,6 +653,8 @@ Rails.application.routes.draw do
     get 'mon-groupe' => 'groupe_gestionnaire#show', as: :groupe_gestionnaire
     get 'mon-groupe/administrateurs' => 'groupe_gestionnaire#administrateurs', as: :groupe_gestionnaire_administrateurs
     get 'mon-groupe/gestionnaires' => 'groupe_gestionnaire#gestionnaires', as: :groupe_gestionnaire_gestionnaires
+    get 'mon-groupe/commentaires' => 'groupe_gestionnaire#commentaires', as: :groupe_gestionnaire_commentaires
+    post 'mon-groupe/create_commentaire' => 'groupe_gestionnaire#create_commentaire', as: :groupe_gestionnaire_create_commentaire
 
     resources :services, except: [:show] do
       collection do
