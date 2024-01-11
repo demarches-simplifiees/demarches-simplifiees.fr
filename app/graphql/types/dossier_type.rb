@@ -32,6 +32,9 @@ module Types
 
     field :date_derniere_correction_en_attente, GraphQL::Types::ISO8601DateTime, "Date de la dernière demande de correction qui n’a pas encore été traitée par l’usager.", null: true
 
+    field :date_previsionnelle_decision_sva_svr, GraphQL::Types::ISO8601Date, "Date prévisionnelle de décision automatique par le SVA/SVR.", null: true, method: :sva_svr_decision_on
+    field :date_traitement_sva_svr, GraphQL::Types::ISO8601DateTime, "Date du traitement automatique par le SVA/SVR.", null: true, method: :sva_svr_decision_triggered_at
+
     field :archived, Boolean, null: false
 
     field :connection_usager, ConnectionUsager, null: false
