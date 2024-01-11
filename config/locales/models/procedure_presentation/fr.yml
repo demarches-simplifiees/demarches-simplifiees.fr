@@ -32,6 +32,7 @@ fr:
             gender: Civilité
           avis:
             answer: Avis
+            question_answer: Avis oui/non
           etablissement:
             entreprise_siren: SIREN
             entreprise_forme_juridique: Forme juridique

@@ -523,7 +523,7 @@ fr:
           open_your_mailbox: "Maintenant ouvrez votre boite email."
           title: "Lien de réinitialisation du mot de passe envoyé"
       shared:
-        email_can_take_a_while_html: "<strong>Attention</strong>, ce message peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
+        email_can_take_a_while_html: "<strong>Attention</strong>, ce courriel peut mettre jusqu’à <strong>15 minutes</strong> pour arriver."
         contact_us_if_any_trouble_html: 'En cas de difficultés, nous restons joignables <a href="%{href}">via ce formulaire</a>.'
   modal:
     publish:
@@ -790,10 +790,6 @@ fr:
       one: Démarche
       other: Démarches
   users:
-    activate:
-      new:
-        title: Choix du mot de passe
-        continue: Continuer
     dossiers:
       test_procedure: "Ce dossier est déposé sur une démarche en test. Toute modification de la démarche par l’administrateur (ajout d’un champ, publication de la démarche...) entraînera sa suppression."
       no_access_html: "Vous n’avez pas accès à ce dossier.<br>Vérifiez que votre adresse email de connexion <b>%{email}</b> est bien celle utilisée pour remplir cette démarche.<br> Si ce n'est pas le cas, déconnectez-vous"

@@ -5,7 +5,7 @@ class ProceduresController < ApplicationController
     if @procedure.logo.attached?
       redirect_to url_for(@procedure.logo.variant(:email))
     else
-      redirect_to image_url(PROCEDURE_DEFAULT_LOGO_SRC)
+      redirect_to ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
     end
   end
 

@@ -187,7 +187,7 @@ describe 'The routing with rules', js: true do
     click_on 'Modifier mon dossier'
 
     fill_in litteraire_user.dossiers.first.champs_public.first.libelle, with: 'some value'
-    wait_for_autosave(false)
+    wait_for_autosave
 
     click_on 'Déposer les modifications'
 
@@ -286,7 +286,7 @@ describe 'The routing with rules', js: true do
     click_on "Modifier mon dossier"
 
     choose(new_group)
-    wait_for_autosave(false)
+    wait_for_autosave
 
     expect(page).to have_text(new_group)
 
@@ -302,7 +302,7 @@ describe 'The routing with rules', js: true do
 
     visit "users/activate?#{token_params}"
     fill_in :user_password, with: password
-    click_button 'Continuer'
+    click_button 'Définir le mot de passe'
 
     expect(page).to have_text('Mot de passe enregistré')
   end

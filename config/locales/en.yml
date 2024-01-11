@@ -520,7 +520,7 @@ en:
           check_france_connect_html: Have you once logged in with France Connect? If yes, <a href=\"%{href}\">try again with France Connect</a>.
           check_gpdr: "The account may have been deleted in the event of prolonged inactivity and no current file. In this case you will have to recreate an account from a procedure."
       shared:
-        email_can_take_a_while_html: <strong>Please note</strong> that this message can take up to 15 minutes to arrive.
+        email_can_take_a_while_html: <strong>Please note</strong> that this email can take up to 15 minutes to arrive.
         contact_us_if_any_trouble_html: 'You can contact us <a href="%{href}">through this form</a> if a problem still exists.'
   modal:
     publish:
@@ -783,10 +783,6 @@ en:
       closed_at: closed at
       auto_archive_on: will close at
   users:
-    activate:
-      new:
-        title: Pick a password
-        continue: Continue
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access_html: "You do not have access to this file.<br>Check that you were signed in as <b>%{email}</b> to fill this procedure.<br>If not, please log off"

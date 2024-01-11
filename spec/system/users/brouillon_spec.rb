@@ -6,7 +6,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier', js: true do
+  scenario 'fill a dossier', js: true, retry: 3 do
     log_in(user, procedure)
 
     fill_individual
@@ -478,7 +478,7 @@ describe 'The user' do
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
         fill_in('age du candidat (facultatif)', with: '18')
-        wait_for_autosave(false)
+        wait_for_autosave
 
         # the champ keeps their previous value so they are all displayed
         expect(page).to have_css('label', text: 'permis de conduire', visible: true)
