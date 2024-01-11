@@ -496,15 +496,15 @@ fr:
           reject: Rejeter
       sessions:
         new:
-          sign_in: "Connectez vous avec un compte %{application_name}"
+          sign_in: Connexion à %{application_name}
           social_sign_in: "Connectez vous rapidement avec"
           password: "Mot de passe (%{min_length} caractères minimum)"
-          remember_me: "Se souvenir de moi"
-          reset_password: "Mot de passe oublié ?"
-          connection: "Se connecter"
-          find_procedure: "Trouvez votre démarche"
-          state_civil_servant: "Vous êtes agent de la fonction publique d’État ?"
-          connect_with_agent_connect: "Accédez à notre page dédiée"
+          remember_me: Se souvenir de moi
+          reset_password: Mot de passe oublié ?
+          connection: Se connecter
+          find_procedure: Trouvez votre démarche
+          state_civil_servant: Vous êtes agent de la fonction publique d’État ?
+          connect_with_agent_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
       passwords:
         edit:
@@ -563,6 +563,7 @@ fr:
         << : *default_attributes
       super_admin:
         << : *default_attributes
+        otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
       champ:

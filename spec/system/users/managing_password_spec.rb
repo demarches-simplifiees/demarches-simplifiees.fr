@@ -11,7 +11,7 @@ describe 'Managing password:', js: true, retry: 3 do
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
-      fill_in 'Email', with: user.email
+      fill_in 'Adresse électronique', with: user.email
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
@@ -42,7 +42,7 @@ describe 'Managing password:', js: true, retry: 3 do
       click_on 'Mot de passe oublié ?'
       expect(page).to have_current_path(new_user_password_path)
 
-      fill_in 'Email', with: user.email
+      fill_in 'Adresse électronique', with: user.email
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end
@@ -78,7 +78,7 @@ describe 'Managing password:', js: true, retry: 3 do
       click_on 'Mot de passe oublié'
       expect(page).to have_current_path(new_super_admin_password_path)
 
-      fill_in 'Email', with: super_admin.email
+      fill_in 'Adresse électronique', with: super_admin.email
       perform_enqueued_jobs do
         click_on 'Demander un nouveau mot de passe'
       end

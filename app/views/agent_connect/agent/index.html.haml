@@ -14,7 +14,7 @@
           = link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
 
       .column
-        %h1.fr-my-2
+        %h1.fr-my-2w
           = t('.connect')
 
         .fr-connect-group.fr-my-2w
@@ -29,20 +29,30 @@
         %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
         #session-new.auth-form.sign-in-form
-          = form_for User.new, url: user_session_path, html: { class: "form" } do |f|
-            = f.label :email, t('.pro_email')
-            = f.text_field :email, type: :email, autocomplete: 'username', autofocus: true
+          = form_for User.new, url: user_session_path do |f|
 
-            = f.label :password, t('views.users.sessions.new.password', min_length: PASSWORD_MIN_LENGTH)
-            = f.password_field :password, autocomplete: 'current-password'
+            %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
+              %legend.fr-fieldset__legend#new-account-legend
+                %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
 
-            .auth-options
-              .flex-no-shrink
-                = f.check_box :remember_me
-                = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+              .fr-fieldset__element
+                %p.fr-text--sm= t('utils.mandatory_champs')
 
-              .text-right
-                = link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+              .fr-fieldset__element
+                = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true }) do |c|
+                  - c.with_label { t('.pro_email') }
+
+              .fr-fieldset__element
+                = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
+
+                %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+
+              .fr-fieldset__element
+                .auth-options
+                  .flex-no-shrink
+                    = f.check_box :remember_me
+                    = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
+
 
             = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
 

@@ -3,17 +3,20 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-.container.devise-container
-  .one-column-centered
-    = devise_error_messages!
+.fr-container.fr-my-5w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-lg-6
+      = devise_error_messages!
 
-    = form_for(resource, as: resource_name, url: password_path(resource_name), html: { class: 'form' }) do |f|
+      = form_for(resource, as: resource_name, url: password_path(resource_name)) do |f|
+        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-password-legend' } }
+          %legend.fr-fieldset__legend#new-password-legend
+            %h1.fr-h2= t('devise.passwords.new.forgot_your_password')
 
-      %h1= t('devise.passwords.new.forgot_your_password')
+          .fr-fieldset__element
+            %p.fr-text--sm= t('devise.passwords.new.send_me_reset_password_instructions')
 
-      %p.notice= t('devise.passwords.new.send_me_reset_password_instructions')
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
-      = f.label :email, 'Email'
-      = f.email_field :email, autofocus: true
-
-      = f.submit t('devise.passwords.new.request_new_password'), class: 'fr-btn fr-btn--lg'
+        = f.submit t('devise.passwords.new.request_new_password'), class: 'fr-btn fr-btn--lg fr-mt-4w'

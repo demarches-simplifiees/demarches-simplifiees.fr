@@ -494,16 +494,16 @@ en:
           other_actions: "Other actions"
       sessions:
         new:
-          sign_in: "Connect with %{application_name} account"
-          social_sign_in: "Connect quickly and securely using"
+          sign_in: "Sign in on %{application_name}"
+          social_sign_in: "Sign in quickly and securely using"
           password: "Password (minimum length %{min_length} characters)"
-          remember_me: "Remember me"
-          reset_password: "Forgot password?"
-          connection: "Sign in"
-          find_procedure: "Find your procedure"
-          state_civil_servant: "Are you a state civil servant?"
-          connect_with_agent_connect: "Visit our dedicated page"
-          subtitle: "Sign in with your account"
+          remember_me: Remember me
+          reset_password: Forgot password?
+          connection: Sign in
+          find_procedure: Find your procedure
+          state_civil_servant: Are you a state civil servant?
+          connect_with_agent_connect: Visit our dedicated page
+          subtitle: "Sign in with my account"
       passwords:
         edit:
           subtitle: Change password
@@ -560,6 +560,7 @@ en:
         << : *default_attributes
       super_admin:
         << : *default_attributes
+        otp_attempt: 'OTP code (only if you have already activated 2FA)'
       procedure:
         zone: This procedure is run by
       champ:
