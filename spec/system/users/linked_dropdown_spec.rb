@@ -1,5 +1,5 @@
 describe 'linked dropdown lists' do
-  let(:password) { TEST_PASSWORD }
+  let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
   let(:options) do

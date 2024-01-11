@@ -1,5 +1,5 @@
 describe 'The user' do
-  let(:password) { TEST_PASSWORD }
+  let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
   let!(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs_mandatory) }

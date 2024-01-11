@@ -1,7 +1,7 @@
 describe 'Using Visa field', js: true do
   include ActiveJob::TestHelper
 
-  let(:password) { TEST_PASSWORD }
+  let(:password) { SECURE_PASSWORD }
   let!(:instructeur1) { create(:instructeur, password: password) }
   let!(:instructeur2) { create(:instructeur, password: password) }
   let!(:instructeur3) { create(:instructeur, password: password) }

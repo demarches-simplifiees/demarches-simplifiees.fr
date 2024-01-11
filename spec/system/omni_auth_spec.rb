@@ -54,7 +54,7 @@ describe 'Omni Auth Connexion' do
           end
 
           context 'and an user exists with the same email' do
-            let!(:user) { create(:user, email: email, password: TEST_PASSWORD) }
+            let!(:user) { create(:user, email: email, password: SECURE_PASSWORD) }
 
             before do
               page.find("a[href='#{omniauth_path('google')}']").click
@@ -66,7 +66,7 @@ describe 'Omni Auth Connexion' do
 
             scenario 'it merges its account' do
               page.find('#it-is-mine').click
-              fill_in 'password', with: TEST_PASSWORD
+              fill_in 'password', with: SECURE_PASSWORD
               click_on I18n.t('omniauth.merge.button_merge')
 
               expect(page).to have_content('Dossiers')
@@ -81,7 +81,7 @@ describe 'Omni Auth Connexion' do
             end
 
             context 'and the user wants an email that belongs to another account', js: true do
-              let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: TEST_PASSWORD) }
+              let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: SECURE_PASSWORD) }
 
               scenario 'it uses another email that belongs to another account' do
                 page.find('#it-is-not-mine').click
@@ -91,7 +91,7 @@ describe 'Omni Auth Connexion' do
                 expect(page).to have_css('#password-for-another-account', visible: true, wait: 2)
 
                 within '#new-account-password-confirmation' do
-                  fill_in 'password', with: TEST_PASSWORD
+                  fill_in 'password', with: SECURE_PASSWORD
                   click_on I18n.t('omniauth.merge.button_merge')
                 end
 
