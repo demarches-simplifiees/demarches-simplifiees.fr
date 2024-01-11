@@ -25,6 +25,10 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
     siblings.last == self
   end
 
+  def empty?
+    revision_types_de_champ.empty?
+  end
+
   def siblings
     if parent_id.present?
       revision.revision_types_de_champ.where(parent_id: parent_id).ordered
