@@ -1,5 +1,5 @@
 describe 'Prefilling a dossier (with a GET request):', js: true, retry: 3 do
-  let(:password) { 'my-s3cure-p4ssword' }
+  let(:password) { SECURE_PASSWORD }
 
   let(:procedure) { create(:procedure, :published, opendata: true) }
   let(:dossier) { procedure.dossiers.last }
