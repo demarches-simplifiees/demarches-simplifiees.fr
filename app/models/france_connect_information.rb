@@ -26,17 +26,32 @@ class FranceConnectInformation < ApplicationRecord
 
   def create_merge_token!
     merge_token = SecureRandom.uuid
-    update(merge_token: merge_token, merge_token_created_at: Time.zone.now)
+    update(merge_token:, merge_token_created_at: Time.zone.now)
 
     merge_token
+  end
+
+  def create_email_merge_token!
+    email_merge_token = SecureRandom.uuid
+    update(email_merge_token:, email_merge_token_created_at: Time.zone.now)
+
+    email_merge_token
   end
 
   def valid_for_merge?
     (MERGE_VALIDITY.ago < merge_token_created_at) && user_id.nil?
   end
 
+  def valid_for_email_merge?
+    (MERGE_VALIDITY.ago < email_merge_token_created_at) && user_id.nil?
+  end
+
   def delete_merge_token!
     update(merge_token: nil, merge_token_created_at: nil)
+  end
+
+  def delete_email_merge_token!
+    update(email_merge_token: nil, email_merge_token_created_at: nil)
   end
 
   def full_name

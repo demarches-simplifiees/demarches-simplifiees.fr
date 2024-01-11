@@ -1,6 +1,7 @@
 class FranceConnect::ParticulierController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
-  before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account, :merge_with_new_account, :mail_merge_with_existing_account, :resend_and_renew_merge_confirmation]
+  before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account, :merge_with_new_account, :resend_and_renew_merge_confirmation]
+  before_action :securely_retrieve_fci_from_email_merge_token, only: [:mail_merge_with_existing_account]
 
   def login
     if FranceConnectService.enabled?
@@ -14,7 +15,7 @@ class FranceConnect::ParticulierController < ApplicationController
     fci = FranceConnectService.find_or_retrieve_france_connect_information(params[:code])
 
     if fci.user.nil?
-      preexisting_unlinked_user = User.find_by(email: fci.email_france_connect.downcase)
+      preexisting_unlinked_user = User.find_by(email: sanitize(fci.email_france_connect))
 
       if preexisting_unlinked_user.nil?
         fci.associate_user!(fci.email_france_connect)
@@ -57,6 +58,7 @@ class FranceConnect::ParticulierController < ApplicationController
       else
         @fci.update(user: user)
         @fci.delete_merge_token!
+        @fci.delete_email_merge_token!
 
         flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
         connect_france_connect_particulier(user)
@@ -67,7 +69,7 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def mail_merge_with_existing_account
-    user = User.find_by(email: @fci.email_france_connect.downcase)
+    user = User.find_by(email: sanitize(@fci.email_france_connect.downcase))
     if user.can_france_connect?
       @fci.update(user: user)
       @fci.delete_merge_token!
@@ -96,13 +98,32 @@ class FranceConnect::ParticulierController < ApplicationController
   end
 
   def resend_and_renew_merge_confirmation
+    @fci.create_email_merge_token!
+    UserMailer.france_connect_merge_confirmation(
+      @fci.email_france_connect,
+      @fci.email_merge_token,
+      @fci.email_merge_token_created_at
+    )
+      .deliver_later
+
     merge_token = @fci.create_merge_token!
-    UserMailer.france_connect_merge_confirmation(@fci.email_france_connect, merge_token, @fci.merge_token_created_at).deliver_later
     redirect_to france_connect_particulier_merge_path(merge_token),
                 notice: t('france_connect.particulier.flash.confirmation_mail_sent')
   end
 
   private
+
+  def securely_retrieve_fci_from_email_merge_token
+    @fci = FranceConnectInformation.find_by(email_merge_token: email_merge_token_params)
+
+    if @fci.nil? || !@fci.valid_for_email_merge?
+      flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: APPLICATION_NAME)
+
+      redirect_to root_path
+    else
+      @fci.delete_email_merge_token!
+    end
+  end
 
   def securely_retrieve_fci
     @fci = FranceConnectInformation.find_by(merge_token: merge_token_params)
@@ -141,11 +162,19 @@ class FranceConnect::ParticulierController < ApplicationController
     params[:merge_token]
   end
 
+  def email_merge_token_params
+    params[:email_merge_token]
+  end
+
   def password_params
     params[:password]
   end
 
   def sanitized_email_params
-    params[:email]&.gsub(/[[:space:]]/, ' ')&.strip&.downcase
+    sanitize(params[:email])
+  end
+
+  def sanitize(string)
+    string&.gsub(/[[:space:]]/, ' ')&.strip&.downcase
   end
 end
