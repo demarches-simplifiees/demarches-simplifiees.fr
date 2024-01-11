@@ -302,7 +302,7 @@ describe 'The routing with rules', js: true do
 
     visit "users/activate?#{token_params}"
     fill_in :user_password, with: password
-    click_button 'Continuer'
+    click_button 'Définir le mot de passe'
 
     expect(page).to have_text('Mot de passe enregistré')
   end

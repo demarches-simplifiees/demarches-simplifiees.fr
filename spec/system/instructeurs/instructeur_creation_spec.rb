@@ -20,10 +20,9 @@ describe 'As an instructeur', js: true do
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"
-    expect(page).to have_content 'Choix du mot de passe'
     fill_in :user_password, with: TEST_PASSWORD
 
-    click_button 'Continuer'
+    click_button 'Définir le mot de passe'
 
     expect(page).to have_content 'Mot de passe enregistré'
   end

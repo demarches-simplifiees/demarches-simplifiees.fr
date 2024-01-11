@@ -783,10 +783,6 @@ en:
       closed_at: closed at
       auto_archive_on: will close at
   users:
-    activate:
-      new:
-        title: Pick a password
-        continue: Continue
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access_html: "You do not have access to this file.<br>Check that you were signed in as <b>%{email}</b> to fill this procedure.<br>If not, please log off"
