@@ -159,20 +159,13 @@ module Administrateurs
     def update_state
       @groupe_instructeur = procedure.groupe_instructeurs.find(params[:groupe_instructeur_id])
 
-      if closed_params? && @groupe_instructeur.id == procedure.defaut_groupe_instructeur.id
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
-          alert: "Il est impossible de désactiver le groupe d’instructeurs par défaut."
-      elsif @groupe_instructeur.update(closed: params[:closed])
+      if @groupe_instructeur.update(closed: params[:closed])
         state_for_notice = @groupe_instructeur.closed ? 'désactivé' : 'activé'
         redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
           notice: "Le groupe #{@groupe_instructeur.label} est #{state_for_notice}."
       else
-        @procedure = procedure
-        @instructeurs = paginated_instructeurs
-        @available_instructeur_emails = available_instructeur_emails
-
-        flash.now[:alert] = @groupe_instructeur.errors.full_messages
-        render :show
+        redirect_to admin_procedure_groupe_instructeur_path(procedure, @groupe_instructeur),
+          alert: @groupe_instructeur.errors.messages_for(:closed).to_sentence
       end
     end
 
