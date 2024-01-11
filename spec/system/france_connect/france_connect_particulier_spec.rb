@@ -76,7 +76,7 @@ describe 'France Connect Particulier Connexion' do
             end
 
             context 'and the user wants an email that belongs to another account', js: true, retry: 3 do
-              let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: 'TEST_PASSWORD') }
+              let!(:another_user) { create(:user, email: 'an_existing_email@a.com', password: TEST_PASSWORD) }
 
               scenario 'it uses another email that belongs to another account' do
                 page.find('#it-is-not-mine').click
