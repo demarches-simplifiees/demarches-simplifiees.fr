@@ -23,7 +23,7 @@ describe 'dropdown list with other option activated', js: true, retry: 3 do
     scenario 'Select other option and the other input hidden must appear', js: true, retry: 3 do
       fill_individual
 
-      find('.radios').find('label:last-child').find('input').select_option
+      find('.fr-fieldset__content .fr-radio-group:last-of-type input').select_option
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
 

@@ -1,6 +1,6 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
   = link_to admin_procedure_mail_templates_path(@procedure), class: 'fr-tile fr-enlarge-link' do
-    .fr-tile__body.flex.justify-between
+    .fr-tile__body.flex.column.align-center.justify-between
       %div
         - if error_messages.present?
           %span.icon.refuse
