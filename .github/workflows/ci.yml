@@ -112,7 +112,7 @@ jobs:
 
     strategy:
       matrix:
-        instances: [0, 1]
+        instances: [0, 1, 2, 3]
 
     steps:
       - uses: actions/checkout@v3
