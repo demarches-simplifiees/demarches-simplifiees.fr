@@ -78,6 +78,20 @@ describe RechercheController, type: :controller do
         end
       end
 
+      context 'when dossier is brouillon without groupe instructeur' do
+        let(:dossier2) { create(:dossier, :brouillon, procedure: procedure) }
+        let(:query) { dossier2.id }
+        before { dossier2.update(groupe_instructeur_id: nil) }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'does not return the dossier' do
+          subject
+          expect(assigns(:projected_dossiers).count).to eq(0)
+          expect(assigns(:dossier_not_in_instructor_group)).to eq(nil)
+        end
+      end
+
       context 'when instructeur is attached to the procedure but is not in the instructor group of the dossier' do
         let!(:gi_p1_1) { GroupeInstructeur.create(label: 'groupe 1', procedure: procedure) }
         let!(:gi_p1_2) { GroupeInstructeur.create(label: 'groupe 2', procedure: procedure) }
