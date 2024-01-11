@@ -141,6 +141,10 @@ class FranceConnect::ParticulierController < ApplicationController
     params[:merge_token]
   end
 
+  def email_merge_token_params
+    params[:email_merge_token]
+  end
+
   def password_params
     params[:password]
   end
