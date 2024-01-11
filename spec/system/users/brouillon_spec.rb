@@ -39,7 +39,7 @@ describe 'The user' do
     select('02 – Aisne', from: form_id_for('departements'))
     fill_in('Renseignez le code postal', with: '60400')
     # wait_until { all('label', text: 'Sélectionnez la commune dans la liste').size == 1 }
-    select('Brétigny (60400)', from: form_id_for('commune'))
+    select('Brétigny (60400)', from: form_id_for('Sélectionnez la commune'))
 
     # communes needs more time to be updated
     wait_until { champ_value_for('communes') == "Brétigny" }

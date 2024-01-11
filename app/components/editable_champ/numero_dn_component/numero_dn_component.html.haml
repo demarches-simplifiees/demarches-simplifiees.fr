@@ -2,19 +2,19 @@
   %span
     = @form.label :numero_dn, "DN"
   = @form.text_field :numero_dn,
-    value: @champ.numero_dn,
-    required: @champ.required?,
+    input_opts(value: @champ.numero_dn,
     placeholder: '0123456',
     style: 'width: 7em',
     pattern: "[0-9]{6,7}",
     aria: { describedby: @champ.describedby_id },
-    data: { numero_dn_target: 'dn' }
+    data: { numero_dn_target: 'dn' })
 
   %span
     = @form.label :date_de_naissance, t('.date')
   = @form.date_field :date_de_naissance,
-    value: @champ.date_de_naissance,
-    required: @champ.required?,
+    input_opts(value: @champ.date_de_naissance,
+    style: 'width: 10em',
     max: Date.today,
-    data: { numero_dn_target: 'ddn' }
+    data: { numero_dn_target: 'ddn' },
+    class: "width-33-desktop")
   .numero-dn-info{ id: dom_id(@champ, :status), data: { numero_dn_target: 'info' } }
