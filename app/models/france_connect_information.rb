@@ -26,7 +26,7 @@ class FranceConnectInformation < ApplicationRecord
 
   def create_merge_token!
     merge_token = SecureRandom.uuid
-    update(merge_token: merge_token, merge_token_created_at: Time.zone.now)
+    update(merge_token:, merge_token_created_at: Time.zone.now)
 
     merge_token
   end
