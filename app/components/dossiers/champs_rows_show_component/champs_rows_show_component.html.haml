@@ -18,6 +18,8 @@
             = render partial: "shared/champs/carte/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:dossier_link)
             = render partial: "shared/champs/dossier_link/show", locals: { champ: champ }
+          - when TypeDeChamp.type_champs.fetch(:drop_down_list)
+            = render partial: "shared/champs/drop_down_list/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
             = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)
