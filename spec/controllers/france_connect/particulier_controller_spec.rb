@@ -281,6 +281,7 @@ describe FranceConnect::ParticulierController, type: :controller do
 
         expect(fci.user).to eq(user)
         expect(fci.merge_token).to be_nil
+        expect(fci.email_merge_token).to be_nil
         expect(controller.current_user).to eq(user)
         expect(flash[:notice]).to eq("Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés")
       end
@@ -371,6 +372,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let(:merge_token) { fci.create_merge_token! }
     it 'renew token' do
       expect { post :resend_and_renew_merge_confirmation, params: { merge_token: merge_token } }.to change { fci.reload.merge_token }
+      expect(fci.email_merge_token).to be_present
       expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
     end
   end
