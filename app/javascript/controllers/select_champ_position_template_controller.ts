@@ -61,6 +61,7 @@ export class SelectChampPositionTemplateController extends ApplicationController
     if (stableIdDidChange) {
       changedSelectTarget.form?.requestSubmit();
     }
+    event.stopImmediatePropagation();
   }
 
   private getStableIdForSelect(select: HTMLSelectElement): string | null {
