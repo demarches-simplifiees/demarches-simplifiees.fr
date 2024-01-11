@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useState, useMemo } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useState,
+  useMemo,
+  type RefObject
+} from 'react';
 import type {
   LngLatBoundsLike,
   LngLat,
@@ -117,4 +123,31 @@ export function useStyle(
   useEffect(() => onStyleChange(style), [onStyleChange, style]);
 
   return { style, layers, setStyle, setLayerEnabled, setLayerOpacity };
+}
+
+function isElementVisible(
+  element: HTMLElement,
+  callback: (visible: boolean) => void
+) {
+  if (element.offsetWidth > 0 && element.offsetHeight > 0) {
+    callback(true);
+  } else {
+    callback(false);
+    const observer = new IntersectionObserver(
+      (entries) => callback(entries[0].isIntersecting == true),
+      { threshold: [0] }
+    );
+    observer.observe(element);
+    return () => observer.unobserve(element);
+  }
+}
+
+export function useElementVisible(element: RefObject<HTMLElement>) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (element.current) {
+      return isElementVisible(element.current, setVisible);
+    }
+  }, [element]);
+  return visible;
 }

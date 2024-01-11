@@ -13,7 +13,7 @@ import type { Style } from 'maplibre-gl';
 
 import invariant from 'tiny-invariant';
 
-import { useStyle } from './hooks';
+import { useStyle, useElementVisible } from './hooks';
 import { StyleControl } from './StyleControl';
 
 const Context = createContext<{ map?: Map | null }>({});
@@ -35,6 +35,7 @@ export function MapLibre({ children, layers }: MapLibreProps) {
     []
   );
   const containerRef = useRef<HTMLDivElement>(null);
+  const visible = useElementVisible(containerRef);
   const [map, setMap] = useState<Map | null>();
 
   const onStyleChange = useCallback(
@@ -48,7 +49,7 @@ export function MapLibre({ children, layers }: MapLibreProps) {
   const { style, ...mapStyleProps } = useStyle(layers, onStyleChange);
 
   useEffect(() => {
-    if (isSupported && !map) {
+    if (isSupported && visible && !map) {
       invariant(containerRef.current, 'Map container not found');
       const map = new Map({
         container: containerRef.current,
@@ -59,7 +60,7 @@ export function MapLibre({ children, layers }: MapLibreProps) {
         setMap(map);
       });
     }
-  }, [map, style, isSupported]);
+  }, [map, style, visible, isSupported]);
 
   if (!isSupported) {
     return (
