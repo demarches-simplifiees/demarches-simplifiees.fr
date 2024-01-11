@@ -134,12 +134,7 @@ class Instructeur < ApplicationRecord
   end
 
   def notifications_for_groupe_instructeurs(groupe_instructeurs)
-    Dossier
-      .visible_by_administration
-      .not_archived
-      .where(groupe_instructeur: groupe_instructeurs)
-      .merge(followed_dossiers)
-      .with_notifications
+    notifications_for(groupe_instructeur: groupe_instructeurs)
       .pluck(:state, :id)
       .reduce({ termines: [], en_cours: [] }) do |acc, e|
         if Dossier::TERMINE.include?(e[0])
@@ -149,6 +144,11 @@ class Instructeur < ApplicationRecord
         end
         acc
       end
+  end
+
+  def notifications_for_dossiers(dossier_ids)
+    notifications_for(id: dossier_ids)
+      .pluck(:id)
   end
 
   def procedure_ids_with_notifications(scope)
@@ -309,5 +309,14 @@ class Instructeur < ApplicationRecord
       avis: avis,
       messagerie: messagerie
     }
+  end
+
+  def notifications_for(condition)
+    Dossier
+      .visible_by_administration
+      .not_archived
+      .where(condition)
+      .merge(followed_dossiers)
+      .with_notifications
   end
 end
