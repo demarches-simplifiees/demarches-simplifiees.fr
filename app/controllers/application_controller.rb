@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
 
   before_action do
     Current.request_id = request.uuid
+    Current.user = current_user
   end
 
   def staging_authenticate
