@@ -3,14 +3,14 @@
     %meta{ "http-equiv": "Content-Type", content: "text/html; charset=UTF-8" }
     %meta{ "http-equiv": "X-UA-Compatible", content: "IE=edge" }
     %meta{ name: "viewport", content: "width=device-width, initial-scale=1" }
+    %meta{ name: "application-name", content: APPLICATION_NAME }
+    %meta{ name: "apple-mobile-web-app-title", content: APPLICATION_NAME }
     = csrf_meta_tags
 
     %title
       = t("dynamics.page_title")
 
-    = favicon_link_tag(image_url("#{FAVICON_16PX_SRC}"), type: "image/png", sizes: "16x16")
-    = favicon_link_tag(image_url("#{FAVICON_32PX_SRC}"), type: "image/png", sizes: "32x32")
-    = favicon_link_tag(image_url("#{FAVICON_96PX_SRC}"), type: "image/png", sizes: "96x96")
+    = render partial: "layouts/favicons"
 
   %body
     = yield
