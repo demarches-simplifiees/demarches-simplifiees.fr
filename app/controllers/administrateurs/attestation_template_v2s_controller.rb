@@ -69,6 +69,10 @@ module Administrateurs
       @attestation_template.update!(attestation_params)
     end
 
+    def create
+      @attestation_template.update!(editor_params)
+    end
+
     private
 
     def ensure_feature_active
