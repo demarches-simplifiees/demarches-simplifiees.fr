@@ -1,0 +1,39 @@
+= form_with url: instructeur_groupe_contact_information_path, model: @contact_information, local: true do |f|
+  = hidden_field_tag :from_admin, params[:from_admin]
+
+  = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
+    - c.body do
+      Votre démarche est hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se posent parfois des questions légitimes sur le processus administratif.
+      %br
+      %br
+      %strong Il est donc indispensable que les usagers puissent vous contacter
+      par le moyen de leur choix s’ils ont des questions sur votre démarche.
+      %br
+      %br
+      Ces informations de contact seront visibles par les utilisateurs de la démarche, affichées dans le menu « Aide », ainsi qu’en pied de page lors du dépôt d’un dossier.
+      %br
+      %br
+      ⚠️  En cas d’informations invalides, #{APPLICATION_NAME} se réserve le droit de suspendre la publication de la démarche.
+
+  = render Dsfr::InputComponent.new(form: f, attribute: :nom, input_type: :text_field) do |c|
+    - c.with_hint do
+      Indiquez le nom à utiliser pour contacter le groupe instructeur
+      (Exemple: Secrétariat de la Mairie)
+
+  = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field)
+  = render Dsfr::InputComponent.new(form: f, attribute: :telephone, input_type: :telephone_field)
+  = render Dsfr::InputComponent.new(form: f, attribute: :horaires, input_type: :text_area)
+  = render Dsfr::InputComponent.new(form: f, attribute: :adresse, input_type: :text_area)
+
+  - if procedure_id.present?
+    = hidden_field_tag :procedure_id, procedure_id
+
+  .sticky-action-footer
+    = f.submit "Enregistrer", class: "fr-btn fr-mr-2w"
+    = link_to "Annuler", instructeur_groupe_path(@groupe_instructeur, procedure_id: procedure_id), class: "fr-btn fr-btn--secondary"
+    - if [ "edit", "update"].include? params[:action]
+      = link_to 'Supprimer',
+        instructeur_groupe_contact_information_path(procedure_id: @procedure.id, groupe_id: @groupe_instructeur.id),
+          method: :delete,
+            data: { confirm: "Confirmez vous la suppression de ces informations de contact ?" },
+              class: 'fr-btn fr-btn--secondary'

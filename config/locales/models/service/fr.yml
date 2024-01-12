@@ -5,8 +5,7 @@ fr:
         one: 'Service'
         other: 'Services'
     attributes:
-      service:
-        siret: "Numéro TAHITI"
+      service: &service
         adresse: 'Adresse postale'
         email: 'Email de contact'
         telephone: 'Téléphone'
