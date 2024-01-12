@@ -18,9 +18,9 @@ class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
 
   def button_title
     if annotations?
-      "Ajouter une annotation"
+      "Ajouter une annotation"
     else
-      "Ajouter un champ"
+      "Ajouter un champ"
     end
   end
 

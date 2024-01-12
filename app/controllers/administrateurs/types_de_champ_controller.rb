@@ -64,7 +64,7 @@ module Administrateurs
     def move_and_morph
       source_type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
       target_type_de_champ = draft.find_and_ensure_exclusive_use(params[:target_stable_id])
-      @coordinate = @source_coordinate = draft.coordinate_for(source_type_de_champ)
+      @coordinate = draft.coordinate_for(source_type_de_champ)
       from = @coordinate.position
       to = draft.coordinate_for(target_type_de_champ).position
       @coordinate = draft.move_type_de_champ(@coordinate.stable_id, to)

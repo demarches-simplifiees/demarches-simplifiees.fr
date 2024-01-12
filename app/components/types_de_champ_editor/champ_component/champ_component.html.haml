@@ -1,7 +1,7 @@
 %li.type-de-champ.flex.column.justify-start.fr-mb-6w{ html_options }
   .type-de-champ-container
     .flex.justify-between.section.head
-      .position.flex.align-center= "##{@coordinate.position}"
+      .position.flex.align-center= @coordinate.position.to_s
       .fr-btn.fr-btn--tertiary-no-outline.handle.fr-icon-drag-move-2-line{ title: "Déplacer le champ vers le haut ou vers le bas" }
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-down-line.move-down{ move_button_options(:down) }

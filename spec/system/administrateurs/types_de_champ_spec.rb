@@ -38,7 +38,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     }
 
     # Champs are automatically saved
-    expect(page).to have_button('Ajouter un champ', disabled: false)
+    expect(page).to have_button('Ajouter un champ', disabled: false)
     page.refresh
     expect(page).to have_selector('.type-de-champ', count: 3)
 
@@ -111,7 +111,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     page.refresh
 
     within '.type-de-champ .editor-block' do
-      click_on 'Ajouter un champ'
+      click_on 'Ajouter un champ'
 
       fill_in 'Libellé du champ', with: 'libellé de champ 1'
     end
@@ -259,9 +259,9 @@ describe 'As an administrateur I can edit types de champ', js: true do
       scenario 'when select is focused, it seeds its options' do
         # once clicked, the select is updated with root champs options only, preselected on coordinates and have nice libelles
         page.find(initial_first_coordinate_selector).click
-        expect(page).to have_selector("#{initial_first_coordinate_selector} option", count: 4)
+        expect(page).to have_selector("#{initial_first_coordinate_selector} option", count: 3)
         expect(page.find(initial_first_coordinate_selector).find("option[selected]").value.to_s).to eq(initial_first_coordinate.stable_id.to_s)
-        expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(["Selectionner une option", '0 first_tdc', '1 middle_tdc', '2 last_tdc'])
+        expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(['0 first_tdc', '1 middle_tdc', '2 last_tdc'])
 
         # renaming a tdc renames it's option
         within "##{dom_id(initial_first_coordinate, :type_de_champ_editor)}" do
@@ -269,7 +269,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
         end
         wait_until { initial_first_coordinate.reload.libelle == 'renamed' }
         page.find(initial_first_coordinate_selector).click
-        expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(["Selectionner une option", '0 renamed', '1 middle_tdc', '2 last_tdc'])
+        expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(['0 renamed', '1 middle_tdc', '2 last_tdc'])
       end
 
       scenario 'when select is changed, it move the coordinates' do
@@ -287,7 +287,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
         # check reorder rerendered champ component between target->destination
         reordered_coordinates.map(&:reload).map do |coordinate|
-          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: "##{coordinate.position}")
+          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position)
         end
       end
     end
@@ -317,10 +317,10 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       scenario 'when first child select is focused, seed with repetition only tdcs' do
         page.find(first_child_coordinate_selector).click
-        expect(page).to have_selector("#{first_child_coordinate_selector} option", count: 3)
+        expect(page).to have_selector("#{first_child_coordinate_selector} option", count: 2)
 
         opts = page.find(first_child_coordinate_selector).all("option").map(&:text)
-        expect(opts).to match_array(["Selectionner une option"] + children_coordinates.map { "#{_1.position} #{_1.libelle}" })
+        expect(opts).to match_array(children_coordinates.map { "#{_1.position} #{_1.libelle}" })
       end
 
       scenario 'when first child select is changed, move champ in repetition' do

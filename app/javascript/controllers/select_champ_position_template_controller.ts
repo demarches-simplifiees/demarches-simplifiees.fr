@@ -44,6 +44,7 @@ export class SelectChampPositionTemplateController extends ApplicationController
         .map((option) => {
           if (option.value == focusedSelectStableId) {
             option.setAttribute('selected', 'selected');
+            option.setAttribute('disabled', 'disabled');
           }
 
           return option.outerHTML;
