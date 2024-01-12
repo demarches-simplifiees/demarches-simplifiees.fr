@@ -25,6 +25,6 @@ class PrefillDescriptionsController < ApplicationController
   end
 
   def prefill_description_params
-    params.require(:type_de_champ).permit(:selected_type_de_champ_ids)
+    params.require(:procedure).permit(:selected_type_de_champ_ids, :identity_items_selected)
   end
 end

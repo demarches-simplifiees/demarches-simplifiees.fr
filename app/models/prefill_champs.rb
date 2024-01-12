@@ -1,4 +1,4 @@
-class PrefillParams
+class PrefillChamps
   attr_reader :dossier, :params
 
   def initialize(dossier, params)
