@@ -73,9 +73,12 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def invalid_rule?
-    rule = routing_rule
-    return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
-    return true if !routing_rule_matches_tdc?
+    !valid_rule?
+  end
+
+  def valid_rule?
+    return false if routing_rule.nil?
+    ([routing_rule.left, routing_rule, routing_rule.right] in [ChampValue, Eq | NotEq, Constant]) && routing_rule_matches_tdc?
   end
 
   def non_unique_rule?
