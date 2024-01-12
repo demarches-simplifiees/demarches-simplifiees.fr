@@ -43,7 +43,7 @@
             %h2.fr-h6 En-tête
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
-            = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: false, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: @attestation_template.official_layout?, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
               - c.with_hint { "Exemple: Ministère de la Mer. 3 lignes maximum" }
 
           .fr-fieldset__element{ data: { attestation_target: 'logoAttachmentFieldset' } }
