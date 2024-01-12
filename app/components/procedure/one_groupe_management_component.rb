@@ -17,6 +17,10 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
     @groupe_instructeur.routing_rule&.right || empty
   end
 
+  def operator_name
+    @groupe_instructeur.routing_rule&.class&.name || empty
+  end
+
   def targeted_champ_tag
     select_tag(
       'targeted_champ',
@@ -37,6 +41,21 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
     @revision
       .routable_types_de_champ
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
+  end
+
+  def operator_tag
+    select_tag('operator_name',
+      options_for_select(
+        options_for_operator_tag,
+        selected: operator_name
+      ),
+      class: 'fr-select')
+  end
+
+  def options_for_operator_tag
+    [Eq, NotEq]
+      .map(&:name)
+      .map { |name| [t(name, scope: 'logic.operators'), name] }
   end
 
   def value_tag

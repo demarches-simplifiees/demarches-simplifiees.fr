@@ -10,9 +10,9 @@ if ENV.key?('SENDINBLUE_BALANCING_VALUE')
     ActionMailer::Base.sendinblue_settings = {
       user_name: Rails.application.secrets.sendinblue[:username],
       password: Rails.application.secrets.sendinblue[:smtp_key],
-      address: 'smtp-relay.brevo.com',
+      address: ENV.fetch("SENDINBLUE_SMTP_ADDRESS", "smtp-relay.brevo.com"),
       domain: 'smtp-relay.brevo.com',
-      port: '587',
+      port: ENV.fetch("SENDINBLUE_SMTP_PORT", "587"),
       authentication: :cram_md5
     }
   end

@@ -13,6 +13,7 @@ class GroupeInstructeur < ApplicationRecord
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 
   has_one :defaut_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :defaut_groupe_instructeur_id, dependent: :nullify, inverse_of: :defaut_groupe_instructeur
+  has_one :contact_information
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
@@ -73,9 +74,12 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def invalid_rule?
-    rule = routing_rule
-    return true if !(rule.is_a?(Logic::Eq) && rule.left.is_a?(Logic::ChampValue) && rule.right.is_a?(Logic::Constant))
-    return true if !routing_rule_matches_tdc?
+    !valid_rule?
+  end
+
+  def valid_rule?
+    return false if routing_rule.nil?
+    ([routing_rule.left, routing_rule, routing_rule.right] in [ChampValue, Eq | NotEq, Constant]) && routing_rule_matches_tdc?
   end
 
   def non_unique_rule?

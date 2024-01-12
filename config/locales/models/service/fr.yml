@@ -5,13 +5,13 @@ fr:
         one: 'Service'
         other: 'Services'
     attributes:
-      service:
-        siret: "Numéro TAHITI"
+      service: &service
         adresse: 'Adresse postale'
         email: 'Email de contact'
         telephone: 'Téléphone'
         nom: Nom du service
         organisme: Organisme(s)
+        siret: Numéro TAHITI
         hints:
           nom: |
             Indiquez le nom et la direction rattachée, séparés par une virgule.

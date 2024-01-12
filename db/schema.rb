@@ -271,6 +271,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.index ["instructeur_id"], name: "index_commentaires_on_instructeur_id"
   end
 
+  create_table "contact_informations", force: :cascade do |t|
+    t.text "adresse", null: false
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.text "horaires", null: false
+    t.string "nom", null: false
+    t.string "telephone", null: false
+    t.datetime "updated_at", null: false
+    t.index ["groupe_instructeur_id", "nom"], name: "index_contact_informations_on_gi_and_nom", unique: true
+    t.index ["groupe_instructeur_id"], name: "index_contact_informations_on_groupe_instructeur_id"
+  end
+
   create_table "default_zones_administrateurs", id: false, force: :cascade do |t|
     t.bigint "administrateur_id"
     t.bigint "zone_id"
@@ -1051,6 +1064,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
   add_foreign_key "commentaires", "instructeurs"
+  add_foreign_key "contact_informations", "groupe_instructeurs"
   add_foreign_key "dossier_assignments", "dossiers"
   add_foreign_key "dossier_batch_operations", "batch_operations"
   add_foreign_key "dossier_batch_operations", "dossiers"

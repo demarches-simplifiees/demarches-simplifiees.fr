@@ -1,8 +1,8 @@
-= turbo_stream.replace "#{dom_id(@prefill_description)}_types_de_champs" do
-  = render "types_de_champs", prefill_description: @prefill_description
+= turbo_stream.replace dom_id(@prefill_description, :prefillable_entities) do
+  = render "prefillable_entities", prefill_description: @prefill_description
 
-= turbo_stream.replace "#{dom_id(@prefill_description)}_url" do
+= turbo_stream.replace dom_id(@prefill_description, :url) do
   = render "prefill_link", prefill_description: @prefill_description
 
-= turbo_stream.replace "#{dom_id(@prefill_description)}_query" do
+= turbo_stream.replace dom_id(@prefill_description, :query) do
   = render "prefill_query", prefill_description: @prefill_description

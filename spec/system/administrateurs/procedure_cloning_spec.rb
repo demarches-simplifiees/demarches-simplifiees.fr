@@ -48,7 +48,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true, retry: 3 do
 
       # select zone
       find("#zones .fr-btn").click
-      check Zone.last.current_label
+      check Zone.last.current_label, allow_label_click: true
       click_on 'Enregistrer'
 
       # then publish
@@ -85,7 +85,7 @@ describe 'As an administrateur I wanna clone a procedure', js: true, retry: 3 do
 
       # select zone
       find("#zones .fr-btn").click
-      check Zone.last.current_label
+      check Zone.last.current_label, allow_label_click: true
       click_on 'Enregistrer'
 
       # then publish

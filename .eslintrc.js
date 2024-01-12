@@ -20,7 +20,8 @@ module.exports = {
     'prettier/prettier': 'error',
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'error',
-    'react/prop-types': 'off'
+    'react/prop-types': 'off',
+    'react/no-deprecated': 'off'
   },
   settings: {
     react: { version: 'detect' }

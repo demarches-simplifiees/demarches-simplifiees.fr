@@ -6,10 +6,12 @@ en:
         other: 'Services'
     attributes:
       service:
-        siret: "TAHITI number"
         adresse: 'Mail address'
         email: 'Email'
         telephone: 'Phone'
+        nom: Service name
+        organisme: Organism(s)
+        siret: TAHITI number
     errors:
       models:
         service:

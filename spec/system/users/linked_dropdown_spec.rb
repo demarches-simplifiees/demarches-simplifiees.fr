@@ -80,9 +80,9 @@ describe 'linked dropdown lists' do
   end
 
   def fill_individual
-    choose 'Monsieur'
-    fill_in('individual_prenom', with: 'prenom')
-    fill_in('individual_nom', with: 'nom')
+    find('label', text: 'Monsieur').click
+    fill_in('identite_champ_first_name', with: 'prenom')
+    fill_in('identite_champ_last_name', with: 'nom')
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end

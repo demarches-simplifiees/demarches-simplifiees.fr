@@ -10,10 +10,10 @@
 
     = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }, {}, class: 'fr-select'
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field, opts: { placeholder: "14 chiffres, sans espace" }) do |c|
+  = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field, opts: { placeholder: "6 caractères, sans espace" }) do |c|
     - c.with_hint do
-      = "Indiquez le numéro TAHITI de l’organisme dont ce service dépend. Rechercher le SIRET sur "
-      = link_to("Annuaire de l’ISPF", annuaire_link, **external_link_attributes)
+      = "Indiquez le numéro TAHITI de l’organisme dont ce service dépend. Rechercher le Numéro TAHITI sur"
+      = link_to("l’annuaire de l’ISPF", annuaire_link, **external_link_attributes)
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
     - c.body do

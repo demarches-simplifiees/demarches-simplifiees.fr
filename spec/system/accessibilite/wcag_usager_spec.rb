@@ -109,9 +109,9 @@ describe 'wcag rules for usager', js: true, retry: 3 do
     scenario "dépot d'un dossier" do
       click_on 'Commencer la démarche'
 
-      choose 'Monsieur'
-      fill_in('individual_prenom', with: 'prenom')
-      fill_in('individual_nom', with: 'nom')
+      find('label', text: 'Monsieur')
+      fill_in('identite_champ_first_name', with: 'prenom')
+      fill_in('identite_champ_last_name', with: 'nom')
       click_on 'Continuer'
 
       expect(page).to be_axe_clean
