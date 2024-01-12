@@ -113,7 +113,7 @@
               %li
                 = f.button 'Enregistrer', class: 'fr-btn'
               %li
-                = link_to 'Prévisualiser l’attestation PDF', admin_procedure_attestation_template_v2_path(@procedure), class: 'fr-btn fr-btn--secondary', target: '_blank', rel: 'noopener'
+                = link_to 'Prévisualiser l’attestation PDF', admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), class: 'fr-btn fr-btn--secondary', target: '_blank', rel: 'noopener'
               %li
                 = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--tertiary-no-outline', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
           .fr-col-5
