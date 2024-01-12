@@ -140,13 +140,24 @@ describe RechercheController, type: :controller do
     describe 'by champs' do
       let(:query) { 'district A' }
 
-      before { subject }
-
       it { is_expected.to have_http_status(200) }
 
       it 'returns the expected dossier' do
+        subject
         expect(assigns(:projected_dossiers).count).to eq(1)
         expect(assigns(:projected_dossiers).first.dossier_id).to eq(dossier.id)
+      end
+
+      context 'when dossier has notification' do
+        before do
+          instructeur.follow(dossier)
+          dossier.touch(:last_commentaire_updated_at)
+        end
+
+        it 'assigns notification' do
+          subject
+          expect(assigns(:notifications_dossier_ids)).to eq([dossier.id])
+        end
       end
 
       context 'as an expert' do
@@ -156,6 +167,7 @@ describe RechercheController, type: :controller do
         it { is_expected.to have_http_status(200) }
 
         it 'returns only the dossier available to the expert' do
+          subject
           expect(assigns(:projected_dossiers).count).to eq(1)
           expect(assigns(:projected_dossiers).first.dossier_id).to eq(dossier_with_expert.id)
         end

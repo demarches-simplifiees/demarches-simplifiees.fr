@@ -38,6 +38,8 @@
             - if instructeur_and_expert_dossier
               %td.text-center.cell-link
                 = dsfr_icon('fr-icon-file-text-line')
+                - if @notifications_dossier_ids.include?(p.dossier_id)
+                  %span.notifications{ 'aria-label': 'notifications' }
               %td.number-col
                 .cell-link= p.dossier_id
               %td
@@ -55,6 +57,8 @@
               %td.text-center
                 %a.cell-link{ href: path }
                   = dsfr_icon('fr-icon-file-text-line')
+                  - if @notifications_dossier_ids.include?(p.dossier_id)
+                    %span.notifications{ 'aria-label': 'notifications' }
 
               %td.number-col
                 %a.cell-link{ href: path }= p.dossier_id
