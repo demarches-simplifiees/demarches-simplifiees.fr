@@ -57,10 +57,6 @@ module Administrateurs
       end
     end
 
-    def move
-      draft.move_type_de_champ(params[:stable_id], params[:position].to_i)
-    end
-
     def move_and_morph
       source_type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
       target_type_de_champ = draft.find_and_ensure_exclusive_use(params[:target_stable_id])

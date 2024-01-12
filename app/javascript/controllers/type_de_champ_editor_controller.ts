@@ -15,12 +15,10 @@ const AUTOSAVE_DEBOUNCE_DELAY = debounce_delay;
 export class TypeDeChampEditorController extends ApplicationController {
   static values = {
     typeDeChampStableId: String,
-    moveUrl: String,
     moveUpUrl: String,
     moveDownUrl: String
   };
 
-  declare readonly moveUrlValue: string;
   declare readonly moveUpUrlValue: string;
   declare readonly moveDownUrlValue: string;
   declare readonly isVisible: boolean;
@@ -33,9 +31,6 @@ export class TypeDeChampEditorController extends ApplicationController {
     this.#latestPromise = Promise.resolve();
     this.on('change', (event) => this.onChange(event));
     this.on('input', (event) => this.onInput(event));
-    this.on('sortable:end', (event) =>
-      this.onSortableEnd(event as CustomEvent)
-    );
   }
 
   disconnect() {
@@ -75,15 +70,6 @@ export class TypeDeChampEditorController extends ApplicationController {
         }
       }
     });
-  }
-
-  private onSortableEnd(event: CustomEvent<{ position: number }>) {
-    const position = event.detail.position;
-    if (event.target == this.element) {
-      const form = createForm(this.moveUrlValue, 'patch');
-      createHiddenInput(form, 'position', position);
-      this.requestSubmitForm(form);
-    }
   }
 
   private save(form?: HTMLFormElement | null): void {
