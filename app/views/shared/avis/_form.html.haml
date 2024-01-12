@@ -13,7 +13,7 @@
     = hidden_field_tag  'avis[emails]', nil
     .fr-input-group
       = react_component("ComboMultiple",
-          options: @dossier.procedure.experts_require_administrateur_invitation ? @experts_emails : [],
+          options: current_expert_not_instructeur? ? [] : @experts_emails,
           selected: [], disabled: [],
           label: 'Emails',
           group: '.ask-avis',
