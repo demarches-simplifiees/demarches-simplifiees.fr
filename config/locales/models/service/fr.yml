@@ -11,6 +11,7 @@ fr:
         telephone: 'Téléphone'
         nom: Nom du service
         organisme: Organisme(s)
+        siret: Numéro TAHITI
         hints:
           nom: |
             Indiquez le nom et la direction rattachée, séparés par une virgule.
