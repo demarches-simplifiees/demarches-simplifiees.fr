@@ -5,7 +5,7 @@ RSpec.describe Instructeurs::SVASVRDecisionBadgeComponent, type: :component do
   let(:with_label) { false }
 
   before do
-    travel_to DateTime.new(2023, 9, 1)
+    travel_to Time.zone.local(2023, 9, 1)
   end
 
   context 'with dossier object' do
