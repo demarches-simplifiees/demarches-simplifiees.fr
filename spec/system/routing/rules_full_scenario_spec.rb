@@ -262,9 +262,9 @@ describe 'The routing with rules', js: true, retry: 3 do
     visit commencer_path(path: procedure.reload.path)
     click_on 'Commencer la démarche'
 
-    choose 'Monsieur'
-    fill_in 'individual_nom',    with: 'Nom'
-    fill_in 'individual_prenom', with: 'Prenom'
+    find('label', text: 'Monsieur').click
+    fill_in('identite_champ_first_name', with: 'Prenom')
+    fill_in('identite_champ_last_name', with: 'Nom')
     click_button('Continuer')
 
     # the old system should not be present

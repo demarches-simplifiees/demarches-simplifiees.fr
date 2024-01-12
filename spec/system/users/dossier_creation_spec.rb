@@ -21,9 +21,9 @@ describe 'Creating a new dossier:' do
         expect(page).to have_current_path identite_dossier_path(user.reload.dossiers.last)
         expect(page).to have_title(libelle)
 
-        choose 'Monsieur'
-        fill_in 'individual_nom',    with: 'Nom'
-        fill_in 'individual_prenom', with: 'Prenom'
+        find('label', text: 'Monsieur').click
+        fill_in('identite_champ_first_name', with: 'Prenom')
+        fill_in('identite_champ_last_name', with: 'Nom')
       end
 
       shared_examples 'the user can create a new draft' do
@@ -41,7 +41,7 @@ describe 'Creating a new dossier:' do
         let(:expected_birthday) { Date.new(1987, 10, 14) }
 
         before do
-          fill_in 'individual_birthdate', with: birthday_format
+          fill_in 'identite_champ_birthdate', with: birthday_format
         end
 
         context 'when the browser supports `type=date` input fields' do
