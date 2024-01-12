@@ -21,7 +21,7 @@
             %th Démarche
             %th Demandeur
             %th.status-col Statut
-            %th.action-col.follow-col
+            %th.follow-col
         %tbody
         - @projected_dossiers.each do |p|
           - procedure_libelle, user_email, procedure_id = p.columns
@@ -67,7 +67,7 @@
 
 
             - if instructeur_dossier && expert_dossier
-              %td.action-col.follow-col
+              %td.follow-col
                 = render Dropdown::MenuComponent.new(wrapper: :div, button_options: {class: ['fr-btn--sm']}) do |menu|
                   - menu.with_button_inner_html do
                     Actions
@@ -86,12 +86,12 @@
 
             - elsif instructeur_dossier
               - if hidden_by_administration
-                %td.action-col.follow-col
+                %td.follow-col
                   = link_to restore_instructeur_dossier_path(procedure_id, p.dossier_id), method: :patch, class: "button primary" do
                     = t('views.instructeurs.dossiers.restore')
 
               - else
-                %td.action-col.follow-col
+                %td.follow-col
                   %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                     = render partial: "instructeurs/procedures/dossier_actions",
                                                             locals: { procedure_id: procedure_id,
