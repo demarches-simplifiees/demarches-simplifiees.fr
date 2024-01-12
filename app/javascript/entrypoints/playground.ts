@@ -1,5 +1,5 @@
 import { createGraphiQLFetcher } from '@graphiql/toolkit';
-import { useExplorerPlugin } from '@graphiql/plugin-explorer';
+import { explorerPlugin } from '@graphiql/plugin-explorer';
 import { GraphiQL } from 'graphiql';
 import { createElement, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -17,15 +17,11 @@ const fetcher = createGraphiQLFetcher({
 
 function GraphiQLWithExplorer() {
   const [query, setQuery] = useState(defaultQuery);
-  const explorerPlugin = useExplorerPlugin({
-    query: query ?? '',
-    onEdit: setQuery,
-    showAttribution: false
-  });
+  const explorer = explorerPlugin({ showAttribution: false });
   return createElement(GraphiQL, {
     fetcher: fetcher,
     defaultEditorToolsVisibility: true,
-    plugins: [explorerPlugin],
+    plugins: [explorer],
     query: query,
     variables: defaultVariables,
     onEditQuery: setQuery,

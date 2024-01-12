@@ -1494,7 +1494,7 @@ describe Dossier, type: :model do
   end
 
   describe '#repasser_en_instruction!' do
-    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now) }
+    let(:dossier) { create(:dossier, :refuse, :with_attestation, :with_justificatif, archived: true, termine_close_to_expiration_notice_sent_at: Time.zone.now, sva_svr_decision_on: 1.day.ago) }
     let!(:instructeur) { create(:instructeur) }
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
@@ -1512,6 +1512,7 @@ describe Dossier, type: :model do
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
     it { expect(dossier.attestation).to be_nil }
+    it { expect(dossier.sva_svr_decision_on).to be_nil }
     it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
     it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
