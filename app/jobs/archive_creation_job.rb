@@ -1,4 +1,6 @@
 class ArchiveCreationJob < ApplicationJob
+  discard_on ActiveRecord::RecordNotFound
+
   queue_as :archives
 
   def max_run_time
