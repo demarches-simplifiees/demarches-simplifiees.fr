@@ -124,12 +124,12 @@ export class AutosaveController extends ApplicationController {
   private showSpinner(champElement: Element) {
     this.#spinnerTimeoutId = setTimeout(() => {
       // do not do anything if there is already a spinner for this champ, like SIRET champ
-      if (!champElement.querySelector('.spinner')) {
+      if (!champElement.nextElementSibling?.classList.contains('spinner')) {
         const spinner = document.createElement('div');
         spinner.classList.add('spinner', 'spinner-removable');
         spinner.setAttribute('aria-live', 'live');
         spinner.setAttribute('aria-label', 'Chargement en cours…');
-        champElement.appendChild(spinner);
+        champElement.insertAdjacentElement('afterend', spinner);
       }
     }, AUTOSAVE_CONDITIONAL_SPINNER_DEBOUNCE_DELAY);
   }
