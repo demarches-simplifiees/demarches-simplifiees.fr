@@ -35,11 +35,13 @@ describe ActiveStorage::DownloadableFile do
       let(:available_blob_key) { 'available' }
       let(:unavailable_blob_key) { 'broken' }
       let(:active_storage_client) { double }
-      let(:active_storage_service) { double(client: active_storage_client, container: object_storage_container) }
+      let(:active_storage_service) { double(container: object_storage_container) }
 
       before do
         require 'fog/openstack'
         Rails.application.config.active_storage.service = :openstack
+
+        allow(ActiveStorage::DownloadableFile).to receive(:client).and_return(active_storage_client)
       end
       after { Rails.application.config.active_storage.service = :test }
 

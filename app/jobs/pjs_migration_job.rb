@@ -1,3 +1,5 @@
+require 'fog/openstack'
+
 class PjsMigrationJob < ApplicationJob
   queue_as :pj_migration_jobs
 

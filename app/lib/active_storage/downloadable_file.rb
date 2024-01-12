@@ -1,3 +1,5 @@
+require 'fog/openstack'
+
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(
     dossiers,
@@ -20,7 +22,6 @@ class ActiveStorage::DownloadableFile
         true
       else
         service = file.blob.service
-        client = service.client
         begin
           client.head_object(service.container, file.blob.key)
           true
@@ -32,6 +33,13 @@ class ActiveStorage::DownloadableFile
   end
 
   private
+
+  def self.client
+    credentials = Rails.application.config.active_storage
+      .service_configurations['openstack']['credentials']
+
+    Fog::OpenStack::Storage.new(credentials)
+  end
 
   def self.bill_and_path(bill)
     [
