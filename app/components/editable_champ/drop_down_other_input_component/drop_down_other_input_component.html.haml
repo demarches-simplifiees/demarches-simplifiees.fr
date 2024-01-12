@@ -1,4 +1,5 @@
-.drop_down_other
-  .notice
-    %label{ for: dom_id(@champ, :value_other) } Veuillez saisir votre autre choix
-  = @form.text_field :value_other, maxlength: 200, size: nil, id: dom_id(@champ, :value_other)
+.drop_down_other.fr-mt-2w
+  .fr-input-group
+    %label.fr-label{ for: dom_id(@champ, :value_other) } Veuillez saisir votre autre choix
+
+    = @form.text_field :value_other, maxlength: 200, size: nil, id: dom_id(@champ, :value_other), class: 'fr-input'

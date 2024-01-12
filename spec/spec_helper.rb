@@ -18,7 +18,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'rspec/retry'
 
-TEST_PASSWORD = 'PARAU TAHITI ‘OE'
+SECURE_PASSWORD = 'PARAU TAHITI ‘OE'
 
 RSpec.configure do |config|
   config.filter_run_excluding disable: true

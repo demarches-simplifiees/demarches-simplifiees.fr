@@ -38,6 +38,19 @@ RSpec.describe Expert, type: :model do
       end
     end
 
+    context 'when an old expert access a hidden procedure' do
+      let(:procedure) { create(:procedure, hidden_at: 1.month.ago) }
+
+      before do
+        procedure.experts << old_expert
+        subject
+      end
+
+      it 'transfers the access to the new expert' do
+        expect(procedure.reload.experts).to match_array(new_expert)
+      end
+    end
+
     context 'when both expert access a procedure' do
       let(:procedure) { create(:procedure) }
 

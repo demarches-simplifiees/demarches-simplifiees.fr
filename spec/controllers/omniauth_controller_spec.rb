@@ -199,7 +199,7 @@ describe OmniauthController, type: :controller do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { 'EXISTING_account@a.com ' }
-    let(:password) { TEST_PASSWORD }
+    let(:password) { SECURE_PASSWORD }
     let(:format) { :turbo_stream }
 
     subject { post :merge_with_existing_account, params: { merge_token:, email:, password:, provider: }, format: }
@@ -265,7 +265,7 @@ describe OmniauthController, type: :controller do
     context 'when the merge_token is ok and the user is found' do
       subject { post :mail_merge_with_existing_account, params: { merge_token: fci.merge_token, provider: } }
 
-      let!(:user) { create(:user, email: email, password: TEST_PASSWORD) }
+      let!(:user) { create(:user, email: email, password: SECURE_PASSWORD) }
 
       it 'merges the account, signs in, and delete the merge token' do
         subject
@@ -278,7 +278,7 @@ describe OmniauthController, type: :controller do
       end
 
       context 'but the targeted user is an instructeur' do
-        let!(:user) { create(:instructeur, email: email, password: TEST_PASSWORD).user }
+        let!(:user) { create(:instructeur, email: email, password: SECURE_PASSWORD).user }
 
         it 'redirects to the new session' do
           subject

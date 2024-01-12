@@ -22,6 +22,14 @@ class Champs::DropDownListChamp < Champ
     end
   end
 
+  def html_label?
+    !render_as_radios?
+  end
+
+  def legend_label?
+    render_as_radios?
+  end
+
   def selected
     other? ? OTHER : value
   end
@@ -62,8 +70,12 @@ class Champs::DropDownListChamp < Champ
     options.include?(value)
   end
 
-  def remove_option(options)
-    update_column(:value, nil)
+  def remove_option(options, touch = false)
+    if touch
+      update(value: nil)
+    else
+      update_column(:value, nil)
+    end
   end
 
   private

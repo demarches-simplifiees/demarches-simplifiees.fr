@@ -8,6 +8,30 @@ module Dsfr
 
       renders_one :hint
 
+      def dsfr_group_classname
+        if dsfr_champ_container == :fieldset
+          'fr-fieldset'
+        else
+          "#{dsfr_input_classname}-group"
+        end
+      end
+
+      def input_group_error_class_names
+        {
+          "#{dsfr_group_classname}--error" => errors_on_attribute?,
+          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute?
+        }
+      end
+
+      def errors_on_attribute?
+        errors.has_key?(attribute_or_rich_body)
+      end
+
+      # errors helpers
+      def error_full_messages
+        errors.full_messages_for(attribute_or_rich_body)
+      end
+
       private
 
       # lookup for edge case from `form.rich_text_area`
@@ -21,15 +45,14 @@ module Dsfr
         end
       end
 
-      def input_group_error_class_names
-        {
-          "fr-input-group--error": errors_on_attribute?,
-          "fr-input-group--valid": !errors_on_attribute? && errors_on_another_attribute?
-        }
+      def fr_fieldset?
+        !['fr-input', 'fr-radio', 'fr-select'].include?(dsfr_input_classname)
       end
 
       def input_error_class_names
-        { 'fr-input--error': errors_on_attribute? }
+        {
+          "#{dsfr_input_classname}--error": errors_on_attribute?
+        }
       end
 
       def input_error_opts
@@ -70,21 +93,8 @@ module Dsfr
         @opts
       end
 
-      def describedby_id
-        dom_id(@champ, :error_full_messages)
-      end
-
       def errors_on_another_attribute?
         !errors.empty?
-      end
-
-      def errors_on_attribute?
-        errors.has_key?(attribute_or_rich_body)
-      end
-
-      # errors helpers
-      def error_full_messages
-        errors.full_messages_for(attribute_or_rich_body)
       end
 
       def map_array_to_hash_with_true(array_or_string_or_nil)

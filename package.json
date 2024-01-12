@@ -1,9 +1,9 @@
 {
   "dependencies": {
-    "@coldwired/actions": "^0.11.1",
+    "@coldwired/actions": "^0.11.2",
     "@coldwired/turbo-stream": "^0.11.1",
     "@coldwired/utils": "^0.11.1",
-    "@gouvfr/dsfr": "^1.7.2",
+    "@gouvfr/dsfr": "^1.10.0",
     "@graphiql/plugin-explorer": "^0.2.0",
     "@graphiql/toolkit": "^0.8.4",
     "@headlessui/react": "^1.6.6",
@@ -79,7 +79,7 @@
     "postcss": "^8.4.23",
     "prettier": "^2.8.8",
     "typescript": "^5.0.4",
-    "vite": "^4.3.0",
+    "vite": "^4.3.9",
     "vite-plugin-full-reload": "^1.0.5",
     "vite-plugin-ruby": "^3.2.2",
     "vitest": "^0.31.0"
@@ -95,7 +95,7 @@
     "coverage": "vitest run --coverage"
   },
   "engines": {
-    "node": ">= 16.*"
+    "node": ">= 18.17.0"
   },
   "graphdoc": {
     "schemaFile": "./app/graphql/schema.json",

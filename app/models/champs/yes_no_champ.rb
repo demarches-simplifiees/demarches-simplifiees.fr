@@ -1,4 +1,12 @@
 class Champs::YesNoChamp < Champs::BooleanChamp
+  def legend_label?
+    true
+  end
+
+  def html_label?
+    false
+  end
+
   def yes_input_id
     "#{input_id}-yes"
   end

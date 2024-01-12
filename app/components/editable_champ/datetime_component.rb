@@ -1,4 +1,8 @@
 class EditableChamp::DatetimeComponent < EditableChamp::EditableChampBaseComponent
+  def dsfr_input_classname
+    'fr-input'
+  end
+
   def formatted_value_for_datetime_locale
     if @champ.valid? && @champ.value.present?
       # convert to a format that the datetime-local input can understand

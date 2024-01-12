@@ -1,6 +1,6 @@
 describe 'Protecting against request forgeries:', :allow_forgery_protection, :show_exception_pages do
   let(:user) { create(:user, password: password) }
-  let(:password) { TEST_PASSWORD }
+  let(:password) { SECURE_PASSWORD }
 
   before do
     visit new_user_session_path

@@ -99,14 +99,15 @@ describe GroupeInstructeur, type: :model do
   end
 
   describe "active group validations" do
-    context "there is at least one active groupe instructeur" do
-      let(:gi_active) { procedure.defaut_groupe_instructeur }
-      let(:gi_closed) { create(:groupe_instructeur, procedure:) }
-      before do
-        gi_active
-        gi_closed.update(closed: true)
-      end
+    let(:gi_active) { procedure.defaut_groupe_instructeur }
+    let(:gi_closed) { create(:groupe_instructeur, procedure:) }
 
+    before do
+      gi_active
+      gi_closed.update(closed: true)
+    end
+
+    context "there is one active groupe instructeur" do
       it "closed is valid when there is one other active groupe" do
         expect(gi_active).to be_valid
         expect(gi_closed).to be_valid
@@ -114,6 +115,15 @@ describe GroupeInstructeur, type: :model do
 
       it "closed is invalid when there is no active groupe" do
         gi_active.closed = true
+        expect(gi_active).not_to be_valid
+      end
+    end
+
+    context "there are many active groupes instructeurs" do
+      let!(:second_gi_active) { create(:groupe_instructeur, procedure:) }
+
+      it "closed is invalid for defaut groupe instructeur even if many active groupes" do
+        gi_active.update(closed: true)
         expect(gi_active).not_to be_valid
       end
     end

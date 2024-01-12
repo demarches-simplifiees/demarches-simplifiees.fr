@@ -7,7 +7,7 @@
         = hidden_field_tag 'statuses[]', status, id: "status_#{status}"
       = hidden_field_tag 'from_publication_date', @filter.from_publication_date if @filter.from_publication_date.present?
 
-      = f.label 'email', 'Recercher des administrateurs par email', class: 'fr-label'
+      = f.label 'email', 'Rechercher des administrateurs par email', class: 'fr-label'
       = f.search_field 'email', size: 40, class: 'fr-input', data: { turbo_force: :server }
     .actions= link_to 'Voir la liste des démarches', all_admin_procedures_path(@filter.params), class: 'fr-btn fr-btn--secondary'
   .fr-table.fr-table--bordered

@@ -35,7 +35,7 @@ class RechercheController < ApplicationController
     # to make it simpler we only do it if the @search_terms is an id
     return if !DossierSearchService.id_compatible?(@search_terms)
 
-    dossier_instructeur_searched_for = Dossier.find_by(id: @search_terms)
+    dossier_instructeur_searched_for = Dossier.state_not_brouillon.find_by(id: @search_terms)
 
     return if dossier_instructeur_searched_for.nil?
     return if current_instructeur&.groupe_instructeur_ids&.include?(dossier_instructeur_searched_for.groupe_instructeur_id)

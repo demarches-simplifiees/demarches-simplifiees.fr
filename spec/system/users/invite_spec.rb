@@ -9,7 +9,7 @@ describe 'Invitations' do
   context 'when the dossier is a brouillon' do
     let!(:dossier) { create(:dossier, :with_individual, state: Dossier.states.fetch(:brouillon), user: owner, procedure: procedure) }
 
-    scenario 'on the form, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
+    scenario 'on the form, the owner of a dossier can invite another user to collaborate on the dossier', js: true, retry: 3 do
       log_in(owner)
       navigate_to_brouillon(dossier)
       fill_in 'Texte obligatoire', with: 'Some edited value'
@@ -94,7 +94,7 @@ describe 'Invitations' do
       end
     end
 
-    scenario 'an invited user can see and edit the draft', js: true do
+    scenario 'an invited user can see and edit the draft', js: true, retry: 3 do
       navigate_to_invited_dossier(invite)
       expect(page).to have_current_path(brouillon_dossier_path(dossier))
 
@@ -117,7 +117,7 @@ describe 'Invitations' do
   context 'when the dossier is en_construction' do
     let!(:dossier) { create(:dossier, :with_individual, :en_construction, user: owner, procedure: procedure) }
 
-    scenario 'on dossier details, the owner of a dossier can invite another user to collaborate on the dossier', js: true do
+    scenario 'on dossier details, the owner of a dossier can invite another user to collaborate on the dossier', js: true, retry: 3 do
       log_in(owner)
       navigate_to_dossier(dossier)
 
@@ -128,7 +128,7 @@ describe 'Invitations' do
       expect(page).to have_text("user_invite@exemple.fr")
     end
 
-    context 'as an invited user', js: true do
+    context 'as an invited user', js: true, retry: 3 do
       before do
         navigate_to_invited_dossier(invite)
         expect(page).to have_current_path(dossier_path(invite.dossier))

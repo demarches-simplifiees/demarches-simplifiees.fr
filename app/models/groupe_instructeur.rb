@@ -16,13 +16,7 @@ class GroupeInstructeur < ApplicationRecord
 
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
-  validates :closed, acceptance: { accept: [false] }, if: -> do
-    if closed
-      (other_groupe_instructeurs.map(&:closed) + [closed]).all?
-    else
-      false
-    end
-  end
+  validates :closed, acceptance: { accept: [false] }, if: -> { (self == procedure.defaut_groupe_instructeur) }
 
   before_validation -> { label&.strip! }
 

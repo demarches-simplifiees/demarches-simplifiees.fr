@@ -1,6 +1,10 @@
 class EditableChamp::EpciComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
 
+  def dsfr_champ_container
+    :fieldset
+  end
+
   private
 
   def departement_options
