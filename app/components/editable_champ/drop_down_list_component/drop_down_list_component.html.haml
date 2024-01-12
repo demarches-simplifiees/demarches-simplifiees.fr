@@ -19,7 +19,13 @@
           %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
             Autre
   - else
-    = @form.select :value, @champ.options_without_empty_value_when_mandatory(@champ.options), { selected: @champ.selected }, required: @champ.required?, id: @champ.input_id, class: select_class_names, aria: { describedby: @champ.describedby_id }
+    = @form.select :value,
+      @champ.options.compact_blank,
+      { selected: @champ.selected, include_blank: true },
+      required: @champ.required?,
+      id: @champ.input_id,
+      class: select_class_names,
+      aria: { describedby: @champ.describedby_id }
 
   - if @champ.drop_down_other?
     = render EditableChamp::DropDownOtherInputComponent.new(form: @form, champ: @champ)
