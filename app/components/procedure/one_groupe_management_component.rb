@@ -81,6 +81,8 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
     case @revision.types_de_champ_public.find_by(stable_id: targeted_champ.stable_id).type_champ
     when TypeDeChamp.type_champs.fetch(:departements)
       departements_for_select
+    when TypeDeChamp.type_champs.fetch(:regions)
+      regions_for_select
     when TypeDeChamp.type_champs.fetch(:drop_down_list)
       targeted_champ
         .options(@revision.types_de_champ_public)
@@ -90,5 +92,9 @@ class Procedure::OneGroupeManagementComponent < ApplicationComponent
 
   def departements_for_select
     APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", constant(_1[:code]).to_json] }
+  end
+
+  def regions_for_select
+    APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", constant(_1[:code]).to_json] }
   end
 end
