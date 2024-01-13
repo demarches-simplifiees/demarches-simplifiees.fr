@@ -1,8 +1,8 @@
 class WatermarkService
-  POINTSIZE = 20
+  POINTSIZE = 30
   KERNING = 1.2
   ANGLE = 45
-  FILL_COLOR = "rgba(0,0,0,0.4)"
+  FILL_COLOR = "rgba(206,17,38,0.4)"
 
   attr_reader :text
   attr_reader :text_length
