@@ -18,6 +18,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 #### Tous environnements
 
 - postgresql
+- imagemagick et gsfonts pour générer les filigranes sur les titres d'identité.
 
 #### Développement
 
