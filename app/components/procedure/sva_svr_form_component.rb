@@ -20,7 +20,7 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
     [
       { label: t("disabled", scope:), value: "disabled", disabled: form_disabled? },
       { label: t("sva", scope:), value: "sva", hint: t("sva_hint", scope:) },
-      { label: t("svr", scope:), value: "svr", hint: t("svr_hint", scope:), disabled: true, after_label: tag.span("Disponible prochainement", class: "fr-badge fr-badge--sm fr-ml-1w") }
+      { label: t("svr", scope:), value: "svr", hint: t("svr_hint", scope:) }
     ]
   end
 

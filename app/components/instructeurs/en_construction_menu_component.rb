@@ -3,6 +3,8 @@
 class Instructeurs::EnConstructionMenuComponent < ApplicationComponent
   attr_reader :dossier
 
+  delegate :sva_svr_enabled?, to: :"dossier.procedure"
+
   def initialize(dossier:)
     @dossier = dossier
   end
@@ -22,11 +24,11 @@ class Instructeurs::EnConstructionMenuComponent < ApplicationComponent
     end
   end
 
-  def sva?
-    dossier.procedure.sva?
+  def sva_svr_resume_method
+    dossier.procedure.sva_svr_configuration.resume
   end
 
-  def sva_resume_method
-    dossier.procedure.sva_svr_configuration.resume
+  def sva_svr_human_decision
+    dossier.procedure.sva_svr_configuration.human_decision
   end
 end
