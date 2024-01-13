@@ -116,12 +116,24 @@ describe ProcedurePresentation do
       it { is_expected.to include(name_field, surname_field, gender_field) }
     end
 
-    context 'when the procedure is sva/svr' do
+    context 'when the procedure is sva' do
       let(:procedure) { create(:procedure, :for_individual, :sva) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
       let(:decision_on) { { "label" => "Date décision SVA", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
       let(:decision_before_field) { { "label" => "Date décision SVA avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
+
+      subject { procedure_presentation.fields }
+
+      it { is_expected.to include(decision_on, decision_before_field) }
+    end
+
+    context 'when the procedure is svr' do
+      let(:procedure) { create(:procedure, :for_individual, :svr) }
+      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
+
+      let(:decision_on) { { "label" => "Date décision SVR", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:decision_before_field) { { "label" => "Date décision SVR avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
 
       subject { procedure_presentation.fields }
 

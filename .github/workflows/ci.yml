@@ -75,6 +75,9 @@ jobs:
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
+      - name: Install fonts pickable by ImageMagick
+        run: sudo apt-get install -y gsfonts
+
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 

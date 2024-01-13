@@ -58,6 +58,19 @@ RSpec.describe Instructeurs::EnConstructionMenuComponent, type: :component do
         expect(subject).to have_dropdown_item('Demander une correction')
         expect(subject).to have_dropdown_item('Demander à compléter')
         expect(subject).to have_dropdown_items(count: 4)
+        expect(subject).to have_text('Le délai du SVA')
+      end
+    end
+
+    context 'when procedure is svr' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :svr)) }
+
+      it 'renders a dropdown' do
+        expect(subject).to have_dropdown_title('Demander une correction')
+        expect(subject).to have_dropdown_item('Demander une correction')
+        expect(subject).to have_dropdown_item('Demander à compléter')
+        expect(subject).to have_dropdown_items(count: 4)
+        expect(subject).to have_text('Le délai du SVR')
       end
     end
   end
