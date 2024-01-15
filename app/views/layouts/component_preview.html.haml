@@ -14,6 +14,7 @@
     = render partial: "layouts/favicons"
 
     = vite_client_tag
+    = vite_react_refresh_tag
     = vite_javascript_tag 'application'
 
     = preload_link_tag(asset_url("Marianne-Regular.woff2"))
@@ -22,7 +23,7 @@
     = vite_stylesheet_tag 'main', media: 'all'
     = stylesheet_link_tag 'application', media: 'all'
 
-  %body{ class: browser.platform.ios? ? 'ios' : nil }
+  %body{ class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo' } }
     .page-wrapper
       %main.m-6
         = content_for?(:content) ? yield(:content) : yield
