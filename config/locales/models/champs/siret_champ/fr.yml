@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/siret_champ:
         hints:
-          value: "Saisissez 14 chiffres sans espaces. Exemple : 50000123456789"
+          value: "Saisissez une lettre ou un chiffre suivi par 5 chiffres sans espace. Exemple : D12345 or 003970"
