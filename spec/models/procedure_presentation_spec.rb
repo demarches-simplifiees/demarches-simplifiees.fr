@@ -565,6 +565,21 @@ describe ProcedurePresentation do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
         end
       end
+
+      context 'with en_construction state filters' do
+        let(:filter) do
+          [
+            { 'table' => 'self', 'column' => 'state', 'value' => 'en_construction' }
+          ]
+        end
+
+        let!(:en_construction) { create(:dossier, :en_construction, procedure: procedure) }
+        let!(:en_construction_with_correction) { create(:dossier, :en_construction, procedure: procedure) }
+        let!(:correction) { create(:dossier_correction, dossier: en_construction_with_correction) }
+        it 'excludes dossier en construction with pending correction' do
+          is_expected.to contain_exactly(en_construction.id)
+        end
+      end
     end
 
     context 'for type_de_champ table' do
