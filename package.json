@@ -61,7 +61,6 @@
     "react-dom": "^18.2.0",
     "react-popper": "^2.3.0",
     "react-query": "^3.39.3",
-    "sortablejs": "^1.15.0",
     "spectaql": "^2.3.0",
     "stimulus-use": "^0.52.0",
     "terser": "^5.18.2",

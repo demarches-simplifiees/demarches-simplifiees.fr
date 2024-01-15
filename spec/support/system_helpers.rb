@@ -71,11 +71,11 @@ module SystemHelpers
 
   # Add a new type de champ in the procedure editor
   def add_champ
-    click_on 'Ajouter un champ'
+    click_on 'Ajouter un champ'
   end
 
   def remove_flash_message
-    expect(page).to have_button('Ajouter un champ', disabled: false)
+    expect(page).to have_button('Ajouter un champ', disabled: false)
     expect(page).to have_content('Formulaire enregistré')
     execute_script("document.querySelector('#flash_message').remove();")
     execute_script("document.querySelector('#autosave-notice').remove();")

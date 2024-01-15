@@ -1,7 +1,7 @@
-%li.type-de-champ.flex.column.justify-start{ html_options }
+%li.type-de-champ.flex.column.justify-start.fr-mb-6w{ html_options }
   .type-de-champ-container
     .flex.justify-between.section.head
-      .fr-btn.fr-btn--tertiary-no-outline.handle.fr-icon-drag-move-2-line{ title: "Déplacer le champ vers le haut ou vers le bas" }
+      .position.flex.align-center= @coordinate.position.to_s
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-down-line.move-down{ move_button_options(:down) }
 
@@ -137,5 +137,6 @@
 
     = render(Conditions::ChampsConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
 
-  .type-de-champ-add-button{ class: class_names(root: !coordinate.child?) }
+  .type-de-champ-add-button{ class: class_names(root: !coordinate.child?, flex: true) }
     = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate&.parent, is_annotation: coordinate.private?, after_stable_id: type_de_champ.stable_id)
+    = render TypesDeChampEditor::SelectChampPositionComponent.new(revision:, coordinate:)
