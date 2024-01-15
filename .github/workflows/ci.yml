@@ -107,7 +107,7 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgis/postgis:14-3.3
