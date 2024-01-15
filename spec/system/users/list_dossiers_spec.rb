@@ -190,7 +190,7 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
     end
   end
 
-  describe "recherche" do
+  describe "user search bar" do
     context "when the dossier does not exist" do
       before do
         page.find_by_id('q').set(10000000)
@@ -199,7 +199,9 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
 
       it "shows an error message on the dossiers page" do
         expect(current_path).to eq(dossiers_path)
-        expect(page).to have_content("Vous n’avez pas de dossiers contenant « 10000000 ».")
+        expect(page).to have_content("Résultat de la recherche pour « 10000000 »")
+        expect(page).to have_content("Aucun dossier")
+        expect(page).to have_content("ne correspond aux termes recherchés")
       end
     end
 
@@ -213,7 +215,10 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
 
       it "shows an error message on the dossiers page" do
         expect(current_path).to eq(dossiers_path)
-        expect(page).to have_content("Vous n’avez pas de dossiers contenant « #{dossier_other_user.id} ».")
+        expect(page).to have_content("Résultat de la recherche pour « #{dossier_other_user.id} »")
+        expect(page).to have_content("Aucun dossier")
+        expect(page).to have_content("ne correspond aux termes recherchés")
+        expect(page).to have_content("Réinitialiser la recherche")
       end
     end
 
@@ -223,8 +228,11 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
         find('.fr-search-bar .fr-btn').click
       end
 
-      it "redirects to the dossier page" do
-        expect(current_path).to eq(dossier_path(dossier_en_construction))
+      it "appears in the result list" do
+        expect(current_path).to eq(dossiers_path)
+        expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.id} »")
+        expect(page).not_to have_css('.tabs')
+        expect(page).to have_content(dossier_en_construction.id)
       end
     end
 
@@ -233,25 +241,32 @@ describe 'user access to the list of their dossiers', js: true, retry: 3 do
         page.find_by_id('q').set(dossier_en_construction.champs_public.first.value)
       end
 
-      context 'when it only matches one dossier' do
-        before do
-          find('.fr-search-bar .fr-btn').click
-        end
-        it "redirects to the dossier page" do
-          expect(current_path).to eq(dossier_path(dossier_en_construction))
-        end
-      end
-
-      context 'when it matches multiple dossier' do
+      context 'when it matches multiple dossiers' do
         let!(:dossier_with_champs) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
         before do
           find('.fr-search-bar .fr-btn').click
         end
 
-        it "redirects to the search results" do
-          expect(current_path).to eq(recherche_dossiers_path)
-          expect(page).to have_content(dossier_en_construction.id)
-          expect(page).to have_content(dossier_with_champs.id)
+        it "appears in the result list" do
+          expect(current_path).to eq(dossiers_path)
+          expect(page).to have_link(dossier_en_construction.procedure.libelle)
+          expect(page).to have_link(dossier_with_champs.procedure.libelle)
+          expect(page).to have_text("2 sur 2 dossiers")
+        end
+
+        it "can be filtered by procedure and display the result - one item" do
+          select dossier_en_construction.procedure.libelle, from: 'procedure_id'
+          expect(page).to have_link(dossier_en_construction.procedure.libelle)
+          expect(page).not_to have_link(dossier_with_champs.procedure.libelle)
+          expect(page).to have_text("1 dossier")
+        end
+
+        it "can be filtered by procedure and display the result - no item" do
+          select dossier_brouillon.procedure.libelle, from: 'procedure_id'
+          expect(page).not_to have_link(dossier_en_construction.id)
+          expect(page).not_to have_link(dossier_with_champs.id)
+          expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.champs_public.first.value} » et pour la procédure « #{dossier_brouillon.procedure.libelle} » ")
+          expect(page).to have_text("Aucun dossier")
         end
       end
     end
