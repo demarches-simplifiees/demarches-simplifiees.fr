@@ -76,6 +76,12 @@ describe Logic::ChampValue do
     it { is_expected.to eq(true) }
   end
 
+  context 'commune tdc' do
+    let(:champ) { create(:champ_communes, value: 'Rueil-Malmaison', value_json: { code_postal: '92500', code_departement: '92' }) }
+
+    it { is_expected.to eq('92') }
+  end
+
   context 'region tdc' do
     let(:champ) { create(:champ_regions, value: 'La Réunion') }
 

@@ -224,7 +224,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def routable_types_de_champ
-    types_de_champ_public.filter { |tdc| [:drop_down_list, :departements, :regions].include?(tdc.type_champ.to_sym) }
+    types_de_champ_public.filter(&:routable?)
   end
 
   private

@@ -121,6 +121,13 @@ class TypeDeChamp < ApplicationRecord
   INSTANCE_OPTIONS = [:parcelles, :batiments, :zones_manuelles, :min, :max, :level, :accredited_users]
   INSTANCE_CHAMPS_PARAMS = [:numero_dn, :date_de_naissance]
 
+  ROUTABLE_TYPES = [
+    type_champs.fetch(:drop_down_list),
+    type_champs.fetch(:communes),
+    type_champs.fetch(:departements),
+    type_champs.fetch(:regions)
+  ]
+
   store_accessor :options,
                  *INSTANCE_OPTIONS,
                  :cadastres,
@@ -637,6 +644,10 @@ class TypeDeChamp < ApplicationRecord
     else
       true
     end
+  end
+
+  def routable?
+    type_champ.in?(ROUTABLE_TYPES)
   end
 
   private
