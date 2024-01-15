@@ -130,6 +130,31 @@ describe RoutingEngine, type: :model do
       end
     end
 
+    context 'with an epci type de champ' do
+      let(:procedure) do
+        create(:procedure, types_de_champ_public: [{ type: :epci }]).tap do |p|
+          p.groupe_instructeurs.create(label: 'a third group')
+        end
+      end
+
+      let(:epci_tdc) { procedure.draft_revision.types_de_champ.first }
+
+      context 'with a matching rule' do
+        before do
+          gi_2.update(routing_rule: ds_eq(champ_value(epci_tdc.stable_id), constant('42')))
+          dossier.champs.first.update_columns(
+            external_id: 244200895,
+            value: 'CC du Pilat Rhodanien',
+            value_json: { code_departement: '42' }
+          )
+        end
+
+        it do
+          is_expected.to eq(gi_2)
+        end
+      end
+    end
+
     context 'routing rules priorities' do
       let(:procedure) do
         create(:procedure,

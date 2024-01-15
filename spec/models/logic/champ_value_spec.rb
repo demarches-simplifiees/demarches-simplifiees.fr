@@ -82,6 +82,19 @@ describe Logic::ChampValue do
     it { is_expected.to eq('92') }
   end
 
+  context 'epci tdc' do
+    let(:champ) { build(:champ_epci, code_departement: '43') }
+
+    before do
+      champ.save!
+      champ.update_columns(external_id: '244301016', value: 'CC des Sucs')
+    end
+
+    it do
+      is_expected.to eq('43')
+    end
+  end
+
   context 'region tdc' do
     let(:champ) { create(:champ_regions, value: 'La Réunion') }
 
