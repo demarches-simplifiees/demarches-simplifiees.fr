@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/titre_identite_champ:
+          hints:
+            value: "Carte nationale d'identité (uniquement le recto), passeport, titre de séjour ou autre justificatif d’identité."

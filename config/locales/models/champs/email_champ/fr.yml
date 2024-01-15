@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/email_champ:
+        hints:
+          value: "Format attendu : nom@domaine.fr"

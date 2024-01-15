@@ -9,3 +9,8 @@ fr:
           association_date_creation: Date de création
           association_date_declaration: Date de déclaration
           association_date_publication: Date de publication
+  activerecord:
+    attributes:
+      champs/rna_champ:
+          hints:
+            value: "Format attendu : W123456789. Exemple : W503726238"

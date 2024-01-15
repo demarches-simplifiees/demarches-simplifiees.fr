@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/commune_champ:
+        hints:
+          value: "Renseignez le code postal de la ville puis, ensuite, sélectionnez la commune dans la liste"

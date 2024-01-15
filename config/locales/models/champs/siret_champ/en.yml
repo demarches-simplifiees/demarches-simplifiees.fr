@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/siret_champ:
+        hints:
+          value: "Enter 14 digits, no space. Example : 50000123456789"

@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/departement_champ:
+        hints:
+          value: "Renseignez le code ou le nom du département"
