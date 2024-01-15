@@ -8,7 +8,7 @@ module DossierPrefillableConcern
 
     attributes = { prefilled: true }
     attributes[:champs_attributes] = champs_attributes.map { |h| h.merge(prefilled: true) }
-    attributes[:individual_attributes] = identity_attributes
+    attributes[:individual_attributes] = identity_attributes if identity_attributes.present?
 
     assign_attributes(attributes)
     save(validate: false)
