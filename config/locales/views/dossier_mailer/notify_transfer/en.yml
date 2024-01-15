@@ -1,0 +1,8 @@
+en:
+  dossier_mailer:
+    notify_transfer:
+      subject: You have a pending transfer request.
+      transfer_text: "Access the transfer request by clicking on the following link:"
+      transfer_link: transfer request
+      transfert_multiple: "%{sender} sends you a transfer request for %{count} files."
+      transfert_simple: "%{sender} sends you a transfer request for file no. %{dossier_id} on the procedure"

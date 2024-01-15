@@ -58,6 +58,18 @@ class DossierTransfer < ApplicationRecord
     end
   end
 
+  def sender
+    if from_support?
+      I18n.t("views.users.dossiers.transfers.sender_from_support")
+    else
+      sender_email
+    end
+  end
+
+  def sender_email
+    dossiers.last.user.email
+  end
+
   private
 
   def send_notification

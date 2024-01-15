@@ -265,4 +265,34 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.body).to include("réinitialisé") }
     end
   end
+
+  describe 'notify_transfer' do
+    let(:user) { create(:user) }
+    let(:procedure) { create(:procedure) }
+    let(:dossier_transfer) { create(:dossier_transfer) }
+    let!(:dossier) { create(:dossier, user: user, transfer: dossier_transfer, procedure: procedure) }
+
+    subject { described_class.notify_transfer(dossier_transfer) }
+
+    context 'when it is a transfer of one dossier' do
+      it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
+      it { expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour le dossier n° #{dossier.id} sur la démarche") }
+      it { expect(subject.body).to include(procedure.libelle.to_s) }
+    end
+
+    context 'when it is a transfer of multiple dossiers' do
+      let!(:dossier2) { create(:dossier, user: user, transfer: dossier_transfer, procedure: procedure) }
+      it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
+      it { expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour 2 dossiers.") }
+    end
+
+    context 'when it is a transfer of one dossier from super admin' do
+      before do
+        dossier_transfer.update!(from_support: true)
+      end
+
+      it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
+      it { expect(subject.body).to include("Le support technique vous adresse une demande de transfert") }
+    end
+  end
 end
