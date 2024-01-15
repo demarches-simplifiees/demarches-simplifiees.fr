@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/epci_champ:
+        hints:
+          value: "Enter the EPCI's department, then select the EPCI from the list."

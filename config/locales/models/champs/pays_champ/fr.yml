@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/pays_champ:
+        hints:
+          value: "Renseignez le pays"

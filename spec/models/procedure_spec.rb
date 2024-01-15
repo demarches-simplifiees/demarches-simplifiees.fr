@@ -747,6 +747,10 @@ describe Procedure do
         expect(subject.api_particulier_scopes).to be_empty
       end
 
+      it 'should not route the procedure' do
+        expect(subject.routing_enabled).to eq(false)
+      end
+
       it 'should have a default groupe instructeur' do
         expect(subject.groupe_instructeurs.size).to eq(1)
         expect(subject.groupe_instructeurs.first.label).to eq(GroupeInstructeur::DEFAUT_LABEL)

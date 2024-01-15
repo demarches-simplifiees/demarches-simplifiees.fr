@@ -769,6 +769,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_014353) do
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false
     t.datetime "hidden_at"
+    t.datetime "hidden_at_as_template", precision: nil
     t.boolean "instructeurs_self_management_enabled"
     t.boolean "juridique_required", default: true
     t.string "libelle"

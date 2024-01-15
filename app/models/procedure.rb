@@ -498,6 +498,7 @@ class Procedure < ApplicationRecord
       procedure.encrypted_api_particulier_token = nil
       procedure.opendata = true
       procedure.api_particulier_scopes = []
+      procedure.routing_enabled = false
     else
       procedure.administrateurs = administrateurs
     end
@@ -540,6 +541,19 @@ class Procedure < ApplicationRecord
 
   def whitelisted?
     whitelisted_at.present?
+  end
+
+  def hidden_as_template?
+    hidden_at_as_template.present?
+  end
+
+  def hide_as_template!
+    touch(:hidden_at_as_template)
+  end
+
+  def unhide_as_template!
+    self.hidden_at_as_template = nil
+    save
   end
 
   def total_dossier

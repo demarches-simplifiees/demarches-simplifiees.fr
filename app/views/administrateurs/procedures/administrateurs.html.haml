@@ -42,7 +42,7 @@
             %td
               %button.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-mb-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
             %td= admin.email
-            %td= admin.procedures.count
+            %td= admin.procedures.size
             %td= l(admin.created_at, format: :message_date_without_time)
           %tr.hidden{ 'data-expand-target': 'content' }
             %td.fr-highlight--beige-gris-galet{ colspan: '6' }

@@ -1,0 +1,34 @@
+This journal lists modifications built on top of demarches-simplifiees.
+
+# champs specifiques à la Polynésie française
+
+| Champ                    | Label                                                                                                                                                                 |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Numero DN                | A way to enter a DN number composed of two fields : a number and date of birth                                                                                        |
+| commune de Polynésie     | dropdown list of french Polynesia cities with island & archipel                                                                                                       |
+| code postal de Polynésie | dropdown list of french postal codes                                                                                                                                  |
+| nationalites             | dropdown list of nationalities                                                                                                                                        |
+| te_fenua                 | map of polynesia using OpenLayer as a foundation                                                                                                                      |
+| Visa                     | Checkbox accessible to predefined list of people. When checked, Visa records who checked the visa and disable all fields above in the current level 1 header section. |
+|                          | Admin may set min,max limits                                                                                                                                          |
+
+# Différences fonctionnelles avec démarches simplifiées
+
+| date | titre                               | description                                                                                                                                                                        |
+|------|-------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| -    | Siret vs Numero TAHITI              | Le numéro TAHITI est l'équivalent français du numéro Siren. Pour l'instant le numéro Tahiti est considéré comme un numéro Siret et tooute l'interface est changées en conséquence. |
+| -    | Lien dans les commentaires          | Les liens envoyés par les instructeurs dans les commentaires sont directement clicables                                                                                            |
+| -    | Integer, Decimal, Date              | L'administrateur a la possibilité de définir des valeurs minimales et maximales pour les champs Integer, Decimal et Date.                                                          |
+| -    | Description des champs              | La description des champ peut contenir des sous-listes à des listes                                                                                                                |
+| -    | Description des champs              | La description d'un champ peut contenir les balises des balises <img>, <a>, <font>, <ol>, <ul>,<b>,<u>,<i> pour insérer des images, liens, listes, et formater le texte            |
+| -    | Connexion usager                    | L'usager peut se connecter via Google, Microsoft ou Tatou. C'est une généralisation de la connexion France Connect.                                                                |
+| -    | Complexité du mot de passe          | Les trois roles ont un niveau de complexite pour le mot de passe: Usager => 2, Instructeur => 3, Administrateur => 4                                                               |
+| -    | Connexion Microsoft                 | Les agents de l'administration de la Polynésie etant sous Office, la connexion via Microsoft est autorisée pour les comptes instructeur et administrateur                          |
+| -    | GraphQL Assigner Instructeur        | Il est possible d'assigner un dossier à un instructeur                                                                                                                             |
+| -    | GraphQL Modifier annotation         | Il est possible de modifier une liste déroulante, l'email ou un téléphone                                                                                                          |
+| -    | GraphQL Ajouter piece justificative | Il est possible d'ajouter une piece justificative à un champ                                                                                                                       |
+| -    | Mails images                        | Il est possible d'insérer des liens <img> et <a> dans les mails officiels d'une démarche                                                                                           |
+| -    | SendInBlue                          | La suppression des mails plus vieux que 6 mois est différente (à creuser)                                                                                                          |
+| -    | Publication d'une démarche          | Un mail est toujours envoyé à l'équipe lors de la publication d'une démarche (supprimé dans DS)                                                                                    |
+
+

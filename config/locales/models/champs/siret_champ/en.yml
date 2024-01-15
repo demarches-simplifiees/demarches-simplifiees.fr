@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/siret_champ:
+        hints:
+          value: "Enter one letter or digit, followed by 5 digits, no space. Example : D12345 or 003970"

@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/address_champ:
+        hints:
+          value: "Enter an address, a street, a city. Example: 11 rue Réaumur, Paris"

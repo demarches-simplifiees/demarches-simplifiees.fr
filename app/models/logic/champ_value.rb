@@ -5,7 +5,8 @@ class Logic::ChampValue < Logic::Term
     :integer_number,
     :decimal_number,
     :drop_down_list,
-    :multiple_drop_down_list
+    :multiple_drop_down_list,
+    :departements
   )
 
   CHAMP_VALUE_TYPE = {
@@ -60,7 +61,7 @@ class Logic::ChampValue < Logic::Term
       CHAMP_VALUE_TYPE.fetch(:boolean)
     when MANAGED_TYPE_DE_CHAMP.fetch(:integer_number), MANAGED_TYPE_DE_CHAMP.fetch(:decimal_number)
       CHAMP_VALUE_TYPE.fetch(:number)
-    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:drop_down_list), MANAGED_TYPE_DE_CHAMP.fetch(:departements)
       CHAMP_VALUE_TYPE.fetch(:enum)
     when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
       CHAMP_VALUE_TYPE.fetch(:enums)
@@ -94,11 +95,15 @@ class Logic::ChampValue < Logic::Term
 
   def options(type_de_champs)
     tdc = type_de_champ(type_de_champs)
-    opts = tdc.drop_down_list_enabled_non_empty_options.map { |option| [option, option] }
-    if tdc.drop_down_other?
-      opts + [["Autre", Champs::DropDownListChamp::OTHER]]
+    if tdc.departement?
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     else
-      opts
+      opts = tdc.drop_down_list_enabled_non_empty_options.map { |option| [option, option] }
+      if tdc.drop_down_other?
+        opts + [["Autre", Champs::DropDownListChamp::OTHER]]
+      else
+        opts
+      end
     end
   end
 
