@@ -347,7 +347,6 @@ Rails.application.routes.draw do
 
       collection do
         get 'transferer', to: 'dossiers#transferer_all'
-        get 'recherche'
         resources :transfers, only: [:create, :update, :destroy]
       end
     end

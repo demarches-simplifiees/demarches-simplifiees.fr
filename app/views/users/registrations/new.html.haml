@@ -32,4 +32,5 @@
               - else
                 = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
-      = f.submit t('views.shared.account.create'), class: "fr-btn fr-btn--lg", id: "submit-password"
+      %ul.fr-btns-group
+        %li= f.submit t('views.shared.account.create'), class: "fr-btn"

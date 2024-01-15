@@ -266,7 +266,7 @@ fr:
           date_html: Date au format ISO8601
           drop_down_list_other_html: Toute valeur
           rna_html: Un numéro RNA
-          siret_html: Un numéro de SIRET
+          siret_html: Un numéro TAHITI
           repetition_html: Un tableau de dictionnaires avec les valeurs possibles pour chaque champ de la répétition.
           annuaire_education_html: Un code d'établissement scolaire, tel que défini par <a href="https://api.gouv.fr/les-api/api-annuaire-education" target="_blank" rel="noopener noreferrer">l'Annuaire de l'Éducation Nationale</a>
           dossier_link_html: L’identifiant du dossier, sous forme de nombre entier
@@ -417,12 +417,18 @@ fr:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           identity_data: Données d’identité
+          identity_siret: Identifier votre établissement
           all_required: Tous les champs sont obligatoires.
           civility: Civilité
           first_name: Prénom
           last_name: Nom
           birthdate: Date de naissance
-          complete_data: Merci de remplir vos informations personnelles pour accéder à la démarche.
+          complete_data: Renseignez vos informations personnelles pour accéder à la démarche.
+          complete_siret: Renseignez le numéro TAHITI de votre entreprise, administration ou association pour commencer la démarche.
+          siret_help_html: Pour trouver votre numéro TAHITI, utilisez %{annuaire_link} ou renseignez-vous auprès de votre service comptable.
+          siret_placeholder: numéro TAHITI à 14 chiffres
+          annuaire_link_title: Rechercher un numéro TAHITI sur l’Annuaire des Entreprises
+          siret_loading: Récupération des informations…
           continue: Continuer
         merci:
           thanks: Merci !
@@ -476,6 +482,8 @@ fr:
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
           simple: Rechercher
+          result_term_title: Résultat de la recherche pour « %{search_terms} »
+          result_procedure_title: et pour la procédure « %{procedure_libelle} »
         secondary_menu: Menu secondaire
         index:
           dossiers: "Mes dossiers"
@@ -483,6 +491,8 @@ fr:
           n_dossier: "dossier Nº "
           no_result_title: Aucun dossier
           no_result_text_html: "Pour remplir une démarche, contactez votre administration en lui demandant le lien de la démarche. <br> Celui ci doit ressembler à %{app_base}/commencer/xxx."
+          no_result_text_with_search: ne correspond aux termes recherchés
+          no_result_reset_search: Réinitialiser la recherche
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.
@@ -718,7 +728,7 @@ fr:
       siret_network_error: 'Désolé, la récupération des informations des numéros TAHITI est temporairement indisponible. Veuillez réessayer dans quelques instants.'
       siret_not_found: 'Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.'
       api_entreprise_down: "Notre fournisseur de données semble en panne, nous récupérerons les données plus tard."
-      # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
+      # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro TAHITI'
       cps_network_error: 'Désolé, la vérification du numéro DN auprès de la CPS est temporairement indisponible. Vérifiez bien vos informations'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."

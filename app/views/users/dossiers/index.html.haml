@@ -14,7 +14,8 @@
       - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
         .fr-col
           #search-2.fr-search-bar
-            = form_tag recherche_dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
+            = form_tag dossiers_path, method: :get, :role => "search", class: "flex width-100 fr-mb-5w" do
+              = hidden_field_tag :procedure_id, params[:procedure_id]
               = label_tag "q", t('views.users.dossiers.search.search_file'), class: 'fr-label'
               = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.search_file'), class: "fr-input"
               %button.fr-btn.fr-btn--sm
@@ -71,7 +72,7 @@
 .fr-container
   .fr-grid-row.fr-grid-row--center
     .fr-col-xl-10
-      - if @statut == "en-cours"
+      - if @statut == "en-cours" && @search_terms.blank?
         - if @first_brouillon_recently_updated.present?
           = render Dsfr::CalloutComponent.new(title: t('users.dossiers.header.callout.first_brouillon_recently_updated_title'), heading_level: 'h2') do |c|
             - c.with_body do
@@ -80,8 +81,11 @@
               = link_to t('users.dossiers.header.callout.first_brouillon_recently_updated_button'), url_for_dossier(@first_brouillon_recently_updated), class: 'fr-btn'
 
       - if @search_terms.present?
-        %h2.page-title Résultat de la recherche pour « #{@search_terms} »
-        = render partial: "dossiers_list", locals: { dossiers: @dossiers }
+        %h2.page-title
+          = t('views.users.dossiers.search.result_term_title', search_terms: @search_terms)
+          - if @procedure_id.present?
+            = t('views.users.dossiers.search.result_procedure_title', procedure_libelle: @procedures_for_select.rassoc(@procedure_id.to_i).first)
+        = render partial: "dossiers_list", locals: { dossiers: @dossiers_visibles, filter: nil, search: true }
 
       - else
         = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter, procedure_id: @procedure_id )
@@ -90,4 +94,4 @@
           -# /!\ in this context, @dossiers is a collection of DeletedDossier not Dossier
           = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
         - else
-          = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut }
+          = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut, search: false }

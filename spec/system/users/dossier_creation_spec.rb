@@ -93,7 +93,7 @@ describe 'Creating a new dossier:' do
         expect(page).to have_content(procedure.libelle)
 
         fill_in 'Numéro TAHITI', with: siret
-        click_on 'Valider'
+        click_on 'Continuer'
 
         expect(page).to have_current_path(etablissement_dossier_path(dossier))
         expect(page).to have_content('Coiff Land, CoiffureLand')
@@ -110,7 +110,7 @@ describe 'Creating a new dossier:' do
         expect(page).to have_content(procedure.libelle)
 
         fill_in 'Numéro TAHITI', with: '0000'
-        click_on 'Valider'
+        click_on 'Continuer'
 
         expect(page).to have_current_path(siret_dossier_path(dossier))
         expect(page).to have_content('Le champ « Siret » est invalide. Le numéro TAHITI doit commencer par une lettre ou un chiffre, suivi de 5 chiffres')

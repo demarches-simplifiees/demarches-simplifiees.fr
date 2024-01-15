@@ -18,6 +18,8 @@
           = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: "#{@champ.id}_radio_option_other"
           %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
             Autre
+  - elsif @champ.render_as_combobox?
+    = render Dsfr::ComboboxComponent.new form: @form, name: :value, options: @champ.enabled_non_empty_options, selected: @champ.selected, id: @champ.input_id, class: select_class_names, describedby: @champ.describedby_id
   - else
     = @form.select :value,
       @champ.options.compact_blank,

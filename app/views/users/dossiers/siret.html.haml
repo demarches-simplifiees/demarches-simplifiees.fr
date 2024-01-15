@@ -3,17 +3,20 @@
 .form-column
   - if !dossier_submission_is_closed?(@dossier)
     = form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
-      %h2.fr-h4 Identifier votre établissement
+      %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'edit-identity-siret' } }
+        = f.hidden_field :dossier_id, value: @dossier.id
 
-      %p.mb-1 Merci de remplir le numéro TAHITI de votre entreprise, administration ou association pour commencer la démarche.
+        %legend.fr-fieldset__legend#edit-identity-siret
+          %h2.fr-h4= t('views.users.dossiers.identite.identity_siret')
 
-      = f.label :siret, style: "display: none"
-      = f.text_field :siret, placeholder: "Numéro TAHITI (6 caractères)", required: true
-      = f.hidden_field :dossier_id, value: @dossier.id
+        .fr-fieldset__element
+          %p.fr-text--sm= t('views.users.dossiers.identite.complete_siret')
 
-      %p.mb-4
-        Pour trouver votre numéro TAHITI, utilisez
-        %a{ href: annuaire_link(''), target: '_blank', rel: 'noopener' }
-          www.ispf.pf
+        .fr-fieldset__element
+          = render Dsfr::InputComponent.new form: f, attribute: :siret, opts: { placeholder: t('views.users.dossiers.identite.siret_placeholder') }
 
-      = f.submit "Valider", class: "fr-btn", data: { disable_with: "Récupération des informations…" }
+        .fr-fieldset__element
+          %p.fr-text--sm= t('views.users.dossiers.identite.siret_help_html',
+                            annuaire_link: link_to('annuaire-entreprises.data.gouv.fr', annuaire_link, title: new_tab_suffix(t('views.users.dossiers.identite.annuaire_link_title')), **external_link_attributes))
+
+      = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn", data: { disable_with: t('views.users.dossiers.identite.siret_loading') }

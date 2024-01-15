@@ -105,7 +105,7 @@ class GroupeInstructeur < ApplicationRecord
     routing_tdc = procedure.active_revision.types_de_champ.find_by(stable_id: routing_rule.left.stable_id)
 
     options = case routing_tdc.type_champ
-    when TypeDeChamp.type_champs.fetch(:departements)
+    when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:epci)
       APIGeoService.departements.map { _1[:code] }
     when TypeDeChamp.type_champs.fetch(:regions)
       APIGeoService.regions.map { _1[:code] }

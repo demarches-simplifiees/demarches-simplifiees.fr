@@ -16,8 +16,8 @@
       - commune_options.each.with_index do |(option, value), index|
         .fr-fieldset__element
           .fr-radio-group
-            = @form.radio_button :value, value, checked: @champ.selected == value, id: index == 0 ? @champ.input_id : "radio-#{index}-#{value.parameterize}"
-            = @form.label :value, option, for: index == 0 ? @champ.input_id : "radio-#{index}-#{value.parameterize}", class: 'fr-label'
+            = @form.radio_button :value, value, checked: @champ.selected == value, id: "#{code_postal_input_id}-#{value.parameterize}"
+            = @form.label :value, option, for: "#{code_postal_input_id}-#{value.parameterize}", class: 'fr-label'
   - else
     = @form.label :value, t('.commune').html_safe, for: @champ.input_id, class: 'fr-label'
     = @form.select :value, commune_options, commune_select_options, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile fr-select"
