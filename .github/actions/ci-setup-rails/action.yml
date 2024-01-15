@@ -12,7 +12,12 @@ runs:
     - name: Setup Node
       uses: actions/setup-node@v3
       with:
-        cache: 'yarn'
+        node-version-file: '.node-version'
+
+    - name: Install yarn
+      run: |
+        npm install --global yarn
+      shell: bash
 
     - name: Install Node modules
       run: |
