@@ -46,7 +46,8 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
     elsif row_number == 1
       select_tag(
         "#{input_prefix}[top_operator_name]",
-        options_for_select(options_for_far_left_tag, @condition.class.name)
+        options_for_select(options_for_far_left_tag, @condition.class.name),
+        class: 'fr-select'
       )
     end
   end
@@ -71,7 +72,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
       options_for_select(targets_for_select, selected_target),
       onchange: "this.form.action = this.form.action + '/change_targeted_champ?row_index=#{row_index}'",
       id: input_id_for('targeted_champ', row_index),
-      class: { alert: !current_target_valid }
+      class: { 'fr-select': true, alert: !current_target_valid }
     )
   end
 
@@ -102,7 +103,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
       input_name_for('operator_name'),
       options_for_select(operators_for_select, selected: operator_name),
       id: input_id_for('operator_name', row_index),
-      class: { alert: current_operator_invalid }
+      class: { 'fr-select': true, alert: current_operator_invalid }
     )
   end
 
@@ -149,13 +150,14 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         input_name_for('value'),
         options_for_select(booleans_for_select, right.to_json),
         id: input_id_for('value', row_index),
-        class: { alert: right_invalid }
+        class: { 'fr-select': true, alert: right_invalid }
       )
     when :empty
       select_tag(
         input_name_for('value'),
         options_for_select(empty_target_for_select),
-        id: input_id_for('value', row_index)
+        id: input_id_for('value', row_index),
+        class: 'fr-select'
       )
     when :enum, :enums
       enums_for_select = left.options(@upper_tdcs)
@@ -168,7 +170,7 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         input_name_for('value'),
         options_for_select(enums_for_select, right.value),
         id: input_id_for('value', row_index),
-        class: { alert: right_invalid }
+        class: { 'fr-select': true, alert: right_invalid }
       )
     when :number
       text_field_tag(
@@ -176,10 +178,10 @@ class TypesDeChampEditor::ConditionsComponent < ApplicationComponent
         right.value,
         required: true,
         id: input_id_for('value', row_index),
-        class: { alert: right_invalid }
+        class: { 'fr-select': true, alert: right_invalid }
       )
     else
-      text_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index))
+      text_field_tag(input_name_for('value'), '', id: input_id_for('value', row_index), class: 'fr-input')
     end
   end
 
