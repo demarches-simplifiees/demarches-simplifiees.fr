@@ -29,10 +29,10 @@ class DossierPreloader
   def positions
     @positions ||= ProcedureRevisionTypeDeChamp
       .where(revision_id: @dossiers.pluck(:revision_id).uniq)
-      .select(:revision_id, :type_de_champ_id, :position)
+      .select(:revision_id, :type_de_champ_id, :new_position)
       .group_by(&:revision_id)
       .transform_values do |coordinates|
-        coordinates.index_by(&:type_de_champ_id).transform_values(&:position)
+        coordinates.index_by(&:type_de_champ_id).transform_values(&:new_position)
       end
   end
 
@@ -117,7 +117,6 @@ class DossierPreloader
     else
       dossier.association(:champs_private_all).target += champs
     end
-
     parent.association(name).target = champs.sort_by do |champ|
       [champ.row_id, positions[dossier.revision_id][champ.type_de_champ_id]]
     end

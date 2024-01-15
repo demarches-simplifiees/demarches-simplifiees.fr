@@ -70,7 +70,7 @@ class Procedure < ApplicationRecord
         TypeDeChamp.fillable
           .joins(:revision_types_de_champ)
           .where(revision_types_de_champ: { revision_id: draft_revision_id, parent_id: nil })
-          .order(:private, :position)
+          .order(:private, :new_position)
       else
         draft_revision.children_of(parent)
       end
@@ -105,7 +105,7 @@ class Procedure < ApplicationRecord
       TypeDeChamp
         .joins(:revision_types_de_champ)
         .where(revision_types_de_champ: { id: recents_prtdc })
-        .order(:private, :position, 'revision_types_de_champ.revision_id': :desc)
+        .order(:private, :new_position, 'revision_types_de_champ.revision_id': :desc)
     end
   end
 

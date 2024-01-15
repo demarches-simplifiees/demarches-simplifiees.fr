@@ -285,11 +285,11 @@ end
 
       after(:build) do |champ_repetition, _evaluator|
         type_de_champ_pj0 = build(:type_de_champ_piece_justificative,
-          position: 0,
+          new_position: 0.0,
           parent: champ_repetition.type_de_champ,
           libelle: 'Justificatif de domicile')
         type_de_champ_pj1 = build(:type_de_champ_piece_justificative,
-          position: 1,
+          new_position: 1.0,
           parent: champ_repetition.type_de_champ,
           libelle: 'Carte d\'identité')
 

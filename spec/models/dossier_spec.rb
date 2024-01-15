@@ -48,9 +48,9 @@ describe Dossier, type: :model do
 
   describe 'with_champs' do
     let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure) }
+    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', new_position: 1.0, procedure: procedure) }
+    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', new_position: 3.0, procedure: procedure) }
+    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', new_position: 2.0, procedure: procedure) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it do
@@ -359,9 +359,9 @@ describe Dossier, type: :model do
 
   describe '#champs' do
     let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure) }
+    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', new_position: 1.0, procedure: procedure) }
+    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', new_position: 3.0, procedure: procedure) }
+    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', new_position: 2.0, procedure: procedure) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs_public.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
@@ -369,9 +369,9 @@ describe Dossier, type: :model do
 
   describe '#champs_private' do
     let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, :private, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, :private, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, :private, libelle: 'l2', position: 2, procedure: procedure) }
+    let!(:tdc_1) { create(:type_de_champ, :private, libelle: 'l1', new_position: 1.0, procedure: procedure) }
+    let!(:tdc_3) { create(:type_de_champ, :private, libelle: 'l3', new_position: 3.0, procedure: procedure) }
+    let!(:tdc_2) { create(:type_de_champ, :private, libelle: 'l2', new_position: 2.0, procedure: procedure) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }

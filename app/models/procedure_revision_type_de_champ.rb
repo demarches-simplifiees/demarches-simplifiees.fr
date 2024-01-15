@@ -6,7 +6,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   has_many :revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
   has_one :procedure, through: :revision
   scope :root, -> { where(parent: nil) }
-  scope :ordered, -> { order(:position, :id) }
+  scope :ordered, -> { order(:new_position, :id) }
   scope :revision_ordered, -> { order(:revision_id) }
   scope :public_only, -> { joins(:type_de_champ).where(types_de_champ: { private: false }) }
   scope :private_only, -> { joins(:type_de_champ).where(types_de_champ: { private: true }) }
@@ -18,7 +18,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   end
 
   def first?
-    position == 0
+    new_position.to_i == 0
   end
 
   def last?
@@ -40,7 +40,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   end
 
   def upper_coordinates
-    upper = siblings.filter { |s| s.position < position }
+    upper = siblings.filter { |s| s.new_position < new_position }
 
     if child?
       upper += parent.upper_coordinates
@@ -53,6 +53,9 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
     upper
   end
 
+  # TODO: position.to_f, check offset
+  # -  def siblings_starting_at(comparator)
+  # -    siblings.filter { |s| new_position.send(comparator, s.new_position) }
   def siblings_starting_at(offset)
     siblings.filter { |s| (position + offset) <= s.position }
   end

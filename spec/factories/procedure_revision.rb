@@ -18,7 +18,7 @@ FactoryBot.define do
           coordinate = build(:procedure_revision_type_de_champ,
             revision: revision,
             type_de_champ: from_coordinate.type_de_champ,
-            position: from_coordinate.position,
+            new_position: from_coordinate.position,
             parent: parent)
 
           if parent.present?

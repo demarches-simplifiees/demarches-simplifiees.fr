@@ -329,7 +329,7 @@ describe Procedure do
       let(:draft) { procedure.draft_revision }
 
       before do
-        draft.revision_types_de_champ.create(type_de_champ: drop_down, position: 100)
+        draft.revision_types_de_champ.create(type_de_champ: drop_down, new_position: 100.0)
 
         repetition.update(libelle: 'Enfants')
         draft.children_of(repetition).destroy_all
@@ -350,7 +350,7 @@ describe Procedure do
           new_draft = procedure.draft_revision
 
           parent_coordinate = new_draft.revision_types_de_champ.find_by(type_de_champ: repetition)
-          new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
+          new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), new_position: 0.0, parent: parent_coordinate)
 
           procedure.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)

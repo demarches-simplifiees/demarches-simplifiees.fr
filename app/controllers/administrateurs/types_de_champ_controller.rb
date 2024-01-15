@@ -9,6 +9,8 @@ module Administrateurs
       if type_de_champ.valid?
         @coordinate = draft.coordinate_for(type_de_champ)
         @created = champ_component_from(@coordinate, focused: true)
+        # TODO: position, champ_components_starting_at. current+1
+        # @morphed = champ_components_starting_at(@coordinate, :>)
         @morphed = champ_components_starting_at(@coordinate, 1)
       else
         flash.alert = type_de_champ.errors.full_messages
@@ -25,6 +27,8 @@ module Administrateurs
         flash.alert = errors
       elsif type_de_champ.update(type_de_champ_update_params)
         @coordinate = draft.coordinate_for(type_de_champ)
+        # TODO: position, champ_components_starting_at. current+0
+        # @morphed = champ_components_starting_at(@coordinate, :==)
         @morphed = champ_components_starting_at(@coordinate)
       else
         flash.alert = type_de_champ.errors.full_messages
@@ -80,6 +84,8 @@ module Administrateurs
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       # update the one component below
+      # TODO: position, champ_components_starting_at. current+1
+      # @morphed = champ_components_starting_at(@coordinate, :==).take(1)
       @morphed = champ_components_starting_at(@coordinate, 1).take(1)
     end
 
@@ -88,6 +94,8 @@ module Administrateurs
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       # update the one component above
+      # TODO: position, champ_components_starting_at. current-1
+      # @morphed = champ_components_starting_at(@coordinate, :<).take(1)
       @morphed = champ_components_starting_at(@coordinate, - 1).take(1)
     end
 
@@ -103,6 +111,8 @@ module Administrateurs
 
         if @coordinate.present?
           @destroyed = @coordinate
+          # TODO: position, champ_components_starting_at. current+0
+          # @morphed = champ_components_starting_at(@coordinate, :==)
           @morphed = champ_components_starting_at(@coordinate)
         end
       end

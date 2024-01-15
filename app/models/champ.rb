@@ -74,7 +74,7 @@ class Champ < ApplicationRecord
     includes(:type_de_champ)
       .joins(dossier: { revision: :revision_types_de_champ })
       .where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id')
-      .order(:row_id, :position)
+      .order(:row_id, :new_position)
   end
   scope :public_ordered, -> { public_only.ordered }
   scope :private_ordered, -> { private_only.ordered }

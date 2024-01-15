@@ -29,7 +29,7 @@ describe ProcedureRevision do
         expect { subject }.to change { draft.types_de_champ_public.size }.from(2).to(3)
         expect(draft.types_de_champ_public.last).to eq(subject)
 
-        expect(last_coordinate.position).to eq(2)
+        # TODO: position.to_f
         expect(last_coordinate.new_position).to eq(2.0)
         expect(last_coordinate.type_de_champ).to eq(subject)
       end
@@ -48,7 +48,8 @@ describe ProcedureRevision do
         expect { subject }.to change { draft.reload.types_de_champ.count }.from(4).to(5)
         expect(draft.children_of(type_de_champ_repetition).last).to eq(subject)
 
-        expect(last_coordinate.position).to eq(1)
+        # TODO: position.to_f
+        expect(last_coordinate.new_position).to eq(1.0)
 
         parent_coordinate = draft.revision_types_de_champ.find_by(type_de_champ: type_de_champ_repetition)
         expect(last_coordinate.parent).to eq(parent_coordinate)
@@ -173,8 +174,9 @@ describe ProcedureRevision do
       context 'in public tdc' do
         let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3) }
 
+        # TODO: position.to_f
         it 'reorders' do
-          expect(draft.revision_types_de_champ_public.pluck(:position)).to eq([0, 1, 2])
+          expect(draft.revision_types_de_champ_public.pluck(:new_position)).to eq([0.0, 1.0, 2.0])
 
           first_stable_id = draft.types_de_champ_public[1].stable_id
 
@@ -204,15 +206,16 @@ describe ProcedureRevision do
           })
         end
 
+        # TODO: position.to_f
         it 'reorders' do
           children = draft.children_of(type_de_champ_repetition)
-          expect(children.pluck(:position)).to eq([0, 1, 2, 3])
+          expect(children.pluck(:new_position)).to eq([0.0, 1.0, 2.0, 3.0])
 
           draft.remove_type_de_champ(children[1].stable_id)
 
           children.reload
 
-          expect(children.pluck(:position)).to eq([0, 1, 2])
+          expect(children.pluck(:new_position)).to eq([0.0, 1.0, 2.0])
         end
       end
     end
@@ -649,10 +652,11 @@ describe ProcedureRevision do
         let(:child_position_2) { create(:type_de_champ_text) }
         let(:child_position_1) { create(:type_de_champ_text) }
 
+        # TODO: position.to_f
         before do
           parent_coordinate = draft.revision_types_de_champ.find_by(type_de_champ_id: parent.id)
-          draft.revision_types_de_champ.create(type_de_champ: child_position_2, position: 2, parent_id: parent_coordinate.id)
-          draft.revision_types_de_champ.create(type_de_champ: child_position_1, position: 1, parent_id: parent_coordinate.id)
+          draft.revision_types_de_champ.create(type_de_champ: child_position_2, new_position: 2.0, parent_id: parent_coordinate.id)
+          draft.revision_types_de_champ.create(type_de_champ: child_position_1, new_position: 1.0, parent_id: parent_coordinate.id)
         end
 
         it 'returns the children in order' do
@@ -730,6 +734,7 @@ describe ProcedureRevision do
       end
     end
 
+    # TODO: position.to_f
     context 'when there are repetitions' do
       let(:types_de_champ_public) do
         [
@@ -739,7 +744,7 @@ describe ProcedureRevision do
             description:,
             children: [
               { mandatory: true, description: "word " * 10 },
-              { type: :piece_justificative, position: 2, mandatory: true, description: nil }
+              { type: :piece_justificative, new_position: 2.0, mandatory: true, description: nil }
             ]
           }
         ]

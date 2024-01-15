@@ -150,7 +150,7 @@ FactoryBot.define do
 
       after(:build) do |procedure, evaluator|
         evaluator.types_de_champ_count.times do |position|
-          build(:type_de_champ, procedure: procedure, position: position)
+          build(:type_de_champ, procedure: procedure, new_position: position.to_f)
         end
       end
     end
@@ -162,7 +162,7 @@ FactoryBot.define do
 
       after(:build) do |procedure, evaluator|
         evaluator.types_de_champ_private_count.times do |position|
-          build(:type_de_champ, :private, procedure: procedure, position: position)
+          build(:type_de_champ, :private, procedure: procedure, new_position: position.to_f)
         end
       end
     end
@@ -373,13 +373,13 @@ FactoryBot.define do
             libelle = 'simple_drop_down_list'
           end
           if type_champ == 'repetition'
-            build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, mandatory: true, libelle: libelle, position: index)
+            build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, mandatory: true, libelle: libelle, new_position: index.to_f)
           else
-            build(:"type_de_champ_#{type_champ}", procedure: procedure, mandatory: true, libelle: libelle, position: index)
+            build(:"type_de_champ_#{type_champ}", procedure: procedure, mandatory: true, libelle: libelle, new_position: index.to_f)
           end
         end
-        build(:type_de_champ_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'simple_choice_drop_down_list_long', position: TypeDeChamp.type_champs.size)
-        build(:type_de_champ_multiple_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'multiple_choice_drop_down_list_long', position: TypeDeChamp.type_champs.size + 1)
+        build(:type_de_champ_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'simple_choice_drop_down_list_long', new_position: (TypeDeChamp.type_champs.size).to_f)
+        build(:type_de_champ_multiple_drop_down_list, :long, procedure: procedure, mandatory: true, libelle: 'multiple_choice_drop_down_list_long', new_position: (TypeDeChamp.type_champs.size + 1).to_f)
       end
     end
 
@@ -390,9 +390,9 @@ FactoryBot.define do
             libelle = 'simple_drop_down_list'
           end
           if type_champ == 'repetition'
-            build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, libelle: libelle, position: index)
+            build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, libelle: libelle, new_position: index.to_f)
           else
-            build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, position: index)
+            build(:"type_de_champ_#{type_champ}", procedure: procedure, libelle: libelle, new_position: index.to_f)
           end
         end
       end
@@ -404,7 +404,7 @@ FactoryBot.define do
           if libelle == 'drop_down_list'
             libelle = 'simple_drop_down_list'
           end
-          build(:"type_de_champ_#{type_champ}", procedure: procedure, private: true, libelle: libelle, position: index)
+          build(:"type_de_champ_#{type_champ}", procedure: procedure, private: true, libelle: libelle, new_position: index.to_f)
         end
       end
     end
@@ -444,7 +444,7 @@ end
 def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
   types_de_champ.deep_dup.each.with_index do |type_de_champ_attributes, i|
     type = TypeDeChamp.type_champs.fetch(type_de_champ_attributes.delete(:type) || :text).to_sym
-    position = type_de_champ_attributes.delete(:position) || i
+    position = (type_de_champ_attributes.delete(:position) || i).to_f
     children = type_de_champ_attributes.delete(:children)
     options = type_de_champ_attributes.delete(:options)
     layers = type_de_champ_attributes.delete(:layers)
@@ -476,7 +476,7 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
     coordinate = build(:procedure_revision_type_de_champ,
       revision: revision,
       type_de_champ: type_de_champ,
-      position: position,
+      new_position: position,
       parent: parent)
 
     revision.association(:revision_types_de_champ).target << coordinate
@@ -491,7 +491,7 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
   end
 
   if parent.present?
-    parent.association(:revision_types_de_champ).target.sort_by!(&:position)
+    parent.association(:revision_types_de_champ).target.sort_by!(&:new_position)
   else
     revision_types_de_champ_private, revision_types_de_champ_public = revision.revision_types_de_champ.partition(&:private?)
 
@@ -501,8 +501,8 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
     revision.association(:revision_types_de_champ_private).target = root_revision_types_de_champ_private.sort_by(&:position)
     revision.association(:revision_types_de_champ).target = revision.revision_types_de_champ_public +
       revision.revision_types_de_champ_private +
-      child_revision_types_de_champ_public.sort_by(&:parent).sort_by(&:position) +
-      child_revision_types_de_champ_private.sort_by(&:parent).sort_by(&:position)
+      child_revision_types_de_champ_public.sort_by(&:parent).sort_by(&:new_position) +
+      child_revision_types_de_champ_private.sort_by(&:parent).sort_by(&:new_position)
 
     revision.association(:types_de_champ).target = revision.revision_types_de_champ.map(&:type_de_champ)
     revision.association(:types_de_champ_public).target = revision.revision_types_de_champ_public.map(&:type_de_champ)

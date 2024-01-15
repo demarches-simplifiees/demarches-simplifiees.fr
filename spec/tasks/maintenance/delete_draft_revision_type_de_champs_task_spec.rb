@@ -53,7 +53,7 @@ module Maintenance
 
         tdc = find_by_stable_id(131)
         expect(tdc).not_to be_nil
-        expect(tdc.revision_type_de_champ.position).to eq(0) # reindexed
+        expect(tdc.revision_type_de_champ.new_position).to eq(0) # reindexed
 
         tdc = find_by_stable_id(132)
         expect(tdc).to be_nil

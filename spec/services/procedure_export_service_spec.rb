@@ -16,12 +16,13 @@ describe ProcedureExportService do
     let(:avis_sheet) { subject.sheets.third }
     let(:repetition_sheet) { subject.sheets.fourth }
 
+    # TODO: position.to_f
     before do
       # change one tdc place to check if the header is ordered
       tdc_first = procedure.active_revision.revision_types_de_champ_public.first
       tdc_last = procedure.active_revision.revision_types_de_champ_public.last
 
-      tdc_first.update(position: tdc_last.position + 1)
+      tdc_first.update(new_position: tdc_last.new_position + 1)
       procedure.reload
     end
 
@@ -430,7 +431,7 @@ describe ProcedureExportService do
         let(:other_parent) { create(:type_de_champ_repetition, stable_id: champ_repetition.stable_id) }
 
         before do
-          create(:type_de_champ, parent: create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision, position: 0))
+          create(:type_de_champ, parent: create(:procedure_revision_type_de_champ, type_de_champ: other_parent, revision: create(:procedure).active_revision, new_position: 0.0))
         end
 
         it 'should have headers' do

@@ -4,8 +4,7 @@ class ProcedureRevision < ApplicationRecord
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
 
   has_many :dossiers, inverse_of: :revision, foreign_key: :revision_id
-
-  has_many :revision_types_de_champ, -> { order(:position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
+  has_many :revision_types_de_champ, -> { order(:new_position, :id) }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_public, -> { root.public_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :revision_types_de_champ_private, -> { root.private_only.ordered }, class_name: 'ProcedureRevisionTypeDeChamp', foreign_key: :revision_id, dependent: :destroy, inverse_of: :revision
   has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
@@ -41,12 +40,11 @@ class ProcedureRevision < ApplicationRecord
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    # TODO: position.to_f
-    position = (after_coordinate&.position) || 100_000
+    new_position = (after_coordinate&.new_position&.to_f) || 100_000.0
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
-      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
+      h = { type_de_champ: tdc, parent_id: parent_id, position: new_position.to_i, new_position: new_position }
       coordinate = revision_types_de_champ.create!(h)
       renumber(coordinate.reload.siblings)
     end
@@ -70,6 +68,7 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
+  # TODO: position.to_f
   def move_type_de_champ(stable_id, position)
     coordinate, _ = coordinate_and_tdc(stable_id)
 
@@ -104,20 +103,22 @@ class ProcedureRevision < ApplicationRecord
     coordinate
   end
 
+  # TODO: position.to_f
   def move_up_type_de_champ(stable_id)
     coordinate, _ = coordinate_and_tdc(stable_id)
 
-    if coordinate.position > 0
-      move_type_de_champ(stable_id, coordinate.position - 1)
+    if coordinate.new_position > 0.0
+      move_type_de_champ(stable_id, coordinate.new_position - 1)
     else
       coordinate
     end
   end
 
+  # TODO: position.to_f
   def move_down_type_de_champ(stable_id)
     coordinate, _ = coordinate_and_tdc(stable_id)
 
-    move_type_de_champ(stable_id, coordinate.position + 1)
+    move_type_de_champ(stable_id, coordinate.new_position + 1)
   end
 
   def draft?
@@ -168,14 +169,14 @@ class ProcedureRevision < ApplicationRecord
 
       revision_types_de_champ
         .filter { _1.parent_id.in?(parent_coordinate_id) }
-        .sort_by(&:position)
+        .sort_by(&:new_position)
         .map(&:type_de_champ)
     else
       parent_coordinate_id = revision_types_de_champ.where(type_de_champ: tdc).select(:id)
 
       types_de_champ
         .where(procedure_revision_types_de_champ: { parent_id: parent_coordinate_id })
-        .order("procedure_revision_types_de_champ.position")
+        .order("procedure_revision_types_de_champ.new_position")
     end
   end
 
@@ -248,7 +249,7 @@ class ProcedureRevision < ApplicationRecord
 
   def renumber(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
-      sibling.update_columns(position: position, new_position: position.to_f)
+      sibling.update_columns(position: position.to_i, new_position: position.to_f)
     end
   end
 
@@ -266,11 +267,10 @@ class ProcedureRevision < ApplicationRecord
       added = (to_sids - from_sids).map { ProcedureRevisionChange::AddChamp.new(to_h[_1]) }
 
       kept = from_sids.intersection(to_sids)
-
       moved = kept
         .map { [from_h[_1], to_h[_1]] }
-        .filter { |from, to| from.position != to.position }
-        .map { |from, to| ProcedureRevisionChange::MoveChamp.new(from, from.position, to.position) }
+        .filter { |from, to| from.new_position != to.new_position }
+        .map { |from, to| ProcedureRevisionChange::MoveChamp.new(from, from.new_position, to.new_position) }
 
       changed = kept
         .map { [from_h[_1], to_h[_1]] }

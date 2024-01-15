@@ -8,7 +8,7 @@ FactoryBot.define do
 
     transient do
       procedure { nil }
-      position { nil }
+      new_position { nil }
       parent { nil }
       no_coordinate { false }
     end
@@ -17,9 +17,8 @@ FactoryBot.define do
       if !evaluator.no_coordinate
         revision = evaluator.procedure&.active_revision || build(:procedure_revision)
         evaluator.procedure&.save
-
         revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
-          position: evaluator.position || 0,
+          new_position: evaluator.new_position || 0.0,
           revision: revision,
           type_de_champ: type_de_champ,
           parent: evaluator.parent)
@@ -205,14 +204,14 @@ FactoryBot.define do
         revision = evaluator.procedure&.active_revision || build(:procedure_revision)
         parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
         types_de_champ = revision.revision_types_de_champ.filter { |rtdc| rtdc.parent == parent }
-        position = types_de_champ.size
+        position = types_de_champ.size.to_f
 
         evaluator.types_de_champ.each.with_index(position) do |type_de_champ, position|
           revision.revision_types_de_champ << build(:procedure_revision_type_de_champ,
             revision: revision,
             type_de_champ: type_de_champ,
             parent: parent,
-            position: position)
+            new_position: position)
         end
 
         revision.save
@@ -223,8 +222,8 @@ FactoryBot.define do
           revision = evaluator.procedure.active_revision
           parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
 
-          build(:type_de_champ, procedure: evaluator.procedure, libelle: 'sub type de champ', parent: parent, position: 0)
-          build(:type_de_champ, type_champ: TypeDeChamp.type_champs.fetch(:integer_number), procedure: evaluator.procedure, libelle: 'sub type de champ2', parent: parent, position: 1)
+          build(:type_de_champ, procedure: evaluator.procedure, libelle: 'sub type de champ', parent: parent, new_position: 0.to_f)
+          build(:type_de_champ, type_champ: TypeDeChamp.type_champs.fetch(:integer_number), procedure: evaluator.procedure, libelle: 'sub type de champ2', parent: parent, new_position: 1.to_f)
         end
       end
 
@@ -233,7 +232,7 @@ FactoryBot.define do
           revision = evaluator.procedure.active_revision
           parent = revision.revision_types_de_champ.find { |rtdc| rtdc.type_de_champ == type_de_champ_repetition }
 
-          build(:type_de_champ, type_champ: TypeDeChamp.type_champs.fetch(:regions), procedure: evaluator.procedure, libelle: 'region sub_champ', parent: parent, position: 10)
+          build(:type_de_champ, type_champ: TypeDeChamp.type_champs.fetch(:regions), procedure: evaluator.procedure, libelle: 'region sub_champ', parent: parent, new_position: 10.to_f)
         end
       end
     end
