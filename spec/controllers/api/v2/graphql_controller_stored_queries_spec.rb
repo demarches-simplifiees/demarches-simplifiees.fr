@@ -185,17 +185,20 @@ describe API::V2::GraphqlController do
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
-          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          Timecop.travel(3.hours.ago) {
+            dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          }
         }
 
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:demarche][:id]).to eq(procedure.to_typed_id)
           expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].size).to eq(2)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
-          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:demarche][:pendingDeletedDossiers][:nodes].first[:dateSupression] < gql_data[:demarche][:pendingDeletedDossiers][:nodes].second[:dateSupression])
         }
       end
     end
@@ -252,17 +255,20 @@ describe API::V2::GraphqlController do
 
         before {
           dossier.hide_and_keep_track!(dossier.user, DeletedDossier.reasons.fetch(:user_request))
-          dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          Timecop.travel(3.hours.ago) {
+            dossier_accepte.hide_and_keep_track!(instructeur, DeletedDossier.reasons.fetch(:instructeur_request))
+          }
         }
 
         it {
           expect(gql_errors).to be_nil
           expect(gql_data[:groupeInstructeur][:id]).to eq(groupe_instructeur.to_typed_id)
           expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].size).to eq(2)
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
-          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier_accepte.id))
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:id]).to eq(GraphQL::Schema::UniqueWithinType.encode('DeletedDossier', dossier.id))
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression]).to eq(dossier_accepte.hidden_by_administration_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression]).to eq(dossier.hidden_by_user_at.iso8601)
+          expect(gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].first[:dateSupression] < gql_data[:groupeInstructeur][:pendingDeletedDossiers][:nodes].second[:dateSupression])
         }
       end
     end
