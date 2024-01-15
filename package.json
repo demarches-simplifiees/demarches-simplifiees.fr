@@ -28,7 +28,7 @@
     "email-butler": "^1.0.13",
     "geojson": "^0.5.0",
     "graphiql": "^3.0.5",
-    "graphql": "^16.8.0",
+    "graphql": "^16.8.1",
     "highcharts": "^10.3.3",
     "intersection-observer": "^0.12.2",
     "is-hotkey": "^0.2.0",
