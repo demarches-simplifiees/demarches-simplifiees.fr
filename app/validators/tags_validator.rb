@@ -1,7 +1,7 @@
 class TagsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     procedure = record.procedure
-    tags = record.used_type_de_champ_tags(value || '')
+    tags = record.used_type_de_champ_tags(value.to_s)
 
     invalid_tags = tags.filter_map do |(tag, stable_id)|
       tag if stable_id.nil?

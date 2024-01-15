@@ -5,8 +5,9 @@ module Administrateurs
     before_action :retrieve_procedure, :retrieve_attestation_template, :ensure_feature_active
 
     def show
-      json_body = @attestation_template.json_body&.deep_symbolize_keys
-      @body = TiptapService.new.to_html(json_body, {})
+      preview_dossier = @procedure.dossier_for_preview(current_user)
+
+      @body = @attestation_template.render_attributes_for(dossier: preview_dossier).fetch(:body)
 
       respond_to do |format|
         format.html do

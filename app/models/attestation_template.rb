@@ -64,26 +64,19 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def render_attributes_for(params = {})
-    attributes = {
-      created_at: Time.zone.now,
+    groupe_instructeur = params[:groupe_instructeur]
+    groupe_instructeur ||= params[:dossier]&.groupe_instructeur
+
+    base_attributes = {
+      created_at: Time.current,
       footer: params.fetch(:footer, footer),
-      logo: params.fetch(:logo, logo.attached? ? logo : nil)
+      signature: signature_to_render(groupe_instructeur)
     }
 
-    dossier = params[:dossier]
-
-    if dossier.present?
-      attributes.merge({
-        title: replace_tags(title, dossier, escape: false),
-        body: replace_tags(body, dossier, escape: false),
-        signature: signature_to_render(dossier.groupe_instructeur)
-      })
+    if version == 2
+      render_attributes_for_v2(params, base_attributes)
     else
-      attributes.merge({
-        title: params.fetch(:title, title),
-        body: params.fetch(:body, body),
-        signature: signature_to_render(params[:groupe_instructeur])
-      })
+      render_attributes_for_v1(params, base_attributes)
     end
   end
 
@@ -112,6 +105,43 @@ class AttestationTemplate < ApplicationRecord
   end
 
   private
+
+  def render_attributes_for_v1(params, base_attributes)
+    attributes = base_attributes.merge(
+      logo: params.fetch(:logo, logo.attached? ? logo : nil)
+    )
+
+    dossier = params[:dossier]
+
+    if dossier.present?
+      attributes.merge(
+        title: replace_tags(title, dossier, escape: false),
+        body: replace_tags(body, dossier, escape: false)
+      )
+    else
+      attributes.merge(
+        title: params.fetch(:title, title),
+        body: params.fetch(:body, body)
+      )
+    end
+  end
+
+  def render_attributes_for_v2(params, base_attributes)
+    dossier = params[:dossier]
+
+    json = json_body&.deep_symbolize_keys
+    body = TiptapService.new.to_html(json, {})
+
+    if dossier.present?
+      attributes.merge(
+        body: replace_tags(body, dossier, escape: false)
+      )
+    else
+      attributes.merge(
+        body: params.fetch(:body, body)
+      )
+    end
+  end
 
   def signature_to_render(groupe_instructeur)
     if groupe_instructeur&.signature&.attached?

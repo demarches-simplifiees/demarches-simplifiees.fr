@@ -48,9 +48,9 @@ class TiptapService
       end
     in type: 'mention', attrs: { id: }, **rest
       if rest[:marks].present?
-        apply_marks(tags[id], rest[:marks])
+        apply_marks("--#{id}--", rest[:marks])
       else
-        tags[id]
+        "--#{id}--"
       end
     in { type: type } if ["paragraph", "title", "heading"].include?(type) && !node.key?(:content)
       # noop
