@@ -30,6 +30,7 @@ describe ProcedureRevision do
         expect(draft.types_de_champ_public.last).to eq(subject)
 
         expect(last_coordinate.position).to eq(2)
+        expect(last_coordinate.new_position).to eq(2.0)
         expect(last_coordinate.type_de_champ).to eq(subject)
       end
     end

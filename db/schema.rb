@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_12_103134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -790,6 +790,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
 
   create_table "procedure_revision_types_de_champ", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
+    t.float "new_position"
     t.bigint "parent_id"
     t.integer "position", null: false
     t.bigint "revision_id", null: false

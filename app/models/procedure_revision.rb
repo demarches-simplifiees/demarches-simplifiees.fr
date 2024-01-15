@@ -41,15 +41,13 @@ class ProcedureRevision < ApplicationRecord
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    # the collection is orderd by (position, id), so we can use after_coordinate.position
-    # if not present, a big number is used to ensure the element is at the tail
+    # TODO: position.to_f
     position = (after_coordinate&.position) || 100_000
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
       h = { type_de_champ: tdc, parent_id: parent_id, position: position }
       coordinate = revision_types_de_champ.create!(h)
-
       renumber(coordinate.reload.siblings)
     end
 
@@ -250,7 +248,7 @@ class ProcedureRevision < ApplicationRecord
 
   def renumber(siblings)
     siblings.to_a.compact.each.with_index do |sibling, position|
-      sibling.update_column(:position, position)
+      sibling.update_columns(position: position, new_position: position.to_f)
     end
   end
 
