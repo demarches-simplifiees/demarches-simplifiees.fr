@@ -139,7 +139,7 @@ class Administrateur < ApplicationRecord
   end
 
   def zones
-    procedures.joins(:zones).flat_map(&:zones).uniq
+    procedures.includes(:zones).flat_map(&:zones).uniq
   end
 
   # required to display feature flags field in manager
