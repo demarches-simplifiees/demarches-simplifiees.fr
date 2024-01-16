@@ -85,6 +85,11 @@
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+  top: 2em;
+}
+
 // display
 .hidden {
   display: none !important;
