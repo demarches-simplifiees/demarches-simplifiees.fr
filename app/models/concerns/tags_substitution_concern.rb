@@ -155,14 +155,14 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::SOUMIS
     },
     {
-      id: 'individual_first_name',
+      id: 'individual_last_name',
       libelle: 'nom',
       description: "nom de l'usager",
       target: :nom,
       available_for_states: Dossier::SOUMIS
     },
     {
-      id: 'individual_last_name',
+      id: 'individual_first_name',
       libelle: 'prénom',
       description: "prénom de l'usager",
       target: :prenom,
@@ -252,6 +252,43 @@ module TagsSubstitutionConcern
 
   def used_tags_for(text)
     used_tags_and_libelle_for(text).map { _1.first.nil? ? _1.second : _1.first }
+  end
+
+  def tags_substitutions(tokens, dossier, escape: true)
+    # NOTE:
+    # - tokens est un simple Set d'ids (pas la même structure que dans replace_tags)
+    # - dans replace_tags, on fait référence à des tags avec ou sans id, mais pas ici,
+    #   a priori inutile car tiptap ne fait référence qu'aux ids.
+
+    @escape_unsafe_tags = escape
+
+    tags_and_datas = [
+      [champ_public_tags(dossier: dossier), dossier.champs_public],
+      [champ_private_tags(dossier: dossier), dossier.champs_private],
+      [dossier_tags, dossier],
+      [ROUTAGE_TAGS, dossier],
+      [INDIVIDUAL_TAGS, dossier.individual],
+      [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
+    ]
+
+    flat_tags = tags_and_datas.each_with_object({}) do |(tags, data), result|
+      next if data.nil?
+
+      valid_tags = tags_for_dossier_state(tags)
+
+      valid_tags.each do |tag|
+        result[tag[:id]] = [tag, data]
+      end
+    end
+
+    tokens.index_with do |token|
+      case flat_tags[token]
+      in tag, data
+        replace_tag(tag, data)
+      else
+        token
+      end
+    end
   end
 
   private

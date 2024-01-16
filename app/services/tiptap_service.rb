@@ -1,8 +1,21 @@
 class TiptapService
-  def to_html(node, tags)
+  def to_html(node, tags = {})
     return '' if node.nil?
 
     children(node[:content], tags, 0)
+  end
+
+  def used_tags(node, tags = Set.new)
+    case node
+    in type: 'mention', attrs: { id: }
+      tags << id
+    in { content: } if content.is_a?(Array)
+      content.each { used_tags(_1, tags) }
+    else
+      # noop
+    end
+
+    tags
   end
 
   private
@@ -47,10 +60,12 @@ class TiptapService
         text
       end
     in type: 'mention', attrs: { id: }, **rest
+      text = tags.fetch(id) { "--#{id}--" }
+
       if rest[:marks].present?
-        apply_marks("--#{id}--", rest[:marks])
+        apply_marks(text, rest[:marks])
       else
-        "--#{id}--"
+        text
       end
     in { type: type } if ["paragraph", "title", "heading"].include?(type) && !node.key?(:content)
       # noop

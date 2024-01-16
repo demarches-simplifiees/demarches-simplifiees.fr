@@ -130,15 +130,20 @@ class AttestationTemplate < ApplicationRecord
     dossier = params[:dossier]
 
     json = json_body&.deep_symbolize_keys
-    body = TiptapService.new.to_html(json, {})
+
+    tiptap = TiptapService.new
 
     if dossier.present?
+      used_tags = tiptap.used_tags(json)
+      substitutions = tags_substitutions(used_tags, dossier, escape: false)
+      body = tiptap.to_html(json, substitutions)
+
       attributes.merge(
-        body: replace_tags(body, dossier, escape: false)
+        body:
       )
     else
       attributes.merge(
-        body: params.fetch(:body, body)
+        body: params.fetch(:body) { tiptap.to_html(json) }
       )
     end
   end
