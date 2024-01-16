@@ -636,6 +636,9 @@ Performance/FixedSize:
 Performance/FlatMap:
   Enabled: true
 
+Performance/OpenStruct:
+  Enabled: true
+
 Performance/RangeInclude:
   Enabled: true
 
