@@ -38,7 +38,7 @@ RSpec.describe APIEntreprise::Job, type: :job do
     def perform(error, etablissement)
       @etablissement = etablissement
 
-      response = OpenStruct.new(
+      response = Typhoeus::Response.new(
         effective_url: 'http://host.com/path',
         code: '666',
         body: 'body',
