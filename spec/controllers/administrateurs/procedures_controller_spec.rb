@@ -116,6 +116,23 @@ describe Administrateurs::ProceduresController, type: :controller do
       expect(assigns(:procedures).any? { |p| p.id == draft_procedure.id }).to be_falsey
     end
 
+    context 'for default admin zones' do
+      let(:zone1) { create(:zone) }
+      let(:zone2) { create(:zone) }
+      let!(:procedure1) { create(:procedure, :published, zones: [zone1]) }
+      let!(:procedure2) { create(:procedure, :published, zones: [zone1, zone2]) }
+      let!(:admin_procedure) { create(:procedure, :published, zones: [zone2], administrateur: admin) }
+
+      subject { get :all, params: { zone_ids: :admin_default } }
+
+      it 'display only procedures for specified zones' do
+        subject
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == admin_procedure.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure1.id }).to be_falsey
+      end
+    end
+
     context "for specific zones" do
       let(:zone1) { create(:zone) }
       let(:zone2) { create(:zone) }

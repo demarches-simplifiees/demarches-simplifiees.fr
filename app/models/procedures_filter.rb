@@ -5,6 +5,9 @@ class ProceduresFilter
 
   def initialize(admin, params)
     @admin = admin
+
+    params[:zone_ids] = admin.zones.pluck(:id) if params[:zone_ids] == 'admin_default'
+
     @params = params.permit(:page, :libelle, :email, :from_publication_date, :service_siret, :service_departement, tags: [], zone_ids: [], statuses: [])
   end
 
