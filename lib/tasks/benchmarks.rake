@@ -131,4 +131,15 @@ namespace :benchmarks do
       x.compare!
     end
   end
+
+  desc "Inspect possible memory leaks"
+  task inspect_memory_leak: :environment do
+    10.times do
+      10_000.times do
+        # Write code here
+      end
+
+      puts `ps -o rss= -p #{$$}`
+    end
+  end
 end
