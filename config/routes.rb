@@ -212,6 +212,7 @@ Rails.application.routes.draw do
     collection do
       get :nom
       get :autorisations
+      get :securite
     end
   end
 

@@ -15,6 +15,9 @@ class APITokensController < ApplicationController
       .map { |libelle, id| ["#{id} - #{libelle}", id] }
   end
 
+  def securite
+  end
+
   def create
     @api_token, @packed_token = APIToken.generate(current_administrateur)
 
