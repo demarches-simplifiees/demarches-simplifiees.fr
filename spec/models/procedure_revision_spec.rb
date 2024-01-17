@@ -28,7 +28,7 @@ describe ProcedureRevision do
       it 'public' do
         expect { subject }.to change { draft.types_de_champ_public.size }.from(2).to(3)
         expect(draft.types_de_champ_public.last).to eq(subject)
-        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0,1,2])
+        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2])
 
         expect(last_coordinate.position).to eq(2)
         expect(last_coordinate.type_de_champ).to eq(subject)
@@ -41,7 +41,7 @@ describe ProcedureRevision do
       it 'private' do
         expect { subject }.to change { draft.types_de_champ_private.count }.from(1).to(2)
         expect(draft.types_de_champ_private.last).to eq(subject)
-        expect(draft.revision_types_de_champ_private.map(&:position)).to eq([0,1])
+        expect(draft.revision_types_de_champ_private.map(&:position)).to eq([0, 1])
         expect(last_coordinate.position).to eq(1)
       end
     end
@@ -52,7 +52,7 @@ describe ProcedureRevision do
       it do
         expect { subject }.to change { draft.reload.types_de_champ.count }.from(4).to(5)
         expect(draft.children_of(type_de_champ_repetition).last).to eq(subject)
-        expect(draft.children_of(type_de_champ_repetition).map(&:revision_type_de_champ).map(&:position)).to eq([0,1])
+        expect(draft.children_of(type_de_champ_repetition).map(&:revision_type_de_champ).map(&:position)).to eq([0, 1])
 
         expect(last_coordinate.position).to eq(1)
 
@@ -81,7 +81,7 @@ describe ProcedureRevision do
           expect(draft.revision_types_de_champ_public.map(&:libelle)).to eq(['l1', 'l2'])
           subject
           expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'in the middle', 'l2'])
-          expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0,1,2])
+          expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2])
         end
       end
 
@@ -106,7 +106,7 @@ describe ProcedureRevision do
         stable_id_before = draft.revision_types_de_champ_public.map(&:stable_id)
         draft.move_type_de_champ(type_de_champ_public.stable_id, 2)
         draft.reload
-        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0,1,2,3])
+        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2, 3])
         expect(draft.types_de_champ_public.index(type_de_champ_public)).to eq(2)
         expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
       end
@@ -115,7 +115,7 @@ describe ProcedureRevision do
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(3)
         draft.move_type_de_champ(last_type_de_champ.stable_id, 0)
         draft.reload
-        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0,1,2,3])
+        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2, 3])
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(0)
         expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(last_type_de_champ)).to eq(0)
       end

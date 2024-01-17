@@ -38,31 +38,18 @@ class ProcedureRevision < ApplicationRecord
     parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
     parent_id = parent_coordinate&.id
 
-    siblings = if parent_coordinate
-      parent_coordinate.revision_types_de_champ
-    elsif params['private'] || params[:private]
-      revision_types_de_champ_private
-    else
-      revision_types_de_champ_public
-    end
-
-
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    if siblings.to_a.empty? # first element of the list, starts at 0
-      position = 0.0
-    elsif after_coordinate # middle of the list, between two items
-      position = after_coordinate.position + 1
-    else # last element of the list, end with last position + 1
-      position = siblings.to_a.last.position + 1.0
-    end
+    siblings = siblings_for(parent_coordinate:, private_tdc: params[:private] || params['private'])
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
+      position = next_position_for(after_coordinate:, siblings:)
       h = { type_de_champ: tdc, parent_id: parent_id, position: position }
-      incr_coordinates_above(siblings, position)
-      coordinate = revision_types_de_champ.create!(h)
+
+      siblings.where("position >= ?", position).update_all("position = position + 1")
+      revision_types_de_champ.create!(h)
     end
 
     # they are not aware of the addition
@@ -88,11 +75,12 @@ class ProcedureRevision < ApplicationRecord
   # []
   def move_type_de_champ(stable_id, position)
     coordinate, _ = coordinate_and_tdc(stable_id)
+    siblings = coordinate.siblings
 
     if position > coordinate.position
-      decr_siblings_between(coordinate, position)
+      siblings.where(position: coordinate.position..position).update_all("position = position - 1")
     else
-      inc_siblings_between(coordinate, position)
+      siblings.where(position: position..coordinate.position).update_all("position = position + 1")
     end
     coordinate.update_column(:position, position)
 
@@ -113,11 +101,11 @@ class ProcedureRevision < ApplicationRecord
     children.each(&:destroy_if_orphan)
     tdc.destroy_if_orphan
 
+    coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+
     # they are not aware of the removal
     types_de_champ_public.reset
     types_de_champ_private.reset
-
-    decr_siblings_above(coordinate.siblings, coordinate.position)
 
     coordinate
   end
@@ -264,23 +252,25 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def incr_coordinates_above(siblings, position)
-    siblings.where("position >= ?", position).update_all("position = position + 1")
+  def siblings_for(parent_coordinate: nil, private_tdc: false)
+    if parent_coordinate
+      parent_coordinate.revision_types_de_champ
+    elsif private_tdc
+      revision_types_de_champ_private
+    else
+      revision_types_de_champ_public
+    end
   end
 
-  def decr_siblings_above(coordinate)
-    coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+  def next_position_for(siblings:, after_coordinate: nil)
+    if siblings.to_a.empty? # first element of the list, starts at 0
+      0
+    elsif after_coordinate # middle of the list, between two items
+      after_coordinate.position + 1
+    else # last element of the list, end with last position + 1
+      siblings.to_a.last.position + 1
+    end
   end
-
-  def decr_siblings_between(coordinate, position)
-    coordinate.siblings.where(position: coordinate.position..position).update_all("position = position - 1")
-  end
-
-  def inc_siblings_between(coordinate, position)
-    coordinate.siblings.where(position: position..coordinate.position).update_all("position = position + 1")
-  end
-
-
 
   def compare_revision_types_de_champ(from_coordinates, to_coordinates)
     if from_coordinates == to_coordinates
