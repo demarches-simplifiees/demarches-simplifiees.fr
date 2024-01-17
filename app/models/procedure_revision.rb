@@ -38,24 +38,37 @@ class ProcedureRevision < ApplicationRecord
     parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
     parent_id = parent_coordinate&.id
 
+    siblings = if parent_coordinate
+      parent_coordinate.revision_types_de_champ
+    elsif params['private'] || params[:private]
+      revision_types_de_champ_private
+    else
+      revision_types_de_champ_public
+    end
+
+
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    # the collection is orderd by (position, id), so we can use after_coordinate.position
-    # if not present, a big number is used to ensure the element is at the tail
-    position = (after_coordinate&.position) || 100_000
+    if siblings.to_a.empty? # first element of the list, starts at 0
+      position = 0.0
+    elsif after_coordinate # middle of the list, between two items
+      position = after_coordinate.position + 1
+    else # last element of the list, end with last position + 1
+      position = siblings.to_a.last.position + 1.0
+    end
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
       h = { type_de_champ: tdc, parent_id: parent_id, position: position }
+      incr_coordinates_above(siblings, position)
       coordinate = revision_types_de_champ.create!(h)
-
-      renumber(coordinate.reload.siblings)
     end
 
     # they are not aware of the addition
     types_de_champ_public.reset
     types_de_champ_private.reset
+    reload
 
     tdc
   rescue => e
@@ -83,6 +96,10 @@ class ProcedureRevision < ApplicationRecord
     coordinate.reload
 
     coordinate
+  end
+
+  def incr_coordinates_above(siblings, position)
+    siblings.where("position >= ?", position).update_all("position = position + 1")
   end
 
   def remove_type_de_champ(stable_id)
