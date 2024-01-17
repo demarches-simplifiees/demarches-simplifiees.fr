@@ -2,6 +2,10 @@ class APITokensController < ApplicationController
   before_action :authenticate_administrateur!
   before_action :set_api_token, only: [:destroy]
 
+  def nom
+    @name = params[:name]
+  end
+
   def create
     @api_token, @packed_token = APIToken.generate(current_administrateur)
 
