@@ -1,0 +1,40 @@
+- content_for :title, "jeton « #{@name} » créé"
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Tableau de bord', tableau_de_bord_helper_path],
+    [t('users.profil.show.profile'), profil_path],
+    [t('api_tokens.nom.new_token')]] }
+
+.fr-container.fr-mt-2w
+  %h1 Votre jeton est prêt
+
+  %p
+    Vous pouvez maintenant utiliser votre jeton pour accéder à vos données.<br />
+    %b Attention, vous ne pourrez plus le consulter après avoir quitté cette page.
+
+  %p{ data: { controller: 'clipboard', clipboard_text_value: @packed_token } }
+    %code= @packed_token
+    %button.fr-btn.fr-btn-primary.fr-btn-small.fr-ml-2w{ data: { action: 'clipboard#copy' }, title: 'Copier dans le presse-papier' } Copier
+
+  %p.fr-mt-4w Résumé des informations du jeton :
+  %ul
+    %li
+      %strong Nom du jeton :
+      #{@api_token.name}
+    %li
+      %strong Accès :
+      #{@api_token.write_access? ? 'lecture et écriture' : 'lecture'}
+    %li
+      %strong Démarches :
+      = @api_token.full_access? ? 'toutes' : @api_token.procedures.map(&:libelle).join(', ')
+    %li
+      %strong Réseaux autorisés :
+      = @api_token.authorized_networks.empty? ? 'tout internet' : @api_token.authorized_networks_for_ui
+    %li
+      %strong Date de fin de validité :
+      - if @api_token.expires_at.present?
+        %span= l(@api_token.expires_at, format: :long)
+      - else
+        %span aucune
+
+    = link_to 'Retour au profil', profil_path, class: 'fr-btn fr-btn--secondary fr-mt-2w'
