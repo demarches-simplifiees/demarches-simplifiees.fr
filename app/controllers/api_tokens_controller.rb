@@ -1,21 +1,9 @@
 class APITokensController < ApplicationController
   before_action :authenticate_administrateur!
-  before_action :set_api_token, only: [:update, :destroy]
+  before_action :set_api_token, only: [:destroy]
 
   def create
     @api_token, @packed_token = APIToken.generate(current_administrateur)
-
-    render :index
-  end
-
-  def update
-    if become_full_access?
-      @api_token.become_full_access!
-    elsif disallow_procedure_id.present?
-      @api_token.untarget_procedure(disallow_procedure_id.to_i)
-    else
-      @api_token.update!(api_token_params)
-    end
 
     render :index
   end

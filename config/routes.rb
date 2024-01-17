@@ -208,7 +208,7 @@ Rails.application.routes.draw do
 
   resources :attachments, only: [:show, :destroy]
   resources :recherche, only: [:index]
-  resources :api_tokens, only: [:create, :update, :destroy]
+  resources :api_tokens, only: [:create, :destroy]
 
   get "patron" => "root#patron" if Rails.env.development? || Rails.env.test?
   get "suivi" => "root#suivi"

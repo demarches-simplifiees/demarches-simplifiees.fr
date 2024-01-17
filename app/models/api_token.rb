@@ -38,18 +38,8 @@ class APIToken < ApplicationRecord
       .order(:libelle)
   end
 
-  def untarget_procedure(procedure_id)
-    new_target_ids = targeted_procedure_ids - [procedure_id]
-
-    update!(allowed_procedure_ids: new_target_ids)
-  end
-
   def sanitized_targeted_procedure_ids
     administrateur.procedures.ids.intersection(targeted_procedure_ids || [])
-  end
-
-  def become_full_access!
-    update_column(:allowed_procedure_ids, nil)
   end
 
   # Prefix is made of the first 6 characters of the uuid base64 encoded
