@@ -19,6 +19,10 @@ class APITokensController < ApplicationController
   end
 
   def create
+    if params[:networkFiltering] == "customNetworks" && invalid_network?
+      return redirect_to securite_api_tokens_path(all_params.merge(invalidNetwork: true))
+    end
+
     @api_token, @packed_token = APIToken.generate(current_administrateur)
 
     @api_token.update!(name:, write_access:,
@@ -33,12 +37,30 @@ class APITokensController < ApplicationController
 
   private
 
+  def all_params
+    [:name, :access, :target, :targets, :networkFiltering, :networks, :lifetime, :customLifetime]
+      .index_with { |param| params[param] }
+  end
+
   def authorized_networks
     if params[:networkFiltering] == "customNetworks"
       networks
     else
       []
     end
+  end
+
+  def invalid_network?
+    params[:networks]
+      .split
+      .any? do
+        begin
+          IPAddr.new(_1)
+          false
+        rescue
+          true
+        end
+      end
   end
 
   def networks

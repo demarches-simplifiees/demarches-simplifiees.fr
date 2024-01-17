@@ -30,35 +30,47 @@
       target: :networkFiltering,
       buttons: [ { label: 'Je veux spécifier les réseaux autorisées à utiliser mon jeton',
         value: :customNetworks,
+        checked: params[:networkFiltering] == 'customNetworks',
         'data-action': 'click->api-token-securite#showNetworkFiltering' },
         { label: 'Mon jeton peut être utilisé depuis nʼimporte quelle adresse IP dans le monde',
         hint: 'dangereux',
         value: :none,
+        checked: params[:networkFiltering] == 'none',
         'data-action': 'click->api-token-securite#hideNetworkFiltering' }]) do
       Filtrage réseau :
 
-    .fr-input-group.fr-mb-4w.hidden{ 'data-api-token-securite-target': 'networkFiltering' }
+    .fr-input-group.fr-mb-4w{
+      'data-api-token-securite-target': 'networkFiltering',
+      class: class_names('hidden': params[:networkFiltering] == 'none' || params[:networkFiltering].blank?, 'fr-input-group--error': params[:invalidNetwork].present?) }
       = f.label :name, class: 'fr-label' do
         Entrez les adresses IP autorisées
         %span.fr-hint-text adresses réseaux séparées par des espaces. Ex: 176.31.79.200 192.168.33.0/24 2001:41d0:304:400::52f/128
       = f.text_field :networks,
-        class: 'fr-input',
+        class: class_names('fr-input': true, 'fr-input--error': params[:invalidNetwork].present?),
         autocomplete: 'off',
         autocapitalize: 'off',
         autocorrect: 'off',
         spellcheck: false,
-        'data-action': 'input->api-token-securite#setContinueButtonState'
+        value: params[:networks],
+        'data-action': 'input->api-token-securite#setContinueButtonState',
+        'data-api-token-securite-target': 'networks'
+
+      - if params[:invalidNetwork].present?
+        %p.fr-error-text Vous devez entrer des adresses IPv4 ou IPv6 valides
 
     = render Dsfr::RadioButtonListComponent.new(form: f,
       target: :lifetime,
       buttons: [ { label: '1 semaine',
         value: :oneWeek,
+        checked: params[:lifetime] == 'oneWeek',
         'data-action': 'click->api-token-securite#hideCustomLifetime' },
         { label: 'durée personnalisée inférieure à 1 an',
         value: :custom,
+        checked: params[:lifetime] == 'custom',
         'data-action': 'click->api-token-securite#showCustomLifetime'},
         { label: 'Infini (le filtrage réseau doit être activé)',
         value: :infinite,
+        checked: params[:lifetime] == 'infinite',
         disabled: true,
         'data-api-token-securite-target': 'infiniteLifetime',
         'data-action': 'click->api-token-securite#hideCustomLifetime' }]) do

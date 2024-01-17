@@ -17,6 +17,10 @@ export class ApiTokenSecuriteController extends ApplicationController {
   declare readonly customLifetimeInputTarget: HTMLInputElement;
   declare readonly networksTarget: HTMLInputElement;
 
+  connect() {
+    this.setContinueButtonState();
+  }
+
   showNetworkFiltering() {
     this.networkFilteringTarget.classList.remove('hidden');
     this.setContinueButtonState();

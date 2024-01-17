@@ -51,14 +51,13 @@ describe APITokensController, type: :controller do
       let(:params) { default_params.merge(networkFiltering: 'customNetworks', networks:) }
 
       it do
-        expect(token.authorized_networks).to be_blank
-        expect(token.expires_at).to eq(1.week.from_now.to_date)
+        expect(token).to be_nil
       end
     end
 
     context 'with network filtering' do
-      let(:networks) { '192.168.1.23/32 2001:41d0:304:400::52f/128 bad' }
-      let(:params) { default_params.merge(restriction: 'customNetworks', networks: ) }
+      let(:networks) { '192.168.1.23/32 2001:41d0:304:400::52f/128' }
+      let(:params) { default_params.merge(networkFiltering: 'customNetworks', networks:) }
 
       it {
   expect(token.authorized_networks).to eq([
