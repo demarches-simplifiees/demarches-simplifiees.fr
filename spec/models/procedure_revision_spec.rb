@@ -103,20 +103,19 @@ describe ProcedureRevision do
     context 'with 4 types de champ publiques' do
       it 'move down' do
         expect(draft.types_de_champ_public.index(type_de_champ_public)).to eq(0)
-
+        stable_id_before = draft.revision_types_de_champ_public.map(&:stable_id)
         draft.move_type_de_champ(type_de_champ_public.stable_id, 2)
         draft.reload
-
+        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0,1,2,3])
         expect(draft.types_de_champ_public.index(type_de_champ_public)).to eq(2)
         expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
       end
 
       it 'move up' do
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(3)
-
         draft.move_type_de_champ(last_type_de_champ.stable_id, 0)
         draft.reload
-
+        expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0,1,2,3])
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(0)
         expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(last_type_de_champ)).to eq(0)
       end

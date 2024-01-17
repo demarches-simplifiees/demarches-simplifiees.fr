@@ -85,14 +85,17 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
+  # []
   def move_type_de_champ(stable_id, position)
     coordinate, _ = coordinate_and_tdc(stable_id)
 
-    siblings = coordinate.siblings.to_a
+    if position > coordinate.position
+      decr_siblings_between(coordinate, position)
+    else
+      inc_siblings_between(coordinate, position)
+    end
+    coordinate.update_column(:position, position)
 
-    siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
-
-    renumber(siblings)
     coordinate.reload
 
     coordinate
@@ -100,6 +103,14 @@ class ProcedureRevision < ApplicationRecord
 
   def incr_coordinates_above(siblings, position)
     siblings.where("position >= ?", position).update_all("position = position + 1")
+  end
+
+  def decr_siblings_between(coordinate, position)
+    coordinate.siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+  end
+
+  def inc_siblings_between(coordinate, position)
+    coordinate.siblings.where(position: position..coordinate.position).update_all("position = position + 1")
   end
 
   def remove_type_de_champ(stable_id)
