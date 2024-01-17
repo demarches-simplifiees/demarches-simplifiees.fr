@@ -1,5 +1,5 @@
 describe API::V2::BaseController, type: :controller do
-  describe 'ensure_authorized_network' do
+  describe 'ensure_authorized_network and token_is_not_expired' do
     let(:admin) { create(:administrateur) }
     let(:token_bearer_couple) { APIToken.generate(admin) }
     let(:token) { token_bearer_couple[0] }
@@ -18,7 +18,23 @@ describe API::V2::BaseController, type: :controller do
     describe 'GET #index' do
       subject { get :fake_action }
 
-      context 'when no authorized networks are defined' do
+      context 'when no authorized networks are defined and the token is not expired' do
+        it { is_expected.to have_http_status(:ok) }
+      end
+
+      context 'when the token is expired' do
+        before do
+          token.update!(expires_at: 1.day.ago)
+        end
+
+        it { is_expected.to have_http_status(:unauthorized) }
+      end
+
+      context 'when this is precisely the day the token expires' do
+        before do
+          token.update!(expires_at: Time.zone.today)
+        end
+
         it { is_expected.to have_http_status(:ok) }
       end
 

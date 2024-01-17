@@ -71,6 +71,10 @@ class APIToken < ApplicationRecord
     authorized_networks.none? { |range| range.include?(ip) }
   end
 
+  def expired?
+    expires_at&.past?
+  end
+
   class << self
     def generate(administrateur)
       plain_token = generate_unique_secure_token
