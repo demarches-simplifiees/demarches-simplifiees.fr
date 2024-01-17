@@ -101,18 +101,6 @@ class ProcedureRevision < ApplicationRecord
     coordinate
   end
 
-  def incr_coordinates_above(siblings, position)
-    siblings.where("position >= ?", position).update_all("position = position + 1")
-  end
-
-  def decr_siblings_between(coordinate, position)
-    coordinate.siblings.where(position: coordinate.position..position).update_all("position = position - 1")
-  end
-
-  def inc_siblings_between(coordinate, position)
-    coordinate.siblings.where(position: position..coordinate.position).update_all("position = position + 1")
-  end
-
   def remove_type_de_champ(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
@@ -129,7 +117,7 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.reset
     types_de_champ_private.reset
 
-    renumber(coordinate.siblings)
+    decr_siblings_above(coordinate.siblings, coordinate.position)
 
     coordinate
   end
@@ -276,11 +264,23 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def renumber(siblings)
-    siblings.to_a.compact.each.with_index do |sibling, position|
-      sibling.update_column(:position, position)
-    end
+  def incr_coordinates_above(siblings, position)
+    siblings.where("position >= ?", position).update_all("position = position + 1")
   end
+
+  def decr_siblings_above(coordinate)
+    coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+  end
+
+  def decr_siblings_between(coordinate, position)
+    coordinate.siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+  end
+
+  def inc_siblings_between(coordinate, position)
+    coordinate.siblings.where(position: position..coordinate.position).update_all("position = position + 1")
+  end
+
+
 
   def compare_revision_types_de_champ(from_coordinates, to_coordinates)
     if from_coordinates == to_coordinates
