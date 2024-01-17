@@ -1,0 +1,12 @@
+---
+en:
+  api_tokens:
+    nom:
+      new_token: New token creation
+      name: name of the token
+      name-hint: 'examples: orus prod, presta'
+      continue: continue
+      cancel: back
+    autorisations:
+      cancel: back
+      continue: continue

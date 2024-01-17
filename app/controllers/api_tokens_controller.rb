@@ -6,6 +6,15 @@ class APITokensController < ApplicationController
     @name = params[:name]
   end
 
+  def autorisations
+    @name = params[:name]
+    @libelle_id_procedures = current_administrateur
+      .procedures
+      .order(:libelle)
+      .pluck(:libelle, :id)
+      .map { |libelle, id| ["#{id} - #{libelle}", id] }
+  end
+
   def create
     @api_token, @packed_token = APIToken.generate(current_administrateur)
 

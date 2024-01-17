@@ -211,6 +211,7 @@ Rails.application.routes.draw do
   resources :api_tokens, only: [:create, :destroy] do
     collection do
       get :nom
+      get :autorisations
     end
   end
 

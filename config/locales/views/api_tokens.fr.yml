@@ -5,5 +5,8 @@ fr:
       new_token: Création d'un nouveau jeton
       name: Nom du jeton
       name-hint: 'exemples: prod orus, test presta'
-      continue: continuer
-      cancel: retour
+      continue: Continuer
+      cancel: Retour
+    autorisations:
+      cancel: Retour
+      continue: Continuer
