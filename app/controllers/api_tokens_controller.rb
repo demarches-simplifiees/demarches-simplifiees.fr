@@ -23,7 +23,7 @@ class APITokensController < ApplicationController
   def destroy
     @api_token.destroy
 
-    render :index
+    redirect_to profil_path
   end
 
   private

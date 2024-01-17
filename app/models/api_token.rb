@@ -65,6 +65,10 @@ class APIToken < ApplicationRecord
     end
   end
 
+  def authorized_networks_for_ui
+    authorized_networks.map { "#{_1.to_string}/#{_1.prefix}" }.join(', ')
+  end
+
   def forbidden_network?(ip)
     return false if authorized_networks.blank?
 
@@ -95,6 +99,10 @@ class APIToken < ApplicationRecord
 
       BCrypt::Password.new(api_token.encrypted_token) == bearer.plain_token ? api_token : nil
     end
+  end
+
+  def last_used_at
+    last_v2_authenticated_at || last_v1_authenticated_at
   end
 
   private

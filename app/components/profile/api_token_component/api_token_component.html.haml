@@ -1,60 +1,16 @@
-%h3.fr-card__title
-  %b= "#{@api_token.name} "
-  %span.fr-text--sm= @api_token.prefix
-
-.fr-card__desc
-  - if @packed_token.present?
-    .fr-text--sm{ style: "width: 80%; word-break: break-all;" }
-      - button = render Dsfr::CopyButtonComponent.new(text: @packed_token, title: "Copier le jeton dans le presse-papier", success: "Le jeton a été copié dans le presse-papier")
-      = "#{@packed_token} #{button}"
-
-    %p
-      = t('.security_one')
-
-  - else
-    %p
-      = t('.security_two')
-
-  = render Dsfr::AlertComponent.new(state: :info, title: t(".security_title"), heading_level: :h4) do |c|
-    - c.with_body do
-      - if @api_token.full_access?
-        %p.fr-text--lg
-          = t('.allowed_full_access_html')
-      - else
-        %p.fr-text--lg
-          = t('.allowed_procedures_html', count: @api_token.procedures.size)
-
-        - if @api_token.procedures.empty?
-          = button_to t('.action_all'), @api_token, method: :patch, params: { api_token: { become_full_access: '1' } }, class: "fr-btn fr-btn--secondary"
-        - else
-          %ul
-            - @api_token.procedures.each do |procedure|
-              %li.flex.justify-between.align-center
-                .truncate-80
-                  = "#{procedure.id} – #{procedure.libelle}"
-                = button_to t('.delete'), @api_token, method: :patch, params: { api_token: { disallow_procedure_id: procedure.id } }, class: "fr-btn fr-btn--secondary"
-
-.fr-card__end
-  = form_for @api_token, namespace: dom_id(@api_token, :allowed_procedures), html: { class: 'mb-3', data: { turbo: true } } do |f|
-    = f.label :allowed_procedure_ids, class: 'fr-label' do
-      = t('.action_choice')
-    - if !@api_token.full_access?
-      - @api_token.procedures.each do |procedure|
-        = f.hidden_field :allowed_procedure_ids, value: procedure.id, multiple: true, id: dom_id(procedure, :allowed_procedure)
-    .flex.justify-between.align-center{ 'data-turbo-force': :server }
-      = f.select :allowed_procedure_ids, procedures_to_allow_options, {prompt: t('.prompt_choose_procedure')}, { class: 'fr-select ', name: "api_token[allowed_procedure_ids][]" }
-      = f.button type: :submit, class: "fr-btn fr-btn--secondary" do
-        = t('.add')
-
-  = form_for @api_token, namespace: dom_id(@api_token, :write_access), html: { class: 'form mb-3', data: { turbo: true, controller: 'autosubmit' } } do |f|
-    = f.label :write_access do
-      = t('.token_procedures')
-    %label.toggle-switch.no-margin
-      = f.check_box :write_access, class: 'toggle-switch-checkbox'
-      %span.toggle-switch-control.round
-      %span.toggle-switch-label.on
-        = t('.reading_writing')
-      %span.toggle-switch-label.off
-        = t('.reading')
-
-  = button_to t('.revoke_token'), api_token_path(@api_token), method: :delete, class: "fr-btn fr-btn--secondary", data: { turbo_confirm: "Confirmez-vous la révocation de ce jeton ? Les applications qui l’utilisent actuellement seront bloquées." }
+%li.fr-mt-2w.flex
+  .fr-mr-4w{ class: class_names('fr-text-default--success': recently_used?) }
+    %span.fr-icon-key-line
+  .flex-grow
+    %div
+      %b= @api_token.name
+      %span (commence par #{@api_token.prefix})
+    %div= autorizations
+    %div= network_filtering
+    %div= use_and_expiration
+  %div
+    = link_to 'Supprimer',
+      api_token_path(@api_token),
+      method: :delete,
+      class: 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-delete-line',
+      data: { confirm: "Confirmez-vous la suppression du jeton « #{@api_token.name} » ?" }
