@@ -992,6 +992,14 @@ class Procedure < ApplicationRecord
     draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
   end
 
+  def dossier_for_preview(user)
+    # Try to use a preview or a dossier filled by current user
+    dossiers.where(for_procedure_preview: true).or(dossiers.not_brouillon)
+      .order(Arel.sql("CASE WHEN for_procedure_preview = True THEN 1 ELSE 0 END DESC,
+                       CASE WHEN user_id = #{user.id} THEN 1 ELSE 0 END DESC")) \
+      .first
+  end
+
   private
 
   def pieces_jointes_list

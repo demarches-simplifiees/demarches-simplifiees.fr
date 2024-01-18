@@ -32,6 +32,39 @@ describe TagsSubstitutionConcern, type: :model do
     end).new(procedure, state)
   end
 
+  describe 'tags_substitutions' do
+    let(:individual) { nil }
+    let(:etablissement) { create(:etablissement) }
+    let(:dossier) { create(:dossier, :en_construction, procedure:, individual:, etablissement:) }
+    let(:instructeur) { create(:instructeur) }
+    let(:tags) { Set.new(["dossier_number"]) }
+
+    subject { template_concern.tags_substitutions(tags, dossier) }
+
+    context 'dossiers metadata' do
+      before { travel_to(Time.zone.local(2024, 1, 15, 12)) }
+      let(:tags) { Set.new(["dossier_number", "dossier_depose_at", "dossier_processed_at", "dossier_procedure_libelle"]) }
+
+      it do
+        is_expected.to eq(
+          "dossier_number" => dossier.id.to_s,
+          "dossier_depose_at" => "15/01/2024",
+          "dossier_processed_at" => "",
+          "dossier_procedure_libelle" => procedure.libelle
+        )
+      end
+    end
+
+    context 'when the dossier and the procedure has an individual' do
+      let(:for_individual) { true }
+      let(:individual) { Individual.create(nom: 'Adama', prenom: 'William', gender: 'M') }
+
+      let(:tags) { Set.new(['individual_gender', 'individual_last_name']) }
+
+      it { is_expected.to eq({ "individual_gender" => 'M', "individual_last_name" => "Adama" }) }
+    end
+  end
+
   describe 'replace_tags' do
     let(:individual) { nil }
     let(:etablissement) { create(:etablissement) }

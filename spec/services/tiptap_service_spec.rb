@@ -1,155 +1,156 @@
 RSpec.describe TiptapService do
+  let(:json) do
+    {
+      type: 'doc',
+      content: [
+        {
+          type: 'header',
+          content: [
+            {
+              type: 'headerColumn',
+              content: [{ type: 'text', text: 'Left' }]
+            },
+            {
+              type: 'headerColumn',
+              content: [{ type: 'text', text: 'Right' }]
+            }
+          ]
+        },
+        {
+          type: 'title',
+          content: [{ type: 'text', text: 'Title' }]
+        },
+        {
+          type: 'title' # remained empty in editor
+        },
+        {
+          type: 'heading',
+          attrs: { level: 1 },
+          content: [{ type: 'text', text: 'Heading 1' }]
+        },
+        {
+          type: 'heading',
+          attrs: { level: 2, textAlign: 'center' },
+          content: [{ type: 'text', text: 'Heading 2' }]
+        },
+        {
+          type: 'heading',
+          attrs: { level: 3 },
+          content: [{ type: 'text', text: 'Heading 3' }]
+        },
+        {
+          type: 'heading',
+          attrs: { level: 3 } # remained empty in editor
+        },
+        {
+          type: 'paragraph',
+          attrs: { textAlign: 'right' },
+          content: [{ type: 'text', text: 'First paragraph' }]
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'Bonjour ',
+              marks: [{ type: 'italic' }, { type: 'strike' }]
+            },
+            {
+              type: 'mention',
+              attrs: { id: 'name' },
+              marks: [{ type: 'bold' }, { type: 'underline' }]
+            },
+            {
+              type: 'text',
+              text: ' '
+            },
+            {
+              type: 'text',
+              text: '!',
+              marks: [{ type: 'highlight' }]
+            }
+          ]
+        },
+        {
+          type: 'paragraph'
+          # no content, empty line
+        },
+        {
+          type: 'bulletList',
+          content: [
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Item 1'
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Item 2'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'orderedList',
+          content: [
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Item 1'
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              type: 'listItem',
+              content: [
+                {
+                  type: 'paragraph',
+                  content: [
+                    {
+                      type: 'text',
+                      text: 'Item 2'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          type: 'footer',
+          content: [{ type: 'text', text: 'Footer' }]
+        }
+      ]
+    }
+  end
+
   describe '.to_html' do
-    let(:json) do
-      {
-        type: 'doc',
-        content: [
-          {
-            type: 'header',
-            content: [
-              {
-                type: 'headerColumn',
-                content: [{ type: 'text', text: 'Left' }]
-              },
-              {
-                type: 'headerColumn',
-                content: [{ type: 'text', text: 'Right' }]
-              }
-            ]
-          },
-          {
-            type: 'title',
-            content: [{ type: 'text', text: 'Title' }]
-          },
-          {
-            type: 'title' # remained empty in editor
-          },
-          {
-            type: 'heading',
-            attrs: { level: 1 },
-            content: [{ type: 'text', text: 'Heading 1' }]
-          },
-          {
-            type: 'heading',
-            attrs: { level: 2, textAlign: 'center' },
-            content: [{ type: 'text', text: 'Heading 2' }]
-          },
-          {
-            type: 'heading',
-            attrs: { level: 3 },
-            content: [{ type: 'text', text: 'Heading 3' }]
-          },
-          {
-            type: 'heading',
-            attrs: { level: 3 } # remained empty in editor
-          },
-          {
-            type: 'paragraph',
-            attrs: { textAlign: 'right' },
-            content: [{ type: 'text', text: 'First paragraph' }]
-          },
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                text: 'Bonjour ',
-                marks: [{ type: 'italic' }, { type: 'strike' }]
-              },
-              {
-                type: 'mention',
-                attrs: { id: 'name' },
-                marks: [{ type: 'bold' }, { type: 'underline' }]
-              },
-              {
-                type: 'text',
-                text: ' '
-              },
-              {
-                type: 'text',
-                text: '!',
-                marks: [{ type: 'highlight' }]
-              }
-            ]
-          },
-          {
-            type: 'paragraph'
-            # no content, empty line
-          },
-          {
-            type: 'bulletList',
-            content: [
-              {
-                type: 'listItem',
-                content: [
-                  {
-                    type: 'paragraph',
-                    content: [
-                      {
-                        type: 'text',
-                        text: 'Item 1'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'listItem',
-                content: [
-                  {
-                    type: 'paragraph',
-                    content: [
-                      {
-                        type: 'text',
-                        text: 'Item 2'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            type: 'orderedList',
-            content: [
-              {
-                type: 'listItem',
-                content: [
-                  {
-                    type: 'paragraph',
-                    content: [
-                      {
-                        type: 'text',
-                        text: 'Item 1'
-                      }
-                    ]
-                  }
-                ]
-              },
-              {
-                type: 'listItem',
-                content: [
-                  {
-                    type: 'paragraph',
-                    content: [
-                      {
-                        type: 'text',
-                        text: 'Item 2'
-                      }
-                    ]
-                  }
-                ]
-              }
-            ]
-          },
-          {
-            type: 'footer',
-            content: [{ type: 'text', text: 'Footer' }]
-          }
-        ]
-      }
-    end
-    let(:tags) { { 'name' => 'Paul' } }
+    let(:substitutions) { { 'name' => 'Paul' } }
     let(:html) do
       [
         '<header><div>Left</div><div>Right</div></header>',
@@ -166,7 +167,13 @@ RSpec.describe TiptapService do
     end
 
     it 'returns html' do
-      expect(described_class.new.to_html(json, tags)).to eq(html)
+      expect(described_class.new.to_html(json, substitutions)).to eq(html)
+    end
+  end
+
+  describe '#used_tags' do
+    it 'returns used tags' do
+      expect(described_class.new.used_tags(json)).to eq(Set.new(['name']))
     end
   end
 end

@@ -173,5 +173,16 @@ describe AttestationTemplate, type: :model do
         end
       end
     end
+
+    context 'body v2' do
+      let(:attestation) { create(:attestation_template, :v2) }
+      let(:dossier) { create(:dossier, procedure: attestation.procedure, individual: build(:individual, nom: 'Doe', prenom: 'John')) }
+
+      it do
+        body = attestation.render_attributes_for(dossier: dossier)[:body]
+        expect(body).to include("Mon titre pour #{dossier.procedure.libelle}")
+        expect(body).to include("Doe John")
+      end
+    end
   end
 end
