@@ -29,26 +29,13 @@ module Maintenance
       fail "TypeDeChamp not found ! #{typed_id}" if stable_id.nil?
 
       tdc = revision.find_and_ensure_exclusive_use(stable_id)
-
-      revision.move_type_de_champ(stable_id, compute_position(row, tdc.revision_type_de_champ))
+      revision.move_type_de_champ(stable_id, Integer(row['new_position']))
 
       tdc.update!(
         libelle: row["new_libelle"].strip,
         description: row["new_description"]&.strip.to_s, # we want empty string
         mandatory: row["new_required"] == "true"
       )
-    end
-
-    private
-
-    def compute_position(row, rtdc)
-      position = Integer(row["new_position"])
-
-      if rtdc.child?
-        position - rtdc.parent.position - 1
-      else
-        position
-      end
     end
   end
 end
