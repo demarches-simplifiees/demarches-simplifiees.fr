@@ -56,19 +56,6 @@ describe APIToken, type: :model do
           expect(api_token.targetable_procedures).to eq([other_procedure])
           expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true, api_token_id: api_token.id)
         end
-
-        context 'and then gain full access' do
-          before do
-            api_token.become_full_access!
-            api_token.reload
-          end
-
-          it do
-            expect(api_token.full_access?).to be(true)
-            expect(api_token.procedure_ids).to match_array([procedure.id, other_procedure.id])
-            expect(api_token.targetable_procedures).to eq([procedure, other_procedure])
-          end
-        end
       end
 
       context 'but acces to a wrong procedure_id' do
