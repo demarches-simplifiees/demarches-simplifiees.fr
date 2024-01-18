@@ -86,6 +86,10 @@
                   %button.fr-tag.fr-tag--sm{ title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
                     = tag[:libelle]
 
+            = render Dsfr::AlertComponent.new(state: :info, title: "Balises sur le conditionnel", heading_level: 'h3', size: :sm) do |c|
+              - c.with_body do
+                Les balises pour les champs conditionnés ne sont pas disponibles.
+
           .fr-fieldset__element.fr-mt-2w
             %h2.fr-h6 Pied de page
 
