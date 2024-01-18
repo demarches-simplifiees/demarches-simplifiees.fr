@@ -72,7 +72,6 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  # []
   def move_type_de_champ(stable_id, position)
     coordinate, _ = coordinate_and_tdc(stable_id)
     siblings = coordinate.siblings
@@ -89,6 +88,12 @@ class ProcedureRevision < ApplicationRecord
     coordinate
   end
 
+  def renumber(siblings)
+    siblings.to_a.compact.each.with_index do |sibling, position|
+      sibling.update_column(:position, position)
+    end
+  end
+
   def remove_type_de_champ(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
@@ -101,9 +106,9 @@ class ProcedureRevision < ApplicationRecord
     children.each(&:destroy_if_orphan)
     tdc.destroy_if_orphan
 
+    # they are not aware of the removal
     coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
 
-    # they are not aware of the removal
     types_de_champ_public.reset
     types_de_champ_private.reset
 
