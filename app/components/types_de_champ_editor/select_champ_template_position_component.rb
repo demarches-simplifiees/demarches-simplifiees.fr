@@ -1,7 +1,7 @@
 class TypesDeChampEditor::SelectChampTemplatePositionComponent < ApplicationComponent
   def initialize(block:, coordinates:)
     @block = block
-    @coordinates = coordinates
+    @coordinates = coordinates.includes(:type_de_champ)
   end
 
   def block_id
