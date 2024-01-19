@@ -40,7 +40,7 @@
                 Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
 
           .fr-fieldset__element.fr-mt-2w
-            %h2.fr-h6 En-tête
+            %h2.fr-h4 En-tête
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
             = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: @attestation_template.official_layout?, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
@@ -64,7 +64,7 @@
               - c.with_hint { "Exemple: Direction interministérielle du numérique. 2 lignes maximum" }
 
           .fr-fieldset__element.fr-mt-2w
-            %label.fr-label.fr-h6
+            %label.fr-label.fr-h4
               = AttestationTemplate.human_attribute_name :body
               = render EditableChamp::AsteriskMandatoryComponent.new
 
@@ -80,18 +80,17 @@
                       = label
 
           .fr-fieldset__element
-            %ul.fr-tags-group
-              - @attestation_template.tags.each do |tag|
-                %li
-                  %button.fr-tag.fr-tag--sm{ title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
-                    = tag[:libelle]
+            %label.fr-label
+              Balises
+            %p.fr-hint-text
+              Intégrez à l’attestation du texte issu du dossier. Cliquez sur un bouton de balise pour l’ajouter là où se trouve le curseur, ou tapez dans l’éditeur le caractère
+              %code @
+              suivi du nom de la balise. Les balises pour les champs conditionnés ne sont pas disponibles.
 
-            = render Dsfr::AlertComponent.new(state: :info, title: "Balises sur le conditionnel", heading_level: 'h3', size: :sm) do |c|
-              - c.with_body do
-                Les balises pour les champs conditionnés ne sont pas disponibles.
+            = render TagsButtonListComponent.new(tags: @attestation_template.tags_categorized)
 
           .fr-fieldset__element.fr-mt-2w
-            %h2.fr-h6 Pied de page
+            %h2.fr-h4 Pied de page
 
           .fr-fieldset__element
             %label.fr-label{ for: field_id(@attestation_template, :signature) } Tampon ou signature

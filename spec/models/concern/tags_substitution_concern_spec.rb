@@ -556,6 +556,23 @@ describe TagsSubstitutionConcern, type: :model do
     it { is_expected.to eq([["public", procedure.draft_revision.types_de_champ.first.stable_id], ['yolo']]) }
   end
 
+  describe 'tags_categorized' do
+    let(:types_de_champ_public) do
+      [
+        { libelle: 'public' },
+        { type: :email, libelle: 'email' }
+      ]
+    end
+
+    it do
+      categories = template_concern.tags_categorized
+      expect(categories.keys).to match([:etablissement, :dossier, :champ_public])
+      expect(categories[:etablissement].map { _1[:id] }).to include("entreprise_siren")
+      expect(categories[:dossier].map { _1[:id] }).to include("dossier_number")
+      expect(categories[:champ_public].map { _1[:libelle] }).to match_array(["public", "email"])
+    end
+  end
+
   describe 'parser' do
     it do
       tokens = TagsSubstitutionConcern::TagsParser.parse("hello world --public--, --numéro du dossier--, un test--yolo-- encore du text\n---\n encore du text --- et encore du text\n--tag--")

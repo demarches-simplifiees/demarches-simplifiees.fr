@@ -240,6 +240,17 @@ module TagsSubstitutionConcern
     tags_for_dossier_state(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
+  def tags_categorized
+    identity_key = procedure.for_individual? ? :individual : :etablissement
+
+    {
+      identity_key => tags_for_dossier_state(identity_tags),
+      dossier: tags_for_dossier_state(dossier_tags + routage_tags),
+      champ_public: tags_for_dossier_state(champ_public_tags),
+      champ_private: tags_for_dossier_state(champ_private_tags)
+    }.reject { |_, ary| ary.empty? }
+  end
+
   def used_type_de_champ_tags(text)
     used_tags_and_libelle_for(text).filter_map do |(tag, libelle)|
       if tag.nil?
