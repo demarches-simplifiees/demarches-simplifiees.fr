@@ -362,40 +362,11 @@ module Administrateurs
     end
 
     def champs
-      @procedure = Procedure.includes(draft_revision: {
-        revision_types_de_champ: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        revision_types_de_champ_public: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        procedure: []
-      }).find(@procedure.id)
+      @procedure = Procedure.includes_for_champ_public_edition.find(@procedure.id)
     end
 
     def annotations
-      @procedure = Procedure.includes(draft_revision: {
-        revision_types_de_champ: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        revision_types_de_champ_private: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        revision_types_de_champ_public: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        procedure: []
-      }).find(@procedure.id)
+      @procedure = Procedure.includes_for_champ_private_edition.find(@procedure.id)
     end
 
     def detail

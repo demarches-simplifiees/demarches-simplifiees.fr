@@ -1,6 +1,7 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure
+    before_action :preload_procedure
     after_action :reset_procedure, only: [:create, :update, :destroy, :piece_justificative_template]
 
     def create
@@ -168,6 +169,10 @@ module Administrateurs
 
     def draft
       @procedure.draft_revision
+    end
+
+    def preload_procedure
+      @procedure = Procedure.includes_for_champ_private_edition.find(@procedure.id)
     end
   end
 end
