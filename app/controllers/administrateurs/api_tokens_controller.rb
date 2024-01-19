@@ -30,6 +30,8 @@ module Administrateurs
 
       @api_token.update!(name:, write_access:,
                          allowed_procedure_ids:, authorized_networks:, expires_at:)
+
+      @curl_command = curl_command(@packed_token, @api_token.procedure_ids.first)
     end
 
     def edit
@@ -59,6 +61,16 @@ module Administrateurs
     end
 
     private
+
+    def curl_command(packed_token, procedure_id)
+      <<~EOF
+        curl \\
+        -H 'Content-Type: application/json' \\
+        -H 'Authorization: Bearer #{packed_token}' \\
+        --data '{ "query": "{ demarche(number: #{procedure_id}) { title } }" }' \\
+        '#{api_v2_graphql_url}'
+      EOF
+    end
 
     def all_params
       [:name, :access, :target, :targets, :networkFiltering, :networks, :lifetime, :customLifetime]
