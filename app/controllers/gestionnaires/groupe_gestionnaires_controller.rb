@@ -26,12 +26,12 @@ module Gestionnaires
 
     def destroy
       if !@groupe_gestionnaire.can_be_deleted?(current_gestionnaire)
-        fail "Impossible de supprimer ce groupe.."
+        flash[:alert] = "Impossible de supprimer ce groupe.."
+      else
+        @groupe_gestionnaire.destroy
+
+        flash[:notice] = "Le groupe #{@groupe_gestionnaire.id} est supprimé"
       end
-      @groupe_gestionnaire.destroy
-
-      flash[:notice] = "Le groupe #{@groupe_gestionnaire.id} est supprimé"
-
       redirect_to gestionnaire_groupe_gestionnaires_path
     end
 

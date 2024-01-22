@@ -6,6 +6,8 @@ class CommentaireGroupeGestionnaire < ApplicationRecord
 
   validates :body, presence: { message: "ne peut être vide" }
 
+  before_create :set_emails
+
   def soft_deletable?(connected_user)
     sent_by?(connected_user) && sent_by_gestionnaire? && !discarded?
   end
@@ -24,5 +26,12 @@ class CommentaireGroupeGestionnaire < ApplicationRecord
     else
       someone == sender
     end
+  end
+
+  private
+
+  def set_emails
+    self.sender_email = sender.email
+    self.gestionnaire_email = gestionnaire&.email
   end
 end

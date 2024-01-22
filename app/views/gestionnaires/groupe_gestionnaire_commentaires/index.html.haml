@@ -1,0 +1,16 @@
+= render partial: 'gestionnaires/breadcrumbs',
+  locals: { steps: [['Groupes gestionnaire', gestionnaire_groupe_gestionnaires_path],
+                    ["#{@groupe_gestionnaire.name.truncate_words(10)}", gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire)],
+                    ["Messagerie"]], preview: false }
+
+.container
+  %h1 Messagerie de « #{@groupe_gestionnaire.name} »
+
+  %table.table
+    %thead
+      %tr
+        %th= 'Adresse email'
+        %th= 'Dernier message'
+        %th
+    %tbody#commentaires
+      = render(GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireComponent.with_collection(@groupe_gestionnaire.commentaire_groupe_gestionnaires.select("sender_id, sender_type, sender_email, MAX(id) as id, MAX(created_at) as created_at").group(:sender_id, :sender_type, :sender_email).order("MAX(id) DESC"), groupe_gestionnaire: @groupe_gestionnaire))
