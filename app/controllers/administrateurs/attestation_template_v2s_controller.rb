@@ -68,11 +68,17 @@ module Administrateurs
       end
 
       @attestation_template.update!(attestation_params)
+      flash.notice = "Le modèle de l’attestation a été modifié"
+
+      respond_to do |format|
+        format.turbo_stream
+        format.html do
+          redirect_to edit_admin_procedure_attestation_template_path(@procedure)
+        end
+      end
     end
 
-    def create
-      @attestation_template.update!(editor_params)
-    end
+    def create = update
 
     private
 

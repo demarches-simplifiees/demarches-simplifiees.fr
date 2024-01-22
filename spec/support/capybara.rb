@@ -5,9 +5,6 @@ require 'selenium/webdriver'
 
 def setup_driver(app, download_path, options)
   Capybara::Selenium::Driver.new(app, browser: :chrome, options:).tap do |driver|
-    # Set download dir for Chrome < 77
-    driver.browser.download_path = download_path
-
     if ENV['MAKE_IT_SLOW'].present?
       driver.browser.network_conditions = {
         offline: false,
