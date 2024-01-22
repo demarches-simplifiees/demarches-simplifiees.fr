@@ -1911,7 +1911,18 @@ describe Dossier, type: :model do
 
   describe "champs_for_export" do
     context 'with a unconditionnal procedure' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, :with_datetime, :with_yes_no, :with_explication, :with_commune, :with_repetition, zones: [create(:zone)]) }
+      let(:procedure) { create(:procedure, types_de_champ_public:, zones: [create(:zone)]) }
+      let(:types_de_champ_public) do
+        [
+          { type: :text },
+          { type: :datetime },
+          { type: :yes_no },
+          { type: :explication },
+          { type: :communes },
+          { type: :repetition, children: [{ type: :text }] }
+        ]
+      end
+
       let(:text_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
       let(:yes_no_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:yes_no) } }
       let(:datetime_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:datetime) } }
@@ -1931,8 +1942,7 @@ describe Dossier, type: :model do
           procedure.publish!
           dossier
           procedure.draft_revision.remove_type_de_champ(text_type_de_champ.stable_id)
-          coordinate = procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field')
-          procedure.draft_revision.renumber(coordinate.revision_type_de_champ.siblings)
+          coordinate = procedure.draft_revision.add_type_de_champ(type_champ: TypeDeChamp.type_champs.fetch(:text), libelle: 'New text field', after_stable_id: repetition_champ.stable_id)
           procedure.draft_revision.find_and_ensure_exclusive_use(yes_no_type_de_champ.stable_id).update(libelle: 'Updated yes/no')
           procedure.draft_revision.find_and_ensure_exclusive_use(commune_type_de_champ.stable_id).update(libelle: 'Commune de naissance')
           procedure.draft_revision.find_and_ensure_exclusive_use(repetition_type_de_champ.stable_id).update(libelle: 'Repetition')

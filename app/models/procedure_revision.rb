@@ -90,12 +90,6 @@ class ProcedureRevision < ApplicationRecord
     coordinate
   end
 
-  def renumber(siblings)
-    siblings.to_a.compact.each.with_index do |sibling, position|
-      sibling.update_column(:position, position)
-    end
-  end
-
   def remove_type_de_champ(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
