@@ -41,14 +41,16 @@ class ProcedureRevision < ApplicationRecord
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    siblings = siblings_for(parent_coordinate:, private_tdc: params[:private] || params['private'])
+    siblings = siblings_for(parent_coordinate:, private_tdc: params[:private])
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
+      # moving all the impacted tdc down
       position = next_position_for(after_coordinate:, siblings:)
-      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
-
       siblings.where("position >= ?", position).update_all("position = position + 1")
+
+      # insertion of the new tdc
+      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
       revision_types_de_champ.create!(h)
     end
 
