@@ -3,6 +3,26 @@ class APIToken < ApplicationRecord
 
   belongs_to :administrateur, inverse_of: :api_tokens
 
+  scope :expiring_within, -> (duration) { where(expires_at: Date.today..duration.from_now) }
+
+  scope :without_any_expiration_notice_sent_within, -> (duration) do
+    where.not('(expires_at - (?::interval)) <= some(expiration_notices_sent_at)', duration.iso8601)
+  end
+
+  scope :with_a_bigger_lifetime_than, -> (duration) do
+    where('? < expires_at - created_at', duration.iso8601)
+  end
+
+  scope :with_expiration_notice_to_send_for, -> (duration) do
+    # example for duration = 1.month
+    # take all tokens that expire in the next month
+    # with a lifetime bigger than 1 month
+    # without any expiration notice sent for that period
+    expiring_within(duration)
+      .with_a_bigger_lifetime_than(duration)
+      .without_any_expiration_notice_sent_within(duration)
+  end
+
   before_save :sanitize_targeted_procedure_ids
 
   def context
