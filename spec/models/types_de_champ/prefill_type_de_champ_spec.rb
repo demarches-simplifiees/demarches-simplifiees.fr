@@ -103,7 +103,7 @@ RSpec.describe TypesDeChamp::PrefillTypeDeChamp, type: :model do
       end
 
       describe 'too many possible values or not' do
-        let!(:procedure) { create(:procedure, :with_drop_down_list) }
+        let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list }]) }
         let(:type_de_champ) { procedure.draft_types_de_champ_public.first }
         let(:link_to_all_possible_values) {
           link_to(

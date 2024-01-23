@@ -2,17 +2,10 @@ describe 'The routing with rules', js: true do
   let(:password) { 'a very complicated password' }
 
   let(:procedure) do
-    create(:procedure, :with_service, :for_individual, :with_zone).tap do |p|
-      p.draft_revision.add_type_de_champ(
-        type_champ: :text,
-        libelle: 'un premier champ text'
-      )
-      p.draft_revision.add_type_de_champ(
-        type_champ: :drop_down_list,
-        libelle: 'Spécialité',
-        options: { "drop_down_other" => "0", "drop_down_options" => ["", "littéraire", "scientifique", "artistique"] }
-      )
-    end
+    create(:procedure, :with_service, :for_individual, :with_zone, types_de_champ_public: [
+      { type: :text, libelle: 'un premier champ text' },
+      { type: :drop_down_list, libelle: 'Spécialité', options: ["", "littéraire", "scientifique", "artistique"] }
+    ])
   end
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }
   let(:scientifique_user) { create(:user, password: password) }

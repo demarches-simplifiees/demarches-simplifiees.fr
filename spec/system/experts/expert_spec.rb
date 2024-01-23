@@ -5,7 +5,7 @@ describe 'Inviting an expert:' do
   context 'as an invited Expert' do
     let(:expert) { create(:expert) }
     let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
     let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
     let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
     let(:champ) { dossier.champs_public.first }

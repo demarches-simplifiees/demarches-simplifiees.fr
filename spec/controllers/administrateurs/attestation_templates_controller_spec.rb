@@ -185,7 +185,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
     end
 
     context 'when procedure is published' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3, administrateur: admin, attestation_template: attestation_template) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }, { type: :text }, { type: :text }], administrateur: admin, attestation_template: attestation_template) }
       let(:dossier) {}
       let(:attestation_template) { build(:attestation_template, title: 'a') }
       let(:attestation_params) do
@@ -208,11 +208,12 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         procedure.publish!
         procedure.reload
         procedure.draft_revision.remove_type_de_champ(removed_and_published_type_de_champ.stable_id)
-        procedure.draft_revision.add_type_de_champ(libelle: 'new type de champ', type_champ: 'text')
+        procedure.draft_revision.add_type_de_champ(libelle: 'new type de champ', type_champ: 'text', after_stable_id: procedure.draft_revision.types_de_champ_public.last.stable_id)
         procedure.publish_revision!
         procedure.reload
         procedure.draft_revision.remove_type_de_champ(removed_type_de_champ.stable_id)
-        procedure.draft_revision.add_type_de_champ(libelle: 'draft type de champ', type_champ: 'text')
+        procedure.draft_revision.reload
+        procedure.draft_revision.add_type_de_champ(libelle: 'draft type de champ', type_champ: 'text', after_stable_id: procedure.draft_revision.types_de_champ_public.last.stable_id)
 
         dossier
 

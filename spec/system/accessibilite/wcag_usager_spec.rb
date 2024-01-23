@@ -133,7 +133,7 @@ describe 'wcag rules for usager', js: true do
   end
 
   context "logged in, depot d'un dossier entreprise" do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_all_champs, :with_service, :published) }
+    let(:procedure) { create(:procedure, :with_all_champs, :with_service, :published) }
 
     before do
       login_as litteraire_user, scope: :user

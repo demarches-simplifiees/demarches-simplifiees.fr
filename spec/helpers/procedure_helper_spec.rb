@@ -34,7 +34,7 @@ RSpec.describe ProcedureHelper, type: :helper do
     subject { estimated_fill_duration_minutes(procedure.reload) }
 
     context 'with champs' do
-      let(:procedure) { create(:procedure, :with_yes_no, :with_piece_justificative) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }, { type: :piece_justificative }]) }
 
       it 'rounds up the duration to the minute' do
         expect(subject).to eq(2)

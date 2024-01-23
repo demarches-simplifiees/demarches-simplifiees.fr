@@ -132,20 +132,36 @@ RSpec.describe PrefillDescription, type: :model do
   end
 
   describe '#prefill_query' do
-    let(:procedure) { create(:procedure) }
-    let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
-    let(:type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(create(:type_de_champ_epci, procedure: procedure), procedure.active_revision) }
-    let(:type_de_champ_repetition) { build(:type_de_champ_repetition, :with_types_de_champ, :with_region_types_de_champ, procedure: procedure) }
+    let(:procedure) do
+      create(:procedure, types_de_champ_public: [
+        { type: :text },
+        { type: :epci },
+        {
+          type: :repetition, children: [
+            { type: :text },
+            { type: :integer_number },
+            { type: :regions }
+          ]
+        }
+      ])
+    end
+    let(:type_de_champ_text) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:text) } }
+    let(:type_de_champ_epci) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:epci) } }
+    let(:type_de_champ_repetition) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
+
+    let(:prefill_type_de_champ_epci) { TypesDeChamp::PrefillTypeDeChamp.build(type_de_champ_epci, procedure.active_revision) }
     let(:prefillable_subchamps) { TypesDeChamp::PrefillRepetitionTypeDeChamp.new(type_de_champ_repetition, procedure.active_revision).send(:prefillable_subchamps) }
+
     let(:text_repetition) { prefillable_subchamps.first }
     let(:integer_repetition) { prefillable_subchamps.second }
     let(:region_repetition) { prefillable_subchamps.third }
+
     let(:prefill_description) { described_class.new(procedure) }
     let(:expected_query) do
       <<~TEXT
         curl --request POST '#{api_public_v1_dossiers_url(procedure)}' \\
              --header 'Content-Type: application/json' \\
-             --data '{"identite_prenom":"#{I18n.t("views.prefill_descriptions.edit.examples.prenom")}","champ_#{type_de_champ_text.to_typed_id_for_query}":"Texte court","champ_#{type_de_champ_epci.to_typed_id_for_query}":["01","200042935"],"champ_#{type_de_champ_repetition.to_typed_id_for_query}":[{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"},{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"}]}'
+             --data '{"identite_prenom":"#{I18n.t("views.prefill_descriptions.edit.examples.prenom")}","champ_#{type_de_champ_text.to_typed_id_for_query}":"Texte court","champ_#{prefill_type_de_champ_epci.to_typed_id_for_query}":["01","200042935"],"champ_#{type_de_champ_repetition.to_typed_id_for_query}":[{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"},{"champ_#{text_repetition.to_typed_id_for_query}":"Texte court","champ_#{integer_repetition.to_typed_id_for_query}":"42","champ_#{region_repetition.to_typed_id_for_query}":"53"}]}'
       TEXT
     end
 

@@ -1,6 +1,6 @@
 describe "procedure filters" do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, :with_type_de_champ, :with_departement, :with_region, :with_drop_down_list, instructeurs: [instructeur]) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text }, { type: :departements }, { type: :regions }, { type: :drop_down_list }], instructeurs: [instructeur]) }
   let!(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }

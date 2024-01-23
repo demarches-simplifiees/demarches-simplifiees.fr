@@ -915,7 +915,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(response).to render_template 'dossiers/show' }
 
       context 'empty champs commune' do
-        let(:procedure) { create(:procedure, :published, :with_commune, instructeurs:) }
+        let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }], instructeurs:) }
         let(:dossier) { create(:dossier, :accepte, procedure:) }
 
         it { expect(response).to render_template 'dossiers/show' }

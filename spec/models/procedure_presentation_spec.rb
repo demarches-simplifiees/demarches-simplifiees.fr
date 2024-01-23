@@ -53,7 +53,11 @@ describe ProcedurePresentation do
 
   describe "#fields" do
     context 'when the procedure can have a SIRET number' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private, types_de_champ_count: 4, types_de_champ_private_count: 4) }
+      let(:procedure) do
+        create(:procedure,
+               types_de_champ_public: Array.new(4) { { type: :text } },
+               types_de_champ_private: Array.new(4) { { type: :text } })
+      end
       let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
       let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
       let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
@@ -866,7 +870,7 @@ describe ProcedurePresentation do
     end
 
     context 'when type_de_champ yes_no' do
-      let(:procedure) { create(:procedure, :with_yes_no) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
 
       it 'should transform value' do
         expect(subject).to eq("oui")
@@ -894,7 +898,7 @@ describe ProcedurePresentation do
     let(:filters) { { "suivis" => [] } }
 
     context 'when type_de_champ yes_no' do
-      let(:procedure) { create(:procedure, :with_yes_no) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
 
       it 'should downcase and transform value' do
         procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")

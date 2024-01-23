@@ -269,7 +269,7 @@ describe API::V1::DossiersController do
           end
 
           describe 'departement' do
-            let(:procedure) { create(:procedure, :with_departement, administrateur: admin) }
+            let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :departements }], administrateur: admin) }
             let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
 
             subject { super() }
@@ -281,7 +281,7 @@ describe API::V1::DossiersController do
           end
 
           describe 'repetition' do
-            let(:procedure) { create(:procedure, :with_repetition, administrateur: admin) }
+            let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }], administrateur: admin) }
             let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
 
             subject { super().first[:rows] }

@@ -1,5 +1,5 @@
 describe 'dossiers/dossier_vide', type: :view do
-  let(:procedure) { create(:procedure, :with_all_champs, :with_drop_down_list) }
+  let(:procedure) { create(:procedure, :with_all_champs) }
   let(:dossier) { create(:dossier, procedure: procedure) }
 
   before do

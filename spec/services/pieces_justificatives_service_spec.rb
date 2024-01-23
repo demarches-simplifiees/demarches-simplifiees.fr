@@ -11,7 +11,7 @@ describe PiecesJustificativesService do
     end
 
     context 'with a pj champ' do
-      let(:procedure) { create(:procedure, :with_piece_justificative) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:witness) { create(:dossier, procedure: procedure) }
 
@@ -37,7 +37,7 @@ describe PiecesJustificativesService do
     end
 
     context 'with a pj not safe on a champ' do
-      let(:procedure) { create(:procedure, :with_piece_justificative) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:pj_champ) { -> (d) { d.champs_public.find { |c| c.type == 'Champs::PieceJustificativeChamp' } } }
 
@@ -113,7 +113,7 @@ describe PiecesJustificativesService do
     end
 
     context 'with a identite champ pj' do
-      let(:procedure) { create(:procedure, :with_titre_identite) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :titre_identite }]) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:witness) { create(:dossier, procedure: procedure) }
 
