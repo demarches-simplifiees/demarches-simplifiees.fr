@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_16_155926) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_16_155926) do
     t.inet "authorized_networks", default: [], array: true
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
+    t.date "expiration_notices_sent_at", default: [], array: true
     t.datetime "last_v1_authenticated_at"
     t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
