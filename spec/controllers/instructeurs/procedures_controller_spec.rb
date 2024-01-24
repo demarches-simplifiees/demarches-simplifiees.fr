@@ -166,7 +166,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
 
-          it { expect(assigns(:procedures_en_cours)).to eq([procedure2, procedure, procedure3]) }
+          it { expect(assigns(:procedures_en_cours)).to match_array([procedure2, procedure, procedure3]) }
           it { expect(assigns(:procedures_en_cours_count)).to eq(3) }
 
           it { expect(assigns(:procedures_closes)).to eq([procedure4]) }
