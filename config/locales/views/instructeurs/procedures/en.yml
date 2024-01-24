@@ -23,3 +23,5 @@ en:
         title: "%{procedure_libelle} - n°%{procedure_id} - administrators"
       stats:
         title: Statistics
+      exports:
+        title: Exports
