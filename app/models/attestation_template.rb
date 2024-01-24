@@ -63,8 +63,7 @@ class AttestationTemplate < ApplicationRecord
     attributes = {
       created_at: Time.zone.now,
       footer: params.fetch(:footer, footer),
-      logo: params.fetch(:logo, logo.attached? ? logo : nil),
-      qrcode: dossier && dossier.id ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
+      logo: params.fetch(:logo, logo.attached? ? logo : nil)
     }
 
     dossier = params[:dossier]
@@ -73,7 +72,8 @@ class AttestationTemplate < ApplicationRecord
       attributes.merge({
         title: replace_tags(title, dossier),
         body: replace_tags(body, dossier),
-        signature: signature_to_render(dossier.groupe_instructeur)
+        signature: signature_to_render(dossier.groupe_instructeur),
+        qrcode: dossier.id.present? ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
       })
     else
       attributes.merge({
