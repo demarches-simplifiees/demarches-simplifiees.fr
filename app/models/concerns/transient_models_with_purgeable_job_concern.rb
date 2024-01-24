@@ -41,7 +41,7 @@ module TransientModelsWithPurgeableJobConcern
     }
 
     def available?
-      generated?
+      generated? && file.url.present?
     end
 
     def compute_with_safe_stale_for_purge(&block)

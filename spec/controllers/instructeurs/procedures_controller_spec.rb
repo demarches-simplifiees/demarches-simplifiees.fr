@@ -520,6 +520,11 @@ describe Instructeurs::ProceduresController, type: :controller do
 
           it { expect(assigns(:last_export)).to eq(export) }
           it { expect(response.body).to include("Votre dernier export est en cours de création") }
+
+          context 'when export is generated but file not yet attached' do
+            let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2]) }
+            it { expect(response.body).to include("Votre dernier export est en cours de création") }
+          end
         end
 
         context 'with recent generated export' do
@@ -527,6 +532,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           let!(:export) { create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago) }
           render_views
           before do
+            export.file.attach(io: StringIO.new, filename: 'file')
             subject
           end
 
