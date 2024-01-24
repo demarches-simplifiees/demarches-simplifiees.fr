@@ -510,6 +510,8 @@ en:
           start_other_dossier: "Start another empty file"
           clone: "Duplicate the file"
           delete_dossier: "Delete the file"
+          delete_dossier_confirm: "If you continue, you will delete this file and the information it contains. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
+          delete_dossier_with_transfer_confirm: "If you continue, you will delete this file, the information it contains and its transfer request. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
           transfer_dossier: "Transfer the file"
           edit_draft: "Keep filling"
           actions: "Actions"
