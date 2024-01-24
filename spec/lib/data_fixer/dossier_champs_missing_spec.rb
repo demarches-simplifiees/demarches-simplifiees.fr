@@ -1,6 +1,6 @@
 describe DataFixer::DossierChampsMissing do
   describe '#fix' do
-    let(:procedure) { create(:procedure, :with_datetime, :with_dossier_link) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :datetime }, { type: :dossier_link }]) }
     let(:dossier) { create(:dossier, procedure:) }
 
     context 'when dossier does not have a fork' do
@@ -34,7 +34,7 @@ describe DataFixer::DossierChampsMissing do
     end
 
     context 'when dossier have missing champ on repetition' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :decimal_number }] }]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
       let(:champ_repetition) { dossier.champs_public.first }
       let(:initial_champ_count) { dossier.champs.count }

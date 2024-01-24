@@ -11,20 +11,27 @@ describe ProcedureRevision do
   describe '#add_type_de_champ' do
     # tdc: public: text, repetition ; private: text ; +1 text child of repetition
     let(:procedure) do
-      create(:procedure).tap do |p|
-        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
-        parent = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'l2')
-        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2', parent_stable_id: parent.stable_id)
-        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1 private', private: true)
-      end
+      create(:procedure,
+            types_de_champ_public: [
+              { type: :text, libelle: 'l1' },
+              {
+                type: :repetition, libelle: 'l2', children: [
+                  { type: :text, libelle: 'l2' }
+                ]
+              }
+            ],
+            types_de_champ_private: [
+              { type: :text, libelle: 'l1 private' }
+            ])
     end
-    let(:text_params) { { type_champ: :text, libelle: 'text' } }
     let(:tdc_params) { text_params }
     let(:last_coordinate) { draft.revision_types_de_champ.last }
 
     subject { draft.add_type_de_champ(tdc_params) }
 
     context 'with a text tdc' do
+      let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_public.last.stable_id } }
+
       it 'public' do
         expect { subject }.to change { draft.types_de_champ_public.size }.from(2).to(3)
         expect(draft.types_de_champ_public.last).to eq(subject)
@@ -36,6 +43,7 @@ describe ProcedureRevision do
     end
 
     context 'with a private tdc' do
+      let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
       let(:tdc_params) { text_params.merge(private: true) }
 
       it 'private' do
@@ -47,6 +55,7 @@ describe ProcedureRevision do
     end
 
     context 'with a repetition child' do
+      let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.children_of(type_de_champ_repetition).last.stable_id } }
       let(:tdc_params) { text_params.merge(parent_stable_id: type_de_champ_repetition.stable_id) }
 
       it do
@@ -62,12 +71,14 @@ describe ProcedureRevision do
     end
 
     context 'when a libelle is missing' do
+      let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
       let(:tdc_params) { text_params.except(:libelle) }
 
       it { expect(subject.errors.full_messages).to eq(["Le champ « Libelle » doit être rempli"]) }
     end
 
     context 'when a parent is incorrect' do
+      let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
       let(:tdc_params) { text_params.merge(parent_id: 123456789) }
 
       it { expect(subject.errors.full_messages).not_to be_empty }
@@ -75,6 +86,7 @@ describe ProcedureRevision do
 
     context 'after_stable_id' do
       context 'with a valid after_stable_id' do
+        let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
         let(:tdc_params) { text_params.merge(after_stable_id: draft.revision_types_de_champ_public.first.stable_id, libelle: 'in the middle') }
 
         it do
@@ -86,18 +98,19 @@ describe ProcedureRevision do
       end
 
       context 'with blank valid after_stable_id' do
+        let(:text_params) { { type_champ: :text, libelle: 'text', after_stable_id: procedure.draft_revision.types_de_champ_private.last.id } }
         let(:tdc_params) { text_params.merge(after_stable_id: '', libelle: 'in the middle') }
 
         it do
           subject
-          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['l1', 'l2', 'in the middle'])
+          expect(draft.revision_types_de_champ_public.reload.map(&:libelle)).to eq(['in the middle', 'l1', 'l2'])
         end
       end
     end
   end
 
   describe '#move_type_de_champ' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 4) }
+    let(:procedure) { create(:procedure, types_de_champ_public: Array.new(4) { { type: :text } }) }
     let(:last_type_de_champ) { draft.types_de_champ_public.last }
 
     context 'with 4 types de champ publiques' do
@@ -122,13 +135,14 @@ describe ProcedureRevision do
     end
 
     context 'with a champ repetition repetition' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
 
       let!(:second_child) do
         draft.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "second child",
-          parent_stable_id: type_de_champ_repetition.stable_id
+          parent_stable_id: type_de_champ_repetition.stable_id,
+          after_stable_id: draft.reload.children_of(type_de_champ_repetition).last.stable_id
         })
       end
 
@@ -136,7 +150,8 @@ describe ProcedureRevision do
         draft.add_type_de_champ({
           type_champ: TypeDeChamp.type_champs.fetch(:text),
           libelle: "last child",
-          parent_stable_id: type_de_champ_repetition.stable_id
+          parent_stable_id: type_de_champ_repetition.stable_id,
+          after_stable_id: draft.reload.children_of(type_de_champ_repetition).last.stable_id
         })
       end
 
@@ -177,7 +192,7 @@ describe ProcedureRevision do
 
     context 'with multiple tdc' do
       context 'in public tdc' do
-        let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3) }
+        let(:procedure) { create(:procedure, types_de_champ_public: Array.new(3) { { type: :text } }) }
 
         it 'reorders' do
           expect(draft.revision_types_de_champ_public.pluck(:position)).to eq([0, 1, 2])
@@ -193,7 +208,7 @@ describe ProcedureRevision do
       end
 
       context 'in repetition tdc' do
-        let(:procedure) { create(:procedure, :with_repetition) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
         let!(:second_child) do
           draft.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
@@ -224,7 +239,7 @@ describe ProcedureRevision do
     end
 
     context 'for a type_de_champ_repetition' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
       let!(:child) { child = draft.children_of(type_de_champ_repetition).first }
 
       it 'can remove its children' do
@@ -295,7 +310,7 @@ describe ProcedureRevision do
     end
 
     context 'with repetition_type_de_champ' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
 
       it 'should have the same tdcs with different links' do
         expect(new_draft.types_de_champ.count).to eq(3)
@@ -312,7 +327,7 @@ describe ProcedureRevision do
   end
 
   describe '#update_type_de_champ' do
-    let(:procedure) { create(:procedure, :with_repetition) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
     let(:last_coordinate) { draft.revision_types_de_champ.last }
     let(:last_type_de_champ) { last_coordinate.type_de_champ }
 
@@ -343,10 +358,10 @@ describe ProcedureRevision do
 
     context 'with a procedure with 2 tdcs' do
       let(:procedure) do
-        create(:procedure).tap do |p|
-          p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2')
-        end
+        create(:procedure, types_de_champ_public: [
+          { type: :integer_number, libelle: 'l1' },
+          { type: :text, libelle: 'l2' }
+        ])
       end
 
       context 'when a condition is added' do
@@ -487,7 +502,7 @@ describe ProcedureRevision do
       end
 
       context 'when collapsible_explanation_enabled and collapsible_explanation_text are changed' do
-        let(:procedure) { create(:procedure, :with_explication) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :explication }]) }
 
         before do
           updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
@@ -520,7 +535,7 @@ describe ProcedureRevision do
     end
 
     context 'when a type de champ is moved' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, types_de_champ_count: 3) }
+      let(:procedure) { create(:procedure, types_de_champ_public: Array.new(3) { { type: :text } }) }
       let(:new_draft_second_tdc) { new_draft.types_de_champ_public.second }
       let(:new_draft_third_tdc) { new_draft.types_de_champ_public.third }
 
@@ -572,7 +587,7 @@ describe ProcedureRevision do
     end
 
     context 'when a child type de champ is transformed into a drop_down_list' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text, libelle: 'sub type de champ' }, { type: :integer_number }] }]) }
 
       before do
         child = new_draft.children_of(new_draft.types_de_champ_public.last).first
@@ -604,7 +619,7 @@ describe ProcedureRevision do
     end
 
     context 'when a child type de champ is transformed into a map' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text, libelle: 'sub type de champ' }, { type: :integer_number }] }]) }
 
       before do
         child = new_draft.children_of(new_draft.types_de_champ_public.last).first
@@ -644,7 +659,7 @@ describe ProcedureRevision do
     end
 
     context 'with a repetition tdc' do
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
       let!(:parent) { draft.types_de_champ.find(&:repetition?) }
       let!(:first_child) { draft.types_de_champ.reject(&:repetition?).first }
       let!(:second_child) { draft.types_de_champ.reject(&:repetition?).second }
@@ -988,9 +1003,12 @@ describe ProcedureRevision do
     def second_champ = procedure.draft_revision.types_de_champ_public.second
 
     let(:procedure) do
-      create(:procedure).tap do |p|
-        tdc = p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
-        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l2', condition: ds_eq(champ_value(tdc.stable_id), constant(true)))
+      create(:procedure, types_de_champ_public: [{ type: :integer_number, libelle: 'l1' }]).tap do |p|
+        tdc = p.draft_revision.revision_types_de_champ_public.last
+        p.draft_revision.add_type_de_champ(type_champ: :integer_number,
+                                           libelle: 'l2',
+                                           condition: ds_eq(champ_value(tdc.stable_id), constant(true)),
+                                           after_stable_id: tdc.stable_id)
       end
     end
 
@@ -1017,14 +1035,14 @@ describe ProcedureRevision do
 
   describe '#routable_types_de_champ' do
     let(:procedure) do
-      create(:procedure).tap do |p|
-        p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
-        p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l2')
-        p.draft_revision.add_type_de_champ(type_champ: :departements, libelle: 'l3')
-        p.draft_revision.add_type_de_champ(type_champ: :regions, libelle: 'l4')
-        p.draft_revision.add_type_de_champ(type_champ: :communes, libelle: 'l5')
-        p.draft_revision.add_type_de_champ(type_champ: :epci, libelle: 'l6')
-      end
+      create(:procedure, types_de_champ_public: [
+        { type: :text, libelle: 'l1' },
+        { type: :drop_down_list, libelle: 'l2' },
+        { type: :departements, libelle: 'l3' },
+        { type: :regions, libelle: 'l4' },
+        { type: :communes, libelle: 'l5' },
+        { type: :epci, libelle: 'l6' }
+      ])
     end
 
     it { expect(draft.routable_types_de_champ.pluck(:libelle)).to eq(['l2', 'l3', 'l4', 'l5', 'l6']) }

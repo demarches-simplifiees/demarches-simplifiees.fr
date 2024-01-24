@@ -40,7 +40,7 @@ describe Manager::ProceduresController, type: :controller do
   describe '#show' do
     render_views
 
-    let(:procedure) { create(:procedure, :published, :with_repetition) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :repetition, children: [{ type: :text, libelle: 'sub type de champ' }] }]) }
 
     before do
       get :show, params: { id: procedure.id }

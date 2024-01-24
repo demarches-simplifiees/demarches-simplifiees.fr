@@ -1,6 +1,6 @@
 describe "Dossier en_construction" do
   let(:user) { create(:user) }
-  let(:procedure) { create(:simple_procedure, :with_piece_justificative, :with_titre_identite) }
+  let(:procedure) { create(:procedure, :for_individual, types_de_champ_public: [{ type: :piece_justificative }, { type: :titre_identite }]) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, user:, procedure:) }
 
   let(:tdc) {

@@ -199,7 +199,7 @@ describe DossierProjectionService do
 
       context 'for type_de_champ table and value to.s' do
         let(:table) { 'type_de_champ' }
-        let(:procedure) { create(:procedure, :with_yes_no) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
@@ -210,7 +210,7 @@ describe DossierProjectionService do
 
       context 'for type_de_champ table and value to.s which needs data field' do
         let(:table) { 'type_de_champ' }
-        let(:procedure) { create(:procedure, :with_address) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :address }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 

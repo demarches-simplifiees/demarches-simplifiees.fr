@@ -1,6 +1,6 @@
 describe Champs::RNAController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published, :with_rna) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :rna }]) }
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }

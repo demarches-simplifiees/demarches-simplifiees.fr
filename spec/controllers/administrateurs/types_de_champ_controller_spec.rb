@@ -1,11 +1,14 @@
 describe Administrateurs::TypesDeChampController, type: :controller do
   let(:procedure) do
-    create(:procedure).tap do |p|
-      p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
-      p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l2')
-      p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l3')
-      p.draft_revision.add_type_de_champ(type_champ: :yes_no, libelle: 'bon dossier', private: true)
-    end
+    create(:procedure,
+           types_de_champ_public: [
+             { type: :integer_number, libelle: 'l1' },
+             { type: :integer_number, libelle: 'l2' },
+             { type: :drop_down_list, libelle: 'l3' }
+           ],
+           types_de_champ_private: [
+             { type: :yes_no, libelle: 'bon dossier', private: true }
+           ])
   end
 
   def first_coordinate = procedure.draft_revision.revision_types_de_champ_public.first

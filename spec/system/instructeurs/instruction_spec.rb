@@ -198,7 +198,7 @@ describe 'Instructing a dossier:', js: true do
   end
 
   context 'A instructeur can ask for an Archive' do
-    let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
     before do
       log_in(instructeur.email, password)
@@ -212,7 +212,7 @@ describe 'Instructing a dossier:', js: true do
     end
   end
   context 'with dossiers having attached files', js: true do
-    let(:procedure) { create(:procedure, :published, :with_piece_justificative, instructeurs: [instructeur]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:champ) { dossier.champs_public.first }
     let(:path) { 'spec/fixtures/files/piece_justificative_0.pdf' }
