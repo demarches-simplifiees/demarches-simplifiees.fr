@@ -9,7 +9,10 @@
         = procedure_badge(dossier.procedure)
 
         = status_badge(dossier.state)
-        = pending_correction_badge(:for_instructeur) if dossier.pending_correction?
+        - if dossier.pending_correction?
+          = pending_correction_badge(:for_instructeur)
+        - elsif dossier.en_construction? && dossier.last_correction_resolved?
+          = correction_resolved_badge
         = render Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: dossier, procedure: dossier.procedure, with_label: true)
 
 
