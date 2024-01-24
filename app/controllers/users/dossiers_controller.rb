@@ -2,6 +2,7 @@ module Users
   class DossiersController < UserController
     include DossierHelper
     include TurboChampsConcern
+    include LockableConcern
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
@@ -18,6 +19,10 @@ module Users
     before_action :set_dossier_as_editing_fork, only: [:submit_en_construction]
     before_action :show_demarche_en_test_banner
     before_action :store_user_location!, only: :new
+
+    around_action only: :submit_en_construction do |_controller, action|
+      lock_action("lock-submit-en-construction-#{@dossier.id}", &action)
+    end
 
     def index
       ordered_dossiers = Dossier.includes(:procedure).order_by_updated_at
