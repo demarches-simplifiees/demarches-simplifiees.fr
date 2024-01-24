@@ -314,11 +314,7 @@ module Users
 
       if @commentaire.errors.empty?
         @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
-        dossier.followers_instructeurs
-          .with_instant_email_message_notifications
-          .each do |instructeur|
-          DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
-        end
+
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)
       else
