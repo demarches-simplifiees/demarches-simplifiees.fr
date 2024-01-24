@@ -1,19 +1,24 @@
 - if render_within_fieldset?
-  = tag.fieldset(class: "reset-#{tag_for_depth} fr-m-0 fr-p-0") do
-    = tag.legend do
-      = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
+  .fr-fieldset__element{ class: class_names("fr-my-0" => render_within_fieldset?) }
+    %fieldset.fr-fieldset.fr-my-0{ class: "reset-#{tag_for_depth}" }
+      %legend.fr-fieldset__legend
+        = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
+      - splitted_tail.each do |section, champ|
+        - if section.present?
+          = render section
+        - else
+          = fields_for champ.input_name, champ do |form|
+            .fr-fieldset__element
+              = render EditableChamp::EditableChampComponent.new form:, champ:
+- else
+  %fieldset.fr-fieldset.fr-my-0
+    - if header_section
+      %legend.fr-fieldset__legend.fr-my-0{ class: "reset-#{tag_for_depth}" }
+        = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
     - splitted_tail.each do |section, champ|
       - if section.present?
         = render section
       - else
         = fields_for champ.input_name, champ do |form|
-          = render EditableChamp::EditableChampComponent.new form: ,champ:
-- else
-  - if header_section
-    %div{ class: "reset-#{tag_for_depth}" }= render EditableChamp::HeaderSectionComponent.new(champ: header_section)
-  - splitted_tail.each do |section, champ|
-    - if section.present?
-      = render section
-    - else
-      = fields_for champ.input_name, champ do |form|
-        = render EditableChamp::EditableChampComponent.new form: ,champ:
+          .fr-fieldset__element
+            = render EditableChamp::EditableChampComponent.new form:, champ:
