@@ -137,6 +137,7 @@ GEM
       activesupport (>= 3.1)
       caxlsx (>= 2.0.2)
     bcrypt (3.1.18)
+    benchmark-ips (2.12.0)
     better_html (1.0.16)
       actionview (>= 4.0)
       activesupport (>= 4.0)
@@ -839,6 +840,7 @@ DEPENDENCIES
   aws-sdk-s3
   axe-core-rspec
   bcrypt
+  benchmark-ips
   bootsnap (>= 1.4.4)
   brakeman
   browser
