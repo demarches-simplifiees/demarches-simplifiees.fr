@@ -15,6 +15,11 @@ class GroupeInstructeur < ApplicationRecord
   has_one :defaut_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :defaut_groupe_instructeur_id, dependent: :nullify, inverse_of: :defaut_groupe_instructeur
   has_one :contact_information
 
+  has_one_attached :signature
+
+  SIGNATURE_MAX_SIZE = 1.megabytes
+  validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: SIGNATURE_MAX_SIZE }
+
   validates :label, presence: true, allow_nil: false
   validates :label, uniqueness: { scope: :procedure }
   validates :closed, acceptance: { accept: [false] }, if: -> { (self == procedure.defaut_groupe_instructeur) }

@@ -58,7 +58,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
           expect(assigns(:attestation)).to include(attestation_params)
           expect(assigns(:attestation)[:created_at]).to eq(Time.zone.now)
           expect(assigns(:attestation)[:logo]).to eq(nil)
-          expect(assigns(:attestation)[:signature]).to eq(nil)
+          expect(assigns(:attestation)[:signature]).not_to be_attached
         end
         it_behaves_like 'rendering a PDF successfully'
       end

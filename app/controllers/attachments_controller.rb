@@ -6,6 +6,7 @@ class AttachmentsController < ApplicationController
     @attachment = @blob.attachments.find(params[:id])
 
     @user_can_edit = cast_bool(params[:user_can_edit])
+    @direct_upload = cast_bool(params[:direct_upload])
     @view_as = params[:view_as]&.to_sym
     @auto_attach_url = params[:auto_attach_url]
 

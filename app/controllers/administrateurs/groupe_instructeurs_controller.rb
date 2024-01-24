@@ -2,6 +2,8 @@ module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper
     include Logic
+    include UninterlacePngConcern
+    include GroupeInstructeursSignatureConcern
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
@@ -387,6 +389,10 @@ module Administrateurs
 
     def groupe_instructeur_params
       params.require(:groupe_instructeur).permit(:label)
+    end
+
+    def signature_params
+      params.require(:groupe_instructeur).permit(:signature)
     end
 
     def paginated_groupe_instructeurs

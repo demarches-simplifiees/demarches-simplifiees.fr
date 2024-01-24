@@ -1,5 +1,8 @@
 module Instructeurs
   class GroupeInstructeursController < InstructeurController
+    include UninterlacePngConcern
+    include GroupeInstructeursSignatureConcern
+
     ITEMS_PER_PAGE = 25
 
     def index

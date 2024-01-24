@@ -413,6 +413,8 @@ Rails.application.routes.draw do
           member do
             post 'add_instructeur'
             delete 'remove_instructeur'
+            post 'add_signature'
+            get 'preview_attestation'
           end
         end
 
@@ -551,6 +553,8 @@ Rails.application.routes.draw do
           delete 'remove_instructeur'
           get 'reaffecter_dossiers'
           post 'reaffecter'
+          post 'add_signature'
+          get 'preview_attestation'
         end
 
         collection do
