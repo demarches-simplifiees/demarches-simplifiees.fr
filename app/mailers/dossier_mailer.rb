@@ -1,12 +1,19 @@
 # Preview all emails at http://localhost:3000/rails/mailers/dossier_mailer
 class DossierMailer < ApplicationMailer
+  class AbortDeliveryError < StandardError; end
+
   helper ServiceHelper
   helper MailerHelper
   helper ProcedureHelper
 
   layout 'mailers/layout'
   default from: NO_REPLY_EMAIL
-  after_action :prevent_perform_deliveries, only: [:notify_new_draft, :notify_new_answer, :notify_pending_correction]
+
+  before_action :abort_perform_deliveries, only: [:notify_transfer]
+  after_action :prevent_perform_deliveries, only: [:notify_new_draft, :notify_new_answer, :notify_pending_correction, :notify_transfer]
+
+  # when we don't want to render the view
+  rescue_from AbortDeliveryError, with: -> {}
 
   def notify_new_draft
     @dossier = params[:dossier]
@@ -162,12 +169,13 @@ class DossierMailer < ApplicationMailer
     end
   end
 
-  def notify_transfer(transfer)
-    I18n.with_locale(transfer.user_locale) do
-      @subject = default_i18n_subject()
-      @transfer = transfer
+  def notify_transfer
+    @transfer = params[:dossier_transfer]
 
-      mail(to: transfer.email, subject: @subject)
+    I18n.with_locale(@transfer.user_locale) do
+      @subject = default_i18n_subject()
+
+      mail(to: @transfer.email, subject: @subject)
     end
   end
 
@@ -183,6 +191,14 @@ class DossierMailer < ApplicationMailer
 
     if commentaire&.discarded? || dossier&.skip_user_notification_email?
       mail.perform_deliveries = false
+    end
+  end
+
+  def abort_perform_deliveries
+    dossier_transfer = params[:dossier_transfer]
+
+    if dossier_transfer.dossiers.empty?
+      raise AbortDeliveryError.new
     end
   end
 
