@@ -105,6 +105,8 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         context "with not draft state on multiple procedures" do
           let(:procedure2) { create(:procedure, :published, :expirable) }
+          let(:procedure3) { create(:procedure, :closed, :expirable) }
+          let(:procedure4) { create(:procedure, :closed, :expirable) }
           let(:state) { Dossier.states.fetch(:en_construction) }
 
           before do
@@ -132,6 +134,13 @@ describe Instructeurs::ProceduresController, type: :controller do
                              state: Dossier.states.fetch(:sans_suite),
                              processed_at: 8.months.ago,
                              hidden_by_user_at: 1.day.ago) # counted as expirable because even if user remove it, instructeur see it
+
+            instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
+            create(:dossier, :followed, procedure: procedure3, state: Dossier.states.fetch(:en_construction))
+            create(:dossier, procedure: procedure3, state: Dossier.states.fetch(:sans_suite))
+
+            instructeur.groupe_instructeurs << procedure4.defaut_groupe_instructeur
+            create(:dossier, procedure: procedure4, state: Dossier.states.fetch(:sans_suite))
             subject
           end
 
@@ -148,12 +157,20 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
           it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
 
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2) }
+
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
           it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3) }
+          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1 + 1 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3 + 2 + 1) }
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
+
+          it { expect(assigns(:procedures_en_cours)).to eq([procedure2, procedure, procedure3]) }
+          it { expect(assigns(:procedures_en_cours_count)).to eq(3) }
+
+          it { expect(assigns(:procedures_closes)).to eq([procedure4]) }
+          it { expect(assigns(:procedures_closes_count)).to eq(1) }
         end
 
         context 'with not draft state on discarded procedure' do

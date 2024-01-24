@@ -7,17 +7,26 @@
 
     %nav.tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
       %ul
-        = tab_item(t('pluralize.published', count: @procedures_publiees_count), instructeur_procedures_path(statut: 'publiees'), active: @statut == 'publiees', badge: number_with_html_delimiter(@procedures_publiees_count))
-        = tab_item('En test', instructeur_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
-        = tab_item(t('pluralize.closed', count: @procedures_closed_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closed_count))
+        = tab_item(t('pluralize.en_cours', count: @procedures_en_cours_count), instructeur_procedures_path(statut: 'en-cours'), active: @statut == 'en-cours', badge: number_with_html_delimiter(@procedures_en_cours_count))
+        = tab_item(t('pluralize.en_test', count: @procedures_draft_count), instructeur_procedures_path(statut: 'brouillons'), active: @statut == 'brouillons', badge: number_with_html_delimiter(@procedures_draft_count))
+        = tab_item(t('pluralize.closed', count: @procedures_closes_count), instructeur_procedures_path(statut: 'archivees'), active: @statut == 'archivees', badge: number_with_html_delimiter(@procedures_closes_count))
 
 .fr-container
-  - if @statut === "publiees"
-    - collection = @procedures_publiees
+  - if @statut.in? ["publiees", "en-cours"] # FIX ME: @statut === "en-cours" à partir du 1/11/2023
+    = render Dsfr::CalloutComponent.new(title: nil) do |c|
+      - c.with_body do
+        = t(".procedure_en_cours_description")
+    - collection = @procedures_en_cours
   - if @statut === "brouillons"
+    = render Dsfr::CalloutComponent.new(title: nil) do |c|
+      - c.with_body do
+        = t(".procedure_en_test_description")
     - collection = @procedures_draft
   - if @statut === "archivees"
-    - collection = @procedures_closed
+    = render Dsfr::CalloutComponent.new(title: nil) do |c|
+      - c.with_body do
+        = t(".procedure_close_description")
+    - collection = @procedures_closes
 
 
   - if collection.present?
