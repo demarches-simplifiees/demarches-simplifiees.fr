@@ -190,8 +190,8 @@ class TypeDeChamp < ApplicationRecord
   end
 
   has_one_attached :piece_justificative_template
-  validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }
-  validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES
+  validates :piece_justificative_template, size: { less_than: FILE_MAX_SIZE }, on: :update
+  validates :piece_justificative_template, content_type: AUTHORIZED_CONTENT_TYPES, on: :update
 
   has_one_attached :notice_explicative
   validates :notice_explicative, content_type: [
@@ -206,7 +206,7 @@ class TypeDeChamp < ApplicationRecord
     "image/jpg",
     "image/png",
     "text/plain"
-  ], size: { less_than: 20.megabytes }
+  ], size: { less_than: 20.megabytes }, on: :update
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :type_champ, presence: true, allow_blank: false, allow_nil: false
