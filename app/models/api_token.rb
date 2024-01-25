@@ -38,18 +38,8 @@ class APIToken < ApplicationRecord
       .order(:libelle)
   end
 
-  def untarget_procedure(procedure_id)
-    new_target_ids = targeted_procedure_ids - [procedure_id]
-
-    update!(allowed_procedure_ids: new_target_ids)
-  end
-
   def sanitized_targeted_procedure_ids
     administrateur.procedures.ids.intersection(targeted_procedure_ids || [])
-  end
-
-  def become_full_access!
-    update_column(:allowed_procedure_ids, nil)
   end
 
   # Prefix is made of the first 6 characters of the uuid base64 encoded
@@ -63,6 +53,20 @@ class APIToken < ApplicationRecord
     if set.add?(IPAddr.new(ip))
       update!(stored_ips: set.to_a)
     end
+  end
+
+  def authorized_networks_for_ui
+    authorized_networks.map { "#{_1.to_string}/#{_1.prefix}" }.join(', ')
+  end
+
+  def forbidden_network?(ip)
+    return false if authorized_networks.blank?
+
+    authorized_networks.none? { |range| range.include?(ip) }
+  end
+
+  def expired?
+    expires_at&.past?
   end
 
   class << self
@@ -85,6 +89,10 @@ class APIToken < ApplicationRecord
 
       BCrypt::Password.new(api_token.encrypted_token) == bearer.plain_token ? api_token : nil
     end
+  end
+
+  def last_used_at
+    last_v2_authenticated_at || last_v1_authenticated_at
   end
 
   private

@@ -1,0 +1,105 @@
+- content_for :title, "Sécurité du jeton « #{@name} »"
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Tableau de bord', tableau_de_bord_helper_path],
+    [t('users.profil.show.profile'), profil_path],
+    [t('administrateurs.api_tokens.nom.new_token')]] }
+
+.fr-container.fr-mt-2w
+  %h1 Sécurité
+
+  .flex.align-center
+    %div
+      = image_tag("spider-128.png", width: '128px', style: 'display: block;')
+    %div
+      %blockquote{ cite: "https://fr.wikipedia.org/wiki/Un_grand_pouvoir,_grandes_responsabilit%C3%A9s#Utilisation_dans_Spider-Man" }
+        %p « Avec un grand pouvoir vient une grande responsabilité  »
+        %p.fr-text--sm Oncle Ben dans Spider-Man
+
+  %p.fr-mt-2w
+    Votre jeton va proprablement vous permettre de manipuler des données confidentielles, voir personnelles.<br />
+    %b Il est de votre responsabilité de le conserver en sécurité et d'en limiter l'utilisation aux seules personnes habilitées.
+  %p Pour vous aider, nous vous proposons des fonctionnalités de filtrage réseau et de durée de vie du jeton.
+
+  = form_with url: admin_api_tokens_path,
+    method: :post,
+    html: { class: 'fr-mt-2w' },
+    data: { controller: 'api-token-securite' } do |f|
+
+    = render Dsfr::RadioButtonListComponent.new(form: f,
+      target: :networkFiltering,
+      buttons: [ { label: 'Je veux spécifier les réseaux autorisées à utiliser mon jeton',
+        value: :customNetworks,
+        checked: params[:networkFiltering] == 'customNetworks',
+        'data-action': 'click->api-token-securite#showNetworkFiltering' },
+        { label: 'Mon jeton peut être utilisé depuis nʼimporte quelle adresse IP dans le monde',
+        hint: 'dangereux',
+        value: :none,
+        checked: params[:networkFiltering] == 'none',
+        'data-action': 'click->api-token-securite#hideNetworkFiltering' }]) do
+      Filtrage réseau :
+
+    .fr-input-group.fr-mb-4w{
+      'data-api-token-securite-target': 'networkFiltering',
+      class: class_names('hidden': params[:networkFiltering] == 'none' || params[:networkFiltering].blank?, 'fr-input-group--error': params[:invalidNetwork].present?) }
+      = f.label :name, class: 'fr-label' do
+        Entrez les adresses IP autorisées
+        %span.fr-hint-text adresses réseaux séparées par des espaces. Ex: 176.31.79.200 192.168.33.0/24 2001:41d0:304:400::52f/128
+      = f.text_field :networks,
+        class: class_names('fr-input': true, 'fr-input--error': params[:invalidNetwork].present?),
+        autocomplete: 'off',
+        autocapitalize: 'off',
+        autocorrect: 'off',
+        spellcheck: false,
+        value: params[:networks],
+        'data-action': 'input->api-token-securite#setContinueButtonState',
+        'data-api-token-securite-target': 'networks'
+
+      - if params[:invalidNetwork].present?
+        %p.fr-error-text Vous devez entrer des adresses IPv4 ou IPv6 valides
+
+    = render Dsfr::RadioButtonListComponent.new(form: f,
+      target: :lifetime,
+      buttons: [ { label: '1 semaine',
+        value: :oneWeek,
+        checked: params[:lifetime] == 'oneWeek',
+        'data-action': 'click->api-token-securite#hideCustomLifetime' },
+        { label: 'durée personnalisée inférieure à 1 an',
+        value: :custom,
+        checked: params[:lifetime] == 'custom',
+        'data-action': 'click->api-token-securite#showCustomLifetime'},
+        { label: 'Infini (le filtrage réseau doit être activé)',
+        value: :infinite,
+        checked: params[:lifetime] == 'infinite',
+        disabled: true,
+        'data-api-token-securite-target': 'infiniteLifetime',
+        'data-action': 'click->api-token-securite#hideCustomLifetime' }]) do
+      Durée de vie du jeton :
+
+    .fr-input-group.fr-mb-4w.hidden{ 'data-api-token-securite-target': 'customLifetime' }
+      = f.label :name, class: 'fr-label' do
+        Entrez la date de fin de validité du jeton
+
+      %input{ type: 'date',
+        class: 'fr-input width-33 fr-mb-4w',
+        name: 'customLifetime',
+        'data-action': 'input->api-token-securite#setContinueButtonState',
+        'data-api-token-securite-target': 'customLifetimeInput',
+        min: Date.tomorrow.iso8601,
+        max: 1.year.from_now.to_date.iso8601 }
+
+    = f.hidden_field :name, value: params[:name]
+    = f.hidden_field :access, value: params[:access]
+    = f.hidden_field :target, value: params[:target]
+    - params[:targets]&.each do |target|
+      = f.hidden_field 'targets[]', value: target
+
+    %ul.fr-btns-group.fr-btns-group--inline
+      %li
+        = f.button type: :submit,
+          class: "fr-btn fr-btn--primary",
+          disabled: true,
+          'data-api-token-securite-target': 'continueButton' do
+          créer le jeton
+      %li
+        = link_to 'retour', autorisations_admin_api_tokens_path(name: params[:name], access: params[:access], target: params[:target], targets: params[:targets]), class: "fr-btn fr-btn--secondary"

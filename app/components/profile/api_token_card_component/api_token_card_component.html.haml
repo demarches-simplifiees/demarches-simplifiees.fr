@@ -3,15 +3,8 @@
     = t('.tokens_title')
   %p
     = t('.first_paragraph_html', application_name: APPLICATION_NAME, api_doc_url: API_DOC_URL)
-  %p
-    = t('.second_paragraph')
 
-  = render Dsfr::ListComponent.new do |list|
-    - api_and_packed_tokens.each do |(api_token, packed_token)|
-      - list.with_item do
-        .fr-card.fr-card--horizontal
-          .fr-card__body.width-100
-            .fr-card__content
-              = render Profile::APITokenComponent.new(api_token:, packed_token:)
+  = link_to t('.create_token'), nom_admin_api_tokens_path, class: "fr-btn fr-btn--secondary fr-mt-2w"
 
-  = button_to t('.action'), api_tokens_path, method: :post, class: "fr-btn fr-btn--secondary"
+  %ul.fr-mt-4w
+    =  render Profile::APITokenComponent.with_collection(api_tokens)

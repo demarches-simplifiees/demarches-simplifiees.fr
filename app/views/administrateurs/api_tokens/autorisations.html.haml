@@ -1,0 +1,70 @@
+- content_for :title, "Privilèges du jeton « #{@name} »"
+
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Tableau de bord', tableau_de_bord_helper_path],
+    [t('users.profil.show.profile'), profil_path],
+    [t('administrateurs.api_tokens.nom.new_token')]] }
+
+.fr-container.fr-mt-2w{ 'data-turbo': 'true' }
+  %h1 Privilèges du jeton « #{@name} »
+  = form_with url: securite_admin_api_tokens_path,
+    method: :get,
+    data: { controller: 'api-token-autorisation' } do |f|
+
+    = render Dsfr::RadioButtonListComponent.new(form: f,
+      target: :target,
+      buttons: [ { label: 'certaines de mes démarches',
+        value: :custom,
+        checked: params[:target] == 'custom',
+        data: { 'action': 'click->api-token-autorisation#showProcedureSelectGroup' } },
+        { label: 'toutes mes démarches',
+        value: :all,
+        hint: 'présentes et futures',
+        checked: params[:target] == 'all',
+        data: { 'action': 'click->api-token-autorisation#hideProcedureSelectGroup' } }]) do
+      Ce jeton accède à
+
+    .fr-mb-4w.hidden{ 'data-api-token-autorisation-target': 'procedureSelectGroup' }
+      .fr-select-group
+        %label.fr-label{ for: 'procedureSelect' } Sélectionner les démarches autorisées
+        .flex
+          = f.select :value,
+            options_for_select(@libelle_id_procedures),
+            { include_blank: true },
+            { id: 'procedureSelect',
+              class: 'fr-select width-33',
+              name: 'procedureSelect',
+              data: { 'api-token-autorisation-target': 'procedureSelect' } }
+
+          %button.fr-btn.fr-btn--secondary.fr-ml-1w{
+            'data-action': 'click->api-token-autorisation#addProcedure' } Ajouter
+
+        %style
+          ul:empty { padding: 0; }
+          ul:empty:before { content: "aucune démarche sélectionnée"; }
+        %ul{ 'data-api-token-autorisation-target': 'procedures' }
+
+    %div{ 'data-action': 'click->api-token-autorisation#setContinueButtonState' }
+      = render Dsfr::RadioButtonListComponent.new(form: f,
+        target: :access,
+        buttons: [ { label: 'de lire uniquement',
+          value: :read,
+          checked: params[:access] == 'read',
+          hint: 'récupérer des dossiers, des pièces-jointes' },
+        { label: 'de lire et dʼécrire',
+        value: :read_write,
+        checked: params[:access] == 'read_write',
+        hint: 'changer le statut de dossier, écrire des messages' }]) do
+        Ce jeton permet
+
+    = f.hidden_field :name, value: @name
+
+    %ul.fr-btns-group.fr-btns-group--inline
+      %li
+        = f.button type: :submit,
+          class: "fr-btn fr-btn--primary",
+          disabled: true,
+          'data-api-token-autorisation-target': 'continueButton' do
+          = t('.continue')
+      %li
+        = link_to t('.cancel'), nom_admin_api_tokens_path(name: @name), class: "fr-btn fr-btn--secondary"

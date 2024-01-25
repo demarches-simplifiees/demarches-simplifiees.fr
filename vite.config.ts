@@ -7,7 +7,7 @@ import RubyPlugin from 'vite-plugin-ruby';
 const plugins = [
   RubyPlugin(),
   ViteReact({ jsxRuntime: 'classic' }),
-  FullReload(['config/routes.rb', 'app/views/**/*'], { delay: 200 })
+  FullReload(['config/routes.rb', 'app/views/**/*', 'app/components/**/*.haml'], { delay: 200 })
 ];
 
 if (shouldBuildLegacy()) {
