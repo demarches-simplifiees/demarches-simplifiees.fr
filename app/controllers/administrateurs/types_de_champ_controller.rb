@@ -110,6 +110,7 @@ module Administrateurs
         flash.alert = errors
       else
         @coordinate = draft.remove_type_de_champ(params[:stable_id])
+        @coordinate.association(:revision).target = ProcedureRevision.includes_for_compare.find(coordinate.revision.id)
         if @coordinate.present?
           @destroyed = @coordinate
           @morphed = champ_components_starting_at(@coordinate)

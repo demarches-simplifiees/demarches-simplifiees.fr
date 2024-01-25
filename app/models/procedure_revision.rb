@@ -17,11 +17,23 @@ class ProcedureRevision < ApplicationRecord
 
   scope :ordered, -> { order(:created_at) }
   scope :includes_for_compare, -> {
-    includes(revision_types_de_champ: {
-      type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-      revision: [],
-      procedure: []
-    })
+    includes(
+      revision_types_de_champ: {
+        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+        revision: [],
+        procedure: []
+      },
+      revision_types_de_champ_public: {
+        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+        revision: [],
+        procedure: []
+      },
+      revision_types_de_champ_private: {
+        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+        revision: [],
+        procedure: []
+      }
+    )
   }
   validate :conditions_are_valid?
   validate :header_sections_are_valid?
@@ -60,7 +72,6 @@ class ProcedureRevision < ApplicationRecord
       revision_types_de_champ.create!(h)
     end
 
-    # they are not aware of the addition
     tdc
   rescue => e
     TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
@@ -101,11 +112,7 @@ class ProcedureRevision < ApplicationRecord
     children.each(&:destroy_if_orphan)
     tdc.destroy_if_orphan
 
-    # they are not aware of the removal
     coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
-
-    types_de_champ_public.reset
-    types_de_champ_private.reset
 
     coordinate
   end
