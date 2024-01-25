@@ -1,4 +1,4 @@
-describe APITokensController, type: :controller do
+describe Administrateurs::APITokensController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create(:procedure, administrateur: admin) }
 

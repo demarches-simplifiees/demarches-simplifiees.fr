@@ -208,13 +208,6 @@ Rails.application.routes.draw do
 
   resources :attachments, only: [:show, :destroy]
   resources :recherche, only: [:index]
-  resources :api_tokens, only: [:create, :destroy] do
-    collection do
-      get :nom
-      get :autorisations
-      get :securite
-    end
-  end
 
   get "patron" => "root#patron" if Rails.env.development? || Rails.env.test?
   get "suivi" => "root#suivi"
@@ -666,6 +659,14 @@ Rails.application.routes.draw do
     resources :services, except: [:show] do
       collection do
         patch 'add_to_procedure'
+      end
+    end
+
+    resources :api_tokens, only: [:create, :destroy] do
+      collection do
+        get :nom
+        get :autorisations
+        get :securite
       end
     end
   end

@@ -3,11 +3,11 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Tableau de bord', tableau_de_bord_helper_path],
     [t('users.profil.show.profile'), profil_path],
-    [t('api_tokens.nom.new_token')]] }
+    [t('administrateurs.api_tokens.nom.new_token')]] }
 
 .fr-container.fr-mt-2w{ 'data-turbo': 'true' }
   %h1 Privilèges du jeton « #{@name} »
-  = form_with url: securite_api_tokens_path,
+  = form_with url: securite_admin_api_tokens_path,
     method: :get,
     data: { controller: 'api-token-autorisation' } do |f|
 
@@ -67,4 +67,4 @@
           'data-api-token-autorisation-target': 'continueButton' do
           = t('.continue')
       %li
-        = link_to t('.cancel'), nom_api_tokens_path(name: @name), class: "fr-btn fr-btn--secondary"
+        = link_to t('.cancel'), nom_admin_api_tokens_path(name: @name), class: "fr-btn fr-btn--secondary"

@@ -3,11 +3,11 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Tableau de bord', tableau_de_bord_helper_path],
     [t('users.profil.show.profile'), profil_path],
-    [t('api_tokens.nom.new_token')]] }
+    [t('administrateurs.api_tokens.nom.new_token')]] }
 
 .fr-container.fr-mt-2w{ 'data-turbo': 'true' }
   %h1= t('.new_token')
-  = form_with url: autorisations_api_tokens_path, method: :get,  html: { class: 'fr-mt-2w' } do |f|
+  = form_with url: autorisations_admin_api_tokens_path, method: :get,  html: { class: 'fr-mt-2w' } do |f|
     .fr-input-group
       = f.label :name, class: 'fr-label' do
         = t('.name')
