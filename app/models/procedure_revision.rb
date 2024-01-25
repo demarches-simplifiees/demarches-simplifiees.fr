@@ -55,10 +55,6 @@ class ProcedureRevision < ApplicationRecord
     end
 
     # they are not aware of the addition
-    types_de_champ_public.reset
-    types_de_champ_private.reset
-    reload
-
     tdc
   rescue => e
     TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
@@ -84,9 +80,6 @@ class ProcedureRevision < ApplicationRecord
       siblings.where(position: position..coordinate.position).update_all("position = position + 1")
     end
     coordinate.update_column(:position, position)
-
-    coordinate.reload
-
     coordinate
   end
 

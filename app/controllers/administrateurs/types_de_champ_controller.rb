@@ -1,12 +1,12 @@
 module Administrateurs
   class TypesDeChampController < AdministrateurController
     before_action :retrieve_procedure
-    before_action :preload_procedure
     after_action :reset_procedure, only: [:create, :update, :destroy, :piece_justificative_template]
+    before_action :reload_procedure_with_includes, only: [:destroy]
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
-
+      reload_procedure_with_includes
       if type_de_champ.valid?
         @coordinate = draft.coordinate_for(type_de_champ)
         @created = champ_component_from(@coordinate, focused: true)
@@ -25,6 +25,7 @@ module Administrateurs
         @morphed = [champ_component_from(coordinate, focused: false, errors:)]
         flash.alert = errors
       elsif type_de_champ.update(type_de_champ_update_params)
+        reload_procedure_with_includes
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = champ_components_starting_at(@coordinate)
       else
@@ -36,6 +37,7 @@ module Administrateurs
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
       if type_de_champ.piece_justificative_template.attach(params[:blob_signed_id])
+        reload_procedure_with_includes
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = [champ_component_from(@coordinate)]
 
@@ -49,6 +51,7 @@ module Administrateurs
       type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
 
       if type_de_champ.notice_explicative.attach(params[:blob_signed_id])
+        reload_procedure_with_includes
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = [champ_component_from(@coordinate)]
 
@@ -65,19 +68,23 @@ module Administrateurs
       from = @coordinate.position
       to = draft.coordinate_for(target_type_de_champ).position
       @coordinate = draft.move_type_de_champ(@coordinate.stable_id, to)
+      reload_procedure_with_includes
+      @coordinate = draft.revision_types_de_champ.find { _1.id == @coordinate.id }
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       @morphed = @coordinate.siblings
       if from > to # case of moved up, update components from target (> plus one) to origin
-        @morphed = @morphed.where("position > ?", to).where("position <= ?", from)
+        @morphed = @morphed.filter { _1.position > to && _1.position <= from }
       else # case of moved down, update components from origin up to target (< minus one)
-        @morphed = @morphed.where("position >= ?", from).where("position < ?", to)
+        @morphed = @morphed.filter { _1.position >= from && _1.position < to }
       end
       @morphed = @morphed.map { |c| champ_component_from(c) }
     end
 
     def move_up
       @coordinate = draft.move_up_type_de_champ(params[:stable_id])
+      reload_procedure_with_includes
+      @coordinate = draft.revision_types_de_champ.find { _1.id == @coordinate.id }
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       # update the one component below
@@ -86,6 +93,8 @@ module Administrateurs
 
     def move_down
       @coordinate = draft.move_down_type_de_champ(params[:stable_id])
+      reload_procedure_with_includes
+      @coordinate = draft.revision_types_de_champ.find { _1.id == @coordinate.id }
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       # update the one component above
@@ -101,7 +110,6 @@ module Administrateurs
         flash.alert = errors
       else
         @coordinate = draft.remove_type_de_champ(params[:stable_id])
-
         if @coordinate.present?
           @destroyed = @coordinate
           @morphed = champ_components_starting_at(@coordinate)
@@ -171,7 +179,7 @@ module Administrateurs
       @procedure.draft_revision
     end
 
-    def preload_procedure
+    def reload_procedure_with_includes
       @procedure = Procedure.includes_for_champ_private_edition.find(@procedure.id)
     end
   end

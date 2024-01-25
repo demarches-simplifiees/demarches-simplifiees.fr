@@ -240,12 +240,12 @@ class Procedure < ApplicationRecord
   scope :includes_for_champ_public_edition, -> {
     includes(draft_revision: {
       revision_types_de_champ: {
-        type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
         revision: [],
         procedure: []
       },
       revision_types_de_champ_public: {
-        type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
+        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
         revision: [],
         procedure: []
       },
