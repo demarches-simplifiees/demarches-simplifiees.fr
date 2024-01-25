@@ -21,7 +21,8 @@ class ApplicationController < ActionController::Base
   around_action :switch_locale
 
   helper_method :multiple_devise_profile_connect?, :instructeur_signed_in?, :current_instructeur, :current_expert, :expert_signed_in?,
-    :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale, :current_expert_not_instructeur?
+    :administrateur_signed_in?, :current_administrateur, :current_account, :localization_enabled?, :set_locale, :current_expert_not_instructeur?,
+    :gestionnaire_signed_in?, :current_gestionnaire
 
   before_action do
     Current.request_id = request.uuid
@@ -37,9 +38,12 @@ class ApplicationController < ActionController::Base
   def multiple_devise_profile_connect?
     user_signed_in? && instructeur_signed_in? ||
         instructeur_signed_in? && administrateur_signed_in? ||
+        instructeur_signed_in? && gestionnaire_signed_in? ||
         instructeur_signed_in? && expert_signed_in? ||
         user_signed_in? && administrateur_signed_in? ||
-        user_signed_in? && expert_signed_in?
+        user_signed_in? && gestionnaire_signed_in? ||
+        user_signed_in? && expert_signed_in? ||
+        administrateur_signed_in? && gestionnaire_signed_in?
   end
 
   def current_instructeur
@@ -58,6 +62,14 @@ class ApplicationController < ActionController::Base
     current_administrateur.present?
   end
 
+  def current_gestionnaire
+    current_user&.gestionnaire
+  end
+
+  def gestionnaire_signed_in?
+    current_gestionnaire.present?
+  end
+
   def current_expert
     current_user&.expert
   end
@@ -72,6 +84,7 @@ class ApplicationController < ActionController::Base
 
   def current_account
     {
+      gestionnaire: current_gestionnaire,
       administrateur: current_administrateur,
       instructeur: current_instructeur,
       user: current_user
@@ -115,6 +128,8 @@ class ApplicationController < ActionController::Base
       authenticate_expert!
     elsif administrateur_signed_in?
       authenticate_administrateur!
+    elsif gestionnaire_signed_in?
+      authenticate_gestionnaire!
     else
       authenticate_user!
     end
@@ -140,6 +155,12 @@ class ApplicationController < ActionController::Base
 
   def authenticate_administrateur!
     if !administrateur_signed_in?
+      redirect_to new_user_session_path
+    end
+  end
+
+  def authenticate_gestionnaire!
+    if !gestionnaire_signed_in?
       redirect_to new_user_session_path
     end
   end
@@ -178,6 +199,7 @@ class ApplicationController < ActionController::Base
         current_user,
         current_instructeur,
         current_administrateur,
+        current_gestionnaire,
         current_super_admin
       ].compact.map { |role| role.class.name }
 
