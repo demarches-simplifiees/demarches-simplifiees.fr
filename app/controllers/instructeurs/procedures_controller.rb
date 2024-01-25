@@ -175,7 +175,7 @@ module Instructeurs
         .visible_by_administration
         .exists?(groupe_instructeur_id: groupe_instructeur_ids) && !instructeur_as_manager?
 
-      export = Export.find_or_create_fresh_export(export_format, groupe_instructeurs, **export_options)
+      export = Export.find_or_create_fresh_export(export_format, groupe_instructeurs, current_instructeur, **export_options)
 
       @procedure = procedure
       @statut = export_options[:statut]

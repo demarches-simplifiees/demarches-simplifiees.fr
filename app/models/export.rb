@@ -29,6 +29,7 @@ class Export < ApplicationRecord
 
   has_and_belongs_to_many :groupe_instructeurs
   belongs_to :procedure_presentation, optional: true
+  belongs_to :instructeur, optional: true
 
   has_one_attached :file
 
@@ -50,6 +51,7 @@ class Export < ApplicationRecord
   end
 
   def compute
+    self.dossiers_count = dossiers_for_export.count
     load_snapshot!
 
     file.attach(blob.signed_id) # attaching a blob directly might run identify/virus scanner and wipe it
@@ -63,7 +65,7 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def self.find_or_create_fresh_export(format, groupe_instructeurs, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
+  def self.find_or_create_fresh_export(format, groupe_instructeurs, instructeur, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
     attributes = {
       format:,
       time_span_type:,
@@ -79,6 +81,7 @@ class Export < ApplicationRecord
     return recent_export if recent_export.present?
 
     create!(**attributes, groupe_instructeurs:,
+                          instructeur:,
                           procedure_presentation:,
                           procedure_presentation_snapshot: procedure_presentation&.snapshot)
   end
@@ -107,9 +110,10 @@ class Export < ApplicationRecord
   end
 
   def count
-    if procedure_presentation_id.present?
-      dossiers_for_export.count
-    end
+    return dossiers_count if !dossiers_count.nil? # export generated
+    return dossiers_for_export.count if procedure_presentation_id.present?
+
+    nil
   end
 
   def procedure
