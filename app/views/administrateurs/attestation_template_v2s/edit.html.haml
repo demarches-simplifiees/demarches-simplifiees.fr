@@ -34,13 +34,13 @@
               Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
           .fr-fieldset__element
+            %h2.fr-h4 En-tête
+
+          .fr-fieldset__element
             .fr-toggle
               = f.check_box :official_layout, class: "fr-toggle-input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
               %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
                 Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
-
-          .fr-fieldset__element.fr-mt-2w
-            %h2.fr-h4 En-tête
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
             = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: @attestation_template.official_layout?, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
@@ -68,7 +68,7 @@
               = AttestationTemplate.human_attribute_name :body
               = render EditableChamp::AsteriskMandatoryComponent.new
 
-            .editor.mt-2{ data: { tiptap_target: 'editor' } }
+            .editor{ data: { tiptap_target: 'editor' } }
             = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
 
           .fr-fieldset__element
@@ -76,16 +76,14 @@
               - @buttons.each do |buttons|
                 .flex.flex-gap-1
                   - buttons.each do |(label, action, icon)|
-                    %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
+                    %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
                       = label
 
           .fr-fieldset__element
-            %label.fr-label
-              Balises
             %p.fr-hint-text
-              Intégrez à l’attestation du texte issu du dossier. Cliquez sur un bouton de balise pour l’ajouter là où se trouve le curseur, ou tapez dans l’éditeur le caractère
-              %code @
-              suivi du nom de la balise. Les balises pour les champs conditionnés ne sont pas disponibles.
+              Tapez le caractère
+              %strong.fr-text-title--grey @
+              suivi du nom de la balise, ou cliquez sur les boutons ci-dessous. Les champs conditionnés ne sont pas disponibles.
 
             = render TagsButtonListComponent.new(tags: @attestation_template.tags_categorized)
 

@@ -100,7 +100,7 @@ class SuggestionMenu {
       .join('');
 
     const hint =
-      '<li><span class="fr-hint-text">Tapez le nom d’une balise, naviguez avec les flèches du clavier, validez avec Entrée ou en cliquant sur la balise.</span></li>';
+      '<li><span class="fr-hint-text">Tapez le nom d’une balise, naviguez avec les flèches, validez avec Entrée ou en cliquant sur la balise.</span></li>';
     list.innerHTML = hint + html;
     list.querySelector<HTMLElement>('.selected')?.focus();
   }
@@ -110,7 +110,7 @@ class SuggestionMenu {
     menu.classList.add('fr-menu');
 
     const list = document.createElement('ul');
-    list.classList.add('fr-menu__list', 'fr-tag-list');
+    list.classList.add('fr-menu__list', 'fr-tag-list', 'list-style-type-none');
 
     menu.appendChild(list);
 

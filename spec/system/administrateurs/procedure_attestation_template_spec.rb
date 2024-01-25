@@ -80,7 +80,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       expect(page).to have_css("label", text: "Logo additionnel")
 
-      fill_in "Intitulé du logo Marianne", with: "System Test"
+      fill_in "Intitulé de votre institution", with: "System Test"
       fill_in "Intitulé de la direction", with: "The boss"
 
       attestation = nil

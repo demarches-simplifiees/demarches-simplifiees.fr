@@ -4,7 +4,7 @@ fr:
       attestation_template: 'Attestation'
     attributes:
       attestation_template:
-        label_logo: Intitulé du logo Marianne
+        label_logo: Intitulé de votre institution
         label_direction: Intitulé de la direction
         logo: Logo
         logo_additional: Logo additionnel

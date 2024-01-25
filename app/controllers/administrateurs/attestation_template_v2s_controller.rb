@@ -34,9 +34,9 @@ module Administrateurs
           ['Souligner', 'underline', 'underline']
         ],
         [
-          ['Titre', 'title', 'h-1'],
-          ['Sous titre', 'heading2', 'h-2'],
-          ['Titre de section', 'heading3', 'h-3']
+          ['Titre', 'title', :hidden], # only for "title" section, without any action possible
+          ['Sous titre', 'heading2', 'h-1'],
+          ['Titre de section', 'heading3', 'h-2']
         ],
         [
           ['Liste à puces', 'bulletList', 'list-unordered'],

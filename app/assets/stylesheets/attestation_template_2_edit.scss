@@ -4,20 +4,20 @@
   .attestation-schema {
     width: 100%;
     margin-top: 3em;
+    top: 3em;
+    position: sticky;
   }
 
   .tiptap {
     padding: $default-spacer;
     overflow-y: scroll;
-    min-height: 600px;
+    min-height: 400px;
   }
 
   .editor {
     // Visual zones
     .header .flex-1,
-    h1,
-    h2,
-    h3 {
+    h1 {
       border: 1px solid var(--background-contrast-grey-hover);
       padding: $default-spacer / 2;
     }
@@ -49,7 +49,7 @@
     }
 
     h3 {
-      font-size: 0.8rem;
+      font-size: 1.15rem;
       font-weight: normal;
       line-height: 1rem;
     }

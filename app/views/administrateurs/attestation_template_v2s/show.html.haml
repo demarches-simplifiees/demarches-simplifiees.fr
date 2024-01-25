@@ -5,7 +5,7 @@
         - if @attestation_template.official_layout?
           = image_tag('centered_marianne.svg', alt: '', class: 'marianne')
           .bloc-marque
-            = simple_format @attestation_template.label_logo.presence || "VOTRE INTITULE\ndu LOGO MARIANNE", class: "intitule"
+            = simple_format @attestation_template.label_logo.presence || "INTITULE de\nVOTRE INSTITUTION", class: "intitule"
             = image_tag('liberte2.svg', alt: '', class: 'devise')
         - elsif @attestation_template.logo.present?
           .bloc-marque.logo-free-layout
