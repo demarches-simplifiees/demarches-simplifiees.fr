@@ -44,7 +44,7 @@ export class FormatController extends ApplicationController {
   }
 
   private formatInteger(value: string) {
-    return value.replace(/[^\d]/g, '');
+    return value.replace(/[^-?\d]/g, '');
   }
 
   private formatDecimal(value: string) {
@@ -54,6 +54,6 @@ export class FormatController extends ApplicationController {
     const decimalSeparator =
       value.lastIndexOf(',') > value.lastIndexOf('.') ? ',' : '.';
 
-    return value.replace(new RegExp(`[^\\d${decimalSeparator}]`, 'g'), '');
+    return value.replace(new RegExp(`[^-?\\d${decimalSeparator}]`, 'g'), '');
   }
 }
