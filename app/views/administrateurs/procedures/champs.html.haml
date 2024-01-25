@@ -3,8 +3,7 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Configuration des champs']], preview: @procedure.draft_revision.valid? }
 
-.container
+.fr-container
   %h1 Configuration des champs
-  %br
   = render NestedForms::FormOwnerComponent.new
   = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)
