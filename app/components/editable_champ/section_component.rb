@@ -8,11 +8,11 @@ class EditableChamp::SectionComponent < ApplicationComponent
   end
 
   def render_within_fieldset?
-    first_champ_is_an_header_section? && any_champ_fillable?
+    first_champ_is_an_header_section?
   end
 
   def header_section
-    return @nodes.first if @nodes.first.is_a?(Champs::HeaderSectionChamp)
+    @nodes.first if @nodes.first.is_a?(Champs::HeaderSectionChamp)
   end
 
   def splitted_tail
@@ -28,13 +28,6 @@ class EditableChamp::SectionComponent < ApplicationComponent
 
   def tag_for_depth
     "h#{header_section.level + 1}"
-  end
-
-  # if two headers follows each others [h1, [h2, c]]
-  # the first one must not be contained in fieldset
-  # so we make the tree not fillable
-  def fillable?
-    false
   end
 
   def split_section_champ(node)
@@ -54,9 +47,5 @@ class EditableChamp::SectionComponent < ApplicationComponent
 
   def first_champ_is_an_header_section?
     header_section.present?
-  end
-
-  def any_champ_fillable?
-    tail.any? { _1&.fillable? }
   end
 end

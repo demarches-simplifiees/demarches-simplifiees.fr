@@ -553,7 +553,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.string "statut", default: "tous"
     t.string "time_span_type", default: "everything", null: false
     t.datetime "updated_at", null: false
-    t.index ["format", "time_span_type", "statut", "key"], name: "index_exports_on_format_and_time_span_type_and_statut_and_key", unique: true
+    t.index ["key"], name: "index_exports_on_key"
     t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"
   end
 

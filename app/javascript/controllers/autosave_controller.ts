@@ -205,6 +205,8 @@ export class AutosaveController extends ApplicationController {
           formData.append(input.name, input.value);
         }
       } else {
+        // NOTE: some type inputs (like number) have an empty input.value
+        // when the filled value is invalid (not a number) so we avoid them
         formData.append(input.name, input.value);
       }
     }

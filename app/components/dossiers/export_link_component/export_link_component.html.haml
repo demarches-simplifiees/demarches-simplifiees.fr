@@ -1,0 +1,18 @@
+%ul#exports-list.fr-raw-list
+  - @exports.each do |export|
+    %li.fr-mb-3w
+      .flex
+        %span
+          %strong
+            = export_title(export)
+          %span.fr-text-mention--grey.fr-mb-1w
+            = time_info(export)
+        .fr-ml-auto
+          = badge(export)
+
+      .flex.flex-gap-2
+        = export_button(export)
+
+        - if export.failed?
+          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut), refresh_button_options(export)
+

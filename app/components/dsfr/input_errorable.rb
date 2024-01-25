@@ -11,12 +11,14 @@ module Dsfr
       def dsfr_group_classname
         if dsfr_champ_container == :fieldset
           'fr-fieldset'
-        else
+        elsif dsfr_input_classname.present? # non fillable element
           "#{dsfr_input_classname}-group"
         end
       end
 
       def input_group_error_class_names
+        return {} if dsfr_group_classname.nil?
+
         {
           "#{dsfr_group_classname}--error" => errors_on_attribute?,
           "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute?

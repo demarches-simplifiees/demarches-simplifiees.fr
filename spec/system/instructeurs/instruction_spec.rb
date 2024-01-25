@@ -120,15 +120,17 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
     end
 
     expect(page).to have_text('Nous générons cet export.')
-    click_on "Télécharger un dossier"
-    expect(page).to have_text('Un export au format .csv est en train d’être généré')
+
+    click_on "voir les exports"
+    expect(page).to have_text("Export .csv d’un dossier « à suivre » demandé il y a moins d'une minute")
+    expect(page).to have_text("En préparation")
+
     assert_performed_jobs 2 do
       perform_enqueued_jobs(only: ExportJob)
     end
-    page.driver.browser.navigate.refresh
 
-    click_on "Télécharger un dossier"
-    expect(page).to have_text('Télécharger l’export au format .csv')
+    page.driver.browser.navigate.refresh
+    expect(page).to have_text('Télécharger l’export')
   end
 
   scenario 'A instructeur can see the personnes impliquées' do

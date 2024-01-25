@@ -226,9 +226,9 @@ module Users
 
     def submit_brouillon
       @dossier = dossier_with_champs(pj_template: false)
-      errors = submit_dossier_and_compute_errors
+      @errors = submit_dossier_and_compute_errors
 
-      if errors.blank?
+      if @errors.blank?
         @dossier.passer_en_construction!
         @dossier.process_declarative!
         @dossier.process_sva_svr!
@@ -237,8 +237,6 @@ module Users
         end
         redirect_to merci_dossier_path(@dossier)
       else
-        flash.now.alert = errors
-
         respond_to do |format|
           format.html { render :brouillon }
           format.turbo_stream
@@ -269,9 +267,9 @@ module Users
 
     def submit_en_construction
       @dossier = dossier_with_champs(pj_template: false)
-      errors = submit_dossier_and_compute_errors
+      @errors = submit_dossier_and_compute_errors
 
-      if errors.blank?
+      if @errors.blank?
         pending_correction_confirm = cast_bool(params.dig(:dossier, :pending_correction_confirm))
         editing_fork_origin = @dossier.editing_fork_origin
         editing_fork_origin.merge_fork(@dossier)
@@ -279,8 +277,6 @@ module Users
 
         redirect_to dossier_path(editing_fork_origin)
       else
-        flash.now.alert = errors
-
         respond_to do |format|
           format.html do
             @dossier = @dossier.editing_fork_origin
@@ -298,11 +294,7 @@ module Users
     def update
       @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
-      errors = update_dossier_and_compute_errors
-
-      if errors.present?
-        flash.now.alert = errors
-      end
+      @errors = update_dossier_and_compute_errors
 
       respond_to do |format|
         format.turbo_stream do
@@ -550,48 +542,22 @@ module Users
       if @dossier.champs_public_all.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end
+
       if !@dossier.save(**validation_options)
-        errors += format_errors(errors: @dossier.errors)
+        errors = @dossier.errors
       end
 
       errors
     end
 
     def submit_dossier_and_compute_errors
-      errors = []
-
       @dossier.valid?(**submit_validation_options)
-      errors += format_errors(errors: @dossier.errors)
-      errors += format_errors(errors: @dossier.check_mandatory_and_visible_champs)
-      errors
-    end
 
-    def format_errors(errors:)
-      errors.map do |active_model_error|
-        case active_model_error.class.name
-        when "ActiveModel::NestedError"
-          append_anchor_link(active_model_error.inner_error)
-        when "ActiveModel::Error"
-          append_anchor_link(active_model_error)
-        else # "String"
-          active_model_error
-        end
+      errors = @dossier.errors
+      @dossier.check_mandatory_and_visible_champs.map do |error_on_champ|
+        errors.import(error_on_champ)
       end
-    end
-
-    def append_anchor_link(error)
-      model = error.base
-      str_error = error.full_message
-      return str_error if !model.is_a?(Champ)
-
-      # attribute = error.attribute != :value ? ":" + error.attribute.to_s.gsub('_',' ') : nil
-      route_helper = @dossier.editing_fork? ? :modifier_dossier_path : :brouillon_dossier_path
-      [
-        t('views.users.dossiers.label_champ', champ: model.libelle.truncate(200), message: str_error),
-        helpers.link_to(t('views.users.dossiers.fix_champ'), public_send(route_helper, anchor: model.labelledby_id), class: 'error-anchor')
-      ].join(", ")
-    rescue # case of invalid type de champ on champ
-      str_error
+      errors
     end
 
     def ensure_ownership!

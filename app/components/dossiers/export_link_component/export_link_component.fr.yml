@@ -1,0 +1,17 @@
+---
+fr:
+  download_export: Télécharger l’export
+  refresh_old_export: Regénérer cet export
+  success_label: Prêt
+  failed_label: Erreur
+  pending_label: En préparation
+  refresh_page: Recharger la page
+  export_title_everything: "Export .%{export_format} de tous les dossiers"
+  export_title_with_tab:
+    one: "Export .%{export_format} d’un dossier « %{export_tabs} »"
+    other: "Export .%{export_format} de %{count} dossiers « %{export_tabs} »"
+  export_title:
+    one: "Export .%{export_format} d’un dossier"
+    other: "Export .%{export_format} de %{count} dossiers"
+  ready_link_label_time_info: " généré il y a %{export_time}"
+  not_ready_link_label_time_info: " demandé il y a %{export_time}"

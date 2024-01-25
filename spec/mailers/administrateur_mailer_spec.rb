@@ -22,4 +22,11 @@ RSpec.describe AdministrateurMailer, type: :mailer do
       it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(forced_delivery_method.to_s) }
     end
   end
+
+  describe '.notify_service_without_siret' do
+    subject { described_class.notify_service_without_siret(admin_email) }
+    it { expect(subject.to).to eq([admin_email]) }
+    it { expect(subject.subject).to eq("Siret manquant sur un de vos services") }
+    it { expect(subject.body).to include("un de vos services n'a pas son siret renseigné") }
+  end
 end

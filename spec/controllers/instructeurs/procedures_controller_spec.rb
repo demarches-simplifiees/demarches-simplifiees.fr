@@ -105,6 +105,8 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         context "with not draft state on multiple procedures" do
           let(:procedure2) { create(:procedure, :published, :expirable) }
+          let(:procedure3) { create(:procedure, :closed, :expirable) }
+          let(:procedure4) { create(:procedure, :closed, :expirable) }
           let(:state) { Dossier.states.fetch(:en_construction) }
 
           before do
@@ -132,6 +134,13 @@ describe Instructeurs::ProceduresController, type: :controller do
                              state: Dossier.states.fetch(:sans_suite),
                              processed_at: 8.months.ago,
                              hidden_by_user_at: 1.day.ago) # counted as expirable because even if user remove it, instructeur see it
+
+            instructeur.groupe_instructeurs << procedure3.defaut_groupe_instructeur
+            create(:dossier, :followed, procedure: procedure3, state: Dossier.states.fetch(:en_construction))
+            create(:dossier, procedure: procedure3, state: Dossier.states.fetch(:sans_suite))
+
+            instructeur.groupe_instructeurs << procedure4.defaut_groupe_instructeur
+            create(:dossier, procedure: procedure4, state: Dossier.states.fetch(:sans_suite))
             subject
           end
 
@@ -148,12 +157,20 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure2.id]).to eq(nil) }
           it { expect(assigns(:dossiers_termines_count_per_procedure)[procedure2.id]).to eq(1) }
 
+          it { expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2) }
+
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
           it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3) }
+          it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1 + 1 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3 + 2 + 1) }
           it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
+
+          it { expect(assigns(:procedures_en_cours)).to match_array([procedure2, procedure, procedure3]) }
+          it { expect(assigns(:procedures_en_cours_count)).to eq(3) }
+
+          it { expect(assigns(:procedures_closes)).to eq([procedure4]) }
+          it { expect(assigns(:procedures_closes_count)).to eq(1) }
         end
 
         context 'with not draft state on discarded procedure' do
@@ -449,6 +466,48 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([archived_dossier].map(&:id)) }
         end
       end
+
+      context 'exports notification' do
+        context 'without generated export' do
+          before do
+            create(:export, :pending, groupe_instructeurs: [gi_2])
+
+            subject
+          end
+
+          it { expect(assigns(:has_export_notification)).to be(false) }
+        end
+
+        context 'with generated export' do
+          render_views
+          before do
+            create(:export, :generated, groupe_instructeurs: [gi_2], updated_at: 1.minute.ago)
+
+            if exports_seen_at
+              cookies.encrypted["exports_#{procedure.id}_seen_at"] = exports_seen_at.to_datetime.to_s
+            end
+
+            subject
+          end
+
+          context 'without cookie' do
+            let(:exports_seen_at) { nil }
+            it { expect(assigns(:has_export_notification)).to be(true) }
+          end
+
+          context 'with cookie in past' do
+            let(:exports_seen_at) { 1.hour.ago }
+            it { expect(assigns(:has_export_notification)).to be(true) }
+
+            it { expect(response.body).to match(/Un nouvel export est prêt/) }
+          end
+
+          context 'with cookie set after last generated export' do
+            let(:exports_seen_at) { 10.seconds.ago }
+            it { expect(assigns(:has_export_notification)).to be(false) }
+          end
+        end
+      end
     end
   end
 
@@ -569,9 +628,9 @@ describe Instructeurs::ProceduresController, type: :controller do
       get :download_export, params: { export_format: :csv, procedure_id: procedure.id }
     end
 
-    context 'when the export is does not exist' do
+    context 'when the export does not exist' do
       it 'displays an notice' do
-        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
       end
 
@@ -584,7 +643,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it 'displays an notice' do
-        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
       end
     end
@@ -610,7 +669,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it 'displays an notice' do
-        is_expected.to redirect_to(instructeur_procedure_url(procedure))
+        is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
         expect(flash.notice).to be_present
       end
     end
@@ -625,6 +684,43 @@ describe Instructeurs::ProceduresController, type: :controller do
       it 'responds in the correct format' do
         expect(response.media_type).to eq('text/vnd.turbo-stream.html')
         expect(response).to have_http_status(:ok)
+      end
+    end
+
+    context 'when logged in through super admin' do
+      let(:manager) { true }
+      it { is_expected.to have_http_status(:forbidden) }
+    end
+  end
+
+  describe '#exports' do
+    let(:instructeur) { create(:instructeur) }
+    let!(:procedure) { create(:procedure) }
+    let!(:assign_to) { create(:assign_to, instructeur: instructeur, groupe_instructeur: build(:groupe_instructeur, procedure: procedure), manager: manager) }
+    let!(:gi_0) { assign_to.groupe_instructeur }
+    let!(:gi_1) { create(:groupe_instructeur, label: 'gi_1', procedure: procedure, instructeurs: [instructeur]) }
+    let(:manager) { false }
+    before { sign_in(instructeur.user) }
+
+    subject do
+      get :exports, params: { procedure_id: procedure.id }
+    end
+
+    context 'when there is one export in the instructeurs group' do
+      let!(:export) { create(:export, groupe_instructeurs: [gi_1]) }
+      it 'retrieves the export' do
+        subject
+        expect(assigns(:exports)).to eq([export])
+      end
+    end
+
+    context 'when there is one export in another instructeurs group' do
+      let!(:instructeur_2) { create(:instructeur) }
+      let!(:gi_2) { create(:groupe_instructeur, label: 'gi_2', procedure: procedure, instructeurs: [instructeur_2]) }
+      let!(:export) { create(:export, groupe_instructeurs: [gi_2]) }
+      it 'does not retrieved the export' do
+        subject
+        expect(assigns(:exports)).to eq([])
       end
     end
 

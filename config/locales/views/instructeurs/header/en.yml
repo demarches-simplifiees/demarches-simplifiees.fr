@@ -12,6 +12,8 @@ en:
           button_delay_expiration: "Keep for one more month"
           notification_management: notification management
           administrators_list: administrators list
+          exports_list: exports list
+          exports_notification_label: A new export is ready to download
           statistics: statistics
           instructeurs: instructors
           contact_users: contact users (draft)
