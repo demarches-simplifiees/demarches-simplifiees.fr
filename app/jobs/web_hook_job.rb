@@ -10,7 +10,15 @@ class WebHookJob < ApplicationJob
       state: state,
       updated_at: updated_at
     }
+
     procedure = Procedure.find(procedure_id)
-    Typhoeus.post(procedure.web_hook_url, body: body, timeout: TIMEOUT)
+
+    response = Typhoeus.post(procedure.web_hook_url, body: body, timeout: TIMEOUT)
+
+    if !response.success?
+      Sentry.set_tags(procedure: procedure_id, dossier: dossier_id)
+      Sentry.set_extras(web_hook_url: procedure.web_hook_url)
+      Sentry.capture_message("Webhook error: #{response.status} // Response: #{response.body}")
+    end
   end
 end
