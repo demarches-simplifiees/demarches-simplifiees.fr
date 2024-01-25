@@ -22,8 +22,8 @@ describe 'Creating a new dossier:' do
         expect(page).to have_title(libelle)
 
         find('label', text: 'Monsieur').click
-        fill_in('identite_champ_first_name', with: 'Prenom')
-        fill_in('identite_champ_last_name', with: 'Nom')
+        fill_in('Prénom', with: 'Prenom')
+        fill_in('Nom', with: 'Nom')
       end
 
       shared_examples 'the user can create a new draft' do
@@ -41,7 +41,7 @@ describe 'Creating a new dossier:' do
         let(:expected_birthday) { Date.new(1987, 10, 14) }
 
         before do
-          fill_in 'identite_champ_birthdate', with: birthday_format
+          fill_in 'Date de naissance', with: birthday_format
         end
 
         context 'when the browser supports `type=date` input fields' do

@@ -263,8 +263,8 @@ describe 'The routing with rules', js: true, retry: 3 do
     click_on 'Commencer la démarche'
 
     find('label', text: 'Monsieur').click
-    fill_in('identite_champ_first_name', with: 'Prenom')
-    fill_in('identite_champ_last_name', with: 'Nom')
+    fill_in('Prénom', with: 'Prenom')
+    fill_in('Nom', with: 'Nom')
     click_button('Continuer')
 
     # the old system should not be present
