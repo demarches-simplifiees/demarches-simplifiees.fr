@@ -48,8 +48,15 @@
       .card-title= t('.transfer_title')
       = t('.transfer_explication_html')
 
-      = form_tag transfer_all_dossiers_path, class: 'form'  do
-        = email_field_tag :next_owner, nil, required: true
+      = form_tag transfer_all_dossiers_path  do
+        .fr-input-group
+          = label_tag 'next_owner', class: "fr-label"  do
+            = t('.transfer_next_owner_label')
+            = render EditableChamp::AsteriskMandatoryComponent.new
+            %span.fr-hint-text= t('activerecord.attributes.user.hints.email')
+
+          = email_field_tag :next_owner, nil, required: true, id: 'next_owner', class: 'fr-input'
+
         = submit_tag t('.transfer_my_files'), class: 'fr-btn fr-btn--secondary', data: { confirm: t('.transfer_confirmation') }
 
       - if @waiting_transfers.present?

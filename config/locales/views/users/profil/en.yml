@@ -8,8 +8,8 @@ en:
         new_email_address: New email address
         change_address: Change my address
         transfer_title: Transfer all your files
-        transfer_explication_html: "<p>This feature allows you to change the owner of all your files. This is usually useful when changing jobs or if you want to merge several accounts.</p>
-    <p>Email address of the recipient of all your files</p>"
+        transfer_explication_html: "<p>This feature allows you to change the owner of all your files. This is usually useful when changing jobs or if you want to merge several accounts.</p>"
+        transfer_next_owner_label: "Email of the next owner of your files"
         waiting_transfers: "Pending Transfers :"
         one_waiting_transfer:
           one: "The new owner %{email} must confirm the transfer of a file by following the instructions received in their email."
