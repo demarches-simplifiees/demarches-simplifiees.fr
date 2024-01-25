@@ -379,6 +379,10 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    kredis (1.7.0)
+      activemodel (>= 6.0.0)
+      activesupport (>= 6.0.0)
+      redis (>= 4.2, < 6)
     launchy (2.5.0)
       addressable (~> 2.7)
     letter_opener (1.7.0)
@@ -876,6 +880,7 @@ DEPENDENCIES
   json_schemer
   jwt
   kaminari
+  kredis
   launchy
   letter_opener_web
   listen
