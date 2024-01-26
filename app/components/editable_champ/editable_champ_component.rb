@@ -30,12 +30,17 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
         {
           'editable-champ': true,
           "editable-champ-#{@champ.type_champ}": true,
-          "hidden": !@champ.visible?,
           champ_component.dsfr_group_classname => true
         }.merge(champ_component.input_group_error_class_names)
       ),
-      id: @champ.input_group_id,
       data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }
+    }
+  end
+
+  def fieldset_element_attributes
+    {
+      id: @champ.input_group_id,
+      "hidden": !@champ.visible?
     }
   end
 

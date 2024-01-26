@@ -81,28 +81,29 @@ RSpec.describe Export, type: :model do
 
   describe '.find_or_create_fresh_export' do
     let!(:procedure) { create(:procedure) }
-    let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
+    let(:instructeur) { create(:instructeur) }
+    let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [instructeur]) }
     let!(:pp) { gi_1.instructeurs.first.procedure_presentation_and_errors_for_procedure_id(procedure.id).first }
     before { pp.add_filter('tous', 'self/created_at', '10/12/2021') }
 
     context 'with procedure_presentation having different filters' do
       it 'works once' do
-        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end
 
       it 'works once, changes procedure_presentation, recreate a new' do
-        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
         pp.add_filter('tous', 'self/updated_at', '10/12/2021')
-        expect { Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
+        expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end
     end
 
     context 'with existing matching export' do
       def find_or_create =
-        Export.find_or_create_fresh_export(:zip, [gi_1], time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp)
+        Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp)
 
       context 'freshly generate export' do
         before { find_or_create.update!(job_status: :generated, updated_at: 1.second.ago) }
@@ -195,6 +196,33 @@ RSpec.describe Export, type: :model do
     it 'returns unique exports even if they belong to multiple matching groupe instructeurs' do
       results = Export.for_groupe_instructeurs([groupe_instructeur1.id])
       expect(results.count).to eq(1)
+    end
+  end
+
+  describe '.dossiers_count' do
+    let(:export) { create(:export, :pending) }
+
+    before do
+      blob_double = instance_double("ActiveStorage::Blob", signed_id: "some_signed_id_value")
+      attachment_double = instance_double("ActiveStorage::Attached::One", attach: true)
+
+      allow(export).to receive(:blob).and_return(blob_double)
+      allow(export).to receive(:file).and_return(attachment_double)
+
+      create_list(:dossier, 3, :en_construction, groupe_instructeur: export.groupe_instructeurs.first)
+    end
+
+    it 'is not set until generation' do
+      expect(export.dossiers_count).to be_nil
+    end
+
+    it 'is persisted after generation' do
+      export.compute_with_safe_stale_for_purge do
+        export.compute
+      end
+
+      export.reload
+      expect(export.dossiers_count).to eq(3)
     end
   end
 end

@@ -1,0 +1,7 @@
+fr:
+  manager:
+    groupe_gestionnaires:
+      add_gestionnaire:
+        wrong_address:
+          one: "%{emails} n’est pas une adresse email valide"
+          other: "%{emails} ne sont pas des adresses emails valides"

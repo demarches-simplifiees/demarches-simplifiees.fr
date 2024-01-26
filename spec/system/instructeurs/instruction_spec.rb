@@ -1,10 +1,11 @@
 describe 'Instructing a dossier:', js: true, retry: 3 do
   include ActiveJob::TestHelper
+  include Logic
 
   let(:password) { SECURE_PASSWORD }
   let!(:instructeur) { create(:instructeur, password: password) }
 
-  let!(:procedure) { create(:procedure, :with_type_de_champ, :published, instructeurs: [instructeur]) }
+  let!(:procedure) { create(:procedure, :published, instructeurs: [instructeur], types_de_champ_private: [{ type: 'checkbox', libelle: 'Yes/No', stable_id: 99 }, { libelle: 'Nom', condition: ds_eq(champ_value(99), constant(true)) }]) }
   let!(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
   context 'the instructeur is also a user' do
     scenario 'a instructeur can fill a dossier' do
@@ -26,7 +27,7 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
     end
   end
 
-  scenario 'A instructeur can accept a dossier', :js do
+  scenario 'A instructeur can accept a dossier' do
     log_in(instructeur.email, password)
 
     expect(page).to have_current_path(instructeur_procedures_path)
@@ -73,6 +74,19 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
     click_on 'Supprimer le dossier'
     click_on 'traité'
     expect(page).not_to have_button('Repasser en instruction')
+  end
+
+  scenario 'An instructeur can add anotations' do
+    log_in(instructeur.email, password)
+
+    visit instructeur_dossier_path(procedure, dossier)
+    click_on 'Annotations privées'
+
+    expect(page).not_to have_field 'Nom', visible: true
+    check 'Yes/No', allow_label_click: true
+    expect(page).to have_field 'Nom'
+    fill_in 'Nom', with: 'John Doe'
+    expect(page).to have_text 'Annotations enregistrées'
   end
 
   scenario 'An instructeur can destroy a dossier from view' do
@@ -159,7 +173,7 @@ describe 'Instructing a dossier:', js: true, retry: 3 do
     expect(page).to have_text(instructeur2.email)
   end
 
-  scenario 'A instructeur can send a dossier to several instructeurs', js: true, retry: 3 do
+  scenario 'A instructeur can send a dossier to several instructeurs' do
     instructeur_2 = create(:instructeur)
     instructeur_3 = create(:instructeur)
     procedure.defaut_groupe_instructeur.instructeurs << [instructeur_2, instructeur_3]

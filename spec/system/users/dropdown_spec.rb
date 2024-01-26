@@ -75,8 +75,8 @@ describe 'dropdown list with other option activated', js: true, retry: 3 do
 
   def fill_individual
     find('label', text: 'Monsieur').click
-    fill_in('identite_champ_first_name', with: 'prenom')
-    fill_in('identite_champ_last_name', with: 'nom')
+    fill_in('Prénom', with: 'prenom')
+    fill_in('Nom', with: 'nom')
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end

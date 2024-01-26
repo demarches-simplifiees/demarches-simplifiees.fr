@@ -72,6 +72,11 @@
     margin-top: 0 !important;
   }
 
+  // Don't cumulate margin-bottoms for inlined elements (radio...), because .fr-fieldset has already its own
+  .fr-fieldset__element > .fr-fieldset > .fr-fieldset__element.fr-fieldset__element--inline {
+    margin-bottom: 0;
+  }
+
   legend {
     width: 100%;
   }
@@ -714,6 +719,22 @@ textarea::placeholder {
 
     &[aria-selected] {
       font-weight: bold;
+    }
+  }
+}
+
+.fr-fieldset__element {
+  @media (min-width: 48em) {
+    // Logic taken from DSFR source code to limit width of fieldset element.
+    // Cf dsfr/src/component/form/style/_scheme.scss
+    $short-text-width: 32rem;
+
+    &--short-text {
+      flex: 0 0 #{$short-text-width};
+    }
+
+    &--short-text:not(&--inline) {
+      margin-right: calc(100% - #{$short-text-width});
     }
   }
 }

@@ -26,7 +26,7 @@ RSpec.describe AdministrateurMailer, type: :mailer do
   describe '.notify_service_without_siret' do
     subject { described_class.notify_service_without_siret(admin_email) }
     it { expect(subject.to).to eq([admin_email]) }
-    it { expect(subject.subject).to eq("Siret manquant sur un de vos services") }
-    it { expect(subject.body).to include("un de vos services n'a pas son siret renseigné") }
+    it { expect(subject.subject).to eq('Numéro TAHITI manquant sur un de vos services') }
+    it { expect(subject.body).to include("un de vos services n'a pas son numéro TAHITI renseigné") }
   end
 end

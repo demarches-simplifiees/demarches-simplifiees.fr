@@ -8,8 +8,7 @@
           = render section
         - else
           = fields_for champ.input_name, champ do |form|
-            .fr-fieldset__element
-              = render EditableChamp::EditableChampComponent.new form:, champ:
+            = render EditableChamp::EditableChampComponent.new form:, champ:
 - else
   %fieldset.fr-fieldset.fr-my-0
     - if header_section
@@ -20,5 +19,4 @@
         = render section
       - else
         = fields_for champ.input_name, champ do |form|
-          .fr-fieldset__element
-            = render EditableChamp::EditableChampComponent.new form:, champ:
+          = render EditableChamp::EditableChampComponent.new form:, champ:

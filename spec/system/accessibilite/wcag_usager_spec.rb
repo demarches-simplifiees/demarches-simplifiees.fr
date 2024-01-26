@@ -110,8 +110,8 @@ describe 'wcag rules for usager', js: true, retry: 3 do
       click_on 'Commencer la démarche'
 
       find('label', text: 'Monsieur')
-      fill_in('identite_champ_first_name', with: 'prenom')
-      fill_in('identite_champ_last_name', with: 'nom')
+      fill_in('Prénom', with: 'prenom')
+      fill_in('Nom', with: 'nom')
       click_on 'Continuer'
 
       expect(page).to be_axe_clean
