@@ -133,7 +133,7 @@ describe Gestionnaire, type: :model do
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, gestionnaire: gestionnaire, sender: administrateur, commentaire_seen_at: Time.zone.now) }
 
-      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).not_to eq nil }
+      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur).to_date).to eq Date.current }
     end
 
     context "when never seen commentaire" do
@@ -155,13 +155,16 @@ describe Gestionnaire, type: :model do
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, gestionnaire: gestionnaire, sender: administrateur, commentaire_seen_at: 12.hours.ago) }
 
-      before do
-        Timecop.freeze(now) do
+      subject do
+        travel_to(now) do
           gestionnaire.mark_commentaire_as_seen(groupe_gestionnaire, administrateur)
         end
       end
 
-      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq now }
+      it do
+        subject
+        expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq now
+      end
     end
 
     context "when never seen commentaire" do
@@ -171,13 +174,16 @@ describe Gestionnaire, type: :model do
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
 
-      before do
-        Timecop.freeze(now) do
+      subject do
+        travel_to(now) do
           gestionnaire.mark_commentaire_as_seen(groupe_gestionnaire, administrateur)
         end
       end
 
-      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq now }
+      it do
+        subject
+        expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq now
+      end
     end
   end
 end
