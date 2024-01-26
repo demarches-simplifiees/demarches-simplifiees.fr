@@ -3,4 +3,4 @@ fr:
     attributes:
       champs/phone_champ:
         hints:
-          value: "Le numéro de téléphone saisi doit être valide. Exemple : 0612345678"
+          value: "Le numéro de téléphone saisi doit être valide. Exemple : 87 12 34 56"
