@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -867,6 +867,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
     t.datetime "hidden_at", precision: nil
     t.datetime "hidden_at_as_template", precision: nil
     t.boolean "instructeurs_self_management_enabled"
+    t.boolean "is_template", default: false, null: false
     t.boolean "juridique_required", default: true
     t.string "libelle"
     t.string "lien_demarche"
@@ -1176,7 +1177,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "champs", "champs", column: "parent_id"
-  add_foreign_key "champs", "dossiers"
+add_foreign_key "champs", "dossiers"
   add_foreign_key "champs", "etablissements"
   add_foreign_key "champs", "types_de_champ"
   add_foreign_key "closed_mails", "procedures"
@@ -1197,7 +1198,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
-  add_foreign_key "etablissements", "dossiers"
+add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
