@@ -14,8 +14,11 @@ describe WebHookJob, type: :job do
 
     context 'with error on webhook' do
       it 'raises' do
+        allow(Sentry).to receive(:capture_message)
         stub_request(:post, web_hook_url).to_return(status: 500, body: "error")
-        expect { job.perform_now }.to raise_error
+
+        job.perform_now
+        expect(Sentry).to have_received(:capture_message)
       end
     end
   end

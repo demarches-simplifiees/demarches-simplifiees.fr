@@ -38,8 +38,7 @@ class ArchiveUploader
   end
 
   def upload_with_active_storage
-    params = blob_default_params(filepath).merge(io: File.open(filepath),
-                                                 identify: false)
+    params = blob_default_params(filepath).merge(io: File.open(filepath))
     blob = ActiveStorage::Blob.create_and_upload!(**params)
     return blob
   end
@@ -64,7 +63,7 @@ class ArchiveUploader
       key: namespaced_object_key,
       filename: filename,
       content_type: 'application/zip',
-      metadata: { analyzed: true, virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      metadata: { analyzed: true, identified: true, virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     }
   end
 
