@@ -1,5 +1,7 @@
 module Administrateurs
   class APITokensController < AdministrateurController
+    include ActionView::RecordIdentifier
+
     before_action :authenticate_administrateur!
     before_action :set_api_token, only: [:destroy]
 
@@ -33,7 +35,7 @@ module Administrateurs
     def destroy
       @api_token.destroy
 
-      redirect_to profil_path
+      render turbo_stream: turbo_stream.remove(dom_id(@api_token))
     end
 
     private
