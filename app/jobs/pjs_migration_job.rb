@@ -23,6 +23,7 @@ class PjsMigrationJob < ApplicationJob
       end
     end
   rescue Aws::S3::Errors::ServiceError
+    blob.attachments.destroy_all
   end
 
   def already_moved?(blob)
