@@ -366,7 +366,7 @@ module Administrateurs
     end
 
     def annotations
-      ProcedureRevisionPreloader.load_one(@procedure.id)
+      ProcedureRevisionPreloader.load_one(@procedure.draft_revision)
     end
 
     def detail

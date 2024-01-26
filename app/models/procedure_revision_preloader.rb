@@ -19,13 +19,17 @@ class ProcedureRevisionPreloader
   end
 
   def load_procedure_revision_types_de_champ(revision)
-    prtdcs = ProcedureRevisionTypeDeChamp.where(revision:).includes({
-      type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] }
-    }).to_a
+    prtdcs = ProcedureRevisionTypeDeChamp
+      .where(revision:)
+      .includes(type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob })
+      .order(:position, :id)
+      .to_a
+
     prtdcs.each do |prtdc|
       prtdc.association(:revision).target = revision
       prtdc.association(:procedure).target = revision.procedure
     end
+
     assign_revision_type_de_champ(revision, prtdcs)
     assign_revision_type_de_champ_public(revision, prtdcs)
     assign_revision_type_de_champ_private(revision, prtdcs)
