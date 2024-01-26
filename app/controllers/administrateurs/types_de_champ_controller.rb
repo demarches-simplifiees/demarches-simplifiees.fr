@@ -6,9 +6,9 @@ module Administrateurs
 
     def create
       type_de_champ = draft.add_type_de_champ(type_de_champ_create_params)
-      reload_procedure_with_includes
       if type_de_champ.valid?
         @coordinate = draft.coordinate_for(type_de_champ)
+        ProcedureRevisionPreloader.load_one(@coordinate.revision)
         @created = champ_component_from(@coordinate, focused: true)
         @morphed = champ_components_starting_at(@coordinate, 1)
       else
@@ -181,7 +181,7 @@ module Administrateurs
     end
 
     def reload_procedure_with_includes
-      @procedure = Procedure.includes_for_champ_private_edition.find(@procedure.id)
+      ProcedureRevisionPreloader.load_one(@procedure.draft_revision)
     end
   end
 end

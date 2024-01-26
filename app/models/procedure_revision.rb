@@ -16,25 +16,7 @@ class ProcedureRevision < ApplicationRecord
   has_one :published_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :published_revision_id, dependent: :nullify, inverse_of: :published_revision
 
   scope :ordered, -> { order(:created_at) }
-  scope :includes_for_compare, -> {
-    includes(
-      revision_types_de_champ: {
-        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-        revision: [],
-        procedure: []
-      },
-      revision_types_de_champ_public: {
-        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-        revision: [],
-        procedure: []
-      },
-      revision_types_de_champ_private: {
-        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-        revision: [],
-        procedure: []
-      }
-    )
-  }
+
   validate :conditions_are_valid?
   validate :header_sections_are_valid?
   validate :expressions_regulieres_are_valid?

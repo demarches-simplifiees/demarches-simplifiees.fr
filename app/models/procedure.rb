@@ -237,34 +237,6 @@ class Procedure < ApplicationRecord
     )
   }
 
-  scope :includes_for_champ_public_edition, -> {
-    includes(draft_revision: {
-      revision_types_de_champ: {
-        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-        revision: [],
-        procedure: []
-      },
-      revision_types_de_champ_public: {
-        type_de_champ: { notice_explicative_attachment: :blob, piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-        revision: [],
-        procedure: []
-      },
-      procedure: []
-    })
-  }
-
-  scope :includes_for_champ_private_edition, -> {
-    includes_for_champ_public_edition.includes(
-      draft_revision: {
-        revision_types_de_champ_private: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        }
-      }
-    )
-  }
-
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
   validates :administrateurs, presence: true
@@ -448,12 +420,14 @@ class Procedure < ApplicationRecord
   end
 
   def preload_draft_and_published_revisions
+    revisions = []
     if !association(:published_revision).loaded? && published_revision_id.present?
-      association(:published_revision).target = ProcedureRevision.includes_for_compare.find(published_revision_id)
+      revisions.push(published_revision)
     end
     if !association(:draft_revision).loaded? && draft_revision_id.present?
-      association(:draft_revision).target = ProcedureRevision.includes_for_compare.find(draft_revision_id)
+      revisions.push(draft_revision)
     end
+    ProcedureRevisionPreloader.new(revisions).all if !revisions.empty?
   end
 
   def accepts_new_dossiers?

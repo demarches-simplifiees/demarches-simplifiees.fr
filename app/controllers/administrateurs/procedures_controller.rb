@@ -362,11 +362,11 @@ module Administrateurs
     end
 
     def champs
-      @procedure = Procedure.includes_for_champ_public_edition.find(@procedure.id)
+      ProcedureRevisionPreloader.load_one(@procedure.draft_revision)
     end
 
     def annotations
-      @procedure = Procedure.includes_for_champ_private_edition.find(@procedure.id)
+      ProcedureRevisionPreloader.load_one(@procedure.id)
     end
 
     def detail
