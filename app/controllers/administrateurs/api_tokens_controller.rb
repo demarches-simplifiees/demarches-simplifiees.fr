@@ -3,7 +3,7 @@ module Administrateurs
     include ActionView::RecordIdentifier
 
     before_action :authenticate_administrateur!
-    before_action :set_api_token, only: [:destroy]
+    before_action :set_api_token, only: [:edit, :update, :destroy]
 
     def nom
       @name = name
@@ -30,6 +30,26 @@ module Administrateurs
 
       @api_token.update!(name:, write_access:,
                          allowed_procedure_ids:, authorized_networks:, expires_at:)
+    end
+
+    def edit
+    end
+
+    def update
+      if invalid_network?
+        @invalid_network = true
+        return render :edit
+      end
+
+      if @api_token.eternal? && networks.empty?
+        flash[:alert] = "Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent."
+        return render :edit
+      end
+
+      @api_token.update!(name:, authorized_networks: networks)
+
+      flash[:notice] = "Le jeton d'API a été mis à jour."
+      redirect_to profil_path
     end
 
     def destroy
