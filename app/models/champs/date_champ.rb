@@ -1,6 +1,18 @@
 class Champs::DateChamp < Champ
   before_validation :convert_to_iso8601, unless: -> { validation_context == :prefill }
   validate :iso_8601
+  validate :min_max_validation
+
+  def min_max_validation
+    return if value.blank?
+
+    if type_de_champ.min.present? && Date.parse(value) < Date.parse(type_de_champ.min)
+      errors.add(:value, :greater_than_or_equal_to, value: value, count: I18n.l(Date.parse(type_de_champ.min), format: :long))
+    end
+    if type_de_champ.max.present? && Date.parse(value) > Date.parse(type_de_champ.max)
+      errors.add(:value, :less_than_or_equal_to, value: value, count: I18n.l(Date.parse(type_de_champ.max), format: :long))
+    end
+  end
 
   def search_terms
     # Text search is pretty useless for dates so we’re not including these champs

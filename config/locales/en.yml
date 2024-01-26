@@ -718,6 +718,10 @@ en:
       not_a_date: "must be a correct date"
       not_a_datetime: "must be a correct datetime"
       blank: "can't be blank"
+  date:
+    formats:
+      default: "%B %e, %Y"
+      long: "%B %e, %Y"
   time:
     formats:
       default: "%B %d %Y %R"

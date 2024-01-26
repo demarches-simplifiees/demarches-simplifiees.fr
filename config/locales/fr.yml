@@ -730,6 +730,10 @@ fr:
       not_a_date: "doit être une date correctement formatée"
       not_a_datetime: "doit être une date et heure correctement formatée"
       blank: "doit être rempli"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      long: "%e %B %Y"
   time:
     formats:
       default: "%d %B %Y %R"
