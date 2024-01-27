@@ -11,7 +11,7 @@ export class VisaController extends ApplicationController {
     }
   }
 
-  static CHAMP_SELECTOR = '.editable-champ';
+  static CHAMP_SELECTOR = '.fr-fieldset__element';
   static REPETITION = 'editable-champ-repetition';
   static CHECKED_VISA_SELECTOR = "input[data-controller='visa']:checked";
   static CHILD_VISA_SELECTOR =
