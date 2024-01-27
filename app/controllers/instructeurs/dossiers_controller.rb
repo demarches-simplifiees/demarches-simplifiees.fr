@@ -422,14 +422,14 @@ module Instructeurs
       # auto-save send small sets of fields to update so for speed, we look for brothers containing visa
       visa_type = TypeDeChamp.type_champs.fetch(:visa)
       champs = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position)
-      params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
+      params[:dossier][:champs_private_attributes]&.each_pair do |_k, v|
         champ = champs.find(v[:id])
         # look for position of last checked visa in same dossier, row
         visa = champs.private_only
           .where(row_id: champ.row_id, dossier: champ.dossier_id, type_de_champ: { type_champ: visa_type })
           .where.not(value: "")
           .order(position: :desc).first
-        visa.present? && champ[:position] < visa[:position]
+        Rails.logger.info("visa?=#{visa.present?} champ_position=#{champ[:position]} visa_position=#{visa&.[](:position)}")
       end
       champs_private_params
     end
