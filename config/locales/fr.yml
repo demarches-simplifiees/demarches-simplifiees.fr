@@ -504,7 +504,7 @@ fr:
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
-          delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
+          delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
           edit_draft: "Continuer à remplir"
           actions: "Actions"
