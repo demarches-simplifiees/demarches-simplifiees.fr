@@ -102,7 +102,12 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       wait_until {
         body = JSON.parse(attestation.reload.tiptap_body)
-        body.dig("content").first&.dig("content")&.first&.dig("content")&.first&.dig("content") == [{ "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }]
+        first_content = body.dig("content").first&.dig("content")&.first&.dig("content")&.first&.dig("content")
+
+        first_content == [
+          { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }, # added by click above
+          { "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } } # defaut initial content
+        ]
       }
 
       find("label", text: /à la charte de l’état/).click

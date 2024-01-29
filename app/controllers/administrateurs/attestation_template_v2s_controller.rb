@@ -87,7 +87,7 @@ module Administrateurs
     end
 
     def retrieve_attestation_template
-      @attestation_template = @procedure.attestation_template_v2 || @procedure.build_attestation_template_v2
+      @attestation_template = @procedure.attestation_template_v2 || @procedure.build_attestation_template_v2(json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT)
     end
 
     def editor_params
