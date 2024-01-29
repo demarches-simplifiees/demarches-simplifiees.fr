@@ -73,6 +73,6 @@ class DossierTransfer < ApplicationRecord
   private
 
   def send_notification
-    DossierMailer.notify_transfer(self).deliver_later
+    DossierMailer.with(dossier_transfer: self).notify_transfer.deliver_later
   end
 end

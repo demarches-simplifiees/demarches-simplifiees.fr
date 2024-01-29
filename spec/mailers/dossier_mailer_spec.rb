@@ -272,7 +272,7 @@ RSpec.describe DossierMailer, type: :mailer do
     let(:dossier_transfer) { create(:dossier_transfer) }
     let!(:dossier) { create(:dossier, user: user, transfer: dossier_transfer, procedure: procedure) }
 
-    subject { described_class.notify_transfer(dossier_transfer) }
+    subject { described_class.with(dossier_transfer: dossier_transfer).notify_transfer }
 
     context 'when it is a transfer of one dossier' do
       it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
@@ -293,6 +293,17 @@ RSpec.describe DossierMailer, type: :mailer do
 
       it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
       it { expect(subject.body).to include("Le support technique vous adresse une demande de transfert") }
+    end
+
+    context 'when dossiers have been dissociated from transfer' do
+      before do
+        dossier.update!(transfer: nil)
+        dossier_transfer.reload
+      end
+
+      it 'does not send an email' do
+        expect { subject.perform_now }.not_to raise_error
+      end
     end
   end
 end
