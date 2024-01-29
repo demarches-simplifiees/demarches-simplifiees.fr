@@ -800,7 +800,7 @@ GEM
       nokogiri (~> 1.8)
     zeitwerk (2.6.12)
     zip_tricks (5.6.0)
-    zipline (1.4.1)
+    zipline (1.5.0)
       actionpack (>= 6.0, < 8.0)
       content_disposition (~> 1.0)
       zip_tricks (>= 4.2.1, < 6.0)
