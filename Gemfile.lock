@@ -357,7 +357,7 @@ GEM
       regexp_parser (~> 2.0)
       simpleidn (~> 0.2)
     jsonapi-renderer (0.2.2)
-    jwt (2.3.0)
+    jwt (2.7.1)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
