@@ -336,10 +336,10 @@ GEM
       ruby-vips (>= 2.0.17, < 3)
     invisible_captcha (2.1.0)
       rails (>= 5.2)
-    io-console (0.7.1)
-    irb (1.11.0)
+    io-console (0.7.2)
+    irb (1.11.1)
       rdoc
-      reline (>= 0.3.8)
+      reline (>= 0.4.2)
     job-iteration (1.4.1)
       activejob (>= 5.2)
     jquery-rails (4.6.0)
