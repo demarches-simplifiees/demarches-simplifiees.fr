@@ -643,7 +643,7 @@ GEM
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
-    saml_idp (0.14.0)
+    saml_idp (0.16.0)
       activesupport (>= 5.2)
       builder (>= 3.0)
       nokogiri (>= 1.6.2)
