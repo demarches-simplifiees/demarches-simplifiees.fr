@@ -258,16 +258,19 @@ describe DossierProjectionService do
           before { create(:dossier_correction, dossier:) }
 
           it { expect(subject.pending_correction?).to be(true) }
+          it { expect(subject.resolved_corrections?).to eq(false) }
         end
 
         context "when dossier has a resolved correction" do
           before { create(:dossier_correction, :resolved, dossier:) }
 
           it { expect(subject.pending_correction?).to eq(false) }
+          it { expect(subject.resolved_corrections?).to eq(true) }
         end
 
         context "when dossier has no correction at all" do
           it { expect(subject.pending_correction?).to eq(false) }
+          it { expect(subject.resolved_corrections?).to eq(false) }
         end
       end
     end
