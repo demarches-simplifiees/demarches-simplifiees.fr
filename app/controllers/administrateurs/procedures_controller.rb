@@ -244,6 +244,7 @@ module Administrateurs
     end
 
     def modifications
+      ProcedureRevisionPreloader.new(@procedure.revisions).all
     end
 
     def update_jeton
