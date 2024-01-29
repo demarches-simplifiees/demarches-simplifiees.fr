@@ -244,6 +244,7 @@ module Administrateurs
     end
 
     def modifications
+      ProcedureRevisionPreloader.new(@procedure.revisions).all
     end
 
     def update_jeton
@@ -362,40 +363,11 @@ module Administrateurs
     end
 
     def champs
-      @procedure = Procedure.includes(draft_revision: {
-        revision_types_de_champ: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        revision_types_de_champ_public: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        procedure: []
-      }).find(@procedure.id)
+      ProcedureRevisionPreloader.load_one(@procedure.draft_revision)
     end
 
     def annotations
-      @procedure = Procedure.includes(draft_revision: {
-        revision_types_de_champ: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        revision_types_de_champ_private: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        revision_types_de_champ_public: {
-          type_de_champ: { piece_justificative_template_attachment: :blob, revision: [], procedure: [] },
-          revision: [],
-          procedure: []
-        },
-        procedure: []
-      }).find(@procedure.id)
+      ProcedureRevisionPreloader.load_one(@procedure.draft_revision)
     end
 
     def detail

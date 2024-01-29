@@ -411,11 +411,23 @@ class Procedure < ApplicationRecord
   end
 
   def draft_changed?
+    preload_draft_and_published_revisions
     !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
   end
 
   def revision_changes
     published_revision.compare(draft_revision)
+  end
+
+  def preload_draft_and_published_revisions
+    revisions = []
+    if !association(:published_revision).loaded? && published_revision_id.present?
+      revisions.push(published_revision)
+    end
+    if !association(:draft_revision).loaded? && draft_revision_id.present?
+      revisions.push(draft_revision)
+    end
+    ProcedureRevisionPreloader.new(revisions).all if !revisions.empty?
   end
 
   def accepts_new_dossiers?

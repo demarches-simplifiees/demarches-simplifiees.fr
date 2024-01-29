@@ -54,11 +54,6 @@ class ProcedureRevision < ApplicationRecord
       revision_types_de_champ.create!(h)
     end
 
-    # they are not aware of the addition
-    types_de_champ_public.reset
-    types_de_champ_private.reset
-    reload
-
     tdc
   rescue => e
     TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
@@ -84,9 +79,6 @@ class ProcedureRevision < ApplicationRecord
       siblings.where(position: position..coordinate.position).update_all("position = position + 1")
     end
     coordinate.update_column(:position, position)
-
-    coordinate.reload
-
     coordinate
   end
 
@@ -102,11 +94,7 @@ class ProcedureRevision < ApplicationRecord
     children.each(&:destroy_if_orphan)
     tdc.destroy_if_orphan
 
-    # they are not aware of the removal
     coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
-
-    types_de_champ_public.reset
-    types_de_champ_private.reset
 
     coordinate
   end
