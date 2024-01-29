@@ -128,7 +128,7 @@ GEM
     axlsx_styler (1.1.0)
       activesupport (>= 3.1)
       caxlsx (>= 2.0.2)
-    bcrypt (3.1.19)
+    bcrypt (3.1.20)
     benchmark-ips (2.12.0)
     better_html (1.0.16)
       actionview (>= 4.0)
