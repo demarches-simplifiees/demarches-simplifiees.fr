@@ -16,10 +16,22 @@ class DeviseUserMailerPreview < ActionMailer::Preview
     DeviseUserMailer.reset_password_instructions(user, "faketoken", {})
   end
 
+  def unlock_instructions
+    DeviseUserMailer.unlock_instructions(user, "faketoken", {})
+  end
+
+  def email_changed
+    DeviseUserMailer.email_changed(user, {})
+  end
+
+  def password_change
+    DeviseUserMailer.password_change(user, {})
+  end
+
   private
 
   def user
-    User.new(id: 10, email: "usager@example.com")
+    User.new(id: 10, email: "usager@example.com", locale: ['en', 'fr'].sample)
   end
 
   def procedure
