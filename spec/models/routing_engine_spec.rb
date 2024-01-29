@@ -122,7 +122,7 @@ describe RoutingEngine, type: :model do
 
       context 'with a matching rule' do
         before do
-          gi_2.update(routing_rule: ds_eq(champ_value(communes_tdc.stable_id), constant('92')))
+          gi_2.update(routing_rule: ds_in_departement(champ_value(communes_tdc.stable_id), constant('92')))
           dossier.champs.first.update(code_postal: '92500', external_id: '92063')
         end
 
@@ -141,7 +141,7 @@ describe RoutingEngine, type: :model do
 
       context 'with a matching rule' do
         before do
-          gi_2.update(routing_rule: ds_eq(champ_value(epci_tdc.stable_id), constant('42')))
+          gi_2.update(routing_rule: ds_in_departement(champ_value(epci_tdc.stable_id), constant('42')))
           dossier.champs.first.update_columns(
             external_id: 244200895,
             value: 'CC du Pilat Rhodanien',
