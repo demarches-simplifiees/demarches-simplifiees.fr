@@ -13,7 +13,7 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    aasm (5.2.0)
+    aasm (5.5.0)
       concurrent-ruby (~> 1.0)
     acsv (0.0.1)
     actioncable (7.0.8)
@@ -175,7 +175,7 @@ GEM
     clamav-client (3.2.0)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
-    concurrent-ruby (1.2.2)
+    concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     content_disposition (1.0.0)
     crack (0.4.5)
