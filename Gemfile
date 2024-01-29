@@ -140,7 +140,6 @@ group :development, :test do
   gem 'irb'
   gem 'mina', require: false # Deploy
   gem 'rspec-rails'
-  gem 'simple_xlsx_reader'
   gem 'spring' # Spring speeds up development by keeping your application running in the background
   gem 'spring-commands-rspec'
 end

@@ -698,9 +698,6 @@ GEM
       rack (>= 2.2.4)
       redis-client (>= 0.19.0)
     simple_po_parser (1.1.6)
-    simple_xlsx_reader (1.0.4)
-      nokogiri
-      rubyzip
     simpleidn (0.2.1)
       unf (~> 0.1.4)
     sinatra (3.0.5)
@@ -932,7 +929,6 @@ DEPENDENCIES
   shoulda-matchers
   sib-api-v3-sdk
   sidekiq
-  simple_xlsx_reader
   skylight
   spreadsheet_architect
   spring
