@@ -6,41 +6,47 @@
     ["Jeton d’API : #{@api_token.name}"]] }
 
 .fr-container.fr-mt-2w
-  %h1 Modification du jeton d'API « #{@api_token.name} »
 
-  = form_with url: admin_api_token_path(@api_token), method: :patch, html: { class: 'fr-mt-2w' } do |f|
-    .fr-input-group
-      = f.label :name, class: 'fr-label' do
-        = t('name', scope: [:administrateurs, :api_tokens, :nom])
-        %span.fr-hint-text= t('name-hint', scope: [:administrateurs, :api_tokens, :nom])
-      = f.text_field :name,
-        class: 'fr-input width-33',
-        autocomplete: 'off',
-        autocapitalize: 'off',
-        autocorrect: 'off',
-        spellcheck: false,
-        required: true,
-        value: @api_token.name
+  %turbo-frame#tokenUpdate
+    %h1 Modification du jeton d'API « #{@api_token.name} »
 
-    .fr-input-group.fr-mb-4w{
-      class: class_names('fr-input-group--error': @invalid_network) }
-      = f.label :name, class: 'fr-label' do
-        = @api_token.eternal? ? "Entrez au moins 1 réseau autorisé" : "Entrez les adresses ip autorisées"
-        %span.fr-hint-text adresses réseaux séparées par des espaces. ex: 176.31.79.200 192.168.33.0/24 2001:41d0:304:400::52f/128
-      = f.text_field :networks,
-        class: class_names('fr-input': true, 'fr-input--error': @invalid_network),
-        autocomplete: 'off',
-        autocapitalize: 'off',
-        autocorrect: 'off',
-        spellcheck: false,
-        required: @api_token.eternal?,
-        value: @api_token.authorized_networks_for_ui.gsub(/,/, ' ')
+    = form_with url: admin_api_token_path(@api_token), method: :patch, html: { class: 'fr-mt-2w' } do |f|
+      .fr-input-group
+        = f.label :name, class: 'fr-label' do
+          = t('name', scope: [:administrateurs, :api_tokens, :nom])
+          %span.fr-hint-text= t('name-hint', scope: [:administrateurs, :api_tokens, :nom])
+        .flex
+          = f.text_field :name,
+            class: 'fr-input width-33',
+            autocomplete: 'off',
+            autocapitalize: 'off',
+            autocorrect: 'off',
+            spellcheck: false,
+            required: true,
+            value: @api_token.name
 
-      - if @invalid_network
-        %p.fr-error-text vous devez entrer des adresses ipv4 ou ipv6 valides
+          %button.fr-btn.fr-btn--secondary.fr-ml-1w Renommer
 
-    %ul.fr-btns-group.fr-btns-group--inline
-      %li
-        = f.button 'Modifier', type: :submit, class: "fr-btn fr-btn--primary"
-      %li
-        = link_to 'Revenir', profil_path, class: "fr-btn fr-btn--secondary"
+    = form_with url: admin_api_token_path(@api_token), method: :patch, html: { class: 'fr-mt-2w' } do |f|
+      .fr-input-group.fr-mb-4w{
+        class: class_names('fr-input-group--error': @invalid_network_message.present?) }
+        = f.label :name, class: 'fr-label' do
+          = @api_token.eternal? ? "Entrez au moins 1 réseau autorisé" : "Entrez les adresses ip autorisées"
+          %span.fr-hint-text adresses réseaux séparées par des espaces. ex: 176.31.79.200 192.168.33.0/24 2001:41d0:304:400::52f/128
+        .flex
+          = f.text_field :networks,
+            class: class_names('fr-input': true, 'fr-input--error': @invalid_network_message.present?),
+            autocomplete: 'off',
+            autocapitalize: 'off',
+            autocorrect: 'off',
+            spellcheck: false,
+            value: @api_token.authorized_networks_for_ui.gsub(/,/, ' ')
+
+          %button.fr-btn.fr-btn--secondary.fr-ml-1w Modifier
+
+        - if @invalid_network_message.present?
+          %p.fr-error-text= @invalid_network_message
+
+  %ul.fr-btns-group.fr-btns-group--inline
+    %li
+      = link_to 'Revenir', profil_path, class: "fr-btn fr-btn--secondary"

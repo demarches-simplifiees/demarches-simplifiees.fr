@@ -37,20 +37,33 @@ module Administrateurs
     end
 
     def update
-      if invalid_network?
-        @invalid_network = true
-        return render :edit
+      @libelle_id_procedures = libelle_id_procedures
+
+      h = {}
+
+      if !params[:networks].nil?
+        if invalid_network?
+          @invalid_network_message = "vous devez entrer des adresses ipv4 ou ipv6 valides"
+          return render :edit
+        end
+
+        if @api_token.eternal? && networks.empty?
+          @invalid_network_message = "Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent."
+          @api_token.reload
+          return render :edit
+        end
+
+        h[:authorized_networks] = networks
+      end
       end
 
-      if @api_token.eternal? && networks.empty?
-        flash[:alert] = "Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent."
-        return render :edit
+      if params[:name].present?
+        h[:name] = name
       end
 
-      @api_token.update!(name:, authorized_networks: networks)
+      @api_token.update!(h)
 
-      flash[:notice] = "Le jeton d'API a été mis à jour."
-      redirect_to profil_path
+      render :edit
     end
 
     def destroy

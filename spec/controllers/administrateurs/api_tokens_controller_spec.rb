@@ -119,9 +119,8 @@ describe Administrateurs::APITokensController, type: :controller do
       before { subject; token.reload }
 
       it 'does not update a token' do
-        expect(token.name).not_to eq('new name')
-        expect(assigns(:invalid_network)).to be true
-        expect(response).to render_template(:edit)
+        expect(token.authorized_networks).to be_blank
+        expect(assigns(:invalid_network_message)).to eq('vous devez entrer des adresses ipv4 ou ipv6 valides')
       end
     end
 
@@ -135,9 +134,8 @@ describe Administrateurs::APITokensController, type: :controller do
       let(:networks) { '' }
 
       it 'does not update a token' do
-        expect(token.name).not_to eq('new name')
-        expect(flash[:alert]).to eq("Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent.")
-        expect(response).to render_template(:edit)
+        expect(token.authorized_networks).to eq([IPAddr.new('118.218.200.200')])
+        expect(assigns(:invalid_network_message)).to eq("Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent.")
       end
     end
   end
