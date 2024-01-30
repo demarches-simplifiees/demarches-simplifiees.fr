@@ -48,7 +48,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     piece_justificative_multiple: Field::Boolean,
     replaced_by_procedure_id: Field::String,
     tags: Field::Text,
-    is_template: Field::Boolean
+    template: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -80,7 +80,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :libelle,
     :description,
     :tags,
-    :is_template,
+    :template,
     :lien_site_web,
     :organisation,
     :zones,

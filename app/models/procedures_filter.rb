@@ -8,7 +8,7 @@ class ProceduresFilter
 
     params[:zone_ids] = admin.zones.pluck(:id) if params[:zone_ids] == 'admin_default'
 
-    @params = params.permit(:page, :libelle, :email, :from_publication_date, :service_siret, :service_departement, tags: [], zone_ids: [], statuses: [])
+    @params = params.permit(:page, :libelle, :email, :from_publication_date, :service_siret, :service_departement, :template, tags: [], zone_ids: [], statuses: [])
   end
 
   def admin_zones
@@ -33,6 +33,10 @@ class ProceduresFilter
 
   def tags
     params[:tags].compact_blank.uniq if params[:tags].present?
+  end
+
+  def template?
+    ActiveRecord::Type::Boolean.new.cast(params[:template])
   end
 
   def service_siret

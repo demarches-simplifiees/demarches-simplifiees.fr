@@ -259,6 +259,17 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
+    context 'with template procedures' do
+      let!(:template_procedure) { create(:procedure, :published, template: true) }
+      let!(:other_procedure) { create(:procedure, :published, template: false) }
+
+      it 'identifies a procedure as a template' do
+        get :all, params: { template: '1' }
+        expect(assigns(:procedures).any? { |p| p.id == template_procedure.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == other_procedure.id }).to be_falsey
+      end
+    end
+
     context 'with libelle search' do
       let!(:procedure1) { create(:procedure, :published, libelle: 'Demande de subvention') }
       let!(:procedure2) { create(:procedure, :published, libelle: "Fonds d'aide public « Prime Entrepreneurs des Quartiers »") }

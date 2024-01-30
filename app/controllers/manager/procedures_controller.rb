@@ -121,7 +121,7 @@ module Manager
     end
 
     def update_template_status
-      if procedure.update(is_template_params)
+      if procedure.update(template_params)
         redirect_to manager_procedure_path(procedure), notice: 'Le statut de modèle a été mis à jour.'
       else
         flash.alert = procedure.errors.full_messages.join(', ')
@@ -184,8 +184,8 @@ module Manager
       params.require(:procedure).permit(:tags)
     end
 
-    def is_template_params
-      params.require(:procedure).permit(:is_template)
+    def template_params
+      params.require(:procedure).permit(:template)
     end
 
     def tags_csv_file
