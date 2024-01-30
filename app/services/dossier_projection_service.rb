@@ -14,6 +14,15 @@ class DossierProjectionService
     end
   end
 
+  def self.for_tiers_translation(array)
+    for_tiers, email, first_name, last_name = array
+    if for_tiers == true
+      "#{email} #{I18n.t('views.instructeurs.dossiers.acts_on_behalf')} #{first_name} #{last_name}"
+    else
+      email
+    end
+  end
+
   TABLE = 'table'
   COLUMN = 'column'
 
@@ -82,11 +91,13 @@ class DossierProjectionService
           .pluck(:dossier_id, *fields.map { |f| f[COLUMN].to_sym })
           .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
       when 'user'
+
         fields[0][:id_value_h] = Dossier # there is only one field available for user table
           .joins(:user)
+          .includes(:individual)
           .where(id: dossiers_ids)
-          .pluck('dossiers.id, users.email')
-          .to_h
+          .pluck('dossiers.id, dossiers.for_tiers, users.email, individuals.prenom, individuals.nom')
+          .to_h { |dossier_id, *array| [dossier_id, for_tiers_translation(array)] }
       when 'groupe_instructeur'
         fields[0][:id_value_h] = Dossier
           .joins(:groupe_instructeur)
