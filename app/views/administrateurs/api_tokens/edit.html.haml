@@ -65,10 +65,16 @@
 
               %button.fr-btn.fr-btn--secondary.fr-ml-1w Ajouter
 
-        %ul.fr-mb-4w
-          - @api_token.procedures.each do |procedure|
-            %li{ id: dom_id(procedure, :authorized) }
-              = procedure.libelle
+    %ul.fr-mb-4w
+      - @api_token.procedures.each do |procedure|
+        %li{ id: dom_id(procedure, :authorized) }
+          = procedure.libelle
+          = button_to 'Supprimer',
+            remove_procedure_admin_api_token_path(@api_token, procedure_id: procedure.id),
+            class: 'fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-left fr-icon-delete-line',
+            form_class: 'inline',
+            method: :delete,
+            form: { data: { turbo: 'true' } }
 
   %ul.fr-btns-group.fr-btns-group--inline
     %li
