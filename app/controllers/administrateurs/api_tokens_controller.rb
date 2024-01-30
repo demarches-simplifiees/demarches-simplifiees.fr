@@ -13,11 +13,7 @@ module Administrateurs
 
     def autorisations
       @name = name
-      @libelle_id_procedures = current_administrateur
-        .procedures
-        .order(:libelle)
-        .pluck(:libelle, :id)
-        .map { |libelle, id| ["#{id} - #{libelle}", id] }
+      @libelle_id_procedures = libelle_id_procedures
     end
 
     def securite
@@ -37,6 +33,7 @@ module Administrateurs
     end
 
     def edit
+      @libelle_id_procedures = libelle_id_procedures
     end
 
     def update
@@ -72,6 +69,14 @@ module Administrateurs
         --data '{ "query": "{ demarche(number: #{procedure_id}) { title } }" }' \\
         '#{api_v2_graphql_url}'
       EOF
+    end
+
+    def libelle_id_procedures
+      current_administrateur
+        .procedures
+        .order(:libelle)
+        .pluck(:libelle, :id)
+        .map { |libelle, id| ["#{id} - #{libelle}", id] }
     end
 
     def all_params
