@@ -47,6 +47,29 @@
         - if @invalid_network_message.present?
           %p.fr-error-text= @invalid_network_message
 
+    = form_with url: admin_api_token_path(@api_token), method: :patch, html: { class: 'fr-mt-2w' } do |f|
+      .fr-mb-4w
+        - if @api_token.full_access?
+          %p Votre jeton d'API a accès à toutes vos démarches.
+          = hidden_field_tag :procedure_to_add, '[]'
+          %button.fr-btn.fr-btn--secondary.fr-btn--sm Restreindre l'accès à certaines les démarches
+        - else
+          .fr-select-group
+            %label.fr-label{ for: 'procedure_to_add' } Ajouter des démarches autorisées
+            .flex
+              = f.select :value,
+                options_for_select(@libelle_id_procedures),
+                { include_blank: true },
+                { class: 'fr-select width-33',
+                  name: 'procedure_to_add'}
+
+              %button.fr-btn.fr-btn--secondary.fr-ml-1w Ajouter
+
+        %ul.fr-mb-4w
+          - @api_token.procedures.each do |procedure|
+            %li{ id: dom_id(procedure, :authorized) }
+              = procedure.libelle
+
   %ul.fr-btns-group.fr-btns-group--inline
     %li
       = link_to 'Revenir', profil_path, class: "fr-btn fr-btn--secondary"

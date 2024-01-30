@@ -55,6 +55,14 @@ module Administrateurs
 
         h[:authorized_networks] = networks
       end
+
+      if procedure_to_add.present?
+        to_add = current_administrateur
+          .procedure_ids
+          .intersection([procedure_to_add])
+
+        h[:allowed_procedure_ids] =
+          (Array.wrap(@api_token.allowed_procedure_ids) + to_add).uniq
       end
 
       if params[:name].present?
@@ -131,6 +139,10 @@ module Administrateurs
 
     def name
       params[:name]
+    end
+
+    def procedure_to_add
+      params[:procedure_to_add]&.to_i
     end
 
     def write_access

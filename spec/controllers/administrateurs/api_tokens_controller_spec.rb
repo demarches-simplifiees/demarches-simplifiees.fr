@@ -98,9 +98,10 @@ describe Administrateurs::APITokensController, type: :controller do
 
   describe 'update' do
     let(:token) { APIToken.generate(admin).first }
-    let(:params) { { name:, networks: } }
+    let(:params) { { name:, networks:, procedure_to_add: } }
     let(:name) { 'new name' }
     let(:networks) { '118.218.200.200' }
+    let(:procedure_to_add) { nil }
 
     subject { patch :update, params: params.merge(id: token.id) }
 
@@ -137,6 +138,31 @@ describe Administrateurs::APITokensController, type: :controller do
         expect(token.authorized_networks).to eq([IPAddr.new('118.218.200.200')])
         expect(assigns(:invalid_network_message)).to eq("Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent.")
       end
+    end
+
+    context 'with a legitime procedure to add' do
+      let(:params) { { procedure_to_add: procedure.id } }
+
+      before { subject; token.reload }
+
+      it { expect(token.allowed_procedure_ids).to eq([procedure.id]) }
+    end
+
+    context 'with a procedure to add not owned by the admin' do
+      let(:another_procedure) { create(:procedure, administrateurs: [create(:administrateur)]) }
+      let(:params) { { procedure_to_add: another_procedure.id } }
+
+      before { subject; token.reload }
+
+      it { expect(token.allowed_procedure_ids).to eq([]) }
+    end
+
+    context 'with an empty procedure to add' do
+      let(:params) { { procedure_to_add: '' } }
+
+      before { subject; token.reload }
+
+      it { expect(token.allowed_procedure_ids).to eq([]) }
     end
   end
 end
