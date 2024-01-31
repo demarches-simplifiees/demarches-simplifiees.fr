@@ -11,6 +11,11 @@ class Champs::RNAChamp < Champ
     data&.dig("association_titre")
   end
 
+  def full_address
+    address = data&.dig("address")
+    "#{address["numero_voie"]} #{address["type_voie"]} #{address["libelle_voie"]} #{address["code_postal"]} #{address["commune"]}"
+  end
+
   def identifier
     title.present? ? "#{value} (#{title})" : value
   end
