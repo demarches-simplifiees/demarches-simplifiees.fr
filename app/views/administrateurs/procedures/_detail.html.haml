@@ -6,7 +6,11 @@
     = button_to detail_admin_procedure_path(procedure["id"]), method: :post, params:, title:, class: [icon, "fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline" ] do
       = title
 
-  %td= procedure.libelle
+  %td
+    - if procedure.template
+      %p.fr-badge.fr-badge--info.fr-badge--sm= "Modèle DS"
+      %br
+    = procedure.libelle
   %td= procedure.id
   %td= procedure.estimated_dossiers_count
   %td= procedure.administrateurs.count

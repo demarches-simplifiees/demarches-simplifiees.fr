@@ -57,6 +57,7 @@ fr:
         published_at: 'Date de publication'
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'
+        template: 'Est un modèle'
     errors:
       models:
         procedure:

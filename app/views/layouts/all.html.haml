@@ -100,6 +100,16 @@
                       - if @filter.tags.present?
                         - @filter.tags.each do |tag|
                           = f.hidden_field :tags, value: tag, multiple: true, id: "tag-#{tag.tr(' ', '_')}"
+                  %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                    .fr-mb-1w
+                      %button{ 'data-action': 'expand#toggle' }
+                        %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                        Démarches modèles
+                    .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                      .fr-checkbox-group.fr-ml-2w.fr-py-1w
+                        = f.check_box :template, class: 'fr-input'
+                        = f.label :template, 'Modèle DS', class: 'fr-label'
+
         .fr-col-9
           = yield(:results)
 = render template: 'layouts/application'

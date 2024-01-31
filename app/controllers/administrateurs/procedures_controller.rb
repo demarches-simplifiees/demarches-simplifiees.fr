@@ -381,7 +381,6 @@ module Administrateurs
     def all
       @filter = ProceduresFilter.new(current_administrateur, params)
       all_procedures = filter_procedures(@filter).map { |p| ProcedureDetail.new(p) }
-
       respond_to do |format|
         format.html do
           all_procedures = Kaminari.paginate_array(all_procedures.to_a, offset: 0, limit: ITEMS_PER_PAGE, total_count: all_procedures.count)
@@ -417,13 +416,14 @@ module Administrateurs
       procedures_result = procedures_result.where(hidden_at_as_template: nil)
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
       procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
+      procedures_result = procedures_result.where(template: true) if filter.template?
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
       procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
       procedures_result = procedures_result.where(service: services) if services
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 
-      sql = "select id, libelle, published_at, aasm_state, estimated_dossiers_count, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
+      sql = "select id, libelle, published_at, aasm_state, estimated_dossiers_count, template, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
       ActiveRecord::Base.connection.execute(sql)
     end
 
