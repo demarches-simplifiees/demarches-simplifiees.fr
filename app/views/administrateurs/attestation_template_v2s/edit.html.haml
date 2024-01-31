@@ -7,6 +7,7 @@
 = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), html: { multipart: true },
   data: { turbo: 'true',
     controller: 'autosubmit attestation',
+    autosubmit_debounce_delay_value: 2000,
     attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
     attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
 
