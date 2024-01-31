@@ -1,6 +1,7 @@
 class GroupeGestionnaire < ApplicationRecord
   has_many :administrateurs
   has_many :commentaire_groupe_gestionnaires
+  has_many :follow_commentaire_groupe_gestionnaires
   has_and_belongs_to_many :gestionnaires
 
   has_ancestry

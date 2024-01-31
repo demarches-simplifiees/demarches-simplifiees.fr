@@ -7,6 +7,7 @@ module Gestionnaires
     end
 
     def show
+      @unread_commentaires = current_gestionnaire.unread_commentaires?(@groupe_gestionnaire)
     end
 
     def edit

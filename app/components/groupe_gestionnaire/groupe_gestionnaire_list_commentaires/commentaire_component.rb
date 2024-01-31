@@ -23,4 +23,9 @@ class GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireCompone
       gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire),
       class: 'button'
   end
+
+  def highlight?
+    commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @commentaire.sender)
+    commentaire_seen_at.nil? || commentaire_seen_at < @commentaire.created_at
+  end
 end

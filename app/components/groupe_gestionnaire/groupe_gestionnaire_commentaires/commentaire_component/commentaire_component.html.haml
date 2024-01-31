@@ -3,7 +3,7 @@
     %span.mail
       = commentaire_issuer
 
-    %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal"] }
+    %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal", highlight_if_unseen_class], data: scroll_to_target }
       = commentaire_date
   .rich-text
     - if @commentaire.discarded?
