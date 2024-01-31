@@ -106,6 +106,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
         first_content == [
           { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }, # added by click above
+          { "type" => "text", "text" => " " },
           { "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } } # defaut initial content
         ]
       }

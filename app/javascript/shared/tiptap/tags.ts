@@ -88,6 +88,11 @@ class SuggestionMenu {
   }
 
   private render() {
+    if (this.#props.items.length == 0) {
+      this.#element?.remove();
+      return;
+    }
+
     this.#element ??= this.createMenu();
     const list = this.#element.firstChild as HTMLUListElement;
 
@@ -161,6 +166,7 @@ export function createSuggestionMenu(
 ): Omit<SuggestionOptions<TagSchema>, 'editor'> {
   return {
     char: '@',
+    allowedPrefixes: null,
     allowSpaces: true,
     items: ({ query }) => {
       return matchSorter(tags, query, { keys: ['label'] }).slice(0, 6);

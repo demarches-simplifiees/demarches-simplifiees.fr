@@ -11,7 +11,7 @@
     attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
     attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
 
-  #attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap' } }
+  #attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
     .fr-mb-6w
       = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur d’attestation", heading_level: 'h3') do |c|
         - c.with_body do
