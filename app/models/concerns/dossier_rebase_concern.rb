@@ -2,6 +2,7 @@ module DossierRebaseConcern
   extend ActiveSupport::Concern
 
   def rebase!(force: false)
+    ProcedureRevisionPreloader.new([procedure.published_revision, revision].compact).all
     return if procedure.published_revision.blank?
 
     if force || can_rebase?
@@ -57,7 +58,7 @@ module DossierRebaseConcern
       .tap { _1.default = [] }
 
     champs_by_stable_id = champs
-      .includes(:type_de_champ)
+      .joins(:type_de_champ)
       .group_by(&:stable_id)
       .transform_values { Champ.where(id: _1) }
       .tap { _1.default = Champ.none }
