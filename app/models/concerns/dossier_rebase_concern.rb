@@ -58,7 +58,7 @@ module DossierRebaseConcern
       .tap { _1.default = [] }
 
     champs_by_stable_id = champs
-      .joins(:type_de_champ)
+      .includes(:type_de_champ)
       .group_by(&:stable_id)
       .transform_values { Champ.where(id: _1) }
       .tap { _1.default = Champ.none }
