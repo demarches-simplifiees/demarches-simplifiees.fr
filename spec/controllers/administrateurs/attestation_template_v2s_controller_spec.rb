@@ -14,12 +14,12 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       activated: false,
       tiptap_body: {
         type: :doc,
-          content: [
-            {
-              type: :paragraph,
-              content: [{ text: "Yo from spec" }]
-            }
-          ]
+        content: [
+          {
+            type: :paragraph,
+            content: [{ text: "Yo from spec", type: :text }]
+          }
+        ]
       }.to_json
     }
   end
@@ -131,11 +131,13 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
     let(:attestation_template) { nil }
 
     subject do
-      post :create, params: { procedure_id: procedure.id, attestation_template: update_params }
+      post :create, params: { procedure_id: procedure.id, attestation_template: update_params }, format: :turbo_stream
       response.body
     end
 
     context 'when attestation template is valid' do
+      render_views
+
       it "create template" do
         subject
         attestation_template = procedure.reload.attestation_template
@@ -147,7 +149,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.activated).to eq(false)
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
-        expect(flash.notice).to be_present
+        expect(response.body).to include("Formulaire enregistré")
       end
 
       context "with files" do
@@ -165,8 +167,9 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   end
 
   describe 'PATCH update' do
+    render_views
     subject do
-      patch :update, params: { procedure_id: procedure.id, attestation_template: update_params }
+      patch :update, params: { procedure_id: procedure.id, attestation_template: update_params }, format: :turbo_stream
       response.body
     end
 
@@ -182,7 +185,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.activated).to eq(false)
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
-        expect(flash.notice).to be_present
+        expect(response.body).to include("Formulaire enregistré")
       end
 
       context "with files" do
@@ -194,6 +197,18 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
           expect(attestation_template.logo.download).to eq(logo.read)
           expect(attestation_template.signature.download).to eq(signature.read)
+        end
+      end
+
+      context 'with error' do
+        let(:update_params) do
+          super().merge(tiptap_body: { type: :doc, content: [{ type: :mention, attrs: { id: "tdc12", label: "oops" } }] }.to_json)
+        end
+
+        it "render error" do
+          subject
+          expect(response.body).to include("Formulaire en erreur")
+          expect(response.body).to include('Supprimer cette balise')
         end
       end
     end

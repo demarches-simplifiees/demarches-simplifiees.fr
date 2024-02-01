@@ -241,7 +241,7 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
         render_views
         let(:body) { "body --#{removed_type_de_champ.libelle}--" }
 
-        it { expect(response.body).to have_content("Le champ « Contenu de l’attestation » contient la balise \"#{removed_type_de_champ.libelle}\" qui a été supprimée mais la suppression n’est pas encore publiée. Publier la nouvelle version de la démarche et recommencer") }
+        it { expect(response.body).to have_content("Le champ « Contenu de l’attestation » contient la balise \"#{removed_type_de_champ.libelle}\" qui a été supprimée dans les modifications en cours du formulaire. Supprimer cette balise ou réinitialiser les modifications du formulaire puis recommencer") }
       end
 
       context 'with removed and published' do

@@ -7,7 +7,7 @@
 = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), html: { multipart: true },
   data: { turbo: 'true',
     controller: 'autosubmit attestation',
-    autosubmit_debounce_delay_value: 2000,
+    autosubmit_debounce_delay_value: 1000,
     attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
     attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
 
@@ -65,12 +65,17 @@
               - c.with_hint { "Exemple: Direction interministérielle du numérique. 2 lignes maximum" }
 
           .fr-fieldset__element.fr-mt-2w
-            %label.fr-label.fr-h4
-              = AttestationTemplate.human_attribute_name :body
-              = render EditableChamp::AsteriskMandatoryComponent.new
+            .fr-input-group{ class: class_names("fr-input-group--error" => f.object.errors.include?(:json_body)) }
+              %label.fr-label.fr-h4
+                = AttestationTemplate.human_attribute_name :body
+                = render EditableChamp::AsteriskMandatoryComponent.new
 
-            .editor{ data: { tiptap_target: 'editor' } }
-            = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
+              #editor.editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
+              = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
+
+              .fr-error-text{ id: dom_id(f.object, "json-body-messages"), class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
+                - if f.object.errors.include?(:json_body)
+                  = render partial: "shared/errors_list", locals: { object: f.object, attribute: :json_body }
 
           .fr-fieldset__element
             .flex.flex-gap-2
