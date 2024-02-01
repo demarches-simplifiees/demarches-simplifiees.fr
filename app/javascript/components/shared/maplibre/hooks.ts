@@ -26,6 +26,16 @@ export function useFitBounds() {
   );
 }
 
+export function useFitBoundsNoFly() {
+  const map = useMapLibre();
+  return useCallback(
+    (bbox: LngLatBoundsLike) => {
+      map.fitBounds(bbox, { padding: 100, linear: true, duration: 0 });
+    },
+    [map]
+  );
+}
+
 export function useFlyTo() {
   const map = useMapLibre();
   return useCallback(

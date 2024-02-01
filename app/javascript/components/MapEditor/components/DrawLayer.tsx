@@ -6,6 +6,7 @@ import type { FeatureCollection } from 'geojson';
 import { useMapLibre } from '../../shared/maplibre/MapLibre';
 import {
   useFitBounds,
+  useFitBoundsNoFly,
   useEvent,
   useMapEvent,
   useFlyTo
@@ -117,6 +118,7 @@ function useExternalEvents(
   }
 ) {
   const fitBounds = useFitBounds();
+  const fitBoundsNoFly = useFitBoundsNoFly();
   const flyTo = useFlyTo();
 
   const onFeatureFocus = useCallback(
@@ -184,10 +186,10 @@ function useExternalEvents(
   );
 
   useEffect(() => {
-    fitBounds(featureCollection.bbox as LngLatBoundsLike);
+    fitBoundsNoFly(featureCollection.bbox as LngLatBoundsLike);
     // We only want to zoom on bbox on component mount.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fitBounds]);
+  }, [fitBoundsNoFly]);
 
   useEvent('map:feature:focus', onFeatureFocus);
   useEvent('map:feature:create', onFeatureCreate);
