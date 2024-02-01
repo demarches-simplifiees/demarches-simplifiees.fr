@@ -90,6 +90,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       }
       expect(attestation.label_logo).to eq("System Test")
       expect(attestation.activated?).to be_falsey
+      expect(page).to have_content("Formulaire enregistré")
 
       click_on "date de décision"
 
@@ -125,6 +126,36 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       # footer is rows-limited
       fill_in "Contenu du pied de page", with: ["line1", "line2", "line3", "line4"].join("\n")
       expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3line4")
+    end
+
+    context "tag in error" do
+      before do
+        tdc = procedure.active_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
+        procedure.publish_revision!
+
+        attestation = procedure.build_attestation_template_v2(json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, label_logo: "test")
+        attestation.json_body["content"] << { type: :mention, attrs: { id: "tdc#{tdc.stable_id}", label: tdc.libelle } }
+        attestation.save!
+
+        procedure.draft_revision.remove_type_de_champ(tdc)
+      end
+
+      scenario do
+        visit edit_admin_procedure_attestation_template_v2_path(procedure)
+        expect(page).to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
+
+        click_on "date de décision"
+
+        expect(page).to have_content("Formulaire en erreur")
+        expect(page).to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
+
+        page.execute_script("document.getElementById('attestation_template_tiptap_body').type = 'text'")
+        fill_in "attestation_template[tiptap_body]", with: AttestationTemplate::TIPTAP_BODY_DEFAULT.to_json
+
+        expect(page).to have_content("Formulaire enregistré")
+        expect(page).not_to have_content("Formulaire en erreur")
+        expect(page).not_to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
+      end
     end
   end
 end

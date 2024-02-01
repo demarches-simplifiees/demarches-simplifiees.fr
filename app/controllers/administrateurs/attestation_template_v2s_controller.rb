@@ -52,6 +52,8 @@ module Administrateurs
           ['Redo', 'redo', 'arrow-go-forward-line']
         ]
       ]
+
+      @attestation_template.validate
     end
 
     def update
@@ -67,11 +69,14 @@ module Administrateurs
         attestation_params[:signature] = uninterlace_png(signature_file)
       end
 
-      @attestation_template.update!(attestation_params)
-      flash.notice = "Le modèle de l’attestation a été modifié"
+      if @attestation_template.update(attestation_params)
+        flash.notice = "Le modèle de l’attestation a été modifié"
+      else
+        flash.alert = "Le modèle de l’attestation contient des erreurs et n'a pas pu être enregistré. Corriger les erreurs."
+      end
 
       respond_to do |format|
-        format.turbo_stream
+        format.turbo_stream { render :update }
         format.html do
           redirect_to edit_admin_procedure_attestation_template_path(@procedure)
         end

@@ -251,8 +251,15 @@ module TagsSubstitutionConcern
     }.reject { |_, ary| ary.empty? }
   end
 
-  def used_type_de_champ_tags(text)
-    used_tags_and_libelle_for(text).filter_map do |(tag, libelle)|
+  def used_type_de_champ_tags(text_or_tiptap)
+    used_tags =
+      if text_or_tiptap.respond_to?(:deconstruct_keys) # hash pattern matching
+        TiptapService.new.used_tags_and_libelle_for(text_or_tiptap.deep_symbolize_keys)
+      else
+        used_tags_and_libelle_for(text_or_tiptap.to_s)
+      end
+
+    used_tags.filter_map do |(tag, libelle)|
       if tag.nil?
         [libelle]
       elsif !tag.in?(SHARED_TAG_IDS) && tag.start_with?('tdc')
@@ -265,11 +272,11 @@ module TagsSubstitutionConcern
     used_tags_and_libelle_for(text).map { _1.first.nil? ? _1.second : _1.first }
   end
 
-  def tags_substitutions(tokens, dossier, escape: true)
+  def tags_substitutions(tags_and_libelles, dossier, escape: true)
     # NOTE:
-    # - tokens est un simple Set d'ids (pas la même structure que dans replace_tags)
-    # - dans replace_tags, on fait référence à des tags avec ou sans id, mais pas ici,
-    #   a priori inutile car tiptap ne fait référence qu'aux ids.
+    # - tags_and_libelles est un simple Set de couples (tag_id, libelle) (pas la même structure que dans replace_tags)
+    # - dans `replace_tags`, on fait référence à des tags avec ou sans id, mais pas ici,
+    #   (inutile car tiptap ne référence que des ids)
 
     @escape_unsafe_tags = escape
 
@@ -283,12 +290,12 @@ module TagsSubstitutionConcern
       end
     end
 
-    tokens.index_with do |token|
-      case flat_tags[token]
+    tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
+      substitutions[tag_id] = case flat_tags[tag_id]
       in tag, data
         replace_tag(tag, data)
-      else
-        token
+      else # champ not in dossier, for example during preview on draft revision
+        libelle
       end
     end
   end

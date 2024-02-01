@@ -5,13 +5,14 @@ class TiptapService
     children(node[:content], substitutions, 0)
   end
 
-  def used_tags(node, tags = Set.new)
+  # NOTE: node must be deep symbolized keys
+  def used_tags_and_libelle_for(node, tags = Set.new)
     case node
-    in type: 'mention', attrs: { id: }
-      tags << id
-    in { content: } if content.is_a?(Array)
-      content.each { used_tags(_1, tags) }
-    else
+    in type: 'mention', attrs: { id:, label: }, **rest
+      tags << [id, label]
+    in { content:, **rest } if content.is_a?(Array)
+      content.each { used_tags_and_libelle_for(_1, tags) }
+    in type:, **rest
       # noop
     end
 

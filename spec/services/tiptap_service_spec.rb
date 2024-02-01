@@ -57,7 +57,7 @@ RSpec.describe TiptapService do
             },
             {
               type: 'mention',
-              attrs: { id: 'name' },
+              attrs: { id: 'name', label: 'Nom' },
               marks: [{ type: 'bold' }, { type: 'underline' }]
             },
             {
@@ -173,7 +173,7 @@ RSpec.describe TiptapService do
 
   describe '#used_tags' do
     it 'returns used tags' do
-      expect(described_class.new.used_tags(json)).to eq(Set.new(['name']))
+      expect(described_class.new.used_tags_and_libelle_for(json)).to eq(Set.new([['name', 'Nom']]))
     end
   end
 end

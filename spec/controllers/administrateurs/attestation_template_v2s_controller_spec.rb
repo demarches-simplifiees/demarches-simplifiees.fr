@@ -17,7 +17,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           content: [
             {
               type: :paragraph,
-              content: [{ text: "Yo from spec" }]
+              content: [{ text: "Yo from spec", type: :text }]
             }
           ]
       }.to_json
