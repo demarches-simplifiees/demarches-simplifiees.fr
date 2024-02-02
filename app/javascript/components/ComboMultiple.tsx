@@ -87,6 +87,7 @@ export default function ComboMultiple({
         : options.filter((o) => o).map((o) => [o, o]),
     [options]
   );
+
   const extraOptions = useMemo(
     () =>
       acceptNewValues &&
@@ -97,6 +98,15 @@ export default function ComboMultiple({
         : [],
     [acceptNewValues, term, optionsWithLabels, newValues]
   );
+
+  const extraListOptions = useMemo(
+    () =>
+      acceptNewValues && term && term.length > 2 && term.includes(';')
+        ? term.split(';').map((val) => [val.trim(), val.trim()])
+        : [],
+    [acceptNewValues, term]
+  );
+
   const results = useMemo(
     () =>
       [
@@ -129,12 +139,22 @@ export default function ComboMultiple({
     const maybeValue = [...extraOptions, ...optionsWithLabels].find(
       ([, val]) => val == value
     );
-    const selectedValue = maybeValue && maybeValue[1];
+
+    const maybeValueFromListOptions = extraListOptions.find(
+      ([, val]) => val == value
+    );
+
+    const selectedValue =
+      term.includes(';') && acceptNewValues
+        ? maybeValueFromListOptions && maybeValueFromListOptions[1]
+        : maybeValue && maybeValue[1];
+
     if (selectedValue) {
       if (
-        acceptNewValues &&
-        extraOptions[0] &&
-        extraOptions[0][0] == selectedValue
+        (acceptNewValues &&
+          extraOptions[0] &&
+          extraOptions[0][0] == selectedValue) ||
+        (acceptNewValues && extraListOptions[0])
       ) {
         setNewValues((newValues) => {
           const set = new Set(newValues);
@@ -172,7 +192,12 @@ export default function ComboMultiple({
       isHotkey(',', event) ||
       isHotkey(';', event)
     ) {
-      if (
+      if (term.includes(';')) {
+        for (const val of term.split(';')) {
+          event.preventDefault();
+          onSelect(val.trim());
+        }
+      } else if (
         term &&
         [...extraOptions, ...optionsWithLabels]
           .map(([label]) => label)
@@ -204,7 +229,11 @@ export default function ComboMultiple({
         .includes(term);
 
     awaitFormSubmit(() => {
-      if (shouldSelect) {
+      if (term.includes(';')) {
+        for (const val of term.split(';')) {
+          onSelect(val.trim());
+        }
+      } else if (shouldSelect) {
         onSelect(term);
       } else {
         hidePopover();
