@@ -138,12 +138,11 @@ function useExternalEvents(
 
   const onZoomFocus = useCallback(
     ({ detail }) => {
-      const { feature } = detail;
-      if (feature) {
-        flyTo(17, feature.geometry.coordinates);
+      if (detail.feature && detail.featureCollection == featureCollection) {
+        flyTo(17, detail.feature.geometry.coordinates);
       }
     },
-    [flyTo]
+    [flyTo, featureCollection]
   );
 
   const onFeatureCreate = useCallback(

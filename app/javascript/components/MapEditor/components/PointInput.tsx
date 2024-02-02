@@ -1,9 +1,13 @@
 import React, { useState, useId } from 'react';
 import { fire } from '@utils';
-import type { Feature } from 'geojson';
+import type { Feature, FeatureCollection } from 'geojson';
 import CoordinateInput from 'react-coordinate-input';
 
-export function PointInput() {
+export function PointInput({
+  featureCollection
+}: {
+  featureCollection: FeatureCollection;
+}) {
   const inputId = useId();
   const [value, setValue] = useState('');
   const [feature, setFeature] = useState<Feature | null>(null);
@@ -60,7 +64,7 @@ export function PointInput() {
                 properties: {}
               };
               setFeature(feature);
-              fire(document, 'map:zoom', { feature });
+              fire(document, 'map:zoom', { featureCollection, feature });
             } else {
               setFeature(null);
             }
