@@ -25,17 +25,12 @@ RSpec.describe TiptapService do
         },
         {
           type: 'heading',
-          attrs: { level: 1 },
-          content: [{ type: 'text', text: 'Heading 1' }]
-        },
-        {
-          type: 'heading',
           attrs: { level: 2, textAlign: 'center' },
           content: [{ type: 'text', text: 'Heading 2' }]
         },
         {
           type: 'heading',
-          attrs: { level: 3 },
+          attrs: { level: 3, textAlign: 'center' },
           content: [{ type: 'text', text: 'Heading 3' }]
         },
         {
@@ -155,10 +150,9 @@ RSpec.describe TiptapService do
       [
         '<header><div>Left</div><div>Right</div></header>',
         '<h1>Title</h1>',
-        '<h1>Heading 1</h1>',
-        '<h2 style="text-align: center">Heading 2</h2>',
-        '<h3>Heading 3</h3>',
-        '<p class="body-start" style="text-align: right">First paragraph</p>',
+        '<h2 class="body-start" style="text-align: center">Heading 2</h2>',
+        '<h3 style="text-align: center">Heading 3</h3>',
+        '<p style="text-align: right">First paragraph</p>',
         '<p><s><em>Bonjour </em></s><u><strong>Paul</strong></u> <mark>!</mark></p>',
         '<ul><li><p>Item 1</p></li><li><p>Item 2</p></li></ul>',
         '<ol><li><p>Item 1</p></li><li><p>Item 2</p></li></ol>',
@@ -168,6 +162,28 @@ RSpec.describe TiptapService do
 
     it 'returns html' do
       expect(described_class.new.to_html(json, substitutions)).to eq(html)
+    end
+
+    context 'body start on paragraph' do
+      let(:json) do
+        {
+          type: 'doc',
+          content: [
+            {
+              type: 'title',
+              content: [{ type: 'text', text: 'The Title' }]
+            },
+            {
+              type: 'paragraph',
+              content: [{ type: 'text', text: 'First paragraph' }]
+            }
+          ]
+        }
+      end
+
+      it 'defines stat body on first paragraph' do
+        expect(described_class.new.to_html(json, substitutions)).to eq("<h1>The Title</h1><p class=\"body-start\">First paragraph</p>")
+      end
     end
   end
 

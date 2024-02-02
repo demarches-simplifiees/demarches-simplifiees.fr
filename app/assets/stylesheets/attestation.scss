@@ -110,7 +110,7 @@
   }
 
   .body-start {
-    margin-top: 30mm;
+    margin-top: 12.6mm; // from masque traitement de texte
   }
 
   .main {
@@ -140,13 +140,13 @@
 
   h2 {
     margin: 0;
-    line-height: 6pt;
+    line-height: 8pt;
   }
 
   h3 {
-    font-size: 11pt;
-    font-weight: normal;
-    line-height: 3pt;
+    font-size: 10pt; // same as text
+    font-weight: bold;
+    line-height: 4pt;
   }
 
   li p {

@@ -30,7 +30,7 @@ class TiptapService
   end
 
   def node_to_html(node, substitutions, level)
-    if level == 0 && !@body_started && node[:type] == 'paragraph' && node.key?(:content)
+    if level == 0 && !@body_started && node[:type].in?(['paragraph', 'heading']) && node.key?(:content)
       @body_started = true
       body_start_mark = " class=\"body-start\""
     end
@@ -47,7 +47,7 @@ class TiptapService
     in type: 'title', content:, **rest
       "<h1#{text_align(rest[:attrs])}>#{children(content, substitutions, level + 1)}</h1>"
     in type: 'heading', attrs: { level: hlevel, **attrs }, content:
-      "<h#{hlevel}#{text_align(attrs)}>#{children(content, substitutions, level + 1)}</h#{hlevel}>"
+      "<h#{hlevel}#{body_start_mark}#{text_align(attrs)}>#{children(content, substitutions, level + 1)}</h#{hlevel}>"
     in type: 'bulletList', content:
       "<ul>#{children(content, substitutions, level + 1)}</ul>"
     in type: 'orderedList', content:
