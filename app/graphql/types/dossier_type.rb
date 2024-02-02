@@ -70,6 +70,7 @@ module Types
       argument :id, ID, required: false
     end
     field :traitements, [Types::TraitementType], null: false
+    field :corrections, [Types::CorrectionType], null: false
 
     def state
       object.state
