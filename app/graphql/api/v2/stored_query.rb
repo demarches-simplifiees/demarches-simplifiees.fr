@@ -333,6 +333,10 @@ class API::V2::StoredQuery
     messages @include(if: $includeMessages) {
       ...MessageFragment
     }
+    corrections @include(if: $includeCorrections) {
+      reason
+      dateResolution
+    }
   }
 
   fragment DemarcheDescriptorFragment on DemarcheDescriptor {
