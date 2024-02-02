@@ -16,7 +16,8 @@ class UserDashboard < Administrate::BaseDashboard
     blocked_at: Field::DateTime,
     blocked_reason: Field::String,
     current_sign_in_at: Field::DateTime,
-    dossiers: Field::HasMany
+    dossiers: Field::HasMany,
+    dossiers_invites: Field::HasMany
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -34,6 +35,7 @@ class UserDashboard < Administrate::BaseDashboard
   # an array of attributes that will be displayed on the model's show page.
   SHOW_PAGE_ATTRIBUTES = [
     :dossiers,
+    :dossiers_invites,
     :id,
     :email,
     :confirmed?,
