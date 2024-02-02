@@ -7,16 +7,18 @@ module Gestionnaires
     end
 
     def show
-      @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @last_commentaire.sender)
+      @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
       @commentaire = CommentaireGroupeGestionnaire.new
-      current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @last_commentaire.sender)
+      current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
     end
 
     def create
-      @commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender: @last_commentaire.sender, gestionnaire: current_gestionnaire))
+      @commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type, gestionnaire: current_gestionnaire))
 
       if @commentaire.errors.empty?
+        GroupeGestionnaireMailer.notify_new_commentaire_groupe_gestionnaire(@groupe_gestionnaire, @commentaire, current_gestionnaire.email, @commentaire.sender_email, admin_groupe_gestionnaire_commentaires_path).deliver_later
         flash.notice = "Message envoyé"
+        current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @commentaire.sender_id, @commentaire.sender_type)
         redirect_to gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire)
       else
         flash.alert = @commentaire.errors.full_messages
@@ -27,6 +29,7 @@ module Gestionnaires
     def destroy
       if @last_commentaire.soft_deletable?(current_gestionnaire)
         @last_commentaire.soft_delete!
+        @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @last_commentaire.sender_id, @last_commentaire.sender_type)
 
         flash.notice = t('.notice')
       else

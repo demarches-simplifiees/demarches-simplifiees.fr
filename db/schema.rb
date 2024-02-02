@@ -61,6 +61,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   end
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
+    t.datetime "commentaire_seen_at"
     t.datetime "created_at", precision: nil
     t.bigint "groupe_gestionnaire_id"
     t.datetime "updated_at", precision: nil
@@ -97,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
     t.date "expiration_notices_sent_at", default: [], array: true
+    t.date "expires_at"
     t.datetime "last_v1_authenticated_at"
     t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
@@ -104,7 +106,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false
     t.boolean "write_access", default: true, null: false
-    t.date "expires_at"
     t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
   end
 
@@ -266,15 +267,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
 
   create_table "commentaire_groupe_gestionnaires", force: :cascade do |t|
     t.string "body"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "discarded_at", precision: 6
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at", precision: nil
     t.string "gestionnaire_email"
     t.bigint "gestionnaire_id"
     t.bigint "groupe_gestionnaire_id"
     t.string "sender_email"
     t.bigint "sender_id", null: false
     t.string "sender_type", null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "updated_at", null: false
     t.index ["gestionnaire_id"], name: "index_commentaire_groupe_gestionnaires_on_gestionnaire_id"
     t.index ["groupe_gestionnaire_id"], name: "index_commentaire_groupe_gestionnaires_on_groupe_gestionnaire"
   end
@@ -414,8 +415,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   create_table "dossier_transfers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
-    t.datetime "updated_at", null: false
     t.boolean "from_support", default: false, null: false
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_dossier_transfers_on_email"
   end
 
@@ -610,14 +611,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   end
 
   create_table "follow_commentaire_groupe_gestionnaires", force: :cascade do |t|
-    t.datetime "commentaire_seen_at", precision: 6
-    t.datetime "created_at", precision: 6, null: false
+    t.datetime "commentaire_seen_at", precision: nil
+    t.datetime "created_at", null: false
     t.bigint "gestionnaire_id", null: false
     t.bigint "groupe_gestionnaire_id"
     t.bigint "sender_id"
     t.string "sender_type"
-    t.datetime "unfollowed_at", precision: 6, precision: nil
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "unfollowed_at", precision: nil
+    t.datetime "updated_at", null: false
     t.index ["gestionnaire_id", "groupe_gestionnaire_id", "sender_id", "sender_type", "unfollowed_at"], name: "index_follow_commentaire_on_groupe_gestionnaire_unfollow", unique: true
     t.index ["gestionnaire_id"], name: "index_follow_commentaire_on_gestionnaire"
     t.index ["groupe_gestionnaire_id"], name: "index_follow_commentaire_on_groupe_gestionnaire"

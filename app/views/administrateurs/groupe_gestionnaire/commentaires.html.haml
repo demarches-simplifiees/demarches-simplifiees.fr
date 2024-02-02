@@ -9,5 +9,5 @@
     %ul.messages-list{ data: { controller: 'scroll-to' } }
       - current_administrateur.commentaire_groupe_gestionnaires.where(groupe_gestionnaire: @groupe_gestionnaire).each do |commentaire|
         %li.message{ class: commentaire_is_from_me_class(commentaire, current_administrateur), id: dom_id(commentaire) }
-          = render(GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent.new(commentaire: commentaire, connected_user: current_administrateur, is_gestionnaire: false))
+          = render(GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent.new(commentaire: commentaire, connected_user: current_administrateur, is_gestionnaire: false, commentaire_seen_at: @commentaire_seen_at))
   = render partial: "shared/groupe_gestionnaires/commentaires/form", locals: { commentaire: @commentaire, form_url: admin_groupe_gestionnaire_create_commentaire_path }
