@@ -25,7 +25,7 @@ export class VisaController extends ApplicationController {
     while ((element = element?.previousElementSibling) != null) {
       if (this.isTitle(element)) {
         if (this.isSubTitle(element)) {
-          element = element.parentElement;
+          element = element.parentElement?.parentElement;
         }
       } else {
         // champ
