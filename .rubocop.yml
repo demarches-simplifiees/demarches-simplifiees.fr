@@ -803,6 +803,8 @@ Rails/FindById:
 
 Rails/FindEach:
   Enabled: true
+  Exclude:
+    - spec/**/*
 
 Rails/FreezeTime:
   Enabled: true
