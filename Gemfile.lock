@@ -230,7 +230,7 @@ GEM
       tzinfo
     ethon (0.16.0)
       ffi (>= 1.15.0)
-    excon (0.102.0)
+    excon (0.109.0)
     factory_bot (6.4.6)
       activesupport (>= 5.0.0)
     ffi (1.16.3)
