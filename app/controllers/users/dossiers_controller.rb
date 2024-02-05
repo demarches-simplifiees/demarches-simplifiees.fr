@@ -58,7 +58,7 @@ module Users
       @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
       @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(ordered_dossiers)
-      @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email).ids)
+      @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
       @dossiers_supprimes_definitivement = deleted_dossiers
 
