@@ -496,8 +496,9 @@ GEM
       httpclient
       json-jwt (>= 1.11.0)
       rack (>= 2.1.0)
-    rack-protection (3.0.5)
-      rack
+    rack-protection (3.2.0)
+      base64 (>= 0.1.0)
+      rack (~> 2.2, >= 2.2.4)
     rack-proxy (0.7.7)
       rack
     rack-test (2.1.0)
@@ -697,10 +698,10 @@ GEM
       rubyzip
     simpleidn (0.2.1)
       unf (~> 0.1.4)
-    sinatra (3.0.5)
+    sinatra (3.2.0)
       mustermann (~> 3.0)
       rack (~> 2.2, >= 2.2.4)
-      rack-protection (= 3.0.5)
+      rack-protection (= 3.2.0)
       tilt (~> 2.0)
     skylight (6.0.3)
       activesupport (>= 5.2.0)
