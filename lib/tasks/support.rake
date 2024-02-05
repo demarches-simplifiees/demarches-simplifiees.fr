@@ -28,7 +28,7 @@ namespace :support do
     fail "Must specify a USER_EMAIL" if user_email.nil?
 
     administrateur = Administrateur.joins(:user).where(user: { email: user_email }).first
-    AdministrateursProcedure.where(administrateur: administrateur).each do |administrateur_procedure|
+    AdministrateursProcedure.where(administrateur: administrateur).find_each do |administrateur_procedure|
       procedure = administrateur_procedure.procedure
       if procedure.administrateurs.count > 1
         begin
