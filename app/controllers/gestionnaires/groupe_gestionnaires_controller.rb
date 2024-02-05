@@ -1,6 +1,6 @@
 module Gestionnaires
   class GroupeGestionnairesController < GestionnaireController
-    before_action :retrieve_groupe_gestionnaire, only: [:show, :edit, :update, :destroy]
+    before_action :retrieve_groupe_gestionnaire, only: [:show, :edit, :update, :destroy, :tree_structure]
 
     def index
       @groupe_gestionnaires = groupe_gestionnaires
@@ -34,6 +34,10 @@ module Gestionnaires
         flash[:notice] = "Le groupe #{@groupe_gestionnaire.id} est supprimé"
       end
       redirect_to gestionnaire_groupe_gestionnaires_path
+    end
+
+    def tree_structure
+      @tree_structure = @groupe_gestionnaire.subtree.arrange
     end
 
     private
