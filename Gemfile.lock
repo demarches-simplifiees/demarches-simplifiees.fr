@@ -285,7 +285,7 @@ GEM
       thor (>= 0.19, < 2.0)
     groupdate (6.4.0)
       activesupport (>= 6.1)
-    haml (6.0.5)
+    haml (6.0.12)
       temple (>= 0.8.2)
       thor
       tilt
@@ -727,7 +727,7 @@ GEM
       attr_required (>= 0.0.5)
       httpclient (>= 2.4)
     sysexits (1.2.0)
-    temple (0.8.2)
+    temple (0.10.3)
     terminal-table (3.0.2)
       unicode-display_width (>= 1.1.1, < 3)
     thor (1.3.0)
