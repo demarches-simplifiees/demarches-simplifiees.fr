@@ -6,7 +6,7 @@ namespace :superadmin do
   EOD
   task list: :environment do
     rake_puts "All SuperAdmins:"
-    SuperAdmin.all.pluck(:email).each do |a|
+    SuperAdmin.pluck(:email).each do |a|
       puts a
     end
   end

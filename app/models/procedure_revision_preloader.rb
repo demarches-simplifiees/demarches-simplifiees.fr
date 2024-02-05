@@ -9,7 +9,7 @@ class ProcedureRevisionPreloader
   end
 
   def self.load_one(revision)
-    ProcedureRevisionPreloader.new([revision]).all.first
+    ProcedureRevisionPreloader.new([revision]).all.first # rubocop:disable Rails/RedundantActiveRecordAllMethod
   end
 
   private
