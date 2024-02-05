@@ -20,7 +20,7 @@ namespace :after_party do
       user.reload
       # rubocop:enable DS/Unscoped
       # rubocop:enable Rails/PluckInWhere
-      Avis.where(claimant: instructeur).each do |avis|
+      Avis.where(claimant: instructeur).find_each do |avis|
         experts_procedure = ExpertsProcedure.find_or_create_by(expert: user.expert, procedure: avis.procedure)
         avis.update_column(:experts_procedure_id, experts_procedure.id)
       end

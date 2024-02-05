@@ -6,6 +6,6 @@ class Cron::AdministrateurActivateBeforeExpirationJob < Cron::CronJob
       .includes(:user)
       .inactive
       .where(created_at: 3.days.ago.all_day)
-      .each { |a| a.user.remind_invitation! }
+      .find_each { |a| a.user.remind_invitation! }
   end
 end

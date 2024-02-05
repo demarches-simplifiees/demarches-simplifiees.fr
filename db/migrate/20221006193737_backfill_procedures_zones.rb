@@ -1,7 +1,7 @@
 class BackfillProceduresZones < ActiveRecord::Migration[6.1]
   def up
     # rubocop:disable DS/Unscoped
-    Procedure.unscoped.each do |procedure|
+    Procedure.unscoped.find_each do |procedure|
       procedure.zones << procedure.zone if procedure.zone
     end
     # rubocop:enable DS/Unscoped
@@ -9,7 +9,7 @@ class BackfillProceduresZones < ActiveRecord::Migration[6.1]
 
   def down
     # rubocop:disable DS/Unscoped
-    Procedure.unscoped.each do |procedure|
+    Procedure.unscoped.find_each do |procedure|
       procedure.zones.destroy_all
     end
     # rubocop:enable DS/Unscoped
