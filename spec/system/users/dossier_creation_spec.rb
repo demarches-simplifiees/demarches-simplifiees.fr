@@ -57,7 +57,7 @@ describe 'Creating a new dossier:', js: true do
 
       context 'when individual fill dossier for a tiers' do
         it 'completes the form with email notification method selected' do
-          find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant...').click
+          find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant, professionnel en charge du suivi du dossier…').click
 
           within('.mandataire-infos') do
             fill_in('Prénom', with: 'John')
@@ -79,7 +79,7 @@ describe 'Creating a new dossier:', js: true do
         end
 
         it 'completes the form with no notification method selected' do
-          find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant...').click
+          find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant, professionnel en charge du suivi du dossier…').click
 
           within('.mandataire-infos') do
             fill_in('Prénom', with: 'John')
