@@ -132,8 +132,8 @@ ignore_unused:
 # - 'activerecord.attributes.*'
 
 ## Ignore these keys completely:
-# ignore:
-#  - kaminari.*
+ignore:
+- 'shared.champs.drop_down_list{,.other}' # pluralization "other" false positive
 
 ## Sometimes, it isn't possible for i18n-tasks to match the key correctly,
 ## e.g. in case of a relative key defined in a helper method.
