@@ -63,6 +63,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::DepartementChampType,
     Types::Champs::DossierLinkChampType,
     Types::Champs::EpciChampType,
+    Types::Champs::RNAChampType,
     Types::Champs::RNFChampType,
     Types::Champs::IntegerNumberChampType,
     Types::Champs::LinkedDropDownListChampType,
