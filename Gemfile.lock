@@ -113,7 +113,7 @@ GEM
       activerecord (>= 5.2.6)
     anchored (1.1.0)
     ast (2.4.2)
-    attr_required (1.0.1)
+    attr_required (1.0.2)
     axe-core-api (4.8.1)
       dumb_delegator
       virtus
