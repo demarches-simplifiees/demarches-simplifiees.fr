@@ -1,7 +1,7 @@
 @import "constants";
 
 [data-reach-combobox-token-label] {
-  border: 1px solid #CCCCCC;
+  border: 1px solid #cccccc;
   border-radius: 4px;
   display: flex;
   flex-wrap: wrap;
@@ -21,7 +21,7 @@
 }
 
 .form [data-reach-combobox-token] button {
-  border: solid 1px #CCCCCC;
+  border: solid 1px #cccccc;
   background-color: transparent;
   border-radius: 4px;
   padding: 8px;
@@ -52,6 +52,22 @@
 }
 
 .manager-mandatory {
-  color: #A10005;
+  color: #a10005;
   font-size: 18px;
+}
+
+.main-content {
+  &__header {
+    .button_to {
+      display: inline;
+    }
+
+    .buttons {
+      text-align: right;
+    }
+
+    .button {
+      margin-bottom: 4px;
+    }
+  }
 }
