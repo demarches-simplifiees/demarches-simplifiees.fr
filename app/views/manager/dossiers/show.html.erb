@@ -19,7 +19,7 @@ as well as a link to its edit page.
 <% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
 <% dossier = page.resource %>
 
-<header class="main-content__header" role="banner">
+<header class="main-content__header">
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
     <% if dossier.hidden_for_administration? && !dossier.brouillon? %>
@@ -31,7 +31,7 @@ as well as a link to its edit page.
       "Transférer le dossier",
       [:transfer_edit, namespace, page.resource],
       class: "button",
-    ) if valid_action? :transfer_edit %>
+    ) if accessible_action?(page.resource, :transfer_edit) %>
   </div>
 </header>
 
@@ -45,17 +45,26 @@ as well as a link to its edit page.
       </p>
     <% end %>
   </div>
-  <dl>
-    <% page.attributes.each do |attribute| %>
-      <dt class="attribute-label" id="<%= attribute.name %>">
-      <%= t(
-        "helpers.label.#{resource_name}.#{attribute.name}",
-        default: attribute.name.titleize,
-      ) %>
-      </dt>
 
-      <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
-          ><%= render_field attribute, page: page %></dd>
+  <dl>
+    <% page.attributes.each do |title, attributes| %>
+      <fieldset class="<%= "field-unit--nested" if title.present? %>">
+        <% if title.present? %>
+          <legend><%= t "helpers.label.#{page.resource_name}.#{title}", default: title %></legend>
+        <% end %>
+
+        <% attributes.each do |attribute| %>
+          <dt class="attribute-label" id="<%= attribute.name %>">
+          <%= t(
+            "helpers.label.#{resource_name}.#{attribute.name}",
+            default: page.resource.class.human_attribute_name(attribute.name),
+          ) %>
+          </dt>
+
+          <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
+              ><%= render_field attribute, page: page %></dd>
+        <% end %>
+      </fieldset>
     <% end %>
   </dl>
 </section>

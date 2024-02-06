@@ -40,7 +40,8 @@ It renders the `_table` partial to display details about the resources.
     resources: resources,
     table_title: "page-title"
   ) %>
-  <%= render("pagination", resources: resources) %>
+
+<%= render "pagination", resources: resources %>
 </section>
 
-<%= render("index_footer") %>
+<%= render("index_footer") %><%# our footer %>

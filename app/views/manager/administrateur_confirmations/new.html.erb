@@ -1,9 +1,13 @@
 <% content_for(:title) { "Confirmation d'ajout d'un administrateur" } %>
 
-<header class="main-content__header" role="banner">
+<header class="main-content__header">
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
   </h1>
+
+  <div>
+    <%= link_to t("administrate.actions.back"), :back, class: "button" %>
+  </div>
 </header>
 
 <section class="main-content__body">
