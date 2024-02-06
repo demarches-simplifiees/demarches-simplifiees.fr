@@ -3,7 +3,7 @@ import { Node, mergeAttributes } from '@tiptap/core';
 export const DocumentWithHeader = Node.create({
   name: 'doc',
   topNode: true,
-  content: 'header title block+ footer'
+  content: 'header title block+'
 });
 
 export const Title = Node.create({
@@ -31,28 +31,15 @@ export const Header = Node.create({
   renderHTML({ HTMLAttributes }) {
     return [
       'header',
-      mergeAttributes(HTMLAttributes, { class: 'header flex' }),
+      mergeAttributes(HTMLAttributes, { class: 'header flex flex-gap-1' }),
       0
     ];
   }
 });
 
-export const Footer = Node.create({
-  name: 'footer',
-  content: 'paragraph+',
-  defining: true,
-
-  parseHTML() {
-    return [{ tag: `footer` }];
-  },
-  renderHTML({ HTMLAttributes }) {
-    return ['footer', mergeAttributes(HTMLAttributes, { class: 'footer' }), 0];
-  }
-});
-
 export const HeaderColumn = Node.create({
   name: 'headerColumn',
-  content: 'paragraph',
+  content: 'paragraph{1,2}',
   defining: true,
 
   parseHTML() {

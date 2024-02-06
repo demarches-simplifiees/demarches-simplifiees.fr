@@ -9,11 +9,15 @@ import { createEditor } from '../shared/tiptap/editor';
 
 export class TiptapController extends ApplicationController {
   static targets = ['editor', 'input', 'button', 'tag'];
+  static values = {
+    insertAfterTag: { type: String, default: '' }
+  };
 
   declare editorTarget: Element;
   declare inputTarget: HTMLInputElement;
   declare buttonTargets: HTMLButtonElement[];
   declare tagTargets: HTMLElement[];
+  declare insertAfterTagValue: string;
 
   #initializing = true;
   #editor?: Editor;
@@ -58,11 +62,15 @@ export class TiptapController extends ApplicationController {
   insertTag(event: MouseEvent) {
     if (this.#editor && isHTMLElement(event.target)) {
       const tag = tagSchema.parse(event.target.dataset);
-      this.#editor
+      const editor = this.#editor
         .chain()
         .focus()
-        .insertContent({ type: 'mention', attrs: tag })
-        .run();
+        .insertContent({ type: 'mention', attrs: tag });
+
+      if (this.insertAfterTagValue != '') {
+        editor.insertContent({ type: 'text', text: this.insertAfterTagValue });
+      }
+      editor.run();
     }
   }
 

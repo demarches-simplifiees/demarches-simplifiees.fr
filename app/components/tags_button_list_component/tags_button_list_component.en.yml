@@ -1,0 +1,8 @@
+---
+en:
+  categories:
+    individual: Identity
+    etablissement: Establishment
+    dossier: File
+    champ_public: Form data
+    champ_private: Private annotations

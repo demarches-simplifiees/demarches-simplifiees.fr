@@ -53,3 +53,4 @@ fr:
         submit: Publier
     autosave_notice:
       form_saved: "Formulaire enregistré"
+      form_error: "Formulaire en erreur"

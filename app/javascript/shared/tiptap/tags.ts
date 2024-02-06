@@ -84,34 +84,55 @@ class SuggestionMenu {
   destroy() {
     this.#popup?.destroy();
     this.#element?.remove();
+    this.#element?.removeEventListener('click', this.handleItemClick);
   }
 
   private render() {
+    if (this.#props.items.length == 0) {
+      this.#element?.remove();
+      return;
+    }
+
     this.#element ??= this.createMenu();
     const list = this.#element.firstChild as HTMLUListElement;
 
     const html = this.#props.items
       .map((item, i) => {
-        return `<li class="fr-badge fr-badge--sm fr-badge--no-icon${
-          i == this.#selectedIndex ? ' fr-badge--info' : ''
-        }">${item.label}</li>`;
+        return `<li><button class="fr-tag fr-tag--sm" aria-pressed="${
+          i == this.#selectedIndex ? 'true' : 'false'
+        }" data-tag-index="${i}">${item.label}</button></li>`;
       })
       .join('');
 
-    this.#element.classList.add('fr-menu__list');
-    list.innerHTML = html;
+    const hint =
+      '<li><span class="fr-hint-text">Tapez le nom d’une balise, naviguez avec les flèches, validez avec Entrée ou en cliquant sur la balise.</span></li>';
+    list.innerHTML = hint + html;
     list.querySelector<HTMLElement>('.selected')?.focus();
   }
 
   private createMenu() {
     const menu = document.createElement('div');
-    const list = document.createElement('ul');
     menu.classList.add('fr-menu');
-    list.classList.add('fr-menu__list');
+
+    const list = document.createElement('ul');
+    list.classList.add('fr-menu__list', 'fr-tag-list', 'list-style-type-none');
+
     menu.appendChild(list);
+
+    menu.addEventListener('click', this.handleItemClick);
 
     return menu;
   }
+
+  private handleItemClick = (event: Event) => {
+    const target = event.target as HTMLElement;
+    if (!target || target.dataset.tagIndex === undefined) {
+      return;
+    }
+
+    this.#props.command(this.#props.items[Number(target.dataset.tagIndex)]);
+    this.#popup?.hide();
+  };
 
   private up() {
     this.#selectedIndex =
@@ -145,6 +166,8 @@ export function createSuggestionMenu(
 ): Omit<SuggestionOptions<TagSchema>, 'editor'> {
   return {
     char: '@',
+    allowedPrefixes: null,
+    allowSpaces: true,
     items: ({ query }) => {
       return matchSorter(tags, query, { keys: ['label'] }).slice(0, 6);
     },

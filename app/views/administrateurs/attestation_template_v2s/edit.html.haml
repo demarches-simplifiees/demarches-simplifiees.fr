@@ -1,16 +1,134 @@
-#attestation-edit.fr-container.mt-2{ data: { controller: 'tiptap' } }
-  = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), data: { turbo: 'true', controller: 'autosubmit' } do |form|
-    .flex.flex-gap-2
-      - @buttons.each do |buttons|
-        .flex.flex-gap-1
-          - buttons.each do |(label, action, icon)|
-            %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
-              = label
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Attestation']] }
 
-    .editor.mt-2{ data: { tiptap_target: 'editor' } }
-    = form.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
+= render NestedForms::FormOwnerComponent.new
+= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), html: { multipart: true },
+  data: { turbo: 'true',
+    controller: 'autosubmit attestation',
+    autosubmit_debounce_delay_value: 1000,
+    attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
+    attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
 
-    %ul.mt-2.flex.wrap.flex-gap-1
-      - @attestation_template.tags.each do |tag|
-        %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
-          = tag[:libelle]
+  #attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
+    .fr-mb-6w
+      = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur d’attestation", heading_level: 'h3') do |c|
+        - c.with_body do
+          Cette page permet la mise en forme de l’attestation avec un nouvel éditeur plus flexible
+          tout en respectant la charte de l’état. Essayez-la et donnez-nous votre avis
+          en nous envoyant un email à #{mail_to(CONTACT_EMAIL, subject: "Feedback attestation v2")}.
+          %br
+          %strong Les attestations délivrées suivent encore l’ancien format :
+          l’activation des attestations basées sur ce format sera bientôt disponible.
+          %br
+
+          = link_to("Suivez ce lien pour revenir aux attestations actuellement délivrées", edit_admin_procedure_attestation_template_path(@procedure))
+
+    .fr-grid-row.fr-grid-row--gutters
+      .fr-col-12.fr-col-md-8
+        %fieldset.fr-fieldset{ aria: { labelledby: 'edit-attestation' } }
+          %legend.fr-fieldset__legend#edit-attestation
+            %h1.fr-h2 Attestation
+            %p.fr-text--regular
+              L’attestation est émise au moment où un dossier est accepté, elle est jointe à l’email d’accusé d’acceptation.
+              Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
+
+          .fr-fieldset__element
+            %h2.fr-h4 En-tête
+
+          .fr-fieldset__element
+            .fr-toggle
+              = f.check_box :official_layout, class: "fr-toggle-input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
+              %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
+                Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
+
+          .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_logo, input_type: :text_area, required: @attestation_template.official_layout?, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
+              - c.with_hint { "Exemple: Ministère de la Mer. 3 lignes maximum" }
+
+          .fr-fieldset__element{ data: { attestation_target: 'logoAttachmentFieldset' } }
+            %label.fr-label{ for: field_id(@attestation_template, :logo) }
+              - if @attestation_template.official_layout?
+                = AttestationTemplate.human_attribute_name(:logo_additional)
+              - else
+                = AttestationTemplate.human_attribute_name(:logo)
+
+            %span.fr-hint-text
+              Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
+
+            %div{ id: dom_id(@attestation_template, :logo_attachment) }
+              = render Attachment::EditComponent.new(attached_file: @attestation_template.logo, direct_upload: false)
+
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :label_direction, input_type: :text_area, required: false, opts: { rows: 2, data: { controller: :textarea, textarea_max_rows_value: 2 } }) do |c|
+              - c.with_hint { "Exemple: Direction interministérielle du numérique. 2 lignes maximum" }
+
+          .fr-fieldset__element.fr-mt-2w
+            .fr-input-group{ class: class_names("fr-input-group--error" => f.object.errors.include?(:json_body)) }
+              %label.fr-label.fr-h4
+                = AttestationTemplate.human_attribute_name :body
+                = render EditableChamp::AsteriskMandatoryComponent.new
+
+              #editor.editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
+              = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
+
+              .fr-error-text{ id: dom_id(f.object, "json-body-messages"), class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
+                - if f.object.errors.include?(:json_body)
+                  = render partial: "shared/errors_list", locals: { object: f.object, attribute: :json_body }
+
+          .fr-fieldset__element
+            .flex.flex-gap-2
+              - @buttons.each do |buttons|
+                .flex.flex-gap-1
+                  - buttons.each do |(label, action, icon)|
+                    %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
+                      = label
+
+          .fr-fieldset__element
+            %p.fr-hint-text
+              Tapez le caractère
+              %strong.fr-text-title--grey @
+              suivi du nom de la balise, ou cliquez sur les boutons ci-dessous. Les champs conditionnés ne sont pas disponibles.
+
+            = render TagsButtonListComponent.new(tags: @attestation_template.tags_categorized)
+
+          .fr-fieldset__element.fr-mt-2w
+            %h2.fr-h4 Pied de page
+
+          .fr-fieldset__element
+            %label.fr-label{ for: field_id(@attestation_template, :signature) } Tampon ou signature
+            %span.fr-hint-text
+              Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
+
+            %div{ id: dom_id(@attestation_template, :signature_attachment) }
+              = render Attachment::EditComponent.new(attached_file: @attestation_template.signature, direct_upload: false)
+
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
+              - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
+
+      .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+        = image_tag("attestation-template-schema-official.jpg", class: "attestation-schema", alt: "Schéma d’une attestation au modèle de l’état")
+
+
+  .padded-fixed-footer
+    .fixed-footer
+      .fr-container
+        .fr-grid-row
+          .fr-col-12.fr-col-md-7
+            %ul.fr-btns-group.fr-btns-group--inline-md
+              %li
+                = link_to 'Prévisualiser l’attestation PDF', admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), class: 'fr-btn fr-btn', target: '_blank', rel: 'noopener'
+              %li
+                = link_to admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary' do
+                  %span.fr-icon-arrow-go-back-line.fr-icon--sm.fr-mr-1v
+                  Revenir à la démarche
+
+          .fr-col-12.fr-col-md-5
+            -# .fr-toggle
+            -#   = f.check_box :activated, class: "fr-toggle-input", disabled: true, id: dom_id(@attestation_template, :activated)
+            -#   %label.fr-toggle__label{ for: dom_id(@attestation_template, :activated), data: { fr_checked_label: "Attestation activée", fr_unchecked_label: "Attestation désactivée" } }
+            .text-right
+              %span#autosave-notice
+              %p.fr-hint-text L’activation de cette attestation sera bientôt disponible.

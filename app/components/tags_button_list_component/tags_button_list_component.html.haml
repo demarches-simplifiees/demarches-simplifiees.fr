@@ -1,0 +1,9 @@
+- tags.each_pair do |category, tags|
+  %p.fr-label.fr-text--sm.fr-text--bold.fr-mb-1w= t(category, scope: ".categories")
+  %ul.fr-tags-group
+    - tags.each do |tag|
+      %li
+        - label = button_label(tag)
+        %button.fr-tag.fr-tag--sm{ type: "button", title: button_title(tag), data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: label } }
+          = label
+
