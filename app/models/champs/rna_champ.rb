@@ -2,7 +2,7 @@ class Champs::RNAChamp < Champ
   include RNAChampAssociationFetchableConcern
 
   validates :value, allow_blank: true, format: {
-    with: /\AW[0-9]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
+    with: /\AW[0-9A-Z]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
   }, if: :validate_champ_value?
 
   delegate :id, to: :procedure, prefix: true
