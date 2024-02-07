@@ -85,7 +85,7 @@ module DossierCloneConcern
       .transform_values { [_1, _1.clone(fork)] }
 
     cloned_dossier = deep_clone(only: dossier_attributes, include: relationships) do |original, kopy|
-      PiecesJustificativesService.clone_attachments(original, kopy)
+      ClonePiecesJustificativesService.clone_attachments(original, kopy)
 
       if original.is_a?(Dossier)
         if fork

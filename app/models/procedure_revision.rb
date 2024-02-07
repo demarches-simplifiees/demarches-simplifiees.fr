@@ -414,7 +414,7 @@ class ProcedureRevision < ApplicationRecord
 
   def replace_type_de_champ_by_clone(coordinate)
     cloned_type_de_champ = coordinate.type_de_champ.deep_clone do |original, kopy|
-      PiecesJustificativesService.clone_attachments(original, kopy)
+      ClonePiecesJustificativesService.clone_attachments(original, kopy)
     end
     coordinate.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ
