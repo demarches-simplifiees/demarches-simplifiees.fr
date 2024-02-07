@@ -35,7 +35,7 @@ fr:
       api_doc:
         label: "Documentation de l’API"
         title: "Documentation graphql de l’API"
-        url: "https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/graphql"
+        url: "https://doc.demarches-simplifiees.fr/api-graphql"
       dinum:
         title: "Le site de la DINUM — Gouvernement"
         url: "https://www.numerique.gouv.fr/dinum/"
