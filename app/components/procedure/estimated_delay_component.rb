@@ -11,6 +11,7 @@ class Procedure::EstimatedDelayComponent < ApplicationComponent
   end
 
   def render?
+    return false if @procedure.declarative?
     estimation_present?
   end
 
