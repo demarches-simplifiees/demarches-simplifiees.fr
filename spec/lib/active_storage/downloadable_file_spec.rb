@@ -1,7 +1,8 @@
 describe ActiveStorage::DownloadableFile do
   let(:dossier) { create(:dossier, :en_construction) }
-
-  subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id), with_bills: true, with_champs_private: true) }
+  let(:user_profile) { create(:administrateur) }
+  let(:dossiers) { Dossier.where(id: dossier.id) }
+  subject(:list) { ActiveStorage::DownloadableFile.create_list_from_dossiers(user_profile:, dossiers:) }
 
   describe 'create_list_from_dossiers' do
     context 'when no piece_justificative is present' do

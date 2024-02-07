@@ -910,7 +910,7 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(assigns(:include_infos_administration)).to eq(true) }
+      it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: instructeur).acl_for_dossier_export) }
       it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
 
@@ -1053,7 +1053,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
-      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true, include_avis_for_expert: false).and_call_original
+      allow_any_instance_of(PiecesJustificativesService).to receive(:generate_dossiers_export).with([dossier]).and_call_original
     end
 
     it 'includes an attachment' do

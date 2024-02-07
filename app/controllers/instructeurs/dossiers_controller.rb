@@ -49,10 +49,9 @@ module Instructeurs
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier_with_champs)&.demande_seen_at
       @is_dossier_in_batch_operation = dossier.batch_operation.present?
-
       respond_to do |format|
         format.pdf do
-          @include_infos_administration = true
+          @acls = PiecesJustificativesService.new(user_profile: current_instructeur).acl_for_dossier_export
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
@@ -322,7 +321,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id), with_champs_private: true, include_infos_administration: true)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers: Dossier.where(id: dossier.id), user_profile: current_instructeur)
       cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
 
       zipline(cleaned_files, "dossier-#{dossier.id}.zip")

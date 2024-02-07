@@ -1,17 +1,18 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossiers,
-    with_bills:,
-    with_champs_private:,
-    with_avis_piece_justificative:)
+  def initialize(user_profile:)
+    @user_profile = user_profile
+  end
+
+  def liste_documents(dossiers)
     bill_ids = []
 
     docs = dossiers.in_batches.flat_map do |batch|
-      pjs = pjs_for_champs(batch, with_champs_private:) +
+      pjs = pjs_for_champs(batch) +
         pjs_for_commentaires(batch) +
         pjs_for_dossier(batch) +
-        pjs_for_avis(batch, with_avis_piece_justificative:)
+        pjs_for_avis(batch)
 
-      if with_bills
+      if liste_documents_allows?(:with_bills)
         # some bills are shared among operations
         # so first, all the bill_ids are fetched
         operation_logs, some_bill_ids = operation_logs_and_signature_ids(batch)
@@ -23,12 +24,44 @@ class PiecesJustificativesService
       pjs
     end
 
-    if with_bills
+    if liste_documents_allows?(:with_bills)
       # then the bills are retrieved without duplication
       docs += signatures(bill_ids.uniq)
     end
 
     docs
+  end
+
+  def generate_dossiers_export(dossiers)
+    return [] if dossiers.empty?
+
+    pdfs = []
+
+    procedure = dossiers.first.procedure
+    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_information, avis: :expert, commentaires: [:instructeur, :expert])
+    dossiers = DossierPreloader.new(dossiers).in_batches
+    dossiers.each do |dossier|
+      dossier.association(:procedure).target = procedure
+
+      pdf = ApplicationController
+        .render(template: 'dossiers/show', formats: [:pdf],
+                assigns: {
+                  acls: acl_for_dossier_export,
+                  dossier: dossier
+                })
+
+      a = ActiveStorage::FakeAttachment.new(
+        file: StringIO.new(pdf),
+        filename: "export-#{dossier.id}.pdf",
+        name: 'pdf_export_for_instructeur',
+        id: dossier.id,
+        created_at: dossier.updated_at
+      )
+
+      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+    end
+
+    pdfs
   end
 
   def self.serialize_types_de_champ_as_type_pj(revision)
@@ -48,47 +81,52 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossiers, include_infos_administration: false, include_avis_for_expert: false)
-    return [] if dossiers.empty?
-
-    pdfs = []
-
-    procedure = dossiers.first.procedure
-    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_information, avis: :expert, commentaires: [:instructeur, :expert])
-    dossiers = DossierPreloader.new(dossiers).in_batches
-    dossiers.each do |dossier|
-      dossier.association(:procedure).target = procedure
-
-      pdf = ApplicationController
-        .render(template: 'dossiers/show', formats: [:pdf],
-                assigns: {
-                  include_infos_administration:,
-                  include_avis_for_expert:,
-                  dossier: dossier
-                })
-
-      a = ActiveStorage::FakeAttachment.new(
-        file: StringIO.new(pdf),
-        filename: "export-#{dossier.id}.pdf",
-        name: 'pdf_export_for_instructeur',
-        id: dossier.id,
-        created_at: dossier.updated_at
-      )
-
-      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+  def acl_for_dossier_export
+    case @user_profile
+    when Expert
+      { include_infos_administration: true, include_avis_for_expert: true, only_for_expert: @user_profile }
+    when Instructeur, Administrateur
+      { include_infos_administration: true, include_avis_for_expert: true, only_for_export: false }
+    when User
+      { include_infos_administration: false, include_avis_for_expert: false, only_for_expert: false }
+    else
+      raise 'not supported'
     end
-
-    pdfs
   end
 
   private
 
-  def self.pjs_for_champs(dossiers, with_champs_private:)
+  def liste_documents_allows?(scope)
+    case @user_profile
+    when Expert
+      {
+        with_bills: false,
+        with_champs_private: false,
+        with_avis_piece_justificative: false
+      }
+    when Instructeur
+      {
+        with_bills: false,
+        with_champs_private: true,
+        with_avis_piece_justificative: true
+      }
+    when Administrateur
+      {
+        with_bills: true,
+        with_champs_private: true,
+        with_avis_piece_justificative: true
+      }
+    else
+      raise 'not supported'
+    end.fetch(scope)
+  end
+
+  def pjs_for_champs(dossiers)
     champs = Champ
       .joins(:piece_justificative_file_attachments)
       .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
 
-    if !with_champs_private
+    if !liste_documents_allows?(:with_champs_private)
       champs = champs.where(private: false)
     end
 
@@ -106,7 +144,7 @@ class PiecesJustificativesService
       end
   end
 
-  def self.pjs_for_commentaires(dossiers)
+  def pjs_for_commentaires(dossiers)
     commentaire_id_dossier_id = Commentaire
       .joins(:piece_jointe_attachment)
       .where(dossier: dossiers)
@@ -123,13 +161,13 @@ class PiecesJustificativesService
       end
   end
 
-  def self.pjs_for_dossier(dossiers)
+  def pjs_for_dossier(dossiers)
     motivations(dossiers) +
       attestations(dossiers) +
       etablissements(dossiers)
   end
 
-  def self.etablissements(dossiers)
+  def etablissements(dossiers)
     etablissement_id_dossier_id = Etablissement
       .where(dossier: dossiers)
       .pluck(:id, :dossier_id)
@@ -144,7 +182,7 @@ class PiecesJustificativesService
       end
   end
 
-  def self.motivations(dossiers)
+  def motivations(dossiers)
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "Dossier", name: "justificatif_motivation", record_id: dossiers)
@@ -155,7 +193,7 @@ class PiecesJustificativesService
       end
   end
 
-  def self.attestations(dossiers)
+  def attestations(dossiers)
     attestation_id_dossier_id = Attestation
       .joins(:pdf_attachment)
       .where(dossier: dossiers)
@@ -171,10 +209,9 @@ class PiecesJustificativesService
       end
   end
 
-  def self.pjs_for_avis(dossiers, with_avis_piece_justificative:)
-    avis_ids_dossier_id_query = Avis.joins(:dossier)
-      .where(dossier: dossiers)
-    avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false) if !with_avis_piece_justificative
+  def pjs_for_avis(dossiers)
+    avis_ids_dossier_id_query = Avis.joins(:dossier).where(dossier: dossiers)
+    avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false) if !liste_documents_allows?(:with_avis_piece_justificative)
     avis_ids_dossier_id = avis_ids_dossier_id_query.pluck(:id, :dossier_id).to_h
 
     ActiveStorage::Attachment
@@ -187,7 +224,7 @@ class PiecesJustificativesService
       end
   end
 
-  def self.operation_logs_and_signature_ids(dossiers)
+  def operation_logs_and_signature_ids(dossiers)
     dol_id_dossier_id_bill_id = DossierOperationLog
       .where(dossier: dossiers, data: nil)
       .pluck(:bill_signature_id, :id, :dossier_id)
@@ -227,14 +264,14 @@ class PiecesJustificativesService
     [serialized_dols, bill_ids]
   end
 
-  def self.signatures(bill_ids)
+  def signatures(bill_ids)
     ActiveStorage::Attachment
       .includes(:blob)
       .where(record_type: "BillSignature", record_id: bill_ids)
       .map { |bill| ActiveStorage::DownloadableFile.bill_and_path(bill) }
   end
 
-  def self.safe_attachment(attachment)
+  def safe_attachment(attachment)
     attachment
       .blob
       .virus_scan_result == ActiveStorage::VirusScanner::SAFE
