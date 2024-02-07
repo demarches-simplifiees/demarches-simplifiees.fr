@@ -11,7 +11,7 @@
       %strong= t('views.users.dossiers.merci.dossier_acces_l2')
     %p.m-2
       = t('views.users.dossiers.merci.dossier_edit_l1')
-      - if !dossier&.read_only?
+      - if !dossier&.read_only? && !procedure.declarative_accepte? && !procedure.sva_svr_enabled?
         %strong= t('views.users.dossiers.merci.dossier_edit_l2')
         = t('views.users.dossiers.merci.dossier_edit_l3')
       %strong= t('views.users.dossiers.merci.dossier_edit_l4')
