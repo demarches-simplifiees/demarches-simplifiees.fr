@@ -1,9 +1,10 @@
 class ProcedureExportService
   attr_reader :procedure, :dossiers
 
-  def initialize(procedure, dossiers)
+  def initialize(procedure, dossiers, user_profile)
     @procedure = procedure
     @dossiers = dossiers
+    @user_profile = user_profile
   end
 
   def to_csv

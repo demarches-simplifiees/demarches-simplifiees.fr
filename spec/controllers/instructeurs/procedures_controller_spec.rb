@@ -735,7 +735,7 @@ describe Instructeurs::ProceduresController, type: :controller do
         expect(flash.notice).to be_present
       end
 
-      it { expect { subject }.to change(Export, :count).by(1) }
+      it { expect { subject }.to change { Export.where(user_profile: instructeur).count }.by(1) }
     end
 
     context 'when the export is not ready' do

@@ -4,7 +4,7 @@ module Administrateurs
     before_action :ensure_not_super_admin!
 
     def download
-      export = Export.find_or_create_fresh_export(export_format, all_groupe_instructeurs, current_administrateur.instructeur, **export_options)
+      export = Export.find_or_create_fresh_export(export_format, all_groupe_instructeurs, current_administrateur, **export_options)
       @dossiers_count = export.count
 
       if export.available?

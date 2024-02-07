@@ -1,8 +1,9 @@
 require 'csv'
 
 describe ProcedureExportService do
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
-  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+  let(:instructeur) { create(:instructeur) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs, instructeurs: [instructeur]) }
+  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur) }
 
   describe 'to_xlsx' do
     subject do
@@ -235,7 +236,7 @@ describe ProcedureExportService do
 
       context 'as csv' do
         subject do
-          ProcedureExportService.new(procedure, procedure.dossiers)
+          ProcedureExportService.new(procedure, procedure.dossiers, instructeur)
             .to_csv
             .open { |f| CSV.read(f.path) }
         end
