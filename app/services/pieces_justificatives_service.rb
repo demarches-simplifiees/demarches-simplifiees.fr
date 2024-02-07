@@ -48,17 +48,6 @@ class PiecesJustificativesService
     end
   end
 
-  def self.serialize_champs_as_pjs(dossier)
-    dossier.champs_public.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
-      {
-        created_at: champ.created_at&.in_time_zone('UTC'),
-        type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],
-        content_url: champ.for_api,
-        user: champ.dossier.user
-      }
-    end.flatten
-  end
-
   def self.generate_dossier_export(dossiers, include_infos_administration: false, include_avis_for_expert: false)
     return [] if dossiers.empty?
 
