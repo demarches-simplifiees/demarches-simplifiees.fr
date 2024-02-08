@@ -2,8 +2,10 @@
   - if champ.repetition?
     - types_de_champ = champ.dossier.revision.children_of(champ.type_de_champ)
     - champs_by_stable_id_with_row = champ.dossier.champs_by_stable_id_with_row
-    - champ.row_ids.each do |row_id|
-      = render ViewableChamp::SectionComponent.new(types_de_champ:, champs_by_stable_id_with_row:, row_id:, demande_seen_at: seen_at, profile:)
+    - champ.row_ids.each.with_index do |row_id, i|
+      .fr-background-alt--grey.fr-p-2w.fr-my-3w.fr-ml-2w.champ-repetition
+        %p.font-weight-bold= "#{champ.libelle} #{i + 1} :"
+        = render ViewableChamp::SectionComponent.new(types_de_champ:, champs_by_stable_id_with_row:, row_id:, demande_seen_at: seen_at, profile:)
 
   - else
     = render Dossiers::RowShowComponent.new(label: champ.libelle, seen_at:, profile:, content_class: champ.type_champ, updated_at: updated_after_deposer?(champ) ? champ.updated_at : nil) do |c|
