@@ -3,12 +3,12 @@ import invariant from 'tiny-invariant';
 
 import cadastreLayers from './layers/cadastre';
 
-function ignServiceURL(layer: string, format = 'image/png') {
+function ignServiceURL(layer: string, style: string, format = 'image/png') {
   const url = `https://data.geopf.fr/wmts`;
   const query =
-    'service=WMTS&request=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}&style=normal';
+    'service=WMTS&request=GetTile&version=1.0.0&tilematrixset=PM&tilematrix={z}&tilecol={x}&tilerow={y}';
 
-  return `${url}?${query}&layer=${layer}&format=${format}`;
+  return `${url}?${query}&layer=${layer}&format=${format}&style=${style}`;
 }
 
 const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
@@ -16,16 +16,20 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
     label: 'UNESCO',
     id: 'unesco',
     layers: [
-      ['Aires protégées Géoparcs', 'PROTECTEDAREAS.GP'],
-      ['Réserves de biosphère', 'PROTECTEDAREAS.BIOS']
+      ['Aires protégées Géoparcs', 'PROTECTEDAREAS.GP', 'normal'],
+      ['Réserves de biosphère', 'PROTECTEDAREAS.BIOS', 'PROTECTEDAREAS.BIOS']
     ]
   },
   {
     label: 'Arrêtés de protection',
     id: 'arretes_protection',
     layers: [
-      ['Arrêtés de protection de biotope', 'PROTECTEDAREAS.APB'],
-      ['Arrêtés de protection de géotope', 'PROTECTEDAREAS.APG']
+      [
+        'Arrêtés de protection de biotope',
+        'PROTECTEDAREAS.APB',
+        'PROTECTEDAREAS.APB'
+      ],
+      ['Arrêtés de protection de géotope', 'PROTECTEDAREAS.APG', 'normal']
     ]
   },
   {
@@ -34,11 +38,13 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
     layers: [
       [
         'Conservatoire du littoral : parcelles protégées',
+        'PROTECTEDAREAS.MNHN.CDL.PARCELS',
         'PROTECTEDAREAS.MNHN.CDL.PARCELS'
       ],
       [
         'Conservatoire du littoral : périmètres d’intervention',
-        'PROTECTEDAREAS.MNHN.CDL.PERIMETER'
+        'PROTECTEDAREAS.MNHN.CDL.PERIMETER',
+        'normal'
       ]
     ]
   },
@@ -48,27 +54,38 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
     layers: [
       [
         'Réserves nationales de chasse et de faune sauvage',
-        'PROTECTEDAREAS.RNCF'
+        'PROTECTEDAREAS.RNCF',
+        'normal'
       ]
     ]
   },
   {
     label: 'Réserves biologiques',
     id: 'reserves_biologiques',
-    layers: [['Réserves biologiques', 'PROTECTEDAREAS.RB']]
+    layers: [['Réserves biologiques', 'PROTECTEDAREAS.RB', 'normal']]
   },
   {
     label: 'Réserves naturelles',
     id: 'reserves_naturelles',
     layers: [
-      ['Réserves naturelles nationales', 'PROTECTEDAREAS.RN'],
+      [
+        'Réserves naturelles nationales',
+        'PROTECTEDAREAS.RN',
+        'PROTECTEDAREAS.RN'
+      ],
       [
         'Périmètres de protection de réserves naturelles',
-        'PROTECTEDAREAS.MNHN.RN.PERIMETER'
+        'PROTECTEDAREAS.MNHN.RN.PERIMETER',
+        'normal'
       ],
-      ['Réserves naturelles de Corse', 'PROTECTEDAREAS.RNC'],
+      [
+        'Réserves naturelles de Corse',
+        'PROTECTEDAREAS.RNC',
+        'PROTECTEDAREAS.RNC'
+      ],
       [
         'Réserves naturelles régionales',
+        'PROTECTEDSITES.MNHN.RESERVES-REGIONALES',
         'PROTECTEDSITES.MNHN.RESERVES-REGIONALES'
       ]
     ]
@@ -77,15 +94,27 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
     label: 'Natura 2000',
     id: 'natura_2000',
     layers: [
-      ['Sites Natura 2000 (Directive Habitats)', 'PROTECTEDAREAS.SIC'],
-      ['Sites Natura 2000 (Directive Oiseaux)', 'PROTECTEDAREAS.ZPS']
+      [
+        'Sites Natura 2000 (Directive Habitats)',
+        'PROTECTEDAREAS.SIC',
+        'PROTECTEDAREAS.SIC'
+      ],
+      [
+        'Sites Natura 2000 (Directive Oiseaux)',
+        'PROTECTEDAREAS.ZPS',
+        'PROTECTEDAREAS.ZPS'
+      ]
     ]
   },
   {
     label: 'Zones humides d’importance internationale',
     id: 'zones_humides',
     layers: [
-      ['Zones humides d’importance internationale', 'PROTECTEDAREAS.RAMSAR']
+      [
+        'Zones humides d’importance internationale',
+        'PROTECTEDAREAS.RAMSAR',
+        'PROTECTEDAREAS.RAMSAR'
+      ]
     ]
   },
   {
@@ -94,18 +123,22 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
     layers: [
       [
         'Zones naturelles d’intérêt écologique faunistique et floristique de type 1 (ZNIEFF 1 mer)',
-        'PROTECTEDAREAS.ZNIEFF1.SEA'
+        'PROTECTEDAREAS.ZNIEFF1.SEA',
+        'normal'
       ],
       [
         'Zones naturelles d’intérêt écologique faunistique et floristique de type 1 (ZNIEFF 1)',
+        'PROTECTEDAREAS.ZNIEFF1',
         'PROTECTEDAREAS.ZNIEFF1'
       ],
       [
         'Zones naturelles d’intérêt écologique faunistique et floristique de type 2 (ZNIEFF 2 mer)',
-        'PROTECTEDAREAS.ZNIEFF2.SEA'
+        'PROTECTEDAREAS.ZNIEFF2.SEA',
+        'normal'
       ],
       [
         'Zones naturelles d’intérêt écologique faunistique et floristique de type 2 (ZNIEFF 2)',
+        'PROTECTEDAREAS.ZNIEFF2',
         'PROTECTEDAREAS.ZNIEFF2'
       ]
     ]
@@ -113,17 +146,19 @@ const OPTIONAL_LAYERS: { label: string; id: string; layers: string[][] }[] = [
   {
     label: 'Cadastre',
     id: 'cadastres',
-    layers: [['Cadastre', 'CADASTRE']]
+    layers: [
+      ['Cadastre', 'CADASTRE', 'DECALAGE DE LA REPRESENTATION CADASTRALE']
+    ]
   }
 ];
 
 function buildSources() {
   return Object.fromEntries(
     OPTIONAL_LAYERS.filter(({ id }) => id !== 'cadastres')
-      .flatMap(({ layers }) => layers.map(([, code]) => code))
-      .map((code) => [
+      .flatMap(({ layers }) => layers)
+      .map(([, code, style]) => [
         getLayerCode(code),
-        rasterSource([ignServiceURL(code)], 'IGN-F/Géoportail/MNHN')
+        rasterSource([ignServiceURL(code, style)], 'IGN-F/Géoportail/MNHN')
       ])
   );
 }
@@ -208,7 +243,7 @@ export default {
       url: 'https://openmaptiles.geo.data.gouv.fr/data/france-vector.json'
     },
     'photographies-aeriennes': rasterSource(
-      [ignServiceURL('ORTHOIMAGERY.ORTHOPHOTOS', 'image/jpeg')],
+      [ignServiceURL('ORTHOIMAGERY.ORTHOPHOTOS', 'normal', 'image/jpeg')],
       'IGN-F/Géoportail'
     ),
     cadastre: {
@@ -216,7 +251,7 @@ export default {
       url: 'https://openmaptiles.geo.data.gouv.fr/data/cadastre.json'
     },
     'plan-ign': rasterSource(
-      [ignServiceURL('GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2')],
+      [ignServiceURL('GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2', 'normal')],
       'IGN-F/Géoportail'
     ),
     ...buildSources()
