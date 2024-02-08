@@ -6,11 +6,11 @@ module DossierSectionsConcern
       @sections = Hash.new do |hash, parent|
         case parent
         when :public
-          hash[parent] = champs_for_revision(:public, true).filter(&:header_section?)
+          hash[parent] = champs_for_revision(scope: :public, root: true).filter(&:header_section?)
         when :private
-          hash[parent] = champs_for_revision(:private, true).filter(&:header_section?)
+          hash[parent] = champs_for_revision(scope: :private, root: true).filter(&:header_section?)
         else
-          hash[parent] = champs_for_revision(parent.type_de_champ).filter(&:header_section?)
+          hash[parent] = champs_for_revision(scope: parent.type_de_champ).filter(&:header_section?)
         end
       end
       @sections[champ.parent || (champ.public? ? :public : :private)]
@@ -23,7 +23,7 @@ module DossierSectionsConcern
     end
 
     def index_for_section_header(champ)
-      champs = champ.private? ? champs_for_revision(:private, true) : champs_for_revision(:public, true)
+      champs = champ.private? ? champs_for_revision(scope: :private, root: true) : champs_for_revision(scope: :public, root: true)
       index = 1
       champs.each do |c|
         if c.repetition?

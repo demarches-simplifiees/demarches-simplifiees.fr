@@ -79,7 +79,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def unspecified_champs_for_dossier(dossier)
-    champs_by_stable_id = dossier.champs_for_revision(nil, true).index_by { "tdc#{_1.stable_id}" }
+    champs_by_stable_id = dossier.champs_for_revision(root: true).index_by { "tdc#{_1.stable_id}" }
 
     used_tags.filter_map do |used_tag|
       corresponding_champ = champs_by_stable_id[used_tag]

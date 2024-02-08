@@ -610,7 +610,7 @@ class Dossier < ApplicationRecord
 
   def any_etablissement_as_degraded_mode?
     return true if etablissement&.as_degraded_mode?
-    return true if champs_for_revision(:public).any? { _1.etablissement&.as_degraded_mode? }
+    return true if champs_for_revision(scope: :public).any? { _1.etablissement&.as_degraded_mode? }
 
     false
   end
@@ -1165,7 +1165,7 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_and_visible_champs
-    champs_for_revision(:public)
+    champs_for_revision(scope: :public)
       .filter { _1.child? ? _1.parent.visible? : true }
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
@@ -1396,13 +1396,13 @@ class Dossier < ApplicationRecord
     champs_for_revision.index_by(&:stable_id_with_row)
   end
 
-  def champs_for_revision(scope = nil, root = false)
+  def champs_for_revision(scope: nil, root: false)
     champs_index = champs.group_by(&:stable_id)
 
     if scope.is_a?(TypeDeChamp)
       revision.children_of(scope)
     else
-      revision.types_de_champ_for(scope, root)
+      revision.types_de_champ_for(scope:, root:)
     end.flat_map { champs_index[_1.stable_id] || [] }
   end
 

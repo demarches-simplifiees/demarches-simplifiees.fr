@@ -157,7 +157,7 @@ module Types
           .for(object, private: false)
           .load(ApplicationRecord.id_from_typed_id(id))
       else
-        object.champs_for_revision(:public, true).filter(&:visible?)
+        object.champs_for_revision(scope: :public, root: true).filter(&:visible?)
       end
     end
 
@@ -167,7 +167,7 @@ module Types
           .for(object, private: true)
           .load(ApplicationRecord.id_from_typed_id(id))
       else
-        object.champs_for_revision(:private, true).filter(&:visible?)
+        object.champs_for_revision(scope: :private, root: true).filter(&:visible?)
       end
     end
 
