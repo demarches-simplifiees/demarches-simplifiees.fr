@@ -18,7 +18,7 @@ as well as a link to its edit page.
 <% content_for(:title) { t("administrate.actions.show_resource", name: page.page_title) } %>
 <% procedure = page.resource %>
 
-<header class="main-content__header" role="banner">
+<header class="main-content__header">
   <h1 class="main-content__page-title">
     <%= content_for(:title) %>
     <% if procedure.discarded? %>
@@ -26,94 +26,98 @@ as well as a link to its edit page.
     <% end %>
   </h1>
 
-  <div>
+  <div class="buttons">
     <%= link_to(
       t("administrate.actions.edit_resource", name: page.page_title),
       [:edit, namespace, page.resource],
       class: "button",
     ) if valid_action? :edit %>
-  </div>
 
-  <div>
-    <%= link_to 'aperçu', apercu_admin_procedure_path(procedure), class: 'button' %>
+    <%= link_to 'Aperçu', apercu_admin_procedure_path(procedure), class: 'button' %>
 
     <% if !procedure.whitelisted? %>
-      <%= link_to 'whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button' %>
+      <%= link_to 'Whitelister', whitelist_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
 
     <% if procedure.hidden_as_template? %>
-      <%= link_to 'autoriser l\'affichage dans les modèles', unhide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
+      <%= link_to 'Autoriser l\'affichage dans les modèles', unhide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% else %>
-      <%= link_to 'masquer l\'affichage dans les modèles', hide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
+      <%= link_to 'Masquer l\'affichage dans les modèles', hide_as_template_manager_procedure_path(procedure), method: :post, class: 'button' %>
     <% end %>
 
     <% if procedure.can_be_deleted_by_manager? %>
-      <%= link_to 'Supprimer la démarche', discard_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la suppression de la démarche ?" } %>
+      <%= link_to 'Supprimer la démarche', discard_manager_procedure_path(procedure), method: :post, class: 'button button--danger', data: { confirm: "Confirmez-vous la suppression de la démarche ?" } %>
     <% elsif procedure.discarded? %>
       <%= link_to 'Restaurer la démarche', restore_manager_procedure_path(procedure), method: :post, class: 'button', data: { confirm: "Confirmez-vous la restauration de la démarche ?" } %>
     <% end %>
-  <div>
-
+  </div>
 </header>
 
 <section class="main-content__body">
   <dl>
-    <% page.attributes.each do |attribute| %>
-      <dt class="attribute-label" id="<%= attribute.name %>">
-      <%= t(
-        "helpers.label.#{resource_name}.#{attribute.name}",
-        default: attribute.name.titleize,
-      ) %>
-      </dt>
+    <% page.attributes.each do |title, attributes| %>
+      <fieldset class="<%= "field-unit--nested" if title.present? %>">
+        <% if title.present? %>
+          <legend><%= t "helpers.label.#{page.resource_name}.#{title}", default: title %></legend>
+        <% end %>
 
-      <dd class="attribute-data attribute-data--<%=attribute.html_class%>">
-        <%= render_field attribute, page: page %>
-        <% if attribute.name == 'administrateurs' %>
-          <%= form_tag(add_administrateur_with_confirmation_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
-            <%= email_field_tag(:email, '', placeholder: 'Email', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
-            <button>Ajouter un administrateur (pour toujours)</button>
-            <p>J'utilise cette option ETQ support quand un usager a besoin de devenir administrateur sur une démarche</p>
-          <% end %>
-          <% if procedure.administrateurs.any? { |admin| admin.email == current_super_admin.email } %>
-            <p style="margin-top: 20px;">Vous êtes administrateur de cette démarche. Aller à la démarche
-              <%= link_to("ETQ admin", admin_procedure_path(procedure), **external_link_attributes) %>
-              ou
-              <%= link_to("ETQ instructeur", instructeur_procedure_path(procedure), **external_link_attributes) %>.</p>
-            <%= link_to 'Me retirer de cette démarche', delete_administrateur_manager_procedure_path(procedure), method: :put, class: 'button' %>
-          <% else %>
-            <%= form_tag(add_administrateur_and_instructeur_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
-              <button>Devenir administrateur &amp; instructeur (pour la journée)</button>
-              <p>J'utilise cette option temporairement à des fins de support.</p>
+        <% attributes.each do |attribute| %>
+          <dt class="attribute-label" id="<%= attribute.name %>">
+          <%= t(
+            "helpers.label.#{resource_name}.#{attribute.name}",
+            default: attribute.name.titleize,
+          ) %>
+          </dt>
 
+          <dd class="attribute-data attribute-data--<%=attribute.html_class%>"
+              ><%= render_field attribute, page: page %>
+            <% if attribute.name == 'administrateurs' %>
+              <%= form_tag(add_administrateur_with_confirmation_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
+                <%= email_field_tag(:email, '', placeholder: 'Email', autocapitalize: 'off', autocorrect: 'off', spellcheck: 'false', style: 'margin-bottom: 1rem;width:24rem;') %>
+                <button>Ajouter un administrateur (pour toujours)</button>
+                <p>J'utilise cette option ETQ support quand un usager a besoin de devenir administrateur sur une démarche</p>
+              <% end %>
+              <% if procedure.administrateurs.any? { |admin| admin.email == current_super_admin.email } %>
+                <p style="margin-top: 20px;">Vous êtes administrateur de cette démarche. Aller à la démarche
+                  <%= link_to("ETQ admin", admin_procedure_path(procedure), **external_link_attributes) %>
+                  ou
+                  <%= link_to("ETQ instructeur", instructeur_procedure_path(procedure), **external_link_attributes) %>.</p>
+                <%= link_to 'Me retirer de cette démarche', delete_administrateur_manager_procedure_path(procedure), method: :put, class: 'button' %>
+              <% else %>
+                <%= form_tag(add_administrateur_and_instructeur_manager_procedure_path(procedure), style: 'margin-top: 1rem;') do %>
+                  <button>Devenir administrateur &amp; instructeur (pour la journée)</button>
+                  <p>J'utilise cette option temporairement à des fins de support.</p>
+
+                <% end %>
+              <% end %>
+
+            <% elsif attribute.name == 'tags' %>
+              <%= form_for procedure, url: add_tags_manager_procedure_path(procedure), html: { class: 'form procedure-form__column--form fr-background-alt--blue-france mt-1' }  do %>
+                <%=  hidden_field_tag 'procedure[tags]', nil %>
+                <%=  react_component("ComboMultiple",
+                      options: Procedure.tags,
+                      selected: procedure.tags,
+                      disabled: [],
+                      label: 'Tags',
+                      group: '.procedure-form__column--form',
+                      name: 'tags',
+                      describedby: 'procedure-tags',
+                      acceptNewValues: true) %>
+                <button class="mt-1">Ajouter des tags</button>
+              <% end %>
+
+            <% elsif attribute.name == 'template' %>
+              <%= form_for procedure, url: update_template_status_manager_procedure_path(procedure), html: { method: :patch, class: 'procedure-form__column--form fr-background-alt--blue-france mt-1', id: 'template-form' } do |f| %>
+                <%= f.label :template, 'Marquer comme modèle', for: 'template_checkbox' %>
+                <%= f.check_box :template, id: 'template_checkbox', onchange: 'this.form.submit();' %>
+              <% end %>
             <% end %>
-          <% end %>
+          </dd>
         <% end %>
-        <% if attribute.name == 'tags' %>
 
-          <%= form_for procedure, url: add_tags_manager_procedure_path(procedure), html: { class: 'form procedure-form__column--form fr-background-alt--blue-france mt-1' }  do %>
-            <%=  hidden_field_tag 'procedure[tags]', nil %>
-            <%=  react_component("ComboMultiple",
-                  options: Procedure.tags,
-                  selected: procedure.tags,
-                  disabled: [],
-                  label: 'Tags',
-                  group: '.procedure-form__column--form',
-                  name: 'tags',
-                  describedby: 'procedure-tags',
-                  acceptNewValues: true) %>
-            <button class="mt-1">Ajouter des tags</button>
-          <% end %>
-        <% end %>
-        <% if attribute.name == 'template' %>
-          <%= form_for procedure, url: update_template_status_manager_procedure_path(procedure), html: { method: :patch, class: 'procedure-form__column--form fr-background-alt--blue-france mt-1', id: 'template-form' } do |f| %>
-            <%= f.label :template, 'Marquer comme modèle', for: 'template_checkbox' %>
-            <%= f.check_box :template, id: 'template_checkbox', onchange: 'this.form.submit();' %>
-          <% end %>
-        <% end %>
-      </dd>
+        <dd class="attribute-data">
+          <a class="button" href="<%= export_mail_brouillons_manager_procedure_url(procedure) %>">Télécharger un export CSV contenant les emails des demandeurs ayant effectué une demandes en brouillon</a></dd>
+      </fieldset>
     <% end %>
-    <dd class="attribute-data">
-      <a class="button" href="<%= export_mail_brouillons_manager_procedure_url(procedure) %>">Télécharger un export CSV contenant les emails des demandeurs ayant effectué une demandes en brouillon</a>
-    </dd>
   </dl>
 </section>

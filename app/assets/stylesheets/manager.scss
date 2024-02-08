@@ -55,3 +55,19 @@
   color: #A10005;
   font-size: 18px;
 }
+
+.main-content {
+  &__header {
+    .button_to {
+      display: inline;
+    }
+
+    .buttons {
+      text-align: right;
+    }
+
+    .button {
+      margin-bottom: 4px;
+    }
+  }
+}

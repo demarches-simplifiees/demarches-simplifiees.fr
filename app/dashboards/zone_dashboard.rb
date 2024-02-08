@@ -48,6 +48,11 @@ class ZoneDashboard < Administrate::BaseDashboard
   # across all pages of the admin dashboard.
   #
   def display_resource(zone)
-    "Zone #{zone.current_label}"
+    case zone
+    when NullZone
+      "Aucune zone"
+    else
+      "Zone #{zone.current_label}"
+    end
   end
 end
