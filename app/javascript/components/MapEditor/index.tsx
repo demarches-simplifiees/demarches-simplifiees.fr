@@ -36,18 +36,16 @@ export default function MapEditor({
 
   return (
     <>
-      <div>
-        <p style={{ marginBottom: '20px' }}>
-          Besoin d&apos;aide ?&nbsp;
-          <a
-            href="https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/cartographie"
-            target="_blank"
-            rel="noreferrer"
-          >
-            consulter les tutoriels video
-          </a>
-        </p>
-      </div>
+      <p className="fr-hint-text fr-mb-2w">
+        Besoin d&apos;aide ?&nbsp;
+        <a
+          href="https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/cartographie"
+          target="_blank"
+          rel="noreferrer"
+        >
+          consulter les tutoriels video
+        </a>
+      </p>
       {error && <FlashMessage message={error} level="alert" fixed={true} />}
 
       <ImportFileInput featureCollection={featureCollection} {...actions} />
