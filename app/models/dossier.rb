@@ -1406,6 +1406,10 @@ class Dossier < ApplicationRecord
     end.flat_map { champs_index[_1.stable_id] || [] }
   end
 
+  def has_annotations?
+    revision.revision_types_de_champ_private.present?
+  end
+
   private
 
   def create_missing_traitemets
