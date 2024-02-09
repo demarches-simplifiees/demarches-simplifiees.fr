@@ -291,12 +291,17 @@ module Instructeurs
 
     def update_annotations
       # dossier_with_champs.assign_attributes(champs_private_params)
+      Rails.logger.info("Maj annotations: #{champs_private_params}")
       dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa)
+
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
       if !dossier.save(context: :annotations)
+        Rails.logger.info("Maj annotations erreurs: #{dossier.errors.full_messages}")
         flash.now.alert = dossier.errors.full_messages
+      else
+        Rails.logger.info("Maj annotations Ok: #{dossier.errors.full_messages}")
       end
 
       respond_to do |format|
@@ -430,6 +435,7 @@ module Instructeurs
           .where.not(value: "")
           .order(position: :desc).first
         Rails.logger.info("visa?=#{visa.present?} champ_position=#{champ[:position]} visa_position=#{visa&.[](:position)}")
+        visa.present? && champ[:position] < visa[:position]
       end
       champs_private_params
     end
