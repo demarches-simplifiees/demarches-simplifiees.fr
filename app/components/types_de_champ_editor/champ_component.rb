@@ -90,7 +90,6 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
   end
 
   EXCLUDE_FROM_BLOCK = [
-    TypeDeChamp.type_champs.fetch(:carte),
     TypeDeChamp.type_champs.fetch(:repetition)
   ]
 
