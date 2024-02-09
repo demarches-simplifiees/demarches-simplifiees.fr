@@ -23,7 +23,10 @@ export function PointInput({
   };
   const addPoint = () => {
     if (feature) {
-      fire(document, 'map:feature:create', feature);
+      fire(document, 'map:feature:create', {
+        feature,
+        featureCollection
+      });
       setValue('');
       setFeature(null);
     }

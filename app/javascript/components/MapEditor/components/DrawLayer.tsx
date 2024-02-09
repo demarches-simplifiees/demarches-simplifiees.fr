@@ -147,16 +147,20 @@ function useExternalEvents(
 
   const onFeatureCreate = useCallback(
     ({ detail }) => {
-      const { geometry, properties } = detail;
-
-      if (geometry) {
+      const { feature } = detail;
+      const { geometry, properties } = feature;
+      if (
+        feature &&
+        feature.geometry &&
+        detail.featureCollection == featureCollection
+      ) {
         createFeatures({
           features: [{ type: 'Feature', geometry, properties }],
           external: true
         });
       }
     },
-    [createFeatures]
+    [createFeatures, featureCollection]
   );
 
   const onFeatureUpdate = useCallback(
