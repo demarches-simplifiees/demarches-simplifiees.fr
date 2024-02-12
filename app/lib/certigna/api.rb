@@ -9,6 +9,10 @@ class Certigna::API
     end
   end
 
+  def self.enabled?
+    ENV.fetch("CERTIGNA_ENABLED", "enabled") == "enabled"
+  end
+
   def self.timestamp(data)
     ensure_properly_configured!
 
