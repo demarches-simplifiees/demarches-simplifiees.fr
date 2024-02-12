@@ -33,9 +33,14 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :france_connect_information
 
   default_scope { eager_load(:instructeur, :administrateur, :expert) }
-  before_validation -> { sanitize_email(:email) }
 
+  before_validation -> { sanitize_email(:email) }
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
+
+  with_options if: :elligible_to_new_validation? do
+    before_validation :remove_devise_email_validator
+    validates :email, strict_email: true
+  end
 
   def validate_password_complexity?
     administrateur?
@@ -267,5 +272,19 @@ class User < ApplicationRecord
 
   def link_invites!
     Invite.where(email: email).update_all(user_id: id)
+  end
+
+  def elligible_to_new_validation?
+    StrictEmailValidator.elligible_to_new_validation?(self)
+  end
+
+  def remove_devise_email_validator
+    _validators[:email]&.reject! { _1.is_a?(ActiveModel::Validations::FormatValidator) }
+    _validate_callbacks.each do |callback|
+      next if !callback.filter.is_a?(ActiveModel::Validations::FormatValidator)
+      next if !callback.filter.attributes.include? :email
+
+      callback.filter.attributes.delete(:email)
+    end
   end
 end

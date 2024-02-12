@@ -608,6 +608,7 @@ fr:
         not_a_phone: 'Numéro de téléphone invalide'
         not_a_rna: 'Numéro RNA invalide'
         url: 'n’est pas un lien valide'
+        invalid_email_format: "n'est pas un email valide"
       models:
         attestation_template:
           attributes:

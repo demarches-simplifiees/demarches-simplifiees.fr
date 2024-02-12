@@ -493,4 +493,86 @@ describe User, type: :model do
       end
     end
   end
+
+  describe 'discard default devise validation when needed' do
+    let(:now) { Time.zone.now }
+    let(:before) { now - 1.day }
+    let(:after) { now + 1.day }
+    subject { user.valid? }
+
+    shared_examples_for "validation of users.email was flacky" do
+      context 'when value is username' do
+        let(:email) { 'username' }
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when value does not contain extension' do
+        let(:email) { 'username@mailserver' }
+        # what we allowed but was a mistake
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when value include an alias' do
+        let(:email) { 'username+alias@mailserver.fr' }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when value includes accents' do
+        let(:email) { 'tech@démarches.gouv.fr' }
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when value is the classic standard user@domain.ext' do
+        let(:email) { 'username@mailserver.domain' }
+        it { is_expected.to be_truthy }
+      end
+    end
+
+    context 'when env var is not present' do
+      let(:user) { build(:user, email: email) }
+      before { allow(StrictEmailValidator).to receive(:strict_validation_enabled?).and_return(false).at_least(1) }
+      it_behaves_like "validation of users.email was flacky"
+    end
+
+    context "record.created_at < ENV['STRICT_EMAIL_VALIDATION_STARTS_AT']" do
+      let(:user) { build(:user, email: email, created_at: before) }
+      before do
+        allow(StrictEmailValidator).to receive(:strict_validation_enabled?).and_return(true).at_least(1)
+        allow(StrictEmailValidator).to receive(:date_since_strict_email_validation).and_return(now).at_least(1)
+      end
+      it_behaves_like "validation of users.email was flacky"
+    end
+
+    context "record.created_at > ENV['STRICT_EMAIL_VALIDATION_STARTS_AT']" do
+      let(:user) { build(:user, email: email, created_at: after) }
+      before do
+        allow(StrictEmailValidator).to receive(:strict_validation_enabled?).and_return(true).at_least(1)
+        allow(StrictEmailValidator).to receive(:date_since_strict_email_validation).and_return(now).at_least(1)
+      end
+      context 'when value is username' do
+        let(:email) { 'username' }
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when value does not contain extension' do
+        let(:email) { 'username@mailserver' }
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when value include an alias' do
+        let(:email) { 'username+alias@mailserver.fr' }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when value includes accents' do
+        let(:email) { 'tech@démarches.gouv.fr' }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when value is the classic standard user@domain.ext' do
+        let(:email) { 'username@mailserver.domain' }
+        it { is_expected.to be_truthy }
+      end
+    end
+  end
 end

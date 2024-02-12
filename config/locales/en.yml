@@ -605,6 +605,7 @@ en:
         not_a_phone: 'Invalid phone number'
         not_a_rna: 'Invalid RNA number'
         url: 'is not a valid link'
+        invalid_email_format: "is not a valid email"
       models:
         attestation_template:
           attributes:
