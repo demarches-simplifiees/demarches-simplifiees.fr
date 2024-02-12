@@ -32,6 +32,7 @@ describe Champs::AddressChamp do
     it { expect(champ.address_label).to eq('33 Rue Rébeval 75019 Paris') }
     it { expect(champ.full_address?).to be_truthy }
     it { expect(champ.commune).to eq({ name: 'Paris 19e Arrondissement', code: '75119', postal_code: '75019' }) }
+    it { expect(champ.commune_name).to eq('Paris 19e Arrondissement (75019)') }
   end
 
   context "with wrong code INSEE" do
