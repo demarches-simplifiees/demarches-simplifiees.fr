@@ -3364,6 +3364,11 @@ type NumeroDnChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type NumeroDnChampDescriptor implements ChampDescriptor {
@@ -4420,6 +4425,11 @@ type VisaChamp implements Champ {
   La valeur du champ sous forme texte.
   """
   stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type VisaChampDescriptor implements ChampDescriptor {
