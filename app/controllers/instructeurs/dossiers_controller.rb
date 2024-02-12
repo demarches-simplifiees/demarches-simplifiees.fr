@@ -291,17 +291,13 @@ module Instructeurs
 
     def update_annotations
       # dossier_with_champs.assign_attributes(champs_private_params)
-      Rails.logger.info("Maj annotations: #{champs_private_params}")
       dossier_with_champs.assign_attributes(remove_changes_forbidden_by_visa)
 
       if dossier.champs_private_all.any?(&:changed?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
       if !dossier.save(context: :annotations)
-        Rails.logger.info("Maj annotations erreurs: #{dossier.errors.full_messages}")
         flash.now.alert = dossier.errors.full_messages
-      else
-        Rails.logger.info("Maj annotations Ok: #{dossier.errors.full_messages}")
       end
 
       respond_to do |format|
@@ -427,14 +423,13 @@ module Instructeurs
       # auto-save send small sets of fields to update so for speed, we look for brothers containing visa
       visa_type = TypeDeChamp.type_champs.fetch(:visa)
       champs = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position)
-      params[:dossier][:champs_private_attributes]&.each_pair do |_k, v|
+      params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
         champ = champs.find(v[:id])
         # look for position of last checked visa in same dossier, row
         visa = champs.private_only
           .where(row_id: champ.row_id, dossier: champ.dossier_id, type_de_champ: { type_champ: visa_type })
           .where.not(value: "")
           .order(position: :desc).first
-        Rails.logger.info("visa?=#{visa.present?} champ_position=#{champ[:position]} visa_position=#{visa&.[](:position)}")
         visa.present? && champ[:position] < visa[:position]
       end
       champs_private_params
