@@ -7,7 +7,7 @@ class API::Client
     response = case method
     when :get
       Typhoeus.get(url,
-        headers: headers_with_authorization(headers, authorization_token),
+        headers: headers_with_authorization(headers, false, authorization_token),
         params:,
         timeout: TIMEOUT)
     when :post
@@ -40,8 +40,8 @@ class API::Client
       body = parse_body(response.body)
       case body
       in Success(body)
-        if !schema || schema.valid?(body)
-          Success(OK[body.deep_symbolize_keys, response])
+        if !schema || schema.valid?(body.deep_stringify_keys)
+          Success(OK[body, response])
         else
           Failure(Error[:schema, response.code, false, SchemaError.new(schema.validate(body))])
         end
@@ -58,7 +58,7 @@ class API::Client
   end
 
   def parse_body(body)
-    Success(JSON.parse(body))
+    Success(JSON.parse(body, symbolize_names: true))
   rescue JSON::ParserError => error
     Failure(error)
   end
