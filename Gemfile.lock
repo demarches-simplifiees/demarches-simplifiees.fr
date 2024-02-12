@@ -274,9 +274,9 @@ GEM
       i18n (>= 0.7)
       multi_json
       request_store (>= 1.0)
-    graphql (2.2.7)
-    graphql-batch (0.5.3)
-      graphql (>= 1.12.18, < 3)
+    graphql (2.0.24)
+    graphql-batch (0.5.1)
+      graphql (>= 1.10, < 3)
       promise.rb (~> 0.7.2)
     graphql-rails_logger (1.2.4)
       actionpack (> 5.0)
@@ -855,8 +855,8 @@ DEPENDENCIES
   geo_coord
   geocoder
   gon
-  graphql
-  graphql-batch
+  graphql (= 2.0.24)
+  graphql-batch (= 0.5.1)
   graphql-rails_logger
   graphql-schema_comparator
   groupdate
