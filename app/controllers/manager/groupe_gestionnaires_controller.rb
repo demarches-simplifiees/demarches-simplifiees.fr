@@ -20,13 +20,35 @@ module Manager
           .deliver_later
       end
 
-      redirect_to manager_groupe_gestionnaires_path(groupe_gestionnaire)
+      redirect_to manager_groupe_gestionnaire_path(groupe_gestionnaire)
+    end
+
+    def remove_gestionnaire
+      if !groupe_gestionnaire.root_groupe_gestionnaire? || groupe_gestionnaire.gestionnaires.one?
+        flash[:alert] = "Suppression impossible : il doit y avoir au moins un gestionnaire dans le groupe racine"
+      else
+        gestionnaire = Gestionnaire.find(gestionnaire_id)
+        if groupe_gestionnaire.remove(gestionnaire)
+          flash[:notice] = "Le gestionnaire « #{gestionnaire.email} » a été retiré du groupe."
+          GroupeGestionnaireMailer
+            .notify_removed_gestionnaire(groupe_gestionnaire, gestionnaire, current_super_admin.email)
+            .deliver_later
+        else
+          flash[:alert] = "Le gestionnaire « #{gestionnaire.email} » n’est pas dans le groupe."
+        end
+      end
+
+      redirect_to manager_groupe_gestionnaire_path(groupe_gestionnaire)
     end
 
     private
 
     def groupe_gestionnaire
       @groupe_gestionnaire ||= GroupeGestionnaire.find(params[:id])
+    end
+
+    def gestionnaire_id
+      params[:gestionnaire][:id]
     end
   end
 end

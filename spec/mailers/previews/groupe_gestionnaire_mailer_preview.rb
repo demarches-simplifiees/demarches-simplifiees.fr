@@ -1,4 +1,11 @@
 class GroupeGestionnaireMailerPreview < ActionMailer::Preview
+  def notify_removed_gestionnaire
+    groupe_gestionnaire = GroupeGestionnaire.new(name: 'un groupe d\'admin')
+    current_super_admin_email = 'admin@dgfip.com'
+    gestionnaire = Gestionnaire.new(user: user)
+    GroupeGestionnaireMailer.notify_removed_gestionnaire(groupe_gestionnaire, gestionnaire, current_super_admin_email)
+  end
+
   def notify_added_gestionnaires
     groupe_gestionnaire = GroupeGestionnaire.new(name: 'un groupe d\'admin')
     current_super_admin_email = 'admin@dgfip.com'

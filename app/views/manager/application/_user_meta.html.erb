@@ -41,3 +41,16 @@
     <% end %>
   </dd>
 </dl>
+
+<dl>
+  <dt class="attribute-label" id="meta-usager">
+    Gestionnaire
+  </dt>
+  <dd class="attribute-data attribute-data--meta-usager">
+    <% if user.gestionnaire.present? %>
+      <%= link_to('Voir son compte gestionnaire', manager_gestionnaire_path(user.gestionnaire)) %>
+    <% else %>
+      Pas gestionnaire !
+    <% end %>
+  </dd>
+</dl>

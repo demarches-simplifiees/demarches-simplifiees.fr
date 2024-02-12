@@ -4,8 +4,22 @@ class GroupeGestionnaire < ApplicationRecord
   has_many :administrateurs
   has_and_belongs_to_many :gestionnaires
 
+  def root_groupe_gestionnaire?
+    groupe_gestionnaire.nil?
+  end
+
   def add(gestionnaire)
+    return if gestionnaire.nil?
+    return if in?(gestionnaire.groupe_gestionnaires)
+
     gestionnaires << gestionnaire
+  end
+
+  def remove(gestionnaire)
+    return if gestionnaire.nil?
+    return if !in?(gestionnaire.groupe_gestionnaires)
+
+    gestionnaire.groupe_gestionnaires.destroy(self)
   end
 
   def add_gestionnaires(ids: [], emails: [])

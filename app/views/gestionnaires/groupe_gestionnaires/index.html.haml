@@ -1,0 +1,17 @@
+= render partial: 'gestionnaires/breadcrumbs',
+  locals: { steps: [['Groupes d\'administrateurs', gestionnaire_groupe_gestionnaires_path]] }
+
+#groupe_gestionnaires-index.container
+  %h1.fr-h1 Liste des groupes d'administrateurs
+
+  %table.fr-table.width-100.mt-3
+    %thead
+      %tr
+        %th{ scope: "col" }
+          Nom
+
+    %tbody
+      - @groupe_gestionnaires.each do |groupe_gestionnaire|
+        %tr
+          %td
+            = groupe_gestionnaire.name
