@@ -15,6 +15,10 @@ class TypesDeChampEditor::ErrorsSummary < ApplicationComponent
     @revision.errors.include?(:header_section)
   end
 
+  def expression_reguliere_errors?
+    @revision.errors.include?(:expression_reguliere)
+  end
+
   private
 
   def errors_for(key)

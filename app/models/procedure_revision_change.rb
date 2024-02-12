@@ -60,7 +60,6 @@ class ProcedureRevisionChange
 
     def can_rebase?(dossier = nil)
       return true if private?
-
       case attribute
       when :drop_down_options
         (from - to).empty? || dossier&.can_rebase_drop_down_options_change?(stable_id, from - to)
@@ -68,7 +67,7 @@ class ProcedureRevisionChange
         !from && to
       when :mandatory
         (from && !to) || dossier&.can_rebase_mandatory_change?(stable_id)
-      when :type_champ, :condition
+      when :type_champ, :condition, :expression_reguliere
         false
       else
         true

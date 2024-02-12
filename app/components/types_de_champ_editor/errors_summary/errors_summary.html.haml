@@ -9,3 +9,7 @@
         - if header_section_errors?
           %p= t('.fix_header_section', count: errors_for(:header_section).size)
           = error_message_for(:header_section)
+
+        - if expression_reguliere_errors?
+          %p= t('.fix_expressions_regulieres', count: errors_for(:expression_reguliere).size)
+          = error_message_for(:expression_reguliere)

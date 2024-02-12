@@ -59,6 +59,9 @@ class Champ < ApplicationRecord
     :character_limit?,
     :character_limit,
     :yes_no?,
+    :expression_reguliere,
+    :expression_reguliere_exemple_text,
+    :expression_reguliere_error_message,
     to: :type_de_champ
 
   # pf champ

@@ -166,6 +166,31 @@ describe TypeDeChamp do
     end
   end
 
+  describe "validate_regexp" do
+    let(:tdc) { create(:type_de_champ_expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text:) }
+    subject { tdc.invalid_regexp? }
+
+    context "expression_reguliere and bad example" do
+      let(:expression_reguliere_exemple_text) { "01234567" }
+      let(:expression_reguliere) { "[A-Z]+" }
+
+      it "should add error message" do
+        expect(subject).to be_truthy
+        expect(tdc.errors.messages[:expression_reguliere_exemple_text]).to be_present
+      end
+    end
+
+    context "Bad expression_reguliere" do
+      let(:expression_reguliere_exemple_text) { "0123456789" }
+      let(:expression_reguliere) { "(" }
+
+      it "should add error message" do
+        expect(subject).to be_truthy
+        expect(tdc.errors.messages[:expression_reguliere]).to be_present
+      end
+    end
+  end
+
   describe '#drop_down_list_options' do
     let(:value) do
       <<~EOS

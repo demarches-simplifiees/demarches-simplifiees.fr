@@ -1575,6 +1575,44 @@ describe Dossier, type: :model do
     end
   end
 
+  describe "#check_expressions_regulieres_champs" do
+    let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:types_de_champ) { [type_de_champ] }
+    let(:type_de_champ) { { type: :expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text: } }
+
+    context "with bad example" do
+      let(:expression_reguliere_exemple_text) { "01234567" }
+      let(:expression_reguliere) { "[A-Z]+" }
+
+      before do
+        champ = dossier.champs_public.first
+        champ.value = expression_reguliere_exemple_text
+        dossier.save
+      end
+
+      it 'should have errors' do
+        expect(dossier.errors).not_to be_empty
+        expect(dossier.errors.full_messages.join(',')).to include("ne correspond pas au format attendu")
+      end
+    end
+
+    context "with good example" do
+      let(:expression_reguliere_exemple_text) { "AZERTY" }
+      let(:expression_reguliere) { "[A-Z]+" }
+
+      before do
+        champ = dossier.champs_public.first
+        champ.value = expression_reguliere_exemple_text
+        dossier.save
+      end
+
+      it 'should not have errors' do
+        expect(dossier.errors).to be_empty
+      end
+    end
+  end
+
   describe 'index_for_section_header' do
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }

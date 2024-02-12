@@ -32,6 +32,10 @@ module DossierRebaseConcern
     !champs.filter { _1.stable_id == stable_id }.any? { _1.in?(options) }
   end
 
+  def can_rebase_expression_reguliere_change?(stable_id, expression_reguliere)
+    false
+  end
+
   private
 
   def accepted_en_construction_changes?
