@@ -1,7 +1,12 @@
 module Gestionnaires
   class GroupeGestionnairesController < GestionnaireController
+    before_action :retrieve_groupe_gestionnaire, only: [:show]
+
     def index
       @groupe_gestionnaires = groupe_gestionnaires
+    end
+
+    def show
     end
 
     private

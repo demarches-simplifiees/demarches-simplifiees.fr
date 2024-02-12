@@ -11,6 +11,14 @@ class Gestionnaire < ApplicationRecord
     find_by(users: { email: email })
   end
 
+  def email
+    user&.email
+  end
+
+  def active?
+    user&.active?
+  end
+
   def self.find_all_by_identifier(ids: [], emails: [])
     find_all_by_identifier_with_emails(ids:, emails:).first
   end

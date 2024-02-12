@@ -9,4 +9,8 @@ class ApplicationComponent < ViewComponent::Base
   def current_administrateur
     controller.current_administrateur
   end
+
+  def current_gestionnaire
+    controller.current_gestionnaire
+  end
 end
