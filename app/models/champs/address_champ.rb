@@ -61,7 +61,7 @@ class Champs::AddressChamp < Champs::TextChamp
 
   def commune_name
     if full_address?
-      "#{APIGeoService.commune_name(department_code, address['city_code'])} (#{address['postal_code']})"
+      "#{APIGeoService.commune_name(address.fetch('department_code'), address['city_code'])} (#{address['postal_code']})"
     end
   end
 
