@@ -228,7 +228,7 @@ describe 'fetch API Particulier Data', js: true, retry: 3 do
       find('#publish-procedure-link').click
       expect(find_field('procedure_path').value).to eq procedure.path
       fill_in 'lien_site_web', with: 'http://some.website'
-      click_on 'Publier'
+      within('form') { click_on 'Publier' }
 
       expect(page).to have_text('Démarche publiée')
     end
