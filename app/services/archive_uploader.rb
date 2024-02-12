@@ -44,7 +44,7 @@ class ArchiveUploader
   end
 
   def upload_with_chunking_wrapper
-    params =  blob_default_params(filepath).merge(byte_size: File.size(filepath),
+    params = blob_default_params(filepath).merge(byte_size: File.size(filepath),
                                                   checksum: Digest::SHA256.file(filepath).hexdigest)
     blob = ActiveStorage::Blob.create_before_direct_upload!(**params)
     if retryable_syscall_to_custom_uploader(blob)

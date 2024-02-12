@@ -2,6 +2,7 @@ fr:
   activemodel:
     models:
       outdated_procedure:
+        one: Démarche sans expiration
         other: Démarches sans expiration
     attributes:
       outdated_procedure:

@@ -123,7 +123,7 @@ describe Gestionnaires::GroupeGestionnairesController, type: :controller do
 
       it do
         subject
-        expect(GroupeGestionnaire.all.count).to eq(1)
+        expect(GroupeGestionnaire.count).to eq(1)
         expect(response).to redirect_to(gestionnaire_groupe_gestionnaires_path)
       end
     end

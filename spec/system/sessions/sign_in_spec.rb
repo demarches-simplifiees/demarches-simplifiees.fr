@@ -78,7 +78,7 @@ describe 'Signin in:' do
       click_on 'Se connecter', match: :first
 
       sign_in_with user.email, password
-      expect(page).to have_content('Vous devez confirmer votre compte par courriel.')
+      expect(page).to have_content('Vous devez confirmer votre compte par email.')
     end
   end
 end

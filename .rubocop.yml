@@ -803,6 +803,8 @@ Rails/FindById:
 
 Rails/FindEach:
   Enabled: true
+  Exclude:
+    - spec/**/*
 
 Rails/FreezeTime:
   Enabled: true
@@ -1436,7 +1438,6 @@ Style/SymbolLiteral:
 
 Style/SymbolProc:
   Enabled: true
-  IgnoredMethods: [after]
 
 Style/TernaryParentheses:
   Enabled: false
