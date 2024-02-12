@@ -8,7 +8,7 @@ export class AutosaveSubmitController extends ApplicationController {
   #buttonText?: string;
 
   connect(): void {
-    this.onGlobal('autosave:enqueue', () => this.didEnqueue());
+    this.onGlobal('autosave:input', () => this.didInput());
     this.onGlobal('autosave:end', () => this.didSucceed());
     this.onGlobal('autosave:error', () => this.didFail());
     this.on('click', (event) => this.onClick(event));
@@ -23,7 +23,7 @@ export class AutosaveSubmitController extends ApplicationController {
     }
   }
 
-  private didEnqueue() {
+  private didInput() {
     this.#isSaving = true;
     this.#shouldSubmit = false;
   }

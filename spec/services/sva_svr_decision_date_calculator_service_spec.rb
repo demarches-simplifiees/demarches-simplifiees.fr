@@ -162,7 +162,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 30' do
-        let(:depose_at) { DateTime.new(2023, 6, 29, 12) }
+        let(:depose_at) { Time.zone.local(2023, 6, 29, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 9, 1))
@@ -170,7 +170,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 31' do
-        let(:depose_at) { DateTime.new(2023, 7, 30, 12) }
+        let(:depose_at) { Time.zone.local(2023, 7, 30, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 10, 2))
@@ -178,7 +178,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 1 in month having 31 days' do
-        let(:depose_at) { DateTime.new(2023, 7, 31, 12) }
+        let(:depose_at) { Time.zone.local(2023, 7, 31, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 10, 3))
@@ -186,7 +186,7 @@ describe SVASVRDecisionDateCalculatorService do
       end
 
       context 'start date = 1 in month having 30 days' do
-        let(:depose_at) { DateTime.new(2023, 6, 30, 12) }
+        let(:depose_at) { Time.zone.local(2023, 6, 30, 12) }
 
         it 'calculcates the date accordingly' do
           expect(subject).to eq(Date.new(2023, 9, 3))
