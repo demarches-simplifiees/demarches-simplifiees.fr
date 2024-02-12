@@ -9,7 +9,7 @@ export enum Action {
   Clear = 'clear',
   Update = 'update'
 }
-export type Option = { value: string; label: string };
+export type Option = { value: string; label: string; data?: unknown };
 export type Hint =
   | {
       type: 'results';
@@ -27,7 +27,13 @@ export type State = {
   options: Option[];
   allowsCustomValue: boolean;
   hint: Hint | null;
+  loading: boolean | null;
 };
+
+export type Fetcher = (
+  term: string,
+  options?: { signal: AbortSignal }
+) => Promise<Option[]>;
 
 export class Combobox {
   #allowsCustomValue = false;
@@ -38,27 +44,26 @@ export class Combobox {
   #options: Option[] = [];
   #visibleOptions: Option[] = [];
   #render: (state: State) => void;
+  #fetcher: Fetcher | null;
+  #abortController?: AbortController | null;
 
   constructor({
     options,
     selected,
-    value,
     allowsCustomValue,
     render
   }: {
-    options: Option[];
+    options: Option[] | Fetcher;
     selected: Option | null;
-    value?: string;
     allowsCustomValue?: boolean;
     render: (state: State) => void;
   }) {
     this.#allowsCustomValue = allowsCustomValue ?? false;
-    this.#options = options;
+    this.#options = Array.isArray(options) ? options : [];
+    this.#fetcher = Array.isArray(options) ? null : options;
     this.#selectedOption = selected;
     if (this.#selectedOption) {
       this.#inputValue = this.#selectedOption.label;
-    } else if (value) {
-      this.#inputValue = value;
     }
     this.#render = render;
   }
@@ -114,11 +119,28 @@ export class Combobox {
     return true;
   }
 
-  input(value: string) {
+  async input(value: string) {
     if (this.#inputValue == value) return;
+
     this.#inputValue = value;
-    this.#selectedOption = null;
-    this.#visibleOptions = this._filterOptions();
+
+    if (this.#fetcher) {
+      this.#abortController?.abort();
+      this.#abortController = new AbortController();
+      this._render(Action.Update);
+      this.#options = await this.#fetcher(value, {
+        signal: this.#abortController.signal
+      }).catch(() => []);
+      this.#abortController = null;
+      this._render(Action.Update);
+
+      this.#selectedOption = null;
+      this.#visibleOptions = this.#options;
+    } else {
+      this.#selectedOption = null;
+      this.#visibleOptions = this._filterOptions();
+    }
+
     if (this.#visibleOptions.length > 0) {
       if (!this.#open) {
         this.open();
@@ -239,7 +261,8 @@ export class Combobox {
       focused: this.#focusedOption,
       selection: this.#selectedOption,
       allowsCustomValue: this.#allowsCustomValue,
-      hint: null
+      hint: null,
+      loading: this.#abortController ? true : this.#fetcher ? false : null
     };
 
     return { ...state, hint: this._getFeedback(state) };

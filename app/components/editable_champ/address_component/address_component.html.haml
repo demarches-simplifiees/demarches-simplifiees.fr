@@ -1,11 +1,2 @@
-- render_parent
-
-= @form.hidden_field :value
-= @form.hidden_field :external_id
-
-= react_component("ComboAdresseSearch",
-  required: @champ.required?,
-  id: @champ.input_id,
-  describedby: @champ.describedby_id,
-  **react_combo_props,
-)
+= render Dsfr::ComboboxComponent.new form: @form, name: :value, url: data_sources_data_source_adresse_path, selected: @champ.value, id: @champ.input_id, class: 'fr-select', describedby: @champ.describedby_id do
+  = @form.hidden_field :external_id, data: { value_slot: 'value' }

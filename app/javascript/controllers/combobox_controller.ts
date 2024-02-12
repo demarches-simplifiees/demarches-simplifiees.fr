@@ -9,14 +9,16 @@ export class ComboboxController extends ApplicationController {
   #combobox?: ComboboxUI;
 
   connect() {
-    const { input, valueInput, list, item, hint } = this.getElements();
+    const { input, selectedValueInput, valueSlots, list, item, hint } =
+      this.getElements();
     const hints = JSON.parse(list.dataset.hints ?? '{}') as Record<
       string,
       string
     >;
     this.#combobox = new ComboboxUI({
       input,
-      valueInput,
+      selectedValueInput,
+      valueSlots,
       list,
       item,
       hint,
@@ -33,8 +35,11 @@ export class ComboboxController extends ApplicationController {
   private getElements() {
     const input =
       this.element.querySelector<HTMLInputElement>('input[type="text"]');
-    const valueInput = this.element.querySelector<HTMLInputElement>(
+    const selectedValueInput = this.element.querySelector<HTMLInputElement>(
       'input[type="hidden"]'
+    );
+    const valueSlots = this.element.querySelectorAll<HTMLInputElement>(
+      'input[type="hidden"][data-value-slot]'
     );
     const list = this.element.querySelector<HTMLUListElement>('[role=listbox]');
     const item = this.element.querySelector<HTMLTemplateElement>('template');
@@ -46,7 +51,7 @@ export class ComboboxController extends ApplicationController {
       'ComboboxController requires a input element'
     );
     invariant(
-      isInputElement(valueInput),
+      isInputElement(selectedValueInput),
       'ComboboxController requires a hidden input element'
     );
     invariant(
@@ -58,7 +63,7 @@ export class ComboboxController extends ApplicationController {
       'ComboboxController requires a template element'
     );
 
-    return { input, valueInput, list, item, hint };
+    return { input, selectedValueInput, valueSlots, list, item, hint };
   }
 }
 

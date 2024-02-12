@@ -1,2 +1,2 @@
-class EditableChamp::AddressComponent < EditableChamp::ComboSearchComponent
+class EditableChamp::AddressComponent < EditableChamp::EditableChampBaseComponent
 end

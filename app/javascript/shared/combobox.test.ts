@@ -1,4 +1,5 @@
 import { suite, test, beforeEach, expect } from 'vitest';
+import { matchSorter } from 'match-sorter';
 
 import { Combobox, Option, State } from './combobox';
 
@@ -26,6 +27,7 @@ suite('Combobox', () => {
 
       test('open select box and select option with click', () => {
         expect(currentState.open).toBeFalsy();
+        expect(currentState.loading).toBe(null);
         expect(currentState.selection?.label).toBe('Fraises');
 
         combobox.open();
@@ -260,6 +262,34 @@ suite('Combobox', () => {
       expect(currentState.open).toBeFalsy();
       expect(currentState.selection).toBeNull();
       expect(currentState.inputValue).toEqual('toto');
+    });
+  });
+
+  suite('single select with fetcher', () => {
+    beforeEach(() => {
+      combobox = new Combobox({
+        options: (term: string) =>
+          Promise.resolve(matchSorter(options, term, { keys: ['value'] })),
+        selected: null,
+        render: (state) => {
+          currentState = state;
+        }
+      });
+      combobox.init();
+    });
+
+    test('type and get options from fetcher', async () => {
+      expect(currentState.open).toBeFalsy();
+      expect(currentState.loading).toBe(false);
+
+      const result = combobox.input('Baies');
+
+      expect(currentState.loading).toBe(true);
+      await result;
+      expect(currentState.loading).toBe(false);
+      expect(currentState.open).toBeTruthy();
+      expect(currentState.selection).toBeNull();
+      expect(currentState.options.length).toEqual(3);
     });
   });
 });
