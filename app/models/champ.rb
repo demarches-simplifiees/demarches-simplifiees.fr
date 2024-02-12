@@ -58,6 +58,7 @@ class Champ < ApplicationRecord
     :refresh_after_update?,
     :character_limit?,
     :character_limit,
+    :yes_no?,
     to: :type_de_champ
 
   # pf champ

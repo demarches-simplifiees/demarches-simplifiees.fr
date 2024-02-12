@@ -1,9 +1,9 @@
 class TypesDeChamp::YesNoTypeDeChamp < TypesDeChamp::CheckboxTypeDeChamp
   def filter_to_human(filter_value)
     if filter_value == "true"
-      "oui"
+      I18n.t('activerecord.attributes.type_de_champ.type_champs.yes_no_true')
     elsif filter_value == "false"
-      "non"
+      I18n.t('activerecord.attributes.type_de_champ.type_champs.yes_no_false')
     else
       filter_value
     end

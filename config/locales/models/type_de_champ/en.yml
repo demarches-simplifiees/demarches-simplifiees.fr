@@ -38,10 +38,14 @@ en:
           piece_justificative: 'Supporting document'
           titre_identite: 'Identity title'
           checkbox: 'Checkbox'
+          checkbox_true: 'checked'
+          checkbox_false: 'not checked'
           drop_down_list: 'Dropdown list'
           multiple_drop_down_list: 'Multiple dropdown list'
           linked_drop_down_list: 'Linked dropdown list'
           yes_no: 'Yes/No'
+          yes_no_true: 'yes'
+          yes_no_false: 'no'
           annuaire_education: 'Schooling directory'
           rna: 'RNA'
           carte: 'Card'
@@ -56,5 +60,3 @@ en:
         attributes:
           header_section_level:
             gap_error: "An header section with %{level} is missing."
-
-
