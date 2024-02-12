@@ -18,17 +18,21 @@ class API::V2::StoredQuery
     $state: DossierState
     $order: Order
     $first: Int
+    $last: Int
+    $before: String
     $after: String
     $archived: Boolean
     $revision: ID
     $createdSince: ISO8601DateTime
     $updatedSince: ISO8601DateTime
-    $pendingDeletedOrder: Order
     $pendingDeletedFirst: Int
+    $pendingDeletedLast: Int
+    $pendingDeletedBefore: String
     $pendingDeletedAfter: String
     $pendingDeletedSince: ISO8601DateTime
-    $deletedOrder: Order
     $deletedFirst: Int
+    $deletedLast: Int
+    $deletedBefore: String
     $deletedAfter: String
     $deletedSince: ISO8601DateTime
     $includeGroupeInstructeurs: Boolean = false
@@ -67,6 +71,8 @@ class API::V2::StoredQuery
         state: $state
         order: $order
         first: $first
+        last: $last
+        before: $before
         after: $after
         archived: $archived
         createdSince: $createdSince
@@ -81,8 +87,9 @@ class API::V2::StoredQuery
         }
       }
       pendingDeletedDossiers(
-        order: $pendingDeletedOrder
         first: $pendingDeletedFirst
+        last: $pendingDeletedLast
+        before: $pendingDeletedBefore
         after: $pendingDeletedAfter
         deletedSince: $pendingDeletedSince
       ) @include(if: $includePendingDeletedDossiers) {
@@ -94,8 +101,9 @@ class API::V2::StoredQuery
         }
       }
       deletedDossiers(
-        order: $deletedOrder
         first: $deletedFirst
+        last: $deletedLast
+        before: $deletedBefore
         after: $deletedAfter
         deletedSince: $deletedSince
       ) @include(if: $includeDeletedDossiers) {
@@ -114,6 +122,8 @@ class API::V2::StoredQuery
     $state: DossierState
     $order: Order
     $first: Int
+    $last: Int
+    $before: String
     $after: String
     $archived: Boolean
     $revision: ID
@@ -121,10 +131,14 @@ class API::V2::StoredQuery
     $updatedSince: ISO8601DateTime
     $pendingDeletedOrder: Order
     $pendingDeletedFirst: Int
+    $pendingDeletedLast: Int
+    $pendingDeletedBefore: String
     $pendingDeletedAfter: String
     $pendingDeletedSince: ISO8601DateTime
     $deletedOrder: Order
     $deletedFirst: Int
+    $deletedLast: Int
+    $deletedBefore: String
     $deletedAfter: String
     $deletedSince: ISO8601DateTime
     $includeDossiers: Boolean = false
@@ -151,6 +165,8 @@ class API::V2::StoredQuery
         state: $state
         order: $order
         first: $first
+        last: $last
+        before: $before
         after: $after
         archived: $archived
         createdSince: $createdSince
@@ -167,6 +183,8 @@ class API::V2::StoredQuery
       pendingDeletedDossiers(
         order: $pendingDeletedOrder
         first: $pendingDeletedFirst
+        last: $pendingDeletedLast
+        before: $pendingDeletedBefore
         after: $pendingDeletedAfter
         deletedSince: $pendingDeletedSince
       ) @include(if: $includePendingDeletedDossiers) {
@@ -180,6 +198,8 @@ class API::V2::StoredQuery
       deletedDossiers(
         order: $deletedOrder
         first: $deletedFirst
+        last: $deletedLast
+        before: $deletedBefore
         after: $deletedAfter
         deletedSince: $deletedSince
       ) @include(if: $includeDeletedDossiers) {
