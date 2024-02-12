@@ -19,8 +19,9 @@ class TitreIdentiteWatermarkJob < ApplicationJob
         processed = WatermarkService.new.process(file, output)
         return if processed.blank?
 
-        blob.upload(processed)
-        blob.touch(:watermarked_at)
+        blob.upload(processed) # also update checksum & byte_size accordingly
+        blob.watermarked_at = Time.current
+        blob.save!
       end
     end
   end
