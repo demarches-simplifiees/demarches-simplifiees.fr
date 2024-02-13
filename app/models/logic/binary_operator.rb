@@ -37,6 +37,8 @@ class Logic::BinaryOperator < Logic::Term
     l = @left.compute(champs)
     r = @right.compute(champs)
 
+    l = l[:value] if l.is_a?(Hash)
+
     l&.send(operation, r) || false
   end
 

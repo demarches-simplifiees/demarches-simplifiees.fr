@@ -4,12 +4,12 @@ class Logic::InDepartementOperator < Logic::BinaryOperator
   end
 
   def compute(champs = [])
-    l = @left.compute_value_json(champs)
+    l = @left.compute(champs)
     r = @right.compute(champs)
 
     return false if l.nil?
 
-    l.fetch("code_departement") == r
+    l.fetch(:code_departement) == r
   end
 
   def errors(type_de_champs = [])

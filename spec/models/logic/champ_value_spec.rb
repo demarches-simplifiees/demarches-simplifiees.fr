@@ -93,13 +93,30 @@ describe Logic::ChampValue do
       let(:champ) { create(:champ_departements, value: '02') }
 
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:departement_enum) }
-      it { is_expected.to eq('02') }
+      it { is_expected.to eq({ value: '02', code_region: '32' }) }
     end
 
     context 'region tdc' do
       let(:champ) { create(:champ_regions, value: 'La Réunion') }
 
       it { is_expected.to eq('04') }
+    end
+
+    context 'commune tdc' do
+      let(:champ) { create(:champ_communes, code_postal: '92500', external_id: '92063') }
+
+      it { is_expected.to eq({ code_departement: '92', code_region: '11' }) }
+    end
+
+    context 'epci tdc' do
+      let(:champ) { build(:champ_epci, code_departement: '43') }
+
+      before do
+        champ.save!
+        champ.update_columns(external_id: '244301016', value: 'CC des Sucs')
+      end
+
+      it { is_expected.to eq({ code_departement: '43', code_region: '84' }) }
     end
 
     describe 'errors' do
@@ -138,34 +155,6 @@ describe Logic::ChampValue do
           expect(champ_value(stable_id).options([drop_down_r2])).to match_array([["revision_2", "revision_2"]])
         end
       end
-    end
-  end
-
-  describe '#compute_value_json' do
-    subject { champ_value(champ.stable_id).compute_value_json([champ]) }
-
-    context 'commune tdc' do
-      let(:champ) { create(:champ_communes, code_postal: '92500', external_id: '92063') }
-
-      it { is_expected.to eq({ 'code_departement' => '92', 'code_postal' => '92500', 'code_region' => '11' }) }
-    end
-
-    context 'epci tdc' do
-      let(:champ) { build(:champ_epci, code_departement: '43') }
-
-      before do
-        champ.save!
-        champ.update_columns(external_id: '244301016', value: 'CC des Sucs')
-      end
-
-      it { is_expected.to eq({ 'code_departement' => '43', 'code_region' => '84' }) }
-    end
-
-    context 'departement tdc' do
-      let(:champ) { create(:champ_departements, value: '02') }
-
-      it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:departement_enum) }
-      it { is_expected.to eq({ 'code_region' => '32' }) }
     end
   end
 end
