@@ -84,18 +84,22 @@ describe Users::TransfersController, type: :controller do
 
     shared_examples 'email error' do
       it { expect { subject }.not_to change { DossierTransfer.count } }
-      it { expect(flash.alert).to match([/invalide/]) }
+      it { expect(flash.alert).to include(expected_error) }
       it { is_expected.to redirect_to transferer_dossier_path(dossier.id) }
     end
 
     context "when email is empty" do
       let(:email) { "" }
-      it_behaves_like 'email error'
+      it_behaves_like 'email error' do
+        let(:expected_error) { 'L’adresse email doit être rempli' }
+      end
     end
 
     context "when email is invalid" do
       let(:email) { "not-an-email" }
-      it_behaves_like 'email error'
+      it_behaves_like 'email error' do
+        let(:expected_error) { "L’adresse email est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr" }
+      end
     end
   end
 end

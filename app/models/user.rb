@@ -37,10 +37,8 @@ class User < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
 
-  with_options if: :elligible_to_new_validation? do
-    before_validation :remove_devise_email_validator
-    validates :email, strict_email: true
-  end
+  before_validation :remove_devise_email_validator
+  validates :email, strict_email: true
 
   def validate_password_complexity?
     administrateur?
@@ -272,10 +270,6 @@ class User < ApplicationRecord
 
   def link_invites!
     Invite.where(email: email).update_all(user_id: id)
-  end
-
-  def elligible_to_new_validation?
-    StrictEmailValidator.elligible_to_new_validation?(self)
   end
 
   def remove_devise_email_validator

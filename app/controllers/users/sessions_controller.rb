@@ -29,7 +29,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def link_sent
-    if Devise.email_regexp.match?(params[:email])
+    if StrictEmailValidator::REGEXP.match?(params[:email])
       @email = params[:email]
     else
       redirect_to root_path
