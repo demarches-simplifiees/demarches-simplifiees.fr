@@ -1,0 +1,609 @@
+{
+  "items": [
+    {
+      "code_programme": "101",
+      "code": "0101",
+      "description": null,
+      "label": "Accès au droit et à la justice"
+    },
+    {
+      "code_programme": "101",
+      "code": "0101-01",
+      "description": null,
+      "label": "Aide juridictionnelle"
+    },
+    {
+      "code_programme": "101",
+      "code": "0101-01-03",
+      "description": null,
+      "label": null
+    },
+    {
+      "code_programme": "101",
+      "code": "0101-02",
+      "description": null,
+      "label": "Développement de l'accès au droit et du réseau judiciaire de proximité"
+    },
+    {
+      "code_programme": "101",
+      "code": "0101-03",
+      "description": null,
+      "label": "Aide aux victimes"
+    },
+    {
+      "code_programme": "101",
+      "code": "0101-04",
+      "description": null,
+      "label": "Médiation familiale et espaces de rencontre"
+    },
+    {
+      "code_programme": "101",
+      "code": "0101-05",
+      "description": null,
+      "label": "Indemnisation des avoués"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102",
+      "description": null,
+      "label": "Accès et retour à l'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-01",
+      "description": null,
+      "label": "Amélioration de l'efficacité du service public de l'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-01-01",
+      "description": null,
+      "label": "Indemnisation des demandeurs d'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-01-02",
+      "description": null,
+      "label": "Coordination du service public de l'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-02",
+      "description": null,
+      "label": "Amélioration des dispositifs en faveur de l'emploi des personnes les plus éloignées du marché du travail"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-02-01",
+      "description": null,
+      "label": "Insertion dans l'emploi au moyen de contrats aidés"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-02-02",
+      "description": null,
+      "label": "Accompagnement des publics les plus en difficultés"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-03",
+      "description": null,
+      "label": "Plan d'investissement des compétences"
+    },
+    {
+      "code_programme": "102",
+      "code": "0102-04",
+      "description": null,
+      "label": "AideExcepContPro"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103",
+      "description": null,
+      "label": "Accompagnement des mutations économiques et développement de l'emploi"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-01",
+      "description": null,
+      "label": "Anticipation et accompagnement des conséquences des mutations économiques sur l'emploi"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-01-01",
+      "description": null,
+      "label": "Développement de l'emploi en TPE-PME"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-01-02",
+      "description": null,
+      "label": "Implication des branches et des entreprises dans la prévention du licenciement et le reclassement des salariés"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-02",
+      "description": null,
+      "label": "Amélioration de l'insertion dans l'emploi par l'adaptation des qualifications et la reconnaissance des compétences"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-02-03",
+      "description": null,
+      "label": "Reconnaissance des compétences acquises par les personnes"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-02-04",
+      "description": null,
+      "label": "Amélioration de l'accès à la qualification par le développement de l'alternance et de la certification"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-03",
+      "description": null,
+      "label": "Développement de l'emploi"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-03-01",
+      "description": null,
+      "label": "Baisse du coût du travail pour faciliter le développement de territoires et de secteurs à forts potentiels d'emploi"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-03-02",
+      "description": null,
+      "label": "Promotion de l'activité"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-03-03",
+      "description": null,
+      "label": "Aide à l'embauche"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-04",
+      "description": null,
+      "label": "Plan d'investissement des compétences"
+    },
+    {
+      "code_programme": "103",
+      "code": "0103-05",
+      "description": null,
+      "label": "Aide except apprentis"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104",
+      "description": null,
+      "label": "Intégration et accès à la nationalité française"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-11",
+      "description": null,
+      "label": "Accueil des étrangers primo arrivants"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-11-02",
+      "description": null,
+      "label": "Accueil des étrangers primo-arrivants - Dépenses sur crédits nationaux"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-11-04",
+      "description": null,
+      "label": "Accueil des étrangers primo-arrivants - Dépenses à la charge du fonds européen pour l'intégration (FEI)"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-11-05",
+      "description": null,
+      "label": "Accueil des étrangers primo-arrivants - Dépenses à la charge du Fonds européen asile, migration et intégration"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-12",
+      "description": null,
+      "label": "Actions d'accompagnement des étrangers en situation régulière"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-12-02",
+      "description": null,
+      "label": "Actions d'accompagnement des primo-arrivants - Dépenses sur crédits nationaux"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-12-08",
+      "description": null,
+      "label": "Actions d'accompagnement des primo-arrivants. Dépenses à la charge du Fonds européen pour l'intégration (FEI)"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-12-14",
+      "description": null,
+      "label": "Actions d'accompagnement des étrangers. Dépenses à la charge du Fonds européen asile, migration et intégration (FAMI)"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-12-15",
+      "description": null,
+      "label": "Actions Réfugiés"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-14",
+      "description": null,
+      "label": "Accès à la nationalité française"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-15",
+      "description": null,
+      "label": "Accompagnement des réfugiés"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-15-01",
+      "description": null,
+      "label": "Centres provisoires d'hébergement des réfugiés"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-15-04",
+      "description": null,
+      "label": "Aide et accompagnement des réfugiés. Dépenses à la charge du Fonds Européen pour les réfugiés (FER)"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-15-12",
+      "description": null,
+      "label": "Aide et accompagnement des réfugiés - Dépenses sur crédits nationaux"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-15-13",
+      "description": null,
+      "label": "Aide et accompagnement des réfugiés - dépenses à la charge du Fonds européen asile, migration et intégration (FAMI)"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-16",
+      "description": null,
+      "label": "Accompagnement du plan de traitement des foyers de  travailleurs migrants"
+    },
+    {
+      "code_programme": "104",
+      "code": "0104-16-01",
+      "description": null,
+      "label": "Foyers de travailleurs migrants - Dépenses sur crédits nationaux"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105",
+      "description": null,
+      "label": "Action de la France en Europe et dans le monde"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-01",
+      "description": null,
+      "label": "Coordination de l'action diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-01-01",
+      "description": null,
+      "label": "Etat major : cabinets"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-01-08",
+      "description": null,
+      "label": "Etat major : logistique de niveau chef d'Etat ou de gouvernement"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-01-09",
+      "description": null,
+      "label": "Etat-major : affaires politiques"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-01-15",
+      "description": null,
+      "label": "Personnel concourant à l'action coordination de l'action diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-01-16",
+      "description": null,
+      "label": "Sécurité des communautés françaises"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-02",
+      "description": null,
+      "label": "Action européenne"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-02-01",
+      "description": null,
+      "label": "Moyens de fonctionnement : services d'administration centrale"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-02-07",
+      "description": null,
+      "label": "Dépenses d'intervention et de communication du ministre chargé des affaires européennes"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-02-08",
+      "description": null,
+      "label": "Contributions aux organisations européennes"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-02-11",
+      "description": null,
+      "label": "Personnel concourant à l'action action européenne"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-04",
+      "description": null,
+      "label": "Contributions internationales"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-04-01",
+      "description": null,
+      "label": "Opérations de maintien de la paix : participations obligatoires aux opérations de maintien de la paix des Nations Unies (en devises)"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-04-02",
+      "description": null,
+      "label": "Contributions en euros aux organisations internationales"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-04-05",
+      "description": null,
+      "label": "Contributions en devises aux organisations internationales"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-05",
+      "description": null,
+      "label": "Coopération de sécurité et de défense"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-05-01",
+      "description": null,
+      "label": "Formation des élites et cadres de sécurité et de défense"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-05-02",
+      "description": null,
+      "label": "Ingénierie de sécurité et de défense"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-05-03",
+      "description": null,
+      "label": "Fonctions de direction et soutien en France et étranger"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-05-04",
+      "description": null,
+      "label": "Personnel concourant à l'action coopération de sécurité et de défense"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06",
+      "description": null,
+      "label": "Soutien"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06-06",
+      "description": null,
+      "label": "Ressources humaines"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06-08",
+      "description": null,
+      "label": "Systèmes d'information et de télécommunication"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06-10",
+      "description": null,
+      "label": "Logistique diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06-11",
+      "description": null,
+      "label": "Politique immobilière"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06-12",
+      "description": null,
+      "label": "Sécurité diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-06-14",
+      "description": null,
+      "label": "Personnel concourant à l'action soutien"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-07",
+      "description": null,
+      "label": "Réseau diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-07-01",
+      "description": null,
+      "label": "Réseau diplomatique : postes à l'étranger - dépenses de structures du ministère des Affaires étrangères"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-07-02",
+      "description": null,
+      "label": "Personnel du Ministère des Affaires étrangères et européennes concourant à l'action réseau diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-07-03",
+      "description": null,
+      "label": "Réseau diplomatique : postes à l'étranger - dépenses de structures hors ministère des Affaires étrangères"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-07-04",
+      "description": null,
+      "label": "Personnel hors Ministère des Affaires étrangères et européennes, concourant à l'action réseau diplomatique"
+    },
+    {
+      "code_programme": "105",
+      "code": "0105-99",
+      "description": null,
+      "label": "Dépenses de personnel à reventiler entre les actions du programme"
+    },
+    {
+      "code_programme": "107",
+      "code": "0107",
+      "description": null,
+      "label": "Administration pénitentiaire"
+    },
+    {
+      "code_programme": "107",
+      "code": "0107-01",
+      "description": null,
+      "label": "Garde et contrôle des personnes placées sous main de justice"
+    },
+    {
+      "code_programme": "107",
+      "code": "0107-02",
+      "description": null,
+      "label": "Accueil et accompagnement des personnes placées sous main de justice"
+    },
+    {
+      "code_programme": "107",
+      "code": "0107-04",
+      "description": null,
+      "label": "Soutien et formation"
+    },
+    {
+      "code_programme": "107",
+      "code": "0107-99",
+      "description": null,
+      "label": "Dépenses de personnel du programme à reventiler"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109",
+      "description": null,
+      "label": "Aide à l'accès au logement"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109-01",
+      "description": null,
+      "label": "Aides personnelles"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109-02",
+      "description": null,
+      "label": "Information relative au logement et accompagnement des publics en difficulté"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109-02-01",
+      "description": null,
+      "label": "Information sur le logement (ANIL et ADIL)"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109-02-02",
+      "description": null,
+      "label": "Autres interventions de l'Etat en faveur du logement des publics en difficulté"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109-03",
+      "description": null,
+      "label": "Sécurisation des risques locatifs"
+    },
+    {
+      "code_programme": "109",
+      "code": "0109-03-01",
+      "description": null,
+      "label": "Garantie des risques locatifs"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110",
+      "description": null,
+      "label": "Aide économique et financière au développement"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110-01",
+      "description": null,
+      "label": "Aide économique et financière multilatérale"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110-01-10",
+      "description": null,
+      "label": "Association internationale de développement"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110-01-13",
+      "description": null,
+      "label": "Groupe de la banque mondiale"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110-01-16",
+      "description": null,
+      "label": "Coopération technique"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110-01-18",
+      "description": null,
+      "label": "Fonds africain de développement"
+    },
+    {
+      "code_programme": "110",
+      "code": "0110-01-24",
+      "description": null,
+      "label": "Fonds asiatique de développement"
+    }
+  ],
+  "pageInfo": {
+    "totalRows": 3066,
+    "page": 1,
+    "pageSize": 100
+  }
+}

@@ -1,0 +1,609 @@
+{
+  "items": [
+    {
+      "code_programme": "101",
+      "code": "010101010101",
+      "description": null,
+      "label": "DOTATIONS CARPA AJ ET AUTRES INTERVENTIONS"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010106",
+      "description": null,
+      "label": "RETRIBUER AVOCATS CE CCASS MISSIONS AJ"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010113",
+      "description": null,
+      "label": "RETRIBUER HUISSIERS"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010114",
+      "description": null,
+      "label": "AUTRES HONOR FRAIS ACTES PROCED ENQUETES TRADUCT"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010115",
+      "description": null,
+      "label": "RETRIBUER EXPERTS MISSIONS AJ"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010116",
+      "description": null,
+      "label": "RETRIBUER MEDIATEURS"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010117",
+      "description": null,
+      "label": "DOTATION CONTRACTUALISATION"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101010118",
+      "description": null,
+      "label": "CONDUITE CHANGEMENT AIDE JURIDICTIONNELLE"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101040101",
+      "description": null,
+      "label": "VERSER UNE SUBVENTION EN FAVEUR DES CDAD"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101040103",
+      "description": null,
+      "label": "MAISONS DE JUSTICE ET DU DROIT"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101040104",
+      "description": null,
+      "label": "VERSER UNE SUBV ASSOC FED AD"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101050105",
+      "description": null,
+      "label": "MEDIATION FAMILIALE"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101050106",
+      "description": null,
+      "label": "ESPACES RENCONTRE"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101050107",
+      "description": null,
+      "label": "MEDIATION - HORS MEDIATION FAMILIALE"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101060102",
+      "description": null,
+      "label": "DOTATION AIDE AUX VICTIMES HORS BAV"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101060105",
+      "description": null,
+      "label": "ASSISTANCE TELEPH SITE INTERNET AV TGD"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101060106",
+      "description": null,
+      "label": "CREATION SOUTIEN EQ BUREAUX AIDE VICTIMES"
+    },
+    {
+      "code_programme": "101",
+      "code": "010101070101",
+      "description": null,
+      "label": "CONTRIBUTION AU FIDA"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000101",
+      "description": null,
+      "label": "Allocation de solidarité spécifique (ASS)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000102",
+      "description": null,
+      "label": "Contribution exceptionnelle de solidarité - FDS"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000202",
+      "description": null,
+      "label": "Allocations complémentaires"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000203",
+      "description": null,
+      "label": "Aide au pouvoir d'achat des demandeurs d'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000301",
+      "description": null,
+      "label": "Allocations temporaires d'attente (ATA)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000304",
+      "description": null,
+      "label": "Intermittents"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000702",
+      "description": null,
+      "label": "Maisons de l'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000703",
+      "description": null,
+      "label": "Maison de l'emploi - investissement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000704",
+      "description": null,
+      "label": "Clauses sociales"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200000801",
+      "description": null,
+      "label": "Pôle emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001005",
+      "description": null,
+      "label": "Contrats initiative Emploi (CIE)-Marchand"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001006",
+      "description": null,
+      "label": "Parcours Emploi Compétences (PEC)-CAE-Non Marchand"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001007",
+      "description": null,
+      "label": "Emplois d'avenir"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001101",
+      "description": null,
+      "label": "Chantier de développement local (Mayotte)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001102",
+      "description": null,
+      "label": "Congé solidarité (secteur marchand - outre mer)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001103",
+      "description": null,
+      "label": "Contrats d'accès à l'emploi DOM"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001106",
+      "description": null,
+      "label": "Contrats emploi jeune et consolidation"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001107",
+      "description": null,
+      "label": "Contrats emploi solidarité"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001109",
+      "description": null,
+      "label": "Stage d'insertion et de formation professionnelle"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001201",
+      "description": null,
+      "label": "Contrats d'accompagnement dans l'emploi (CAE) DOM"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001210",
+      "description": null,
+      "label": "CAE, CAV"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001301",
+      "description": null,
+      "label": "Agence Services et Paiement (ASP)-Frais de gestion"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001302",
+      "description": null,
+      "label": "ASP-Dotation d'investissement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001401",
+      "description": null,
+      "label": "Contrat d'autonomie pour les jeunes des quartiers"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001501",
+      "description": null,
+      "label": "Entreprises adaptées-Aides au poste classiques"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001503",
+      "description": null,
+      "label": "Programmes Régionaux d'insertion des TH (PRITH)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001504",
+      "description": null,
+      "label": "PROG  Ins. travailleurs hand. CPER"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001505",
+      "description": null,
+      "label": "Subventions aux entreprises adaptées"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001601",
+      "description": null,
+      "label": "IAE-Associations intermédiaires(AI)-AAP classiques"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001602",
+      "description": null,
+      "label": "IAE-Chantiers d'insertion (ACI)-AAP classiques"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001603",
+      "description": null,
+      "label": "IAE- Entreprises d'insertion (EI)-AAP classiques"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001604",
+      "description": null,
+      "label": "Exos-Structures agréées Réinsertion Pro"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001605",
+      "description": null,
+      "label": "IAE-Fonds départemental d'insertion (FDI)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001607",
+      "description": null,
+      "label": "Réserves parlementaires"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001608",
+      "description": null,
+      "label": "ETCLD-Contribution développement l'emploi (CDE)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001609",
+      "description": null,
+      "label": "Exonération association intermédiaire"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001610",
+      "description": null,
+      "label": "IAE-Exos-Ateliers et Chantiers d'insertion (ACI)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001611",
+      "description": null,
+      "label": "Contrats à impact social (CIS)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001612",
+      "description": null,
+      "label": "FIE-Initiatives territoriales (IT)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001613",
+      "description": null,
+      "label": "IAE-Entrep Travail Temp Inser(ETTI)-AAP classiques"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001614",
+      "description": null,
+      "label": "IAE-Entrep d'inser travail indépendant (EITI)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001615",
+      "description": null,
+      "label": "IAE-SEVE Emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001616",
+      "description": null,
+      "label": "Contrat Pro IAE"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001617",
+      "description": null,
+      "label": "IAE-Chantiers d'insertion (ACI)-Contrats Pass"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001618",
+      "description": null,
+      "label": "CDI Séniors IAE"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001619",
+      "description": null,
+      "label": "IAE-Aide création d'entreprise- Accompagnement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001701",
+      "description": null,
+      "label": "Accompagnement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001702",
+      "description": null,
+      "label": "Actions de parrainage"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001704",
+      "description": null,
+      "label": "EPIDE-Fonctionnement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001705",
+      "description": null,
+      "label": "Fonds Insertion professionnelle des jeunes (FIPJ)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001706",
+      "description": null,
+      "label": "Missions locales"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001707",
+      "description": null,
+      "label": "Missions locales Accompagnement EAV"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001708",
+      "description": null,
+      "label": "Structuration Réseau ML (UNML et ARML)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001710",
+      "description": null,
+      "label": "Ecoles de la deuxième chance (E2C)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001714",
+      "description": null,
+      "label": "EPIDE- Dotation d'investissement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001716",
+      "description": null,
+      "label": "Allocation APEC"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001717",
+      "description": null,
+      "label": "Allocation AIJ"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001718",
+      "description": null,
+      "label": "Allocation Jeunes étudiants diplômés"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001719",
+      "description": null,
+      "label": "Mentorat"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001720",
+      "description": null,
+      "label": "CEJ-Allocation Jeunes Ponctuelle PE (AJPE)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001721",
+      "description": null,
+      "label": "CEJ-Nouveaux acteurs accomp des jeunes en rupture"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001722",
+      "description": null,
+      "label": "CEJ-Allocation Mensuelle Pôle Emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001723",
+      "description": null,
+      "label": "CEJ-Remobilisation jeunes en rupture"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001724",
+      "description": null,
+      "label": "CEJ-Offre de service digitale"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001725",
+      "description": null,
+      "label": "CEJ-Pôle emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001726",
+      "description": null,
+      "label": "CEJ-Allocation Mensuelle Missions locales"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001727",
+      "description": null,
+      "label": "CEJ-Accompagnement APEC"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001728",
+      "description": null,
+      "label": "Marseille Création d'entreprises Jeunes"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001729",
+      "description": null,
+      "label": "Allocation ponctuelle PACEA Missions locales"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001801",
+      "description": null,
+      "label": "Mise en situation Emploi Publics fragiles ou spéc."
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001901",
+      "description": null,
+      "label": "Allocation équivalent retraite (AER)"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200001902",
+      "description": null,
+      "label": "R2F"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002001",
+      "description": null,
+      "label": "Garanties jeunes Accompagnement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002002",
+      "description": null,
+      "label": "Garanties Jeunes Allocations"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002003",
+      "description": null,
+      "label": "Allocation PACEA"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002004",
+      "description": null,
+      "label": "PIC- Programmes nationaux - Accompagnement"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002005",
+      "description": null,
+      "label": "PIC-R2F"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002101",
+      "description": null,
+      "label": "Aide exceptionnelle contrats professionnalisation"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002201",
+      "description": null,
+      "label": "Expérimentations SPIE"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002301",
+      "description": null,
+      "label": "Accompagnements mobilité résidentielle Pôle Emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002302",
+      "description": null,
+      "label": "Actions en faveur mobilité des demandeurs d'emploi"
+    },
+    {
+      "code_programme": "102",
+      "code": "010200002401",
+      "description": null,
+      "label": "ASS-Création Reprise d'Entreprise (ACCRE-ASS)"
+    }
+  ],
+  "pageInfo": {
+    "totalRows": 13381,
+    "page": 1,
+    "pageSize": 100
+  }
+}

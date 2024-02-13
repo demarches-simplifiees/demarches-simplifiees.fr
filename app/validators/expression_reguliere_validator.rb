@@ -1,7 +1,9 @@
 class ExpressionReguliereValidator < ActiveModel::Validator
+  TIMEOUT = 1.second.freeze
+
   def validate(record)
     if record.value.present?
-      if !record.value.match?(Regexp.new(record.expression_reguliere, timeout: 5.0))
+      if !record.value.match?(Regexp.new(record.expression_reguliere, timeout: TIMEOUT))
         record.errors.add(:value, :invalid_regexp, expression_reguliere_error_message: record.expression_reguliere_error_message)
       end
     end
