@@ -5,8 +5,8 @@ fr:
         gestionnaires: Gestionnaires
     models:
       groupe_gestionnaire:
-        one: Groupe d'administrateurs
-        other: Groupes d'administrateurs
+        one: Groupe Gestionnaire
+        other: Groupes Gestionnaire
     errors:
       duplicate_email: 
         one: "%{emails} est déjà gestionnaire de ce groupe"

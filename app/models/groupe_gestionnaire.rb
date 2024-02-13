@@ -24,6 +24,9 @@ class GroupeGestionnaire < ApplicationRecord
       if gestionnaire.nil? || !in?(gestionnaire.groupe_gestionnaires) || !gestionnaire.groupe_gestionnaires.destroy(self)
         alert = "Le gestionnaire « #{gestionnaire.email} » n’est pas dans le groupe."
       else
+        if gestionnaire.groupe_gestionnaires.empty?
+          gestionnaire.destroy
+        end
         notice = "Le gestionnaire « #{gestionnaire.email} » a été retiré du groupe."
         GroupeGestionnaireMailer
           .notify_removed_gestionnaire(self, gestionnaire, current_user.email)
@@ -74,5 +77,9 @@ class GroupeGestionnaire < ApplicationRecord
     end
 
     [gestionnaires_to_add, alert, notice]
+  end
+
+  def can_be_deleted?(current_user)
+    (gestionnaires.empty? || (gestionnaires == [current_user])) && administrateurs.empty? && children.empty?
   end
 end
