@@ -916,6 +916,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.bigint "administrateur_id"
     t.text "adresse"
     t.datetime "created_at", null: false
+    t.string "departement"
     t.string "email"
     t.jsonb "etablissement_infos", default: {}
     t.decimal "etablissement_lat", precision: 10, scale: 6
@@ -929,6 +930,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "updated_at", null: false
     t.index ["administrateur_id", "nom"], name: "index_services_on_administrateur_id_and_nom", unique: true
     t.index ["administrateur_id"], name: "index_services_on_administrateur_id"
+    t.index ["departement"], name: "index_services_on_departement"
   end
 
   create_table "stats", force: :cascade do |t|
