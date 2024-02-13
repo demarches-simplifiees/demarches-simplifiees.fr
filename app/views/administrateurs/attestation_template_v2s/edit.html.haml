@@ -64,11 +64,18 @@
             = render Dsfr::InputComponent.new(form: f, attribute: :label_direction, input_type: :text_area, required: false, opts: { rows: 2, data: { controller: :textarea, textarea_max_rows_value: 2 } }) do |c|
               - c.with_hint { "Exemple: Direction interministérielle du numérique. 2 lignes maximum" }
 
-          .fr-fieldset__element.fr-mt-2w
+          .fr-fieldset__element.fr-mt-3w
             .fr-input-group{ class: class_names("fr-input-group--error" => f.object.errors.include?(:json_body)) }
               %label.fr-label.fr-h4
                 = AttestationTemplate.human_attribute_name :body
                 = render EditableChamp::AsteriskMandatoryComponent.new
+
+              .flex.flex-gap-2.fr-mb-2w
+                - @buttons.each do |buttons|
+                  .flex.flex-gap-1
+                    - buttons.each do |(label, action, icon)|
+                      %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
+                        = label
 
               #editor.editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
               = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
@@ -76,14 +83,6 @@
               .fr-error-text{ id: dom_id(f.object, "json-body-messages"), class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
                 - if f.object.errors.include?(:json_body)
                   = render partial: "shared/errors_list", locals: { object: f.object, attribute: :json_body }
-
-          .fr-fieldset__element
-            .flex.flex-gap-2
-              - @buttons.each do |buttons|
-                .flex.flex-gap-1
-                  - buttons.each do |(label, action, icon)|
-                    %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
-                      = label
 
           .fr-fieldset__element
             %p.fr-hint-text
