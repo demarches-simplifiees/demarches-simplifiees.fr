@@ -5,24 +5,44 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
   let!(:commentaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur) }
 
   describe "#index" do
+    let(:subject_gestionnaire) { gestionnaire }
+    let(:subject_groupe_gestionnaire) { groupe_gestionnaire }
     render_views
-    subject { get :index, params: { groupe_gestionnaire_id: groupe_gestionnaire.id } }
+    subject { get :index, params: { groupe_gestionnaire_id: subject_groupe_gestionnaire.id } }
 
     context "when not logged" do
       before { subject }
       it { expect(response).to redirect_to(new_user_session_path) }
     end
 
-    context "when logged in" do
+    describe "when logged in" do
       before do
-        sign_in(gestionnaire.user)
+        sign_in(subject_gestionnaire.user)
         subject
       end
 
-      it do
-        expect(response).to have_http_status(:ok)
-        expect(assigns(:groupe_gestionnaire).commentaire_groupe_gestionnaires.select("sender_id, sender_type, sender_email, MAX(id) as id, MAX(created_at) as created_at").group(:sender_id, :sender_type, :sender_email).order("MAX(id) DESC")).to include(commentaire)
-        expect(response.body).to include(commentaire.sender_email)
+      context "in a root group" do
+        it do
+          expect(response).to have_http_status(:ok)
+          expect(assigns(:groupe_gestionnaire).current_commentaires_groupe_and_children_commentaires_groupe.select("sender_id, sender_type, sender_email, MAX(id) as id, MAX(created_at) as created_at").group(:sender_id, :sender_type, :sender_email).order("MAX(id) DESC")).to include(commentaire)
+          expect(response.body).to include(commentaire.sender_email)
+          expect(response.body).not_to include("Messages avec le groupe gestionnaire parent")
+        end
+      end
+
+      context "in a child group" do
+        let(:child_gestionnaire) { create(:gestionnaire).tap { _1.user.update(last_sign_in_at: Time.zone.now) } }
+        let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire.id}/", gestionnaires: [child_gestionnaire]) }
+        let(:subject_groupe_gestionnaire) { child_groupe_gestionnaire }
+        let(:subject_gestionnaire) { child_gestionnaire }
+        let!(:commentaire_to_parent_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: child_groupe_gestionnaire, sender: child_gestionnaire) }
+
+        it do
+          expect(response).to have_http_status(:ok)
+          expect(assigns(:groupe_gestionnaire).current_commentaires_groupe_and_children_commentaires_groupe.or(CommentaireGroupeGestionnaire.where(groupe_gestionnaire_id: child_groupe_gestionnaire.id, sender: child_gestionnaire)).select("sender_id, sender_type, sender_email, MAX(id) as id, MAX(created_at) as created_at").group(:sender_id, :sender_type, :sender_email).order("MAX(id) DESC")).to include(commentaire_to_parent_groupe_gestionnaire)
+          expect(response.body).to include(commentaire_to_parent_groupe_gestionnaire.sender_email)
+          expect(response.body).to include("Messages avec le groupe gestionnaire parent")
+        end
       end
     end
   end
@@ -64,6 +84,62 @@ describe Gestionnaires::GroupeGestionnaireCommentairesController, type: :control
     context 'of a new commentaire' do
       it do
         expect(groupe_gestionnaire.reload.commentaire_groupe_gestionnaires.map(&:body)).to include("avant\napres")
+        expect(flash.notice).to eq("Message envoyé")
+      end
+    end
+  end
+
+  describe "#parent_groupe_gestionnaire" do
+    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire.id}/", gestionnaires: [gestionnaire]) }
+    render_views
+    subject { get :parent_groupe_gestionnaire, params: { groupe_gestionnaire_id: child_groupe_gestionnaire.id } }
+
+    context "when not logged" do
+      before { subject }
+      it { expect(response).to redirect_to(new_user_session_path) }
+    end
+
+    describe "when logged in" do
+      before do
+        sign_in(gestionnaire.user)
+        subject
+      end
+
+      context "without a commentaire to parent_group_gestionnaire" do
+        it do
+          expect(response).to have_http_status(:ok)
+          expect(assigns(:groupe_gestionnaire).commentaire_groupe_gestionnaires.where(sender: gestionnaire)).not_to include(commentaire)
+          expect(response.body).not_to include(commentaire.body)
+        end
+      end
+
+      context "with a commentaire to parent_group_gestionnaire" do
+        let!(:commentaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: child_groupe_gestionnaire, sender: gestionnaire) }
+
+        it do
+          expect(response).to have_http_status(:ok)
+          expect(assigns(:groupe_gestionnaire).commentaire_groupe_gestionnaires.where(sender: gestionnaire)).to include(commentaire)
+          expect(response.body).to include(commentaire.body)
+        end
+      end
+    end
+  end
+
+  describe "#create_parent_groupe_gestionnaire" do
+    let!(:child_groupe_gestionnaire) { create(:groupe_gestionnaire, ancestry: "/#{groupe_gestionnaire.id}/", gestionnaires: [gestionnaire]) }
+    before do
+      sign_in(gestionnaire.user)
+      post :create_parent_groupe_gestionnaire,
+        params: {
+          id: commentaire.id,
+          groupe_gestionnaire_id: child_groupe_gestionnaire.id,
+          commentaire_groupe_gestionnaire: { body: "avant\napres" }
+        }
+    end
+
+    context 'of a new commentaire' do
+      it do
+        expect(child_groupe_gestionnaire.reload.commentaire_groupe_gestionnaires.map(&:body)).to include("avant\napres")
         expect(flash.notice).to eq("Message envoyé")
       end
     end
