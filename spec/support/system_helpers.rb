@@ -70,21 +70,14 @@ module SystemHelpers
   end
 
   # Add a new type de champ in the procedure editor
-  def add_champ(options = {})
-    add_champs(**options)
+  def add_champ
+    click_on 'Ajouter un champ'
   end
 
-  # Add several new type de champ in the procedure editor
-  def add_champs(count: 1, remove_flash_message: false)
-    within '.buttons' do
-      count.times { click_on 'Ajouter un champ' }
-    end
-
-    if remove_flash_message
-      expect(page).to have_button('Ajouter un champ', disabled: false)
-      expect(page).to have_content('Formulaire enregistré')
-      execute_script("document.querySelector('#flash_message').remove();")
-    end
+  def remove_flash_message
+    expect(page).to have_button('Ajouter un champ', disabled: false)
+    expect(page).to have_content('Formulaire enregistré')
+    execute_script("document.querySelector('#flash_message').remove();")
   end
 
   def blur

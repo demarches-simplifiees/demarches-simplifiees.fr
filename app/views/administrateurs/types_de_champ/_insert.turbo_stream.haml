@@ -9,6 +9,9 @@
 - if @destroyed.present?
   = turbo_stream.remove dom_id(@destroyed, :type_de_champ_editor)
 
+  - if @destroyed.siblings.empty?
+    = turbo_stream.show('empty-coordinates')
+
 - if @created.present?
   - if @created.coordinate.previous_sibling.present?
     = turbo_stream.after dom_id(@created.coordinate.previous_sibling, :type_de_champ_editor) do
@@ -16,6 +19,8 @@
   - else
     = turbo_stream.prepend dom_id(@created.coordinate.block, :types_de_champ_editor_block) do
       - render @created
+
+  = turbo_stream.hide('empty-coordinates')
 
 - @morphed&.each do |champ_component|
   = turbo_stream.replace dom_id(champ_component.coordinate, :type_de_champ_editor) do

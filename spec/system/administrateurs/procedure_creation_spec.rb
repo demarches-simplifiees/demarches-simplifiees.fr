@@ -33,13 +33,16 @@ describe 'Creating a new procedure', js: true, retry: 3 do
     scenario 'an admin can add types de champs' do
       visit champs_admin_procedure_path(procedure)
 
-      add_champ(remove_flash_message: true)
+      add_champ
+      remove_flash_message
       fill_in 'Libellé du champ', with: 'libelle de champ'
       blur
       expect(page).to have_content('Formulaire enregistré')
       expect(page).to have_selector('select > optgroup', count: 8)
 
-      add_champ
+      within(find('.type-de-champ-add-button', match: :first)) {
+        add_champ
+      }
       expect(page).to have_selector('.type-de-champ', count: 1)
     end
 
@@ -47,7 +50,8 @@ describe 'Creating a new procedure', js: true, retry: 3 do
       visit champs_admin_procedure_path(procedure)
 
       # Add an empty repetition type de champ
-      add_champ(remove_flash_message: true)
+      add_champ
+      remove_flash_message
       select('Bloc répétable', from: 'Type de champ')
       fill_in 'Libellé du champ', with: 'libellé de champ'
       blur

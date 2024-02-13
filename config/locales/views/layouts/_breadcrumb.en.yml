@@ -5,7 +5,9 @@ en:
       you_are_here: "You are here"
       show: Show breadcrumb
       preview: "Preview the form"
-      continue: "Continue"
+      preview_annotations: "Preview annotations"
+      continue: "Validate form"
+      continue_annotations: "Validate annotations"
       continue_title: "You can comeback using this link"
       since: "since %{date}"
       closed: "Closed"
