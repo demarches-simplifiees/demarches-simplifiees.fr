@@ -28,3 +28,5 @@ fr:
         create: 'Créer un compte'
         title: "via un compte %{name}"
         signin: 'Se connecter'
+      messages:
+        remove_file: 'Supprimer le fichier'

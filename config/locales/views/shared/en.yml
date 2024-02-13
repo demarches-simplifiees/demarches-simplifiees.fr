@@ -28,3 +28,5 @@ en:
         create: 'Create an account'
         signin: 'Sign in'
         title: "using %{name} account"
+      messages:
+        remove_file: 'Remove file'
