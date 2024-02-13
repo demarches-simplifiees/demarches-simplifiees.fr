@@ -1,8 +1,7 @@
 class APIEntreprise::EffectifsJob < APIEntreprise::Job
   def perform(etablissement_id, procedure_id)
-    find_etablissement(etablissement_id)
-    # may 2020 is at the moment the most actual info for effectifs endpoint
-    etablissement_params = APIEntreprise::EffectifsAdapter.new(etablissement.siret, procedure_id, "2020", "05").to_params
+    etablissement = Etablissement.find(etablissement_id)
+    etablissement_params = APIEntreprise::EffectifsAdapter.new(etablissement.siret, procedure_id, *get_current_valid_month_for_effectif).to_params
     etablissement.update!(etablissement_params)
   end
 

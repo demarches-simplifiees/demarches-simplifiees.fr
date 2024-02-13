@@ -1,23 +1,34 @@
 class APIEntreprise::EffectifsAnnuelsAdapter < APIEntreprise::Adapter
-  def initialize(siret, procedure_id)
+  def initialize(siret, procedure_id, year = default_year)
     @siret = siret
     @procedure_id = procedure_id
+    @year = year
   end
 
   private
 
+  def default_year
+    Date.current.year - 1
+  end
+
   def get_resource
-    api(@procedure_id).effectifs_annuels(siren)
+    api(@procedure_id).effectifs_annuels(siren, @year)
   end
 
   def process_params
-    if data_source[:effectifs_annuels].present?
-      {
-        entreprise_effectif_annuel: data_source[:effectifs_annuels],
-        entreprise_effectif_annuel_annee: data_source[:annee]
-      }
-    else
-      {}
+    data = data_source.fetch(:data, nil)
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: data)
+      effectifs = data&.fetch(:effectifs_annuel, nil)&.first
+      if effectifs.present?
+        {
+          entreprise_effectif_annuel: effectifs[:value],
+          entreprise_effectif_annuel_annee: effectifs[:annee]
+        }
+      else
+        {}
+      end
     end
   end
 end

@@ -9,18 +9,24 @@ class APIEntreprise::EffectifsAdapter < APIEntreprise::Adapter
   private
 
   def get_resource
-    api(@procedure_id).effectifs(siren, @annee, @mois)
+    api(@procedure_id).effectifs(@siret, @annee, @mois)
   end
 
   def process_params
-    if data_source[:effectifs_mensuels].present?
-      {
-        entreprise_effectif_mensuel: data_source[:effectifs_mensuels],
-        entreprise_effectif_mois: data_source[:mois],
-        entreprise_effectif_annee: data_source[:annee]
-      }
-    else
-      {}
+    data = data_source.fetch(:data, nil)
+    Sentry.with_scope do |scope|
+      scope.set_tags(siret: @siret)
+      scope.set_extras(source: data)
+      effectifs = data&.fetch(:effectifs_mensuels, nil)&.first
+      if effectifs.present?
+        {
+          entreprise_effectif_mensuel: effectifs[:value],
+          entreprise_effectif_mois: effectifs[:mois],
+          entreprise_effectif_annee: effectifs[:annee]
+        }
+      else
+        {}
+      end
     end
   end
 end

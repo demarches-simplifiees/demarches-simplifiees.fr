@@ -9,7 +9,7 @@ describe APIEntreprise::EffectifsAdapter do
   subject { adapter.to_params }
 
   before do
-    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/effectifs_mensuels_acoss_covid\/#{annee}\/#{mois}\/entreprise\/#{siren}/)
+    stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/gip_mds\/etablissements\/#{siret}\/effectifs_mensuels\/#{mois}\/annee\/#{annee}/)
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
@@ -23,7 +23,7 @@ describe APIEntreprise::EffectifsAdapter do
     end
 
     it "renvoie les effectifs du mois demandé" do
-      expect(subject[:entreprise_effectif_mensuel]).to eq(100.5)
+      expect(subject[:entreprise_effectif_mensuel]).to eq(12.34)
     end
   end
 end

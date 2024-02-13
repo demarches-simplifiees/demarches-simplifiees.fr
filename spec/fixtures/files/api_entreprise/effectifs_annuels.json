@@ -1,5 +1,16 @@
 {
-  "siren": "418166096",
-  "annee": "2019",
-  "effectifs_annuels": 100.5
+  "data": {
+    "siren": "418166096",
+    "annee": "2017",
+    "effectifs_annuel": [
+      {
+        "regime": "regime_general",
+        "value": 100.5,
+        "nature": "effectif_moyen_annuel",
+        "date_derniere_mise_a_jour": "2018-01-01"
+      }
+    ]
+  },
+  "links": {},
+  "meta": {}
 }
