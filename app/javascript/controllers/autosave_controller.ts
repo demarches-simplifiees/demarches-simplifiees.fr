@@ -165,17 +165,25 @@ export class AutosaveController extends ApplicationController {
 
   private enqueueAutouploadRequest(target: HTMLInputElement, file: File) {
     const autoupload = new AutoUpload(target, file);
-    autoupload.start().catch((e) => {
-      const error = e as FileUploadError;
-      // Report unexpected client errors to Sentry.
-      // (But ignore usual client errors, or errors we can monitor better on the server side.)
-      if (
-        error.failureReason == FAILURE_CLIENT &&
-        error.code != ERROR_CODE_READ
-      ) {
-        throw error;
-      }
-    });
+    autoupload
+      .start()
+      .catch((e) => {
+        const error = e as FileUploadError;
+
+        this.globalDispatch('autosave:error');
+
+        // Report unexpected client errors to Sentry.
+        // (But ignore usual client errors, or errors we can monitor better on the server side.)
+        if (
+          error.failureReason == FAILURE_CLIENT &&
+          error.code != ERROR_CODE_READ
+        ) {
+          throw error;
+        }
+      })
+      .then(() => {
+        this.globalDispatch('autosave:end');
+      });
   }
 
   // Add a new autosave request to the queue.
