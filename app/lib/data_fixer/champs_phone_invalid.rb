@@ -1,4 +1,4 @@
-class PhoneFixer
+class DataFixer::ChampsPhoneInvalid
   def self.fix(phones_string)
     phone_candidates = phones_string
       .split(/-/)
