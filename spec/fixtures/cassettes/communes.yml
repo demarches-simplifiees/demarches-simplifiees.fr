@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=60&limit=10&type=commune-actuelle,arrondissement-municipal
+    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=60&limit=20&type=commune-actuelle,arrondissement-municipal
     body:
       encoding: US-ASCII
       string: ''
@@ -19,7 +19,7 @@ http_interactions:
       Server:
       - nginx/1.10.3 (Ubuntu)
       Date:
-      - Fri, 03 Nov 2023 16:28:05 GMT
+      - Tue, 13 Feb 2024 11:25:44 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -35,10 +35,10 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[]"
-  recorded_at: Fri, 03 Nov 2023 16:28:05 GMT
+  recorded_at: Tue, 13 Feb 2024 11:25:44 GMT
 - request:
     method: get
-    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=6040&limit=10&type=commune-actuelle,arrondissement-municipal
+    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=6040&limit=20&type=commune-actuelle,arrondissement-municipal
     body:
       encoding: US-ASCII
       string: ''
@@ -55,7 +55,7 @@ http_interactions:
       Server:
       - nginx/1.10.3 (Ubuntu)
       Date:
-      - Fri, 03 Nov 2023 16:28:05 GMT
+      - Tue, 13 Feb 2024 11:25:44 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
@@ -71,10 +71,10 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: "[]"
-  recorded_at: Fri, 03 Nov 2023 16:28:05 GMT
+  recorded_at: Tue, 13 Feb 2024 11:25:44 GMT
 - request:
     method: get
-    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=60400&limit=10&type=commune-actuelle,arrondissement-municipal
+    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=60400&limit=20&type=commune-actuelle,arrondissement-municipal
     body:
       encoding: US-ASCII
       string: ''
@@ -91,23 +91,23 @@ http_interactions:
       Server:
       - nginx/1.10.3 (Ubuntu)
       Date:
-      - Fri, 03 Nov 2023 16:28:05 GMT
+      - Tue, 13 Feb 2024 11:25:44 GMT
       Content-Type:
       - application/json; charset=utf-8
       Content-Length:
-      - '1608'
+      - '3234'
       Vary:
       - Accept-Encoding
       - Origin
       X-Powered-By:
       - Express
       Etag:
-      - W/"648-ePvxexacWlkxvdJ8v6an7VGvHMo"
+      - W/"ca2-8NmtTi6sTg1Smpmu0voZ0sZ2g4c"
       Strict-Transport-Security:
       - max-age=15552000
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        W3sibm9tIjoiQXBwaWxseSIsImNvZGUiOiI2MDAyMSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDAyMTYiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1Mjl9LHsibm9tIjoiQmFixZN1ZiIsImNvZGUiOiI2MDAzNyIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDAzNjQiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1MTB9LHsibm9tIjoiQmVhdXJhaW5zLWzDqHMtTm95b24iLCJjb2RlIjoiNjAwNTUiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAwNTQ3IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MzQwfSx7Im5vbSI6IkLDqWjDqXJpY291cnQiLCJjb2RlIjoiNjAwNTkiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAwNTg4IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MjAyfSx7Im5vbSI6IkJyw6l0aWdueSIsImNvZGUiOiI2MDEwNSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDEwNTciLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo0Mjd9LHsibm9tIjoiQnVzc3kiLCJjb2RlIjoiNjAxMTciLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxMTcyIiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MzEwfSx7Im5vbSI6IkNhaXNuZXMiLCJjb2RlIjoiNjAxMTgiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxMTgwIiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6NTA3fSx7Im5vbSI6IkNyaXNvbGxlcyIsImNvZGUiOiI2MDE4MSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDE4MDAiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo5MDh9LHsibm9tIjoiQ3V0cyIsImNvZGUiOiI2MDE4OSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDE4ODMiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo5Njd9LHsibm9tIjoiR2VudnJ5IiwiY29kZSI6IjYwMjcwIiwiY29kZURlcGFydGVtZW50IjoiNjAiLCJzaXJlbiI6IjIxNjAwMjY3NSIsImNvZGVFcGNpIjoiMjQ2MDAwNzU2IiwiY29kZVJlZ2lvbiI6IjMyIiwiY29kZXNQb3N0YXV4IjpbIjYwNDAwIl0sInBvcHVsYXRpb24iOjMzNX1d
-  recorded_at: Fri, 03 Nov 2023 16:28:05 GMT
+        W3sibm9tIjoiQXBwaWxseSIsImNvZGUiOiI2MDAyMSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDAyMTYiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1Mjl9LHsibm9tIjoiQmFixZN1ZiIsImNvZGUiOiI2MDAzNyIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDAzNjQiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1MTB9LHsibm9tIjoiQmVhdXJhaW5zLWzDqHMtTm95b24iLCJjb2RlIjoiNjAwNTUiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAwNTQ3IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MzQwfSx7Im5vbSI6IkLDqWjDqXJpY291cnQiLCJjb2RlIjoiNjAwNTkiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAwNTg4IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MjAyfSx7Im5vbSI6IkJyw6l0aWdueSIsImNvZGUiOiI2MDEwNSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDEwNTciLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo0Mjd9LHsibm9tIjoiQnVzc3kiLCJjb2RlIjoiNjAxMTciLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxMTcyIiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MzEwfSx7Im5vbSI6IkNhaXNuZXMiLCJjb2RlIjoiNjAxMTgiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxMTgwIiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6NTA3fSx7Im5vbSI6IkNyaXNvbGxlcyIsImNvZGUiOiI2MDE4MSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDE4MDAiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo5MDh9LHsibm9tIjoiQ3V0cyIsImNvZGUiOiI2MDE4OSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDE4ODMiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo5Njd9LHsibm9tIjoiR2VudnJ5IiwiY29kZSI6IjYwMjcwIiwiY29kZURlcGFydGVtZW50IjoiNjAiLCJzaXJlbiI6IjIxNjAwMjY3NSIsImNvZGVFcGNpIjoiMjQ2MDAwNzU2IiwiY29kZVJlZ2lvbiI6IjMyIiwiY29kZXNQb3N0YXV4IjpbIjYwNDAwIl0sInBvcHVsYXRpb24iOjMzNX0seyJub20iOiJHcmFuZHLDuyIsImNvZGUiOiI2MDI4NyIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDI4NDAiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjozNjB9LHsibm9tIjoiTGFyYnJveWUiLCJjb2RlIjoiNjAzNDgiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAzNDY3IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6NTE2fSx7Im5vbSI6Ik1vbmRlc2NvdXJ0IiwiY29kZSI6IjYwNDEwIiwiY29kZURlcGFydGVtZW50IjoiNjAiLCJzaXJlbiI6IjIxNjAwNDA2OSIsImNvZGVFcGNpIjoiMjQ2MDAwNzU2IiwiY29kZVJlZ2lvbiI6IjMyIiwiY29kZXNQb3N0YXV4IjpbIjYwNDAwIl0sInBvcHVsYXRpb24iOjI0OX0seyJub20iOiJNb3JsaW5jb3VydCIsImNvZGUiOiI2MDQzMSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDQyNjciLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1Mzh9LHsibm9tIjoiTmFtcGNlbCIsImNvZGUiOiI2MDQ0NSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDQ0MDgiLCJjb2RlRXBjaSI6IjI0NjAwMDc0OSIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjozMTB9LHsibm9tIjoiTm95b24iLCJjb2RlIjoiNjA0NzEiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDA0NjU1IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MTMxOTd9LHsibm9tIjoiUGFzc2VsIiwiY29kZSI6IjYwNDg4IiwiY29kZURlcGFydGVtZW50IjoiNjAiLCJzaXJlbiI6IjIxNjAwNDgyMCIsImNvZGVFcGNpIjoiMjQ2MDAwNzU2IiwiY29kZVJlZ2lvbiI6IjMyIiwiY29kZXNQb3N0YXV4IjpbIjYwNDAwIl0sInBvcHVsYXRpb24iOjI3Mn0seyJub20iOiJQb250LWwnw4l2w6pxdWUiLCJjb2RlIjoiNjA1MDYiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDA1MDA5IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6Njc5fSx7Im5vbSI6IlBvbnRvaXNlLWzDqHMtTm95b24iLCJjb2RlIjoiNjA1MDciLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDA1MDE3IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6NDUzfSx7Im5vbSI6IlBvcnF1w6lyaWNvdXJ0IiwiY29kZSI6IjYwNTExIiwiY29kZURlcGFydGVtZW50IjoiNjAiLCJzaXJlbiI6IjIxNjAwNTA1OCIsImNvZGVFcGNpIjoiMjQ2MDAwNzU2IiwiY29kZVJlZ2lvbiI6IjMyIiwiY29kZXNQb3N0YXV4IjpbIjYwNDAwIl0sInBvcHVsYXRpb24iOjQwMX1d
+  recorded_at: Tue, 13 Feb 2024 11:25:44 GMT
 recorded_with: VCR 6.1.0

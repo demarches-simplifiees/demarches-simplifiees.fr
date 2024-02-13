@@ -23,6 +23,9 @@ export class ComboboxController extends ApplicationController {
       item,
       hint,
       allowsCustomValue: this.element.hasAttribute('data-allows-custom-value'),
+      limit: this.element.hasAttribute('data-limit')
+        ? Number(this.element.getAttribute('data-limit'))
+        : undefined,
       getHintText: (hint) => getHintText(hints, hint)
     });
     this.#combobox.init();
