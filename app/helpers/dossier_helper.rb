@@ -34,6 +34,7 @@ module DossierHelper
   end
 
   def dossier_submission_is_closed?(dossier)
+    return false if dossier.editing_fork?
     dossier.brouillon? && dossier.procedure.close?
   end
 
