@@ -10,8 +10,11 @@ namespace :api_geo_data do
     departements = get_from_api_geo('departements?zone=metro,drom,com', 'departements')
     departements.each do |departement|
       departement_code = departement[:code]
-      if !departement_code.start_with?('98')
-        get_from_api_geo("epcis?codeDepartement=#{departement_code}", "epcis-#{departement_code}")
+      epci_filename = "epcis-#{departement_code}"
+      if departement_code.start_with?('98')
+        PATH.join("#{epci_filename}.json").write(JSON.dump([]))
+      else
+        get_from_api_geo("epcis?codeDepartement=#{departement_code}", epci_filename)
       end
       get_from_api_geo("communes?codeDepartement=#{departement_code}&type=commune-actuelle,arrondissement-municipal", "communes-#{departement_code}")
     end
