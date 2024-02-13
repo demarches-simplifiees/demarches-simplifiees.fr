@@ -19,7 +19,7 @@ class Attachment::EditComponent < ApplicationComponent
     @user_can_destroy = user_can_destroy
     @user_can_replace = user_can_replace
     @as_multiple = as_multiple
-
+    @auto_attach_url = auto_attach_url
     # Adaptation pour la gestion des pièces jointes multiples
     @attachments = attachments.presence || (kwargs.key?(:attachment) ? [kwargs.delete(:attachment)] : [])
     @attachments << attached_file.attachment if attached_file.respond_to?(:attachment) && @attachments.empty?
