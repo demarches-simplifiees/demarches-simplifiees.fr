@@ -162,6 +162,7 @@ describe 'As an administrateur I can edit types de champ', js: true, retry: 3 do
     wait_until { procedure.active_revision.types_de_champ_public.first.parcelles == '1' }
     expect(page).to have_content('Formulaire enregistré')
 
+    page.refresh
     preview_window = window_opened_by { click_on 'Prévisualiser le formulaire' }
     within_window(preview_window) do
       expect(page).to have_content('Libellé de champ Te Fenua')
