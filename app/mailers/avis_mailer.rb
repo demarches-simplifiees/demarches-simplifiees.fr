@@ -19,4 +19,8 @@ class AvisMailer < ApplicationMailer
       mail(to: email, subject: subject)
     end
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end

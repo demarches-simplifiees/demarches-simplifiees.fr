@@ -22,6 +22,10 @@ class ExpertMailer < ApplicationMailer
 
     mail(template_name: 'send_dossier_decision', to: email, subject: subject)
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end
 
 def decision_dossier(dossier)

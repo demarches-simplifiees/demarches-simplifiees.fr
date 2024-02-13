@@ -39,9 +39,7 @@ class AdministrateurMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL)
   end
 
-  private
-
-  def forced_delivery_for_action?
+  def self.critical_email?(action_name)
     action_name == "activate_before_expiration"
   end
 end

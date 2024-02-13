@@ -30,4 +30,8 @@ class PreactivateUsersMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL,
       body: body)
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end

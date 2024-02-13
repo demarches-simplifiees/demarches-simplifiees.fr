@@ -85,4 +85,8 @@ class AdministrationMailer < ApplicationMailer
       "#{size.to_int}o"
     end
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end

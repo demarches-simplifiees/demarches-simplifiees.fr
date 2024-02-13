@@ -27,4 +27,8 @@ class GroupeInstructeurMailer < ApplicationMailer
 
     mail(bcc: added_instructeur_emails, subject: subject)
   end
+
+  def self.critical_email?(action_name)
+    false
+  end
 end

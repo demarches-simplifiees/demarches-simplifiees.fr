@@ -2,16 +2,16 @@ module BalancedDeliveryConcern
   extend ActiveSupport::Concern
 
   included do
-    before_action :add_delivery_method, if: :forced_delivery?
+    before_action :add_delivery_method, if: :forced_delivery_provider?
+
+    def critical_email?
+      self.class.critical_email?(action_name)
+    end
 
     private
 
-    def forced_delivery_for_action?
-      false
-    end
-
-    def forced_delivery?
-      SafeMailer.forced_delivery_method.present? && forced_delivery_for_action?
+    def forced_delivery_provider?
+      SafeMailer.forced_delivery_method.present? && critical_email?
     end
 
     def add_delivery_method

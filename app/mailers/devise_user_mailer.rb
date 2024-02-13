@@ -6,6 +6,8 @@ class DeviseUserMailer < Devise::Mailer
   include MailerDolistConcern
   include MailerMonitoringConcern
   include BalancedDeliveryConcern
+  include PriorityDeliveryConcern
+
   layout 'mailers/layout'
 
   def template_paths
@@ -19,7 +21,7 @@ class DeviseUserMailer < Devise::Mailer
     super
   end
 
-  def forced_delivery_for_action?
+  def self.critical_email?(action_name)
     true
   end
 end

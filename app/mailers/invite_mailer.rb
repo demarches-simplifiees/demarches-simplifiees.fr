@@ -33,7 +33,7 @@ class InviteMailer < ApplicationMailer
       reply_to: reply_to)
   end
 
-  def forced_delivery_for_action?
+  def self.critical_email?(action_name)
     true
   end
 end

@@ -8,6 +8,10 @@ class ResendAttestationMailer < ApplicationMailer
     mail(to: to, subject: subject, body: body(dossier))
   end
 
+  def self.critical_email?(action_name)
+    false
+  end
+
   private
 
   def body(dossier)
