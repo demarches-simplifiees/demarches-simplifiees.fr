@@ -25,17 +25,85 @@ module Connections
 
     private
 
+    # [d1, d2, d3, d4, d5, d6]
+    #
+    # first: 2
+    # -> d1, d2
+    # first: 2, after: d2
+    # -> d3, d4
+    # first: 2, before: d3
+    # -> d1, d2
+    #
+    # last: 2
+    # -> d5, d6
+    # last: 2, before: d5
+    # -> d3, d4
+    # last: 2, after: d4
+    # -> d5, d6
+    #
+    # si after ou before present, last ou first donne juste limit
+    #
+    # order:
+    # order, ne sert rien si after ou before
+    #
+    # first: 2, order: desc => last: 2
+    # -> d5, d6
+    #
+    # last: 2, order: desc => first 2
+    # -> d1, d2
+    def limit_and_inverted(first: nil, last: nil, after: nil, before: nil, order: nil)
+      limit = [first, last, max_page_size].compact.min + 1
+      inverted = last.present? || before.present?
+
+      if order == :desc && after.nil? && before.nil?
+        inverted = !inverted
+      end
+
+      [limit, inverted]
+    end
+
+    def previous_page?(after, result_size, limit, inverted)
+      after.present? || (result_size == limit && inverted)
+    end
+
+    def next_page?(before, result_size, limit, inverted)
+      before.present? || (result_size == limit && !inverted)
+    end
+
     def load_nodes
       @nodes ||= begin
-        page_info = compute_page_info(before:, after:, first:, last:)
-        nodes = resolve_nodes(**page_info.slice(:before, :after, :limit, :inverted))
-        result_size = nodes.size
-        @has_previous_page = page_info[:has_previous_page].(result_size)
-        @has_next_page = page_info[:has_next_page].(result_size)
+        ensure_valid_params
 
-        trimmed_nodes = nodes.first(page_info[:expected_size])
-        trimmed_nodes.reverse! if page_info[:inverted]
+        limit, inverted = limit_and_inverted(first:, last:, after:, before:, order: @deprecated_order)
+        expected_size = limit - 1
+
+        nodes = resolve_nodes(limit:, before:, after:, inverted:)
+
+        result_size = nodes.size
+        @has_previous_page = previous_page?(after, result_size, limit, inverted)
+        @has_next_page = next_page?(before, result_size, limit, inverted)
+
+        trimmed_nodes = nodes.first(expected_size)
+        trimmed_nodes.reverse! if inverted
         trimmed_nodes
+      end
+    end
+
+    def ensure_valid_params
+      if first.present? && last.present?
+        raise GraphQL::ExecutionError.new('Arguments "first" and "last" are exclusive', extensions: { code: :bad_request })
+      end
+
+      if before.present? && after.present?
+        raise GraphQL::ExecutionError.new('Arguments "before" and "after" are exclusive', extensions: { code: :bad_request })
+      end
+
+      if first.present? && first < 0
+        raise GraphQL::ExecutionError.new('Argument "first" must be a non-negative integer', extensions: { code: :bad_request })
+      end
+
+      if last.present? && last < 0
+        raise GraphQL::ExecutionError.new('Argument "last" must be a non-negative integer', extensions: { code: :bad_request })
       end
     end
 
@@ -70,47 +138,6 @@ module Connections
       else
         nodes
       end
-    end
-
-    def compute_page_info(before: nil, after: nil, first: nil, last: nil)
-      if first.present? && last.present?
-        raise GraphQL::ExecutionError.new('Arguments "first" and "last" are exclusive', extensions: { code: :bad_request })
-      end
-
-      if before.present? && after.present?
-        raise GraphQL::ExecutionError.new('Arguments "before" and "after" are exclusive', extensions: { code: :bad_request })
-      end
-
-      if first.present? && first < 0
-        raise GraphQL::ExecutionError.new('Argument "first" must be a non-negative integer', extensions: { code: :bad_request })
-      end
-
-      if last.present? && last < 0
-        raise GraphQL::ExecutionError.new('Argument "last" must be a non-negative integer', extensions: { code: :bad_request })
-      end
-
-      if @deprecated_order == :desc
-        if last.present?
-          first = [last, max_page_size].min
-          last = nil
-        else
-          last = [first || default_page_size, max_page_size].min
-          first = nil
-        end
-      end
-
-      limit = [first || last || default_page_size, max_page_size].min + 1
-      inverted = last.present? || before.present?
-
-      {
-        before:,
-        after:,
-        limit:,
-        inverted:,
-        expected_size: limit - 1,
-        has_previous_page: -> (result_size) { after.present? || (result_size >= limit && inverted) },
-        has_next_page: -> (result_size) { before.present? || (result_size >= limit && !inverted) }
-      }
     end
   end
 end
