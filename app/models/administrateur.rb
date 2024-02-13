@@ -70,7 +70,7 @@ class Administrateur < ApplicationRecord
   end
 
   def can_be_deleted?
-    procedures.all? { |p| p.administrateurs.count > 1 }
+    procedures.all? { |p| p.administrateurs.count > 1 || p.dossiers.empty? }
   end
 
   def delete_and_transfer_services

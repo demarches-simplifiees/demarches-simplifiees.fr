@@ -22,10 +22,15 @@ module Manager
     def delete
       administrateur = Administrateur.find(params[:id])
 
-      administrateur.delete_and_transfer_services
+      result = AdministrateurDeletionService.new(current_super_admin, administrateur).call
 
-      logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_super_admin.id}")
-      flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
+      case result
+      in Dry::Monads::Result::Success
+        logger.info("L'administrateur #{administrateur.id} est supprimé par #{current_super_admin.id}")
+        flash[:notice] = "L'administrateur #{administrateur.id} est supprimé"
+      in Dry::Monads::Result::Failure(reason)
+        flash[:alert] = I18n.t(reason, scope: "manager.administrateurs.delete")
+      end
 
       redirect_to manager_administrateurs_path
     end

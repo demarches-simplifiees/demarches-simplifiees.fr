@@ -2,3 +2,13 @@ fr:
   manager:
     gestionnaires:
       manage_root_groupe_gestionnaire: Gestion du groupe racine
+    groupe_gestionnaires:
+      add_gestionnaire:
+        wrong_address:
+          one: "%{emails} n’est pas une adresse email valide"
+          other: "%{emails} ne sont pas des adresses emails valides"
+    administrateurs:
+      delete:
+        cannot_be_deleted: "L'administrateur ne peut pas être supprimé"
+        still_procedures: "L'administrateur ne peut pas être supprimé car il a encore des démarches"
+        still_services: "L'administrateur ne peut pas être supprimé car il a encore des services"
