@@ -11,7 +11,7 @@
     attestation_logo_attachment_official_label_value: AttestationTemplate.human_attribute_name(:logo_additional),
     attestation_logo_attachment_free_label_value: AttestationTemplate.human_attribute_name(:logo) } do |f|
 
-  #attestation-edit.fr-container.fr-mt-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
+  #attestation-edit.fr-container.fr-my-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
     .fr-mb-6w
       = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur d’attestation", heading_level: 'h3') do |c|
         - c.with_body do
@@ -26,7 +26,7 @@
           = link_to("Suivez ce lien pour revenir aux attestations actuellement délivrées", edit_admin_procedure_attestation_template_path(@procedure))
 
     .fr-grid-row.fr-grid-row--gutters
-      .fr-col-12.fr-col-md-8
+      .fr-col-12.fr-col-lg-7
         %fieldset.fr-fieldset{ aria: { labelledby: 'edit-attestation' } }
           %legend.fr-fieldset__legend#edit-attestation
             %h1.fr-h2 Attestation
@@ -107,9 +107,15 @@
             = render Dsfr::InputComponent.new(form: f, attribute: :footer, input_type: :text_area, required: false, opts: { rows: 3, data: { controller: :textarea, textarea_max_rows_value: 3 } }) do |c|
               - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
 
-      .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
-        = image_tag("attestation-template-schema-official.jpg", class: "attestation-schema", alt: "Schéma d’une attestation au modèle de l’état")
-
+      #preview-column.fr-col-12.fr-col-lg-5.fr-background-alt--blue-france
+        .sticky--top.fr-px-1w
+          .flex.justify-between.align-center
+            %h2.fr-h4 Aperçu
+            %p= link_to 'Prévisualiser en taille réelle', admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), class: 'fr-link', target: '_blank', rel: 'noopener'
+          %iframe.attestation-preview{ title: "Aperçu", src: admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), data: { attestation_target: 'preview' } }
+          %p.fr-hint-text
+            L’aperçu est mis à jour automatiquement après chaque modification.
+            Pour générer un aperçu fidèle avec tous les champs et les dates, créez-vous un dossier et acceptez-le : l’aperçu l’utilisera.
 
   .padded-fixed-footer
     .fixed-footer
@@ -117,8 +123,6 @@
         .fr-grid-row
           .fr-col-12.fr-col-md-7
             %ul.fr-btns-group.fr-btns-group--inline-md
-              %li
-                = link_to 'Prévisualiser l’attestation PDF', admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), class: 'fr-btn fr-btn', target: '_blank', rel: 'noopener'
               %li
                 = link_to admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary' do
                   %span.fr-icon-arrow-go-back-line.fr-icon--sm.fr-mr-1v

@@ -1,11 +1,17 @@
 @import "constants";
 
 #attestation-edit {
-  .attestation-schema {
+  .attestation-preview {
     width: 100%;
-    margin-top: 3em;
-    top: 3em;
-    position: sticky;
+
+    @media (min-width: 62em) {
+      height: 664px; // empirical height for an A4 ratio at this width
+    }
+
+    @media (max-width: 62em) {
+      // PDF height is approximately tied to width
+      height: calc(90vw * 29.7 / 21);
+    }
   }
 
   .tiptap {
