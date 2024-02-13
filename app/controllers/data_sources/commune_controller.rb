@@ -30,7 +30,7 @@ class DataSources::CommuneController < ApplicationController
       type: 'commune-actuelle,arrondissement-municipal',
       nom: name,
       boost: 'population',
-      limit: 20
+      limit: 100
     })
   end
 
@@ -39,7 +39,7 @@ class DataSources::CommuneController < ApplicationController
       type: 'commune-actuelle,arrondissement-municipal',
       codePostal: postal_code,
       boost: 'population',
-      limit: 10
+      limit: 20
     })
   end
 

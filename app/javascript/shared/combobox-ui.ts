@@ -21,6 +21,7 @@ export type ComboboxUIOptions = {
   item: HTMLTemplateElement;
   valueSlots?: HTMLInputElement[] | NodeListOf<HTMLInputElement>;
   allowsCustomValue?: boolean;
+  limit?: number;
   hint?: HTMLElement;
   getHintText?: (hint: Hint) => string;
 };
@@ -41,6 +42,7 @@ export class ComboboxUI implements EventListenerObject {
 
   #getHintText = defaultGetHintText;
   #allowsCustomValue: boolean;
+  #limit?: number;
 
   constructor({
     input,
@@ -50,7 +52,8 @@ export class ComboboxUI implements EventListenerObject {
     item,
     hint,
     getHintText,
-    allowsCustomValue
+    allowsCustomValue,
+    limit
   }: ComboboxUIOptions) {
     this.#input = input;
     this.#selectedValueInput = selectedValueInput;
@@ -60,6 +63,7 @@ export class ComboboxUI implements EventListenerObject {
     this.#hint = hint;
     this.#getHintText = getHintText ?? defaultGetHintText;
     this.#allowsCustomValue = allowsCustomValue ?? false;
+    this.#limit = limit;
   }
 
   init() {
@@ -75,6 +79,7 @@ export class ComboboxUI implements EventListenerObject {
         options: fetcher,
         selected,
         allowsCustomValue: this.#allowsCustomValue,
+        limit: this.#limit,
         render: (state) => this.render(state)
       });
     } else {
@@ -92,6 +97,7 @@ export class ComboboxUI implements EventListenerObject {
         options,
         selected,
         allowsCustomValue: this.#allowsCustomValue,
+        limit: this.#limit,
         render: (state) => this.render(state)
       });
     }
