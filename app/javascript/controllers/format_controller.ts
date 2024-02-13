@@ -52,12 +52,19 @@ export class FormatController extends ApplicationController {
   }
 
   private formatDecimal(value: string) {
-    const decimalSeparator = getDecimalSeparator(value);
-    const number =
-      decimalSeparator == ','
-        ? value.replace(/\./g, '').replace(/,/g, '.')
-        : value.replace(/,/g, '');
-    return number.replace(new RegExp(`[^-?\\d.]`, 'g'), '');
+    let formattedNumber = value;
+    const lastDotIndex = value.lastIndexOf('.');
+    const lastCommaIndex = value.lastIndexOf(',');
+    if (lastDotIndex != -1 && lastCommaIndex != -1) {
+      if (lastDotIndex < lastCommaIndex) {
+        formattedNumber = value.replace(/\./g, '');
+      } else {
+        formattedNumber = value.replace(/,/g, '');
+      }
+    }
+    return formattedNumber
+      .replace(/,/g, '.')
+      .replace(new RegExp(`[^-?\\d.]`, 'g'), '');
   }
 }
 
@@ -70,16 +77,4 @@ function replaceValue(target: HTMLInputElement, value: string) {
   target.selectionStart = start ? start - delta : 0;
   target.selectionEnd = end ? end - delta : 0;
   target.selectionDirection = dir;
-}
-
-function getDecimalSeparator(value: string) {
-  if (value.indexOf('.') != -1 && value.indexOf(',') != -1) {
-    if (value.lastIndexOf('.') < value.lastIndexOf(',')) {
-      return ',';
-    }
-    return '.';
-  } else if (value.indexOf(',') != -1) {
-    return ',';
-  }
-  return (1.1).toLocaleString().indexOf('.') != -1 ? '.' : ',';
 }
