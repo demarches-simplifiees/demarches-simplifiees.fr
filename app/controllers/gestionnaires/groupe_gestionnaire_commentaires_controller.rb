@@ -14,7 +14,7 @@ module Gestionnaires
     end
 
     def create
-      @commentaire = @last_commentaire.groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type, gestionnaire: current_gestionnaire))
+      @commentaire = @last_commentaire.groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender: @last_commentaire.sender, gestionnaire: current_gestionnaire))
 
       if @commentaire.errors.empty?
         GroupeGestionnaireMailer.notify_new_commentaire_groupe_gestionnaire(@last_commentaire.groupe_gestionnaire, @commentaire, current_gestionnaire.email, @commentaire.sender_email, @commentaire.sender_type == "Administrateur" ? admin_groupe_gestionnaire_commentaires_path : parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@last_commentaire.groupe_gestionnaire)).deliver_later
@@ -28,7 +28,7 @@ module Gestionnaires
     end
 
     def parent_groupe_gestionnaire
-      if (@last_commentaire)
+      if @last_commentaire
         @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, current_gestionnaire.id, "Gestionnaire")
         current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, current_gestionnaire.id, "Gestionnaire")
       end
@@ -71,7 +71,7 @@ module Gestionnaires
     end
 
     def retrieve_last_parent_groupe_gestionnaire_commentaire
-      @last_commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires&.where(sender_id: current_gestionnaire.id, sender_type: "Gestionnaire")&.last
+      @last_commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires&.where(sender: current_gestionnaire)&.last
     end
 
     def commentaire_params
