@@ -234,7 +234,7 @@ module Experts
     end
 
     def commentaire_params
-      params.require(:commentaire).permit(:body, :piece_jointe)
+      params.require(:commentaire).permit(:body, piece_jointe: [])
     end
   end
 end
