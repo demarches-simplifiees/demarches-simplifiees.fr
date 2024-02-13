@@ -110,6 +110,21 @@ describe RechercheController, type: :controller do
         end
       end
 
+      context 'when dossier is deleted' do
+        let!(:deleted_dossier) { DeletedDossier.create_from_dossier(dossier, DeletedDossier.reasons.fetch(:user_request)) }
+        let(:query) { deleted_dossier.dossier_id }
+
+        before { subject }
+
+        it { is_expected.to have_http_status(200) }
+
+        it 'does not return the dossier but it returns a message' do
+          subject
+          expect(assigns(:dossiers_count)).to eq(0)
+          expect(assigns(:deleted_dossier)).to eq(deleted_dossier)
+        end
+      end
+
       context 'with an id out of range' do
         let(:query) { 123456789876543234567 }
 
