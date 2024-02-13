@@ -26,7 +26,7 @@ class DataSources::AdresseController < ApplicationController
       {
         label: _1[:properties][:label],
         value: _1[:properties][:label],
-        data: _1[:properties]
+        data: _1
       }
     end
   end
