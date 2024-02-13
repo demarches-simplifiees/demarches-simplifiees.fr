@@ -115,7 +115,7 @@ class GroupeInstructeur < ApplicationRecord
     when TypeDeChamp.type_champs.fetch(:regions)
       APIGeoService.regions.map { _1[:code] }
     when TypeDeChamp.type_champs.fetch(:drop_down_list)
-      routing_tdc.options_with_drop_down_other
+      routing_tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1.last : _1 }
     end
     routing_rule.right.value.in?(options)
   end

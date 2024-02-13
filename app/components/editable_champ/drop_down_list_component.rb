@@ -13,6 +13,6 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
 
   def contains_long_option?
     max_length = 100
-    @champ.options.any? { _1.size > max_length }
+    @champ.enabled_non_empty_options.any? { _1.size > max_length }
   end
 end

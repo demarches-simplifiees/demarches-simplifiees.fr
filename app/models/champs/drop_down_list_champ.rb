@@ -19,14 +19,6 @@ class Champs::DropDownListChamp < Champ
     drop_down_list_options?
   end
 
-  def options
-    if drop_down_other?
-      drop_down_list_options + [["Autre", OTHER]]
-    else
-      drop_down_list_options
-    end
-  end
-
   def html_label?
     !render_as_radios?
   end
@@ -39,16 +31,12 @@ class Champs::DropDownListChamp < Champ
     other? ? OTHER : value
   end
 
-  def disabled_options
-    drop_down_list_disabled_options
-  end
-
-  def enabled_non_empty_options
-    drop_down_list_enabled_non_empty_options
+  def enabled_non_empty_options(other: false)
+    drop_down_list_enabled_non_empty_options(other:)
   end
 
   def other?
-    drop_down_other? && (other || (value.present? && drop_down_list_options.exclude?(value)))
+    drop_down_other? && (other || (value.present? && enabled_non_empty_options.exclude?(value)))
   end
 
   def value=(value)

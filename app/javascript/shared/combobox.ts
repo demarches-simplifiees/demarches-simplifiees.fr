@@ -151,6 +151,8 @@ export class Combobox {
       this.#open = false;
       this.#focusedOption = null;
       this._render(Action.Close);
+    } else {
+      this._render(Action.Update);
     }
   }
 
@@ -196,7 +198,6 @@ export class Combobox {
   }
 
   close() {
-    if (!this.#open) return;
     this.#open = false;
     this.#focusedOption = null;
     if (!this.#allowsCustomValue && !this.#selectedOption) {
@@ -238,7 +239,7 @@ export class Combobox {
       return this.#options;
     }
 
-    return matchSorter(this.#options, this.#inputValue, { keys: ['value'] });
+    return matchSorter(this.#options, this.#inputValue, { keys: ['label'] });
   }
 
   private get _focusedOptionIndex(): number {
