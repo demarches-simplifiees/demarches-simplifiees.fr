@@ -3,6 +3,7 @@ module Administrateurs
     include UninterlacePngConcern
 
     before_action :retrieve_procedure
+    before_action :preload_revisions
 
     def show
       redirect_to edit_admin_procedure_attestation_template_path(@procedure)
