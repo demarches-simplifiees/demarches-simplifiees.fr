@@ -75,6 +75,8 @@ RSpec.describe ApplicationMailer, type: :mailer do
     let(:user1) { create(:user) }
     let(:user2) { create(:user, email: "your@email.com") }
 
+    before { freeze_time }
+
     it 'creates a new EmailEvent record with the correct information' do
       expect { UserMailer.ask_for_merge(user1, user2.email).deliver_now }.to change { EmailEvent.count }.by(2)
       event = EmailEvent.last
@@ -83,7 +85,7 @@ RSpec.describe ApplicationMailer, type: :mailer do
       expect(event.to).to eq("your@email.com")
       expect(event.method).to eq("test")
       expect(event.subject).to eq('Fusion de compte')
-      expect(event.processed_at).to be_within(1.second).of(Time.zone.now)
+      expect(event.processed_at).to eq(Time.current)
       expect(event.status).to eq('dispatched')
     end
   end
