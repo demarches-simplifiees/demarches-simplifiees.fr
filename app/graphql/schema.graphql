@@ -3620,6 +3620,35 @@ type Query {
   ): GroupeInstructeurWithDossiers!
 }
 
+type RNA {
+  address: Address
+  id: String!
+  title: String
+}
+
+type RNAChamp implements Champ {
+  commune: Commune
+  departement: Departement
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+  rna: RNA
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+}
+
 type RNAChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.

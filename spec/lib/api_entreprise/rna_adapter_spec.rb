@@ -31,6 +31,16 @@ describe APIEntreprise::RNAAdapter do
       expect(subject["association_objet"]).to eq("L'association a pour objet de promouvoir la pratique du sport de haut niveau et de contribuer à la formation des jeunes sportifs.")
       expect(subject["association_date_declaration"]).to eq("2019-01-01")
       expect(subject["association_date_publication"]).to eq("2018-01-01")
+      expect(subject["adresse"]).to eq({
+        complement: "",
+        numero_voie: "33",
+        type_voie: "rue",
+        libelle_voie: "de Modagor",
+        distribution: "dummy",
+        code_insee: "75108",
+        code_postal: "75009",
+        commune: "Paris"
+      })
     end
   end
 end

@@ -8,4 +8,4 @@
   %p.fr-error-text= t('.network_error')
 - else
   - if champ.value.present?
-    %p.fr-info-text= t('.data_fetched', title: champ.title)
+    %p.fr-info-text= t('.data_fetched', title: champ.title, address: champ.full_address)

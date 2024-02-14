@@ -27,7 +27,7 @@ RSpec.describe Types::DossierType, type: :graphql do
   end
 
   describe 'dossier with champs' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :communes }, { type: :address }, { type: :siret }, { type: :rna }]) }
     let(:dossier) { create(:dossier, :accepte, :with_populated_champs, procedure: procedure) }
     let(:query) { DOSSIER_WITH_CHAMPS_QUERY }
     let(:variables) { { number: dossier.id } }
@@ -48,7 +48,30 @@ RSpec.describe Types::DossierType, type: :graphql do
       }
     end
 
-    before { dossier.champs_public.second.update(data: address) }
+    let(:rna) do
+      {
+        "adresse" => {
+          "commune" => "Paris 14e",
+          "type_voie" => "RUE",
+          "code_insee" => "75114",
+          "complement" => nil,
+          "code_postal" => "75512",
+          "numero_voie" => "12",
+          "distribution" => nil,
+          "libelle_voie" => "xyz"
+        },
+       "association_rna" => "W173847273",
+       "association_objet" => "prévenir",
+       "association_titre" => "CROIX ROUGE",
+       "association_date_creation" => "1964-12-30",
+       "association_date_declaration" => "2022-08-10"
+      }
+    end
+
+    before do
+      dossier.champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:address) }.update(data: address)
+      dossier.champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:rna) }.update(data: rna)
+    end
 
     it do
       expect(data[:dossier][:champs][0][:__typename]).to eq "CommuneChamp"
@@ -59,6 +82,11 @@ RSpec.describe Types::DossierType, type: :graphql do
       expect(data[:dossier][:champs][1][:departement][:code]).to eq('75')
       expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.champs_public[2].etablissement.siret
       expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id])
+
+      expect(data[:dossier][:champs][3][:rna][:id]).to eq('W173847273')
+      expect(data[:dossier][:champs][3][:rna][:title]).to eq('CROIX ROUGE')
+      expect(data[:dossier][:champs][3][:rna][:address][:label]).to eq('12 RUE xyz 75512 Paris 14e')
+      expect(data[:dossier][:champs][3][:rna][:address][:streetNumber]).to eq('12')
     end
 
     context 'when etablissement is in degraded mode' do
@@ -398,6 +426,8 @@ RSpec.describe Types::DossierType, type: :graphql do
             entreprise { capitalSocial }
           }
         }
+
+        ...RNAChampFragment
       }
     }
   }
@@ -422,6 +452,17 @@ RSpec.describe Types::DossierType, type: :graphql do
     cityCode
     streetName
     streetNumber
+  }
+
+  fragment RNAChampFragment on RNAChamp {
+    stringValue
+    rna {
+      id
+      title
+      address {
+        ...AddressFragment
+      }
+    }
   }
   GRAPHQL
 
