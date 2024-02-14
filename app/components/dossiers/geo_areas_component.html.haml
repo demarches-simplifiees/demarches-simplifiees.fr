@@ -2,12 +2,12 @@
   .fr-label Sélections utilisateur
   .areas
     %ul
-      - champ.selections_utilisateur.slice(0, 20).each do |geo_area|
+      - champ.selections_utilisateur.slice(0, 50).each do |geo_area|
         = render Dossiers::GeoAreaComponent.new(geo_area:, editing:)
-      - if champ.selections_utilisateur.size > 20
+      - if champ.selections_utilisateur.size > 50
         %li
           %span
-            et #{champ.selections_utilisateur.size - 20} autres points, lignes ou polygones.
+            et #{champ.selections_utilisateur.size - 50} autres points, lignes ou polygones.
 
 - if champ.cadastres.present?
   .fr-label Parcelles cadastrales
