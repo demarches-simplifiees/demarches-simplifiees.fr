@@ -382,6 +382,7 @@ Rails.application.routes.draw do
     post 'accept_merge' => 'profil#accept_merge'
     post 'refuse_merge' => 'profil#refuse_merge'
     delete 'france_connect_information' => 'profil#destroy_fci'
+    get 'fermeture/:path', to: 'commencer#closing_details', as: :closing_details
   end
 
   get 'procedures/:id/logo', to: 'procedures#logo', as: :procedure_logo
