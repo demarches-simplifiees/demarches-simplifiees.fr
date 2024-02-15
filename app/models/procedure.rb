@@ -718,7 +718,7 @@ class Procedure < ApplicationRecord
   end
 
   def instructeurs_self_management?
-    routing_enabled? || instructeurs_self_management_enabled?
+    instructeurs_self_management_enabled?
   end
 
   def groupe_instructeurs_but_defaut
