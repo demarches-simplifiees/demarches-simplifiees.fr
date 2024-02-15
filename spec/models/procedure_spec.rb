@@ -178,6 +178,20 @@ describe Procedure do
       it { is_expected.to allow_value('Demande de subvention').for(:libelle) }
     end
 
+    context 'closing procedure' do
+      context 'without replacing procedure in DS' do
+        let(:procedure) { create(:procedure) }
+
+        context 'valid' do
+          before do
+            procedure.update!(closing_details: "Bonjour,\nLa démarche est désormais hébergée sur une autre plateforme\nCordialement", closing_reason: Procedure.closing_reasons.fetch(:other))
+          end
+
+          it { expect(procedure).to be_valid }
+        end
+      end
+    end
+
     context 'description' do
       it { is_expected.not_to allow_value(nil).for(:description) }
       it { is_expected.not_to allow_value('').for(:description) }
