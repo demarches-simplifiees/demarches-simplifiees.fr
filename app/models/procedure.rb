@@ -50,7 +50,6 @@ class Procedure < ApplicationRecord
   has_many :replaced_procedures, -> { with_discarded }, inverse_of: :replaced_by_procedure, class_name: "Procedure",
   foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
-  has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
   has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
@@ -179,21 +178,6 @@ class Procedure < ApplicationRecord
       .discarded
       .where('hidden_at < ?', 1.month.ago)
   end
-
-  scope :for_api, -> {
-    includes(
-      :administrateurs,
-      :module_api_carto,
-      published_revision: [
-        :types_de_champ_private,
-        :types_de_champ_public
-      ],
-      draft_revision: [
-        :types_de_champ_private,
-        :types_de_champ_public
-      ]
-    )
-  }
 
   enum declarative_with_state: {
     en_instruction:  'en_instruction',
@@ -438,10 +422,6 @@ class Procedure < ApplicationRecord
     accepts_new_dossiers? || depubliee?
   end
 
-  def expose_legacy_carto_api?
-    module_api_carto&.use_api_carto? && module_api_carto&.migrated?
-  end
-
   def declarative?
     declarative_with_state.present?
   end
@@ -548,10 +528,6 @@ class Procedure < ApplicationRecord
     transaction do
       procedure.save!
       move_new_children_to_new_parent_coordinate(procedure.draft_revision)
-    end
-
-    if is_different_admin || from_library
-      procedure.draft_revision.types_de_champ_public.each { |tdc| tdc.options&.delete(:old_pj) }
     end
 
     new_defaut_groupe = procedure.groupe_instructeurs

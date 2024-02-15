@@ -6,7 +6,6 @@ gem 'rails', '~> 7.0.8' # allows update to security fixes at any time
 
 gem 'aasm'
 gem 'acsv'
-gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'
 gem 'addressable'

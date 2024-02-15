@@ -809,10 +809,6 @@ class Dossier < ApplicationRecord
     hidden_for_administration? && hidden_by_user?
   end
 
-  def expose_legacy_carto_api?
-    procedure.expose_legacy_carto_api?
-  end
-
   def geo_position
     if etablissement.present?
       point = Geocoder.search(etablissement.geo_adresse).first

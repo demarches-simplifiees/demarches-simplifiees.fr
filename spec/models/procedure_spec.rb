@@ -776,12 +776,6 @@ describe Procedure do
         expect(subject.service).to eq(nil)
       end
 
-      it 'should discard old pj information' do
-        subject.draft_revision.types_de_champ_public.each do |stc|
-          expect(stc.old_pj).to be_nil
-        end
-      end
-
       it 'should have one administrateur' do
         expect(subject.administrateurs).to eq([administrateur])
       end
@@ -825,12 +819,6 @@ describe Procedure do
         it 'should not clone groupe instructeur services' do
           expect(procedure.groupe_instructeurs.last.contact_information).not_to eq nil
           expect(subject.groupe_instructeurs.last.contact_information).to eq nil
-        end
-      end
-
-      it 'should discard old pj information' do
-        subject.draft_revision.types_de_champ_public.each do |stc|
-          expect(stc.old_pj).to be_nil
         end
       end
 

@@ -542,10 +542,6 @@ describe Administrateurs::ProceduresController, type: :controller do
         subject { post :create, params: { procedure: procedure_params } }
 
         it { expect { subject }.to change { Procedure.count }.by(0) }
-
-        describe 'no new module api carto in database' do
-          it { expect { subject }.to change { ModuleAPICarto.count }.by(0) }
-        end
       end
 
       describe 'flash message is present' do
