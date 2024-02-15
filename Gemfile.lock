@@ -332,7 +332,7 @@ GEM
     invisible_captcha (2.2.0)
       rails (>= 5.2)
     io-console (0.7.2)
-    irb (1.11.1)
+    irb (1.11.2)
       rdoc
       reline (>= 0.4.2)
     job-iteration (1.4.1)
