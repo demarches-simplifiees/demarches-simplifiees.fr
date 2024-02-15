@@ -75,4 +75,14 @@
       background-color: var(--background-action-low-blue-france);
     }
   }
+
+  // scss-lint:disable SelectorFormat
+  #show_maybe_null + label {
+    margin-bottom: 0.25rem;
+
+    .fr-hint-text {
+      position: absolute;
+      top: 1.15rem;
+    }
+  }
 }

@@ -1,8 +1,18 @@
-- tags.each_pair do |category, tags|
-  %p.fr-label.fr-text--sm.fr-text--bold.fr-mb-1w= t(category, scope: ".categories")
-  %ul.fr-tags-group
+- each_category do |category, tags, can_toggle_nullable|
+  .flex
+    %p.fr-label.fr-text--sm.fr-text--bold.fr-mb-1w= t(category, scope: ".categories")
+
+    - if can_toggle_nullable
+      .fr-fieldset__element.fr-ml-4w
+        .fr-checkbox-group.fr-checkbox-group--sm
+          = check_box_tag("show_maybe_null", 1, false, data: { "no-autosubmit" => true, action: "change->attestation#toggleMaybeNull"})
+          = label_tag "show_maybe_null", for: :show_maybe_null do
+            Voir les champs facultatifs
+            %span.hidden.fr-hint-text Un champ non rempli restera vide dans l’attestation.
+
+  %ul.fr-tags-group{ data: { category: category } }
     - tags.each do |tag|
-      %li
+      %li{ class: class_names("hidden" => can_toggle_nullable && tag[:maybe_null]), data: { "maybe-null" => can_toggle_nullable && tag[:maybe_null].present? } }
         - label = button_label(tag)
         %button.fr-tag.fr-tag--sm{ type: "button", title: button_title(tag), data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: label } }
           = label
