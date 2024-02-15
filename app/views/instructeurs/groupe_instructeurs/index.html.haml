@@ -5,12 +5,10 @@
                     ['Groupes d’instructeurs']] }
 
 .container.groupe-instructeur
+  %h1 Gestion des Groupes
   .card
-    .card-title Gestion des Groupes
+    %h2.fr-h3 Liste des groupes
     %table.table.mt-2
-      %thead
-        %tr
-          %th{ colspan: 2 } Liste des groupes
       %tbody
         - @groupes_instructeurs.each do |group|
           %tr

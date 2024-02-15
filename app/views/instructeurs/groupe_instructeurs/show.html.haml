@@ -21,15 +21,11 @@
       Démarche « #{@procedure.libelle} »
 
   .card.mt-2
-    .card-title Gestion des instructeurs
-    = form_for :instructeur,
-      url: { action: :add_instructeur },
-      html: { class: 'form' } do |f|
-
-      = f.label :email do
-        Affecter un nouvel instructeur
-      = f.email_field :email, placeholder: 'marie.dupont@exemple.fr', required: true
-      = f.submit 'Affecter', class: 'button primary send'
+    %h2.fr-h3 Gestion des instructeurs
+    = form_for(Instructeur.new(user: User.new), url: { action: :add_instructeur }, html: { class: 'form' }) do |f|
+      %h3.fr-h4 Affecter un nouvel instructeur 
+      = render Dsfr::InputComponent.new(form: f, attribute: :email)
+      = f.submit 'Affecter', class: 'fr-btn fr-primary'
 
     %table.table.mt-2
       %thead
@@ -40,16 +36,17 @@
           %tr
             %td= instructeur.email
             - confirmation_message = @procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{@groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-            %td.actions= button_to 'retirer',
+            %td.actions= button_to 'Retirer',
               { action: :remove_instructeur },
               { method: :delete,
                 data: { confirm: confirmation_message },
                 params: { instructeur: { id: instructeur.id }},
-                class: 'button' }
+                class: 'fr-btn fr-btn--secondary' }
 
     = paginate @instructeurs, views_prefix: 'shared'
+  
   .card.mt-2
-    .card-title Informations de contact
+    %h2.fr-h3 Informations de contact
     - service = @groupe_instructeur.contact_information
     - if service.nil?
       = "Le groupe #{@groupe_instructeur.label} n'a pas d'informations de contact. Les informations de contact affichées à l'usager seront celles du service de la procédure"
