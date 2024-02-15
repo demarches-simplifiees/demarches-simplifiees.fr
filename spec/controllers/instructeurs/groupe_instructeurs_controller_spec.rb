@@ -14,6 +14,17 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     sign_in(instructeur.user)
   end
 
+  describe "before_action: ensure_allowed!" do
+    it "is present" do
+      before_actions = Instructeurs::GroupeInstructeursController
+        ._process_action_callbacks
+        .filter { |process_action_callbacks| process_action_callbacks.kind == :before }
+        .map(&:filter)
+
+      expect(before_actions).to include(:ensure_allowed!)
+    end
+  end
+
   describe '#index' do
     context 'of a procedure I own' do
       before do

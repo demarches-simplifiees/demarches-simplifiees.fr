@@ -3,6 +3,8 @@ module Instructeurs
     include UninterlacePngConcern
     include GroupeInstructeursSignatureConcern
 
+    before_action :ensure_allowed!
+
     ITEMS_PER_PAGE = 25
 
     def index
@@ -97,6 +99,13 @@ module Instructeurs
 
     def instructeur_id
       params[:instructeur][:id]
+    end
+
+    def ensure_allowed!
+      if !(current_administrateur&.owns?(procedure) || procedure.instructeurs_self_management_enabled?)
+        flash[:alert] = "Vous n’avez pas le droit de gérer les instructeurs de cette démarche"
+        redirect_to instructeur_procedure_path(procedure)
+      end
     end
   end
 end
