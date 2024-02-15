@@ -3,7 +3,8 @@ fr:
     procedures:
       close:
         page_title: Clore la démarche
-        replacement_procedure_title: Cette démarche est-elle remplacée par une existante ? Si oui, veuillez indiquer le n° de la nouvelle démarche
+        replacement_procedure_callout_title: Vous êtes sur le point de clore une démarche
+        replacement_procedure_callout_content: Les dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.
         actions:
           close_procedure: Clore la démarche
       preview_unavailable: Aperçu non disponible car la démarche est mal configurée

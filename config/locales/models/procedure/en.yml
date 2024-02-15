@@ -14,6 +14,8 @@ en:
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
           old_procedure: This procedure replaces a close? If yes, please indicate the number of the replaced procedure
           procedure_path: "Personalize if needed the rest of the URL to facilitate access to the procedure. From 3 to 200 characters: lowercase letters, numbers and dashes only"
+          closing_details: Give as many explanations as possible to users about the reason for closing the process
+          closing_details_placeholder: "This procedure has been replaced by the page…\n\nThe guide to the new procedure is available here\n\nFor any further information, contact…\n\nSincerely,"
         path: Public link
         organisation: Service
         description: What is the purpose of this procedure?
@@ -23,6 +25,12 @@ en:
         lien_site_web: Where will users find the link to the procedure?
         old_procedure: Replaced procedure number
         new_procedure: New procedure number
+        replaced_by_procedure_id: New procedure
+        closing_details: Information message on the process closing page
+        closing_reason: Closing reason
+        closing_reasons:
+          other: Other
+          internal_procedure: I replace my procedure with another in Démarches Simplifiées
         procedure_path: Procedure link to disseminate to users
         procedure_path_placeholder: procedure-name
         cadre_juridique: Link to the legal text

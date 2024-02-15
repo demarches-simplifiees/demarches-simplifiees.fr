@@ -3,7 +3,8 @@ en:
     procedures:
       close:
         page_title: Close the procedure
-        replacement_procedure_title: Is this procedure replaced by an existing one? If yes, please indicate the number of the new procedure
+        replacement_procedure_callout_title: You are about to close a procedure
+        replacement_procedure_callout_content: Files  « in construction » or  « instructing » can be instructed, but no new files can be filed.
         actions:
           close_procedure: Close the procedure
       preview_unavailable: Preview is unavailable due to procedure misconfiguration
