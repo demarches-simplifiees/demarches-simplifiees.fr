@@ -12,7 +12,7 @@
         = render Dsfr::ToggleComponent.new(form: f,
           target: :instructeurs_self_management_enabled,
           title: 'Autogestion des instructeurs',
-          hint: "L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.#{ ' Lorsque la démarche est routée, l’autogestion est activée d’office. A moins que votre démarche requiert une validation des instructeurs (ex: signer une clause de confidentialité), nous recommandons de laisser l’autogestion des instructeurs activée.' if @procedure.routing_enabled? }",
+          hint: "L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.#{ 'Nous recommandons de laisser l’autogestion des instructeurs activée.' if @procedure.routing_enabled? }",
           disabled: false)
   %p.fr-mt-2w Routage
   %p.fr-mt-2w= t('.routing_configuration_notice_1')
