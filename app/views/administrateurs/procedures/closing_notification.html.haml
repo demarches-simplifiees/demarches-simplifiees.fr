@@ -1,0 +1,52 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],[t('administrateurs.procedures.close.page_title')]],
+            metadatas: true }
+
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      %h1= t('administrateurs.procedures.closing_notification.page_title')
+      - if @procedure.closing_reason == Procedure.closing_reasons.fetch(:other)
+        %h2.fr-h5= I18n.t('administrateurs.procedures.closing_notification.page_subtitle', closing_path: closing_details_path(@procedure.path)).html_safe
+      - else
+        %h2.fr-h5= I18n.t('administrateurs.procedures.closing_notification.page_subtitle_with_redirection', redirection_path: commencer_path(@procedure.replaced_by_procedure.path)).html_safe
+
+      = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+        - c.with_body do
+          %p
+            = t('administrateurs.procedures.closing_notification.callout_content')
+
+      = form_for @procedure,
+        url: admin_procedure_notify_after_closing_path(@procedure),
+        method: :post,
+        html: { "data-controller" => "closing-notification" } do |f|
+
+        %div{ data: { 'action': "click->closing-notification#enableSubmitOnClick" } }
+          - if @users_brouillon_count != 0
+            = render Dsfr::ToggleComponent.new(form: f,
+              target: :closing_notification_brouillon,
+              title: t("administrateurs.procedures.closing_notification.email_toggle_brouillon", count: @users_brouillon_count),
+              toggle_labels: {checked: 'Oui', unchecked: 'Non'},
+              opt: {"closing-notification-target" => "brouillonToggle"})
+
+            .fr-input-group{ "data-closing-notification-target" => "emailContentBrouillon" }
+              = label_tag :email_content_brouillon, t("administrateurs.procedures.closing_notification.email_content_brouillon"), class: "fr-label"
+              = text_area_tag :email_content_brouillon, '', class: "fr-input"
+
+          - if @users_en_cours_count != 0
+            = render Dsfr::ToggleComponent.new(form: f,
+              target: :closing_notification_en_cours,
+              title: t("administrateurs.procedures.closing_notification.email_toggle_en_cours", count: @users_en_cours_count),
+              toggle_labels: {checked: 'Oui', unchecked: 'Non'},
+              opt: {"closing-notification-target" => "enCoursToggle"})
+
+            .fr-input-group{ "data-closing-notification-target" => "emailContentEnCours" }
+              = label_tag :email_content_en_cours, t("administrateurs.procedures.closing_notification.email_content_en_cours"), class: "fr-label"
+              = text_area_tag :email_content_en_cours, '', class: "fr-input"
+
+          %ul.fr-btns-group.fr-btns-group--inline-md
+            %li
+              = submit_tag  t('administrateurs.procedures.close.actions.notify_after_closing'), { class: "fr-btn", id: 'publish', disabled: true, data: { confirm:  "Vous allez informer les usagers de la clôture de la démarche. Souhaitez-vous continuer ?", disable_with: "Envoi des notifications…", 'closing-notification-target': 'submit'} }
+            %li
+              = link_to t('administrateurs.procedures.close.actions.cancel'), admin_procedures_path, class: 'fr-btn fr-btn--secondary fr-ml-2w'

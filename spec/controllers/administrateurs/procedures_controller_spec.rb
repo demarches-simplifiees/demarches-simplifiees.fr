@@ -696,7 +696,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'archives the procedure' do
         expect(procedure.close?).to be_truthy
-        expect(response).to redirect_to :admin_procedures
+        expect(response).to redirect_to admin_procedure_path(procedure.id)
         expect(flash[:notice]).to have_content 'Démarche close'
       end
 
@@ -724,8 +724,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'archives the procedure' do
         expect(procedure.close?).to be_truthy
-        expect(response).to redirect_to :admin_procedures
-        expect(flash[:notice]).to have_content 'Démarche close'
+        expect(response).to redirect_to admin_procedure_closing_notification_path
       end
 
       it 'does have a replacement procedure' do
@@ -743,14 +742,8 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'archives the procedure' do
         expect(procedure.close?).to be_truthy
-        expect(response).to redirect_to :admin_procedures
+        expect(response).to redirect_to admin_procedure_path(procedure.id)
         expect(flash[:notice]).to have_content 'Démarche close'
-      end
-
-      it 'does have a replacement procedure' do
-        expect(procedure.replaced_by_procedure).to eq(nil)
-        expect(procedure.replaced_by_external_url).to eq('new_url.com')
-        expect(procedure.closing_reason).to eq('external_procedure')
       end
     end
 
@@ -769,6 +762,42 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(response).to redirect_to :admin_procedures
         expect(flash[:alert]).to have_content 'Démarche inexistante'
       end
+    end
+
+    context 'when the admin is not an owner of the new procedure in DS' do
+      let(:admin_2) { create(:administrateur) }
+      let(:other_admin_procedure) { create(:procedure, :with_all_champs, administrateurs: [admin_2]) }
+
+      before do
+        put :archive, params: { procedure_id: procedure.id, procedure: { closing_reason: 'internal_procedure', replaced_by_procedure_id: other_admin_procedure.id } }
+        procedure.reload
+      end
+
+      it 'closes the procedure without redirection to the new procedure in DS' do
+        expect(response).to redirect_to admin_procedure_path(procedure.id)
+        expect(flash[:notice]).to have_content 'Démarche close'
+        expect(procedure.replaced_by_procedure).to eq(nil)
+      end
+    end
+  end
+
+  describe 'POST #notify_after_closing' do
+    let(:procedure_closed) { create(:procedure_with_dossiers, :closed, administrateurs: [admin]) }
+    let(:user_ids) { [procedure_closed.dossiers.first.user.id] }
+    let(:email_content) { "La démarche a fermé" }
+
+    subject do
+      post :notify_after_closing, params: { procedure_id: procedure_closed.id, procedure: { closing_notification_brouillon: true }, email_content_brouillon: email_content }
+    end
+
+    before do
+      sign_in(admin.user)
+    end
+
+    it 'redirects to admin procedures' do
+      expect { subject }.to have_enqueued_job(SendClosingNotificationJob).with(user_ids, email_content, procedure_closed)
+      expect(flash.notice).to eq("Les emails sont en cours d'envoi")
+      expect(response).to redirect_to :admin_procedures
     end
   end
 
@@ -1053,6 +1082,27 @@ describe Administrateurs::ProceduresController, type: :controller do
         it 'redirects to the confirmation page' do
           expect(response.status).to eq 302
           expect(response.body).to include(admin_procedure_confirmation_path(procedure.id))
+        end
+      end
+
+      context 'procedure was closed and is re opened' do
+        before do
+          procedure.publish!
+          procedure.update!(closing_reason: 'internal_procedure', replaced_by_procedure_id: procedure2.id)
+          procedure.close!
+          procedure.update!(closing_notification_brouillon: true, closing_notification_en_cours: true)
+          perform_request
+          procedure.reload
+          procedure2.reload
+        end
+
+        it 'publish the given procedure and reset closing params' do
+          expect(procedure.publiee?).to be_truthy
+          expect(procedure.path).to eq(path)
+          expect(procedure.closing_reason).to be_nil
+          expect(procedure.replaced_by_procedure_id).to be_nil
+          expect(procedure.closing_notification_brouillon).to be_falsy
+          expect(procedure.closing_notification_en_cours).to be_falsy
         end
       end
 

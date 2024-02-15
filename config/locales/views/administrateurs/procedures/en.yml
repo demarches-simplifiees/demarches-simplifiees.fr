@@ -6,7 +6,22 @@ en:
         replacement_procedure_callout_title: You are about to close a procedure
         replacement_procedure_callout_content: Files  « in construction » or  « instructing » can be instructed, but no new files can be filed.
         actions:
-          close_procedure: Close the procedure
+          close_procedure: Close procedure
+          notify_after_closing: Notify users
+          cancel: Cancel
+      closing_notification:
+        page_title: Alert users
+        page_subtitle: Your procedure has been successfully closed. The link of the procedure now redirects to this <a href="%{closing_path}" target="_blank" rel="noopener noreferrer">closing page</a>.
+        page_subtitle_with_redirection: Your procedure has been successfully closed. The link of the procedure now redirects to this <a href="%{redirection_path}" target="_blank" rel="noopener noreferrer">procedure</a>.
+        callout_content: You can continue to examine the submitted files. If you do not intend to examine these files, we invite you to inform users
+        email_toggle_brouillon:
+          one: You want to send an email to the user with a draft folder
+          other: You want to send an email to %{count} users with a draft folder
+        email_content_brouillon: You want to send an email to users with a draft file
+        email_toggle_en_cours:
+          one: You want to send an email to the user with a submitted file
+          other: You want to send an email to %{count} users with a submitted file
+        email_content_en_cours: You want to send an email to users with a file « in construction » or « instructing »
       preview_unavailable: Preview is unavailable due to procedure misconfiguration
       modifications:
         dossiers_en_construction_and_dossiers_en_instruction: "%{en_construction_count} files « in construction » and %{en_instruction_count} files « instructing » on this procedure version."

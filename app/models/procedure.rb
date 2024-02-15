@@ -1010,6 +1010,10 @@ class Procedure < ApplicationRecord
       .first
   end
 
+  def reset_closing_params
+    update!(closing_reason: nil, closing_details: nil, replaced_by_procedure_id: nil, closing_notification_brouillon: false, closing_notification_en_cours: false)
+  end
+
   private
 
   def pieces_jointes_list

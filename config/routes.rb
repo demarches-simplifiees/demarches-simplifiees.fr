@@ -600,6 +600,8 @@ Rails.application.routes.draw do
       put 'publish_revision' => 'procedures#publish_revision', as: :publish_revision
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
+      get 'closing_notification' => 'procedures#closing_notification', as: :closing_notification
+      post 'notify_after_closing' => 'procedures#notify_after_closing', as: :notify_after_closing
       get 'confirmation' => 'procedures#confirmation', as: :confirmation
       post 'transfer' => 'procedures#transfer', as: :transfer
       resources :mail_templates, only: [:edit, :update, :show]

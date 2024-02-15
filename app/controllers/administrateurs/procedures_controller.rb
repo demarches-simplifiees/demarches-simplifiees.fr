@@ -212,6 +212,38 @@ module Administrateurs
       redirect_to admin_procedures_path
     end
 
+    def closing_notification
+      @procedure = current_administrateur.procedures.find(params[:procedure_id])
+      @users_brouillon_count = @procedure.dossiers.not_archived.state_brouillon.count('distinct user_id')
+      @users_en_cours_count = @procedure.dossiers.not_archived.state_en_construction_ou_instruction.count('distinct user_id')
+    end
+
+    def notify_after_closing
+      @procedure = current_administrateur.procedures.find(params[:procedure_id])
+      @procedure.update!(notification_closing_params)
+
+      if (@procedure.closing_notification_brouillon? && params[:email_content_brouillon].blank?) || (@procedure.closing_notification_en_cours? && params[:email_content_en_cours].blank?)
+        flash.alert = "Veuillez renseigner le contenu de l’email afin d’informer les usagers"
+        redirect_to admin_procedure_closing_notification_path and return
+      end
+
+      if @procedure.closing_notification_brouillon?
+        user_ids = @procedure.dossiers.not_archived.state_brouillon.pluck(:user_id).uniq
+        content = params[:email_content_brouillon]
+        SendClosingNotificationJob.perform_later(user_ids, content, @procedure)
+        flash.notice = "Les emails sont en cours d'envoi"
+      end
+
+      if @procedure.closing_notification_en_cours?
+        user_ids = @procedure.dossiers.not_archived.state_en_construction_ou_instruction.pluck(:user_id).uniq
+        content = params[:email_content_en_cours]
+        SendClosingNotificationJob.perform_later(user_ids, content, @procedure)
+        flash.notice = "Les emails sont en cours d’envoi"
+      end
+
+      redirect_to admin_procedures_path
+    end
+
     def destroy
       procedure = current_administrateur.procedures.find(params[:id])
 
@@ -303,6 +335,10 @@ module Administrateurs
           .find(params[:old_procedure])
           .update!(replaced_by_procedure: @procedure)
       end
+
+      # TO DO after data backfill add this condition before reset :
+      # if @procedure.closing_reason.present?
+      @procedure.reset_closing_params
 
       redirect_to admin_procedure_confirmation_path(@procedure)
     rescue ActiveRecord::RecordInvalid
@@ -507,6 +543,10 @@ module Administrateurs
         end
       end
       closing_params
+    end
+
+    def notification_closing_params
+      params.require(:procedure).permit(:closing_notification_brouillon, :closing_notification_en_cours)
     end
 
     def allow_decision_access_params
