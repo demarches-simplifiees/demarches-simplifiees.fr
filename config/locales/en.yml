@@ -358,10 +358,6 @@ en:
     gestionnaires:
       groupe_gestionnaires:
         delete: Delete
-        messages:
-          form:
-            send_message: "Send message"
-            write_message_placeholder: "Write your message here"
     instructeurs:
       dossiers:
         tab_steps:

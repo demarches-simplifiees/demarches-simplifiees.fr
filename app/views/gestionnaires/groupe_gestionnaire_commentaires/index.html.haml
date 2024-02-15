@@ -6,20 +6,19 @@
 .container
   %h1 Messagerie de « #{@groupe_gestionnaire.name} »
 
-  %table.table
+  %table.fr-table.width-100.mt-3
     %thead
       %tr
+        %th= 'Groupe gestionnaire'
         %th= 'Adresse email'
         %th= 'Dernier message'
         %th
     %tbody#commentaires
-      - commentaires = @groupe_gestionnaire.current_commentaires_groupe_and_children_commentaires_groupe
-      - if @groupe_gestionnaire.parent_id && !current_gestionnaire.groupe_gestionnaires.where(id: @groupe_gestionnaire.parent_id).exists?
-        - commentaires = commentaires.or(CommentaireGroupeGestionnaire.where(groupe_gestionnaire_id: @groupe_gestionnaire.id, sender: current_gestionnaire))
-      = render(GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireComponent.with_collection(commentaires.select("sender_id, sender_type, sender_email, MAX(id) as id, MAX(created_at) as created_at").group(:sender_id, :sender_type, :sender_email).order("MAX(id) DESC"), groupe_gestionnaire: @groupe_gestionnaire))
+      = render(GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireComponent.with_collection(@commentaires, groupe_gestionnaire: @groupe_gestionnaire))
       - if @groupe_gestionnaire.parent_id && !current_gestionnaire.groupe_gestionnaires.where(id: @groupe_gestionnaire.parent_id).exists? && @last_commentaire.nil?
         %tr
+          %td= @groupe_gestionnaire.parent.name
           %td= "Messages avec le groupe gestionnaire parent (#{@groupe_gestionnaire.parent.name})"
           %td
           %td
-            = link_to 'Voir', parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire), class: 'fr-btn fr-btn--sm fr-btn--tertiary'
+            = link_to 'Voir', parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire), class: 'fr-btn'

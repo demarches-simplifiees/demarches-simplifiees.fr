@@ -10,11 +10,9 @@ class GroupeGestionnaire::Card::CommentairesComponent < ApplicationComponent
     if @administrateur
       @administrateur.commentaire_groupe_gestionnaires.size
     else
-      commentaires = @groupe_gestionnaire.current_commentaires_groupe_and_children_commentaires_groupe
-      if @groupe_gestionnaire.parent_id && !current_gestionnaire.groupe_gestionnaires.exists?(id: @groupe_gestionnaire.parent_id)
-        commentaires = commentaires.or(CommentaireGroupeGestionnaire.where(groupe_gestionnaire_id: @groupe_gestionnaire.id, sender: current_gestionnaire))
-      end
-      commentaires.select(:sender_id, :sender_type).distinct.size
+      @groupe_gestionnaire.gestionnaire_commentaires(current_gestionnaire)
+        .select(:sender_id, :sender_type)
+        .distinct.size
     end
   end
 end

@@ -11,9 +11,17 @@
       %tr
         %th{ scope: "col" }
           Nom
+        %th{ scope: "col" }
+          Nombre de gestionnaires
+        %th{ scope: "col" }
+          Nombre d'administrateurs
 
     %tbody
-      - @groupe_gestionnaires.each do |groupe_gestionnaire|
+      - @groupe_gestionnaires.order(:name).each do |groupe_gestionnaire|
         %tr
           %td
             = link_to groupe_gestionnaire.name, gestionnaire_groupe_gestionnaire_path(groupe_gestionnaire)
+          %td
+            = groupe_gestionnaire.gestionnaire_ids.size
+          %td
+            = groupe_gestionnaire.administrateur_ids.size

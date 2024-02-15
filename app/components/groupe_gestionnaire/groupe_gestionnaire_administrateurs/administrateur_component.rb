@@ -24,7 +24,7 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
   end
 
   def remove_button
-    button_to 'Retirer',
+    button_to "Retirer du groupe",
       remove_gestionnaire_groupe_gestionnaire_administrateur_path(@groupe_gestionnaire, @administrateur),
       method: :delete,
       class: 'fr-btn fr-btn--sm fr-btn--tertiary',
@@ -32,10 +32,10 @@ class GroupeGestionnaire::GroupeGestionnaireAdministrateurs::AdministrateurCompo
   end
 
   def destroy_button
-    button_to 'Supprimer',
+    button_to "Révoquer l'accès administrateur",
       gestionnaire_groupe_gestionnaire_administrateur_path(@groupe_gestionnaire, @administrateur),
       method: :delete,
       class: 'fr-btn fr-btn--sm fr-btn--tertiary',
-      form: { data: { turbo: true, turbo_confirm: "Supprimer « #{@administrateur.email} » en tant qu'administrateurs ?" } }
+      form: { data: { turbo: true, turbo_confirm: "Supprimer « #{@administrateur.email} » en tant qu'administrateur ?" } }
   end
 end
