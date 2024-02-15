@@ -13,21 +13,21 @@
     locals: { steps: [[@procedure.libelle, instructeur_procedure_path(@procedure)],
                       ['Instructeurs']] }
 
-.container.groupe-instructeur
+.fr-container.groupe-instructeur
   %h1
     - if @procedure.routing_enabled?
       Groupe « #{@groupe_instructeur.label} »
     - else
       Démarche « #{@procedure.libelle} »
 
-  .card.mt-2
+  .card.fr-mt-2w
     %h2.fr-h3 Gestion des instructeurs
     = form_for(Instructeur.new(user: User.new), url: { action: :add_instructeur }, html: { class: 'form' }) do |f|
-      %h3.fr-h4 Affecter un nouvel instructeur 
+      %h3.fr-h4 Affecter un nouvel instructeur
       = render Dsfr::InputComponent.new(form: f, attribute: :email)
       = f.submit 'Affecter', class: 'fr-btn fr-primary'
 
-    %table.table.mt-2
+    %table.fr-table.fr-mt-2w.width-100
       %thead
         %tr
           %th{ colspan: 2 } Instructeurs affectés
@@ -44,8 +44,8 @@
                 class: 'fr-btn fr-btn--secondary' }
 
     = paginate @instructeurs, views_prefix: 'shared'
-  
-  .card.mt-2
+
+  .card.fr-mt-2w
     %h2.fr-h3 Informations de contact
     - service = @groupe_instructeur.contact_information
     - if service.nil?
