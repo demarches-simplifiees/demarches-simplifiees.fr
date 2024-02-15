@@ -124,7 +124,6 @@ class TypeDeChamp < ApplicationRecord
 
   store_accessor :options,
                  :cadastres,
-                 :old_pj,
                  :drop_down_options,
                  :skip_pj_validation,
                  :skip_content_type_pj_validation,
