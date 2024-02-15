@@ -507,6 +507,13 @@ en:
           shared_with: File shared with
           deleted: Deleted at %{date}
           deleted_badge: Deleted
+          procedure_closed:
+            brouillon:
+              internal_procedure: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the <a href="%{link}" target="_blank" rel="noopener noreferrer">procedure</a> which replaces it
+              other: This process is closed, you cannot submit this file. More information <a href="%{link}" target="_blank" rel="noopener noreferrer">here</a>
+            en_cours:
+              internal_procedure: This procedure is closed. Your file has been submitted and can be investigated by the administration
+              other: "This procedure is closed. Your file has been submitted and can be processed by the administration. More information <a href=%{link} target=_blank rel=noopener noreferrer>here</a>"
         transfers:
           sender_from_support: Technical support
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
@@ -716,9 +723,6 @@ en:
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."
-      procedure_archived:
-        with_service_and_phone_email: This procedure has been closed, it is no longer possible to submit a file. For more information, please contact the service %{service_name}, available at %{service_phone_number} or by email %{service_email}
-        with_organisation_only: This procedure has been closed, it is no longer possible to submit a file. For more information, please contact the organisation %{organisation_name}
       evil_regexp: The regular expression you have entered is potentially dangerous and could lead to performance issues.
       mismatch_regexp: The provided example must match the regular expression
       syntax_error_regexp: The syntax of the regular expression is invalid

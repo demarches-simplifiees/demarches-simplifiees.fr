@@ -502,7 +502,13 @@ fr:
           no_result_reset_search: Réinitialiser la recherche
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
-          procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.
+          procedure_closed:
+            brouillon:
+              internal_procedure: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la <a href="%{link}" target="_blank" rel="noopener noreferrer">démarche</a> qui la remplace
+              other: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Plus d'informations <a href="%{link}" target="_blank" rel="noopener noreferrer">ici</a>
+            en_cours:
+              internal_procedure: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration
+              other: "Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Plus d'informations <a href=%{link} target=_blank rel=noopener noreferrer>ici</a>"
           pending_correction: Ce dossier attend vos corrections. Consultez les modifications à apporter dans la messagerie.
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
@@ -722,9 +728,6 @@ fr:
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
-      procedure_archived:
-        with_service_and_phone_email: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{service_name} au %{service_phone_number} ou par email à %{service_email}
-        with_organisation_only: Cette démarche en ligne a été close, il n’est plus possible de déposer de dossier. Pour plus d’informations veuillez contacter le service %{organisation_name}
       evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
       mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie
       syntax_error_regexp: La syntaxe de l'expression régulière n'est pas valide
