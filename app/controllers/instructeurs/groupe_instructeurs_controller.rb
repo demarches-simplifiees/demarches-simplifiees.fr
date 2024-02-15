@@ -106,6 +106,9 @@ module Instructeurs
         flash[:alert] = "Vous n’avez pas le droit de gérer les instructeurs de cette démarche"
         redirect_to instructeur_procedure_path(procedure)
       end
+    rescue ActiveRecord::RecordNotFound
+      flash[:alert] = "Vous n’avez pas accès à cette démarche"
+      redirect_to root_path
     end
   end
 end

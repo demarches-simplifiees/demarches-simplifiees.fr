@@ -1,8 +1,8 @@
 describe Instructeurs::GroupeInstructeursController, type: :controller do
   render_views
-
+  let(:administrateurs) { [create(:administrateur, user: instructeur.user)] }
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :published, administrateurs:) }
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
   let!(:gi_1_2) { create(:groupe_instructeur, label: 'groupe instructeur 2', procedure: procedure) }
 
@@ -25,11 +25,15 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
   end
 
-  describe '#index' do
-    context 'of a procedure I own' do
-      before do
-        get :index, params: { procedure_id: procedure.id }
-      end
+  describe '#index (plus, ensure_allowed!)' do
+    context 'when i own the procedure' do
+      before { get :index, params: { procedure_id: procedure.id } }
+      it { expect(response).to have_http_status(:ok) }
+    end
+
+    context 'when i am an instructeur of the procedure and instructeurs_self_management_enabled is true' do
+      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: true) }
+      before { get :index, params: { procedure_id: procedure.id } }
 
       context 'when a procedure has multiple groups' do
         it { expect(response).to have_http_status(:ok) }
@@ -37,6 +41,25 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
         it { expect(response.body).not_to include(gi_1_1.label) }
         it { expect(response.body).not_to include(gi_2_2.label) }
       end
+    end
+
+    context 'when i am an instructor of the procedure, and instructeurs_self_management_enabled is false' do
+      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: false) }
+      before { get :index, params: { procedure_id: procedure.id } }
+
+      it { expect(response).to have_http_status(:redirect) }
+      it { expect(flash.alert).to eq("Vous n’avez pas le droit de gérer les instructeurs de cette démarche") }
+    end
+
+    context 'i am an instructor, not on the procedure' do
+      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: true) }
+      before do
+        sign_in(create(:instructeur).user)
+        get :index, params: { procedure_id: procedure.id }
+      end
+
+      it { expect(response).to have_http_status(:redirect) }
+      it { expect(flash.alert).to eq("Vous n’avez pas accès à cette démarche") }
     end
   end
 
