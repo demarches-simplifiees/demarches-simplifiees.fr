@@ -995,8 +995,9 @@ class Procedure < ApplicationRecord
   def dossier_for_preview(user)
     # Try to use a preview or a dossier filled by current user
     dossiers.where(for_procedure_preview: true).or(dossiers.not_brouillon)
-      .order(Arel.sql("CASE WHEN for_procedure_preview = True THEN 1 ELSE 0 END DESC,
-                       CASE WHEN user_id = #{user.id} THEN 1 ELSE 0 END DESC")) \
+      .order(Arel.sql("CASE WHEN user_id = #{user.id} THEN 1 ELSE 0 END DESC,
+                       CASE WHEN state = 'accepte' THEN 1 ELSE 0 END DESC,
+                       CASE WHEN for_procedure_preview = True THEN 1 ELSE 0 END DESC")) \
       .first
   end
 
