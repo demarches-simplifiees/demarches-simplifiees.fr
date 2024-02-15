@@ -78,13 +78,13 @@ RSpec.describe Avis, type: :model do
   describe 'email validation' do
     let(:now_invalid_email) { "toto@tps" }
     context 'new avis' do
-      before { allow(StrictEmailValidator).to receive(:elligible_to_new_validation?).and_return(true) }
+      before { allow(StrictEmailValidator).to receive(:eligible_to_new_validation?).and_return(true) }
 
       it { expect(build(:avis, email: now_invalid_email).valid?).to be_falsey }
       it { expect(build(:avis, email: nil).valid?).to be_truthy }
     end
     context 'old avis' do
-      before { allow(StrictEmailValidator).to receive(:elligible_to_new_validation?).and_return(false) }
+      before { allow(StrictEmailValidator).to receive(:eligible_to_new_validation?).and_return(false) }
 
       it { expect(build(:avis, email: now_invalid_email).valid?).to be_truthy }
       it { expect(build(:avis, email: nil).valid?).to be_truthy }

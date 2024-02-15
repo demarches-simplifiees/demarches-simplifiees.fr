@@ -534,20 +534,20 @@ describe User, type: :model do
       it_behaves_like "validation of users.email was flacky"
     end
 
-    context "record.created_at < ENV['STRICT_EMAIL_VALIDATION_STARTS_AT']" do
+    context "record.created_at < ENV['STRICT_EMAIL_VALIDATION_STARTS_ON']" do
       let(:user) { build(:user, email: email, created_at: before) }
       before do
         allow(StrictEmailValidator).to receive(:strict_validation_enabled?).and_return(true).at_least(1)
-        allow(StrictEmailValidator).to receive(:date_since_strict_email_validation).and_return(now).at_least(1)
+        stub_const("StrictEmailValidator::DATE_SINCE_STRICT_EMAIL_VALIDATION", now)
       end
       it_behaves_like "validation of users.email was flacky"
     end
 
-    context "record.created_at > ENV['STRICT_EMAIL_VALIDATION_STARTS_AT']" do
+    context "record.created_at > ENV['STRICT_EMAIL_VALIDATION_STARTS_ON']" do
       let(:user) { build(:user, email: email, created_at: after) }
       before do
         allow(StrictEmailValidator).to receive(:strict_validation_enabled?).and_return(true).at_least(1)
-        allow(StrictEmailValidator).to receive(:date_since_strict_email_validation).and_return(now).at_least(1)
+        stub_const("StrictEmailValidator::DATE_SINCE_STRICT_EMAIL_VALIDATION", now)
       end
       context 'when value is username' do
         let(:email) { 'username' }

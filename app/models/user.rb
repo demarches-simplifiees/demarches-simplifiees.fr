@@ -37,8 +37,9 @@ class User < ApplicationRecord
   before_validation -> { sanitize_email(:email) }
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
 
-  before_validation :remove_devise_email_validator
-  validates :email, strict_email: true
+  before_validation :remove_devise_email_format_validator
+  # plug our custom validation a la devise (same options) https://github.com/heartcombo/devise/blob/main/lib/devise/models/validatable.rb#L30
+  validates :email, strict_email: true, allow_blank: true, if: :devise_will_save_change_to_email?
 
   def validate_password_complexity?
     administrateur?
@@ -272,7 +273,9 @@ class User < ApplicationRecord
     Invite.where(email: email).update_all(user_id: id)
   end
 
-  def remove_devise_email_validator
+  # we just want to remove the devise format validator
+  #   https://github.com/heartcombo/devise/blob/main/lib/devise/models/validatable.rb#L30
+  def remove_devise_email_format_validator
     _validators[:email]&.reject! { _1.is_a?(ActiveModel::Validations::FormatValidator) }
     _validate_callbacks.each do |callback|
       next if !callback.filter.is_a?(ActiveModel::Validations::FormatValidator)

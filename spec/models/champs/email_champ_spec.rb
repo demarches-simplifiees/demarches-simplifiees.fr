@@ -3,7 +3,9 @@ describe Champs::EmailChamp do
     let(:now) { Time.zone.now }
     let(:before) { now + 1.day }
     let(:after) { now + 1.day }
-    subject { build(:champ_email, value: value).valid?(:validate_champ_value) }
+    let(:champ) { build(:champ_email, value: value) }
+
+    subject { champ.valid?(:validate_champ_value) }
 
     context 'when value is username' do
       let(:value) { 'username' }
@@ -30,6 +32,14 @@ describe Champs::EmailChamp do
     context 'when value is the classic standard user@domain.ext' do
       let(:value) { 'username@mailserver.domain' }
       it { is_expected.to be_truthy }
+    end
+
+    context 'when value contains white spaces plus a standard email' do
+      let(:value) { "\r\n\t username@mailserver.domain\r\n\t " }
+      it { is_expected.to be_truthy }
+      it 'normalize value' do
+        expect { subject }.to change { champ.value }.from(value).to('username@mailserver.domain')
+      end
     end
   end
 end
