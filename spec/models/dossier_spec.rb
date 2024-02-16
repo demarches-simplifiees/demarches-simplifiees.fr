@@ -357,26 +357,6 @@ describe Dossier, type: :model do
     end
   end
 
-  describe '#champs' do
-    let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-
-    it { expect(dossier.champs_public.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
-  end
-
-  describe '#champs_private' do
-    let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, :private, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, :private, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, :private, libelle: 'l2', position: 2, procedure: procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-
-    it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
-  end
-
   describe "#text_summary" do
     let(:service) { create(:service, nom: 'nom du service') }
     let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme", service: service) }
