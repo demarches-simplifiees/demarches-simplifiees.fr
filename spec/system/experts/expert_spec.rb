@@ -20,7 +20,7 @@ describe 'Inviting an expert:' do
       before 'Signing up' do
         visit sign_up_expert_avis_path(avis.dossier.procedure, avis, email: avis.expert.email)
 
-        expect(page).to have_field('Email', with: avis.expert.email, disabled: true)
+        expect(page).to have_field('Adresse électronique', with: avis.expert.email, disabled: true)
         fill_in 'Mot de passe', with: password
         click_on 'Créer un compte'
       end
