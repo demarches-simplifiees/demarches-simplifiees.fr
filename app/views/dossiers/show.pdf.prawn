@@ -110,7 +110,7 @@ def add_identite_etablissement(pdf, etablissement)
       format_in_2_columns(pdf, "État administratif", humanized_entreprise_etat_administratif(etablissement))
     end
 
-    if @include_infos_administration
+    if @acls[:include_infos_administration]
       if etablissement.entreprise_effectif_mensuel.present?
         format_in_2_columns(pdf, "Effectif mensuel #{try_format_mois_effectif(etablissement)} de l'établissement (URSSAF ou MSA) ", number_with_delimiter(etablissement.entreprise_effectif_mensuel.to_s))
       end
@@ -349,22 +349,28 @@ prawn_document(page_size: "A4") do |pdf|
   add_title(pdf, 'Formulaire')
   add_champs(pdf, @dossier.champs_public)
 
-  if @include_infos_administration && @dossier.champs_private.present?
+  if @acls[:include_infos_administration] && @dossier.champs_private.present?
     add_title(pdf, "Annotations privées")
     add_champs(pdf, @dossier.champs_private)
   end
 
-  if @include_infos_administration && @dossier.avis.present?
+  if @acls[:include_infos_administration] && @dossier.avis.present?
     add_title(pdf, "Avis")
     @dossier.avis.each do |avis|
       add_avis(pdf, avis)
     end
   end
 
-  if @include_avis_for_expert && @dossier.avis.present?
+  if @acls[:include_avis_for_expert] && @dossier.avis.present?
     add_title(pdf, "Avis")
-    @dossier.avis_for_expert(@include_avis_for_expert).each do |avis|
-      add_avis(pdf, avis)
+    if @acls[:only_for_expert]
+      @dossier.avis_for_expert(@acls[:only_for_expert]).each do |avis|
+        add_avis(pdf, avis)
+      end
+    else
+      @dossier.avis.each do |avis|
+        add_avis(pdf, avis)
+      end
     end
   end
 

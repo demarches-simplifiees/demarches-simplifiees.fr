@@ -1,6 +1,6 @@
 describe ExportJob do
-  let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
-  let(:instructeur) { create(:instructeur) }
+  let(:procedure) { create(:procedure, instructeurs: [user_profile]) }
+  let(:user_profile) { create(:instructeur) }
   let(:time_span_type) { :everything }
   let(:status) { :tous }
   let(:key) { '123' }
@@ -8,7 +8,7 @@ describe ExportJob do
     create(:export, format:,
                     time_span_type:,
                     key:,
-                    instructeur:,
+                    user_profile:,
                     groupe_instructeurs: procedure.groupe_instructeurs)
   end
 

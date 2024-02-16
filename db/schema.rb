@@ -116,6 +116,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_15_164247) do
     t.date "month"
     t.string "time_span_type", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_profile_id"
+    t.string "user_profile_type"
     t.index ["key", "time_span_type", "month"], name: "index_archives_on_key_and_time_span_type_and_month", unique: true
   end
 
@@ -586,6 +588,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_15_164247) do
     t.string "statut", default: "tous"
     t.string "time_span_type", default: "everything", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.bigint "user_profile_id"
+    t.string "user_profile_type"
     t.index ["instructeur_id"], name: "index_exports_on_instructeur_id"
     t.index ["key"], name: "index_exports_on_key"
     t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"

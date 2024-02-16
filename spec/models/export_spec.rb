@@ -1,4 +1,12 @@
 RSpec.describe Export, type: :model do
+  describe 'associations' do
+    let(:instructeur) { create(:instructeur) }
+    let(:export) { create(:export, user_profile_type: 'Instructeur', user_profile_id: instructeur.id) }
+    it 'find polymorphic association' do
+      expect(export.user_profile).to eq(instructeur)
+    end
+  end
+
   describe 'validations' do
     let(:groupe_instructeur) { create(:groupe_instructeur) }
 

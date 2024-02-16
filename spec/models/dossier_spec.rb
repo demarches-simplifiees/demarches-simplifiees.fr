@@ -410,7 +410,6 @@ describe Dossier, type: :model do
     context 'when there is a public advice asked from the dossiers instructeur' do
       let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_2)).to match([avis]) }
     end
@@ -418,7 +417,6 @@ describe Dossier, type: :model do
     context 'when there is a private advice asked from the dossiers instructeur' do
       let!(:avis) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis]) }
       it { expect(dossier.avis_for_expert(expert_2)).not_to match([avis]) }
     end
@@ -427,7 +425,6 @@ describe Dossier, type: :model do
       let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: false) }
       let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: false) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_1, avis_2]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_1, avis_2]) }
       it { expect(dossier.avis_for_expert(expert_2)).to match([avis_1, avis_2]) }
     end
@@ -436,7 +433,6 @@ describe Dossier, type: :model do
       let!(:avis_1) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure, confidentiel: true) }
       let!(:avis_2) { create(:avis, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure_2, confidentiel: true) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_1, avis_2]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_1]) }
       it { expect(dossier.avis_for_expert(expert_2)).to match([avis_2]) }
     end
@@ -446,7 +442,6 @@ describe Dossier, type: :model do
       let!(:avis_2) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('9/01/2010')) }
       let!(:avis_3) { create(:avis, dossier: dossier, claimant: expert_1, experts_procedure: experts_procedure_2, confidentiel: false, created_at: Time.zone.parse('11/01/2010')) }
 
-      it { expect(dossier.avis_for_instructeur(instructeur)).to match([avis_2, avis_1, avis_3]) }
       it { expect(dossier.avis_for_expert(expert_1)).to match([avis_2, avis_1, avis_3]) }
     end
 

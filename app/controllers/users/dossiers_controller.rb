@@ -88,10 +88,11 @@ module Users
     end
 
     def show
+      pj_service = PiecesJustificativesService.new(user_profile: current_user)
       respond_to do |format|
         format.pdf do
           @dossier = dossier_with_champs(pj_template: false)
-          @include_infos_administration = false
+          @acls = pj_service.acl_for_dossier_export
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all do

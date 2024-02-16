@@ -159,9 +159,7 @@ module Experts
     end
 
     def telecharger_pjs
-      @dossier = dossier_with_champs
-
-      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: @dossier.id), include_avis_for_expert: current_expert)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(user_profile: current_expert, dossiers: Dossier.where(id: @dossier.id))
       cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
 
       zipline(cleaned_files, "dossier-#{@dossier.id}.zip")

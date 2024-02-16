@@ -740,17 +740,6 @@ class Dossier < ApplicationRecord
     procedure.duree_conservation_dossiers_dans_ds + (conservation_extension / 1.month.to_i)
   end
 
-  def avis_for_instructeur(instructeur)
-    if instructeur.dossiers.include?(self)
-      avis.order(created_at: :asc)
-    else
-      avis
-        .where(confidentiel: false)
-        .or(avis.where(claimant: instructeur))
-        .order(created_at: :asc)
-    end
-  end
-
   def avis_for_expert(expert)
     Avis
       .where(dossier_id: id, confidentiel: false)

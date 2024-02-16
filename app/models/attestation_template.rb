@@ -92,7 +92,7 @@ class AttestationTemplate < ApplicationRecord
 
   def dup
     attestation_template = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
-    PiecesJustificativesService.clone_attachments(self, attestation_template)
+    ClonePiecesJustificativesService.clone_attachments(self, attestation_template)
     attestation_template
   end
 

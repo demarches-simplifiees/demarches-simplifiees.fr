@@ -13,6 +13,8 @@ describe Instructeur, type: :model do
   end
 
   describe 'associations' do
+    it { is_expected.to have_many(:archives) }
+    it { is_expected.to have_many(:exports) }
     it { is_expected.to have_and_belong_to_many(:administrateurs) }
     it { is_expected.to have_many(:batch_operations) }
   end

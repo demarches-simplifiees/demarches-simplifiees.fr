@@ -14,7 +14,7 @@ module Administrateurs
 
     def create
       type = params[:type]
-      archive = Archive.find_or_create_archive(type, year_month, all_groupe_instructeurs)
+      archive = Archive.find_or_create_archive(type, year_month, all_groupe_instructeurs, current_administrateur)
       if archive.pending?
         ArchiveCreationJob.perform_later(@procedure, archive, current_administrateur)
         flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes à plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."

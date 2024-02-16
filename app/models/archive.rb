@@ -9,6 +9,7 @@ class Archive < ApplicationRecord
   has_and_belongs_to_many :groupe_instructeurs
 
   has_one_attached :file
+  belongs_to :user_profile, polymorphic: true, optional: true
 
   scope :for_groupe_instructeur, -> (groupe_instructeur) {
     joins(:archives_groupe_instructeurs)
@@ -30,9 +31,9 @@ class Archive < ApplicationRecord
     end
   end
 
-  def self.find_or_create_archive(time_span_type, month, groupe_instructeurs)
+  def self.find_or_create_archive(time_span_type, month, groupe_instructeurs, user_profile)
     create_with(groupe_instructeurs: groupe_instructeurs)
-      .create_or_find_by(time_span_type: time_span_type, month: month, key: generate_cache_key(groupe_instructeurs))
+      .create_or_find_by(time_span_type:, month:, user_profile:, key: generate_cache_key(groupe_instructeurs))
   end
 
   private
