@@ -7,14 +7,15 @@
   |
   = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(procedure), class: 'header-link'
 
-  - if procedure.instructeurs_self_management?
+  - if current_administrateur&.owns?(procedure)
     |
-    - if can_manage_groupe_instructeurs?(procedure)
-      = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(procedure), class: 'header-link'
-    - elsif procedure.routing_enabled?
-      = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(procedure), class: 'header-link'
-    - else
-      = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur), class: 'header-link'
+    = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(procedure), class: 'header-link'
+  - elsif procedure.instructeurs_self_management? && procedure.routing_enabled?
+    |
+    = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(procedure), class: 'header-link'
+  - elsif procedure.instructeurs_self_management?
+    |
+    = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupe_path(procedure, procedure.defaut_groupe_instructeur), class: 'header-link'
 
   - if can_send_groupe_message?(procedure)
     |
