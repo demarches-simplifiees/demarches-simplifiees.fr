@@ -4,7 +4,7 @@ class DossierTransfer < ApplicationRecord
 
   EXPIRATION_LIMIT = 2.weeks
 
-  validates :email, format: { with: Devise.email_regexp }
+  validates :email, strict_email: true, presence: true
   before_validation -> { sanitize_email(:email) }
 
   scope :pending, -> { where('created_at > ?', (Time.zone.now - EXPIRATION_LIMIT)) }

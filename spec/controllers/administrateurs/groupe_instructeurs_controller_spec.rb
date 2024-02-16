@@ -346,8 +346,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
-      let(:emails) { ['instructeur_1@ministere_a.gouv.fr'].to_json }
-      it { expect(subject.request.flash[:alert]).to be_present }
+      let(:instructeur) { create(:instructeur) }
+      before { procedure_non_routee.groupe_instructeurs.first.add_instructeurs(emails: [instructeur.user.email]) }
+      let(:emails) { [instructeur.email].to_json }
       it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
     end
 
