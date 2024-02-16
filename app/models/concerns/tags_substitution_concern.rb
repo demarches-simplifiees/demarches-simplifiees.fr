@@ -19,6 +19,7 @@ module TagsSubstitutionConcern
         .sub(/[[:space:]]+$/, '')
         .gsub(/[[:space:]]/, ' ')
         .gsub('&nbsp;', ' ')
+        .gsub(/--/, '__')
     end
 
     define_combinator :doc do

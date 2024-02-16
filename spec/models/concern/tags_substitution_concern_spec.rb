@@ -211,7 +211,7 @@ describe TagsSubstitutionConcern, type: :model do
       end
 
       context 'and they are used in the template' do
-        let(:template) { "--bon pote -- c'est top--" }
+        let(:template) { "--bon pote __ c'est top--" }
 
         context 'and their value in the dossier are not nil' do
           before do
