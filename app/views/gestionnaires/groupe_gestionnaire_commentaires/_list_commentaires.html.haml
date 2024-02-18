@@ -1,0 +1,8 @@
+%table.fr-table.width-100.mt-3
+  %thead
+    %tr
+      %th= 'Adresse email'
+      %th= 'Dernier message'
+      %th
+  %tbody#commentaires
+    = render(GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireComponent.with_collection(commentaires, groupe_gestionnaire: groupe_gestionnaire))
