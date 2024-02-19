@@ -244,7 +244,16 @@ describe PiecesJustificativesService do
         context 'given an expert' do
           let(:user_profile) { create(:expert) }
           it "doesn't return confidentiel avis.piece_justificative_file" do
-            expect(subject).to be_empty
+            expect(subject.size).to eq(0)
+          end
+        end
+
+        context 'when the expert has given the avis' do
+          let(:experts_procedure) { create(:experts_procedure, expert: user_profile, procedure:) }
+          let(:avis) { create(:avis, experts_procedure:, dossier: dossier, confidentiel: true) }
+          let(:user_profile) { create(:expert) }
+          it "doesn't return confidentiel avis.piece_justificative_file" do
+            expect(subject.size).to eq(2)
           end
         end
       end

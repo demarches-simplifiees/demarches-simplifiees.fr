@@ -223,7 +223,16 @@ class PiecesJustificativesService
 
   def pjs_for_avis(dossiers)
     avis_ids_dossier_id_query = Avis.joins(:dossier).where(dossier: dossiers)
-    avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false) if !liste_documents_allows?(:with_avis_piece_justificative)
+    if !liste_documents_allows?(:with_avis_piece_justificative)
+      avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false)
+    end
+    if @user_profile.is_a?(Expert)
+      avis_ids = Avis.joins(:dossier, experts_procedure: :expert)
+        .where(experts_procedure: { expert: @user_profile })
+        .where(dossier: dossiers)
+        .pluck(:id)
+      avis_ids_dossier_id_query = avis_ids_dossier_id_query.or(Avis.where(id: avis_ids))
+    end
     avis_ids_dossier_id = avis_ids_dossier_id_query.pluck(:id, :dossier_id).to_h
 
     ActiveStorage::Attachment
