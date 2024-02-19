@@ -39,9 +39,13 @@ describe ProcedureExportService do
         [
           "ID",
           "Email",
+          "FranceConnect ?",
           "Civilité",
           "Nom",
           "Prénom",
+          "Dépot pour un tier",
+          "Nom du mandataire",
+          "Prénom du mandataire",
           "Archivé",
           "État du dossier",
           "Dernière mise à jour le",
@@ -111,8 +115,8 @@ describe ProcedureExportService do
 
         # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
         offset = dossier.depose_at.utc_offset
-        depose_at = Time.zone.at(dossiers_sheet.data[0][8] - offset.seconds)
-        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][9] - offset.seconds)
+        depose_at = Time.zone.at(dossiers_sheet.data[0][12] - offset.seconds)
+        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][13] - offset.seconds)
         expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size)
         expect(depose_at).to eq(dossier.depose_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
@@ -174,6 +178,7 @@ describe ProcedureExportService do
         [
           "ID",
           "Email",
+          "FranceConnect ?",
           "Entreprise raison sociale",
           "Archivé",
           "État du dossier",
@@ -245,6 +250,7 @@ describe ProcedureExportService do
           [
             "ID",
             "Email",
+            "FranceConnect ?",
             "Établissement SIRET",
             "Établissement siège social",
             "Établissement NAF",
