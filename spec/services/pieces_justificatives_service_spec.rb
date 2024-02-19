@@ -224,19 +224,20 @@ describe PiecesJustificativesService do
           }
 
           avis.piece_justificative_file.attach(to_be_attached)
+          avis.introduction_file.attach(avis.piece_justificative_file.blob)
         end
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
           it "doesn't return confidentiel avis.piece_justificative_file" do
-            expect(subject).not_to be_empty
+            expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
           it "doesn't return confidentiel avis.piece_justificative_file" do
-            expect(subject).not_to be_empty
+            expect(subject.size).to eq(2)
           end
         end
 
@@ -251,7 +252,7 @@ describe PiecesJustificativesService do
       context 'with avis.piece_justificative being public' do
         let(:procedure) { create(:procedure) }
         let(:dossier) { create(:dossier, procedure: procedure) }
-        let(:avis) { create(:avis, dossier: dossier) }
+        let(:avis) { create(:avis, dossier: dossier, confidentiel: false) }
         before do
           to_be_attached = {
             io: StringIO.new("toto"),
@@ -261,26 +262,27 @@ describe PiecesJustificativesService do
           }
 
           avis.piece_justificative_file.attach(to_be_attached)
+          avis.introduction_file.attach(avis.piece_justificative_file.blob)
         end
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
           it "doesn't return confidentiel avis.piece_justificative_file" do
-            expect(subject).not_to be_empty
+            expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
           it "doesn't return confidentiel avis.piece_justificative_file" do
-            expect(subject).not_to be_empty
+            expect(subject.size).to eq(2)
           end
         end
 
         context 'given an expert' do
           let(:user_profile) { create(:expert) }
           it "doesn't return confidentiel avis.piece_justificative_file" do
-            expect(subject).not_to be_empty
+            expect(subject.size).to eq(2)
           end
         end
       end

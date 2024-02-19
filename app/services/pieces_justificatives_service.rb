@@ -84,11 +84,23 @@ class PiecesJustificativesService
   def acl_for_dossier_export
     case @user_profile
     when Expert
-      { include_infos_administration: true, include_avis_for_expert: true, only_for_expert: @user_profile }
+      {
+        include_infos_administration: true,
+        include_avis_for_expert: true,
+        only_for_expert: @user_profile
+      }
     when Instructeur, Administrateur
-      { include_infos_administration: true, include_avis_for_expert: true, only_for_export: false }
+      {
+        include_infos_administration: true,
+        include_avis_for_expert: true,
+        only_for_export: false
+      }
     when User
-      { include_infos_administration: false, include_avis_for_expert: false, only_for_expert: false }
+      {
+        include_infos_administration: false,
+        include_avis_for_expert: false, # should be true, expert can use the messagerie, why not provide avis ?
+        only_for_expert: false
+      }
     else
       raise 'not supported'
     end
@@ -216,7 +228,7 @@ class PiecesJustificativesService
 
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Avis", name: "piece_justificative_file", record_id: avis_ids_dossier_id.keys)
+      .where(record_type: "Avis", record_id: avis_ids_dossier_id.keys)
       .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = avis_ids_dossier_id[a.record_id]
