@@ -2126,6 +2126,16 @@ describe Dossier, type: :model do
   describe "#spreadsheet_columns" do
     let(:dossier) { create(:dossier) }
 
+    context 'user france connected' do
+      let(:dossier) { build(:dossier, user: build(:user, france_connect_information: build(:france_connect_information))) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", true]) }
+    end
+
+    context 'user not france connected' do
+      let(:dossier) { build(:dossier) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", false]) }
+    end
+
     context 'for_individual' do
       let(:dossier) { create(:dossier, procedure: create(:procedure, :for_individual)) }
       it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Dépot pour un tier", :for_tiers]) }

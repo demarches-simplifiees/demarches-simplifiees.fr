@@ -1192,7 +1192,8 @@ class Dossier < ApplicationRecord
   def spreadsheet_columns(with_etablissement: false, types_de_champ:)
     columns = [
       ['ID', id.to_s],
-      ['Email', user_email_for(:display)]
+      ['Email', user_email_for(:display)],
+      ['FranceConnect ?', user.france_connect_information.present?]
     ]
 
     if procedure.for_individual?
