@@ -1193,7 +1193,7 @@ class Dossier < ApplicationRecord
     columns = [
       ['ID', id.to_s],
       ['Email', user_email_for(:display)],
-      ['FranceConnect ?', user.france_connect_information.present?]
+      ['FranceConnect ?', user_from_france_connect?]
     ]
 
     if procedure.for_individual?
@@ -1384,6 +1384,10 @@ class Dossier < ApplicationRecord
 
   def mandataire_full_name
     "#{mandataire_first_name} #{mandataire_last_name}"
+  end
+
+  def user_from_france_connect?
+    user.france_connect_information.present?
   end
 
   private
