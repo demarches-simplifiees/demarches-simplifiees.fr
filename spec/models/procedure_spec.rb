@@ -1761,6 +1761,36 @@ describe Procedure do
     end
   end
 
+  describe "#attestation_template" do
+    let(:procedure) { create(:procedure) }
+
+    context "when there is a v2 created after v1" do
+      before do
+        create(:attestation_template, procedure: procedure)
+        create(:attestation_template, :v2, procedure: procedure)
+      end
+
+      it { expect(procedure.attestation_template.version).to eq(1) }
+    end
+
+    context "when there is a v2 created before v1" do
+      before do
+        create(:attestation_template, :v2, procedure: procedure)
+        create(:attestation_template, procedure: procedure, activated: true)
+      end
+
+      it { expect(procedure.attestation_template.version).to eq(1) }
+    end
+
+    context "when there is only a v2" do
+      before do
+        create(:attestation_template, :v2, procedure: procedure)
+      end
+
+      it { expect(procedure.attestation_template.version).to eq(2) }
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
