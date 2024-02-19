@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_15_164247) do
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
     t.date "expiration_notices_sent_at", default: [], array: true
+    t.date "expires_at"
     t.datetime "last_v1_authenticated_at"
     t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
@@ -105,7 +106,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_15_164247) do
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false
     t.boolean "write_access", default: true, null: false
-    t.date "expires_at"
     t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
   end
 
