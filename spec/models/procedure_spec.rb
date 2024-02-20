@@ -294,6 +294,26 @@ describe Procedure do
         let(:procedure) { build(:procedure, monavis_embed: monavis_issue_bouchra) }
         it { expect(procedure.valid?).to eq(true) }
       end
+
+      context 'Monavis embed code with jedonnemonavis' do
+        monavis_jedonnemonavis = <<-MSG
+          <a href="https://jedonnemonavis.numerique.gouv.fr/Demarches/3839?&view-mode=formulaire-avis&nd_source=button&key=6af80846f64fb213abcabaeea7a3ea8c">
+            <img src="https://jedonnemonavis.numerique.gouv.fr/static/bouton-bleu.svg" alt="Je donne mon avis" />
+          </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_jedonnemonavis) }
+        it { expect(procedure.valid?).to eq(true) }
+      end
+
+      context 'Monavis embed code with kthxbye' do
+        monavis_jedonnemonavis = <<-MSG
+          <a href="https://kthxbye.fr/?key=6af80846f64fb213abcabaeea7a3ea8c">
+            <img src="https://kthxbye.fr/static/bouton-bleu.svg" alt="Je donne mon avis" />
+          </a>
+        MSG
+        let(:procedure) { build(:procedure, monavis_embed: monavis_jedonnemonavis) }
+        it { expect(procedure.valid?).to eq(false) }
+      end
     end
 
     describe 'duree de conservation dans ds' do
