@@ -44,6 +44,8 @@ export class ComboboxUI implements EventListenerObject {
   #allowsCustomValue: boolean;
   #limit?: number;
 
+  #selectedData: Option['data'] = null;
+
   constructor({
     input,
     selectedValueInput,
@@ -293,7 +295,8 @@ export class ComboboxUI implements EventListenerObject {
   private dispatchChange(cb: () => Option['data']): void {
     const value = this.#selectedValueInput.value;
     const data = cb();
-    if (value != this.#selectedValueInput.value) {
+    if (value != this.#selectedValueInput.value || data != this.#selectedData) {
+      this.#selectedData = data;
       for (const input of this.#valueSlots) {
         switch (input.dataset.valueSlot) {
           case 'value':
