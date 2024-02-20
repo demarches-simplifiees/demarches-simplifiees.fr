@@ -311,6 +311,11 @@ en:
         resent: 'Resend the confirmation email'
         faq: 'Also, you can check our'
     invites:
+      create:
+        success: "One invitation has been sent to %{email}."
+      destroy:
+        success: "The permission given to %{email} had been revoked."
+        error: "You can't revoke this invitation"
       dropdown:
         invite_to_edit: Invite someone to edit this file
         view_invited_people: "View invited people"
