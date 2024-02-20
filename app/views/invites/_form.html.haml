@@ -1,31 +1,35 @@
 #invites-form.fr-p-2w
+  %h4.fr-h5= t('views.invites.form.modal_title')
+  %p.fr-highlight.fr-mb-3w= t('views.invites.form.modal_highlight')
+
+  %h5.fr-h6= t('views.invites.form.edit_dossier', count: invites.size)
   - if invites.present?
     #invite-list{ morphing ? { tabindex: "-1" } : {} }
-      %h4.fr-h6= t('views.invites.form.invite_to_participate')
       %ul
         - invites.each do |invite|
           %li
             = invite.email
             %small{ 'data-turbo': 'true' }
-              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission') }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
+              = link_to t('views.invites.form.withdraw_permission'), invite_path(invite), data: { turbo_method: :delete, turbo_confirm: t('views.invites.form.want_to_withdraw_permission', email: invite.email) }, class: "fr-btn fr-btn--sm fr-btn--tertiary-no-outline"
 
-    %p= t('views.invites.form.edit_dossier')
     - if dossier.brouillon?
       %p= t('views.invites.form.submit_dossier_yourself')
 
-  - else
-    %p= t('views.invites.form.invite_to_edit_line1')
-    %p= t('views.invites.form.invite_to_edit_line2')
+  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post, aria: { labelledby: 'invite-form-legend' } do
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend#invite-form-legend
+        %h5.fr-h6= t('views.invites.form.title')
 
-  = form_tag dossier_invites_path(dossier), data: { turbo: true, turbo_force: :server }, method: :post do
-    .fr-input-group
-      = label_tag :invite_email, class: "fr-label" do
-        = t('views.invites.form.email')
-        %span.fr-hint-text= t('views.invites.form.email_hint')
-      = email_field_tag :invite_email, '', required: true, class: "fr-input"
+      .fr-fieldset__element
+        .fr-input-group
+          = label_tag :invite_email, class: "fr-label" do
+            = t('views.invites.form.email')
+            %span.fr-hint-text= t('views.invites.form.email_hint')
+          = email_field_tag :invite_email, '', required: true, class: "fr-input"
 
-    .fr-input-group
-      = label_tag :invite_message, t('views.invites.form.invite_message'), class: "fr-label"
-      = text_area_tag :invite_message, '', class: "fr-input"
+      .fr-fieldset__element
+        .fr-input-group
+          = label_tag :invite_message, t('views.invites.form.invite_message'), class: "fr-label"
+          = text_area_tag :invite_message, '', class: "fr-input"
 
     = submit_tag t('views.invites.form.send_invitation'), class: 'fr-btn fr-btn--secondary'
