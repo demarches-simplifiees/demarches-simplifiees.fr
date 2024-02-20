@@ -7,7 +7,7 @@ describe 'Signing up:' do
     visit new_user_registration_path
 
     sign_up_with user_email, user_password
-    expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+    expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
 
     click_confirmation_link_for user_email
     expect(page).to have_content('Votre compte a bien été confirmé.')
@@ -59,7 +59,7 @@ describe 'Signing up:' do
     # Then with a good password
     sign_up_with user_email, user_password
     expect(page).to have_current_path new_user_confirmation_path user: { email: user_email }
-    expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+    expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
   end
 
   context 'when visiting a procedure' do
@@ -72,7 +72,7 @@ describe 'Signing up:' do
       expect(page).to have_current_path new_user_registration_path
 
       sign_up_with user_email, user_password
-      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
 
       click_confirmation_link_for(user_email, in_another_browser: true)
 
@@ -100,7 +100,7 @@ describe 'Signing up:' do
 
       # The same page than for initial sign-ups is displayed, to avoid leaking informations
       # about the account existence.
-      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
 
       # The confirmation email is sent again
       confirmation_email = open_email(user_email)
@@ -129,7 +129,7 @@ describe 'Signing up:' do
 
       # The same page than for initial sign-ups is displayed, to avoid leaking informations
       # about the accound existence.
-      expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+      expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
 
       # A warning email is sent
       warning_email = open_email(user_email)

@@ -3,31 +3,21 @@
 - content_for :footer do
   = render partial: 'root/footer'
 
-.container.devise-container.devise-confirmations
-  .one-column-centered
+
+.fr-container
+  .fr-col-12.fr-col-md-6.fr-col-offset-md-3
     = devise_error_messages!
-    %h1.center= t('views.confirmation.new.title')
+    %h1.fr-mt-6w.fr-h2.center
+      = t('views.confirmation.new.title')
 
-    %img.confirmation-icon{ src: image_url("user/confirmation-email.svg"), alt: t('views.confirmation.new.image_alt') }
+    %p.center{ aria: { hidden: true } }= image_tag("user/confirmation-email.svg", alt: t('views.confirmation.new.image_alt'))
 
-    %h2.confirmation-preamble
-      = succeed '.' do
-        = t('views.confirmation.new.email_cta')
-        - if resource.email.present?
-          %strong= resource.email
+    = render Dsfr::AlertComponent.new(title: '', state: :info, heading_level: 'h2', extra_class_names: 'fr-mt-6w fr-mb-3w') do |c|
+      - c.with_body do
+        %p= t('views.confirmation.new.email_cta_html', email: resource.email)
+        %p= t('views.confirmation.new.email_guidelines_html')
 
-    %p.confirmation-instructions= t('views.confirmation.new.email_guidelines_html')
-
-    %hr.confirmation-separator
-
-    .confirmation-resend
-      %p= t('views.confirmation.new.email_missing')
-
-      = form_for(resource, as: resource_name, url: confirmation_path(resource_name)) do |f|
-        = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autofocus: true })
-        = f.submit t('views.confirmation.new.resent'), class: 'fr-btn'
-
-      %p.fr-mt-3w
-        = t('views.confirmation.new.faq')
-        = link_to(t("links.common.faq.label"), t("links.common.faq.email_non_recu_url"), title: new_tab_suffix(t("links.common.faq.title")), **external_link_attributes)
-        \.
+    = form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { class: 'fr-mb-6w'}) do |f|
+      %legend.fr-hint-text.fr-mb-3w= t('views.confirmation.new.email_missing')
+      = f.hidden_field :email
+      = f.submit t('views.confirmation.new.resent'), class: 'fr-btn fr-btn--secondary'
