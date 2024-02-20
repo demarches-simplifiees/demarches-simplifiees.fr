@@ -1,5 +1,5 @@
 describe Champs::MultipleDropDownListChamp do
-  let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, drop_down_list_value: "val1\r\nval2\r\nval3") }
+  let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, drop_down_list_value: "val1\r\nval2\r\nval3\r\n[brackets] val4") }
   let(:value) { nil }
   subject { build(:champ_multiple_drop_down_list, type_de_champ:, value:) }
 
@@ -41,6 +41,8 @@ describe Champs::MultipleDropDownListChamp do
           expect(subject.value).to eq("[\"val1\",\"val2\"]")
           subject.value = ''
           expect(subject.value).to eq("[\"val1\",\"val2\"]")
+          subject.value = "[brackets] val4"
+          expect(subject.value).to eq("[\"val1\",\"val2\",\"[brackets] val4\"]")
           subject.value = nil
           expect(subject.value).to be_nil
           subject.value = ["val1"]
