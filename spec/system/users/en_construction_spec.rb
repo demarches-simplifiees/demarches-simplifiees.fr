@@ -31,7 +31,7 @@ describe "Dossier en_construction" do
 
       click_on "Supprimer le fichier toto.txt"
 
-      input_selector = "#attachment-multiple-empty-#{champ.public_id} "
+      input_selector = "#attachment-multiple-empty-#{champ.public_id}"
       expect(page).to have_selector(input_selector)
       find(input_selector).attach_file(Rails.root.join('spec/fixtures/files/file.pdf'))
 

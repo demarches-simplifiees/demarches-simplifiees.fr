@@ -432,6 +432,12 @@ describe API::V2::GraphqlController do
                   byteSize
                   contentType
                 }
+                attachments {
+                  filename
+                  checksum
+                  byteSize
+                  contentType
+                }
               }
               avis {
                 expert {
@@ -519,11 +525,19 @@ describe API::V2::GraphqlController do
             {
               body: commentaire.body,
               attachment: {
-                filename: commentaire.piece_jointe.filename.to_s,
-                contentType: commentaire.piece_jointe.content_type,
-                checksum: commentaire.piece_jointe.checksum,
-                byteSize: commentaire.piece_jointe.byte_size
+                filename: commentaire.piece_jointe.first.filename.to_s,
+                contentType: commentaire.piece_jointe.first.content_type,
+                checksum: commentaire.piece_jointe.first.checksum,
+                byteSize: commentaire.piece_jointe.first.byte_size
               },
+              attachments: commentaire.piece_jointe.map do |pj|
+                {
+                  filename: pj.filename.to_s,
+                  contentType: pj.content_type,
+                  checksum: pj.checksum,
+                  byteSize: pj.byte_size
+                }
+              end,
               email: commentaire.email
             }
           end
