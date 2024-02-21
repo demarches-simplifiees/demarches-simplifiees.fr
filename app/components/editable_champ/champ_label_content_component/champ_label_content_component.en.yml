@@ -2,6 +2,6 @@
 en:
   changes_to_save: "modifications to submit"
   modified_at: "modified on %{datetime}"
-  check_content_rebased: The type of this field or its description has been modified by the administration. Check its content.
+  check_content_rebased: "Information: field updated by administration. Check its content."
   optional_champ: (optional)
   recommended_size: The recommended maximum size is %{size} characters.

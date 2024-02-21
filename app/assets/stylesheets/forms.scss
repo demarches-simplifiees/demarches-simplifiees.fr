@@ -72,13 +72,6 @@
     border-bottom: 2px solid $border-grey;
   }
 
-  @mixin notice-text-style {
-    font-size: 16px;
-    color: $dark-grey;
-  }
-
-
-
   label:not(.fr-label),
   legend.form-label {
     font-size: 18px;
@@ -101,9 +94,9 @@
   }
 
   .notice {
-    @include notice-text-style;
     margin-top: - $default-spacer;
     margin-bottom: $default-padding;
+    color: var(--text-mention-grey);
 
     p {
       margin-bottom: $default-spacer;
@@ -118,7 +111,7 @@
     position: relative;
 
     .updated-at {
-      @include notice-text-style;
+      font-size: 0.875rem;
       float: right;
       margin-left: $default-spacer;
       visibility: hidden;
@@ -127,6 +120,7 @@
     &:hover .updated-at,
     .updated-at.highlighted {
       visibility: visible;
+      margin-bottom: 4px;
     }
 
     &.editable-champ-checkbox {
@@ -493,15 +487,6 @@
 
   .justify-content--space-between {
     justify-content: space-between;
-  }
-
-  .send-notice {
-    @include notice-text-style;
-    margin-bottom: $default-padding;
-  }
-
-  .send-wrapper + .send-notice {
-    margin-top: - $default-padding;
   }
 
   .inline-champ {
