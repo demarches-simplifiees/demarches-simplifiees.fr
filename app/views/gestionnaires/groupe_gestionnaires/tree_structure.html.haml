@@ -7,6 +7,9 @@
   %h1 Arborescence de « #{@groupe_gestionnaire.name} »
 
   .fr-mt-4w
+    - if @groupe_gestionnaire.parent_id
+      %ul
+        %li= @groupe_gestionnaire.parent.name
     %ul
       - @tree_structure.each do |parent, children|
         %li
