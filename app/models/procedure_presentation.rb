@@ -319,7 +319,7 @@ class ProcedurePresentation < ApplicationRecord
         'value' => value
       }
 
-      update!(filters: updated_filters)
+      update(filters: updated_filters)
     end
   end
 
@@ -457,11 +457,11 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def check_filters_max_length
-    individual_filters = filters.values.flatten.filter { |f| f.is_a?(Hash) }
-    individual_filters.each do |filter|
-      if filter['value']&.length.to_i > FILTERS_VALUE_MAX_LENGTH
-        errors.add(:filters, :too_long)
-      end
+    filters.values.flatten.each do |filter|
+      next if !filter.is_a?(Hash)
+      next if filter['value']&.length.to_i <= FILTERS_VALUE_MAX_LENGTH
+
+      errors.add(:base, "Le filtre #{filter['label']} est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)")
     end
   end
 

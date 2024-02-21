@@ -148,7 +148,9 @@ module Instructeurs
     end
 
     def add_filter
-      procedure_presentation.add_filter(statut, params[:field], params[:value])
+      if !procedure_presentation.add_filter(statut, params[:field], params[:value])
+        flash.alert = procedure_presentation.errors.full_messages
+      end
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
