@@ -3,10 +3,6 @@ class Champs::AddressChamp < Champs::TextChamp
     data.present?
   end
 
-  def feature
-    ''
-  end
-
   def feature=(value)
     return if value.blank?
     feature = JSON.parse(value)

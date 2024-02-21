@@ -6,7 +6,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier', js: true, vcr: { cassette_name: 'communes' } do
+  scenario 'fill a dossier', js: true, vcr: true do
     log_in(user, procedure)
 
     fill_individual
@@ -36,11 +36,16 @@ describe 'The user' do
     select('Australie', from: form_id_for('pays'))
     select('Martinique', from: form_id_for('regions'))
     select('02 – Aisne', from: form_id_for('departements'))
+
     fill_in('communes', with: '60400')
     find('li', text: 'Brétigny (60400)').click
-
-    # communes needs more time to be updated
     wait_until { champ_value_for('communes') == "Brétigny" }
+
+    fill_in('address', with: '78 Rue du Grés 30310 Vergè')
+    find('li', text: '78 Rue du Grés 30310 Vergèze').click
+    wait_until { champ_value_for('address') == '78 Rue du Grés 30310 Vergèze' }
+    expect(champ_for('address').full_address?).to be_truthy
+    expect(champ_for('address').departement_code_and_name).to eq('30 – Gard')
 
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
