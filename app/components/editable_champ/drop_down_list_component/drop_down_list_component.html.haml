@@ -1,33 +1,33 @@
-- if @champ.options?
-  - if @champ.render_as_radios?
-    .fr-fieldset__content
-      - @champ.enabled_non_empty_options.each_with_index do |option, index|
-        .fr-radio-group
-          = @form.radio_button :value, option, id: "#{@champ.id}_radio_option_#{index}"
-          %label.fr-label{ for: "#{@champ.id}_radio_option_#{index}" }
-            = option
+- if @champ.render_as_radios?
+  .fr-fieldset__content
+    - @champ.enabled_non_empty_options.each_with_index do |option, index|
+      .fr-radio-group
+        = @form.radio_button :value, option, id: "#{@champ.id}_radio_option_#{index}"
+        %label.fr-label{ for: "#{@champ.id}_radio_option_#{index}" }
+          = option
 
-      - if !@champ.mandatory?
-        .fr-radio-group
-          = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: "#{@champ.id}_radio_option_blank"
-          %label.fr-label{ for: "#{@champ.id}_radio_option_blank" }
-            Non renseigné
+    - if !@champ.mandatory?
+      .fr-radio-group
+        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: "#{@champ.id}_radio_option_blank"
+        %label.fr-label{ for: "#{@champ.id}_radio_option_blank" }
+          Non renseigné
 
-      - if @champ.drop_down_other?
-        .fr-radio-group
-          = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: "#{@champ.id}_radio_option_other"
-          %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
-            = t('shared.champs.drop_down_list.other')
-  - elsif @champ.render_as_combobox?
-    = render Dsfr::ComboboxComponent.new form: @form, name: :value, options: @champ.enabled_non_empty_options(other: true), selected: @champ.selected, id: @champ.input_id, class: select_class_names, describedby: @champ.describedby_id
-  - else
-    = @form.select :value,
-      @champ.enabled_non_empty_options(other: true),
-      { selected: @champ.selected, include_blank: true },
-      required: @champ.required?,
-      id: @champ.input_id,
-      class: select_class_names,
-      aria: { describedby: @champ.describedby_id }
+    - if @champ.drop_down_other?
+      .fr-radio-group
+        = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: "#{@champ.id}_radio_option_other"
+        %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
+          = t('shared.champs.drop_down_list.other')
+- elsif @champ.render_as_combobox?
+  = render Dsfr::ComboboxComponent.new form: @form, name: :value, options: @champ.enabled_non_empty_options(other: true), selected: @champ.selected, id: @champ.input_id, class: select_class_names, describedby: @champ.describedby_id
+- else
+  = @form.select :value,
+    @champ.enabled_non_empty_options(other: true),
+    { selected: @champ.selected, include_blank: true },
+    required: @champ.required?,
+    id: @champ.input_id,
+    class: select_class_names,
+    aria: { describedby: @champ.describedby_id }
 
-  - if @champ.drop_down_other?
+- if @champ.drop_down_other?
+  %div{ class: other_element_class_names }
     = render EditableChamp::DropDownOtherInputComponent.new(form: @form, champ: @champ)
