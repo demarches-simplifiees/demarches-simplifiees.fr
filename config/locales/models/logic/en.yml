@@ -1,3 +1,4 @@
 en:
   logic:
     empty: empty member
+    empty_operator: empty operator

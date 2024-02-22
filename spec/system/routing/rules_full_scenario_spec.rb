@@ -39,14 +39,14 @@ describe 'The routing with rules', js: true do
     expect(page).not_to have_text('à configurer')
 
     click_on 'littéraire'
-    expect(page).to have_select("targeted_champ", selected: "Spécialité")
-    expect(page).to have_select("value", selected: "littéraire")
+    expect(page).to have_select("groupe_instructeur[condition_form][rows][][targeted_champ]", selected: "Spécialité")
+    expect(page).to have_select("groupe_instructeur[condition_form][rows][][value]", selected: "littéraire")
 
     click_on '3 groupes'
     click_on 'scientifique'
 
-    expect(page).to have_select("targeted_champ", selected: "Spécialité")
-    expect(page).to have_select("value", selected: "scientifique")
+    expect(page).to have_select("groupe_instructeur[condition_form][rows][][targeted_champ]", selected: "Spécialité")
+    expect(page).to have_select("groupe_instructeur[condition_form][rows][][value]", selected: "scientifique")
   end
 
   scenario 'Routage avancé' do
@@ -106,20 +106,20 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text("L’instructeur alain@gouv.fr a été affecté")
 
     # add routing rules
-    within('.target') { select('Spécialité') }
-    within('.value') { select('scientifique') }
+    within('.target select') { select('Spécialité') }
+    within('.value select') { select('scientifique') }
 
     click_on '3 groupes'
 
     click_on 'littéraire'
 
-    within('.target') { select('Spécialité') }
-    within('.value') { select('scientifique') }
+    within('.target select') { select('Spécialité') }
+    within('.value select') { select('scientifique') }
 
     expect(page).to have_text('règle déjà attribuée à scientifique')
 
-    within('.target') { select('Spécialité') }
-    within('.value') { select('littéraire') }
+    within('.target select') { select('Spécialité') }
+    within('.value select') { select('littéraire') }
 
     expect(page).not_to have_text('règle déjà attribuée à scientifique')
 

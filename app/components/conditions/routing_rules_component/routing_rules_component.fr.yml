@@ -1,0 +1,6 @@
+---
+fr:
+  display_if: Router si
+  select: Sélectionner
+  add_condition: Ajouter une règle de routage
+  remove_a_row: Supprimer la ligne

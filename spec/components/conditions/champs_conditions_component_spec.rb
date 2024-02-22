@@ -1,4 +1,4 @@
-describe TypesDeChampEditor::ConditionsComponent, type: :component do
+describe Conditions::ChampsConditionsComponent, type: :component do
   include Logic
 
   describe 'render' do

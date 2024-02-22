@@ -22,34 +22,14 @@
         Groupe inactif
         %span.fr-hint-text Si cette option est activée, les usagers ne pourront plus sélectionner ce groupe d’instructeurs
 
-  = form_tag admin_procedure_routing_rules_path(@procedure),
-    method: :post,
-    data: { controller: 'autosave' },
-    class: 'fr-mb-3w' do
+  = render Conditions::RoutingRulesComponent.new(groupe_instructeur: @groupe_instructeur)
 
-    = hidden_field_tag('groupe_instructeur_id', @groupe_instructeur.id)
+  .fr-hint-text.mt-2.mb-2
+    %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le
+    %span
+      = link_to 'champ concerné', champs_admin_procedure_path(@procedure)
 
-    .flex
-      %p.fr-mb-1w.fr-mr-2w Routage
-      - if @groupe_instructeur.invalid_rule?
-        %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm règle invalide
-      - elsif @groupe_instructeur.non_unique_rule?
-        %p.fr-mb-1w.fr-badge.fr-badge--warning.fr-badge--sm règle déjà attribuée à #{@groupe_instructeur.groups_with_same_rule}
-
-    .flex.align-baseline.fr-mb-1w
-      .fr-mr-2w.no-wrap si le champ
-      .target.fr-mr-2w
-        = targeted_champ_tag
-      .operator.fr-mr-2w.no-wrap
-        = operator_tag
-      .value
-        = value_tag
-    .fr-hint-text
-      %span Si vous ne trouvez pas l'option correspondant à votre groupe, veuillez l'ajouter dans le champ dédié au
-      %span
-        = link_to 'routage', champs_admin_procedure_path(@procedure)
-
-  .flex.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+  .flex.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right.mb-2
     - if @groupe_instructeur.can_delete?
       %p= t('.delete')
       = button_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
