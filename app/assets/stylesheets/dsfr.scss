@@ -29,6 +29,10 @@ trix-editor.fr-input {
   max-height: none;
 }
 
+.fr-label + .fr-ds-combobox { // same as .fr-label + .fr-input
+  margin-top: 0.5rem;
+}
+
 // Fix firefox < 80, Safari < 15.4, Chrome < 83 not supporting "appearance: auto" on inputs
 // This rule was set by DSFR for DSFR design, but broke our legacy forms.
 // scss-lint:disable DuplicateProperty
