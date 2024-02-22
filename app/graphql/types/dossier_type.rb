@@ -50,10 +50,14 @@ module Types
     field :attestation, Types::File, "L’URL de l’attestation au format PDF.", null: true
 
     field :usager, Types::ProfileType, "Profile de l'usager déposant le dossier", null: false
+
     field :groupe_instructeur, Types::GroupeInstructeurType, null: false
     field :revision, Types::RevisionType, null: false, deprecation_reason: 'Utilisez le champ `demarche.revision` à la place.'
 
     field :demandeur, Types::DemandeurType, null: false
+    field :prenom_mandataire, String, null: true, method: :mandataire_first_name
+    field :nom_mandataire, String, null: true, method: :mandataire_last_name
+    field :depose_par_un_tiers, Boolean, method: :for_tiers
 
     field :instructeurs, [Types::ProfileType], null: false
 
@@ -89,8 +93,8 @@ module Types
       if object.user_deleted?
         :deleted
       else
-        user_loader.then do |user|
-          if user.france_connect_information.present?
+        user_loader.then do |_user|
+          if object.user_from_france_connect?
             :france_connect
           else
             :password

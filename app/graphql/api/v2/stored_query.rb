@@ -294,6 +294,9 @@ class API::V2::StoredQuery
     usager {
       email
     }
+    prenomMandataire
+    nomMandataire
+    deposeParUnTiers
     connectionUsager
     groupeInstructeur {
       ...GroupeInstructeurFragment
