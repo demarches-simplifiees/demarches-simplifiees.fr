@@ -97,6 +97,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
       end
     end
+
+    describe 'autolink simple urls' do
+      let(:commentaire) { create(:commentaire, instructeur: instructeur, body: "rdv sur https://demarches.gouv.fr") }
+      it { is_expected.to have_link("https://demarches.gouv.fr", href: "https://demarches.gouv.fr") }
+    end
   end
 
   describe '#commentaire_from_guest?' do
