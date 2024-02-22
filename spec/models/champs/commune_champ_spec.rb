@@ -2,11 +2,10 @@ describe Champs::CommuneChamp do
   let(:code_insee) { '63102' }
   let(:code_postal) { '63290' }
   let(:code_departement) { '63' }
-  let(:champ) { create(:champ_communes, code_postal: code_postal) }
+  let(:champ) { create(:champ_communes, code_postal:, external_id: code_insee) }
 
   describe 'value' do
     it 'with code_postal' do
-      champ.update(value: code_insee)
       expect(champ.to_s).to eq('Châteldon (63290)')
       expect(champ.name).to eq('Châteldon')
       expect(champ.external_id).to eq(code_insee)

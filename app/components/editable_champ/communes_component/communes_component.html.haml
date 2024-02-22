@@ -1,23 +1,2 @@
-.fr-fieldset__element.fr-mb-0
-  .fr-input-group
-    = @form.label :code_postal, t('.postal_code').html_safe, class: 'fr-label', for: code_postal_input_id
-    = @form.text_field :code_postal, required: @champ.required?, id: code_postal_input_id, class: "width-33-desktop width-100-mobile small-margin fr-input"
-  - if @champ.code_postal?
-    - if commune_options.empty?
-      .fr-error-text.mb-4= t('.not_found', postal_code: @champ.code_postal)
-
-.fr-fieldset__element.fr-mb-0
-  - if commune_options.empty?
-    -# noop
-  - elsif commune_options.size <= 3
-    %fieldset.fr-fieldset
-      .fr-fieldset__legend--regular.fr-fieldset__legend= t('.commune').html_safe
-
-      - commune_options.each.with_index do |(option, value), index|
-        .fr-fieldset__element
-          .fr-radio-group
-            = @form.radio_button :value, value, checked: @champ.selected == value, id: "#{code_postal_input_id}-#{value.parameterize}"
-            = @form.label :value, option, for: "#{code_postal_input_id}-#{value.parameterize}", class: 'fr-label'
-  - else
-    = @form.label :value, t('.commune').html_safe, for: @champ.input_id, class: 'fr-label'
-    = @form.select :value, commune_options, commune_select_options, required: @champ.required?, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: "width-33-desktop width-100-mobile fr-select"
+= render Dsfr::ComboboxComponent.new form: @form, name: :external_id, url: data_sources_data_source_commune_path, selected: [@champ.to_s, @champ.selected], id: @champ.input_id, class: 'fr-select', describedby: @champ.describedby_id do
+  = @form.hidden_field :code_postal, data: { value_slot: 'data:string' }

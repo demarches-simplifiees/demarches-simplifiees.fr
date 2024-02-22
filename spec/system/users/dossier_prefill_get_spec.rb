@@ -30,7 +30,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   }
   let(:epci_value) { ['01', '200029999'] }
   let(:dossier_link_value) { '42' }
-  let(:commune_value) { ['01540', '01457'] } # Vonnas (01540)
+  let(:commune_value) { ['01540', '01457'] }
   let(:commune_libelle) { 'Vonnas (01540)' }
   let(:address_value) { "20 Avenue de Ségur 75007 Paris" }
   let(:sub_type_de_champs_repetition) { procedure.active_revision.children_of(type_de_champ_repetition) }

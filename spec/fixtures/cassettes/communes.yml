@@ -1,0 +1,113 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=60&limit=10&type=commune-actuelle,arrondissement-municipal
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.10.3 (Ubuntu)
+      Date:
+      - Fri, 03 Nov 2023 16:28:05 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '2'
+      X-Powered-By:
+      - Express
+      Vary:
+      - Origin
+      Etag:
+      - W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+      Strict-Transport-Security:
+      - max-age=15552000
+    body:
+      encoding: ASCII-8BIT
+      string: "[]"
+  recorded_at: Fri, 03 Nov 2023 16:28:05 GMT
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=6040&limit=10&type=commune-actuelle,arrondissement-municipal
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.10.3 (Ubuntu)
+      Date:
+      - Fri, 03 Nov 2023 16:28:05 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '2'
+      X-Powered-By:
+      - Express
+      Vary:
+      - Origin
+      Etag:
+      - W/"2-l9Fw4VUO7kr8CvBlt4zaMCqXZ0w"
+      Strict-Transport-Security:
+      - max-age=15552000
+    body:
+      encoding: ASCII-8BIT
+      string: "[]"
+  recorded_at: Fri, 03 Nov 2023 16:28:05 GMT
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/communes?boost=population&codePostal=60400&limit=10&type=commune-actuelle,arrondissement-municipal
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.10.3 (Ubuntu)
+      Date:
+      - Fri, 03 Nov 2023 16:28:05 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '1608'
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Powered-By:
+      - Express
+      Etag:
+      - W/"648-ePvxexacWlkxvdJ8v6an7VGvHMo"
+      Strict-Transport-Security:
+      - max-age=15552000
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        W3sibm9tIjoiQXBwaWxseSIsImNvZGUiOiI2MDAyMSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDAyMTYiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1Mjl9LHsibm9tIjoiQmFixZN1ZiIsImNvZGUiOiI2MDAzNyIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDAzNjQiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo1MTB9LHsibm9tIjoiQmVhdXJhaW5zLWzDqHMtTm95b24iLCJjb2RlIjoiNjAwNTUiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAwNTQ3IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MzQwfSx7Im5vbSI6IkLDqWjDqXJpY291cnQiLCJjb2RlIjoiNjAwNTkiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAwNTg4IiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MjAyfSx7Im5vbSI6IkJyw6l0aWdueSIsImNvZGUiOiI2MDEwNSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDEwNTciLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo0Mjd9LHsibm9tIjoiQnVzc3kiLCJjb2RlIjoiNjAxMTciLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxMTcyIiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6MzEwfSx7Im5vbSI6IkNhaXNuZXMiLCJjb2RlIjoiNjAxMTgiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxMTgwIiwiY29kZUVwY2kiOiIyNDYwMDA3NTYiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA0MDAiXSwicG9wdWxhdGlvbiI6NTA3fSx7Im5vbSI6IkNyaXNvbGxlcyIsImNvZGUiOiI2MDE4MSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDE4MDAiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo5MDh9LHsibm9tIjoiQ3V0cyIsImNvZGUiOiI2MDE4OSIsImNvZGVEZXBhcnRlbWVudCI6IjYwIiwic2lyZW4iOiIyMTYwMDE4ODMiLCJjb2RlRXBjaSI6IjI0NjAwMDc1NiIsImNvZGVSZWdpb24iOiIzMiIsImNvZGVzUG9zdGF1eCI6WyI2MDQwMCJdLCJwb3B1bGF0aW9uIjo5Njd9LHsibm9tIjoiR2VudnJ5IiwiY29kZSI6IjYwMjcwIiwiY29kZURlcGFydGVtZW50IjoiNjAiLCJzaXJlbiI6IjIxNjAwMjY3NSIsImNvZGVFcGNpIjoiMjQ2MDAwNzU2IiwiY29kZVJlZ2lvbiI6IjMyIiwiY29kZXNQb3N0YXV4IjpbIjYwNDAwIl0sInBvcHVsYXRpb24iOjMzNX1d
+  recorded_at: Fri, 03 Nov 2023 16:28:05 GMT
+recorded_with: VCR 6.1.0
