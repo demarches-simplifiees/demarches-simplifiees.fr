@@ -15,7 +15,7 @@ class InvitesController < ApplicationController
 
     if invite.valid?
       # The notification is sent through an after commit hook in order to avoir concurrency issues
-      flash.notice = "Une invitation a été envoyée à #{invite.email}."
+      flash.notice = t('views.invites.create.success', email: invite.email)
     else
       flash.alert = invite.errors.full_messages
     end
@@ -49,9 +49,9 @@ class InvitesController < ApplicationController
     if invite.present?
       @dossier = invite.dossier
       invite.destroy!
-      flash.notice = "L’autorisation de #{invite.email} vient d’être révoquée."
+      flash.notice = t('views.invites.destroy.success', email: invite.email)
     else
-      flash.alert = "Vous ne pouvez pas révoquer cette autorisation"
+      flash.alert = t('views.invites.destroy.error')
     end
 
     respond_to do |format|

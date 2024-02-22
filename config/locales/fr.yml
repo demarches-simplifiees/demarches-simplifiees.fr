@@ -306,21 +306,29 @@ fr:
         email_missing: "Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer."
         resent: 'Renvoyer un email de confirmation'
     invites:
+      create:
+        success: "Une invitation a été envoyée à %{email}."
+      destroy:
+        success: "L’autorisation de %{email} vient d’être révoquée."
+        error: "Vous ne pouvez pas révoquer cette autorisation"
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
         view_invited_people: "Voir les personnes invitées"
         invite_to_view: "Inviter une personne à consulter ce dossier"
       form:
-        invite_to_edit_line1: Vous pouvez inviter quelqu’un à remplir ce dossier avec vous.
-        invite_to_edit_line2: Cette personne aura le droit de modifier votre dossier.
+        modal_title: "Gestion des invités"
+        modal_highlight: Les invités ont le droit de voir et modifier votre dossier.
+        title: Ajouter un invité
         email: Adresse mail
         email_hint: "Exemple : camilya.martin@exemple.fr"
         invite_message: Ajouter un message à la personne invitée (optionnel)
         send_invitation: Envoyer une invitation
-        invite_to_participate: "Personnes invitées à participer à ce dossier"
         withdraw_permission: "Révoquer l’autorisation"
-        want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation ?"
-        edit_dossier: "Ces personnes peuvent modifier ce dossier."
+        want_to_withdraw_permission: "Souhaitez-vous supprimer l’autorisation de %{email} ?"
+        edit_dossier:
+          zero: "Aucun invité peut modifier ce dossier"
+          one: "1 invité peut modifier ce dossier"
+          other: "%{count} invités peuvent modifier ce dossier"
         submit_dossier_yourself: "Une fois le dossier complet, vous devez le déposer vous-même."
     pagination:
       next: Suivant
