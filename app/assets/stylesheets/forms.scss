@@ -50,7 +50,12 @@
   }
 
   // Don't cumulate margin-bottoms for inlined elements (radio...), because .fr-fieldset has already its own
-  .fr-fieldset__element > .fr-fieldset > .fr-fieldset__element.fr-fieldset__element--inline {
+  // This is important because of multilpe conditional hidden elements to not take additional space,
+  // but we need the usual margin when there are an error or conditional spinner is visible.
+  // scss-lint:disable SingleLinePerSelector
+  .fr-fieldset__element
+    > .fr-fieldset:not(.fr-fieldset--error):not(:has(+ .spinner))
+    > .fr-fieldset__element.fr-fieldset__element--inline {
     margin-bottom: 0;
   }
 
@@ -66,13 +71,6 @@
     border: none;
     border-bottom: 2px solid $border-grey;
   }
-
-  @mixin notice-text-style {
-    font-size: 16px;
-    color: $dark-grey;
-  }
-
-
 
   label:not(.fr-label),
   legend.form-label {
@@ -96,9 +94,9 @@
   }
 
   .notice {
-    @include notice-text-style;
     margin-top: - $default-spacer;
     margin-bottom: $default-padding;
+    color: var(--text-mention-grey);
 
     p {
       margin-bottom: $default-spacer;
@@ -113,7 +111,7 @@
     position: relative;
 
     .updated-at {
-      @include notice-text-style;
+      font-size: 0.875rem;
       float: right;
       margin-left: $default-spacer;
       visibility: hidden;
@@ -122,6 +120,7 @@
     &:hover .updated-at,
     .updated-at.highlighted {
       visibility: visible;
+      margin-bottom: 4px;
     }
 
     &.editable-champ-checkbox {
@@ -488,15 +487,6 @@
 
   .justify-content--space-between {
     justify-content: space-between;
-  }
-
-  .send-notice {
-    @include notice-text-style;
-    margin-bottom: $default-padding;
-  }
-
-  .send-wrapper + .send-notice {
-    margin-top: - $default-padding;
   }
 
   .inline-champ {
