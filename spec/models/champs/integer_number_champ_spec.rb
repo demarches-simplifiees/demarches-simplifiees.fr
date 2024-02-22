@@ -4,7 +4,7 @@ describe Champs::IntegerNumberChamp do
 
   let(:type_de_champ) { create(:type_de_champ, min:, max:) }
 
-  subject { build(:champ_integer_number, value: value, type_de_champ:).tap(&:valid?) }
+  subject { build(:champ_integer_number, value: value, type_de_champ:).tap { |c| c.valid?(:champs_public_value) } }
 
   describe '#valid?' do
     context 'when the value is integer number' do
@@ -50,8 +50,10 @@ describe Champs::IntegerNumberChamp do
       context 'when the value is greater than max' do
         let(:value) { 11 }
 
-        it { is_expected.to_not be_valid }
-        it { expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"]) }
+        it do
+          is_expected.to_not be_valid(:champs_public_value)
+          expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"])
+        end
       end
     end
 
@@ -66,8 +68,10 @@ describe Champs::IntegerNumberChamp do
       context 'when the value is less than min' do
         let(:value) { 9 }
 
-        it { is_expected.to_not be_valid }
-        it { expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"]) }
+        it do
+          is_expected.to_not be_valid(:champs_public_value)
+          expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"])
+        end
       end
     end
   end
