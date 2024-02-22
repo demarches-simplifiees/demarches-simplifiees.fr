@@ -984,7 +984,7 @@ describe API::V2::GraphqlController do
           it "should fail" do
             expect(gql_data).to eq(nil)
             expect(gql_errors).not_to eq(nil)
-            expect(body[:errors].first[:message]).to eq("Variable $input of type DossierEnvoyerMessageInput! was provided invalid value")
+            expect(body[:errors].first[:message]).to eq("unexpected token at '{'")
             expect(body[:errors].first.key?(:backtrace)).to be_falsey
           end
         end

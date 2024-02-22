@@ -17,7 +17,6 @@ class InstructeurMailer < ApplicationMailer
     @overview = instructeur.last_week_overview
 
     if @overview.present?
-      headers['X-mailjet-campaign'] = 'last_week_overview'
       mail(to: email, subject: @subject)
     end
   end
