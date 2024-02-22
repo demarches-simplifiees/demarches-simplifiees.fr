@@ -38,7 +38,7 @@ describe Champs::DgfipChamp, type: :model do
     let(:numero_fiscal) { '1122299999092' }
     let(:reference_avis) { 'FC22299999092' }
     let(:champ) { described_class.new(dossier: create(:dossier), type_de_champ: create(:type_de_champ_dgfip)) }
-    let(:validation_context) { :create }
+    let(:validation_context) { :champs_public_value }
 
     subject { champ.valid?(validation_context) }
 

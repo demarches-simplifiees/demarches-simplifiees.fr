@@ -1,10 +1,10 @@
-import { isButtonElement } from '@utils';
+import { isButtonElement } from '@coldwired/utils';
 
 import { ApplicationController } from './application_controller';
 
 export class AutosaveSubmitController extends ApplicationController {
   #isSaving = false;
-  #shouldSubmit = true;
+  #shouldSubmit = false;
   #buttonText?: string;
 
   connect(): void {
@@ -46,15 +46,20 @@ export class AutosaveSubmitController extends ApplicationController {
 
   private disableButton() {
     if (isButtonElement(this.element)) {
-      this.#buttonText = this.element.value;
-      this.element.value = this.element.dataset.disableWith ?? '';
+      const disableWith = this.element.dataset.disableWith ?? '';
+      if (disableWith) {
+        this.#buttonText = this.element.textContent ?? undefined;
+        this.element.textContent = disableWith;
+      }
       this.element.disabled = true;
     }
   }
 
   private enableButton() {
-    if (isButtonElement(this.element) && this.#buttonText) {
-      this.element.value = this.#buttonText;
+    if (isButtonElement(this.element)) {
+      if (this.#buttonText) {
+        this.element.textContent = this.#buttonText;
+      }
       this.element.disabled = false;
     }
   }

@@ -38,7 +38,7 @@ describe Champs::CnafChamp, type: :model do
     let(:numero_allocataire) { '1234567' }
     let(:code_postal) { '12345' }
     let(:champ) { described_class.new(dossier: create(:dossier), type_de_champ: create(:type_de_champ_cnaf)) }
-    let(:validation_context) { :create }
+    let(:validation_context) { :champs_public_value }
 
     subject { champ.valid?(validation_context) }
 

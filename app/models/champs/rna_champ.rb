@@ -3,7 +3,7 @@ class Champs::RNAChamp < Champ
 
   validates :value, allow_blank: true, format: {
     with: /\AW[0-9]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
-  }, if: -> { validation_context != :brouillon }
+  }, if: :validate_champ_value?
 
   delegate :id, to: :procedure, prefix: true
 

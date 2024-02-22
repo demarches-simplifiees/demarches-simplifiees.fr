@@ -1589,7 +1589,7 @@ describe Dossier, type: :model do
       before do
         champ = dossier.champs_public.first
         champ.value = expression_reguliere_exemple_text
-        dossier.save
+        dossier.save(context: :champs_public_value)
       end
 
       it 'should have errors' do

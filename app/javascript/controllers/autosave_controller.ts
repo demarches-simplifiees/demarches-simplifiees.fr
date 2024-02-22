@@ -1,11 +1,5 @@
-import {
-  httpRequest,
-  ResponseError,
-  isSelectElement,
-  isCheckboxOrRadioInputElement,
-  isTextInputElement,
-  getConfig
-} from '@utils';
+import { httpRequest, ResponseError, getConfig } from '@utils';
+import { matchInputElement, isButtonElement } from '@coldwired/utils';
 
 import { ApplicationController } from './application_controller';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
@@ -54,66 +48,84 @@ export class AutosaveController extends ApplicationController {
   }
 
   onClickRetryButton(event: Event) {
-    const target = event.target as HTMLButtonElement;
-    const inputTargetSelector = target.dataset.inputTarget;
-    if (inputTargetSelector) {
-      const target =
-        this.element.querySelector<HTMLInputElement>(inputTargetSelector);
-      if (
-        target &&
-        target.type == 'file' &&
-        target.dataset.autoAttachUrl &&
-        target.files?.length
-      ) {
-        this.enqueueAutouploadRequest(target, target.files[0]);
+    const target = event.target;
+    if (isButtonElement(target)) {
+      const inputTargetSelector = target.dataset.inputTarget;
+      if (inputTargetSelector) {
+        const target =
+          this.element.querySelector<HTMLInputElement>(inputTargetSelector);
+        if (
+          target &&
+          target.type == 'file' &&
+          target.dataset.autoAttachUrl &&
+          target.files?.length
+        ) {
+          this.enqueueAutouploadRequest(target, target.files[0]);
+        }
       }
     }
   }
 
   private onChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (!target.disabled) {
-      if (target.type == 'file') {
+    matchInputElement(event.target, {
+      file: (target) => {
         if (target.dataset.autoAttachUrl && target.files?.length) {
           this.globalDispatch('autosave:input');
           this.enqueueAutouploadRequest(target, target.files[0]);
         }
-      } else if (target.type == 'hidden') {
+      },
+      changeable: (target) => {
         this.globalDispatch('autosave:input');
-        // In React comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
-        // We want to debounce them.
-        this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
-      } else if (
-        isSelectElement(target) ||
-        isCheckboxOrRadioInputElement(target)
-      ) {
-        this.globalDispatch('autosave:input');
+
         // Wait next tick so champs having JS can interact
         // with form elements before extracting form data.
         setTimeout(() => {
           this.enqueueAutosaveRequest();
           this.showConditionnalSpinner(target);
         }, 0);
+      },
+      inputable: (target) => this.enqueueOnInput(target, true),
+      hidden: (target) => {
+        // In comboboxes we dispatch a "change" event on hidden inputs to trigger autosave.
+        // We want to debounce them.
+        this.enqueueOnInput(target, true);
       }
-    }
+    });
   }
 
   private onInput(event: Event) {
-    const target = event.target as HTMLInputElement;
-    if (
-      !target.disabled &&
-      // Ignore input from React comboboxes. We trigger "change" events on them when selection is changed.
-      target.getAttribute('role') != 'combobox' &&
-      isTextInputElement(target)
-    ) {
-      this.globalDispatch('autosave:input');
-      this.debounce(this.enqueueAutosaveRequest, AUTOSAVE_DEBOUNCE_DELAY);
-
-      this.showConditionnalSpinner(target);
-    }
+    matchInputElement(event.target, {
+      inputable: (target) => {
+        // Ignore input from React comboboxes. We trigger "change" events on them when selection is changed.
+        if (target.getAttribute('role') != 'combobox') {
+          const validate = this.needsValidation(target);
+          this.enqueueOnInput(target, validate);
+        }
+      }
+    });
   }
 
-  private showConditionnalSpinner(target: HTMLInputElement) {
+  private enqueueOnInput(
+    target: HTMLInputElement | HTMLTextAreaElement,
+    validate: boolean
+  ) {
+    this.globalDispatch('autosave:input');
+
+    const callback = validate
+      ? this.enqueueAutosaveWithValidationRequest
+      : this.enqueueAutosaveRequest;
+    this.debounce(callback, AUTOSAVE_DEBOUNCE_DELAY);
+
+    this.showConditionnalSpinner(target);
+  }
+
+  private needsValidation(target: HTMLElement) {
+    return target.getAttribute('aria-invalid') == 'true';
+  }
+
+  private showConditionnalSpinner(
+    target: HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+  ) {
     const champWrapperElement = target.closest(
       '.editable-champ[data-dependent-conditions]'
     );
@@ -198,9 +210,18 @@ export class AutosaveController extends ApplicationController {
     this.didEnqueue();
   }
 
+  private enqueueAutosaveWithValidationRequest() {
+    this.#latestPromise = this.#latestPromise.finally(() =>
+      this.sendAutosaveRequest(true)
+        .then(() => this.didSucceed())
+        .catch((error) => this.didFail(error))
+    );
+    this.didEnqueue();
+  }
+
   // Create a fetch request that saves the form.
   // Returns a promise fulfilled when the request completes.
-  private sendAutosaveRequest(): Promise<void> {
+  private sendAutosaveRequest(validate = false): Promise<void> {
     this.#abortController = new AbortController();
     const { form, inputs } = this;
 
@@ -221,6 +242,9 @@ export class AutosaveController extends ApplicationController {
         // when the filled value is invalid (not a number) so we avoid them
         formData.append(input.name, input.value);
       }
+    }
+    if (validate) {
+      formData.append('validate', 'true');
     }
 
     this.#pendingPromiseCount++;
