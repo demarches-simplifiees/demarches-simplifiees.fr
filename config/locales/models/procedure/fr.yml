@@ -26,6 +26,7 @@ fr:
         description_pj_placeholder: Si vous ne renseignez pas ce champ et que votre formulaire contient des pièces jointes, une liste générée automatiquement s'affichera dans la page d'accueil de votre démarche.
         lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
         old_procedure: Numéro de la démarche remplacée
+        new_procedure: Numéro de la nouvelle démarche
         procedure_path: Lien de la démarche à diffuser aux usagers
         procedure_path_placeholder: nom-de-la-demarche
         cadre_juridique: Lien vers le texte
