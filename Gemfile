@@ -57,7 +57,6 @@ gem 'kredis'
 gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
-gem 'mailjet', require: false
 gem 'maintenance_tasks'
 gem 'matrix' # needed by prawn and not default in ruby 3.1
 gem 'mini_magick'
