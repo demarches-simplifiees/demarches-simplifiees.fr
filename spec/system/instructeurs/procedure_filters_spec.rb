@@ -40,7 +40,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add created_at column", js: true, retry: 3 do
+  scenario "should add be able to add created_at column", js: true do
     add_column("Créé le")
     within ".dossiers-table" do
       expect(page).to have_link("Créé le")
@@ -48,7 +48,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add and remove custom type_de_champ column", js: true, retry: 3 do
+  scenario "should add be able to add and remove custom type_de_champ column", js: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
@@ -62,7 +62,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should be able to add and remove filter", js: true, retry: 3 do
+  scenario "should be able to add and remove filter", js: true do
     add_filter(type_de_champ.libelle, champ.value)
 
     expect(page).to have_content("#{type_de_champ.libelle} : #{champ.value}")
@@ -86,7 +86,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should be able to user custom fiters", js: true, retry: 3 do
+  scenario "should be able to user custom fiters", js: true do
     # use date filter
     click_on 'Sélectionner un filtre'
     select "En construction le", from: "Colonne"
@@ -112,7 +112,7 @@ describe "procedure filters" do
   end
 
   describe 'with a vcr cached cassette' do
-    scenario "should be able to find by departements with custom enum lookup", js: true, retry: 3 do
+    scenario "should be able to find by departements with custom enum lookup", js: true do
       departement_champ = new_unfollow_dossier.champs.find(&:departement?)
       departement_champ.update!(value: 'Oise', external_id: '60')
       departement_champ.reload
@@ -127,7 +127,7 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
     end
 
-    scenario "should be able to find by region with custom enum lookup", js: true, retry: 3 do
+    scenario "should be able to find by region with custom enum lookup", js: true do
       region_champ = new_unfollow_dossier.champs.find(&:region?)
       region_champ.update!(value: 'Bretagne', external_id: '53')
       region_champ.reload
@@ -142,7 +142,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should be able to add and remove two filters for the same field", js: true, retry: 3 do
+  scenario "should be able to add and remove two filters for the same field", js: true do
     add_filter(type_de_champ.libelle, champ.value)
     add_filter(type_de_champ.libelle, champ_2.value)
     add_enum_filter('Groupe instructeur', procedure.groupe_instructeurs.first.label)

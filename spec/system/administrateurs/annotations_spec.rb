@@ -1,4 +1,4 @@
-describe 'As an administrateur I can edit annotation', js: true, retry: 3 do
+describe 'As an administrateur I can edit annotation', js: true do
   let(:administrateur) { procedure.administrateurs.first }
   let(:procedure) { create(:procedure) }
 

@@ -1,4 +1,4 @@
-describe 'The routing with rules', js: true, retry: 3 do
+describe 'The routing with rules', js: true do
   let(:password) { 'a very complicated password' }
 
   let(:procedure) do
