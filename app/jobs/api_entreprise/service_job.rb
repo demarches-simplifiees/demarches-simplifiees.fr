@@ -10,6 +10,11 @@ class APIEntreprise::ServiceJob < APIEntreprise::Job
     service.etablissement_lat = point&.latitude
     service.etablissement_lng = point&.longitude
 
+    code_insee = service.etablissement_infos['code_insee_localite']
+    if code_insee
+      service.departement = CodeInsee.new(code_insee).to_departement
+    end
+
     service.save!
   end
 end
