@@ -36,6 +36,7 @@ module Types
     field :date_traitement_sva_svr, GraphQL::Types::ISO8601DateTime, "Date du traitement automatique par le SVA/SVR.", null: true, method: :sva_svr_decision_triggered_at
 
     field :archived, Boolean, null: false
+    field :prefilled, Boolean, null: false, method: :prefilled?
 
     field :connection_usager, ConnectionUsager, null: false
 
