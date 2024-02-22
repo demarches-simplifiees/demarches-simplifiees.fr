@@ -1,7 +1,7 @@
 class TypesDeChamp::TypeDeChampBase
   include ActiveModel::Validations
 
-  delegate :description, :libelle, :mandatory, :stable_id, :fillable?, to: :@type_de_champ
+  delegate :description, :libelle, :mandatory, :mandatory?, :stable_id, :fillable?, :public?, to: :@type_de_champ
 
   FILL_DURATION_SHORT  = 10.seconds
   FILL_DURATION_MEDIUM = 1.minute
@@ -19,6 +19,7 @@ class TypesDeChamp::TypeDeChampBase
         libelle: TagsSubstitutionConcern::TagsParser.normalize(libelle),
         id: "tdc#{stable_id}",
         description: description,
+        maybe_null: public? && !mandatory?,
         lambda: -> (champs) {
           champs.find { |champ| champ.stable_id == stable_id }&.for_tag
         }

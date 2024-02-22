@@ -2,7 +2,10 @@ module Administrateurs
   class AttestationTemplateV2sController < AdministrateurController
     include UninterlacePngConcern
 
-    before_action :retrieve_procedure, :retrieve_attestation_template, :ensure_feature_active
+    before_action :retrieve_procedure
+    before_action :ensure_feature_active
+    before_action :retrieve_attestation_template
+    before_action :preload_revisions, only: [:edit, :update, :create]
 
     def show
       preview_dossier = @procedure.dossier_for_preview(current_user)
