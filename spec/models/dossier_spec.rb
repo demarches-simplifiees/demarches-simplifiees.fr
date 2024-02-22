@@ -2138,7 +2138,7 @@ describe Dossier, type: :model do
 
     context 'for_individual' do
       let(:dossier) { create(:dossier, procedure: create(:procedure, :for_individual)) }
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Dépot pour un tier", :for_tiers]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Dépôt pour un tiers", :for_tiers]) }
       it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(['Nom du mandataire', :mandataire_last_name]) }
       it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(['Prénom du mandataire', :mandataire_first_name]) }
     end
