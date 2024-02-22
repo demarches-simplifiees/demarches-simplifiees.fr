@@ -272,7 +272,7 @@ module Users
       else
         respond_to do |format|
           format.html do
-            @dossier = editing_fork_origin
+            # @dossier = editing_fork_origin
             render :modifier
           end
 
