@@ -1,0 +1,30 @@
+- if champ.data.blank?
+  %p= t('.not_found', rnf: champ.rnf_id)
+- else
+  .fr-background-alt--grey.fr-p-3v
+    = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.rnf_id")) do |c|
+      - c.with_value do
+        %p
+          = champ.rnf_id
+          = render Dsfr::CopyButtonComponent.new(text: champ.rnf_id, title: t("activemodel.attributes.rnf_champ.paste"), success: t("activemodel.attributes.rnf_champ.paste_success"))
+
+    - ['title', 'email', 'phone','status'].each do |scope|
+      - if champ.data[scope].present?
+        = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.data.#{scope}")) do |c|
+          - c.with_value do
+            %p= champ.data[scope]
+
+    - ['createdAt', 'updatedAt', 'dissolvedAt'].each do |scope|
+      - if champ.data[scope].present?
+        = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.data.#{scope}")) do |c|
+          - c.with_value do
+            %p= l(champ.data[scope].to_date)
+
+    - if champ.data['address'].present?
+      - ['label', 'cityCode', 'postalCode'].each do |scope|
+        = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.data.#{scope}")) do |c|
+          - c.with_value do
+            %p= champ.data['address'][scope]
+      = render Dossiers::RowShowComponent.new(label: t("activemodel.attributes.rnf_champ.data.department")) do |c|
+        - c.with_value do
+          %p= "#{champ.data['address']['departmentCode']} – #{champ.data['address']['departmentName']}"

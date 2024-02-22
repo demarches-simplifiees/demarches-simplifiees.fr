@@ -1,0 +1,24 @@
+fr:
+  activemodel:
+    attributes:
+      rnf_champ:
+        rnf_id: Numéro RNF
+        data:
+          title: Nom de la fondation
+          email: Email
+          phone: Téléphone
+          createdAt: Créée le
+          updatedAt: Mise à jour le
+          dissolvedAt: Dissoute le
+          address: Adresse
+          status: Statut
+          cityCode: Code INSEE
+          postalCode: Code postal
+          department: Département
+        paste: Copier le RNF dans le presse-papier
+        paste_success: Le RNF a été copié dans le presse-papier
+  activerecord:
+    attributes:
+      champs/rnf_champ:
+          hints:
+            value: "Format attendu : 075-FDD-00003-01"

@@ -1,0 +1,32 @@
+{
+  "id":3,
+  "createdAt":"2023-09-07T13:26:10.358Z",
+  "updatedAt":"2023-09-07T13:26:10.358Z",
+  "rnfId":"075-FDD-00003-01",
+  "type":"FDD",
+  "department":"75",
+  "title":"Fondation SFR",
+  "dissolvedAt":null,
+  "phone":"+33185060000",
+  "email":"fondation@sfr.fr",
+  "addressId":3,
+  "address": {
+    "id":3,
+    "createdAt":"2023-09-07T13:26:10.358Z",
+    "updatedAt":"2023-09-07T13:26:10.358Z",
+    "label":"16 Rue du Général de Boissieu 75015 Paris",
+    "type":"housenumber",
+    "streetAddress":"16 Rue du Général de Boissieu",
+    "streetNumber":"16",
+    "streetName":"Rue du Général de Boissieu",
+    "postalCode":"75015",
+    "cityName":"Paris",
+    "cityCode":"75115",
+    "departmentName":"Paris",
+    "departmentCode":"75",
+    "regionName":"Île-de-France",
+    "regionCode":"11"
+  },
+  "status":null,
+  "persons":[]
+}

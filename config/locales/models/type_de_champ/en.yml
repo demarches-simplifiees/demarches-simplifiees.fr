@@ -48,6 +48,7 @@ en:
           yes_no_false: 'no'
           annuaire_education: 'Schooling directory'
           rna: 'RNA'
+          rnf: 'RNF'
           carte: 'Card'
           cnaf: 'Data from Caisse nationale des allocations familiales'
           dgfip: 'Data from Direction générale des Finances publiques'

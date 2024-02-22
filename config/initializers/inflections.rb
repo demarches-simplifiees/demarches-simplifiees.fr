@@ -14,6 +14,7 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.acronym 'IP'
   inflect.acronym 'JSON'
   inflect.acronym 'RNA'
+  inflect.acronym 'RNF'
   inflect.acronym 'URL'
   inflect.acronym 'SVA'
   inflect.acronym 'SVR'

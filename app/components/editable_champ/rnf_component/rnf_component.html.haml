@@ -1,0 +1,9 @@
+= @form.text_field :external_id, required: @champ.required?, class: "width-33-desktop fr-input small-margin", id: @champ.input_id
+
+.rnf-info{ id: dom_id(@champ, :rnf_info) }
+  - if @champ.fetch_external_data_error?
+    %p.fr-error-text= t('.rnf_info_error')
+  - elsif @champ.fetch_external_data_pending?
+    %p.fr-info-text= t('.rnf_info_pending')
+  - elsif @champ.data?
+    %p.fr-info-text= t('.rnf_info_success', title: @champ.title)

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/rnf.schema.json",
+  "title": "RNF",
+  "type": "object",
+  "properties": {
+    "id": { "type": "integer" },
+    "rnfId": { "type": "string" },
+    "type": { "type": "string" },
+    "department": { "type": "string" },
+    "title": { "type": "string" },
+    "dissolvedAt": { "type": ["string", "null"] },
+    "phone": { "type": "string" },
+    "email": { "type": "string" },
+    "addressId": { "type": "integer" },
+    "address": {
+      "id": { "type": "integer" },
+      "createdAt":{ "type": "string" },
+      "updatedAt":{ "type": "string" },
+      "label":{ "type": "string" },
+      "type":{ "type": "string" },
+      "streetAddress":{ "type": "string" },
+      "streetNumber":{ "type": "string" },
+      "streetName":{ "type": "string" },
+      "postalCode":{ "type": "string" },
+      "cityName":{ "type": "string" },
+      "cityCode":{ "type": "string" },
+      "departmentName":{ "type": "string" },
+      "departmentCode":{ "type": "string" },
+      "regionName":{ "type": "string" },
+      "regionCode":{ "type": "string" }
+    },
+    "status": { "type": ["string", "null"] },
+    "persons": { "type": "array" }
+  }
+}

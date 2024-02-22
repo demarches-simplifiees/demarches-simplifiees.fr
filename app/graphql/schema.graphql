@@ -3408,6 +3408,7 @@ type NumeroDnChamp implements Champ {
   Le numero DN sur 7 chiffres
   """
   numeroDn: String
+  prefilled: Boolean!
 
   """
   La valeur du champ sous forme texte.
@@ -3762,6 +3763,34 @@ type Query {
 }
 
 type RNAChampDescriptor implements ChampDescriptor {
+  """
+  Description des champs d’un bloc répétable.
+  """
+  champDescriptors: [ChampDescriptor!] @deprecated(reason: "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place.")
+
+  """
+  Description du champ.
+  """
+  description: String
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+
+  """
+  Est-ce que le champ est obligatoire ?
+  """
+  required: Boolean!
+
+  """
+  Type de la valeur du champ.
+  """
+  type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type RNFChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
   """
@@ -4381,9 +4410,14 @@ enum TypeDeChamp {
   repetition
 
   """
-  RNA
+  RNA (Répertoire national des associations)
   """
   rna
+
+  """
+  RNF (Répertoire national des fondations)
+  """
+  rnf
 
   """
   Numéro TAHITI
@@ -4480,6 +4514,7 @@ type VisaChamp implements Champ {
   Libellé du champ.
   """
   label: String!
+  prefilled: Boolean!
   signedBy: String
 
   """
