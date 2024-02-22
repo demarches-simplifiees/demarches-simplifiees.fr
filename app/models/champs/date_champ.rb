@@ -1,7 +1,7 @@
 class Champs::DateChamp < Champ
   before_validation :convert_to_iso8601, unless: -> { validation_context == :prefill }
   validate :iso_8601
-  validate :min_max_validation
+  validate :min_max_validation, if: :validate_champ_value?
 
   def min_max_validation
     return if value.blank?

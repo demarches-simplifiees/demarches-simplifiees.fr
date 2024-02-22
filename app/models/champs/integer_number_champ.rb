@@ -4,7 +4,7 @@ class Champs::IntegerNumberChamp < Champ
     allow_nil: true,
     allow_blank: true
   }
-  validate :min_max_validation
+  validate :min_max_validation, if: :validate_champ_value?
 
   def min_max_validation
     return if value.blank?

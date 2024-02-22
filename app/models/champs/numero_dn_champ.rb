@@ -1,7 +1,7 @@
 class Champs::NumeroDnChamp < Champ
   store_accessor :value_json, :numero_dn, :date_de_naissance
 
-  validates_with NumeroDnValidator, if: -> { validation_context != :brouillon }
+  validates_with NumeroDnValidator, if: :validate_champ_value?
 
   def numero_dn=(value)
     value = value.to_s.rjust(7, "0") if value.present?
