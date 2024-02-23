@@ -776,6 +776,8 @@ Rails/DynamicFindBy:
   Enabled: true
   Exclude:
     - spec/system/**/*.rb
+  AllowedMethods:
+    - find_by_authenticable_token
 
 Rails/EagerEvaluationLogMessage:
   Enabled: true

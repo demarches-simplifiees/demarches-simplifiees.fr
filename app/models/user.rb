@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   include EmailSanitizableConcern
   include PasswordComplexityConcern
+  include TokenAuthenticableConcern
 
   enum loged_in_with_france_connect: {
     particulier: 'particulier',
