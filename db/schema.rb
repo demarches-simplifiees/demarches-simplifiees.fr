@@ -1141,6 +1141,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_18_134256) do
     t.datetime "reset_password_sent_at", precision: nil
     t.string "reset_password_token"
     t.integer "sign_in_count", default: 0, null: false
+    t.string "sign_in_secret"
     t.string "siret"
     t.boolean "team_account", default: false
     t.text "unconfirmed_email"
