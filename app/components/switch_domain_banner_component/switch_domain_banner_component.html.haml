@@ -1,0 +1,19 @@
+- if auto_switch?
+  :javascript
+    const hintUrl = "http://#{ApplicationHelper::APP_HOST}/favicon.ico"
+
+    fetch(hintUrl, { mode: 'cors' }).then(() => {
+      window.location = '#{new_host_url}';
+    }).catch((e) => {
+      // TODO: notify us in order to monitor connectivity issues volume
+    })
+
+= render Dsfr::NoticeComponent.new(closable: true) do |c|
+  - c.with_title do
+    = t(".message_new_domain")
+    = "#{helpers.link_to APPLICATION_NAME, new_host_url}."
+
+    - if manual_switch?
+      = t(".follow_link")
+    - elsif auto_switch? || true
+      = t(".detected_error")

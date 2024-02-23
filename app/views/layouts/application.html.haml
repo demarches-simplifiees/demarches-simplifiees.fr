@@ -36,7 +36,6 @@
 
     = yield(:invisible_captcha_styles)
     = render partial: 'layouts/setup_theme'
-    = render partial: 'layouts/switch_domain_banner'
 
   %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo number-input' } }.compact }
     = render partial: 'layouts/skiplinks'
