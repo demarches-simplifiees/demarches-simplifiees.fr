@@ -8,6 +8,8 @@ class User < ApplicationRecord
     entreprise: 'entreprise'
   }
 
+  enum preferred_domain: { demarches_gouv_fr: 0, demarches_simplifiees_fr: 1 }, _prefix: true
+
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -41,6 +43,8 @@ class User < ApplicationRecord
   before_validation :remove_devise_email_format_validator
   # plug our custom validation a la devise (same options) https://github.com/heartcombo/devise/blob/main/lib/devise/models/validatable.rb#L30
   validates :email, strict_email: true, allow_blank: true, if: :devise_will_save_change_to_email?
+
+  validates :preferred_domain, inclusion: { in: User.preferred_domains.keys, allow_nil: true }
 
   def validate_password_complexity?
     administrateur?

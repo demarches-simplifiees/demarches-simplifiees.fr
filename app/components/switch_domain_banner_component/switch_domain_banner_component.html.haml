@@ -1,0 +1,22 @@
+- if auto_switch?
+  /- const hintUrl = "#{ApplicationHelper::APP_HOST}/favicon.ico"
+  / TODO: Access-Control-Allow-Origin ds.fr pour /favicon.ico
+
+  :javascript
+    const hintUrl = "https://crisp.chat/favicon.ico"
+
+    fetch(hintUrl, { mode: 'cors' }).then(() => {
+      window.location = '#{new_host_url}';
+    }).catch(() => {
+      // TODO: notify us in order to monitor connectivity issues volume
+    })
+
+= render Dsfr::NoticeComponent.new(closable: true) do |c|
+  - c.with_title do
+    = t(".message_new_domain")
+    = "#{helpers.link_to APPLICATION_NAME, new_host_url}."
+
+    - if manual_switch?
+      = t(".follow_link")
+    - elsif auto_switch?
+      = t(".detected_error")
