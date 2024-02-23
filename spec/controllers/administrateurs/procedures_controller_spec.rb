@@ -240,6 +240,36 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
     end
 
+    context 'only for individual' do
+      let!(:procedure) { create(:procedure, :published, for_individual: true) }
+      let!(:procedure2) { create(:procedure, :published, for_individual: false) }
+      it 'returns procedures with specifi type of usager' do
+        get :all, params: { kind_usagers: ['individual'] }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_falsey
+      end
+    end
+
+    context 'only for entreprise' do
+      let!(:procedure) { create(:procedure, :published, for_individual: true) }
+      let!(:procedure2) { create(:procedure, :published, for_individual: false) }
+      it 'returns procedures with specifi type of usager' do
+        get :all, params: { kind_usagers: ['personne_morale'] }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_falsey
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+      end
+    end
+
+    context 'for individual and entreprise' do
+      let!(:procedure) { create(:procedure, :published, for_individual: true) }
+      let!(:procedure2) { create(:procedure, :published, for_individual: false) }
+      it 'returns procedures with specifi type of usager' do
+        get :all, params: { kind_usagers: ['individual', 'personne_morale'] }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        expect(assigns(:procedures).any? { |p| p.id == procedure2.id }).to be_truthy
+      end
+    end
+
     context 'with specific tag' do
       let!(:tags_procedure) { create(:procedure, :published, tags: ['environnement', 'diplomatie']) }
 

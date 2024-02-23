@@ -34,6 +34,9 @@ en:
           publiee: Published
           close: Closed
           hidden: Destroyed
+        kind_usager:
+          individual: Individual
+          personne_morale: 'Legal entity'
         declarative_with_state/en_instruction: Instruction
         declarative_with_state/accepte: Accepted
         api_particulier_token: Token API Particulier
