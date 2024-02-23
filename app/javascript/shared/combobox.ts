@@ -9,6 +9,7 @@ export enum Action {
   Clear = 'clear',
   Update = 'update'
 }
+
 export type Option = { value: string; label: string; data?: unknown };
 export type Hint =
   | {
@@ -41,6 +42,7 @@ export class Combobox {
   #inputValue = '';
   #selectedOption: Option | null = null;
   #focusedOption: Option | null = null;
+  #otherOption: Option | null = null;
   #options: Option[] = [];
   #visibleOptions: Option[] = [];
   #render: (state: State) => void;
@@ -65,6 +67,8 @@ export class Combobox {
     if (this.#selectedOption) {
       this.#inputValue = this.#selectedOption.label;
     }
+    this.#otherOption =
+      this.#options.find((o) => o.value == '__other__') ?? null;
     this.#render = render;
   }
 
@@ -139,6 +143,8 @@ export class Combobox {
     } else {
       this.#selectedOption = null;
       this.#visibleOptions = this._filterOptions();
+      if (this.#otherOption && this.displaysOther())
+        this.#visibleOptions.unshift(this.#otherOption);
     }
 
     if (this.#visibleOptions.length > 0) {
@@ -154,6 +160,16 @@ export class Combobox {
     } else {
       this._render(Action.Update);
     }
+  }
+
+  private displaysOther() {
+    const includeInput = (o: Option) =>
+      o.label.toLowerCase().indexOf(this.#inputValue.toLowerCase()) > 0;
+    const includeOther = (o: Option) => o.value == this.#otherOption?.value;
+    return (
+      !this.#visibleOptions.find(includeInput) &&
+      !this.#visibleOptions.find(includeOther)
+    );
   }
 
   keyboard(key: string) {
