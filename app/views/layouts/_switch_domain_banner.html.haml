@@ -1,0 +1,7 @@
+- if auto_switch_domain?(request, user_signed_in?)
+  :javascript
+    const hintUrl = "#{image_url(FAVICONS_SRC["16px"])}"
+    fetch(hintUrl)
+      .then(function(){
+        window.location = window.location.href.replace("#{ApplicationHelper::APP_HOST_LEGACY}", "#{ApplicationHelper::APP_HOST}")
+      })

@@ -11,14 +11,60 @@ describe ApplicationHelper do
 
     subject { app_host_legacy?(request) }
 
-    context 'request on ENV[APP_HOST_LEGACY]' do
+    context 'when request on ENV[APP_HOST_LEGACY]' do
       let(:request_base_url) { app_host_legacy }
       it { is_expected.to be_truthy }
     end
 
-    context 'request on ENV[APP_HOST]' do
+    context 'when request on ENV[APP_HOST]' do
       let(:request_base_url) { app_host }
       it { is_expected.to be_falsey }
+    end
+  end
+
+  describe 'auto_switch_domain?' do
+    subject { auto_switch_domain?(request, user_signed_in) }
+
+    context 'when user_signed_in? is true' do
+      let(:user_signed_in) { true }
+      let(:request) { instance_double(ActionDispatch::Request, base_url: 'osf', params: {}) }
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when user_signed_in? is false' do
+      let(:user_signed_in) { false }
+      let(:params) { {} }
+      let(:request) { instance_double(ActionDispatch::Request, base_url: request_base_url, params:) }
+      let(:app_host_legacy) { 'legacy' }
+      let(:app_host) { 'host' }
+
+      before do
+        stub_const("ApplicationHelper::APP_HOST_LEGACY", app_host_legacy)
+        stub_const("ApplicationHelper::APP_HOST", app_host)
+      end
+
+      context 'request on ENV[APP_HOST_LEGACY] without feature or url' do
+        let(:request_base_url) { app_host_legacy }
+        it { is_expected.to be_falsey }
+      end
+
+      context 'request on ENV[APP_HOST_LEGACY] with switch_domain params' do
+        let(:params) { { switch_domain: '1' } }
+        let(:request_base_url) { app_host_legacy }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'request on ENV[APP_HOST_LEGACY] with switch_domain params' do
+        before { Flipper.enable :switch_domain }
+        after { Flipper.disable :switch_domain }
+        let(:request_base_url) { app_host_legacy }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'request on ENV[APP_HOST]' do
+        let(:request_base_url) { app_host }
+        it { is_expected.to be_falsey }
+      end
     end
   end
 

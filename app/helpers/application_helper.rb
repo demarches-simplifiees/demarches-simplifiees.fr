@@ -8,6 +8,14 @@ module ApplicationHelper
     Regexp.new(APP_HOST_LEGACY).match?(request.base_url)
   end
 
+  def auto_switch_domain?(request, user_signed_in)
+    switch_domain_enabled?(request) && !user_signed_in && app_host_legacy?(request)
+  end
+
+  def switch_domain_enabled?(request)
+    request.params.key?(:switch_domain) || Flipper.enabled?(:switch_domain)
+  end
+
   def html_lang
     I18n.locale.to_s
   end
