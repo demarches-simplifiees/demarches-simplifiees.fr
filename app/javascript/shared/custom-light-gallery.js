@@ -1,0 +1,1 @@
+console.log('on est dans custom light gallery');

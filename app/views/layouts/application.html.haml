@@ -36,6 +36,7 @@
 
     = yield(:invisible_captcha_styles)
     = render partial: 'layouts/setup_theme'
+    -# = stylesheet_link_tag 'css/lightgallery-bundle.css', type: 'text/css'
 
   %body{ { id: content_for(:page_id), class: browser.platform.ios? ? 'ios' : nil, data: { controller: 'turbo number-input' } }.compact }
     = render partial: 'layouts/skiplinks'
@@ -65,4 +66,5 @@
       - if Rails.env.development?
         = vite_typescript_tag 'axe-core'
       = yield :charts_js
+    = javascript_tag 'js/lightgallery.umd.js'
     = render Attachment::ProgressBarComponent.new

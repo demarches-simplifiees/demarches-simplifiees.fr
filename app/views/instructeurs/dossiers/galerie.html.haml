@@ -1,0 +1,16 @@
+- content_for(:title, "Galerie")
+
+= render partial: "header", locals: { dossier: @dossier }
+
+.container
+  .galerie#lightgallery{ "data-controller" => "custom-lightbox"}
+    - @dossier.champs.each do |c|
+      - if c.is_a?(Champs::PieceJustificativeChamp)
+        - blob = c.piece_justificative_file.first.blob
+        - is_pdf = (blob.content_type == 'application/pdf')
+        - if is_pdf
+          = link_to image_url(blob.url), data: { iframe: true } do
+            = image_tag(blob.url)
+        - else
+          = link_to image_url(blob.url) do
+            = image_tag(blob.url)

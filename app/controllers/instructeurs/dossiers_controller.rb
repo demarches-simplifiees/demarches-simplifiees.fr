@@ -372,6 +372,10 @@ module Instructeurs
       redirect_to instructeur_procedure_path(procedure)
     end
 
+    def galerie
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+    end
+
     private
 
     def dossier_scope

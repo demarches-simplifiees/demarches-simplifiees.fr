@@ -53,6 +53,7 @@
     "highcharts": "^10.3.3",
     "intersection-observer": "^0.12.2",
     "is-hotkey": "^0.2.0",
+    "lightgallery": "^2.7.2",
     "maplibre-gl": "^1.15.2",
     "match-sorter": "^6.2.0",
     "patch-package": "^7.0.0",

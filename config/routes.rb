@@ -494,6 +494,7 @@ Rails.application.routes.draw do
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
             get 'reaffectation'
             post 'reaffecter'
+            get 'galerie'
           end
         end
 
