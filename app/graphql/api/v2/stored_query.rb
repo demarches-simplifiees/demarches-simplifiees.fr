@@ -636,6 +636,7 @@ class API::V2::StoredQuery
     civilite
     nom
     prenom
+    email
   }
 
 
