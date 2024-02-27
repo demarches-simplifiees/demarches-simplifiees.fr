@@ -20,8 +20,6 @@ class API::V2::BaseController < ApplicationController
     end
   end
 
-  private
-
   def graphql_web_interface_context
     {
       administrateur_id: current_administrateur.id,

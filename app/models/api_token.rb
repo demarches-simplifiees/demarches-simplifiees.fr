@@ -8,6 +8,7 @@ class APIToken < ApplicationRecord
   def context
     {
       administrateur_id:,
+      api_token_id: id,
       procedure_ids:,
       write_access:
     }

@@ -38,21 +38,21 @@ module Manager
     def append_info_to_payload(payload)
       super
 
-      payload.merge!({
+      to_log = {
         user_agent: request.user_agent,
         user_id: current_user&.id,
         user_email: current_user&.email
-      }.compact)
+      }
 
       if browser.known?
-        payload.merge!({
+        to_log.merge!({
           browser: browser.name,
           browser_version: browser.version.to_s,
           platform: browser.platform.name
         })
       end
 
-      payload
+      payload[:to_log] = to_log
     end
   end
 end
