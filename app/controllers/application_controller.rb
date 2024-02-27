@@ -286,7 +286,8 @@ class ApplicationController < ActionController::Base
       end
 
       send_login_token_or_bufferize(current_instructeur)
-      redirect_to link_sent_path(email: current_instructeur.email)
+      signed_email = message_verifier.generate(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
+      redirect_to link_sent_path(email: signed_email)
     end
   end
 
