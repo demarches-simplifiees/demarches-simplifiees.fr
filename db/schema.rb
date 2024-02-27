@@ -991,6 +991,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
   end
 
   create_table "traitements", force: :cascade do |t|
+    t.string "browser_name"
+    t.boolean "browser_supported"
+    t.integer "browser_version"
     t.bigint "dossier_id"
     t.string "instructeur_email"
     t.string "motivation"
