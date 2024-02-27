@@ -26,7 +26,7 @@ class Users::PasswordsController < Devise::PasswordsController
   # end
 
   def reset_link_sent
-    @email = params[:email]
+    @email = message_verifier.verify(params[:email], purpose: :reset_password) rescue nil
   end
 
   protected
@@ -37,7 +37,8 @@ class Users::PasswordsController < Devise::PasswordsController
 
   def after_sending_reset_password_instructions_path_for(resource_name)
     flash.discard(:notice)
-    users_password_reset_link_sent_path(email: resource.email)
+    signed_email = message_verifier.generate(resource.email, purpose: :reset_password, expires_in: 1.hour)
+    users_password_reset_link_sent_path(email: signed_email)
   end
 
   def try_to_authenticate_instructeur

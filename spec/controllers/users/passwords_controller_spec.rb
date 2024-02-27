@@ -43,11 +43,23 @@ describe Users::PasswordsController, type: :controller do
     let(:email) { 'test@example.com' }
 
     it 'displays the page' do
-      get 'reset_link_sent', params: { email: email }
+      signed_email = controller.message_verifier.generate(email, purpose: :reset_password)
+
+      get 'reset_link_sent', params: { email: signed_email }
 
       expect(response).to have_http_status(:ok)
       expect(response).to render_template('reset_link_sent')
       expect(assigns(:email)).to eq email
+    end
+
+    context 'when signed email is invalid' do
+      it "does not fail" do
+        get 'reset_link_sent', params: { email: "invalid.message" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response).to render_template('reset_link_sent')
+        expect(assigns(:email)).to be_nil
+      end
     end
   end
 end

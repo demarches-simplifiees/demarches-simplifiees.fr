@@ -117,6 +117,10 @@ class ApplicationController < ActionController::Base
     "window.location.href='#{path}'"
   end
 
+  def message_verifier
+    @message_verifier ||= ActiveSupport::MessageVerifier.new(Rails.application.secret_key_base)
+  end
+
   protected
 
   def feature_enabled?(feature_name)
