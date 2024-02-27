@@ -30,13 +30,9 @@ as well as a link to its edit page.
       class: "button",
     ) if accessible_action?(page.resource, :edit) %>
 
-    <%= link_to(
-      t("administrate.actions.destroy"),
-      [namespace, page.resource],
-      class: "button button--danger",
-      method: :delete,
-      data: { confirm: t("administrate.actions.confirm") }
-    ) if accessible_action?(page.resource, :destroy) %>
+  </div>
+  <div>
+    <%= button_to "Supprimer", delete_manager_gestionnaire_path(page.resource), method: :delete, disabled: !page.resource.can_be_deleted?, class: "button", data: { confirm: "Confirmez-vous la suppression du gestionnaire ?" }, title: page.resource.can_be_deleted? ? "Supprimer" : "Ce gestionnaire ne peut etre supprimé car il est le seul gestionnaire d'un groupe racine" %>
   </div>
 </header>
 

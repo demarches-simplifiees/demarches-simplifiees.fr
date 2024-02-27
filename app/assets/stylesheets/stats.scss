@@ -146,10 +146,11 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
 .big-number-card-number {
   display: block;
   text-align: center;
-  font-size: 90px;
-  line-height: 90px;
+  font-size: 80px;
+  line-height: 1em;
   font-weight: bold;
   color: $blue-france-500;
+  white-space: nowrap;
 }
 
 .big-number-card-detail {

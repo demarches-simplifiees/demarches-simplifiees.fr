@@ -12,6 +12,7 @@ gem 'addressable'
 gem 'administrate'
 gem 'administrate-field-enum' # Allow using Field::Enum in administrate
 gem 'after_party'
+gem 'ancestry'
 gem 'anchored'
 gem 'aws-sdk-s3'
 gem 'bcrypt'
