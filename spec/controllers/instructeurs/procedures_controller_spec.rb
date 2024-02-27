@@ -704,6 +704,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       expect(BulkMessage.count).to eq(1)
       expect(bulk_message.body).to eq("avant\napres")
       expect(bulk_message.groupe_instructeurs).to be_empty
+      expect(bulk_message.procedure_id).to eq(procedure.id)
     end
 
     it "creates a flash notice" do

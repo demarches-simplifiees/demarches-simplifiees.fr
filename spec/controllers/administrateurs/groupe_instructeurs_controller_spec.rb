@@ -183,7 +183,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     let!(:gi_1_3) { create(:groupe_instructeur, label: 'groupe instructeur 3', procedure: procedure) }
     let!(:dossier12) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1) }
     let!(:instructeur) { create(:instructeur) }
-    let!(:bulk_message) { BulkMessage.create(dossier_count: 2, dossier_state: "brouillon", body: "hello", sent_at: Time.zone.now, groupe_instructeurs: [gi_1_1, gi_1_3], instructeur: instructeur) }
+    let!(:bulk_message) { BulkMessage.create(dossier_count: 2, dossier_state: "en_construction", body: "hello", sent_at: Time.zone.now, groupe_instructeurs: [gi_1_1, gi_1_3], instructeur: instructeur, procedure: procedure) }
 
     describe 'when the new group is a group of the procedure' do
       before do
