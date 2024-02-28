@@ -25,12 +25,16 @@ class Users::SessionsController < Devise::SessionsController
     if send_login_token_or_bufferize(current_instructeur)
       flash[:notice] = "Nous venons de vous renvoyer un nouveau lien de connexion sécurisée à #{APPLICATION_NAME}"
     end
-    redirect_to link_sent_path(email: current_instructeur.email)
+
+    signed_email = message_verifier.generate(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)
+    redirect_to link_sent_path(email: signed_email)
   end
 
   def link_sent
-    if StrictEmailValidator::REGEXP.match?(params[:email])
-      @email = params[:email]
+    email = message_verifier.verify(params[:email], purpose: :reset_link) rescue nil
+
+    if StrictEmailValidator::REGEXP.match?(email)
+      @email = email
     else
       redirect_to root_path
     end
