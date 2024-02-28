@@ -26,7 +26,7 @@ describe ChorusConfiguration do
     it 'works with existing args' do
       expect do
         cc = ChorusConfiguration.new()
-        cc.assign_attributes(centre_de_coup: {}, domaine_fonctionnel: {}, referentiel_de_programmation: {})
+        cc.assign_attributes(centre_de_cout: {}, domaine_fonctionnel: {}, referentiel_de_programmation: {})
       end.not_to raise_error
     end
   end

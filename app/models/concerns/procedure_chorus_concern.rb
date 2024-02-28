@@ -7,7 +7,7 @@ module ProcedureChorusConcern
     end
 
     def chorusable?
-      feature_enabled?(:chorus)
+      feature_enabled?(:engagement_juridique_type_de_champ)
     end
   end
 end

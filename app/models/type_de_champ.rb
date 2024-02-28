@@ -5,9 +5,12 @@ class TypeDeChamp < ApplicationRecord
   FEATURE_FLAGS = {
     visa: :visa,
     tefenua: :tefenua,
+    engagement_juridique: :engagement_juridique_type_de_champ,
+
     cojo: :cojo_type_de_champ,
     expression_reguliere: :expression_reguliere_type_de_champ
   }
+
   MINIMUM_TEXTAREA_CHARACTER_LIMIT_LENGTH = 400
 
   INSTANCE_TYPE_CHAMPS = {
@@ -40,6 +43,8 @@ class TypeDeChamp < ApplicationRecord
   }
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
+    engagement_juridique: REFERENTIEL_EXTERNE,
+
     header_section: STRUCTURE,
     repetition: STRUCTURE,
     dossier_link: STRUCTURE,
@@ -82,6 +87,8 @@ class TypeDeChamp < ApplicationRecord
   }.merge(INSTANCE_TYPE_DE_CHAMP_TO_CATEGORIE)
 
   enum type_champs: {
+    engagement_juridique: 'engagement_juridique',
+
     header_section: 'header_section',
     repetition: 'repetition',
     dossier_link: 'dossier_link',
@@ -132,6 +139,10 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:departements),
     type_champs.fetch(:regions),
     type_champs.fetch(:epci)
+  ]
+
+  PRIVATE_ONLY_TYPES = [
+    type_champs.fetch(:engagement_juridique)
   ]
 
   store_accessor :options,
