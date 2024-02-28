@@ -36,7 +36,7 @@
                 %span.fr-icon-refresh-line.fr-icon--sm
                 = t('go_gestionnaire', scope: [:layouts])
 
-        - if super_admin_signed_in?
+        - if super_admin_signed_in? && nav_bar_profile != :superadmin
           %li
             = link_to manager_root_path, class: "fr-nav__link" do
               %span.fr-icon-shield-line.fr-icon--sm

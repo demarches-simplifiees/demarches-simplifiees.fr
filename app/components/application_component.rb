@@ -2,6 +2,8 @@ class ApplicationComponent < ViewComponent::Base
   include ViewComponent::Translatable
   include FlipperHelper
 
+  delegate :rich_text_area_tag, to: :helpers
+
   def current_user
     controller.current_user
   end

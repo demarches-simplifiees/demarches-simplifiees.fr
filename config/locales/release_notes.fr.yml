@@ -1,0 +1,31 @@
+---
+fr:
+  release_notes:
+    index:
+      title: Quoi de neuf sur %{app_name} ? 🚀
+      forbidden: Vous n’êtes pas autorisé(e) à consulter la page des Nouveautés.
+      no_content: Aucune nouveauté annoncée de ce côté là.
+    page:
+      previous_page: Annonces précédentes
+  super_admins:
+    release_notes:
+      create: &save
+        success: L’annonce a été sauvegardée.
+        error: L’annonce n’a pas pu être sauvegardée.
+      update:
+        <<: *save
+      destroy:
+        success: La note a été supprimée.
+  activerecord:
+    attributes:
+      release_note:
+        body: Annonce
+        categories: Catégories
+        released_on: Date de publication
+      release_note/categories:
+        administrateur: Administrateur
+        instructeur: Instructeur
+        expert: Expert
+        api: API
+        usager: Usager
+
