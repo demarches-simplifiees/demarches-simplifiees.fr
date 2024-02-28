@@ -17,7 +17,7 @@
         #state-menu.dropdown-content.fade-in-down{ data: { menu_button_target: 'menu' }, "aria-labelledby" => "batch_operation_others" }
           %ul.dropdown-items
             - available_operations[:options][2, available_operations[:options].count].each do |opt|
-              %li{ 'data-turbo': 'true' }
+              %li
                 = form.button opt[:label], class: 'dropdown-items-link ', disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation] } do
                   %span{ class: icons[opt[:operation].to_sym] }
                   .dropdown-description
