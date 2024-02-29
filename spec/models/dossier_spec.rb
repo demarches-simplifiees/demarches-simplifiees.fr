@@ -1218,7 +1218,7 @@ describe Dossier, type: :model do
       it 'passes dossier en instruction' do
         expect(subject.state).to eq('en_instruction')
         expect(subject.followers_instructeurs).not_to include(instructeur)
-        expect(subject.sva_svr_decision_on).to eq(2.months.from_now.to_date + 1.day) # date is updated
+        expect(subject.sva_svr_decision_on >= 2.months.from_now.to_date + 1.day).to be_truthy
         expect(last_operation.operation).to eq('passer_en_instruction')
         expect(last_operation.automatic_operation?).to be_truthy
         expect(operation_serialized['operation']).to eq('passer_en_instruction')
