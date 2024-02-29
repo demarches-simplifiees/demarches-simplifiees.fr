@@ -15,7 +15,7 @@ Rails.application.configure do
         }
       }
 
-      hash.merge!(event.payload[:to_log])
+      hash.merge!(event.payload[:to_log]) if event.payload.key?(:to_log)
 
       hash.compact
     end
