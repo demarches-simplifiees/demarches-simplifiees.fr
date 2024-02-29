@@ -45,10 +45,19 @@ module Types
       end
 
       def effectif_mensuel
-        if object.effectif_mensuel.present?
+        if object.effectif_mensuel?
           {
             periode: [object.effectif_mois, object.effectif_annee].join('/'),
             nb: object.effectif_mensuel
+          }
+        end
+      end
+
+      def effectif_annuel
+        if object.effectif_annuel?
+          {
+            periode: object.effectif_annuel_annee,
+            nb: object.effectif_annuel
           }
         end
       end
@@ -70,15 +79,6 @@ module Types
       def code_effectif_entreprise
         # we need this in order to bypass Hashie::Dash deserialization issue on nil values
         object.code_effectif_entreprise
-      end
-
-      def effectif_annuel
-        if object.effectif_annuel.present?
-          {
-            periode: object.effectif_annuel_annee,
-            nb: object.effectif_annuel
-          }
-        end
       end
 
       private

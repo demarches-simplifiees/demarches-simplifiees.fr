@@ -25,4 +25,12 @@ class Entreprise < Hashie::Dash
   property :enseigne, default: nil
 
   property :inline_adresse
+
+  def effectif_mensuel?
+    effectif_mensuel.present? && effectif_mois.present? && effectif_annee.present?
+  end
+
+  def effectif_annuel?
+    effectif_annuel.present? && effectif_annuel_annee.present?
+  end
 end
