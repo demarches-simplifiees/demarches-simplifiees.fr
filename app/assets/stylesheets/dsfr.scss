@@ -33,22 +33,29 @@ trix-editor.fr-input {
   margin-top: 0.5rem;
 }
 
-@media (max-width: 62em) {
-  .fr-ds-combobox {
-    .fr-menu {
-      .fr-menu__list {
-        z-index: calc(var(--ground) + 1000);
-        width: 100%;
-        background-color: var(--background-default-grey);
-        --idle: transparent;
-        --hover: var(--background-overlap-grey-hover);
-        --active: var(--background-overlap-grey-active);
-        filter: drop-shadow(var(--overlap-shadow));
-        box-shadow: inset 0 1px 0 0 var(--border-open-blue-france);
-      }
+
+.fr-ds-combobox {
+  .fr-menu {
+    width: 100%;
+
+    .fr-menu__list {
+      width: 100%;
     }
   }
 }
+
+@media (max-width: 62em) {
+  .fr-ds-combobox  .fr-menu .fr-menu__list {
+    z-index: calc(var(--ground) + 1000);
+    background-color: var(--background-default-grey);
+    --idle: transparent;
+    --hover: var(--background-overlap-grey-hover);
+    --active: var(--background-overlap-grey-active);
+    filter: drop-shadow(var(--overlap-shadow));
+    box-shadow: inset 0 1px 0 0 var(--border-open-blue-france);
+  }
+}
+
 // Fix firefox < 80, Safari < 15.4, Chrome < 83 not supporting "appearance: auto" on inputs
 // This rule was set by DSFR for DSFR design, but broke our legacy forms.
 // scss-lint:disable DuplicateProperty
