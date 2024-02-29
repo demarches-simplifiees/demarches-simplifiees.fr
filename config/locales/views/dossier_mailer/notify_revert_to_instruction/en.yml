@@ -1,9 +1,0 @@
-en:
-  dossier_mailer:
-    notify_revert_to_instruction:
-      subject: Your file nº %{dossier_id} « %{libelle_demarche} » will be reexamined
-      body_html: |
-        Your file nº %{dossier_id} will be reexamined. All previous decisions are void.
-        To see the file created on procedure <b>« %{libelle_demarche} »</b>, select the following link:
-      contact: |
-        In order to get more details about the decision to reexamin, please contact the following service:

@@ -1177,7 +1177,7 @@ describe Dossier, type: :model do
     it 'creates a commentaire in the messagerie with expected wording' do
       passer_en_instruction
 
-      email_template = dossier.procedure.mail_template_for(Dossier.states.fetch(:en_instruction))
+      email_template = dossier.procedure.mail_template_for(dossier)
       commentaire = dossier.commentaires.last
 
       expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))
@@ -1634,8 +1634,7 @@ describe Dossier, type: :model do
 
     before do
       Timecop.freeze
-      allow(DossierMailer).to receive(:notify_revert_to_instruction)
-        .and_return(double(deliver_later: true))
+      allow(NotificationMailer).to receive(:send_repasser_en_instruction_notification).and_return(double(deliver_later: true))
       dossier.repasser_en_instruction!(instructeur: instructeur)
       dossier.reload
     end
@@ -1650,7 +1649,7 @@ describe Dossier, type: :model do
     it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
     it { expect(last_operation.operation).to eq('repasser_en_instruction') }
     it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
-    it { expect(DossierMailer).to have_received(:notify_revert_to_instruction).with(dossier) }
+    it { expect(NotificationMailer).to have_received(:send_repasser_en_instruction_notification).with(dossier) }
 
     after { Timecop.return }
   end

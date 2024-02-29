@@ -7,6 +7,7 @@ describe Procedure do
     it { expect(subject.closed_mail_template).to be_a(Mails::ClosedMail) }
     it { expect(subject.refused_mail_template).to be_a(Mails::RefusedMail) }
     it { expect(subject.without_continuation_mail_template).to be_a(Mails::WithoutContinuationMail) }
+    it { expect(subject.re_instructed_mail_template).to be_a(Mails::ReInstructedMail) }
   end
 
   describe 'compute_dossiers_count' do

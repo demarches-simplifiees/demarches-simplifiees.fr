@@ -1,5 +1,5 @@
 class Procedure::Card::EmailsComponent < ApplicationComponent
-  CUSTOMIZABLE_COUNT = 5
+  CUSTOMIZABLE_COUNT = 6
 
   def initialize(procedure:)
     @procedure = procedure
@@ -31,7 +31,8 @@ class Procedure::Card::EmailsComponent < ApplicationComponent
       @procedure.received_mail,
       @procedure.closed_mail,
       @procedure.refused_mail,
-      @procedure.without_continuation_mail
+      @procedure.without_continuation_mail,
+      @procedure.re_instructed_mail
     ].map { |mail| mail&.updated_at }.compact.size
   end
 end

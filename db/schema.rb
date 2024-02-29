@@ -432,8 +432,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
     t.boolean "prefilled"
-    t.text "private_search_terms"
-    t.datetime "processed_at"
+    t.string "private_search_terms"
+    t.datetime "processed_at", precision: 6
+    t.datetime "re_instructed_at"
     t.bigint "revision_id"
     t.text "search_terms"
     t.string "state"
@@ -880,12 +881,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
   end
 
-  create_table "received_mails", id: :serial, force: :cascade do |t|
+  create_table "re_instructed_mails", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
-    t.integer "procedure_id"
+    t.integer "procedure_id", null: false
     t.string "subject"
     t.datetime "updated_at", null: false
+    t.index ["procedure_id"], name: "index_re_instructed_mails_on_procedure_id"
+  end
+
+  create_table "received_mails", id: :serial, force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", precision: nil, null: false
+    t.integer "procedure_id"
+    t.string "subject"
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["procedure_id"], name: "index_received_mails_on_procedure_id"
   end
 

@@ -18,10 +18,6 @@ class DossierMailerPreview < ActionMailer::Preview
     DossierMailer.with(commentaire:).notify_pending_correction
   end
 
-  def notify_revert_to_instruction
-    DossierMailer.notify_revert_to_instruction(dossier)
-  end
-
   def notify_brouillon_near_deletion
     DossierMailer.notify_brouillon_near_deletion([dossier], usager_email)
   end

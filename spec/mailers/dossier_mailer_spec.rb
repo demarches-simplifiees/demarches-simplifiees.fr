@@ -86,18 +86,6 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
   end
 
-  describe '.notify_revert_to_instruction' do
-    let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }
-
-    subject { described_class.notify_revert_to_instruction(dossier) }
-
-    it { expect(subject.subject).to include('réexaminé') }
-    it { expect(subject.body).to include(dossier.procedure.libelle) }
-    it { expect(subject.body).to include(dossier_url(dossier)) }
-
-    it_behaves_like 'a dossier notification'
-  end
-
   describe '.notify_brouillon_near_deletion' do
     let(:dossier) { create(:dossier) }
 

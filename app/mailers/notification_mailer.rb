@@ -44,6 +44,10 @@ class NotificationMailer < ApplicationMailer
     with(dossier: dossier, state: Dossier.states.fetch(:sans_suite)).send_notification
   end
 
+  def self.send_repasser_en_instruction_notification(dossier)
+    with(dossier: dossier, state: Dossier.states.fetch(:en_instruction)).send_notification
+  end
+
   def self.send_pending_correction(dossier)
     with(dossier: dossier).send_notification
   end
