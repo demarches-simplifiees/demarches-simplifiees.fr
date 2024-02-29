@@ -385,7 +385,7 @@ RSpec.describe DossierCloneConcern do
         procedure.publish_revision!
       end
       it 'works' do
-        expect { subject }.not_to raise_error(ActiveRecord::InvalidForeignKey)
+        expect { subject }.not_to raise_error
       end
     end
   end

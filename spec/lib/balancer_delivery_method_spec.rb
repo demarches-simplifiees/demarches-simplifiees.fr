@@ -35,7 +35,7 @@ RSpec.describe BalancerDeliveryMethod do
     end
 
     def deliver!(mail)
-      Mail::CheckDeliveryParams.check(mail)
+      Mail::SmtpEnvelope.new(mail)
       self.class.deliveries << mail
     end
   end

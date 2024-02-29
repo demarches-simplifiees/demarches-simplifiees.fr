@@ -93,8 +93,8 @@ describe Dossier, type: :model do
         expect(expiring_dossier.close_to_expiration?).to be_falsey
         expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
 
-        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extention)
-        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extention)
+        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extension)
+        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extension)
       end
     end
 
@@ -144,8 +144,8 @@ describe Dossier, type: :model do
         expect(expiring_dossier.close_to_expiration?).to be_falsey
         expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
 
-        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extention)
-        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extention)
+        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extension)
+        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extension)
       end
     end
 
@@ -204,8 +204,8 @@ describe Dossier, type: :model do
         expect(expiring_dossier.close_to_expiration?).to be_falsey
         expect(expiring_dossier_with_notification.close_to_expiration?).to be_falsey
 
-        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extention)
-        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extention)
+        expect(expiring_dossier.expiration_date).to eq(expiring_dossier.expiration_date_with_extension)
+        expect(expiring_dossier_with_notification.expiration_date).to eq(expiring_dossier_with_notification.expiration_date_with_extension)
       end
     end
 

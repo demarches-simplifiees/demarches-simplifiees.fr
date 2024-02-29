@@ -7,8 +7,7 @@ describe 'users/dossiers/brouillon', type: :view do
   before do
     sign_in dossier.user
     assign(:dossier, dossier)
-    # allow(view) doesn't work because method is called inside partial
-    ActionView::Base.any_instance.stub(:administrateur_signed_in?).and_return(profile == :administrateur)
+    allow_any_instance_of(ActionView::Base).to receive(:administrateur_signed_in?).and_return(profile == :administrateur)
   end
 
   subject! { render }

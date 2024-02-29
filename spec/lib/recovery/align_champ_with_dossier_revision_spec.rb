@@ -33,7 +33,7 @@ describe Recovery::AlignChampWithDossierRevision do
 
       expect(fixer.logs.size).to eq(1)
       expect(fixer.logs.first.fetch(:status)).to eq(:updated)
-      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error(ArgumentError)
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error
       expect(bad_dossier.champs.size).to eq(2)
       expect(bad_dossier.champs_public.size).to eq(2)
     end
@@ -60,7 +60,7 @@ describe Recovery::AlignChampWithDossierRevision do
 
       expect(fixer.logs.size).to eq(1)
       expect(fixer.logs.first.fetch(:status)).to eq(:not_found)
-      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error(ArgumentError)
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error
       expect(bad_dossier.champs.size).to eq(1)
       expect(bad_dossier.champs_public.size).to eq(1)
     end
