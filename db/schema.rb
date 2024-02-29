@@ -415,7 +415,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "en_construction_at"
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.datetime "en_instruction_at"
-    t.boolean "for_procedure_preview", default: false
+    t.boolean "for_procedure_preview", default: false, null: false
     t.boolean "forced_groupe_instructeur", default: false, null: false
     t.bigint "groupe_instructeur_id"
     t.datetime "groupe_instructeur_updated_at"
@@ -432,8 +432,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
     t.boolean "prefilled"
-    t.string "private_search_terms"
-    t.datetime "processed_at", precision: 6
+    t.text "private_search_terms"
+    t.datetime "processed_at"
     t.datetime "re_instructed_at"
     t.bigint "revision_id"
     t.text "search_terms"
@@ -892,10 +892,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
 
   create_table "received_mails", id: :serial, force: :cascade do |t|
     t.text "body"
-    t.datetime "created_at", precision: nil, null: false
+    t.datetime "created_at", null: false
     t.integer "procedure_id"
     t.string "subject"
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "updated_at", null: false
     t.index ["procedure_id"], name: "index_received_mails_on_procedure_id"
   end
 

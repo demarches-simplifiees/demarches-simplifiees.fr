@@ -27,7 +27,6 @@ describe Stat, type: :model do
       create_list(:dossier, 2, :en_construction, depose_at: 10.days.ago, procedure:)
       create_list(:dossier, 3, :en_construction, depose_at: 40.days.ago, procedure:)
 
-      create_list(:dossier, 3, :brouillon, procedure:, for_procedure_preview: nil)
       create_list(:dossier, 1, :brouillon, procedure:, for_procedure_preview: false)
 
       create_list(:dossier, 6, :en_instruction, procedure:)
@@ -48,7 +47,7 @@ describe Stat, type: :model do
       expect(stats["not_brouillon"]).to eq(18)
       expect(stats["dossiers_depose_avant_30_jours"]).to eq(2)
       expect(stats["dossiers_deposes_entre_60_et_30_jours"]).to eq(3)
-      expect(stats["brouillon"]).to eq(4)
+      expect(stats["brouillon"]).to eq(1)
       expect(stats["en_construction"]).to eq(5)
       expect(stats["en_instruction"]).to eq(6)
       expect(stats["termines"]).to eq(7)
