@@ -338,6 +338,10 @@ ul.dropdown-items {
   color: $blue-france-500;
 }
 
-.account-btn::before {
-  content: none !important;
+.account-btn {
+  flex-wrap: wrap;
+
+  &::before {
+    content: none !important;
+  }
 }
