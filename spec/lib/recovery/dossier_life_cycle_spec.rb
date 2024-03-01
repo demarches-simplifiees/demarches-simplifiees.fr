@@ -41,14 +41,10 @@ describe 'Dossier::Recovery::LifeCycle' do
 
       d.traitements.accepter(motivation: 'oui', processed_at: Time.zone.now)
       d.save
-      pp d.champs.map(&:attributes)
 
       d.dossier_operation_logs << build(:dossier_operation_log, :with_serialized)
 
       d.transfer_logs.create(from: create(:user), to: create(:user))
-
-      pp d.champs.map(&:attributes)
-
       d
     end
 
