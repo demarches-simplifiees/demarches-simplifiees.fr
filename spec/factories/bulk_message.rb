@@ -6,5 +6,6 @@ FactoryBot.define do
     sent_at { 1.day.ago }
     instructeur { association :instructeur }
     groupe_instructeurs { [association(:groupe_instructeur, strategy: :build)] }
+    procedure { association :procedure }
   end
 end
