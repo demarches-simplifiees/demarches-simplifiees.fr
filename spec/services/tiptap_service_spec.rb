@@ -192,4 +192,20 @@ RSpec.describe TiptapService do
       expect(described_class.new.used_tags_and_libelle_for(json)).to eq(Set.new([['name', 'Nom']]))
     end
   end
+
+  describe '.to_path' do
+    let(:substitutions) { { "dossier_number" => "42" } }
+    let(:json) do
+      {
+        "content" => [
+          { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " .pdf", "type" => "text" }] }
+        ]
+
+      }.deep_symbolize_keys
+    end
+
+    it 'returns path' do
+      expect(described_class.new.to_path(json, substitutions)).to eq("export_42.pdf")
+    end
+  end
 end
