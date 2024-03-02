@@ -56,5 +56,7 @@ Flipper.configure do |config|
 end
 
 Rails.application.configure do
+  # don't preload features for /assets/* but do for everything else
+  config.flipper.preload = -> (request) { !request.path.start_with?('/assets/', '/ping') }
   config.flipper.strict = Rails.env.development?
 end
