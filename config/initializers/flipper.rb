@@ -2,11 +2,12 @@
 # we can add new features from the Web UI. However when the new DB is created
 # this will immediately migrate the default features to be controlled.
 def setup_features(features)
-  features.each do |feature|
-    if !Flipper.exist?(feature)
-      # Disable feature by default
-      Flipper.disable(feature)
-    end
+  existing = Flipper.preload(features).map { _1.name.to_sym }
+  missing = features - existing
+
+  missing.each do |feature|
+    # Feature is disabled by default
+    Flipper.add(feature.to_s)
   end
 end
 
@@ -14,13 +15,17 @@ end
 features = [
   :administrateur_web_hook,
   :api_particulier,
-  :dossier_pdf_vide,
-  :hide_instructeur_email,
-  :procedure_routage_api,
-  :groupe_instructeur_api_hack,
+  :attestation_v2,
+  :blocking_pending_correction,
   :cojo_type_de_champ,
+  :dossier_pdf_vide,
+  :engagement_juridique_type_de_champ,
+  :export_order_by_revision,
+  :expression_reguliere_type_de_champ,
+  :groupe_instructeur_api_hack,
+  :hide_instructeur_email,
   :sva,
-  :blocking_pending_correction
+  :switch_domain
 ]
 
 def database_exists?
@@ -34,4 +39,8 @@ ActiveSupport.on_load(:active_record) do
   if database_exists? && ActiveRecord::Base.connection.data_source_exists?('flipper_features')
     setup_features(features)
   end
+end
+
+Rails.application.configure do
+  config.flipper.strict = Rails.env.development?
 end
