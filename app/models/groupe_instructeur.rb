@@ -9,6 +9,7 @@ class GroupeInstructeur < ApplicationRecord
   has_many :batch_operations, through: :dossiers, source: :batch_operations
   has_many :assignments, class_name: 'DossierAssignment', dependent: :nullify, inverse_of: :groupe_instructeur
   has_many :previous_assignments, class_name: 'DossierAssignment', dependent: :nullify, inverse_of: :previous_groupe_instructeur
+  has_many :export_templates
   has_and_belongs_to_many :exports, dependent: :destroy
   has_and_belongs_to_many :bulk_messages, dependent: :destroy
 

@@ -10,6 +10,7 @@ class Instructeur < ApplicationRecord
   has_many :batch_operations, dependent: :nullify
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
+  has_many :export_templates
 
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
