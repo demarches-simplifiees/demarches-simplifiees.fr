@@ -871,21 +871,33 @@ describe Procedure do
     describe 'feature flag' do
       context 'with a feature flag enabled' do
         before do
-          Flipper.enable(:procedure_routage_api, procedure)
+          Flipper.enable(:dossier_pdf_vide, procedure)
         end
 
         it 'should enable feature' do
-          expect(subject.feature_enabled?(:procedure_routage_api)).to be true
+          expect(subject.feature_enabled?(:dossier_pdf_vide)).to be true
+          expect(Flipper.feature(:dossier_pdf_vide).enabled_gate_names).to include(:actor)
+        end
+      end
+
+      context 'with feature flag is fully enabled' do
+        before do
+          Flipper.enable(:dossier_pdf_vide)
+        end
+
+        it 'should not clone feature for actor' do
+          expect(subject.feature_enabled?(:dossier_pdf_vide)).to be true
+          expect(Flipper.feature(:dossier_pdf_vide).enabled_gate_names).not_to include(:actor)
         end
       end
 
       context 'with a feature flag disabled' do
         before do
-          Flipper.disable(:procedure_routage_api, procedure)
+          Flipper.disable(:dossier_pdf_vide, procedure)
         end
 
         it 'should not enable feature' do
-          expect(subject.feature_enabled?(:procedure_routage_api)).to be false
+          expect(subject.feature_enabled?(:dossier_pdf_vide)).to be false
         end
       end
     end
