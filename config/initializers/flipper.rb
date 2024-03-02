@@ -1,6 +1,10 @@
 # This setup is primarily for first deployment, because consequently
 # we can add new features from the Web UI. However when the new DB is created
 # this will immediately migrate the default features to be controlled.
+#
+require 'flipper/adapters/active_record'
+require 'flipper/adapters/active_support_cache_store'
+
 def setup_features(features)
   existing = Flipper.preload(features).map { _1.name.to_sym }
   missing = features - existing
@@ -38,6 +42,16 @@ end
 ActiveSupport.on_load(:active_record) do
   if database_exists? && ActiveRecord::Base.connection.data_source_exists?('flipper_features')
     setup_features(features)
+  end
+end
+
+Flipper.configure do |config|
+  config.adapter do
+    Flipper::Adapters::ActiveSupportCacheStore.new(
+      Flipper::Adapters::ActiveRecord.new,
+      ActiveSupport::Cache::MemoryStore.new,
+      expires_in: 10.seconds
+    )
   end
 end
 
