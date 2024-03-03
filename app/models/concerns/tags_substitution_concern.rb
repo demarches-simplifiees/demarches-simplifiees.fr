@@ -242,6 +242,10 @@ module TagsSubstitutionConcern
     tags_for_dossier_state(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
+  def some_tags
+    tags_for_dossier_state(identity_tags + dossier_tags)
+  end
+
   def tags_categorized
     identity_key = procedure.for_individual? ? :individual : :etablissement
 
