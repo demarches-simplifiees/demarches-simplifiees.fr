@@ -974,6 +974,22 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def all_pj
+    scope = active_revision.revision_types_de_champ_private_and_public
+      .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
+      .where(types_de_champ: { type_champ: ['repetition', 'piece_justificative'] })
+
+    scope.each_with_object([]) do |rtdc, list|
+      if rtdc.type_de_champ.repetition?
+        rtdc.revision_types_de_champ.each do |rtdc_in_repetition|
+          list << rtdc_in_repetition.type_de_champ if rtdc_in_repetition.type_de_champ.piece_justificative?
+        end
+      else
+        list << rtdc.type_de_champ
+      end
+    end
+  end
+
   def pieces_jointes_list_with_conditionnal
     pieces_jointes_list do |base_scope|
       base_scope.where.not(types_de_champ: { condition: nil })
