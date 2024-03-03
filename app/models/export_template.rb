@@ -7,6 +7,16 @@ class ExportTemplate < ApplicationRecord
 
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
 
+  def set_default_values
+    content["default_dossier_directory"] = tiptap_json("dossier-")
+    content["pdf_name"] = tiptap_json("export_")
+
+    content["pjs"] = []
+    procedure.pieces_jointes_exportables_list.each do |pj|
+      content["pjs"] << { "stable_id" => pj.stable_id.to_s, "path" => tiptap_json("#{pj.libelle.parameterize}-") }
+    end
+  end
+
   def tiptap_default_dossier_directory=(body)
     self.content["default_dossier_directory"] = JSON.parse(body)
   end
