@@ -81,6 +81,10 @@ class ExportTemplate < ApplicationRecord
     "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
   end
 
+  def specific_tags
+    tags_categorized.slice(:individual, :etablissement, :dossier).values.flatten
+  end
+
   private
 
   def tiptap_content(key)

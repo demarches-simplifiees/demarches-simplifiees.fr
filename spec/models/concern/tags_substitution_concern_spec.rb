@@ -604,6 +604,24 @@ describe TagsSubstitutionConcern, type: :model do
     end
   end
 
+  describe 'some_tags' do
+    context 'for entreprise procedure' do
+      let(:for_individual) { false }
+      it do
+        tags = template_concern.some_tags
+        expect(tags.map { _1[:id] }).to eq ["entreprise_siren", "entreprise_numero_tva_intracommunautaire", "entreprise_siret_siege_social", "entreprise_raison_sociale", "entreprise_adresse", "dossier_motivation", "dossier_depose_at", "dossier_en_instruction_at", "dossier_processed_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number"]
+      end
+    end
+
+    context 'for individual procedure' do
+      let(:for_individual) { true }
+      it do
+        tags = template_concern.some_tags
+        expect(tags.map { _1[:id] }).to eq ["individual_gender", "individual_last_name", "individual_first_name", "dossier_motivation", "dossier_depose_at", "dossier_en_instruction_at", "dossier_processed_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number"]
+      end
+    end
+  end
+
   describe 'parser' do
     it do
       tokens = TagsSubstitutionConcern::TagsParser.parse("hello world --public--, --numéro du dossier--, un test--yolo-- encore du text\n---\n encore du text --- et encore du text\n--tag--")
