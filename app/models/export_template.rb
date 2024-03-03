@@ -23,6 +23,15 @@ class ExportTemplate < ApplicationRecord
     tiptap_content("pdf_name")
   end
 
+  def content_for_pj(pj)
+    content_for_pj_id(pj.stable_id)&.to_json
+  end
+
+  def content_for_pj_id(stable_id)
+    content_for_stable_id = content["pjs"].find { _1.symbolize_keys[:stable_id] == stable_id.to_s }
+    content_for_stable_id.symbolize_keys.fetch(:path)
+  end
+
   def pj_and_path(dossier, pj, index: 0, row_index: nil)
     [
       pj,
