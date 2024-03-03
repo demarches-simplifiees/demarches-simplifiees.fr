@@ -992,6 +992,12 @@ class Procedure < ApplicationRecord
     end
   end
 
+  def pieces_jointes_exportables_list
+    pieces_jointes_list(with_private: true, with_titre_identite: false, with_repetition_parent: false) do |base_scope|
+      base_scope
+    end.flatten
+  end
+
   def pieces_jointes_list_with_conditionnal
     pieces_jointes_list do |base_scope|
       base_scope.where.not(types_de_champ: { condition: nil })
@@ -1025,15 +1031,27 @@ class Procedure < ApplicationRecord
 
   private
 
-  def pieces_jointes_list
-    scope = yield active_revision.revision_types_de_champ_public
+  def pieces_jointes_list(with_private: false, with_titre_identite: true, with_repetition_parent: true)
+    types_de_champ = with_private ?
+      active_revision.revision_types_de_champ_private_and_public :
+      active_revision.revision_types_de_champ_public
+
+    type_champs = ['repetition', 'piece_justificative']
+    type_champs << 'titre_identite' if with_titre_identite
+
+    scope = yield types_de_champ
       .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
-      .where(types_de_champ: { type_champ: ['repetition', 'piece_justificative', 'titre_identite'] })
+      .where(types_de_champ: { type_champ: [type_champs] })
 
     scope.each_with_object([]) do |rtdc, list|
       if rtdc.type_de_champ.repetition?
         rtdc.revision_types_de_champ.each do |rtdc_in_repetition|
-          list << [rtdc_in_repetition.type_de_champ, rtdc.type_de_champ] if rtdc_in_repetition.type_de_champ.piece_justificative?
+          if rtdc_in_repetition.type_de_champ.piece_justificative?
+            to_add = []
+            to_add << rtdc_in_repetition.type_de_champ
+            to_add << rtdc.type_de_champ if with_repetition_parent
+            list << to_add
+          end
         end
       else
         list << [rtdc.type_de_champ]
