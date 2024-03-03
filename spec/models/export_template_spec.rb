@@ -38,6 +38,31 @@ describe ExportTemplate do
         { type: :piece_justificative, libelle: "Justificatif de domicile", mandatory: true, stable_id: 910 },
       ]
     end
+    it 'set default values' do
+      export_template.set_default_values
+      expect(export_template.content).to eq({
+        "pdf_name"=> {
+          "type"=>"doc",
+          "content" => [
+            {"type"=>"paragraph", "content"=>[{"text"=>"export_", "type"=>"text"}, {"type"=>"mention", "attrs"=>ExportTemplate::DOSSIER_ID_TAG.stringify_keys}]}
+          ]
+        },
+        "default_dossier_directory" => {
+          "type" => "doc",
+          "content" => [
+            {"type"=>"paragraph", "content"=> [{"text"=>"dossier-", "type"=>"text"}, {"type"=>"mention", "attrs"=>ExportTemplate::DOSSIER_ID_TAG.stringify_keys}]}
+          ]
+        },
+        "pjs"=>
+        [
+
+          {
+            "stable_id" => "910",
+            "path" =>  {"type" =>"doc", "content" => [{"type"=>"paragraph", "content"=>[{"text"=>"justificatif-de-domicile-", "type"=>"text"}, {"type"=>"mention", "attrs"=>ExportTemplate::DOSSIER_ID_TAG.stringify_keys}]}]}
+          }
+        ]
+      })
+    end
   end
 
   describe '#tiptap_default_dossier_directory' do
