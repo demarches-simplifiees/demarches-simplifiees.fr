@@ -135,4 +135,123 @@ describe ExportTemplate do
       end
     end
   end
+
+  describe '#valid?' do
+    let(:subject) { build(:export_template, content:) }
+    let(:ddd_text) { "DoSSIER" }
+    let(:mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
+    let(:ddd_mention) { mention }
+    let(:pdf_text) { "export" }
+    let(:pdf_mention) { mention }
+    let(:pj_text) { "_pj" }
+    let(:pj_mention) { mention }
+    let(:content) do
+      {
+        "pdf_name" => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "text" => pdf_text, "type" => "text" }, pdf_mention] }
+          ]
+        },
+        "default_dossier_directory" => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "text" => ddd_text, "type" => "text" }, ddd_mention] }
+          ]
+        },
+        "pjs" =>
+        [
+          { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] }, stable_id: "3" }
+        ]
+      }
+    end
+
+    context 'with valid default dossier directory' do
+      it 'has no error for default_dossier_directory' do
+        expect(subject.valid?).to be_truthy
+        expect(subject.errors[:default_dossier_directory]).not_to be_present
+      end
+    end
+
+    context 'with no ddd text' do
+      let(:ddd_text) { " " }
+      context 'with mention' do
+        let(:ddd_mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
+        it 'has no error for default_dossier_directory' do
+          expect(subject.valid?).to be_truthy
+          expect(subject.errors[:default_dossier_directory]).not_to be_present
+        end
+      end
+
+      context 'without mention' do
+        let(:ddd_mention) { { "type" => "mention", "attrs" => {} } }
+        it "add error for default_dossier_directory" do
+          expect(subject.valid?).to be_falsey
+          expect(subject.errors[:default_dossier_directory]).to be_present
+        end
+      end
+
+      context 'with mention but without numéro de dossier' do
+        let(:ddd_mention) { { "type" => "mention", "attrs" => { "id" => 'dossier_service_name', "label" => "nom du service" } } }
+        it "add error for default_dossier_directory" do
+          expect(subject.valid?).to be_falsey
+          expect(subject.errors[:default_dossier_directory]).to be_present
+        end
+      end
+    end
+
+    context 'with valid pdf name' do
+      it 'has no error for pdf name' do
+        expect(subject.valid?).to be_truthy
+        expect(subject.errors[:pdf_name]).not_to be_present
+      end
+    end
+
+    context 'with pdf text and without mention' do
+      let(:pdf_text) { "export" }
+      let(:pdf_mention) { { "type" => "mention", "attrs" => {} } }
+
+      it "add no error" do
+        expect(subject.valid?).to be_truthy
+      end
+    end
+
+    context 'with no pdf text' do
+      let(:pdf_text) { " " }
+
+      context 'with mention' do
+        it 'has no error for default_dossier_directory' do
+          expect(subject.valid?).to be_truthy
+          expect(subject.errors[:default_dossier_directory]).not_to be_present
+        end
+      end
+
+      context 'without mention' do
+        let(:pdf_mention) { { "type" => "mention", "attrs" => {} } }
+        it "add error for pdf name" do
+          expect(subject.valid?).to be_falsey
+          expect(subject.errors[:pdf_name]).to be_present
+        end
+      end
+    end
+
+    context 'with no pj text' do
+      let(:pj_text) { " " }
+
+      context 'with mention' do
+        it 'has no error for pj' do
+          expect(subject.valid?).to be_truthy
+          expect(subject.errors[:pj_3]).not_to be_present
+        end
+      end
+
+      context 'without mention' do
+        let(:pj_mention) { { "type" => "mention", "attrs" => {} } }
+        it "add error for pj" do
+          expect(subject.valid?).to be_falsey
+          expect(subject.errors[:pj_3]).to be_present
+        end
+      end
+    end
+  end
 end
