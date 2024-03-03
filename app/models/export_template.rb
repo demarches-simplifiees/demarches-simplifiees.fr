@@ -43,6 +43,13 @@ class ExportTemplate < ApplicationRecord
     content_for_stable_id.symbolize_keys.fetch(:path)
   end
 
+  def assign_pj_names(pj_params)
+    self.content["pjs"] = []
+    pj_params.each do |pj_param|
+      self.content["pjs"] << { stable_id: pj_param[0].delete_prefix("tiptap_pj_"), path: JSON.parse(pj_param[1]) }
+    end
+  end
+
   def pj_and_path(dossier, pj, index: 0, row_index: nil)
     [
       pj,

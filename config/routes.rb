@@ -429,6 +429,7 @@ Rails.application.routes.draw do
         resources :archives, only: [:index, :create]
 
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
+          resources :export_templates, only: [:new, :create, :edit, :update]
           resource :contact_information
           member do
             post 'add_instructeur'
