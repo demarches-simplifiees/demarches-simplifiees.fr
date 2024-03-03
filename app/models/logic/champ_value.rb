@@ -37,6 +37,7 @@ class Logic::ChampValue < Logic::Term
   def compute(champs)
     targeted_champ = champ(champs)
 
+    return nil if targeted_champ.nil?
     return nil if !targeted_champ.visible?
     return nil if targeted_champ.blank? & !targeted_champ.drop_down_other?
 
