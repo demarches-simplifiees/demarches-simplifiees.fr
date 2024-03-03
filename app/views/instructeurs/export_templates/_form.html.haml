@@ -21,7 +21,7 @@
       .fr-input-group{ data: { controller: 'tiptap' } }
         = f.label :tiptap_default_dossier_directory, class: "fr-label"
         .editor.mt-2{ data: { tiptap_target: 'editor' } }
-          = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input' }
+        = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
         %ul.mt-2.flex.wrap.flex-gap-1
           - @export_template.specific_tags.each do |tag|
             %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
@@ -30,7 +30,7 @@
       .fr-input-group{ data: { controller: 'tiptap' } }
         = f.label :tiptap_pdf_name, class: "fr-label"
         .editor.mt-2{ data: { tiptap_target: 'editor' } }
-          = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input' }
+        = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
         %ul.mt-2.flex.wrap.flex-gap-1
           - @export_template.specific_tags.each do |tag|
             %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
@@ -43,7 +43,7 @@
           .fr-input-group{ data: { controller: 'tiptap' } }
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
             .editor.mt-2{ data: { tiptap_target: 'editor' } }
-              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input' }
+              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
             %ul.mt-2.flex.wrap.flex-gap-1
               - @export_template.specific_tags.each do |tag|
                 %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
@@ -57,3 +57,17 @@
               = f.submit "Enregistrer", class: "fr-btn"
             %li
               = link_to "Annuler", instructeur_procedure_path(@procedure), class: "fr-btn fr-btn--secondary"
+  - if @export_template.sample_dossier
+    .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+      .export-template-preview.fr-p-2w.sticky--top
+        %h2.fr-h4 Aperçu
+        %ul.tree.fr-text--sm
+          %li= DownloadableFileService::EXPORT_DIRNAME
+          %li
+            %ul
+              %li
+                %span#preview_default_dossier_directory= @export_template.tiptap_convert(sample_dossier, "default_dossier_directory")
+                %ul
+                  %li#preview_pdf_name= @export_template.tiptap_convert(sample_dossier, "pdf_name")
+                  - @procedure.pieces_jointes_exportables_list.each do |pj|
+                    %li{id: "preview_pj_#{pj.stable_id}"}= @export_template.tiptap_convert_pj(sample_dossier, pj.stable_id)

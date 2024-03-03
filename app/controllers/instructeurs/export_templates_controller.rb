@@ -37,6 +37,14 @@ module Instructeurs
       end
     end
 
+    def preview
+      param = params.require(:export_template).keys.first
+      @preview_param = param.delete_prefix("tiptap_")
+      hash = JSON.parse(params[:export_template][param]).deep_symbolize_keys
+      export_template = ExportTemplate.new(kind: 'zip', groupe_instructeur: @groupe_instructeurs.first)
+      @preview_value = export_template.render_attributes_for(hash, @procedure.dossier_for_preview(current_instructeur))
+    end
+
     private
 
     def export_template_params
