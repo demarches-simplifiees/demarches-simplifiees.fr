@@ -1,0 +1,8 @@
+fr:
+  instructeurs:
+    export_templates:
+      new:
+        title: Nouveau modèle d'export
+      edit:
+        title: Modèle d'export
+

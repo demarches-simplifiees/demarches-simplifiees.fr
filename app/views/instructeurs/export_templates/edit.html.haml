@@ -1,0 +1,7 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                    [t('.title')]] }
+.fr-container
+  %h1 Mise à jour modèle d'export
+
+  = render partial: 'form', locals: { form_url: instructeur_export_template_path(@procedure, @export_template), groupe_instructeurs: @groupe_instructeurs }
