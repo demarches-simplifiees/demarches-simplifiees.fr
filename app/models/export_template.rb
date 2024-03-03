@@ -37,9 +37,11 @@ class ExportTemplate < ApplicationRecord
     content_for_pj_id(pj.stable_id)&.to_json
   end
 
-  def content_for_pj_id(stable_id)
-    content_for_stable_id = content["pjs"].find { _1.symbolize_keys[:stable_id] == stable_id.to_s }
-    content_for_stable_id.symbolize_keys.fetch(:path)
+  def assign_pj_names(pj_params)
+    self.content["pjs"] = []
+    pj_params.each do |pj_param|
+      self.content["pjs"] << { stable_id: pj_param[0].delete_prefix("tiptap_pj_"), path: JSON.parse(pj_param[1]) }
+    end
   end
 
   def attachment_and_path(dossier, attachment, index: 0, row_index: nil)

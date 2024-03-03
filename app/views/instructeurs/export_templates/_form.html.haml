@@ -1,0 +1,59 @@
+.fr-grid-row.fr-grid-row--gutters
+  .fr-col-12.fr-col-md-8
+    = form_with url: form_url, model: @export_template, local: true do |f|
+      = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field) do |c|
+        - c.with_hint do
+          Indiquez le nom à utiliser pour ce modèle d'export
+
+      - if groupe_instructeurs.many?
+        .fr-input-group
+          = f.label :groupe_instructeur_id, class: 'fr-label' do
+            = f.object.class.human_attribute_name(:groupe_instructeur_id)
+            = render EditableChamp::AsteriskMandatoryComponent.new
+            %span.fr-hint-text
+              Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+          = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+      - else
+        = f.hidden_field :groupe_instructeur_id
+
+      = f.hidden_field :kind
+
+      .fr-input-group{ data: { controller: 'tiptap' } }
+        = f.label :tiptap_default_dossier_directory, class: "fr-label"
+        .editor.mt-2{ data: { tiptap_target: 'editor' } }
+          = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input' }
+        %ul.mt-2.flex.wrap.flex-gap-1
+          - @export_template.specific_tags.each do |tag|
+            %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
+              = tag[:libelle]
+
+      .fr-input-group{ data: { controller: 'tiptap' } }
+        = f.label :tiptap_pdf_name, class: "fr-label"
+        .editor.mt-2{ data: { tiptap_target: 'editor' } }
+          = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input' }
+        %ul.mt-2.flex.wrap.flex-gap-1
+          - @export_template.specific_tags.each do |tag|
+            %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
+              = tag[:libelle]
+
+      - if @all_pj.any?
+        %h3 Pieces justificatives
+
+        - @all_pj.each do |pj|
+          .fr-input-group{ data: { controller: 'tiptap' } }
+            = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
+            .editor.mt-2{ data: { tiptap_target: 'editor' } }
+              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input' }
+            %ul.mt-2.flex.wrap.flex-gap-1
+              - @export_template.specific_tags.each do |tag|
+                %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
+                  = tag[:libelle]
+
+
+      .fixed-footer
+        .fr-container
+          %ul.fr-btns-group.fr-btns-group--inline-md
+            %li
+              = f.submit "Enregistrer", class: "fr-btn"
+            %li
+              = link_to "Annuler", instructeur_procedure_path(@procedure), class: "fr-btn fr-btn--secondary"
