@@ -125,10 +125,6 @@ Rails.application.routes.draw do
     passwords: 'super_admins/passwords'
   }
 
-  namespace :super_admins do
-    resources :release_notes
-  end
-
   get 'super_admins/edit_otp', to: 'super_admins#edit_otp', as: 'edit_super_admin_otp'
   put 'super_admins/enable_otp', to: 'super_admins#enable_otp', as: 'enable_super_admin_otp'
 
@@ -651,8 +647,6 @@ Rails.application.routes.draw do
       end
     end
   end
-
-  resources :release_notes, only: [:index]
 
   if Rails.env.test?
     scope 'test/api_geo' do
