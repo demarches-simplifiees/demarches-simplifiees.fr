@@ -3,10 +3,21 @@ class Champs::AddressChamp < Champs::TextChamp
     data.present?
   end
 
+  def feature
+    data.to_json if full_address?
+  end
+
   def feature=(value)
-    return if value.blank?
-    feature = JSON.parse(value)
-    self.data = APIGeoService.parse_ban_address(feature)
+    if value.blank?
+      self.data = nil
+    else
+      feature = JSON.parse(value)
+      if feature.key?('properties')
+        self.data = APIGeoService.parse_ban_address(feature)
+      else
+        self.data = feature
+      end
+    end
   rescue JSON::ParserError
     self.data = nil
   end
