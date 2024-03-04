@@ -10,7 +10,7 @@ class Champ < ApplicationRecord
   # here because otherwise we can't easily use includes in our queries.
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
-  has_many :champs, -> { ordered }, foreign_key: :parent_id, inverse_of: :parent
+  has_many :champs, foreign_key: :parent_id, inverse_of: :parent
 
   delegate :procedure, to: :dossier
 
@@ -70,14 +70,6 @@ class Champ < ApplicationRecord
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
-  scope :ordered, -> do
-    includes(:type_de_champ)
-      .joins(dossier: { revision: :revision_types_de_champ })
-      .where('procedure_revision_types_de_champ.type_de_champ_id = champs.type_de_champ_id')
-      .order(:row_id, :position)
-  end
-  scope :public_ordered, -> { public_only.ordered }
-  scope :private_ordered, -> { private_only.ordered }
   scope :root, -> { where(parent_id: nil) }
   scope :prefilled, -> { where(prefilled: true) }
 
@@ -97,10 +89,6 @@ class Champ < ApplicationRecord
 
   def stable_id_with_row
     [row_id, stable_id].compact
-  end
-
-  def sections
-    @sections ||= dossier.sections_for(self)
   end
 
   # used for the `required` html attribute

@@ -3,35 +3,35 @@ describe TreeableConcern do
     include TreeableConcern
 
     attr_reader :root
-    def initialize(champs:)
-      @root = to_tree(champs:)
+    def initialize(types_de_champ:)
+      @root = to_tree(types_de_champ:)
     end
   end
 
-  subject { ChampsToTree.new(champs: champs).root }
+  subject { ChampsToTree.new(types_de_champ:).root }
   describe "to_tree" do
-    let(:header_1) { build(:champ_header_section_level_1) }
-    let(:header_1_2) { build(:champ_header_section_level_2) }
-    let(:header_2) { build(:champ_header_section_level_1) }
-    let(:champ_text) { build(:champ_text) }
-    let(:champ_textarea) { build(:champ_textarea) }
-    let(:champ_explication) { build(:champ_explication) }
-    let(:champ_communes) { build(:champ_communes) }
+    let(:header_1) { build(:champ_header_section_level_1).type_de_champ }
+    let(:header_1_2) { build(:champ_header_section_level_2).type_de_champ }
+    let(:header_2) { build(:champ_header_section_level_1).type_de_champ }
+    let(:champ_text) { build(:champ_text).type_de_champ }
+    let(:champ_textarea) { build(:champ_textarea).type_de_champ }
+    let(:champ_explication) { build(:champ_explication).type_de_champ }
+    let(:champ_communes) { build(:champ_communes).type_de_champ }
 
     context 'without section' do
-      let(:champs) do
+      let(:types_de_champ) do
         [
           champ_text, champ_textarea
         ]
       end
       it 'inlines champs at root level' do
-        expect(subject.size).to eq(champs.size)
-        expect(subject).to eq(champs)
+        expect(subject.size).to eq(types_de_champ.size)
+        expect(subject).to eq(types_de_champ)
       end
     end
 
     context 'with header_section and champs' do
-      let(:champs) do
+      let(:types_de_champ) do
         [
           header_1,
           champ_explication,
@@ -51,7 +51,7 @@ describe TreeableConcern do
     end
 
     context 'leading champs, and in between sections only' do
-      let(:champs) do
+      let(:types_de_champ) do
         [
           champ_text,
           champ_textarea,
@@ -74,7 +74,7 @@ describe TreeableConcern do
     end
 
     context 'with one sub sections' do
-      let(:champs) do
+      let(:types_de_champ) do
         [
           header_1,
           champ_explication,
@@ -94,11 +94,11 @@ describe TreeableConcern do
     end
 
     context 'with consecutive subsection' do
-      let(:header_1) { build(:champ_header_section_level_1) }
-      let(:header_1_2_1) { build(:champ_header_section_level_2) }
-      let(:header_1_2_2) { build(:champ_header_section_level_2) }
-      let(:header_1_2_3) { build(:champ_header_section_level_2) }
-      let(:champs) do
+      let(:header_1) { build(:champ_header_section_level_1).type_de_champ }
+      let(:header_1_2_1) { build(:champ_header_section_level_2).type_de_champ }
+      let(:header_1_2_2) { build(:champ_header_section_level_2).type_de_champ }
+      let(:header_1_2_3) { build(:champ_header_section_level_2).type_de_champ }
+      let(:types_de_champ) do
        [
          header_1,
          header_1_2_1,
@@ -123,9 +123,9 @@ describe TreeableConcern do
     end
 
     context 'with one sub sections and one subsub section' do
-      let(:header_1_2_3) { build(:champ_header_section_level_3) }
+      let(:header_1_2_3) { build(:champ_header_section_level_3).type_de_champ }
 
-      let(:champs) do
+      let(:types_de_champ) do
         [
           header_1,
           champ_explication,

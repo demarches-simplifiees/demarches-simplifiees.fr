@@ -36,8 +36,21 @@ class ChampSerializer < ActiveModel::Serializer
     object.etablissement&.entreprise
   end
 
+  class Row < Hashie::Dash
+    property :index
+    property :champs
+
+    def read_attribute_for_serialization(attribute)
+      self[attribute]
+    end
+  end
+
   def rows
-    object.rows_for_export
+    object.dossier
+      .champs_for_revision(scope: object.type_de_champ)
+      .group_by(&:row_id)
+      .values
+      .map.with_index(1) { |champs, index| Row.new(index:, champs:) }
   end
 
   def include_etablissement?

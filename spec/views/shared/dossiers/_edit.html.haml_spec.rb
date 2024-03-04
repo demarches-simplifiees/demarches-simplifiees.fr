@@ -6,29 +6,34 @@ describe 'shared/dossiers/edit', type: :view do
 
   subject { render 'shared/dossiers/edit', dossier: dossier, apercu: false }
 
-  context 'when there are some champs' do
-    let(:dossier) { create(:dossier) }
-    let(:champ_checkbox) { create(:champ_checkbox, dossier: dossier, value: 'true') }
-    let(:champ_header_section) { create(:champ_header_section, dossier: dossier, value: 'Section') }
-    let(:champ_explication) { create(:champ_explication, dossier: dossier, value: 'mazette') }
-    let(:champ_dossier_link) { create(:champ_dossier_link, dossier: dossier, value: dossier.id) }
-    let(:champ_textarea) { create(:champ_textarea, dossier: dossier, value: 'Some long text in a textarea.') }
-    let(:champs) { [champ_checkbox, champ_header_section, champ_explication, champ_dossier_link, champ_textarea] }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
 
-    before { dossier.champs_public << champs }
+  context 'when there are some champs' do
+    let(:champs_by_stable_id_with_row) { dossier.champs_by_stable_id_with_row }
+
+    let(:type_de_champ_header_section) { procedure.draft_types_de_champ_public.find(&:header_section?) }
+    let(:type_de_champ_explication) { procedure.draft_types_de_champ_public.find(&:explication?) }
+    let(:type_de_champ_dossier_link) { procedure.draft_types_de_champ_public.find(&:dossier_link?) }
+    let(:type_de_champ_checkbox) { procedure.draft_types_de_champ_public.find(&:checkbox?) }
+    let(:type_de_champ_textarea) { procedure.draft_types_de_champ_public.find(&:textarea?) }
+
+    let(:champ_checkbox) { champs_by_stable_id_with_row[[type_de_champ_checkbox.stable_id]] }
+    let(:champ_dossier_link) { champs_by_stable_id_with_row[[type_de_champ_dossier_link.stable_id]] }
+    let(:champ_textarea) { champs_by_stable_id_with_row[[type_de_champ_textarea.stable_id]] }
+
+    let(:types_de_champ_public) { [{ type: :checkbox }, { type: :header_section }, { type: :explication }, { type: :dossier_link }, { type: :textarea }] }
 
     it 'renders labels and editable values of champs' do
       expect(subject).to have_field(champ_checkbox.libelle, checked: true)
-      expect(subject).to have_css(".header-section", text: champ_header_section.libelle)
-      expect(subject).to have_text(champ_explication.libelle)
-      expect(subject).to have_field(champ_dossier_link.libelle, with: champ_dossier_link.value)
+      expect(subject).to have_css(".header-section", text: type_de_champ_header_section.libelle)
+      expect(subject).to have_text(type_de_champ_explication.libelle)
+      expect(subject).to have_field(type_de_champ_dossier_link.libelle, with: champ_dossier_link.value)
       expect(subject).to have_field(champ_textarea.libelle, with: champ_textarea.value)
     end
 
     context "with standard champs" do
-      let(:champ_email) { create(:champ_email, dossier: dossier) }
-      let(:champ_phone) { create(:champ_phone, dossier: dossier) }
-      let(:champs) { [champ_email, champ_phone] }
+      let(:types_de_champ_public) { [{ type: :email }, { type: :phone }] }
 
       it "does not render basic placeholders" do
         expect(subject).not_to have_css('input[type="email"][placeholder$="exemple.fr"]')
@@ -38,16 +43,17 @@ describe 'shared/dossiers/edit', type: :view do
   end
 
   context 'with a single-value list' do
-    let(:dossier) { create(:dossier) }
-    let(:type_de_champ) { create(:type_de_champ_drop_down_list, mandatory: mandatory, procedure: dossier.procedure) }
-    let(:champ) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: type_de_champ, value: value) }
+    let(:types_de_champ_public) { [{ type: :drop_down_list, options:, mandatory: }] }
+    let(:champ) { dossier.champs_public.first }
+    let(:type_de_champ) { champ.type_de_champ }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
     let(:mandatory) { true }
-
-    before { dossier.champs_public << champ }
+    let(:options) { nil }
 
     context 'when the list is short' do
       let(:value) { 'val1' }
+
+      before { champ.update(value:) }
 
       it 'renders the list as radio buttons' do
         expect(subject).to have_selector('input[type=radio]', count: enabled_options.count)
@@ -65,7 +71,9 @@ describe 'shared/dossiers/edit', type: :view do
 
     context 'when the list is long' do
       let(:value) { 'alpha' }
-      let(:type_de_champ) { create(:type_de_champ_drop_down_list, :long, procedure: dossier.procedure) }
+      let(:options) { [:long] }
+
+      before { champ.update(value:) }
 
       it 'renders the list as a dropdown' do
         expect(subject).to have_select(type_de_champ.libelle, options: enabled_options + [''])
@@ -74,21 +82,18 @@ describe 'shared/dossiers/edit', type: :view do
   end
 
   context 'with a multiple-values list' do
-    let(:dossier) { create(:dossier) }
-    let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure: dossier.procedure, drop_down_list_value: drop_down_list_value) }
-    let(:champ) { create(:champ_multiple_drop_down_list, dossier: dossier, type_de_champ: type_de_champ, value: champ_value) }
+    let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, options: }] }
+    let(:champ) { dossier.champs.first }
+    let(:type_de_champ) { champ.type_de_champ }
     let(:options) { type_de_champ.drop_down_list_options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
 
-    before { dossier.champs_public << champ }
-
     context 'when the list is short' do
-      let(:drop_down_list_value) { ['valid', 'invalid', 'not sure yet'].join("\r\n") }
-      let(:champ_value) { ['invalid'].to_json }
+      let(:options) { ['valid', 'invalid', 'not sure yet'] }
 
       it 'renders the list as checkboxes' do
         expect(subject).to have_selector('input[type=checkbox]', count: enabled_options.count)
-        expect(subject).to have_selector('input[type=checkbox][checked=checked]', count: 1)
+        expect(subject).to have_selector('input[type=checkbox][checked=checked]', count: 2)
       end
 
       it 'adds an extra hidden input, to send a blank value even when all checkboxes are unchecked' do
@@ -97,8 +102,7 @@ describe 'shared/dossiers/edit', type: :view do
     end
 
     context 'when the list is long' do
-      let(:drop_down_list_value) { ['peach', 'banana', 'pear', 'apricot', 'apple', 'grapefruit'].join("\r\n") }
-      let(:champ_value) { ['banana', 'grapefruit'].to_json }
+      let(:options) { ['peach', 'banana', 'pear', 'apricot', 'apple', 'grapefruit'] }
 
       it 'renders the list as a multiple-selection dropdown' do
         expect(subject).to have_selector('select')
@@ -107,13 +111,11 @@ describe 'shared/dossiers/edit', type: :view do
   end
 
   context 'with a mandatory piece justificative' do
-    let(:dossier) { create(:dossier) }
-    let(:type_de_champ) { create(:type_de_champ_piece_justificative, procedure: dossier.procedure, mandatory: true) }
-    let(:champ) { create(:champ_piece_justificative, dossier: dossier, type_de_champ: type_de_champ) }
+    let(:types_de_champ_public) { [{ type: :piece_justificative, mandatory: true }] }
+    let(:champ) { dossier.champs.first }
 
     context 'when dossier is en construction' do
-      let(:dossier) { create(:dossier, :en_construction) }
-      before { dossier.champs_public << champ }
+      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
 
       it 'can delete a piece justificative' do
         expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
@@ -121,10 +123,6 @@ describe 'shared/dossiers/edit', type: :view do
     end
 
     context 'when dossier is brouillon' do
-      before do
-        dossier.champs_public << champ
-      end
-
       it 'can delete a piece justificative' do
         expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
       end
@@ -132,16 +130,11 @@ describe 'shared/dossiers/edit', type: :view do
   end
 
   context 'with a routed procedure' do
-    let(:procedure_routee) do
-      create(:procedure, :routee)
-    end
-    let!(:drop_down_tdc) { create(:type_de_champ_drop_down_list, procedure: procedure_routee, drop_down_options: options) }
-    let(:options) { procedure_routee.groupe_instructeurs.pluck(:label) }
-    let(:dossier) { create(:dossier, procedure: procedure_routee) }
-    let(:champs) { [champ_drop_down] }
-    let(:champ_drop_down) { create(:champ_drop_down_list, dossier: dossier, type_de_champ: drop_down_tdc, value: options.first) }
-
-    before { dossier.champs_public << champs }
+    let(:groupe_instructeur) { create(:groupe_instructeur) }
+    let(:procedure) { create(:procedure, :routee, groupe_instructeurs: [groupe_instructeur], types_de_champ_public: [{ type: :drop_down_list, options: }]) }
+    let(:options) { [groupe_instructeur.label] }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:champ_drop_down) { dossier.champs.first }
 
     it 'renders the libelle of the type de champ used for routing' do
       expect(subject).to include(champ_drop_down.libelle)

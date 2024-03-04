@@ -16,8 +16,4 @@ class Champs::HeaderSectionChamp < Champ
   def libelle_with_section_index?
     libelle =~ /^\d/
   end
-
-  def section_index
-    sections.index(self) + 1
-  end
 end

@@ -13,15 +13,15 @@
 
 %h2 Formulaire
 
-- champs = @dossier.champs_public
-- if champs.any? || @dossier.procedure.routing_enabled?
-  = render partial: "shared/dossiers/champs", locals: { champs: champs, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
+- types_de_champ_public = @dossier.revision.types_de_champ_public
+- if types_de_champ_public.any? || @dossier.procedure.routing_enabled?
+  = render partial: "shared/dossiers/champs", locals: { types_de_champ: types_de_champ_public, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 
 %h2 Annotations privées
 
-- champs_annotations_privees = @dossier.champs_private
-- if champs_annotations_privees.any?
-  = render partial: "shared/dossiers/champs", locals: { champs: champs_annotations_privees, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
+- types_de_champ_private = @dossier.revision.types_de_champ_private
+- if types_de_champ_private.any?
+  = render partial: "shared/dossiers/champs", locals: { types_de_champ: types_de_champ_private, dossier: @dossier, demande_seen_at: nil, profile: 'instructeur' }
 - else
   Aucune annotation privée
 

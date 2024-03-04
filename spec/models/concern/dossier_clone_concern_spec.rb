@@ -1,20 +1,23 @@
 RSpec.describe DossierCloneConcern do
   let(:procedure) do
-    create(:procedure, types_de_champ_public: [
+    create(:procedure, types_de_champ_public:, types_de_champ_private:).tap(&:publish!)
+  end
+  let(:types_de_champ_public) do
+    [
       { type: :text, libelle: "Un champ text", stable_id: 99 },
       { type: :text, libelle: "Un autre champ text", stable_id: 991 },
       { type: :yes_no, libelle: "Un champ yes no", stable_id: 992 },
       { type: :repetition, libelle: "Un champ répétable", stable_id: 993, mandatory: true, children: [{ type: :text, libelle: 'Nom', stable_id: 994 }] }
-    ])
+    ]
   end
+  let(:types_de_champ_private) { [] }
   let(:dossier) { create(:dossier, :en_construction, procedure:) }
   let(:forked_dossier) { dossier.find_or_create_editing_fork(dossier.user) }
 
-  before { procedure.publish! }
-
   describe '#clone' do
-    let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+    let(:types_de_champ_public) { [{}] }
+    let(:types_de_champ_private) { [{}] }
     let(:fork) { false }
     let(:new_dossier) { dossier.clone(fork:) }
 
@@ -137,9 +140,9 @@ RSpec.describe DossierCloneConcern do
        end
 
         context 'for Champs::PieceJustificative, original_champ.piece_justificative_file is duped' do
-          let(:dossier) { create(:dossier) }
-          let(:champ_piece_justificative) { create(:champ_piece_justificative, dossier_id: dossier.id) }
-          before { dossier.champs_public << champ_piece_justificative }
+          let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+          let(:champ_piece_justificative) { dossier.champs_public.first }
+
           it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.first.blob).to eq(champ_piece_justificative.piece_justificative_file.first.blob) }
         end
 
@@ -181,8 +184,8 @@ RSpec.describe DossierCloneConcern do
       it { expect(new_dossier.champs_public[0].updated_at).to eq(dossier.champs_public[0].updated_at) }
 
       context "piece justificative champ" do
-        let(:champ_pj) { create(:champ_piece_justificative, dossier_id: dossier.id) }
-        before { dossier.champs_public << champ_pj.reload }
+        let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+        let(:champ_pj) { dossier.champs_public.first }
 
         it {
           champ_pj_fork = Champs::PieceJustificativeChamp.where(dossier: new_dossier).first

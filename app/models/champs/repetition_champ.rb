@@ -3,7 +3,13 @@ class Champs::RepetitionChamp < Champ
   delegate :libelle_for_export, to: :type_de_champ
 
   def rows
-    champs.group_by(&:row_id).values
+    dossier
+      .champs_for_revision(scope: type_de_champ)
+      .group_by(&:row_id).values
+  end
+
+  def row_ids
+    rows.map { _1.first.row_id }
   end
 
   def add_row(revision)
@@ -35,13 +41,15 @@ class Champs::RepetitionChamp < Champ
   end
 
   def rows_for_export
-    rows.each.with_index(1).map do |champs, index|
-      Champs::RepetitionChamp::Row.new(index: index, dossier_id: dossier_id.to_s, champs: champs)
+    champs = dossier.champs_by_stable_id_with_row
+    row_ids.each.with_index(1).map do |row_id, index|
+      Champs::RepetitionChamp::Row.new(index: index, row_id:, dossier_id: dossier_id.to_s, champs:)
     end
   end
 
   class Row < Hashie::Dash
     property :index
+    property :row_id
     property :dossier_id
     property :champs
 
@@ -53,7 +61,7 @@ class Champs::RepetitionChamp < Champ
       [
         ['Dossier ID', :dossier_id],
         ['Ligne', :index]
-      ] + Dossier.champs_for_export(champs, types_de_champ)
+      ] + Dossier.champs_for_export(types_de_champ, champs, row_id)
     end
   end
 end

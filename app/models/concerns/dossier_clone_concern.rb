@@ -42,10 +42,10 @@ module DossierCloneConcern
   end
 
   def make_diff(editing_fork)
-    origin_champs_index = champs_public_all.index_by(&:stable_id_with_row)
-    forked_champs_index = editing_fork.champs_public_all.index_by(&:stable_id_with_row)
+    origin_champs_index = champs_for_revision(scope: :public).index_by(&:stable_id_with_row)
+    forked_champs_index = editing_fork.champs_for_revision(scope: :public).index_by(&:stable_id_with_row)
     updated_champs_index = editing_fork
-      .champs_public_all
+      .champs_for_revision(scope: :public)
       .filter { _1.updated_at > editing_fork.created_at }
       .index_by(&:stable_id_with_row)
 
@@ -80,7 +80,7 @@ module DossierCloneConcern
     dossier_attributes += [:groupe_instructeur_id] if fork
     relationships = [:individual, :etablissement]
 
-    cloned_champs = champs
+    cloned_champs = champs_for_revision
       .index_by(&:id)
       .transform_values { [_1, _1.clone(fork)] }
 
@@ -142,7 +142,7 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_index = (champs_public_all + diff[:added]).index_by(&:stable_id_with_row)
+    champs_index = (champs_for_revision(scope: :public) + diff[:added]).index_by(&:stable_id_with_row)
 
     diff[:added].each do |champ|
       if champ.child?

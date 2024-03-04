@@ -79,10 +79,10 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def unspecified_champs_for_dossier(dossier)
-    all_champs_with_libelle_index = (dossier.champs_public + dossier.champs_private).index_by { |champ| "tdc#{champ.stable_id}" }
+    champs_by_stable_id = dossier.champs_for_revision(root: true).index_by { "tdc#{_1.stable_id}" }
 
     used_tags.filter_map do |used_tag|
-      corresponding_champ = all_champs_with_libelle_index[used_tag]
+      corresponding_champ = champs_by_stable_id[used_tag]
 
       if corresponding_champ && corresponding_champ.blank?
         corresponding_champ

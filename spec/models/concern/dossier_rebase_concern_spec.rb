@@ -577,7 +577,7 @@ describe DossierRebaseConcern do
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }
 
-      def champ_libelles = dossier.champs_public.map(&:libelle)
+      def champ_libelles = dossier.revision.types_de_champ_public.map(&:libelle)
 
       context 'when a tdc is added in the middle' do
         before do
@@ -639,7 +639,7 @@ describe DossierRebaseConcern do
           tdc_to_update.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs_public.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+        it { expect { subject }.to change { dossier.revision.types_de_champ_public.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
         it { expect { subject }.to change { first_champ.class }.from(Champs::TextChamp).to(Champs::IntegerNumberChamp) }
         it { expect { subject }.to change { first_champ.value }.from('v1').to(nil) }
         it { expect { subject }.to change { first_champ.external_id }.from('123').to(nil) }
@@ -667,7 +667,8 @@ describe DossierRebaseConcern do
       let!(:dossier) { create(:dossier, procedure: procedure) }
       let(:repetition) { procedure.draft_revision.types_de_champ.find(&:repetition?) }
 
-      def child_libelles = dossier.champs_public.first.champs.map(&:libelle)
+      def child_libelles = dossier.revision.revision_types_de_champ_public.first.revision_types_de_champ.map(&:libelle)
+      def child_types_champ = dossier.revision.revision_types_de_champ_public.first.revision_types_de_champ.map(&:type_champ)
 
       context 'when a child tdc is added in the middle' do
         before do
@@ -708,7 +709,7 @@ describe DossierRebaseConcern do
           tdc_to_update.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.champs.map(&:type_champ) }.from(['text', 'text']).to(['integer_number', 'text']) }
+        it { expect { subject }.to change { child_types_champ }.from(['text', 'text']).to(['integer_number', 'text']) }
       end
 
       context 'when the parents type is changed' do

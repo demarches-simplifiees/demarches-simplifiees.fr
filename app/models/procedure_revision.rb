@@ -155,6 +155,22 @@ class ProcedureRevision < ApplicationRecord
     dossier
   end
 
+  def types_de_champ_for(scope: nil, root: false)
+    # We return an unordered collection
+    return types_de_champ if !root && scope.nil?
+    return types_de_champ.filter { scope == :public ? _1.public? : _1.private? } if !root
+
+    # We return an ordered collection
+    case scope
+    when :public
+      types_de_champ_public
+    when :private
+      types_de_champ_private
+    else
+      types_de_champ_public + types_de_champ_private
+    end
+  end
+
   def children_of(tdc)
     if revision_types_de_champ.loaded?
       parent_coordinate_id = revision_types_de_champ

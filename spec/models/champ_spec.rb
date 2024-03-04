@@ -83,11 +83,6 @@ describe Champ do
       expect(public_sections).not_to be_empty
       expect(private_sections).not_to be_empty
       expect(sections_in_repetition).not_to be_empty
-
-      expect(public_champ.sections).to eq(public_sections)
-      expect(private_champ.sections).to eq(private_sections)
-      expect(champ_in_repetition.sections).to eq(sections_in_repetition)
-      expect(standalone_champ.sections).to eq([])
     end
   end
 
