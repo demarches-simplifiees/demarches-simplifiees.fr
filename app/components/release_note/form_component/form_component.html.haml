@@ -1,0 +1,53 @@
+= form_for [:super_admins, release_note] do |f|
+  %fieldset#release_notes_fieldset.fr-fieldset{ 'data-controller': 'trix' }
+    .fr-fieldset__element
+      = render Dsfr::InputComponent.new(form: f, attribute: :released_on, input_type: :date_field) do |c|
+        - c.with_label { ReleaseNote.human_attribute_name(:released_on) }
+
+    .fr-fieldset__element
+      .fr-toggle
+        = f.check_box :published, class: "fr-toggle-input", id: dom_id(release_note, :published)
+        %label.fr-toggle__label{ for: dom_id(release_note, :published), data: { fr_checked_label: "Publié", fr_unchecked_label: "Brouillon" } }
+          Publier
+
+    .fr-fieldset__element
+      %fieldset.fr-fieldset{ "aria-labelledby": token_list(dom_id(release_note, "category_legend"), categories_errors_describedby_id), class: categories_fieldset_class, role: categories_error? ? "group" : nil }
+        %legend.fr-fieldset__legend.fr-fieldset__legend--regular{ id: dom_id(release_note, :category_legend) }
+          = ReleaseNote.human_attribute_name(:categories)
+          = render EditableChamp::AsteriskMandatoryComponent.new
+
+        - ReleaseNote::CATEGORIES.each do |category|
+          .fr-fieldset__element.fr-fieldset__element--inline
+            .fr-checkbox-group
+              = f.check_box :categories, { multiple: true, include_hidden: false, id: dom_id(release_note, "category_#{category}"), "aria-describedby" => "#{dom_id(release_note, "category_#{category}_messages")}" }, category, nil
+              %label.fr-label{ for: dom_id(release_note, "category_#{category}") }
+                = category.humanize
+
+        - if categories_error?
+          .fr-messages-group{ id: "checkboxes-error-messages", aria_live: "assertive" }
+            - if categories_full_messages_errors.one?
+              %p.fr-message.fr-message--error{ id: categories_errors_describedby_id }= categories_full_messages_errors.first
+            - else
+              .fr-error-text{ id: categories_errors_describedby_id }
+                %ul.list-style-type-none.fr-pl-0
+                  - categories_full_messages_errors.map do |error_message|
+                    %li= error_message
+
+
+    .fr-fieldset__element
+      .fr-input-group
+        = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :rich_text_area)
+
+
+    .fr-fieldset__element
+      %ul.fr-btns-group.fr-btns-group--inline.fr-btns-group--icon-left
+        %li= f.button "Valider", class: "fr-btn fr-icon-check-line"
+
+        - if release_note.persisted?
+          %li= link_to t(".new"), new_super_admins_release_note_path(date: release_note.released_on), class: "fr-btn fr-btn--secondary fr-icon-add-line"
+
+        - if release_note.persisted?
+          %li
+            = link_to t('.delete'), super_admins_release_note_path(release_note),
+              class: "fr-btn fr-btn--secondary fr-icon-delete-line",
+              data: { method: :delete, confirm: "Supprimer cette note ?" }
