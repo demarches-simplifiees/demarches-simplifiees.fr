@@ -1,5 +1,3 @@
-require 'sidekiq/web'
-
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 
@@ -97,7 +95,6 @@ Rails.application.routes.draw do
       mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
       match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
       mount MaintenanceTasks::Engine => "/maintenance_tasks"
-      mount Sidekiq::Web => "/sidekiq"
     end
 
     get 'import_procedure_tags' => 'procedures#import_data'
