@@ -33,6 +33,7 @@ gem 'dotenv-rails', require: 'dotenv/rails-now' # dotenv should always be loaded
 gem 'dry-monads'
 gem 'flipper'
 gem 'flipper-active_record'
+gem 'flipper-active_support_cache_store'
 gem 'flipper-ui'
 gem 'fugit'
 gem 'geocoder'
