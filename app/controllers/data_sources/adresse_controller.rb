@@ -18,7 +18,7 @@ class DataSources::AdresseController < ApplicationController
   private
 
   def fetch_results
-    Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: params[:q], limit: 10 })
+    Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: params[:q], limit: 10 }, timeout: 3)
   end
 
   def format_results(results)
