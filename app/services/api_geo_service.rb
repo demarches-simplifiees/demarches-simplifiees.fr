@@ -81,6 +81,10 @@ class APIGeoService
       communes(departement_code).find { _1[:name] == name }&.dig(:code)
     end
 
+    def commune_postal_codes(departement_code, code)
+      communes(departement_code).filter { _1[:code] == code }.map { _1[:postal_code] }
+    end
+
     def parse_ban_address(feature)
       return unless ban_address_schema.valid?(feature)
 
