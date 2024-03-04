@@ -22,13 +22,6 @@
     - if administrateur_signed_in?
       = vite_javascript_tag 'track-admin'
 
-    - if vite_legacy?
-      = vite_legacy_polyfill_tag
-      = vite_legacy_javascript_tag 'application'
-      - if administrateur_signed_in?
-        = vite_legacy_javascript_tag 'track-admin'
-      = vite_legacy_fallback_tag
-
     = preload_link_tag(asset_url("Marianne-Regular.woff2"))
     = preload_link_tag(asset_url("Spectral-Regular.ttf"))
 
