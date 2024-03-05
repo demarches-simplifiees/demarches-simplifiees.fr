@@ -7,7 +7,9 @@ module Maintenance
     end
 
     def process(element)
+      # test comment
       element.destroy
+
     end
 
     def count
