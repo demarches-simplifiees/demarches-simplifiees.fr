@@ -1,13 +1,11 @@
-%fieldset.fr-fieldset
-  %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-    Sélectionnez une des valeurs
-  .fr-fieldset__element.fr-fieldset__element--inline
-    .fr-radio-group
-      = @form.radio_button :value, Individual::GENDER_FEMALE, id: @champ.female_input_id
-      %label.fr-label{ for: @champ.female_input_id }
-        = Individual.human_attribute_name('gender.female')
-  .fr-fieldset__element.fr-fieldset__element--inline
-    .fr-radio-group
-      = @form.radio_button :value, Individual::GENDER_MALE, id: @champ.male_input_id
-      %label.fr-label{ for: @champ.male_input_id }
-        = Individual.human_attribute_name('gender.male')
+
+.fr-fieldset__element.fr-fieldset__element--inline
+  .fr-radio-group
+    = @form.radio_button :value, Individual::GENDER_FEMALE, id: @champ.female_input_id
+    %label.fr-label{ for: @champ.female_input_id }
+      = Individual.human_attribute_name('gender.female')
+.fr-fieldset__element.fr-fieldset__element--inline
+  .fr-radio-group
+    = @form.radio_button :value, Individual::GENDER_MALE, id: @champ.male_input_id
+    %label.fr-label{ for: @champ.male_input_id }
+      = Individual.human_attribute_name('gender.male')
