@@ -354,6 +354,15 @@ describe User, type: :model do
         expect(User.find_by(id: user.id)).to be_nil
       end
     end
+
+    context 'with fci' do
+      let(:user) { create(:user, :with_fci) }
+      let!(:fci) { create(:france_connect_information, user:) }
+      let(:reason) { :user_expired }
+      subject { user.delete_and_keep_track_dossiers_also_delete_user(super_admin, reason:) }
+
+      it { expect { subject }.not_to raise_error }
+    end
   end
 
   describe '#password_complexity' do
