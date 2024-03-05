@@ -1,6 +1,13 @@
 class FranceConnectParticulierClient < OpenIDConnect::Client
   def initialize(code = nil)
-    super(FRANCE_CONNECT[:particulier])
+    config = FRANCE_CONNECT[:particulier]
+
+    # TODO: remove this block when migration to new domain is done
+    if !Rails.env.test? && Current.host != ENV.fetch("APP_HOST")
+      config[:redirect_uri] = config[:redirect_uri].gsub(ENV.fetch("APP_HOST"), Current.host)
+    end
+
+    super(config)
 
     if code.present?
       self.authorization_code = code

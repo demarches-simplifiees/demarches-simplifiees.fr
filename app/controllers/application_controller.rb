@@ -28,6 +28,9 @@ class ApplicationController < ActionController::Base
     Current.request_id = request.uuid
     Current.user = current_user
     Current.browser = browser
+    # TODO: remove this block when migration to new domain is done
+    # headers['Host'] instead of request.host to keep the port (ex: localhost:3000)
+    Current.host = request.headers['Host']
   end
 
   def staging_authenticate
