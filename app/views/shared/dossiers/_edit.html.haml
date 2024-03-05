@@ -1,8 +1,8 @@
 - dossier_for_editing = dossier.en_construction? ? dossier.owner_editing_fork : dossier
 
-- if dossier.france_connect_information.present? && current_user.instructeur? && !current_user.owns_or_invite?(dossier)
+- if dossier.france_connected_with_one_identity?  && current_user.instructeur? && !current_user.owns_or_invite?(dossier)
   - content_for(:notice_info) do
-    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_information }
+    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_informations.first }
 
 
 .dossier-edit.container.counter-start-header-section

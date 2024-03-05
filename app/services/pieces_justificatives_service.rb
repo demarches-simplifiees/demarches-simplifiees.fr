@@ -38,7 +38,7 @@ class PiecesJustificativesService
     pdfs = []
 
     procedure = dossiers.first.procedure
-    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_information, avis: :expert, commentaires: [:instructeur, :expert])
+    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
     dossiers = DossierPreloader.new(dossiers).in_batches
     dossiers.each do |dossier|
       dossier.association(:procedure).target = procedure

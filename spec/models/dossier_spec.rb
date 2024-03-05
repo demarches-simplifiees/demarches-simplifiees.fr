@@ -307,14 +307,23 @@ describe Dossier, type: :model do
         end
 
         context 'and the user signs-in using France Connect' do
-          let(:france_connect_information) { build(:france_connect_information) }
-          let(:user) { build(:user, france_connect_information: france_connect_information) }
+          let(:user) { create(:user, france_connect_informations: [build(:france_connect_information)]) }
 
           it 'fills the individual with the informations from France Connect' do
             subject
             expect(dossier.individual.nom).to eq('DUBOIS')
             expect(dossier.individual.prenom).to eq('Angela Claire Louise')
             expect(dossier.individual.gender).to eq(Individual::GENDER_FEMALE)
+          end
+        end
+        context 'and the user signs-in using France Connect many times' do
+          let(:user) { create(:user, france_connect_informations: [build(:france_connect_information), build(:france_connect_information)]) }
+
+          it 'fills the individual with the informations from France Connect' do
+            subject
+            expect(dossier.individual.nom).to eq(nil)
+            expect(dossier.individual.prenom).to eq(nil)
+            expect(dossier.individual.gender).to eq(nil)
           end
         end
       end
@@ -2108,7 +2117,7 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier) }
 
     context 'user france connected' do
-      let(:dossier) { build(:dossier, user: build(:user, france_connect_information: build(:france_connect_information))) }
+      let(:dossier) { build(:dossier, user: build(:user, france_connect_informations: [build(:france_connect_information)])) }
       it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", true]) }
     end
 

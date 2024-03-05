@@ -348,7 +348,7 @@ describe User, type: :model do
         expect(dossier_termine.user).to be_nil
         expect(dossier_termine.user_email_for(:display)).to eq(user.email)
         expect(dossier_termine.valid?).to be_truthy
-        expect(dossier_termine.france_connect_information).to be_nil
+        expect(dossier_termine.france_connect_informations).to be_empty
         expect { dossier_termine.user_email_for(:notification) }.to raise_error(RuntimeError)
 
         expect(User.find_by(id: user.id)).to be_nil
@@ -356,12 +356,13 @@ describe User, type: :model do
     end
 
     context 'with fci' do
-      let(:user) { create(:user, :with_fci) }
-      let!(:fci) { create(:france_connect_information, user:) }
+      let!(:user) { create(:user, france_connect_informations: [build(:france_connect_information), build(:france_connect_information)]) }
       let(:reason) { :user_expired }
       subject { user.delete_and_keep_track_dossiers_also_delete_user(super_admin, reason:) }
 
       it { expect { subject }.not_to raise_error }
+      it { expect { subject }.to change { FranceConnectInformation.count }.from(2).to(0) }
+      it { expect { subject }.to change { User.count }.from(1).to(0) }
     end
   end
 

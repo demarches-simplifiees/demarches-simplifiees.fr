@@ -14,7 +14,7 @@ FactoryBot.define do
     end
 
     trait :with_fci do
-      association :france_connect_information
+      france_connect_informations { [association(:france_connect_information)] }
     end
   end
 end
