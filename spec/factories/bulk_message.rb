@@ -5,7 +5,6 @@ FactoryBot.define do
     dossier_state { Dossier.states.fetch(:brouillon) }
     sent_at { 1.day.ago }
     instructeur { association :instructeur }
-    groupe_instructeurs { [association(:groupe_instructeur, strategy: :build)] }
     procedure { association :procedure }
   end
 end

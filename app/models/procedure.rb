@@ -60,6 +60,8 @@ class Procedure < ApplicationRecord
   belongs_to :zone, optional: true
   has_and_belongs_to_many :zones
 
+  has_many :bulk_messages, dependent: :destroy
+
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message
   end

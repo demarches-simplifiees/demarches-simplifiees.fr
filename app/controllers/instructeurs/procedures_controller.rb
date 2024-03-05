@@ -283,7 +283,6 @@ module Instructeurs
         dossier_state: Dossier.states.fetch(:brouillon),
         sent_at: Time.zone.now,
         instructeur_id: current_instructeur.id,
-        groupe_instructeurs: GroupeInstructeur.for_dossiers(dossiers),
         procedure_id: @procedure.id
       )
       bulk_message.save!
