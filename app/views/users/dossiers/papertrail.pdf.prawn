@@ -75,7 +75,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
       pdf.text t('.dossier_state') + ' : ' + papertrail_dossier_state(@dossier), size: 10, character_spacing: -0.2, align: :justify
     end
 
-    service = @dossier.procedure.service
+    service = @dossier.service
     if service.present?
       pdf.fill_color black
       pdf.pad_top(30) { pdf.text t('.administrative_service'), size: 14, character_spacing: -0.2, align: :justify }
