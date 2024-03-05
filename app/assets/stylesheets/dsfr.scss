@@ -85,17 +85,6 @@ input[type="radio"] {
   }
 }
 
-// remove pointer cursor on textarea
-textarea {
-  cursor: auto;
-}
-
-fieldset {
-  border: none;
-  padding-left: 0;
-  padding-bottom: 0;
-}
-
 .fr-btn.fr-btn--icon-left[target="_blank"] {
   &::after {
     display: none;
