@@ -3,10 +3,11 @@
 module Maintenance
   class SpreadDossierDeletionTask < MaintenanceTasks::Task
     ERROR_OCCURED_AT = Date.new(2024, 2, 14)
+    ERROR_OCCURED_RANGE = ERROR_OCCURED_AT.at_midnight..(ERROR_OCCURED_AT + 1.day)
     SPREAD_DURATION_IN_DAYS = 150
 
     def collection
-      Dossier.where(termine_close_to_expiration_notice_sent_at: ERROR_OCCURED_AT)
+      Dossier.where(termine_close_to_expiration_notice_sent_at: ERROR_OCCURED_RANGE)
         .in_batches
     end
 
