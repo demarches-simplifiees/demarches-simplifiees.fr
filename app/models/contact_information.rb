@@ -21,4 +21,7 @@ class ContactInformation < ApplicationRecord
       "tel:#{telephone.gsub(/[[:blank:]]/, '')}"
     end
   end
+
+  def organisme
+  end
 end
