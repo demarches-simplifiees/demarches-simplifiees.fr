@@ -697,6 +697,9 @@ Rails.application.routes.draw do
 
   resources :release_notes, only: [:index]
 
+  resources :faq, only: [:index]
+  get '/faq/:category/:slug', to: 'faq#show', as: :faq
+
   if Rails.env.test?
     scope 'test/api_geo' do
       get 'regions' => 'api_geo_test#regions'
