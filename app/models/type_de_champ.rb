@@ -115,7 +115,8 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:communes),
     type_champs.fetch(:departements),
     type_champs.fetch(:regions),
-    type_champs.fetch(:epci)
+    type_champs.fetch(:epci),
+    type_champs.fetch(:address)
   ]
 
   PRIVATE_ONLY_TYPES = [

@@ -47,7 +47,7 @@ module Administrateurs
         tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
         rule_operator = :ds_eq
         create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)
-      when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:epci)
+      when TypeDeChamp.type_champs.fetch(:communes), TypeDeChamp.type_champs.fetch(:epci), TypeDeChamp.type_champs.fetch(:address)
         tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
         rule_operator = :ds_in_departement
         create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)

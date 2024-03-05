@@ -22,13 +22,13 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
     end
 
     context 'when the targeted_champ is unmanaged' do
-      let(:tdc) { create(:type_de_champ_address) }
+      let(:tdc) { create(:type_de_champ_email) }
       let(:source_tdcs) { [tdc] }
       let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(1))] }
 
       it do
         expect(page).to have_css('.errors-summary')
-        expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse » et ne peut pas être utilisé comme champ cible.")
+        expect(page).to have_content("Le champ « #{tdc.libelle} » est de type « adresse électronique » et ne peut pas être utilisé comme champ cible.")
       end
     end
 

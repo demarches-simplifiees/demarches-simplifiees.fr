@@ -814,6 +814,26 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         expect(procedure3.routing_enabled).to be_truthy
       end
     end
+
+    context 'with an address type de champ' do
+      let!(:procedure3) do
+        create(:procedure,
+               types_de_champ_public: [{ type: :address }],
+               administrateurs: [admin])
+      end
+
+      let!(:address_tdc) { procedure3.draft_revision.types_de_champ.first }
+
+      before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: address_tdc.stable_id } } }
+
+      it do
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
+        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
+        expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_in_departement(champ_value(address_tdc.stable_id), constant('01')))
+        expect(procedure3.routing_enabled).to be_truthy
+      end
+    end
   end
 
   describe '#wizard' do

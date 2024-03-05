@@ -97,7 +97,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
         [t('is', scope: 'logic'), Eq.name],
         [t('is_not', scope: 'logic'), NotEq.name]
       ]
-    when ChampValue::CHAMP_VALUE_TYPE.fetch(:commune_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:epci_enum)
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:commune_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:epci_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:address)
       [
         [t(InDepartementOperator.name, scope: 'logic.operators'), InDepartementOperator.name],
         [t(NotInDepartementOperator.name, scope: 'logic.operators'), NotInDepartementOperator.name],
@@ -149,7 +149,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
         id: input_id_for('value', row_index),
         class: 'fr-select'
       )
-    when :enum, :enums, :commune_enum, :epci_enum, :departement_enum
+    when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :address
       enums_for_select = left.options(@source_tdcs, operator_name)
 
       if right_invalid
