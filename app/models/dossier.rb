@@ -891,11 +891,11 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
+    RoutingEngine.compute(self)
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_construction))
     NotificationMailer.send_en_construction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     procedure.compute_dossiers_count
-    RoutingEngine.compute(self)
   end
 
   def submit_en_construction!
