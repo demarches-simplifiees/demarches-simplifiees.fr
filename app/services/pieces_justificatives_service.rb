@@ -85,7 +85,7 @@ class PiecesJustificativesService
     case @user_profile
     when Expert
       {
-        include_infos_administration: true,
+        include_infos_administration: false,
         include_avis_for_expert: true,
         only_for_expert: @user_profile
       }
