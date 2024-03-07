@@ -10,7 +10,7 @@ fr:
           procedure_close_content: "Vous pouvez toujours consulter votre dossier, mais il ne sera pas traité par l’administration"
           new_procedure_link: voir la démarche
           new_procedure_content: "Une nouvelle démarche est disponible, consultez-la ici :"
-          contact_service: Pour plus d’informations, veuillez vous rapprocher du service %{service_name}, disponible au %{service_phone_number} ou par email %{service_email}
+          contact_service_html: Pour plus d’informations, veuillez vous rapprocher du service %{service_name}, disponible au %{service_phone_number} ou par email à <a href="mailto:%{service_email}">%{service_email}</a>
           title: Votre dossier va expirer
           states:
             brouillon: Votre dossier est en brouillon, mais va bientôt expirer. Cela signifie qu’il va bientôt être supprimé sans avoir été déposé. Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez étendre la durée de conversation en cliquant sur le bouton ci-dessous.

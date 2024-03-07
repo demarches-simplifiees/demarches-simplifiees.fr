@@ -14,7 +14,7 @@
     = render partial: "users/dossiers/replacement_procedure", locals: { replacement_procedure: dossier.procedure.replaced_by_procedure }
 
     %p
-      = t('users.dossiers.header.banner.contact_service', service_name: dossier.procedure.service.nom, service_phone_number: dossier.procedure.service.telephone, service_email: dossier.procedure.service.email)
+      = t('users.dossiers.header.banner.contact_service_html', service_name: dossier.procedure.service.nom, service_phone_number: Phonelib.parse(dossier.procedure.service.telephone_url).full_national, service_email: dossier.procedure.service.email)
 
     - if !dossier.brouillon?
       = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
