@@ -9,12 +9,13 @@ class Dsfr::InputComponent < ApplicationComponent
   renders_one :describedby
   renders_one :label
 
-  def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true)
+  def initialize(form:, attribute:, input_type: :text_field, opts: {}, required: true, autoresize: true)
     @form = form
     @attribute = attribute
     @input_type = input_type
     @opts = opts
     @required = required
+    @autoresize = autoresize
   end
 
   def dsfr_champ_container
@@ -65,6 +66,10 @@ class Dsfr::InputComponent < ApplicationComponent
 
   def email?
     @input_type == :email_field
+  end
+
+  def autoresize?
+    @input_type == :text_area && @autoresize
   end
 
   def required?
