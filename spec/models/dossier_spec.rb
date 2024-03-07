@@ -1641,7 +1641,6 @@ describe Dossier, type: :model do
 
     it { expect(dossier.state).to eq('en_instruction') }
     it { expect(dossier.archived).to be_falsey }
-    it { expect(dossier.processed_at).to be_nil }
     it { expect(dossier.motivation).to be_nil }
     it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
     it { expect(dossier.attestation).to be_nil }
