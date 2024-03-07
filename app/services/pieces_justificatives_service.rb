@@ -46,7 +46,7 @@ class PiecesJustificativesService
       pdf = ApplicationController
         .render(template: 'dossiers/show', formats: [:pdf],
                 assigns: {
-                  acls: acl_for_dossier_export,
+                  acls: acl_for_dossier_export(procedure),
                   dossier: dossier
                 })
 
@@ -81,22 +81,25 @@ class PiecesJustificativesService
     end
   end
 
-  def acl_for_dossier_export
+  def acl_for_dossier_export(procedure)
     case @user_profile
     when Expert
       {
+        include_messagerie: procedure.allow_expert_messaging,
         include_infos_administration: false,
         include_avis_for_expert: true,
         only_for_expert: @user_profile
       }
     when Instructeur, Administrateur
       {
+        include_messagerie: true,
         include_infos_administration: true,
         include_avis_for_expert: true,
         only_for_export: false
       }
     when User
       {
+        include_messagerie: true,
         include_infos_administration: false,
         include_avis_for_expert: false, # should be true, expert can use the messagerie, why not provide avis ?
         only_for_expert: false
