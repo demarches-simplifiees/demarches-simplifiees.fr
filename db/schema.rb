@@ -145,6 +145,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.text "body"
     t.datetime "created_at", null: false
     t.text "footer"
+    t.jsonb "json_body"
     t.integer "procedure_id"
     t.text "title"
     t.datetime "updated_at", null: false

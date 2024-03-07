@@ -1,0 +1,30 @@
+= image_tag('centered_marianne.svg', alt: '', class: 'marianne')
+.header
+  .left
+    .bloc-marque
+      %p.intitule
+        PRÉFET<br />
+        DU VAL-<br />
+        DE-MARNE
+      = image_tag('liberte2.svg', alt: '', class: 'devise')
+
+    %p.issuer
+      Service Hébergement et Accès au Logement<br />
+      Bureau de l'Accès au Logement
+
+  .right
+    %p.direction
+      Direction Régionale et Interdépartementale<br />
+      de l'Hébergement et du Logement<br />
+      DRIHL Val-de-Marne
+
+    %p.date Créteil, le 20 mars 2023
+
+%h1.title ATTESTATION
+
+.main
+  = sanitize(@body)
+
+%p.footer
+  12/14 rue des Archives 94000 Créteil<br />
+  www.drihl.ile-de-france.developpement-durable.gouv.fr
