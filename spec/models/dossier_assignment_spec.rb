@@ -3,8 +3,6 @@ require 'rails_helper'
 RSpec.describe DossierAssignment, type: :model do
   include Logic
 
-  before { Flipper.enable(:routing_rules, procedure) }
-
   context 'Assignment from routing engine' do
     let(:procedure) do
       create(:procedure,

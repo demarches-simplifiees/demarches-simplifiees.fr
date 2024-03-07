@@ -28,5 +28,4 @@
               %td.operator= operator_tag(operator_name, targeted_champ, row_index)
               %td.value= right_operand_tag(targeted_champ, value, row_index)
               %td.delete-column= delete_condition_tag(row_index)
-      - if @groupe_instructeur.procedure.feature_enabled?(:multi_line_routing)
-        .flex.justify-end.mt-2= add_condition_tag
+      .flex.justify-end.mt-2= add_condition_tag
