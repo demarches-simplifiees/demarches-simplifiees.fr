@@ -17,6 +17,6 @@
               = render Dsfr::InputComponent.new(form: f, attribute: :otp_attempt, input_type: :number_field, opts: { inputmode: :numeric }, required: false)
 
           .fr-fieldset__element
-            %p= link_to "Mot de passe oublié ou réinitialisation 2FA ?", new_super_admin_password_path, class: "link"
+            %p= link_to "Mot de passe oublié ou réinitialisation 2FA ?", new_super_admin_password_path, class: "fr-link"
 
         = f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"

@@ -4,7 +4,7 @@
   .fr-container
     .fr-grid-row.fr-grid-row--gutters
 
-      .fr-col-lg.fr-p-6w.fr-background-alt--grey
+      .fr-col-lg.fr-p-6w.fr-background-alt--blue-france
 
         #session-new.auth-form.sign-in-form
           = form_for User.new, url: user_session_path do |f|
@@ -43,7 +43,7 @@
               .fr-fieldset__element
                 = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
 
-                %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "link"
+                %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "fr-link"
 
               .fr-fieldset__element
                 .auth-options

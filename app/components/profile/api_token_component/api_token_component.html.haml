@@ -51,7 +51,7 @@
       = f.button type: :submit, class: "fr-btn fr-btn--secondary" do
         = t('.add')
 
-  = form_for @api_token, namespace: dom_id(@api_token, :write_access), html: { class: 'form form-ds-fr-white mb-3', data: { turbo: true, controller: 'autosubmit' } } do |f|
+  = form_for @api_token, namespace: dom_id(@api_token, :write_access), html: { class: 'form mb-3', data: { turbo: true, controller: 'autosubmit' } } do |f|
     = f.label :write_access do
       = t('.token_procedures')
     %label.toggle-switch.no-margin

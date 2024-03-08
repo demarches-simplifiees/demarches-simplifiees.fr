@@ -1,6 +1,12 @@
 @import "colors";
 @import "constants";
 
+
+[data-fr-theme="dark"] .card {
+  background: none;
+  border: 1px solid var(--background-action-low-blue-france);
+}
+
 .card {
   padding: ($default-spacer * 3) ($default-spacer * 2);
   border: 1px solid $border-grey;
@@ -8,7 +14,6 @@
   background: #FFFFFF;
 
   .card-title {
-    color: $black;
     font-weight: bold;
     font-size: 20px;
     line-height: 1.5rem;

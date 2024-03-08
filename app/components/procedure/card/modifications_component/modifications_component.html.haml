@@ -1,12 +1,11 @@
 .fr-col-6.fr-col-md-4.fr-col-lg-3
   = link_to modifications_admin_procedure_path(@procedure), id: 'modifications', class: 'fr-tile fr-enlarge-link' do
     .fr-tile__body.flex.column.align-center.justify-between
+      %p.fr-badge.fr-badge--success Activée
       %div
-        %span.icon.accept
-        %p.fr-tile-status-accept Activée
-      %div
-        %h3.fr-h6.fr-mt-10v
+        .line-count.fr-my-1w
           %p.fr-tag= @procedure.revisions_count
+        %h3.fr-h6
           = t('.title', count: @procedure.revisions_count)
 
         %p.fr-tile-subtitle Historique des modifications du formulaire

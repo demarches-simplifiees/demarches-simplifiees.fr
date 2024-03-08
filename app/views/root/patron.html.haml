@@ -35,7 +35,6 @@
     %span.icon.retry
     %span.icon.download
     %span.icon.download-white
-    %span.icon.move-handle
     %span.icon.frown
     %span.icon.meh
     %span.icon.smile
@@ -50,7 +49,7 @@
           %label Mot de passe
           %input{ type: "password", value: "12345678" }
 
-        %h3.header-subsection Bouton radio verticaux
+        %h3.fr-h5 Bouton radio verticaux
         .radios.vertical
           = f.label :archived, value: true do
             = f.radio_button :archived, true
@@ -61,7 +60,7 @@
             Option B
             %p.notice Une autre option, pas mal non plus.
 
-        %h3.header-subsection Interrupteur
+        %h3.fr-h5 Interrupteur
         %label.toggle-switch
           = f.check_box :archived, class: 'toggle-switch-checkbox'
           %span.toggle-switch-control.round
@@ -231,8 +230,8 @@
   .sub-header
     .container
       Titre
-      %nav.tabs
-        %ul
+      %nav.fr-tabs
+        %ul.fr-tabs__list{ role: 'tablist' }
           = tab_item("Onglet actif", "#", active: true)
           = tab_item("Onglet inactif", "#")
           = tab_item("Onglet avec badge", "#", badge: 2)

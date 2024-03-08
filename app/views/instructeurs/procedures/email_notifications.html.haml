@@ -9,8 +9,10 @@
     = t('.title')
 
   = form_for @assign_to, url: update_email_notifications_instructeur_procedure_path(@procedure), html: { class: 'form' } do |form|
-    .explication
-      = t('.subtitle')
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      - c.body do
+        %p
+          = t('.subtitle')
 
     = form.label :email_notification, t('.for_each_file_submitted.title')
 

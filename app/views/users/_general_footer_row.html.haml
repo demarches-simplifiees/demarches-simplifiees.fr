@@ -5,3 +5,6 @@
     = link_to t("links.footer.mentions_legales.label"), MENTIONS_LEGALES_URL, title: t("links.footer.mentions_legales.title"), class: "fr-footer__bottom-link", rel: "noopener noreferrer"
   %li.fr-footer__bottom-item
     = link_to t("links.footer.cookies.label"), suivi_path, title: t("links.footer.cookies.title"), class: "fr-footer__bottom-link"
+  %li.fr-footer__bottom-item
+    %button.fr-footer__bottom-link.fr-icon-theme-fill.fr-btn--icon-left{ aria: {controls: "fr-theme-modal" }, data: {'fr-opened': "false" } }
+      = t('links.footer.display_params')

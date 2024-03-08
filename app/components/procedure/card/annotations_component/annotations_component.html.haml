@@ -6,13 +6,9 @@
           %span.icon.refuse
           %p.fr-tile-status-error À modifier
       - elsif @count == 0
-        %div
-          %span.icon.clock
-          %p.fr-tile-status-todo À configurer
+        %p.fr-badge.fr-badge--info À configurer
       - else
-        %div
-          %span.icon.accept
-          %p.fr-tile-status-accept Validé
+        %p.fr-badge.fr-badge--success Validé
       %div
         .line-count.fr-my-1w
           %p.fr-tag= @count

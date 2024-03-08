@@ -1,12 +1,21 @@
 @import "colors";
 @import "constants";
 
+
+[data-fr-theme="dark"] .message {
+  background: var(--background-action-low-blue-france);
+
+  &.inverted-background {
+    background: var(--background-action-low-blue-france);
+  }
+}
+
 .message {
   display: flex;
   align-items: flex-start;
   margin-bottom: $default-padding;
   padding: $default-padding;
-  background: #FFFFFF;
+  background: $light-grey;
   border-radius: 3px;
 
   &.inverted-background {

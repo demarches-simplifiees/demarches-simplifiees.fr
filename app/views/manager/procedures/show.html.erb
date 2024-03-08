@@ -89,7 +89,7 @@ as well as a link to its edit page.
           <% end %>
         <% end %>
         <% if attribute.name == 'tags' %>
-          <%= form_for procedure, url: add_tags_manager_procedure_path(procedure), html: { class: 'form procedure-form__column--form mt-1' }  do %>
+          <%= form_for procedure, url: add_tags_manager_procedure_path(procedure), html: { class: 'form procedure-form__column--form fr-background-alt--blue-france mt-1' }  do %>
             <%=  hidden_field_tag 'procedure[tags]', nil %>
             <%=  react_component("ComboMultiple",
                   options: Procedure.tags,
