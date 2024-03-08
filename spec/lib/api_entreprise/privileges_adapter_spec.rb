@@ -7,7 +7,7 @@ describe APIEntreprise::PrivilegesAdapter do
   subject { adapter }
 
   before do
-    stub_request(:get, "https://entreprise.api.gouv.fr/v2/privileges")
+    stub_request(:get, "https://entreprise.api.gouv.fr/privileges")
       .to_return(body: body, status: status)
     allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
   end
