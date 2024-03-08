@@ -25,29 +25,5 @@ module Types
     field :region_code, String, "n° de region", null: true
 
     field :geometry, Types::GeoJSON, "coordonnées géographique", null: true
-
-    def city_name
-      if object[:departement_code].present? && object[:city_code].present?
-        APIGeoService.commune_name(object.fetch(:departement_code), object.fetch(:city_code))
-      else
-        object[:city_name]
-      end
-    end
-
-    def departement_name
-      if object[:departement_code].present?
-        APIGeoService.departement_name(object.fetch(:departement_code))
-      else
-        object[:departement_name]
-      end
-    end
-
-    def region_name
-      if object[:region_code].present?
-        APIGeoService.region_name(object.fetch(:region_code))
-      else
-        object[:region_name]
-      end
-    end
   end
 end
