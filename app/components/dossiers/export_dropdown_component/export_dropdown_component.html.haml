@@ -14,3 +14,7 @@
     - menu.with_item do
       = link_to download_export_path(export_format: format), role: 'menuitem', data: { turbo_method: :post, turbo: true } do
         = t(".everything_#{format}_html")
+  - export_templates.each do |export_template|
+    - menu.with_item do
+      = link_to download_export_path(export_template_id: export_template.id), role: 'menuitem', data: { turbo_method: :post, turbo: true } do
+        = "Exporter à partir du modèle #{export_template.name}"
