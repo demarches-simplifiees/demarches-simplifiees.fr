@@ -324,13 +324,18 @@ module Instructeurs
     end
 
     def export_format
-      @export_format ||= params[:export_format]
+      @export_format ||= params[:export_format].presence || export_template&.kind
+    end
+
+    def export_template
+      @export_template ||= ExportTemplate.find(params[:export_template_id]) if params[:export_template_id].present?
     end
 
     def export_options
       @export_options ||= {
         time_span_type: params[:time_span_type],
         statut: params[:statut],
+        export_template:,
         procedure_presentation: params[:statut].present? ? procedure_presentation : nil
       }.compact
     end

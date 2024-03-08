@@ -88,7 +88,7 @@ module Users
     end
 
     def show
-      pj_service = PiecesJustificativesService.new(user_profile: current_user)
+      pj_service = PiecesJustificativesService.new(user_profile: current_user, export_template: nil)
       respond_to do |format|
         format.pdf do
           @dossier = dossier_with_champs(pj_template: false)

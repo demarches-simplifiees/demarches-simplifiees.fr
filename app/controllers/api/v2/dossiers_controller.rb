@@ -2,7 +2,7 @@ class API::V2::DossiersController < API::V2::BaseController
   before_action :ensure_dossier_present
 
   def pdf
-    @acls = PiecesJustificativesService.new(user_profile: Administrateur.new).acl_for_dossier_export(dossier.procedure)
+    @acls = PiecesJustificativesService.new(user_profile: Administrateur.new, export_template: nil).acl_for_dossier_export(dossier.procedure)
     render(template: 'dossiers/show', formats: [:pdf])
   end
 
