@@ -67,9 +67,10 @@ class Export < ApplicationRecord
     procedure_presentation_id.present?
   end
 
-  def self.find_or_create_fresh_export(format, groupe_instructeurs, user_profile, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil)
+  def self.find_or_create_fresh_export(format, groupe_instructeurs, user_profile, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, export_template: nil)
     attributes = {
       format:,
+      export_template:,
       time_span_type:,
       statut:,
       key: generate_cache_key(groupe_instructeurs.map(&:id), procedure_presentation)
@@ -148,7 +149,7 @@ class Export < ApplicationRecord
   end
 
   def blob
-    service = ProcedureExportService.new(procedure, dossiers_for_export, user_profile)
+    service = ProcedureExportService.new(procedure, dossiers_for_export, user_profile, export_template)
 
     case format.to_sym
     when :csv

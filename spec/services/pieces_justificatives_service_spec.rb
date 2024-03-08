@@ -2,8 +2,9 @@ describe PiecesJustificativesService do
   describe '.liste_documents' do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
+    let(:export_template) { nil }
     subject do
-      PiecesJustificativesService.new(user_profile:).liste_documents(dossiers).map(&:first)
+      PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:first)
     end
 
     context 'no acl' do
@@ -19,6 +20,11 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
+          it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+        end
       end
 
       context 'with a multiple attachments' do
@@ -303,7 +309,7 @@ describe PiecesJustificativesService do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :piece_justificative }] }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
-    subject { PiecesJustificativesService.new(user_profile:).generate_dossiers_export(dossiers) }
+    subject { PiecesJustificativesService.new(user_profile:, export_template: nil).generate_dossiers_export(dossiers) }
 
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }
@@ -315,7 +321,7 @@ describe PiecesJustificativesService do
       let!(:not_confidentiel_avis) { create(:avis, :not_confidentiel, dossier: dossier) }
       let!(:expert_avis) { create(:avis, :confidentiel, dossier: dossier, expert: user_profile) }
 
-      subject { PiecesJustificativesService.new(user_profile:).generate_dossiers_export(dossiers) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template: nil).generate_dossiers_export(dossiers) }
       it "includes avis not confidentiel as well as expert's avis" do
         expect_any_instance_of(Dossier).to receive(:avis_for_expert).with(user_profile).and_return([])
         subject

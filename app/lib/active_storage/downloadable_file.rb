@@ -1,8 +1,8 @@
 require 'fog/openstack'
 
 class ActiveStorage::DownloadableFile
-  def self.create_list_from_dossiers(dossiers:, user_profile:)
-    pj_service = PiecesJustificativesService.new(user_profile:)
+  def self.create_list_from_dossiers(dossiers:, user_profile:, export_template: nil)
+    pj_service = PiecesJustificativesService.new(user_profile:, export_template:)
 
     pj_service.generate_dossiers_export(dossiers) + pj_service.liste_documents(dossiers)
   end
