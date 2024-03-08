@@ -20,7 +20,7 @@
   .items
     - tags.each do |tag|
       .item
-        %code.tag
+        %code.tag{ style: "white-space: pre-wrap;" }
           = "--#{tag[:libelle]}--"
         .description
           = tag[:description]
