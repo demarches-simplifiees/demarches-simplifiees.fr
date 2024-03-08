@@ -71,7 +71,9 @@ module DossierRebaseConcern
       .each { add_new_champs_for_revision(_1) }
 
     # remove champ
-    changes_by_op[:remove].each { champs_by_stable_id[_1.stable_id].destroy_all }
+    children_champ, root_champ = changes_by_op[:remove].partition(&:child?)
+    children_champ.each { champs_by_stable_id[_1.stable_id].delete_all }
+    root_champ.each { champs_by_stable_id[_1.stable_id].delete_all }
 
     # update champ
     changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
