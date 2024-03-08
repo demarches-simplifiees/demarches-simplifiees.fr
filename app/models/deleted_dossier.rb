@@ -12,7 +12,8 @@ class DeletedDossier < ApplicationRecord
     user_removed:      'user_removed',
     procedure_removed: 'procedure_removed',
     expired:           'expired',
-    instructeur_request: 'instructeur_request'
+    instructeur_request: 'instructeur_request',
+    user_expired:      'user_expired'
   }
 
   enum state: {

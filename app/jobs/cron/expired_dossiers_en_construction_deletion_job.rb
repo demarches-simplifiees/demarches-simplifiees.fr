@@ -1,7 +1,7 @@
 class Cron::ExpiredDossiersEnConstructionDeletionJob < Cron::CronJob
-  self.schedule_expression = "every day at 3 pm"
+  self.schedule_expression = Expired.schedule_at(self)
 
   def perform(*args)
-    ExpiredDossiersDeletionService.new.process_expired_dossiers_en_construction
+    Expired::DossiersDeletionService.new.process_expired_dossiers_en_construction
   end
 end

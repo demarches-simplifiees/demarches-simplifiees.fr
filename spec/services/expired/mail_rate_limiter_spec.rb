@@ -1,8 +1,8 @@
-describe MailRateLimiter do
+describe Expired::MailRateLimiter do
   describe 'hits limits' do
     let(:limit) { 10 }
     let(:window) { 2.seconds }
-    let(:rate_limiter) { MailRateLimiter.new(limit:, window:) }
+    let(:rate_limiter) { Expired::MailRateLimiter.new(limit:, window:) }
     let(:mail) { DossierMailer.notify_automatic_deletion_to_user([], 'tartampion@france.fr') }
 
     it 'decreases current_window[:limit]' do
