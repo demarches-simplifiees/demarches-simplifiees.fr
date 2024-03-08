@@ -17,7 +17,7 @@ class ExportTemplateValidator < ActiveModel::Validator
   end
 
   def validate_pjs(record)
-    record.content["pjs"].each do |pj|
+    record.content["pjs"]&.each do |pj|
       pj_sym = pj.symbolize_keys
       validate_content(record, pj_sym[:path], "pj_#{pj_sym[:stable_id]}".to_sym)
     end
