@@ -12,6 +12,8 @@
         = number_with_delimiter(@procedures_numbers[:total])
       %span.big-number-card-detail
         #{number_with_delimiter(@procedures_numbers[:last_30_days_count])} (#{@procedures_numbers[:evolution]} %) sur les 30 derniers jours
+      %span.big-number-card-detail
+        = link_to "Voir carte de déploiement", carte_path
 
     .stat-card.stat-card-half.big-number-card.pull-left
       %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
@@ -19,6 +21,8 @@
         = number_with_delimiter(@dossiers_numbers[:total])
       %span.big-number-card-detail
         #{number_with_delimiter(@dossiers_numbers[:last_30_days_count])} (#{@dossiers_numbers[:evolution]} %) sur les 30 derniers jours
+      %span.big-number-card-detail
+        = link_to "Voir carte de déploiement", carte_path(map_filter: { kind: :nb_dossiers })
 
 
     .stat-card.stat-card-half.pull-left
