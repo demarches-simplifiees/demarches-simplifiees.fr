@@ -12,6 +12,8 @@ module DownloadManager
     end
 
     def download_all
+      # TODO: arriver à enelver ce parametrage d'ActiveStorage
+      ActiveStorage::Current.url_options = { host: ENV.fetch("APP_HOST") }
       hydra = Typhoeus::Hydra.new(max_concurrency: DOWNLOAD_MAX_PARALLEL)
 
       attachments.map do |attachment, path|

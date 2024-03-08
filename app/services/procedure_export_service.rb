@@ -1,9 +1,10 @@
 class ProcedureExportService
   attr_reader :procedure, :dossiers
 
-  def initialize(procedure, dossiers)
+  def initialize(procedure, dossiers, export_template)
     @procedure = procedure
     @dossiers = dossiers
+    @export_template = export_template
   end
 
   def to_csv
@@ -35,7 +36,7 @@ class ProcedureExportService
   end
 
   def to_zip
-    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, with_champs_private: true, include_infos_administration: true)
+    attachments = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers, export_template: @export_template, with_champs_private: true, include_infos_administration: true)
 
     DownloadableFileService.download_and_zip(procedure, attachments, base_filename) do |zip_filepath|
       ArchiveUploader.new(procedure: procedure, filename: filename(:zip), filepath: zip_filepath).blob

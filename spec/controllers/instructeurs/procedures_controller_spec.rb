@@ -703,6 +703,18 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       it { expect { subject }.to change(Export, :count).by(1) }
+
+      context 'with an export template' do
+        let(:export_template) { create(:export_template) }
+        subject do
+          get :download_export, params: { export_template_id: export_template.id, procedure_id: procedure.id }
+        end
+
+        it 'displays an notice' do
+          is_expected.to redirect_to(exports_instructeur_procedure_url(procedure))
+          expect(flash.notice).to be_present
+        end
+      end
     end
 
     context 'when the export is not ready' do

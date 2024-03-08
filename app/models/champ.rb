@@ -99,6 +99,10 @@ class Champ < ApplicationRecord
     [row_id, stable_id].compact
   end
 
+  def row_index
+    Champ.where(parent:).pluck(:row_id).sort.index(:id)
+  end
+
   def sections
     @sections ||= dossier.sections_for(self)
   end

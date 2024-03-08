@@ -3,13 +3,14 @@ require 'fog/openstack'
 class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(
     dossiers,
+    export_template: nil,
     with_bills: false,
     with_champs_private: false,
     include_infos_administration: false,
     include_avis_for_expert: false
   )
-    PiecesJustificativesService.generate_dossier_export(dossiers, include_infos_administration:, include_avis_for_expert:) +
-      PiecesJustificativesService.liste_documents(dossiers, with_bills:, with_champs_private:, with_avis_piece_justificative: include_infos_administration)
+    PiecesJustificativesService.generate_dossier_export(dossiers, export_template:, include_infos_administration:, include_avis_for_expert:) +
+      PiecesJustificativesService.liste_documents(dossiers, export_template:, with_bills:, with_champs_private:, with_avis_piece_justificative: include_infos_administration)
   end
 
   def self.cleanup_list_from_dossier(files)

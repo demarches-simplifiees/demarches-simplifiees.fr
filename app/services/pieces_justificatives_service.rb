@@ -1,12 +1,12 @@
 class PiecesJustificativesService
-  def self.liste_documents(dossiers,
+  def self.liste_documents(dossiers, export_template: nil,
     with_bills:,
     with_champs_private:,
     with_avis_piece_justificative:)
     bill_ids = []
 
     docs = dossiers.in_batches.flat_map do |batch|
-      pjs = pjs_for_champs(batch, with_champs_private:) +
+      pjs = pjs_for_champs(batch, export_template, with_champs_private:) +
         pjs_for_commentaires(batch) +
         pjs_for_dossier(batch) +
         pjs_for_avis(batch, with_avis_piece_justificative:)
@@ -87,7 +87,7 @@ class PiecesJustificativesService
     end
   end
 
-  def self.generate_dossier_export(dossiers, include_infos_administration: false, include_avis_for_expert: false)
+  def self.generate_dossier_export(dossiers, export_template: nil, include_infos_administration: false, include_avis_for_expert: false)
     return [] if dossiers.empty?
 
     pdfs = []
@@ -114,7 +114,11 @@ class PiecesJustificativesService
         created_at: dossier.updated_at
       )
 
-      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+      if export_template
+        pdfs << export_template.pj_and_path(dossier, a)
+      else
+        pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+      end
     end
 
     pdfs
@@ -122,7 +126,7 @@ class PiecesJustificativesService
 
   private
 
-  def self.pjs_for_champs(dossiers, with_champs_private:)
+  def self.pjs_for_champs(dossiers, export_template, with_champs_private:)
     champs = Champ
       .joins(:piece_justificative_file_attachments)
       .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
@@ -139,9 +143,14 @@ class PiecesJustificativesService
       .includes(:blob)
       .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
       .filter { |a| safe_attachment(a) }
-      .map do |a|
+      .map do |a,i|
         dossier_id = champ_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        pj_index = Champ.find(a.record_id).piece_justificative_file.blobs.map(&:id).index(a.blob_id)
+        if export_template
+          export_template.pj_and_path(Dossier.find(dossier_id), a, index: pj_index, row_index: a.record.row_index)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 

@@ -3,10 +3,11 @@ describe PiecesJustificativesService do
     let(:with_champs_private) { true }
     let(:with_bills) { true }
     let(:with_avis_piece_justificative) { true }
+    let(:export_template) { nil }
 
     subject do
       PiecesJustificativesService
-        .liste_documents(Dossier.where(id: dossier.id), with_bills:, with_champs_private:, with_avis_piece_justificative:)
+        .liste_documents(Dossier.where(id: dossier.id), export_template:, with_bills:, with_champs_private:, with_avis_piece_justificative:)
         .map(&:first)
     end
 
@@ -24,6 +25,11 @@ describe PiecesJustificativesService do
 
       context 'with a single attachment' do
         it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap {_1.set_default_values} }
+          it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+        end
       end
 
       context 'with a multiple attachments' do
