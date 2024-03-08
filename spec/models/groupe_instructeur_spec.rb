@@ -129,6 +129,21 @@ describe GroupeInstructeur, type: :model do
     end
   end
 
+  describe 'destroy' do
+    context 'with contact information' do
+      let(:defaut_group) { procedure.defaut_groupe_instructeur }
+      let(:second_group) { create(:groupe_instructeur, procedure:) }
+
+      before do
+        second_group.update(contact_information: create(:contact_information))
+      end
+
+      it 'works' do
+        expect { second_group.destroy! }.not_to raise_error
+      end
+    end
+  end
+
   private
 
   def assign(procedure_to_assign, instructeur_assigne: instructeur)
