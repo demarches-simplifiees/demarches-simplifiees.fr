@@ -22,8 +22,36 @@ describe Champs::EmailChamp do
       it { is_expected.to be_falsey }
     end
 
+    context 'when value comes from pentesters with \u0022' do
+      let(:value) { "testing@example.com\u0022onmouseover=uzcc(96363)\u0022" }
+      # what we allowed but it was a mistake
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when value comes from pentesters with script' do
+      let(:value) { "testing@example.com<script>alert('ok')</script>" }
+      # what we allowed but it was a mistake
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when value comes from pentesters with ?' do
+      let(:value) { "testing@example.com?test" }
+      # what we allowed but it was a mistake
+      it { is_expected.to be_falsey }
+    end
+
     context 'when value include an alias' do
       let(:value) { 'username+alias@mailserver.fr' }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when value include an dash in domain' do
+      let(:value) { 'username+alias@demarches-simplifiees.fr' }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when value include an dash in domain' do
+      let(:value) { 'username+alias@demarches-simplifiees-v2.fr' }
       it { is_expected.to be_truthy }
     end
 
