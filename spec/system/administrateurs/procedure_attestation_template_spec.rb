@@ -45,6 +45,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       click_on("Publier")
       # validate publication
       within('form') { click_on 'Publier' }
+      click_on("Revenir à la page de la démarche")
 
       # now process to disable attestation
       find_attestation_card.click

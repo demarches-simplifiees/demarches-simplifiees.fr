@@ -23,6 +23,9 @@ fr:
           other: Il y a %{count} dossiers « en instruction » sur cette version de la démarche.
       publication:
         publish_title: Publier votre démarche
+        confirmation: Votre démarche est désormais publiée !
+        copy_url: Copiez le lien de la procédure
+        share_link: "Pour partager votre démarche, utilisez toujours le lien complet ci-dessous :"
         closed_procedure_html: "Cette démarche est <strong>close</strong> et n’est donc plus accessible par le public. Vous pouvez la réactiver :"
         draft_changed_procedure_html: "Cette démarche est déjà <strong>publiée</strong>. Elle a été <strong>modifiée</strong> depuis sa publication. Vous pouvez publier les changements effectués dans une nouvelle version de cette démarche :"
         published_procedure_html: "Cette démarche est <strong>publiée</strong>, certains éléments ne peuvent plus être modifiés. Pour y accéder vous pouvez utiliser le lien :"
@@ -35,6 +38,7 @@ fr:
         dubious_fields: "Attention, certains champs ne peuvent être demandés par l’administration. Voici les champs qui nous semblent suspects :"
         click_here: Cliquez ici.
         back_to_procedure: Revenir à la page de la démarche
+        new_procedure: Créer une nouvelle démarche
       publication_form:
         faq_test_alert: Avez-vous bien pensé à tester votre démarche avant de la publier ? Pour vous aider dans cette phase de test, vous pouvez
         faq_test_alert_link: consulter notre guide de bonnes pratiques.

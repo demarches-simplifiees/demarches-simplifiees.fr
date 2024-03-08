@@ -970,10 +970,9 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(procedure.lien_site_web).to eq(lien_site_web)
         end
 
-        it 'redirects to the procedure page' do
+        it 'redirects to the confirmation page' do
           expect(response.status).to eq 302
-          expect(response.body).to include(admin_procedure_path(procedure.id))
-          expect(flash[:notice]).to have_content 'Démarche publiée'
+          expect(response.body).to include(admin_procedure_confirmation_path(procedure.id))
         end
         #----- PF
         it 'sends a published email to team' do
@@ -1003,10 +1002,9 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(procedure2.depubliee?).to be_truthy
         end
 
-        it 'redirects to the procedures page' do
+        it 'redirects to the confirmation page' do
           expect(response.status).to eq 302
-          expect(response.body).to include(admin_procedure_path(procedure.id))
-          expect(flash[:notice]).to have_content 'Démarche publiée'
+          expect(response.body).to include(admin_procedure_confirmation_path(procedure.id))
         end
       end
 
