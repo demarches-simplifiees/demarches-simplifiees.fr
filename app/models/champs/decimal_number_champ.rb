@@ -27,6 +27,6 @@ class Champs::DecimalNumberChamp < Champ
   def processed_value
     return unless valid_champ_value?
 
-    value&.to_f
+    value.to_s
   end
 end

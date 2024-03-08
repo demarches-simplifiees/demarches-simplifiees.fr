@@ -22,6 +22,6 @@ class Champs::IntegerNumberChamp < Champ
   def processed_value
     return unless valid_champ_value?
 
-    value&.to_i
+    value.to_s
   end
 end
