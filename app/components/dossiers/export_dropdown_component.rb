@@ -3,6 +3,7 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
 
   def initialize(procedure:, statut: nil, count: nil, class_btn: nil, export_url: nil)
     @procedure = procedure
+    @export_templates = procedure.export_templates
     @statut = statut
     @count = count
     @class_btn = class_btn
@@ -21,10 +22,15 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
     item.fetch(:format) != :json || @procedure.active_revision.carte?
   end
 
-  def download_export_path(export_format:, no_progress_notification: nil)
+  def download_export_path(export_format: nil, export_template_id: nil, no_progress_notification: nil)
     @export_url.call(@procedure,
-      export_format: export_format,
+      export_format:,
+      export_template_id:,
       statut: @statut,
       no_progress_notification: no_progress_notification)
+  end
+
+  def export_templates
+    @export_templates
   end
 end
