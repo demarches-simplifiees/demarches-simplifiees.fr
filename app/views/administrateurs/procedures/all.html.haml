@@ -36,6 +36,10 @@
         .selected-statuses.fr-mb-2w
           - @filter.statuses.each do |status|
             = link_to status, all_admin_procedures_path(@filter.without(:statuses, status)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
+      - if @filter.kind_usagers.present?
+        .selected-kind_usagers.fr-mb-2w
+          - @filter.kind_usagers.each do |kind_usager|
+            = link_to t(kind_usager, scope: 'activerecord.attributes.procedure.kind_usager'), all_admin_procedures_path(@filter.without(:kind_usagers, kind_usager)), class: 'fr-tag fr-tag--dismiss fr-mb-1w'
       - if @filter.tags.present?
         .selected-tag.fr-mb-2w
           - @filter.tags.each do |tag|
