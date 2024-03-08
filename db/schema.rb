@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_30_154452) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_31_100329) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -589,6 +589,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_30_154452) do
   create_table "exports", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.integer "dossiers_count"
+    t.bigint "export_template_id"
     t.string "format", null: false
     t.bigint "instructeur_id"
     t.string "job_status", default: "pending", null: false
@@ -598,6 +599,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_30_154452) do
     t.string "statut", default: "tous"
     t.string "time_span_type", default: "everything", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["export_template_id"], name: "index_exports_on_export_template_id"
     t.index ["instructeur_id"], name: "index_exports_on_instructeur_id"
     t.index ["key"], name: "index_exports_on_key"
     t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"
@@ -1221,6 +1223,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_30_154452) do
   add_foreign_key "experts_procedures", "procedures"
   add_foreign_key "export_templates", "groupe_instructeurs"
   add_foreign_key "export_templates", "instructeurs"
+  add_foreign_key "exports", "export_templates"
   add_foreign_key "exports", "instructeurs"
   add_foreign_key "france_connect_informations", "users"
   add_foreign_key "geo_areas", "champs"
