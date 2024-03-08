@@ -515,8 +515,9 @@ describe Users::DossiersController, type: :controller do
 
   describe '#submit_en_construction' do
     before { sign_in(user) }
-
-    let!(:dossier) { create(:dossier, :en_construction, user: user) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :text }] }
+    let(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
     let(:first_champ) { dossier.owner_editing_fork.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
     let(:value) { 'beautiful value' }
@@ -560,10 +561,8 @@ describe Users::DossiersController, type: :controller do
     context 'when a mandatory champ is missing' do
       let(:value) { nil }
       render_views
-      before do
-        first_champ.type_de_champ.update(mandatory: true, libelle: 'l')
-        subject
-      end
+      let(:types_de_champ_public) { [{ type: :text, mandatory: true, libelle: 'l' }] }
+      before { subject }
 
       it { expect(response).to render_template(:modifier) }
       it { expect(response.body).to have_content("doit être rempli") }
@@ -578,6 +577,25 @@ describe Users::DossiersController, type: :controller do
 
         expect(response).to redirect_to(dossier_path(dossier))
       end
+    end
+
+    context 'when dossier repetition had been removed in newer version' do
+      let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, user:) }
+      let(:types_de_champ_public) { [{ type: :repetition, libelle: 'repetition', children: [{ type: :text, libelle: 'child' }] }] }
+      let(:editing_fork) { dossier.owner_editing_fork }
+      let(:champ_repetition) { editing_fork.champs.find(&:repetition?) }
+      before do
+        editing_fork
+
+        procedure.draft_revision.remove_type_de_champ(editing_fork.champs.find(&:repetition?).stable_id)
+        procedure.publish_revision!
+
+        editing_fork.reload
+        editing_fork.rebase!
+      end
+      let(:submit_payload) { { id: dossier.id } }
+
+      it { expect { subject }.not_to raise_error }
     end
 
     context 'when dossier was already submitted' do
