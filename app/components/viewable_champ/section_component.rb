@@ -49,7 +49,7 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   private
 
   def to_sections(nodes:)
-    nodes.map { _1.is_a?(Array) ? ViewableChamp::SectionComponent.new(nodes: _1, demande_seen_at: @demande_seen_at, profile: @profile, champs_by_stable_id_with_row: @champs_by_stable_id_with_row) : _1 }
+    nodes.map { _1.is_a?(Array) ? ViewableChamp::SectionComponent.new(nodes: _1, demande_seen_at: @demande_seen_at, profile: @profile, champs_by_stable_id_with_row: @champs_by_stable_id_with_row, row_id: @row_id) : _1 }
   end
 
   def champ_for_type_de_champ(type_de_champ)
