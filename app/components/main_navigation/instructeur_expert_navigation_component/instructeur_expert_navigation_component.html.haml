@@ -1,0 +1,14 @@
+%nav#header-navigation.fr-nav{ role: :navigation, "aria-label" => t('main_menu', scope: [:layouts, :header]) }
+  %ul.fr-nav__list
+    - if instructeur?
+      %li.fr-nav__item
+        = link_to Procedure.model_name.human(count: 10), instructeur_procedures_path, class: 'fr-nav__link', aria: aria_current_for(:procedure)
+
+    - if expert?
+      %li.fr-nav__item
+        = link_to expert_all_avis_path, class: 'fr-nav__link', aria: aria_current_for(:avis) do
+          = Avis.model_name.human(count: 10)
+          - if helpers.current_expert.avis_summary[:unanswered] > 0
+            %span.badge.warning= helpers.current_expert.avis_summary[:unanswered]
+
+    = render MainNavigation::AnnouncesLinkComponent.new

@@ -3,6 +3,7 @@
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 - is_instructeur_context = nav_bar_profile == :instructeur && instructeur_signed_in?
+- is_administrateur_context = nav_bar_profile == :administrateur && administrateur_signed_in?
 - is_expert_context = nav_bar_profile == :expert && expert_signed_in?
 - is_user_context = nav_bar_profile == :user
 - is_search_enabled = [params[:controller] == 'recherche', is_instructeur_context, is_expert_context, is_user_context && current_user.dossiers.count].any?
@@ -24,7 +25,7 @@
             .fr-header__navbar
               - if is_search_enabled
                 %button.fr-btn--search.fr-btn{ "aria-controls" => "search-modal", "data-fr-opened" => "false", :title => t('views.users.dossiers.search.search_file') }= t('views.users.dossiers.search.search_file')
-              %button.fr-btn--menu.fr-btn{ "aria-controls" => "burger-menu", "aria-haspopup" => "menu", "data-fr-opened" => "false", :title => "Menu" } Menu
+              %button#navbar-burger-button.fr-btn--menu.fr-btn{ "aria-controls" => "modal-header__menu", "aria-haspopup" => "menu", "data-fr-opened" => "false", title: "Menu" } Menu
           -# .fr-header__service
             - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
@@ -72,39 +73,20 @@
           - if is_expert_context
             = render partial: 'layouts/search_dossiers_form'
 
-  - has_header = [is_instructeur_context, is_expert_context, is_user_context]
-  #burger-menu.fr-header__menu.fr-modal
+  #modal-header__menu.fr-header__menu.fr-modal{ "aria-labelledby": "navbar-burger-button" }
     .fr-container
-      %button#burger_button.fr-btn--close.fr-btn{ "aria-controls" => "burger-menu", :title => t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
+      %button.fr-btn--close.fr-btn{ "aria-controls" => "modal-header__menu", title: t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])
       .fr-header__menu-links
-      %nav#navigation-478.fr-nav{ "aria-label" => t('main_menu', scope: [:layouts, :header]) , :role => "navigation" }
-        %ul.fr-nav__list
-          -# Questionner UX pour un back JS
-          - if params[:controller] == 'users/commencer'
-            %li.fr-nav__item
-              = link_to t('back', scope: [:layouts, :header]), url_for(:back), title: t('back_title', scope: [:layouts, :header]), class: 'fr-nav__link'
+        -# populated by dsfr js
 
-          - if is_instructeur_context
-            - if current_instructeur.procedures.any?
-              - current_url = request.path_info
-              %li.fr-nav__item
-                = active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link', aria: { current: current_url == instructeur_procedures_path ? 'page' : true }
-            - if current_instructeur.user.expert && current_expert.avis_summary[:total] > 0
-              = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
+      - if content_for?(:main_navigation)
+        = yield(:main_navigation)
+      - elsif is_administrateur_context
+        = render 'administrateurs/main_navigation'
+      - elsif is_instructeur_context || is_expert_context
+        = render MainNavigation::InstructeurExpertNavigationComponent.new
+      - elsif is_user_context
+        = render 'users/main_navigation'
 
-          - if is_expert_context
-            - if current_expert.user.instructeur && current_instructeur.procedures.any?
-              %li.fr-nav__item= active_link_to t('utils.procedure'), instructeur_procedures_path, active: ['dossiers','procedures'].include?(controller_name), class: 'fr-nav__link', aria: { current: true }
-            - if current_expert.avis_summary[:total] > 0
-              = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
-
-          - if is_user_context
-            %li.fr-nav__item= active_link_to t('.files'), dossiers_path, active: :inclusive, class: 'fr-nav__link', aria: { current: true }
-            - if current_user.expert && current_expert.avis_summary[:total] > 0
-              = render partial: 'layouts/header/avis_tab', locals: { current_expert: current_expert }
-
-  - if content_for?(:navigation_principale)
-    .fr-container
-      = yield(:navigation_principale)
 
   = yield(:notice_info)

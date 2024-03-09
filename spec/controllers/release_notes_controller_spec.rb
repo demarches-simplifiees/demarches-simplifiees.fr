@@ -47,5 +47,31 @@ RSpec.describe ReleaseNotesController, type: :controller do
         it { is_expected.to be_redirection }
       end
     end
+
+    describe 'touch user announces_seen_at' do
+      let(:user) { create(:user, administrateur: build(:administrateur)) }
+
+      context 'when default categories' do
+        it 'touch announces_seen_at' do
+          expect { subject }.to change { user.reload.announces_seen_at }
+        end
+
+        context 'when current announces_seen_at is more recent than last announce' do
+          before { user.update(announces_seen_at: 1.second.ago) }
+
+          it 'does not touch announces_seen_at' do
+            expect { subject }.not_to change { user.reload.announces_seen_at }
+          end
+        end
+      end
+
+      context 'when specific categories' do
+        subject { get :index, params: { categories: ['administrateur', 'instructeur'] } }
+
+        it 'does not touch announces_seen_at' do
+          expect { subject }.not_to change { user.reload.announces_seen_at }
+        end
+      end
+    end
   end
 end

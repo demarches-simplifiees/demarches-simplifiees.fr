@@ -4,7 +4,6 @@ gem 'rails', '~> 7.0.5' # allows update to security fixes at any time
 
 gem 'aasm'
 gem 'acsv'
-gem 'active_link_to' # Automatically set a class on active links
 gem 'active_model_serializers'
 gem 'activestorage-openstack'
 gem 'active_storage_validations'

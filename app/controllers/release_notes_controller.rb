@@ -1,8 +1,9 @@
 class ReleaseNotesController < ApplicationController
   before_action :ensure_access_allowed!
+  after_action :touch_default_categories_seen_at
 
   def index
-    @categories = params[:categories].presence || infer_default_categories
+    @categories = params[:categories].presence || helpers.infer_default_announce_categories
 
     # Paginate per group of dates, then show all announces for theses dates
     @paginated_groups = ReleaseNote.published
@@ -20,18 +21,26 @@ class ReleaseNotesController < ApplicationController
     render "scrollable_list" if params[:page].present?
   end
 
+  def nav_bar_profile
+    # detect context from referer, simple (no detection when refreshing the page)
+    params = Rails.application.routes.recognize_path(request&.referer)
+
+    controller_class = "#{params[:controller].camelize}Controller".safe_constantize
+    return if controller_class.nil?
+
+    controller_instance = controller_class.new
+    controller_instance.try(:nav_bar_profile)
+  end
+
   private
 
-  def infer_default_categories
-    if administrateur_signed_in?
-      ['administrateur', 'usager', current_administrateur.api_tokens.exists? ? 'api' : nil]
-    elsif instructeur_signed_in?
-      ['instructeur', 'expert']
-    elsif expert_signed_in?
-      ['expert']
-    else
-      ['usager']
-    end
+  def touch_default_categories_seen_at
+    return if params[:categories].present? || params[:page].present?
+    return if current_user.blank?
+
+    return if current_user.announces_seen_at&.after?(@announces.max_by(&:released_on).released_on)
+
+    current_user.touch(:announces_seen_at)
   end
 
   def ensure_access_allowed!

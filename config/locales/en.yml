@@ -56,7 +56,6 @@ en:
     subject: Subject
     message: Message
     send_mail: Send message
-    procedure: Procedures
     new_tab: New tab
   helpers:
     procedure:

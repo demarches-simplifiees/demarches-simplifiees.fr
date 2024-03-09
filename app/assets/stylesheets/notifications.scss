@@ -13,3 +13,14 @@ span.notifications {
   top: 5px;
   right: 8px;
 }
+
+.fr-nav {
+  &__notifiable {
+    position: relative;
+  }
+
+  .notifications {
+    top: 1rem;
+    right: 0.25rem;
+  }
+}
