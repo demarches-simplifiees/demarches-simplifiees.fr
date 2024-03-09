@@ -173,6 +173,7 @@ RSpec.describe DossierCloneConcern do
 
     context "as a fork" do
       let(:new_dossier) { dossier.clone(fork: true) }
+      before { dossier.champs_public.reload } # we compare timestamps so we have to get the precision limit from the db }
 
       it { expect(new_dossier.editing_fork_origin).to eq(dossier) }
       it { expect(new_dossier.champs_public[0].id).not_to eq(dossier.champs_public[0].id) }
@@ -181,7 +182,7 @@ RSpec.describe DossierCloneConcern do
 
       context "piece justificative champ" do
         let(:champ_pj) { create(:champ_piece_justificative, dossier_id: dossier.id) }
-        before { dossier.champs_public << champ_pj }
+        before { dossier.champs_public << champ_pj.reload }
 
         it {
           champ_pj_fork = Champs::PieceJustificativeChamp.where(dossier: new_dossier).first

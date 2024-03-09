@@ -1,4 +1,4 @@
-class AddAncestryToGroupeGestionnaires < ActiveRecord::Migration[6.1]
+class AddAncestryToGroupeGestionnaires < ActiveRecord::Migration[7.0]
   disable_ddl_transaction!
 
   def change
