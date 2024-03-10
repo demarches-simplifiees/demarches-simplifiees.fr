@@ -72,7 +72,12 @@ module Administrateurs
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
       @morphed = @coordinate.siblings
-      @morphed = @morphed.where("position > ?", [from, to].min).where("position <= ?", [from, to].max)
+      if from > to # case of moved up, update components from target (> plus one) to origin
+        @morphed = @morphed.where("position > ?", to).where("position <= ?", from)
+      else # case of moved down, update components from origin up to target (< minus one)
+        @morphed = @morphed.where("position >= ?", from).where("position < ?", to)
+      end
+
       @morphed = @morphed.map { |c| champ_component_from(c) }
     end
 

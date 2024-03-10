@@ -186,9 +186,9 @@ describe Administrateurs::TypesDeChampController, type: :controller do
       it do
         is_expected.to have_http_status(:ok)
         [first_coordinate, second_coordinate, third_coordinate].map(&:reload)
-        expect(assigns(:coordinate).stable_id).to eq(first_coordinate.stable_id)
-        expect(assigns(:destroyed).stable_id).to eq(first_coordinate.stable_id)
-        expect(extract_libelle(assigns(:created))).to eq(['l3', []])
+        expect(assigns(:coordinate).stable_id).to eq(second_coordinate.stable_id)
+        expect(assigns(:destroyed).stable_id).to eq(second_coordinate.stable_id)
+        expect(extract_libelle(assigns(:created))).to eq(['l3', ['l1']])
         expect(morpheds).to eq([['l3', ['l1']], ['l2', ['l1', 'l3']]])
       end
     end
