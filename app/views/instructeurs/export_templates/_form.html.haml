@@ -22,19 +22,13 @@
         = f.label :tiptap_default_dossier_directory, class: "fr-label"
         .editor.mt-2{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
-        %ul.mt-2.flex.wrap.flex-gap-1
-          - @export_template.specific_tags.each do |tag|
-            %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
-              = tag[:libelle]
+        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
         = f.label :tiptap_pdf_name, class: "fr-label"
         .editor.mt-2{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
-        %ul.mt-2.flex.wrap.flex-gap-1
-          - @export_template.specific_tags.each do |tag|
-            %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
-              = tag[:libelle]
+        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       - if @all_pj.any?
         %h3 Pieces justificatives
@@ -44,11 +38,7 @@
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
             .editor.mt-2{ data: { tiptap_target: 'editor' } }
               = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
-            %ul.mt-2.flex.wrap.flex-gap-1
-              - @export_template.specific_tags.each do |tag|
-                %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
-                  = tag[:libelle]
-
+            .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       .fixed-footer
         .fr-container
