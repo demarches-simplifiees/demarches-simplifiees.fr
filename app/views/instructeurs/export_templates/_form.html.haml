@@ -20,13 +20,13 @@
 
       .fr-input-group{ data: { controller: 'tiptap' } }
         = f.label :tiptap_default_dossier_directory, class: "fr-label"
-        .editor.mt-2{ data: { tiptap_target: 'editor' } }
+        .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
         = f.label :tiptap_pdf_name, class: "fr-label"
-        .editor.mt-2{ data: { tiptap_target: 'editor' } }
+        .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
@@ -36,7 +36,7 @@
         - @all_pj.each do |pj|
           .fr-input-group{ data: { controller: 'tiptap' } }
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
-            .editor.mt-2{ data: { tiptap_target: 'editor' } }
+            .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
               = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
             .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
