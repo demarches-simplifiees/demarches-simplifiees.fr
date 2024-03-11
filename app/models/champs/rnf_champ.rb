@@ -106,7 +106,7 @@ class Champs::RNFChamp < Champ
         department_code: address["departmentCode"],
         region_name: address["regionName"],
         region_code: address["regionCode"]
-      }
+      }.with_indifferent_access
     end
   end
 
