@@ -6,3 +6,6 @@
       %h1= t('commencer.closing_details.page_title', libelle: @procedure.libelle, closed_at: @procedure.closed_at.strftime('%d/%m/%Y'))
       %p
         = format_text_value(@procedure.closing_details)
+
+      .text-center
+        = image_tag('landing/hero/dematerialiser.svg', "aria-hidden": true)
