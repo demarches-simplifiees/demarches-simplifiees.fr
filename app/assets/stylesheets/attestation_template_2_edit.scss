@@ -20,7 +20,7 @@
     min-height: 400px;
   }
 
-  .editor {
+  .tiptap-editor {
     // Visual zones
     .header .flex-1,
     h1 {
@@ -62,17 +62,6 @@
 
     li p {
       margin-bottom: 0;
-    }
-
-    // Tags
-    .fr-menu__list {
-      max-height: 500px;
-    }
-
-    .fr-tag:not(.fr-menu .fr-tag) {
-      // style span rendered by tiptap like a button/link tag
-      color: var(--text-action-high-blue-france);
-      background-color: var(--background-action-low-blue-france);
     }
   }
 
