@@ -131,7 +131,7 @@ module Types
         postal_code: object.code_postal.presence || '',
         city_name: object.localite.presence || '',
         city_code: object.code_insee_localite.presence || ''
-      }
+      }.with_indifferent_access
     end
 
     def entreprise

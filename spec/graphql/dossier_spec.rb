@@ -83,10 +83,17 @@ RSpec.describe Types::DossierType, type: :graphql do
       expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.champs_public[2].etablissement.siret
       expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id])
 
+      expect(data[:dossier][:champs][1][:address][:cityName]).to eq('Paris 19e Arrondissement')
+      expect(data[:dossier][:champs][1][:address][:departmentName]).to eq('Paris')
+      expect(data[:dossier][:champs][1][:address][:regionName]).to eq('Île-de-France')
+
       expect(data[:dossier][:champs][3][:rna][:id]).to eq('W173847273')
       expect(data[:dossier][:champs][3][:rna][:title]).to eq('CROIX ROUGE')
       expect(data[:dossier][:champs][3][:rna][:address][:label]).to eq('12 RUE xyz 75512 Paris 14e')
       expect(data[:dossier][:champs][3][:rna][:address][:streetNumber]).to eq('12')
+      expect(data[:dossier][:champs][3][:rna][:address][:cityName]).to eq('Paris 14e')
+      expect(data[:dossier][:champs][3][:rna][:address][:departmentName]).to eq(nil)
+      expect(data[:dossier][:champs][3][:rna][:address][:regionName]).to eq(nil)
     end
 
     context 'when etablissement is in degraded mode' do
@@ -452,6 +459,8 @@ RSpec.describe Types::DossierType, type: :graphql do
     cityCode
     streetName
     streetNumber
+    departmentName
+    regionName
   }
 
   fragment RNAChampFragment on RNAChamp {
