@@ -170,9 +170,7 @@ module DossierCloneConcern
     children_champs_to_remove, root_champs_to_remove = champs_to_remove.partition(&:child?)
 
     children_champs_to_remove.each(&:destroy!)
-    root_champs_to_remove.each do |champ|
-      champ.rows.flatten.each(&:destroy!) if champ.repetition?
-      champ.destroy!
-    end
+    Champ.where(parent_id: root_champs_to_remove.map(&:id)).destroy_all
+    root_champs_to_remove.each(&:destroy!)
   end
 end
