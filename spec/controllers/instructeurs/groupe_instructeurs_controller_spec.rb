@@ -72,7 +72,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
   end
 
   describe '#add_instructeur' do
-    before do
+    subject do
       post :add_instructeur,
         params: {
           procedure_id: procedure.id,
@@ -83,6 +83,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
 
     context 'of a new instructeur' do
       let(:new_instructeur_email) { 'new_instructeur@mail.com' }
+      before { subject }
 
       it { expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email) }
       it { expect(flash.notice).to be_present }
@@ -91,9 +92,17 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
 
     context 'of an instructeur already in the group' do
       let(:new_instructeur_email) { instructeur.email }
+      before { subject }
 
       it { expect(flash.alert).to be_present }
       it { expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2)) }
+    end
+
+    context 'invalid email' do
+      let(:new_instructeur_email) { 'invalid' }
+
+      it { subject; expect(flash.alert).to include(new_instructeur_email) }
+      it { expect { subject }.not_to enqueue_email }
     end
   end
 
