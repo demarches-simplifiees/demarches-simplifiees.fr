@@ -3,7 +3,11 @@ class StrictEmailValidator < ActiveModel::EachValidator
   #   saying that it's quite permissive
   #   but we want more, we want to ensure it's a domain with extension
   #   so we append \.[A-Za-z]{2,}
-  REGEXP = /\A(?<username>[^@[:space:]])+@(?<domain>[^@[:space:]\.])+(?<extensions>\.[[:alnum:].]{2,})\z/
+  TRUEMAIL_REGEX_DOMAIN = /[\p{L}0-9]+([-.]{1}[\p{L}\p{N}\p{Pd}]*[\p{L}\p{N}]+)*\.\p{L}{2,63}/i.freeze
+  TRUEMAIL_REGEX_EMAIL_PATTERN = %r{(?=\A.{6,255}\z)(\A([\p{L}0-9]+[\w\p{L}.+!~,'&%#*^`{}|\-/?=$]*)@(#{TRUEMAIL_REGEX_DOMAIN})\z)}.freeze
+
+  REGEXP = TRUEMAIL_REGEX_EMAIL_PATTERN
+
   DATE_SINCE_STRICT_EMAIL_VALIDATION = Date.parse(ENV.fetch('STRICT_EMAIL_VALIDATION_STARTS_ON')) rescue 0
 
   def validate_each(record, attribute, value)
