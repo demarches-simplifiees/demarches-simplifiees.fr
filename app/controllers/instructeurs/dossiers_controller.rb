@@ -419,17 +419,24 @@ module Instructeurs
     end
 
     def remove_changes_forbidden_by_visa
-      # auto-save send small sets of fields to update so for speed, we look for brothers containing visa
+      # return if there's no checked visa in the dossier
       visa_type = TypeDeChamp.type_champs.fetch(:visa)
-      champs = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position)
+      checked_visa_champ = Champ.where(type_de_champ: { type_champ: visa_type }).where.not(value: "")
+      return champs_private_params unless Champ.private_only.joins(:type_de_champ).where(dossier: params[:dossier_id]).and(checked_visa_champ).any?
+
+      header_type = TypeDeChamp.type_champs.fetch(:header_section)
+      header_champ = Champ.where(type_de_champ: { type_champ: header_type })
+      champs_base = Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ).and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id)
+
+      # auto-save send small sets of fields to update so for speed, we look for brothers containing visa or headers
       params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
-        champ = champs.find(v[:id])
-        # look for position of last checked visa in same dossier, row
-        visa = champs.private_only
-          .where(row_id: champ.row_id, dossier: champ.dossier_id, type_de_champ: { type_champ: visa_type })
-          .where.not(value: "")
-          .order(position: :desc).first
-        visa.present? && champ[:position] < visa[:position]
+        champ = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position).find(v[:id])
+        # look for position of next visa in the same first level title.
+        champs = champs_base
+          .where(row_id: champ.row_id, dossier: champ.dossier_id)
+          .where('position > ?', champ[:position])
+        champ = champs.find { |c| c.visa? || (c.header_section? && c.header_section_level_value == 1) }
+        champ.present? && champ.visa?
       end
       champs_private_params
     end
