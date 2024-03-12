@@ -18,3 +18,6 @@
     - menu.with_item do
       = link_to download_export_path(export_template_id: export_template.id), role: 'menuitem', data: { turbo_method: :post, turbo: true } do
         = "Exporter à partir du modèle #{export_template.name}"
+  - menu.with_item do
+    = link_to new_instructeur_export_template_path(procedure_id: params[:procedure_id]), role: 'menuitem' do
+      Ajouter un modèle d'export
