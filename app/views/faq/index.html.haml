@@ -1,6 +1,7 @@
 - content_for(:title, t('.meta_title'))
 
 .fr-container.fr-my-4w
+  = render partial: "breadcrumb"
   .fr-grid-row
     .fr-col-12.fr-col-md-10
       %h1= t('.title', app_name: Current.application_name)

@@ -1,0 +1,13 @@
+%nav.fr-breadcrumb{ role: "navigation", 'aria-label': t('you_are_here', scope: [:layouts, :breadcrumb]) }
+  %button.fr-breadcrumb__button{ 'aria-expanded' => "false", 'aria-controls' => "breadcrumb-1" }
+    = t('show', scope: [:layouts, :breadcrumb])
+  .fr-collapse#breadcrumb-1
+    %ol.fr-breadcrumb__list
+      %li= link_to t('root', scope: [:layouts, :breadcrumb]), root_path, class: 'fr-breadcrumb__link'
+
+      %li
+        %a.fr-breadcrumb__link{ **(defined?(faq_title) ? { href: faq_index_path } : { "aria-current": "page" }) }= t('faq', scope: [:layouts, :breadcrumb])
+
+      - if defined?(faq_title)
+        %li
+          %a.fr-breadcrumb__link{ 'aria-current' => "page" }= faq_title
