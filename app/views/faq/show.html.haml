@@ -5,4 +5,5 @@
     .fr-col-12.fr-col-md-4
       = render partial: "sidebar", locals: { faqs: @siblings, current: @metadata }
     .fr-col-12.fr-col-md-8.fr-py-12v
-      = @renderer.render(@content).html_safe
+      .markdown-content
+        = @renderer.render(@content).html_safe
