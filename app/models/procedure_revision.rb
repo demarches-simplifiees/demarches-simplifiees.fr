@@ -133,15 +133,6 @@ class ProcedureRevision < ApplicationRecord
     changes
   end
 
-  def new_dossier
-    Dossier.new(
-      revision: self,
-      champs_public: build_champs_public,
-      champs_private: build_champs_private,
-      groupe_instructeur: procedure.defaut_groupe_instructeur
-    )
-  end
-
   def dossier_for_preview(user)
     dossier = Dossier
       .create_with(autorisation_donnees: true)

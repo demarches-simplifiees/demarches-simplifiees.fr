@@ -70,9 +70,9 @@ def add_page_numbering(pdf)
   pdf.number_pages string, options
 end
 
-def add_procedure(pdf, dossier)
+def add_procedure(pdf, procedure)
   pdf.repeat(lambda { |page| page > 1 }) do
-    pdf.draw_text dossier.procedure.libelle, :at => pdf.bounds.top_left
+    pdf.draw_text procedure.libelle, :at => pdf.bounds.top_left
   end
 end
 
@@ -80,7 +80,7 @@ def format_date(date)
   I18n.l(date, format: :message_date_with_year)
 end
 
-def add_identite_individual(pdf, dossier)
+def add_identite_individual(pdf)
   format_in_2_columns(pdf, "Civilité")
   format_in_2_columns(pdf, "Nom")
   format_in_2_columns(pdf, "Prénom")
@@ -106,96 +106,92 @@ def add_title(pdf, title)
   pdf.text "\n"
 end
 
-def add_libelle(pdf, champ)
-  add_single_line(pdf, champ.libelle, 9, :bold)
+def add_libelle(pdf, type_de_champ)
+  add_single_line(pdf, type_de_champ.libelle, 9, :bold)
 end
 
 def add_explanation(pdf, explanation)
   add_single_line(pdf, explanation, 9, :italic)
 end
 
-def add_optionnal_description(pdf, champ)
-  add_explanation(pdf, strip_tags(champ.description).strip + "\n\n") if champ.description.present?
+def add_optionnal_description(pdf, type_de_champ)
+  add_explanation(pdf, strip_tags(type_de_champ.description).strip + "\n\n") if type_de_champ.description.present?
 end
 
-def render_single_champ(pdf, champ)
-  case champ.type
-  when 'Champs::RepetitionChamp'
-    raise 'There should not be a RepetitionChamp here !'
-  when 'Champs::PieceJustificativeChamp'
+def render_single_champ(pdf, revision, type_de_champ)
+  case type_de_champ.type_champ
+  when TypeDeChamp.type_champs.fetch(:repetition)
+    add_libelle(pdf, type_de_champ)
+    types_de_champ = revision.children_of(type_de_champ)
+
+    3.times do
+      types_de_champ.each do |type_de_champ|
+        render_single_champ(pdf, revision, type_de_champ)
+      end
+    end
+  when TypeDeChamp.type_champs.fetch(:piece_justificative)
     add_single_line(pdf, 'Pièce justificative à joindre en complément du dossier', 9, :bold)
-    format_with_checkbox(pdf, champ.libelle)
-    add_optionnal_description(pdf, champ)
+    format_with_checkbox(pdf, type_de_champ.libelle)
+    add_optionnal_description(pdf, type_de_champ)
     pdf.text "\n"
-  when 'Champs::YesNoChamp', 'Champs::CheckboxChamp'
-    add_libelle(pdf, champ)
-    add_optionnal_description(pdf, champ)
+  when TypeDeChamp.type_champs.fetch(:yes_no), TypeDeChamp.type_champs.fetch(:checkbox)
+    add_libelle(pdf, type_de_champ)
+    add_optionnal_description(pdf, type_de_champ)
     add_explanation(pdf, 'Cochez la mention applicable')
     format_with_checkbox(pdf, 'Oui')
     format_with_checkbox(pdf, 'Non')
     pdf.text "\n"
-  when 'Champs::CiviliteChamp'
-    add_libelle(pdf, champ)
-    add_optionnal_description(pdf, champ)
+  when TypeDeChamp.type_champs.fetch(:civilite)
+    add_libelle(pdf, type_de_champ)
+    add_optionnal_description(pdf, type_de_champ)
     format_with_checkbox(pdf, Individual::GENDER_FEMALE)
     format_with_checkbox(pdf, Individual::GENDER_MALE)
     pdf.text "\n"
-  when 'Champs::HeaderSectionChamp'
-    add_single_line(pdf, champ.libelle, 14, :bold)
-    add_optionnal_description(pdf, champ)
+  when TypeDeChamp.type_champs.fetch(:header_section)
+    add_single_line(pdf, type_de_champ.libelle, 14, :bold)
+    add_optionnal_description(pdf, type_de_champ)
     pdf.text "\n"
-  when 'Champs::ExplicationChamp'
-    add_libelle(pdf, champ)
-    pdf.text champ.description
+  when TypeDeChamp.type_champs.fetch(:explication)
+    add_libelle(pdf, type_de_champ)
+    pdf.text type_de_champ.description
     pdf.text "\n"
-  when 'Champs::AddressChamp', 'Champs::CarteChamp', 'Champs::TextareaChamp'
-    format_in_2_lines(pdf, champ, 5)
-  when 'Champs::DropDownListChamp'
-    add_libelle(pdf, champ)
-    add_optionnal_description(pdf, champ)
+  when TypeDeChamp.type_champs.fetch(:address), TypeDeChamp.type_champs.fetch(:carte), TypeDeChamp.type_champs.fetch(:textarea)
+    format_in_2_lines(pdf, type_de_champ, 5)
+  when TypeDeChamp.type_champs.fetch(:drop_down_list)
+    add_libelle(pdf, type_de_champ)
+    add_optionnal_description(pdf, type_de_champ)
     add_explanation(pdf, 'Cochez la mention applicable, une seule valeur possible')
-    champ.enabled_non_empty_options.each do |option|
+    type_de_champ.drop_down_list_enabled_non_empty_options.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
-  when 'Champs::MultipleDropDownListChamp'
-    add_libelle(pdf, champ)
-    add_optionnal_description(pdf, champ)
+  when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+    add_libelle(pdf, type_de_champ)
+    add_optionnal_description(pdf, type_de_champ)
     add_explanation(pdf, 'Cochez la mention applicable, plusieurs valeurs possibles')
-    champ.enabled_non_empty_options.each do |option|
+    type_de_champ.drop_down_list_enabled_non_empty_options.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
-  when 'Champs::LinkedDropDownListChamp'
-    add_libelle(pdf, champ)
-    champ.primary_options.compact_blank.each do |o|
+  when TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+    add_libelle(pdf, type_de_champ)
+    type_de_champ.primary_options.compact_blank.each do |o|
       format_with_checkbox(pdf, o)
-      champ.secondary_options[o].compact_blank.each do |secondary_option|
+      type_de_champ.secondary_options[o].compact_blank.each do |secondary_option|
         format_with_checkbox(pdf, secondary_option, 15)
       end
     end
     pdf.text "\n"
-  when 'Champs::SiretChamp'
-    add_identite_etablissement(pdf, champ.libelle)
+  when TypeDeChamp.type_champs.fetch(:siret)
+    add_identite_etablissement(pdf, type_de_champ.libelle)
   else
-    format_in_2_lines(pdf, champ)
+    format_in_2_lines(pdf, type_de_champ)
   end
 end
 
-def add_champs(pdf, champs)
-  champs.each do |champ|
-    if champ.type == 'Champs::RepetitionChamp'
-      add_libelle(pdf, champ)
-      added_champs = champ.add_row(champ.type_de_champ.revision)
-
-      3.times do
-        added_champs.each do |champ|
-          render_single_champ(pdf, champ)
-        end
-      end
-    else
-      render_single_champ(pdf, champ)
-    end
+def add_champs(pdf, revision, types_de_champ)
+  types_de_champ.each do |type_de_champ|
+    render_single_champ(pdf, revision, type_de_champ)
   end
 end
 
@@ -209,23 +205,24 @@ prawn_document(page_size: "A4") do |pdf|
   pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
   pdf.move_down(40)
 
-  render_in_2_columns(pdf, 'Démarche', @dossier.procedure.libelle)
-  render_in_2_columns(pdf, 'Organisme', @dossier.procedure.organisation_name || "En attente de saisi")
+  render_in_2_columns(pdf, 'Démarche', @procedure.libelle)
+  render_in_2_columns(pdf, 'Organisme', @procedure.organisation_name || "En attente de saisi")
   pdf.text "\n"
 
   add_title(pdf, "Identité du demandeur")
 
   format_in_2_columns(pdf, "Email")
-  if @dossier.procedure.for_individual?
-    add_identite_individual(pdf, @dossier)
+
+  if @procedure.for_individual?
+    add_identite_individual(pdf)
   else
-    render_identite_etablissement(pdf, @dossier.etablissement) if @dossier.etablissement.present?
+    add_identite_etablissement(pdf, 'Etablissement')
   end
   pdf.text "\n"
 
   add_title(pdf, 'Formulaire')
-  add_single_line(pdf, @dossier.procedure.description + "\n", 9, :italic) if @dossier.procedure.description.present?
-  add_champs(pdf, @dossier.champs_public)
+  add_single_line(pdf, @procedure.description + "\n", 9, :italic) if @procedure.description.present?
+  add_champs(pdf, @revision, @revision.types_de_champ_public)
   add_page_numbering(pdf)
-  add_procedure(pdf, @dossier)
+  add_procedure(pdf, @procedure)
 end
