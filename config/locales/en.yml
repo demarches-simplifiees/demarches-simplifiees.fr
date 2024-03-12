@@ -799,6 +799,8 @@ en:
     dossiers:
       test_procedure: "This file is submitted on a test procedure. Any modification of the procedure by the administrator (addition of a field, publication of the procedure, etc.) will result in the removal of the file."
       no_access_html: "You do not have access to this file.<br>Check that you were signed in as <b>%{email}</b> to fill this procedure.<br>If not, please log off"
+      no_dossier: "File no longer exists. The document associated with this QR code is no longer valid."
+      invalid_qrcode: "This QR code is not valid."
       no_longer_editable: "Your file can no longer be edited"
       verify_site: "Verify you are on "
       en_construction_submitted: "The modifications have already been submitted"

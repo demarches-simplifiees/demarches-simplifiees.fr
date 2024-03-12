@@ -117,7 +117,7 @@ module Users
     end
 
     def qrcode
-      if dossier.match_encoded_date?(:created_at, params[:created_at])
+      if dossier&.match_encoded_date?(:created_at, params[:created_at]) && dossier&.attestation&.pdf&.attached?
         attestation_template = dossier.attestation_template
         if attestation_template&.activated
           @attestation = attestation_template.render_attributes_for(dossier: dossier)
@@ -126,7 +126,7 @@ module Users
           attestation
         end
       else
-        forbidden!
+        render 'qrcode'
       end
     end
 
@@ -186,18 +186,18 @@ module Users
 
       sanitized_siret = siret_model.siret
       etablissement = begin
-                        APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-                      rescue => error
-                        if error.try(:network_error?) && !APIEntrepriseService.api_up?
-                          # TODO: notify ops
-                          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
-                        else
-                          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
+        APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
+      rescue => error
+        if error.try(:network_error?) && !APIEntrepriseService.api_up?
+          # TODO: notify ops
+          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
+        else
+          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
 
-                          # probably random error, invite user to retry
-                          return render_siret_error(t('errors.messages.siret_network_error'))
-                        end
-                      end
+          # probably random error, invite user to retry
+          return render_siret_error(t('errors.messages.siret_network_error'))
+        end
+      end
 
       if etablissement.nil?
         return render_siret_error(t('errors.messages.siret_unknown'))

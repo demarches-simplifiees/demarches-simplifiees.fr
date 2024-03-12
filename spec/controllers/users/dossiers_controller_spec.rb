@@ -190,7 +190,7 @@ describe Users::DossiersController, type: :controller do
         before { sign_in(another_user) }
         after { sign_in(user) }
 
-        it 'returns the attestation pdf' do
+        it 'returns error' do
           attestation_template = dossier.attestation_template
           attestation_template.activated = false
           attestation_template.save
@@ -198,6 +198,18 @@ describe Users::DossiersController, type: :controller do
           get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
           expect(response.headers["Location"]).to end_with ".pdf"
         end
+      end
+    end
+
+    context 'when the dossier is no longer accepted' do
+      let(:another_user) { create(:user) }
+      let!(:dossier) { create(:dossier, :with_attestation, :followed, :accepte, user: user) }
+      before { sign_in(user) }
+
+      it 'display error message' do
+        dossier.repasser_en_instruction!(instructeur: dossier.followers_instructeurs.first)
+        get :qrcode, params: { id: dossier.id, created_at: dossier.encoded_date(:created_at) }
+        expect(response).to render_template(:qrcode)
       end
     end
   end
@@ -270,7 +282,7 @@ describe Users::DossiersController, type: :controller do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
         .to_return(body: Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read, status: 200)
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
-        .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
+                                                     .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
 
       if api_current_status_response
@@ -450,7 +462,7 @@ describe Users::DossiersController, type: :controller do
       expect(delivery).to receive(:deliver_later).with(no_args)
 
       expect(NotificationMailer).to receive(:send_en_construction_notification)
-        .and_return(delivery)
+                                      .and_return(delivery)
 
       subject
 
@@ -1127,12 +1139,12 @@ describe Users::DossiersController, type: :controller do
       let(:procedure) { create(:procedure) }
       let(:dossier) do
         create(:dossier,
-          :accepte,
-          :with_populated_champs,
-          :with_motivation,
-          :with_commentaires,
-          procedure: procedure,
-          user: user)
+               :accepte,
+               :with_populated_champs,
+               :with_motivation,
+               :with_commentaires,
+               procedure: procedure,
+               user: user)
       end
 
       subject! { get(:show, params: { id: dossier.id, format: :pdf }) }
