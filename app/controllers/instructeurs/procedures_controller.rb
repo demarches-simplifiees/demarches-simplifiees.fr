@@ -245,6 +245,7 @@ module Instructeurs
     def exports
       @procedure = procedure
       @exports = Export.for_groupe_instructeurs(groupe_instructeur_ids).ante_chronological
+      @export_templates = current_instructeur.export_templates_for(@procedure).includes(:groupe_instructeur)
       cookies.encrypted[cookies_export_key] = {
         value: DateTime.current,
         expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT
