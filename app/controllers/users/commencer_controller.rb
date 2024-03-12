@@ -151,7 +151,7 @@ module Users
     end
 
     def generate_empty_pdf(revision)
-      @dossier = revision.new_dossier
+      @revision = revision
       data = render_to_string(template: 'dossiers/dossier_vide', formats: [:pdf])
       send_data(data, filename: "#{revision.procedure.libelle}.pdf")
     end

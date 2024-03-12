@@ -1366,26 +1366,6 @@ describe Procedure do
     it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
   end
 
-  describe '#new_dossier' do
-    let(:procedure) do
-      create(:procedure,
-        types_de_champ_public: [{}, { type: :number }],
-        types_de_champ_private: [{ type: :textarea }])
-    end
-
-    let(:dossier) { procedure.active_revision.new_dossier }
-
-    it { expect(dossier.procedure).to eq(procedure) }
-
-    it { expect(dossier.champs_public.size).to eq(2) }
-    it { expect(dossier.champs_public.first.type).to eq("Champs::TextChamp") }
-
-    it { expect(dossier.champs_private.size).to eq(1) }
-    it { expect(dossier.champs_private.first.type).to eq("Champs::TextareaChamp") }
-
-    it { expect(Champ.count).to eq(0) }
-  end
-
   describe "#organisation_name" do
     subject { procedure.organisation_name }
     context 'when the procedure has a service (and no organization)' do
