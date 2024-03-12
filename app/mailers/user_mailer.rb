@@ -74,6 +74,15 @@ class UserMailer < ApplicationMailer
     mail(to: user.email, subject: @subject)
   end
 
+  def notify_after_closing(user, content, procedure = nil)
+    @user = user
+    @subject = "Clôture d'une démarche sur Démarches simplifiées"
+    @procedure = procedure
+    @content = content
+
+    mail(to: user.email, subject: @subject, content: @content, procedure: @procedure)
+  end
+
   def self.critical_email?(action_name)
     [
       'france_connect_merge_confirmation',

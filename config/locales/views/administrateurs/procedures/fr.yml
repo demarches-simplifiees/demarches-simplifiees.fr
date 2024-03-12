@@ -3,9 +3,25 @@ fr:
     procedures:
       close:
         page_title: Clore la démarche
-        replacement_procedure_title: Cette démarche est-elle remplacée par une existante ? Si oui, veuillez indiquer le n° de la nouvelle démarche
+        replacement_procedure_callout_title: Vous êtes sur le point de clore une démarche
+        replacement_procedure_callout_content: Les dossiers en cours pourront être instruits, mais aucun nouveau dossier ne pourra plus être déposé.
         actions:
           close_procedure: Clore la démarche
+          notify_after_closing: Informer les usagers
+          cancel: Retour
+      closing_notification:
+        page_title: Alerter les usagers
+        page_subtitle: Votre démarche est close. Le lien de votre démarche redirige désormais vers cette <a href="%{closing_path}" target="_blank" rel="noopener noreferrer">page de fermeture</a>.
+        page_subtitle_with_redirection: Votre démarche est close. Le lien public redirige désormais vers cette <a href="%{redirection_path}" target="_blank" rel="noopener noreferrer">démarche</a>.
+        callout_content: Vous avez la possibilité de continuer à instruire les dossiers déposés. Si vous n’avez pas l’intention d’instruire ces dossiers, nous vous invitons à en informer les usagers.
+        email_toggle_brouillon:
+          one: Souhaitez-vous envoyer un email à l'utilisateur avec un dossier en brouillon ?
+          other: Souhaitez-vous envoyer un email aux %{count} utilisateurs avec un dossier en brouillon ?
+        email_content_brouillon: Contenu de l'email
+        email_toggle_en_cours:
+          one : Souhaitez-vous envoyer un email à l'utilisateur avec un dossier déposé ?
+          other: Souhaitez-vous envoyer un email aux %{count} utilisateurs avec un dossier déposé ?
+        email_content_en_cours: Contenu de l'email
       preview_unavailable: Aperçu non disponible car la démarche est mal configurée
       modifications:
         dossiers_en_construction_and_dossiers_en_instruction: Il y a %{en_construction_count} dossiers « en construction » et %{en_instruction_count} dossiers « en instruction » sur cette version de la démarche.
