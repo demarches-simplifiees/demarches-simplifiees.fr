@@ -37,6 +37,14 @@ module Instructeurs
       end
     end
 
+    def destroy
+      if @export_template.destroy
+        redirect_to exports_instructeur_procedure_path(procedure: @procedure), notice: "Le modèle d'export #{@export_template.name} a bien été supprimé"
+      else
+        redirect_to exports_instructeur_procedure_path(procedure: @procedure), alert: "Le modèle d'export #{@export_template.name} n'a pu être supprimé"
+      end
+    end
+
     def preview
       param = params.require(:export_template).keys.first
       @preview_param = param.delete_prefix("tiptap_")
