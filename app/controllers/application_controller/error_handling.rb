@@ -5,10 +5,12 @@ module ApplicationController::ErrorHandling
     rescue_from ActionController::InvalidAuthenticityToken do
       # When some browsers (like Safari) re-open a previously closed tab, they attempts
       # to reload the page – even if it is a POST request. But in that case, they don’t
-      # sends any of the cookies.
+      # sends any of the cookies and we don’t report this error.
       #
-      # In that case, don’t report this error.
-      if request.cookies.count > 0
+      # There are dozens of these "errors" every day,
+      # we only log them to detect massive attacks or global errors
+      # without having thousands reports.
+      if request.cookies.any? && rand(10) == 0
         log_invalid_authenticity_token_error
       end
 
