@@ -47,7 +47,7 @@ class Users::SessionsController < Devise::SessionsController
         return
       when User.loged_in_with_france_connects.fetch(:sipf), User.loged_in_with_france_connects.fetch(:tatou)
         params = { redirect_uri: root_url }
-        redirect_to "#{Rails.application.secrets[connected_with_france_connect][:logout_endpoint]}?#{params.to_query}"
+        redirect_to "#{Rails.application.secrets[connected_with_france_connect][:logout_endpoint]}?#{params.to_query}", allow_other_host: true
         return
         # when User.loged_in_with_france_connects.fetch(:microsoft)
         #   params = { post_logout_redirect_uri: root_url }
