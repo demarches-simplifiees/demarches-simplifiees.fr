@@ -117,4 +117,17 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       end
     end
   end
+
+  describe '#destroy' do
+    let(:export_template) { create(:export_template, groupe_instructeur:) }
+    let(:subject) { delete :destroy, params: { procedure_id: procedure.id, id: export_template.id } }
+
+    context 'with valid params' do
+      it 'redirect to some page' do
+        subject
+        expect(response).to redirect_to(exports_instructeur_procedure_path(procedure:))
+        expect(flash.notice).to eq "Le modèle d'export Mon export a bien été supprimé"
+      end
+    end
+  end
 end

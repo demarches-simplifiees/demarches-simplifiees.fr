@@ -3,6 +3,7 @@ class ExportTemplate < ApplicationRecord
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
+  has_many :exports, dependent: :nullify
   validates_with ExportTemplateValidator
 
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
