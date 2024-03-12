@@ -13,7 +13,7 @@ en:
         mandataire_last_name: Last name
         for_tiers:
           false: For yourself
-          true: "For someone else : a family member, a relative, someone you represent"
+          true: "For someone else : a family member, a relative, a professional, someone you represent."
       dossier/state: &state
         brouillon: "Draft"
         en_construction: "In progress"
