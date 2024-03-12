@@ -18,7 +18,7 @@ module Instructeurs
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
     def attestation
-      if dossier.attestation.pdf.attached?
+      if dossier.attestation&.pdf&.attached?
         redirect_to dossier.attestation.pdf.url, allow_other_host: true
       end
     end
