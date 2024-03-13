@@ -3,7 +3,7 @@
 module Maintenance
   class BackfillBulkMessagesWithProcedureIdTask < MaintenanceTasks::Task
     def collection
-      BulkMessage.all.filter { |bm| bm.procedure.nil? && bm.groupe_instructeurs.present? }
+      BulkMessage.where(procedure: nil).where.missing(:groupe_instructeurs)
     end
 
     def process(element)
