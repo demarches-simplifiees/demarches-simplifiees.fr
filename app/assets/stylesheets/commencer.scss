@@ -1,11 +1,7 @@
 @import "constants";
 
 .commencer {
-  .optional-on-small-screens {
-    color: #FFFFFF;
-  }
-
-  @media (max-width: 450px) {
+  @media (max-width: 62em) {
     .optional-on-small-screens {
       display: none;
     }
