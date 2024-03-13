@@ -19,10 +19,21 @@ FileUtils.chdir APP_ROOT do
 
   # Install JavaScript dependencies
   system! 'node --version'
-  system! 'bin/yarn install'
+  system! 'bun --version'
+  system! 'bun install'
 
-  puts "\n== Updating webdrivers =="
-  system! 'RAILS_ENV=test bin/rails webdrivers:chromedriver:update'
+  if ENV["UPDATE_WEBDRIVER"]
+    puts "\n== Updating webdrivers =="
+    puts "\nyou must add ~/.local/bin to your path"
+    system! 'bunx @puppeteer/browsers clear --path ~/.local/bin/headless_browsers'
+
+    system! 'bunx @puppeteer/browsers install chromedriver --path ~/.local/bin/headless_browsers'
+    system! 'bunx @puppeteer/browsers install chrome --path ~/.local/bin/headless_browsers'
+    puts "\n if chrome and chromedriver versions are not compatible, add the version you want in the above lines. ex : chrome@121"
+
+    system! 'rm -f ~/.local/bin/chromedriver && ln -s $(find ~/.local/bin/headless_browsers -type f -name chromedriver) ~/.local/bin/chromedriver'
+    system! 'rm -f ~/.local/bin/chrome && ln -s $(find ~/.local/bin/headless_browsers -type f -name chrome) ~/.local/bin/chrome'
+  end
 
   puts "\n== Copying sample files =="
   unless File.exist?('.env')

@@ -41,7 +41,7 @@ Pour faire tourner sidekiq, vous aurez besoin de :
 #### Développement
 
 - rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
-- Yarn : voir https://yarnpkg.com/en/docs/install
+- Bun : voir https://bun.sh/docs/installation
 
 #### Tests
 

@@ -21,7 +21,7 @@ jobs:
         ports: [ "5432:5432" ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup the app code and dependancies
         uses: ./.github/actions/ci-setup-rails
@@ -36,22 +36,23 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          cache: 'yarn'
+        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
 
       - name: Install Node modules
         run: |
           node --version
-          yarn install --frozen-lockfile
+          bun --version
+          bun install
         shell: bash
 
       - name: Run tests
         run: |
-          yarn test
+          bun run test
 
   unit_tests:
     name: Unit tests
@@ -72,7 +73,7 @@ jobs:
         instances: [0, 1, 2, 3, 4, 5]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install build dependancies
         # - fonts pickable by ImageMagick
@@ -97,9 +98,9 @@ jobs:
           bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
       - name: Upload test results for this instance
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: rspec-results-${{ github.job }}-${{ strategy.job-index }}
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
   system_tests:
@@ -121,7 +122,7 @@ jobs:
         instances: [0, 1]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
@@ -141,9 +142,9 @@ jobs:
           RAILS_ENV=test bin/rspec $SPEC_FILES --format progress --format RspecJunitFormatter --out tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
       - name: Upload test results for this instance
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: test-reports
+          name: rspec-results-${{ github.job }}-${{ strategy.job-index }}
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
   save_test_reports:
@@ -152,13 +153,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Collect test results from all instances
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: test-reports
           path: tmp
+          pattern: rspec-results-*
+          merge-multiple: true
 
       - name: Save test results and timing data, to better split future tests
         uses: ./.github/actions/ci-save-split-tests
