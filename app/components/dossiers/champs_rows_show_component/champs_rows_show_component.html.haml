@@ -13,7 +13,9 @@
           = t(blank_key(champ))
       - else
         - c.with_value do
-          - case champ.type_champ
+          - type_champ = champ.type_champ
+          - champ = champ.champ
+          - case type_champ
           - when TypeDeChamp.type_champs.fetch(:carte)
             = render partial: "shared/champs/carte/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:dossier_link)

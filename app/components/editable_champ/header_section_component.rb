@@ -20,7 +20,7 @@ class EditableChamp::HeaderSectionComponent < ApplicationComponent
     class_names(
       {
         "section-#{level}": true,
-        'header-section': @champ.dossier.auto_numbering_section_headers_for?(@champ),
+        'header-section': @champ.dossier.auto_numbering_section_headers_for?(@champ.champ),
         'hidden': !@champ.visible?
       }.merge(@html_class)
     )

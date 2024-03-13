@@ -23,7 +23,7 @@ class Dossiers::ChampsRowsShowComponent < ApplicationComponent
 
   def blank_key(champ)
     key = ".blank_optional"
-    key += "_attachment" if champ.type_de_champ.piece_justificative?
+    key += "_attachment" if champ.piece_justificative?
 
     key
   end
