@@ -426,7 +426,8 @@ module Instructeurs
 
       header_type = TypeDeChamp.type_champs.fetch(:header_section)
       header_champ = Champ.where(type_de_champ: { type_champ: header_type })
-      champs_base = Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ).and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id)
+      champs_base = Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ)
+        .and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id, :position).order(:position)
 
       # auto-save send small sets of fields to update so for speed, we look for brothers containing visa or headers
       params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
@@ -435,8 +436,8 @@ module Instructeurs
         champs = champs_base
           .where(row_id: champ.row_id, dossier: champ.dossier_id)
           .where('position > ?', champ[:position])
-        champ = champs.find { |c| c.visa? || (c.header_section? && c.header_section_level_value == 1) }
-        champ.present? && champ.visa?
+        following_champ = champs.find { |c| c.visa? || (c.header_section? && c.header_section_level_value == 1) }
+        following_champ.present? && following_champ.visa?
       end
       champs_private_params
     end
