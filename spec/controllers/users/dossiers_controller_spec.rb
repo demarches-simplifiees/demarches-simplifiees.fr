@@ -282,7 +282,7 @@ describe Users::DossiersController, type: :controller do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
         .to_return(body: Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read, status: 200)
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
-                                                     .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
+        .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
 
       if api_current_status_response
@@ -462,7 +462,7 @@ describe Users::DossiersController, type: :controller do
       expect(delivery).to receive(:deliver_later).with(no_args)
 
       expect(NotificationMailer).to receive(:send_en_construction_notification)
-                                      .and_return(delivery)
+        .and_return(delivery)
 
       subject
 

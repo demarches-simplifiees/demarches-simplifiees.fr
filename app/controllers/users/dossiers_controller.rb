@@ -187,16 +187,16 @@ module Users
       sanitized_siret = siret_model.siret
       etablissement = begin
         APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-      rescue => error
-        if error.try(:network_error?) && !APIEntrepriseService.api_up?
-          # TODO: notify ops
-          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
-        else
-          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
+                      rescue => error
+                        if error.try(:network_error?) && !APIEntrepriseService.api_up?
+                          # TODO: notify ops
+                          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
+                        else
+                          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
 
-          # probably random error, invite user to retry
-          return render_siret_error(t('errors.messages.siret_network_error'))
-        end
+                          # probably random error, invite user to retry
+                          return render_siret_error(t('errors.messages.siret_network_error'))
+                        end
       end
 
       if etablissement.nil?
