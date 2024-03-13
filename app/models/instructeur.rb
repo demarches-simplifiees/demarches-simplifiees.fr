@@ -303,6 +303,10 @@ class Instructeur < ApplicationRecord
     agent_connect_information.order(updated_at: :desc).first
   end
 
+  def export_templates_for(procedure)
+    procedure.export_templates.where(groupe_instructeur: groupe_instructeurs).order(:name)
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)
