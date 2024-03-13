@@ -3,7 +3,7 @@
 module Maintenance
   class DestroyIncompleteBulkMessagesTask < MaintenanceTasks::Task
     def collection
-      BulkMessage.all.filter { |bm| bm.procedure.nil? && bm.groupe_instructeurs.blank? }
+      BulkMessage.where(procedure: nil).where.missing(:groupe_instructeurs)
     end
 
     def process(element)
