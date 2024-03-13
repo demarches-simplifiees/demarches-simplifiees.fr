@@ -1,9 +1,9 @@
 class Dossiers::ExportDropdownComponent < ApplicationComponent
   include ApplicationHelper
 
-  def initialize(procedure:, statut: nil, count: nil, class_btn: nil, export_url: nil)
+  def initialize(procedure:, export_templates: nil, statut: nil, count: nil, class_btn: nil, export_url: nil)
     @procedure = procedure
-    @export_templates = procedure.export_templates
+    @export_templates = export_templates
     @statut = statut
     @count = count
     @class_btn = class_btn
