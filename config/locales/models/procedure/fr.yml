@@ -74,3 +74,7 @@ fr:
             sva_svr:
               immutable: "La configuration SVA/SVR ne peut plus être modifiée"
               declarative_incompatible: "Le SVA/SVR est incompatible avec une démarche déclarative"
+  helpers:
+    label:
+      procedure:
+        routing_champs: Champ(s) de routage

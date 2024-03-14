@@ -703,6 +703,10 @@ class Procedure < ApplicationRecord
     groupe_instructeurs - [defaut_groupe_instructeur]
   end
 
+  def routing_champs
+    active_revision.types_de_champ_public.filter(&:used_by_routing_rules?).map(&:libelle)
+  end
+
   def can_be_deleted_by_administrateur?
     brouillon? || dossiers.state_en_instruction.empty?
   end

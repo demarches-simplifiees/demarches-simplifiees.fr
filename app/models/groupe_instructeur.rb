@@ -92,7 +92,7 @@ class GroupeInstructeur < ApplicationRecord
   end
 
   def valid_rule_line?(rule)
-    ([rule.left, rule, rule.right] in [ChampValue, (LessThan | LessThanEq | Eq | NotEq | GreaterThanEq | GreaterThan | IncludeOperator), Constant]) && routing_rule_matches_tdc?(rule)
+    !rule.is_a?(EmptyOperator) && routing_rule_matches_tdc?(rule)
   end
 
   def non_unique_rule?
@@ -111,6 +111,10 @@ class GroupeInstructeur < ApplicationRecord
 
   def other_groupe_instructeurs
     procedure.groupe_instructeurs - [self]
+  end
+
+  def humanized_routing_rule
+    routing_rule&.to_s(procedure.active_revision.types_de_champ)
   end
 
   private
