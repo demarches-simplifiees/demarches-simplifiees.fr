@@ -8,34 +8,39 @@ describe DossierSectionsConcern do
     let(:procedure) { create(:procedure, :for_individual, types_de_champ_public:, types_de_champ_private:) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
+    let(:public_type_de_champ) { dossier.types_de_champ_public[1] }
+    let(:private_type_de_champ) { dossier.types_de_champ_private[1] }
+
     context "with no section having number" do
-      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(true) }
-      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(true) }
+      it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(true) }
+      it { expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(true) }
     end
 
     context "with public section having number" do
       let(:public_libelle) { "1 - infos" }
-      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(false) }
-      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(true) }
+      it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(false) }
+      it { expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(true) }
     end
 
     context "with private section having number" do
       let(:private_libelle) { "1 - infos private" }
-      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1])).to eq(true) }
-      it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_private[1])).to eq(false) }
+      it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(true) }
+      it { expect(dossier.auto_numbering_section_headers_for?(private_type_de_champ)).to eq(false) }
     end
 
     context "header_section in a repetition are not auto-numbered" do
       let(:types_de_champ_public) { [{ type: :header_section, libelle: public_libelle }, { type: :repetition, mandatory: true, children: [{ type: :header_section, libelle: "Enfant" }, { type: :text }] }] }
 
+      let(:public_type_de_champ) { dossier.revision.children_of(dossier.types_de_champ_public[1]).first }
+
       context "with parent section having headers with number" do
         let(:public_libelle) { "1. Infos" }
-        it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1].rows[0][0])).to eq(false) }
+        it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(false) }
       end
 
       context "with parent section having headers without number" do
         let(:public_libelle) { "infos" }
-        it { expect(dossier.auto_numbering_section_headers_for?(dossier.champs_public[1].rows[0][0])).to eq(false) }
+        it { expect(dossier.auto_numbering_section_headers_for?(public_type_de_champ)).to eq(false) }
       end
     end
   end
@@ -53,19 +58,19 @@ describe DossierSectionsConcern do
     let(:procedure) { create(:procedure, :for_individual, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
-    let(:headers) { dossier.champs_public.filter(&:header_section?) }
+    let(:headers) { dossier.revision.types_de_champ_public.filter(&:header_section?) }
 
     let(:number_value) { nil }
 
     before do
-      dossier.champs_public.find { _1.stable_id == number_stable_id }.update(value: number_value)
+      dossier.champs.find { _1.stable_id == number_stable_id }.update(value: number_value)
       dossier.reload
     end
 
     context "when there are invisible sections" do
       it "index accordingly header sections" do
          expect(dossier.index_for_section_header(headers[0])).to eq(1)
-         expect(headers[1]).not_to be_visible
+         expect(dossier.project_champ(headers[1], nil)).not_to be_visible
          expect(dossier.index_for_section_header(headers[2])).to eq(2)
        end
     end
@@ -74,7 +79,7 @@ describe DossierSectionsConcern do
       let(:number_value) { 5 }
       it "index accordingly header sections" do
         expect(dossier.index_for_section_header(headers[0])).to eq(1)
-        expect(headers[1]).to be_visible
+        expect(dossier.project_champ(headers[1], nil)).to be_visible
         expect(dossier.index_for_section_header(headers[1])).to eq(2)
         expect(dossier.index_for_section_header(headers[2])).to eq(3)
       end
