@@ -43,6 +43,12 @@ $procedure-context-breakpoint: $two-columns-breakpoint;
       max-width: 100%;
       max-height: 50px;
 
+      html[data-fr-theme='dark'] & {
+        box-sizing: content-box;
+        padding: $default-padding / 2;
+        background: #FFFFFF;
+      }
+
       @media (min-width: $procedure-context-breakpoint) {
         max-height: 90px;
       }
