@@ -34,9 +34,13 @@ module Administrateurs
             }
           }.to_json
 
-          result = Typhoeus.post(WEASYPRINT_URL, headers:, body:)
+          response = Typhoeus.post(WEASYPRINT_URL, headers:, body:)
 
-          send_data(result.body, filename: 'attestation.pdf', type: 'application/pdf', disposition: 'inline')
+          if response.success?
+            send_data(response.body, filename: 'attestation.pdf', type: 'application/pdf', disposition: 'inline')
+          else
+            raise StandardError.new("PDF Generation failed: #{response.return_code} #{response.status_message}")
+          end
         end
       end
     end
