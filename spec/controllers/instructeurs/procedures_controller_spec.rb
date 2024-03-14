@@ -777,15 +777,18 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     context 'when the turbo_stream format is used' do
+      render_views
+
       before do
         post :download_export,
-          params: { export_format: :csv, procedure_id: procedure.id },
+          params: { export_format: :csv, procedure_id: procedure.id, statut: 'traites' },
           format: :turbo_stream
       end
 
       it 'responds in the correct format' do
         expect(response.media_type).to eq('text/vnd.turbo-stream.html')
         expect(response).to have_http_status(:ok)
+        expect(response.body).to include(polling_last_export_instructeur_procedure_path(procedure))
       end
     end
 
