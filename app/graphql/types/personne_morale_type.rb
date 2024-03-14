@@ -32,6 +32,10 @@ module Types
       field :attestation_fiscale_attachment, Types::File, null: true
       field :enseigne, String, null: true
 
+      def enseigne
+        object.enseigne || nil
+      end
+
       def attestation_sociale_attachment
         load_attachment_for(:entreprise_attestation_sociale_attachment)
       end

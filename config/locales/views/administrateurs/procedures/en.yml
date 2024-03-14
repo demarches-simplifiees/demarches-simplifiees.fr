@@ -55,3 +55,5 @@ en:
         dpd_part_polynesie_body: "Hi%0AWould it be possible to get feedbacks on procedure %{id} available on %{path}%0AThanks in advance."
         back_to_procedure: 'Cancel and return to the procedure page'
         submit: Publish
+    autosave_notice:
+      form_saved: "Form saved"

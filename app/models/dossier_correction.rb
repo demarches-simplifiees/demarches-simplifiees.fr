@@ -6,7 +6,11 @@ class DossierCorrection < ApplicationRecord
 
   scope :pending, -> { where(resolved_at: nil) }
 
-  enum reason: { incorrect: 'incorrect', incomplete: 'incomplete' }, _prefix: :dossier
+  enum reason: {
+    incorrect: 'incorrect',
+    incomplete: 'incomplete',
+    outdated: 'outdated'
+  }, _prefix: :dossier
 
   def resolved?
     resolved_at.present?

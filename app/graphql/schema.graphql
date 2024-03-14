@@ -624,6 +624,11 @@ enum CorrectionReason {
   Le dossier n’est pas valide et nécessite une correction
   """
   incorrect
+
+  """
+  Le dossier doit être mis à jour et revalidé
+  """
+  outdated
 }
 
 """
@@ -3817,6 +3822,33 @@ type RNAChampDescriptor implements ChampDescriptor {
   Type de la valeur du champ.
   """
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type RNF {
+  address: Address
+  id: String!
+  title: String
+}
+
+type RNFChamp implements Champ {
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+  rnf: RNF
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type RNFChampDescriptor implements ChampDescriptor {

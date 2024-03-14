@@ -78,6 +78,12 @@ module SystemHelpers
     expect(page).to have_button('Ajouter un champ', disabled: false)
     expect(page).to have_content('Formulaire enregistré')
     execute_script("document.querySelector('#flash_message').remove();")
+    execute_script("document.querySelector('#autosave-notice').remove();")
+  end
+
+  def hide_autonotice_message
+    expect(page).to have_text('Formulaire enregistré')
+    execute_script("document.querySelector('#autosave-notice').classList.add('hidden');")
   end
 
   def blur

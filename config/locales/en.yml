@@ -334,8 +334,6 @@ en:
           updated_at: "Updated on %{datetime}"
         edit:
           autosave: Your file is automatically saved after each modification. You can close the window at any time and pick up where you left off later.
-          pending_correction:
-            confirm_label: I certify that I have made all corrections requested by the administration.
         messages:
           form:
             send_message: "Send message"

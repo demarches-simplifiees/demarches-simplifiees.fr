@@ -5,3 +5,4 @@ fr:
         reasons:
           incorrect: "Le dossier n’est pas valide et nécessite une correction"
           incomplete: "Le dossier est incomplet et nécessite d’être complété"
+          outdated: "Le dossier doit être mis à jour et revalidé"

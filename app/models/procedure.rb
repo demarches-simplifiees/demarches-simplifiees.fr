@@ -1018,11 +1018,15 @@ class Procedure < ApplicationRecord
   end
 
   def pieces_jointes_list_without_conditionnal
-    active_revision.types_de_champ_public.not_condition.filter(&:piece_justificative?)
+    pieces_jointes_list do |base_scope|
+      base_scope.where(types_de_champ: { condition: nil })
+    end
   end
 
   def pieces_jointes_list_with_conditionnal
-    active_revision.types_de_champ_public.where.not(condition: nil).filter(&:piece_justificative?)
+    pieces_jointes_list do |base_scope|
+      base_scope.where.not(types_de_champ: { condition: nil })
+    end
   end
 
   def toggle_routing
@@ -1034,6 +1038,22 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def pieces_jointes_list
+    scope = yield active_revision.revision_types_de_champ_public
+      .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
+      .where(types_de_champ: { type_champ: ['repetition', 'piece_justificative', 'titre_identite'] })
+
+    scope.each_with_object([]) do |rtdc, list|
+      if rtdc.type_de_champ.repetition?
+        rtdc.revision_types_de_champ.each do |rtdc_in_repetition|
+          list << [rtdc_in_repetition.type_de_champ, rtdc.type_de_champ] if rtdc_in_repetition.type_de_champ.piece_justificative?
+        end
+      else
+        list << [rtdc.type_de_champ]
+      end
+    end
+  end
 
   def validate_auto_archive_on_in_the_future
     return if auto_archive_on.nil?

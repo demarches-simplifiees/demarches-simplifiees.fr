@@ -5,6 +5,10 @@ class Champs::RNFChamp < Champ
     external_id
   end
 
+  def value
+    rnf_id
+  end
+
   def fetch_external_data
     RNFService.new.(rnf_id:)
   end

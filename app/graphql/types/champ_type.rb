@@ -79,6 +79,8 @@ module Types
           Types::Champs::VisaChampType
         when ::Champs::EpciChamp
           Types::Champs::EpciChampType
+        when ::Champs::RNFChamp
+          Types::Champs::RNFChampType
         else
           Types::Champs::TextChampType
         end

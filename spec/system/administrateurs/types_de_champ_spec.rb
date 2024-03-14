@@ -71,7 +71,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   scenario "removing champs" do
     add_champ
-    remove_flash_message
+    hide_autonotice_message
 
     fill_in 'Libellé du champ', with: 'libellé de champ'
     expect(page).to have_content('Formulaire enregistré')
@@ -90,19 +90,19 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   scenario "adding an invalid champ" do
     add_champ
-    remove_flash_message
+    hide_autonotice_message
 
     fill_in 'Libellé du champ', with: ''
     fill_in 'Description du champ (optionnel)', with: 'description du champ'
-    expect(page).not_to have_content('Formulaire enregistré')
+    expect(page).to have_no_text(:visible, 'Formulaire enregistré')
 
     fill_in 'Libellé du champ', with: 'libellé de champ'
-    expect(page).to have_content('Formulaire enregistré')
+    expect(page).to have_text('Formulaire enregistré')
   end
 
   scenario "adding a repetition champ" do
     add_champ
-    remove_flash_message
+    hide_autonotice_message
 
     select('Bloc répétable', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'libellé de champ'
@@ -131,7 +131,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   scenario "adding a carte champ" do
     add_champ
-    remove_flash_message
+    hide_autonotice_message
 
     select('Carte de France', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ carte', fill_options: { clear: :backspace }
@@ -171,7 +171,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
   scenario "adding a dropdown champ" do
     add_champ
-    remove_flash_message
+    hide_autonotice_message
 
     select('Choix simple', from: 'Type de champ')
     fill_in 'Libellé du champ', with: 'Libellé de champ menu déroulant', fill_options: { clear: :backspace }

@@ -269,19 +269,23 @@ module Users
 
     def submit_en_construction
       @dossier = dossier_with_champs(pj_template: false)
+      editing_fork_origin = @dossier.editing_fork_origin
+
+      if cast_bool(params.dig(:dossier, :pending_correction))
+        editing_fork_origin.resolve_pending_correction
+      end
+
       @errors = submit_dossier_and_compute_errors
 
       if @errors.blank?
-        pending_correction_confirm = cast_bool(params.dig(:dossier, :pending_correction_confirm))
-        editing_fork_origin = @dossier.editing_fork_origin
         editing_fork_origin.merge_fork(@dossier)
-        editing_fork_origin.submit_en_construction!(pending_correction_confirm:)
+        editing_fork_origin.submit_en_construction!
 
         redirect_to dossier_path(editing_fork_origin)
       else
         respond_to do |format|
           format.html do
-            @dossier = @dossier.editing_fork_origin
+            @dossier = editing_fork_origin
             render :modifier
           end
 
@@ -556,8 +560,16 @@ module Users
       @dossier.validate(:champs_public_value)
 
       errors = @dossier.errors
-      @dossier.check_mandatory_and_visible_champs.map do |error_on_champ|
+      @dossier.check_mandatory_and_visible_champs.each do |error_on_champ|
         errors.import(error_on_champ)
+      end
+
+      if @dossier.editing_fork_origin&.pending_correction?
+        @dossier.editing_fork_origin.validate(:champs_public_value)
+        @dossier.editing_fork_origin.errors.where(:pending_correction).each do |error|
+          errors.import(error)
+        end
+
       end
 
       errors

@@ -631,50 +631,46 @@ describe Users::DossiersController, type: :controller do
     context "when there are pending correction" do
       let!(:correction) { create(:dossier_correction, dossier: dossier) }
 
-      subject { post :submit_en_construction, params: { id: dossier.id, dossier: { pending_correction_confirm: "1" } } }
+      subject { post :submit_en_construction, params: { id: dossier.id } }
 
-      it "resolve correction" do
+      it "resolves correction automatically" do
         expect { subject }.to change { correction.reload.resolved_at }.to be_truthy
       end
 
       context 'when procedure has sva enabled' do
         let(:procedure) { create(:procedure, :sva) }
-        let!(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+        let(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
+        let!(:correction) { create(:dossier_correction, dossier: dossier) }
 
-        it 'passe automatiquement en instruction' do
-          expect(dossier.pending_correction?).to be_truthy
+        subject { post :submit_en_construction, params: { id: dossier.id, dossier: { pending_correction: pending_correction_value } } }
 
-          subject
-          dossier.reload
+        context 'when resolving correction' do
+          let(:pending_correction_value) { "1" }
+          it 'passe automatiquement en instruction' do
+            expect(dossier.pending_correction?).to be_truthy
 
-          expect(dossier).to be_en_instruction
-          expect(dossier.pending_correction?).to be_falsey
-          expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
+            subject
+            dossier.reload
+
+            expect(dossier).to be_en_instruction
+            expect(dossier.pending_correction?).to be_falsey
+            expect(dossier.en_instruction_at).to within(5.seconds).of(Time.current)
+          end
         end
-      end
-    end
 
-    context 'when there is sva without confirming correction' do
-      let!(:correction) { create(:dossier_correction, dossier: dossier) }
+        context 'when not resolving correction' do
+          render_views
 
-      subject { post :submit_en_construction, params: { id: dossier.id } }
+          let(:pending_correction_value) { "" }
+          it 'does not passe automatiquement en instruction' do
+            subject
+            dossier.reload
 
-      it "does not resolve correction" do
-        expect { subject }.not_to change { correction.reload.resolved_at }
-      end
+            expect(dossier).to be_en_construction
+            expect(dossier.pending_correction?).to be_truthy
 
-      context 'when procedure has sva enabled' do
-        let(:procedure) { create(:procedure, :sva) }
-        let!(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
-
-        it 'does not passe automatiquement en instruction' do
-          expect(dossier.pending_correction?).to be_truthy
-
-          subject
-          dossier.reload
-
-          expect(dossier).to be_en_construction
-          expect(dossier.pending_correction?).to be_truthy
+            expect(response.body).to include("Cochez la case")
+          end
         end
       end
     end

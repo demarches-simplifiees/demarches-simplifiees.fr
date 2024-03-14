@@ -897,16 +897,14 @@ class Dossier < ApplicationRecord
     RoutingEngine.compute(self)
   end
 
-  def submit_en_construction!(pending_correction_confirm: false)
+  def submit_en_construction!
     self.traitements.submit_en_construction
     save!
 
     RoutingEngine.compute(self)
 
-    if pending_correction_confirm
-      resolve_pending_correction!
-      process_sva_svr!
-    end
+    resolve_pending_correction!
+    process_sva_svr!
   end
 
   def after_passer_en_instruction(h)

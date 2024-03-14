@@ -55,3 +55,5 @@ fr:
         dpd_part_polynesie_body: "Bonjour%0AQue pensez-vous de la démarche %{id} sur %{path}%0AD’avance merci."
         back_to_procedure: 'Annuler et revenir à la page de la démarche'
         submit: Publier
+    autosave_notice:
+      form_saved: "Formulaire enregistré"

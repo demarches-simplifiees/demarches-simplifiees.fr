@@ -334,8 +334,6 @@ fr:
           updated_at: "Modifié le %{datetime}"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
-          pending_correction:
-            confirm_label: Je certifie avoir effectué toutes les corrections demandées par l’administration.
         messages:
           form:
             send_message: "Envoyer le message"

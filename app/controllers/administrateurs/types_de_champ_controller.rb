@@ -10,8 +10,6 @@ module Administrateurs
         @coordinate = draft.coordinate_for(type_de_champ)
         @created = champ_component_from(@coordinate, focused: true)
         @morphed = champ_components_starting_at(@coordinate, 1)
-
-        flash.notice = "Formulaire enregistré"
       else
         flash.alert = type_de_champ.errors.full_messages
       end
@@ -28,8 +26,6 @@ module Administrateurs
       elsif type_de_champ.update(type_de_champ_update_params)
         @coordinate = draft.coordinate_for(type_de_champ)
         @morphed = champ_components_starting_at(@coordinate)
-
-        flash.notice = "Formulaire enregistré"
       else
         flash.alert = type_de_champ.errors.full_messages
       end
@@ -49,12 +45,10 @@ module Administrateurs
     end
 
     def move
-      flash.notice = "Formulaire enregistré"
       draft.move_type_de_champ(params[:stable_id], params[:position].to_i)
     end
 
     def move_up
-      flash.notice = "Formulaire enregistré"
       @coordinate = draft.move_up_type_de_champ(params[:stable_id])
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
@@ -63,7 +57,6 @@ module Administrateurs
     end
 
     def move_down
-      flash.notice = "Formulaire enregistré"
       @coordinate = draft.move_down_type_de_champ(params[:stable_id])
       @destroyed = @coordinate
       @created = champ_component_from(@coordinate)
@@ -80,7 +73,6 @@ module Administrateurs
         flash.alert = errors
       else
         @coordinate = draft.remove_type_de_champ(params[:stable_id])
-        flash.notice = "Formulaire enregistré"
 
         if @coordinate.present?
           @destroyed = @coordinate
