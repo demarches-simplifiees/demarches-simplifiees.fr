@@ -111,7 +111,7 @@
             = t(".#{prefix}.enable_collapsible_explanation", label: change.label)
         - else
           - list.with_item do
-            = t(".#{prefix}.disable_collapsible_explanation", label: change.label)
+            = t(".#{prefix}.remove_collapsible_explanation_text", label: change.label)
       - when :collapsible_explanation_text
         - list.with_item do
           - if change.to.blank?
