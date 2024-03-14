@@ -52,7 +52,10 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # then publish
       find('#publish-procedure-link').click
-      expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
+      expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure-2'
+      fill_in 'procedure_path', with: 'libelle-de-la-procedure'
+      expect(page).to have_content 'Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.'
+
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
 
@@ -87,7 +90,9 @@ describe 'As an administrateur I wanna clone a procedure', js: true do
 
       # then publish
       find('#publish-procedure-link').click
-      expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure'
+      expect(find_field('procedure_path').value).to eq 'libelle-de-la-procedure-2'
+      fill_in 'procedure_path', with: 'libelle-de-la-procedure'
+      expect(page).to have_content 'Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.'
       fill_in 'lien_site_web', with: 'http://some.website'
       click_on 'publish'
 

@@ -4,6 +4,8 @@ describe 'Publishing a procedure', js: true do
   include ProcedureSpecHelper
 
   let(:administrateur) { create(:administrateur) }
+  let(:other_administrateur) { create(:administrateur) }
+
   let(:instructeurs) { [administrateur.user.instructeur] }
   let!(:procedure) do
     create(:procedure_with_dossiers,
@@ -13,6 +15,16 @@ describe 'Publishing a procedure', js: true do
       :with_zone,
       instructeurs: instructeurs,
       administrateur: administrateur)
+  end
+  let!(:other_procedure) do
+    create(:procedure_with_dossiers,
+      :published,
+      :with_path,
+      :with_type_de_champ,
+      :with_service,
+      :with_zone,
+      instructeurs: instructeurs,
+      administrateur: other_administrateur)
   end
 
   before do
@@ -68,6 +80,19 @@ describe 'Publishing a procedure', js: true do
         fill_in 'lien_site_web', with: 'http://some.website'
 
         expect(page).to have_button('Publier', disabled: true)
+      end
+    end
+
+    context 'when the procedure has the same path as another procedure from another admin ' do
+      scenario 'an error message prevents the publication' do
+        expect(find_field('procedure_path').value).to eq procedure.path
+        fill_in 'procedure_path', with: other_procedure.path
+        expect(page).to have_content 'vous devez la modifier afin de pouvoir publier votre démarche'
+
+        fill_in 'lien_site_web', with: 'http://some.website'
+        within('form') { click_on 'Publier' }
+
+        expect(page).to have_text('Le champ « Lien public » est déjà utilisé par une démarche.')
       end
     end
   end

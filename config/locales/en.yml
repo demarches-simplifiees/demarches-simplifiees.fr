@@ -650,8 +650,7 @@ en:
           attributes:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
-              taken_can_be_claimed: Is the same as another of your procedure. If you publish this procedure, the other one will be unpublished
-              invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
+              invalid: is not valid. It must countain between 3 and 200 characters among a-z, 0-9, '_' and '-'.
         "dossier/champs":
           format: "%{message}"
           attributes:
