@@ -42,7 +42,7 @@ class Champs::RepetitionChamp < Champ
 
   def rows_for_export
     champs = dossier.champs_by_stable_id_with_row
-    row_ids.each.with_index(1).map do |row_id, index|
+    row_ids.map.with_index(1) do |row_id, index|
       Champs::RepetitionChamp::Row.new(index: index, row_id:, dossier_id: dossier_id.to_s, champs:)
     end
   end

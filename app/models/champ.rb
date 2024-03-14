@@ -160,7 +160,7 @@ class Champ < ApplicationRecord
   end
 
   def input_group_id
-    "champ-#{html_id}"
+    html_id
   end
 
   def input_id
@@ -258,7 +258,7 @@ class Champ < ApplicationRecord
   end
 
   def html_id
-    "champ-#{stable_id}-#{id}"
+    row_id.present? ? "champ-#{stable_id}-#{row_id}" : "champ-#{stable_id}"
   end
 
   def needs_dossier_id?

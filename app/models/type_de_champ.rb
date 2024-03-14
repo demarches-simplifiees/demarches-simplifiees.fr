@@ -145,7 +145,7 @@ class TypeDeChamp < ApplicationRecord
   has_one :revision, through: :revision_type_de_champ
   has_one :procedure, through: :revision
 
-  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelle_for_export, to: :dynamic_type
+  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelle_for_export, :primary_options, :secondary_options, to: :dynamic_type
   delegate :used_by_routing_rules?, to: :revision_type_de_champ
 
   class WithIndifferentAccess
@@ -166,8 +166,6 @@ class TypeDeChamp < ApplicationRecord
   after_create :populate_stable_id
 
   attr_reader :dynamic_type
-
-  delegate :primary_options, :secondary_options, to: :dynamic_type
 
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
@@ -524,6 +522,17 @@ class TypeDeChamp < ApplicationRecord
     tdcs = private? ? revision.types_de_champ_private.to_a : revision.types_de_champ_public.to_a
 
     previous_section_level(tdcs.take(tdcs.find_index(self)))
+  end
+
+  def level_for_revision(revision)
+    rtdc = revision.revision_types_de_champ.find { |rtdc| rtdc.stable_id == stable_id }
+    if rtdc.child?
+      header_section_level_value.to_i + rtdc.parent.type_de_champ.current_section_level(revision)
+    elsif header_section_level_value
+      header_section_level_value.to_i
+    else
+      0
+    end
   end
 
   def self.filter_hash_type(type_champ)

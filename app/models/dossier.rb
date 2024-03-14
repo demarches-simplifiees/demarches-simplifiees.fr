@@ -1410,6 +1410,16 @@ class Dossier < ApplicationRecord
     revision.revision_types_de_champ_private.present?
   end
 
+  def project_champ(type_de_champ, row_id)
+    stable_id_with_row = [row_id, type_de_champ.stable_id].compact
+    champ = champs.find { _1.stable_id_with_row == stable_id_with_row }
+    if champ.nil?
+      type_de_champ.build_champ(dossier: self, row_id:)
+    else
+      champ
+    end
+  end
+
   private
 
   def create_missing_traitemets

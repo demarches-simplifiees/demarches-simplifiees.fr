@@ -53,4 +53,4 @@
 
       - types_de_champ = dossier.revision.types_de_champ_public
       - if types_de_champ.any? || dossier.procedure.routing_enabled?
-        = render ViewableChamp::SectionComponent.new(types_de_champ:, champs_by_stable_id_with_row: dossier.champs_by_stable_id_with_row, demande_seen_at:, profile:)
+        = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
