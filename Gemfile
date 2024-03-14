@@ -91,6 +91,7 @@ gem 'sassc-rails' # Use SCSS for stylesheets
 gem 'sentry-delayed_job'
 gem 'sentry-rails'
 gem 'sentry-ruby'
+gem 'sentry-sidekiq'
 gem 'sib-api-v3-sdk'
 gem 'sidekiq'
 gem 'skylight'
