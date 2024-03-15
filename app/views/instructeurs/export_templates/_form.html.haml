@@ -1,9 +1,7 @@
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
     = form_with url: form_url, model: @export_template, local: true do |f|
-      = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field) do |c|
-        - c.with_hint do
-          Indiquez le nom à utiliser pour ce modèle d'export
+      = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
 
       - if groupe_instructeurs.many?
         .fr-input-group
@@ -19,13 +17,22 @@
       = f.hidden_field :kind
 
       .fr-input-group{ data: { controller: 'tiptap' } }
-        = f.label :tiptap_default_dossier_directory, class: "fr-label"
+        = f.label :tiptap_default_dossier_directory, class: "fr-label" do
+          = f.object.class.human_attribute_name(:tiptap_default_dossier_directory)
+          = render EditableChamp::AsteriskMandatoryComponent.new
+          %span.fr-hint-text
+            = t('activerecord.attributes.export_template.hints.tiptap_default_dossier_directory')
+
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
-        = f.label :tiptap_pdf_name, class: "fr-label"
+        = f.label :tiptap_pdf_name, class: "fr-label" do
+          = f.object.class.human_attribute_name(:tiptap_pdf_name)
+          = render EditableChamp::AsteriskMandatoryComponent.new
+          %span.fr-hint-text
+            = t('activerecord.attributes.export_template.hints.tiptap_pdf_name')
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
