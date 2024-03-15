@@ -1269,29 +1269,20 @@ class Dossier < ApplicationRecord
     if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
-    columns + self.class.champs_for_export(types_de_champ, champs_by_stable_id_with_row)
+    columns + champs_for_export(types_de_champ)
   end
 
   # Get all the champs values for the types de champ in the final list.
   # Dossier might not have corresponding champ – display nil.
   # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
-  def self.champs_for_export(types_de_champ, champs, row_id = nil)
+  def champs_for_export(types_de_champ, row_id = nil)
     types_de_champ.flat_map do |type_de_champ|
-      champ = champs[[row_id, type_de_champ.stable_id].compact]
-
-      exported_values = if champ.nil? || !champ.visible?
-        # some champs export multiple columns
-        # ex: commune.for_export => [commune, insee, departement]
-        # so we build a fake champ to have the right export
-        type_de_champ.champ.build.for_export
-      else
-        champ.for_export
-      end
+      champ = champ_for_export(type_de_champ, row_id)
 
       # nil => [nil]
       # text => [text]
       # [commune, insee, departement] => [commune, insee, departement]
-      wrapped_exported_values = [exported_values].flatten
+      wrapped_exported_values = [champ.for_export].flatten
 
       wrapped_exported_values.map.with_index do |champ_value, index|
         [type_de_champ.libelle_for_export(index), champ_value]
@@ -1392,12 +1383,10 @@ class Dossier < ApplicationRecord
     user.france_connect_information.present?
   end
 
-  def champs_by_stable_id_with_row
-    champs_for_revision.index_by(&:stable_id_with_row)
-  end
-
   def champs_for_revision(scope: nil, root: false)
     champs_index = champs.group_by(&:stable_id)
+      # Due to some bad data we can have multiple copies of the same champ. Ignore extra copy.
+      .transform_values { _1.sort_by(&:id).uniq(&:row_id) }
 
     if scope.is_a?(TypeDeChamp)
       revision.children_of(scope)
@@ -1412,7 +1401,7 @@ class Dossier < ApplicationRecord
 
   def project_champ(type_de_champ, row_id)
     stable_id_with_row = [row_id, type_de_champ.stable_id].compact
-    champ = champs.find { _1.stable_id_with_row == stable_id_with_row }
+    champ = champs_by_stable_id_with_row[stable_id_with_row]
     if champ.nil?
       type_de_champ.build_champ(dossier: self, row_id:)
     else
@@ -1420,7 +1409,24 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def champ_for_export(type_de_champ, row_id)
+    stable_id_with_row = [row_id, type_de_champ.stable_id].compact
+    champ = champs_by_stable_id_with_row[stable_id_with_row]
+    if champ.nil? || !champ.visible?
+      # some champs export multiple columns
+      # ex: commune.for_export => [commune, insee, departement]
+      # so we build a fake champ to have the right export
+      type_de_champ.build_champ(dossier: self, row_id:)
+    else
+      champ
+    end
+  end
+
   private
+
+  def champs_by_stable_id_with_row
+    @champs_by_stable_id_with_row ||= champs.sort_by(&:id).index_by(&:stable_id_with_row)
+  end
 
   def create_missing_traitemets
     if en_construction_at.present? && traitements.en_construction.empty?
