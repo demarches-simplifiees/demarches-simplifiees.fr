@@ -398,6 +398,9 @@ Rails.application.routes.draw do
 
     resources :procedures, only: [], param: :procedure_id do
       member do
+        get 'notification_settings', to: 'avis#notification_settings'
+        patch 'update_notification_settings', to: 'avis#update_notification_settings'
+
         resources :avis, only: [:show, :update] do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
