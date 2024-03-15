@@ -59,6 +59,21 @@ describe APIGeoService do
   describe 'commune_name' do
     subject { APIGeoService.commune_name('01', '01457') }
     it { is_expected.to eq('Vonnas') }
+
+    context 'Paris' do
+      subject { APIGeoService.commune_name('75', '75056') }
+      it { is_expected.to eq('Paris') }
+    end
+
+    context 'Lyon' do
+      subject { APIGeoService.commune_name('69', '69123') }
+      it { is_expected.to eq('Lyon') }
+    end
+
+    context 'Marseille' do
+      subject { APIGeoService.commune_name('13', '13055') }
+      it { is_expected.to eq('Marseille') }
+    end
   end
 
   describe 'commune_code' do
