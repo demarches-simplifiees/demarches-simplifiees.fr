@@ -221,7 +221,7 @@ class Champ < ApplicationRecord
   end
 
   def clone(fork = false)
-    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
+    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id, :stable_id, :stream]
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
     relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
