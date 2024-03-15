@@ -6,6 +6,7 @@
 
   button {
     background-image: image-url("icons/polygon.svg");
+    background-size: cover;
   }
 }
 
@@ -14,7 +15,18 @@
   top: 7em;
 
   button {
-    background-image: image-url("icons/trash-white.svg");
+    background-image: image-url("icons/trash-gray.svg");
+    background-size: cover;
+  }
+}
+
+.ol-control-layers {
+  left: 0.5em;
+  top: 9em;
+
+  button {
+    background-image: image-url("icons/layers.svg");
+    background-size: cover;
   }
 }
 

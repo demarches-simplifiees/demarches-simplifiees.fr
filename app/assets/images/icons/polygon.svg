@@ -20,7 +20,7 @@
      id="defs5810" />
   <sodipodi:namedview
      id="base"
-     pagecolor="#ffffff"
+     pagecolor="#666666"
      bordercolor="#666666"
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
@@ -60,7 +60,7 @@
      id="layer1"
      transform="translate(0,9)">
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       style="fill:#666666;fill-opacity:1;stroke:#666666;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
        id="rect6366"
        width="3.561413"
        height="3.561413"
@@ -72,9 +72,9 @@
        height="3.561413"
        width="3.561413"
        id="rect6368"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+       style="fill:#666666;fill-opacity:1;stroke:#666666;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
     <rect
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
+       style="fill:#666666;fill-opacity:1;stroke:#666666;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal"
        id="rect6372"
        width="3.561413"
        height="3.561413"
@@ -86,9 +86,9 @@
        height="3.561413"
        width="3.561413"
        id="rect6374"
-       style="fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
+       style="fill:#666666;fill-opacity:1;stroke:#666666;stroke-width:0.99969494;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:normal" />
     <path
-       style="fill:none;stroke:#ffffff;stroke-width:1.65858471px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:none;stroke:#666666;stroke-width:1.65858471px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="M 4.3169808,8.3658494 15,12 20.902828,-4.9028284 4.3169808,-1.585659 Z"
        id="path6376"
        inkscape:connector-curvature="0"

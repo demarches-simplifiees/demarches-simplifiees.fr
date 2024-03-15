@@ -1,5 +1,5 @@
 import {
-  createBatimentLayer,
+  createBatimentLayer, createCadastreLayer,
   createDefaultMap,
   createManualZoneLayer,
   // createMarkerFeature,
@@ -9,7 +9,7 @@ import {
   formatArea,
   getBatimentFeatureInfo,
   getCadastreFeatureInfo
-} from './te_fenua_lib';
+} from "./te_fenua_lib";
 import { Draw, Modify } from 'ol/interaction';
 import Select from 'ol/interaction/Select';
 import { GeoJSON } from 'ol/format';
@@ -254,6 +254,7 @@ function addInteractions(mapElement, map) {
     map.addInteraction(select);
     createControl(map, clickOnAddZone, 'add', 'Ajouter une zone');
     createControl(map, clickOnEffaceZone, 'delete', 'Effacer une zone');
+    createControl(map, clickOnToggleCadastre, 'layers', 'Afficher/masquer le cadastre');
     draw.on('drawend', (e) => {
       bubbles.add_zone.style.display = 'none';
       let source = map.zoneManuellesLayer.getSource();
@@ -325,6 +326,11 @@ function addInteractions(mapElement, map) {
         deleteSelectedZones();
       });
     }
+  }
+
+  function clickOnToggleCadastre(e) {
+    e.preventDefault();
+    map.cadastreLayer.setVisible(!map.cadastreLayer.getVisible());
   }
 
   function deleteSelectedZones() {
@@ -424,16 +430,19 @@ function displayMap(mapElement) {
   const batimentsLayer = createBatimentLayer();
   const zoneManuellesLayer = createManualZoneLayer();
   const markerLayer = createMarkerLayer();
+  const cadastreLayer = createCadastreLayer();
 
   // Prépare la carte OpenLayers.
   let map = createDefaultMap(mapElement, [
     createTeFenuaLayer(),
+    cadastreLayer,
     parcellesLayer,
     batimentsLayer,
     zoneManuellesLayer,
     markerLayer
   ]);
   map.parcellesLayer = parcellesLayer;
+  map.cadastreLayer = cadastreLayer;
   map.batimentsLayer = batimentsLayer;
   map.zoneManuellesLayer = zoneManuellesLayer;
   map.markerLayer = markerLayer;
