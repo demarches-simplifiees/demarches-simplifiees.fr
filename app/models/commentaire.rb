@@ -120,7 +120,8 @@ class Commentaire < ApplicationRecord
     experts_contactes = Set.new
 
     dossier.avis.includes(:expert).find_each do |avis|
-      if avis.expert.present?
+      expert_procedure = avis.expert.experts_procedures.find_by(procedure_id: dossier.procedure.id)
+      if expert_procedure.notify_on_new_message? && avis.expert.present?
         expert_id = avis.expert.id
         if !experts_contactes.include?(expert_id)
           AvisMailer.notify_new_commentaire_to_expert(dossier, avis, avis.expert).deliver_later
