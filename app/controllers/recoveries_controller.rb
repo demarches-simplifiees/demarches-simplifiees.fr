@@ -18,15 +18,17 @@ class RecoveriesController < ApplicationController
   end
 
   def post_identification
-    # cookies are used to avoid leaking
-    # email in url
-    cookies[:recover_previous_email] = previous_email
+    # cipher previous_user email
+    # to avoid leaks in the url
+    ciphered_email = cipher(previous_email)
 
-    redirect_to selection_recovery_path
+    redirect_to selection_recovery_path(ciphered_email:)
   end
 
   def selection
-    previous_user = User.find_by(email: cookies[:recover_previous_email])
+    @previous_email = uncipher(params[:ciphered_email])
+
+    previous_user = User.find_by(email: @previous_email)
 
     @recoverables = RecoveryService
       .recoverable_procedures(previous_user:, siret:)
@@ -35,7 +37,7 @@ class RecoveriesController < ApplicationController
   end
 
   def post_selection
-    previous_user = User.find_by(email: cookies[:recover_previous_email])
+    previous_user = User.find_by(email: previous_email)
 
     RecoveryService.recover_procedure!(previous_user:,
                           next_user: current_user,
@@ -57,6 +59,9 @@ class RecoveriesController < ApplicationController
   def siret = current_instructeur.agent_connect_information.siret
   def previous_email = params[:previous_email]
   def procedure_ids = params[:procedure_ids].map(&:to_i)
+
+  def cipher(email) = message_verifier.generate(email, purpose: :agent_files_recovery, expires_in: 1.hour)
+  def uncipher(email) = message_verifier.verified(email, purpose: :agent_files_recovery) rescue nil
 
   def structure_name
     # we know that the structure exists because

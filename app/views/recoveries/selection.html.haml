@@ -16,4 +16,5 @@
             = check_box_tag 'procedure_ids[]', procedure_id, false, class: 'fr-checkbox', id: procedure_id
             = label_tag procedure_id, libelle, class: 'fr-label'
 
+    = hidden_field_tag 'previous_email', @previous_email
     %button.fr-btn{ disabled: true,  data: { 'enable-submit-if-checked-target': 'submit' } } Continuer

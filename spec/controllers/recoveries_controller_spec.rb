@@ -100,8 +100,9 @@ describe RecoveriesController, type: :controller do
       subject { post :post_identification, params: { previous_email: 'email@a.com' } }
 
       it do
-        is_expected.to redirect_to(selection_recovery_path)
-        expect(cookies[:recover_previous_email]).to eq('email@a.com')
+        response = subject
+        expect(response).to have_http_status(:redirect)
+        expect(response.location).to start_with(selection_recovery_url)
       end
     end
 
