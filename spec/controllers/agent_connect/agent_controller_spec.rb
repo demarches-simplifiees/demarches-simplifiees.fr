@@ -30,7 +30,7 @@ describe AgentConnect::AgentController, type: :controller do
     context 'when the callback code is correct' do
       let(:code) { 'correct' }
       let(:state) { original_state }
-      let(:user_info) { { 'sub' => 'sub', 'email' => ' I@email.com' } }
+      let(:user_info) { { 'sub' => 'sub', 'email' => ' I@email.com', 'given_name' => 'given', 'usual_name' => 'usual' } }
 
       context 'and user_info returns some info' do
         before do

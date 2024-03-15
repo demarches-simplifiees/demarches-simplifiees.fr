@@ -91,6 +91,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_27_163855) do
     t.index ["procedure_id"], name: "index_administrateurs_procedures_on_procedure_id"
   end
 
+  create_table "agent_connect_informations", force: :cascade do |t|
+    t.string "belonging_population"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.string "given_name", null: false
+    t.bigint "instructeur_id", null: false
+    t.string "organizational_unit"
+    t.string "phone"
+    t.string "siret"
+    t.string "sub", null: false
+    t.datetime "updated_at", null: false
+    t.string "usual_name", null: false
+    t.index ["instructeur_id"], name: "index_agent_connect_informations_on_instructeur_id"
+  end
+
   create_table "api_tokens", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.bigint "administrateur_id", null: false
     t.bigint "allowed_procedure_ids", array: true
@@ -1179,6 +1194,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_27_163855) do
   add_foreign_key "administrateurs_instructeurs", "instructeurs"
   add_foreign_key "administrateurs_procedures", "administrateurs"
   add_foreign_key "administrateurs_procedures", "procedures"
+  add_foreign_key "agent_connect_informations", "instructeurs"
   add_foreign_key "api_tokens", "administrateurs"
   add_foreign_key "archives_groupe_instructeurs", "archives"
   add_foreign_key "archives_groupe_instructeurs", "groupe_instructeurs"

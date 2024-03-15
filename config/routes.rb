@@ -699,6 +699,20 @@ Rails.application.routes.draw do
     end
   end
 
+  resource :recovery, only: [], path: :recuperation_de_dossiers do
+    collection do
+      get :nature
+      post :nature, action: :post_nature
+      get :identification
+      post :identification, action: :post_identification
+      get :selection
+      post :selection, action: :post_selection
+      get :terminee
+      get :support
+    end
+
+    root action: :nature
+  end
   #
   # Legacy routes
   #
