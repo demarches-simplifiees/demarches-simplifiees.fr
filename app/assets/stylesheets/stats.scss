@@ -90,6 +90,7 @@ $segmented-control-item-border-radius: 2 * $default-space;
   font-size: 15px;
   border: 2px solid $blue-france-700;
   margin-right: -2px;
+  padding-top: var(--li-bottom);
   padding-left: $segmented-control-item-horizontal-padding;
   padding-right: $segmented-control-item-horizontal-padding;
   color: $blue-france-700;
