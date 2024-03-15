@@ -11,15 +11,17 @@ describe ProcedureExportService do
       when 'drop_down_list'
         'simple_drop_down_list'
       when 'communes'
-        ['communes', "communes (Code insee)", "communes (Département)"]
+        [tdc, "#{tdc} (Code insee)", "#{tdc} (Département)"]
       when 'commune_de_polynesie'
-        ["commune_de_polynesie", "commune_de_polynesie (Archipel)", "commune_de_polynesie (Code postal)", "commune_de_polynesie (Ile)"]
+        [tdc, "#{tdc} (Archipel)", "#{tdc} (Code postal)", "#{tdc} (Ile)"]
       when 'code_postal_de_polynesie'
-        ["code_postal_de_polynesie", "code_postal_de_polynesie (Archipel)", "code_postal_de_polynesie (Commune)", "code_postal_de_polynesie (Ile)"]
+        [tdc, "#{tdc} (Archipel)", "#{tdc} (Commune)", "#{tdc} (Ile)"]
       when 'departements', 'regions', 'pays'
         [tdc, "#{tdc} (Code)"]
       when 'epci'
         [tdc, "#{tdc} (Code)", "#{tdc} (Département)"]
+      when 'rnf'
+        [tdc, "#{tdc} (Adresse)", "#{tdc} (Code insee Ville)", "#{tdc} (Département)", "#{tdc} (Nom)"]
       else
         tdc
       end
