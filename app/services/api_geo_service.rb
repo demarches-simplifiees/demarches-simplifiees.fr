@@ -70,6 +70,7 @@ class APIGeoService
 
     def communes_by_postal_code(postal_code)
       communes_by_postal_code_map.fetch(postal_code, [])
+        .filter { !_1[:code].in?(['75056', '13055', '69123']) }
         .sort_by { I18n.transliterate([_1[:name], _1[:postal_code]].join(' ')) }
     end
 
