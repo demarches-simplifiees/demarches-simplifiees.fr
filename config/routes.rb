@@ -191,10 +191,13 @@ Rails.application.routes.draw do
   end
 
   namespace :champs do
+    post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
+    delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
+    post ':champ_id/repetition', to: 'repetition#add'
+    delete ':champ_id/repetition', to: 'repetition#remove'
+
     get ':champ_id/siret', to: 'siret#show', as: :siret
     get ':champ_id/rna', to: 'rna#show', as: :rna
-    post ':champ_id/repetition', to: 'repetition#add', as: :repetition
-    delete ':champ_id/repetition', to: 'repetition#remove'
     delete ':champ_id/options', to: 'options#remove', as: :options
 
     get ':champ_id/carte/features', to: 'carte#index', as: :carte_features

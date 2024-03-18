@@ -2,25 +2,25 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   include ApplicationHelper
   include TreeableConcern
 
-  def initialize(nodes: nil, types_de_champ: nil, row_id: nil, demande_seen_at:, profile:, champs_by_stable_id_with_row:)
-    @demande_seen_at, @profile, @row_id, @champs_by_stable_id_with_row = demande_seen_at, profile, row_id, champs_by_stable_id_with_row
+  def initialize(dossier:, nodes: nil, types_de_champ: nil, row_id: nil, demande_seen_at:, profile:)
+    @dossier, @demande_seen_at, @profile, @row_id = dossier, demande_seen_at, profile, row_id
     nodes ||= to_tree(types_de_champ:)
     @nodes = to_sections(nodes:)
   end
+
+  private
 
   def section_id
     @section_id ||= header_section ? dom_id(header_section, :content) : SecureRandom.uuid
   end
 
   def header_section
-    maybe_header_section = @nodes.first
-    if maybe_header_section.is_a?(TypeDeChamp) && maybe_header_section.header_section?
-      champ_for_type_de_champ(maybe_header_section)
-    end
+    node = @nodes.first
+    @dossier.project_champ(node, @row_id) if node.is_a?(TypeDeChamp) && node.header_section?
   end
 
   def champs
-    tail.filter_map { _1.is_a?(TypeDeChamp) ? champ_for_type_de_champ(_1) : nil }
+    tail.filter_map { _1.is_a?(TypeDeChamp) ? @dossier.project_champ(_1, @row_id) : nil }
   end
 
   def sections
@@ -28,14 +28,14 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   end
 
   def tail
-    return @nodes if header_section.blank?
+    return @nodes if header_section.nil?
     _, *rest_of_champ = @nodes
 
     rest_of_champ
   end
 
   def reset_tag_for_depth
-    return if !header_section
+    return if header_section.nil?
 
     "reset-h#{header_section.level + 1}"
   end
@@ -49,10 +49,6 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   private
 
   def to_sections(nodes:)
-    nodes.map { _1.is_a?(Array) ? ViewableChamp::SectionComponent.new(nodes: _1, demande_seen_at: @demande_seen_at, profile: @profile, champs_by_stable_id_with_row: @champs_by_stable_id_with_row, row_id: @row_id) : _1 }
-  end
-
-  def champ_for_type_de_champ(type_de_champ)
-    @champs_by_stable_id_with_row[[@row_id, type_de_champ.stable_id].compact]
+    nodes.map { _1.is_a?(Array) ? ViewableChamp::SectionComponent.new(dossier: @dossier, nodes: _1, demande_seen_at: @demande_seen_at, profile: @profile, row_id: @row_id) : _1 }
   end
 end

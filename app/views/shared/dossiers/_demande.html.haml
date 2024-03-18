@@ -53,4 +53,4 @@
 
       - types_de_champ = dossier.revision.types_de_champ_public
       - if types_de_champ.any? || dossier.procedure.routing_enabled?
-        = render partial: "shared/dossiers/champs", locals: { types_de_champ:, dossier:, demande_seen_at:, profile: }
+        = render ViewableChamp::SectionComponent.new(dossier:, types_de_champ:, demande_seen_at:, profile:)
