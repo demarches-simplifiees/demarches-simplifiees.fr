@@ -1258,6 +1258,7 @@ class Dossier < ApplicationRecord
       ['Archivé', :archived],
       ['État du dossier', Dossier.human_attribute_name("state.#{state}")],
       ['Dernière mise à jour le', :updated_at],
+      ['Dernière mise à jour du dossier le', :last_champ_updated_at],
       ['Déposé le', :depose_at],
       ['Passé en instruction le', :en_instruction_at],
       procedure.sva_svr_enabled? ? ["Date décision #{procedure.sva_svr_configuration.human_decision}", :sva_svr_decision_on] : nil,
