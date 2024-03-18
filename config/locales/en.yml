@@ -504,7 +504,7 @@ en:
           depose_at: First submission on %{date}
           created_at: Created at %{date}
           updated_at: updated at %{date}
-          shared_with: File shared with
+          shared_with: File shared by %{owner} with
           deleted: Deleted at %{date}
           deleted_badge: Deleted
           procedure_closed:
