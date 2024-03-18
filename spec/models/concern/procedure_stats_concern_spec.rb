@@ -14,7 +14,7 @@ describe ProcedureStatsConcern do
     it "returns the funnel stats" do
       expect(stats_dossiers_funnel).to match(
         [
-          ['Démarrés', procedure.dossiers.visible_by_user_or_administration.count],
+          ['Tous (dont brouillon)', procedure.dossiers.visible_by_user_or_administration.count],
           ['Déposés', procedure.dossiers.visible_by_administration.count],
           ['Instruction débutée', procedure.dossiers.visible_by_administration.state_instruction_commencee.count],
           ['Traités', procedure.dossiers.visible_by_administration.state_termine.count]
