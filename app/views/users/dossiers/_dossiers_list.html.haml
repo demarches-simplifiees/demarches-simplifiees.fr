@@ -50,7 +50,7 @@
             %br
             = pending_correction_badge(:for_user)
 
-      - if dossier.procedure.close? && !dossier.termine?
+      - if dossier.procedure.close?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
             %p
@@ -62,6 +62,11 @@
                 = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.internal_procedure')
               - elsif (dossier.en_construction? || dossier.en_instruction?) && dossier.procedure.closing_reason_other?
                 = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.other', link: closing_details_path(dossier.procedure.path)).html_safe
+              - elsif (dossier.termine? && dossier.procedure.closing_reason == Procedure.closing_reasons.fetch(:internal_procedure))
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.termine.internal_procedure', link: commencer_path(dossier.procedure.replaced_by_procedure.path)).html_safe
+              - elsif (dossier.termine? && dossier.procedure.closing_reason == Procedure.closing_reasons.fetch(:other))
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.termine.other', link: closing_details_path(dossier.procedure.path)).html_safe
+
 
       - if dossier.pending_correction?
         = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: "fr-mb-2w") do |c|
