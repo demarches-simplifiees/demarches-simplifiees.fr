@@ -10,17 +10,15 @@ describe 'shared/dossiers/edit', type: :view do
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
 
   context 'when there are some champs' do
-    let(:champs_by_stable_id_with_row) { dossier.champs_by_stable_id_with_row }
-
     let(:type_de_champ_header_section) { procedure.draft_types_de_champ_public.find(&:header_section?) }
     let(:type_de_champ_explication) { procedure.draft_types_de_champ_public.find(&:explication?) }
     let(:type_de_champ_dossier_link) { procedure.draft_types_de_champ_public.find(&:dossier_link?) }
     let(:type_de_champ_checkbox) { procedure.draft_types_de_champ_public.find(&:checkbox?) }
     let(:type_de_champ_textarea) { procedure.draft_types_de_champ_public.find(&:textarea?) }
 
-    let(:champ_checkbox) { champs_by_stable_id_with_row[[type_de_champ_checkbox.stable_id]] }
-    let(:champ_dossier_link) { champs_by_stable_id_with_row[[type_de_champ_dossier_link.stable_id]] }
-    let(:champ_textarea) { champs_by_stable_id_with_row[[type_de_champ_textarea.stable_id]] }
+    let(:champ_checkbox) { dossier.project_champ(type_de_champ_checkbox, nil) }
+    let(:champ_dossier_link) { dossier.project_champ(type_de_champ_dossier_link, nil) }
+    let(:champ_textarea) { dossier.project_champ(type_de_champ_textarea, nil) }
 
     let(:types_de_champ_public) { [{ type: :checkbox }, { type: :header_section }, { type: :explication }, { type: :dossier_link }, { type: :textarea }] }
 

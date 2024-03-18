@@ -3,6 +3,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
   let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_private: [{ type: :repetition, children: [{ libelle: 'Nom' }, { type: :integer_number, libelle: 'Age' }] }, {}], administrateurs: [admin]) }
   let(:dossiers) { [] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
+  let(:champs_private) { dossier.champs_for_revision(scope: :private, root: true) }
 
   let(:query) { '' }
   let(:context) { { administrateur_id: admin.id, procedure_ids: admin.procedure_ids, write_access: true } }
@@ -21,7 +22,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:dossiers) { [dossier] }
 
-    let(:annotation) { dossier.champs_private.find(&:repetition?) }
+    let(:annotation) { champs_private.find(&:repetition?) }
     let(:query) { DOSSIER_MODIFIER_ANNOTATION_AJOUTER_LIGNE_MUTATION }
     let(:variables) do
       {
@@ -34,7 +35,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     end
 
     context 'with invalid champ' do
-      let(:annotation) { dossier.champs_private.last }
+      let(:annotation) { champs_private.last }
 
       it 'return error' do
         expect(data).to eq(dossierModifierAnnotationAjouterLigne: {
@@ -60,7 +61,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:dossiers) { [dossier] }
 
-    let(:annotation) { dossier.champs_private.last }
+    let(:annotation) { champs_private.last }
     let(:query) { DOSSIER_MODIFIER_ANNOTATION_TEXT_MUTATION }
     let(:variables) do
       {
@@ -84,7 +85,7 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     end
 
     context 'with invalid champ' do
-      let(:annotation) { dossier.champs_private.find(&:repetition?) }
+      let(:annotation) { champs_private.find(&:repetition?) }
 
       it 'return error' do
         expect(data).to eq(dossierModifierAnnotationText: {
@@ -95,8 +96,8 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     end
 
     context 'with rows' do
-      let(:annotation) { dossier.champs_private.find(&:repetition?).rows.first.first }
-      let(:other_annotation) { dossier.champs_private.find(&:repetition?).rows.second.first }
+      let(:annotation) { champs_private.find(&:repetition?).rows.first.first }
+      let(:other_annotation) { champs_private.find(&:repetition?).rows.second.first }
 
       it 'update champ' do
         expect(data).to eq(dossierModifierAnnotationText: {
