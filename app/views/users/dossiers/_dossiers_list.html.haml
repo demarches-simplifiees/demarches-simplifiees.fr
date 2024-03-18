@@ -32,7 +32,7 @@
 
             - if dossier.invites.present?
               %p.fr-icon--sm.fr-icon-shield-line
-                = t('views.users.dossiers.dossiers_list.shared_with')
+                = t('views.users.dossiers.dossiers_list.shared_with', owner: dossier.user.email)
                 = dossier.invites.map(&:email).join(', ')
 
         .text-right
