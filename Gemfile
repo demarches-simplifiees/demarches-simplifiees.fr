@@ -75,7 +75,6 @@ gem 'puma' # Use Puma as the app server
 gem 'pundit'
 gem 'rack-attack'
 gem 'rails-i18n' # Locales par défaut
-gem 'rails-pg-extras'
 gem 'rake-progressbar', require: false
 gem 'redcarpet'
 gem 'redis'
