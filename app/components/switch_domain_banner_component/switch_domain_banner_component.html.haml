@@ -8,7 +8,8 @@
       // TODO: notify us in order to monitor connectivity issues volume
     })
 
-= render Dsfr::NoticeComponent.new(closable: true) do |c|
+
+= render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-switch-domain-notice" => true }) do |c|
   - c.with_title do
     = t(".message_new_domain")
     = "#{helpers.link_to APPLICATION_NAME, new_host_url}."
@@ -17,3 +18,10 @@
       = t(".follow_link")
     - elsif auto_switch? || true
       = t(".detected_error")
+
+- if user && !user.preferred_domain_demarches_gouv_fr? && requested_from_new_domain?
+  = form_tag(helpers.preferred_domain_path, method: :patch, remote: true, name: "update-preferred-domain")
+  :javascript
+    document.addEventListener('noticeClosed', function(e) {
+      document.forms['update-preferred-domain'].submit();
+    });

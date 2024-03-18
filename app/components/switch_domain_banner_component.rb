@@ -9,8 +9,7 @@ class SwitchDomainBannerComponent < ApplicationComponent
 
   def render?
     return false unless helpers.switch_domain_enabled?(request)
-
-    # TODO if preferred hosts
+    return false if user&.preferred_domain_demarches_gouv_fr? && requested_from_new_domain?
 
     true
   end
@@ -27,6 +26,8 @@ class SwitchDomainBannerComponent < ApplicationComponent
     helpers.url_for(url_options)
   end
 
+  def requested_from_new_domain?
+    Current.host == ApplicationHelper::APP_HOST
   end
 
   private

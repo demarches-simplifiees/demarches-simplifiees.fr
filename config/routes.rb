@@ -386,6 +386,7 @@ Rails.application.routes.draw do
     post 'accept_merge' => 'profil#accept_merge'
     post 'refuse_merge' => 'profil#refuse_merge'
     delete 'france_connect_information' => 'profil#destroy_fci'
+    patch 'preferred_domain', to: 'profil#preferred_domain'
     get 'fermeture/:path', to: 'commencer#closing_details', as: :closing_details
   end
 
