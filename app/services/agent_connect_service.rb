@@ -35,9 +35,7 @@ class AgentConnectService
       nonce: nonce
     )
 
-    access_token
-      .userinfo!
-      .raw_attributes
+    [access_token.userinfo!.raw_attributes, access_token.id_token]
   end
 
   private

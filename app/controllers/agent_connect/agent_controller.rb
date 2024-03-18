@@ -19,21 +19,21 @@ class AgentConnect::AgentController < ApplicationController
   end
 
   def callback
-    user_info = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    user_info, id_token = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.encrypted[NONCE_COOKIE_NAME] = nil
 
     instructeur = Instructeur.find_by(agent_connect_id: user_info['sub'])
 
     if instructeur.nil?
       instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
-      instructeur&.update(agent_connect_id: user_info['sub'])
     end
 
     if instructeur.nil?
       user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20])
       instructeur = user.instructeur
-      instructeur.update(agent_connect_id: user_info['sub'])
     end
+
+    instructeur.update(agent_connect_id: user_info['sub'], agent_connect_id_token: id_token)
 
     aci = AgentConnectInformation.find_or_initialize_by(instructeur:)
     aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone'))
