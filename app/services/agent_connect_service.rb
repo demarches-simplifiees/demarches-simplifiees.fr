@@ -6,7 +6,7 @@ class AgentConnectService
   end
 
   def self.authorization_uri
-    client = AgentConnectClient.new
+    client = OpenIDConnect::Client.new(AGENT_CONNECT)
 
     state = SecureRandom.hex(16)
     nonce = SecureRandom.hex(16)
@@ -22,7 +22,8 @@ class AgentConnectService
   end
 
   def self.user_info(code, nonce)
-    client = AgentConnectClient.new(code)
+    client = OpenIDConnect::Client.new(AGENT_CONNECT)
+    client.authorization_code = code
 
     access_token = client.access_token!(client_auth_method: :secret)
 
