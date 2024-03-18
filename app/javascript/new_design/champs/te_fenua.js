@@ -1,5 +1,6 @@
 import {
-  createBatimentLayer, createCadastreLayer,
+  createBatimentLayer,
+  createCadastreLayer,
   createDefaultMap,
   createManualZoneLayer,
   // createMarkerFeature,
@@ -9,7 +10,7 @@ import {
   formatArea,
   getBatimentFeatureInfo,
   getCadastreFeatureInfo
-} from "./te_fenua_lib";
+} from './te_fenua_lib';
 import { Draw, Modify } from 'ol/interaction';
 import Select from 'ol/interaction/Select';
 import { GeoJSON } from 'ol/format';
@@ -254,7 +255,12 @@ function addInteractions(mapElement, map) {
     map.addInteraction(select);
     createControl(map, clickOnAddZone, 'add', 'Ajouter une zone');
     createControl(map, clickOnEffaceZone, 'delete', 'Effacer une zone');
-    createControl(map, clickOnToggleCadastre, 'layers', 'Afficher/masquer le cadastre');
+    createControl(
+      map,
+      clickOnToggleCadastre,
+      'layers',
+      'Afficher/masquer le cadastre'
+    );
     draw.on('drawend', (e) => {
       bubbles.add_zone.style.display = 'none';
       let source = map.zoneManuellesLayer.getSource();

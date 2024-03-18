@@ -282,7 +282,7 @@ export function createCadastreLayer() {
   // http://openlayers.org/en/master/apidoc/ol.layer.Tile.html
   return new TileLayer({
     zIndex: 10,
-    opacity: 0.60,
+    opacity: 0.6,
     // http://openlayers.org/en/master/apidoc/ol.source.WMTS.html
     source: new WMTS({
       url: 'https://www.tefenua.gov.pf/api/wmts',
