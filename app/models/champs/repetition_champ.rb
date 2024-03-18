@@ -5,7 +5,9 @@ class Champs::RepetitionChamp < Champ
   def rows
     dossier
       .champs_for_revision(scope: type_de_champ)
-      .group_by(&:row_id).values
+      .group_by(&:row_id)
+      .sort
+      .map(&:second)
   end
 
   def row_ids
