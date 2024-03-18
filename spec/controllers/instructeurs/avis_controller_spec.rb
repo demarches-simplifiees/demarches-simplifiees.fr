@@ -5,7 +5,7 @@ describe Instructeurs::AvisController, type: :controller do
     let(:now) { Time.zone.parse('01/02/2345') }
     let(:expert) { create(:expert) }
     let(:claimant) { create(:instructeur) }
-    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+    let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure, notify_on_new_avis: false) }
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }

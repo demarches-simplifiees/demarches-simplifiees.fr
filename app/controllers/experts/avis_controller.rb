@@ -4,10 +4,11 @@ module Experts
     include Zipline
 
     before_action :authenticate_expert!, except: [:sign_up, :update_expert]
-    before_action :check_if_avis_revoked, except: [:index, :procedure]
+    before_action :check_if_avis_revoked, except: [:index, :procedure, :notification_settings, :update_notification_settings]
     before_action :redirect_if_no_sign_up_needed, only: [:sign_up, :update_expert]
     before_action :set_avis_and_dossier, only: [:show, :instruction, :avis_list, :avis_new, :messagerie, :create_commentaire, :delete_commentaire, :update, :telecharger_pjs]
     before_action :check_messaging_allowed, only: [:messagerie, :create_commentaire]
+    before_action :set_procedure, only: [:notification_settings, :update_notification_settings]
 
     A_DONNER_STATUS = 'a-donner'
     DONNES_STATUS   = 'donnes'
@@ -64,6 +65,20 @@ module Experts
     end
 
     def avis_list
+    end
+
+    def expert_procedure
+      ExpertsProcedure.find_by!(expert_id: current_expert.id, procedure_id: @procedure.id)
+    end
+
+    def notification_settings
+      @expert_procedure = expert_procedure
+    end
+
+    def update_notification_settings
+      expert_procedure.update!(expert_procedure_params)
+      flash.notice = 'Vos notifications sont enregistrées.'
+      redirect_to procedure_expert_avis_index_path(@procedure)
     end
 
     def avis_new
@@ -166,6 +181,15 @@ module Experts
     end
 
     private
+
+    def expert_procedure_params
+      params.require(:experts_procedure)
+        .permit(:notify_on_new_avis, :notify_on_new_message)
+    end
+
+    def set_procedure
+      @procedure = current_expert.procedures.find(params[:procedure_id])
+    end
 
     def check_messaging_allowed
       if !@avis.procedure.allow_expert_messaging

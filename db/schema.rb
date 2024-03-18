@@ -586,6 +586,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
     t.boolean "allow_decision_access", default: false, null: false
     t.datetime "created_at", null: false
     t.bigint "expert_id", null: false
+    t.boolean "notify_on_new_avis", default: true, null: false
+    t.boolean "notify_on_new_message", default: false, null: false
     t.bigint "procedure_id", null: false
     t.datetime "revoked_at", precision: nil
     t.datetime "updated_at", null: false
