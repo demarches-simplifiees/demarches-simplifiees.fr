@@ -44,14 +44,12 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      current_user.update(loged_in_with_france_connect: '')
 
+      current_user.update(loged_in_with_france_connect: nil)
       sign_out :user
 
-      case connected_with_france_connect
-      when User.loged_in_with_france_connects.fetch(:particulier)
-        redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
-        return
+      if connected_with_france_connect == User.loged_in_with_france_connects.fetch(:particulier)
+        return redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
       end
     end
 
