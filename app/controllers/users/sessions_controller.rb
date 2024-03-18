@@ -95,4 +95,9 @@ class Users::SessionsController < Devise::SessionsController
       redirect_to link_sent_path(email: instructeur.email)
     end
   end
+
+  # agent connect callback
+  def logout
+    redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
+  end
 end

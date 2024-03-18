@@ -155,6 +155,7 @@ Rails.application.routes.draw do
     get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
     post '/instructeurs/reset-link-sent' => 'users/sessions#reset_link_sent'
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
+    get 'logout' => 'users/sessions#logout'
   end
 
   get 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
