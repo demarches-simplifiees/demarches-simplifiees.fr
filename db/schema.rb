@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_18_092147) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_18_134256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -95,14 +95,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_18_092147) do
     t.string "belonging_population"
     t.datetime "created_at", null: false
     t.string "email", null: false
-    t.string "given_name", null: false
+    t.string "given_name"
     t.bigint "instructeur_id", null: false
     t.string "organizational_unit"
     t.string "phone"
     t.string "siret"
     t.string "sub", null: false
     t.datetime "updated_at", null: false
-    t.string "usual_name", null: false
+    t.string "usual_name"
     t.index ["instructeur_id"], name: "index_agent_connect_informations_on_instructeur_id"
   end
 
