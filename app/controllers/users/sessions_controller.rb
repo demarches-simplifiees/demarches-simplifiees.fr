@@ -44,14 +44,19 @@ class Users::SessionsController < Devise::SessionsController
   def destroy
     if user_signed_in?
       connected_with_france_connect = current_user.loged_in_with_france_connect
-      current_user.update(loged_in_with_france_connect: '')
+      agent_connect_id_token = current_user&.instructeur&.agent_connect_id_token
+
+      current_user.update(loged_in_with_france_connect: nil)
+      current_user&.instructeur&.update(agent_connect_id_token: nil)
 
       sign_out :user
 
-      case connected_with_france_connect
-      when User.loged_in_with_france_connects.fetch(:particulier)
-        redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
-        return
+      if connected_with_france_connect == User.loged_in_with_france_connects.fetch(:particulier)
+        return redirect_to FRANCE_CONNECT[:particulier][:logout_endpoint], allow_other_host: true
+      end
+
+      if agent_connect_id_token.present?
+        return redirect_to build_agent_connect_logout_url(agent_connect_id_token), allow_other_host: true
       end
     end
 
@@ -94,5 +99,17 @@ class Users::SessionsController < Devise::SessionsController
       send_login_token_or_bufferize(instructeur)
       redirect_to link_sent_path(email: instructeur.email)
     end
+  end
+
+  # agent connect callback
+  def logout
+    redirect_to root_path, notice: I18n.t('devise.sessions.signed_out')
+  end
+
+  private
+
+  def build_agent_connect_logout_url(id_token)
+    h = { id_token_hint: id_token, post_logout_redirect_uri: logout_url }
+    "#{ENV['AGENT_CONNECT_BASE_URL']}/api/v2/session/end?#{h.to_query}"
   end
 end

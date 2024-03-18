@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_18_092147) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -763,6 +763,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
 
   create_table "instructeurs", id: :serial, force: :cascade do |t|
     t.string "agent_connect_id"
+    t.string "agent_connect_id_token"
     t.boolean "bypass_email_login_token", default: false, null: false
     t.datetime "created_at", precision: nil
     t.text "encrypted_login_token"

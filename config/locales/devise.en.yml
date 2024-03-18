@@ -5,3 +5,4 @@ en:
         request_new_password: Request new password
     sessions:
       signed_in_multiple_profile: "You are connected ! You can switch between your multiple profiles : %{roles}."
+      signed_out: You are now disconnected.

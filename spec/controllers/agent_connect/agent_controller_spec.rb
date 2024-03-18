@@ -20,6 +20,7 @@ describe AgentConnect::AgentController, type: :controller do
     let(:email) { 'i@email.com' }
     let(:original_state) { 'original_state' }
     let(:nonce) { 'nonce' }
+    let(:id_token) { 'id_token' }
     subject { get :callback, params: { code: code, state: state } }
 
     before do
@@ -34,7 +35,7 @@ describe AgentConnect::AgentController, type: :controller do
 
       context 'and user_info returns some info' do
         before do
-          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return(user_info)
+          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
         end
 
         context 'and the instructeur does not have an account yet' do
@@ -50,6 +51,7 @@ describe AgentConnect::AgentController, type: :controller do
             expect(last_user.email).to eq(email)
             expect(last_user.confirmed_at).to be_present
             expect(last_user.instructeur.agent_connect_id).to eq('sub')
+            expect(last_user.instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
             expect(state_cookie).to be_nil
             expect(nonce_cookie).to be_nil
@@ -69,6 +71,7 @@ describe AgentConnect::AgentController, type: :controller do
             instructeur.reload
 
             expect(instructeur.agent_connect_id).to eq('sub')
+            expect(instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
         end
@@ -86,6 +89,7 @@ describe AgentConnect::AgentController, type: :controller do
             instructeur = user.reload.instructeur
 
             expect(instructeur.agent_connect_id).to eq('sub')
+            expect(instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
         end
