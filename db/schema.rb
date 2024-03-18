@@ -1232,7 +1232,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
-add_foreign_key "etablissements", "dossiers"
+  add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"

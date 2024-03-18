@@ -68,7 +68,7 @@ module Experts
     end
 
     def expert_procedure
-      ExpertsProcedure.find_by(expert_id: current_expert.id, procedure_id: @procedure.id)
+      ExpertsProcedure.find_by!(expert_id: current_expert.id, procedure_id: @procedure.id)
     end
 
     def notification_settings
@@ -188,7 +188,7 @@ module Experts
     end
 
     def set_procedure
-      @procedure = current_expert.procedures.find_by(id: params[:procedure_id])
+      @procedure = current_expert.procedures.find(params[:procedure_id])
     end
 
     def check_messaging_allowed

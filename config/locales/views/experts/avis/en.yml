@@ -2,13 +2,13 @@ en:
   experts:
     avis:
       procedure:
-        management: notification management of the procedure %{procedure_id}
+        management: Notification management of the procedure
       notification_settings:
         utils:
           positive: Yes
           negative: No
         title: Email Notifications
-        subtitle: "Configure on this page the notifications you wish to receive by email for: %{procedure_libelle}"
+        subtitle: Configure on this page the notifications you wish to receive by email
         for_each_avis_submitted:
           title: Receive a notification for each avis requested from you
           notice_1: This email alerts you that an avis is requested from you.
@@ -18,5 +18,5 @@ en:
           notice_1: This email notifies you that a new message is available in the messaging system.
           notice_2: It is sent every time an instructor or user sends a message.
         buttons:
-          back_to_procedure: Return to the procedure notices %{procedure_id}
+          back_to_procedure: Return to the procedure notices
           save: Save

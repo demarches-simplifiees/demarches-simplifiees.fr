@@ -8,7 +8,7 @@
     .procedure-header
       %h1.fr-h3= procedure_libelle @procedure
 
-.container
+.fr-container
   %h1.fr-h3
     = t('.title')
 
@@ -16,7 +16,7 @@
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do
         %p
-          = t('.subtitle', procedure_libelle: @procedure.libelle)
+          = t('.subtitle')
 
     %fieldset.fr-fieldset
       %legend.fr-fieldset__legend
@@ -55,6 +55,6 @@
           %label.fr-label{ for: 'notify_on_new_message_false' }
             = t('.utils.negative')
 
-    .send-wrapper
-      = link_to t('.buttons.back_to_procedure', procedure_id: @procedure.id), procedure_expert_avis_index_path(@procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w'
-      = form.submit t('.buttons.save'), class: "fr-btn"
+    %ul.fr-btns-group.fr-btns-group--inline
+      %li= form.submit t('.buttons.save'), class: "fr-btn"
+      %li= link_to t('.buttons.back_to_procedure', procedure_id: @procedure.id), procedure_expert_avis_index_path(@procedure), class: 'fr-btn fr-btn--secondary'
