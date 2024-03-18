@@ -250,7 +250,9 @@ class TypeDeChamp < ApplicationRecord
   def params_for_champ
     {
       private: private?,
-      type: "Champs::#{type_champ.classify}Champ"
+      type: "Champs::#{type_champ.classify}Champ",
+      stable_id:,
+      stream: 'main'
     }
   end
 

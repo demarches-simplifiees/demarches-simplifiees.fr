@@ -104,7 +104,7 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     env:
       RUBY_YJIT_ENABLE: "1"
     services:
