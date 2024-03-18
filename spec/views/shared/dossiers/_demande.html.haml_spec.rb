@@ -51,4 +51,17 @@ describe 'shared/dossiers/demande', type: :view do
       end
     end
   end
+
+  context 'when a champ is freshly build' do
+    let(:procedure) { create(:procedure, :published, :with_type_de_champ) }
+    before do
+      dossier.champs_public.first.destroy
+    end
+
+    it 'renders without error' do
+      procedure.active_revision.types_de_champ.each do |tdc|
+        expect(subject).to include(tdc.libelle)
+      end
+    end
+  end
 end

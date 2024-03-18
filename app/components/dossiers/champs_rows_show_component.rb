@@ -10,6 +10,7 @@ class Dossiers::ChampsRowsShowComponent < ApplicationComponent
 
   def updated_at_after_deposer(champ)
     return if champ.dossier.depose_at.blank?
+    return if champ.new_record?
 
     if champ.updated_at > champ.dossier.depose_at
       champ.updated_at
