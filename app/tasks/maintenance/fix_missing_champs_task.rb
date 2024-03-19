@@ -15,8 +15,7 @@ module Maintenance
         # rubocop:enable Rails/FindEach
         maybe_fixable = [dossier, dossier.editing_forks.first].compact.any? { _1.champs.size < _1.revision.types_de_champ.size }
         if maybe_fixable
-          added_champ_count = DataFixer::DossierChampsMissing.new(dossier:).fix
-          rake_puts "fixed: #{dossier.id}, adding: #{added_champ_count}"
+          DataFixer::DossierChampsMissing.new(dossier:).fix
         end
       end
     end
