@@ -3,11 +3,13 @@
 module Maintenance
   class FillChampsStableIdTask < MaintenanceTasks::Task
     def collection
-      Champ.where(stable_id: nil).includes(:type_de_champ)
+      Champ.all
     end
 
     def process(champ)
-      champ.update_columns(stable_id: champ.stable_id, stream: 'main')
+      if !champ.attribute_present?(:stable_id)
+        champ.update_columns(stable_id: champ.stable_id, stream: 'main')
+      end
     end
 
     def count
