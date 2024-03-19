@@ -35,9 +35,11 @@ class ApplicationController < ActionController::Base
     if Current.host.include?("gouv.fr")
       Current.application_name = "demarches.gouv.fr"
       Current.contact_email = "contact@demarches.gouv.fr"
+      Current.application_base_url = "https://demarches.gouv.fr"
     else
       Current.application_name = APPLICATION_NAME
       Current.contact_email = CONTACT_EMAIL
+      Current.application_base_url = Current.application_base_url
     end
   end
 
