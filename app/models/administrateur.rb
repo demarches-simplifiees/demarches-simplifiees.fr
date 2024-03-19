@@ -72,30 +72,6 @@ class Administrateur < ApplicationRecord
     procedures.with_discarded.all? { |p| p.administrateurs.count > 1 || p.dossiers.empty? }
   end
 
-  def delete_and_transfer_services
-    if !can_be_deleted?
-      fail "Impossible de supprimer cet administrateur car il a des démarches où il est le seul administrateur"
-    end
-
-    procedures.with_discarded.each do |procedure|
-      next if procedure.service.nil?
-
-      next_administrateur = procedure.administrateurs.where.not(id: self.id).first
-      procedure.service.update(administrateur: next_administrateur)
-
-      if (procedure.administrateurs.count == 1 && procedure.dossiers.empty?)
-        procedure.destroy
-      end
-    end
-
-    services.each do |service|
-      # We can't destroy a service if it has procedures, even if those procedures are archived
-      service.destroy unless service.procedures.with_discarded.any?
-    end
-    AdministrateursProcedure.where(administrateur_id: self.id).delete_all
-    destroy
-  end
-
   def merge(old_admin)
     return if old_admin.nil?
 
