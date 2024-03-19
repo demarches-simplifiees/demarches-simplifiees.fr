@@ -3,7 +3,7 @@
 .fr-container
   .fr-grid-row
     .fr-col-12
-      %h1= t('commencer.closing_details.page_title', libelle: @procedure.libelle, closed_at: @procedure.closed_at.strftime('%d/%m/%Y'))
+      %h1= t('commencer.closing_details.page_title', libelle: @procedure.libelle, closed_at: l(@procedure.closed_at.to_date, format: :long))
       %p
         = format_text_value(@procedure.closing_details)
 
