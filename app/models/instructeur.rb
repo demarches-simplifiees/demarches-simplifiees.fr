@@ -298,6 +298,10 @@ class Instructeur < ApplicationRecord
       .update_all(claimant_id: id)
   end
 
+  def last_agent_connect_information
+    agent_connect_information.order(updated_at: :desc).first
+  end
+
   private
 
   def annotations_hash(demande, annotations_privees, avis, messagerie)
