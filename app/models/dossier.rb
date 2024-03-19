@@ -1403,11 +1403,7 @@ class Dossier < ApplicationRecord
   def project_champ(type_de_champ, row_id)
     stable_id_with_row = [row_id, type_de_champ.stable_id].compact
     champ = champs_by_stable_id_with_row[stable_id_with_row]
-    if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:)
-    else
-      champ
-    end
+    ChampProjection.new(self, type_de_champ, champ:, row_id:)
   end
 
   def champ_for_export(type_de_champ, row_id)
