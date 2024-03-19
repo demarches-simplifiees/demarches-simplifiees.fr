@@ -58,16 +58,17 @@ class ExportTemplate < ApplicationRecord
     end
   end
 
-  def tiptap_convert_pj(dossier, pj_stable_id)
-    if content_for_pj_id(pj_stable_id)["content"]&.first["content"]
-      render_attributes_for(content_for_pj_id(pj_stable_id), dossier)
+  def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
+    if content_for_pj_id(pj_stable_id)["content"]&.first&.[]("content")
+      render_attributes_for(content_for_pj_id(pj_stable_id), dossier, attachment)
     end
   end
 
-  def render_attributes_for(content_for, dossier)
+  def render_attributes_for(content_for, dossier, attachment = nil)
     tiptap = TiptapService.new
     used_tags = tiptap.used_tags_and_libelle_for(content_for.deep_symbolize_keys)
     substitutions = tags_substitutions(used_tags, dossier, escape: false)
+    substitutions['original-filename'] = attachment.filename.base if attachment
     tiptap.to_path(content_for.deep_symbolize_keys, substitutions)
   end
 
@@ -86,6 +87,14 @@ class ExportTemplate < ApplicationRecord
 
   def specific_tags
     tags_categorized.slice(:individual, :etablissement, :dossier).values.flatten
+  end
+
+  def tags_for_pj
+    specific_tags.push({
+      libelle: 'nom original du fichier',
+      id: 'original-filename',
+      maybe_null: false
+    })
   end
 
   private
@@ -134,7 +143,7 @@ class ExportTemplate < ApplicationRecord
     stable_id = TypeDeChamp.find(type_de_champ_id).stable_id
     tiptap_pj = content["pjs"].find { |pj| pj["stable_id"] == stable_id.to_s }
     if tiptap_pj
-      File.join(folder(dossier), tiptap_convert_pj(dossier, stable_id) + suffix(attachment, index, row_index))
+      File.join(folder(dossier), tiptap_convert_pj(dossier, stable_id, attachment) + suffix(attachment, index, row_index))
     else
       File.join(folder(dossier), "erreur_renommage", attachment.filename.to_s)
     end
