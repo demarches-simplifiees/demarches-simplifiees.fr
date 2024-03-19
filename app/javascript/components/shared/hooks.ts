@@ -48,7 +48,7 @@ export function useDeferredSubmit(input?: HTMLInputElement): {
 }
 
 export function groupId(id: string) {
-  return `#champ-${id.replace(/-input$/, '')}`;
+  return `#${id.replace(/-input$/, '')}`;
 }
 
 export function useHiddenField(
