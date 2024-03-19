@@ -20,7 +20,7 @@ class AgentConnect::AgentController < ApplicationController
 
   def callback
     user_info, id_token = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
-    cookies.encrypted[NONCE_COOKIE_NAME] = nil
+    cookies.delete NONCE_COOKIE_NAME
 
     instructeur = Instructeur.find_by(agent_connect_id: user_info['sub'])
 
@@ -69,7 +69,7 @@ class AgentConnect::AgentController < ApplicationController
       flash.alert = t('errors.messages.france_connect.connexion')
       redirect_to(new_user_session_path)
     else
-      cookies.encrypted[STATE_COOKIE_NAME] = nil
+      cookies.delete STATE_COOKIE_NAME
     end
   end
 end
