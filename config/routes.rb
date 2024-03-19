@@ -571,6 +571,8 @@ Rails.application.routes.draw do
         get 'modifications'
         get 'monavis'
         patch 'update_monavis'
+        get 'accuse_lecture'
+        patch 'update_accuse_lecture'
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review

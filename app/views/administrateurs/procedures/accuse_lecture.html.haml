@@ -1,0 +1,37 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Accusé de lecture']] }
+
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      %h1.page-title
+        Accusé de lecture
+
+      = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+        - c.with_body do
+          %p
+            Pour les démarches avec voies de recours, il est possible d'activer l'accusé de lecture. L'usager n'a plus accès à la décision finale par mail, mais il doit se connecter sur la plateforme Démarches Simplifiées pour en prendre connaissance et en accuser lecture.
+
+      %ul.fr-toggle__list
+        %li
+          = form_for @procedure,
+            method: :patch,
+            url: update_accuse_lecture_admin_procedure_path(@procedure),
+            data: { controller: 'autosubmit', turbo: 'true' } do |f|
+
+            = render Dsfr::ToggleComponent.new(form: f,
+              target: :accuse_lecture,
+              title: "Accusé de lecture de la démarche",
+              hint: "L’accusé de lecture est à activer uniquement pour les démarches avec voies de recours car il complexifie l'accès à la décision finale pour les usagers",
+              opt: {"checked" => @procedure.accuse_lecture})
+
+.padded-fixed-footer
+  .fixed-footer
+    .fr-container
+      .fr-grid-row
+        .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+          %ul.fr-btns-group.fr-btns-group--inline-md
+            %li
+              = link_to 'Enregistrer et revenir à la page de suivi', admin_procedure_path(id: @procedure), class: 'fr-btn'
