@@ -2,11 +2,11 @@ class AgentConnectService
   include OpenIDConnect
 
   def self.enabled?
-    ENV.fetch("AGENT_CONNECT_ENABLED", "enabled") == "enabled"
+    ENV['AGENT_CONNECT_BASE_URL'].present?
   end
 
   def self.authorization_uri
-    client = AgentConnectClient.new
+    client = OpenIDConnect::Client.new(conf)
 
     state = SecureRandom.hex(16)
     nonce = SecureRandom.hex(16)
@@ -22,25 +22,25 @@ class AgentConnectService
   end
 
   def self.user_info(code, nonce)
-    client = AgentConnectClient.new(code)
+    client = OpenIDConnect::Client.new(conf)
+    client.authorization_code = code
 
     access_token = client.access_token!(client_auth_method: :secret)
 
-    discover = find_discover
-    id_token = ResponseObject::IdToken.decode(access_token.id_token, discover.jwks)
-
-    id_token.verify!(
-      client_id: Rails.application.secrets.agent_connect[:identifier],
-      issuer: discover.issuer,
-      nonce: nonce
-    )
+    id_token = ResponseObject::IdToken.decode(access_token.id_token, conf[:jwks])
+    id_token.verify!(conf.merge(nonce: nonce))
 
     [access_token.userinfo!.raw_attributes, access_token.id_token]
   end
 
   private
 
-  def self.find_discover
-    Discovery::Provider::Config.discover!("#{ENV.fetch('AGENT_CONNECT_BASE_URL')}/api/v2")
+  # TODO: remove this block when migration to new domain is done
+  def self.conf
+    if Current.host.end_with?('.gouv.fr')
+      AGENT_CONNECT_GOUV
+    else
+      AGENT_CONNECT
+    end
   end
 end

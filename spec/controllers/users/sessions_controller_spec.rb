@@ -85,6 +85,7 @@ describe Users::SessionsController, type: :controller do
     let(:agent_connect_id_token) { nil }
 
     before do
+      stub_const("AGENT_CONNECT", { end_session_endpoint: 'http://agent-connect/logout' })
       sign_in user
       delete :destroy
     end

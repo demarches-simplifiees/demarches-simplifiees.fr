@@ -20,22 +20,18 @@ class AgentConnect::AgentController < ApplicationController
 
   def callback
     user_info, id_token = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
-    cookies.encrypted[NONCE_COOKIE_NAME] = nil
+    cookies.delete NONCE_COOKIE_NAME
 
-    instructeur = Instructeur.find_by(agent_connect_id: user_info['sub'])
-
-    if instructeur.nil?
-      instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
-    end
+    instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
 
     if instructeur.nil?
       user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20])
       instructeur = user.instructeur
     end
 
-    instructeur.update(agent_connect_id: user_info['sub'], agent_connect_id_token: id_token)
+    instructeur.update(agent_connect_id_token: id_token)
 
-    aci = AgentConnectInformation.find_or_initialize_by(instructeur:)
+    aci = AgentConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
     aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone'))
 
     sign_in(:user, instructeur.user)
@@ -69,7 +65,7 @@ class AgentConnect::AgentController < ApplicationController
       flash.alert = t('errors.messages.france_connect.connexion')
       redirect_to(new_user_session_path)
     else
-      cookies.encrypted[STATE_COOKIE_NAME] = nil
+      cookies.delete STATE_COOKIE_NAME
     end
   end
 end
