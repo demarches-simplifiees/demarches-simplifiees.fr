@@ -10,7 +10,7 @@
         %h1.fr-mb-4w
           = t('views.accessibility_statement.title')
         %p.fr-mb-2w= t('views.accessibility_statement.line_one')
-        %p.fr-mb-2w= t('views.accessibility_statement.line_two', app_name: Current.application_name, host: URI(APPLICATION_BASE_URL).host)
+        %p.fr-mb-2w= t('views.accessibility_statement.line_two', app_name: Current.application_name, host: URI(Current.application_base_url).host)
 
         %div
           %h2

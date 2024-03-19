@@ -23,7 +23,7 @@ class RootController < ApplicationController
   end
 
   def patron
-    description = "Allez voir le super site : #{APPLICATION_BASE_URL}"
+    description = "Allez voir le super site : #{Current.application_base_url}"
 
     all_champs = TypeDeChamp.type_champs
       .map.with_index { |(name, _), i| TypeDeChamp.new(type_champ: name, private: false, libelle: name.humanize, description:, mandatory: true, stable_id: i) }
