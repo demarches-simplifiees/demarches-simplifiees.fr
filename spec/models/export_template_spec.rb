@@ -26,12 +26,16 @@ describe ExportTemplate do
       },
       "pjs" =>
       [
-        {path: {"type"=>"doc", "content"=>[{"type"=>"paragraph", "content"=>[{"type"=>"mention", "attrs"=>{"id"=>"dossier_number", "label"=>"numéro du dossier"}}, {"text"=>" _justif", "type"=>"text"}]}]}, stable_id: "3"},
-        { path:
-         {"type"=>"doc", "content"=>[{"type"=>"paragraph", "content"=>[{"text"=>"cni_", "type"=>"text"}, {"type"=>"mention", "attrs"=>{"id"=>"dossier_number", "label"=>"numéro du dossier"}}, {"text"=>" ", "type"=>"text"}]}]},
-           stable_id: "5"},
-           { path: {"type"=>"doc", "content"=>[{"type"=>"paragraph", "content"=>[{"text"=>"pj_repet_", "type"=>"text"}, {"type"=>"mention", "attrs"=>{"id"=>"dossier_number", "label"=>"numéro du dossier"}}, {"text"=>" ", "type"=>"text"}]}]},
-            stable_id: "10"}
+        { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }] }, stable_id: "3" },
+        {
+          path:
+                   { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "cni_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
+           stable_id: "5"
+        },
+        {
+          path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "pj_repet_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
+         stable_id: "10"
+        }
       ]
     }
   end
@@ -95,9 +99,9 @@ describe ExportTemplate do
 
     it 'returns tiptap content for pj' do
       expect(export_template.content_for_pj(type_de_champ_pj)).to eq({
-        "type"=>"doc",
-        "content"=> [
-          {"type"=>"paragraph", "content"=>[{"type"=>"mention", "attrs"=>{"id"=>"dossier_number", "label"=>"numéro du dossier"}}, {"text"=>" _justif", "type"=>"text"}]}
+        "type" => "doc",
+        "content" => [
+          { "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }
         ]
       }.to_json)
     end
@@ -126,7 +130,7 @@ describe ExportTemplate do
         dossier.champs_public << champ_pj
       end
       it 'returns pj and custom name for pj' do
-        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/#{dossier.id}_justif.png"])
+        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/superpj_justif.png"])
       end
     end
     context 'pj repetable' do
@@ -169,6 +173,17 @@ describe ExportTemplate do
 
     it 'convert pdf_name' do
       expect(export_template.tiptap_convert(procedure.dossiers.first, "pdf_name")).to eq "mon_export_#{dossier.id}"
+    end
+  end
+
+  describe '#tiptap_convert_pj' do
+    let(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile', procedure:) }
+    let(:champ_pj) { create(:champ_piece_justificative, type_de_champ: type_de_champ_pj) }
+    let(:attachment) { ActiveStorage::Attachment.new(name: 'pj', record: champ_pj, blob: ActiveStorage::Blob.new(filename: "superpj.png")) }
+
+    it 'convert pj' do
+      attachment
+      expect(export_template.tiptap_convert_pj(dossier, type_de_champ_pj.stable_id, attachment)).to eq "superpj_justif"
     end
   end
 

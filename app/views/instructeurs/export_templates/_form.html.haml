@@ -45,7 +45,7 @@
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
             .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
               = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
-            .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
+            .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags_for_pj })
 
       .fixed-footer
         .fr-container
