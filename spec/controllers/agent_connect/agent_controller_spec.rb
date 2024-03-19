@@ -50,7 +50,6 @@ describe AgentConnect::AgentController, type: :controller do
 
             expect(last_user.email).to eq(email)
             expect(last_user.confirmed_at).to be_present
-            expect(last_user.instructeur.agent_connect_id).to eq('sub')
             expect(last_user.instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
             expect(state_cookie).to be_nil
@@ -70,7 +69,6 @@ describe AgentConnect::AgentController, type: :controller do
 
             instructeur.reload
 
-            expect(instructeur.agent_connect_id).to eq('sub')
             expect(instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
@@ -88,10 +86,39 @@ describe AgentConnect::AgentController, type: :controller do
 
             instructeur = user.reload.instructeur
 
-            expect(instructeur.agent_connect_id).to eq('sub')
             expect(instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
           end
+        end
+      end
+
+      context 'when the instructeur connects two times with the same domain' do
+        before do
+          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token]).twice
+          expect(controller).to receive(:sign_in).twice
+        end
+
+        it 'creates another agent_connect_information' do
+          get :callback, params: { code: code, state: state }
+          get :callback, params: { code: code, state: state }
+
+          expect(Instructeur.last.agent_connect_information.count).to eq(1)
+        end
+      end
+
+      context 'when the instructeur connects two times with different domains' do
+        before do
+          expect(controller).to receive(:sign_in).twice
+        end
+
+        it 'creates another agent_connect_information' do
+          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
+          get :callback, params: { code: code, state: state }
+
+          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info.merge('sub' => 'sub2'), id_token])
+          get :callback, params: { code: code, state: state }
+
+          expect(Instructeur.last.agent_connect_information.pluck(:sub)).to match_array(['sub', 'sub2'])
         end
       end
 
