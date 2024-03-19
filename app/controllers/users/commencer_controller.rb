@@ -80,6 +80,9 @@ module Users
 
     def closing_details
       @procedure = Procedure.find_by(path: params[:path])
+
+      return procedure_not_found if @procedure.blank?
+
       render 'closing_details', layout: 'closing_details'
     end
 
