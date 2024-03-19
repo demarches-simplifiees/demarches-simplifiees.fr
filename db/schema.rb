@@ -864,6 +864,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
 
   create_table "procedures", id: :serial, force: :cascade do |t|
     t.string "aasm_state", default: "brouillon"
+    t.boolean "accuse_reception", default: false, null: false
     t.boolean "allow_expert_messaging", default: true, null: false
     t.boolean "allow_expert_review", default: true, null: false
     t.string "api_entreprise_token"
