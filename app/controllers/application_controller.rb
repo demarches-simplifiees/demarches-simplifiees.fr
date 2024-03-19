@@ -31,6 +31,12 @@ class ApplicationController < ActionController::Base
     # TODO: remove this block when migration to new domain is done
     # headers['Host'] instead of request.host to keep the port (ex: localhost:3000)
     Current.host = request.headers['Host']
+
+    if Current.host.include?("gouv.fr")
+      Current.application_name = "demarches.gouv.fr"
+    else
+      Current.application_name = APPLICATION_NAME
+    end
   end
 
   def staging_authenticate
