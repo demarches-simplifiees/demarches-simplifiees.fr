@@ -2,7 +2,7 @@ class AgentConnectService
   include OpenIDConnect
 
   def self.enabled?
-    ENV.fetch("AGENT_CONNECT_ENABLED", "enabled") == "enabled"
+    ENV['AGENT_CONNECT_BASE_URL'].present?
   end
 
   def self.authorization_uri
