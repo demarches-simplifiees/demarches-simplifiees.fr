@@ -3,18 +3,16 @@
 module Maintenance
   class FillChampsStableIdTask < MaintenanceTasks::Task
     def collection
-      Champ.all
+      Dossier.all
     end
 
-    def process(champ)
-      if !champ.attribute_present?(:stable_id)
-        champ.update_columns(stable_id: champ.stable_id, stream: 'main')
-      end
-    end
-
-    def count
-      sql = "SELECT reltuples FROM pg_class WHERE relname = 'champs';"
-      Champ.connection.select_value(sql).to_i
+    def process(dossier)
+      dossier.champs
+        .includes(:type_de_champ)
+        .where(stable_id: nil)
+        .each do |champ|
+          champ.update_columns(stable_id: champ.stable_id, stream: 'main')
+        end
     end
   end
 end
