@@ -14,7 +14,7 @@ module Manager
     end
 
     def reinvite
-      Administrateur.find_inactive_by_id(params[:id]).user.invite_administrateur!(current_super_admin.id)
+      Administrateur.find_inactive_by_id(params[:id]).user.invite_administrateur!
       flash.notice = "Invitation renvoyée"
       redirect_to manager_administrateur_path(params[:id])
     end
