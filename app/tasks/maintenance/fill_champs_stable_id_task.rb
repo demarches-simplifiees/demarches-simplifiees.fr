@@ -10,7 +10,7 @@ module Maintenance
       dossier.champs
         .includes(:type_de_champ)
         .where(stable_id: nil)
-        .each do |champ|
+        .find_each do |champ|
           champ.update_columns(stable_id: champ.stable_id, stream: 'main')
         end
     end
