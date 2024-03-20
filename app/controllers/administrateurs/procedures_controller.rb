@@ -286,7 +286,6 @@ module Administrateurs
     def check_path
       @path_available = @procedure.path_available?(params[:path])
       @other_procedure = @procedure.other_procedure_with_path(params[:path])
-      @administrateur = current_administrateur
       respond_to do |format|
         format.turbo_stream do
           render :check_path
