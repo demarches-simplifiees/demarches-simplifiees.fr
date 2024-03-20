@@ -3,7 +3,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -315,6 +315,16 @@ module Administrateurs
         @procedure.path = @procedure.suggested_path(current_administrateur)
         @current_administrateur = current_administrateur
         @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
+      end
+    end
+
+    def check_path
+      @path_available = @procedure.path_available?(params[:path])
+      @other_procedure = @procedure.other_procedure_with_path(params[:path])
+      respond_to do |format|
+        format.turbo_stream do
+          render :check_path
+        end
       end
     end
 

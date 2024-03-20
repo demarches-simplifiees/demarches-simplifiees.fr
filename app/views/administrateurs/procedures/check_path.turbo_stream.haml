@@ -1,0 +1,6 @@
+= turbo_stream.update 'check_path' do
+  - if @path_available == false && current_administrateur.owns?(@other_procedure)
+    %p.fr-error-text= t('.path_not_available.owner')
+  - elsif @path_available == false
+    %p.fr-error-text= t('.path_not_available.not_owner')
+  - else

@@ -603,6 +603,7 @@ Rails.application.routes.draw do
       put 'clone'
       put 'archive'
       get 'publication' => 'procedures#publication', as: :publication
+      get 'check_path' => 'procedures#check_path', as: :check_path
       put 'publish' => 'procedures#publish', as: :publish
       put 'reset_draft' => 'procedures#reset_draft', as: :reset_draft
       put 'publish_revision' => 'procedures#publish_revision', as: :publish_revision
