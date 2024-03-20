@@ -42,6 +42,10 @@ describe Users::RegistrationsController, type: :controller do
       post :create, params: { user: user }
     end
 
+    before do
+      allow(Current).to receive(:host).and_return(ENV.fetch("APP_HOST"))
+    end
+
     context 'when user is correct' do
       it 'sends confirmation instruction' do
         message = double()
@@ -49,6 +53,8 @@ describe Users::RegistrationsController, type: :controller do
         expect(message).to receive(:deliver_later)
 
         subject
+
+        expect(User.last.preferred_domain_demarches_gouv_fr?).to be_truthy
       end
     end
 
