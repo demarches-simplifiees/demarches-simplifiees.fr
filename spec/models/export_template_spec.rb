@@ -1,7 +1,15 @@
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-  let(:export_template) { build(:export_template, groupe_instructeur:, content:) }
-  let(:procedure) { create(:procedure_with_dossiers) }
+  let(:export_template) { create(:export_template, groupe_instructeur:, content:) }
+  let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:) }
+  let(:dossier) { procedure.dossiers.first }
+  let(:for_individual) { false }
+  let(:types_de_champ_public) do
+    [
+      { type: :piece_justificative, libelle: "Justificatif de domicile", mandatory: true, stable_id: 3 },
+      { type: :titre_identite, libelle: "CNI", mandatory: true, stable_id: 5 }
+    ]
+  end
   let(:content) do
     {
       "pdf_name" => {
@@ -30,13 +38,6 @@ describe ExportTemplate do
 
   describe 'new' do
     let(:export_template) { build(:export_template, groupe_instructeur: groupe_instructeur) }
-    let(:procedure) { create(:procedure, types_de_champ_public:) }
-    let(:types_de_champ_public) do
-      [
-        { type: :integer_number, stable_id: 900 },
-        { type: :piece_justificative, libelle: "Justificatif de domicile", mandatory: true, stable_id: 910 }
-      ]
-    end
     it 'set default values' do
       export_template.set_default_values
       expect(export_template.content).to eq({
@@ -56,7 +57,7 @@ describe ExportTemplate do
         [
 
           {
-            "stable_id" => "910",
+            "stable_id" => "3",
             "path" =>  { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "justificatif-de-domicile-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.stringify_keys }] }] }
           }
         ]
@@ -161,8 +162,18 @@ describe ExportTemplate do
     end
   end
 
+  describe '#tiptap_convert' do
+    it 'convert default dossier directory' do
+      expect(export_template.tiptap_convert(procedure.dossiers.first, "default_dossier_directory")).to eq "DOSSIER_#{dossier.id}"
+    end
+
+    it 'convert pdf_name' do
+      expect(export_template.tiptap_convert(procedure.dossiers.first, "pdf_name")).to eq "mon_export_#{dossier.id}"
+    end
+  end
+
   describe '#valid?' do
-    let(:subject) { build(:export_template, content:) }
+    let(:subject) { build(:export_template, groupe_instructeur:, content:) }
     let(:ddd_text) { "DoSSIER" }
     let(:mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
     let(:ddd_mention) { mention }
@@ -194,7 +205,6 @@ describe ExportTemplate do
     context 'with valid default dossier directory' do
       it 'has no error for default_dossier_directory' do
         expect(subject.valid?).to be_truthy
-        expect(subject.errors[:default_dossier_directory]).not_to be_present
       end
     end
 
@@ -204,23 +214,15 @@ describe ExportTemplate do
         let(:ddd_mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
         it 'has no error for default_dossier_directory' do
           expect(subject.valid?).to be_truthy
-          expect(subject.errors[:default_dossier_directory]).not_to be_present
         end
       end
 
-      context 'without mention' do
-        let(:ddd_mention) { { "type" => "mention", "attrs" => {} } }
-        it "add error for default_dossier_directory" do
-          expect(subject.valid?).to be_falsey
-          expect(subject.errors[:default_dossier_directory]).to be_present
-        end
-      end
-
-      context 'with mention but without numéro de dossier' do
+      context 'without numéro de dossier' do
         let(:ddd_mention) { { "type" => "mention", "attrs" => { "id" => 'dossier_service_name', "label" => "nom du service" } } }
-        it "add error for default_dossier_directory" do
+        it "add error for tiptap_default_dossier_directory" do
           expect(subject.valid?).to be_falsey
-          expect(subject.errors[:default_dossier_directory]).to be_present
+          expect(subject.errors[:tiptap_default_dossier_directory]).to be_present
+          expect(subject.errors.full_messages).to include "Le champ « Nom du répertoire » doit contenir le numéro du dossier"
         end
       end
     end
@@ -228,7 +230,7 @@ describe ExportTemplate do
     context 'with valid pdf name' do
       it 'has no error for pdf name' do
         expect(subject.valid?).to be_truthy
-        expect(subject.errors[:pdf_name]).not_to be_present
+        expect(subject.errors[:tiptap_pdf_name]).not_to be_present
       end
     end
 
@@ -247,7 +249,7 @@ describe ExportTemplate do
       context 'with mention' do
         it 'has no error for default_dossier_directory' do
           expect(subject.valid?).to be_truthy
-          expect(subject.errors[:default_dossier_directory]).not_to be_present
+          expect(subject.errors[:tiptap_pdf_name]).not_to be_present
         end
       end
 
@@ -255,18 +257,18 @@ describe ExportTemplate do
         let(:pdf_mention) { { "type" => "mention", "attrs" => {} } }
         it "add error for pdf name" do
           expect(subject.valid?).to be_falsey
-          expect(subject.errors[:pdf_name]).to be_present
+          expect(subject.errors.full_messages).to include "Le champ « Nom de l'export » doit être rempli"
         end
       end
     end
 
     context 'with no pj text' do
+      # let!(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile', procedure:) }
       let(:pj_text) { " " }
 
       context 'with mention' do
         it 'has no error for pj' do
           expect(subject.valid?).to be_truthy
-          expect(subject.errors[:pj_3]).not_to be_present
         end
       end
 
@@ -274,8 +276,26 @@ describe ExportTemplate do
         let(:pj_mention) { { "type" => "mention", "attrs" => {} } }
         it "add error for pj" do
           expect(subject.valid?).to be_falsey
-          expect(subject.errors[:pj_3]).to be_present
+          expect(subject.errors.full_messages).to include "Le champ « Justificatif de domicile » doit être rempli"
         end
+      end
+    end
+  end
+
+  describe 'specific_tags' do
+    context 'for entreprise procedure' do
+      let(:for_individual) { false }
+      it do
+        tags = export_template.specific_tags
+        expect(tags.map { _1[:id] }).to eq ["entreprise_siren", "entreprise_numero_tva_intracommunautaire", "entreprise_siret_siege_social", "entreprise_raison_sociale", "entreprise_adresse", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur"]
+      end
+    end
+
+    context 'for individual procedure' do
+      let(:for_individual) { true }
+      it do
+        tags = export_template.specific_tags
+        expect(tags.map { _1[:id] }).to eq ["individual_gender", "individual_last_name", "individual_first_name", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur"]
       end
     end
   end
