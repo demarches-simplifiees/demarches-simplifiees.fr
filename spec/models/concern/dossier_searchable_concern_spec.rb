@@ -11,7 +11,7 @@ describe DossierSearchableConcern do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
     let(:dossier) { create(:dossier, etablissement: etablissement, user: user, procedure: procedure) }
     let(:france_connect_information) { build(:france_connect_information, given_name: 'Chris', family_name: 'Harrisson') }
-    let(:user) { build(:user, france_connect_information: france_connect_information) }
+    let(:user) { build(:user, france_connect_informations: [france_connect_information]) }
 
     before do
       champ_public.update_attribute(:value, "champ public")

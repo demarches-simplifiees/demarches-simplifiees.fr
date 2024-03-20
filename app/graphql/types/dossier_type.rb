@@ -212,7 +212,7 @@ module Types
     private
 
     def user_loader
-      Loaders::Record.for(User, includes: :france_connect_information).load(object.user_id)
+      Loaders::Record.for(User, includes: :france_connect_informations).load(object.user_id)
     end
   end
 end
