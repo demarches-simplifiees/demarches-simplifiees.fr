@@ -72,19 +72,6 @@ class ExportTemplate < ApplicationRecord
     tiptap.to_path(content_for.deep_symbolize_keys, substitutions)
   end
 
-
-  def folder(dossier)
-    render_attributes_for(content["default_dossier_directory"], dossier)
-  end
-
-  def export_path(dossier)
-    File.join(folder(dossier), export_filename(dossier))
-  end
-
-  def export_filename(dossier)
-    "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
-  end
-
   def specific_tags
     tags_categorized.slice(:individual, :etablissement, :dossier).values.flatten
   end
@@ -117,6 +104,17 @@ class ExportTemplate < ApplicationRecord
     content_for_stable_id.symbolize_keys.fetch(:path)
   end
 
+  def folder(dossier)
+    render_attributes_for(content["default_dossier_directory"], dossier)
+  end
+
+  def export_path(dossier)
+    File.join(folder(dossier), export_filename(dossier))
+  end
+
+  def export_filename(dossier)
+    "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
+  end
 
   def path(dossier, attachment, index, row_index)
     if attachment.name == 'pdf_export_for_instructeur'
