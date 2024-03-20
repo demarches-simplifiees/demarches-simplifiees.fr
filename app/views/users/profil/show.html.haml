@@ -39,7 +39,7 @@
     - if current_user.instructeur?
       %p.mb-4
         = t('.email_explications_html',
-          contact_email: CONTACT_EMAIL,
+          contact_email: Current.contact_email,
           application_name: Current.application_name,
           legit_admin_domains: LEGIT_ADMIN_DOMAINS.join(', '))
 
