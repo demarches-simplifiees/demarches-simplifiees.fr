@@ -1617,13 +1617,12 @@ describe Dossier, type: :model do
   end
 
   describe 'index_for_section_header' do
-    let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:types_de_champ) { [{ type: :repetition, mandatory: true, children: [{ type: :header_section }] }] }
+    let(:types_de_champ_public) { [{ type: :repetition, mandatory: true, children: [{ type: :header_section }] }] }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:header_in_repetition) { dossier.revision.types_de_champ.find(&:header_section?) }
 
     it 'index classly' do
-      repetition = dossier.champs.find(&:repetition?)
-      header_in_repetition = repetition.champs.find(&:header_section?)
       expect(dossier.index_for_section_header(header_in_repetition)).to eq("1.1")
     end
   end

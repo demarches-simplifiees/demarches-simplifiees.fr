@@ -2,38 +2,38 @@ module DossierSectionsConcern
   extend ActiveSupport::Concern
 
   included do
-    def sections_for(champ)
+    def sections_for(type_de_champ)
       @sections = Hash.new do |hash, parent|
         case parent
         when :public
-          hash[parent] = champs_for_revision(scope: :public, root: true).filter(&:header_section?)
+          hash[parent] = revision.types_de_champ_public.filter(&:header_section?)
         when :private
-          hash[parent] = champs_for_revision(scope: :private, root: true).filter(&:header_section?)
+          hash[parent] = revision.types_de_champ_private.filter(&:header_section?)
         else
-          hash[parent] = champs_for_revision(scope: parent.type_de_champ).filter(&:header_section?)
+          hash[parent] = revision.children_of(parent).filter(&:header_section?)
         end
       end
-      @sections[champ.parent || (champ.public? ? :public : :private)]
+      @sections[revision.parent_of(type_de_champ) || (type_de_champ.public? ? :public : :private)]
     end
 
-    def auto_numbering_section_headers_for?(champ)
-      return false if champ.child?
+    def auto_numbering_section_headers_for?(type_de_champ)
+      return false if revision.child?(type_de_champ)
 
-      sections_for(champ)&.none?(&:libelle_with_section_index?)
+      sections_for(type_de_champ)&.none? { _1.libelle =~ /^\d/ }
     end
 
-    def index_for_section_header(champ)
-      champs = champ.private? ? champs_for_revision(scope: :private, root: true) : champs_for_revision(scope: :public, root: true)
+    def index_for_section_header(type_de_champ)
+      types_de_champ = type_de_champ.private? ? revision.types_de_champ_private : revision.types_de_champ_public
       index = 1
-      champs.each do |c|
-        if c.repetition?
-          index_in_repetition = c.rows.flatten.filter { _1.stable_id == champ.stable_id }.find_index(champ)
+      types_de_champ.each do |tdc|
+        if tdc.repetition?
+          index_in_repetition = revision.children_of(tdc).find_index { _1.stable_id == type_de_champ.stable_id }
           return "#{index}.#{index_in_repetition + 1}" if index_in_repetition
         else
-          return index if c.stable_id == champ.stable_id
-          next unless c.visible?
+          return index if tdc.stable_id == type_de_champ.stable_id
+          next unless project_champ(tdc, nil).visible?
 
-          index += 1 if c.type_de_champ.header_section?
+          index += 1 if tdc.header_section?
         end
       end
       index

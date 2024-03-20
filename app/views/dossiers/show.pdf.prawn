@@ -145,10 +145,10 @@ def add_single_champ(pdf, champ)
   when 'Champs::PieceJustificativeChamp', 'Champs::TitreIdentiteChamp'
     return
   when 'Champs::HeaderSectionChamp'
-    libelle = if @dossier.auto_numbering_section_headers_for?(champ)
-      "#{@dossier.index_for_section_header(champ)}. #{champ.libelle}"
+    libelle = if @dossier.auto_numbering_section_headers_for?(tdc)
+      "#{@dossier.index_for_section_header(tdc)}. #{tdc.libelle}"
     else
-      champ.libelle
+      tdc.libelle
     end
 
     add_section_title(pdf, libelle)
@@ -198,12 +198,14 @@ def add_single_champ(pdf, champ)
   end
 end
 
-def add_champs(pdf, champs)
-  champs.each do |champ|
-    if champ.type == 'Champs::RepetitionChamp'
-      champ.rows.each do |row|
-        row.each do |inner_champ|
-          add_single_champ(pdf, inner_champ)
+def add_champs(pdf, types_de_champ)
+  types_de_champ.each do |tdc|
+    champ = @dossier.project_champ(tdc, nil)
+    if tdc.repetition?
+      inner_types_de_champ = @dossier.revision.children_of(tdc)
+      champ.row_ids.each do |row_id|
+        inner_types_de_champ.each do |inner_tdc|
+          add_single_champ(pdf, @dossier.project_champ(inner_tdc, row_id))
         end
       end
     else
@@ -347,11 +349,11 @@ prawn_document(page_size: "A4") do |pdf|
   end
 
   add_title(pdf, 'Formulaire')
-  add_champs(pdf, @dossier.champs_public)
+  add_champs(pdf, @dossier.revision.types_de_champ_public)
 
   if @acls[:include_infos_administration] && @dossier.has_annotations?
     add_title(pdf, "Annotations privées")
-    add_champs(pdf, @dossier.champs_private)
+    add_champs(pdf, @dossier.revision.types_de_champ_private)
   end
 
   if @acls[:include_infos_administration] && @dossier.avis.present?
