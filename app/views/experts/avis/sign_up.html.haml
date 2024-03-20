@@ -5,7 +5,7 @@
       %p.dossier Dossier nº #{@dossier.id}
     .column
       = form_for(User.new(email: @email), url: sign_up_expert_avis_path(email: @email), method: :post, html: { class: "fr-py-5w" }) do |f|
-        %h1.fr-h2= t('views.registrations.new.title', name: APPLICATION_NAME)
+        %h1.fr-h2= t('views.registrations.new.title', name: Current.application_name)
         %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
           .fr-fieldset__element
             %p.fr-text--sm= t('utils.mandatory_champs')

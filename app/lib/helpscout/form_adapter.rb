@@ -13,9 +13,9 @@ class Helpscout::FormAdapter
 
   def self.admin_options
     [
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_QUESTION], app_name: APPLICATION_NAME), ADMIN_TYPE_QUESTION],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_RDV], app_name: APPLICATION_NAME), ADMIN_TYPE_RDV],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_SOUCIS], app_name: APPLICATION_NAME), ADMIN_TYPE_SOUCIS],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_QUESTION], app_name: Current.application_name), ADMIN_TYPE_QUESTION],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_RDV], app_name: Current.application_name), ADMIN_TYPE_RDV],
+      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_SOUCIS], app_name: Current.application_name), ADMIN_TYPE_SOUCIS],
       [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_PRODUIT]), ADMIN_TYPE_PRODUIT],
       [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_DEMANDE_COMPTE]), ADMIN_TYPE_DEMANDE_COMPTE],
       [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_AUTRE]), ADMIN_TYPE_AUTRE]

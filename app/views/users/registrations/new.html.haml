@@ -4,7 +4,7 @@
   = devise_error_messages!
   = form_for resource, url: user_registration_path, html: { class: "fr-py-5w" } do |f|
 
-    %h1.fr-h2= t('views.registrations.new.title', name: APPLICATION_NAME)
+    %h1.fr-h2= t('views.registrations.new.title', name: Current.application_name)
 
     = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
 

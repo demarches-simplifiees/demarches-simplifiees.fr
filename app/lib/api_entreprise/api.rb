@@ -163,7 +163,7 @@ class APIEntreprise::API
 
   def base_params(siret_or_siren)
     {
-      context: APPLICATION_NAME,
+      context: Current.application_name,
       recipient: recipient_for(siret_or_siren),
       non_diffusables: true
     }
