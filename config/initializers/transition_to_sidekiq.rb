@@ -17,5 +17,9 @@ if Rails.env.production? && sidekiq_enabled
     class ProcedureExternalURLCheckJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class MaintenanceTasks::TaskJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
