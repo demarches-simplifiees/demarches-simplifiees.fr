@@ -54,13 +54,13 @@
         = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: "fr-mb-2w") do |c|
           - c.with_body do
             %p
-              - if dossier.brouillon? && dossier.procedure.closing_reason == Procedure.closing_reasons.fetch(:internal_procedure)
+              - if dossier.brouillon? && dossier.procedure.closing_reason_internal_procedure?
                 = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.internal_procedure', link: commencer_path(dossier.procedure.replaced_by_procedure.path)).html_safe
-              - elsif dossier.brouillon? && dossier.procedure.closing_reason == Procedure.closing_reasons.fetch(:other)
+              - elsif dossier.brouillon? && dossier.procedure.closing_reason_other?
                 = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.other', link: closing_details_path(dossier.procedure.path)).html_safe
-              - elsif (dossier.en_construction? || dossier.en_instruction?) && dossier.procedure.closing_reason == Procedure.closing_reasons.fetch(:internal_procedure)
+              - elsif (dossier.en_construction? || dossier.en_instruction?) && dossier.procedure.closing_reason_internal_procedure?
                 = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.internal_procedure')
-              - elsif (dossier.en_construction? || dossier.en_instruction?) && dossier.procedure.closing_reason == Procedure.closing_reasons.fetch(:other)
+              - elsif (dossier.en_construction? || dossier.en_instruction?) && dossier.procedure.closing_reason_other?
                 = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.other', link: closing_details_path(dossier.procedure.path)).html_safe
 
       - if dossier.pending_correction?
