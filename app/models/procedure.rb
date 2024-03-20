@@ -226,7 +226,7 @@ class Procedure < ApplicationRecord
   enum closing_reason: {
     internal_procedure: 'internal_procedure',
     other: 'other'
-  }
+  }, _prefix: true
 
   scope :for_api_v2, -> {
     includes(:draft_revision, :published_revision, administrateurs: :user)
@@ -265,7 +265,7 @@ class Procedure < ApplicationRecord
 
   validate :check_juridique, on: [:create, :publication]
 
-  validates :replaced_by_procedure_id, presence: true, if: -> { closing_reason == Procedure.closing_reasons.fetch(:internal_procedure) }
+  validates :replaced_by_procedure_id, presence: true, if: :closing_reason_internal_procedure?
 
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,

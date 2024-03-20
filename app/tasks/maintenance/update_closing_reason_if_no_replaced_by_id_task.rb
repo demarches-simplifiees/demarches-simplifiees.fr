@@ -11,7 +11,7 @@ module Maintenance
     end
 
     def process(procedure)
-      procedure.update!(closing_reason: Procedure.closing_reasons.fetch(:other))
+      procedure.closing_reason_other!
     end
   end
 end
