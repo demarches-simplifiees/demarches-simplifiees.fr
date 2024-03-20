@@ -485,8 +485,8 @@ describe Champ do
 
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:champ) { dossier.champs_public.find(&:repetition?) }
-    let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
-    let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
+    let(:champ_text) { champ.rows.flat_map.find { |c| c.type_champ == 'text' } }
+    let(:champ_integer) { champ.rows.flat_map.find { |c| c.type_champ == 'integer_number' } }
     let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate) }
 
     context 'when creating the model directly' do
@@ -494,41 +494,6 @@ describe Champ do
 
       it 'associates nested champs to the parent dossier' do
         expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
-      end
-    end
-
-    context 'when updating using nested attributes' do
-      subject do
-        dossier.update!(champs_public_attributes: [
-          {
-            id: champ.id,
-            champs_attributes: [champ_text_attrs]
-          }
-        ])
-        champ.reload
-        dossier.reload
-      end
-
-      it 'associates nested champs to the parent dossier' do
-        subject
-
-        expect(dossier.champs_public.size).to eq(2)
-        expect(champ.rows.size).to eq(2)
-        second_row = champ.reload.rows.second
-        expect(second_row.size).to eq(1)
-        expect(second_row.first.dossier).to eq(dossier)
-
-        champ.champs << champ_integer
-        first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(2)
-        expect(first_row.second).to eq(champ_integer)
-
-        champ.champs << champ_text
-        first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(2)
-        expect(first_row.first).to eq(champ_text)
-
-        expect(champ.rows.size).to eq(2)
       end
     end
   end

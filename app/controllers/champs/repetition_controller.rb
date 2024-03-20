@@ -3,7 +3,7 @@ class Champs::RepetitionController < ApplicationController
 
   def add
     @champ = find_champ
-    row = @champ.add_row(@champ.dossier.revision)
+    row = @champ.add_row
     @first_champ_id = row.map(&:focusable_input_id).compact.first
     @row_id = row.first&.row_id
     @row_number = @champ.row_ids.find_index(@row_id) + 1
@@ -11,8 +11,7 @@ class Champs::RepetitionController < ApplicationController
 
   def remove
     @champ = find_champ
-    @champ.champs.where(row_id: params[:row_id]).destroy_all
-    @champ.reload
+    @champ.remove_champ(params[:row_id])
     @row_id = params[:row_id]
   end
 
@@ -20,10 +19,10 @@ class Champs::RepetitionController < ApplicationController
 
   def find_champ
     if params[:champ_id].present?
-      policy_scope(Champ).includes(:champs).find(params[:champ_id])
+      policy_scope(Champ).includes(:type_de_champ, dossier: :champs).find(params[:champ_id])
     else
       policy_scope(Champ)
-        .includes(:champs, :type_de_champ)
+        .includes(:type_de_champ, dossier: :champs)
         .find_by!(dossier_id: params[:dossier_id], type_de_champ: { stable_id: params[:stable_id] })
     end
   end

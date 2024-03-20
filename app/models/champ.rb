@@ -1,16 +1,16 @@
 class Champ < ApplicationRecord
+  self.ignored_columns += [:parent_id]
+
   include ChampConditionalConcern
 
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
-  belongs_to :parent, class_name: 'Champ', optional: true
   has_many_attached :piece_justificative_file
 
   # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
-  has_many :champs, foreign_key: :parent_id, inverse_of: :parent
 
   delegate :procedure, to: :dossier
 
@@ -70,11 +70,9 @@ class Champ < ApplicationRecord
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
   scope :public_only, -> { where(private: false) }
   scope :private_only, -> { where(private: true) }
-  scope :root, -> { where(parent_id: nil) }
+  scope :root, -> { where(row_id: nil) }
   scope :prefilled, -> { where(prefilled: true) }
 
-  before_create :set_dossier_id, if: :needs_dossier_id?
-  before_validation :set_dossier_id, if: :needs_dossier_id?
   before_save :cleanup_if_empty
   before_save :normalize
   after_update_commit :fetch_external_data_later
@@ -84,7 +82,7 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    parent_id.present?
+    row_id.present? && !repetition?
   end
 
   # used for the `required` html attribute
@@ -221,7 +219,7 @@ class Champ < ApplicationRecord
   end
 
   def clone(fork = false)
-    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id, :stable_id, :stream]
+    champ_attributes = [:private, :row_id, :type, :type_de_champ_id, :stable_id, :stream]
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
     relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
@@ -259,6 +257,8 @@ class Champ < ApplicationRecord
   private
 
   def validate_champ_value?
+    return false if !in_dossier_revision?
+
     case validation_context
     when :champs_public_value
       public?
@@ -269,16 +269,12 @@ class Champ < ApplicationRecord
     end
   end
 
+  def in_dossier_revision?
+    dossier.revision.types_de_champ.map(&:stable_id).include?(stable_id)
+  end
+
   def html_id
     "champ-#{public_id}"
-  end
-
-  def needs_dossier_id?
-    !dossier_id && parent_id
-  end
-
-  def set_dossier_id
-    self.dossier_id = parent.dossier_id
   end
 
   def cleanup_if_empty

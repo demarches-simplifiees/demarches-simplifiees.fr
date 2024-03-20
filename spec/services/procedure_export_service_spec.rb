@@ -496,7 +496,7 @@ describe ProcedureExportService do
       context 'with empty repetition' do
         before do
           dossiers.flat_map { |dossier| dossier.champs_public.filter(&:repetition?) }.each do |champ|
-            champ.champs.destroy_all
+            Champ.where(row_id: champ.row_ids).destroy_all
           end
         end
 

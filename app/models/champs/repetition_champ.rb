@@ -1,33 +1,37 @@
 class Champs::RepetitionChamp < Champ
-  accepts_nested_attributes_for :champs
   delegate :libelle_for_export, to: :type_de_champ
 
   def rows
-    dossier
-      .champs_for_revision(scope: type_de_champ)
-      .group_by(&:row_id)
-      .sort
-      .map(&:second)
+    dossier.project_rows_for(type_de_champ)
   end
 
   def row_ids
-    rows.map { _1.first.row_id }
+    dossier.champs_for_revision(scope: type_de_champ)
+      .map(&:row_id)
+      .uniq
+      .sort
   end
 
-  def add_row(revision)
+  def add_row
     added_champs = []
     transaction do
       row_id = ULID.generate
-      revision.children_of(type_de_champ).each do |type_de_champ|
-        added_champs << type_de_champ.build_champ(row_id:)
+      dossier.revision.children_of(type_de_champ).each do |type_de_champ|
+        added_champs << type_de_champ.build_champ(row_id:, dossier:)
       end
       self.champs << added_champs
     end
+    dossier.reload
     added_champs
   end
 
+  def remove_champ(row_id)
+    dossier.champs.where(row_id:).destroy_all
+    dossier.reload
+  end
+
   def blank?
-    champs.empty?
+    row_ids.empty?
   end
 
   def search_terms

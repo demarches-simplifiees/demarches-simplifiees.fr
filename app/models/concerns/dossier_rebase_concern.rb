@@ -130,8 +130,8 @@ module DossierRebaseConcern
       parent_stable_id = target_coordinate.parent.stable_id
 
       champs.filter { _1.stable_id == parent_stable_id }.each do |champ_repetition|
-        if champ_repetition.champs.present?
-          champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
+        if champ_repetition.row_ids.present?
+          champ_repetition.row_ids.each do |row_id|
             champs << create_champ(target_coordinate, champ_repetition, row_id:)
           end
         elsif champ_repetition.mandatory?

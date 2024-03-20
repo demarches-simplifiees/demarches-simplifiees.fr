@@ -25,9 +25,40 @@ class RootController < ApplicationController
   def patron
     description = "Allez voir le super site : #{Current.application_base_url}"
 
+    procedure = Procedure.new
+    revision = ProcedureRevision.new(procedure:)
+    @dossier = Dossier.new(revision:, champs: [])
+    @dossier.association(:procedure).target = procedure
+    revision.association(:revision_types_de_champ).target = []
+    revision.association(:types_de_champ).target = []
+    revision.association(:types_de_champ_public).target = []
+
+    id = 1
     all_champs = TypeDeChamp.type_champs
-      .map.with_index { |(name, _), i| TypeDeChamp.new(type_champ: name, private: false, libelle: name.humanize, description:, mandatory: true, stable_id: i) }
-      .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
+      .flat_map do |(type_champ, _)|
+        stable_id = id += 1
+        tdc = TypeDeChamp.new(type_champ:, private: false, libelle: type_champ.humanize, description:, mandatory: true, stable_id:)
+        rtdc = ProcedureRevisionTypeDeChamp.new(revision:, type_de_champ: tdc)
+        tdcs = [tdc]
+        rtdcs = [rtdc]
+        champs = [tdc.build_champ(id: id += 1, stable_id:, dossier: @dossier)]
+
+        # if tdc.repetition?
+        #   libelles = ['Prénom', 'Nom'];
+        #   libelles.map do |libelle|
+        #     stable_id = id += 1
+        #     child_tdc = TypeDeChamp.new(type_champ: :text, private: false, libelle:, description:, mandatory: true, stable_id:)
+        #     tdcs << child_tdc
+        #     rtdcs << ProcedureRevisionTypeDeChamp.new(revision:, type_de_champ: child_tdc, parent: rtdc)
+        #     champs << child_tdc.build_champ(id: id += 1, stable_id:, dossier: @dossier)
+        #   end
+        # end
+        revision.association(:revision_types_de_champ).target += rtdcs
+        revision.association(:types_de_champ).target += tdcs
+        revision.association(:types_de_champ_public).target += tdcs
+
+        champs
+      end
 
     all_champs
       .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
@@ -54,16 +85,6 @@ class RootController < ApplicationController
         end
       end
 
-    all_champs
-      .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .each do |champ_repetition|
-        libelles = ['Prénom', 'Nom'];
-        champ_repetition.champs << libelles.map.with_index do |libelle, i|
-          text_tdc = TypeDeChamp.new(type_champ: :text, private: false, libelle: libelle, description: description, mandatory: true)
-          text_tdc.champ.build(id: all_champs.length + i)
-        end
-      end
-
     type_champ_values = {
       TypeDeChamp.type_champs.fetch(:date)      => '2016-07-26',
       TypeDeChamp.type_champs.fetch(:datetime)  => '26/07/2016 07:35',
@@ -76,21 +97,7 @@ class RootController < ApplicationController
         .each { |champ| champ.value = value }
     end
 
-    @dossier = Dossier.new(champs: all_champs)
-    @dossier.association(:procedure).target = Procedure.new
-    all_champs.each do |champ|
-      champ.association(:dossier).target = @dossier
-      champ.champs.each do |champ|
-        champ.association(:dossier).target = @dossier
-      end
-    end
-
-    draft_revision = @dossier.procedure.build_draft_revision(types_de_champ: all_champs.map(&:type_de_champ))
-    @dossier.association(:revision).target = draft_revision
-    @dossier.champs_public.map(&:type_de_champ).map do |tdc|
-      tdc.association(:revision_type_de_champ).target = tdc.build_revision_type_de_champ(revision: draft_revision)
-      tdc.association(:revision).target = draft_revision
-    end
+    @dossier.association(:champs).target = all_champs
   end
 
   def suivi

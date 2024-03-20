@@ -40,7 +40,7 @@ describe DataFixer::DossierChampsMissing do
       let(:initial_champ_count) { dossier.champs.count }
       before do
         initial_champ_count
-        champ_repetition.champs.first.destroy
+        dossier.champs.find(&:child?).destroy
       end
       subject { described_class.new(dossier:).fix }
 

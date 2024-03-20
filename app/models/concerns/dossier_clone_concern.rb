@@ -98,7 +98,6 @@ module DossierCloneConcern
         kopy.state = Dossier.states.fetch(:brouillon)
         kopy.champs = cloned_champs.values.map do |(_, champ)|
           champ.dossier = kopy
-          champ.parent = cloned_champs[champ.parent_id].second if champ.child?
           champ
         end
       end
@@ -142,14 +141,10 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_index = (champs_for_revision(scope: :public) + diff[:added]).index_by(&:public_id)
+    champs_index = champs.index_by(&:public_id)
 
     diff[:added].each do |champ|
-      if champ.child?
-        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.public_id).id)
-      else
-        champ.update_column(:dossier_id, id)
-      end
+      champ.update_column(:dossier_id, id)
     end
 
     champs_to_remove = []
@@ -157,20 +152,13 @@ module DossierCloneConcern
       old_champ = champs_index.fetch(champ.public_id)
       champs_to_remove << old_champ
 
-      if champ.child?
-        # we need to do that in order to avoid a foreign key constraint
-        old_champ.update(row_id: nil)
-        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.public_id).id)
-      else
-        champ.update_column(:dossier_id, id)
-      end
+      # we need to do that in order to avoid a foreign key constraint
+      old_champ.update(row_id: nil) if champ.child?
+
+      champ.update_column(:dossier_id, id)
     end
 
     champs_to_remove += diff[:removed]
-    children_champs_to_remove, root_champs_to_remove = champs_to_remove.partition(&:child?)
-
-    children_champs_to_remove.each(&:destroy!)
-    Champ.where(parent_id: root_champs_to_remove.map(&:id)).destroy_all
-    root_champs_to_remove.each(&:destroy!)
+    champs_to_remove.each(&:destroy!)
   end
 end
