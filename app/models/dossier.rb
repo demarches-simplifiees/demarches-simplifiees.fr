@@ -1246,7 +1246,7 @@ class Dossier < ApplicationRecord
       columns += [
         ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' }],
         ['Référentiel De Programmation', procedure.chorus_configuration.referentiel_de_programmation&.fetch("code") { '' }],
-        ['Centre De Coup', procedure.chorus_configuration.centre_de_cout&.fetch("code") { '' }]
+        ['Centre De Coût', procedure.chorus_configuration.centre_de_cout&.fetch("code") { '' }]
       ]
     end
     columns += [
