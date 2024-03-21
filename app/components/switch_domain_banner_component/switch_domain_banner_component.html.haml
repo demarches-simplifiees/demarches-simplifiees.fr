@@ -18,8 +18,8 @@
 
     - if manual_switch?
       = t(".follow_link")
-    - elsif auto_switch? || true
       = t(".detected_error")
+    - elsif auto_switch?
 
 - if user && !user.preferred_domain_demarches_gouv_fr? && requested_from_new_domain?
   = form_tag(helpers.preferred_domain_path, method: :patch, remote: true, name: "update-preferred-domain")
