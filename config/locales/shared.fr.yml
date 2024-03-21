@@ -1,6 +1,7 @@
 fr:
   shared:
     dossiers:
+      beneficiaire: '%{beneficiaire}, dossier rempli par %{mandataire}'
       france_connect_informations:
         details_no_name: "Le dossier a été déposé par un compte %{provider}."
         details: "Le dossier a été déposé par le compte de %{name}."

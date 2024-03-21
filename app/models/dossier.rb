@@ -448,6 +448,9 @@ class Dossier < ApplicationRecord
 
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
+  validates :mandataire_first_name, presence: true, if: :for_tiers?
+  validates :mandataire_last_name, presence: true, if: :for_tiers?
+  validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
 
   validates_associated :prefilled_champs_public, on: :champs_public_value
 
@@ -910,6 +913,7 @@ class Dossier < ApplicationRecord
     save!
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_construction))
     NotificationMailer.send_en_construction_notification(self).deliver_later
+    NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     procedure.compute_dossiers_count
     RoutingEngine.compute(self)
   end
@@ -940,6 +944,7 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     if !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
+      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
     log_dossier_operation(instructeur, :passer_en_instruction)
   end
@@ -956,6 +961,7 @@ class Dossier < ApplicationRecord
     save!
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     NotificationMailer.send_en_instruction_notification(self).deliver_later
+    NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
 
     if procedure.sva_svr_enabled?
       # TODO: handle serialization errors when SIRET demandeur was not completed
@@ -1033,6 +1039,7 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
     if !disable_notification
       NotificationMailer.send_accepte_notification(self).deliver_later
+      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :accepter, self)
@@ -1058,6 +1065,7 @@ class Dossier < ApplicationRecord
     remove_titres_identite!
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
     NotificationMailer.send_accepte_notification(self).deliver_later
+    NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     log_automatic_dossier_operation(:accepter, self)
   end
 
@@ -1083,6 +1091,7 @@ class Dossier < ApplicationRecord
 
     if !disable_notification
       NotificationMailer.send_refuse_notification(self).deliver_later
+      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
@@ -1102,6 +1111,7 @@ class Dossier < ApplicationRecord
     remove_titres_identite!
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
     NotificationMailer.send_refuse_notification(self).deliver_later
+    NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     log_automatic_dossier_operation(:refuser, self)
   end
 
@@ -1127,6 +1137,7 @@ class Dossier < ApplicationRecord
 
     if !disable_notification
       NotificationMailer.send_sans_suite_notification(self).deliver_later
+      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
@@ -1381,6 +1392,10 @@ class Dossier < ApplicationRecord
 
   def service
     groupe_instructeur&.contact_information || procedure.service
+  end
+
+  def mandataire_full_name
+    "#{mandataire_first_name} #{mandataire_last_name}"
   end
 
   private

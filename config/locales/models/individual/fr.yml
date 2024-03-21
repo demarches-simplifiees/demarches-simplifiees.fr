@@ -6,6 +6,11 @@ fr:
         nom: Nom
         prenom: Prénom
         birthdate: Date de naissance
+        email: Email
+        notification_method: "Notifier le bénéficiaire :"
+        notification_methods:
+          email: Par e-mail
+          no_notification: Pas de notification
       individual/gender:
         female: Madame
         male: Monsieur

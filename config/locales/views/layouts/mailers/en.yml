@@ -14,3 +14,12 @@ en:
         schedule: "Schedule :"
       signature:
         team: "The team"
+      for_tiers:
+        good_morning: Good morning,
+        first_part: We inform you that file no. %{dossier_id}, completed on your behalf by %{mandataire_first_name} %{mandataire_last_name}, on the procedure
+        second_part: To find out more, please contact
+        en_construction: has been submited %{processed_at}.
+        en_instruction: has been received and taken care of on %{processed_at}. The administration is reviewing your file.
+        accepte: has been accepted on %{processed_at}.
+        refuse: has been refused on %{processed_at}.
+        sans_suite: has been closed without continuation on %{processed_at}.

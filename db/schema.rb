@@ -419,6 +419,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "en_construction_close_to_expiration_notice_sent_at"
     t.datetime "en_instruction_at"
     t.boolean "for_procedure_preview", default: false, null: false
+    t.boolean "for_tiers", default: false, null: false
     t.boolean "forced_groupe_instructeur", default: false, null: false
     t.bigint "groupe_instructeur_id"
     t.datetime "groupe_instructeur_updated_at"
@@ -431,6 +432,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "last_champ_private_updated_at"
     t.datetime "last_champ_updated_at"
     t.datetime "last_commentaire_updated_at"
+    t.string "mandataire_first_name"
+    t.string "mandataire_last_name"
     t.text "motivation"
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
@@ -679,11 +682,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.date "birthdate"
     t.datetime "created_at"
     t.integer "dossier_id"
+    t.string "email"
     t.string "gender"
     t.string "nom"
+    t.string "notification_method"
     t.string "prenom"
     t.datetime "updated_at"
     t.index ["dossier_id"], name: "index_individuals_on_dossier_id", unique: true
+    t.index ["email"], name: "index_individuals_on_email"
   end
 
   create_table "initiated_mails", id: :serial, force: :cascade do |t|

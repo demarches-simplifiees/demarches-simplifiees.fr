@@ -3,8 +3,11 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
     expect(dossier.user).to eq(user)
 
     expect(page).to have_current_path identite_dossier_path(procedure.dossiers.last)
-    expect(page).to have_field('Prénom', with: prenom_value)
-    expect(page).to have_field('Nom', with: nom_value)
+
+    within('.individual-infos') do
+      expect(page).to have_field('Prénom', with: prenom_value)
+      expect(page).to have_field('Nom', with: nom_value)
+    end
     click_on 'Continuer'
 
     expect(page).to have_current_path(brouillon_dossier_path(dossier))

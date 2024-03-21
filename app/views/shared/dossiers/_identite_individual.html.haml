@@ -1,16 +1,17 @@
+
 = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.civility')) do |c|
   - c.with_value do
-    %p= individual.gender
+    %p= dossier.individual.gender
 
 = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.first_name')) do |c|
   - c.with_value do
-    %p= individual.prenom
+    %p= dossier.individual.prenom
 
 = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.last_name')) do |c|
   - c.with_value do
-    %p= individual.nom
+    %p= dossier.individual.nom
 
-- if individual.birthdate.present?
+- if dossier.individual.birthdate.present?
   = render Dossiers::RowShowComponent.new(label: t('views.users.dossiers.identite.birthdate')) do |c|
     - c.with_value do
-      %p= try_format_date(individual.birthdate)
+      %p= try_format_date(dossier.individual.birthdate)

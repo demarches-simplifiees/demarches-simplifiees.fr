@@ -75,14 +75,16 @@ describe 'linked dropdown lists' do
     expect(page).to have_current_path(commencer_path(path: procedure.path))
     click_on 'Commencer la démarche'
 
-    expect(page).to have_content("Identité du demandeur")
+    expect(page).to have_content("Votre identité")
     expect(page).to have_current_path(identite_dossier_path(user_dossier))
   end
 
   def fill_individual
     find('label', text: 'Monsieur').click
-    fill_in('Prénom', with: 'prenom')
-    fill_in('Nom', with: 'nom')
+    within('.individual-infos') do
+      fill_in('Prénom', with: 'prenom')
+      fill_in('Nom', with: 'nom')
+    end
     click_on 'Continuer'
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end

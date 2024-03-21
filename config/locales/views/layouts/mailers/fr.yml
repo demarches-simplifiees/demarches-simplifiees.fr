@@ -15,3 +15,12 @@ fr:
         schedule: "Horaires :"
       signature:
         team: "L’équipe"
+      for_tiers:
+        good_morning: Bonjour,
+        first_part: Nous vous informons que le dossier nº %{dossier_id}, rempli en votre nom par %{mandataire_first_name} %{mandataire_last_name}, sur la démarche
+        second_part: Pour en savoir plus, veuillez vous rapprocher de
+        en_construction: a été déposé le %{processed_at}.
+        en_instruction: a bien été reçu et pris en charge le %{processed_at}. Il va maintenant être examiné par le service.
+        accepte: a été accepté le %{processed_at}.
+        refuse: a été refusé le %{processed_at}.
+        sans_suite: a été classé sans suite le %{processed_at}.

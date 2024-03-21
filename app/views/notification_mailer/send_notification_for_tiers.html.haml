@@ -1,0 +1,26 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
+%p
+  = t("layouts.mailers.for_tiers.good_morning")
+
+%p
+  = t("layouts.mailers.for_tiers.first_part",
+  dossier_id: number_with_delimiter(@dossier.id),
+  mandataire_first_name: @dossier.mandataire_first_name,
+  mandataire_last_name: @dossier.mandataire_last_name)
+
+  %span{ :style => "font-weight: bold;" }
+    = @dossier.procedure.libelle
+
+  = t("layouts.mailers.for_tiers.#{@dossier.state}", processed_at: l(@dossier.updated_at.to_date) )
+
+%p
+  = t("layouts.mailers.for_tiers.second_part")
+  = "#{mail_to(@dossier.user.email)}."
+
+%p
+  = t(:best_regards, scope: [:views, :shared, :greetings])
+  %br
+    = t('layouts.mailers.signature.team')
+    #{APPLICATION_NAME.gsub(".","&#8288;.").html_safe}

@@ -64,5 +64,15 @@ describe Individual do
         it { expect(individual.birthdate).to be_nil }
       end
     end
+
+    context 'when an individual has an invalid notification_method' do
+      let(:invalid_individual) { build(:individual, notification_method: 'invalid_method') }
+
+      it 'raises an ArgumentError' do
+        expect {
+          invalid_individual.valid?
+        }.to raise_error(ArgumentError, "'invalid_method' is not a valid notification_method")
+      end
+    end
   end
 end

@@ -8,6 +8,7 @@ describe 'user access to the list of their dossiers', js: true do
   let!(:dossier_refuse)             { create(:dossier, :refuse, user: user) }
   let!(:dossier_a_corriger)         { create(:dossier_correction, dossier: dossier_en_construction_2) }
   let!(:dossier_archived)           { create(:dossier, :en_instruction, :archived, user: user) }
+  let!(:dossier_for_tiers)          { create(:dossier, :en_instruction, :for_tiers_with_notification, user: user) }
   let(:dossiers_per_page) { 25 }
   let(:last_updated_dossier) { dossier_en_construction }
 
@@ -30,7 +31,7 @@ describe 'user access to the list of their dossiers', js: true do
     expect(page).to have_content(dossier_en_construction.procedure.libelle)
     expect(page).to have_content(dossier_en_instruction.procedure.libelle)
     expect(page).to have_content(dossier_archived.procedure.libelle)
-    expect(page).to have_text('5 en cours')
+    expect(page).to have_text('6 en cours')
     expect(page).to have_text('2 traités')
   end
 
@@ -52,17 +53,26 @@ describe 'user access to the list of their dossiers', js: true do
     scenario 'the user can navigate through the other pages' do
       expect(page).not_to have_link(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
+      page.click_link("Suivant")
       expect(page).to have_link(dossier_en_instruction.procedure.libelle)
-      expect(page).to have_text('5 en cours')
+      expect(page).to have_text('6 en cours')
       expect(page).to have_text('2 traités')
+    end
+  end
+
+  context 'when the dossier is for_tiers' do
+    let(:individual) { dossier_for_tiers.individual }
+
+    it 'displays the name of the mandataire' do
+      expect(page).to have_content("#{individual.prenom} #{individual.nom}, dossier rempli par #{dossier_for_tiers.mandataire_full_name}")
     end
   end
 
   context 'when user uses filter' do
     scenario 'user filters state on tab "en-cours"' do
-      expect(page).to have_text('5 en cours')
+      expect(page).to have_text('6 en cours')
       expect(page).to have_text('2 traités')
-      expect(page).to have_text('5 sur 5 dossiers')
+      expect(page).to have_text('6 sur 6 dossiers')
 
       click_on('Sélectionner un filtre')
       expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Brouillon', 'En construction', 'En instruction', 'À corriger']
@@ -82,7 +92,7 @@ describe 'user access to the list of their dossiers', js: true do
 
     scenario 'user filters state on tab "traité"' do
       visit dossiers_path(statut: 'traites')
-      expect(page).to have_text('5 en cours')
+      expect(page).to have_text('6 en cours')
       expect(page).to have_text('2 traités')
       expect(page).to have_text('2 sur 2 dossiers')
 
@@ -102,11 +112,11 @@ describe 'user access to the list of their dossiers', js: true do
     scenario 'user filters by created_at' do
       dossier_en_construction.update!(created_at: Date.yesterday)
 
-      expect(page).to have_text('5 sur 5 dossiers')
+      expect(page).to have_text('6 sur 6 dossiers')
       click_on('Sélectionner un filtre')
       fill_in 'from_created_at_date', with: Date.today
       click_on('Appliquer les filtres')
-      expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).to have_text('5 sur 5 dossiers')
     end
 
     scenario 'user uses multiple filters' do
@@ -114,11 +124,11 @@ describe 'user access to the list of their dossiers', js: true do
 
       expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Brouillon', 'En construction', 'En instruction', 'À corriger']
 
-      expect(page).to have_text('5 sur 5 dossiers')
+      expect(page).to have_text('6 sur 6 dossiers')
       click_on('Sélectionner un filtre')
       fill_in 'from_created_at_date', with: Date.today
       click_on('Appliquer les filtres')
-      expect(page).to have_text('4 sur 4 dossiers')
+      expect(page).to have_text('5 sur 5 dossiers')
       expect(page).to have_text('1 filtre actif')
 
       click_on('Sélectionner un filtre')
@@ -133,7 +143,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_text('1 dossier')
       expect(page).to have_text('3 filtres actifs')
       click_on('3 filtres actifs')
-      expect(page).to have_text('5 sur 5 dossiers')
+      expect(page).to have_text('6 sur 6 dossiers')
       expect(page).not_to have_text('5 filtres actifs')
     end
   end
@@ -275,7 +285,7 @@ describe 'user access to the list of their dossiers', js: true do
   describe "filter by procedure" do
     context "when dossiers are on different procedures" do
       it "can filter by procedure" do
-        expect(page).to have_text('5 en cours')
+        expect(page).to have_text('6 en cours')
         expect(page).to have_text('2 traités')
         expect(page).to have_select('procedure_id', selected: 'Toutes les démarches')
         select dossier_brouillon.procedure.libelle, from: 'procedure_id'

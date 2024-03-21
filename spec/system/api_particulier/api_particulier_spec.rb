@@ -267,8 +267,10 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Monsieur').click
-        fill_in('Prénom', with: 'prenom')
-        fill_in('Nom', with: 'nom')
+        within('.individual-infos') do
+          fill_in('Prénom', with: 'prenom')
+          fill_in('Nom', with: 'nom')
+        end
 
         click_button('Continuer')
 
@@ -325,9 +327,10 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Monsieur').click
-        fill_in('Prénom', with: 'Georges')
-        fill_in('Nom', with: 'Moustaki')
-
+        within('.individual-infos') do
+          fill_in('Prénom', with: 'Georges')
+          fill_in('Nom', with: 'Moustaki')
+        end
         click_button('Continuer')
 
         fill_in "Identifiant", with: 'wrong code'
@@ -398,9 +401,10 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Madame').click
-        fill_in('Prénom', with: 'Dubois')
-        fill_in('Nom', with: 'Angela Claire Louise')
-
+        within('.individual-infos') do
+          fill_in('Prénom', with: 'Angela Claire Louise')
+          fill_in('Nom', with: 'Dubois')
+        end
         click_button('Continuer')
 
         fill_in "INE", with: 'wrong code'
@@ -461,9 +465,10 @@ describe 'fetch API Particulier Data', js: true do
         click_on 'Commencer la démarche'
 
         find('label', text: 'Madame').click
-        fill_in('Nom', with: 'FERRI')
-        fill_in('Prénom', with: 'Karine')
-
+        within('.individual-infos') do
+          fill_in('Prénom', with: 'Karine')
+          fill_in('Nom', with: 'FERRI')
+        end
         click_button('Continuer')
 
         fill_in 'Le numéro fiscal', with: numero_fiscal
