@@ -3,7 +3,7 @@
 .container
   %h1.page-title= t('.title', application_name: Current.application_name)
 
-  %p= t('.subtitle', email: sanitize(@fci.email_france_connect), application_name: Current.application_name).html_safe
+  %p= t('.subtitle_html', email: @fci.email_france_connect, application_name: Current.application_name)
 
   .form.mt-2
     %label= t('.label_select_merge_flow', email: @fci.email_france_connect)
