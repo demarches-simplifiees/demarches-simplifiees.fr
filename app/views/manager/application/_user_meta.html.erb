@@ -21,7 +21,7 @@
     Instructeur
   </dt>
   <dd class="attribute-data attribute-data--meta-usager">
-    <% if user.instructeur.present? %>
+    <% if user.instructeur? %>
       <%= link_to('Voir son compte instructeur', manager_instructeur_path(user.instructeur)) %>
     <% else %>
       Pas instructeur !
@@ -31,10 +31,23 @@
 
 <dl>
   <dt class="attribute-label" id="meta-usager">
+    Expert
+  </dt>
+  <dd class="attribute-data attribute-data--meta-usager">
+    <% if user.expert? %>
+      <%= link_to('Voir son compte expert', manager_expert_path(user.expert)) %>
+    <% else %>
+      Pas expert !
+    <% end %>
+  </dd>
+</dl>
+
+<dl>
+  <dt class="attribute-label" id="meta-usager">
     Administrateur
   </dt>
   <dd class="attribute-data attribute-data--meta-usager">
-    <% if user.administrateur.present? %>
+    <% if user.administrateur? %>
       <%= link_to('Voir son compte administrateur', manager_administrateur_path(user.administrateur)) %>
     <% else %>
       Pas administrateur !
@@ -47,7 +60,7 @@
     Gestionnaire
   </dt>
   <dd class="attribute-data attribute-data--meta-usager">
-    <% if user.gestionnaire.present? %>
+    <% if user.gestionnaire? %>
       <%= link_to('Voir son compte gestionnaire', manager_gestionnaire_path(user.gestionnaire)) %>
     <% else %>
       Pas gestionnaire !

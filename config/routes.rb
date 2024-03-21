@@ -53,6 +53,8 @@ Rails.application.routes.draw do
       put 'unblock_email'
     end
 
+    resources :experts, only: [:index, :show]
+
     resources :instructeurs, only: [:index, :show, :edit, :update] do
       post 'reinvite', on: :member
       delete 'delete', on: :member

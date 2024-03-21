@@ -2,12 +2,14 @@ describe DossierPreloader do
   let(:types_de_champ) do
     [
       { type: :text },
-      { type: :repetition, mandatory: true, children: [{ type: :text }] }
+      { type: :repetition, mandatory: true, children: [{ type: :text }] },
+      { type: :repetition, mandatory: false, children: [{ type: :text }] }
     ]
   end
   let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
   let(:dossier) { create(:dossier, procedure: procedure) }
   let(:repetition) { subject.champs_public.second }
+  let(:repetition_optional) { subject.champs_public.third }
   let(:first_child) { subject.champs_public.second.champs.first }
 
   describe 'all' do
@@ -37,6 +39,8 @@ describe DossierPreloader do
         expect(subject.champs_public.first.conditional?).to eq(false)
 
         expect(first_child.parent).to eq(repetition)
+        expect(repetition.champs.first).to eq(first_child)
+        expect(repetition_optional.champs).to be_empty
       end
 
       expect(count).to eq(0)
