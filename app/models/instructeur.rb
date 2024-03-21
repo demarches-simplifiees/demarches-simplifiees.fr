@@ -1,4 +1,5 @@
 class Instructeur < ApplicationRecord
+  include UserFindByConcern
   has_and_belongs_to_many :administrateurs
 
   has_many :assign_to, dependent: :destroy
@@ -35,24 +36,6 @@ class Instructeur < ApplicationRecord
   }
 
   default_scope { eager_load(:user) }
-
-  def self.by_email(email)
-    find_by(users: { email: email })
-  end
-
-  def self.find_all_by_identifier(ids: [], emails: [])
-    find_all_by_identifier_with_emails(ids:, emails:).first
-  end
-
-  def self.find_all_by_identifier_with_emails(ids: [], emails: [])
-    valid_emails, invalid_emails = emails.partition { URI::MailTo::EMAIL_REGEXP.match?(_1) }
-
-    [
-      where(id: ids).or(where(users: { email: valid_emails })).distinct(:id),
-      valid_emails,
-      invalid_emails
-    ]
-  end
 
   def email
     user.email

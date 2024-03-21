@@ -1,4 +1,4 @@
 fr:
   groupe_gestionnaire_mailer:
-    notify_removed_gestionnaire:
+    notify_removed_administrateur:
       email_body: "Vous venez d’être supprimé(e) du groupe gestionnaire %{groupe_gestionnaire_name} sur %{application_name} par « %{email} »."

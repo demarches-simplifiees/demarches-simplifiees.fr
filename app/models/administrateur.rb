@@ -1,4 +1,5 @@
 class Administrateur < ApplicationRecord
+  include UserFindByConcern
   UNUSED_ADMIN_THRESHOLD = ENV.fetch('UNUSED_ADMIN_THRESHOLD') { 6 }.to_i.months
 
   has_and_belongs_to_many :instructeurs
@@ -25,10 +26,6 @@ class Administrateur < ApplicationRecord
       .where(users: { last_sign_in_at: ..UNUSED_ADMIN_THRESHOLD.ago })
       .merge(APIToken.where(last_v1_authenticated_at: nil).or(APIToken.where(last_v1_authenticated_at: ..UNUSED_ADMIN_THRESHOLD.ago)))
       .merge(APIToken.where(last_v2_authenticated_at: nil).or(APIToken.where(last_v2_authenticated_at: ..UNUSED_ADMIN_THRESHOLD.ago)))
-  end
-
-  def self.by_email(email)
-    Administrateur.find_by(users: { email: email })
   end
 
   def email
