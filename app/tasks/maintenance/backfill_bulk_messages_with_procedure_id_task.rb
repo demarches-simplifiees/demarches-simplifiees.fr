@@ -3,7 +3,11 @@
 module Maintenance
   class BackfillBulkMessagesWithProcedureIdTask < MaintenanceTasks::Task
     def collection
-      BulkMessage.where(procedure: nil).where.missing(:groupe_instructeurs)
+      BulkMessage
+        .where(procedure: nil)
+        .includes(:groupe_instructeurs)
+        .where
+        .not(groupe_instructeurs: { id: nil })
     end
 
     def process(element)
