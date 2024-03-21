@@ -283,6 +283,10 @@ FactoryBot.define do
                                 referentiel_de_programmation: { c: 3 })
       end
     end
+
+    trait :accuse_reception do
+      accuse_reception { true }
+    end
   end
 end
 

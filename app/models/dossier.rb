@@ -1019,9 +1019,14 @@ class Dossier < ApplicationRecord
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
     if !disable_notification
-      NotificationMailer.send_accepte_notification(self).deliver_later
-      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+      if procedure.accuse_reception?
+        NotificationMailer.send_accuse_reception_notification(self).deliver_later
+      else
+        NotificationMailer.send_accepte_notification(self).deliver_later
+        NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+      end
     end
+
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :accepter, self)
   end
@@ -1071,8 +1076,12 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
 
     if !disable_notification
-      NotificationMailer.send_refuse_notification(self).deliver_later
-      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+      if procedure.accuse_reception?
+        NotificationMailer.send_accuse_reception_notification(self).deliver_later
+      else
+        NotificationMailer.send_refuse_notification(self).deliver_later
+        NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+      end
     end
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :refuser, self)
@@ -1117,9 +1126,14 @@ class Dossier < ApplicationRecord
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:sans_suite))
 
     if !disable_notification
-      NotificationMailer.send_sans_suite_notification(self).deliver_later
-      NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+      if procedure.accuse_reception?
+        NotificationMailer.send_accuse_reception_notification(self).deliver_later
+      else
+        NotificationMailer.send_sans_suite_notification(self).deliver_later
+        NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+      end
     end
+
     send_dossier_decision_to_experts(self)
     log_dossier_operation(instructeur, :classer_sans_suite, self)
   end
