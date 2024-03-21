@@ -163,7 +163,7 @@ class ProcedurePresentation < ApplicationRecord
       end
     when TYPE_DE_CHAMP_PRIVATE
       ids = dossiers
-        .with_type_de_champ_private(column)
+        .with_type_de_champ(column)
         .order("champs.value #{order}")
         .pluck(:id)
       if ids.size != count
@@ -218,8 +218,8 @@ class ProcedurePresentation < ApplicationRecord
         dossiers.with_type_de_champ(column)
           .filter_ilike(:champs, value_column, values)
       when TYPE_DE_CHAMP_PRIVATE
-        dossiers.with_type_de_champ_private(column)
-          .filter_ilike(:champs_private, value_column, values)
+        dossiers.with_type_de_champ(column)
+          .filter_ilike(:champs, value_column, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
