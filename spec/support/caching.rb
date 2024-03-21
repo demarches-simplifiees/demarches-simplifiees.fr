@@ -1,5 +1,5 @@
 RSpec.configure do |config|
-  config.around(:all, :caching) do |example|
+  config.around(:example, :caching) do |example|
     caching_was = ActionController::Base.perform_caching
     cache_store_was = Rails.cache
 
