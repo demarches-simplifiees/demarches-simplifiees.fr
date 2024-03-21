@@ -56,13 +56,22 @@ describe 'instructeurs/dossiers/show', type: :view do
     let(:dossier) { create(:dossier, :en_construction) }
     it 'displays the correct actions' do
       within("form[action=\"#{passer_en_instruction_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
-        expect(subject).to have_button('Passer en instruction')
+        expect(subject).to have_button('Passer en instruction', disabled: false)
       end
       within("form[action=\"#{follow_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
         expect(subject).to have_button('Suivre le dossier')
       end
       expect(subject).to have_button('Demander une correction')
       expect(subject).to have_selector('.header-actions ul:first-child > li.instruction-button', count: 1)
+    end
+
+    context 'with pending correction' do
+      before { create(:dossier_correction, dossier:) }
+
+      it 'disable the instruction button' do
+        expect(subject).to have_button('Passer en instruction', disabled: true)
+        expect(subject).to have_content('Le passage en instruction est impossible')
+      end
     end
   end
 

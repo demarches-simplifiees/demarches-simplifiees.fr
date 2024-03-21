@@ -378,12 +378,17 @@ en:
           enabled: "Add file %{dossier_id} to the selection for the bulk operation"
           disabled: "Impossible to add file %{dossier_id} to the selection because it is already in a bulk operation"
         personalize: Personalize
+        passer_en_instruction: Switch to instruction
+        repasser_en_construction: Revert to submitted
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
         save: Save
         stop_follow: No longer follow
         no_file: No file
         dossier_synthesis: Summary of files
+        passer_en_instruction_blocked_by_pending_correction: |
+          It is not possible to switch to instruction while the file is awaiting correction.
+          If necessary, the instructor who requested the correction can delete the corresponding message.
       avis:
         introduction_file_explaination: "File attached to the request for advice"
       search:
@@ -430,7 +435,7 @@ en:
           status_overview:
             status_draft: draft
             status_in_progress: in progress
-            en_construction_html: Your file is in progress. It means that <strong>you can still edit it</strong>. You will no longer be able to edit the file when the administration will switch it to "review".
+            en_construction_html: Your file is in progress. It means that <strong>you can still edit it</strong>. You will no longer be able to edit the file when the administration will switch it to "processing".
             status_review: undergoing review
             admin_review: The administration is reviewing your file. You are no longer able to edit it.
             delay_title:
