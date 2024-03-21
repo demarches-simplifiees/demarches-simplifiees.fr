@@ -1177,7 +1177,7 @@ describe Dossier, type: :model do
     it 'creates a commentaire in the messagerie with expected wording' do
       passer_en_instruction
 
-      email_template = dossier.procedure.mail_template_for(dossier)
+      email_template = dossier.procedure.email_template_for(dossier.state)
       commentaire = dossier.commentaires.last
 
       expect(commentaire.body).to include(email_template.subject_for_dossier(dossier), email_template.body_for_dossier(dossier))

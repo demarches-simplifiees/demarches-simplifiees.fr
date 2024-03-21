@@ -116,7 +116,7 @@ RSpec.describe NotificationMailer, type: :mailer do
       dossier.procedure.received_mail = email_template
     end
 
-    subject(:mail) { described_class.send_accepte_notification(dossier) }
+    subject(:mail) { described_class.send_en_instruction_notification(dossier) }
 
     context "subject has a special character" do
       let(:subject) { '--libellé démarche--' }

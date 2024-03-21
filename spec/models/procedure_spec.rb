@@ -2,12 +2,12 @@ describe Procedure do
   describe 'mail templates' do
     subject { create(:procedure) }
 
-    it { expect(subject.initiated_mail_template).to be_a(Mails::InitiatedMail) }
-    it { expect(subject.received_mail_template).to be_a(Mails::ReceivedMail) }
-    it { expect(subject.closed_mail_template).to be_a(Mails::ClosedMail) }
-    it { expect(subject.refused_mail_template).to be_a(Mails::RefusedMail) }
-    it { expect(subject.without_continuation_mail_template).to be_a(Mails::WithoutContinuationMail) }
-    it { expect(subject.re_instructed_mail_template).to be_a(Mails::ReInstructedMail) }
+    it { expect(subject.passer_en_construction_email_template).to be_a(Mails::InitiatedMail) }
+    it { expect(subject.passer_en_instruction_email_template).to be_a(Mails::ReceivedMail) }
+    it { expect(subject.accepter_email_template).to be_a(Mails::ClosedMail) }
+    it { expect(subject.refuser_email_template).to be_a(Mails::RefusedMail) }
+    it { expect(subject.classer_sans_suite_email_template).to be_a(Mails::WithoutContinuationMail) }
+    it { expect(subject.repasser_en_instruction_email_template).to be_a(Mails::ReInstructedMail) }
   end
 
   describe 'compute_dossiers_count' do
@@ -30,7 +30,7 @@ describe Procedure do
     subject { procedure }
 
     context 'when initiated_mail is not customize' do
-      it { expect(subject.initiated_mail_template.body).to eq(Mails::InitiatedMail.default_for_procedure(procedure).body) }
+      it { expect(subject.passer_en_construction_email_template.body).to eq(Mails::InitiatedMail.default_for_procedure(procedure).body) }
     end
 
     context 'when initiated_mail is customize' do
@@ -39,7 +39,7 @@ describe Procedure do
         subject.save
         subject.reload
       end
-      it { expect(subject.initiated_mail_template.body).to eq('sisi') }
+      it { expect(subject.passer_en_construction_email_template.body).to eq('sisi') }
     end
 
     context 'when initiated_mail is customize ... again' do
@@ -48,7 +48,7 @@ describe Procedure do
         subject.save
         subject.reload
       end
-      it { expect(subject.initiated_mail_template.body).to eq('toto') }
+      it { expect(subject.passer_en_construction_email_template.body).to eq('toto') }
 
       it { expect(Mails::InitiatedMail.count).to eq(1) }
     end
@@ -58,7 +58,7 @@ describe Procedure do
     let(:procedure) { create(:procedure, attestation_template: attestation_template) }
     let(:attestation_template) { nil }
 
-    subject { procedure.closed_mail_template.rich_body.body.to_html }
+    subject { procedure.accepter_email_template.rich_body.body.to_html }
 
     context 'for procedures without an attestation' do
       it { is_expected.not_to include('lien attestation') }
@@ -768,7 +768,7 @@ describe Procedure do
     end
 
     it 'should not duplicate default mail_template' do
-      expect(subject.initiated_mail_template.attributes).to eq Mails::InitiatedMail.default_for_procedure(subject).attributes
+      expect(subject.passer_en_construction_email_template.attributes).to eq Mails::InitiatedMail.default_for_procedure(subject).attributes
     end
 
     it 'should not duplicate specific related objects' do

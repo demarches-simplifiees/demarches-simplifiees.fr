@@ -327,7 +327,7 @@ fr:
         edit: Modifier
       greetings:
         hello: Bonjour,
-        best_regards: Bonne journée,
+        best_regards: Cordialement,
       dossiers:
         form:
           submitted_at: "Déposé le %{datetime}"

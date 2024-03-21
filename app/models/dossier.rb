@@ -881,8 +881,8 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def mail_template_for_state
-    procedure.mail_template_for(self)
+  def email_template_for(state)
+    procedure.email_template_for(state)
   end
 
   def after_passer_en_construction
@@ -891,7 +891,7 @@ class Dossier < ApplicationRecord
       .passer_en_construction
       .processed_at
     save!
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_construction))
     NotificationMailer.send_en_construction_notification(self).deliver_later
     procedure.compute_dossiers_count
     RoutingEngine.compute(self)
@@ -922,7 +922,7 @@ class Dossier < ApplicationRecord
 
     resolve_pending_correction!
 
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     if !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
     end
@@ -939,7 +939,7 @@ class Dossier < ApplicationRecord
     end
 
     save!
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     NotificationMailer.send_en_instruction_notification(self).deliver_later
 
     if procedure.sva_svr_enabled?
@@ -986,7 +986,7 @@ class Dossier < ApplicationRecord
     save!
     rebase_later
 
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, DossierOperationLog.operations.fetch(:repasser_en_instruction))
     if !disable_notification
       NotificationMailer.send_repasser_en_instruction_notification(self).deliver_later
     end
@@ -1015,7 +1015,7 @@ class Dossier < ApplicationRecord
     save!
     remove_titres_identite!
 
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
     if !disable_notification
       NotificationMailer.send_accepte_notification(self).deliver_later
     end
@@ -1041,7 +1041,7 @@ class Dossier < ApplicationRecord
 
     save!
     remove_titres_identite!
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
     NotificationMailer.send_accepte_notification(self).deliver_later
     log_automatic_dossier_operation(:accepter, self)
   end
@@ -1064,7 +1064,7 @@ class Dossier < ApplicationRecord
     save!
     remove_titres_identite!
 
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
 
     if !disable_notification
       NotificationMailer.send_refuse_notification(self).deliver_later
@@ -1085,7 +1085,7 @@ class Dossier < ApplicationRecord
     save!
 
     remove_titres_identite!
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
     NotificationMailer.send_refuse_notification(self).deliver_later
     log_automatic_dossier_operation(:refuser, self)
   end
@@ -1108,7 +1108,7 @@ class Dossier < ApplicationRecord
     save!
     remove_titres_identite!
 
-    MailTemplatePresenterService.create_commentaire_for_state(self)
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:sans_suite))
 
     if !disable_notification
       NotificationMailer.send_sans_suite_notification(self).deliver_later
