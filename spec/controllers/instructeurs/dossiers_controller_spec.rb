@@ -1297,4 +1297,17 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(response.body).to include('a réaffecté ce dossier du groupe « défaut » au groupe « deuxième groupe »')
     end
   end
+
+  describe '#print' do
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    subject do
+      get :print, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    it { expect(subject).to have_http_status(:ok) }
+  end
 end

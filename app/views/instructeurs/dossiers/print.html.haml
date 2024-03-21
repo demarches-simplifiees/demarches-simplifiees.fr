@@ -9,7 +9,7 @@
   = render partial: "shared/dossiers/identite_entreprise", locals: { etablissement: @dossier.etablissement, profile: 'instructeur' }
 
 - if @dossier.individual.present?
-  = render partial: "shared/dossiers/identite_individual", locals: { individual: @dossier.individual }
+  = render partial: "shared/dossiers/identite_individual", locals: { individual: @dossier.individual, dossier: @dossier }
 
 %h2 Formulaire
 
