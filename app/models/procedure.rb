@@ -542,6 +542,12 @@ class Procedure < ApplicationRecord
       .find_by(label: defaut_groupe_instructeur.label) || procedure.groupe_instructeurs.first
     procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
 
+    Flipper.features.each do |feature|
+      if feature_enabled?(feature.key)
+        Flipper.enable(feature.key, procedure)
+      end
+    end
+
     procedure
   end
 

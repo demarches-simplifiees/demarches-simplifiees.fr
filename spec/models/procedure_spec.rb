@@ -847,6 +847,28 @@ describe Procedure do
         expect(subject.canonical_procedure).to be_nil
       end
     end
+
+    describe 'feature flag' do
+      context 'with a feature flag enabled' do
+        before do
+          Flipper.enable(:procedure_routage_api, procedure)
+        end
+
+        it 'should enable feature' do
+          expect(subject.feature_enabled?(:procedure_routage_api)).to be true
+        end
+      end
+
+      context 'with a feature flag disabled' do
+        before do
+          Flipper.disable(:procedure_routage_api, procedure)
+        end
+
+        it 'should not enable feature' do
+          expect(subject.feature_enabled?(:procedure_routage_api)).to be false
+        end
+      end
+    end
   end
 
   describe '#publish!' do
