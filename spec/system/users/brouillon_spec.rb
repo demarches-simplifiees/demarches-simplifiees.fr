@@ -112,7 +112,6 @@ describe 'The user' do
     expect(page).to have_selected_value('pays', selected: 'Australie')
     expect(page).to have_field('dossier_link', with: dossier_to_link.id.to_s)
     expect(page).to have_text('file.pdf')
-    expect(page).to have_text('Analyse antivirus en cours')
   end
 
   scenario 'fill nothing and every error anchor links points to an existing element', js: true do
@@ -302,9 +301,9 @@ describe 'The user' do
     find_field('Pièce justificative 2').attach_file(Rails.root + 'spec/fixtures/files/RIB.pdf')
 
     # Expect the files to be uploaded immediately
-    expect(page).to have_text('Analyse antivirus en cours', count: 2, wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_text('RIB.pdf')
+    expect(page).to have_button("Supprimer", title: "Supprimer le fichier RIB.pdf")
 
     # Expect the submit buttons to be enabled
     expect(page).to have_button('Déposer le dossier', disabled: false)
@@ -324,7 +323,6 @@ describe 'The user' do
     # Test invalid file type
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/invalid_file_format.json')
     expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
-    expect(page).to have_text('Analyse antivirus en cours', count: 1, wait: 5)
   end
 
   scenario 'retry on transcient upload error', js: true do
@@ -345,9 +343,9 @@ describe 'The user' do
 
     # Test that retrying after a failure works
     click_on('Réessayer', visible: true, wait: 5)
-    expect(page).to have_text('Analyse antivirus en cours', wait: 5)
     expect(page).to have_text('file.pdf')
     expect(page).to have_button('Déposer le dossier', disabled: false)
+    expect(page).to have_button("Supprimer", title: "Supprimer le fichier file.pdf")
 
     # Reload the current page
     visit current_path
@@ -362,7 +360,6 @@ describe 'The user' do
 
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/file.pdf')
     expect(page).to have_text('file.pdf')
-    expect(page).to have_text('Analyse antivirus en cours')
 
     attach_file('Pièce justificative 1', Rails.root + 'spec/fixtures/files/white.png')
     expect(page).to have_text('white.png')
@@ -394,7 +391,6 @@ describe 'The user' do
       _1.blob.virus_scan_result = ActiveStorage::VirusScanner::SAFE
       _1.save!
     }
-    expect(page).not_to have_text('Analyse antivirus en cours', wait: 10)
 
     visit current_path
 

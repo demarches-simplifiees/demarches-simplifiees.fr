@@ -36,6 +36,6 @@ class Attachment::PendingPollComponent < ApplicationComponent
   private
 
   def pending_attachment?(attachment)
-    attachment.virus_scanner.pending? || attachment.watermark_pending?
+    attachment.watermark_pending?
   end
 end

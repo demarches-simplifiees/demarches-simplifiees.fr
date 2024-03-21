@@ -2,6 +2,6 @@
 en:
   reload: Reload
   explanation:
-    one: Scanning for viruses and processing your attachment takes longer than expected.
-    other: Scanning for viruses and processing your attachments takes longer than expected.
+    one: Processing your attachment takes longer than expected.
+    other: Processing your attachments takes longer than expected.
   dossier_submittable: This does not prevent you from submitting your file if you wish.
