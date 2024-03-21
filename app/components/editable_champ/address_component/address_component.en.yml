@@ -1,0 +1,10 @@
+en:
+  street_label: Street
+  city_label: City
+  commune_label: Municipality
+  code_postal_label: Postal code
+  pays_label: Country
+  departement_label: Department
+  ban: Address in France
+  france: Address in France but can not be found in "base adresse nationale"
+  international: Foreign address

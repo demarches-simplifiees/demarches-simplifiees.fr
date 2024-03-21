@@ -489,6 +489,11 @@ module Users
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
+        :not_in_ban,
+        :street_address,
+        :city_name,
+        :city_code,
+        :country_code,
         value: []
       ])
       champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}
