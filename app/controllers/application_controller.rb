@@ -39,7 +39,7 @@ class ApplicationController < ActionController::Base
     else
       Current.application_name = APPLICATION_NAME
       Current.contact_email = CONTACT_EMAIL
-      Current.application_base_url = Current.application_base_url
+      Current.application_base_url = APPLICATION_BASE_URL
     end
   end
 
