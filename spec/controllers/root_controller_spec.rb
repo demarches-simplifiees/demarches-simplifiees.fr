@@ -9,6 +9,16 @@ describe RootController, type: :controller do
     it { expect(subject).to redirect_to(dossiers_path) }
   end
 
+  context 'when Expert is connected' do
+    let(:expert) { create(:expert) }
+
+    before do
+      sign_in(expert.user)
+    end
+
+    it { expect(subject).to redirect_to(expert_all_avis_path) }
+  end
+
   context 'when Instructeur is connected' do
     let(:instructeur) { create(:instructeur) }
     let(:procedure) { create(:procedure, :published) }
