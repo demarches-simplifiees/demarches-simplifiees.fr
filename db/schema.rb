@@ -395,8 +395,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
   create_table "dossier_transfers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", null: false
-    t.datetime "updated_at", null: false
     t.boolean "from_support", default: false, null: false
+    t.datetime "updated_at", null: false
     t.index ["email"], name: "index_dossier_transfers_on_email"
   end
 
