@@ -70,6 +70,8 @@
           - if is_expert_context
             = render partial: 'layouts/search_dossiers_form'
 
+  = render SwitchDomainBannerComponent.new(user: current_user)
+
   #modal-header__menu.fr-header__menu.fr-modal{ "aria-labelledby": "navbar-burger-button" }
     .fr-container
       %button.fr-btn--close.fr-btn{ "aria-controls" => "modal-header__menu", title: t('close_modal', scope: [:layouts, :header]) }= t('close_modal', scope: [:layouts, :header])

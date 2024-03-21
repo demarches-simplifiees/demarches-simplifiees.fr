@@ -39,7 +39,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
       return redirect_to after_inactive_sign_up_path_for(existing_user)
     end
 
-    super
+    super do
+      resource.update_preferred_domain(Current.host) if resource.valid?
+    end
   end
 
   # GET /resource/edit

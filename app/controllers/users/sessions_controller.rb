@@ -13,6 +13,7 @@ class Users::SessionsController < Devise::SessionsController
 
     if user&.valid_password?(params[:user][:password])
       user.update(loged_in_with_france_connect: nil)
+      user.update_preferred_domain(Current.host)
     end
 
     super

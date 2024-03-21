@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include DomainMigratableConcern
   include EmailSanitizableConcern
   include PasswordComplexityConcern
 
