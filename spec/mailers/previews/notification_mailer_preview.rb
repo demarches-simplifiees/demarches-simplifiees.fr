@@ -23,6 +23,10 @@ class NotificationMailerPreview < ActionMailer::Preview
     NotificationMailer.send_notification_for_tiers(dossier)
   end
 
+  def send_accuse_lecture_notification
+    NotificationMailer.send_accuse_lecture_notification(dossier)
+  end
+
   private
 
   def dossier

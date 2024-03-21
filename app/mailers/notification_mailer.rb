@@ -6,7 +6,7 @@
 # The subject and body of a Notification can be customized by each demarche.
 #
 class NotificationMailer < ApplicationMailer
-  before_action :set_dossier, except: [:send_notification_for_tiers]
+  before_action :set_dossier, except: [:send_notification_for_tiers, :send_accuse_lecture_notification]
   before_action :set_services_publics_plus, only: :send_notification
 
   helper ServiceHelper
@@ -40,6 +40,16 @@ class NotificationMailer < ApplicationMailer
     @logo_url = procedure_logo_url(@dossier.procedure)
 
     mail(subject: @subject, to: @email, template_name: 'send_notification_for_tiers')
+  end
+
+  def send_accuse_lecture_notification(dossier)
+    @dossier = dossier
+    @subject = "La décision a été rendue pour votre démarche #{@dossier.procedure.libelle.truncate_words(50)}"
+    @email = @dossier.user_email_for(:notification)
+
+    @logo_url = procedure_logo_url(@dossier.procedure)
+
+    mail(subject: @subject, to: @email, template_name: 'send_accuse_lecture_notification')
   end
 
   def self.send_en_construction_notification(dossier)
