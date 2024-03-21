@@ -14,7 +14,7 @@
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do
         %p
-          = t('.api_particulier_description_html', app_name: APPLICATION_NAME)
+          = t('.api_particulier_description_html', app_name: Current.application_name)
 
     %fieldset.fr-fieldset
       .fr-fieldset__element

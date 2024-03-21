@@ -39,8 +39,8 @@
     - if current_user.instructeur?
       %p.mb-4
         = t('.email_explications_html',
-          contact_email: CONTACT_EMAIL,
-          application_name: APPLICATION_NAME,
+          contact_email: Current.contact_email,
+          application_name: Current.application_name,
           legit_admin_domains: LEGIT_ADMIN_DOMAINS.join(', '))
 
     = form_for current_user, url: update_email_path, method: :patch do |f|
@@ -74,8 +74,8 @@
 
   - if @france_connect_informations.present?
     .card
-      .card-title= t('.identities', count: @france_connect_informations.count, application_name: APPLICATION_NAME)
-      %p= t('.linked_identities', count: @france_connect_informations.count, application_name: APPLICATION_NAME)
+      .card-title= t('.identities', count: @france_connect_informations.count, application_name: Current.application_name)
+      %p= t('.linked_identities', count: @france_connect_informations.count, application_name: Current.application_name)
       %ul
         - @france_connect_informations.each do |fci|
           %li

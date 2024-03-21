@@ -39,7 +39,7 @@
                     - c.with_body do
                       %p
                         -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
-                        = t('answer_html', scope: [:support, :index, question_type], base_url: APPLICATION_BASE_URL, "link_#{question_type}": link)
+                        = t('answer_html', scope: [:support, :index, question_type], base_url: Current.application_base_url, "link_#{question_type}": link)
 
       .fr-input-group
         = label_tag :dossier_id, t('file_number', scope: [:utils]), class: 'fr-label'

@@ -5,7 +5,7 @@ module InitiationProcedureConcern
     def create_initiation_procedure(administrateur)
       p = Procedure.new(
         libelle: 'Une première procédure',
-        description: "Une première procédure afin de découvrir les possibilités de #{APPLICATION_NAME}",
+        description: "Une première procédure afin de découvrir les possibilités de #{Current.application_name}",
         organisation: 'Dinum',
         cadre_juridique: "inexistant car c'est un test",
         duree_conservation_dossiers_dans_ds: 1,

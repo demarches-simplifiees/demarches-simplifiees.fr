@@ -25,7 +25,7 @@
 
 .fr-input-group
   = f.label :duree_conservation_dossiers_dans_ds, class: 'fr-label' do
-    Sur #{APPLICATION_NAME}
+    Sur #{Current.application_name}
     = render EditableChamp::AsteriskMandatoryComponent.new
 
   = f.number_field :duree_conservation_dossiers_dans_ds, { class: 'fr-input', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }

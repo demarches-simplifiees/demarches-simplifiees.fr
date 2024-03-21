@@ -10,7 +10,7 @@
             = link_to commencer_sign_up_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn' do
               = t('views.shared.account.create')
               %span.optional-on-small-screens.fr-ml-1v
-                #{APPLICATION_NAME}
+                #{Current.application_name}
           %li= link_to t('views.shared.account.already_user'), commencer_sign_in_path(path: @procedure.path, prefill_token: @prefilled_dossier&.prefill_token), class: 'fr-btn fr-btn--secondary'
 
   - else
