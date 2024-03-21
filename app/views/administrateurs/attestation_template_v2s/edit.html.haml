@@ -1,10 +1,16 @@
-#attestation-edit.fr-container.mt-2{
-    data: {
-      controller: 'attestation',
-      attestation_tags_value: @attestation_template.tags.map { _1[:libelle] },
-      attestation_url_value: admin_procedure_attestation_template_v2_path(@procedure)} }
+#attestation-edit.fr-container.mt-2{ data: { controller: 'tiptap' } }
+  = form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), data: { turbo: 'true', controller: 'autosubmit' } do |form|
+    .flex.flex-gap-2
+      - @buttons.each do |buttons|
+        .flex.flex-gap-1
+          - buttons.each do |(label, action, icon)|
+            %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
+              = label
 
-  %button.fr-btn{ data: { action: 'click->attestation#bold', attestation_target: 'bold' } } Gras
-  .editor.mt-2{ data: { attestation_target: 'editor' } }
+    .editor.mt-2{ data: { tiptap_target: 'editor' } }
+    = form.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
 
-  %button.fr-btn.mt-2{ data: { action: 'click->attestation#send' } } Envoyer
+    %ul.mt-2.flex.wrap.flex-gap-1
+      - @attestation_template.tags.each do |tag|
+        %li.fr-badge.fr-badge--sm{ role: 'button', title: tag[:description], data: { action: 'click->tiptap#insertTag', tiptap_target: 'tag', tag_id: tag[:id], tag_label: tag[:libelle] } }
+          = tag[:libelle]
