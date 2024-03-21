@@ -35,7 +35,7 @@ class Attachment::MultipleComponent < ApplicationComponent
   end
 
   def empty_component_id
-    "attachment-multiple-empty-#{champ.id}"
+    "attachment-multiple-empty-#{champ.public_id}"
   end
 
   def auto_attach_url

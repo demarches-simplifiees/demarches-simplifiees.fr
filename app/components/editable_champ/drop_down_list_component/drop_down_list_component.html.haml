@@ -2,20 +2,20 @@
   .fr-fieldset__content
     - @champ.enabled_non_empty_options.each_with_index do |option, index|
       .fr-radio-group
-        = @form.radio_button :value, option, id: "#{@champ.id}_radio_option_#{index}"
-        %label.fr-label{ for: "#{@champ.id}_radio_option_#{index}" }
+        = @form.radio_button :value, option, id: dom_id(@champ, "radio_option_#{index}")
+        %label.fr-label{ for: dom_id(@champ, "radio_option_#{index}") }
           = option
 
     - if !@champ.mandatory?
       .fr-radio-group
-        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: "#{@champ.id}_radio_option_blank"
-        %label.fr-label{ for: "#{@champ.id}_radio_option_blank" }
+        = @form.radio_button :value, '', checked: @champ.value.blank? && !@champ.other?, id: dom_id(@champ, "radio_option_blank")
+        %label.fr-label{ for: dom_id(@champ, "radio_option_blank") }
           Non renseigné
 
     - if @champ.drop_down_other?
       .fr-radio-group
-        = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: "#{@champ.id}_radio_option_other"
-        %label.fr-label{ for: "#{@champ.id}_radio_option_other" }
+        = @form.radio_button :value, Champs::DropDownListChamp::OTHER, checked: @champ.other?, id: dom_id(@champ, "radio_option_other")
+        %label.fr-label{ for: dom_id(@champ, "radio_option_other") }
           = t('shared.champs.drop_down_list.other')
 - elsif @champ.render_as_combobox?
   = render Dsfr::ComboboxComponent.new form: @form, options: @champ.enabled_non_empty_options(other: true), selected: @champ.selected, input_html_options: { name: :value, id: @champ.input_id, class: select_class_names, describedby: @champ.describedby_id }

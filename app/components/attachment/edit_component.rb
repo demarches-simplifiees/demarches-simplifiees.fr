@@ -54,7 +54,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def destroy_attachment_path
-    attachment_path(champ_id: champ&.id)
+    attachment_path(champ_id: champ&.public_id)
   end
 
   def attachment_input_class

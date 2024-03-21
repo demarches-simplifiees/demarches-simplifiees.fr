@@ -1399,8 +1399,7 @@ class Dossier < ApplicationRecord
   end
 
   def project_champ(type_de_champ, row_id)
-    stable_id_with_row = [row_id, type_de_champ.stable_id].compact
-    champ = champs_by_stable_id_with_row[stable_id_with_row]
+    champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil?
       type_de_champ.build_champ(dossier: self, row_id:)
     else
@@ -1409,8 +1408,7 @@ class Dossier < ApplicationRecord
   end
 
   def champ_for_export(type_de_champ, row_id)
-    stable_id_with_row = [row_id, type_de_champ.stable_id].compact
-    champ = champs_by_stable_id_with_row[stable_id_with_row]
+    champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil? || !champ.visible?
       # some champs export multiple columns
       # ex: commune.for_export => [commune, insee, departement]
@@ -1423,8 +1421,8 @@ class Dossier < ApplicationRecord
 
   private
 
-  def champs_by_stable_id_with_row
-    @champs_by_stable_id_with_row ||= champs.sort_by(&:id).index_by(&:stable_id_with_row)
+  def champs_by_public_id
+    @champs_by_public_id ||= champs.sort_by(&:id).index_by(&:public_id)
   end
 
   def create_missing_traitemets

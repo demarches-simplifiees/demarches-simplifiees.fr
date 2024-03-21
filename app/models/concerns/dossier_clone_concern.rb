@@ -42,12 +42,12 @@ module DossierCloneConcern
   end
 
   def make_diff(editing_fork)
-    origin_champs_index = champs_for_revision(scope: :public).index_by(&:stable_id_with_row)
-    forked_champs_index = editing_fork.champs_for_revision(scope: :public).index_by(&:stable_id_with_row)
+    origin_champs_index = champs_for_revision(scope: :public).index_by(&:public_id)
+    forked_champs_index = editing_fork.champs_for_revision(scope: :public).index_by(&:public_id)
     updated_champs_index = editing_fork
       .champs_for_revision(scope: :public)
       .filter { _1.updated_at > editing_fork.created_at }
-      .index_by(&:stable_id_with_row)
+      .index_by(&:public_id)
 
     added = forked_champs_index.keys - origin_champs_index.keys
     removed = origin_champs_index.keys - forked_champs_index.keys
@@ -142,11 +142,11 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_index = (champs_for_revision(scope: :public) + diff[:added]).index_by(&:stable_id_with_row)
+    champs_index = (champs_for_revision(scope: :public) + diff[:added]).index_by(&:public_id)
 
     diff[:added].each do |champ|
       if champ.child?
-        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.stable_id_with_row).id)
+        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.public_id).id)
       else
         champ.update_column(:dossier_id, id)
       end
@@ -154,13 +154,13 @@ module DossierCloneConcern
 
     champs_to_remove = []
     diff[:updated].each do |champ|
-      old_champ = champs_index.fetch(champ.stable_id_with_row)
+      old_champ = champs_index.fetch(champ.public_id)
       champs_to_remove << old_champ
 
       if champ.child?
         # we need to do that in order to avoid a foreign key constraint
         old_champ.update(row_id: nil)
-        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.stable_id_with_row).id)
+        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.public_id).id)
       else
         champ.update_column(:dossier_id, id)
       end
