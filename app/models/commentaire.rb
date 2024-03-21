@@ -74,9 +74,13 @@ class Commentaire < ApplicationRecord
   end
 
   def soft_delete!
+    transaction do
+      discard!
+      dossier_correction&.resolve!
+      update! body: ''
+    end
+
     piece_jointe.purge_later if piece_jointe.attached?
-    discard!
-    update! body: ''
   end
 
   def flagged_pending_correction?

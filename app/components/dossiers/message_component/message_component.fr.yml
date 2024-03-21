@@ -3,6 +3,7 @@ fr:
   reply: Répondre
   guest: Invité
   delete_button: Supprimer le message
+  delete_with_correction_button: Supprimer la demande de correction et ce message
   confirm: Êtes-vous sûr de vouloir supprimer ce message ?
   automatic_email: Email automatique
   you: Vous

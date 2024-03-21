@@ -41,9 +41,7 @@ module DossierCorrectableConcern
     end
 
     def resolve_pending_correction
-      return if pending_correction.nil?
-
-      pending_correction.resolved_at = Time.current
+      pending_correction&.resolve
     end
 
     def resolve_pending_correction!

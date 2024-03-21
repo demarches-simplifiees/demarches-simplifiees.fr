@@ -14,7 +14,7 @@
 
           - if SUPER_ADMIN_OTP_ENABLED
             .fr-fieldset__element
-              = render Dsfr::InputComponent.new(form: f, attribute: :otp_attempt, input_type: :number_field, opts: { inputmode: :numeric }, required: false)
+              = render Dsfr::InputComponent.new(form: f, attribute: :otp_attempt, input_type: :number_field, opts: { inputmode: :numeric, autocomplete: 'off' }, required: false)
 
           .fr-fieldset__element
             %p= link_to "Mot de passe oublié ou réinitialisation 2FA ?", new_super_admin_password_path, class: "fr-link"

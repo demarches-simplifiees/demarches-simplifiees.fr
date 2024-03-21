@@ -17,8 +17,20 @@ class Dossiers::MessageComponent < ApplicationComponent
 
   private
 
+  def soft_deletable?
+    commentaire.soft_deletable?(connected_user)
+  end
+
   def show_reply_button?
     @show_reply_button
+  end
+
+  def delete_button_text
+    if commentaire.dossier_correction&.pending?
+      t('.delete_with_correction_button')
+    else
+      t('.delete_button')
+    end
   end
 
   def highlight_if_unseen_class

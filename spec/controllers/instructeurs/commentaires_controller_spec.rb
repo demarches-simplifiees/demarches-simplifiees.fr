@@ -20,6 +20,29 @@ describe Instructeurs::CommentairesController, type: :controller do
           expect(subject.body).to include('Message supprimé')
           expect(subject.body).to include('alert-success')
           expect(subject.body).to include('Votre message a été supprimé')
+          expect(commentaire.reload).to be_discarded
+          expect(commentaire.body).to be_empty
+        end
+
+        context 'when instructeur is not owner' do
+          let(:commentaire) { create(:commentaire, dossier: dossier) }
+
+          it 'does not delete the message' do
+            expect(subject.body).to include('alert-danger')
+            expect(commentaire.reload).not_to be_discarded
+            expect(commentaire.body).not_to be_empty
+          end
+        end
+
+        context 'when a correction is attached' do
+          let!(:correction) { create(:dossier_correction, commentaire:, dossier:) }
+
+          it 'removes the correction' do
+            expect(subject).to have_http_status(:ok)
+            expect(subject.body).to include('en construction') # update the header
+            expect(subject.body).not_to include('en attente')
+            expect(correction.reload).to be_resolved
+          end
         end
       end
 

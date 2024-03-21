@@ -69,7 +69,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       context 'on a procedure where commentaire had been written by connected instructeur' do
         let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message') }
 
-        it { is_expected.to have_selector("form[action=\"#{form_url}\"]") }
+        it do
+          is_expected.to have_selector("form[action=\"#{form_url}\"]")
+          is_expected.to have_button(component.t('.delete_button'))
+        end
       end
 
       context 'on a procedure where commentaire had been written by connected instructeur and discarded' do
@@ -95,6 +98,13 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         let(:commentaire) { create(:commentaire, instructeur: create(:instructeur), body: 'Second message') }
 
         it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
+      end
+
+      context 'when commentaire is a correction' do
+        let(:commentaire) { create(:commentaire, instructeur:, body: 'Please fix this') }
+        before { create(:dossier_correction, commentaire:, dossier:) }
+
+        it { is_expected.to have_button(component.t('.delete_with_correction_button')) }
       end
     end
 
