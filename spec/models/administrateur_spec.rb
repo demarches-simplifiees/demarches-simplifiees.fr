@@ -49,47 +49,6 @@ describe Administrateur, type: :model do
     end
   end
 
-  describe '#delete_and_transfer_services' do
-    let!(:administrateur) { create(:administrateur) }
-    let!(:autre_administrateur) { create(:administrateur) }
-    let!(:procedure) { create(:procedure, :with_service, administrateurs: [administrateur, autre_administrateur]) }
-    let(:service) { procedure.service }
-
-    it "delete and transfer services to other admin" do
-      service.update(administrateur: administrateur)
-      administrateur.delete_and_transfer_services
-
-      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
-      expect(service.reload.administrateur).to eq(autre_administrateur)
-    end
-
-    it "delete service if not associated to procedures" do
-      service_without_procedure = create(:service, administrateur: administrateur)
-      administrateur.delete_and_transfer_services
-
-      expect(Service.find_by(id: service_without_procedure.id)).to be_nil
-      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
-    end
-
-    it "does not delete service if associated to an archived procedure" do
-      service.update(administrateur: administrateur)
-      procedure.discard!
-      administrateur.delete_and_transfer_services
-
-      expect(Service.find_by(id: procedure.service.id)).not_to be_nil
-      expect(Administrateur.find_by(id: administrateur.id)).to be_nil
-    end
-
-    context "proedure without service" do
-      let!(:procedure) { create(:procedure, :draft, administrateurs: [administrateur, autre_administrateur]) }
-
-      it "delete procedure without service" do
-        administrateur.delete_and_transfer_services
-        expect(Administrateur.find_by(id: administrateur.id)).to be_nil
-      end
-    end
-  end
-
   describe '#merge' do
     let(:new_admin) { create(:administrateur) }
     let(:old_admin) { create(:administrateur) }
