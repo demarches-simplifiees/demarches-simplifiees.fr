@@ -34,4 +34,35 @@ describe Manager::DossiersController, type: :controller do
 
     it { expect(subject).to match(%r{Nom\s+\*\s+Texte court\s+🟢\s+rempli}) }
   end
+
+  describe "POST #transfer" do
+    before do
+      allow(DossierMailer).to receive(:notify_transfer).and_call_original
+      post :transfer, params: { id: @dossier.id, email: }
+    end
+
+    context 'with valid email' do
+      let(:email) { "chouette.gars@laposte.net" }
+
+      it { expect(flash[:success]).to eq("Une invitation de transfert a été envoyée à chouette.gars@laposte.net") }
+      it { expect(DossierMailer).to have_received(:notify_transfer) }
+    end
+
+    context 'with invalid email' do
+      let(:email) { "chouette" }
+
+      it { expect(flash[:alert]).to eq("L’adresse email est invalide") }
+      it { expect(DossierMailer).not_to have_received(:notify_transfer) }
+    end
+  end
+
+  describe "DELETE #transfer_destroy" do
+    before do
+      DossierTransfer.create(email: 'coucou@laposte.net', dossiers: [@dossier])
+      delete :transfer_destroy, params: { id: @dossier.id }
+    end
+
+    it { expect(@dossier.transfer).to be_nil }
+    it { expect(flash[:notice]).to eq "La demande de transfert a été supprimée avec succès" }
+  end
 end

@@ -480,7 +480,9 @@ en:
           deleted_badge: Deleted
         transfers:
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"
+          sender_demande_en_cours: "A transfer request from technical support is pending on file Nº %{id} to %{email}"
           receiver_demande_en_cours: "Transfer request on file Nº %{id} sent by %{email}"
+          receiver_demande_en_cours_from_support: "Transfer request from technical support on file Nº %{id} of %{email}"
           revoke: Revoke this request
           accept: Accept
           reject: Reject

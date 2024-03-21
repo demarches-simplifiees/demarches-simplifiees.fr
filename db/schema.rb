@@ -386,6 +386,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "created_at", null: false
     t.bigint "dossier_id", null: false
     t.string "from", null: false
+    t.boolean "from_support", default: false, null: false
     t.string "to", null: false
     t.datetime "updated_at", null: false
     t.index ["dossier_id"], name: "index_dossier_transfer_logs_on_dossier_id"
@@ -395,6 +396,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "created_at", null: false
     t.string "email", null: false
     t.datetime "updated_at", null: false
+    t.boolean "from_support", default: false, null: false
     t.index ["email"], name: "index_dossier_transfers_on_email"
   end
 

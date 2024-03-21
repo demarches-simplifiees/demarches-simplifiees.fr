@@ -26,9 +26,25 @@ as well as a link to its edit page.
       (Supprimé)
     <% end %>
   </h1>
+  <div>
+    <%= link_to(
+      "Transférer le dossier",
+      [:transfer_edit, namespace, page.resource],
+      class: "button",
+    ) if valid_action? :transfer_edit %>
+  </div>
 </header>
 
 <section class="main-content__body">
+  <div>
+    <% if dossier.transfer&.from_support %>
+      <p>
+        <%= t('views.users.dossiers.transfers.sender_demande_en_cours_from_support', id: dossier.id, email: dossier.transfer.email) %>
+        <br>
+        <%= link_to t('views.users.dossiers.transfers.revoke'), transfer_destroy_manager_dossier_path(dossier), class: 'fr-link', method: :delete %>
+      </p>
+    <% end %>
+  </div>
   <dl>
     <% page.attributes.each do |attribute| %>
       <dt class="attribute-label" id="<%= attribute.name %>">
