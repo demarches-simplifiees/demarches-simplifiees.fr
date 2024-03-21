@@ -8,6 +8,15 @@ en:
       text_success:
         one: "1 is being archived"
         other: "%{success_count}/%{count} files have been archived"
+  desarchiver:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file has been unarchived"
+        other: "%{success_count}/%{count} files have been unarchived"
+    in_progress:
+      text_success:
+        one: "1 is being unarchived"
+        other: "%{success_count}/%{count} files have been unarchived"
   passer_en_instruction:
     finish:
       text_success:
@@ -17,6 +26,15 @@ en:
       text_success:
         one: "1 is being changed to instructing"
         other: "%{success_count}/%{count} files have been changed to instructing"
+  repousser_expiration:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file will be kept for an additional month"
+        other: "%{success_count}/%{count} files will be kept for an additional month"
+    in_progress:
+      text_success:
+        one: "1 is being kept for an additional month"
+        other: "%{success_count}/%{count} files will be kept for an additional month"
   accepter:
     finish:
       text_success:
@@ -35,6 +53,24 @@ en:
       text_success:
         one: "1 is being refused"
         other: "%{success_count}/%{count} files have been refused"
+  supprimer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file has been deleted"
+        other: "%{success_count}/%{count} files have been deleted"
+    in_progress:
+      text_success:
+        one: "1 is being deleted"
+        other: "%{success_count}/%{count} files have been deleted"
+  restaurer:
+    finish:
+      text_success:
+        one: "%{success_count}/1 file has been restored"
+        other: "%{success_count}/%{count} files have been restored"
+    in_progress:
+      text_success:
+        one: "1 is being restored"
+        other: "%{success_count}/%{count} files have been restored"
   classer_sans_suite:
     finish:
       text_success:

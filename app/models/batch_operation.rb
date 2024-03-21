@@ -4,10 +4,14 @@ class BatchOperation < ApplicationRecord
     refuser: 'refuser',
     classer_sans_suite: 'classer_sans_suite',
     archiver: 'archiver',
+    desarchiver: 'desarchiver',
     follow: 'follow',
     passer_en_instruction: 'passer_en_instruction',
+    repousser_expiration: 'repousser_expiration',
     repasser_en_construction: 'repasser_en_construction',
-    unfollow: 'unfollow'
+    restaurer: 'restaurer',
+    unfollow: 'unfollow',
+    supprimer: 'supprimer'
   }
 
   has_many :dossiers, dependent: :nullify
@@ -37,25 +41,32 @@ class BatchOperation < ApplicationRecord
   def dossiers_safe_scope(dossier_ids = self.dossier_ids)
     query = instructeur
       .dossiers
-      .visible_by_administration
       .where(id: dossier_ids)
     case operation
     when BatchOperation.operations.fetch(:archiver) then
-      query.not_archived.state_termine
+      query.visible_by_administration.not_archived.state_termine
+    when BatchOperation.operations.fetch(:desarchiver) then
+      query.visible_by_administration.archived.state_termine
     when BatchOperation.operations.fetch(:passer_en_instruction) then
-      query.state_en_construction
+      query.visible_by_administration.state_en_construction
     when BatchOperation.operations.fetch(:accepter) then
-      query.state_en_instruction
+      query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:refuser) then
-      query.state_en_instruction
+      query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:classer_sans_suite) then
-      query.state_en_instruction
+      query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:follow) then
-      query.without_followers.en_cours
+      query.visible_by_administration.without_followers.en_cours
+    when BatchOperation.operations.fetch(:repousser_expiration) then
+      query.visible_by_administration.termine_or_en_construction_close_to_expiration
     when BatchOperation.operations.fetch(:repasser_en_construction) then
-      query.state_en_instruction
+      query.visible_by_administration.state_en_instruction
     when BatchOperation.operations.fetch(:unfollow) then
-      query.with_followers.en_cours
+      query.visible_by_administration.with_followers.en_cours
+    when BatchOperation.operations.fetch(:supprimer) then
+      query.visible_by_administration.state_termine
+    when BatchOperation.operations.fetch(:restaurer) then
+      query.hidden_by_administration
     end
   end
 
@@ -68,6 +79,8 @@ class BatchOperation < ApplicationRecord
     case operation
     when BatchOperation.operations.fetch(:archiver)
       dossier.archiver!(instructeur)
+    when BatchOperation.operations.fetch(:desarchiver)
+      dossier.desarchiver!
     when BatchOperation.operations.fetch(:passer_en_instruction)
       dossier.passer_en_instruction(instructeur: instructeur)
     when BatchOperation.operations.fetch(:accepter)
@@ -78,10 +91,16 @@ class BatchOperation < ApplicationRecord
       dossier.classer_sans_suite(instructeur: instructeur, motivation: motivation, justificatif: justificatif_motivation)
     when BatchOperation.operations.fetch(:follow)
       instructeur.follow(dossier)
+    when BatchOperation.operations.fetch(:repousser_expiration)
+      dossier.extend_conservation(1.month)
     when BatchOperation.operations.fetch(:repasser_en_construction)
       dossier.repasser_en_construction!(instructeur: instructeur)
     when BatchOperation.operations.fetch(:unfollow)
       instructeur.unfollow(dossier)
+    when BatchOperation.operations.fetch(:supprimer)
+      dossier.hide_and_keep_track!(instructeur, :instructeur_request)
+    when BatchOperation.operations.fetch(:restaurer)
+      dossier.restore(instructeur)
     end
   end
 
