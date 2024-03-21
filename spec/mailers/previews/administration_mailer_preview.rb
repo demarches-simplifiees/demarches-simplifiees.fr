@@ -1,10 +1,10 @@
 class AdministrationMailerPreview < ActionMailer::Preview
   def invite_admin
-    AdministrationMailer.invite_admin(administrateur, "12345678", 0)
+    AdministrationMailer.invite_admin(administrateur, "12345678")
   end
 
   def invite_admin_whose_already_has_an_account
-    AdministrationMailer.invite_admin(administrateur, nil, 0)
+    AdministrationMailer.invite_admin(administrateur, nil)
   end
 
   def refuse_admin
