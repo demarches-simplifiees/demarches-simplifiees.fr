@@ -1,5 +1,5 @@
 describe 'users/dossiers/show/_status_overview', type: :view do
-  before { allow(dossier.procedure).to receive(:usual_traitement_time_for_recent_dossiers).and_return(1.day) }
+  before { allow(dossier.procedure).to receive(:usual_traitement_time_for_recent_dossiers).and_return([1.day, 2.days, 3.days]) }
 
   subject! { render 'users/dossiers/show/status_overview', dossier: dossier }
 
@@ -34,8 +34,14 @@ describe 'users/dossiers/show/_status_overview', type: :view do
       expect(rendered).to have_timeline_item('.termine').inactive
     end
 
-    it { is_expected.to have_selector('.status-explanation .en-construction') }
-    it { is_expected.to have_text('Habituellement, les dossiers de cette démarche sont traités dans un délai de 1 jour') }
+    it 'works' do
+      subject
+      expect(subject).to have_selector('.status-explanation .en-construction')
+      expect(subject).to have_text('Selon nos estimations, à partir des délais d’instruction constatés')
+      expect(subject).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour.")
+      expect(subject).to have_text("Les dossiers demandant quelques échanges le délai d’instruction est d‘environ : 2 jours.")
+      expect(subject).to have_text("Si votre dossier est incomplet ou qu’il faut beaucoup d’échanges avec l’administration, le délai d’instruction est d’environ 3 jours.")
+    end
   end
 
   context 'when en instruction' do
@@ -48,8 +54,13 @@ describe 'users/dossiers/show/_status_overview', type: :view do
       expect(rendered).to have_timeline_item('.termine').inactive
     end
 
-    it { is_expected.to have_selector('.status-explanation .en-instruction') }
-    it { is_expected.to have_text('Habituellement, les dossiers de cette démarche sont traités dans un délai de 1 jour') }
+    it 'works' do
+      expect(subject).to have_selector('.status-explanation .en-instruction')
+      expect(subject).to have_text('Selon nos estimations, à partir des délais d’instruction constatés')
+      expect(subject).to have_text("Dans le meilleur des cas, le délai d’instruction est : 1 jour.")
+      expect(subject).to have_text("Les dossiers demandant quelques échanges le délai d’instruction est d‘environ : 2 jours.")
+      expect(subject).to have_text("Si votre dossier est incomplet ou qu’il faut beaucoup d’échanges avec l’administration, le délai d’instruction est d’environ 3 jours.")
+    end
   end
 
   context 'when accepté' do
