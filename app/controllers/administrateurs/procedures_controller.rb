@@ -320,6 +320,8 @@ module Administrateurs
       flash.notice = "Nouvelle version de la démarche publiée"
 
       redirect_to admin_procedure_path(@procedure)
+    rescue ActiveRecord::RecordInvalid
+      redirect_to admin_procedure_publication_path(@procedure)
     end
 
     def transfert

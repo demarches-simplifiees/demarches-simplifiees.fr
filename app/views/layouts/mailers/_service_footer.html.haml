@@ -15,6 +15,10 @@
             = t('.procedure_management')
           = service.nom
           = service.adresse
+        %p
+          = t('.email_sent_to')
+          %br
+          = dossier.user_email_for(:notification)
       %td{ width: "50%", valign: "top" }
         %p
           %strong
