@@ -48,6 +48,17 @@ describe AdministrateurDeletionService do
       end
     end
 
+    context 'when admin has one discarded procedure without dossiers and only one admin' do
+      let(:owned_procedure_without_dossier) { create(:procedure, service: owned_procedure_service, administrateurs: [admin]) }
+
+      before { owned_procedure_without_dossier.discard! }
+
+      it "deletes admin" do
+        subject
+        expect(Administrateur.find_by(id: admin.id)).to be_nil
+      end
+    end
+
     context "when there is a failure" do
       it 'rollbacks' do
         allow_any_instance_of(Service).to receive(:update).and_return(false)

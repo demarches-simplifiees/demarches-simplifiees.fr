@@ -47,7 +47,7 @@ class AdministrateurDeletionService
 
   def delete_procedures_without_dossier
     procedures_without_dossier = owned_procedures.filter { _1.dossiers.empty? }
-    procedures_without_dossier.each { _1.discard_and_keep_track!(super_admin) }
+    procedures_without_dossier.each { |p| p.discard_and_keep_track!(super_admin) unless p.discarded? }
     procedures_without_dossier.each(&:purge_discarded)
   end
 
