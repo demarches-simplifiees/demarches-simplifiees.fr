@@ -569,7 +569,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_passer_en_instruction?
-    return false if pending_correction?
+    return false if procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
 
     true
   end
@@ -580,7 +580,7 @@ class Dossier < ApplicationRecord
 
     return false if !can_passer_en_instruction?
     return true if declarative_triggered_at.nil? && procedure.declarative_en_instruction?
-    return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil?
+    return true if procedure.sva_svr_enabled? && sva_svr_decision_triggered_at.nil? && !pending_correction?
 
     false
   end
@@ -940,6 +940,8 @@ class Dossier < ApplicationRecord
       .passer_en_instruction(instructeur: instructeur)
       .processed_at
     save!
+
+    resolve_pending_correction!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     if !disable_notification
