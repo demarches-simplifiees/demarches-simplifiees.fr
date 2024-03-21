@@ -27,7 +27,7 @@
       - if dossier.en_construction?
         .en-construction
           - if dossier.pending_correction.present?
-            .message.inverted-background
+            .message.fr-background-alt--grey
               = render Dossiers::MessageComponent.new(commentaire: dossier.pending_correction.commentaire, connected_user: current_user)
 
           %p{ role: 'status' }
@@ -58,7 +58,7 @@
       - elsif dossier.accepte?
         .accepte
           %p.decision{ role: 'status' }
-            %span.icon.accept
+            = dsfr_icon('fr-icon-checkbox-circle-fill fr-text-default--success')
             = t('views.users.dossiers.show.status_overview.acceptee_html')
 
           - if dossier.motivation.present?
@@ -77,7 +77,7 @@
       - elsif dossier.refuse?
         .refuse
           %p.decision{ role: 'status' }
-            %span.icon.refuse
+            = dsfr_icon('fr-icon-close-circle-fill fr-text-default--error')
             = t('views.users.dossiers.show.status_overview.refuse_html')
 
           - if dossier.motivation.present?
@@ -91,7 +91,7 @@
       - elsif dossier.sans_suite?
         .sans-suite
           %p.decision{ role: 'status' }
-            %span.icon.without-continuation
+            = dsfr_icon('fr-icon-intermediate-circle-fill')
             = t('views.users.dossiers.show.status_overview.sans_suite_html')
 
           = render partial: 'users/dossiers/show/download_justificatif', locals: { dossier: dossier }

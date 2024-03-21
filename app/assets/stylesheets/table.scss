@@ -6,7 +6,7 @@
   width: 100%;
 
   tbody tr {
-    border-top: 1px solid $border-grey;
+    border-top: 1px solid var(--border-default-grey);
   }
 
   td,
@@ -35,7 +35,7 @@
 
   &.hoverable {
     tbody tr:hover {
-      background-color: $light-grey;
+      background-color: var(--hover);
     }
   }
 
@@ -63,22 +63,11 @@
   width: calc(100vw);
 }
 
-
-[data-fr-theme="dark"] .fr-table--bordered {
-  .table {
-    &.hoverable {
-      tbody tr:hover {
-        background-color: var(--background-action-low-blue-france);
-      }
-    }
-  }
-}
-
 .fr-table--bordered {
   .table {
     &.hoverable {
       tbody tr:hover {
-        background-color: $white;
+        background-color: var(--hover);
       }
     }
   }

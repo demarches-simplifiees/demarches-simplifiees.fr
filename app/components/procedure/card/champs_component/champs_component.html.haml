@@ -2,9 +2,7 @@
   = link_to champs_admin_procedure_path(@procedure), class: 'fr-tile fr-enlarge-link', title: error_messages do
     .fr-tile__body.flex.column.align-center.justify-between
       - if error_messages.present?
-        %div
-          %span.icon.refuse
-          %p.fr-tile-status-error À modifier
+        %p.fr-badge.fr-badge--error À modifier
       - elsif @count == 0
         %p.fr-badge.fr-badge--warning À faire
       - else

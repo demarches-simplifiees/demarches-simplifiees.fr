@@ -38,7 +38,7 @@ export function ImportFileInput({
             {input.hasValue && (
               <span
                 title="Supprimer le fichier"
-                className="icon refuse"
+                className="fr-icon-delete-line fr-text-default--error"
                 style={{
                   cursor: 'pointer'
                 }}

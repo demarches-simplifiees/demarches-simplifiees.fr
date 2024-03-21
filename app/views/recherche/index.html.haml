@@ -37,7 +37,7 @@
           %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
             - if instructeur_and_expert_dossier
               %td.text-center.cell-link
-                %span.icon.folder
+                = dsfr_icon('fr-icon-file-text-line')
               %td.number-col
                 .cell-link= p.dossier_id
               %td
@@ -54,7 +54,7 @@
 
               %td.text-center
                 %a.cell-link{ href: path }
-                  %span.icon.folder
+                  = dsfr_icon('fr-icon-file-text-line')
 
               %td.number-col
                 %a.cell-link{ href: path }= p.dossier_id
@@ -77,13 +77,13 @@
 
                   - menu.with_item do
                     = link_to(instructeur_dossier_path(procedure_id, p.dossier_id), role: 'menuitem') do
-                      %span.icon.in-progress>
+                      = dsfr_icon('fr-icon-file-text-fill', :sm)
                       .dropdown-description
                         Voir le dossier
 
                   - menu.with_item do
                     = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id]), role: 'menuitem') do
-                      %span.icon.in-progress>
+                      = dsfr_icon('fr-icon-chat-3-fill', :sm)
                       .dropdown-description
                         Donner mon avis
 

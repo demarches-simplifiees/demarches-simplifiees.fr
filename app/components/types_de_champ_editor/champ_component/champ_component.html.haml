@@ -1,7 +1,9 @@
 %li.type-de-champ.flex.column.justify-start{ html_options }
   .type-de-champ-container
-    .flex.justify-between.section.head.hr
-      .handle.fr-icon-drag-move-2-line{ title: "Déplacer le champ vers le haut ou vers le bas" }
+    .flex.justify-between.section.head
+      .fr-btn.fr-btn--tertiary-no-outline.handle.fr-icon-drag-move-2-line{ title: "Déplacer le champ vers le haut ou vers le bas" }
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-down-line.move-down{ move_button_options(:down) }
 
       - if coordinate.used_by_routing_rules?
         .flex.align-center
@@ -10,25 +12,17 @@
             = link_to('le routage', admin_procedure_groupe_instructeurs_path(revision.procedure_id, anchor: 'routing-rules'))
       - else
         .flex.justify-start.delete
-          = button_to type_de_champ_path, class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
-            .icon.delete
+          = button_to type_de_champ_path, class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
             %span.sr-only Supprimer
 
     - if @errors.present?
       .types-de-champ-errors
         = @errors
 
-    .flex.justify-start.section.fr-ml-1w.fr-mb-2w
+    .flex.justify-start.section
       = form_for(type_de_champ, form_options) do |form|
-        .flex.justify-start
+        .flex.justify-start.flex-gap
           .flex.justify-start.width-33
-            .flex.justify-start.column
-              %button.move-up.cell.mb-1{ move_button_options(:up) }
-                .icon.arrow-up.small
-                %span.sr-only  Déplacer le champ vers le haut
-              %button.move-down.cell{ move_button_options(:down) }
-                .icon.arrow-down.small
-                %span.sr-only Déplacer le champ vers le bas
             .cell.flex.justify-start.column.flex-grow
               = form.label :type_champ, "Type de champ", for: dom_id(type_de_champ, :type_champ)
               = form.select :type_champ, grouped_options_for_select(types_of_type_de_champ, type_de_champ.type_champ), {}, class: 'fr-select small-margin small inline width-100', id: dom_id(type_de_champ, :type_champ), disabled: coordinate.used_by_routing_rules?

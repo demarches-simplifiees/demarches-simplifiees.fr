@@ -46,7 +46,7 @@
           - @deleted_dossiers.each do |deleted_dossier|
             %tr
               %td.text-center
-                %span.icon.folder
+                = dsfr_icon('fr-icon-file-text-line')
               %td.number-col
                 = deleted_dossier.dossier_id
               %td

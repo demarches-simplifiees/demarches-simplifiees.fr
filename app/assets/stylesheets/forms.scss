@@ -96,9 +96,6 @@
   }
 
 
-  .mandatory {
-    fill: currentColor;
-  }
 
   label:not(.fr-label),
   legend.form-label {
@@ -716,6 +713,10 @@ textarea::placeholder {
 [data-fr-theme="dark"] .fixed-footer {
   border-top: 2px solid var(--background-action-low-blue-france-hover);
   background-color: var(--background-action-low-blue-france);
+}
+
+.mandatory {
+  fill: currentColor;
 }
 
 .fixed-footer {

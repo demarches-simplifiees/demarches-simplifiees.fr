@@ -43,14 +43,13 @@
                   = procedure.auto_archive_on.strftime('%d/%m/%Y')
 
             %div
+              = dsfr_icon('fr-icon-team-fill')
               - if procedure.routing_enabled?
-                %span.icon.person
                 %span.fr-badge= procedure.groupe_instructeurs.count
               - else
-                %span.icon.person
                 %span.fr-badge= procedure.instructeurs.count
 
-              %span.icon.folder.fr-ml-1w
+              = dsfr_icon('fr-icon-file-text-fill fr-ml-1w')
               %span.fr-badge= procedure.dossiers.state_not_brouillon.visible_by_administration.count
 
       .text-right
@@ -81,28 +80,28 @@
           - if !procedure.close? && !procedure.discarded?
             - menu.with_item do
               = link_to commencer_url(path: procedure.path), target: :blank, rel: :noopener, role: 'menuitem' do
-                %span.icon.in-progress
+                = dsfr_icon('fr-icon-flashlight-line')
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.to_test')
 
           - if !procedure.discarded?
             - menu.with_item do
               = link_to(admin_procedure_clone_path(procedure.id), role: 'menuitem', class: 'clone-btn', data: { method: :put }) do
-                %span.icon.new-folder
+                = dsfr_icon('fr-icon-file-copy-line')
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.to_clone')
 
           - if procedure.publiee?
             - menu.with_item do
               = link_to(admin_procedure_close_path(procedure_id: procedure.id), role: 'menuitem') do
-                %span.icon.archive
+                = dsfr_icon('fr-icon-calendar-close-fill')
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.to_close')
 
           - if procedure.can_be_deleted_by_administrateur? && !procedure.discarded?
             - menu.with_item do
               = link_to admin_procedure_path(procedure), role: 'menuitem', method: :delete, data: { confirm: "Voulez-vous vraiment supprimer la démarche ? \nToute suppression est définitive et s'appliquera aux éventuels autres administrateurs de cette démarche !" } do
-                %span.icon.refuse
+                = dsfr_icon('fr-icon-delete-line')
                 .dropdown-description
                   %h4= t('administrateurs.dropdown_actions.delete')
 

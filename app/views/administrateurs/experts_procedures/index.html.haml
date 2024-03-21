@@ -81,7 +81,7 @@
           - @experts_procedure.each do |expert_procedure|
             %tr
               %td
-                %span.icon.person
+                = dsfr_icon('fr-icon-user-fill')
                 = expert_procedure.expert.email
               %td.text-center
                 = expert_procedure.avis.count
