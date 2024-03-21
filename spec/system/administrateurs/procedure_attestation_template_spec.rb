@@ -65,7 +65,12 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
   end
 
   context 'Update attestation v2' do
-    before { Flipper.enable(:attestation_v2) }
+    before do
+      Flipper.enable(:attestation_v2)
+
+      response = Typhoeus::Response.new(code: 200, body: 'Hello world')
+      Typhoeus.stub(WEASYPRINT_URL).and_return(response)
+    end
 
     scenario do
       visit admin_procedure_path(procedure)
