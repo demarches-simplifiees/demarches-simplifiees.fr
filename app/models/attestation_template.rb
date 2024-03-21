@@ -103,7 +103,7 @@ class AttestationTemplate < ApplicationRecord
   def version(procedure)
     { version: procedure.feature_enabled?(:attestation_v2) ? :v2 : :v1 }
   end
-  
+
   def tiptap_body
     json_body&.to_json
   end
