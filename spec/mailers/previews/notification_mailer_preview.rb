@@ -19,6 +19,10 @@ class NotificationMailerPreview < ActionMailer::Preview
     NotificationMailer.send_sans_suite_notification(dossier)
   end
 
+  def send_notification_for_tiers
+    NotificationMailer.send_notification_for_tiers(dossier)
+  end
+
   private
 
   def dossier

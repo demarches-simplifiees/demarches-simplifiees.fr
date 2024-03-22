@@ -19,6 +19,7 @@ describe 'users/dossiers/index', type: :view do
     assign(:dossier_transferes, Kaminari.paginate_array([]).page(1))
     assign(:dossiers_close_to_expiration, Kaminari.paginate_array([]).page(1))
     assign(:dossiers, Kaminari.paginate_array(user_dossiers).page(1))
+    assign(:procedures_for_select, user_dossiers.map(&:procedure))
     assign(:statut, statut)
     assign(:filter, filter)
     assign(:all_dossiers_uniq_procedures_count, 0)

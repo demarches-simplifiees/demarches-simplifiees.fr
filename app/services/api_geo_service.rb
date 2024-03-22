@@ -34,6 +34,11 @@ class APIGeoService
       regions.find { _1[:name] == name }&.dig(:code)
     end
 
+    def region_code_by_departement(name)
+      return if name.nil?
+      departements.find { _1[:name] == name }&.dig(:region_code)
+    end
+
     def departements
       [{ code: '99', name: 'Etranger' }] + get_from_api_geo(:departements).sort_by { _1[:code] }
     end

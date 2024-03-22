@@ -1148,6 +1148,7 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
     let(:operation_serialized) { last_operation.data }
     let(:instructeur) { create(:instructeur) }
+    let!(:correction) { create(:dossier_correction, dossier:) } # correction has a commentaire
 
     subject(:passer_en_instruction) { dossier.passer_en_instruction!(instructeur: instructeur) }
 
@@ -1165,6 +1166,13 @@ describe Dossier, type: :model do
     end
 
     it { expect { passer_en_instruction }.to change { dossier.commentaires.count }.by(1) }
+
+    it "resolve pending correction" do
+      passer_en_instruction
+
+      expect(dossier.pending_correction?).to be_falsey
+      expect(correction.reload.resolved_at).to be_present
+    end
 
     it 'creates a commentaire in the messagerie with expected wording' do
       passer_en_instruction
@@ -1253,13 +1261,24 @@ describe Dossier, type: :model do
     context 'when there is a pending correction' do
       before { create(:dossier_correction, dossier:) }
 
-      it { expect(dossier.can_passer_en_instruction?).to be_falsey }
+      it { expect(dossier.can_passer_en_instruction?).to be_truthy }
     end
 
-    context 'when there is a resolved correction' do
-      before { create(:dossier_correction, :resolved, dossier:) }
+    context 'when there is a pending correction with procedure blocking_pending_correction feature' do
+      let(:resolved_at) { nil }
 
-      it { expect(dossier.can_passer_en_instruction?).to be_truthy }
+      before do
+        Flipper.enable(:blocking_pending_correction, dossier.procedure)
+        create(:dossier_correction, dossier:, resolved_at: resolved_at)
+      end
+
+      it { expect(dossier.can_passer_en_instruction?).to be_falsey }
+
+      context 'when there is a resolved correction' do
+        let(:resolved_at) { Time.current }
+
+        it { expect(dossier.can_passer_en_instruction?).to be_truthy }
+      end
     end
   end
 

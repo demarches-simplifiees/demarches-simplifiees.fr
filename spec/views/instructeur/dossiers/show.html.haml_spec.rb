@@ -68,9 +68,15 @@ describe 'instructeurs/dossiers/show', type: :view do
     context 'with pending correction' do
       before { create(:dossier_correction, dossier:) }
 
-      it 'disable the instruction button' do
-        expect(subject).to have_button('Passer en instruction', disabled: true)
-        expect(subject).to have_content('Le passage en instruction est impossible')
+      it { expect(subject).to have_button('Passer en instruction', disabled: false) }
+
+      context 'with procedure blocking pending correction' do
+        before { Flipper.enable(:blocking_pending_correction, dossier.procedure) }
+
+        it 'disable the instruction button' do
+          expect(subject).to have_button('Passer en instruction', disabled: true)
+          expect(subject).to have_content('Le passage en instruction est impossible')
+        end
       end
     end
   end

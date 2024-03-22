@@ -31,7 +31,8 @@ namespace :api_geo_data do
           name: result[:nom].tr("'", '’'),
           code: result[:code],
           epci_code: result[:codeEpci],
-          departement_code: result[:codeDepartement]
+          departement_code: result[:codeDepartement],
+          region_code: result[:codeRegion]
         }.compact
 
         if result[:codesPostaux].present?

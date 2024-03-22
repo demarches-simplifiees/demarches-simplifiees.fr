@@ -6,7 +6,7 @@
 # The subject and body of a Notification can be customized by each demarche.
 #
 class NotificationMailer < ApplicationMailer
-  before_action :set_dossier
+  before_action :set_dossier, except: [:send_notification_for_tiers]
   before_action :set_services_publics_plus, only: :send_notification
 
   helper ServiceHelper
@@ -22,6 +22,21 @@ class NotificationMailer < ApplicationMailer
     I18n.with_locale(@dossier.user_locale) do
       mail(subject: @subject, to: @email, template_name: 'send_notification')
     end
+  end
+
+  def send_notification_for_tiers(dossier)
+    @dossier = dossier
+
+    if @dossier.individual.no_notification?
+      mail.perform_deliveries = false
+      return
+    end
+
+    @subject = "Votre dossier rempli par le mandataire #{@dossier.mandataire_first_name} #{@dossier.mandataire_last_name} a été mis à jour"
+    @email = @dossier.individual.email
+    @logo_url = procedure_logo_url(@dossier.procedure)
+
+    mail(subject: @subject, to: @email, template_name: 'send_notification_for_tiers')
   end
 
   def self.send_en_construction_notification(dossier)

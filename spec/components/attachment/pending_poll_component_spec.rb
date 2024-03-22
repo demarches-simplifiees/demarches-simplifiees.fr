@@ -45,15 +45,16 @@ RSpec.describe Attachment::PendingPollComponent, type: :component do
     it "does not render" do
       expect(component).not_to be_render
     end
+  end
 
-    context "when antivirus is in progress" do
-      before do
-        attachment.blob.virus_scan_result = ActiveStorage::VirusScanner::PENDING
-      end
+  context "when antivirus is in progress on pj" do
+    let(:champ) { create(:champ_piece_justificative) }
+    before do
+      attachment.blob.virus_scan_result = ActiveStorage::VirusScanner::PENDING
+    end
 
-      it "renders" do
-        expect(component).to be_render
-      end
+    it "does not render" do
+      expect(component).not_to be_render
     end
   end
 

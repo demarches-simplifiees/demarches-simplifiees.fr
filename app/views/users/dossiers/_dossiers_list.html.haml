@@ -13,9 +13,8 @@
             - else
               = dossier.procedure.libelle
 
-          - if demandeur_dossier(dossier).present?
-            %p.fr-icon--sm.fr-icon-user-line
-              = demandeur_dossier(dossier)
+          %p.fr-icon--sm.fr-icon-user-line
+            = demandeur_dossier(dossier)
 
           - if dossier.hidden_by_user?
             %p.fr-icon--sm.fr-icon-delete-line

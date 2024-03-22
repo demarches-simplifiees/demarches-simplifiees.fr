@@ -35,6 +35,15 @@ describe 'users/dossiers/brouillon', type: :view do
       let(:procedure) { create(:procedure) }
       it { is_expected.not_to have_link("Télécharger le guide de la démarche") }
     end
+
+    context 'when a dossier is for_tiers and the dossier en construction with email notification' do
+      let(:dossier) { create(:dossier, :for_tiers_with_notification) }
+
+      it 'displays the informations of the beneficiaire' do
+        expect(rendered).to have_text("Identité du demandeur")
+        expect(rendered).not_to have_text("Votre identité")
+      end
+    end
   end
 
   context "as an administrateur" do

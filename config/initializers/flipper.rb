@@ -22,7 +22,8 @@ features = [
   :procedure_routage_api,
   :groupe_instructeur_api_hack,
   :cojo_type_de_champ,
-  :sva
+  :sva,
+  :blocking_pending_correction
 ]
 
 def database_exists?

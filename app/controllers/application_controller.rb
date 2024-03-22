@@ -200,6 +200,7 @@ class ApplicationController < ActionController::Base
       roles = [
         current_user,
         current_instructeur,
+        current_expert,
         current_administrateur,
         current_gestionnaire,
         current_super_admin

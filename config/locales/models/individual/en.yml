@@ -6,6 +6,11 @@ en:
         nom: Last name
         prenom: First name
         birthdate: Date de naissance
+        email: Email
+        notification_method: "Notify beneficiary :"
+        notification_methods:
+          email: By e-mail
+          no_notification: No notification
       individual/gender:
         female: Ms
         male: Mr

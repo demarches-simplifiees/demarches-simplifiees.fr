@@ -74,27 +74,36 @@
   - c.with_body do
     %p Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
 
-= f.label :notice, 'Notice', class: 'fr-label'
-%p.fr-hint-text
-  Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
-= render Attachment::EditComponent.new(attached_file: @procedure.notice, view_as: :download)
+.fr-mb-3w
+  = f.label :notice, 'Notice', class: 'fr-label'
+  %p.fr-hint-text
+    Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
+  = render Attachment::EditComponent.new(attached_file: @procedure.notice, view_as: :download)
 
 - if !@procedure.locked?
-  %h3.fr-h6 À qui s’adresse ma démarche ?
-  .radios.vertical
-    = f.label :for_individual, value: true do
-      = f.radio_button :for_individual, true
-      Ma démarche s’adresse à un particulier
-      %p.fr-hint-text En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+  %fieldset.fr-fieldset{ "aria-labelledby": "for-individual-legend" }
+    %legend#for-individual-legend.fr-fieldset__legend.fr-fieldset__legend--regular À qui s’adresse ma démarche ?
+    .fr-fieldset__element
+      .fr-radio-group
+        = f.radio_button :for_individual, true
+        = f.label :for_individual, value: true, class: "fr-label" do
+          Ma démarche s’adresse à un particulier
+          %span.fr-hint-text En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
 
-    = f.label :for_individual, value: false, class: 'fr-label' do
-      = f.radio_button :for_individual, false
-      Ma démarche s’adresse à une personne morale
-      %p.fr-hint-text
-        En choisissant cette option, l’usager devra renseigner son n° TAHITI.<br>Grâce à l’ISPF et l'API I-Taiete, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
-  .fr-highlight
-    %p
-      Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
+    .fr-fieldset__element
+      .fr-radio-group
+        = f.radio_button :for_individual, false
+        = f.label :for_individual, value: false, class: 'fr-label' do
+          Ma démarche s’adresse à une personne morale
+          %span.fr-hint-text
+            En choisissant cette option, l’usager devra renseigner son n° TAHITI.<br>Grâce à l’ISPF et l'API I-Taiete, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
+
+    .fr-fieldset__element
+      .fr-highlight
+        %p.fr-text--sm
+          Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ».
+          Vous pourrez ajouter un champ SIRET directement dans le formulaire.
+
 
 = f.label :tags, 'Associez les tags à la démarche (facultatif)', class: 'fr-label'
 %p.fr-hint-text Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
@@ -110,42 +119,42 @@
   describedby: 'procedure-tags',
   acceptNewValues: true)
 
-%h2.header-section
-  Cadre relatif au RGS et RGPD
-.notice
-  Le référentiel général de sécurité (RGS), le règlement général de protection des données (RGPD) et le niveau de sécurité
-  actuellement de la plateforme Mes-Démarches imposent un cadre pour la collecte et le traitement des données.
-  <b>En cochant les cases ci-dessous</b>, vous reconnaissez avoir pris connaissance de ces informations et du cadre d'usage du service.<br />
-  Pour vous aider, pensez à nous contacter via ce
-  = link_to "formulaire", contact_admin_path
-  <br /><br />
+= render Dsfr::CalloutComponent.new(title: "Cadre relatif au RGS et RGPD") do |c|
+  - c.with_body do
+    %p
+      Le référentiel général de sécurité (RGS), le règlement général de protection des données (RGPD) et le niveau de sécurité
+      actuellement de la plateforme Mes-Démarches imposent un cadre pour la collecte et le traitement des données.
+      %b En cochant les cases ci-dessous
+      , vous reconnaissez avoir pris connaissance de ces informations et du cadre d'usage du service.
+      %br
+      Pour vous aider, pensez à nous contacter via ce
+      = link_to "formulaire", contact_admin_path
 
 = f.label :rgpd do
   RGPD
   %span.mandatory *
   .checkboxes
-    .notice
-      %p
-        Au titre du règlement général pour la protection des données personnelles (RGPD) et
-        de la loi n°78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés,
-        certaines données dites "sensibles" ou "particulières" font l'objet d'une protection spécifique.
-        Sont considérées comme telles :
+    %p.fr-hint-text
+      Au titre du règlement général pour la protection des données personnelles (RGPD) et
+      de la loi n°78-17 du 6 janvier 1978 relative à l'informatique, aux fichiers et aux libertés,
+      certaines données dites "sensibles" ou "particulières" font l'objet d'une protection spécifique.
+      Sont considérées comme telles :
       %ul
-        %li les données de santé, les données génétiques ou biométriques,
-        %li les données relatives aux infractions et condamnations pénales,
-        %li les données révélant l'origine raciale ou ethnique,
-        %li les opinions politiques, les convictions religieuses ou philosophiques, l’appartenance syndicale, la vie ou l’orientation sexuelle d'un usager,
-        %li le numéro d'inscription au répertoire national d'identification des personnes physiques (NIR).
-      %p
-        La collecte des données de certaines catégories de la population, jugées plus vulnérables,
-        doit également faire l'objet de précautions.
-        C'est le cas des personnes âgées, des enfants, des personnes souffrant de handicap,
-        des personnes en situation de précarité sociale.<br/>
-        Par exemple : un <b>certificat médical</b>, un <b>extrait de casier judiciaire</b>, des informations sur le <b>handicap</b>,
-        une <b>délégation de l'autorité parentale</b>...<br/>
-      %p
-        Si vos formulaires contiennent des données sensibles, vous vous engagez à nous contacter pour trouver des solutions via ce
-        = link_to "formulaire.", contact_admin_path
+        %li.fr-hint-text les données de santé, les données génétiques ou biométriques,
+        %li.fr-hint-text les données relatives aux infractions et condamnations pénales,
+        %li.fr-hint-text les données révélant l'origine raciale ou ethnique,
+        %li.fr-hint-text les opinions politiques, les convictions religieuses ou philosophiques, l’appartenance syndicale, la vie ou l’orientation sexuelle d'un usager,
+        %li.fr-hint-text le numéro d'inscription au répertoire national d'identification des personnes physiques (NIR).
+    %p.fr-hint-text
+      La collecte des données de certaines catégories de la population, jugées plus vulnérables,
+      doit également faire l'objet de précautions.
+      C'est le cas des personnes âgées, des enfants, des personnes souffrant de handicap,
+      des personnes en situation de précarité sociale.<br/>
+      Par exemple : un <b>certificat médical</b>, un <b>extrait de casier judiciaire</b>, des informations sur le <b>handicap</b>,
+      une <b>délégation de l'autorité parentale</b>...<br/>
+    %p.fr-hint-text
+      Si vos formulaires contiennent des données sensibles, vous vous engagez à nous contacter pour trouver des solutions via ce
+      = link_to "formulaire.", contact_admin_path
     - checkbox_value = @terms_of_use_read ? @terms_of_use_read[:rgpd].present? : @procedure.created_at.present?
     = hidden_field_tag 'rgpd', '0'
     = check_box_tag 'rgpd', '1', checkbox_value
@@ -155,11 +164,10 @@
   Cachets et signatures électroniques
   %span.mandatory *
   .checkboxes
-    .notice
-      %p
-        La plateforme #{APPLICATION_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
-        Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
-        = link_to "formulaire.", contact_admin_path
+    %p.fr-hint-text
+      La plateforme #{APPLICATION_NAME} peut fournir des attestations vérifiables via un QR code et ne fournit pas de cachet ou signature électronique.
+      Si votre démarche comporte une décision avec une signature ou un cachet, vous pouvez nous contacter pour évaluer les risques et les solutions via ce
+      = link_to "formulaire.", contact_admin_path
     = hidden_field_tag 'rgs_stamp', '0'
     = check_box_tag 'rgs_stamp', '1', @terms_of_use_read ? @terms_of_use_read[:rgs_stamp].present? : @procedure.created_at.present?
     J’ai pris connaissance du cadre d'usage cachet/signatures
@@ -167,10 +175,9 @@
 = label_tag 'rgs_timestamp' do
   Horodatage
   .checkboxes
-    .notice
-      %p
-        La plateforme dispose depuis le 6 Juin 2019 d'un service d'horodatage permettant de certifier les dates de changement d'état d'un dossier
-        (construction, instruction, ...) et les dates de reception des avis.
+    %p.fr-hint-text
+      La plateforme dispose depuis le 6 Juin 2019 d'un service d'horodatage permettant de certifier les dates de changement d'état d'un dossier
+      (construction, instruction, ...) et les dates de reception des avis.
 
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary
