@@ -490,6 +490,7 @@ class API::V2::StoredQuery
 
   fragment ChampFragment on Champ {
     id
+    champDescriptorId
     __typename
     label
     stringValue

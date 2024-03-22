@@ -7,7 +7,12 @@
     }).catch((e) => {
       const error = new Error("Connection test on new host failed: " + e);
       const event = new CustomEvent("sentry:capture-exception", { detail: error });
-      setTimeout(() => dispatchEvent(event), 100); // listener is not immediately enabled
+
+      // listener is not immediately enabled, so wait a little bit
+      setTimeout(() => {
+        dispatchEvent(event);
+        document.getElementById("banner_auto_switch_error")?.classList?.remove("hidden");
+      }, 100);
     })
 
 
@@ -18,8 +23,8 @@
 
     - if manual_switch?
       = t(".follow_link")
-    - elsif auto_switch? || true
-      = t(".detected_error")
+    - elsif auto_switch?
+      %span#banner_auto_switch_error.hidden= t(".detected_error")
 
 - if user && !user.preferred_domain_demarches_gouv_fr? && requested_from_new_domain?
   = form_tag(helpers.preferred_domain_path, method: :patch, remote: true, name: "update-preferred-domain")
