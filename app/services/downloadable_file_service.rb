@@ -1,9 +1,10 @@
 class DownloadableFileService
   ARCHIVE_CREATION_DIR = ENV.fetch('ARCHIVE_CREATION_DIR') { '/tmp' }
+  EXPORT_DIRNAME = 'export'
 
   def self.download_and_zip(procedure, attachments, filename, &block)
     Dir.mktmpdir(nil, ARCHIVE_CREATION_DIR) do |tmp_dir|
-      export_dir = File.join(tmp_dir, filename)
+      export_dir = File.join(tmp_dir, EXPORT_DIRNAME)
       zip_path = File.join(ARCHIVE_CREATION_DIR, "#{filename}.zip")
 
       begin
@@ -15,7 +16,7 @@ class DownloadableFileService
 
         Dir.chdir(tmp_dir) do
           File.delete(zip_path) if File.exist?(zip_path)
-          system 'zip', '-0', '-r', zip_path, filename
+          system 'zip', '-0', '-r', zip_path, EXPORT_DIRNAME
         end
         yield(zip_path)
       ensure

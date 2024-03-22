@@ -540,12 +540,13 @@ describe ProcedureExportService do
           File.write('tmp.zip', subject.download, mode: 'wb')
           File.open('tmp.zip') do |fd|
             files = ZipTricks::FileReader.read_zip_structure(io: fd)
+            base_fn = 'export'
             structure = [
-              "#{service.send(:base_filename)}/",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/pieces_justificatives/",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(dossier_exports.first.first)}"
+              "#{base_fn}/",
+              "#{base_fn}/dossier-#{dossier.id}/",
+              "#{base_fn}/dossier-#{dossier.id}/pieces_justificatives/",
+              "#{base_fn}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
+              "#{base_fn}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(dossier_exports.first.first)}"
             ]
             expect(files.size).to eq(structure.size)
             expect(files.map(&:filename)).to match_array(structure)
