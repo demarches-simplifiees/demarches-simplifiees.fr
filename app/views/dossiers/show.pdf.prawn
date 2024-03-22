@@ -337,7 +337,7 @@ prawn_document(page_size: "A4") do |pdf|
   add_title(pdf, "Identité du demandeur")
 
   if @dossier.france_connected_with_one_identity?
-    format_in_2_columns(pdf, 'Informations FranceConnect', france_connect_information(@dossier.user.france_connect_informations.first))
+    format_in_2_columns(pdf, 'Informations FranceConnect', france_connect_informations(@dossier.user.france_connect_informations.first))
   end
 
   format_in_2_columns(pdf, "Email", @dossier.user_email_for(:display))
