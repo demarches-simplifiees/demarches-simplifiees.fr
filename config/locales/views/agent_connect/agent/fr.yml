@@ -5,8 +5,8 @@ fr:
         cta: Se connecter avec Microsoft 365
         explanation: Microsoft 365 est la plateforme en cours de déploiement pour les agents de la Polynésie française
         old_mail: Si vous n'avez pas de compte en @administration.gov.pf
-        full_deploy_title: AgentConnect est désormais entièrement deployé
-        full_deploy_body: Tous les ministères et opérateurs peuvent l'utiliser à ce jour
+#        full_deploy_title: AgentConnect est désormais entièrement deployé
+#        full_deploy_body: Tous les ministères et opérateurs peuvent l'utiliser à ce jour
         you_are_a_citizen: Vous êtes un particulier ?
         citizen_page: Se connecter sur votre espace
         signin_with: "S’identifier avec"

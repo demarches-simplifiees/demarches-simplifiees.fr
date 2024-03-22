@@ -5,8 +5,8 @@ en:
         cta: Connect with Microsoft 365
         explanation: Microsoft 365 is the platform being deployed for French Polynesia agents
         old_mail: If you dont't have an @administration.gov.pf account
-        full_deploy_title: Agent connect is now fully available
-        full_deploy_body: All ministries and operators are able to use it
+#        full_deploy_title: Agent connect is now fully available
+#        full_deploy_body: All ministries and operators are able to use it
         you_are_a_citizen: Are you a citizen ?
         citizen_page: Go to our dedicated page
         signin_with: "Sign in with"
