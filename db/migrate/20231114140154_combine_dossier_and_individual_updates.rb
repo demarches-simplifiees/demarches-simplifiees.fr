@@ -3,8 +3,8 @@ class CombineDossierAndIndividualUpdates < ActiveRecord::Migration[7.0]
 
   def change
     safety_assured do
-      add_column :dossiers, :mandataire_first_name, :string
-      add_column :dossiers, :mandataire_last_name, :string
+      add_column :dossiers, :mandataire_first_name, :string unless column_exists?(:dossiers, :mandataire_first_name)
+      add_column :dossiers, :mandataire_last_name, :string unless column_exists?(:dossiers, :mandataire_last_name)
       add_column :dossiers, :for_tiers, :boolean, default: false, null: false
 
       add_column :individuals, :notification_method, :string
