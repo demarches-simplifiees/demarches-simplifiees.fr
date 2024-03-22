@@ -97,6 +97,20 @@ class Conditions::ConditionsComponent < ApplicationComponent
         [t('is', scope: 'logic'), Eq.name],
         [t('is_not', scope: 'logic'), NotEq.name]
       ]
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:commune_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:epci_enum)
+      [
+        [t(InDepartementOperator.name, scope: 'logic.operators'), InDepartementOperator.name],
+        [t(NotInDepartementOperator.name, scope: 'logic.operators'), NotInDepartementOperator.name],
+        [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
+        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
+      ]
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:departement_enum)
+      [
+        [t('is', scope: 'logic'), Eq.name],
+        [t('is_not', scope: 'logic'), NotEq.name],
+        [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
+        [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
+      ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:enums)
       [
         [t(IncludeOperator.name, scope: 'logic.operators'), IncludeOperator.name],
@@ -111,7 +125,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
     end
   end
 
-  def right_operand_tag(left, right, row_index)
+  def right_operand_tag(left, right, row_index, operator_name)
     right_invalid = !current_right_valid?(left, right)
 
     case left.type(@source_tdcs)
@@ -135,8 +149,8 @@ class Conditions::ConditionsComponent < ApplicationComponent
         id: input_id_for('value', row_index),
         class: 'fr-select'
       )
-    when :enum, :enums
-      enums_for_select = left.options(@source_tdcs)
+    when :enum, :enums, :commune_enum, :epci_enum, :departement_enum
+      enums_for_select = left.options(@source_tdcs, operator_name)
 
       if right_invalid
         enums_for_select = empty_target_for_select + enums_for_select

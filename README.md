@@ -29,7 +29,7 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 <!-- en plus de la policy par défaut, ajoutez à la fin du fichier -->
 <policymap>
     <policy domain="coder" rights="none" pattern="*"/>
-    <policy domain="coder" rights="read | write" pattern="{JPG,JPEG,PNG}"/>
+    <policy domain="coder" rights="read | write" pattern="{JPG,JPEG,PNG,JSON}"/>
     <policy domain="module" rights="none" pattern="{MSL,MVG,PS,SVG,URL,XPS}"/>
 </policymap>
 ```

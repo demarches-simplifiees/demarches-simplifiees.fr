@@ -88,6 +88,7 @@ class ApplicationController < ActionController::Base
       gestionnaire: current_gestionnaire,
       administrateur: current_administrateur,
       instructeur: current_instructeur,
+      expert: current_expert,
       user: current_user
     }.compact
   end

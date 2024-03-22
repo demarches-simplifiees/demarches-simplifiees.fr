@@ -1,5 +1,5 @@
 class Champs::EpciChamp < Champs::TextChamp
-  store_accessor :value_json, :code_departement
+  store_accessor :value_json, :code_departement, :code_region
   before_validation :on_departement_change
 
   validate :code_departement_in_departement_codes, unless: -> { code_departement.blank? }
@@ -42,6 +42,10 @@ class Champs::EpciChamp < Champs::TextChamp
     external_id
   end
 
+  def code_region
+    APIGeoService.region_code_by_departement(departement_name)
+  end
+
   def selected
     code
   end
@@ -74,6 +78,7 @@ class Champs::EpciChamp < Champs::TextChamp
     if code_departement_changed?
       self.external_id = nil
       self.value = nil
+      self.code_region = code_region
     end
   end
 
