@@ -11,7 +11,7 @@
   %h1
   = form_with model: @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_jeton }) do |f|
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
-      - c.body do
+      - c.with_body do
         %p
           Démarches Simplifiées utilise
           = link_to 'API Entreprise', "https://entreprise.api.gouv.fr/"

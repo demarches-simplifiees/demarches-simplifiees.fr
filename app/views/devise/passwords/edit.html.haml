@@ -20,7 +20,7 @@
             - data_opts = { controller: populated_resource.validate_password_complexity? ? 'turbo-input' : false, turbo_input_url_value: show_password_complexity_path(populated_resource.min_password_complexity) }
             = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
               opts: { autofocus: 'true', autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH, data: data_opts }) do |c|
-              - c.describedby do
+              - c.with_describedby do
                 - if populated_resource.validate_password_complexity?
                   %div{ id: c.describedby_id }
                     #password_complexity

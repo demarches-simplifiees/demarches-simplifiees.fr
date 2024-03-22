@@ -9,7 +9,7 @@
   - else
     = render Dossiers::RowShowComponent.new(label: champ.libelle, seen_at:, profile:, content_class: champ.type_champ, updated_at: updated_after_deposer?(champ) ? champ.updated_at : nil) do |c|
       - if champ.blank?
-        - c.blank do
+        - c.with_blank do
           = t(blank_key(champ))
       - else
         - c.with_value do

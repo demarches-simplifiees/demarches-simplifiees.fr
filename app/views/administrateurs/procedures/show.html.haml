@@ -32,12 +32,12 @@
 - if @procedure.draft_changed?
   .fr-container
     = render Dsfr::CalloutComponent.new(title: t(:has_changes, scope: [:administrateurs, :revision_changes]), icon: "fr-fi-information-line") do |c|
-      - c.body do
+      - c.with_body do
         = render Procedure::RevisionChangesComponent.new changes: @procedure.revision_changes, previous_revision: @procedure.published_revision
 
         = render Procedure::PublicationWarningComponent.new(procedure: @procedure)
 
-      - c.bottom do
+      - c.with_bottom do
         %ul.fr-mt-2w.fr-btns-group.fr-btns-group--inline
           - if @procedure.publiee?
             %li= button_to 'Publier les modifications', admin_procedure_publish_revision_path(@procedure), class: 'fr-btn', id: 'publish-procedure-link', data: { disable_with: "Publication...", confirm: 'Êtes-vous sûr de vouloir publier les modifications ?' }, disabled: !@procedure.draft_revision.valid? || @procedure.errors.present?, method: :put

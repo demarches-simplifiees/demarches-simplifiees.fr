@@ -2,7 +2,7 @@
   = hidden_field_tag :from_admin, params[:from_admin]
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
-    - c.body do
+    - c.with_body do
       Votre démarche est hébergée par #{APPLICATION_NAME} – mais nous ne pouvons pas assurer le support des démarches. Et malgré la dématérialisation, les usagers se posent parfois des questions légitimes sur le processus administratif.
       %br
       %br

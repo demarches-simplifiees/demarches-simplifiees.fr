@@ -1,6 +1,6 @@
 - if @procedure.locked?
   = render Dsfr::AlertComponent.new(state: :warning, title: "Cette démarche est publiée.", extra_class_names: 'fr-mb-2w') do |c|
-    - c.body do
+    - c.with_body do
       %p
         Certains éléments de la description ne sont plus modifiables.
 

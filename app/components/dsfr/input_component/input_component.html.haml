@@ -31,7 +31,7 @@
   - if email?
     .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion'}, aria: { live: 'off' } }
       = render Dsfr::AlertComponent.new(title: t('.email_suggest.wanna_say'), state: :info, heading_level: :div) do |c|
-        - c.body do
+        - c.with_body do
           %p{ data: { "email-input-target": 'suggestion'} } exemple@gmail.com &nbsp;?
           %p
             = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-mr-3w', data: { action: 'click->email-input#accept'} do
