@@ -30,5 +30,7 @@ This journal lists modifications built on top of demarches-simplifiees.
 | -    | Mails images                        | Il est possible d'insérer des liens <img> et <a> dans les mails officiels d'une démarche                                                                                           |
 | -    | SendInBlue                          | La suppression des mails plus vieux que 6 mois est différente (à creuser)                                                                                                          |
 | -    | Publication d'une démarche          | Un mail est toujours envoyé à l'équipe lors de la publication d'une démarche (supprimé dans DS)                                                                                    |
+| -    | Normalisation Nom/Prénom            | Le NOM et le PRENOM demandé au début du formulaire sont normalisés.                                                                                                                |
+| -    | Affichage des blocs répétitifs      | Les blocs s'affichent sous forme de tableau                                                                                                                                        |
 
 
