@@ -419,7 +419,7 @@ describe TagsSubstitutionConcern, type: :model do
         let(:for_individual) { true }
         let(:individual) { create(:individual, nom: '<a href="https://oops.com">name</a>') }
 
-        it { is_expected.to eq('--libelleA-- &lt;a href=&quot;https://oops.com&quot;&gt;name&lt;/a&gt;') }
+        it { is_expected.to eq('--libelleA-- &lt;A HREF=&quot;HTTPS://OOPS.COM&quot;&gt;NAME&lt;/A&gt;') }
       end
 
       context 'in a champ' do

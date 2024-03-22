@@ -364,7 +364,7 @@ module TagsSubstitutionConcern
       instance_exec(data, &tag[:lambda])
     end
 
-    if escape_unsafe_tags? && tag.fetch(:escapable, true)
+    if escape_unsafe_tags? && tag.fetch(:escapable, true) && !value.html_safe?
       escape_once(value)
     else
       value
