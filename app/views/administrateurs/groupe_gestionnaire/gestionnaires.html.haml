@@ -1,0 +1,15 @@
+= render partial: 'gestionnaires/breadcrumbs',
+  locals: { steps: [['Mon groupe gestionnaire', admin_groupe_gestionnaire_path],
+                    ['Gestionnaires']], preview: false }
+
+.container
+  %h1 Gestionnaires de « #{@groupe_gestionnaire.name} »
+
+  %table.table
+    %thead
+      %tr
+        %th= 'Adresse email'
+        %th= 'Enregistré le'
+        %th= 'État'
+    %tbody#gestionnaires
+      = render(GroupeGestionnaire::GroupeGestionnaireGestionnaires::GestionnaireComponent.with_collection(@groupe_gestionnaire.gestionnaires.order('users.email'), groupe_gestionnaire: @groupe_gestionnaire, is_gestionnaire: false))

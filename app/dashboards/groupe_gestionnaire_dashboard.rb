@@ -13,7 +13,8 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     created_at: Field::DateTime,
     updated_at: Field::DateTime,
     gestionnaires: Field::HasMany,
-    administrateurs: Field::HasMany
+    administrateurs: Field::HasMany,
+    parent_name: Field::String
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -26,7 +27,8 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     :created_at,
     :name,
     :gestionnaires,
-    :administrateurs
+    :administrateurs,
+    :parent_name
   ].freeze
 
   # SHOW_PAGE_ATTRIBUTES
@@ -35,7 +37,8 @@ class GroupeGestionnaireDashboard < Administrate::BaseDashboard
     :gestionnaires,
     :administrateurs,
     :id,
-    :created_at
+    :created_at,
+    :parent_name
   ].freeze
 
   # FORM_ATTRIBUTES

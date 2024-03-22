@@ -44,8 +44,10 @@
               .cell.fr-mt-1w
                 = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere) do
                   = t('.expression_reguliere.labels.regex')
+
                 .type-de-champ-expression-reguliere
                   = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
+                %p.fr-hint-text= t('.expression_reguliere.labels.hint')
 
               .cell.fr-mt-1w
                 = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do
@@ -145,7 +147,7 @@
               - if type_de_champ.titre_identite?
                 = render Dsfr::AlertComponent.new(state: :info, heading_level: 'p') do |c|
                   - c.body do
-                    Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation, du refus ou du classement sans suite du dossier. Aussi, pour des raisons de sécurités, un filigrane est automatiquement ajouté aux images.
+                    Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation, du refus ou du classement sans suite du dossier. Aussi, pour des raisons de sécurité, un filigrane est automatiquement ajouté aux images.
               - elsif procedure.piece_justificative_multiple?
                 %p Les usagers pourront envoyer plusieurs fichiers si nécessaire.
           - if type_de_champ.carte? || type_de_champ.te_fenua?

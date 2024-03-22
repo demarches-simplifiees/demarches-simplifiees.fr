@@ -18,9 +18,11 @@ describe Gestionnaires::GroupeGestionnaireChildrenController, type: :controller 
         subject
       end
 
-      it { expect(response).to have_http_status(:ok) }
-      it { expect(assigns(:groupe_gestionnaire).children).to include(child_groupe_gestionnaire) }
-      it { expect(response.body).to include(child_groupe_gestionnaire.name) }
+      it do
+        expect(response).to have_http_status(:ok)
+        expect(assigns(:groupe_gestionnaire).children).to include(child_groupe_gestionnaire)
+        expect(response.body).to include(child_groupe_gestionnaire.name)
+      end
     end
   end
 

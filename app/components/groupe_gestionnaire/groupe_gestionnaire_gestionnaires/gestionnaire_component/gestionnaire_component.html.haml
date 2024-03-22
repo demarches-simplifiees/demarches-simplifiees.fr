@@ -2,4 +2,5 @@
   %td= email
   %td= created_at
   %td= registration_state
-  %td= remove_button
+  - if @is_gestionnaire
+    %td= remove_button

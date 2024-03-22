@@ -96,6 +96,15 @@ describe FranceConnect::ParticulierController, type: :controller do
               expect(controller.current_user).to eq(user)
               expect(response).to redirect_to(root_path)
             end
+
+            context 'when invites are pending' do
+              let!(:invite) { create(:invite, email: email, user: nil) }
+              it 'links pending invites' do
+                expect(invite.reload.user).to eq(nil)
+                subject
+                expect(invite.reload.user).to eq(User.last)
+              end
+            end
           end
 
           context 'and an user with the same email exists' do
