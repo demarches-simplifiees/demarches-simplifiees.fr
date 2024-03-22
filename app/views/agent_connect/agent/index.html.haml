@@ -18,20 +18,28 @@
               .fr-fieldset__element
                 %p= t('.explanation')
 
-                .fr-connect-group.fr-my-2w
+                -# .fr-connect-group.fr-my-2w
                   = link_to(agent_connect_login_path, class: "fr-btn fr-connect") do
                     %span.fr-connect__login
                       = t('.signin_with')
                     %span.fr-connect__brand AgentConnect
                   %p
                     = link_to t('.whats_agentconnect'), 'https://agentconnect.gouv.fr/', target: '_blank', rel: "noopener"
-
+                .social-logins
+                  - provider = 'microsoft'
+                  = link_to url_for(controller: '/omniauth', action: 'login', provider: provider), class: "fr-btn fr-btn--lg fr-btn--secondary"  do
+                    = image_tag "icons/logo_#{provider}.svg", alt: "icone #{provider.camelize}"
+                    #{t("views.shared.social_login.#{provider}")}
 
             %p.fr-hr-or= t('views.shared.france_connect_login.separator')
 
             %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'new-account-legend' } }
               %legend.fr-fieldset__legend#new-account-legend
                 %h2.fr-h6= I18n.t('views.users.sessions.new.subtitle')
+
+              = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+                - c.with_body do
+                  = t('.old_mail')
 
               = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
                 - c.with_body do
@@ -65,7 +73,7 @@
             %li= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary width-100"
 
       .fr-col-lg.fr-p-6w
-        = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
+        -# = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
           - c.with_body do
             = t('.full_deploy_body')
         %h2.fr-h6= t('.whats_ds', application_name: APPLICATION_NAME)
