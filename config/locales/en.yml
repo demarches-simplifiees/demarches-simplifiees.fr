@@ -401,7 +401,9 @@ en:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           self_title: Your identity
-          callout_text: "You are acting as a proxy for a principal, either professionally (such as accountant, lawyer) or personally (family). Make sure to respect the conditions of Articles 1984 and following of the Civil Code."
+          callout_text: "You are acting as a proxy for a principal, either professionally (such as accountant, lawyer) or personally (family). Make sure to respect the conditions of"
+          callout_link: Articles 1984 and following of the Civil Code.
+          callout_link_title: Articles 1984 and following of the Civil Code
           beneficiaire_title: "Identity of the beneficiary"
           identity_siret: Identify your establishment
           civility: Civility

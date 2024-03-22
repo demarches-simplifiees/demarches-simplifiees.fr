@@ -21,6 +21,7 @@ fr:
         second_part: Pour en savoir plus, veuillez vous rapprocher de
         en_construction: a été déposé le %{processed_at}.
         en_instruction: a bien été reçu et pris en charge le %{processed_at}. Il va maintenant être examiné par le service.
+        repasser_en_instruction: va être réexaminé, la précédente décision sur ce dossier est caduque.
         accepte: a été accepté le %{processed_at}.
         refuse: a été refusé le %{processed_at}.
         sans_suite: a été classé sans suite le %{processed_at}.

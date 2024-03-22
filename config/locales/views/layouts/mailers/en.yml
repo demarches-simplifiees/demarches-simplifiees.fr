@@ -20,6 +20,7 @@ en:
         second_part: To find out more, please contact
         en_construction: has been submited %{processed_at}.
         en_instruction: has been received and taken care of on %{processed_at}. The administration is reviewing your file.
+        repasser_en_instruction: will be re-examined, the previous decision on this file is obsolete.
         accepte: has been accepted on %{processed_at}.
         refuse: has been refused on %{processed_at}.
         sans_suite: has been closed without continuation on %{processed_at}.

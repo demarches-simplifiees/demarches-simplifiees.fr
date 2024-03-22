@@ -66,6 +66,7 @@ module TagsSubstitutionConcern
       libelle: 'motivation',
       description: 'Motivation facultative associée à la décision finale d’acceptation, refus ou classement sans suite',
       lambda: -> (d) { simple_format(d.motivation) },
+      escapable: false, # sanitized by simple_format
       available_for_states: Dossier::TERMINE
     },
     {
@@ -118,14 +119,16 @@ module TagsSubstitutionConcern
       libelle: 'lien dossier',
       description: '',
       lambda: -> (d) { external_link(dossier_url(d)) },
-      available_for_states: Dossier::SOUMIS
+      available_for_states: Dossier::SOUMIS,
+      escapable: false
     },
     {
       id: 'dossier_attestation_url',
       libelle: 'lien attestation',
       description: '',
       lambda: -> (d) { external_link(attestation_dossier_url(d)) },
-      available_for_states: [Dossier.states.fetch(:accepte)]
+      available_for_states: [Dossier.states.fetch(:accepte)],
+      escapable: false
     },
     {
       id: 'dossier_motivation_url',
@@ -138,7 +141,8 @@ module TagsSubstitutionConcern
           return "[l’instructeur n’a pas joint de document supplémentaire]"
         end
       },
-      available_for_states: Dossier::TERMINE
+      available_for_states: Dossier::TERMINE,
+      escapable: false
     }
   ]
 
@@ -310,10 +314,12 @@ module TagsSubstitutionConcern
     tags
   end
 
-  def replace_tags(text, dossier)
+  def replace_tags(text, dossier, escape: true)
     if text.nil?
       return ''
     end
+
+    @escape_unsafe_tags = escape
 
     tokens = parse_tags(text)
 
@@ -352,11 +358,21 @@ module TagsSubstitutionConcern
   end
 
   def replace_tag(tag, data)
-    if tag.key?(:target)
+    value = if tag.key?(:target)
       data.public_send(tag[:target])
     else
       instance_exec(data, &tag[:lambda])
     end
+
+    if escape_unsafe_tags? && tag.fetch(:escapable, true)
+      escape_once(value)
+    else
+      value
+    end
+  end
+
+  def escape_unsafe_tags?
+    @escape_unsafe_tags
   end
 
   def procedure_types_de_champ_tags

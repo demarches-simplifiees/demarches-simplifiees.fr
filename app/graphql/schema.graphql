@@ -3863,6 +3863,8 @@ type RNF {
 }
 
 type RNFChamp implements Champ {
+  commune: Commune
+  departement: Departement
   id: ID!
 
   """

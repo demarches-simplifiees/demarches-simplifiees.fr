@@ -94,6 +94,7 @@ module Instructeurs
       @not_archived_notifications_dossier_ids = notifications[:en_cours] + notifications[:termines]
 
       @has_export_notification = notify_exports?
+      @last_export = last_export_for(statut)
 
       @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
 
@@ -181,6 +182,8 @@ module Instructeurs
       @statut = export_options[:statut]
       @dossiers_count = export.count
 
+      @last_export = last_export_for(@statut)
+
       if export.available?
         respond_to do |format|
           format.turbo_stream do
@@ -202,6 +205,16 @@ module Instructeurs
             redirect_to exports_instructeur_procedure_path(procedure), notice: t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
           end
         end
+      end
+    end
+
+    def polling_last_export
+      @statut = statut
+      @last_export = last_export_for(@statut)
+      if @last_export.available?
+        flash.notice = t('instructeurs.procedures.export_available_html', file_format: @last_export.format, file_url: @last_export.file.url)
+      else
+        flash.notice = t('instructeurs.procedures.export_pending_html', url: exports_instructeur_procedure_path(procedure))
       end
     end
 
@@ -375,6 +388,10 @@ module Instructeurs
       scope = scope.where(updated_at: last_seen_at...) if last_seen_at
 
       scope.exists?
+    end
+
+    def last_export_for(statut)
+      Export.where(instructeur_id: current_instructeur.id, statut: statut, updated_at: 1.hour.ago..).last
     end
 
     def cookies_export_key

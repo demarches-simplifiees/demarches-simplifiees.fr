@@ -10,6 +10,18 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
     it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
+    it { expect(subject.body).to include("a été déposé le") }
+    it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
+  end
+
+  describe 'send_notification_for_tiers for repasser_en_instruction' do
+    let(:dossier_for_tiers) { create(:dossier, :accepte, :for_tiers_with_notification, procedure: create(:simple_procedure)) }
+
+    subject { described_class.send_notification_for_tiers(dossier_for_tiers, repasser_en_instruction: true) }
+
+    it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
+    it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
+    it { expect(subject.body).to include("va être réexaminé, la précédente décision sur ce dossier est caduque.") }
     it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
   end
 
@@ -130,7 +142,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     context "subject has a special character" do
       let(:subject) { '--libellé démarche--' }
-      it { expect(mail.subject).to eq("Mon titre avec l'apostrophe") }
+      it { expect(mail.subject).to eq("Mon titre avec l&#39;apostrophe") }
     end
   end
 end
