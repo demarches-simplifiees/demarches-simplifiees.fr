@@ -76,6 +76,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::TextChampType,
     Types::Champs::TitreIdentiteChampType,
     Types::Champs::VisaChampType,
+    Types::Champs::EngagementJuridiqueChampType,
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,
@@ -126,7 +127,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::VisaChampDescriptorType,
     Types::Champs::Descriptor::YesNoChampDescriptorType,
     Types::Champs::Descriptor::ExpressionReguliereChampDescriptorType,
-Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType
+    Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType
 
   def self.unauthorized_object(error)
     # Add a top-level error to the response instead of returning nil:

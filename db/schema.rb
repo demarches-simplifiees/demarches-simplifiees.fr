@@ -98,6 +98,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.datetime "last_v1_authenticated_at"
     t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
+    t.inet "stored_ips", default: [], array: true
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false
     t.boolean "write_access", default: true, null: false
