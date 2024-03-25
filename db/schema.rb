@@ -441,6 +441,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
   end
 
   create_table "dossiers", id: :serial, force: :cascade do |t|
+    t.date "accuse_lecture_agreement_at"
     t.string "api_entreprise_job_exceptions", array: true
     t.boolean "archived", default: false
     t.datetime "archived_at", precision: nil
