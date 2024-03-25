@@ -112,9 +112,12 @@ module Recovery
       end
     end
 
-    def import(pj)
-      ActiveStorage::Blob.insert(pj.blob.attributes)
-      ActiveStorage::Attachment.insert(pj.attributes)
+    def import(pjs)
+      attachments = pjs.respond_to?(:each) ? pjs : [pjs]
+      attachments.each do |pj|
+        ActiveStorage::Blob.insert(pj.blob.attributes)
+        ActiveStorage::Attachment.insert(pj.attributes)
+      end
     end
   end
 end

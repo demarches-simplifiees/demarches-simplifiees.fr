@@ -29,6 +29,10 @@ class Champs::PieceJustificativeChamp < Champ
     piece_justificative_file.map { _1.filename.to_s }.join(', ')
   end
 
+  def allow_multiple_attachments?
+    false
+  end
+
   def for_api
     return nil unless piece_justificative_file.attached?
 

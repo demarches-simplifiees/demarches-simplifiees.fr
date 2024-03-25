@@ -1,41 +1,64 @@
-.attachment.fr-upload-group{ { id: attachment ? dom_id(attachment, :edit) : nil, class: class_names("fr-mb-1w": !(as_multiple? && downloadable?)) }.compact, **replace_controller_attributes }
-  - if persisted?
-    %div{ id: dom_id(attachment, :persisted_row) }
-      .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
-        - if user_can_destroy?
-          = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename)}) do
-            = t('.delete')
-        - elsif user_can_replace?
-          = button_tag t('.replace'), **replace_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm", title: t(".replace_file", filename: attachment.filename)
+.attachment.fr-upload-group{ id: (attachment ? dom_id(attachment, :edit) : nil), class: class_names("fr-mb-1w": !(as_multiple? && attachments.any?(&:persisted?))), **replace_controller_attributes }
+  - if as_multiple?
+    - attachments.each do |attachment|
+      - if attachment.persisted?
+        %div{ id: dom_id(attachment, :persisted_row) }
+          .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
+            - if user_can_destroy?
+              = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename)}) do
+                = t('.delete')
+            - elsif user_can_replace?
+              = button_tag t('.replace'), **replace_button_options(attachment), class: "fr-btn fr-btn--tertiary fr-btn--sm", title: t(".replace_file", filename: attachment.filename)
 
-        - if downloadable?
-          = render Dsfr::DownloadComponent.new(attachment:)
-        - else
-          .fr-py-1v
-            %span.attachment-filename.fr-mr-1w= link_to_if(viewable?, attachment.filename.to_s, helpers.url_for(attachment.blob), title: t(".open_file", filename: attachment.filename), **helpers.external_link_attributes)
+              - if downloadable?(attachment)
+                = render Dsfr::DownloadComponent.new(attachment: attachment)
+            - else
+              .fr-py-1v
+                %span.attachment-filename.fr-mr-1w= link_to_if(viewable?(attachment), attachment.filename.to_s, helpers.url_for(attachment.blob), title: t(".open_file", filename: attachment.filename), **helpers.external_link_attributes)
 
-          = render Attachment::ProgressComponent.new(attachment: attachment, ignore_antivirus: true)
+              = render Attachment::ProgressComponent.new(attachment: attachment, ignore_antivirus: true)
 
-      - if error?
-        %p.fr-error-text= error_message
+            - if error?(attachment)
+              %p.fr-error-text= error_message(attachment)
+  - else
+    - if persisted?
+      %div{ id: dom_id(attachment, :persisted_row) }
+        .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
+          - if user_can_destroy?
+            = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename)}) do
+              = t('.delete')
+          - elsif user_can_replace?
+            = button_tag t('.replace'), **replace_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm", title: t(".replace_file", filename: attachment.filename)
 
-  - elsif first?
+          - if downloadable?(attachment)
+            = render Dsfr::DownloadComponent.new(attachment:)
+          - else
+            .fr-py-1v
+              %span.attachment-filename.fr-mr-1w= link_to_if(viewable?(attachment), attachment.filename.to_s, helpers.url_for(attachment.blob), title: t(".open_file", filename: attachment.filename), **helpers.external_link_attributes)
+
+            = render Attachment::ProgressComponent.new(attachment: attachment, ignore_antivirus: true)
+
+        - if error?(attachment)
+          %p.fr-error-text= error_message(attachment)
+
+  - if first? && !persisted?
     %p.fr-hint-text.fr-mb-1w
       - if max_file_size.present?
         = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
       - if allowed_formats.present?
         = t('.allowed_formats', formats: allowed_formats.join(', '))
 
-
-  - if !as_multiple?
+  - if !persisted? || champ.present? && champ.titre_identite?
     = file_field(champ, field_name, **file_field_options)
 
-    - if persisted?
-      - Attachment::PendingPollComponent.new(attachment: attachment, poll_url:, context: poll_context).then do |component|
-        .fr-mt-2w
-          = render component
+  - if attachments.any?(&:persisted?)
+    - attachments.each do |attachment|
+      - if attachment.persisted?
+        - Attachment::PendingPollComponent.new(attachment: attachment, poll_url: poll_url, context: poll_context).then do |component|
+          .fr-mt-2w
+            = render component
 
-    .attachment-upload-error.hidden
-      %p.fr-error-text= t('.errors.uploading')
-      = button_tag(**retry_button_options) do
-        = t(".retry")
+  .attachment-upload-error.hidden
+    %p.fr-error-text= t('.errors.uploading')
+    = button_tag(**retry_button_options) do
+      = t(".retry")

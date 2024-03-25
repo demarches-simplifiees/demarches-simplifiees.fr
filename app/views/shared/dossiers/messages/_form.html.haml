@@ -8,12 +8,10 @@
   %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
   = render Dsfr::InputComponent.new(form: f, attribute: :body, input_type: :text_area, opts: { rows: 5, placeholder: placeholder, title: placeholder, class: 'fr-input message-textarea'})
-
   - if local_assigns.has_key?(:dossier)
-    .fr-mt-3w{ data: { controller: "file-input-reset" } }
-      = render Attachment::EditComponent.new(attached_file: commentaire.piece_jointe)
-      %button.hidden.fr-btn.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line{ data: { 'file-input-reset-target': 'reset', action: 'file-input-reset#reset' } }
-        = t('views.shared.messages.remove_file')
+    .fr-mt-3w{ data: { controller: "file-input-reset", delete_label: t('views.shared.messages.remove_file') } }
+      = render Attachment::MultipleComponent.new(attached_file: commentaire.piece_jointe)
+      %ul{ data: { 'file-input-reset-target': 'fileList' } }
 
-  .fr-mt-3w
-    = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
+    .fr-mt-3w
+      = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }

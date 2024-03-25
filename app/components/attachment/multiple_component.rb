@@ -17,7 +17,7 @@ class Attachment::MultipleComponent < ApplicationComponent
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
-  def initialize(champ:, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, user_can_replace: false, max: nil)
+  def initialize(champ: nil, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, user_can_replace: false, max: nil)
     @champ = champ
     @attached_file = attached_file
     @form_object_name = form_object_name
@@ -38,11 +38,11 @@ class Attachment::MultipleComponent < ApplicationComponent
   end
 
   def empty_component_id
-    "attachment-multiple-empty-#{champ.id}"
+    champ.present? ? "attachment-multiple-empty-#{champ.id}" : "attachment-multiple-empty-generic"
   end
 
   def auto_attach_url
-    helpers.auto_attach_url(champ)
+    champ.present? ? helpers.auto_attach_url(champ) : '#'
   end
   alias poll_url auto_attach_url
 

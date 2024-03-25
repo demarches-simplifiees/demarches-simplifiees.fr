@@ -26,11 +26,20 @@ describe CommentaireService do
       end
     end
 
-    context 'when it has a file' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+    context 'when it has multiple files' do
+      let(:files) do
+        [
+          fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf')
+        ]
+      end
 
-      it 'attaches the file' do
+      before do
+        commentaire.piece_jointe.attach(files)
+      end
+
+      it 'attaches the files' do
         expect(commentaire.piece_jointe.attached?).to be_truthy
+        expect(commentaire.piece_jointe.count).to eq(1)
       end
     end
   end

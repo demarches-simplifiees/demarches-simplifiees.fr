@@ -395,7 +395,7 @@ module Instructeurs
     end
 
     def commentaire_params
-      params.require(:commentaire).permit(:body, :piece_jointe)
+      params.require(:commentaire).permit(:body, piece_jointe: [])
     end
 
     def champs_private_params

@@ -10,7 +10,7 @@ module Recovery
                  :invites,
                  :traitements,
                  :transfer_logs,
-                 commentaires: { piece_jointe_attachment: :blob },
+                 commentaires: { piece_jointe_attachments: :blob },
                  avis: { introduction_file_attachment: :blob, piece_justificative_file_attachment: :blob },
                  dossier_operation_logs: { serialized_attachment: :blob },
                  attestation: { pdf_attachment: :blob },

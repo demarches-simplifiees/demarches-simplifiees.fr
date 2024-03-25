@@ -23,3 +23,4 @@ fr:
         signin: 'Se connecter'
       messages:
         remove_file: 'Supprimer le fichier'
+        remove_all: "Supprimer tous les fichiers"

@@ -23,6 +23,10 @@ class Champs::TitreIdentiteChamp < Champ
     piece_justificative_file.attached? ? "présent" : "absent"
   end
 
+  def allow_multiple_attachments?
+    false
+  end
+
   def for_api
     nil
   end

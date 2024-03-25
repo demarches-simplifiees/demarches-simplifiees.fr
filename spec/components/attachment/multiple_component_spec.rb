@@ -99,10 +99,6 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     before do
       attach_to_champ(attached_file, champ)
     end
-
-    it 'setup controller' do
-      expect(subject).to have_selector('[data-controller=replace-attachment]').once
-    end
   end
 
   def attach_to_champ(attached_file, champ)

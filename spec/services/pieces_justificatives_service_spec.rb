@@ -69,7 +69,7 @@ describe PiecesJustificativesService do
           attach_file(witness_commentaire.piece_jointe)
         end
 
-        it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachment) }
+        it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachments) }
       end
 
       context 'with a pj not safe on a commentaire' do

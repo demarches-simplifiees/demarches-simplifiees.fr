@@ -27,7 +27,9 @@
 
     - if groupe_gestionnaire.nil? && commentaire.piece_jointe.attached?
       .fr-ml-2w
-        = render Attachment::ShowComponent.new(attachment: commentaire.piece_jointe.attachment, new_tab: true)
+        - commentaire.piece_jointe.each do |attachment|
+          = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
+
 
     - if show_reply_button?
       = button_tag type: 'button', class: 'fr-btn fr-btn--sm fr-btn--secondary fr-icon-arrow-go-back-line fr-btn--icon-left', onclick: 'document.querySelector("#commentaire_body").focus()' do

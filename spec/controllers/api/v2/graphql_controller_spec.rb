@@ -426,7 +426,7 @@ describe API::V2::GraphqlController do
               messages {
                 email
                 body
-                attachment {
+                attachments {
                   filename
                   checksum
                   byteSize
@@ -506,12 +506,14 @@ describe API::V2::GraphqlController do
             messages: dossier.commentaires.map do |commentaire|
               {
                 body: commentaire.body,
-                attachment: {
-                  filename: commentaire.piece_jointe.filename.to_s,
-                  contentType: commentaire.piece_jointe.content_type,
-                  checksum: commentaire.piece_jointe.checksum,
-                  byteSize: commentaire.piece_jointe.byte_size
-                },
+                attachments: commentaire.piece_jointe.map do |pj|
+                  {
+                    filename: pj.filename.to_s,
+                    contentType: pj.content_type,
+                    checksum: pj.checksum,
+                    byteSize: pj.byte_size
+                  }
+                end,
                 email: commentaire.email
               }
             end,

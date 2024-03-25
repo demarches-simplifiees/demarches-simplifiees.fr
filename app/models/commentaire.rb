@@ -7,7 +7,7 @@ class Commentaire < ApplicationRecord
 
   validate :messagerie_available?, on: :create, unless: -> { dossier.brouillon? }
 
-  has_one_attached :piece_jointe
+  has_many_attached :piece_jointe
 
   validates :body, presence: { message: "ne peut être vide" }, unless: :discarded?
 
@@ -67,12 +67,6 @@ class Commentaire < ApplicationRecord
     sent_by?(connected_user) && (sent_by_instructeur? || sent_by_expert?) && !discarded?
   end
 
-  def file_url
-    if piece_jointe.attached? && piece_jointe.virus_scanner.safe?
-      Rails.application.routes.url_helpers.url_for(piece_jointe)
-    end
-  end
-
   def soft_delete!
     transaction do
       discard!
@@ -80,7 +74,7 @@ class Commentaire < ApplicationRecord
       update! body: ''
     end
 
-    piece_jointe.purge_later if piece_jointe.attached?
+    piece_jointe.each(&:purge_later) if piece_jointe.attached?
   end
 
   def flagged_pending_correction?
