@@ -5,8 +5,6 @@ describe Champs::PieceJustificativeController, type: :controller do
   let(:champ) { dossier.champs_public.first }
 
   describe '#update' do
-    let(:replace_attachment_id) { nil }
-
     render_views
     before { sign_in user }
 
@@ -14,8 +12,7 @@ describe Champs::PieceJustificativeController, type: :controller do
       put :update, params: {
         position: '1',
         champ_id: champ.id,
-        blob_signed_id: file,
-        replace_attachment_id:
+        blob_signed_id: file
       }.compact, format: :turbo_stream
     end
 
@@ -66,33 +63,6 @@ describe Champs::PieceJustificativeController, type: :controller do
         expect(response.status).to eq(422)
         expect(response.header['Content-Type']).to include('application/json')
         expect(response.parsed_body).to eq({ 'errors' => ['La pièce justificative n’est pas d’un type accepté'] })
-      end
-    end
-
-    context 'replace an attachment' do
-      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
-      before { subject }
-
-      context "attachment associated to dossier" do
-        let(:champ) { create(:champ, :with_piece_justificative_file, dossier:) }
-        let(:replace_attachment_id) { champ.piece_justificative_file.first.id }
-
-        it "replaces an existing attachment" do
-          champ.reload
-
-          expect(champ.piece_justificative_file.attachments.count).to eq(1)
-          expect(champ.piece_justificative_file.attachments.first.filename).to eq("piece_justificative_0.pdf")
-        end
-      end
-
-      context "attachment not associated to dossier" do
-        let(:other_champ) { create(:champ, :with_piece_justificative_file) }
-        let(:replace_attachment_id) { other_champ.piece_justificative_file.first.id }
-
-        it "add attachment, don't replace attachment" do
-          expect(champ.reload.piece_justificative_file.attachments.count).to eq(1)
-          expect(other_champ.reload.piece_justificative_file.attachments.count).to eq(1)
-        end
       end
     end
   end
