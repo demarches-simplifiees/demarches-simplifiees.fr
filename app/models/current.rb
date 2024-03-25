@@ -1,5 +1,10 @@
 class Current < ActiveSupport::CurrentAttributes
-  attribute :user, :request_id, :browser,
-    :host, :application_name, :contact_email,
-    :application_base_url
+  attribute :application_base_url
+  attribute :application_name
+  attribute :browser
+  attribute :contact_email
+  attribute :host
+  attribute :no_reply_email
+  attribute :request_id
+  attribute :user
 end
