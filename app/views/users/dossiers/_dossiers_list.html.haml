@@ -55,17 +55,17 @@
           - c.with_body do
             %p
               - if dossier.brouillon? && dossier.procedure.closing_reason_internal_procedure?
-                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.internal_procedure', link: commencer_path(dossier.procedure.replaced_by_procedure.path)).html_safe
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.internal_procedure_html', link: commencer_path(dossier.procedure.replaced_by_procedure.path))
               - elsif dossier.brouillon? && dossier.procedure.closing_reason_other?
-                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.other', link: closing_details_path(dossier.procedure.path)).html_safe
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.brouillon.other_html', link: closing_details_path(dossier.procedure.path))
               - elsif dossier.en_construction_ou_instruction? && dossier.procedure.closing_reason_internal_procedure?
-                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.internal_procedure')
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.internal_procedure_html')
               - elsif dossier.en_construction_ou_instruction? && dossier.procedure.closing_reason_other?
-                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.other', link: closing_details_path(dossier.procedure.path)).html_safe
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.en_cours.other_html', link: closing_details_path(dossier.procedure.path))
               - elsif dossier.termine? && dossier.procedure.closing_reason_internal_procedure?
-                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.termine.internal_procedure', link: commencer_path(dossier.procedure.replaced_by_procedure.path)).html_safe
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.termine.internal_procedure_html', link: commencer_path(dossier.procedure.replaced_by_procedure.path))
               - elsif dossier.termine? && dossier.procedure.closing_reason_other?
-                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.termine.other', link: closing_details_path(dossier.procedure.path)).html_safe
+                = I18n.t('views.users.dossiers.dossiers_list.procedure_closed.termine.other_html', link: closing_details_path(dossier.procedure.path))
 
 
       - if dossier.pending_correction?
