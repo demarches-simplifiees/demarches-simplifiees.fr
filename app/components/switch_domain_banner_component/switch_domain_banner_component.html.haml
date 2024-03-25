@@ -1,6 +1,6 @@
 - if auto_switch?
   :javascript
-    const hintUrl = "http://#{ApplicationHelper::APP_HOST}/favicon.ico"
+    const hintUrl = "#{request.protocol}#{ApplicationHelper::APP_HOST}/favicon.ico"
 
     fetch(hintUrl, { mode: 'cors' }).then(() => {
       window.location = '#{new_host_url}';
