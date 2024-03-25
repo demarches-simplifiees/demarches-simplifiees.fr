@@ -509,11 +509,14 @@ en:
           deleted_badge: Deleted
           procedure_closed:
             brouillon:
-              internal_procedure: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the <a href="%{link}" target="_blank" rel="noopener noreferrer">procedure</a> which replaces it
-              other: This process is closed, you cannot submit this file. More information <a href="%{link}" target="_blank" rel="noopener noreferrer">here</a>
+              internal_procedure_html: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the <a href="%{link}" target="_blank" rel="noopener noreferrer">procedure</a> which replaces it
+              other_html: This process is closed, you cannot submit this file. More information <a href="%{link}" target="_blank" rel="noopener noreferrer">here</a>
             en_cours:
-              internal_procedure: This procedure is closed. Your file has been submitted and can be investigated by the administration
-              other: "This procedure is closed. Your file has been submitted and can be processed by the administration. More information <a href=%{link} target=_blank rel=noopener noreferrer>here</a>"
+              internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration
+              other_html: "This procedure is closed. Your file has been submitted and can be processed by the administration. More information <a href=%{link} target=_blank rel=noopener noreferrer>here</a>"
+            termine:
+              internal_procedure_html: This procedure is closed and replaced by <a href="%{link}" target="_blank" rel="noopener noreferrer">this procedure</a>. Your file has been processed by the administration
+              other_html: This process is closed, you cannot submit a new file. More information <a href="%{link}" target="_blank" rel="noopener noreferrer">here</a>
         transfers:
           sender_from_support: Technical support
           sender_demande_en_cours: "A transfer request is pending on file Nº %{id} to %{email}"

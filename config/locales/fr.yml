@@ -504,11 +504,14 @@ fr:
           no_result_reset_filter: Réinitialiser les filtres
           procedure_closed:
             brouillon:
-              internal_procedure: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la <a href="%{link}" target="_blank" rel="noopener noreferrer">démarche</a> qui la remplace
-              other: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Plus d'informations <a href="%{link}" target="_blank" rel="noopener noreferrer">ici</a>
+              internal_procedure_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la <a href="%{link}" target="_blank" rel="noopener noreferrer">démarche</a> qui la remplace
+              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Plus d'informations <a href="%{link}" target="_blank" rel="noopener noreferrer">ici</a>
             en_cours:
-              internal_procedure: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration
-              other: "Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Plus d'informations <a href=%{link} target=_blank rel=noopener noreferrer>ici</a>"
+              internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration
+              other_html: "Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Plus d'informations <a href=%{link} target=_blank rel=noopener noreferrer>ici</a>"
+            termine:
+              internal_procedure_html: Cette démarche est close et remplacée par <a href="%{link}" target="_blank" rel="noopener noreferrer">cette démarche</a>. Votre dossier a été traité par l'administration
+              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. Plus d'informations <a href="%{link}" target="_blank" rel="noopener noreferrer">ici</a>
           pending_correction: Ce dossier attend vos corrections. Consultez les modifications à apporter dans la messagerie.
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
