@@ -31,14 +31,7 @@ class Champs::PieceJustificativeController < ApplicationController
     save_succeed = nil
 
     ActiveStorage::Attachment.transaction do
-      if params.key?(:replace_attachment_id)
-        @champ.piece_justificative_file.attachments.find do
-          _1.id == params[:replace_attachment_id].to_i
-        end&.destroy
-      end
-
       @champ.piece_justificative_file.attach(params[:blob_signed_id])
-
       save_succeed = @champ.save
     end
 

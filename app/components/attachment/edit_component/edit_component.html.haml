@@ -1,12 +1,10 @@
-.attachment.fr-upload-group{ { id: attachment ? dom_id(attachment, :edit) : nil, class: class_names("fr-mb-1w": !(as_multiple? && downloadable?)) }.compact, **replace_controller_attributes }
+.attachment.fr-upload-group{ { id: attachment ? dom_id(attachment, :edit) : nil, class: class_names("fr-mb-1w": !(as_multiple? && downloadable?)) }.compact }
   - if persisted?
     %div{ id: dom_id(attachment, :persisted_row) }
       .flex.flex-gap-2{ class: class_names("attachment-error": attachment.virus_scanner_error?) }
         - if user_can_destroy?
           = render NestedForms::OwnedButtonComponent.new(formaction: destroy_attachment_path, http_method: :delete, opt: {class: "fr-btn fr-btn--tertiary fr-btn--sm fr-icon-delete-line", title: t(".delete_file", filename: attachment.filename)}) do
             = t('.delete')
-        - elsif user_can_replace?
-          = button_tag t('.replace'), **replace_button_options, class: "fr-btn fr-btn--tertiary fr-btn--sm", title: t(".replace_file", filename: attachment.filename)
 
         - if downloadable?
           = render Dsfr::DownloadComponent.new(attachment:)
