@@ -44,6 +44,26 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         end
       end
     end
+
+    context "reset password instructions" do
+      subject { described_class.reset_password_instructions(user, token) }
+
+      context "legacy domain" do
+        it "respect preferred domain" do
+          expect(header_value("From", subject.message)).to include(CONTACT_EMAIL)
+          expect(subject.message.to_s).to include("#{ENV.fetch("APP_HOST_LEGACY")}/users/password")
+        end
+      end
+
+      context "new domain" do
+        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+
+        it "respect preferred domain" do
+          expect(header_value("From", subject.message)).to include("@demarches.gouv.fr")
+          expect(subject.message.to_s).to include("#{ENV.fetch("APP_HOST")}/users/password")
+        end
+      end
+    end
   end
 
   def header_value(name, message)
