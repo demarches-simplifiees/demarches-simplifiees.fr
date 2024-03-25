@@ -10,9 +10,20 @@ class DeviseUserMailer < Devise::Mailer
   include PriorityDeliveryConcern
 
   layout 'mailers/layout'
+  default from: "#{APPLICATION_NAME} <#{CONTACT_EMAIL}>"
 
   def template_paths
     ['devise_mailer']
+  end
+
+  # Note: this devise hook (like any callback) is called *after* the action,
+  # because we use mailers with Mailer.action_name() syntax
+  # instead of parameterized Mailer.with().action_name.
+  # So any action using Current must manually call `configure_defaults_for_user`
+  def initialize_from_record(record)
+    configure_defaults_for_user(record)
+
+    super
   end
 
   def confirmation_instructions(record, token, opts = {})
