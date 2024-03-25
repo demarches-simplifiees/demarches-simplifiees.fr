@@ -1,0 +1,12 @@
+.width-100
+  %h2.fr-h6
+    %span.mail
+      = commentaire_issuer
+
+    %span.date{ class: ["fr-text--xs", "fr-text-mention--grey", "font-weight-normal"] }
+      = commentaire_date
+  .rich-text
+    - if @commentaire.discarded?
+      %p= t('.deleted_body')
+    - else
+      = render SimpleFormatComponent.new(@commentaire.body, allow_a: false)

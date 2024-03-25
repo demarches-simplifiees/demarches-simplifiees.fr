@@ -1,6 +1,6 @@
 module Administrateurs
   class GroupeGestionnaireController < AdministrateurController
-    before_action :retrieve_groupe_gestionnaire, only: [:show, :administrateurs, :gestionnaires]
+    before_action :retrieve_groupe_gestionnaire, only: [:show, :administrateurs, :gestionnaires, :commentaires, :create_commentaire]
 
     def show
     end
@@ -9,6 +9,22 @@ module Administrateurs
     end
 
     def gestionnaires
+    end
+
+    def commentaires
+      @commentaire = Commentaire.new
+    end
+
+    def create_commentaire
+      @commentaire = @groupe_gestionnaire.commentaire_groupe_gestionnaires.create(commentaire_params.merge(sender: current_administrateur))
+
+      if @commentaire.errors.empty?
+        flash.notice = "Message envoyé"
+        redirect_to admin_groupe_gestionnaire_commentaires_path
+      else
+        flash.alert = @commentaire.errors.full_messages
+        render :commentaires
+      end
     end
 
     private
@@ -23,6 +39,10 @@ module Administrateurs
     rescue ActiveRecord::RecordNotFound
       flash.alert = 'Groupe inexistant'
       redirect_to admin_procedures_path, status: 404
+    end
+
+    def commentaire_params
+      params.require(:commentaire).permit(:body)
     end
   end
 end

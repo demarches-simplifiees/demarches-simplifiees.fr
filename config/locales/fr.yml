@@ -325,6 +325,7 @@ fr:
       actions:
         save: Enregistrer
         edit: Modifier
+        see: Voir
       greetings:
         hello: Bonjour,
         best_regards: Cordialement,

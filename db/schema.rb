@@ -261,6 +261,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.index ["procedure_id"], name: "index_closed_mails_on_procedure_id"
   end
 
+  create_table "commentaire_groupe_gestionnaires", force: :cascade do |t|
+    t.string "body"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "discarded_at", precision: 6
+    t.bigint "gestionnaire_id"
+    t.bigint "groupe_gestionnaire_id"
+    t.bigint "sender_id", null: false
+    t.string "sender_type", null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["gestionnaire_id"], name: "index_commentaire_groupe_gestionnaires_on_gestionnaire_id"
+    t.index ["groupe_gestionnaire_id"], name: "index_commentaire_groupe_gestionnaires_on_groupe_gestionnaire"
+  end
+
   create_table "commentaires", id: :serial, force: :cascade do |t|
     t.string "body"
     t.datetime "created_at", null: false

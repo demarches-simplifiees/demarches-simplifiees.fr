@@ -19,7 +19,7 @@
 
     .type-de-champ-container {
       width: 100%;
-      border: 1px solid $border-grey;
+      border: 1px solid var(--border-default-grey);
       border-radius: 5px;
       margin-bottom: $default-padding;
       box-shadow: 0px 2px 4px -4px;
@@ -33,10 +33,11 @@
       }
     }
 
-    .delete {
+    .right {
       flex-grow: 1;
       display: flex;
       justify-content: flex-end;
+      align-items: center;
     }
 
     &.first .move-up {
@@ -55,7 +56,7 @@
 
     &.type-header-section {
       .head {
-        background-color: $blue-cumulus-950;
+        background-color: var(--background-contrast-blue-cumulus);
       }
     }
 

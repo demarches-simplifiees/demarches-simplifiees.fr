@@ -109,7 +109,7 @@ export class Combobox {
     }
 
     const option = this.#visibleOptions.find(
-      (option) => option.value == maybeValue
+      (option) => option.value.trim() == maybeValue.trim()
     );
     if (!option) return false;
 
