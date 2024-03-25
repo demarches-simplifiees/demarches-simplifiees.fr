@@ -5,6 +5,7 @@ class DeviseUserMailer < Devise::Mailer
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
   include MailerDolistConcern
   include MailerMonitoringConcern
+  include MailerHeadersConfigurableConcern
   include BalancedDeliveryConcern
   include PriorityDeliveryConcern
 
@@ -15,7 +16,10 @@ class DeviseUserMailer < Devise::Mailer
   end
 
   def confirmation_instructions(record, token, opts = {})
-    opts[:from] = NO_REPLY_EMAIL
+    configure_defaults_for_user(record)
+
+    opts[:from] = Current.no_reply_email
+    opts[:reply_to] = Current.no_reply_email
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
     super
