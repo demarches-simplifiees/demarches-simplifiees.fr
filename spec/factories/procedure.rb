@@ -94,7 +94,7 @@ FactoryBot.define do
     end
 
     trait :with_bulk_message do
-      groupe_instructeurs { [association(:groupe_instructeur, :default, :with_bulk_message, procedure: instance, strategy: :build)] }
+      bulk_messages { [create(:bulk_message)] }
     end
 
     trait :with_logo do

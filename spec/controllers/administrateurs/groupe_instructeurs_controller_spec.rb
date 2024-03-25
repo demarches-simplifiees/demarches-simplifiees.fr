@@ -183,7 +183,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     let!(:gi_1_3) { create(:groupe_instructeur, label: 'groupe instructeur 3', procedure: procedure) }
     let!(:dossier12) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1_1) }
     let!(:instructeur) { create(:instructeur) }
-    let!(:bulk_message) { BulkMessage.create(dossier_count: 2, dossier_state: "en_construction", body: "hello", sent_at: Time.zone.now, groupe_instructeurs: [gi_1_1, gi_1_3], instructeur: instructeur, procedure: procedure) }
 
     describe 'when the new group is a group of the procedure' do
       before do
@@ -194,7 +193,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
             target_group: gi_1_2.id
           }
         dossier12.reload
-        bulk_message.reload
       end
 
       it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
@@ -203,7 +201,6 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it { expect(dossier12.dossier_assignment.dossier_id).to be(dossier12.id) }
       it { expect(dossier12.dossier_assignment.groupe_instructeur_id).to be(gi_1_2.id) }
       it { expect(dossier12.dossier_assignment.assigned_by).to eq(admin.email) }
-      it { expect(bulk_message.groupe_instructeurs).to contain_exactly(gi_1_2, gi_1_3) }
     end
 
     describe 'when the target group is not a possible group' do
@@ -218,11 +215,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       }
       before do
         dossier12.reload
-        bulk_message.reload
       end
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
-      it { expect(bulk_message.groupe_instructeurs).to match_array([gi_1_1, gi_1_3]) }
     end
   end
 

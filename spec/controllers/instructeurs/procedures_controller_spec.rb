@@ -703,7 +703,6 @@ describe Instructeurs::ProceduresController, type: :controller do
     it "creates a Bulk Message for 2 groupes instructeurs" do
       expect(BulkMessage.count).to eq(1)
       expect(bulk_message.body).to eq("avant\napres")
-      expect(bulk_message.groupe_instructeurs).to be_empty
       expect(bulk_message.procedure_id).to eq(procedure.id)
     end
 
