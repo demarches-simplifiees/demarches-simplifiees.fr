@@ -1,4 +1,4 @@
-FROM ruby:3.2.2-slim AS base
+FROM ruby:3.3.0-slim AS base
 
 #------------ intermediate container with specific dev tools
 FROM base AS builder
@@ -162,6 +162,7 @@ ENV \
     RAILS_ENV="production"\
     RAILS_LOG_TO_STDOUT=""\
     RAILS_SERVE_STATIC_FILES=true\
+    RUBY_YJIT_ENABLE=true\
     SAML_IDP_ENABLED=""\
     SAML_IDP_CERTIFICATE="billybop"\
     SAML_IDP_SECRET_KEY="-----BEGIN RSA PRIVATE KEY-----\nblabla+blabla\n-----END RSA PRIVATE KEY-----\n"\
