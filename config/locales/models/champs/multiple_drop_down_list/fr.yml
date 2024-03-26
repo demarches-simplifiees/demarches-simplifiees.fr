@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      champs/multiple_drop_down_list_champ:
+        hints:
+          value: "Vous pouvez séléctionner un ou plusieurs choix."
