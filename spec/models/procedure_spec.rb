@@ -325,7 +325,7 @@ describe Procedure do
       let(:drop_down) { build(:type_de_champ_drop_down_list, :without_selectable_values, libelle: 'Civilité') }
       let(:invalid_drop_down_error_message) { 'Le champ « Civilité » doit comporter au moins un choix sélectionnable' }
 
-      let(:procedure) { create(:procedure, :with_repetition) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
       let(:draft) { procedure.draft_revision }
 
       before do

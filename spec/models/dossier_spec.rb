@@ -1979,7 +1979,7 @@ describe Dossier, type: :model do
       end
 
       context "when procedure brouillon" do
-        let(:procedure) { create(:procedure, :with_type_de_champ, :with_explication) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }, { type: :explication }]) }
 
         it "should not contain non-exportable types de champ" do
           expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])

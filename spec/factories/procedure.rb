@@ -65,7 +65,6 @@ FactoryBot.define do
 
     after(:create) do |procedure, evaluator|
       evaluator.instructeurs.each { |i| i.assign_to_procedure(procedure) }
-
       if evaluator.updated_at
         procedure.update_column(:updated_at, evaluator.updated_at)
       end
@@ -90,10 +89,7 @@ FactoryBot.define do
       published
 
       for_individual { true }
-
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ, libelle: 'Texte obligatoire', mandatory: true, procedure: procedure)
-      end
+      types_de_champ_public { [{ type: :text, libelle: 'Texte obligatoire', mandatory: true }] }
     end
 
     trait :with_bulk_message do
@@ -144,176 +140,11 @@ FactoryBot.define do
     end
 
     trait :with_type_de_champ do
-      transient do
-        types_de_champ_count { 1 }
-      end
-
-      after(:build) do |procedure, evaluator|
-        evaluator.types_de_champ_count.times do |position|
-          build(:type_de_champ, procedure: procedure, position: position)
-        end
-      end
+      types_de_champ_public { [{ type: :text }] }
     end
 
     trait :with_type_de_champ_private do
-      transient do
-        types_de_champ_private_count { 1 }
-      end
-
-      after(:build) do |procedure, evaluator|
-        evaluator.types_de_champ_private_count.times do |position|
-          build(:type_de_champ, :private, procedure: procedure, position: position)
-        end
-      end
-    end
-
-    trait :with_private_piece_justificative do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_piece_justificative, :private, procedure: procedure)
-      end
-    end
-
-    trait :with_type_de_champ_mandatory do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ, mandatory: true, procedure: procedure)
-      end
-    end
-
-    trait :with_datetime do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_datetime, mandatory: true, procedure: procedure)
-      end
-    end
-
-    trait :with_dossier_link do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_dossier_link, procedure: procedure)
-      end
-    end
-
-    trait :with_siret do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_siret, procedure: procedure)
-      end
-    end
-
-    trait :with_yes_no do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_yes_no, procedure: procedure)
-      end
-    end
-
-    trait :with_commune do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_communes, procedure: procedure)
-      end
-    end
-
-    trait :with_departement do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_departements, procedure: procedure)
-      end
-    end
-
-    trait :with_region do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_regions, procedure: procedure)
-      end
-    end
-
-    trait :with_piece_justificative do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_piece_justificative, procedure: procedure)
-      end
-    end
-
-    trait :with_titre_identite do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_titre_identite, procedure: procedure)
-      end
-    end
-
-    trait :with_repetition do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure)
-      end
-    end
-
-    trait :with_optional_repetition do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure, mandatory: false)
-      end
-    end
-
-    trait :with_private_repetition do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_repetition, :private, procedure: procedure)
-      end
-    end
-
-    trait :with_number do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_number, procedure: procedure)
-      end
-    end
-
-    trait :with_phone do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_phone, procedure: procedure)
-      end
-    end
-
-    trait :with_drop_down_list do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_drop_down_list, :with_other, procedure: procedure)
-      end
-    end
-
-    trait :with_address do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_address, procedure: procedure)
-      end
-    end
-
-    trait :with_cnaf do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_cnaf, procedure: procedure)
-      end
-    end
-
-    trait :with_rna do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_rna, procedure: procedure)
-      end
-    end
-
-    trait :with_dgfip do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_dgfip, procedure: procedure)
-      end
-    end
-
-    trait :with_pole_emploi do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_pole_emploi, procedure: procedure)
-      end
-    end
-
-    trait :with_mesri do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_mesri, procedure: procedure)
-      end
-    end
-
-    trait :with_explication do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_explication, procedure: procedure)
-      end
-    end
-    trait :with_carte do
-      after(:build) do |procedure, _evaluator|
-        build(:type_de_champ_carte, procedure: procedure)
-      end
+      types_de_champ_private { [{ type: :text }] }
     end
 
     trait :draft do
@@ -410,6 +241,7 @@ FactoryBot.define do
       end
     end
 
+    # TODO: rewrite with types_de_champ_private
     trait :with_all_annotations do
       after(:build) do |procedure, _evaluator|
         TypeDeChamp.type_champs.map.with_index do |(libelle, type_champ), index|
@@ -418,21 +250,6 @@ FactoryBot.define do
           end
           build(:"type_de_champ_#{type_champ}", procedure: procedure, private: true, libelle: libelle, position: index)
         end
-      end
-    end
-
-    trait :with_visa do
-      with_all_annotations
-
-      after(:build) do |procedure, evaluator|
-        (libelle, type_champ) = TypeDeChamp.type_champs.fetch(:visa)
-        accredited_user_string = ''
-        if evaluator.instructeurs.size > 1
-          all_instructors_but_first = evaluator.instructeurs[1..-1]
-          accredited_user_string = all_instructors_but_first.map(&:email).join("\n")
-        end
-        build(:type_de_champ_visa, procedure: procedure, private: true, libelle: 'visa_to_test', position: procedure.active_revision.types_de_champ_private.size, accredited_user_string: accredited_user_string)
-        build(:type_de_champ_text, procedure: procedure, private: true, libelle: 'text_after_visa_to_test', position: procedure.active_revision.types_de_champ_private.size)
       end
     end
 

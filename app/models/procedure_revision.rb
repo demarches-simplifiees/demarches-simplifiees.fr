@@ -264,12 +264,11 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def next_position_for(siblings:, after_coordinate: nil)
-    if siblings.to_a.empty? # first element of the list, starts at 0
+    # either we are at the beginning of the list or after another item
+    if after_coordinate.nil? # first element of the list, starts at 0
       0
-    elsif after_coordinate # middle of the list, between two items
+    else # after another item
       after_coordinate.position + 1
-    else # last element of the list, end with last position + 1
-      siblings.to_a.last.position + 1
     end
   end
 

@@ -6,7 +6,19 @@ describe 'Using Visa field', js: true do
   let!(:instructeur2) { create(:instructeur, password: password) }
   let!(:instructeur3) { create(:instructeur, password: password) }
 
-  let!(:procedure) { create(:procedure, :published, :with_visa, instructeurs: [instructeur1, instructeur2, instructeur3]) }
+  let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
+  let(:types_de_champ_private) do
+    [
+      { type: :text },
+      { type: :header_section, header_section_level: 1 },
+      { type: :text },
+      { type: :header_section, header_section_level: 2 },
+      { type: :text },
+      { type: :visa, libelle: 'visa_to_test', accredited_users: [instructeur2, instructeur3].map(&:email) },
+      { type: :text }
+    ]
+  end
+  let!(:procedure) { create(:procedure, :published, types_de_champ_private:, instructeurs: [instructeur1, instructeur2, instructeur3]) }
   let!(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
   let(:etablissement_geo_adresse_lat) { "40.7143528" }
   let(:etablissement_geo_adresse_lon) { "-74.0059731" }
@@ -64,9 +76,8 @@ describe 'Using Visa field', js: true do
 
   def check_fields(axe, disabled)
     visa_label_path = ".//label[normalize-space(text())='visa_to_test']"
-    divs_path = visa_label_path + "/parent::div/#{axe}-sibling::div"
+    divs_path = visa_label_path + "/parent::div/parent::div/#{axe}-sibling::div"
     fields_path = divs_path + "//*[contains(@name, 'dossier')]"
-    wait_until { has_css?('.editable-champ-address > input') }
     fields = page.all(:xpath, fields_path)
     fields.each do |field|
       expect(field.disabled?).to be disabled

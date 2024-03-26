@@ -1,6 +1,6 @@
 describe Champs::SiretController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published, :with_siret) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :siret }]) }
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }

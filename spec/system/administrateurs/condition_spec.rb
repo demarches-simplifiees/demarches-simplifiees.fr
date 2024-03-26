@@ -3,13 +3,11 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
 
   let(:administrateur) { procedure.administrateurs.first }
   let(:procedure) do
-    create(:procedure).tap do |p|
-      p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
-      # private
-      p.draft_revision.add_type_de_champ(type_champ: :boolean, libelle: 'bon dossier', private: true)
-
-      p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'nom du parent')
-    end
+    create(:procedure,
+           types_de_champ_public: [
+             { type: :integer_number, libelle: 'age' },
+             { type: :text, libelle: 'nom du parent' }
+           ])
   end
 
   let(:first_tdc) { procedure.draft_revision.types_de_champ.first }

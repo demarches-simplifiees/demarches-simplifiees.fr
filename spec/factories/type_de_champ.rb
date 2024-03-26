@@ -237,6 +237,7 @@ FactoryBot.define do
         revision.save
       end
 
+      # TODO: drop
       trait :with_types_de_champ do
         after(:build) do |type_de_champ_repetition, evaluator|
           revision = evaluator.procedure.active_revision

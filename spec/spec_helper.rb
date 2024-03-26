@@ -72,7 +72,7 @@ RSpec.configure do |config|
     screenshot_name = "screenshot-#{filename}-#{line_number}-#{timestamp}.png"
     screenshot_path = "#{ENV.fetch('CIRCLE_ARTIFACTS', Rails.root.join('tmp', 'capybara'))}/#{screenshot_name}"
 
-    page.save_screenshot(screenshot_path)
+    page.save_screenshot(screenshot_path, full: false)
 
     puts "\n  Screenshot: #{screenshot_path}"
   end

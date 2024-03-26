@@ -3,30 +3,25 @@ describe ProcedurePresentation do
     subject { procedure.types_de_champ_for_procedure_presentation.not_repetition.pluck(:libelle) }
 
     context 'for a draft procedure' do
-      let(:procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :number, libelle: 'libelle 1' }]) }
 
       context 'when there are one tdc on a draft revision' do
-        let!(:tdc) { { type_champ: :number, libelle: 'libelle 1' } }
-
-        before { procedure.draft_revision.add_type_de_champ(tdc) }
-
         it { is_expected.to match(['libelle 1']) }
       end
     end
 
     context 'for a published procedure' do
-      let(:procedure) { create(:procedure, :published) }
-      let(:tdc) { { type_champ: :number, libelle: 'libelle 1' } }
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: []) }
+      let!(:tdc) { procedure.draft_revision.add_type_de_champ({ type_champ: :number, libelle: 'libelle 1' }) }
 
       before do
-        procedure.draft_revision.add_type_de_champ(tdc)
         procedure.publish_revision!
       end
 
       it { is_expected.to match(['libelle 1']) }
 
       context 'when there is another published revision with an added tdc' do
-        let(:added_tdc) { { type_champ: :number, libelle: 'libelle 2' } }
+        let(:added_tdc) { { type_champ: :number, libelle: 'libelle 2', after_stable_id: tdc.stable_id } }
 
         before do
           procedure.draft_revision.add_type_de_champ(added_tdc)

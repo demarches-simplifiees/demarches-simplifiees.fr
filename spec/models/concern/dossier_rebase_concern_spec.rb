@@ -573,11 +573,7 @@ describe DossierRebaseConcern do
 
     context 'with a procedure with 2 tdc' do
       let!(:procedure) do
-        create(:procedure).tap do |p|
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l1')
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'l2')
-          p.publish!
-        end
+        create(:procedure, :published, types_de_champ_public: [{ type: :text, libelle: 'l1' }, { type: :text, libelle: 'l2' }])
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }
 
@@ -656,25 +652,34 @@ describe DossierRebaseConcern do
 
     context 'with a procedure with a repetition' do
       let!(:procedure) do
-        create(:procedure).tap do |p|
-          repetition = p.draft_revision.add_type_de_champ(type_champ: :repetition, libelle: 'p1', mandatory: true)
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c1', parent_stable_id: repetition.stable_id)
-          p.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c2', parent_stable_id: repetition.stable_id)
-          p.publish!
-        end
+        create(:procedure, :published, types_de_champ_public: [
+          {
+            type: :repetition,
+            libelle: 'p1',
+            mandatory: true,
+            children: [
+              { type: :text, libelle: 'c1' },
+              { type: :text, libelle: 'c2' }
+            ]
+          }
+        ])
       end
       let!(:dossier) { create(:dossier, procedure: procedure) }
-      let(:repetition_stable_id) { procedure.draft_revision.types_de_champ.find(&:repetition?) }
+      let(:repetition) { procedure.draft_revision.types_de_champ.find(&:repetition?) }
 
       def child_libelles = dossier.champs_public.first.champs.map(&:libelle)
 
       context 'when a child tdc is added in the middle' do
         before do
-          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_stable_id: repetition_stable_id, mandatory: true)
+          last_child = procedure.draft_revision.children_of(repetition).last
+          added_tdc = procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'c3', parent_stable_id: repetition.stable_id, after_stable_id: last_child)
           procedure.draft_revision.move_type_de_champ(added_tdc.stable_id, 1)
+          # procedure.publish_revision!
         end
 
-        it { expect { subject }.to change { child_libelles }.from(['c1', 'c2']).to(['c1', 'c3', 'c2']) }
+        it 'does somehting' do
+          expect { subject }.to change { child_libelles }.from(['c1', 'c2']).to(['c1', 'c3', 'c2'])
+        end
       end
 
       context 'when the first child tdc is removed' do
