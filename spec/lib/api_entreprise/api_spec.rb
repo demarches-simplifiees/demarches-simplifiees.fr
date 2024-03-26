@@ -120,7 +120,8 @@ describe APIEntreprise::API do
   describe '.etablissement' do
     subject { described_class.new(procedure_id).etablissement(siret) }
     before do
-      stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}?.*non_diffusables=true/)
+      stub_request(:get, "https://entreprise.api.gouv.fr/v3/insee/sirene/etablissements/#{siret}")
+        .with(query: { "non_diffusables" => "true", "context" => APPLICATION_NAME, "object" => "procedure_id: #{procedure_id}", "recipient" => ENV.fetch("API_ENTREPRISE_DEFAULT_SIRET") })
         .to_return(status: status, body: body)
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(false)
     end
