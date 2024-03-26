@@ -73,8 +73,8 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it 'renders the actions' do
-      expect(mail.body).to have_link('Consulter mon dossier', href: dossier_url(dossier))
-      expect(mail.body).to have_link('J’ai une question', href: messagerie_dossier_url(dossier))
+      expect(mail.body).to have_link('Consulter mon dossier', href: dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+      expect(mail.body).to have_link('J’ai une question', href: messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
     end
 
     context 'when the template body contains tags' do
@@ -85,7 +85,16 @@ RSpec.describe NotificationMailer, type: :mailer do
       end
 
       it 'replaces link tags with a clickable link' do
-        expect(mail.body).to have_link(dossier_url(dossier))
+        expect(mail.body).to have_link(dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+      end
+
+      context "when user has preferred domain" do
+        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+
+        it do
+          expect(mail.body).to have_link(dossier_url(dossier, host: ENV.fetch("APP_HOST")))
+          expect(header_value("From", mail)).to include("@demarches.gouv.fr")
+        end
       end
     end
 
