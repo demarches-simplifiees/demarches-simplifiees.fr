@@ -55,17 +55,8 @@
             = t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier))
 
       - elsif dossier.termine?
-        - if dossier.procedure.accuse_lecture? && !dossier.accuse_lecture_agreement_at.present?
-          = render Dsfr::CalloutComponent.new(title: nil) do |c|
-            - c.with_body do
-              Cette procédure est soumise à un accusé de lecture. En demandant l'affichage de la décision prise sur votre dossier, vous acceptez l'accusé de lecture et par là même le démarrage du délai légal en cas de recours.
-
-              = form_for dossier,
-                method: :get,
-                url: set_accuse_lecture_agreement_at_dossier_path(dossier),
-                data: { controller: 'autosubmit', turbo: 'true' } do |f|
-
-                = f.submit "Je souhaite afficher la décision", class: "fr-btn fr-mt-2w"
+        - if dossier.hide_info_with_accuse_lecture
+          = render Dossiers::AccuseLectureComponent.new(dossier: dossier)
 
         - elsif dossier.accepte?
           .accepte

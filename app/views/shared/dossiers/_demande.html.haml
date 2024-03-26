@@ -9,7 +9,7 @@
         .flex-grow.fr-py-3v.fr-px-2w= t('views.shared.dossiers.demande.en_construction')
 
       - if dossier.depose_at.present?
-        = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier }
+        = render partial: "shared/dossiers/infos_generales", locals: { dossier: dossier, profile: profile }
 
 
       - if dossier.for_tiers?

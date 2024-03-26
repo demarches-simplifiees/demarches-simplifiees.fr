@@ -1180,6 +1180,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def hide_info_with_accuse_lecture
+    procedure.accuse_lecture? && termine? && accuse_lecture_agreement_at.blank?
+  end
+
   private
 
   def champs_by_public_id
