@@ -1209,6 +1209,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_160237) do
   add_foreign_key "avis", "dossiers"
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "batch_operations", "instructeurs"
+  add_foreign_key "bulk_messages", "procedures"
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "champs", "champs", column: "parent_id"
