@@ -16,6 +16,7 @@
     width: 100%;
     margin-bottom: $default-padding;
     overflow: hidden;
+    scroll-margin: 1em;
 
     .type-de-champ-container {
       width: 100%;
@@ -121,4 +122,9 @@
       }
     }
   }
+}
+
+#summary nav ul {
+  height: 80vh;
+  overflow: auto;
 }

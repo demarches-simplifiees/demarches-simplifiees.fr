@@ -1,12 +1,13 @@
 class NullZone
   include ActiveModel::Model
+  ReflectionAssociation = Struct.new(:class_name)
 
   def procedures
     Procedure.where(zone: nil).where.not(published_at: nil).order(published_at: :desc)
   end
 
   def self.reflect_on_association(association)
-    OpenStruct.new(class_name: "Procedure") if association == :procedures
+    ReflectionAssociation.new("Procedure") if association == :procedures
   end
 
   def label

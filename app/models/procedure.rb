@@ -1041,6 +1041,10 @@ class Procedure < ApplicationRecord
     lien_dpo.present? && lien_dpo.match?(/@/)
   end
 
+  def header_sections
+    draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
+  end
+
   private
 
   def pieces_jointes_list

@@ -136,13 +136,17 @@ button.fr-tag-bug {
   }
 }
 
+// on veut ajouter un gris plus clair dans le side_menu
+.fr-sidemenu__item .fr-sidemenu__link.custom-link-grey {
+  color: var(--text-disabled-grey);
+}
+
 // on veut ferrer à droite le dropdown de sélecteur de langue
 @media (min-width: 62em) {
   .fr-nav__item.custom-fr-translate-flex-end {
     align-items: flex-end;
   }
 }
-
 
 // improve readability in Windows High Contrast Mode
 @media screen and (forced-colors: active) {

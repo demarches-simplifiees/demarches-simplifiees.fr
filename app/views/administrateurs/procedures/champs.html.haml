@@ -6,7 +6,10 @@
 .fr-container
   %h1 Configuration des champs
   = render NestedForms::FormOwnerComponent.new
-= render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)
+  .fr-grid-row
+    = render partial: 'champs_summary'
+    .fr-col
+      = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)
 
 .padded-fixed-footer
   .fixed-footer

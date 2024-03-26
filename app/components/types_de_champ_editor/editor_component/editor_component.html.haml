@@ -1,4 +1,4 @@
-.fr-container.fr-pb-12w{ 'data-turbo': 'true', id: dom_id(@revision, :types_de_champ_editor) }
+.fr-pb-12w{ 'data-turbo': 'true', id: dom_id(@revision, :types_de_champ_editor) }
   .types-de-champ-editor.editor-root
     = render TypesDeChampEditor::ErrorsSummary.new(revision: @revision)
     = render TypesDeChampEditor::BlockComponent.new(block: @revision, coordinates: coordinates)

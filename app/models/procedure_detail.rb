@@ -1,4 +1,4 @@
-class ProcedureDetail < OpenStruct
+ProcedureDetail = Struct.new(:id, :libelle, :published_at, :aasm_state, :estimated_dossiers_count, :admin_count, keyword_init: true) do
   include SpreadsheetArchitect
 
   def spreadsheet_columns
@@ -7,9 +7,9 @@ class ProcedureDetail < OpenStruct
     end
   end
 
-  def administrateurs
-    Administrateurs.new(admin_count)
-  end
+  AdministrateursCounter = Struct.new(:count)
 
-  Administrateurs = Struct.new(:count)
+  def administrateurs
+    AdministrateursCounter.new(admin_count)
+  end
 end

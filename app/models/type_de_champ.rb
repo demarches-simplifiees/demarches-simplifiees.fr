@@ -685,8 +685,10 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def stable_self
-    OpenStruct.new(to_key: [stable_id],
-      model_name: OpenStruct.new(param_key: model_name.param_key))
+    KeyableModel.new(
+      to_key: [stable_id],
+      model_name: KeyableModel.new(param_key: model_name.param_key)
+    )
   end
 
   def refresh_after_update?

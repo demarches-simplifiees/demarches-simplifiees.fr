@@ -5,9 +5,10 @@
 
 .fr-container
   %h1 Configuration des annotations privées
-  %br
   = render  NestedForms::FormOwnerComponent.new
-= render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: true)
+  .fr-grid-row
+    .fr-col
+      = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: true)
 
 .padded-fixed-footer
   .fixed-footer
