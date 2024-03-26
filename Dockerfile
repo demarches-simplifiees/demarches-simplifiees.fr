@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
   curl build-essential git libpq-dev libicu-dev gnupg zip &&\
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-  curl -sL "https://deb.nodesource.com/setup_16.x" | bash - && \
+  curl -sL "https://deb.nodesource.com/setup_18.x" | bash - && \
   apt-get install -y nodejs yarn
 
 #cf https://imagetragick.com/
@@ -36,10 +36,9 @@ RUN apt-get update && apt-get install -y \
   curl git postgresql-client libicu72 imagemagick gnupg zip &&\
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-  curl -sL "https://deb.nodesource.com/setup_16.x" | bash - && \
+  curl -sL "https://deb.nodesource.com/setup_18.x" | bash - && \
   apt-get install -y nodejs yarn
 
-#  curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
 RUN adduser --disabled-password --home ${APP_PATH} userapp
 USER userapp
 WORKDIR ${APP_PATH}
