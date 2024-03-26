@@ -13,7 +13,16 @@ RSpec.describe UserMailer, type: :mailer do
 
       subject { described_class.new_account_warning(user, procedure) }
 
-      it { expect(subject.body).to have_link("Commencer la démarche « #{procedure.libelle} »", href: commencer_sign_in_url(path: procedure.path)) }
+      it { expect(subject.body).to have_link("Commencer la démarche « #{procedure.libelle} »", href: commencer_sign_in_url(path: procedure.path, host: ENV.fetch("APP_HOST_LEGACY"))) }
+
+      context "when user has preferred domain" do
+        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+
+        it do
+          expect(subject.body).to have_link("Commencer la démarche « #{procedure.libelle} »", href: commencer_sign_in_url(path: procedure.path, host: ENV.fetch("APP_HOST")))
+          expect(header_value("From", subject)).to include("@demarches.gouv.fr")
+        end
+      end
     end
 
     context 'without SafeMailer configured' do
@@ -65,7 +74,7 @@ RSpec.describe UserMailer, type: :mailer do
     subject { described_class.france_connect_merge_confirmation(email, code, 15.minutes.from_now) }
 
     it { expect(subject.to).to eq([email]) }
-    it { expect(subject.body).to include(france_connect_particulier_mail_merge_with_existing_account_url(email_merge_token: code)) }
+    it { expect(subject.body).to include(france_connect_particulier_mail_merge_with_existing_account_url(email_merge_token: code))) }
 
     context 'without SafeMailer configured' do
       it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
@@ -92,15 +101,15 @@ RSpec.describe UserMailer, type: :mailer do
     context 'instructeur' do
       let(:role) { create(:instructeur) }
       it { expect(subject.to).to eq([role.user.email]) }
-      it { expect(subject.body).to have_link('Consulter mes archives', href: instructeur_archives_url(procedure)) }
-      it { expect(subject.body).to have_link("#{procedure.id} − #{procedure.libelle}", href: instructeur_procedure_url(procedure)) }
+      it { expect(subject.body).to have_link('Consulter mes archives', href: instructeur_archives_url(procedure, host: ENV.fetch("APP_HOST_LEGACY"))) }
+      it { expect(subject.body).to have_link("#{procedure.id} − #{procedure.libelle}", href: instructeur_procedure_url(procedure, host: ENV.fetch("APP_HOST_LEGACY"))) }
     end
 
     context 'instructeur' do
       let(:role) { create(:administrateur) }
       it { expect(subject.to).to eq([role.user.email]) }
-      it { expect(subject.body).to have_link('Consulter mes archives', href: admin_procedure_archives_url(procedure)) }
-      it { expect(subject.body).to have_link("#{procedure.id} − #{procedure.libelle}", href: admin_procedure_url(procedure)) }
+      it { expect(subject.body).to have_link('Consulter mes archives', href: admin_procedure_archives_url(procedure, host: ENV.fetch("APP_HOST_LEGACY"))) }
+      it { expect(subject.body).to have_link("#{procedure.id} − #{procedure.libelle}", href: admin_procedure_url(procedure, host: ENV.fetch("APP_HOST_LEGACY"))) }
     end
 
     context 'when perform_later is called' do
