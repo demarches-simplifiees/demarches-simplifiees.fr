@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_25_160237) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -497,7 +497,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_160237) do
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
     t.index ["editing_fork_origin_id"], name: "index_dossiers_on_editing_fork_origin_id"
     t.index ["groupe_instructeur_id"], name: "index_dossiers_on_groupe_instructeur_id"
-    t.index ["hidden_at"], name: "index_dossiers_on_hidden_at"
     t.index ["parent_dossier_id"], name: "index_dossiers_on_parent_dossier_id"
     t.index ["prefill_token"], name: "index_dossiers_on_prefill_token", unique: true
     t.index ["revision_id"], name: "index_dossiers_on_revision_id"
