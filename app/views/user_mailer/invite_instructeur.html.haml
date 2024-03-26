@@ -4,7 +4,7 @@
   Bonjour,
 
 %p
-  Vous venez d’être nommé instructeur sur #{APPLICATION_NAME}.
+  Vous venez d’être nommé instructeur sur #{Current.application_name}.
 
 %p
   Votre compte a été créé pour l'adresse email
@@ -15,7 +15,7 @@
   = link_to(users_activate_url(token: @reset_password_token), users_activate_url(token: @reset_password_token))
 
 %p
-  Lors de vos prochaines connexions sur #{APPLICATION_NAME} cliquez sur le bouton « Se connecter » positionné sur le haut de page ou bien sur ce lien : 
+  Lors de vos prochaines connexions sur #{Current.application_name} cliquez sur le bouton « Se connecter » positionné sur le haut de page ou bien sur ce lien : 
   = link_to new_user_session_url, new_user_session_url
 
 - if AgentConnectService.enabled?

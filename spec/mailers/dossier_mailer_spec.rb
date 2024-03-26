@@ -17,19 +17,21 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.with(dossier:).notify_new_draft }
 
-    it { expect(subject.subject).to include("brouillon") }
-    it { expect(subject.subject).to include(dossier.procedure.libelle) }
-    it { expect(subject.body).to include(dossier.procedure.libelle) }
-    it { expect(subject.body).to include(dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY"))) }
-    it { expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu’au") }
-    it { expect(subject.body).to include("heure de") }
+    it 'includes the correct subject and body content' do
+      expect(subject.subject).to include("brouillon")
+      expect(subject.subject).to include(dossier.procedure.libelle)
+      expect(subject.body).to include(dossier.procedure.libelle)
+      expect(subject.body).to include(dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+      expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu’au")
+      expect(subject.body).to include("heure de")
+    end
 
     it_behaves_like 'a dossier notification'
 
-    context "user prefers new domain" do
+    context "when user prefers new domain" do
       let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
 
-      it do
+      it 'includes the correct body content and sender email' do
         expect(subject.body).to include(dossier_url(dossier, host: ENV.fetch('APP_HOST')))
         expect(header_value("From", subject)).to include("ne-pas-repondre@demarches.gouv.fr")
       end
@@ -43,10 +45,12 @@ RSpec.describe DossierMailer, type: :mailer do
     let(:commentaire) { create(:commentaire, dossier: dossier) }
     subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
-    it { expect(subject.subject).to include("Nouveau message") }
-    it { expect(subject.subject).to include(dossier.id.to_s) }
-    it { expect(subject.body).to include(dossier.procedure.service.email) }
-    it { expect(subject.body).not_to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY"))) }
+    it 'checks email subject and body for correct inclusions and exclusions' do
+      expect(subject.subject).to include("Nouveau message")
+      expect(subject.subject).to include(dossier.id.to_s)
+      expect(subject.body).to include(dossier.procedure.service.email)
+      expect(subject.body).not_to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+    end
 
     it_behaves_like 'a dossier notification'
 
@@ -62,9 +66,11 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.with(commentaire: commentaire).notify_new_answer }
 
-    it { expect(subject.subject).to include("Nouveau message") }
-    it { expect(subject.subject).to include(dossier.id.to_s) }
-    it { expect(subject.body).to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY"))) }
+    it 'checks email subject and body for correct inclusions' do
+      expect(subject.subject).to include("Nouveau message")
+      expect(subject.subject).to include(dossier.id.to_s)
+      expect(subject.body).to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+    end
 
     it_behaves_like 'a dossier notification'
   end
@@ -90,10 +96,12 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_deletion_to_administration(deleted_dossier, to_email) }
 
-    it { expect(subject.subject).to eq("Le dossier nº #{deleted_dossier.dossier_id} a été supprimé à la demande de l’usager") }
-    it { expect(subject.body).to include("À la demande de l’usager") }
-    it { expect(subject.body).to include(deleted_dossier.dossier_id) }
-    it { expect(subject.body).to include(deleted_dossier.procedure.libelle) }
+    it 'verifies subject and body content for deletion notification' do
+      expect(subject.subject).to eq("Le dossier nº #{deleted_dossier.dossier_id} a été supprimé à la demande de l’usager")
+      expect(subject.body).to include("À la demande de l’usager")
+      expect(subject.body).to include(deleted_dossier.dossier_id)
+      expect(subject.body).to include(deleted_dossier.procedure.libelle)
+    end
   end
 
   describe '.notify_brouillon_near_deletion' do
@@ -101,8 +109,10 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_brouillon_near_deletion([dossier], dossier.user.email) }
 
-    it { expect(subject.body).to include("n° #{dossier.id} ") }
-    it { expect(subject.body).to include(dossier.procedure.libelle) }
+    it 'checks email body for correct inclusions regarding brouillon nearing deletion' do
+      expect(subject.body).to include("n° #{dossier.id} ")
+      expect(subject.body).to include(dossier.procedure.libelle)
+    end
   end
 
   describe '.notify_brouillon_deletion' do
@@ -110,8 +120,10 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_brouillon_deletion([dossier.hash_for_deletion_mail], dossier.user.email) }
 
-    it { expect(subject.subject).to eq("Un dossier en brouillon a été supprimé automatiquement") }
-    it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
+    it 'verifies subject and body content for brouillon deletion notification' do
+      expect(subject.subject).to eq("Un dossier en brouillon a été supprimé automatiquement")
+      expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})")
+    end
   end
 
   describe '.notify_automatic_deletion_to_user' do
@@ -122,11 +134,13 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
-      it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
-      it { expect(subject.body).to include("N° #{dossier.id} ") }
-      it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("nous nous excusons de la gêne occasionnée") }
+      it 'checks email subject, to, and body for correct inclusions and exclusions for en_construction status' do
+        expect(subject.to).to eq([dossier.user.email])
+        expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte")
+        expect(subject.body).to include("N° #{dossier.id} ")
+        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("nous nous excusons de la gêne occasionnée")
+      end
     end
 
     describe 'termine' do
@@ -134,11 +148,13 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
 
-      it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte") }
-      it { expect(subject.body).to include("N° #{dossier.id} ") }
-      it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).not_to include("nous nous excusons de la gène occasionnée") }
+      it 'checks email subject, to, and body for correct inclusions and exclusions for termine status' do
+        expect(subject.to).to eq([dossier.user.email])
+        expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte")
+        expect(subject.body).to include("N° #{dossier.id} ")
+        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).not_to include("nous nous excusons de la gêne occasionnée")
+      end
     end
   end
 
@@ -148,8 +164,10 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_automatic_deletion_to_administration([deleted_dossier], dossier.user.email) }
 
-    it { expect(subject.subject).to eq("Un dossier a été supprimé automatiquement") }
-    it { expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})") }
+    it 'verifies subject and body content for automatic deletion notification' do
+      expect(subject.subject).to eq("Un dossier a été supprimé automatiquement")
+      expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})")
+    end
   end
 
   describe '.notify_near_deletion_to_administration' do
@@ -158,11 +176,13 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_near_deletion_to_administration([dossier], dossier.user.email) }
 
-      it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
-      it { expect(subject.body).to include("N° #{dossier.id} ") }
-      it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("PDF") }
-      it { expect(subject.body).to include("Vous avez <b>14 jours</b> pour commencer l’instruction du dossier.") }
+      it 'checks email subject and body for correct inclusions for en_construction status' do
+        expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé")
+        expect(subject.body).to include("N° #{dossier.id} ")
+        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("PDF")
+        expect(subject.body).to include("Vous avez <b>14 jours</b> pour commencer l’instruction du dossier.")
+      end
     end
 
     describe 'termine' do
@@ -170,9 +190,11 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_near_deletion_to_administration([dossier], dossier.user.email) }
 
-      it { expect(subject.subject).to eq("Un dossier dont le traitement est terminé va bientôt être supprimé") }
-      it { expect(subject.body).to include("N° #{dossier.id} ") }
-      it { expect(subject.body).to include(dossier.procedure.libelle) }
+      it 'verifies subject and body content for near deletion notification of completed cases' do
+        expect(subject.subject).to eq("Un dossier dont le traitement est terminé va bientôt être supprimé")
+        expect(subject.body).to include("N° #{dossier.id} ")
+        expect(subject.body).to include(dossier.procedure.libelle)
+      end
     end
   end
 
@@ -182,12 +204,14 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_near_deletion_to_user([dossier], dossier.user.email) }
 
-      it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé") }
-      it { expect(subject.body).to include("N° #{dossier.id} ") }
-      it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("Votre compte reste activé") }
-      it { expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface.") }
+      it 'verifies email subject, to, and body for correct inclusions for en_construction status' do
+        expect(subject.to).to eq([dossier.user.email])
+        expect(subject.subject).to eq("Un dossier en construction va bientôt être supprimé")
+        expect(subject.body).to include("N° #{dossier.id} ")
+        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("Votre compte reste activé")
+        expect(subject.body).to include("Si vous souhaitez conserver votre dossier plus longtemps, vous pouvez <b>prolonger sa durée de conservation</b> dans l’interface.")
+      end
     end
 
     describe 'termine' do
@@ -195,12 +219,14 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_near_deletion_to_user([dossier], dossier.user.email) }
 
-      it { expect(subject.to).to eq([dossier.user.email]) }
-      it { expect(subject.subject).to eq("Un dossier dont le traitement est terminé va bientôt être supprimé") }
-      it { expect(subject.body).to include("N° #{dossier.id} ") }
-      it { expect(subject.body).to include(dossier.procedure.libelle) }
-      it { expect(subject.body).to include("Votre compte reste activé") }
-      it { expect(subject.body).to include("PDF") }
+      it 'checks email subject, to, and body for correct inclusions for termine status' do
+        expect(subject.to).to eq([dossier.user.email])
+        expect(subject.subject).to eq("Un dossier dont le traitement est terminé va bientôt être supprimé")
+        expect(subject.body).to include("N° #{dossier.id} ")
+        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("Votre compte reste activé")
+        expect(subject.body).to include("PDF")
+      end
     end
 
     describe 'multiple termines' do
@@ -208,10 +234,12 @@ RSpec.describe DossierMailer, type: :mailer do
 
       subject { described_class.notify_near_deletion_to_user(dossiers, dossiers[0].user.email) }
 
-      it { expect(subject.subject).to eq("Des dossiers dont le traitement est terminé vont bientôt être supprimés") }
-      it { expect(subject.body).to include("N° #{dossiers[0].id} ") }
-      it { expect(subject.body).to include("N° #{dossiers[1].id} ") }
-      it { expect(subject.body).to include("N° #{dossiers[2].id} ") }
+      it 'verifies email subject and body contain correct dossier numbers for multiple termine status' do
+        expect(subject.subject).to eq("Des dossiers dont le traitement est terminé vont bientôt être supprimés")
+        dossiers.each do |dossier|
+          expect(subject.body).to include("N° #{dossier.id} ")
+        end
+      end
     end
   end
 
@@ -221,10 +249,12 @@ RSpec.describe DossierMailer, type: :mailer do
 
     subject { described_class.notify_groupe_instructeur_changed(instructeur, dossier) }
 
-    it { expect(subject.subject).to eq("Le dossier nº #{dossier.id} a changé de groupe d’instructeurs") }
-    it { expect(subject.body).to include("n° #{dossier.id}") }
-    it { expect(subject.body).to include(dossier.procedure.libelle) }
-    it { expect(subject.body).to include("Suite à cette modification, vous ne suivez plus ce dossier.") }
+    it 'verifies subject and body content for groupe instructeur change notification' do
+      expect(subject.subject).to eq("Le dossier nº #{dossier.id} a changé de groupe d’instructeurs")
+      expect(subject.body).to include("n° #{dossier.id}")
+      expect(subject.body).to include(dossier.procedure.libelle)
+      expect(subject.body).to include("Suite à cette modification, vous ne suivez plus ce dossier.")
+    end
   end
 
   describe '.notify_pending_correction' do
@@ -240,19 +270,23 @@ RSpec.describe DossierMailer, type: :mailer do
     }
 
     context 'reason is incorrect' do
-      it { expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »") }
-      it { expect(subject.body).to include("apporter des corrections") }
-      it { expect(subject.body).not_to include("Silence") }
+      it 'checks email subject and body for corrections without Silence Vaut Accord' do
+        expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »")
+        expect(subject.body).to include("apporter des corrections")
+        expect(subject.body).not_to include("Silence")
+      end
     end
 
     context 'sva with reason is incorrect' do
       let(:sva_svr_decision_on) { Date.tomorrow }
       let(:procedure) { create(:procedure, :sva) }
 
-      it { expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »") }
-      it { expect(subject.body).to include("apporter des corrections") }
-      it { expect(subject.body).to include("Silence Vaut Accord") }
-      it { expect(subject.body).to include("suspendu") }
+      it 'includes Silence Vaut Accord and mentions suspension for incorrect reason' do
+        expect(subject.subject).to eq("Vous devez corriger votre dossier nº #{dossier.id} « #{dossier.procedure.libelle} »")
+        expect(subject.body).to include("apporter des corrections")
+        expect(subject.body).to include("Silence Vaut Accord")
+        expect(subject.body).to include("suspendu")
+      end
     end
 
     context 'sva with reason is incomplete' do
@@ -260,9 +294,11 @@ RSpec.describe DossierMailer, type: :mailer do
       let(:reason) { :incomplete }
       let(:procedure) { create(:procedure, :sva) }
 
-      it { expect(subject.body).to include("compléter") }
-      it { expect(subject.body).to include("Silence Vaut Accord") }
-      it { expect(subject.body).to include("réinitialisé") }
+      it 'mentions the need to complete the dossier and includes Silence Vaut Accord with reset message' do
+        expect(subject.body).to include("compléter")
+        expect(subject.body).to include("Silence Vaut Accord")
+        expect(subject.body).to include("réinitialisé")
+      end
     end
 
     context 'svr with reason is incomplete' do
@@ -270,9 +306,11 @@ RSpec.describe DossierMailer, type: :mailer do
       let(:reason) { :incomplete }
       let(:procedure) { create(:procedure, :svr) }
 
-      it { expect(subject.body).to include("compléter") }
-      it { expect(subject.body).to include("Silence Vaut Rejet") }
-      it { expect(subject.body).to include("réinitialisé") }
+      it 'mentions the need to complete the dossier and includes Silence Vaut Rejet with reset message' do
+        expect(subject.body).to include("compléter")
+        expect(subject.body).to include("Silence Vaut Rejet")
+        expect(subject.body).to include("réinitialisé")
+      end
     end
   end
 
@@ -285,20 +323,26 @@ RSpec.describe DossierMailer, type: :mailer do
     subject { described_class.with(dossier_transfer: dossier_transfer).notify_transfer }
 
     context 'when it is a transfer of one dossier' do
-      it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
-      it { expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour le dossier n° #{dossier.id} sur la démarche") }
-      it { expect(subject.body).to include(procedure.libelle.to_s) }
+      it 'includes relevant details about the single dossier transfer request' do
+        expect(subject.subject).to include("Vous avez une demande de transfert en attente.")
+        expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour le dossier n° #{dossier.id} sur la démarche")
+        expect(subject.body).to include(procedure.libelle.to_s)
+      end
     end
 
     context 'when recipient has preferred domain' do
       let(:dossier_transfer) { create(:dossier_transfer, email: create(:user, preferred_domain: :demarches_gouv_fr).email) }
-      it { expect(subject.body).to include(dossiers_url(statut: "dossiers-transferes", host: ENV.fetch("APP_HOST"))) }
+      it 'includes a link with the preferred domain in the email body' do
+        expect(subject.body).to include(dossiers_url(statut: "dossiers-transferes", host: ENV.fetch("APP_HOST")))
+      end
     end
 
     context 'when it is a transfer of multiple dossiers' do
       let!(:dossier2) { create(:dossier, user: user, transfer: dossier_transfer, procedure: procedure) }
-      it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
-      it { expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour 2 dossiers.") }
+      it 'includes a summary of multiple dossiers transfer request' do
+        expect(subject.subject).to include("Vous avez une demande de transfert en attente.")
+        expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour 2 dossiers.")
+      end
     end
 
     context 'when it is a transfer of one dossier from super admin' do
@@ -306,8 +350,10 @@ RSpec.describe DossierMailer, type: :mailer do
         dossier_transfer.update!(from_support: true)
       end
 
-      it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
-      it { expect(subject.body).to include("Le support technique vous adresse une demande de transfert") }
+      it 'includes details indicating the transfer request is from support' do
+        expect(subject.subject).to include("Vous avez une demande de transfert en attente.")
+        expect(subject.body).to include("Le support technique vous adresse une demande de transfert")
+      end
     end
 
     context 'when dossiers have been dissociated from transfer' do

@@ -26,7 +26,8 @@ module MailerDefaultsConfigurableConcern
 
   included do
     before_action -> { self.class.save_original_defaults }
-    after_action ->  { self.class.reset_original_defaults }
+    before_action :set_currents_for_legacy
+    after_action -> { self.class.reset_original_defaults }
 
     def configure_defaults_for_user(user)
       return if !user.is_a?(User) # not for super-admins

@@ -2,7 +2,7 @@
 
 - content_for(:footer) do
   Merci de ne pas répondre à cet email. Donnez votre avis
-  = link_to("sur #{APPLICATION_NAME}", @url)
+  = link_to("sur #{Current.application_name}", @url)
   ou
   = succeed '.' do
     = mail_to(@avis.claimant.email, "contactez la personne qui vous a invité")
