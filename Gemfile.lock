@@ -734,6 +734,8 @@ GEM
       attr_required (>= 0.0.5)
       faraday (~> 2.0)
       faraday-follow_redirects
+    sys-proctable (1.3.0)
+      ffi (~> 1.1)
     sysexits (1.2.0)
     temple (0.8.2)
     terminal-table (3.0.2)
@@ -940,6 +942,7 @@ DEPENDENCIES
   spring-commands-rspec
   stackprof
   strong_migrations
+  sys-proctable
   timecop
   turbo-rails
   typhoeus
