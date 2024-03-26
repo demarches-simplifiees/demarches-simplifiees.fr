@@ -38,7 +38,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     }
 
     # Champs are automatically saved
-    expect(page).to have_button('Ajouter un champ', disabled: false)
+    expect(page).to have_button('Ajouter un champ', disabled: false)
     page.refresh
     expect(page).to have_selector('.type-de-champ', count: 3)
 
@@ -111,7 +111,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
     page.refresh
 
     within '.type-de-champ .editor-block' do
-      click_on 'Ajouter un champ'
+      click_on 'Ajouter un champ'
 
       fill_in 'Libellé du champ', with: 'libellé de champ 1'
     end
@@ -268,6 +268,118 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       expect(page).to have_content("Le formulaire contient des erreurs")
       expect(page).to have_content("Le titre de section suivant est invalide, veuillez le corriger :")
+    end
+  end
+
+  context 'move and morph' do
+    let(:procedure) { create(:procedure, types_de_champ_public: tdcs) }
+    let!(:initial_first_coordinate) { procedure.draft_revision.revision_types_de_champ_public[0] }
+    let!(:initial_second_coordinate) { procedure.draft_revision.revision_types_de_champ_public[1] }
+    let!(:initial_third_coordinate) { procedure.draft_revision.revision_types_de_champ_public[2] }
+
+    context 'with root champs' do
+      let(:tdcs) do
+        [
+          { type: :text, libelle: 'first_tdc' },
+          { type: :text, libelle: 'middle_tdc' },
+          { type: :text, libelle: 'last_tdc' }
+        ]
+      end
+      let(:initial_first_coordinate_selector) { "##{ActionView::RecordIdentifier.dom_id(initial_first_coordinate, :move_and_morph)}" }
+
+      scenario 'root select is empty by default' do
+        # at first, select only contains the current coordinate
+        expect(page).to have_selector("#{initial_first_coordinate_selector} option", count: 1)
+        expect(page.find(initial_first_coordinate_selector).all("option").first.value.to_s).to eq(initial_first_coordinate.stable_id.to_s)
+      end
+
+      scenario 'when select is focused, it seeds its options' do
+        # once clicked, the select is updated with root champs options only, preselected on coordinates and have nice libelles
+        page.find(initial_first_coordinate_selector).click
+        expect(page).to have_selector("#{initial_first_coordinate_selector} option", count: 3)
+        expect(page.find(initial_first_coordinate_selector).find("option[selected]").value.to_s).to eq(initial_first_coordinate.stable_id.to_s)
+        expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(['0 first_tdc', '1 middle_tdc', '2 last_tdc'])
+
+        # renaming a tdc renames it's option
+        within "##{dom_id(initial_first_coordinate, :type_de_champ_editor)}" do
+          fill_in 'Libellé du champ', with: 'renamed'
+        end
+        wait_until { initial_first_coordinate.reload.libelle == 'renamed' }
+        page.find(initial_first_coordinate_selector).click
+        expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(['0 renamed', '1 middle_tdc', '2 last_tdc'])
+      end
+
+      scenario 'when select is changed, it move the coordinates' do
+        page.find(initial_first_coordinate_selector).click # seeds
+        page.find(initial_first_coordinate_selector).select(initial_third_coordinate.libelle)
+        wait_until do
+          procedure.reload.draft_revision.revision_types_de_champ.last.type_de_champ.libelle == initial_first_coordinate.type_de_champ.libelle
+        end
+        # wait until turbo response
+        expect(page).to have_text('Formulaire enregistré')
+
+        # check reorder worked on backend
+        reordered_coordinates = [initial_second_coordinate, initial_third_coordinate, initial_first_coordinate]
+        expect(procedure.reload.draft_revision.revision_types_de_champ.map(&:stable_id)).to eq(reordered_coordinates.map(&:stable_id))
+
+        # check reorder rerendered champ component between target->destination
+        reordered_coordinates.map(&:reload).map do |coordinate|
+          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position)
+        end
+      end
+    end
+
+    context 'with repetition champs' do
+      let(:tdcs) do
+        [
+          { type: :text, libelle: 'root_first_tdc' },
+          {
+            type: :repetition,
+            libelle: 'root_second_tdc',
+            children: [
+              { type: :text, libelle: 'child_first_tdc' },
+              { type: :text, libelle: 'child_second_tdc' }
+            ]
+          },
+          { type: :text, libelle: 'root_thrid_tdc' }
+        ]
+      end
+      let(:children_coordinates) { procedure.draft_revision.revision_types_de_champ.filter { _1.parent.present? } }
+      let(:first_child_coordinate_selector) { "##{ActionView::RecordIdentifier.dom_id(children_coordinates.first, :move_and_morph)}" }
+
+      scenario 'first child of repetition select is empty by default' do
+        expect(page).to have_selector("#{first_child_coordinate_selector} option", count: 1)
+        expect(page.find(first_child_coordinate_selector).all("option").first.value.to_s).to eq(children_coordinates.first.stable_id.to_s)
+      end
+
+      scenario 'when first child select is focused, seed with repetition only tdcs' do
+        page.find(first_child_coordinate_selector).click
+        expect(page).to have_selector("#{first_child_coordinate_selector} option", count: 2)
+
+        opts = page.find(first_child_coordinate_selector).all("option").map(&:text)
+        expect(opts).to match_array(children_coordinates.map { "#{_1.position} #{_1.libelle}" })
+      end
+
+      scenario 'when first child select is changed, move champ in repetition' do
+        page.find(first_child_coordinate_selector).click
+        expect(children_coordinates.first.position).to eq(0)
+        page.find(first_child_coordinate_selector).select(children_coordinates.last.libelle)
+        # check reorder works on backend
+        wait_until do
+          children_coordinates.first.reload.position == 1
+        end
+        # wait until turbo response
+        expect(page).to have_text('Formulaire enregistré')
+
+        # check reorder worked on backend
+        reordered_coordinates = children_coordinates.reverse
+        expect(procedure.reload.draft_revision.revision_types_de_champ.filter { _1.parent.present? }.sort_by(&:position).map(&:stable_id)).to eq(reordered_coordinates.map(&:stable_id))
+
+        # check reorder rerendered champ component between target->destination
+        reordered_coordinates.map(&:reload).map do |coordinate|
+          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position)
+        end
+      end
     end
   end
 end

@@ -57,8 +57,22 @@ module Administrateurs
       end
     end
 
-    def move
-      draft.move_type_de_champ(params[:stable_id], params[:position].to_i)
+    def move_and_morph
+      source_type_de_champ = draft.find_and_ensure_exclusive_use(params[:stable_id])
+      target_type_de_champ = draft.find_and_ensure_exclusive_use(params[:target_stable_id])
+      @coordinate = draft.coordinate_for(source_type_de_champ)
+      from = @coordinate.position
+      to = draft.coordinate_for(target_type_de_champ).position
+      @coordinate = draft.move_type_de_champ(@coordinate.stable_id, to)
+      @destroyed = @coordinate
+      @created = champ_component_from(@coordinate)
+      @morphed = @coordinate.siblings
+      if from > to # case of moved up, update components from target (> plus one) to origin
+        @morphed = @morphed.where("position > ?", to).where("position <= ?", from)
+      else # case of moved down, update components from origin up to target (< minus one)
+        @morphed = @morphed.where("position >= ?", from).where("position < ?", to)
+      end
+      @morphed = @morphed.map { |c| champ_component_from(c) }
     end
 
     def move_up

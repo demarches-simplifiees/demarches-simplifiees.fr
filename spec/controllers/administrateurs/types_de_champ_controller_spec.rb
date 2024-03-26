@@ -154,6 +154,43 @@ describe Administrateurs::TypesDeChampController, type: :controller do
     end
   end
 
+  describe '#move_and_morph' do
+    # l1, l2, l3 => l2, l3, l1
+    context 'move and morph down' do
+      let(:params) do
+        { procedure_id: procedure.id, stable_id: first_coordinate.stable_id, target_stable_id: third_coordinate.stable_id }
+      end
+
+      subject { patch :move_and_morph, params: params, format: :turbo_stream }
+
+      it do
+        is_expected.to have_http_status(:ok)
+        expect(assigns(:coordinate)).to eq(first_coordinate)
+        expect(assigns(:destroyed)).to eq(first_coordinate)
+        expect(extract_libelle(assigns(:created))).to eq(['l1', ['l2', 'l3']])
+        expect(morpheds).to eq([['l2', []], ['l3', ['l2']]])
+      end
+    end
+
+    # l1, l2, l3 => l3, l1, l2
+    context 'move and morph up' do
+      let(:params) do
+        { procedure_id: procedure.id, stable_id: third_coordinate.stable_id, target_stable_id: first_coordinate.stable_id }
+      end
+
+      subject { patch :move_and_morph, params: params, format: :turbo_stream }
+
+      it do
+        is_expected.to have_http_status(:ok)
+        [first_coordinate, second_coordinate, third_coordinate].map(&:reload)
+        expect(assigns(:coordinate).stable_id).to eq(first_coordinate.stable_id)
+        expect(assigns(:destroyed).stable_id).to eq(first_coordinate.stable_id)
+        expect(extract_libelle(assigns(:created))).to eq(['l3', []])
+        expect(morpheds).to eq([['l1', ['l3']], ['l2', ['l3', 'l1']]])
+      end
+    end
+  end
+
   # l1, l2, l3 => l1, l3
   # destroyed: l2, morphed: (l3, [l1])
   describe '#destroy' do

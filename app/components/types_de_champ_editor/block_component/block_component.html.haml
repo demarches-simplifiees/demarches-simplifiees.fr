@@ -1,3 +1,6 @@
-%ul.types-de-champ-block{ id: block_id, data: sortable_options }
+- c = TypesDeChampEditor::SelectChampTemplatePositionComponent.new(block: @block, coordinates: @coordinates)
+%ul.types-de-champ-block{ id: block_id, data: { controller: 'select-champ-position-template', 'select-champ-position-template-template-id-value': c.block_id } }
   - @coordinates.each do |coordinate|
-    = render TypesDeChampEditor::ChampComponent.new(coordinate: coordinate, upper_coordinates: coordinate.upper_coordinates)
+    = render TypesDeChampEditor::ChampComponent.new(coordinate:, upper_coordinates: coordinate.upper_coordinates)
+  %li.hidden= render c
+

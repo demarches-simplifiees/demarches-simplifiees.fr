@@ -638,7 +638,7 @@ Rails.application.routes.draw do
 
       resources :types_de_champ, only: [:create, :update, :destroy], param: :stable_id do
         member do
-          patch :move
+          patch :move_and_morph
           patch :move_up
           patch :move_down
           put :piece_justificative_template

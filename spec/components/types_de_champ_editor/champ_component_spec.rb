@@ -61,5 +61,14 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
         expect(page).to have_css('input[type=file]')
       end
     end
+
+    describe 'select champ position' do
+      let(:tdc) { procedure.draft_revision.types_de_champ.first }
+      let(:coordinate) { procedure.draft_revision.revision_types_de_champ_public.first }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text, libelle: 'a' }]) }
+      it 'does not have select to move champs' do
+        expect(page).to have_css("select##{ActionView::RecordIdentifier.dom_id(coordinate, :move_and_morph)}")
+      end
+    end
   end
 end
