@@ -171,7 +171,7 @@ class DossierMailer < ApplicationMailer
 
   def notify_transfer(transfer)
     I18n.with_locale(transfer.user_locale) do
-      @subject = default_i18n_subject(count: transfer.dossiers.size)
+      @subject = default_i18n_subject()
       @transfer = transfer
 
       mail(to: transfer.email, subject: @subject)

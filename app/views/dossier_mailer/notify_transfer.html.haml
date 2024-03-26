@@ -1,9 +1,16 @@
-- content_for(:title, "#{@subject}")
-
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.body', count: @transfer.dossiers.size)
+  - if @transfer.dossiers.size > 1
+    = t('.transfert_multiple', sender: @transfer.sender, count: @transfer.dossiers.size)
+  - else
+    - dossier = @transfer.dossiers.last
+    = t('.transfert_simple', sender: @transfer.sender, dossier_id: dossier.id)
+    %span{ :style => "font-weight: bold;" }
+      = dossier.procedure.libelle
+
+%p
+  = t('.transfer_text')
   = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
 
 = render partial: "layouts/mailers/signature"
