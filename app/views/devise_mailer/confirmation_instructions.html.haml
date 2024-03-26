@@ -5,7 +5,7 @@
   %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
-    Pour activer votre compte sur #{APPLICATION_NAME}, veuillez cliquer sur le lien suivant :
+    Pour activer votre compte sur #{Current.application_name}, veuillez cliquer sur le lien suivant :
     - link = confirmation_url(@user, confirmation_token: @token, procedure_id: @procedure&.id, prefill_token: @prefill_token)
     = link_to(link, link)
 
