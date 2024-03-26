@@ -39,6 +39,7 @@ gem 'flipper-ui'
 gem 'fugit'
 gem 'geocoder'
 gem 'geo_coord', require: "geo/coord"
+gem 'gitlab-sidekiq-fetcher', require: 'sidekiq-reliable-fetch', git: 'https://github.com/demarches-simplifiees/reliable-fetch.git'
 gem 'gon'
 gem 'graphql', '2.0.24'
 gem 'graphql-batch', '0.5.1'

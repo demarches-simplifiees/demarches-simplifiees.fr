@@ -15,6 +15,10 @@ if ENV.has_key?('REDIS_SIDEKIQ_SENTINELS')
       password:,
       role: :master
     }
+
+    if ENV['SKIP_RELIABLE_FETCH'].blank?
+      Sidekiq::ReliableFetch.setup_reliable_fetch!(config)
+    end
   end
 
   Sidekiq.configure_client do |config|

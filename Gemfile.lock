@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/demarches-simplifiees/reliable-fetch.git
+  revision: f547a270c402b0180091516d790434e83287fae7
+  specs:
+    gitlab-sidekiq-fetcher (0.11.0)
+      json (>= 2.5)
+      sidekiq (~> 7.0)
+
+GIT
   remote: https://github.com/heartcombo/devise.git
   revision: edffc79bf05d7f1c58ba50ffeda645e2e4ae0cb1
   ref: edffc79bf05d7f1c58ba50ffeda645e2e4ae0cb1
@@ -861,6 +869,7 @@ DEPENDENCIES
   fugit
   geo_coord
   geocoder
+  gitlab-sidekiq-fetcher!
   gon
   graphql (= 2.0.24)
   graphql-batch (= 0.5.1)
