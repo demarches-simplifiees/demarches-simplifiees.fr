@@ -23,14 +23,14 @@ class ProcedureRevision < ApplicationRecord
 
   delegate :path, to: :procedure, prefix: true
 
-  def build_champs_public
+  def build_champs_public(dossier)
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_public.reload.map(&:build_champ)
+    types_de_champ_public.reload.map { _1.build_champ(dossier:) }
   end
 
-  def build_champs_private
+  def build_champs_private(dossier)
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_private.reload.map(&:build_champ)
+    types_de_champ_private.reload.map { _1.build_champ(dossier:) }
   end
 
   def add_type_de_champ(params)
@@ -163,19 +163,16 @@ class ProcedureRevision < ApplicationRecord
     dossier
   end
 
-  def types_de_champ_for(scope: nil, root: false)
-    # We return an unordered collection
-    return types_de_champ if !root && scope.nil?
-    return types_de_champ.filter { scope == :public ? _1.public? : _1.private? } if !root
-
-    # We return an ordered collection
+  def types_de_champ_for(scope: nil)
     case scope
     when :public
-      types_de_champ_public
+      types_de_champ.filter(&:public?)
     when :private
-      types_de_champ_private
+      types_de_champ.filter(&:private?)
+    when TypeDeChamp
+      children_of(scope)
     else
-      types_de_champ_public + types_de_champ_private
+      types_de_champ
     end
   end
 

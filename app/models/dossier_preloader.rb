@@ -25,17 +25,6 @@ class DossierPreloader
 
   private
 
-  # returns: { revision_id : { type_de_champ_id : position } }
-  def positions
-    @positions ||= ProcedureRevisionTypeDeChamp
-      .where(revision_id: @dossiers.pluck(:revision_id).uniq)
-      .select(:revision_id, :type_de_champ_id, :position)
-      .group_by(&:revision_id)
-      .transform_values do |coordinates|
-        coordinates.index_by(&:type_de_champ_id).transform_values(&:position)
-      end
-  end
-
   def load_dossiers(dossiers, pj_template: false)
     to_include = @includes_for_dossier.dup
     to_include << [piece_justificative_file_attachments: :blob]
@@ -52,17 +41,10 @@ class DossierPreloader
       .to_a
 
     load_etablissements(all_champs)
-
-    children_champs, root_champs = all_champs.partition(&:child?)
-    champs_by_dossier = root_champs.group_by(&:dossier_id)
-    champs_by_dossier_by_parent = children_champs
-      .group_by(&:dossier_id)
-      .transform_values do |champs|
-        champs.group_by(&:parent_id)
-      end
+    champs_by_dossier = all_champs.group_by(&:dossier_id)
 
     dossiers.each do |dossier|
-      load_dossier(dossier, champs_by_dossier[dossier.id] || [], champs_by_dossier_by_parent[dossier.id] || {})
+      load_dossier(dossier, champs_by_dossier[dossier.id] || [])
     end
   end
 
@@ -79,55 +61,26 @@ class DossierPreloader
     end
   end
 
-  def load_dossier(dossier, champs, children_by_parent = {})
-    champs_public, champs_private = champs.partition(&:public?)
+  def load_dossier(dossier, champs)
+    children_champs, root_champs = champs.partition(&:child?)
+    champs_public, champs_private = root_champs.partition(&:public?)
+    children_champs_public, children_champs_private = children_champs.partition(&:public?)
 
-    dossier.association(:champs).target = []
-    dossier.association(:champs_public_all).target = []
-    dossier.association(:champs_private_all).target = []
-    load_champs(dossier, :champs_public, champs_public, dossier, children_by_parent)
-    load_champs(dossier, :champs_private, champs_private, dossier, children_by_parent)
+    dossier.association(:champs).target = champs
+    dossier.association(:champs_public).target = champs_public
+    dossier.association(:champs_public_all).target = champs_public + children_champs_public
+    dossier.association(:champs_private).target = champs_private
+    dossier.association(:champs_private_all).target = champs_private + children_champs_private
+
+    champs.each do |champ|
+      champ.association(:dossier).target = dossier
+    end
 
     # We need to do this because of the check on `Etablissement#champ` in
     # `Etablissement#libelle_for_export`. By assigning `nil` to `target` we mark association
     # as loaded and so the check on `Etablissement#champ` will not trigger n+1 query.
     if dossier.etablissement
       dossier.etablissement.association(:champ).target = nil
-    end
-  end
-
-  def load_champs(parent, name, champs, dossier, children_by_parent)
-    if champs.empty?
-      parent.association(name).target = [] # tells to Rails association has been loaded
-      return
-    end
-
-    champs.each do |champ|
-      champ.association(:dossier).target = dossier
-
-      if parent.is_a?(Champ)
-        champ.association(:parent).target = parent
-      end
-    end
-
-    dossier.association(:champs).target += champs
-
-    if champs.first.public?
-      dossier.association(:champs_public_all).target += champs
-    else
-      dossier.association(:champs_private_all).target += champs
-    end
-
-    parent.association(name).target = champs
-      .filter { positions[dossier.revision_id][_1.type_de_champ_id].present? }
-      .sort_by { [_1.row_id, positions[dossier.revision_id][_1.type_de_champ_id]] }
-
-    # Load children champs
-    champs.filter(&:block?).each do |parent_champ|
-      champs = children_by_parent[parent_champ.id] || []
-      parent_champ.association(:dossier).target = dossier
-
-      load_champs(parent_champ, :champs, champs, dossier, children_by_parent)
     end
   end
 end

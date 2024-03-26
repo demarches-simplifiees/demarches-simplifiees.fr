@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_25_160237) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_26_140237) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -1212,7 +1212,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_160237) do
   add_foreign_key "bulk_messages", "procedures"
   add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
   add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
-  add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "champs", "dossiers"
   add_foreign_key "champs", "etablissements"
   add_foreign_key "champs", "types_de_champ"

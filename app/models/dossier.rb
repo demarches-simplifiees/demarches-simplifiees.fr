@@ -41,15 +41,11 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs
-  # We have to remove champs in a particular order - champs with a reference to a parent have to be
-  # removed first, otherwise we get a foreign key constraint error.
-  has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+  has_many :champs, dependent: :destroy
   has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_public_all, -> { public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private_all, -> { private_only }, class_name: 'Champ', inverse_of: false
-  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachment: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
@@ -140,9 +136,6 @@ class Dossier < ApplicationRecord
 
   after_destroy_commit :log_destroy
 
-  accepts_nested_attributes_for :champs
-  accepts_nested_attributes_for :champs_public
-  accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :champs_public_all
   accepts_nested_attributes_for :champs_private_all
   accepts_nested_attributes_for :individual
@@ -276,35 +269,16 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
-  scope :with_champs, -> {
-    includes(champs_public: [
-      :type_de_champ,
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
-    ])
-  }
-
   scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
-  scope :with_annotations, -> {
-    includes(champs_private: [
-      :type_de_champ,
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [:type_de_champ, piece_justificative_file_attachments: :blob]
-    ])
-  }
   scope :for_api, -> {
-    with_champs
-      .with_annotations
-      .includes(commentaires: { piece_jointe_attachment: :blob },
-        justificatif_motivation_attachment: :blob,
-        attestation: [],
-        avis: { piece_justificative_file_attachment: :blob },
-        traitement: [],
-        etablissement: [],
-        individual: [],
-        user: [])
+    includes(commentaires: { piece_jointe_attachment: :blob },
+      justificatif_motivation_attachment: :blob,
+      attestation: [],
+      avis: { piece_justificative_file_attachment: :blob },
+      traitement: [],
+      etablissement: [],
+      individual: [],
+      user: [])
   }
 
   scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
@@ -449,8 +423,6 @@ class Dossier < ApplicationRecord
   validates :mandataire_last_name, presence: true, if: :for_tiers?
   validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
 
-  validates_associated :prefilled_champs_public, on: :champs_public_value
-
   def types_de_champ_public
     types_de_champ
   end
@@ -500,17 +472,16 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs_for_new_dossier
-    revision.build_champs_public.each do |champ|
+    revision.build_champs_public(self).each do |champ|
       champs_public << champ
     end
-    revision.build_champs_private.each do |champ|
+    revision.build_champs_private(self) do |champ|
       champs_private << champ
     end
-    champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|
-      champ.add_row(revision)
-    end
-    champs_private.filter(&:repetition?).each do |champ|
-      champ.add_row(revision)
+    (champs_public + champs_private).filter(&:repetition?).each do |champ|
+      if champ.private? || champ.mandatory?
+        champ.add_row
+      end
     end
   end
 
@@ -1159,17 +1130,22 @@ class Dossier < ApplicationRecord
   end
 
   def remove_titres_identite!
-    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def check_mandatory_and_visible_champs
-    champs_for_revision(scope: :public)
-      .filter { _1.child? ? _1.parent.visible? : true }
-      .filter(&:visible?)
-      .filter(&:mandatory_blank?)
-      .map do |champ|
+    project_champs_public.filter(&:visible?).each do |champ|
+      if champ.mandatory_blank?
         champ.errors.add(:value, :missing)
       end
+      if champ.repetition?
+        champ.rows.each do |row|
+          row.filter(&:visible?).filter(&:mandatory_blank?).each do |champ|
+            champ.errors.add(:value, :missing)
+          end
+        end
+      end
+    end
   end
 
   def demander_un_avis!(avis)
@@ -1382,20 +1358,33 @@ class Dossier < ApplicationRecord
     user.france_connected_with_one_identity?
   end
 
-  def champs_for_revision(scope: nil, root: false)
+  def champs_for_revision(scope: nil)
     champs_index = champs.group_by(&:stable_id)
       # Due to some bad data we can have multiple copies of the same champ. Ignore extra copy.
       .transform_values { _1.sort_by(&:id).uniq(&:row_id) }
 
-    if scope.is_a?(TypeDeChamp)
-      revision.children_of(scope)
-    else
-      revision.types_de_champ_for(scope:, root:)
-    end.flat_map { champs_index[_1.stable_id] || [] }
+    revision.types_de_champ_for(scope:)
+      .flat_map { champs_index[_1.stable_id] || [] }
   end
 
   def has_annotations?
-    revision.revision_types_de_champ_private.present?
+    revision.types_de_champ_private.present?
+  end
+
+  def project_champs_public
+    revision.types_de_champ_public.map { project_champ(_1, nil) }
+  end
+
+  def project_champs_private
+    revision.types_de_champ_private.map { project_champ(_1, nil) }
+  end
+
+  def project_rows_for(type_de_champ)
+    types_de_champ = revision.children_of(type_de_champ)
+    repetition = project_champ(type_de_champ, nil)
+    repetition.row_ids.map do |row_id|
+      types_de_champ.map { project_champ(_1, row_id) }
+    end
   end
 
   def project_champ(type_de_champ, row_id)
@@ -1417,6 +1406,11 @@ class Dossier < ApplicationRecord
     else
       champ
     end
+  end
+
+  def reload
+    super if persisted?
+    @champs_by_stable_id_with_row = nil
   end
 
   private
