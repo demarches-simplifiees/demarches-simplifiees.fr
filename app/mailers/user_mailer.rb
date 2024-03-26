@@ -9,6 +9,8 @@ class UserMailer < ApplicationMailer
     @subject = "Demande de création de compte"
     @procedure = procedure
 
+    configure_defaults_for_user(user)
+
     mail(to: user.email, subject: @subject, procedure: @procedure)
   end
 
@@ -16,6 +18,8 @@ class UserMailer < ApplicationMailer
     @user = user
     @requested_email = requested_email
     @subject = "Fusion de compte"
+
+    configure_defaults_for_email(requested_email)
 
     mail(to: requested_email, subject: @subject)
   end
@@ -25,6 +29,8 @@ class UserMailer < ApplicationMailer
     @email_merge_token_created_at = email_merge_token_created_at
     @subject = "Veuillez confirmer la fusion de compte"
 
+    configure_defaults_for_email(email)
+
     mail(to: email, subject: @subject)
   end
 
@@ -33,9 +39,11 @@ class UserMailer < ApplicationMailer
     @user = user
     subject = "Activez votre compte instructeur"
 
+    configure_defaults_for_user(user)
+
     mail(to: user.email,
       subject: subject,
-      reply_to: CONTACT_EMAIL)
+      reply_to: Current.contact_email)
   end
 
   def invite_gestionnaire(user, reset_password_token, groupe_gestionnaire)
@@ -44,12 +52,16 @@ class UserMailer < ApplicationMailer
     @groupe_gestionnaire = groupe_gestionnaire
     subject = "Activez votre compte gestionnaire"
 
+    configure_defaults_for_user(user)
+
     mail(to: user.email,
       subject: subject,
-      reply_to: CONTACT_EMAIL)
+      reply_to: Current.contact_email)
   end
 
   def send_archive(administrateur_or_instructeur, procedure, archive)
+    configure_defaults_for_user(administrateur_or_instructeur.user)
+
     @archive = archive
     @procedure = procedure
     @archive_url = case administrateur_or_instructeur
@@ -71,6 +83,8 @@ class UserMailer < ApplicationMailer
     @user = user
     @subject = "Votre compte sera supprimé dans #{Expired::REMAINING_WEEKS_BEFORE_EXPIRATION} semaines"
 
+    configure_defaults_for_user(user)
+
     mail(to: user.email, subject: @subject)
   end
 
@@ -79,6 +93,8 @@ class UserMailer < ApplicationMailer
     @subject = "Clôture d'une démarche sur Démarches simplifiées"
     @procedure = procedure
     @content = content
+
+    configure_defaults_for_user(user)
 
     mail(to: user.email, subject: @subject, content: @content, procedure: @procedure)
   end
