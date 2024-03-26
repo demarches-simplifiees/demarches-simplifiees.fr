@@ -13,3 +13,7 @@ trix-editor {
   min-height: 10em;
   background-color: #FFFFFF;
 }
+
+[data-fr-theme="dark"] .trix-button-group button {
+  background: var(--background-action-high-blue-france) !important;
+}
