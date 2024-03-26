@@ -531,6 +531,7 @@ Rails.application.routes.draw do
           delete :remove, on: :member
         end
         resources :children, controller: 'groupe_gestionnaire_children', only: [:index, :create, :destroy]
+        resources :commentaires, controller: 'groupe_gestionnaire_commentaires', only: [:index, :show, :create, :destroy]
       end
     end
   end

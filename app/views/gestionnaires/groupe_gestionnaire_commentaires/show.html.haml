@@ -1,0 +1,15 @@
+= render partial: 'gestionnaires/breadcrumbs',
+  locals: { steps: [['Groupes gestionnaire', gestionnaire_groupe_gestionnaires_path],
+                    ["#{@groupe_gestionnaire.name.truncate_words(10)}", gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire)],
+                    ["Messagerie", gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire)],
+                    [@last_commentaire.sender_email]], preview: false }
+
+.container
+  %h1 Messages de « #{ @last_commentaire.sender_email } »
+.messagerie.container
+  %ul.messages-list{ data: { controller: 'scroll-to' } }
+    - @groupe_gestionnaire.commentaire_groupe_gestionnaires.where(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type).each do |commentaire|
+      %li.message{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire), id: dom_id(commentaire) }
+        = render(GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent.new(commentaire: commentaire, connected_user: current_gestionnaire))
+  - if @last_commentaire.sender
+    = render partial: "shared/groupe_gestionnaires/commentaires/form", locals: { commentaire: @commentaire, form_url: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire) }

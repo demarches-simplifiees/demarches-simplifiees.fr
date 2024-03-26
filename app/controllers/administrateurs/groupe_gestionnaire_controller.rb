@@ -12,7 +12,7 @@ module Administrateurs
     end
 
     def commentaires
-      @commentaire = Commentaire.new
+      @commentaire = CommentaireGroupeGestionnaire.new
     end
 
     def create_commentaire
@@ -42,7 +42,7 @@ module Administrateurs
     end
 
     def commentaire_params
-      params.require(:commentaire).permit(:body)
+      params.require(:commentaire_groupe_gestionnaire).permit(:body)
     end
   end
 end

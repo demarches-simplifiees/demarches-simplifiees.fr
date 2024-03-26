@@ -265,8 +265,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_10_113623) do
     t.string "body"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "discarded_at", precision: 6
+    t.string "gestionnaire_email"
     t.bigint "gestionnaire_id"
     t.bigint "groupe_gestionnaire_id"
+    t.string "sender_email"
     t.bigint "sender_id", null: false
     t.string "sender_type", null: false
     t.datetime "updated_at", precision: 6, null: false

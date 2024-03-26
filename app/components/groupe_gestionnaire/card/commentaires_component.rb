@@ -4,4 +4,12 @@ class GroupeGestionnaire::Card::CommentairesComponent < ApplicationComponent
     @administrateur = administrateur
     @path = path
   end
+
+  def number_commentaires
+    if @administrateur
+      @administrateur.commentaire_groupe_gestionnaires.size
+    else
+      @groupe_gestionnaire.commentaire_groupe_gestionnaires.select(:sender_id, :sender_type).distinct.size
+    end
+  end
 end
