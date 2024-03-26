@@ -1,6 +1,0 @@
-en:
-  activerecord:
-    attributes:
-      champs/textarea_champ:
-        hints:
-          value: "Resize the field to enter more lines"

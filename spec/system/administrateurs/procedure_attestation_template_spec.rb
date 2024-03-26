@@ -128,9 +128,8 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         attestation.reload.logo.attached? && attestation.signature.attached? && !attestation.official_layout?
       }
 
-      # footer is rows-limited
       fill_in "Contenu du pied de page", with: ["line1", "line2", "line3", "line4"].join("\n")
-      expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3line4")
+      expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3\nline4")
     end
 
     context "tag in error" do

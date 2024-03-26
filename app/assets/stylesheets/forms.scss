@@ -683,3 +683,15 @@ textarea::placeholder {
     }
   }
 }
+
+.resize-none {
+  resize: none;
+}
+
+.resize-x {
+  resize: horizontal;
+}
+
+.resize-y {
+  resize: vertical;
+}

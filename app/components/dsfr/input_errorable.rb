@@ -92,6 +92,11 @@ module Dsfr
             'email-input-target': 'input'
           })
         end
+
+        if autoresize?
+          @opts.deep_merge!(data: { controller: 'autoresize' })
+        end
+
         @opts
       end
 
@@ -116,6 +121,10 @@ module Dsfr
       end
 
       def email?
+        false
+      end
+
+      def autoresize?
         false
       end
 
