@@ -41,21 +41,23 @@ class ProcedureRevision < ApplicationRecord
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    # the collection is orderd by (position, id), so we can use after_coordinate.position
-    # if not present, a big number is used to ensure the element is at the tail
-    position = (after_coordinate&.position) || 100_000
+    siblings = siblings_for(parent_coordinate:, private_tdc: params[:private])
 
     tdc = TypeDeChamp.new(params)
     if tdc.save
-      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
-      coordinate = revision_types_de_champ.create!(h)
+      # moving all the impacted tdc down
+      position = next_position_for(after_coordinate:, siblings:)
+      siblings.where("position >= ?", position).update_all("position = position + 1")
 
-      renumber(coordinate.reload.siblings)
+      # insertion of the new tdc
+      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
+      revision_types_de_champ.create!(h)
     end
 
     # they are not aware of the addition
     types_de_champ_public.reset
     types_de_champ_private.reset
+    reload
 
     tdc
   rescue => e
@@ -74,12 +76,15 @@ class ProcedureRevision < ApplicationRecord
 
   def move_type_de_champ(stable_id, position)
     coordinate, _ = coordinate_and_tdc(stable_id)
+    siblings = coordinate.siblings
 
-    siblings = coordinate.siblings.to_a
+    if position > coordinate.position
+      siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+    else
+      siblings.where(position: position..coordinate.position).update_all("position = position + 1")
+    end
+    coordinate.update_column(:position, position)
 
-    siblings.insert(position, siblings.delete_at(siblings.index(coordinate)))
-
-    renumber(siblings)
     coordinate.reload
 
     coordinate
@@ -98,10 +103,10 @@ class ProcedureRevision < ApplicationRecord
     tdc.destroy_if_orphan
 
     # they are not aware of the removal
+    coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+
     types_de_champ_public.reset
     types_de_champ_private.reset
-
-    renumber(coordinate.siblings)
 
     coordinate
   end
@@ -248,9 +253,23 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def renumber(siblings)
-    siblings.to_a.compact.each.with_index do |sibling, position|
-      sibling.update_column(:position, position)
+  def siblings_for(parent_coordinate: nil, private_tdc: false)
+    if parent_coordinate
+      parent_coordinate.revision_types_de_champ
+    elsif private_tdc
+      revision_types_de_champ_private
+    else
+      revision_types_de_champ_public
+    end
+  end
+
+  def next_position_for(siblings:, after_coordinate: nil)
+    if siblings.to_a.empty? # first element of the list, starts at 0
+      0
+    elsif after_coordinate # middle of the list, between two items
+      after_coordinate.position + 1
+    else # last element of the list, end with last position + 1
+      siblings.to_a.last.position + 1
     end
   end
 

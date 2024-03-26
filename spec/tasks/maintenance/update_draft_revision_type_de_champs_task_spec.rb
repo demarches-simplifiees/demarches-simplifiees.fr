@@ -21,9 +21,9 @@ module Maintenance
         demarche_id,id,new_libelle,new_description,new_required,new_position,delete_flag
         #{procedure.id},#{find_by_stable_id(12).to_typed_id},[NEW] Number,[NEW] Number desc,true,0,
         #{procedure.id},#{find_by_stable_id(13).to_typed_id},Bloc,[NEW] bloc desc,,1,
-        #{procedure.id},#{find_by_stable_id(132).to_typed_id},[NEW] RepNum,,true,2,
-        #{procedure.id},#{find_by_stable_id(131).to_typed_id},[NEW] RepText,,,3,
-        #{procedure.id},#{find_by_stable_id(11).to_typed_id},[supp] Text,,,4,true
+        #{procedure.id},#{find_by_stable_id(132).to_typed_id},[NEW] RepNum,,true,0,
+        #{procedure.id},#{find_by_stable_id(131).to_typed_id},[NEW] RepText,,,1,
+        #{procedure.id},#{find_by_stable_id(11).to_typed_id},[supp] Text,,,2,true
       CSV
     end
 
