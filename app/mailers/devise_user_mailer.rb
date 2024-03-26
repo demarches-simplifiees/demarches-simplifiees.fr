@@ -3,9 +3,9 @@ class DeviseUserMailer < Devise::Mailer
   helper :application # gives access to all helpers defined within `application_helper`.
   helper MailerHelper
   include Devise::Controllers::UrlHelpers # Optional. eg. `confirmation_url`
+  include MailerDefaultsConfigurableConcern
   include MailerDolistConcern
   include MailerMonitoringConcern
-  include MailerHeadersConfigurableConcern
   include BalancedDeliveryConcern
   include PriorityDeliveryConcern
 
