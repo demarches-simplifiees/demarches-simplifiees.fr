@@ -9,7 +9,9 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
       dossier.send(:log_dossier_operation, instructeur, :supprimer, dossier)
       dossier.update_columns(hidden_by_user_at: hidden_at, hidden_by_administration_at: hidden_at)
       dossier.update_column(:hidden_by_reason, "user_request")
+    end
 
+    subject do
       Cron::DiscardedDossiersDeletionJob.perform_now
     end
 
@@ -18,6 +20,8 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
     end
 
     RSpec.shared_examples "does not delete" do
+      before { subject }
+
       it 'does not delete it' do
         expect { dossier.reload }.not_to raise_error
       end
@@ -28,6 +32,8 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
     end
 
     RSpec.shared_examples "does delete" do
+      before { subject }
+
       it 'does delete it' do
         expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
@@ -63,6 +69,19 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
           include_examples "does delete"
         end
       end
+    end
+
+    context "error on error" do
+      let(:state) { :en_construction }
+      let(:hidden_at) { 1.month.ago }
+      let(:failing_dossier) { create(:dossier, :en_construction, hidden_by_user_at: 5.weeks.ago, hidden_by_reason: "user_request") }
+
+      before do
+        failing_dossier.update_column(:hidden_by_reason, nil) # recurrent error previously causing job to crash
+        expect(Sentry).to receive(:capture_exception).with(instance_of(KeyError), extra: { dossier: failing_dossier.id })
+      end
+
+      include_examples "does delete"
     end
   end
 end

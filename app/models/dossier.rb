@@ -1359,6 +1359,8 @@ class Dossier < ApplicationRecord
       DeletedDossier.create_from_dossier(self, hidden_by_reason)
       dossier_operation_logs.purge_discarded
       destroy
+    rescue => e
+      Sentry.capture_exception(e, extra: { dossier: id })
     end
   end
 
