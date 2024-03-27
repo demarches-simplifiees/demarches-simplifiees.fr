@@ -56,19 +56,6 @@ describe APIToken, type: :model do
           expect(api_token.targetable_procedures).to eq([other_procedure])
           expect(api_token.context).to eq(administrateur_id: administrateur.id, procedure_ids: [procedure.id], write_access: true, api_token_id: api_token.id)
         end
-
-        context 'and then gain full access' do
-          before do
-            api_token.become_full_access!
-            api_token.reload
-          end
-
-          it do
-            expect(api_token.full_access?).to be(true)
-            expect(api_token.procedure_ids).to match_array([procedure.id, other_procedure.id])
-            expect(api_token.targetable_procedures).to eq([procedure, other_procedure])
-          end
-        end
       end
 
       context 'but acces to a wrong procedure_id' do
@@ -175,6 +162,38 @@ describe APIToken, type: :model do
       before { api_token.update!(stored_ips: [ip]) }
 
       it { is_expected.to eq([IPAddr.new(ip)]) }
+    end
+  end
+
+  describe '#forbidden_network?' do
+    let(:api_token_and_packed_token) { APIToken.generate(administrateur) }
+    let(:api_token) { api_token_and_packed_token.first }
+    let(:authorized_networks) { [] }
+
+    before { api_token.update!(authorized_networks: authorized_networks) }
+
+    subject { api_token.forbidden_network?(ip) }
+
+    context 'when no authorized networks are defined' do
+      let(:ip) { '192.168.1.1' }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when a single authorized network is defined' do
+      let(:authorized_networks) { [IPAddr.new('192.168.1.0/24')] }
+
+      context 'and the request comes from it' do
+        let(:ip) { '192.168.1.1' }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and the request does not come from it' do
+        let(:ip) { '192.168.2.1' }
+
+        it { is_expected.to be_truthy }
+      end
     end
   end
 end
