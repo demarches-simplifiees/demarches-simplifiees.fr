@@ -30,8 +30,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
 
   describe 'send_accuse_lecture_notification' do
-    let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure, :accuse_lecture)) }
-
+    let(:dossier) { create(:dossier, :accepte, procedure: create(:procedure, :accuse_lecture)) }
     subject { described_class.send_accuse_lecture_notification(dossier) }
 
     it { expect(subject.subject).to include("La décision a été rendue pour votre démarche #{dossier.procedure.libelle}") }

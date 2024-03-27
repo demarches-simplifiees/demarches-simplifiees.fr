@@ -30,6 +30,7 @@ fr:
         first_part: Nous vous informons qu'une décision sur le dossier nº %{dossier_id} de la démarche
         second_part: a été rendue.
         third_part: Pour en connaitre la nature, veuillez vous connecter à votre compte
+        commentaire_html: <p>Bonjour,</p><p>Nous vous informons qu'une décision sur votre dossier a été rendue.</p>Cordialement,<br>%{service}
 
       commentaire_groupe_gestionnaire_footer:
         do_not_reply_html: Merci de ne pas répondre à cet email. Consultez votre message sur %{application_name} ou contactez votre expéditeur par <a href="mailto:%{sender_email}">mail</a>
