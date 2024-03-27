@@ -7,8 +7,8 @@ describe Champs::SiretController, type: :controller do
     let(:champ) { dossier.champs_public.first }
 
     let(:champs_public_attributes) do
-      champ_attributes = []
-      champ_attributes[champ.id] = { value: siret }
+      champ_attributes = {}
+      champ_attributes[champ.public_id] = { value: siret }
       champ_attributes
     end
     let(:params) do
