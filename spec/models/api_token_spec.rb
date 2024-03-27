@@ -196,4 +196,112 @@ describe APIToken, type: :model do
       end
     end
   end
+
+  describe '#expiring_within' do
+    let(:api_token) { APIToken.generate(administrateur).first }
+
+    subject { APIToken.expiring_within(7.days) }
+
+    context 'when the token is not expiring' do
+      it { is_expected.to be_empty }
+    end
+
+    context 'when the token is expiring in the range' do
+      before { api_token.update!(expires_at: 1.day.from_now) }
+
+      it { is_expected.to eq([api_token]) }
+    end
+
+    context 'when the token is not expiring in the range' do
+      before { api_token.update!(expires_at: 8.days.from_now) }
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'when the token is expired' do
+      before { api_token.update!(expires_at: 1.day.ago) }
+
+      it { is_expected.to be_empty }
+    end
+  end
+
+  describe '#without_any_expiration_notice_sent_within' do
+    let(:api_token) { APIToken.generate(administrateur).first }
+    let(:today) { Date.new(2018, 01, 01) }
+    let(:expires_at) { Date.new(2018, 06, 01) }
+
+    subject { APIToken.without_any_expiration_notice_sent_within(7.days) }
+
+    before do
+      travel_to(today)
+      api_token.update!(created_at: today, expires_at:)
+    end
+
+    context 'when the token has not been notified' do
+      it { is_expected.to eq([api_token]) }
+    end
+
+    context 'when the token has been notified' do
+      before do
+        api_token.expiration_notices_sent_at << expires_at - 7.days
+        api_token.save!
+      end
+
+      it { is_expected.to be_empty }
+    end
+
+    context 'when the token has been notified outside the window' do
+      before do
+        api_token.expiration_notices_sent_at << expires_at - 8.days
+        api_token.save!
+      end
+
+      it { is_expected.to eq([api_token]) }
+    end
+  end
+
+  describe '#with_expiration_notice_to_send_for' do
+    let(:api_token) { APIToken.generate(administrateur).first }
+    let(:duration) { 7.days }
+
+    subject do
+      APIToken.with_expiration_notice_to_send_for(duration)
+    end
+
+    context 'when the token is expiring in the range' do
+      before { api_token.update!(expires_at: 1.day.from_now, created_at:) }
+
+      let(:created_at) { 1.year.ago }
+
+      it do
+        is_expected.to eq([api_token])
+      end
+
+      context 'when the token has been created within the time frame' do
+        let(:created_at) { 2.days.ago }
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'when the token has already been notified' do
+        before do
+          api_token.expiration_notices_sent_at << 1.day.ago
+          api_token.save!
+        end
+
+        it { is_expected.to be_empty }
+      end
+
+      context 'when the token has already been notified for another window' do
+        before do
+          api_token.expiration_notices_sent_at << 1.month.ago
+          api_token.save!
+        end
+
+        it do
+          is_expected.to eq([api_token])
+        end
+      end
+    end
+  end
 end
