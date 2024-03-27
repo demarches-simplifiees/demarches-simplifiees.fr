@@ -195,21 +195,33 @@ Rails.application.routes.draw do
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
-    post ':champ_id/repetition', to: 'repetition#add'
-    delete ':champ_id/repetition', to: 'repetition#remove'
 
-    get ':champ_id/siret', to: 'siret#show', as: :siret
-    get ':champ_id/rna', to: 'rna#show', as: :rna
-    delete ':champ_id/options', to: 'options#remove', as: :options
+    get ':dossier_id/:stable_id/siret', to: 'siret#show', as: :siret
+    get ':dossier_id/:stable_id/rna', to: 'rna#show', as: :rna
+    delete ':dossier_id/:stable_id/options', to: 'options#remove', as: :options
 
-    get ':champ_id/carte/features', to: 'carte#index', as: :carte_features
+    get ':dossier_id/:stable_id/carte/features', to: 'carte#index', as: :carte_features
+    post ':dossier_id/:stable_id/carte/features', to: 'carte#create'
+    patch ':dossier_id/:stable_id/carte/features/:id', to: 'carte#update', as: :carte_feature
+    delete ':dossier_id/:stable_id/carte/features/:id', to: 'carte#destroy'
+
+    get ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#show', as: :piece_justificative
+    put ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#update'
+    get ':dossier_id/:stable_id/piece_justificative/template', to: 'piece_justificative#template', as: :piece_justificative_template
+
+    # TODO: remove after one deploy
+    get ':champ_id/siret', to: 'siret#show'
+    get ':champ_id/rna', to: 'rna#show'
+    delete ':champ_id/options', to: 'options#remove'
+
+    get ':champ_id/carte/features', to: 'carte#index'
     post ':champ_id/carte/features', to: 'carte#create'
     patch ':champ_id/carte/features/:id', to: 'carte#update'
     delete ':champ_id/carte/features/:id', to: 'carte#destroy'
 
-    get ':champ_id/piece_justificative', to: 'piece_justificative#show', as: :piece_justificative
-    put ':champ_id/piece_justificative', to: 'piece_justificative#update', as: :attach_piece_justificative
-    get ':champ_id/piece_justificative/template', to: 'piece_justificative#template', as: :piece_justificative_template
+    get ':champ_id/piece_justificative', to: 'piece_justificative#show'
+    put ':champ_id/piece_justificative', to: 'piece_justificative#update'
+    get ':champ_id/piece_justificative/template', to: 'piece_justificative#template'
   end
 
   resources :attachments, only: [:show, :destroy]
@@ -360,7 +372,7 @@ Rails.application.routes.draw do
         get 'modifier', to: 'dossiers#modifier'
         post 'modifier', to: 'dossiers#submit_en_construction'
         patch 'modifier', to: 'dossiers#modifier_legacy'
-        get 'champs/:champ_id', to: 'dossiers#champ', as: :champ
+        get 'champs/:stable_id', to: 'dossiers#champ', as: :champ
         get 'merci'
         get 'demande'
         get 'messagerie'
@@ -483,7 +495,7 @@ Rails.application.routes.draw do
             get 'avis'
             get 'avis_new'
             get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
-            get 'annotations/:annotation_id', to: 'dossiers#annotation', as: :annotation
+            get 'annotations/:stable_id', to: 'dossiers#annotation', as: :annotation
             patch 'follow'
             patch 'unfollow'
             patch 'archive'

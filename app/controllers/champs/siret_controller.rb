@@ -1,9 +1,5 @@
-class Champs::SiretController < ApplicationController
-  before_action :authenticate_logged_user!
-
+class Champs::SiretController < Champs::ChampController
   def show
-    @champ = policy_scope(Champ).find(params[:champ_id])
-
     if @champ.fetch_etablissement!(read_param_value(@champ.input_name, 'value'), current_user)
       @siret = @champ.etablissement.siret
     else
