@@ -49,7 +49,7 @@
                 %p.fr-text--sm= t('utils.mandatory_champs')
 
               .fr-fieldset__element
-                = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true }) do |c|
+                = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email' }) do |c|
                   - c.with_label { t('.pro_email') }
 
               .fr-fieldset__element

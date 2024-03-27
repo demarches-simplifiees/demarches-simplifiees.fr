@@ -20,6 +20,17 @@ class AvisMailer < ApplicationMailer
     end
   end
 
+  # i18n-tasks-use t("avis_mailer.#{action}.subject")
+  def notify_new_commentaire_to_expert(dossier, avis, expert)
+    I18n.with_locale(dossier.user_locale) do
+      @dossier = dossier
+      @avis = avis
+      @subject = default_i18n_subject(dossier_id: dossier.id, libelle_demarche: dossier.procedure.libelle)
+
+      mail(to: expert.email, subject: @subject)
+    end
+  end
+
   def self.critical_email?(action_name)
     false
   end

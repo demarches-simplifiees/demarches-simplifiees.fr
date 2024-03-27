@@ -1243,6 +1243,24 @@ describe Users::DossiersController, type: :controller do
       end
     end
 
+    context 'email notification to experts' do
+      let(:expert) { create(:expert) }
+      let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
+      let(:avis) { create(:avis, dossier: dossier, claimant: instructeur_with_instant_message, experts_procedure: experts_procedure) }
+      let(:avis2) { create(:avis, dossier: dossier, claimant: instructeur_with_instant_message, experts_procedure: experts_procedure) }
+
+      before do
+        allow(AvisMailer).to receive(:notify_new_commentaire_to_expert).and_return(double(deliver_later: nil))
+        avis
+        avis2
+        subject
+      end
+
+      it 'sends just one email to the expert linked to several avis on the same dossier' do
+        expect(AvisMailer).to have_received(:notify_new_commentaire_to_expert).with(dossier, avis, expert).once
+      end
+    end
+
     context 'notification' do
       before 'instructeurs have no notification before the message' do
         expect(instructeur_with_instant_message.followed_dossiers.with_notifications).to eq([])

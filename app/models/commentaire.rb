@@ -97,6 +97,8 @@ class Commentaire < ApplicationRecord
     # - Otherwise, a instructeur posted a commentaire, we need to notify the user
     if sent_by_instructeur? || sent_by_expert?
       notify_user(wait: 5.minutes)
+    elsif !sent_by_system?
+      notify_administration
     end
   end
 
@@ -105,6 +107,26 @@ class Commentaire < ApplicationRecord
       DossierMailer.with(commentaire: self).notify_pending_correction.deliver_later(job_options)
     else
       DossierMailer.with(commentaire: self).notify_new_answer.deliver_later(job_options)
+    end
+  end
+
+  def notify_administration
+    dossier.followers_instructeurs
+      .with_instant_email_message_notifications
+      .find_each do |instructeur|
+      DossierMailer.notify_new_commentaire_to_instructeur(dossier, instructeur.email).deliver_later
+    end
+
+    experts_contactes = Set.new
+
+    dossier.avis.includes(:expert).find_each do |avis|
+      if avis.expert.present?
+        expert_id = avis.expert.id
+        if !experts_contactes.include?(expert_id)
+          AvisMailer.notify_new_commentaire_to_expert(dossier, avis, avis.expert).deliver_later
+          experts_contactes.add(expert_id)
+        end
+      end
     end
   end
 
