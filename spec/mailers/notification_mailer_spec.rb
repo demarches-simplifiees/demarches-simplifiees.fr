@@ -26,7 +26,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   end
 
   describe 'send_accuse_reception_notification' do
-    let(:dossier) { create(:dossier, :en_construction, procedure: create(:procedure, :accuse_reception)) }
+    let(:dossier) { create(:dossier, :accepte, procedure: create(:procedure, :accuse_reception)) }
 
     subject { described_class.send_accuse_reception_notification(dossier) }
 

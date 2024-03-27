@@ -409,6 +409,11 @@ describe Instructeurs::DossiersController, type: :controller do
         end
 
         it { expect(subject.body).to include('header-top') }
+
+        it 'creates a commentaire' do
+          expect { subject }.to change { Commentaire.count }.by(1)
+          expect(dossier_accuse_reception.commentaires.last.body).to eq("<p>Bonjour,</p><p>Nous vous informons qu'une décision sur votre dossier a été rendue.</p>Cordialement,<br>#{procedure_accuse_reception.service.nom}")
+        end
       end
     end
 
