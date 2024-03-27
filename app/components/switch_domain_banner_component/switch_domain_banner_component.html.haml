@@ -19,7 +19,9 @@
 = render Dsfr::NoticeComponent.new(closable: true, data_attributes: { "data-switch-domain-notice" => true }) do |c|
   - c.with_title do
     = t(".message_new_domain")
-    = "#{helpers.link_to APPLICATION_NAME, new_host_url}."
+    -# haml-lint:disable ApplicationNameLinter
+    = "#{helpers.link_to "demarches.gouv.fr", new_host_url}."
+    -# haml-lint:enable ApplicationNameLinter
 
     - if manual_switch?
       = t(".follow_link")
