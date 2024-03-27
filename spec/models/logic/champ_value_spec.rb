@@ -54,6 +54,12 @@ describe Logic::ChampValue do
       it { expect(champ_value(champ.stable_id).type([champ.type_de_champ])).to eq(:number) }
       it { is_expected.to eq(42.01) }
 
+      context 'with invalid value with too many digits after the decimal point' do
+        before { champ.value = '42.1234' }
+
+        it { is_expected.to be nil }
+      end
+
       context 'with invalid value' do
         before { champ.value = 'racine de 2' }
 
