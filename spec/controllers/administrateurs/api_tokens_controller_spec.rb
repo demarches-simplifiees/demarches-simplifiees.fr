@@ -93,4 +93,50 @@ describe Administrateurs::APITokensController, type: :controller do
       end
     end
   end
+
+  describe 'update' do
+    let(:token) { APIToken.generate(admin).first }
+    let(:params) { { name:, networks: } }
+    let(:name) { 'new name' }
+    let(:networks) { '118.218.200.200' }
+
+    subject { patch :update, params: params.merge(id: token.id) }
+
+    context 'nominal' do
+      before { subject; token.reload }
+
+      it 'updates a token' do
+        expect(token.name).to eq('new name')
+        expect(token.authorized_networks).to eq([IPAddr.new('118.218.200.200')])
+      end
+    end
+
+    context 'with bad network' do
+      let(:networks) { 'bad' }
+
+      before { subject; token.reload }
+
+      it 'does not update a token' do
+        expect(token.name).not_to eq('new name')
+        expect(assigns(:invalid_network)).to be true
+        expect(response).to render_template(:edit)
+      end
+    end
+
+    context 'with no network and infinite lifetime' do
+      before do
+        token.update!(authorized_networks: [IPAddr.new('118.218.200.200')])
+        subject
+        token.reload
+      end
+
+      let(:networks) { '' }
+
+      it 'does not update a token' do
+        expect(token.name).not_to eq('new name')
+        expect(flash[:alert]).to eq("Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent.")
+        expect(response).to render_template(:edit)
+      end
+    end
+  end
 end

@@ -70,6 +70,10 @@ describe 'instructeurs/dossiers/show', type: :view do
 
       it { expect(subject).to have_button('Passer en instruction', disabled: false) }
 
+      it 'shows the correction badge' do
+        expect(subject).to have_selector('.fr-badge--warning', text: "en attente")
+      end
+
       context 'with procedure blocking pending correction' do
         before { Flipper.enable(:blocking_pending_correction, dossier.procedure) }
 
@@ -77,6 +81,14 @@ describe 'instructeurs/dossiers/show', type: :view do
           expect(subject).to have_button('Passer en instruction', disabled: true)
           expect(subject).to have_content('Le passage en instruction est impossible')
         end
+      end
+    end
+
+    context 'with resolved correction' do
+      before { create(:dossier_correction, dossier:, resolved_at: 1.minute.ago) }
+
+      it 'shows the resolved badge' do
+        expect(subject).to have_selector('.fr-badge--success', text: "corrigé")
       end
     end
   end

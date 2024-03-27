@@ -175,7 +175,10 @@
 
                   %td.status-col
                     - status = [status_badge(p.state)]
-                    - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v") if p.pending_correction?
+                    - if p.pending_correction?
+                      - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
+                    - elsif p.state.to_sym == :en_construction && p.resolved_corrections?
+                      - status << correction_resolved_badge(html_class: "fr-mt-1v")
                     = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: class_names("cell-link": true, "fr-py-0": status.many?))
 
                   - if @procedure.sva_svr_enabled?

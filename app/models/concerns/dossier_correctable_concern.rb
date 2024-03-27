@@ -40,6 +40,10 @@ module DossierCorrectableConcern
       pending_corrections.exists?
     end
 
+    def last_correction_resolved?
+      corrections.last&.resolved?
+    end
+
     def resolve_pending_correction
       pending_correction&.resolve
     end

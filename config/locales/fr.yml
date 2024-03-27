@@ -298,6 +298,15 @@ fr:
         password_label: "Mot de passe"
         password_message: "Inscrivez un mot de passe"
         password_placeholder: "%{min_length} caractères minimum"
+    confirmation:
+      new:
+        title: 'Confirmez votre adresse email'
+        image_alt: "Email envoyé"
+        email_cta: "Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse"
+        email_guidelines_html: "Ouvrez votre boîte email, et <strong>cliquez sur le lien d’activation</strong> dans le message que vous avez reçu."
+        email_missing: "Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer."
+        resent: 'Renvoyer un email de confirmation'
+        faq: 'Vous pouvez également consulter notre'
     invites:
       dropdown:
         invite_to_edit: Inviter une personne à modifier ce dossier
@@ -504,6 +513,8 @@ fr:
           start_other_dossier: "Commencer un autre dossier vide"
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
+          delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
+          delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
           edit_draft: "Continuer à remplir"
           actions: "Actions"

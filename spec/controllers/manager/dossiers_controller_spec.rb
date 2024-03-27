@@ -36,23 +36,26 @@ describe Manager::DossiersController, type: :controller do
   end
 
   describe "POST #transfer" do
-    before do
-      allow(DossierMailer).to receive(:notify_transfer).and_call_original
+    subject do
       post :transfer, params: { id: @dossier.id, email: }
     end
 
     context 'with valid email' do
       let(:email) { "chouette.gars@laposte.net" }
 
-      it { expect(flash[:success]).to eq("Une invitation de transfert a été envoyée à chouette.gars@laposte.net") }
-      it { expect(DossierMailer).to have_received(:notify_transfer) }
+      it do
+        expect { subject }.to have_enqueued_mail(DossierMailer, :notify_transfer)
+        expect(flash[:success]).to eq("Une invitation de transfert a été envoyée à chouette.gars@laposte.net")
+      end
     end
 
     context 'with invalid email' do
       let(:email) { "chouette" }
 
-      it { expect(flash[:alert]).to eq("L’adresse email est invalide") }
-      it { expect(DossierMailer).not_to have_received(:notify_transfer) }
+      it do
+        expect { subject }.not_to have_enqueued_mail
+        expect(flash[:alert]).to eq("L’adresse email est invalide")
+      end
     end
   end
 

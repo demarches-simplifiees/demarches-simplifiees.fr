@@ -5,6 +5,12 @@ class DossierProjectionService
 
         corrections.any? { _1[:resolved_at].nil? }
       end
+
+      def resolved_corrections?
+        return false if corrections.blank?
+
+        corrections.all? { _1[:resolved_at].present? }
+      end
     end
   end
 

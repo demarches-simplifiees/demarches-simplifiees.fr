@@ -89,6 +89,10 @@ class APIToken < ApplicationRecord
     expires_at&.past?
   end
 
+  def eternal?
+    expires_at.nil?
+  end
+
   class << self
     def generate(administrateur)
       plain_token = generate_unique_secure_token

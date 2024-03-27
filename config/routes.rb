@@ -678,7 +678,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :api_tokens, only: [:create, :destroy] do
+    resources :api_tokens, only: [:create, :destroy, :edit, :update] do
       collection do
         get :nom
         get :autorisations

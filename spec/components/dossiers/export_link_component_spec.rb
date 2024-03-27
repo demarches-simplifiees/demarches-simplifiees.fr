@@ -63,6 +63,14 @@ RSpec.describe Dossiers::ExportLinkComponent, type: :component do
       it 'displays the current dossiers count' do
         expect(subject).to include("3 dossiers")
       end
+
+      context "when export is generated, but file not yet available" do
+        let(:export) { create(:export, :generated, groupe_instructeurs: [groupe_instructeur], procedure_presentation: procedure_presentation) }
+
+        it "displays the pending label" do
+          expect(subject).to include("demandé il y a")
+        end
+      end
     end
 
     context "when the export has failed" do

@@ -1,4 +1,4 @@
-- content_for(:title, 'Confirmez votre adresse email')
+- content_for(:title, t('views.confirmation.new.title'))
 
 - content_for :footer do
   = render partial: 'root/footer'
@@ -6,38 +6,28 @@
 .container.devise-container.devise-confirmations
   .one-column-centered
     = devise_error_messages!
-    %h1.center Confirmez votre adresse email
+    %h1.center= t('views.confirmation.new.title')
 
-    %img.confirmation-icon{ src: image_url("user/confirmation-email.svg"), alt: "Email envoyé" }
+    %img.confirmation-icon{ src: image_url("user/confirmation-email.svg"), alt: t('views.confirmation.new.image_alt') }
 
     %h2.confirmation-preamble
       = succeed '.' do
-        Avant d’effectuer votre démarche, nous avons besoin de vérifier votre adresse
+        = t('views.confirmation.new.email_cta')
         - if resource.email.present?
           %strong= resource.email
 
-    %p.confirmation-instructions
-      Ouvrez votre boîte email, et
-      %strong cliquez sur le lien d’activation
-      dans le message que vous avez reçu.<br/>
-      Si vous semblez ne pas recevoir ce message,
-      regardez dans
-      - if resource.email.end_with?('gmail.com')
-        les dossiers <b>Spam</b>, <b>Promotions</b> ou <b>Notifications</b>.<br/>
-      - else
-        le dossier <b>Spam</b><br/>
-      Si vous ne trouvez toujours pas le message, effectuez une recherche avec '<b>mes-demarches</b>'<br/>
+    %p.confirmation-instructions= t('views.confirmation.new.email_guidelines_html')
 
     %hr.confirmation-separator
 
     .confirmation-resend
-      %p Si vous n’avez pas reçu notre message (avez-vous vérifié les indésirables ?), nous pouvons vous le renvoyer.
+      %p= t('views.confirmation.new.email_missing')
 
       = form_for(resource, as: resource_name, url: confirmation_path(resource_name)) do |f|
         = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autofocus: true })
-        = f.submit 'Renvoyer un email de confirmation', class: 'fr-btn'
+        = f.submit t('views.confirmation.new.resent'), class: 'fr-btn'
 
       %p.fr-mt-3w
-        Vous pouvez également consulter notre
+        = t('views.confirmation.new.faq')
         = link_to(t("links.common.faq.label"), t("links.common.faq.email_non_recu_url"), title: new_tab_suffix(t("links.common.faq.title")), **external_link_attributes)
         \.

@@ -1,7 +1,9 @@
 module Administrateurs
   class APITokensController < AdministrateurController
+    include ActionView::RecordIdentifier
+
     before_action :authenticate_administrateur!
-    before_action :set_api_token, only: [:destroy]
+    before_action :set_api_token, only: [:edit, :update, :destroy]
 
     def nom
       @name = name
@@ -28,15 +30,47 @@ module Administrateurs
 
       @api_token.update!(name:, write_access:,
                          allowed_procedure_ids:, authorized_networks:, expires_at:)
+
+      @curl_command = curl_command(@packed_token, @api_token.procedure_ids.first)
+    end
+
+    def edit
+    end
+
+    def update
+      if invalid_network?
+        @invalid_network = true
+        return render :edit
+      end
+
+      if @api_token.eternal? && networks.empty?
+        flash[:alert] = "Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent."
+        return render :edit
+      end
+
+      @api_token.update!(name:, authorized_networks: networks)
+
+      flash[:notice] = "Le jeton d'API a été mis à jour."
+      redirect_to profil_path
     end
 
     def destroy
       @api_token.destroy
 
-      redirect_to profil_path
+      render turbo_stream: turbo_stream.remove(dom_id(@api_token))
     end
 
     private
+
+    def curl_command(packed_token, procedure_id)
+      <<~EOF
+        curl \\
+        -H 'Content-Type: application/json' \\
+        -H 'Authorization: Bearer #{packed_token}' \\
+        --data '{ "query": "{ demarche(number: #{procedure_id}) { title } }" }' \\
+        '#{api_v2_graphql_url}'
+      EOF
+    end
 
     def all_params
       [:name, :access, :target, :targets, :networkFiltering, :networks, :lifetime, :customLifetime]

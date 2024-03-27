@@ -4,11 +4,13 @@ const SUCCESS_MESSAGE_TIMEOUT = 1000;
 
 export class ClipboardController extends Controller {
   static values = { text: String };
-  static targets = ['success'];
+  static targets = ['success', 'toHide'];
 
   declare readonly textValue: string;
   declare readonly successTarget: HTMLElement;
+  declare readonly toHideTarget: HTMLElement;
   declare readonly hasSuccessTarget: boolean;
+  declare readonly hasToHideTarget: boolean;
 
   #timer?: ReturnType<typeof setTimeout>;
 
@@ -23,12 +25,22 @@ export class ClipboardController extends Controller {
   }
 
   private displayCopyConfirmation() {
+    if (this.hasToHideTarget) {
+      this.toHideTarget.classList.add('hidden');
+    }
     if (this.hasSuccessTarget) {
       this.successTarget.classList.remove('hidden');
-      clearTimeout(this.#timer);
-      this.#timer = setTimeout(() => {
-        this.successTarget.classList.add('hidden');
-      }, SUCCESS_MESSAGE_TIMEOUT);
     }
+
+    clearTimeout(this.#timer);
+
+    this.#timer = setTimeout(() => {
+      if (this.hasSuccessTarget) {
+        this.successTarget.classList.add('hidden');
+      }
+      if (this.hasToHideTarget) {
+        this.toHideTarget.classList.remove('hidden');
+      }
+    }, SUCCESS_MESSAGE_TIMEOUT);
   }
 }

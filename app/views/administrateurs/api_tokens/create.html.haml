@@ -14,7 +14,22 @@
 
   %p{ data: { controller: 'clipboard', clipboard_text_value: @packed_token } }
     %code= @packed_token
-    %button.fr-btn.fr-btn-primary.fr-btn-small.fr-ml-2w{ data: { action: 'clipboard#copy' }, title: 'Copier dans le presse-papier' } Copier
+    %button.fr-btn.fr-btn-primary.fr-btn-small.fr-ml-2w{ data: { action: 'clipboard#copy', clipboard_target: 'toHide' }, title: 'Copier dans le presse-papier' } Copier
+    %button.fr-btn.fr-btn-primary.fr-btn-small.fr-ml-2w.hidden{ data: { clipboard_target: 'success' } } Copié !
+
+  %p.fr-mt-4w Voici un premier exemple d'utilisation de votre jeton d'API. Il vous permet de récupérer le titre de l'une de vos démarches :
+
+  .code-example{ data: { controller: 'clipboard', clipboard_text_value: @curl_command } }
+    .example-header
+      %span.lang bash
+      %button.fr-btn.fr-btn--icon-left.fr-icon-clipboard-line.fr-btn--sm.fr-btn--tertiary-no-outline{ data: { action: 'clipboard#copy', clipboard_target: 'toHide' }, title: 'Copier dans le presse-papier' } Copier
+      %button.fr-btn.fr-btn--icon-left.fr-icon-checkbox-line.fr-btn--sm.fr-btn--tertiary-no-outline.hidden{ data: { clipboard_target: 'success' } } Copié !
+    %pre
+      %code= @curl_command
+
+  %p.fr-text--sm.fr-text-mention--grey
+    Pour continuer, vous pouvez consulter
+    = link_to("notre documentation sur l'API", API_DOC_URL, **external_link_attributes)
 
   %p.fr-mt-4w Résumé des informations du jeton :
   %ul
