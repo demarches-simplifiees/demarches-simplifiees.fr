@@ -12,18 +12,28 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_new_draft' do
-    let(:dossier) { create(:dossier, procedure: create(:simple_procedure, :with_auto_archive)) }
+    let(:user) { create(:user) }
+    let(:dossier) { create(:dossier, procedure: create(:simple_procedure, :with_auto_archive), user:) }
 
     subject { described_class.with(dossier:).notify_new_draft }
 
     it { expect(subject.subject).to include("brouillon") }
     it { expect(subject.subject).to include(dossier.procedure.libelle) }
     it { expect(subject.body).to include(dossier.procedure.libelle) }
-    it { expect(subject.body).to include(dossier_url(dossier)) }
+    it { expect(subject.body).to include(dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY"))) }
     it { expect(subject.body).to include("Vous pouvez déposer votre dossier jusqu’au") }
     it { expect(subject.body).to include("heure de") }
 
     it_behaves_like 'a dossier notification'
+
+    context "user prefers new domain" do
+      let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+
+      it do
+        expect(subject.body).to include(dossier_url(dossier, host: ENV.fetch('APP_HOST')))
+        expect(header_value("From", subject)).to include("ne-pas-repondre@demarches.gouv.fr")
+      end
+    end
   end
 
   describe '.notify_new_answer with dossier brouillon' do
@@ -36,7 +46,7 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
     it { expect(subject.body).to include(dossier.procedure.service.email) }
-    it { expect(subject.body).not_to include(messagerie_dossier_url(dossier)) }
+    it { expect(subject.body).not_to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY"))) }
 
     it_behaves_like 'a dossier notification'
 
@@ -54,7 +64,7 @@ RSpec.describe DossierMailer, type: :mailer do
 
     it { expect(subject.subject).to include("Nouveau message") }
     it { expect(subject.subject).to include(dossier.id.to_s) }
-    it { expect(subject.body).to include(messagerie_dossier_url(dossier)) }
+    it { expect(subject.body).to include(messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY"))) }
 
     it_behaves_like 'a dossier notification'
   end
@@ -278,6 +288,11 @@ RSpec.describe DossierMailer, type: :mailer do
       it { expect(subject.subject).to include("Vous avez une demande de transfert en attente.") }
       it { expect(subject.body).to include("#{user.email} vous adresse une demande de transfert pour le dossier n° #{dossier.id} sur la démarche") }
       it { expect(subject.body).to include(procedure.libelle.to_s) }
+    end
+
+    context 'when recipient has preferred domain' do
+      let(:dossier_transfer) { create(:dossier_transfer, email: create(:user, preferred_domain: :demarches_gouv_fr).email) }
+      it { expect(subject.body).to include(dossiers_url(statut: "dossiers-transferes", host: ENV.fetch("APP_HOST"))) }
     end
 
     context 'when it is a transfer of multiple dossiers' do

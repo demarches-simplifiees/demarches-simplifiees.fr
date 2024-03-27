@@ -3,6 +3,8 @@ module MailerHeadersConfigurableConcern
 
   included do
     def configure_defaults_for_user(user)
+      return if user.nil? || !user.is_a?(User) # not for super-admins
+
       I18n.locale = user.locale
 
       if user.preferred_domain_demarches_gouv_fr?
@@ -17,10 +19,22 @@ module MailerHeadersConfigurableConcern
         Current.no_reply_email = NO_REPLY_EMAIL
       end
 
-      from = "#{Current.application_name} <#{Current.contact_email}>"
+      @@original_default_from ||= self.class.default[:from]
+      from = if @@original_default_from.include?(NO_REPLY_EMAIL)
+        Current.no_reply_email
+      else
+        "#{Current.application_name} <#{Current.contact_email}>"
+      end
+
       self.class.default from: from, reply_to: from
       self.class.default_url_options = { host: Current.host }
       self.class.asset_host = Current.application_base_url
+    end
+
+    def configure_defaults_for_email(email)
+      user = User.find_by(email: email)
+
+      configure_defaults_for_user(user)
     end
   end
 end
