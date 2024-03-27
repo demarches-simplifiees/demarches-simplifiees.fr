@@ -93,6 +93,7 @@ gem 'sidekiq'
 gem 'skylight'
 gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
+gem 'sys-proctable'
 gem 'turbo-rails'
 gem 'typhoeus'
 gem 'ulid-ruby', require: 'ulid'
