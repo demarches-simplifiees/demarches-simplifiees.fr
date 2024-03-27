@@ -1,5 +1,6 @@
 describe WebhookController, type: :controller do
-  let(:sent_email) { OpenStruct.new(delivered_at: 1.day.ago, subject: "subject", status: "opened") }
+  let(:email) { Struct.new(:delivered_at, :subject, :status) }
+  let(:sent_email) { email.new(1.day.ago, "subject", "opened") }
   before do
     allow(controller).to receive(:verify_helpscout_signature!).and_return(true)
     allow(controller).to receive(:verify_authenticity_token)
