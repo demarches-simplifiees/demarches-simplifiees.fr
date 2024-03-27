@@ -781,10 +781,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def flipper_id
-    "Procedure;#{id}"
-  end
-
   def api_entreprise_role?(role)
     APIEntrepriseToken.new(api_entreprise_token).role?(role)
   end
