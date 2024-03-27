@@ -77,7 +77,7 @@ jobs:
       - name: Install build dependancies
         # - fonts pickable by ImageMagick
         # - rust for YJIT support
-        run: sudo apt-get install -y gsfonts rustc
+        run: sudo apt-get install -y gsfonts rustc redis-server
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails

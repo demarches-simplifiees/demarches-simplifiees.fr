@@ -57,6 +57,7 @@ gem 'invisible_captcha'
 gem 'json_schemer'
 gem 'jwt'
 gem 'kaminari'
+gem 'kredis'
 gem 'listen' # Required by ActiveSupport::EventedFileUpdateChecker
 gem 'lograge'
 gem 'logstash-event'
