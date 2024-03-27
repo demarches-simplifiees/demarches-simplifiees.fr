@@ -29,10 +29,9 @@ class ApplicationController < ActionController::Base
     Current.user = current_user
     Current.browser = browser
     # TODO: remove this block when migration to new domain is done
-    # headers['Host'] instead of request.host to keep the port (ex: localhost:3000)
-    Current.host = request.headers['Host']
+    Current.host = request.host_with_port
 
-    if Current.host.include?("gouv.fr")
+    if Current.host.include?(".gouv.fr")
       Current.application_name = "demarches.gouv.fr"
       Current.contact_email = "contact@demarches.gouv.fr"
       Current.application_base_url = "https://demarches.gouv.fr"

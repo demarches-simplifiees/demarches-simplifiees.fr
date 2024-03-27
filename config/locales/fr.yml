@@ -932,7 +932,7 @@ fr:
         confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
         invalid_password: "Mauvais mot de passe"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
-        merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes."
+        merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes."
   groupe_gestionnaires:
     flash:
       alert:
