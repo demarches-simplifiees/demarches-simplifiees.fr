@@ -1005,25 +1005,25 @@ describe Instructeurs::DossiersController, type: :controller do
             dossier_id: dossier.id,
             dossier: {
               champs_private_attributes: {
-                '0': {
-                  id: champ_multiple_drop_down_list.id,
+                champ_multiple_drop_down_list.public_id => {
+                  with_public_id: true,
                   value: ['', 'val1', 'val2']
                 },
-                '1': {
-                  id: champ_datetime.id,
+                champ_datetime.public_id => {
+                  with_public_id: true,
                   value: '2019-12-21T13:17'
                 },
-                '2': {
-                  id: champ_linked_drop_down_list.id,
+                champ_linked_drop_down_list.public_id => {
+                  with_public_id: true,
                   primary_value: 'primary',
                   secondary_value: 'secondary'
                 },
-                '3': {
-                  id: champ_repetition.champs.first.id,
+                champ_repetition.champs.first.public_id => {
+                  with_public_id: true,
                   value: 'text'
                 },
-                '4': {
-                  id: champ_drop_down_list.id,
+                champ_drop_down_list.public_id => {
+                  with_public_id: true,
                   value: '__other__',
                   value_other: 'other value'
                 }
@@ -1074,12 +1074,11 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
-    context 'with invalid champs_public (DecimalNumberChamp)' do
-      let(:types_de_champ_public) do
-        [
-          { type: :decimal_number }
-        ]
-      end
+    after do
+      Timecop.return
+    end
+
+    context "with new values for champs_private (legacy)" do
       let(:params) do
         {
           procedure_id: procedure.id,
@@ -1096,8 +1095,62 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       it 'update champs_private' do
+        patch :update_annotations, params: params, format: :turbo_stream
+        champ_datetime.reload
+        expect(champ_datetime.value).to eq(Time.zone.parse('2024-03-30T07:03:00').iso8601)
+      end
+    end
+
+    context "without new values for champs_private" do
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {},
+            champs_public_attributes: {
+              champ_multiple_drop_down_list.public_id => {
+                with_public_id: true,
+                value: ['', 'val1', 'val2']
+              }
+            }
+          }
+        }
+      end
+
+      it {
+        expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
+        expect(response).to have_http_status(200)
+      }
+    end
+
+    context "with invalid champs_public (DecimalNumberChamp)" do
+      let(:types_de_champ_public) do
+        [
+          { type: :decimal_number }
+        ]
+      end
+
+      let(:champ_decimal_number) { dossier.champs_public.first }
+
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {
+              champ_datetime.public_id => {
+                with_public_id: true,
+                value: '2024-03-30T07:03'
+              }
+            }
+          }
+        }
+      end
+
+      it 'update champs_private' do
         too_long_float = '3.1415'
-        dossier.champs_public.first.update_column(:value, too_long_float)
+        champ_decimal_number.update_column(:value, too_long_float)
         patch :update_annotations, params: params, format: :turbo_stream
         champ_datetime.reload
         expect(champ_datetime.value).to eq(Time.zone.parse('2024-03-30T07:03:00').iso8601)

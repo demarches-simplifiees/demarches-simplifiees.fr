@@ -2,6 +2,9 @@ class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern
 
+  # TODO: remove after one deploy
+  attr_writer :with_public_id
+
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
