@@ -1,5 +1,6 @@
 class ApplicationMailer < ActionMailer::Base
   include MailerDolistConcern
+  include MailerHeadersConfigurableConcern
   include MailerMonitoringConcern
   include BalancedDeliveryConcern
   include PriorityDeliveryConcern

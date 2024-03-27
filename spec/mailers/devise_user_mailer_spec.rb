@@ -65,8 +65,4 @@ RSpec.describe DeviseUserMailer, type: :mailer do
       end
     end
   end
-
-  def header_value(name, message)
-    message.header.fields.find { _1.name == name }.value
-  end
 end
