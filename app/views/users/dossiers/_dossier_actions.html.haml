@@ -43,7 +43,7 @@
 
     - if has_delete_action
       - menu.with_item(class: 'danger') do
-        - confirm = dossier.transfer.present? ? t("views.users.dossiers.dossier_action.delete_dossier_with_transfer_confirm") : t("views.users.dossiers.dossier_action.delete_dossier_confirm")
+        - confirm = dossier.transfer.present? ? t("views.users.dossiers.dossier_action.delete_dossier_with_transfer_confirm", email: dossier.transfer.email) : t("views.users.dossiers.dossier_action.delete_dossier_confirm")
         = link_to(dossier_path(dossier), role: 'menuitem', method: :delete, data: { disable: true, confirm: }) do
           = dsfr_icon('fr-icon-delete-fill', :sm)
           .dropdown-description
