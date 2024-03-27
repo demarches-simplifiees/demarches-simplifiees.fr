@@ -277,7 +277,7 @@ module Users
           end
 
           format.turbo_stream do
-            @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+            @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs.filter(&:public?))
             render :update, layout: false
           end
         end
@@ -291,7 +291,7 @@ module Users
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs_public_all)
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_params.fetch(:champs_public_all_attributes), dossier.champs.filter(&:public?))
           render :update, layout: false
         end
       end
@@ -303,7 +303,8 @@ module Users
 
     def champ
       @dossier = dossier_with_champs(pj_template: false)
-      champ = @dossier.champs_public_all.find(params[:champ_id])
+      type_de_champ = @dossier.find_public_type_de_champ!(params[:stable_id])
+      champ = @dossier.project_champ(type_de_champ, params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do
@@ -471,7 +472,7 @@ module Users
     end
 
     def champs_public_params
-      champs_params = params.require(:dossier).permit(champs_public_attributes: [
+      champ_attributes = [
         :id,
         :value,
         :value_other,
@@ -489,8 +490,12 @@ module Users
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
+        :with_public_id,
         value: []
-      ])
+      ]
+      public_ids = params.dig(:dossier, :champs_public_attributes)&.keys || []
+      champs_attributes = public_ids.map { [_1, champ_attributes] }.to_h
+      champs_params = params.require(:dossier).permit(champs_public_attributes: champs_attributes)
       champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}
       champs_params
     end
@@ -525,8 +530,8 @@ module Users
     end
 
     def update_dossier_and_compute_errors
-      @dossier.assign_attributes(champs_public_params)
-      if @dossier.champs_public_all.any?(&:changed_for_autosave?)
+      @dossier.update_champs_public(champs_public_params[:champs_public_all_attributes])
+      if @dossier.champs.any?(&:changed_for_autosave?) || @dossier.champs_public_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
         @dossier.last_champ_updated_at = Time.zone.now
       end
 

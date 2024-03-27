@@ -975,7 +975,7 @@ describe Instructeurs::DossiersController, type: :controller do
       Timecop.return
     end
 
-    context "with new values for champs_private" do
+    context "with new values for champs_private (legacy)" do
       let(:params) do
         {
           procedure_id: procedure.id,
@@ -1027,6 +1027,58 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
 
+    context "with new values for champs_private" do
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          dossier_id: dossier.id,
+          dossier: {
+            champs_private_attributes: {
+              champ_multiple_drop_down_list.public_id => {
+                with_public_id: true,
+                value: ['', 'val1', 'val2']
+              },
+              champ_datetime.public_id => {
+                with_public_id: true,
+                value: '2019-12-21T13:17'
+              },
+              champ_linked_drop_down_list.public_id => {
+                with_public_id: true,
+                primary_value: 'primary',
+                secondary_value: 'secondary'
+              },
+              champ_repetition.champs.first.public_id => {
+                with_public_id: true,
+                value: 'text'
+              },
+              champ_drop_down_list.public_id => {
+                with_public_id: true,
+                value: '__other__',
+                value_other: 'other value'
+              }
+            }
+          }
+        }
+      end
+
+      it {
+        expect(champ_multiple_drop_down_list.value).to eq('["val1","val2"]')
+        expect(champ_linked_drop_down_list.primary_value).to eq('primary')
+        expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
+        expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
+        expect(champ_repetition.champs.first.value).to eq('text')
+        expect(champ_drop_down_list.value).to eq('other value')
+        expect(dossier.reload.last_champ_private_updated_at).to eq(now)
+        expect(response).to have_http_status(200)
+      }
+
+      it 'updates the annotations' do
+        Timecop.travel(now + 1.hour)
+        expect(instructeur.followed_dossiers.with_notifications).to eq([])
+        expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
+      end
+    end
+
     context "without new values for champs_private" do
       let(:params) do
         {
@@ -1035,8 +1087,8 @@ describe Instructeurs::DossiersController, type: :controller do
           dossier: {
             champs_private_attributes: {},
             champs_public_attributes: {
-              '0': {
-                id: champ_multiple_drop_down_list.id,
+              champ_multiple_drop_down_list.public_id => {
+                with_public_id: true,
                 value: ['', 'val1', 'val2']
               }
             }
