@@ -2,8 +2,26 @@ class Champs::CommuneChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement, :code_postal, :code_region
   before_save :on_codes_change, if: :should_refresh_after_code_change?
 
-  def for_export
-    [to_s, code? ? code : '', departement? ? departement_code_and_name : '']
+  def for_export(path = :value)
+    case path
+    when :value
+      to_s
+    when :departement
+      departement_code_and_name || ''
+    when :code
+      code || ''
+    end
+  end
+
+  def for_tag(path = :value)
+    case path
+    when :value
+      to_s
+    when :departement
+      departement_code_and_name || ''
+    when :code
+      code || ''
+    end
   end
 
   def departement_name

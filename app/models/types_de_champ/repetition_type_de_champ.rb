@@ -10,11 +10,4 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
     # Count only once children read time for all rows
     estimated_row_duration * estimated_rows_in_repetition + estimated_children_read_duration
   end
-
-  # We have to truncate the label here as spreadsheets have a (30 char) limit on length.
-  def libelle_for_export(index = 0)
-    str = "(#{stable_id}) #{libelle}"
-    # /\*?[] are invalid Excel worksheet characters
-    ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
-  end
 end

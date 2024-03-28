@@ -19,7 +19,7 @@ class Champs::TitreIdentiteChamp < Champ
     piece_justificative_file.blank?
   end
 
-  def for_export
+  def for_export(path = :value)
     piece_justificative_file.attached? ? "présent" : "absent"
   end
 

@@ -4,30 +4,21 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
   delegate :drop_down_list_options, to: :@type_de_champ
   validate :check_presence_of_primary_options
 
-  def tags_for_template
-    tags = super
-    stable_id = @type_de_champ.stable_id
-    tags.push(
-      {
-        libelle: "#{TagsSubstitutionConcern::TagsParser.normalize(libelle)}/primaire",
-        id: "tdc#{stable_id}/primaire",
-        description: "#{description} (menu primaire)",
-        lambda: -> (champs) {
-          champs.find { |champ| champ.stable_id == stable_id }&.primary_value
-        }
-      }
-    )
-    tags.push(
-      {
-        libelle: "#{TagsSubstitutionConcern::TagsParser.normalize(libelle)}/secondaire",
-        id: "tdc#{stable_id}/secondaire",
-        description: "#{description} (menu secondaire)",
-        lambda: -> (champs) {
-          champs.find { |champ| champ.stable_id == stable_id }&.secondary_value
-        }
-      }
-    )
-    tags
+  def paths
+    paths = super
+    paths.push({
+      libelle: "#{libelle} (Primaire)",
+      description: "#{description} (Primaire)",
+      path: :primaire,
+      maybe_null: public? && !mandatory?
+    })
+    paths.push({
+      libelle: "#{libelle} (Secondaire)",
+      description: "#{description} (Secondaire)",
+      path: :secondaire,
+      maybe_null: public? && !mandatory?
+    })
+    paths
   end
 
   def add_blank_option_when_not_mandatory(options)

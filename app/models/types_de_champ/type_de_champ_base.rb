@@ -12,23 +12,31 @@ class TypesDeChamp::TypeDeChampBase
     @type_de_champ = type_de_champ
   end
 
-  def tags_for_template
-    stable_id = self.stable_id
+  def paths
     [
       {
-        libelle: TagsSubstitutionConcern::TagsParser.normalize(libelle),
-        id: "tdc#{stable_id}",
-        description: description,
-        maybe_null: public? && !mandatory?,
-        lambda: -> (champs) {
-          champs.find { |champ| champ.stable_id == stable_id }&.for_tag
-        }
+        libelle:,
+        path: :value,
+        description:,
+        maybe_null: public? && !mandatory?
       }
     ]
   end
 
-  def libelle_for_export(index = 0)
-    libelle
+  def tags_for_template
+    paths.map {
+      _1.merge(
+        libelle: TagsSubstitutionConcern::TagsParser.normalize(_1[:libelle]),
+        id: _1[:path] == :value ? "tdc#{stable_id}" : "tdc#{stable_id}/#{_1[:path]}",
+        lambda: -> (dossier) {
+          dossier.project_champ(@type_de_champ, nil).for_tag(_1[:path])
+        }
+      )
+    }
+  end
+
+  def libelles_for_export
+    paths.map { [_1[:libelle], _[:path]] }
   end
 
   # Default estimated duration to fill the champ in a form, in seconds.
