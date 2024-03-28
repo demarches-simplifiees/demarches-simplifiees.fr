@@ -1,6 +1,9 @@
 class Champ < ApplicationRecord
   include ChampConditionalConcern
 
+  # TODO: remove after one deploy
+  attr_writer :with_public_id
+
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
@@ -50,7 +53,6 @@ class Champ < ApplicationRecord
     :siret?,
     :carte?,
     :datetime?,
-    :stable_id,
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
@@ -174,13 +176,13 @@ class Champ < ApplicationRecord
   # However the field index makes it difficult to render a single field, independent from the ordering of the others.
   #
   # Luckily, this is only used to make the name unique, but the actual value is ignored when Rails parses nested
-  # attributes. So instead of the field index, this method uses the champ id; which gives us an independent and
+  # attributes. So instead of the field index, this method uses the champ public_id; which gives us an independent and
   # predictable input name.
   def input_name
     if private?
-      "dossier[champs_private_attributes][#{id}]"
+      "dossier[champs_private_attributes][#{public_id}]"
     else
-      "dossier[champs_public_attributes][#{id}]"
+      "dossier[champs_public_attributes][#{public_id}]"
     end
   end
 

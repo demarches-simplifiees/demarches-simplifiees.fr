@@ -26,11 +26,13 @@ module Mutations
     private
 
     def find_annotation(dossier, annotation_id)
-      stable_id, row_id = Champ.decode_typed_id(annotation_id)
+      stable_id, _row_id = Champ.decode_typed_id(annotation_id)
+      type_de_champ = dossier.revision.types_de_champ
+        .private_only
+        .find_by(type_champ: TypeDeChamp.type_champs.fetch(:repetition), stable_id:)
 
-      Champ.joins(:type_de_champ).find_by(type_de_champ: {
-        type_champ: TypeDeChamp.type_champs.fetch(:repetition), stable_id:, private: true
-      }, private: true, row_id:, dossier:)
+      return nil if type_de_champ.nil?
+      dossier.project_champ(type_de_champ, nil)
     end
   end
 end

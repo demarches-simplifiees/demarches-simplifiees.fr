@@ -496,41 +496,6 @@ describe Champ do
         expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
       end
     end
-
-    context 'when updating using nested attributes' do
-      subject do
-        dossier.update!(champs_public_attributes: [
-          {
-            id: champ.id,
-            champs_attributes: [champ_text_attrs]
-          }
-        ])
-        champ.reload
-        dossier.reload
-      end
-
-      it 'associates nested champs to the parent dossier' do
-        subject
-
-        expect(dossier.champs_public.size).to eq(2)
-        expect(champ.rows.size).to eq(2)
-        second_row = champ.reload.rows.second
-        expect(second_row.size).to eq(1)
-        expect(second_row.first.dossier).to eq(dossier)
-
-        champ.champs << champ_integer
-        first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(2)
-        expect(first_row.second).to eq(champ_integer)
-
-        champ.champs << champ_text
-        first_row = champ.reload.rows.first
-        expect(first_row.size).to eq(2)
-        expect(first_row.first).to eq(champ_text)
-
-        expect(champ.rows.size).to eq(2)
-      end
-    end
   end
 
   describe '#log_fetch_external_data_exception' do
@@ -572,21 +537,21 @@ describe Champ do
 
   describe "#input_name" do
     let(:champ) { create(:champ_text) }
-    it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
+    it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }
 
     context "when private" do
       let(:champ) { create(:champ_text, private: true) }
-      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
     end
 
     context "when has parent" do
       let(:champ) { create(:champ_text, parent: create(:champ_text)) }
-      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }
     end
 
     context "when has private parent" do
       let(:champ) { create(:champ_text, private: true, parent: create(:champ_text, private: true)) }
-      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
     end
   end
 

@@ -674,12 +674,12 @@ describe Users::DossiersController, type: :controller do
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_public_attributes: {
-            first_champ.id => {
-              id: first_champ.id,
+            first_champ.public_id => {
+              with_public_id: true,
               value: value
             },
-            piece_justificative_champ.id => {
-              id: piece_justificative_champ.id,
+            piece_justificative_champ.public_id => {
+              with_public_id: true,
               piece_justificative_file: file
             }
           }
@@ -719,7 +719,7 @@ describe Users::DossiersController, type: :controller do
           {
             id: dossier.id,
             dossier: {
-              champs_public_attributes: { first_champ.id => { id: first_champ.id } }
+              champs_public_attributes: { first_champ.public_id => { with_public_id: true } }
             }
           }
         end
@@ -747,7 +747,7 @@ describe Users::DossiersController, type: :controller do
         {
           id: dossier.id,
           dossier: {
-            champs_public_attributes: { first_champ.id => { id: first_champ.id, value: value } }
+            champs_public_attributes: { first_champ.public_id => { with_public_id: true, value: value } }
           }
         }
       end
@@ -790,12 +790,12 @@ describe Users::DossiersController, type: :controller do
         dossier: {
           groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_public_attributes: {
-            first_champ.id => {
-              id: first_champ.id,
+            first_champ.public_id => {
+              with_public_id: true,
               value: value
             },
-            piece_justificative_champ.id => {
-              id: piece_justificative_champ.id,
+            piece_justificative_champ.public_id => {
+              with_public_id: true,
               piece_justificative_file: file
             }
           }
@@ -855,8 +855,8 @@ describe Users::DossiersController, type: :controller do
             id: dossier.id,
             dossier: {
               champs_public_attributes: {
-                piece_justificative_champ.id => {
-                  id: piece_justificative_champ.id,
+                piece_justificative_champ.public_id => {
+                  with_public_id: true,
                   piece_justificative_file: file
                 }
               }
@@ -951,8 +951,8 @@ describe Users::DossiersController, type: :controller do
           id: dossier.id,
           dossier: {
             champs_public_attributes: {
-              first_champ.id => {
-                id: first_champ.id,
+              first_champ.public_id => {
+                with_public_id: true,
                 value: value
               }
             }

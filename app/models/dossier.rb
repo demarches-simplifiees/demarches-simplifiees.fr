@@ -8,6 +8,7 @@ class Dossier < ApplicationRecord
   include DossierRebaseConcern
   include DossierSearchableConcern
   include DossierSectionsConcern
+  include DossierChampsConcern
 
   enum state: {
     brouillon:       'brouillon',
@@ -1382,48 +1383,11 @@ class Dossier < ApplicationRecord
     user.france_connected_with_one_identity?
   end
 
-  def champs_for_revision(scope: nil, root: false)
-    champs_index = champs.group_by(&:stable_id)
-      # Due to some bad data we can have multiple copies of the same champ. Ignore extra copy.
-      .transform_values { _1.sort_by(&:id).uniq(&:row_id) }
-
-    if scope.is_a?(TypeDeChamp)
-      revision.children_of(scope)
-    else
-      revision.types_de_champ_for(scope:, root:)
-    end.flat_map { champs_index[_1.stable_id] || [] }
-  end
-
   def has_annotations?
     revision.revision_types_de_champ_private.present?
   end
 
-  def project_champ(type_de_champ, row_id)
-    champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:)
-    else
-      champ
-    end
-  end
-
-  def champ_for_export(type_de_champ, row_id)
-    champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.nil? || !champ.visible?
-      # some champs export multiple columns
-      # ex: commune.for_export => [commune, insee, departement]
-      # so we build a fake champ to have the right export
-      type_de_champ.build_champ(dossier: self, row_id:)
-    else
-      champ
-    end
-  end
-
   private
-
-  def champs_by_public_id
-    @champs_by_public_id ||= champs.sort_by(&:id).index_by(&:public_id)
-  end
 
   def create_missing_traitemets
     if en_construction_at.present? && traitements.en_construction.empty?
