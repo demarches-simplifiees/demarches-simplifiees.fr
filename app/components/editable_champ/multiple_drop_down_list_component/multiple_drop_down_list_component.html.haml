@@ -11,9 +11,9 @@
   - else
     %div{ 'data-turbo-focus-group': true }
       - if @champ.selected_options.present?
-        .fr-mb-2w{ "data-turbo": "true" }
+        .fr-mb-2w.fr-mt-2w{ "data-turbo": "true" }
           - @champ.selected_options.each do |option|
             = render NestedForms::OwnedButtonComponent.new(formaction: champs_options_path(@champ.id, option:), http_method: :delete, opt: { aria: {pressed: true }, class: 'fr-tag fr-tag-bug fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option) }) do
               = option
       - if @champ.unselected_options.present?
-        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: '' }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: 'fr-select fr-mt-2v'
+        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: false, prompt: t('.prompt') }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: 'fr-select fr-mt-2v'
