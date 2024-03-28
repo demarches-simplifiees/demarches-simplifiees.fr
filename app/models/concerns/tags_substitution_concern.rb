@@ -61,6 +61,15 @@ module TagsSubstitutionConcern
     end
   end
 
+  DOSSIER_ID_TAG = {
+    id: 'dossier_number',
+      label: 'numéro du dossier',
+      libelle: 'numéro du dossier',
+      description: '',
+      target: :id,
+      available_for_states: Dossier::SOUMIS
+  }
+
   DOSSIER_TAGS = [
     {
       id: 'dossier_motivation',
@@ -99,20 +108,13 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::SOUMIS
     },
     {
-      id: 'dossier_number',
-      libelle: 'numéro du dossier',
-      description: '',
-      target: :id,
-      available_for_states: Dossier::SOUMIS
-    },
-    {
       id: 'dossier_service_name',
       libelle: 'nom du service',
       description: 'Le nom du service instructeur qui traite le dossier',
       lambda: -> (d) { d.procedure.organisation_name || '' },
       available_for_states: Dossier::SOUMIS
     }
-  ]
+  ].push(DOSSIER_ID_TAG)
 
   DOSSIER_TAGS_FOR_MAIL = [
     {

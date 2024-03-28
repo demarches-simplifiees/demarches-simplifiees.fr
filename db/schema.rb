@@ -597,9 +597,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
     t.index ["procedure_id"], name: "index_experts_procedures_on_procedure_id"
   end
 
+  create_table "export_templates", force: :cascade do |t|
+    t.jsonb "content", default: {}
+    t.datetime "created_at", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.string "kind"
+    t.string "name"
+    t.datetime "updated_at", null: false
+    t.index ["groupe_instructeur_id"], name: "index_export_templates_on_groupe_instructeur_id"
+  end
+
   create_table "exports", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.integer "dossiers_count"
+    t.bigint "export_template_id"
     t.string "format", null: false
     t.bigint "instructeur_id"
     t.string "job_status", default: "pending", null: false
@@ -611,6 +622,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_profile_id"
     t.string "user_profile_type"
+    t.index ["export_template_id"], name: "index_exports_on_export_template_id"
     t.index ["instructeur_id"], name: "index_exports_on_instructeur_id"
     t.index ["key"], name: "index_exports_on_key"
     t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"
@@ -1240,6 +1252,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
+  add_foreign_key "export_templates", "groupe_instructeurs"
+  add_foreign_key "exports", "export_templates"
   add_foreign_key "exports", "instructeurs"
   add_foreign_key "france_connect_informations", "users"
   add_foreign_key "geo_areas", "champs"

@@ -1,6 +1,7 @@
 class PiecesJustificativesService
-  def initialize(user_profile:)
+  def initialize(user_profile:, export_template:)
     @user_profile = user_profile
+    @export_template = export_template
   end
 
   def liste_documents(dossiers)
@@ -58,7 +59,11 @@ class PiecesJustificativesService
         created_at: dossier.updated_at
       )
 
-      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+      if @export_template
+        pdfs << @export_template.attachment_and_path(dossier, a)
+      else
+        pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+      end
     end
 
     pdfs
@@ -153,9 +158,14 @@ class PiecesJustificativesService
       .includes(:blob)
       .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
       .filter { |a| safe_attachment(a) }
-      .map do |a|
+      .map do |a, _i|
         dossier_id = champ_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        pj_index = Champ.find(a.record_id).piece_justificative_file.blobs.map(&:id).index(a.blob_id)
+        if @export_template
+          @export_template.attachment_and_path(Dossier.find(dossier_id), a, index: pj_index, row_index: a.record.row_index)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 

@@ -11,7 +11,7 @@
 
       .procedure-actions
         - if @can_download_dossiers
-          = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_url: method(:download_export_instructeur_procedure_path))
+          = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), export_url: method(:download_export_instructeur_procedure_path))
 
     .fr-container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,

@@ -33,11 +33,11 @@ describe ProcedureArchiveService do
           files = ZipTricks::FileReader.read_zip_structure(io: f)
 
           structure = [
-            "#{service.send(:zip_root_folder, archive)}/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
+            "export/",
+            "export/dossier-#{dossier.id}/",
+            "export/dossier-#{dossier.id}/pieces_justificatives/",
+            "export/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2021-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
@@ -53,11 +53,11 @@ describe ProcedureArchiveService do
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
           structure = [
-            "#{service.send(:zip_root_folder, archive)}/",
-            "#{service.send(:zip_root_folder, archive)}/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
+            "export/",
+            "export/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
+            "export/dossier-#{dossier.id}/",
+            "export/dossier-#{dossier.id}/pieces_justificatives/",
+            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
@@ -100,12 +100,12 @@ describe ProcedureArchiveService do
           archive.file.open do |f|
             zip_entries = ZipTricks::FileReader.read_zip_structure(io: f)
             structure = [
-              "#{service.send(:zip_root_folder, archive)}/",
-              "#{service.send(:zip_root_folder, archive)}/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
-              "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/",
-              "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
-              "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/",
-              "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
+              "export/",
+              "export/-LISTE-DES-FICHIERS-EN-ERREURS.txt",
+              "export/dossier-#{dossier.id}/",
+              "export/dossier-#{dossier.id}/export-dossier-05-03-2020-00-00-1.pdf",
+              "export/dossier-#{dossier.id}/pieces_justificatives/",
+              "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2021-00-00-#{dossier.id % 10000}.pdf"
             ]
             expect(zip_entries.map(&:filename)).to match_array(structure)
             zip_entries.map do |entry|
@@ -134,15 +134,15 @@ describe ProcedureArchiveService do
         archive.file.open do |f|
           files = ZipTricks::FileReader.read_zip_structure(io: f)
           structure = [
-            "#{service.send(:zip_root_folder, archive)}/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2020-00-00-#{dossier.id % 10000}.pdf",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id % 10000}.pdf",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/pieces_justificatives/",
-            "#{service.send(:zip_root_folder, archive)}/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
+            "export/",
+            "export/dossier-#{dossier.id}/",
+            "export/dossier-#{dossier.id}/pieces_justificatives/",
+            "export/dossier-#{dossier.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier.attestation.pdf.id % 10000}.pdf",
+            "export/dossier-#{dossier.id}/export-#{dossier.id}-05-03-2020-00-00-#{dossier.id % 10000}.pdf",
+            "export/dossier-#{dossier_2020.id}/",
+            "export/dossier-#{dossier_2020.id}/export-#{dossier_2020.id}-05-03-2020-00-00-#{dossier_2020.id % 10000}.pdf",
+            "export/dossier-#{dossier_2020.id}/pieces_justificatives/",
+            "export/dossier-#{dossier_2020.id}/pieces_justificatives/attestation-dossier--05-03-2020-00-00-#{dossier_2020.attestation.pdf.id % 10000}.pdf"
           ]
           expect(files.map(&:filename)).to match_array(structure)
         end
