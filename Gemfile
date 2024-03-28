@@ -100,6 +100,9 @@ gem 'ulid-ruby', require: 'ulid'
 gem 'view_component'
 gem 'vite_rails'
 gem 'warden'
+gem 'webrick', require: false
+gem 'yabeda-prometheus'
+gem 'yabeda-sidekiq'
 gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
 
