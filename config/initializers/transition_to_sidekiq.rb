@@ -6,6 +6,10 @@ if Rails.env.production? && sidekiq_enabled
       self.queue_adapter = :sidekiq
     end
 
+    class ActiveStorage::AnalyzeJob < ActiveStorage::BaseJob
+      self.queue_adapter = :sidekiq
+    end
+
     class VirusScannerJob
       self.queue_adapter = :sidekiq
     end
@@ -23,6 +27,26 @@ if Rails.env.production? && sidekiq_enabled
     end
 
     class PriorizedMailDeliveryJob < ActionMailer::MailDeliveryJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class ProcedureSVASVRProcessDossierJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class WebhookJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class DestroyRecordLaterJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class ChampFetchExternalDataJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class DossierUpdateSearchTermsJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
   end
