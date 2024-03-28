@@ -4,10 +4,6 @@ class EditableChamp::RNAComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def update_path
-    if Champ.update_by_stable_id?
-      champs_rna_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
-    else
-      champs_legacy_rna_path(@champ)
-    end
+    champs_rna_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
   end
 end
