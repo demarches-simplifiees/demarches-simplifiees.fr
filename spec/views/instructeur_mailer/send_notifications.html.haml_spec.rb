@@ -4,6 +4,8 @@ describe 'instructeur_mailer/send_notifications', type: :view do
   before do
     assign(:data, data)
 
+    allow(Current).to receive(:application_name).and_return(APPLICATION_NAME)
+
     render
   end
 

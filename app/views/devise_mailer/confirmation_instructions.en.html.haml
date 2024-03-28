@@ -5,7 +5,7 @@
   %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
-    You have entered your details to create an account on #{APPLICATION_NAME}. To confirm your email and finish creating your account, select the following link:
+    You have entered your details to create an account on #{Current.application_name}. To confirm your email and finish creating your account, select the following link:
     - link = confirmation_url(@user, confirmation_token: @token, procedure_id: @procedure&.id)
     = link_to(link, link)
 
@@ -15,7 +15,7 @@
   %p= t(:hello, scope: [:views, :shared, :greetings])
 
   %p
-    To confirm your account email change on #{APPLICATION_NAME}, select the following link:
+    To confirm your account email change on #{Current.application_name}, select the following link:
     = link_to(confirmation_url(@user, confirmation_token: @token), confirmation_url(@user, confirmation_token: @token))
 
 = render partial: "layouts/mailers/signature"

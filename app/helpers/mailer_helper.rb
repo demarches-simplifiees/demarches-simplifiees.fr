@@ -19,7 +19,7 @@ module MailerHelper
   end
 
   def blue
-    '#0069CC'
+    '#000091'
   end
 
   def white
