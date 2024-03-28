@@ -15,7 +15,7 @@ class Champs::RNAChamp < Champ
     title.present? ? "#{value} (#{title})" : value
   end
 
-  def for_export
+  def for_export(path = :value)
     identifier
   end
 

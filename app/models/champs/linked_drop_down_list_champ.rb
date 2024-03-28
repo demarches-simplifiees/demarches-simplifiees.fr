@@ -41,12 +41,26 @@ class Champs::LinkedDropDownListChamp < Champ
     value.present? ? [primary_value, secondary_value].filter(&:present?).join(' / ') : ""
   end
 
-  def for_tag
-    value.present? ? [primary_value, secondary_value].filter(&:present?).join(' / ') : ""
+  def for_tag(path = :value)
+    case path
+    when :primary
+      primary_value
+    when :secondary
+      secondary_value
+    when :value
+      value.present? ? [primary_value, secondary_value].filter(&:present?).join(' / ') : ""
+    end
   end
 
-  def for_export
-    value.present? ? "#{primary_value || ''};#{secondary_value || ''}" : nil
+  def for_export(path = :value)
+    case path
+    when :primary
+      primary_value
+    when :secondary
+      secondary_value
+    when :value
+      value.present? ? "#{primary_value || ''};#{secondary_value || ''}" : nil
+    end
   end
 
   def for_api

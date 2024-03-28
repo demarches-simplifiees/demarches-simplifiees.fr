@@ -25,11 +25,33 @@ class Champs::RNFChamp < Champ
     rnf_id.blank?
   end
 
-  def for_export
-    if address.present?
-      [rnf_id, title, address['label'], address['cityCode'], departement_code_and_name]
-    else
-      [rnf_id, nil, nil, nil, nil]
+  def for_export(path = :value)
+    case path
+    when :value
+      rnf_id
+    when :departement
+      departement_code_and_name
+    when :code_insee
+      commune&.fetch(:code)
+    when :adresse
+      full_address
+    when :nom
+      title
+    end
+  end
+
+  def for_tag(path = :value)
+    case path
+    when :value
+      rnf_id
+    when :departement
+      departement_code_and_name || ''
+    when :code_insee
+      commune&.fetch(:code) || ''
+    when :address
+      full_address || ''
+    when :nom
+      title || ''
     end
   end
 

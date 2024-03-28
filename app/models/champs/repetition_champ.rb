@@ -1,6 +1,12 @@
 class Champs::RepetitionChamp < Champ
   accepts_nested_attributes_for :champs
-  delegate :libelle_for_export, to: :type_de_champ
+
+  # We have to truncate the label here as spreadsheets have a (30 char) limit on length.
+  def libelle_for_export
+    str = "(#{stable_id}) #{libelle}"
+    # /\*?[] are invalid Excel worksheet characters
+    ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
+  end
 
   def rows
     dossier
@@ -34,7 +40,7 @@ class Champs::RepetitionChamp < Champ
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
-  def for_tag
+  def for_tag(path = :value)
     ([libelle] + rows.map do |champs|
       champs.map do |champ|
         "#{champ.libelle} : #{champ}"

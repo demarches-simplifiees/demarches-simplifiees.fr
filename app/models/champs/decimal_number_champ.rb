@@ -16,7 +16,7 @@ class Champs::DecimalNumberChamp < Champ
     }
   }
 
-  def for_export
+  def for_export(path = :value)
     processed_value
   end
 
