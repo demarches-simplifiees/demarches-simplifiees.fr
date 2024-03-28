@@ -33,7 +33,10 @@ class DeviseUserMailer < Devise::Mailer
     opts[:reply_to] = Current.no_reply_email
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
-    super
+
+    I18n.with_locale(record.locale) do
+      super
+    end
   end
 
   def self.critical_email?(action_name)
