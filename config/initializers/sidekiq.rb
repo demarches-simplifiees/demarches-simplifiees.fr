@@ -16,6 +16,11 @@ if ENV.has_key?('REDIS_SIDEKIQ_SENTINELS')
       role: :master
     }
 
+    if ENV['PROMETHEUS_EXPORTER_ENABLED'] == 'enabled'
+      Yabeda.configure!
+      Yabeda::Prometheus::Exporter.start_metrics_server!
+    end
+
     if ENV['SKIP_RELIABLE_FETCH'].blank?
       Sidekiq::ReliableFetch.setup_reliable_fetch!(config)
     end
