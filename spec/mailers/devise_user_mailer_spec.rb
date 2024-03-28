@@ -19,6 +19,24 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name)
       end
     end
+
+    describe "i18n" do
+      context "when locale is fr" do
+        let(:user) { create(:user, locale: :fr) }
+
+        it "uses fr locale" do
+          expect(subject.body).to include("Activez votre compte")
+        end
+      end
+
+      context "when locale is en" do
+        let(:user) { create(:user, locale: :en) }
+
+        it "uses en locale" do
+          expect(subject.body).to include("Activate account")
+        end
+      end
+    end
   end
 
   describe 'headers for user' do

@@ -23,6 +23,8 @@ class DeviseUserMailer < Devise::Mailer
   def initialize_from_record(record)
     configure_defaults_for_user(record)
 
+    I18n.locale = record.locale if record.is_a?(User) # no locale for super admins
+
     super
   end
 

@@ -32,8 +32,6 @@ module MailerDefaultsConfigurableConcern
     def configure_defaults_for_user(user)
       return if !user.is_a?(User) # not for super-admins
 
-      I18n.locale = user.locale
-
       if user.preferred_domain_demarches_gouv_fr?
         set_currents_for_demarches_gouv_fr
       else
