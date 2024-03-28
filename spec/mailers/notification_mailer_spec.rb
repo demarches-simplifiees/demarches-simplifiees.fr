@@ -25,6 +25,15 @@ RSpec.describe NotificationMailer, type: :mailer do
     it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
   end
 
+  describe 'send_accuse_reception_notification' do
+    let(:dossier) { create(:dossier, :accepte, procedure: create(:procedure, :accuse_reception)) }
+
+    subject { described_class.send_accuse_reception_notification(dossier) }
+
+    it { expect(subject.subject).to include("La décision a été rendue pour votre démarche #{dossier.procedure.libelle}") }
+    it { expect(subject.body).to include("Pour en connaitre la nature, veuillez vous connecter à votre compte\r\n<a href=\"#{dossier_url(dossier)}\">Démarches Simplifiées.</a>") }
+  end
+
   describe 'send_en_construction_notification' do
     let(:dossier) { create(:dossier, :en_construction, :with_individual, user: user, procedure:) }
 

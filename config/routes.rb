@@ -369,6 +369,7 @@ Rails.application.routes.draw do
         get 'attestation'
         get 'transferer', to: 'dossiers#transferer'
         get 'papertrail', format: :pdf
+        get 'set_accuse_reception_agreement_at'
       end
 
       collection do
@@ -572,6 +573,8 @@ Rails.application.routes.draw do
         get 'modifications'
         get 'monavis'
         patch 'update_monavis'
+        get 'accuse_reception'
+        patch 'update_accuse_reception'
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review
