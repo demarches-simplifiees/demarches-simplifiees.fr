@@ -348,6 +348,7 @@ fr:
         form:
           submitted_at: "Déposé le %{datetime}"
           updated_at: "Modifié le %{datetime}"
+          download_attestation: "Télécharger l‘attestation"
         edit:
           autosave: Votre dossier est enregistré automatiquement après chaque modification. Vous pouvez à tout moment fermer la fenêtre et reprendre plus tard là où vous en étiez.
         messages:

@@ -17,12 +17,6 @@ module Instructeurs
     after_action :mark_avis_as_read, only: [:avis, :create_avis]
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
-    def attestation
-      if dossier.attestation.pdf.attached?
-        redirect_to dossier.attestation.pdf.url, allow_other_host: true
-      end
-    end
-
     def extend_conservation
       dossier.extend_conservation(1.month)
       flash[:notice] = t('views.instructeurs.dossiers.archived_dossier')

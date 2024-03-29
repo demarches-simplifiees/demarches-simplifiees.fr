@@ -35,8 +35,10 @@ describe 'instructeurs/dossiers/show', type: :view do
     let(:dossier) { create :dossier, :accepte, :with_attestation }
 
     it 'provides a link to the attestation' do
+      pdf = dossier.attestation.pdf
+      expect(dossier).to receive(:attestation).and_return(double(pdf: pdf)).at_least(2)
       expect(subject).to have_text('Attestation')
-      expect(subject).to have_link(href: attestation_instructeur_dossier_path(dossier.procedure, dossier))
+      expect(subject).to have_text("Télécharger l‘attestation")
     end
   end
 

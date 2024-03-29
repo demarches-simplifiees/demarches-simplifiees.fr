@@ -23,4 +23,4 @@
   - if dossier.attestation.present?
     = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
       - c.with_value do
-        = link_to('Voir l’attestation', attestation_instructeur_dossier_path(dossier.procedure, dossier), **external_link_attributes)
+        = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))

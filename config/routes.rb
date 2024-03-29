@@ -475,7 +475,6 @@ Rails.application.routes.draw do
           member do
             resources :commentaires, only: [:destroy]
             post 'repousser-expiration' => 'dossiers#extend_conservation'
-            get 'attestation'
             get 'geo_data'
             get 'apercu_attestation'
             get 'bilans_bdf'

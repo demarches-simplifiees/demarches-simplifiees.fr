@@ -13,17 +13,6 @@ describe Instructeurs::DossiersController, type: :controller do
 
   before { sign_in(instructeur.user) }
 
-  describe '#attestation' do
-    context 'when a dossier has an attestation' do
-      let(:dossier) { create(:dossier, :accepte, attestation: create(:attestation, :with_pdf), procedure: procedure) }
-
-      it 'redirects to a service tmp_url' do
-        get :attestation, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-        expect(response.location).to match '/rails/active_storage/disk/'
-      end
-    end
-  end
-
   describe '#send_to_instructeurs' do
     let(:mail) { double("mail") }
 
