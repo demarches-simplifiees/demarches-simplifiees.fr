@@ -1,7 +1,7 @@
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
     = form_with url: form_url, model: @export_template, local: true do |f|
-      #export_template-edit.fr-my-4w{ data: { controller: 'tiptap', tiptap_insert_after_tag_value: ' ' } }
+      #export_template-edit.fr-my-4w
         .fr-mb-6w
           = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur de modèle d'export", heading_level: 'h3') do |c|
             - c.with_body do
