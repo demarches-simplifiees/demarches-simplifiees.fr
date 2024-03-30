@@ -7,7 +7,7 @@ class Champs::IntegerNumberChamp < Champ
       # i18n-tasks-use t('errors.messages.not_an_integer')
       "« #{object.libelle} » " + object.errors.generate_message(:value, :not_an_integer)
     }
-  }
+  }, if: -> { validate_champ_value? || validation_context == :prefill }
 
   def for_export
     processed_value
