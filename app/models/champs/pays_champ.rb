@@ -1,6 +1,6 @@
 class Champs::PaysChamp < Champs::TextChamp
-  validates :value, inclusion: APIGeoService.countries.pluck(:name), allow_nil: true, allow_blank: false
-  validates :external_id, inclusion: APIGeoService.countries.pluck(:code), allow_nil: true, allow_blank: false
+  validates :external_id, inclusion: APIGeoService.countries.pluck(:code), allow_nil: true, allow_blank: false, if: -> { validate_champ_value? || validation_context == :prefill }
+  validates :value, inclusion: APIGeoService.countries.pluck(:name), allow_nil: true, allow_blank: false, if: -> { validate_champ_value? || validation_context == :prefill }
 
   def for_export
     [name, code]
@@ -26,8 +26,13 @@ class Champs::PaysChamp < Champs::TextChamp
       self.external_id = nil
       super(nil)
     elsif code != value
-      self.external_id = APIGeoService.country_code(code)
+      self.external_id = APIGeoService.country_code(code) # lookup by code which is a country name
       super(code)
+      if self.external_id # if we match a country code, lookup for country name with code
+        super(APIGeoService.country_name(self.external_id, locale: 'FR'))
+      else # if we did not match any country code, external_id is nil as well as value
+        super(nil)
+      end
     end
   end
 
