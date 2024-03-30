@@ -74,8 +74,8 @@ class Migrations::BatchUpdatePaysValuesJob < ApplicationJob
   def perform(ids)
     ids.each do |id|
       pays_champ = Champs::PaysChamp.find(id)
-      next if pays_champ.valid?
 
+      next if pays_champ.valid?(pays_champ.public? ? :champs_public_value : :champs_private_value)
       code = APIGeoService.country_code(pays_champ.value)
       value = if code.present?
         APIGeoService.country_name(code)
