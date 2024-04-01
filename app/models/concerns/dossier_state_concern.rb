@@ -6,18 +6,22 @@ module DossierStateConcern
     self.depose_at = self.en_construction_at = self.traitements
       .passer_en_construction
       .processed_at
+
     save!
+
     RoutingEngine.compute(self)
+
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_construction))
+    procedure.compute_dossiers_count
+  end
+
+  def after_commit_passer_en_construction
     NotificationMailer.send_en_construction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
-    procedure.compute_dossiers_count
   end
 
   def after_passer_en_instruction(h)
     instructeur = h[:instructeur]
-    disable_notification = h.fetch(:disable_notification, false)
-
     instructeur.follow(self)
 
     self.en_construction_close_to_expiration_notice_sent_at = nil
@@ -27,14 +31,19 @@ module DossierStateConcern
       .processed_at
     save!
 
+    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     resolve_pending_correction!
 
-    MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
+    log_dossier_operation(instructeur, :passer_en_instruction)
+  end
+
+  def after_commit_passer_en_instruction(h)
+    disable_notification = h.fetch(:disable_notification, false)
+
     if !disable_notification
       NotificationMailer.send_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
-    log_dossier_operation(instructeur, :passer_en_instruction)
   end
 
   def after_passer_automatiquement_en_instruction
@@ -47,9 +56,8 @@ module DossierStateConcern
     end
 
     save!
+
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
-    NotificationMailer.send_en_instruction_notification(self).deliver_later
-    NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
 
     if procedure.sva_svr_enabled?
       # TODO: handle serialization errors when SIRET demandeur was not completed
@@ -57,6 +65,11 @@ module DossierStateConcern
     else
       log_automatic_dossier_operation(:passer_en_instruction)
     end
+  end
+
+  def after_commit_passer_automatiquement_en_instruction
+    NotificationMailer.send_en_instruction_notification(self).deliver_later
+    NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
   end
 
   def after_repasser_en_construction(h)
@@ -69,15 +82,19 @@ module DossierStateConcern
     self.en_construction_at = self.traitements
       .passer_en_construction(instructeur: instructeur)
       .processed_at
+
     save!
+
     log_dossier_operation(instructeur, :repasser_en_construction)
+  end
+
+  def after_commit_repasser_en_construction
   end
 
   def after_accepter(h)
     instructeur = h[:instructeur]
     motivation = h[:motivation]
     justificatif = h[:justificatif]
-    disable_notification = h.fetch(:disable_notification, false)
 
     self.processed_at = self.traitements
       .accepter(motivation: motivation, instructeur: instructeur)
@@ -93,15 +110,22 @@ module DossierStateConcern
     end
 
     save!
-    remove_titres_identite!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
+
+    log_dossier_operation(instructeur, :accepter, self)
+  end
+
+  def after_commit_accepter(h)
+    disable_notification = h.fetch(:disable_notification, false)
+
     if !disable_notification
       NotificationMailer.send_accepte_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
+
     send_dossier_decision_to_experts(self)
-    log_dossier_operation(instructeur, :accepter, self)
+    remove_titres_identite!
   end
 
   def after_accepter_automatiquement
@@ -121,18 +145,24 @@ module DossierStateConcern
     end
 
     save!
-    remove_titres_identite!
+
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:accepte))
+
+    log_automatic_dossier_operation(:accepter, self)
+  end
+
+  def after_commit_accepter_automatiquement
     NotificationMailer.send_accepte_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
-    log_automatic_dossier_operation(:accepter, self)
+
+    send_dossier_decision_to_experts(self)
+    remove_titres_identite!
   end
 
   def after_refuser(h)
     instructeur = h[:instructeur]
     motivation = h[:motivation]
     justificatif = h[:justificatif]
-    disable_notification = h.fetch(:disable_notification, false)
 
     self.processed_at = self.traitements
       .refuser(motivation: motivation, instructeur: instructeur)
@@ -144,16 +174,22 @@ module DossierStateConcern
     end
 
     save!
-    remove_titres_identite!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
+
+    log_dossier_operation(instructeur, :refuser, self)
+  end
+
+  def after_commit_refuser(h)
+    disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
       NotificationMailer.send_refuse_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
+
     send_dossier_decision_to_experts(self)
-    log_dossier_operation(instructeur, :refuser, self)
+    remove_titres_identite!
   end
 
   def after_refuser_automatiquement
@@ -167,18 +203,23 @@ module DossierStateConcern
 
     save!
 
-    remove_titres_identite!
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:refuse))
+
+    log_automatic_dossier_operation(:refuser, self)
+  end
+
+  def after_commit_refuser_automatiquement
     NotificationMailer.send_refuse_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
-    log_automatic_dossier_operation(:refuser, self)
+
+    send_dossier_decision_to_experts(self)
+    remove_titres_identite!
   end
 
   def after_classer_sans_suite(h)
     instructeur = h[:instructeur]
     motivation = h[:motivation]
     justificatif = h[:justificatif]
-    disable_notification = h.fetch(:disable_notification, false)
 
     self.processed_at = self.traitements
       .classer_sans_suite(motivation: motivation, instructeur: instructeur)
@@ -190,21 +231,26 @@ module DossierStateConcern
     end
 
     save!
-    remove_titres_identite!
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:sans_suite))
+
+    log_dossier_operation(instructeur, :classer_sans_suite, self)
+  end
+
+  def after_commit_classer_sans_suite(h)
+    disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
       NotificationMailer.send_sans_suite_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
+
     send_dossier_decision_to_experts(self)
-    log_dossier_operation(instructeur, :classer_sans_suite, self)
+    remove_titres_identite!
   end
 
   def after_repasser_en_instruction(h)
     instructeur = h[:instructeur]
-    disable_notification = h.fetch(:disable_notification, false)
 
     create_missing_traitemets
 
@@ -222,13 +268,20 @@ module DossierStateConcern
     self.justificatif_motivation.purge_later
 
     save!
-    rebase_later
 
     MailTemplatePresenterService.create_commentaire_for_state(self, DossierOperationLog.operations.fetch(:repasser_en_instruction))
+
+    log_dossier_operation(instructeur, :repasser_en_instruction)
+  end
+
+  def after_commit_repasser_en_instruction(h)
+    disable_notification = h.fetch(:disable_notification, false)
+
     if !disable_notification
       NotificationMailer.send_repasser_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self, repasser_en_instruction: true).deliver_later if self.for_tiers?
     end
-    log_dossier_operation(instructeur, :repasser_en_instruction)
+
+    rebase_later
   end
 end

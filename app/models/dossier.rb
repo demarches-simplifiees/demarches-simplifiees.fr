@@ -158,48 +158,48 @@ class Dossier < ApplicationRecord
     state :refuse
     state :sans_suite
 
-    event :passer_en_construction, after: :after_passer_en_construction do
+    event :passer_en_construction, after: :after_passer_en_construction, after_commit: :after_commit_passer_en_construction do
       transitions from: :brouillon, to: :en_construction
     end
 
-    event :passer_en_instruction, after: :after_passer_en_instruction do
+    event :passer_en_instruction, after: :after_passer_en_instruction, after_commit: :after_commit_passer_en_instruction do
       transitions from: :en_construction, to: :en_instruction, guard: :can_passer_en_instruction?
     end
 
-    event :passer_automatiquement_en_instruction, after: :after_passer_automatiquement_en_instruction do
+    event :passer_automatiquement_en_instruction, after: :after_passer_automatiquement_en_instruction, after_commit: :after_commit_passer_automatiquement_en_instruction do
       transitions from: :en_construction, to: :en_instruction, guard: :can_passer_automatiquement_en_instruction?
     end
 
-    event :repasser_en_construction, after: :after_repasser_en_construction do
+    event :repasser_en_construction, after: :after_repasser_en_construction, after_commit: :after_commit_repasser_en_construction do
       transitions from: :en_instruction, to: :en_construction, guard: :can_repasser_en_construction?
     end
 
-    event :repasser_en_construction_with_pending_correction, after: :after_repasser_en_construction do
+    event :repasser_en_construction_with_pending_correction, after: :after_repasser_en_construction, after_commit: :after_commit_repasser_en_construction do
       transitions from: :en_instruction, to: :en_construction
     end
 
-    event :accepter, after: :after_accepter do
+    event :accepter, after: :after_accepter, after_commit: :after_commit_accepter do
       transitions from: :en_instruction, to: :accepte, guard: :can_terminer?
     end
 
-    event :accepter_automatiquement, after: :after_accepter_automatiquement do
+    event :accepter_automatiquement, after: :after_accepter_automatiquement, after_commit: :after_commit_accepter_automatiquement do
       transitions from: :en_construction, to: :accepte, guard: :can_accepter_automatiquement?
       transitions from: :en_instruction, to: :accepte, guard: :can_accepter_automatiquement?
     end
 
-    event :refuser, after: :after_refuser do
+    event :refuser, after: :after_refuser, after_commit: :after_commit_refuser do
       transitions from: :en_instruction, to: :refuse, guard: :can_terminer?
     end
 
-    event :refuser_automatiquement, after: :after_refuser_automatiquement do
+    event :refuser_automatiquement, after: :after_refuser_automatiquement, after_commit: :after_commit_refuser_automatiquement do
       transitions from: :en_instruction, to: :refuse, guard: :can_refuser_automatiquement?
     end
 
-    event :classer_sans_suite, after: :after_classer_sans_suite do
+    event :classer_sans_suite, after: :after_classer_sans_suite, after_commit: :after_commit_classer_sans_suite do
       transitions from: :en_instruction, to: :sans_suite, guard: :can_terminer?
     end
 
-    event :repasser_en_instruction, after: :after_repasser_en_instruction do
+    event :repasser_en_instruction, after: :after_repasser_en_instruction, after_commit: :after_commit_repasser_en_instruction do
       transitions from: :refuse, to: :en_instruction, guard: :can_repasser_en_instruction?
       transitions from: :sans_suite, to: :en_instruction, guard: :can_repasser_en_instruction?
       transitions from: :accepte, to: :en_instruction, guard: :can_repasser_en_instruction?
