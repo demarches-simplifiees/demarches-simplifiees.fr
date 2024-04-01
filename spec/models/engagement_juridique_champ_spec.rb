@@ -1,7 +1,7 @@
 describe Champs::EngagementJuridiqueChamp do
   describe 'validation' do
     let(:champ) { build(:champ_engagement_juridique, value: value) }
-    subject { champ.valid? }
+    subject { champ.validate(:champs_public_value) }
 
     context 'with [A-Z]' do
       let(:value) { "ABC" }
