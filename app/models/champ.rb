@@ -50,7 +50,6 @@ class Champ < ApplicationRecord
     :siret?,
     :carte?,
     :datetime?,
-    :stable_id,
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
