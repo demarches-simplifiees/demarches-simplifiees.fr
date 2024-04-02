@@ -21,7 +21,7 @@ describe Champs::CarteChamp do
     let(:feature_collection) {
       {
         type: 'FeatureCollection',
-        id: champ.type_de_champ.stable_id,
+        id: champ.stable_id,
         bbox: champ.bounding_box,
         features: features
       }
