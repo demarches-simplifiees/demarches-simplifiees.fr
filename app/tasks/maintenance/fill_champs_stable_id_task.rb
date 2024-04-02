@@ -2,7 +2,7 @@
 
 module Maintenance
   class FillChampsStableIdTask < MaintenanceTasks::Task
-    BATCH = 1_000
+    BATCH = 20
 
     def collection
       (Dossier.last.id / BATCH).ceil.times.to_a
