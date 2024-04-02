@@ -5,7 +5,7 @@ class TypesDeChampEditor::SelectChampPositionComponent < ApplicationComponent
   end
 
   def options
-    [["Selectionner une option", @coordinate.stable_id]]
+    [["Sélectionner une option", @coordinate.stable_id]]
   end
 
   def describedby_id
