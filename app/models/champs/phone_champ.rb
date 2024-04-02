@@ -25,7 +25,8 @@ class Champs::PhoneChamp < Champs::TextChamp
       possible: true,
       allow_blank: true,
       message: I18n.t(:not_a_phone, scope: 'activerecord.errors.messages')
-    }, unless: -> { Phonelib.valid_for_countries?(value, DEFAULT_COUNTRY_CODES) }
+    },
+    if: -> { (validate_champ_value? || validation_context == :prefill) && !Phonelib.valid_for_countries?(value, DEFAULT_COUNTRY_CODES) }
 
   def to_s
     return '' if value.blank?

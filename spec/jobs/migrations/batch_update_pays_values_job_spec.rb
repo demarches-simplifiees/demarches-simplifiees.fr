@@ -1,12 +1,8 @@
 describe Migrations::BatchUpdatePaysValuesJob, type: :job do
-  before do
-    pays_champ.save(validate: false)
-  end
-
   subject { described_class.perform_now([pays_champ.id]) }
 
   context "the value is correct" do
-    let(:pays_champ) { build(:champ_pays, value: 'France', external_id: 'FR') }
+    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'France', external_id: 'FR') } }
 
     it 'does not change it' do
       subject
@@ -16,7 +12,7 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is incorrect" do
-    let(:pays_champ) { build(:champ_pays, value: 'Incorrect') }
+    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'Incorrect') } }
 
     it 'updates value to nil' do
       subject
@@ -26,7 +22,7 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is easily cleanable" do
-    let(:pays_champ) { build(:champ_pays, value: 'Vietnam') }
+    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'Vietnam') } }
 
     it 'cleans the value' do
       subject
@@ -36,7 +32,7 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is hard to clean" do
-    let(:pays_champ) { build(:champ_pays, value: 'CHRISTMAS (ILE)') }
+    let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'CHRISTMAS (ILE)') } }
 
     it 'cleans the value' do
       subject

@@ -1,6 +1,7 @@
 class Champs::RNAChamp < Champ
   include RNAChampAssociationFetchableConcern
 
+  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validates :value, allow_blank: true, format: {
     with: /\AW[0-9A-Z]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
   }, if: :validate_champ_value?

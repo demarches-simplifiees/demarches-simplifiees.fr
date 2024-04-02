@@ -14,7 +14,7 @@ class Champs::DecimalNumberChamp < Champ
     message: -> (object, _data) {
       "« #{object.libelle} » " + object.errors.generate_message(:value, :not_a_number)
     }
-  }
+  }, if: -> { validate_champ_value? || validation_context == :prefill }
 
   def for_export
     processed_value
