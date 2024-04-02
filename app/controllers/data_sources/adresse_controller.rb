@@ -6,13 +6,16 @@ class DataSources::AdresseController < ApplicationController
       if response.success?
         results = JSON.parse(response.body, symbolize_names: true)
 
-        render json: format_results(results)
-      else
-        render json: []
+        return render json: format_results(results)
       end
-    else
-      render json: []
     end
+
+    render json: []
+
+  rescue JSON::ParserError => e
+    Sentry.set_extras(body: response.body, code: response.code)
+    Sentry.capture_exception(e)
+    render json: []
   end
 
   private
