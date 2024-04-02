@@ -12,7 +12,9 @@ describe Champs::CommuneChamp do
       expect(champ.code).to eq(code_insee)
       expect(champ.code_departement).to eq(code_departement)
       expect(champ.code_postal).to eq(code_postal)
-      expect(champ.for_export).to eq(['Châteldon (63290)', '63102', '63 – Puy-de-Dôme'])
+      expect(champ.for_export(:value)).to eq 'Châteldon (63290)'
+      expect(champ.for_export(:code)).to eq '63102'
+      expect(champ.for_export(:departement)).to eq '63 – Puy-de-Dôme'
       expect(champ.communes.size).to eq(8)
     end
   end

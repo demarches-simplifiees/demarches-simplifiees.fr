@@ -1,5 +1,5 @@
 class Champs::CheckboxChamp < Champs::BooleanChamp
-  def for_export
+  def for_export(path = :value)
     true? ? 'on' : 'off'
   end
 

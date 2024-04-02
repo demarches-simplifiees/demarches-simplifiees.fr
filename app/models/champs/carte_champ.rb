@@ -79,7 +79,7 @@ class Champs::CarteChamp < Champ
     nil
   end
 
-  def for_export
+  def for_export(path = :value)
     geo_areas.map(&:label).join("\n")
   end
 

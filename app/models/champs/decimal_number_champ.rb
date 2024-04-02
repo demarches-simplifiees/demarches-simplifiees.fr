@@ -16,7 +16,7 @@ class Champs::DecimalNumberChamp < Champ
     }
   }, if: -> { validate_champ_value? || validation_context == :prefill }
 
-  def for_export
+  def for_export(path = :value)
     processed_value
   end
 

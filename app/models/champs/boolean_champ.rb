@@ -25,11 +25,11 @@ class Champs::BooleanChamp < Champ
     processed_value
   end
 
-  def for_tag
+  def for_tag(path = :value)
     processed_value
   end
 
-  def for_export
+  def for_export(path = :value)
     processed_value
   end
 
