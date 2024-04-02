@@ -1161,7 +1161,7 @@ class Dossier < ApplicationRecord
       revision
         .children_of(scope)
         .flat_map { champs_index[_1.stable_id] || [] }
-        .filter(&:child?)
+        .filter(&:child?) # TODO: remove once bad data (child champ without a row id) is cleaned
     else
       revision
         .types_de_champ_for(scope:, root:)
