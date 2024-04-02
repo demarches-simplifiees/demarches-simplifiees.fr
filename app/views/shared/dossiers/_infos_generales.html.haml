@@ -20,7 +20,7 @@
       - c.with_value do
         = simple_format dossier.motivation
 
-  - if dossier.attestation.present?
+  - if dossier.attestation.present? && dossier.attestation.pdf.attached?
     = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
       - c.with_value do
         = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))
