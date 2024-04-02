@@ -8,8 +8,10 @@ describe DownloadManager::ParallelDownloadQueue do
   after { FileUtils.remove_entry_secure(test_dir) if Dir.exist?(test_dir) }
 
   let(:downloadable_manager) { DownloadManager::ParallelDownloadQueue.new([attachment], download_to_dir) }
+  let(:http_client) { instance_double(Typhoeus::Hydra) }
+
   describe '#download_one' do
-    subject { downloadable_manager.download_one(attachment: attachment, path_in_download_dir: destination, http_client: double) }
+    subject { downloadable_manager.download_one(attachment: attachment, path_in_download_dir: destination, http_client:) }
 
     let(:destination) { 'lol.png' }
     let(:attachment) do
@@ -70,6 +72,48 @@ describe DownloadManager::ParallelDownloadQueue do
           expect { subject }.to change { File.exist?(target) }
           attachment.file.rewind
           expect(attachment.file.read).to eq(File.read(target))
+        end
+      end
+    end
+
+    context "download strategies" do
+      subject { super(); http_client.run }
+      let(:byte_size) { 1.kilobyte }
+      let(:file_url) { 'http://example.com/test_file' }
+      let(:destination) { 'test_file.txt' }
+      let(:http_client) { Typhoeus::Hydra.new }
+      let(:blob) { instance_double('ActiveStorage::Blob', byte_size:, url: file_url) }
+      let(:attachment) { double('ActiveStorage::Attachment', blob: blob) }
+
+      before do
+        allow(attachment).to receive(:url).and_return(file_url)
+        stub_request(:get, file_url).to_return(body: file_content, status: 200)
+      end
+
+      context 'for small files using request_in_whole method' do
+        let(:file_content) { 'downloaded content' }
+        it 'downloads the file in whole' do
+          target = Pathname.new(download_to_dir).join(destination)
+          expect { subject }.to change { target.exist? }.from(false).to(true)
+
+          expect(File.read(target)).to eq(file_content)
+        end
+      end
+
+      context 'for large files using request_in_chunks method' do
+        let(:byte_size) { 20.megabytes } # Adjust byte size for large file scenario
+        let(:file_content) { 'downloaded content' * 1000 }
+
+        before do
+          allow(downloadable_manager).to receive(:request_in_chunks).and_call_original
+        end
+
+        it 'downloads the file in chunks' do
+          target = Pathname.new(download_to_dir).join(destination)
+          expect { subject }.to change { target.exist? }.from(false).to(true)
+
+          expect(File.read(target)).to eq(file_content)
+          expect(downloadable_manager).to have_received(:request_in_chunks) # ensure we're taking the chunks code path
         end
       end
     end
