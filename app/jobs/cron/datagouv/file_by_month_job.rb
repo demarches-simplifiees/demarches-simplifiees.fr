@@ -14,6 +14,6 @@ class Cron::Datagouv::FileByMonthJob < Cron::CronJob
   end
 
   def data
-    Dossier.where(created_at: 1.month.ago.all_month).count
+    Dossier.visible_by_user_or_administration.where(created_at: 1.month.ago.all_month).count
   end
 end

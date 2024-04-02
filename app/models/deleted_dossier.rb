@@ -36,6 +36,7 @@ class DeletedDossier < ApplicationRecord
       user_id: dossier.user_id,
       procedure: dossier.procedure,
       state: dossier.state,
+      depose_at: dossier.depose_at,
       deleted_at: Time.zone.now
     ).create_or_find_by!(dossier_id: dossier.id)
   end

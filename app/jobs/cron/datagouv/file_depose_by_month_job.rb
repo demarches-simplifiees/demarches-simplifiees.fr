@@ -14,6 +14,8 @@ class Cron::Datagouv::FileDeposeByMonthJob < Cron::CronJob
   end
 
   def data
-    Dossier.where(depose_at: 1.month.ago.all_month).count
+    Dossier.visible_by_user_or_administration
+      .where(depose_at: 1.month.ago.all_month).count + DeletedDossier
+        .where(depose_at: 1.month.ago.all_month).count
   end
 end
