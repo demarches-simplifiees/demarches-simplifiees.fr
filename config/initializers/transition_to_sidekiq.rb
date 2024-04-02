@@ -57,5 +57,9 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     class Cron::CronJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class APIEntreprise::EntrepriseJob < APIEntreprise::Job
+      self.queue_adapter = :sidekiq
+    end
   end
 end
