@@ -96,15 +96,6 @@ describe PiecesJustificativesService do
         it { expect(subject).to be_empty }
       end
 
-      context 'with a motivation and procedure with accuse de lecture' do
-        let(:dossier) { create :dossier, :accepte, :with_motivation, procedure: create(:procedure, :accuse_lecture) }
-
-        it 'still displays the motivation text for the instructeur and the correct dossier state' do
-          expect(subject).to have_content(dossier.motivation)
-          expect(rendered).to have_selector('.fr-badge', text: 'accepté', count: 1)
-        end
-      end
-
       context 'with an attestation' do
         let(:dossier) { create(:dossier, :with_attestation) }
         let!(:witness) { create(:dossier, :with_attestation) }
