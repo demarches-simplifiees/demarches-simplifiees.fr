@@ -14,7 +14,7 @@ module DownloadManager
     def download_all
       hydra = Typhoeus::Hydra.new(max_concurrency: DOWNLOAD_MAX_PARALLEL)
 
-      attachments.map do |attachment, path|
+      attachments.each do |attachment, path|
         begin
           download_one(attachment: attachment,
                        path_in_download_dir: path,
@@ -23,7 +23,10 @@ module DownloadManager
           on_error.call(attachment, path, e)
         end
       end
+
       hydra.run
+
+      GC.start
     end
 
     # can't be used with typhoeus, otherwise block is closed before the request is run by hydra
