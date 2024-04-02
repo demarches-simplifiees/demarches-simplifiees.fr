@@ -1,8 +1,8 @@
 class Champs::CnafChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/cnaf-input-validation.middleware.ts
-  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
-  validates :numero_allocataire, format: { with: /\A\d{1,7}\z/ }, if: -> { code_postal.present? && validate_champ_value? }
-  validates :code_postal, format: { with: /\A\w{5}\z/ }, if: -> { numero_allocataire.present? && validate_champ_value? }
+
+  validates :numero_allocataire, format: { with: /\A\d{1,7}\z/ }, if: -> { code_postal.present? && validate_champ_value_or_prefill? }
+  validates :code_postal, format: { with: /\A\w{5}\z/ }, if: -> { numero_allocataire.present? && validate_champ_value_or_prefill? }
 
   store_accessor :value_json, :numero_allocataire, :code_postal
 

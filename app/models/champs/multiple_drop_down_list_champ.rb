@@ -1,6 +1,5 @@
 class Champs::MultipleDropDownListChamp < Champ
-  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
-  validate :values_are_in_options, if: -> { value.present? }
+  validate :values_are_in_options, if: -> { value.present? && validate_champ_value_or_prefill? }
 
   def options?
     drop_down_list_options?
