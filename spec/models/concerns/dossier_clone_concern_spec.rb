@@ -45,11 +45,19 @@ RSpec.describe DossierCloneConcern do
       it { expect(new_dossier.last_champ_updated_at).to be_nil }
       it { expect(new_dossier.last_commentaire_updated_at).to be_nil }
       it { expect(new_dossier.motivation).to be_nil }
-      it { expect(new_dossier.private_search_terms).to eq("") }
       it { expect(new_dossier.processed_at).to be_nil }
-      it { expect(new_dossier.search_terms).to match(dossier.user.email) }
       it { expect(new_dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
       it { expect(new_dossier.dossier_transfer_id).to be_nil }
+
+      it "update search terms" do
+        new_dossier
+        perform_enqueued_jobs(only: DossierUpdateSearchTermsJob)
+        sql = "SELECT search_terms, private_search_terms FROM dossiers where id = :id"
+        result = Dossier.connection.execute(Dossier.sanitize_sql_array([sql, id: new_dossier.id])).first
+
+        expect(result["search_terms"]).to match(dossier.user.email)
+        expect(result["private_search_terms"]).to eq("")
+      end
     end
 
     context 'copies some attributes' do

@@ -899,7 +899,7 @@ describe Dossier, type: :model do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
       expect {
-        dossier.update_column(:search_terms, 'bonjour')
+        dossier.update_column(:conservation_extension, 'P1W')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -907,7 +907,7 @@ describe Dossier, type: :model do
       }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_construction', anything)
 
       expect {
-        dossier.update_column(:search_terms, 'bonjour2')
+        dossier.update_column(:conservation_extension, 'P2W')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {

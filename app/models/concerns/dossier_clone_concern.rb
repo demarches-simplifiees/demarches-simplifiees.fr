@@ -71,7 +71,6 @@ module DossierCloneConcern
       touch(:last_champ_updated_at)
     end
     reload
-    update_search_terms_later
     editing_fork.destroy_editing_fork!
   end
 

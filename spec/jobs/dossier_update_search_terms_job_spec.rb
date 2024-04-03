@@ -1,15 +1,21 @@
 RSpec.describe DossierUpdateSearchTermsJob, type: :job do
   let(:dossier) { create(:dossier) }
-  let(:champ_public) { dossier.champs_public.first }
-  let(:champ_private) { dossier.champs_private.first }
 
-  subject(:perform_job) { described_class.perform_now(dossier) }
+  subject(:perform_job) { described_class.perform_now(dossier.reload) }
 
-  context 'with an update' do
-    before do
-      create(:champ_text, dossier: dossier, value: "un nouveau champ")
-    end
+  before do
+    create(:champ_text, dossier:, value: "un nouveau champ")
+    create(:champ_text, dossier:, value: "private champ", private: true)
+  end
 
-    it { expect { perform_job }.to change { dossier.reload.search_terms }.to(/un nouveau champ/) }
+  it "update search terms columns" do
+    perform_job
+
+    sql = "SELECT search_terms, private_search_terms FROM dossiers WHERE id = :id"
+    sanitized_sql = Dossier.sanitize_sql_array([sql, id: dossier.id])
+    result = Dossier.connection.execute(sanitized_sql).first
+
+    expect(result['search_terms']).to match(/un nouveau champ/)
+    expect(result['private_search_terms']).to match(/private champ/)
   end
 end
