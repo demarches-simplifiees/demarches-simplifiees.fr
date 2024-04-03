@@ -385,11 +385,13 @@ class ApplicationController < ActionController::Base
   end
 
   def switch_locale(&action)
-    locale = extract_locale_from_query_params ||
+    unchecked_locale = extract_locale_from_query_params ||
       extract_locale_from_cookie ||
       extract_locale_from_user ||
       extract_locale_from_accept_language_header ||
       I18n.default_locale
+
+    locale = unchecked_locale.to_sym.in?(I18n.available_locales) ? unchecked_locale : I18n.default_locale
 
     gon.locale = locale
 
