@@ -39,7 +39,11 @@ class Webhook < ApplicationRecord
   def deliver(data)
     return :cancel unless enabled?
 
-    response = Typhoeus.post(url, headers:, body: data.to_json, timeout: TIMEOUT)
+    response = if legacy?
+      Typhoeus.post(url, body: legacy_body(data), timeout: TIMEOUT)
+    else
+      Typhoeus.post(url, headers:, body: data.to_json, timeout: TIMEOUT)
+    end
 
     if response.success?
       self.last_success_at = Time.zone.now
@@ -60,7 +64,43 @@ class Webhook < ApplicationRecord
     end
   end
 
+  def label
+    if legacy?
+      'Webhook v1'
+    else
+      super
+    end
+  end
+
   private
+
+  def legacy?
+    read_attribute(:label) == '--default-webhook-v1--'
+  end
+
+  def legacy_body(data)
+    {
+      procedure_id:,
+      dossier_id: ApplicationRecord.id_from_typed_id(data[:resource_id]),
+      state: legacy_state(event_type),
+      updated_at: data[:date]
+    }
+  end
+
+  def legacy_state(event_type)
+    case event_type
+    when self.class.event_types.fetch(:dossier_depose), self.class.event_types.fetch(:dossier_repasse_en_construction)
+      Dossier.states.fetch(:en_construction)
+    when self.class.event_types.fetch(:dossier_passe_en_instruction), self.class.event_types.fetch(:dossier_repasse_en_instruction)
+      Dossier.states.fetch(:en_instruction)
+    when self.class.event_types.fetch(:dossier_accepte)
+      Dossier.states.fetch(:accepte)
+    when self.class.event_types.fetch(:dossier_refuse)
+      Dossier.states.fetch(:refuse)
+    when self.class.event_types.fetch(:dossier_classe_sans_suite)
+      Dossier.states.fetch(:sans_suite)
+    end
+  end
 
   def alive?
     (last_success_at || created_at) > 2.days.ago

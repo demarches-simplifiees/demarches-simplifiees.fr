@@ -438,8 +438,6 @@ class Dossier < ApplicationRecord
   delegate :france_connected_with_one_identity?, to: :user, allow_nil: true
   before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? && editing_fork_origin_id.nil? }
 
-  after_save :send_web_hook
-
   validates :user, presence: true, if: -> { deleted_user_email_never_send.nil? }, unless: -> { prefilled }
   validates :individual, presence: true, if: -> { revision.procedure.for_individual? }
   validates :mandataire_first_name, presence: true, if: :for_tiers?
@@ -1178,17 +1176,6 @@ class Dossier < ApplicationRecord
         operation: DossierOperationLog.operations.fetch(operation),
         automatic_operation: true,
         subject: subject
-      )
-    end
-  end
-
-  def send_web_hook
-    if saved_change_to_state? && !brouillon? && procedure.web_hook_url.present?
-      WebHookJob.perform_later(
-        procedure.id,
-        self.id,
-        self.state,
-        self.updated_at
       )
     end
   end

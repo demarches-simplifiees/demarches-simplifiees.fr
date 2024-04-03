@@ -517,7 +517,6 @@ module Administrateurs
         :cadre_juridique,
         :deliberation,
         :notice,
-        :web_hook_url,
         :declarative_with_state,
         :logo,
         :auto_archive_on,
