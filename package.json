@@ -75,6 +75,12 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@esbuild/darwin-arm64": "=0.19.9",
+    "@esbuild/linux-x64": "=0.19.9",
+    "@esbuild/win32-x64": "=0.19.9",
+    "@rollup/rollup-linux-x64-gnu": "=4.9.1",
+    "@rollup/rollup-darwin-arm64": "=4.9.1",
+    "@rollup/rollup-win32-x64-msvc": "=4.9.1",
     "@types/debounce": "^1.2.1",
     "@types/geojson": "^7946.0.10",
     "@types/is-hotkey": "^0.1.7",
@@ -121,5 +127,10 @@
   "resolutions": {
     "string-width": "4.2.2",
     "wrap-ansi": "7.0.0"
-  }
+  },
+  "trustedDependencies": [
+    "core-js",
+    "esbuild",
+    "rollup"
+  ]
 }

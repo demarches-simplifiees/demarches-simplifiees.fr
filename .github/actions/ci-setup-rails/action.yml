@@ -16,19 +16,17 @@ runs:
 
 
     - name: Setup Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version-file: '.node-version'
-
-    - name: Install yarn
-      run: |
-        npm install --global yarn
-      shell: bash
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
 
     - name: Install Node modules
       run: |
         node --version
-        yarn install --frozen-lockfile
+        bun --version
+        bun install
       shell: bash
 
     - name: Setup environment variables
