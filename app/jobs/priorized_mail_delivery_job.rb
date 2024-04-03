@@ -1,6 +1,8 @@
 class PriorizedMailDeliveryJob < ActionMailer::MailDeliveryJob
   discard_on ActiveJob::DeserializationError
 
+  retry_on Net::OpenTimeout, Errno::ECONNRESET, wait: :exponentially_longer, attempts: 10
+
   def queue_name
     mailer, action_name = @arguments
     if mailer.constantize.critical_email?(action_name)
