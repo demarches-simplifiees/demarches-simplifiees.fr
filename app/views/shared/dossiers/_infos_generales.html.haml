@@ -9,7 +9,7 @@
     .fr-highlight
       %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
 
-  - if profile == 'usager' && dossier.hide_info_with_accuse_lecture
+  - if profile == 'usager' && dossier.hide_info_with_accuse_lecture?
     = render Dossiers::AccuseLectureComponent.new(dossier: dossier)
 
   - else

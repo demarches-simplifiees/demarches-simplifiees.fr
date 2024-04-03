@@ -24,6 +24,7 @@ en:
         accepte: has been accepted on %{processed_at}.
         refuse: has been refused on %{processed_at}.
         sans_suite: has been closed without continuation on %{processed_at}.
+        accuse_lecture: has been processed on %{processed_at}.
       accuse_lecture:
         good_morning: Hello,
         first_part: We inform you that a decision on file no. %{dossier_id} of the procedure

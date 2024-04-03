@@ -55,7 +55,7 @@
             = t('views.users.dossiers.show.status_overview.use_mailbox_for_questions_html', mailbox_url: messagerie_dossier_url(dossier))
 
       - elsif dossier.termine?
-        - if dossier.hide_info_with_accuse_lecture
+        - if dossier.hide_info_with_accuse_lecture?
           = render Dossiers::AccuseLectureComponent.new(dossier: dossier)
 
         - elsif dossier.accepte?

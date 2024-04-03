@@ -25,6 +25,7 @@ fr:
         accepte: a été accepté le %{processed_at}.
         refuse: a été refusé le %{processed_at}.
         sans_suite: a été classé sans suite le %{processed_at}.
+        accuse_lecture: a été traité le %{processed_at}.
       accuse_lecture:
         good_morning: Bonjour,
         first_part: Nous vous informons qu'une décision sur le dossier nº %{dossier_id} de la démarche

@@ -29,6 +29,17 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
   end
 
+  describe 'send_notification_for_tiers with accuse lecture procedure' do
+    let(:dossier_for_tiers) { create(:dossier, :accepte, :for_tiers_with_notification, procedure: create(:procedure, :accuse_lecture, :for_individual)) }
+
+    subject { described_class.send_notification_for_tiers(dossier_for_tiers) }
+
+    it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
+    it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
+    it { expect(subject.body).to include("a été traité le") }
+    it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
+  end
+
   describe 'send_accuse_lecture_notification' do
     let(:dossier) { create(:dossier, :accepte, procedure: create(:procedure, :accuse_lecture)) }
     subject { described_class.send_accuse_lecture_notification(dossier) }
