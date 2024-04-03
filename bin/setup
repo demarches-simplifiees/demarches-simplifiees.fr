@@ -18,7 +18,6 @@ FileUtils.chdir APP_ROOT do
   system("bundle check") || system!("bundle install")
 
   # Install JavaScript dependencies
-  system! 'node --version'
   system! 'bun --version'
   system! 'bun install'
 
