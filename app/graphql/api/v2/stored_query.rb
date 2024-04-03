@@ -5,6 +5,8 @@ class API::V2::StoredQuery
       QUERY_V2
     when 'ds-mutation-v2'
       MUTATION_V2
+    when 'ds-webhook-v2'
+      WEBHOOK_V2
     when 'introspection'
       GraphQL::Introspection::INTROSPECTION_QUERY
     else
@@ -49,6 +51,8 @@ class API::V2::StoredQuery
     $includeMessages: Boolean = false
     $includeCorrections: Boolean = false
     $includeGeometry: Boolean = false
+    $includeWebhooks: Boolean = false
+    $includeWebhookSecret: Boolean = false
   ) {
     demarche(number: $demarcheNumber) {
       id
@@ -118,6 +122,9 @@ class API::V2::StoredQuery
         nodes {
           ...DeletedDossierFragment
         }
+      }
+      webhooks @include(if: $includeWebhooks) {
+        ...WebhookFragment
       }
     }
   }
@@ -711,6 +718,14 @@ class API::V2::StoredQuery
     startCursor
     endCursor
   }
+
+  fragment WebhookFragment on Webhook {
+    id
+    label
+    enabled
+    url
+    secret @include(if: $includeWebhookSecret)
+  }
   GRAPHQL
 
   MUTATION_V2 = <<-'GRAPHQL'
@@ -990,6 +1005,42 @@ class API::V2::StoredQuery
         message
       }
     }
+  }
+  GRAPHQL
+
+  WEBHOOK_V2 = <<-'GRAPHQL'
+  mutation webhookCreate($input: WebhookCreateInput!) {
+    webhookCreate(input: $input) {
+      webhook { ...WebhookFragment }
+      errors {
+        message
+      }
+    }
+  }
+
+  mutation webhookDelete($input: WebhookDeleteInput!) {
+    webhookDelete(input: $input) {
+      webhook { ...WebhookFragment }
+      errors {
+        message
+      }
+    }
+  }
+
+  mutation webhookUpdate($input: WebhookUpdateInput!) {
+    webhookUpdate(input: $input) {
+      webhook { ...WebhookFragment }
+      errors {
+        message
+      }
+    }
+  }
+
+  fragment WebhookFragment on Webhook {
+    id
+    label
+    enabled
+    url
   }
   GRAPHQL
 end

@@ -63,6 +63,11 @@ module Types
     field :revisions, [Types::RevisionType], null: false
     field :chorus_configuration, Types::ChorusConfigurationType, null: true, description: "Cadre budgétaire Chorus"
 
+    field :webhooks, [Types::WebhookType], "Liste de tous les webhook de la démarche.", null: false
+    field :webhook_events, Types::WebhookEventType.connection_type, "Les événements d’un webhook", null: false do
+      argument :id, ID, required: true, description: "Webhook ID."
+    end
+
     def state
       object.aasm.current_state
     end
@@ -83,6 +88,16 @@ module Types
 
     def revisions
       Loaders::Association.for(object.class, :revisions).load(object)
+    end
+
+    def webhooks
+      Loaders::Association.for(object.class, :webhooks).load(object)
+    end
+
+    def webhook_events(id:)
+      webhook_id = ApplicationRecord.id_from_typed_id(id)
+      events = WebhookEvent.joins(:webhook).where(webhooks: { procedure_id: object.id, id: webhook_id })
+      WebhookEventConnection.new(events)
     end
 
     def dossiers(updated_since: nil, created_since: nil, state: nil, archived: nil, revision: nil, max_revision: nil, min_revision: nil, order:, lookahead:)
