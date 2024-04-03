@@ -20,6 +20,7 @@ module DossierStateConcern
   def after_commit_passer_en_construction
     NotificationMailer.send_en_construction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+    Webhook.enqueue(self, Webhook.event_types.fetch(:dossier_depose))
   end
 
   def after_passer_en_instruction(h)
@@ -46,6 +47,8 @@ module DossierStateConcern
       NotificationMailer.send_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
+
+    Webhook.enqueue(self, Webhook.event_types.fetch(:dossier_passe_en_instruction))
   end
 
   def after_passer_automatiquement_en_instruction
@@ -72,6 +75,8 @@ module DossierStateConcern
   def after_commit_passer_automatiquement_en_instruction
     NotificationMailer.send_en_instruction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+
+    Webhook.enqueue(self, Webhook.event_types.fetch(:dossier_passe_en_instruction))
   end
 
   def after_repasser_en_construction(h)
@@ -91,6 +96,7 @@ module DossierStateConcern
   end
 
   def after_commit_repasser_en_construction
+    Webhook.enqueue(self, Webhook.event_types.fetch(:dossier_repasse_en_construction))
   end
 
   def after_accepter(h)
@@ -132,6 +138,8 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     remove_titres_identite!
+
+    Webhook.enqueue(self, [Webhook.event_types.fetch(:dossier_accepte), Webhook.event_types.fetch(:dossier_termine)])
   end
 
   def after_accepter_automatiquement
@@ -167,6 +175,8 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     remove_titres_identite!
+
+    Webhook.enqueue(self, [Webhook.event_types.fetch(:dossier_accepte), Webhook.event_types.fetch(:dossier_termine)])
   end
 
   def after_refuser(h)
@@ -204,6 +214,8 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     remove_titres_identite!
+
+    Webhook.enqueue(self, [Webhook.event_types.fetch(:dossier_refuse), Webhook.event_types.fetch(:dossier_termine)])
   end
 
   def after_refuser_automatiquement
@@ -232,6 +244,8 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     remove_titres_identite!
+
+    Webhook.enqueue(self, [Webhook.event_types.fetch(:dossier_refuse), Webhook.event_types.fetch(:dossier_termine)])
   end
 
   def after_classer_sans_suite(h)
@@ -269,6 +283,8 @@ module DossierStateConcern
 
     send_dossier_decision_to_experts(self)
     remove_titres_identite!
+
+    Webhook.enqueue(self, [Webhook.event_types.fetch(:dossier_classe_sans_suite), Webhook.event_types.fetch(:dossier_termine)])
   end
 
   def after_repasser_en_instruction(h)
@@ -305,5 +321,18 @@ module DossierStateConcern
     end
 
     rebase_later
+
+    Webhook.enqueue(self, Webhook.event_types.fetch(:dossier_repasse_en_instruction))
+  end
+
+  def submit_en_construction!
+    self.traitements.submit_en_construction
+    save!
+
+    RoutingEngine.compute(self)
+
+    resolve_pending_correction!
+    process_sva_svr!
+    Webhook.enqueue(self, Webhook.event_types.fetch(:dossier_corrige))
   end
 end
