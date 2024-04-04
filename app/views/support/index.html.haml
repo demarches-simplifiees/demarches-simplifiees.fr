@@ -11,8 +11,7 @@
 
       .description
         .recommandations
-          %h2
-            = t('.intro_html')
+          = t('.intro_html')
         %p.mandatory-explanation= t('mandatory_champs', scope: [:utils])
 
       - if !user_signed_in?
