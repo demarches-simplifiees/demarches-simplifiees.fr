@@ -159,7 +159,7 @@ describe FranceConnect::ParticulierController, type: :controller do
   RSpec.shared_examples "a method that needs a valid merge token" do
     context 'when the merge token is invalid' do
       before do
-        stub_const("APPLICATION_NAME", "demarches-simplifiees.fr")
+        allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
         merge_token
         fci.update(merge_token_created_at: 2.years.ago)
       end
@@ -171,7 +171,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         else
           expect(subject).to redirect_to root_path
         end
-        expect(flash.alert).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes.')
+        expect(flash.alert).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
       end
     end
   end
@@ -193,12 +193,12 @@ describe FranceConnect::ParticulierController, type: :controller do
       let(:merge_token) { 'i do not exist' }
 
       before do
-        stub_const("APPLICATION_NAME", "demarches-simplifiees.fr")
+        allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
       end
 
       it do
         expect(subject).to redirect_to root_path
-        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expirée. Veuillez recommencer la procédure pour vous fusionner les comptes.")
+        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.")
       end
     end
   end
@@ -273,6 +273,10 @@ describe FranceConnect::ParticulierController, type: :controller do
     context 'when the merge_token is ok and the user is found' do
       subject { post :mail_merge_with_existing_account, params: { email_merge_token: } }
 
+      before do
+        allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
+      end
+
       let!(:user) { create(:user, email: email, password: 'abcdefgh') }
 
       it 'merges the account, signs in, and delete the merge token' do
@@ -283,7 +287,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         expect(fci.merge_token).to be_nil
         expect(fci.email_merge_token).to be_nil
         expect(controller.current_user).to eq(user)
-        expect(flash[:notice]).to eq("Les comptes FranceConnect et #{APPLICATION_NAME} sont à présent fusionnés")
+        expect(flash[:notice]).to eq("Les comptes FranceConnect et #{Current.application_name} sont à présent fusionnés")
       end
 
       context 'but the targeted user is an instructeur' do
