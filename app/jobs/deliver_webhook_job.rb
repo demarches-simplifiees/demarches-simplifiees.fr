@@ -8,13 +8,9 @@ class DeliverWebhookJob < ApplicationJob
 
   def perform(webhook, event)
     data = {
-      id: event.to_typed_id,
-      date: event.enqueued_at.iso8601,
-      cursor: event.cursor,
-      event_type: event.event_type,
-      resource_type: event.resource_type,
-      resource_id: event.resource_id,
-      resource_version: event.resource_version
+      event_id: event.to_typed_id,
+      webhook_id: webhook.to_typed_id,
+      enqueued_at: event.enqueued_at.iso8601
     }
 
     if webhook.deliver(data) == :error

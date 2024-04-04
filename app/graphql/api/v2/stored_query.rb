@@ -256,6 +256,17 @@ class API::V2::StoredQuery
     }
   }
 
+  query getWebhook($id: ID!) {
+    webhook(id: $id) {
+      pageInfo {
+        ...PageInfoFragment
+      }
+      nodes {
+        ...WebhookEventFragment
+      }
+    }
+  }
+
   fragment ServiceFragment on Service {
     nom
     siret
@@ -725,6 +736,14 @@ class API::V2::StoredQuery
     enabled
     url
     secret @include(if: $includeWebhookSecret)
+  }
+
+  fragment WebhookEventFragment on WebhookEvent {
+    id
+    enqueued_at
+    dossier {
+      ...DossierFragment
+    }
   }
   GRAPHQL
 

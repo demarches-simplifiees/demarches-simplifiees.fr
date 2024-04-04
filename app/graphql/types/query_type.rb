@@ -18,6 +18,10 @@ module Types
 
     field :demarches_publiques, DemarcheDescriptorType.connection_type, null: false, internal: true
 
+    field :webhook, Types::WebhookEventType.connection_type, "Les événements d’un webhook", null: false do
+      argument :id, ID, "Webhook ID.", required: true
+    end
+
     def demarches_publiques
       Procedure.publiques.includes(draft_revision: :procedure, published_revision: :procedure)
     end
@@ -44,6 +48,17 @@ module Types
 
     def groupe_instructeur(number:)
       GroupeInstructeur.for_api_v2.find(number)
+    end
+
+    def webhook(id:)
+      webhook_id = ApplicationRecord.id_from_typed_id(id)
+      webhook = Webhook.find(webhook_id)
+
+      if context.authorized_demarche?(webhook.procedure)
+        WebhookEventConnection.new(webhook.events)
+      else
+        raise GraphQL::ExecutionError, "Vous n’avez pas les droits d’accès à ce webhook"
+      end
     end
 
     def self.accessible?(context)
