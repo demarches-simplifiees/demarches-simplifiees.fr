@@ -12,7 +12,7 @@
       .description
         .recommandations
           = t('.intro_html')
-        %p.mandatory-explanation= t('mandatory_champs', scope: [:utils])
+        %p.mandatory-explanation= t('asterisk_html', scope: [:utils])
 
       - if !user_signed_in?
         .fr-input-group
