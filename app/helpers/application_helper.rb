@@ -122,23 +122,8 @@ module ApplicationHelper
     end
   end
 
-  def dismiss_outdated_browser_banner
-    cookies[:dismissed_outdated_browser_banner] = {
-      value: 'true',
-      expires: 1.week.from_now
-    }
-  end
-
-  def has_dismissed_outdated_browser_banner?
-    cookies[:dismissed_outdated_browser_banner] == 'true'
-  end
-
-  def supported_browser?
-    BrowserSupport.supported?(browser)
-  end
-
   def show_outdated_browser_banner?
-    !supported_browser? && !has_dismissed_outdated_browser_banner?
+    !BrowserSupport.supported?(browser)
   end
 
   def vite_legacy?

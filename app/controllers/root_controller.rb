@@ -96,15 +96,6 @@ class RootController < ApplicationController
   def suivi
   end
 
-  def dismiss_outdated_browser
-    dismiss_outdated_browser_banner
-
-    respond_to do |format|
-      format.html { redirect_back(fallback_location: root_path) }
-      format.turbo_stream
-    end
-  end
-
   def save_locale
     set_locale(params[:locale])
     redirect_back(fallback_location: root_path)

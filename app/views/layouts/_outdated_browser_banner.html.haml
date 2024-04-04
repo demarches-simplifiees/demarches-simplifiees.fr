@@ -1,21 +1,10 @@
 - if show_outdated_browser_banner?
-  #outdated-browser-banner.site-banner
-    .container
-      .site-banner-icon ⚠️
-      - if browser.ie?(11)
-        .site-banner-text
-          Internet Explorer 11 est un navigateur trop ancien. Nous cesserons de gérer son fonctionnement à partir du
-          %strong
-            31 janvier 2021.
-          %br
-          Merci de changer pour un navigateur plus récent avant cette date ; il peut être nécessaire de prendre contact avec un responsable informatique.
-      - else
-        .site-banner-text
-          %strong
-            #{browser.name} #{browser.version} est trop ancien pour utiliser #{Current.application_name}.
-          %br
-          Certaines parties du site ne fonctionneront pas correctement.
-      .site-banner-actions
-        = button_to 'Ignorer', dismiss_outdated_browser_path, method: :post, form: { data: { turbo: true } }, class: 'button btn', title: 'Ne plus afficher cet avertissement pendant une semaine'
-        %a.btn.button.primary{ href: "https://browser-update.org/fr/update.html", target: "_blank", rel: "noopener" }
-          Mettre à jour mon navigateur
+  = render Dsfr::AlertComponent.new(state: :warning, title: "Navigateur trop ancien", heading_level: :h2) do |c|
+    - c.with_body do
+      Votre navigateur internet, #{browser.name} #{browser.version}, est malheureusement trop ancien. Il ne sera plus compatible avec #{APPLICATION_NAME} à partir du 
+      %strong
+        1 juin 2024.
+      %br
+      Veuillez installer un navigateur plus récent en suivant le lien suivant :
+      %br
+      = link_to "Mettre à jour mon navigateur", "https://betagouv.github.io/navigateur-trop-ancien/", class: "fr-btn fr-btn--secondary fr-mt-2w", target: "_blank", rel: "noopener"
