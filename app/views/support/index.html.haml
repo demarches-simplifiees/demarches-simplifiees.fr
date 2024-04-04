@@ -18,13 +18,13 @@
         .fr-input-group
           = label_tag :email, class: 'fr-label' do
             Email
-            %span.mandatory *
+            = render EditableChamp::AsteriskMandatoryComponent.new
           = email_field_tag :email, params[:email], required: true, autocomplete: 'email', class: 'fr-input'
 
       %fieldset.fr-fieldset{ name: "type" }
         %legend.fr-fieldset__legend
           = t('.your_question')
-          %span.mandatory *
+          = render EditableChamp::AsteriskMandatoryComponent.new
         .fr-fieldset__content
           - @options.each do |(question, question_type, link)|
             .fr-radio-group
@@ -47,13 +47,13 @@
       .fr-input-group
         = label_tag :subject, class: 'fr-label' do
           = t('subject', scope: [:utils])
-          %span.mandatory *
+          = render EditableChamp::AsteriskMandatoryComponent.new
         = text_field_tag :subject, params[:subject], required: true, class: 'fr-input'
 
       .fr-input-group
         = label_tag :text, class: 'fr-label' do
           = t('message', scope: [:utils])
-          %span.mandatory *
+          = render EditableChamp::AsteriskMandatoryComponent.new
         = text_area_tag :text, params[:text], rows: 6, required: true, class: 'fr-input'
 
       .fr-upload-group
