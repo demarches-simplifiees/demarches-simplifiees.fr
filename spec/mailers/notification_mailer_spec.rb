@@ -8,10 +8,12 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject { described_class.send_notification_for_tiers(dossier_for_tiers) }
 
-    it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
-    it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
-    it { expect(subject.body).to include("a été déposé le") }
-    it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
+    it 'verifies email subject, recipient, and body content for updated dossier by mandataire' do
+      expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour")
+      expect(subject.to).to eq([dossier_for_tiers.individual.email])
+      expect(subject.body).to include("a été déposé le")
+      expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.")
+    end
   end
 
   describe 'send_notification_for_tiers for repasser_en_instruction' do
@@ -19,10 +21,12 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject { described_class.send_notification_for_tiers(dossier_for_tiers, repasser_en_instruction: true) }
 
-    it { expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour") }
-    it { expect(subject.to).to eq([dossier_for_tiers.individual.email]) }
-    it { expect(subject.body).to include("va être réexaminé, la précédente décision sur ce dossier est caduque.") }
-    it { expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.") }
+    it 'verifies email subject, recipient, and body content for dossier re-examination notification' do
+      expect(subject.subject).to include("Votre dossier rempli par le mandataire #{dossier_for_tiers.mandataire_first_name} #{dossier_for_tiers.mandataire_last_name} a été mis à jour")
+      expect(subject.to).to eq([dossier_for_tiers.individual.email])
+      expect(subject.body).to include("va être réexaminé, la précédente décision sur ce dossier est caduque.")
+      expect(subject.body).to include("Pour en savoir plus, veuillez vous rapprocher de\r\n<a href=\"mailto:#{dossier_for_tiers.user.email}\">#{dossier_for_tiers.user.email}</a>.")
+    end
   end
 
   describe 'send_en_construction_notification' do
@@ -66,37 +70,40 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject(:mail) { described_class.send_en_instruction_notification(dossier) }
 
-    it 'renders the template' do
+    it 'renders the template with subject and body' do
       expect(mail.subject).to eq('Email subject')
       expect(mail.body).to include('Your dossier was processed')
       expect(mail.body).to have_link('messagerie')
     end
 
-    it 'renders the actions' do
-      expect(mail.body).to have_link('Consulter mon dossier', href: dossier_url(dossier))
-      expect(mail.body).to have_link('J’ai une question', href: messagerie_dossier_url(dossier))
+    it 'renders the actions with links to dossier and messagerie' do
+      expect(mail.body).to have_link('Consulter mon dossier', href: dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
+      expect(mail.body).to have_link('J’ai une question', href: messagerie_dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
     end
 
     context 'when the template body contains tags' do
       let(:email_template) { create(:received_mail, subject: 'Email subject', body: 'Hello --nom--, your dossier --lien dossier-- was processed.', procedure:) }
 
-      it 'replaces value tags with the proper value' do
-        expect(mail.body).to have_content(dossier.individual.nom)
+      it 'replaces value tags with the proper value and renders links correctly' do
+        expect(mail.body).to include(dossier.individual.nom)
+        expect(mail.body).to have_link(href: dossier_url(dossier, host: ENV.fetch("APP_HOST_LEGACY")))
       end
 
-      it 'replaces link tags with a clickable link' do
-        expect(mail.body).to have_link(dossier_url(dossier))
+      context "when user has preferred domain" do
+        let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
+
+        it 'adjusts links and sender email for user preferred domain' do
+          expect(mail.body).to have_link(href: dossier_url(dossier, host: ENV.fetch("APP_HOST")))
+          expect(header_value("From", mail)).to include("@demarches.gouv.fr")
+        end
       end
     end
 
     context 'when the template body contains HTML' do
       let(:email_template) { create(:received_mail, body: 'Your <b>dossier</b> was processed. <iframe src="#">Foo</iframe>', procedure:) }
 
-      it 'allows basic formatting tags' do
+      it 'allows basic formatting tags but sanitizes sensitive content' do
         expect(mail.body).to include('<b>dossier</b>')
-      end
-
-      it 'sanitizes sensitive content' do
         expect(mail.body).not_to include('iframe')
       end
     end
@@ -117,15 +124,17 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject(:mail) { described_class.send_accepte_notification(dossier) }
 
-    context "subject is too long" do
+    context "when the subject is too long" do
       let(:subject) { 'Un long libellé --libellé démarche--' }
       it { expect(mail.subject.length).to be <= 100 }
     end
 
-    context "subject should fallback to default" do
+    context "when the subject should fallback to default" do
       let(:subject) { "" }
-      it { expect(mail.subject).to match(/^Votre dossier .+ a été accepté \(My super long title/) }
-      it { expect(mail.subject.length).to be <= 100 }
+      it 'provides a default subject within the length limit including procedure title beginning' do
+        expect(mail.subject).to match(/^Votre dossier .+ a été accepté \(My super long title/)
+        expect(mail.subject.length).to be <= 100
+      end
     end
   end
 
@@ -140,9 +149,11 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     subject(:mail) { described_class.send_en_instruction_notification(dossier) }
 
-    context "subject has a special character should not be escaped" do
+    context "when the subject has a special character that should not be escaped" do
       let(:subject) { '--libellé démarche--' }
-      it { expect(mail.subject).to eq("Mon titre avec l'apostrophe") }
+      it 'includes the apostrophe without escaping it' do
+        expect(mail.subject).to eq("Mon titre avec l'apostrophe")
+      end
     end
   end
 end

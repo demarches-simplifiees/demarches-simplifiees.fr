@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 291,
+          "line": 302,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -45,47 +45,13 @@
       "note": ""
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "42099f4550a8377f455e830e8ab645cecd5806248481c5c646b4e17548c3cb07",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/france_connect/particulier/merge.html.haml",
-      "line": 6,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "t(\".subtitle\", :email => sanitize(FranceConnectInformation.find_by(:merge_token => merge_token_params).email_france_connect), :application_name => (APPLICATION_NAME))",
-      "render_path": [
-        {
-          "type": "controller",
-          "class": "FranceConnect::ParticulierController",
-          "method": "merge",
-          "line": 47,
-          "file": "app/controllers/france_connect/particulier_controller.rb",
-          "rendered": {
-            "name": "france_connect/particulier/merge",
-            "file": "app/views/france_connect/particulier/merge.html.haml"
-          }
-        }
-      ],
-      "location": {
-        "type": "template",
-        "template": "france_connect/particulier/merge"
-      },
-      "user_input": "FranceConnectInformation.find_by(:merge_token => merge_token_params).email_france_connect",
-      "confidence": "Weak",
-      "cwe_id": [
-        79
-      ],
-      "note": "explicitely sanitized even if we are using html_safe"
-    },
-    {
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "737aa4f7931ece068cce98d7cc66057a1ec81b9be43e469c3569ff1be91bbf09",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/graphql/connections/cursor_connection.rb",
-      "line": 66,
+      "line": 150,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "items.order(order_column => ((:desc or :asc)), :id => ((:desc or :asc))).limit(limit).where(\"(#{order_table}.#{order_column}, #{order_table}.id) < (?, ?)\", timestamp, id)",
       "render_path": null,
@@ -108,7 +74,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/graphql/connections/cursor_connection.rb",
-      "line": 69,
+      "line": 153,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "items.order(order_column => ((:desc or :asc)), :id => ((:desc or :asc))).limit(limit).where(\"(#{order_table}.#{order_column}, #{order_table}.id) > (?, ?)\", timestamp, id)",
       "render_path": null,
@@ -146,8 +112,63 @@
         89
       ],
       "note": "The table and column are escaped, which should make this safe"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "c97049798ff05438dcca6f3ee1a714f2336041837411ab001a7e3caf1bfb75c8",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/layouts/mailers/_signature.html.haml",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Current.application_name.gsub(\".\", \"&#8288;.\")",
+      "render_path": [
+        {
+          "type": "template",
+          "name": "administrateur_mailer/api_token_expiration",
+          "line": 19,
+          "file": "app/views/administrateur_mailer/api_token_expiration.haml",
+          "rendered": {
+            "name": "layouts/mailers/_signature",
+            "file": "app/views/layouts/mailers/_signature.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "layouts/mailers/_signature"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "Current is not a model"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "f74cfb12b3183f456594e809f222bb2723cc232aa5b8f5f7d9bd6d493c1521fb",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/notification_mailer/send_notification_for_tiers.html.haml",
+      "line": 29,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Current.application_name.gsub(\".\", \"&#8288;.\")",
+      "render_path": null,
+      "location": {
+        "type": "template",
+        "template": "notification_mailer/send_notification_for_tiers"
+      },
+      "user_input": null,
+      "confidence": "Medium",
+      "cwe_id": [
+        79
+      ],
+      "note": "Current is not a model"
     }
   ],
-  "updated": "2023-08-28 12:16:04 +0200",
-  "brakeman_version": "5.4.1"
+  "updated": "2024-03-27 17:15:54 +0100",
+  "brakeman_version": "6.1.2"
 }

@@ -4,7 +4,7 @@ describe ProcedureSerializer do
     let(:procedure) { create(:procedure, :published) }
 
     it {
-      is_expected.to include(link: "http://localhost:3000/commencer/#{procedure.path}")
+      is_expected.to include(link: "http://test.host/commencer/#{procedure.path}")
       is_expected.to include(state: "publiee")
     }
   end

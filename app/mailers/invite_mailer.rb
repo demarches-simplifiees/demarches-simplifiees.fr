@@ -28,6 +28,8 @@ class InviteMailer < ApplicationMailer
     @invite = invite
     email = invite.email
 
+    configure_defaults_for_email(email)
+
     mail(to: email,
       subject: subject,
       reply_to: reply_to)
