@@ -9,11 +9,18 @@ class Cron::CronJob < ApplicationJob
 
     def schedule
       remove if cron_expression_changed?
-      set(cron: cron_expression).perform_later if !scheduled?
+
+      if !scheduled?
+        if SIDEKIQ_ENABLED
+          Sidekiq::Cron::Job.create(name: name, cron: cron_expression, class: name)
+        else
+          set(cron: cron_expression).perform_later
+        end
+      end
     end
 
     def remove
-      delayed_job.destroy if scheduled?
+      enqueued_cron_job.destroy if scheduled?
     end
 
     def display_schedule
@@ -21,11 +28,23 @@ class Cron::CronJob < ApplicationJob
     end
 
     def scheduled?
-      delayed_job.present?
+      enqueued_cron_job.present?
     end
 
     def cron_expression_changed?
-      scheduled? && delayed_job.cron != cron_expression
+      scheduled? && enqueued_cron_job.cron != cron_expression
+    end
+
+    def enqueued_cron_job
+      if SIDEKIQ_ENABLED
+        sidekiq_cron_job
+      else
+        delayed_job
+      end
+    end
+
+    def sidekiq_cron_job
+      Sidekiq::Cron::Job.find(name)
     end
 
     def delayed_job
