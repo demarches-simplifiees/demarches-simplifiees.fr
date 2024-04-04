@@ -49,5 +49,9 @@ if Rails.env.production? && sidekiq_enabled
     class DossierUpdateSearchTermsJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class Migrations::BackfillStableIdJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
