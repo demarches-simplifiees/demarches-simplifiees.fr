@@ -14,7 +14,7 @@
         .fr-header__brand.fr-enlarge-link
           .fr-header__brand-top
             .fr-header__logo
-              %p.fr-logo
+              %p.fr-logo{ lang: "fr" }
                 République
                 = succeed "Française" do
                   %br/
@@ -26,7 +26,7 @@
             - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
             = link_to root_profile_link, title: "#{root_profile_libelle} — #{Current.application_name}" do
-              %p.fr-header__service-title= Current.application_name
+              %span.fr-header__service-title{ lang: "fr" }= Current.application_name
 
         .fr-header__tools
           .fr-header__tools-links.relative
