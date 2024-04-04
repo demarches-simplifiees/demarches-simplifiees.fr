@@ -37,7 +37,7 @@ fr:
         title: "Documentation graphql de l’API"
         url: "https://doc.demarches-simplifiees.fr/api-graphql"
       dinum:
-        title: "Le site de la DINUM — Gouvernement"
+        title: "Le site de la DINUM — Direction interministérielle du numérique"
         url: "https://www.numerique.gouv.fr/dinum/"
         alt: "Direction interministérielle du numérique"
       cgu:
