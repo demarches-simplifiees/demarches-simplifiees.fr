@@ -83,6 +83,8 @@ module Users
 
       return procedure_not_found if @procedure.blank?
 
+      redirect_to commencer_path(params[:path]) and return if !@procedure.close?
+
       render 'closing_details', layout: 'closing_details'
     end
 
