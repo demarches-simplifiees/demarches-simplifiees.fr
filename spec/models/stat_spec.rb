@@ -2,14 +2,14 @@ describe Stat, type: :model do
   describe '.deleted_dossiers_states' do
     subject { Stat.send(:deleted_dossiers_states) }
     it 'find counts for columns' do
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :accepte)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 1.month.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 2.months.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 3.months.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_instruction, deleted_at: 3.months.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :accepte, deleted_at: 3.months.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :refuse, deleted_at: 3.months.ago)
-      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :sans_suite, deleted_at: 3.months.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :accepte, deleted_at: Time.zone.now, depose_at: Time.zone.now)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 33.days.ago, depose_at: 33.days.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 66.days.ago, depose_at: 66.days.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_construction, deleted_at: 3.months.ago, depose_at: 3.months.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :en_instruction, deleted_at: 3.months.ago, depose_at: 3.months.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :accepte, deleted_at: 3.months.ago, depose_at: 3.months.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :refuse, deleted_at: 3.months.ago, depose_at: 3.months.ago)
+      create(:deleted_dossier, dossier_id: create(:dossier).id, state: :sans_suite, deleted_at: 3.months.ago, depose_at: 3.months.ago)
 
       expect(subject["not_brouillon"]).to eq(8)
       expect(subject["dossiers_depose_avant_30_jours"]).to eq(1)
