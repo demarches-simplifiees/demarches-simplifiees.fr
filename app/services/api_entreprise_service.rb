@@ -74,5 +74,14 @@ class APIEntrepriseService
         false
       end
     end
+
+    def api_djepva_up?
+      response = Typhoeus.get("https://entreprise.api.gouv.fr/ping/djepva/api-association", timeout: 1)
+      if response.success?
+        JSON.parse(response.body).fetch('status') == 'ok'
+      else
+        false
+      end
+    end
   end
 end
