@@ -1,5 +1,5 @@
 describe Champs::DgfipChamp, type: :model do
-  let(:champ) { described_class.new }
+  let(:champ) { build(:champ_dgfip) }
 
   describe 'numero_fiscal and reference_avis' do
     before do
