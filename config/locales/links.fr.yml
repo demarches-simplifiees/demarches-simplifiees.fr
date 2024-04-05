@@ -18,6 +18,7 @@ fr:
         ou_en_est_mon_dossier_url: "https://faq.demarches-simplifiees.fr/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche"
     footer:
       top_labels:
+        hidden_title: Liens pratiques
         communication: Communication
         legals: Informations légales
         resources: Ressources
