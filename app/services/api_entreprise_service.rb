@@ -64,5 +64,15 @@ class APIEntrepriseService
       Sentry.capture_exception(e)
       false
     end
+
+    # See: https://entreprise.api.gouv.fr/developpeurs#surveillance-etat-fournisseurs
+    def api_insee_up?
+      response = Typhoeus.get("https://entreprise.api.gouv.fr/ping/insee/sirene", timeout: 1)
+      if response.success?
+        JSON.parse(response.body).fetch('status') == 'ok'
+      else
+        false
+      end
+    end
   end
 end

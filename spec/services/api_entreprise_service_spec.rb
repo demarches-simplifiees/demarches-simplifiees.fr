@@ -116,4 +116,36 @@ describe APIEntrepriseService do
       end
     end
   end
+
+  describe "#api_insee_up?" do
+    subject { described_class.api_insee_up? }
+    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read }
+    let(:status) { 200 }
+
+    before do
+      stub_request(:get, "https://entreprise.api.gouv.fr/ping/insee/sirene")
+        .to_return(body: body, status: status)
+    end
+
+    it "returns true when api etablissement is up" do
+      expect(subject).to be_truthy
+    end
+
+    context "when api entreprise is down" do
+      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read.gsub('ok', 'HASISSUES') }
+
+      it "returns false" do
+        expect(subject).to be_falsey
+      end
+    end
+
+    context "when api entreprise status is unknown" do
+      let(:body) { "" }
+      let(:status) { 0 }
+
+      it "returns nil" do
+        expect(subject).to be_falsey
+      end
+    end
+  end
 end
