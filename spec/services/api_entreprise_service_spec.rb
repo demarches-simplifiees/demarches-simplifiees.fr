@@ -85,38 +85,6 @@ describe APIEntrepriseService do
     it_behaves_like 'schedule fetch of all etablissement params'
   end
 
-  describe "#api_up?" do
-    subject { described_class.api_up? }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
-    let(:status) { 200 }
-
-    before do
-      stub_request(:get, "https://status.entreprise.api.gouv.fr/summary.json")
-        .to_return(body: body, status: status)
-    end
-
-    it "returns true when api etablissement is up" do
-      expect(subject).to be_truthy
-    end
-
-    context "when api entreprise is down" do
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read.gsub('UP', 'HASISSUES') }
-
-      it "returns false" do
-        expect(subject).to be_falsey
-      end
-    end
-
-    context "when api entreprise status is unknown" do
-      let(:body) { "" }
-      let(:status) { 0 }
-
-      it "returns nil" do
-        expect(subject).to be_falsey
-      end
-    end
-  end
-
   describe "#api_insee_up?" do
     subject { described_class.api_insee_up? }
     let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read }
