@@ -1,4 +1,6 @@
 class ChampFetchExternalDataJob < ApplicationJob
+  discard_on ActiveJob::DeserializationError
+
   include Dry::Monads[:result]
 
   def perform(champ, external_id)
