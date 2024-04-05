@@ -259,6 +259,8 @@ class Champ < ApplicationRecord
   private
 
   def validate_champ_value?
+    return false unless visible?
+
     case validation_context
     when :champs_public_value
       public?
