@@ -1,11 +1,4 @@
 .gallery {
-  display: flex;
-  flex-wrap: wrap;
-
-  .gallery-item {
-    display: block;
-  }
-
   a {
     background-image: none;
   }
@@ -47,6 +40,40 @@
         background-color: var(--active-tint);
       }
     }
+  }
+}
+
+.gallery-pieces-jointes {
+  display: flex;
+  flex-wrap: wrap;
+
+  .gallery-item {
+    margin: 1.5rem 2rem;
+  }
+
+  img {
+    height: 200px;
+    width: 200px;
+  }
+}
+
+.gallery-demande {
+  img {
+    height: 150px;
+    width: 150px;
+  }
+
+  .gallery-item {
+    margin-bottom: 2rem;
+  }
+
+  .fr-download {
+    margin-bottom: 0.5rem;
+  }
+
+  .thumbnail {
+    width: fit-content;
+    margin-bottom: 1rem;
   }
 }
 
