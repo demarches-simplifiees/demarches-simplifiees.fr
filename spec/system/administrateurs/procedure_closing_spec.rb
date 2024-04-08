@@ -34,7 +34,7 @@ describe 'Closing a procedure', js: true do
 
       expect(page).to have_text('Clore la démarche')
 
-      select('Je remplace ma démarche par une autre dans Démarches simplifiées')
+      select('Je remplace ma démarche par une autre dans demarches-simplifiees.fr')
 
       select("#{other_procedure.libelle} (#{other_procedure.id})")
 

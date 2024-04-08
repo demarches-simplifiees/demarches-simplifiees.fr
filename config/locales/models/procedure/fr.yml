@@ -18,7 +18,7 @@ fr:
           closing_details_placeholder: "Cette démarche a été remplacée par la page…\n\nLe guide de la nouvelle démarche est disponible ici\n\nPour toute information complémentaire, contactez…\n\nCordialement,"
         path: Lien public
         organisation: Organisme
-        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur demarches-simplifiees.fr (choisi par un usager)
+        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur %{app_name}
         max_duree_conservation_dossiers_dans_ds: Durée maximale de conservation des dossiers (autorisée par un super admin de DS)
         id: Id
         libelle: Titre de la démarche
@@ -34,7 +34,7 @@ fr:
         closing_reason: Raison de la clôture
         closing_reasons:
           other: Autre
-          internal_procedure: Je remplace ma démarche par une autre dans Démarches simplifiées
+          internal_procedure: Je remplace ma démarche par une autre dans %{app_name}
         procedure_path: Lien de la démarche à diffuser aux usagers
         procedure_path_placeholder: nom-de-la-demarche
         cadre_juridique: Lien vers le texte

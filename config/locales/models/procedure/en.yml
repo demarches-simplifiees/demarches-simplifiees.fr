@@ -30,12 +30,12 @@ en:
         closing_reason: Closing reason
         closing_reasons:
           other: Other
-          internal_procedure: I replace my procedure with another in Démarches Simplifiées
+          internal_procedure: I replace my procedure with another in %{app_name}
         procedure_path: Procedure link to disseminate to users
         procedure_path_placeholder: procedure-name
         cadre_juridique: Link to the legal text
         lien_dpo: Link or email to contact the data protection officer (DPO)
-        duree_conservation_dossiers_dans_ds: Duration files will be kept
+        duree_conservation_dossiers_dans_ds: Duration files will be kept on %{app_name}
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
         aasm_state:
           brouillon: Draft
