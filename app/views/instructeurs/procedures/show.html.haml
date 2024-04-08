@@ -136,12 +136,14 @@
                         = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
 
                   %td.number-col
-                    - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                      %span.notifications{ 'aria-label': 'notifications' }
                     - if p.hidden_by_administration_at.present?
                       %span.cell-link= p.dossier_id
                     - else
-                      %a.cell-link{ href: path }= p.dossier_id
+                      %a.cell-link.relative{ href: path }
+                        = p.dossier_id
+                        - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                          %span.notifications.absolute-right{ 'aria-label': 'notifications' }
+
 
                   - p.columns.each do |column|
                     %td
