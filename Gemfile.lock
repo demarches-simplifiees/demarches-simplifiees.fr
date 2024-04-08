@@ -721,6 +721,10 @@ GEM
       connection_pool (>= 2.3.0)
       rack (>= 2.2.4)
       redis-client (>= 0.19.0)
+    sidekiq-cron (1.12.0)
+      fugit (~> 1.8)
+      globalid (>= 1.0.1)
+      sidekiq (>= 6)
     simple_xlsx_reader (1.0.4)
       nokogiri
       rubyzip
@@ -973,6 +977,7 @@ DEPENDENCIES
   shoulda-matchers
   sib-api-v3-sdk
   sidekiq
+  sidekiq-cron
   simple_xlsx_reader
   skylight
   spreadsheet_architect

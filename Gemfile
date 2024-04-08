@@ -91,6 +91,7 @@ gem 'sentry-ruby'
 gem 'sentry-sidekiq'
 gem 'sib-api-v3-sdk'
 gem 'sidekiq'
+gem 'sidekiq-cron'
 gem 'skylight'
 gem 'spreadsheet_architect'
 gem 'strong_migrations' # lint database migrations
