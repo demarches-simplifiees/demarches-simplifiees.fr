@@ -451,8 +451,8 @@ module TagsSubstitutionConcern
 
   def tags_and_datas_list(dossier)
     [
-      [champ_public_tags(dossier:), dossier.champs_public],
-      [champ_private_tags(dossier:), dossier.champs_private],
+      [champ_public_tags(dossier:), dossier],
+      [champ_private_tags(dossier:), dossier],
       [dossier_tags, dossier],
       [ROUTAGE_TAGS, dossier],
       [INDIVIDUAL_TAGS, dossier.individual],

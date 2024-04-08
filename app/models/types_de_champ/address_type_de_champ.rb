@@ -1,21 +1,25 @@
 class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
-  def tags_for_template
-    tags = super
-    stable_id = @type_de_champ.stable_id
-    tags.push(
+  def libelles_for_export
+    path = paths.first
+    [[path[:libelle], path[:path]]]
+  end
+
+  private
+
+  def paths
+    paths = super
+    paths.push(
       {
-        libelle: "#{TagsSubstitutionConcern::TagsParser.normalize(libelle)} (Département)",
-        id: "tdc#{stable_id}/departement",
-        description: "#{description} (Département)",
-        lambda: -> (champs) { champs.find { _1.stable_id == stable_id }&.departement_code_and_name }
+        libelle: "#{libelle} (Département)",
+        path: :departement,
+        description: "#{description} (Département)"
       },
       {
-        libelle: "#{TagsSubstitutionConcern::TagsParser.normalize(libelle)} (Commune)",
-        id: "tdc#{stable_id}/commune",
-        description: "#{description} (Commune)",
-        lambda: -> (champs) { champs.find { _1.stable_id == stable_id }&.commune_name }
+        libelle: "#{libelle} (Commune)",
+        path: :commune,
+        description: "#{description} (Commune)"
       }
     )
-    tags
+    paths
   end
 end

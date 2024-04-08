@@ -24,11 +24,11 @@ class Champs::MultipleDropDownListChamp < Champ
     selected_options.join(', ')
   end
 
-  def for_tag
+  def for_tag(path = :value)
     selected_options.join(', ')
   end
 
-  def for_export
+  def for_export(path = :value)
     value.present? ? selected_options.join(', ') : nil
   end
 

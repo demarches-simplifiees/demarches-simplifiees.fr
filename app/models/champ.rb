@@ -110,8 +110,8 @@ class Champ < ApplicationRecord
     value.present? ? value.to_s : ''
   end
 
-  def for_export
-    value.presence
+  def for_export(path = :value)
+    path == :value ? value.presence : nil
   end
 
   def for_api
@@ -122,8 +122,8 @@ class Champ < ApplicationRecord
     to_s
   end
 
-  def for_tag
-    value.present? ? value.to_s : ''
+  def for_tag(path = :value)
+    path == :value && value.present? ? value.to_s : ''
   end
 
   def main_value_name

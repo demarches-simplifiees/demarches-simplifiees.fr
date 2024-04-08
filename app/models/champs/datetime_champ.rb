@@ -10,7 +10,7 @@ class Champs::DatetimeChamp < Champ
     value.present? ? I18n.l(Time.zone.parse(value)) : ""
   end
 
-  def for_tag
+  def for_tag(path = :value)
     value.present? ? I18n.l(Time.zone.parse(value)) : ""
   end
 

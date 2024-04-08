@@ -5,16 +5,26 @@ class Champs::DepartementChamp < Champs::TextChamp
   validate :external_id_in_departement_codes, unless: -> { external_id.nil? }
   before_save :store_code_region
 
-  def for_export
-    [name, code]
+  def for_export(path = :value)
+    case path
+    when :code
+      code
+    when :value
+      name
+    end
   end
 
   def to_s
     formatted_value
   end
 
-  def for_tag
-    formatted_value
+  def for_tag(path = :value)
+    case path
+    when :code
+      code
+    when :value
+      formatted_value
+    end
   end
 
   def for_api

@@ -71,7 +71,7 @@ describe ProcedureExportService do
           "multiple_drop_down_list",
           "linked_drop_down_list",
           "communes",
-          "communes (Code insee)",
+          "communes (Code INSEE)",
           "communes (Département)",
           "departements",
           "departements (Code)",
@@ -100,7 +100,7 @@ describe ProcedureExportService do
           "rnf",
           "rnf (Nom)",
           "rnf (Adresse)",
-          "rnf (Code insee Ville)",
+          "rnf (Code INSEE Ville)",
           "rnf (Département)",
           "engagement_juridique"
         ]
@@ -206,7 +206,7 @@ describe ProcedureExportService do
           "multiple_drop_down_list",
           "linked_drop_down_list",
           "communes",
-          "communes (Code insee)",
+          "communes (Code INSEE)",
           "communes (Département)",
           "departements",
           "departements (Code)",
@@ -235,7 +235,7 @@ describe ProcedureExportService do
           "rnf",
           "rnf (Nom)",
           "rnf (Adresse)",
-          "rnf (Code insee Ville)",
+          "rnf (Code INSEE Ville)",
           "rnf (Département)",
           "engagement_juridique"
         ]
@@ -309,7 +309,7 @@ describe ProcedureExportService do
             "multiple_drop_down_list",
             "linked_drop_down_list",
             "communes",
-            "communes (Code insee)",
+            "communes (Code INSEE)",
             "communes (Département)",
             "departements",
             "departements (Code)",
@@ -338,7 +338,7 @@ describe ProcedureExportService do
             "rnf",
             "rnf (Nom)",
             "rnf (Adresse)",
-            "rnf (Code insee Ville)",
+            "rnf (Code INSEE Ville)",
             "rnf (Département)",
             "engagement_juridique"
           ]
@@ -433,7 +433,7 @@ describe ProcedureExportService do
       let(:champ_repetition) { dossiers.first.champs_public.find { |champ| champ.type_champ == 'repetition' } }
 
       it 'should have sheets' do
-        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.libelle_for_export])
+        expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.type_de_champ.libelle_for_export])
       end
 
       context 'with cloned procedure' do
@@ -489,7 +489,7 @@ describe ProcedureExportService do
         let!(:another_champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
 
         it 'should have sheets' do
-          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', another_champ_repetition.libelle_for_export, champ_repetition.libelle_for_export])
+          expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', another_champ_repetition.type_de_champ.libelle_for_export, champ_repetition.type_de_champ.libelle_for_export])
         end
       end
 

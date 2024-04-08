@@ -13,22 +13,18 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def tags_for_template
-    stable_id = self.stable_id
-    [
-      {
-        libelle: TagsSubstitutionConcern::TagsParser.normalize(libelle),
-        id: "tdc#{stable_id}",
-        description: description,
-        maybe_null: public? && !mandatory?,
-        lambda: -> (champs) {
-          champs.find { |champ| champ.stable_id == stable_id }&.for_tag
-        }
-      }
-    ]
+    tdc = @type_de_champ
+    paths.map do |path|
+      path.merge(
+        libelle: TagsSubstitutionConcern::TagsParser.normalize(path[:libelle]),
+        id: path[:path] == :value ? "tdc#{stable_id}" : "tdc#{stable_id}/#{path[:path]}",
+        lambda: -> (dossier) { dossier.project_champ(tdc, nil).for_tag(path[:path]) }
+      )
+    end
   end
 
-  def libelle_for_export(index = 0)
-    libelle
+  def libelles_for_export
+    paths.map { [_1[:libelle], _1[:path]] }
   end
 
   # Default estimated duration to fill the champ in a form, in seconds.
@@ -58,5 +54,18 @@ class TypesDeChamp::TypeDeChampBase
 
   def human_to_filter(human_value)
     human_value
+  end
+
+  private
+
+  def paths
+    [
+      {
+        libelle:,
+        path: :value,
+        description:,
+        maybe_null: public? && !mandatory?
+      }
+    ]
   end
 end
