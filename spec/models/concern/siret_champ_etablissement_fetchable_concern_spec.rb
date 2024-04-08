@@ -52,7 +52,7 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
       let(:siret) { '82161143100015' }
       let(:api_etablissement_status) { 503 }
 
-      before { expect(APIEntrepriseService).to receive(:api_up?).and_return(true) }
+      before { expect(APIEntrepriseService).to receive(:api_insee_up?).and_return(true) }
 
       it_behaves_like 'an error occured', :network_error
 
@@ -66,7 +66,7 @@ RSpec.describe SiretChampEtablissementFetchableConcern do
       let(:siret) { '82161143100015' }
       let(:api_etablissement_status) { 502 }
 
-      before { expect(APIEntrepriseService).to receive(:api_up?).and_return(false) }
+      before { expect(APIEntrepriseService).to receive(:api_insee_up?).and_return(false) }
 
       it { expect { fetch_etablissement! }.to change { champ.reload.etablissement } }
 

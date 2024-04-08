@@ -83,13 +83,6 @@ class APIEntreprise::API
     call(url)
   end
 
-  def current_status
-    status_url = "https://status.entreprise.api.gouv.fr/summary.json"
-    response = Typhoeus.get(status_url, timeout: 1)
-
-    handle_response(response)
-  end
-
   private
 
   def recipient_for(siret_or_siren)

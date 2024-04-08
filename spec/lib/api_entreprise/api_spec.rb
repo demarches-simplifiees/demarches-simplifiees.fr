@@ -323,18 +323,4 @@ describe APIEntreprise::API do
       expect(WebMock).not_to have_requested(:get, /https:\/\/entreprise.api.gouv.fr\/v2\/entreprises\/#{siren}/)
     end
   end
-
-  describe 'current_status' do
-    subject { described_class.new.current_status }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
-
-    before do
-      stub_request(:get, "https://status.entreprise.api.gouv.fr/summary.json")
-        .to_return(body: body)
-    end
-
-    it "returns the current status response" do
-      expect(subject).to eq(JSON.parse(body, symbolize_names: true))
-    end
-  end
 end

@@ -12,7 +12,7 @@ module RNAChampAssociationFetchableConcern
 
     update!(data: data)
   rescue APIEntreprise::API::Error => error
-    error_key = :network_error if error.try(:network_error?) && !APIEntrepriseService.api_up?
+    error_key = :network_error if error.try(:network_error?) && !APIEntrepriseService.api_djepva_up?
     clear_association!(error_key)
   end
 

@@ -245,21 +245,21 @@ describe Users::DossiersController, type: :controller do
     let(:api_etablissement_status) { 200 }
     let(:api_etablissement_body) { Rails.root.join('spec/fixtures/files/api_entreprise/etablissements.json').read }
     let(:token_expired) { false }
-    let(:api_current_status_response) { nil }
+    let(:api_insee_status_response) { nil }
 
     before do
       sign_in(user)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/etablissements\/#{siret}/)
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v3\/insee\/sirene\/unites_legales\/#{siren}/)
-        .to_return(body: Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read, status: 200)
+        .to_return(body: Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read, status: 200)
       allow_any_instance_of(APIEntrepriseToken).to receive(:roles)
         .and_return(["attestations_fiscales", "attestations_sociales", "bilans_entreprise_bdf"])
       allow_any_instance_of(APIEntrepriseToken).to receive(:expired?).and_return(token_expired)
 
-      if api_current_status_response
-        stub_request(:get, "https://status.entreprise.api.gouv.fr/summary.json")
-          .to_return(body: api_current_status_response)
+      if api_insee_status_response
+        stub_request(:get, "https://entreprise.api.gouv.fr/ping/insee/sirene")
+          .to_return(body: api_insee_status_response)
       end
     end
 
@@ -304,14 +304,14 @@ describe Users::DossiersController, type: :controller do
 
       context 'When API-Entreprise is ponctually down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_current_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
+        let(:api_insee_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
       end
 
       context 'When API-Entreprise is globally down' do
         let(:api_etablissement_status) { 502 }
-        let(:api_current_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read.gsub('UP', 'HASISSUES') }
+        let(:api_insee_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read.gsub('ok', 'HASISSUES') }
 
         it "create an etablissement only with SIRET as degraded mode" do
           dossier.reload
@@ -328,7 +328,7 @@ describe Users::DossiersController, type: :controller do
 
       context 'when default token has expired' do
         let(:api_etablissement_status) { 200 }
-        let(:api_current_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
+        let(:api_insee_status_response) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read }
         let(:token_expired) { true }
 
         it_behaves_like 'the request fails with an error', I18n.t('errors.messages.siret_network_error')
