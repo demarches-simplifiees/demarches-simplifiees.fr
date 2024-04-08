@@ -1,11 +1,11 @@
 en:
   legend:
     state: States
-    created_at: Creation date since
-    depose_at: Submission date since
+    created_at: Created since
+    depose_at: Submitted since
   button:
     apply_filters: Apply filters
-    reset_filters: Reset filters
+    cancel_filters: Cancel
     select_filters: Select a filter
   tag:
     active_filters:

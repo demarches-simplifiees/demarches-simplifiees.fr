@@ -104,7 +104,7 @@ describe 'user access to the list of their dossiers', js: true do
       expect(page).to have_select 'Statut', selected: 'Refusé', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
 
       click_on('Sélectionner un filtre')
-      click_on('Réinitialiser les filtres')
+      click_on('Annuler')
       expect(page).to have_text('2 sur 2 dossiers')
       expect(page).to have_select 'Statut', selected: 'Sélectionner un statut', options: ['Sélectionner un statut', 'Accepté', 'Refusé', 'Classé sans suite']
     end
