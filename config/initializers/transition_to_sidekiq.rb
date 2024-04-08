@@ -34,7 +34,7 @@ if Rails.env.production? && SIDEKIQ_ENABLED
       self.queue_adapter = :sidekiq
     end
 
-    class WebhookJob < ApplicationJob
+    class WebHookJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
 
