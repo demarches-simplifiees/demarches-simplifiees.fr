@@ -358,6 +358,13 @@ module Instructeurs
       redirect_to instructeur_procedure_path(procedure)
     end
 
+    def pieces_jointes
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      @champs_with_pieces_jointes = @dossier
+        .champs
+        .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
+    end
+
     private
 
     def dossier_scope

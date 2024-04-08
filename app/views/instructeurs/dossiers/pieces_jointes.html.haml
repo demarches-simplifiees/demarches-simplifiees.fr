@@ -1,0 +1,29 @@
+- content_for(:title, "Pièces jointes")
+
+= render partial: "header", locals: { dossier: @dossier }
+
+.fr-container
+  .gallery{ "data-controller": "lightbox"}
+    - @champs_with_pieces_jointes.each do |champ|
+      - champ.piece_justificative_file.each do |attachment|
+        .gallery-item
+          - blob = attachment.blob
+          - if blob.content_type == 'application/pdf'
+            = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: "application/pdf", title: "#{champ.libelle} -- #{blob.filename}" do
+              .thumbnail
+                = image_tag("pdf-placeholder.png")
+                .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
+                  Visualiser
+            .champ-libelle
+              = champ.libelle
+            = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)
+
+          - else
+            = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
+              .thumbnail
+                = image_tag(blob.url)
+                .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
+                  Visualiser
+            .champ-libelle
+              = champ.libelle
+            = render Attachment::ShowComponent.new(attachment: attachment, new_tab: true)

@@ -1372,4 +1372,29 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it { expect(subject).to have_http_status(:ok) }
   end
+
+  describe '#pieces_jointes' do
+    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs:) }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+
+    before do
+      dossier.champs.first.piece_justificative_file.attach(
+        io: StringIO.new("image file"),
+        filename: "image.jpeg",
+        content_type: "image/jpeg",
+        # we don't want to run virus scanner on this file
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+      get :pieces_jointes, params: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id
+      }
+    end
+
+    it do
+      expect(response.body).to include('Télécharger le fichier toto.txt')
+      expect(response.body).to include('Télécharger le fichier image.jpeg')
+      expect(response.body).to include('Visualiser')
+    end
+  end
 end
