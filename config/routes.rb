@@ -699,6 +699,7 @@ Rails.application.routes.draw do
   resources :release_notes, only: [:index]
 
   get '/404', to: 'errors#not_found'
+  get '/500', to: 'errors#internal_server_error'
 
   if Rails.env.test?
     scope 'test/api_geo' do
