@@ -700,6 +700,7 @@ Rails.application.routes.draw do
 
   get '/404', to: 'errors#not_found'
   get '/500', to: 'errors#internal_server_error'
+  get '/:status', to: 'errors#show', constraints: { status: /[4-5][0-5]\d/ }
 
   if Rails.env.test?
     scope 'test/api_geo' do

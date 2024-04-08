@@ -17,6 +17,13 @@ class ErrorsController < ApplicationController
 
   def not_found = render_error 404
 
+  def show # generic page for others errors
+    @status = params[:status].to_i
+    @error_name = Rack::Utils::HTTP_STATUS_CODES[@status]
+
+    render_error @status
+  end
+
   private
 
   def render_error(status)
