@@ -16,6 +16,7 @@ class ErrorsController < ApplicationController
   end
 
   def not_found = render_error 404
+  def unprocessable_entity = render_error 422
 
   def show # generic page for others errors
     @status = params[:status].to_i

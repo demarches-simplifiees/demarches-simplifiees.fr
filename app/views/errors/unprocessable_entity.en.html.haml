@@ -1,0 +1,24 @@
+%main#content{ role: "main" }
+  .fr-container
+    .fr-my-7w.fr-mt-md-12w.fr-mb-md-10w.fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.fr-grid-row--center
+      .fr-py-0.fr-col-12.fr-col-md-6
+        %h1 The requested action has been rejected
+        %p.fr-text--sm.fr-mb-3w Error 422
+        %p.fr-text--lead.fr-mb-3w We're sorry, but we can't process your request.
+        %p.fr-text--sm.fr-mb-5w
+          This may be due to a request that cannot be processed in its current state.
+          %br
+          Go back to
+          = link_to("the previous page", "javascript:window.location = document.referrer", class: "fr-link")
+          and then try again.
+          %br
+
+          If the problem persists, please don't hesitate to contact us for assistance.
+
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to 'Back', 'javascript:window.location = document.referrer', class: 'fr-btn'
+          %li
+            = link_to 'Contact us', contact_path, class: 'fr-btn fr-btn--secondary'
+
+      = render partial: "artwork"

@@ -48,5 +48,12 @@ RSpec.describe ErrorsController, type: :controller do
 
       it_behaves_like 'specific action'
     end
+
+    context "422" do
+      let(:status_code) { 422 }
+      let(:action_name) { :unprocessable_entity }
+
+      it_behaves_like 'specific action'
+    end
   end
 end
