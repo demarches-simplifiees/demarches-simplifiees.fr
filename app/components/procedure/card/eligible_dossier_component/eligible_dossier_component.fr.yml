@@ -1,0 +1,8 @@
+---
+fr:
+  title: Eligibilité des dossiers
+  state: 
+    pending: Champs manquant
+    ready: À configurer
+    completed: Activé
+  subtitle: Gérez vos critères d'éligibilité
