@@ -74,7 +74,6 @@ module Dsfr
                                              'fr-input': true,
                                              'fr-mb-0': true
                                       }.merge(input_error_class_names)))
-
         if errors_on_attribute?
           @opts.deep_merge!(aria: {
             describedby: describedby_id,

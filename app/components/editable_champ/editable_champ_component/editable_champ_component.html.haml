@@ -5,6 +5,6 @@
 
     = render champ_component
 
-    = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, described_by: @champ.describedby_id, champ: @champ)
+    = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, describedby_id: @champ.describedby_id, champ: @champ)
 
     = @form.hidden_field :id, value: @champ.id
