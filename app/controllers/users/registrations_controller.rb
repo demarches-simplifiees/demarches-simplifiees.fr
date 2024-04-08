@@ -40,7 +40,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
 
     super do
-      resource.update_preferred_domain(Current.host) if resource.valid?
+      resource.update_preferred_domain(Current.host) if resource.valid? && helpers.switch_domain_enabled?(request)
     end
   end
 
