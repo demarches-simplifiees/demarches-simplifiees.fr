@@ -20,7 +20,7 @@ describe Champs::DecimalNumberChamp do
 
       it 'is not valid and contains expected error' do
         expect(subject).to be_falsey
-        expect(champ.errors[:value]).to eq(["« #{champ.libelle} » doit comprendre maximum 3 chiffres après la virgule", "« #{champ.libelle} » n'est pas un nombre"])
+        expect(champ.errors[:value]).to eq(["doit comprendre maximum 3 chiffres après la virgule", "n'est pas un nombre"])
       end
     end
 
@@ -29,7 +29,7 @@ describe Champs::DecimalNumberChamp do
 
       it 'is not valid and contains expected error' do
         expect(subject).to be_falsey
-        expect(champ.errors[:value]).to eq(["« #{champ.libelle} » doit comprendre maximum 3 chiffres après la virgule"])
+        expect(champ.errors[:value]).to eq(["doit comprendre maximum 3 chiffres après la virgule"])
       end
     end
 

@@ -6,13 +6,13 @@ class Champs::DecimalNumberChamp < Champ
     allow_blank: true,
     message: -> (object, _data) {
       # i18n-tasks-use t('errors.messages.not_a_float')
-      "« #{object.libelle} » " + object.errors.generate_message(:value, :not_a_float)
+      object.errors.generate_message(:value, :not_a_float)
     }
   }, numericality: {
     allow_nil: true,
     allow_blank: true,
     message: -> (object, _data) {
-      "« #{object.libelle} » " + object.errors.generate_message(:value, :not_a_number)
+      object.errors.generate_message(:value, :not_a_number)
     }
   }, if: -> { validate_champ_value? || validation_context == :prefill }
 
