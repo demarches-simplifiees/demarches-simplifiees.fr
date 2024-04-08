@@ -8,8 +8,8 @@ class Procedure::Card::EligibleDossierComponent < ApplicationComponent
   #       so `.types_de_champ_public` depend_on the transition
   def ready?
     @procedure.active_revision
-      .types_de_champ_public
-      .any? { Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(_1.type_champ) }
+      .conditionable_types_de_champ
+      .present?
   end
 
   def completed?

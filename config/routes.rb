@@ -614,6 +614,8 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
+      resource :transitions_rules, only: [:edit, :update]
+
       patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 
       put 'clone'
