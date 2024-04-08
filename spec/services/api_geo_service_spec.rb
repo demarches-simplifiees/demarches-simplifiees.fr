@@ -87,4 +87,24 @@ describe APIGeoService do
       expect(APIGeoService.epcis('01').first).to eq(code: '200042935', name: 'CA Haut - Bugey Agglomération')
     end
   end
+
+  describe 'parse_ban_address' do
+    let(:features) { JSON.parse(Rails.root.join('spec/fixtures/files/api_address/address.json').read)['features'] }
+    let(:feature) { features.first }
+    subject { APIGeoService.parse_ban_address(feature) }
+
+    context 'with a valid code insee' do
+      it { expect(subject[:city_name]).to eq('Paris') }
+    end
+
+    context 'with an invalid code insee' do
+      let(:feature) do
+        features.first.tap {
+          _1['properties']['citycode'] = '0000'
+        }
+      end
+
+      it { expect(subject[:city_name]).to eq('Paris') }
+    end
+  end
 end

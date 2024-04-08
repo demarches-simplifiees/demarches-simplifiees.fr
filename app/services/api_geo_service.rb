@@ -101,7 +101,7 @@ class APIGeoService
           department_code:,
           region_name: region_name(region_code),
           region_code:,
-          city_name: commune_name(department_code, city_code),
+          city_name: commune_name(department_code, city_code) || properties['city'], # fallback to city name if commune not found
           city_code:
         }
       else
