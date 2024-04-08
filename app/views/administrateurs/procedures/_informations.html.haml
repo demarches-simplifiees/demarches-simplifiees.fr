@@ -15,18 +15,15 @@
 = f.label :logo, 'Ajouter un logo de la démarche (facultatif)', class: 'fr-label'
 = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)
 
-= render Dsfr::CalloutComponent.new(title: "Conservation des données") do |c|
-  - c.with_body do
-    %p
-      = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
-    - if f.object.duree_conservation_dossiers_dans_ds.to_i < Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
-      %p
-        = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
-
 .fr-input-group
   = f.label :duree_conservation_dossiers_dans_ds, class: 'fr-label' do
     = Procedure.human_attribute_name(:duree_conservation_dossiers_dans_ds, app_name: Current.application_name)
     = render EditableChamp::AsteriskMandatoryComponent.new
+
+    %span.fr-hint-text
+      = t(:notice, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds])
+      - if f.object.duree_conservation_dossiers_dans_ds.to_i < Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH
+        = t(:new_duration_constraint, scope: [:administrateurs, :duree_conservation_dossiers_dans_ds], new_duration_in_month: f.object.max_duree_conservation_dossiers_dans_ds)
 
   = f.number_field :duree_conservation_dossiers_dans_ds, { class: 'fr-input', placeholder: '6', required: true, max: f.object.max_duree_conservation_dossiers_dans_ds }
 
@@ -51,11 +48,8 @@
 = f.label :deliberation, 'Importer le texte', class: 'fr-label'
 = render Attachment::EditComponent.new(attached_file: @procedure.deliberation, view_as: :download)
 
-= render Dsfr::CalloutComponent.new(title: "RGPD") do |c|
-  - c.with_body do
-    %p Pour certaines démarches, veuillez indiquer soit le mail de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations
-
-= render Dsfr::InputComponent.new(form: f, attribute: :lien_dpo, input_type: :text_field, opts: {}, required: false)
+= render Dsfr::InputComponent.new(form: f, attribute: :lien_dpo, input_type: :text_field, opts: {}, required: false) do |c|
+  - c.with_hint_content("Pour certaines démarches, veuillez indiquer soit le mail de contact de votre délégué à la protection des données, soit un lien web pointant vers les informations")
 
 - if Rails.application.config.ds_opendata_enabled
   = render Dsfr::CalloutComponent.new(title: t(:opendata_header, scope: [:administrateurs, :informations])) do |c|
@@ -70,13 +64,11 @@
       %span.toggle-switch-label.on Oui
       %span.toggle-switch-label.off Non
 
-= render Dsfr::CalloutComponent.new(title: "Notice explicative de la démarche") do |c|
-  - c.with_body do
-    %p Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
-
 .fr-mb-3w
-  = f.label :notice, 'Notice', class: 'fr-label'
+  = f.label :notice, 'Notice explicative de la démarche', class: 'fr-label'
   %p.fr-hint-text
+    Une notice explicative est un document destiné à guider l’usager dans sa démarche. C’est un document que vous avez élaboré et qui peut prendre la forme d’un fichier doc, d’un pdf ou encore de diapositives. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
+    %br
     Formats acceptés : .doc, .odt, .pdf, .ppt, .pptx
   = render Attachment::EditComponent.new(attached_file: @procedure.notice, view_as: :download)
 
@@ -122,43 +114,44 @@
 %details.procedure-form__options-details
   %summary.procedure-form__options-summary
     %h3.fr-h6 Options avancées
+  %fieldset
+    .fr-fieldset__element
+      - if feature_enabled?(:administrateur_web_hook)
+        = f.label :web_hook_url, class: 'fr-label' do
+          Lien de rappel HTTP (webhook)
+        %p.fr-hint-text
+          %strong Les webhooks sont maintenant dépréciés
+          Nous vous recommandons d'utiliser l'API GraphQL en faisant du polling,
+          = link_to "voici un exemple d'implementation ", WEBHOOK_ALTERNATIVE_DOC_URL, rel: "noopener", target: "_blank", title: "Voir une implémentation alternative à l'ancien système de webhook"
+        = f.text_field :web_hook_url, class: 'fr-input', placeholder: 'https://callback.exemple.fr/'
 
-  - if feature_enabled?(:administrateur_web_hook)
-    = f.label :web_hook_url, class: 'fr-label' do
-      Lien de rappel HTTP (webhook)
-    %p.fr-hint-text
-      %strong Les webhooks sont maintenant dépréciés
-      Nous vous recommandons d'utiliser l'API GraphQL en faisant du polling,
-      = link_to "voici un exemple d'implementation ", WEBHOOK_ALTERNATIVE_DOC_URL, rel: "noopener", target: "_blank", title: "Voir une implémentation alternative à l'ancien système de webhook"
-    = f.text_field :web_hook_url, class: 'fr-input', placeholder: 'https://callback.exemple.fr/'
+    .fr-fieldset__element
+      = f.label :auto_archive_on, class: 'fr-label fr-mb-2w' do
+        Date limite de dépôt des dossiers (facultatif)
+        %span.fr-hint-text
+          Si une date est définie, aucun dossier ne pourra plus être déposé ou modifié après cette limite.
+          Les dossiers en construction passeront en instruction et la démarche sera clôturée.
+      %p.notice
+        Le
+        - value = @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil
+        = f.date_field :auto_archive_on, id: 'auto_archive_on', class: 'fr-input', value: value
+        #{procedure_auto_archive_time(@procedure)}.
 
-  = render Dsfr::CalloutComponent.new(title: "Date limite de dépôt des dossiers") do |c|
-    - c.with_body do
-      %p
-        Si une date est définie, aucun dossier ne pourra plus être déposé ou modifié après cette limite.
-        Les dossiers en construction passeront en instruction et la démarche sera clôturée.
+    .fr-fieldset__element
+      = f.label :declarative_with_state, class: 'fr-label' do
+        Démarche déclarative (facultatif)
+        %span.fr-hint-text
+          Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
+          Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
+          Mentionnez l’état d’avancement pour qu’il passe immédiatement « en instruction » pour être traité ou qu’il soit immédiatement « accepté ».
 
-  = f.label :auto_archive_on, 'Mentionnez une date (facultatif)', class: 'fr-label fr-mb-2w'
-  %p.notice
-    Le
-    - value = @procedure.auto_archive_on ? @procedure.auto_archive_on - 1.day : nil
-    = f.date_field :auto_archive_on, id: 'auto_archive_on', class: 'fr-input', value: value
-    #{procedure_auto_archive_time(@procedure)}.
+      = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'fr-select'
 
-  = render Dsfr::CalloutComponent.new(title: "Démarche déclarative") do |c|
-    - c.with_body do
-      %p
-        Par défaut, un dossier déposé peut être complété ou corrigé par le demandeur jusqu'à sa mise en instruction.<br>
-        Dans une démarche déclarative, une fois déposé, un dossier ne peut plus être modifié.
-        Soit il passe immédiatement « en instruction » pour être traité soit il est immédiatement « accepté ».
-
-  = f.label :declarative_with_state, 'Mentionnez l’état d’avancement (facultatif)', class: 'fr-label fr-mb-2w'
-  = f.select :declarative_with_state, Procedure.declarative_attributes_for_select, { include_blank: 'Non' }, class: 'fr-select'
-
-  - if !@procedure.piece_justificative_multiple?
-    .fr-checkbox-group
-      = f.check_box :piece_justificative_multiple
-      = f.label :piece_justificative_multiple, class: 'fr-label' do
-        Champ “Pièce justificative” avec multiples fichiers
-    %p.fr-hint-text
-      Autorise les usagers à envoyer plusieurs fichiers pour les champs de type “Pièce justificative”. L'activation de cette option est irréversible et peut nécessiter des modifications si vous utilisez des systèmes automatisés pour traiter les dossiers.
+    - if !@procedure.piece_justificative_multiple?
+      .fr-fieldset__element
+        .fr-checkbox-group.fr-mt-3w
+          = f.check_box :piece_justificative_multiple
+          = f.label :piece_justificative_multiple, class: 'fr-label' do
+            Champ “Pièce justificative” avec multiples fichiers
+        %p.fr-hint-text
+          Autorise les usagers à envoyer plusieurs fichiers pour les champs de type “Pièce justificative”. L'activation de cette option est irréversible et peut nécessiter des modifications si vous utilisez des systèmes automatisés pour traiter les dossiers.
