@@ -6,9 +6,5 @@ module Dsfr
       @describedby_id = describedby_id
       @champ = champ
     end
-
-    def render?
-      @errors_on_attribute
-    end
   end
 end

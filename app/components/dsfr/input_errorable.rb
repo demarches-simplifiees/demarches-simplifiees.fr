@@ -34,6 +34,15 @@ module Dsfr
         errors.full_messages_for(attribute_or_rich_body)
       end
 
+
+      def fieldset_error_opts
+        if dsfr_champ_container == :fieldset && errors_on_attribute?
+          { aria: { labelledby: "#{describedby_id} #{object.labelledby_id}" } }
+         else
+          {}
+        end
+      end
+
       private
 
       # lookup for edge case from `form.rich_text_area`
