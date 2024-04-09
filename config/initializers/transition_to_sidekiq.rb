@@ -53,5 +53,9 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     class Migrations::BackfillStableIdJob
       self.queue_adapter = :sidekiq
     end
+
+    class Cron::CronJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
