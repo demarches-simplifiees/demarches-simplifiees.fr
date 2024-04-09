@@ -6,8 +6,10 @@ class DossierAssignment < ApplicationRecord
 
   enum mode: {
     auto: 'auto',
-    manual: 'manual'
+    manual: 'manual',
+    tech: 'tech'
   }
+
   scope :manual, -> { where(mode: :manual) }
 
   def groupe_instructeur_label
