@@ -8,6 +8,10 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
     @champ_component ||= component_class.new(form: @form, champ: @champ, seen_at: @seen_at)
   end
 
+  def dsfr_input_classname
+    raise NotImplementedError "please implement dsfr_input_classname, otherwise errors on champ are not visually highlighted"
+  end
+
   private
 
   def has_label?(champ)
