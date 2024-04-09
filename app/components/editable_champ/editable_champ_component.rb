@@ -37,7 +37,7 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
           champ_component.dsfr_group_classname => true
         }.merge(champ_component.input_group_error_class_names)
       ),
-      data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values },
+      data: { controller: stimulus_controller, **data_dependent_conditions, **stimulus_values }
     }.merge(champ_component.fieldset_error_opts)
   end
 

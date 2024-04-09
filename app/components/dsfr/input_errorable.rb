@@ -34,11 +34,10 @@ module Dsfr
         errors.full_messages_for(attribute_or_rich_body)
       end
 
-
       def fieldset_error_opts
         if dsfr_champ_container == :fieldset && errors_on_attribute?
           { aria: { labelledby: "#{describedby_id} #{object.labelledby_id}" } }
-         else
+        else
           {}
         end
       end
@@ -65,7 +64,7 @@ module Dsfr
       def input_error_opts
         {
           aria: {
-            describedby: describedby_id,
+            describedby: describedby_id
           }
         }
       end
@@ -84,7 +83,7 @@ module Dsfr
           })
         elsif hintable?
           @opts.deep_merge!(aria: {
-            describedby: hint_id,
+            describedby: hint_id
           })
         end
 
