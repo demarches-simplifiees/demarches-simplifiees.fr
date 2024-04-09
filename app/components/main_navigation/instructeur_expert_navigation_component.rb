@@ -10,7 +10,7 @@ class MainNavigation::InstructeurExpertNavigationComponent < ApplicationComponen
   end
 
   def aria_current_for(page)
-    { current: page == current_page ? :page : nil }
+    { current: page == current_page ? true : nil }
   end
 
   private
