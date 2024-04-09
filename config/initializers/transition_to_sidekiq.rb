@@ -58,7 +58,7 @@ if Rails.env.production? && SIDEKIQ_ENABLED
       self.queue_adapter = :sidekiq
     end
 
-    class APIEntreprise::EntrepriseJob < APIEntreprise::Job
+    class APIEntreprise::Job < ApplicationJob
       self.queue_adapter = :sidekiq
     end
   end
