@@ -1,6 +1,7 @@
 %footer.fr-footer#footer{ role: "contentinfo" }
   .fr-footer__top
     .fr-container
+      %h2.sr-only= t("links.footer.top_labels.hidden_title")
       .fr-grid-row.fr-grid-row--start.fr-grid-row--gutters
         .fr-col-12.fr-col-sm-3.fr-col-md-3
           %h3.fr-footer__top-cat= t("links.footer.top_labels.communication")
@@ -42,7 +43,7 @@
               = link_to t("links.footer.security.label"), t("links.footer.security.url"), title: t("links.footer.security.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
   .fr-container
     .fr-footer__body
-      .fr-footer__brand.fr-enlarge-link
+      .fr-footer__brand.fr-enlarge-link{ lang: "fr" }
         %p.fr-logo
           gouvernement
         = link_to t("links.footer.dinum.url"), title: t("links.footer.dinum.title"), class: "fr-footer__brand-link" do
