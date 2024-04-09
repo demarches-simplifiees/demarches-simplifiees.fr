@@ -614,7 +614,11 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
-      resource :transitions_rules, only: [:edit, :update]
+      resource :transitions_rules, only: [:edit, :update, :destroy], param: :revision_id do
+        patch :change_targeted_champ, on: :member
+        patch :add_row, on: :member
+        delete :delete_row, on: :member
+      end
 
       patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 

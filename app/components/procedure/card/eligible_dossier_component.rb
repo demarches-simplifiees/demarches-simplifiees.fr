@@ -7,7 +7,7 @@ class Procedure::Card::EligibleDossierComponent < ApplicationComponent
   #       ie: we might extend this behavior to other aasm transition
   #       so `.types_de_champ_public` depend_on the transition
   def ready?
-    @procedure.active_revision
+    @procedure.draft_revision
       .conditionable_types_de_champ
       .present?
   end

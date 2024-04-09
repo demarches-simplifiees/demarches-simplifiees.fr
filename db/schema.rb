@@ -851,6 +851,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
     t.bigint "dossier_submitted_message_id"
     t.bigint "procedure_id", null: false
     t.datetime "published_at", precision: nil
+    t.jsonb "transitions_rules"
     t.datetime "updated_at", precision: nil, null: false
     t.index ["dossier_submitted_message_id"], name: "index_procedure_revisions_on_dossier_submitted_message_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"

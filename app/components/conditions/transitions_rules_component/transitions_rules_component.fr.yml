@@ -1,0 +1,6 @@
+---
+fr:
+  display_if: Autoriser si
+  select: Sélectionner
+  add_condition: Ajouter une règle d'eligibilité
+  remove_a_row: Supprimer une règle

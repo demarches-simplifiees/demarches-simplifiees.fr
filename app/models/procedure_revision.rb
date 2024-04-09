@@ -1,4 +1,5 @@
 class ProcedureRevision < ApplicationRecord
+  include Logic
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy
@@ -22,6 +23,8 @@ class ProcedureRevision < ApplicationRecord
   validate :expressions_regulieres_are_valid?
 
   delegate :path, to: :procedure, prefix: true
+
+  serialize :transitions_rules, LogicSerializer
 
   def build_champs_public
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
