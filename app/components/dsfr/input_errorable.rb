@@ -60,8 +60,7 @@ module Dsfr
       def input_error_opts
         {
           aria: {
-            describedby: describedby_id,
-            invalid: errors_on_attribute?
+            describedby: describedby_id
           }
         }
       end
@@ -77,8 +76,7 @@ module Dsfr
 
         if errors_on_attribute?
           @opts.deep_merge!(aria: {
-            describedby: describedby_id,
-            invalid: errors_on_attribute?
+            describedby: describedby_id
           })
         end
 
