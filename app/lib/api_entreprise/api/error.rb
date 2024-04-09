@@ -6,7 +6,7 @@ class APIEntreprise::API::Error < ::StandardError
     msg = <<~TEXT
       url: #{uri.host}#{uri.path}
       HTTP error code: #{response.code}
-      body: #{CGI.escape(response.body)}
+      body: #{response.body}
       curl message: #{response.return_message}
       total time: #{response.total_time}
       connect time: #{response.connect_time}

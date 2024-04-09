@@ -126,7 +126,7 @@ class APIEntreprise::API
     elsif response.code == 400
       raise Error::BadFormatRequest.new(response)
     elsif response.code == 502
-      raise	Error::BadGateway.new(response)
+      raise Error::BadGateway.new(response)
     elsif response.code == 503
       raise Error::ServiceUnavailable.new(response)
     elsif response.timed_out?
