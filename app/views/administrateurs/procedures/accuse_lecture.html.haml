@@ -12,7 +12,7 @@
       = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
         - c.with_body do
           %p
-            Pour les démarches avec voies de recours, il est possible d'activer l'accusé de lecture. L'usager n'a plus accès à la décision finale par mail, mais il doit se connecter sur la plateforme Démarches Simplifiées pour en prendre connaissance et en accuser lecture.
+            Pour les démarches avec voies de recours, il est possible d'activer l'accusé de lecture. L'usager n'a plus accès à la décision finale par mail, mais il doit se connecter sur la plateforme #{Current.application_name} pour en prendre connaissance et en accuser lecture.
 
       %ul.fr-toggle__list
         %li
