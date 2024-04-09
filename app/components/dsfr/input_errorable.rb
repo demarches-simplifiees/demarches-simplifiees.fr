@@ -80,11 +80,11 @@ module Dsfr
                                       }.merge(input_error_class_names)))
         if errors_on_attribute?
           @opts.deep_merge!(aria: {
-            describedby: describedby_id
+            describedby: describedby_id,
           })
         elsif hintable?
           @opts.deep_merge!(aria: {
-            describedby: hint_id
+            describedby: hint_id,
           })
         end
 
@@ -131,6 +131,10 @@ module Dsfr
       end
 
       def autoresize?
+        false
+      end
+
+      def hintable?
         false
       end
 
