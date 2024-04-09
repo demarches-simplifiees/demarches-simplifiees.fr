@@ -1,11 +1,13 @@
-= render @autocomplete_component
+.fr-fieldset__element
+  = render @autocomplete_component
 
-= react_component("MapEditor",
-  featureCollection: @champ.to_feature_collection,
-  url: champs_carte_features_path(@champ),
-  options: @champ.render_options,
-  autocompleteAnnounceTemplateId: @autocomplete_component.announce_template_id,
-  autocompleteScreenReaderInstructions: t("combo_search_component.screen_reader_instructions"))
+  = react_component("MapEditor",
+    { featureCollection: @champ.to_feature_collection,
+    url: champs_carte_features_path(@champ),
+    options: @champ.render_options,
+    autocompleteAnnounceTemplateId: @autocomplete_component.announce_template_id,
+    autocompleteScreenReaderInstructions: t("combo_search_component.screen_reader_instructions") },
+    {class: 'width-100'})
 
-.geo-areas{ id: dom_id(@champ, :geo_areas) }
-  = render Dossiers::GeoAreasComponent.new(champ: @champ, editing: true)
+  .geo-areas{ id: dom_id(@champ, :geo_areas) }
+    = render Dossiers::GeoAreasComponent.new(champ: @champ, editing: true)
