@@ -3,6 +3,14 @@ class Champs::CarteChamp < Champ
   DEFAULT_LON = 2.428462
   DEFAULT_LAT = 46.538192
 
+  def legend_label?
+    true
+  end
+
+  def html_label?
+    false
+  end
+
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
   def cadastres
