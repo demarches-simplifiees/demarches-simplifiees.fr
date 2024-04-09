@@ -56,10 +56,6 @@ module Dsfr
         end
       end
 
-      def fr_fieldset?
-        !['fr-input', 'fr-radio', 'fr-select'].include?(dsfr_input_classname)
-      end
-
       def input_error_class_names
         {
           "#{dsfr_input_classname}--error": errors_on_attribute?
