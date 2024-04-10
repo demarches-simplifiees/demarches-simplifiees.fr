@@ -59,5 +59,9 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     class APIEntreprise::Job < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class DossierOperationLogMoveToColdStorageBatchJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
