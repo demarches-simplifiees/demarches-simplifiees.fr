@@ -18,7 +18,7 @@
 
 .fr-input-group
   = f.label :duree_conservation_dossiers_dans_ds, class: 'fr-label' do
-    = Procedure.human_attribute_name(:duree_conservation_dossiers_dans_ds, app_name: Current.application_name)
+    = Procedure.human_attribute_name(:duree_conservation_dossiers_dans_ds)
     = render EditableChamp::AsteriskMandatoryComponent.new
 
     %span.fr-hint-text

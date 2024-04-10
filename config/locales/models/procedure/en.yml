@@ -35,7 +35,7 @@ en:
         procedure_path_placeholder: procedure-name
         cadre_juridique: Link to the legal text
         lien_dpo: Link or email to contact the data protection officer (DPO)
-        duree_conservation_dossiers_dans_ds: Duration files will be kept on %{app_name}
+        duree_conservation_dossiers_dans_ds: Duration files will be kept
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
         aasm_state:
           brouillon: Draft

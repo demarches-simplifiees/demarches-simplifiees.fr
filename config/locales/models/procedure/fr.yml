@@ -18,8 +18,8 @@ fr:
           closing_details_placeholder: "Cette démarche a été remplacée par la page…\n\nLe guide de la nouvelle démarche est disponible ici\n\nPour toute information complémentaire, contactez…\n\nCordialement,"
         path: Lien public
         organisation: Organisme
-        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur %{app_name}
-        max_duree_conservation_dossiers_dans_ds: Durée maximale de conservation des dossiers (autorisée par un super admin de DS)
+        duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers
+        max_duree_conservation_dossiers_dans_ds: Durée maximale de conservation des dossiers (autorisée par un super admin)
         id: Id
         libelle: Titre de la démarche
         description: Quel est l’objet de la démarche ?
