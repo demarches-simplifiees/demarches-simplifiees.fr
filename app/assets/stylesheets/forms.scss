@@ -656,7 +656,6 @@ textarea::placeholder {
 .fr-menu__list {
   padding: $default-spacer;
   overflow-y: auto;
-  max-height: 300px;
 
   .fr-menu__item {
     list-style-type: none;
