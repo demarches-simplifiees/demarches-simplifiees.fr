@@ -37,7 +37,7 @@ fr:
           internal_procedure: Je remplace ma démarche par une autre dans %{app_name}
         procedure_path: Lien de la démarche à diffuser aux usagers
         procedure_path_placeholder: nom-de-la-demarche
-        cadre_juridique: Lien vers le texte
+        cadre_juridique: Cadre juridique - lien web vers le texte
         lien_dpo: Lien ou email pour contacter le Délégué à la Protection des Données (DPO)
         published_at: 'Date de publication'
         aasm_state: 'Statut'
