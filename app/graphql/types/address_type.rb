@@ -27,11 +27,11 @@ module Types
     field :geometry, Types::GeoJSON, "coordonnées géographique", null: true
 
     def city_name
-      if object['department_code'].present? && object['city_code'].present?
-        APIGeoService.commune_name(object.fetch('department_code'), object.fetch('city_code'))
-      else
+      APIGeoService.safely_normalize_city_name(
+        object['department_code'],
+        object['city_code'],
         object['city_name']
-      end
+      )
     end
 
     def department_name

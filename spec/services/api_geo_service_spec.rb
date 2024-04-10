@@ -107,4 +107,34 @@ describe APIGeoService do
       it { expect(subject[:city_name]).to eq('Paris') }
     end
   end
+
+  describe 'safely_normalize_city_name' do
+    let(:department_code) { '75' }
+    let(:city_code) { '75056' }
+    let(:fallback) { 'Paris' }
+
+    subject { APIGeoService.safely_normalize_city_name(department_code, city_code, fallback) }
+
+    context 'nominal' do
+      it { is_expected.to eq('Paris') }
+    end
+
+    context 'without department' do
+      let(:department_code) { nil }
+
+      it { is_expected.to eq('Paris') }
+    end
+
+    context 'without city_code' do
+      let(:city_code) { nil }
+
+      it { is_expected.to eq('Paris') }
+    end
+
+    context 'with a wrong department' do
+      let(:department_code) { 'wrong' }
+
+      it { is_expected.to eq('Paris') }
+    end
+  end
 end
