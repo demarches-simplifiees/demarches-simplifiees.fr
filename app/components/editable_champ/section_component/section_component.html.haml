@@ -10,9 +10,9 @@
           = fields_for champ.input_name, champ do |form|
             = render EditableChamp::EditableChampComponent.new form:, champ:
 - else
-  %fieldset.fr-fieldset.fr-my-0
+  .fr-fieldset__element.fr-my-0
     - if header_section
-      %legend.fr-fieldset__legend.fr-my-0{ class: "reset-#{tag_for_depth}" }
+      .fr-fieldset__legend.fr-my-0{ class: "reset-#{tag_for_depth}" }
         = render EditableChamp::HeaderSectionComponent.new(champ: header_section)
     - splitted_tail.each do |section, champ|
       - if section.present?
