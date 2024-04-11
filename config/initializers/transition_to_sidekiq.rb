@@ -1,5 +1,3 @@
-SIDEKIQ_ENABLED = ENV.has_key?('REDIS_SIDEKIQ_SENTINELS') || ENV.has_key?('REDIS_URL')
-
 if Rails.env.production? && SIDEKIQ_ENABLED
   ActiveSupport.on_load(:after_initialize) do
     class ActiveStorage::PurgeJob < ActiveStorage::BaseJob

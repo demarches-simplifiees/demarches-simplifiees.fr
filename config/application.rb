@@ -51,7 +51,7 @@ module TPS
     config.action_dispatch.ip_spoofing_check = false
 
     # Set the queue name for the mail delivery jobs to 'mailers'
-    config.action_mailer.deliver_later_queue_name = :mailers
+    config.action_mailer.deliver_later_queue_name = 'mailers'
 
     # Allow the error messages format to be customized
     config.active_model.i18n_customize_full_message = true

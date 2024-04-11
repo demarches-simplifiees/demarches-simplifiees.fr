@@ -4,14 +4,14 @@ class Cron::CronJob < ApplicationJob
 
   class << self
     def schedulable?
-      true && ENV['CRON_JOBS_DISABLED'].blank?
+      ENV['CRON_JOBS_DISABLED'].blank?
     end
 
     def schedule
       remove if cron_expression_changed?
 
       if !scheduled?
-        if queue_adapter == :sidekiq
+        if queue_adapter_name == "sidekiq"
           Sidekiq::Cron::Job.create(name: name, cron: cron_expression, class: name)
         else
           set(cron: cron_expression).perform_later
@@ -36,7 +36,7 @@ class Cron::CronJob < ApplicationJob
     end
 
     def enqueued_cron_job
-      if queue_adapter == :sidekiq
+      if queue_adapter_name == "sidekiq"
         sidekiq_cron_job
       else
         delayed_job
