@@ -40,8 +40,7 @@
           %tr
             %td.number-col
               = link_to(expert_avis_path(avis.procedure, avis), class: 'cell-link') do
-                = dsfr_icon('fr-icon-file-text-line')
-                #{avis.dossier.id}
+                = avis.dossier.id
             %td= link_to(avis.dossier.user_email_for(:display), expert_avis_path(avis.procedure, avis), class: 'cell-link')
             %td= link_to(avis.procedure.libelle, expert_avis_path(avis.procedure, avis), class: 'cell-link')
     = paginate @avis, views_prefix: 'shared'

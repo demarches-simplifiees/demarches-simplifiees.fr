@@ -19,7 +19,6 @@
       %table.table.dossiers-table.hoverable
         %thead
           %tr
-            %th.notification-col
             %th.number-col Nº dossier
             %th Démarche
             %th Demandeur
@@ -36,12 +35,11 @@
 
           %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
             - if instructeur_and_expert_dossier
-              %td.text-center.cell-link
-                = dsfr_icon('fr-icon-file-text-line')
-                - if @notifications_dossier_ids.include?(p.dossier_id)
-                  %span.notifications{ 'aria-label': 'notifications' }
               %td.number-col
-                .cell-link= p.dossier_id
+                .cell-link.relative
+                  = p.dossier_id
+                  - if @notifications_dossier_ids.include?(p.dossier_id)
+                    %span.notifications.absolute-right{ 'aria-label': 'notifications' }
               %td
                 .cell-link= procedure_libelle
               %td
@@ -53,15 +51,11 @@
               = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
 
             - else
-
-              %td.text-center
-                %a.cell-link{ href: path }
-                  = dsfr_icon('fr-icon-file-text-line')
-                  - if @notifications_dossier_ids.include?(p.dossier_id)
-                    %span.notifications{ 'aria-label': 'notifications' }
-
               %td.number-col
-                %a.cell-link{ href: path }= p.dossier_id
+                %a.cell-link.relative{ href: path }
+                  = p.dossier_id
+                  - if @notifications_dossier_ids.include?(p.dossier_id)
+                    %span.notifications.absolute-right{ 'aria-label': 'notifications' }
 
               %td
                 %a.cell-link{ href: path }= procedure_libelle
