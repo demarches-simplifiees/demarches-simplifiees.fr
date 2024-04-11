@@ -72,7 +72,7 @@
 
             - if dossier.attestation.present?
               .action
-                = link_to attestation_dossier_path(dossier), class: "fr-btn fr-icon-download-line fr-btn--icon-left", target: '_blank', rel: 'noopener' do
+                = link_to attestation_dossier_path(dossier), class: "fr-btn fr-icon-download-line fr-btn--icon-left", **external_link_attributes do
                   = t('views.users.dossiers.show.status_overview.accepte_attestation')
 
 

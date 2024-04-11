@@ -14,10 +14,10 @@
   = t("layouts.mailers.accuse_lecture.second_part")
 %p
   = t("layouts.mailers.accuse_lecture.third_part")
-  = link_to 'Démarches Simplifiées.', dossier_url(@dossier)
+  = link_to APPLICATION_NAME, dossier_url(@dossier)
 
 %p
   = t(:best_regards, scope: [:views, :shared, :greetings])
   %br
     = t('layouts.mailers.signature.team')
-    #{APPLICATION_NAME.gsub(".","&#8288;.").html_safe}
+    = APPLICATION_NAME

@@ -9,10 +9,16 @@
       %h1.page-title
         Accusé de lecture
 
-      = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      = render Dsfr::CalloutComponent.new(title: nil) do |c|
         - c.with_body do
           %p
-            Pour les démarches avec voies de recours, il est possible d'activer l'accusé de lecture. L'usager n'a plus accès à la décision finale par mail, mais il doit se connecter sur la plateforme #{Current.application_name} pour en prendre connaissance et en accuser lecture.
+            Pour les démarches avec voies de recours, il est possible d’activer l’accusé de lecture.
+          %br
+          %p
+            Cette fonctionnalité permet à l’instructeur de connaître la date de lecture de la décision finale par l’usager.
+          %br
+          %p
+            L’usager n’a plus accès à la décision finale par mail, mais il doit se connecter sur la plateforme #{Current.application_name} pour en prendre connaissance et en accuser lecture.
 
       %ul.fr-toggle__list
         %li
@@ -24,7 +30,7 @@
             = render Dsfr::ToggleComponent.new(form: f,
               target: :accuse_lecture,
               title: "Accusé de lecture de la démarche",
-              hint: "L’accusé de lecture est à activer uniquement pour les démarches avec voies de recours car il complexifie l'accès à la décision finale pour les usagers",
+              hint: "L’accusé de lecture est à activer uniquement pour les démarches avec voies de recours car il complexifie l’accès à la décision finale pour les usagers",
               opt: {"checked" => @procedure.accuse_lecture})
 
 .padded-fixed-footer

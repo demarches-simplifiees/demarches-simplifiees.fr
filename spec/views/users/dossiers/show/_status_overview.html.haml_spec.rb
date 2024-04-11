@@ -98,6 +98,6 @@ describe 'users/dossiers/show/_status_overview', type: :view do
 
     it { is_expected.not_to have_selector('.status-explanation .sans-suite') }
     it { is_expected.not_to have_text(dossier.motivation) }
-    it { is_expected.to have_text('Cette procédure est soumise à un accusé de lecture.') }
+    it { is_expected.to have_text('Cette démarche est soumise à un accusé de lecture.') }
   end
 end

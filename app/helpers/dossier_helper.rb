@@ -80,10 +80,7 @@ module DossierHelper
 
   def status_badge_user(dossier, alignment_class = '')
     if dossier.hide_info_with_accuse_lecture?
-      tag.span 'traité', role: 'status', class: class_names(
-        'fr-badge fr-badge--sm fr-badge--no-icon' => true,
-        alignment_class => true
-      )
+      tag.span 'traité', role: 'status', class: "fr-badge fr-badge--sm fr-badge--no-icon #{alignment_class}"
     else
       status_badge(dossier.state, alignment_class)
     end

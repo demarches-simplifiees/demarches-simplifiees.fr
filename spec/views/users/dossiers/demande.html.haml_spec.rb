@@ -64,7 +64,7 @@ describe 'users/dossiers/demande', type: :view do
     let(:dossier) { create(:dossier, :accepte, :with_motivation) }
 
     it 'displays the motivation' do
-      expect(rendered).not_to have_text('Cette procédure est soumise à un accusé de lecture.')
+      expect(rendered).not_to have_text('Cette démarche est soumise à un accusé de lecture.')
       expect(rendered).to have_text('Motivation')
     end
   end
@@ -73,7 +73,7 @@ describe 'users/dossiers/demande', type: :view do
     let(:dossier) { create(:dossier, :accepte, :with_motivation, procedure: create(:procedure, :accuse_lecture)) }
 
     it 'display information about accuse de lecture and not the motivation' do
-      expect(rendered).to have_text('Cette procédure est soumise à un accusé de lecture.')
+      expect(rendered).to have_text('Cette démarche est soumise à un accusé de lecture.')
       expect(rendered).not_to have_text('Motivation')
     end
   end
