@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_11_091345) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -244,14 +244,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_091345) do
     t.datetime "sent_at", precision: nil, null: false
     t.bigint "procedure_id"
     t.datetime "updated_at", null: false
-  end
-
-  create_table "bulk_messages_groupe_instructeurs", id: false, force: :cascade do |t|
-    t.bigint "bulk_message_id"
-    t.bigint "groupe_instructeur_id"
-    t.index ["bulk_message_id", "groupe_instructeur_id"], name: "index_bulk_msg_gi_on_bulk_msg_id_and_gi_id", unique: true
-    t.index ["bulk_message_id"], name: "index_bulk_messages_groupe_instructeurs_on_bulk_message_id"
-    t.index ["groupe_instructeur_id"], name: "index_bulk_messages_groupe_instructeurs_on_gi_id"
   end
 
   create_table "champs", id: :serial, force: :cascade do |t|
@@ -1212,8 +1204,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_091345) do
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
-  add_foreign_key "bulk_messages_groupe_instructeurs", "bulk_messages"
-  add_foreign_key "bulk_messages_groupe_instructeurs", "groupe_instructeurs"
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "champs", "dossiers"
   add_foreign_key "champs", "etablissements"
