@@ -126,9 +126,6 @@ class APIGeoService
       return fallback if department_code.nil? || city_code.nil?
 
       commune_name(department_code, city_code) || fallback
-
-    rescue StandardError
-      fallback
     end
 
     private

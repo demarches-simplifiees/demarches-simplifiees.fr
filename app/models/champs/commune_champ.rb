@@ -57,20 +57,11 @@ class Champs::CommuneChamp < Champs::TextChamp
   alias postal_code code_postal
 
   def name
-    if departement? && code?
-      APIGeoService.commune_name(code_departement, code).presence || safe_to_s
-    else
-      safe_to_s
-    end
+    APIGeoService.safely_normalize_city_name(code_departement, code, safe_to_s)
   end
 
   def to_s
-    if departement? && code_postal? && code?
-      name = APIGeoService.commune_name(code_departement, code)
-      name.present? ? "#{name} (#{code_postal})" : safe_to_s
-    else
-      safe_to_s
-    end
+    code_postal? ? "#{name} (#{code_postal})" : name
   end
 
   def code
