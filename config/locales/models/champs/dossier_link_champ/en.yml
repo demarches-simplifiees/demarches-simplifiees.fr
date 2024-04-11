@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      champs/dossier_link_champ:
+        hints:
+          value: "File number"
