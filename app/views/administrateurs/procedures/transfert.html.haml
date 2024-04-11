@@ -1,6 +1,26 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Transfert']] }
-.container
-  = render partial: 'procedure_transfert'
+                    ['Envoyer une copie']] }
+.fr-container.fr-my-4w
+  .fr-grid-row.fr-grid-row--center
+    .fr-col-12.fr-col-lg-8
+      %h1 Envoyer une copie de cette démarche
+
+      = render Dsfr::AlertComponent.new(state: :info, extra_class_names: "fr-my-4w") do |c|
+        - c.with_body do
+          Cette fonctionnalité permet de cloner votre démarche vers le compte d’un autre administrateur.
+          Il ou elle pourra ensuite la modifier et la publier, indépendamment de votre démarche.
+
+      = form_tag admin_procedure_transfer_path(procedure_id: @procedure.id), method: :post do
+        %fieldset.fr-fieldset
+          .fr-fieldset__element
+            .fr-input-group
+              = label_tag :email_admin, class: "fr-label" do
+                Adresse email de l’administrateur destinataire
+                %span.fr-hint-text Un compte administrateur à cette adresse doit déjà exister sur #{Current.application_name}.
+
+              = text_field_tag :email_admin, '', { class: 'fr-input', type: 'email' }
+
+          .fr-fieldset__element
+            = submit_tag "Envoyer à l’administrateur", class: 'fr-btn'
