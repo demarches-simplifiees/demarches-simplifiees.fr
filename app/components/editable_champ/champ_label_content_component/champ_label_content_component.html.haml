@@ -17,11 +17,11 @@
   %span.updated-at.highlighted
     = t('.check_content_rebased')
 
-- if hint?
-  %span.fr-hint-text{ data: { controller: 'date-input-hint' } }= hint
-
 - if @champ.description.present?
   %span.fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
+
+- if hint?
+  %span.fr-hint-text{ data: { controller: 'date-input-hint' } }= hint
 
 - if @champ.textarea?
   %span.sr-only= t('.recommended_size', size: @champ.character_limit_base)
