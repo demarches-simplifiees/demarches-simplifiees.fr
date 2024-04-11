@@ -770,7 +770,11 @@ class Procedure < ApplicationRecord
   end
 
   def self.purge_discarded
-    discarded_expired.find_each(&:purge_discarded)
+    discarded_expired.find_each do |p|
+      p.purge_discarded
+    rescue StandardError => e
+      Sentry.capture_exception(e, extra: { procedure_id: p.id })
+    end
   end
 
   def restore(author)
