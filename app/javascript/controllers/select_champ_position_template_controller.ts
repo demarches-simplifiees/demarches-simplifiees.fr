@@ -48,14 +48,6 @@ export class SelectChampPositionTemplateController extends ApplicationController
           option.setAttribute('disabled', 'disabled');
         }
       });
-      options.map((option, index) => {
-        const previousOption = options[index - 1];
-        // can't move current element after previous element
-        if (previousOption && option.value == focusedSelectStableId) {
-          previousOption.setAttribute('selected', 'selected');
-          previousOption.setAttribute('disabled', 'disabled');
-        }
-      });
 
       focusedSelect.innerHTML = options
         .map((option) => option.outerHTML)
