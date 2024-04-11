@@ -4,6 +4,8 @@ class Cron::DossierOperationLogMoveToColdStorageJob < Cron::CronJob
   def perform
     DossierOperationLog
       .with_data
-      .find_each(&:move_to_cold_storage!)
+      .in_batches do |batch|
+      DossierOperationLogMoveToColdStorageBatchJob.perform_later(batch.ids)
+    end
   end
 end
