@@ -53,20 +53,20 @@
           %legend.fr-fieldset__legend--regular.fr-fieldset__legend.hidden{ "data-for-tiers-target" => "beneficiaireTitle" }
             %h2.fr-h4= t('views.users.dossiers.identite.beneficiaire_title')
 
-
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-            = t('activerecord.attributes.individual.gender')
-            = render EditableChamp::AsteriskMandatoryComponent.new
-          .fr-fieldset__element
-            .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
-              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
-                = Individual.human_attribute_name('gender.female')
-          .fr-fieldset__element
-            .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
-              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
-                = Individual.human_attribute_name('gender.male')
+          %fieldset
+            %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+              = t('activerecord.attributes.individual.gender')
+              = render EditableChamp::AsteriskMandatoryComponent.new
+            .fr-fieldset__element
+              .fr-radio-group
+                = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
+                %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
+                  = Individual.human_attribute_name('gender.female')
+            .fr-fieldset__element
+              .fr-radio-group
+                = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
+                %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
+                  = Individual.human_attribute_name('gender.male')
 
           .fr-fieldset__element.fr-fieldset__element--short-text
             = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
