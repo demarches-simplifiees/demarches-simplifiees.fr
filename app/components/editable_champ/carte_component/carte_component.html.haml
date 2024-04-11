@@ -3,6 +3,7 @@
 
   = react_component("MapEditor",
     { featureCollection: @champ.to_feature_collection,
+    champId: @champ.input_id,
     url: champs_carte_features_path(@champ),
     options: @champ.render_options,
     autocompleteAnnounceTemplateId: @autocomplete_component.announce_template_id,

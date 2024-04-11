@@ -9,7 +9,7 @@ export function AddressInput(
   comboProps: Pick<
     ComboSearchProps,
     'screenReaderInstructions' | 'announceTemplateId'
-  > & { featureCollection: FeatureCollection }
+  > & { featureCollection: FeatureCollection; champId: string }
 ) {
   return (
     <div
@@ -18,9 +18,9 @@ export function AddressInput(
       }}
     >
       <ComboAdresseSearch
-        className="no-margin"
-        placeholder="Rechercher une adresse : saisissez au moins 2 caractères"
+        className="fr-input fr-mt-1w"
         allowInputValues={false}
+        id={comboProps.champId}
         onChange={(_, feature) => {
           fire(document, 'map:zoom', {
             featureCollection: comboProps.featureCollection,
