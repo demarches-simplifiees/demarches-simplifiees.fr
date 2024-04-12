@@ -4,7 +4,7 @@
     .notice{ notice_params }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
 
 
-  .repetition{ id: dom_id(@champ, :rows) }
+  .repetition{ id: dom_id(@champ, :rows), class: class_names('utils-repetition-required' => @champ.mandatory?) }
     - @champ.row_ids.each.with_index(1) do |row_id, row_number|
       = render EditableChamp::RepetitionRowComponent.new(form: @form, dossier: @champ.dossier, type_de_champ: @champ.type_de_champ, row_id:, row_number:, seen_at: @seen_at)
 
