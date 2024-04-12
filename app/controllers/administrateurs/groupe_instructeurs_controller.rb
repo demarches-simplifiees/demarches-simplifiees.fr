@@ -212,7 +212,7 @@ module Administrateurs
     def reaffecter_all_dossiers_to_defaut_groupe
       procedure.groupe_instructeurs_but_defaut.each do |gi|
         gi.dossiers.find_each do |dossier|
-          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:manual), current_administrateur)
+          dossier.assign_to_groupe_instructeur(procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:auto), current_administrateur)
         end
       end
     end
