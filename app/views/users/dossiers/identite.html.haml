@@ -39,10 +39,10 @@
           %h2.fr-h4= t('views.users.dossiers.identite.self_title')
 
         .fr-fieldset__element.fr-fieldset__element--short-text
-          = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_first_name, opts: { "data-for-tiers-target" => "mandataireFirstName" })
+          = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_first_name, opts: { "data-for-tiers-target" => "mandataireFirstName", autocomplete: 'given-name' })
 
         .fr-fieldset__element.fr-fieldset__element--short-text
-          = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_last_name, opts: { "data-for-tiers-target" => "mandataireLastName" })
+          = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_last_name, opts: { "data-for-tiers-target" => "mandataireLastName", autocomplete: 'family-name' })
 
     = f.fields_for :individual, include_id: false do |individual|
       .individual-infos
@@ -67,12 +67,18 @@
                 = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
                 %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
                   = Individual.human_attribute_name('gender.male')
+          
+          .fr-fieldset.width-100.hidden{ "data-for-tiers-target" => "beneficiaireIdentity" }
+            .fr-fieldset__element.fr-fieldset__element--short-text
+              = render Dsfr::InputComponent.new(form: individual, attribute: :prenom)
+            .fr-fieldset__element.fr-fieldset__element--short-text
+              = render Dsfr::InputComponent.new(form: individual, attribute: :nom)  
 
-          .fr-fieldset__element.fr-fieldset__element--short-text
-            = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
-
-          .fr-fieldset__element.fr-fieldset__element--short-text
-            = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: 'family-name' })
+          .fr-fieldset.width-100{ "data-for-tiers-target" => "mandataireIdentity" }
+            .fr-fieldset__element.fr-fieldset__element--short-text
+              = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
+            .fr-fieldset__element.fr-fieldset__element--short-text
+              = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: 'family-name' })
 
         %fieldset.fr-fieldset{ "data-for-tiers-target" => "beneficiaireNotificationBlock" }
           %legend.fr-fieldset__legend--regular.fr-fieldset__legend

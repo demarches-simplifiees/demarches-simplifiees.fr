@@ -10,7 +10,9 @@ export class ForTiersController extends ApplicationController {
     'email',
     'notificationMethod',
     'mandataireTitle',
+    'mandataireIdentity',
     'beneficiaireTitle',
+    'beneficiaireIdentity',
     'emailInput'
   ];
 
@@ -22,7 +24,9 @@ export class ForTiersController extends ApplicationController {
   declare notificationMethodTargets: NodeListOf<HTMLInputElement>;
   declare emailTarget: HTMLInputElement;
   declare mandataireTitleTarget: HTMLElement;
+  declare mandataireIdentityTarget: HTMLInputElement;
   declare beneficiaireTitleTarget: HTMLElement;
+  declare beneficiaireIdentityTarget: HTMLElement;
   declare emailInput: HTMLInputElement;
 
   connect() {
@@ -53,7 +57,9 @@ export class ForTiersController extends ApplicationController {
     this.mandataireFirstNameTarget.required = forTiersSelected;
     this.mandataireLastNameTarget.required = forTiersSelected;
     this.mandataireTitleTarget.classList.toggle('hidden', forTiersSelected);
+    this.mandataireIdentityTarget.classList.toggle('hidden', forTiersSelected);
     this.beneficiaireTitleTarget.classList.toggle('hidden', !forTiersSelected);
+    this.beneficiaireIdentityTarget.classList.toggle('hidden', !forTiersSelected);
     this.notificationMethodTargets.forEach((radio) => {
       radio.required = forTiersSelected;
     });
