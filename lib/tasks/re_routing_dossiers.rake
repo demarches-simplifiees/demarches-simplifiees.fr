@@ -18,7 +18,7 @@ namespace :re_routing_dossiers do
     dossiers.each do |dossier|
       RoutingEngine.compute(dossier, assignment_mode:)
 
-      rake_puts "Dossier #{args[:dossier_id]} routed to groupe instructeur #{dossier.groupe_instructeur.label}"
+      rake_puts "Dossier #{dossier.id} routed to groupe instructeur #{dossier.groupe_instructeur.label}"
 
       progress.inc
     end
