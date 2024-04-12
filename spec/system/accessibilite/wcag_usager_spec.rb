@@ -126,7 +126,9 @@ describe 'wcag rules for usager', js: true do
         fill_in('Prénom', with: 'prenom')
         fill_in('Nom', with: 'nom')
       end
-      click_on 'Continuer'
+      within "#identite-form" do
+        click_on 'Continuer'
+      end
 
       expect(page).to be_axe_clean
     end

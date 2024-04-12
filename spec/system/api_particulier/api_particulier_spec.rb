@@ -272,7 +272,9 @@ describe 'fetch API Particulier Data', js: true do
           fill_in('Nom', with: 'nom')
         end
 
-        click_button('Continuer')
+        within "#identite-form" do
+          click_on 'Continuer'
+        end
 
         fill_in 'Le numéro d’allocataire CAF', with: numero_allocataire
         fill_in 'Le code postal', with: 'wrong_code'
@@ -331,7 +333,9 @@ describe 'fetch API Particulier Data', js: true do
           fill_in('Prénom', with: 'Georges')
           fill_in('Nom', with: 'Moustaki')
         end
-        click_button('Continuer')
+        within "#identite-form" do
+          click_on 'Continuer'
+        end
 
         fill_in "Identifiant", with: 'wrong code'
 
@@ -405,7 +409,9 @@ describe 'fetch API Particulier Data', js: true do
           fill_in('Prénom', with: 'Angela Claire Louise')
           fill_in('Nom', with: 'Dubois')
         end
-        click_button('Continuer')
+        within "#identite-form" do
+          click_on 'Continuer'
+        end
 
         fill_in "INE", with: 'wrong code'
 
@@ -469,7 +475,9 @@ describe 'fetch API Particulier Data', js: true do
           fill_in('Prénom', with: 'Karine')
           fill_in('Nom', with: 'FERRI')
         end
-        click_button('Continuer')
+        within "#identite-form" do
+          click_on 'Continuer'
+        end
 
         fill_in 'Le numéro fiscal', with: numero_fiscal
         fill_in "La référence d’avis d’imposition", with: 'wrong_code'

@@ -79,7 +79,9 @@ describe 'dropdown list with other option activated', js: true do
       fill_in('Prénom', with: 'prenom')
       fill_in('Nom', with: 'nom')
     end
-    click_on 'Continuer'
+    within "#identite-form" do
+      click_on 'Continuer'
+    end
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end
 end
