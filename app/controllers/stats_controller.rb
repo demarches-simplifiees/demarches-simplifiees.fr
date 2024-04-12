@@ -39,11 +39,16 @@ class StatsController < ApplicationController
       'Etat du fichier',
       'Durée en brouillon',
       'Durée en construction',
-      'Durée en instruction'
+      'Durée en instruction',
+      "Date de dépôt",
+      "Etat de la procedure",
+      "Date de la publication",
+      "N° TAHITI du service",
+      "Nom du service"
     ]
 
     data = Dossier
-      .includes(:procedure, :user)
+      .includes({ procedure: :service }, :user)
       .in_batches
       .flat_map do |dossiers|
       dossiers
@@ -55,7 +60,12 @@ class StatsController < ApplicationController
           "dossiers.state",
           Arel.sql("dossiers.depose_at - dossiers.created_at"),
           Arel.sql("dossiers.en_instruction_at - dossiers.depose_at"),
-          Arel.sql("dossiers.processed_at - dossiers.en_instruction_at")
+          Arel.sql("dossiers.processed_at - dossiers.en_instruction_at"),
+          Arel.sql("date_trunc('month', dossiers.depose_at)::date"),
+          "procedures.aasm_state",
+          Arel.sql("date_trunc('month', procedures.published_at)::date"),
+          "services.siret",
+          "services.nom"
         )
     end
 
