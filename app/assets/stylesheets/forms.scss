@@ -413,6 +413,10 @@
         margin-bottom: 2 * $default-padding;
       }
     }
+
+    .utils-repetition-required .row:first-child .utils-repetition-required-destroy-button {
+      display: none;
+    }
   }
 
   .editable-champ-titre_identite { // scss-lint:disable SelectorFormat
