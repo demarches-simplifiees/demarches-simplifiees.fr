@@ -1,87 +1,32 @@
+import { toggle } from '@utils';
 import { ApplicationController } from './application_controller';
 
+function onVisibleEnableInputs(element: HTMLInputElement) {
+  element.disabled = false;
+  element.required = true;
+}
+
+function onHiddenDisableInputs(element: HTMLInputElement) {
+  element.disabled = true;
+  element.required = false;
+}
+
 export class ForTiersController extends ApplicationController {
-  static targets = [
-    'mandataireFirstName',
-    'mandataireLastName',
-    'forTiers',
-    'mandataireBlock',
-    'beneficiaireNotificationBlock',
-    'email',
-    'notificationMethod',
-    'mandataireTitle',
-    'beneficiaireTitle',
-    'emailInput'
-  ];
+  static targets = ['emailContainer', 'emailInput', 'notificationMethod'];
 
-  declare mandataireFirstNameTarget: HTMLInputElement;
-  declare mandataireLastNameTarget: HTMLInputElement;
-  declare forTiersTargets: NodeListOf<HTMLInputElement>;
-  declare mandataireBlockTarget: HTMLElement;
-  declare beneficiaireNotificationBlockTarget: HTMLElement;
   declare notificationMethodTargets: NodeListOf<HTMLInputElement>;
-  declare emailTarget: HTMLInputElement;
-  declare mandataireTitleTarget: HTMLElement;
-  declare beneficiaireTitleTarget: HTMLElement;
-  declare emailInput: HTMLInputElement;
+  declare emailContainerTarget: HTMLElement;
+  declare emailInputTarget: HTMLInputElement;
 
-  connect() {
-    const emailInputElement = this.emailTarget.querySelector('input');
-    if (emailInputElement) {
-      this.emailInput = emailInputElement;
-    }
-    this.toggleFieldRequirements();
-    this.addAllEventListeners();
-  }
-
-  addAllEventListeners() {
-    this.forTiersTargets.forEach((radio) => {
-      radio.addEventListener('change', () => this.toggleFieldRequirements());
-    });
-    this.notificationMethodTargets.forEach((radio) => {
-      radio.addEventListener('change', () => this.toggleEmailInput());
-    });
-  }
-
-  toggleFieldRequirements() {
-    const forTiersSelected = this.isForTiersSelected();
-    this.toggleDisplay(this.mandataireBlockTarget, forTiersSelected);
-    this.toggleDisplay(
-      this.beneficiaireNotificationBlockTarget,
-      forTiersSelected
-    );
-    this.mandataireFirstNameTarget.required = forTiersSelected;
-    this.mandataireLastNameTarget.required = forTiersSelected;
-    this.mandataireTitleTarget.classList.toggle('hidden', forTiersSelected);
-    this.beneficiaireTitleTarget.classList.toggle('hidden', !forTiersSelected);
-    this.notificationMethodTargets.forEach((radio) => {
-      radio.required = forTiersSelected;
-    });
-
-    this.toggleEmailInput();
-  }
-
-  isForTiersSelected() {
-    return Array.from(this.forTiersTargets).some(
-      (radio) => radio.checked && radio.value === 'true'
-    );
-  }
-
-  toggleDisplay(element: HTMLElement, shouldDisplay: boolean) {
-    element.classList.toggle('hidden', !shouldDisplay);
-  }
   toggleEmailInput() {
     const isEmailSelected = this.isEmailSelected();
-    const forTiersSelected = this.isForTiersSelected();
 
-    if (this.emailInput) {
-      this.emailInput.required = forTiersSelected && isEmailSelected;
+    toggle(this.emailContainerTarget, isEmailSelected);
 
-      if (!isEmailSelected) {
-        this.emailInput.value = '';
-      }
-
-      this.toggleDisplay(this.emailTarget, forTiersSelected && isEmailSelected);
+    if (isEmailSelected) {
+      onVisibleEnableInputs(this.emailInputTarget);
+    } else {
+      onHiddenDisableInputs(this.emailInputTarget);
     }
   }
 

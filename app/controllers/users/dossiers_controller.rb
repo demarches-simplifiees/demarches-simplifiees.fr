@@ -135,6 +135,13 @@ module Users
       @dossier = dossier
       @user = current_user
       @no_description = true
+
+      respond_to do |format|
+        format.html
+        format.turbo_stream do
+          @dossier.update_columns(params.require(:dossier).permit(:for_tiers).to_h)
+        end
+      end
     end
 
     def update_identite

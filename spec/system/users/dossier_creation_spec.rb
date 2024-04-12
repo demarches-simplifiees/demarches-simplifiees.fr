@@ -28,7 +28,9 @@ describe 'Creating a new dossier:', js: true do
 
       shared_examples 'the user can create a new draft' do
         it do
-          click_button('Continuer')
+          within "#identite-form" do
+            click_button('Continuer')
+          end
 
           expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
           expect(user.dossiers.first.individual.birthdate).to eq(expected_birthday)
@@ -58,7 +60,6 @@ describe 'Creating a new dossier:', js: true do
       context 'when individual fill dossier for a tiers' do
         it 'completes the form with email notification method selected' do
           find('label', text: 'Pour un bénéficiaire : membre de la famille, proche, mandant, professionnel en charge du suivi du dossier…').click
-
           within('.mandataire-infos') do
             fill_in('Prénom', with: 'John')
             fill_in('Nom', with: 'Doe')
@@ -73,7 +74,15 @@ describe 'Creating a new dossier:', js: true do
 
           find('label', text: 'Par e-mail').click
           fill_in('dossier_individual_attributes_email', with: 'prenom.nom@mail.com')
-          click_button('Continuer')
+          find('label', text: 'Monsieur').click # force focus out
+          within "#identite-form" do
+            within '.suspect-email' do
+              expect(page).to have_content("Information : Voulez-vous dire ?")
+              click_button("Oui")
+            end
+            click_button("Continuer")
+          end
+
           expect(procedure.dossiers.last.individual.notification_method == 'email')
           expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
         end
@@ -93,7 +102,10 @@ describe 'Creating a new dossier:', js: true do
           end
 
           find('label', text: 'Pas de notification').click
-          click_button('Continuer')
+          within "#identite-form" do
+            click_button('Continuer')
+          end
+
           expect(procedure.dossiers.last.individual.notification_method.empty?)
           expect(page).to have_current_path(brouillon_dossier_path(procedure.dossiers.last))
         end
