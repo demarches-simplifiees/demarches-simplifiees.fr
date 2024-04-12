@@ -40,7 +40,7 @@ version: '3.3'
 services:
   app:
     image: ${IMAGE}:${TAG:-latest}
-    container_name: app-${ENV:-dev}
+    container_name: app
     restart: always
     ports:
       - ${PORT}:3000
@@ -124,6 +124,7 @@ services:
       - MICROSOFT_CLIENT_SECRET
       - OTP_SECRET_KEY
       - PROCEDURE_DEFAULT_LOGO_SRC
+      - REDIS_URL=redis://redis:6379/0
       - RUBY_YJIT_ENABLE
       - S3_ACCESS_KEY
       - S3_BUCKET
@@ -160,14 +161,18 @@ services:
       - md-logo-downloads:/app/public/downloads
     networks:
       - md-network
+    depends_on:
+      - clamav
+      - worker
+      - sidekiq
 
   worker:
     image: ${IMAGE}:${TAG}
     entrypoint: []
     command: app/lib/worker.sh
-    container_name: worker-${ENV:-dev}
+    container_name: worker
     restart: always
-    environment:
+    environment: &worker_env
       - ACTIVE_STORAGE_SERVICE
       - API_ADRESSE_URL
       - API_COJO_URL
@@ -209,6 +214,7 @@ services:
       - MAILCATCHER_HOST
       - MAILCATCHER_PORT
       - PROCEDURE_DEFAULT_LOGO_SRC
+      - REDIS_URL=redis://redis:6379/0
       - RUBY_YJIT_ENABLE
       - S3_ACCESS_KEY
       - S3_BUCKET
@@ -235,14 +241,31 @@ services:
 
   clamav:
     image: matau/clamav
-    container_name: clamav-${ENV:-dev}
+    container_name: clamav
     restart: always
-    ports:
-      - 3310:3310
     volumes:
       - clamav-db:/data
       - clamav-logs:/var/log/clamav
       - md-root-tmp:/tmp
+    networks:
+      - md-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    command: redis-server --save 3600 1 --appendonly yes
+    volumes:
+      - md-redis:/data
+    networks:
+      - md-network
+
+  sidekiq:
+    image: ${IMAGE}:${TAG}
+    container_name: sidekiq
+    command: bundle exec sidekiq -q default -q low_priority -q expires
+    depends_on:
+      - redis
+    environment: *worker_env
     networks:
       - md-network
 
@@ -252,6 +275,12 @@ volumes:
     driver_opts:
       type: none
       device: $ROOT/data
+      o: bind
+  md-redis:
+    driver: local
+    driver_opts:
+      type: none
+      device: $ROOT/redis
       o: bind
   md-logo-uploads:
     driver: local
