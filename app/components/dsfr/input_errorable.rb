@@ -111,7 +111,11 @@ module Dsfr
       end
 
       def default_hint
-        I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+        if I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+          I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+        elsif I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html")
+          I18n.t("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html").html_safe
+        end
       end
 
       def password?
@@ -129,7 +133,10 @@ module Dsfr
       def hint?
         return true if get_slot(:hint).present?
 
-        I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+        maybe_hint = I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}")
+        maybe_hint_html = I18n.exists?("activerecord.attributes.#{object.class.name.underscore}.hints.#{@attribute}_html")
+
+        maybe_hint || maybe_hint_html
       end
     end
   end
