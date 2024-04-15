@@ -94,19 +94,29 @@
       À qui s’adresse ma démarche ?
       %span.fr-hint-text Si votre démarche s’adresse indifféremment à une personne morale ou un particulier, choisissez l'option « Particuliers ». Vous pourrez ajouter un champ SIRET directement dans le formulaire.
     .fr-fieldset__element
-      .fr-radio-group
+      .fr-radio-group.fr-radio-rich
         = f.radio_button :for_individual, true
         = f.label :for_individual, value: true, class: "fr-label" do
           Ma démarche s’adresse à un particulier
           %span.fr-hint-text En choisissant cette option, l’usager devra renseigner son nom et prénom avant d’accéder au formulaire
+        .fr-radio-rich__img
+          %svg.fr-artwork{ aria_hidden: "true", viewBox: "0 0 80 80", width: "80px", height: "80px" }
+            %use.fr-artwork-decorative{ href: image_path("pictograms/digital/avatar.svg#artwork-decorative") }
+            %use.fr-artwork-minor{ href: image_path("pictograms/digital/avatar.svg#artwork-minor") }
+            %use.fr-artwork-major{ href: image_path("pictograms/digital/avatar.svg#artwork-major") }
 
     .fr-fieldset__element
-      .fr-radio-group
+      .fr-radio-group.fr-radio-rich
         = f.radio_button :for_individual, false
         = f.label :for_individual, value: false, class: 'fr-label' do
           Ma démarche s’adresse à une personne morale
           %span.fr-hint-text
             En choisissant cette option, l’usager devra renseigner son n° SIRET.<br>Grâce à l’API Entreprise, les informations sur la personne morale (raison sociale, adresse du siège, etc.) seront automatiquement renseignées.
+        .fr-radio-rich__img
+          %svg.fr-artwork{ aria_hidden: "true", viewBox: "0 0 80 80", width: "80px", height: "80px" }
+            %use.fr-artwork-decorative{ href: image_path("pictograms/buildings/school.svg#artwork-decorative") }
+            %use.fr-artwork-minor{ href: image_path("pictograms/buildings/school.svg#artwork-minor") }
+            %use.fr-artwork-major{ href: image_path("pictograms/buildings/school.svg#artwork-major") }
 
 %fieldset.fr-fieldset
   .fr-fieldset__element
