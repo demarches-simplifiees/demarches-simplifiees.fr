@@ -130,5 +130,17 @@ describe APIGeoService do
 
       it { is_expected.to eq('Paris') }
     end
+
+    context 'with blank department' do
+      let(:department_code) { '' }
+
+      it { is_expected.to eq('Paris') }
+    end
+
+    context 'with blank city_code' do
+      let(:city_code) { '' }
+
+      it { is_expected.to eq('Paris') }
+    end
   end
 end
