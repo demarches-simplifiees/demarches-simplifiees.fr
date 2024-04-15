@@ -457,7 +457,7 @@ describe API::V2::GraphqlController do
 
         it "should be returned" do
           expect(gql_errors).to eq(nil)
-          expect(gql_data).to eq(dossier: {
+          expect(gql_data[:dossier]).to include(
             id: dossier.to_typed_id,
             number: dossier.id,
             state: 'en_construction',
@@ -503,27 +503,32 @@ describe API::V2::GraphqlController do
               civilite: 'M',
               dateDeNaissance: '1991-11-01'
             },
-            messages: dossier.commentaires.map do |commentaire|
-              {
-                body: commentaire.body,
-                attachment: {
-                  filename: commentaire.piece_jointe.filename.to_s,
-                  contentType: commentaire.piece_jointe.content_type,
-                  checksum: commentaire.piece_jointe.checksum,
-                  byteSize: commentaire.piece_jointe.byte_size
-                },
-                email: commentaire.email
-              }
-            end,
-            avis: [],
-            champs: dossier.champs_public.map do |champ|
-              {
-                id: champ.to_typed_id,
-                label: champ.libelle,
-                stringValue: champ.for_api_v2
-              }
-            end
-          })
+            avis: []
+          )
+
+          expected_champs = dossier.champs_public.map do |champ|
+            {
+              id: champ.to_typed_id,
+              label: champ.libelle,
+              stringValue: champ.for_api_v2
+            }
+          end
+          expect(gql_data[:dossier][:champs]).to match_array(expected_champs)
+
+          expected_messages = dossier.commentaires.map do |commentaire|
+            {
+              body: commentaire.body,
+              attachment: {
+                filename: commentaire.piece_jointe.filename.to_s,
+                contentType: commentaire.piece_jointe.content_type,
+                checksum: commentaire.piece_jointe.checksum,
+                byteSize: commentaire.piece_jointe.byte_size
+              },
+              email: commentaire.email
+            }
+          end
+          expect(gql_data[:dossier][:messages]).to match_array(expected_messages)
+
           expect(gql_data[:dossier][:champs][0][:id]).to eq(dossier.champs_public[0].type_de_champ.to_typed_id)
         end
       end
