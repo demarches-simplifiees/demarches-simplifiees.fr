@@ -430,22 +430,6 @@ class ApplicationController < ActionController::Base
     controller_instance.try(:nav_bar_profile)
   end
 
-  # Extract a value from params based on the "path"
-  #
-  # params: { dossiers: { champs_public_attributes: { 1234 => { value: "hello" } } } }
-  #
-  # Usage: read_param_value("dossiers[champs_public_attributes][1234]", "value")
-  def read_param_value(path, name)
-    parts = path.split(/\[|\]\[|\]/) + [name]
-    parts.reduce(params) do |value, part|
-      if part.to_i != 0
-        value[part.to_i] || value[part]
-      else
-        value[part]
-      end
-    end
-  end
-
   def cast_bool(value)
     ActiveRecord::Type::Boolean.new.deserialize(value)
   end
