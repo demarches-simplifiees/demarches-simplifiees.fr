@@ -18,13 +18,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid var(--border-default-grey);
+    background-color: var(--border-default-grey);
 
     img {
       position: relative;
       z-index: 1;
     }
 
-    .fr-icon-eye {
+    .fr-btn {
       position: absolute;
       z-index: 10;
       background-color: var(--background-default-grey);
@@ -48,7 +50,7 @@
   flex-wrap: wrap;
 
   .gallery-item {
-    margin: 1.5rem 2rem;
+    margin: 0 2rem 1.5rem 0;
   }
 
   img {
@@ -61,10 +63,6 @@
   img {
     height: 150px;
     width: 150px;
-  }
-
-  .gallery-item {
-    margin-bottom: 2rem;
   }
 
   .fr-download {
