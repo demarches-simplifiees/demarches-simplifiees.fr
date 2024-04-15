@@ -13,5 +13,5 @@
       = render Attachment::MultipleComponent.new(attached_file: commentaire.piece_jointe)
       %ul{ data: { 'file-input-reset-target': 'fileList' } }
 
-    .fr-mt-3w
-      = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
+  .fr-mt-3w
+    = f.submit t('views.shared.dossiers.messages.form.send_message'), class: 'fr-btn', data: { disable: true }
