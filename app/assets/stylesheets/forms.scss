@@ -2,11 +2,6 @@
 @import "colors";
 @import "placeholders";
 
-.fr-input-group,
-.fr-select-group {
-  margin-bottom: 1rem;
-}
-
 .form {
   input.unstyled {
     padding: 0 !important;
@@ -23,6 +18,11 @@
   .placeholder {
     color: $dark-grey;
     font-style: italic;
+  }
+
+  .fr-input-group,
+  .fr-select-group {
+    margin-bottom: 1rem;
   }
 
   .section-2 {
