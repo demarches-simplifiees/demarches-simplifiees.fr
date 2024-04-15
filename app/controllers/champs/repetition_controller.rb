@@ -6,7 +6,7 @@ class Champs::RepetitionController < ApplicationController
     row = @champ.add_row(@champ.dossier.revision)
     @first_champ_id = row.map(&:focusable_input_id).compact.first
     @row_id = row.first&.row_id
-    @row_number = @champ.row_ids.find_index(@row_id) + 1
+    @row_number = @row_id.nil? ? 0 : @champ.row_ids.find_index(@row_id) + 1
   end
 
   def remove
