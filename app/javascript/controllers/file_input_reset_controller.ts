@@ -25,15 +25,13 @@ export class FileInputResetController extends ApplicationController {
 
     Array.from(files).forEach((file, index) => {
       const container = document.createElement('li');
-      container.style.display = 'flex';
-      container.style.alignItems = 'center';
+      container.classList.add('flex', 'flex-gap-2', 'fr-mb-1w');
 
       const deleteButton = this.createDeleteButton(deleteLabel, index);
       container.appendChild(deleteButton);
 
       const listItem = document.createElement('div');
       listItem.textContent = file.name;
-      listItem.style.marginLeft = '8px';
 
       container.appendChild(listItem);
       this.fileListTarget.appendChild(container);

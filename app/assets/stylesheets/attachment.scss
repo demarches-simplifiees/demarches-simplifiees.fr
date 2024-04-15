@@ -49,9 +49,8 @@
   }
 }
 
-.attachment-multiple.fr-downloads-group.destroyable {
-  ul {
-    list-style-type: none;
-    padding-inline-start: 0;
-  }
+.attachment-multiple.fr-downloads-group.destroyable ul,
+ul[data-file-input-reset-target='fileList'] {
+  list-style-type: none;
+  padding-inline-start: 0;
 }
