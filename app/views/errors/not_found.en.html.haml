@@ -1,0 +1,20 @@
+%main#content{ role: "main" }
+  .fr-container
+    .fr-my-7w.fr-mt-md-12w.fr-mb-md-10w.fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.fr-grid-row--center
+      .fr-py-0.fr-col-12.fr-col-md-6
+        %h1 Page not found
+        %p.fr-text--sm.fr-mb-3w Error 404
+        %p.fr-text--lead.fr-mb-3w The page you are looking for cannot be found. We apologize for the inconvenience.
+        %p.fr-text--sm.fr-mb-5w
+          If you typed the web address in the browser, check that it is correct. The page may no longer be available.
+          %br
+          In this case, to continue your visit you can check our homepage.
+          %br
+          Otherwise, contact us so we can direct you to the correct information.
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to("Homepage", root_path, class: "fr-btn")
+          %li
+            = link_to("Contact us", contact_path, class: "fr-btn fr-btn--secondary")
+
+      = render partial: "artwork"

@@ -419,6 +419,17 @@ class ApplicationController < ActionController::Base
     prepend_view_path "app/custom_views"
   end
 
+  def try_nav_bar_profile_from_referrer
+    # detect context from referer, simple (no detection when refreshing the page)
+    params = Rails.application.routes.recognize_path(request&.referer)
+
+    controller_class = "#{params[:controller].camelize}Controller".safe_constantize
+    return if controller_class.nil?
+
+    controller_instance = controller_class.new
+    controller_instance.try(:nav_bar_profile)
+  end
+
   # Extract a value from params based on the "path"
   #
   # params: { dossiers: { champs_public_attributes: { 1234 => { value: "hello" } } } }

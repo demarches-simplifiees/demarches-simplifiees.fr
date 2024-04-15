@@ -1,0 +1,19 @@
+%main#content{ role: "main" }
+  .fr-container
+    .fr-my-7w.fr-mt-md-12w.fr-mb-md-10w.fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.fr-grid-row--center
+      .fr-py-0.fr-col-12.fr-col-md-6
+        %h1 Erreur inattendue
+        %p.fr-text--sm.fr-mb-3w Erreur 500
+        %p.fr-text--lead.fr-mb-3w
+          Désolé, une erreur est survenue. Nos équipes ont été averties
+          pour résoudre le problème le plus rapidement possible.
+        %p.fr-text--sm.fr-mb-5w
+          Essayez de rafraîchir la page ou réessayez un peu plus tard.
+          %br
+          Si le problème persiste, merci de nous contacter.
+
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to("Contactez-nous", contact_path, class: "fr-btn fr-btn--secondary")
+
+      = render partial: "artwork"
