@@ -43,6 +43,8 @@
         = t('.max_file_size', max_file_size: number_to_human_size(max_file_size))
       - if allowed_formats.present?
         = t('.allowed_formats', formats: allowed_formats.join(', '))
+      - if as_multiple?
+        = t('.multiple_files')
 
   - if !persisted? || champ.present? && champ.titre_identite?
     = file_field(champ, field_name, **file_field_options)
