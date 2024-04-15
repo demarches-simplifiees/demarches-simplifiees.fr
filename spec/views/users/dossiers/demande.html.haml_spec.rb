@@ -75,6 +75,7 @@ describe 'users/dossiers/demande', type: :view do
     it 'display information about accuse de lecture and not the motivation' do
       expect(rendered).to have_text('Cette démarche est soumise à un accusé de lecture.')
       expect(rendered).not_to have_text('Motivation')
+      expect(rendered).not_to have_text('L’usager n’a pas encore pris connaissance de la décision concernant son dossier')
     end
   end
 end

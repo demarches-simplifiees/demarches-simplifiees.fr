@@ -173,4 +173,32 @@ describe 'instructeurs/dossiers/show', type: :view do
       end
     end
   end
+
+  describe 'accuse de lecture ' do
+    context 'dossier not termine' do
+      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :accuse_lecture)) }
+
+      it 'does not display a text about accuse de lecture for instructeur' do
+        expect(subject).not_to have_text('Cette démarche est soumise à un accusé de lecture')
+      end
+    end
+
+    context 'dossier termine with accuse de lecture not accepted by user' do
+      let(:dossier) { create(:dossier, :accepte, procedure: create(:procedure, :accuse_lecture)) }
+
+      it 'displays a text about accuse de lecture for instructeur' do
+        expect(subject).to have_text('Cette démarche est soumise à un accusé de lecture')
+        expect(subject).to have_text('L’usager n’a pas encore pris connaissance de la décision concernant son dossier')
+      end
+    end
+
+    context 'dossier termine with accuse de lecture accepted by user' do
+      let(:dossier) { create(:dossier, :accepte, accuse_lecture_agreement_at: Time.zone.now, procedure: create(:procedure, :accuse_lecture)) }
+
+      it 'displays a text about accuse de lecture for instructeur' do
+        expect(subject).to have_text('Cette démarche est soumise à un accusé de lecture')
+        expect(subject).to have_text('L’usager a pris connaissance de la décision concernant son dossier le')
+      end
+    end
+  end
 end

@@ -1184,6 +1184,10 @@ class Dossier < ApplicationRecord
     procedure.accuse_lecture? && termine? && accuse_lecture_agreement_at.blank?
   end
 
+  def termine_and_accuse_lecture?
+    procedure.accuse_lecture? && termine?
+  end
+
   private
 
   def champs_by_public_id
