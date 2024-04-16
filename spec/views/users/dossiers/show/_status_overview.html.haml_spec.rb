@@ -92,4 +92,12 @@ describe 'users/dossiers/show/_status_overview', type: :view do
     it { is_expected.to have_selector('.status-explanation .sans-suite') }
     it { is_expected.to have_text(dossier.motivation) }
   end
+
+  context 'when terminé but the procedure has an accuse de lecture' do
+    let(:dossier) { create(:dossier, :sans_suite, :with_motivation, procedure: create(:procedure, :accuse_lecture)) }
+
+    it { is_expected.not_to have_selector('.status-explanation .sans-suite') }
+    it { is_expected.not_to have_text(dossier.motivation) }
+    it { is_expected.to have_text('Cette démarche est soumise à un accusé de lecture.') }
+  end
 end

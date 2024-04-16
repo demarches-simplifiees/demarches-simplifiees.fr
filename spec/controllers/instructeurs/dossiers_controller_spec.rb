@@ -6,7 +6,9 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:administration) { create(:administration) }
   let(:instructeurs) { [instructeur] }
   let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs) }
+  let(:procedure_accuse_lecture) { create(:procedure, :published, :for_individual, :accuse_lecture, instructeurs: instructeurs) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
+  let(:dossier_accuse_lecture) { create(:dossier, :en_construction, :with_individual, procedure: procedure_accuse_lecture) }
   let(:dossier_for_tiers) { create(:dossier, :en_construction, :for_tiers_with_notification, procedure: procedure) }
   let(:dossier_for_tiers_without_notif) { create(:dossier, :en_construction, :for_tiers_without_notification, procedure: procedure) }
   let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
@@ -372,6 +374,34 @@ describe Instructeurs::DossiersController, type: :controller do
 
         it 'only one email is sent' do
           expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(1)
+        end
+      end
+    end
+
+    context "with accuse de lecture procedure" do
+      before do
+        dossier_accuse_lecture.passer_en_instruction!(instructeur: instructeur)
+        sign_in(instructeur.user)
+      end
+      context 'with classer_sans_suite' do
+        subject { post :terminer, params: { process_action: "classer_sans_suite", procedure_id: procedure_accuse_lecture.id, dossier_id: dossier_accuse_lecture.id }, format: :turbo_stream }
+
+        it 'Notification accuse de lecture email is sent and not the others' do
+          expect(NotificationMailer).to receive(:send_accuse_lecture_notification)
+            .with(dossier_accuse_lecture).and_return(NotificationMailer)
+          expect(NotificationMailer).to receive(:deliver_later)
+
+          expect(NotificationMailer).not_to receive(:send_sans_suite_notification)
+            .with(dossier_accuse_lecture)
+
+          subject
+        end
+
+        it { expect(subject.body).to include('header-top') }
+
+        it 'creates a commentaire' do
+          expect { subject }.to change { Commentaire.count }.by(1)
+          expect(dossier_accuse_lecture.commentaires.last.body).to eq("<p>Bonjour,</p><p>Nous vous informons qu'une décision sur votre dossier a été rendue.</p>Cordialement,<br>#{procedure_accuse_lecture.service.nom}")
         end
       end
     end

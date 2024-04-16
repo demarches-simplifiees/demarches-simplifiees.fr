@@ -3,7 +3,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -276,6 +276,13 @@ module Administrateurs
       render 'monavis'
     end
 
+    def accuse_lecture
+    end
+
+    def update_accuse_lecture
+      @procedure.update!(procedure_params)
+    end
+
     def jeton
     end
 
@@ -515,6 +522,7 @@ module Administrateurs
         :logo,
         :auto_archive_on,
         :monavis_embed,
+        :accuse_lecture,
         :api_entreprise_token,
         :duree_conservation_dossiers_dans_ds,
         { zone_ids: [] },

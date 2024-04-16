@@ -9,18 +9,22 @@
     .fr-highlight
       %p.fr-text--sm.fr-text-mention--grey Sauf mention contraire, les champs ont été saisis à la date du dépôt du dossier.
 
-  - if dossier.justificatif_motivation.attached?
-    = render Dossiers::RowShowComponent.new(label: "Justificatif") do |c|
-      - c.with_value do
-        .action
-          = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
+  - if profile == 'usager' && dossier.hide_info_with_accuse_lecture?
+    = render Dossiers::AccuseLectureComponent.new(dossier: dossier)
 
-  - if dossier.motivation.present?
-    = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
-      - c.with_value do
-        = simple_format dossier.motivation
+  - else
+    - if dossier.justificatif_motivation.attached?
+      = render Dossiers::RowShowComponent.new(label: "Justificatif") do |c|
+        - c.with_value do
+          .action
+            = render Attachment::ShowComponent.new(attachment: dossier.justificatif_motivation.attachment)
 
-  - if dossier.attestation.present? && dossier.attestation.pdf.attached?
-    = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
-      - c.with_value do
-        = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))
+    - if dossier.motivation.present?
+      = render Dossiers::RowShowComponent.new(label: "Motivation") do |c|
+        - c.with_value do
+          = simple_format dossier.motivation
+
+    - if dossier.attestation.present? && dossier.attestation.pdf.attached?
+      = render Dossiers::RowShowComponent.new(label: "Attestation") do |c|
+        - c.with_value do
+          = render Dsfr::DownloadComponent.new(attachment: dossier.attestation.pdf, name: t(:download_attestation, scope: [:views, :shared, :dossiers, :form]))

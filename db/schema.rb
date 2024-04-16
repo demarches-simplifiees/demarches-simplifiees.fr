@@ -442,6 +442,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
   end
 
   create_table "dossiers", id: :serial, force: :cascade do |t|
+    t.date "accuse_lecture_agreement_at"
     t.string "api_entreprise_job_exceptions", array: true
     t.boolean "archived", default: false
     t.datetime "archived_at", precision: nil
@@ -857,6 +858,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
 
   create_table "procedures", id: :serial, force: :cascade do |t|
     t.string "aasm_state", default: "brouillon"
+    t.boolean "accuse_lecture", default: false, null: false
     t.boolean "allow_expert_messaging", default: true, null: false
     t.boolean "allow_expert_review", default: true, null: false
     t.string "api_entreprise_token"

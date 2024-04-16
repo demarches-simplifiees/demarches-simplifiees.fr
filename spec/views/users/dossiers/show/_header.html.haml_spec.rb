@@ -18,6 +18,26 @@ describe 'users/dossiers/show/header', type: :view do
     expect(rendered).to have_link("Demande", href: demande_dossier_path(dossier))
   end
 
+  context "when the procedure is with accuse de lecture with a dossier en construction" do
+    let(:procedure) { create(:procedure, :accuse_lecture) }
+    let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+
+    it "affiche les informations du dossier" do
+      expect(rendered).to have_text("Dossier nº #{dossier.id}")
+      expect(rendered).to have_text("en construction")
+    end
+  end
+
+  context "when the procedure is with accuse de lecture with a dossier termine" do
+    let(:procedure) { create(:procedure, :accuse_lecture) }
+    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+    it "n'affiche pas les informations de décision" do
+      expect(rendered).to have_text("Dossier nº #{dossier.id}")
+      expect(rendered).to have_text("traité")
+    end
+  end
+
   context "when the procedure is closed with a dossier en construction" do
     let(:procedure) { create(:procedure, :closed) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }

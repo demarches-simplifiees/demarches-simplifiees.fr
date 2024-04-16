@@ -124,6 +124,13 @@ module Users
       @dossier = dossier
     end
 
+    def set_accuse_lecture_agreement_at
+      @dossier = dossier
+      @dossier.update!(accuse_lecture_agreement_at: Time.zone.now)
+      flash.notice = 'Accusé de lecture accepté'
+      redirect_back(fallback_location: demande_dossier_path(@dossier))
+    end
+
     def identite
       @dossier = dossier
       @user = current_user
