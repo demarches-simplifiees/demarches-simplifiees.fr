@@ -4,30 +4,28 @@ class ProcedureExternalURLCheckJob < ApplicationJob
 
     if procedure.lien_notice.present?
       error = procedure.errors.find { _1.attribute == :lien_notice }
-      if error.present?
-        procedure.update!(lien_notice_error: error.message)
-      else
-        response = Typhoeus.get(procedure.lien_notice, followlocation: true)
-        if response.success?
-          procedure.update!(lien_notice_error: nil)
-        else
-          procedure.update!(lien_notice_error: "#{response.code} #{response.return_message}")
-        end
-      end
+
+      procedure.lien_notice_error = check_for_error(error, procedure.lien_notice)
+      procedure.save!(validate: false) # others errors may prevent save if validate
     end
 
     if procedure.lien_dpo.present? && !procedure.lien_dpo_email?
       error = procedure.errors.find { _1.attribute == :lien_dpo }
-      if error.present?
-        procedure.update!(lien_dpo_error: error.message)
-      else
-        response = Typhoeus.get(procedure.lien_dpo, followlocation: true)
-        if response.success?
-          procedure.update!(lien_dpo_error: nil)
-        else
-          procedure.update!(lien_dpo_error: "#{response.code} #{response.return_message}")
-        end
-      end
+
+      procedure.lien_dpo_error = check_for_error(error, procedure.lien_dpo)
+      procedure.save!(validate: false)
     end
+  end
+
+  private
+
+  def check_for_error(error, url)
+    return error.message if error.present?
+
+    response = Typhoeus.get(url, followlocation: true)
+
+    return if response.success?
+
+    "#{response.code} #{response.return_message}"
   end
 end

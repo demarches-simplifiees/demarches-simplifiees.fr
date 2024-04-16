@@ -13,5 +13,9 @@ if Rails.env.production? && sidekiq_enabled
     class DossierRebaseJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class ProcedureExternalURLCheckJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
