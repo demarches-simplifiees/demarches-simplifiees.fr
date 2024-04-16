@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_15_192417) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1146,16 +1146,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
     t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
-  end
-
-  create_table "virus_scans", force: :cascade do |t|
-    t.string "blob_key"
-    t.bigint "champ_id"
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "scanned_at", precision: nil
-    t.string "status"
-    t.datetime "updated_at", precision: nil, null: false
-    t.index ["champ_id"], name: "index_virus_scans_on_champ_id"
   end
 
   create_table "without_continuation_mails", id: :serial, force: :cascade do |t|

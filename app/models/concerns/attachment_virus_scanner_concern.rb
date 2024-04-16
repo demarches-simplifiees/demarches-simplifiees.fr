@@ -15,6 +15,13 @@ module AttachmentVirusScannerConcern
   private
 
   def scan_for_virus_later
-    blob&.scan_for_virus_later
+    return if blob.nil?
+
+    # do not scan if the blob is already marked as safe
+    # usually because of metadata[:virus_scan_result] = ActiveStorage::VirusScanner::SAFE
+    # added on a blob built by the application itself
+    return if blob.virus_scan_result == ActiveStorage::VirusScanner::SAFE
+
+    blob.scan_for_virus_later
   end
 end
