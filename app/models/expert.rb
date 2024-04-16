@@ -29,6 +29,14 @@ class Expert < ApplicationRecord
     end
   end
 
+  def self.autocomplete_mails(procedure)
+    if procedure.experts_require_administrateur_invitation?
+      procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
+    else
+      procedure.experts.map(&:email).sort
+    end
+  end
+
   def merge(old_expert)
     return if old_expert.nil?
 
