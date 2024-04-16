@@ -2,7 +2,7 @@
 @import "colors";
 @import "placeholders";
 
-.form {
+.form { // kiki
   ul {
     list-style-type: square;
     list-style-position: outside;
@@ -284,10 +284,11 @@
   .fr-label .fr-hint-text > *,
   .fr-fieldset__legend .fr-hint-text > * {
     // la description d'un champ peut contenir du markup (markdown->html),
-    // on herite donc la fontsize/mrgin/padding du fr-hint-text
-    font-size: inherit;
+    // on herite donc la fontsize/margin/padding du fr-hint-text
     margin: inherit;
-    // disabled for pf to allow ul/ol tags to work
+    // pf padding disabled to let sub ul/ol work & bigger fr-hint-text
+    // font-size: inherit;
+    font-size: 14px;
     // padding: inherit;
   }
 

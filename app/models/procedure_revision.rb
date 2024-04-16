@@ -333,43 +333,35 @@ class ProcedureRevision < ApplicationRecord
         from_type_de_champ.condition&.to_s(from_coordinates.map(&:type_de_champ)),
         to_type_de_champ.condition&.to_s(to_coordinates.map(&:type_de_champ)))
     end
-    if to_type_de_champ.visa?
-      if from_type_de_champ.accredited_user_list != to_type_de_champ.accredited_user_list
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-          :accredited_user_list,
-          from_type_de_champ.accredited_user_list,
-          to_type_de_champ.accredited_user_list)
-      end
-    end
-    if to_type_de_champ.integer_number? || to_type_de_champ.decimal_number?
-      if from_type_de_champ.min != to_type_de_champ.min
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-                                                            :min,
-                                                            from_type_de_champ.min,
-                                                            to_type_de_champ.min)
-      end
-      if from_type_de_champ.max != to_type_de_champ.max
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-                                                            :max,
-                                                            from_type_de_champ.max,
-                                                            to_type_de_champ.max)
-      end
-    end
-    if to_type_de_champ.date?
-      if from_type_de_champ.min != to_type_de_champ.min
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-                                                            :min,
-                                                            Date.iso8601(from_type_de_champ.min),
-                                                            Date.iso8601(to_type_de_champ.min))
-      end
-      if from_type_de_champ.max != to_type_de_champ.max
-        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
-                                                            :max,
-                                                            Date.iso8601(from_type_de_champ.max),
-                                                            Date.iso8601(to_type_de_champ.max))
-      end
-    end
 
+    if from_type_de_champ.type_champ == to_type_de_champ.type_champ
+      if to_type_de_champ.visa?
+        if from_type_de_champ.accredited_user_list != to_type_de_champ.accredited_user_list
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+            :accredited_user_list,
+            from_type_de_champ.accredited_user_list,
+            to_type_de_champ.accredited_user_list)
+        end
+      end
+      if from_type_de_champ.integer_number? || from_type_de_champ.decimal_number?
+        if from_type_de_champ.min != to_type_de_champ.min
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ, :min, from_type_de_champ.min, to_type_de_champ.min)
+        end
+        if from_type_de_champ.max != to_type_de_champ.max
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ, :max, from_type_de_champ.max, to_type_de_champ.max)
+        end
+      end
+      if from_type_de_champ.date?
+        if from_type_de_champ.min != to_type_de_champ.min
+          to_date = to_type_de_champ.min.present? ? Date.iso8601(to_type_de_champ.min) : ''
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ, :min, nil, to_date)
+        end
+        if from_type_de_champ.max != to_type_de_champ.max
+          to_date = to_type_de_champ.max.present? ? Date.iso8601(to_type_de_champ.max) : ''
+          changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ, :max, nil, to_date)
+        end
+      end
+    end
     if to_type_de_champ.drop_down_list?
       if from_type_de_champ.drop_down_list_options != to_type_de_champ.drop_down_list_options
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,

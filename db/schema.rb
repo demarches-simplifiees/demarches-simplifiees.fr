@@ -274,7 +274,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
     t.string "sender_email"
     t.bigint "sender_id", null: false
     t.string "sender_type", null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "updated_at", null: false
     t.index ["gestionnaire_id"], name: "index_commentaire_groupe_gestionnaires_on_gestionnaire_id"
     t.index ["groupe_gestionnaire_id"], name: "index_commentaire_groupe_gestionnaires_on_groupe_gestionnaire"
   end

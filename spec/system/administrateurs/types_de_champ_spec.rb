@@ -286,6 +286,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
         ]
       end
       let(:initial_first_coordinate_selector) { "##{ActionView::RecordIdentifier.dom_id(initial_first_coordinate, :move_and_morph)}" }
+      let(:initial_second_coordinate_selector) { "##{ActionView::RecordIdentifier.dom_id(initial_second_coordinate, :move_and_morph)}" }
 
       scenario 'root select is empty by default' do
         # at first, select only contains the current coordinate
@@ -305,8 +306,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
           fill_in 'Libellé du champ', with: 'renamed'
         end
         wait_until { initial_first_coordinate.reload.libelle == 'renamed' }
-        # wait until turbo response
-        expect(page).to have_text('Formulaire enregistré')
+        page.find(initial_second_coordinate_selector).click
         page.find(initial_first_coordinate_selector).click
         expect(page).to have_css("#{initial_first_coordinate_selector} option", count: 3)
         expect(page.find(initial_first_coordinate_selector).all("option").map(&:text)).to match_array(['0 renamed', '1 middle_tdc', '2 last_tdc'])
