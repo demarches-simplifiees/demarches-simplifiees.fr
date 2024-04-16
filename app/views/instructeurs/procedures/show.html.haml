@@ -142,7 +142,7 @@
                       %a.cell-link.relative{ href: path }
                         = p.dossier_id
                         - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                          %span.notifications.absolute-right{ 'aria-label': 'notifications' }
+                          %span.notifications{ 'aria-label': 'notifications' }
 
 
                   - p.columns.each do |column|
