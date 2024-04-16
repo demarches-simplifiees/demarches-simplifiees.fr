@@ -9,11 +9,11 @@ title: "Je souhaite obtenir un duplicata CERFA 02 - NEPH"
 
 # Je souhaite obtenir un duplicata CERFA 02 - NEPH
 
-Pour obtenir un duplicata du CERFA 02, rendez-vous sur la page dédiée où vous trouverez les départements qui permettent d’utiliser demarches.gouv.fr pour réactiver son numéro NEPH.
+Pour obtenir un duplicata du CERFA 02, rendez-vous sur la page dédiée où vous trouverez les départements qui permettent d’utiliser %{application_name} pour réactiver son numéro NEPH.
 
 Pour savoir comment remplir votre démarche, vous pouvez consulter le tutoriel usager.
 
-Comme chaque administration choisit d’utiliser cette plateforme ou non, **il n’est pas obligatoire que la démarche recherchée soit dématérialisée sur demarches.gouv.fr**.
+Comme chaque administration choisit d’utiliser cette plateforme ou non, **il n’est pas obligatoire que la démarche recherchée soit dématérialisée sur %{application_name}**.
 En ce sens, nous vous invitons à contacter votre préfecture ou à consulter leur site internet.
 
 *Comme chaque administration choisit d’utiliser cette plateforme ou non, il n’est pas obligatoire que la démarche recherchée soit dématérialisée sur notre site.*

@@ -9,7 +9,7 @@ title: "Comment obtenir un compte administrateur ?"
 
 # Comment obtenir un compte administrateur ?
 
-Pour obtenir un compte administrateur, il suffit d’en faire la demande en déposant un dossier via le lien suivant : [Demande d'inscription à demarches.gouv.fr](https://demarches.gouv.fr/commencer/demande-d-inscription-a-demarches-simplifiees)
+Pour obtenir un compte administrateur, il suffit d’en faire la demande en déposant un dossier via le lien suivant : [Demande d'inscription à %{application_name}](%{application_base_url}/commencer/demande-d-inscription-a-demarches-simplifiees)
 
 Le profil administrateur est le seul profil réservé strictement aux agents publics. Nous vous demandons donc de bien vouloir **faire la demande avec votre adresse mail professionnelle**.
 

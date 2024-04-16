@@ -17,7 +17,7 @@ vous devriez alors le trouver ainsi que le numéro SIRET associé.
 ## Si vous êtes une association
 
 Vous avez sans doute un numéro au Registre National des Associations, mais pas forcément de numéro SIRET.
-Il n’est pour l’instant malheureusement pas possible d’utiliser demarches.gouv.fr avec uniquement un numéro de RNA.
+Il n’est pour l’instant malheureusement pas possible d’utiliser %{application_name} avec uniquement un numéro de RNA.
 
 La demande d’un numéro de SIRET à l’INSEE peut se faire assez simplement par email, en envoyant un message à *sirene-associations@insee.fr*. La procédure est décrite en détail sur cette page, avec un exemple de message-type : [https://www.service-public.fr/associations/vosdroits/F1926](https://www.service-public.fr/associations/vosdroits/F1926)
 

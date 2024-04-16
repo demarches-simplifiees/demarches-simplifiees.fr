@@ -11,9 +11,9 @@ title: "Je veux enregistrer mon formulaire pour le reprendre plus tard"
 
 ## Comment enregistrer mon formulaire ?
 
-Lorsque vous remplissez un formulaire sur demarches.gouv.fr, les informations que vous saisissez sont **enregistrées automatiquement**.
+Lorsque vous remplissez un formulaire sur %{application_name}, les informations que vous saisissez sont **enregistrées automatiquement**.
 
-Si vous souhaitez terminer de remplir le formulaire plus tard, **il suffit de fermer la page du formulaire**. Lorsque vous retournerez sur demarches.gouv.fr, vous pourrez reprendre votre démarche là où vous l’avez laissée.
+Si vous souhaitez terminer de remplir le formulaire plus tard, **il suffit de fermer la page du formulaire**. Lorsque vous retournerez sur %{application_name}, vous pourrez reprendre votre démarche là où vous l’avez laissée.
 
 ![Le formulaire est enregistré automatiquement](faq/usager-form-footer-submit.png)
 
@@ -21,8 +21,8 @@ Si vous souhaitez terminer de remplir le formulaire plus tard, **il suffit de fe
 
 Si vous avez déjà commencé à remplir une démarche, vous pouvez retrouver votre dossier déjà rempli. Pour cela :
 
-1. Connectez-vous à demarches.gouv.fr, utilisez votre identifiant et votre mot de passe, ou bien FranceConnect.
-  ![La page de connexion de demarches.gouv.fr](faq/sign-in-page.png)
+1. Connectez-vous à %{application_name}, utilisez votre identifiant et votre mot de passe, ou bien FranceConnect.
+  ![La page de connexion de %{application_name}](faq/sign-in-page.png)
 
 2. Dans [la liste de vos dossiers](/dossiers), **cliquez sur le dossier en brouillon** que vous souhaitez reprendre. Vous pouvez également faire une **recherche par numéro de dossier, mots-clés ou en filtrant par démarches**.
   ![La liste de mes dossiers](faq/usager-dossiers-list.png)

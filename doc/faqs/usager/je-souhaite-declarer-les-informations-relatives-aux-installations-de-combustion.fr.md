@@ -13,4 +13,4 @@ Dans le cadre de l'arrêté du 2 janvier 2019 - JO du 18 janvier 2019 - précisa
 les modalités de recueil de données relatives aux installations
 de combustion moyennes, vous pouvez remplir la démarche suivante : 
 
-[https://demarches.gouv.fr/commencer/installations-de-combustion-moyennes-mcp-recueil-d](/commencer/installations-de-combustion-moyennes-mcp-recueil-d)
+[%{application_base_url}/commencer/installations-de-combustion-moyennes-mcp-recueil-d](/commencer/installations-de-combustion-moyennes-mcp-recueil-d)

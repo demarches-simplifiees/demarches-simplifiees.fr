@@ -9,7 +9,7 @@ title: "Je veux savoir où en est l’instruction de ma démarche"
 
 # Je veux savoir où en est l’instruction de ma démarche
 
-**L’équipe de demarches.gouv.fr n’est pas en mesure de vous renseigner sur l’avancée du traitement de votre dossier**. En effet, nous nous occupons uniquement de la partie technique de la plateforme.
+**L’équipe de %{application_name} n’est pas en mesure de vous renseigner sur l’avancée du traitement de votre dossier**. En effet, nous nous occupons uniquement de la partie technique de la plateforme.
 
 Pour contacter les services en charge de votre démarche, vous pouvez :
 

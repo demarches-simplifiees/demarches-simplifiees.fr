@@ -13,7 +13,7 @@ Tester une démarche est nécessaire avant toute publication. En effet, il s’a
 
 - corriger les erreurs de votre formulaire et de le transmettre à votre délégué à la protection des données
 - vérifier que le processus d’instruction envisagé correspond à vos besoins ainsi que toutes les fonctionnalités associées (emails automatiques, attestations, annotations privées, etc…)
-- préparer votre service et vos usagers à l’utilisation de demarches.gouv.fr.
+- préparer votre service et vos usagers à l’utilisation de %{application_name}.
 
 
 ## Déroulé du test
@@ -28,7 +28,7 @@ Vous pouvez faire tester la partie usager (étape 1) et instructeur (étape 2) p
 
 **Vous pouvez effectuer toutes les modifications que vous souhaitez sur votre démarche pendant cette phase de test.**
 
-Bien évidemment, avant de tester la démarche, il faut l’avoir créé. Pour cela, vous pouvez vous aider de [notre guide de la dématérialisation réussie via demarches.gouv.fr](https://456404736-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-L7_aKvpAJdAIEfxHudA%2Fuploads%2FGJm7S7LVjHPKVlMCE36e%2FGuide%20des%20bonnes%20pratiques%20démarches-simplifiees.pdf?alt=media&token=228e63c7-a168-4656-9cda-3f53a10645c2). Vous pouvez également consulter la documentation [Comment créer une nouvelle démarche](https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-administrateur)
+Bien évidemment, avant de tester la démarche, il faut l’avoir créé. Pour cela, vous pouvez vous aider de [notre guide de la dématérialisation réussie via %{application_name}](https://456404736-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2F-L7_aKvpAJdAIEfxHudA%2Fuploads%2FGJm7S7LVjHPKVlMCE36e%2FGuide%20des%20bonnes%20pratiques%20démarches-simplifiees.pdf?alt=media&token=228e63c7-a168-4656-9cda-3f53a10645c2). Vous pouvez également consulter la documentation [Comment créer une nouvelle démarche](https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-administrateur)
 
 ## Étape 1 : Déposer un dossier de test côté usager
 
@@ -54,7 +54,7 @@ N’hésitez pas à [transmettre le lien vers la démarche test à vos collègue
 
 Vous avez déposé à l’étape précédente un premier dossier. Rendez-vous désormais dans la partie instructeur.
 
-Passez à l’interface instructeur via le lien [https://demarches.gouv.fr/procedures](/procedures) ou en changeant de profil depuis le menu en haut à droite en cliquant sur votre adresse email.
+Passez à l’interface instructeur via le lien [%{application_base_url}/procedures](/procedures) ou en changeant de profil depuis le menu en haut à droite en cliquant sur votre adresse email.
 
 ![Menu pour passer instructeur](faq/administrateur-profile-switch.png)
 
@@ -76,7 +76,7 @@ Vous pourrez ici tester différents éléments secondaires :
 
 - Demande d’**avis externe** (partie instruction) . Pour plus d’information, vous pouvez consulter [notre tutoriel expert invité](https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-expert-invite)
 - **Vérifiez les e-mails** d’accusé de réception, de passage en instruction, d’acceptation, de refus et de classement sans suite (partie usager)
-- Testez la **messagerie du dossier** en envoyant un message à l’usager. Si vous souhaitez anonymiser l’adresse mail des instructeurs dans la messagerie, vous pouvez [nous contacter à l’adresse contact@demarches-simplifiees.fr](mailto:contact@demarches-simplifiees.fr)
+- Testez la **messagerie du dossier** en envoyant un message à l’usager. Si vous souhaitez anonymiser l’adresse mail des instructeurs dans la messagerie, vous pouvez [nous contacter à l’adresse %{contact_email}](mailto:%{contact_email})
 - Si l’**attestation automatique d’acceptation** et la partie annotations privées ont été paramétrées, vérifiez qu’il n’y a pas d’erreur
 
 En cas d’erreur et/ou en fonction des retours de vos collègues suite à la phase de test, vous pouvez modifier la démarche depuis votre profil administrateur.
@@ -99,6 +99,6 @@ Après avoir minutieusement testé votre démarche, il est temps de la rendre ac
 
 5. **Finalisez la publication** en cliquant sur le bouton **« Publier »** situé en bas de l’écran.
 
-Félicitations, vous êtes désormais administrateur d’une démarche publiée sur demarches.gouv.fr !
+Félicitations, vous êtes désormais administrateur d’une démarche publiée sur %{application_name} !
 
 ⚠️ **N’oubliez pas de diffuser le lien** de votre démarche auprès de vos usagers, accessible depuis votre interface administrateur. Ce lien est différent du lien de la démarche test.

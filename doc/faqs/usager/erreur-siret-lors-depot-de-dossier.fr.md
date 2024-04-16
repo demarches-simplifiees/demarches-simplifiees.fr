@@ -1,20 +1,20 @@
 ---
-title: "Erreur SIRET lors d’un dépôt de dossier sur demarches.gouv.fr"
+title: "Erreur SIRET lors d’un dépôt de dossier sur %{application_name}"
 category: usager
 subcategory: dossier_technical_issue
-slug: "erreur-siret-lors-d-un-depot-de-dossier-sur-demarches-gouv-fr"
+slug: "erreur-siret-lors-d-un-depot-de-dossier"
 locale: "fr"
 keywords: "erreur SIRET, dépôt de dossier, numéro SIRET, identification entreprise, URSSAF, INSEE, entreprise.data.gouv.fr"
 ---
 
-# Erreur SIRET lors d’un dépôt de dossier sur demarches.gouv.fr
+# Erreur SIRET lors d’un dépôt de dossier sur %{application_name}
 
-Cet article s’adresse exclusivement aux utilisateurs de demarches.gouv.fr,
+Cet article s’adresse exclusivement aux utilisateurs de %{application_name},
 rencontrant un problème relatif à l’identification par numéro de SIRET lors d’un
 dépôt de dossiers.
 
 Si votre problème n’est pas relatif à l’utilisation de la plateforme
-demarches.gouv.fr, vous pouvez consulter la page suivante :
+%{application_name}, vous pouvez consulter la page suivante :
 [Service-public.fr pour signaler un problème](https://www.service-public.fr/professionnels-entreprises/vosdroits/R17969/signaler-un-probleme)
 
 Si vous rencontrez le message « Erreur SIRET » lorsque vous identifiez votre

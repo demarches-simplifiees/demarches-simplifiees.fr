@@ -11,20 +11,16 @@ title: "Comment trouver ma démarche ?"
 
 ## 1. Trouver le lien de votre démarche
 
-Pour déposer un dossier sur demarches.gouv.fr, il est nécessaire de disposer du lien de la démarche qui vous intéresse. Il ressemble à un lien de cette forme :
+Pour déposer un dossier sur %{application_name}, il est nécessaire de disposer du lien de la démarche qui vous intéresse. Il ressemble à un lien de cette forme :
 
-    https://demarches.gouv.fr/commencer/xxxxxxxxxxxxxx
-
-ou
-
-    https://www.demarches-simplifiees.fr/commencer/xxxxxxxxxxxxxx
+    %{application_base_url}/commencer/xxxxxxxxxxxxxx
 
 
 Ce lien vous est communiqué par l’administration compétente pour votre démarche – généralement sur son site internet, ou par email.
 
 ## 2. Les démarches les plus courantes
 
-Vous trouverez ci-dessous la liste des démarches les plus courantes dématérialisées sur demarches.gouv.fr :
+Vous trouverez ci-dessous la liste des démarches les plus courantes dématérialisées sur %{application_name} :
 
 - [Démarches relatives au permis de conduire](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-au-permis-de-conduire)
 - [Démarches relatives au transporteur](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-au-transporteur)
@@ -32,13 +28,13 @@ Vous trouverez ci-dessous la liste des démarches les plus courantes dématéria
 - [Démarches relatives aux cartes professionnelles de chauffeurs de voiture de tourisme (VTC)](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-aux-cartes-professionnelles-de-chauffeurs-de-voiture-de-tourisme-vtc)
 - [Démarches relatives aux étrangers résidant en France](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-aux-titres-de-sejour-pour-les-etrangers)
 - [Démarches relatives aux médailles d’honneur](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-aux-medailles-dhonneur)
-- [Démarche relative à la consultation du domaine](https://demarches.gouv.fr/commencer/consultation-du-domaine)
+- [Démarche relative à la consultation du domaine](%{application_base_url}/commencer/consultation-du-domaine)
 
 ## 3. Je ne trouve pas le lien pour ma démarche
 
-Si l’administration en charge de votre démarche n’a pas choisi d’utiliser demarches.gouv.fr, vous pouvez vous rendre sur [Service-public.fr](https://www.service-public.fr), qui référence la plupart des démarches administratives.
+Si l’administration en charge de votre démarche n’a pas choisi d’utiliser %{application_name}, vous pouvez vous rendre sur [Service-public.fr](https://www.service-public.fr), qui référence la plupart des démarches administratives.
 
-**Pour être accompagné par un agent ou trouver des lieux d’inclusion numérique**, consultez également :
+**Pour être accompagné par un agent ou trouver des lieux d’inclusion numérique**, consultez également :
 
 - [Service-public.fr](https://www.service-public.fr), site public de renseignement administratif
 - [Cartographie de l’inclusion numérique](https://cartographie.societenumerique.gouv.fr/orientation/besoin) permettant d’orienter les usagers vers les lieux d’inclusion numériques
@@ -46,7 +42,7 @@ Si l’administration en charge de votre démarche n’a pas choisi d’utiliser
 
 ## 4. Compléter un dossier déjà créé
 
-Pour compléter un dossier, [connectez-vous sur votre espace demarches.gouv.fr](/users/sign_in) en renseignant l’adresse email et le mot de passe utilisés lors de la création de votre dossier.
+Pour compléter un dossier, [connectez-vous sur votre espace %{application_name}](/users/sign_in) en renseignant l’adresse email et le mot de passe utilisés lors de la création de votre dossier.
 
 ## 5. Je veux déposer un nouveau dossier
 

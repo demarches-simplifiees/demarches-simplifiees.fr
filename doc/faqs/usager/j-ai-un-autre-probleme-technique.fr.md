@@ -16,7 +16,7 @@ Par exemple, un problème pour vous connecter ; ou une erreur au moment d’enre
 Utilisez notre [page de contact](/contact) pour écrire au support technique.
 Nous ferons de notre mieux pour vous répondre le plus rapidement possible.
 
-**Pour être clair : le support technique ne s’occupe que des questions techniques liées à l’utilisation de demarches.gouv.fr**.
+**Pour être clair : le support technique ne s’occupe que des questions techniques liées à l’utilisation de %{application_name}**.
 Il ne pourra pas répondre aux questions concernant votre dossier ou le traitement de votre demande.
 
 Pour une question administrative, contactez plutôt l’administration en charge de votre dossier,

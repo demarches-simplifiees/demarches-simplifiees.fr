@@ -9,7 +9,7 @@ title: "Je veux contacter le service en charge de ma démarche"
 
 # Je veux contacter le service en charge de ma démarche
 
-**L’équipe de demarches.gouv.fr ne peut pas vous renseigner sur l’avancée du traitement de votre dossier**.
+**L’équipe de %{application_name} ne peut pas vous renseigner sur l’avancée du traitement de votre dossier**.
 
 Pour contacter les services en charge de votre démarche, vous pouvez :
 

@@ -15,7 +15,7 @@ Il se peut que vous ayez déposé votre dossier en utilisant une autre adresse e
 Si c'est le cas, vous avez 3 solutions pour le retrouver :
 
 - Recherchez parmi les emails reçus lors de la création de votre compte ou lors 
-du dépôt de votre dossier sur demarches.gouv.fr. L'adresse email associée à 
+du dépôt de votre dossier sur %{application_name}. L'adresse email associée à 
 votre dossier est mentionnée dans l'entête de ces emails.
 - Consultez le corps de l'attestation de dépôt du dossier, où l'adresse email
 utilisée est également indiquée.

@@ -17,7 +17,7 @@ lui envoyer un email pour lui demander l’accès.
 
 ## Vous ne savez pas qui est l’administrateur de la démarche ?
 
-Si c’est le cas, envoyez un email à [contact@demarches.gouv.fr](mailto:contact@demarches.gouv.fr),
+Si c’est le cas, envoyez un email à [%{contact_email}](mailto:%{contact_email}),
 en décrivant précisément la démarche à laquelle vous voulez
 être affecté (intitulé, organisation, région, ou département…)
 afin que nous puissions retrouver 

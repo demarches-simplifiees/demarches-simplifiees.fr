@@ -16,7 +16,15 @@ class FAQController < ApplicationController
   private
 
   def loader_service
-    @loader_service ||= FAQsLoaderService.new
+    @loader_service ||= begin
+                          substitutions = {
+                            application_base_url: Current.application_base_url,
+                            application_name: Current.application_name,
+                            contact_email: Current.contact_email
+                          }
+
+                          FAQsLoaderService.new(substitutions)
+                        end
   end
 
   def load_faq_data
