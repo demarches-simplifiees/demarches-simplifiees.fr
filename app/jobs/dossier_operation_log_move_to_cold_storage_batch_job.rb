@@ -1,5 +1,5 @@
 class DossierOperationLogMoveToColdStorageBatchJob < ApplicationJob
-  queue_as :low_priority
+  queue_as :low_priority_sub_second_batch
 
   def perform(ids)
     DossierOperationLog.where(id: ids)
