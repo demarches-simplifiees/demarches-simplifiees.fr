@@ -94,4 +94,36 @@ RSpec.describe Expert, type: :model do
       end
     end
   end
+
+  describe '.autocomplete_mails' do
+    subject { Expert.autocomplete_mails(procedure) }
+
+    let(:procedure) { create(:procedure, experts_require_administrateur_invitation: true) }
+    let(:expert) { create(:expert) }
+    let(:revoked_expert) { create(:expert) }
+    let(:unsigned_expert) { create(:expert) }
+    let(:new_unsigned_expert) { create(:expert) }
+
+    before do
+      procedure.experts << expert << revoked_expert << unsigned_expert << new_unsigned_expert
+      ExpertsProcedure.find_by(expert: revoked_expert, procedure: procedure)
+        .update!(revoked_at: 1.day.ago)
+      unsigned_expert.user.update!(last_sign_in_at: nil, created_at: 2.days.ago)
+      new_unsigned_expert.user.update!(last_sign_in_at: nil)
+    end
+
+    context 'when procedure experts need administrateur invitation' do
+      it 'returns only confirmed not revoked experts' do
+        expect(subject).to eq([expert.user.email, new_unsigned_expert.user.email].sort)
+      end
+    end
+
+    context 'when procedure experts can be anyone' do
+      let(:procedure) { create(:procedure, experts_require_administrateur_invitation: false) }
+
+      it 'prefill autocomplete with all confirmed experts in the procedure' do
+        expect(subject).to eq([expert.user.email, revoked_expert.user.email, new_unsigned_expert.user.email].sort)
+      end
+    end
+  end
 end
