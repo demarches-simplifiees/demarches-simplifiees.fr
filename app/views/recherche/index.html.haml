@@ -39,7 +39,7 @@
                 .cell-link.relative
                   = p.dossier_id
                   - if @notifications_dossier_ids.include?(p.dossier_id)
-                    %span.notifications.absolute-right{ 'aria-label': 'notifications' }
+                    %span.notifications{ 'aria-label': 'notifications' }
               %td
                 .cell-link= procedure_libelle
               %td
@@ -55,7 +55,7 @@
                 %a.cell-link.relative{ href: path }
                   = p.dossier_id
                   - if @notifications_dossier_ids.include?(p.dossier_id)
-                    %span.notifications.absolute-right{ 'aria-label': 'notifications' }
+                    %span.notifications{ 'aria-label': 'notifications' }
 
               %td
                 %a.cell-link{ href: path }= procedure_libelle
