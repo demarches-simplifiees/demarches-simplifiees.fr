@@ -33,6 +33,7 @@ class Expert < ApplicationRecord
     experts = Expert
       .joins(:experts_procedures, :user)
       .where(experts_procedures: { procedure: procedure })
+      .where.not(users: { confirmed_at: nil })
 
     if procedure.experts_require_administrateur_invitation?
       experts = experts
