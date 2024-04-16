@@ -30,11 +30,18 @@ class Expert < ApplicationRecord
   end
 
   def self.autocomplete_mails(procedure)
+    experts = Expert
+      .joins(:experts_procedures, :user)
+      .where(experts_procedures: { procedure: procedure })
+
     if procedure.experts_require_administrateur_invitation?
-      procedure.experts_procedures.where(revoked_at: nil).map(&:expert).map(&:email).sort
-    else
-      procedure.experts.map(&:email).sort
+      experts = experts
+        .where(experts_procedures: { revoked_at: nil })
     end
+
+    experts
+      .pluck('users.email')
+      .sort
   end
 
   def merge(old_expert)
