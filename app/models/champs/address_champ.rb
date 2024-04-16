@@ -97,9 +97,13 @@ class Champs::AddressChamp < Champs::TextChamp
   end
 
   def commune_name
-    if full_address?
-      "#{APIGeoService.commune_name(code_departement, address['city_code'])} (#{address['postal_code']})"
-    end
+    return if !full_address?
+
+    commune = APIGeoService.commune_name(code_departement, address['city_code'])
+
+    return commune if address['postal_code'].blank?
+
+    "#{commune} (#{address['postal_code']})"
   end
 
   def commune

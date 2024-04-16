@@ -53,4 +53,24 @@ describe Champs::AddressChamp do
     it { expect(champ.full_address?).to be_truthy }
     it { expect(champ.commune).to eq({ name: 'Les Trois Lacs', code: '27676', postal_code: '27700' }) }
   end
+
+  context "with empty code postal" do
+    let(:value) { '15 rue Baudelaire Nouméa' }
+    let(:data) do
+      {
+        "type" => "housenumber",
+        "label" => "15 Rue BAUDELAIRE Nouméa",
+        "city_code" => "98818",
+        "city_name" => "Nouméa",
+        "postal_code" => "",
+        "department_code" => "988",
+        "department_name" => "Nouvelle-Calédonie"
+      }
+    end
+
+    it do
+      expect(champ.commune).to eq({ name: 'Nouméa', code: '98818', postal_code: '' })
+      expect(champ.commune_name).to eq("Nouméa")
+    end
+  end
 end
