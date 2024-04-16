@@ -1275,10 +1275,11 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#personnes_impliquees' do
-    let!(:gi_1) { procedure.groupe_instructeurs.first }
-    let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
-    let!(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure, groupe_instructeur: gi_1) }
-    let!(:new_instructeur) { create(:instructeur) }
+    let(:routed_procedure) { create(:procedure, :routee, :published, :for_individual) }
+    let(:gi_1) { routed_procedure.groupe_instructeurs.first }
+    let(:gi_2) { routed_procedure.groupe_instructeurs.last }
+    let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: routed_procedure, groupe_instructeur: gi_1) }
+    let(:new_instructeur) { create(:instructeur) }
 
     before do
       gi_1.instructeurs << new_instructeur
@@ -1288,7 +1289,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
       get :personnes_impliquees,
         params: {
-          procedure_id: procedure.id,
+          procedure_id: routed_procedure.id,
           dossier_id: dossier.id
         }
     end

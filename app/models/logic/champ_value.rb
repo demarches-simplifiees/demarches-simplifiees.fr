@@ -53,8 +53,6 @@ class Logic::ChampValue < Logic::Term
       targeted_champ.selected_options
     when "Champs::DepartementChamp", "Champs::RegionChamp"
       targeted_champ.code
-    when "Champs::CommuneChamp", "Champs::EpciChamp"
-      targeted_champ.code_departement
     end
   end
 
