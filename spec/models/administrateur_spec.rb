@@ -329,7 +329,7 @@ describe Administrateur, type: :model do
     let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
 
     before do
-      Timecop.freeze(now) do
+      travel_to(now) do
         administrateur.mark_commentaire_as_seen
       end
     end

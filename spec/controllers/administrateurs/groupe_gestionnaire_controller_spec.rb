@@ -102,7 +102,10 @@ describe Administrateurs::GroupeGestionnaireController, type: :controller do
     end
 
     context "when logged in" do
+      let(:gestionnaire_2) { create(:gestionnaire) }
+
       before do
+        groupe_gestionnaire.gestionnaires << gestionnaire_2
         sign_in(admin.user)
       end
 
@@ -111,6 +114,10 @@ describe Administrateurs::GroupeGestionnaireController, type: :controller do
 
         expect(response).to redirect_to(admin_groupe_gestionnaire_commentaires_path)
         expect(flash.notice).to be_present
+      end
+
+      it '2 emails are sent' do
+        expect { perform_enqueued_jobs { subject } }.to change { ActionMailer::Base.deliveries.count }.by(2)
       end
     end
   end

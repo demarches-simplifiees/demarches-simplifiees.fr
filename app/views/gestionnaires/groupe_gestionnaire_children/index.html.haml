@@ -16,4 +16,7 @@
       = render(GroupeGestionnaire::GroupeGestionnaireChildren::ChildComponent.with_collection(@groupe_gestionnaire.children, groupe_gestionnaire: @groupe_gestionnaire))
 
   .fr-mt-4w
-    = render 'add_admin_form', groupe_gestionnaire: @groupe_gestionnaire
+    = link_to 'Afficher l’arborescence', tree_structure_gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire)
+
+  .fr-mt-4w
+    = render 'add_child_form', groupe_gestionnaire: @groupe_gestionnaire
