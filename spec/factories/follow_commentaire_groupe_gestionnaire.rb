@@ -1,0 +1,6 @@
+FactoryBot.define do
+  factory :follow_commentaire_groupe_gestionnaire do
+    association :groupe_gestionnaire
+    association :gestionnaire
+  end
+end

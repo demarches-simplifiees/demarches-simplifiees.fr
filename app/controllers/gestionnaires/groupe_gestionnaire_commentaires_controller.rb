@@ -7,7 +7,9 @@ module Gestionnaires
     end
 
     def show
+      @commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @last_commentaire.sender)
       @commentaire = CommentaireGroupeGestionnaire.new
+      current_gestionnaire.mark_commentaire_as_seen(@groupe_gestionnaire, @last_commentaire.sender)
     end
 
     def create
@@ -30,7 +32,6 @@ module Gestionnaires
       else
         flash.alert = t('.alert_acl')
       end
-      # redirect_to gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @last_commentaire)
     rescue Discard::RecordNotDiscarded
       flash.alert = t('.alert_already_discarded')
     end

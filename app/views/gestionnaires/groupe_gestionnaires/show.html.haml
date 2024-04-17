@@ -13,14 +13,14 @@
         = t('views.gestionnaires.groupe_gestionnaires.delete')
 
 .fr-container
-  %h2= "Gestion du groupe gestionnaire № #{@groupe_gestionnaire.id}"
+  %h2= "Gestion du groupe gestionnaire \"#{@groupe_gestionnaire.name}\""
   - if @groupe_gestionnaire.groupe_gestionnaire_id.present?
     %p
       groupe parent :
       %a{ href: gestionnaire_groupe_gestionnaire_path(@groupe_gestionnaire.groupe_gestionnaire) }= @groupe_gestionnaire.groupe_gestionnaire.name
-  .fr-grid-row.fr-grid-row--gutters.fr-mb-5w
+  .fr-grid-row.fr-grid-row--gutters.fr-mb-5w.fr-groupe_gestionnaire_cards
     = render GroupeGestionnaire::Card::GestionnairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: gestionnaire_groupe_gestionnaire_gestionnaires_path(@groupe_gestionnaire))
     = render GroupeGestionnaire::Card::AdministrateursComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: gestionnaire_groupe_gestionnaire_administrateurs_path(@groupe_gestionnaire))
     = render GroupeGestionnaire::Card::ChildrenComponent.new(groupe_gestionnaire: @groupe_gestionnaire, path: gestionnaire_groupe_gestionnaire_children_path(@groupe_gestionnaire))
-    = render GroupeGestionnaire::Card::CommentairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire, administrateur: nil, path: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire))
+    = render GroupeGestionnaire::Card::CommentairesComponent.new(groupe_gestionnaire: @groupe_gestionnaire, administrateur: nil, path: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire), unread_commentaires: @unread_commentaires)
 

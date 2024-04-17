@@ -533,6 +533,11 @@ Rails.application.routes.draw do
         resources :commentaires, controller: 'groupe_gestionnaire_commentaires', only: [:index, :show, :create, :destroy]
       end
     end
+
+    namespace :gestionnaires do
+      get 'activate' => '/gestionnaires/activate#new'
+      patch 'activate' => '/gestionnaires/activate#create'
+    end
   end
 
   #

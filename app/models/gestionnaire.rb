@@ -2,6 +2,7 @@ class Gestionnaire < ApplicationRecord
   include UserFindByConcern
   has_and_belongs_to_many :groupe_gestionnaires
   has_many :commentaire_groupe_gestionnaires
+  has_many :follow_commentaire_groupe_gestionnaires
 
   belongs_to :user
 
@@ -32,5 +33,28 @@ class Gestionnaire < ApplicationRecord
     else
       'Expiré'
     end
+  end
+
+  def unread_commentaires?(groupe_gestionnaire)
+    CommentaireGroupeGestionnaire
+      .joins(:groupe_gestionnaire)
+      .joins("LEFT JOIN follow_commentaire_groupe_gestionnaires ON follow_commentaire_groupe_gestionnaires.groupe_gestionnaire_id = commentaire_groupe_gestionnaires.groupe_gestionnaire_id AND follow_commentaire_groupe_gestionnaires.sender_id = commentaire_groupe_gestionnaires.sender_id AND follow_commentaire_groupe_gestionnaires.sender_type = commentaire_groupe_gestionnaires.sender_type AND follow_commentaire_groupe_gestionnaires.gestionnaire_id = #{self.id}")
+      .where(groupe_gestionnaire: groupe_gestionnaire)
+      .where('follow_commentaire_groupe_gestionnaires.commentaire_seen_at IS NULL OR follow_commentaire_groupe_gestionnaires.commentaire_seen_at < commentaire_groupe_gestionnaires.created_at')
+      .exists?
+  end
+
+  def commentaire_seen_at(groupe_gestionnaire, sender)
+    FollowCommentaireGroupeGestionnaire
+      .where(gestionnaire: self, groupe_gestionnaire:, sender:)
+      .order(id: :desc)
+      .last
+      &.commentaire_seen_at
+  end
+
+  def mark_commentaire_as_seen(groupe_gestionnaire, sender)
+    FollowCommentaireGroupeGestionnaire
+      .where(gestionnaire: self, groupe_gestionnaire: groupe_gestionnaire, sender: sender, unfollowed_at: nil)
+      .first_or_initialize.update(commentaire_seen_at: Time.zone.now)
   end
 end
