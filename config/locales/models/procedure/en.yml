@@ -30,7 +30,7 @@ en:
         closing_reason: Closing reason
         closing_reasons:
           other: Other
-          internal_procedure: I replace my procedure with another in Démarches Simplifiées
+          internal_procedure: I replace my procedure with another in %{app_name}
         procedure_path: Procedure link to disseminate to users
         procedure_path_placeholder: procedure-name
         cadre_juridique: Link to the legal text
