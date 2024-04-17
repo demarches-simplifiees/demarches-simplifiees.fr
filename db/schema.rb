@@ -612,14 +612,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   end
 
   create_table "follow_commentaire_groupe_gestionnaires", force: :cascade do |t|
-    t.datetime "commentaire_seen_at", precision: 6
-    t.datetime "created_at", precision: 6, null: false
+    t.datetime "commentaire_seen_at", precision: nil
+    t.datetime "created_at", null: false
     t.bigint "gestionnaire_id", null: false
     t.bigint "groupe_gestionnaire_id"
     t.bigint "sender_id"
     t.string "sender_type"
-    t.datetime "unfollowed_at", precision: 6, precision: nil
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "unfollowed_at", precision: nil
+    t.datetime "updated_at", null: false
     t.index ["gestionnaire_id", "groupe_gestionnaire_id", "sender_id", "sender_type", "unfollowed_at"], name: "index_follow_commentaire_on_groupe_gestionnaire_unfollow", unique: true
     t.index ["gestionnaire_id"], name: "index_follow_commentaire_on_gestionnaire"
     t.index ["groupe_gestionnaire_id"], name: "index_follow_commentaire_on_groupe_gestionnaire"
@@ -893,9 +893,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
     t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.boolean "template", default: false, null: false
-    t.datetime "test_started_at", precision: nil
-    t.datetime "unpublished_at", precision: nil
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "test_started_at"
+    t.datetime "unpublished_at"
+    t.datetime "updated_at", null: false
     t.string "web_hook_url"
     t.datetime "whitelisted_at"
     t.bigint "zone_id"
