@@ -1,4 +1,5 @@
 class GroupeGestionnaireMailer < ApplicationMailer
+  helper MailerHelper
   layout 'mailers/layout'
 
   def notify_removed_gestionnaire(groupe_gestionnaire, removed_gestionnaire_email, current_super_admin_email)
@@ -35,6 +36,16 @@ class GroupeGestionnaireMailer < ApplicationMailer
     subject = "Vous avez été ajouté(e) en tant qu'administrateur du groupe gestionnaire \"#{groupe_gestionnaire.name}\""
 
     mail(bcc: added_administrateur_emails, subject: subject)
+  end
+
+  def notify_new_commentaire_groupe_gestionnaire(groupe_gestionnaire, commentaire, sender_email, recipient_email, commentaire_url)
+    @groupe_gestionnaire = groupe_gestionnaire
+    @commentaire = commentaire
+    @sender_email = sender_email
+    @commentaire_url = commentaire_url
+    @subject = "Vous avez un nouveau message dans le groupe gestionnaire \"#{groupe_gestionnaire.name}\""
+
+    mail(to: recipient_email, subject: @subject)
   end
 
   def self.critical_email?(action_name)

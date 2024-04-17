@@ -44,17 +44,17 @@ class Gestionnaire < ApplicationRecord
       .exists?
   end
 
-  def commentaire_seen_at(groupe_gestionnaire, sender)
+  def commentaire_seen_at(groupe_gestionnaire, sender_id, sender_type)
     FollowCommentaireGroupeGestionnaire
-      .where(gestionnaire: self, groupe_gestionnaire:, sender:)
+      .where(gestionnaire: self, groupe_gestionnaire:, sender_id:, sender_type:)
       .order(id: :desc)
       .last
       &.commentaire_seen_at
   end
 
-  def mark_commentaire_as_seen(groupe_gestionnaire, sender)
+  def mark_commentaire_as_seen(groupe_gestionnaire, sender_id, sender_type)
     FollowCommentaireGroupeGestionnaire
-      .where(gestionnaire: self, groupe_gestionnaire: groupe_gestionnaire, sender: sender, unfollowed_at: nil)
+      .where(gestionnaire: self, groupe_gestionnaire:, sender_id:, sender_type:, unfollowed_at: nil)
       .first_or_initialize.update(commentaire_seen_at: Time.zone.now)
   end
 end

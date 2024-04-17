@@ -133,7 +133,7 @@ describe Gestionnaire, type: :model do
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
       let!(:follow_commentaire_groupe_gestionnaire) { create(:follow_commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, gestionnaire: gestionnaire, sender: administrateur, commentaire_seen_at: Time.zone.now) }
 
-      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur).to_date).to eq Date.current }
+      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur.id, "Administrateur").to_date).to eq Date.current }
     end
 
     context "when never seen commentaire" do
@@ -142,7 +142,7 @@ describe Gestionnaire, type: :model do
       let(:groupe_gestionnaire) { create(:groupe_gestionnaire, gestionnaires: [gestionnaire]) }
       let!(:commentaire_groupe_gestionnaire) { create(:commentaire_groupe_gestionnaire, groupe_gestionnaire: groupe_gestionnaire, sender: administrateur, created_at: 12.hours.ago) }
 
-      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq nil }
+      it { expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur.id, "Administrateur")).to eq nil }
     end
   end
 
@@ -157,13 +157,13 @@ describe Gestionnaire, type: :model do
 
       subject do
         travel_to(now) do
-          gestionnaire.mark_commentaire_as_seen(groupe_gestionnaire, administrateur)
+          gestionnaire.mark_commentaire_as_seen(groupe_gestionnaire, administrateur.id, "Administrateur")
         end
       end
 
       it do
         subject
-        expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq now
+        expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur.id, "Administrateur")).to eq now
       end
     end
 
@@ -176,13 +176,13 @@ describe Gestionnaire, type: :model do
 
       subject do
         travel_to(now) do
-          gestionnaire.mark_commentaire_as_seen(groupe_gestionnaire, administrateur)
+          gestionnaire.mark_commentaire_as_seen(groupe_gestionnaire, administrateur.id, "Administrateur")
         end
       end
 
       it do
         subject
-        expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur)).to eq now
+        expect(gestionnaire.commentaire_seen_at(groupe_gestionnaire, administrateur.id, "Administrateur")).to eq now
       end
     end
   end

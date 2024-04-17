@@ -25,7 +25,7 @@ class GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireCompone
   end
 
   def highlight?
-    commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @commentaire.sender)
+    commentaire_seen_at = current_gestionnaire.commentaire_seen_at(@groupe_gestionnaire, @commentaire.sender_id, @commentaire.sender_type)
     commentaire_seen_at.nil? || commentaire_seen_at < @commentaire.created_at
   end
 end

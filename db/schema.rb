@@ -61,7 +61,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   end
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
-    t.datetime "created_at"
+    t.datetime "commentaire_seen_at"
+    t.datetime "created_at", precision: nil
     t.bigint "groupe_gestionnaire_id"
     t.datetime "updated_at"
     t.bigint "user_id", null: false

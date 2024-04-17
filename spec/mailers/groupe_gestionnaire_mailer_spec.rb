@@ -54,4 +54,21 @@ RSpec.describe GroupeGestionnaireMailer, type: :mailer do
     it { expect(subject.body).to include('Vous venez d’être nommé administrateur du groupe gestionnaire') }
     it { expect(subject.bcc).to match_array(['int3@g', 'int4@g']) }
   end
+
+  describe '#notify_new_commentaire_groupe_gestionnaire' do
+    let(:groupe_gestionnaire) { create(:groupe_gestionnaire) }
+
+    let(:gestionnaire) { create(:gestionnaire, email: 'int3@g') }
+
+    let(:admin) { create(:administrateur, email: 'toto@email.com') }
+
+    let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: admin) }
+
+    let(:commentaire_url) { gestionnaire_groupe_gestionnaire_commentaire_url(groupe_gestionnaire, commentaire) }
+
+    subject { described_class.notify_new_commentaire_groupe_gestionnaire(groupe_gestionnaire, commentaire, admin.email, gestionnaire.email, commentaire_url) }
+
+    it { expect(subject.body).to include('Vous avez un nouveau message dans le groupe gestionnaire') }
+    it { expect(subject.to).to match_array(['int3@g']) }
+  end
 end
