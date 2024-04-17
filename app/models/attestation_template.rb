@@ -141,8 +141,8 @@ class AttestationTemplate < ApplicationRecord
     signature.attached? ? signature.filename : nil
   end
 
-  def version(procedure)
-    { version: procedure.feature_enabled?(:attestation_v2) ? :v2 : :v1 }
+  def md_version(procedure)
+    { md_version: procedure.feature_enabled?(:attestation_v2) ? :v2 : :v1 }
   end
 
   def tiptap_body
@@ -215,7 +215,7 @@ class AttestationTemplate < ApplicationRecord
       template: 'administrateurs/attestation_templates/show',
       formats: :pdf,
       assigns: { attestation: attestation },
-      locals: version(dossier.procedure)
+      locals: md_version(dossier.procedure)
     )
 
     StringIO.new(attestation_view)

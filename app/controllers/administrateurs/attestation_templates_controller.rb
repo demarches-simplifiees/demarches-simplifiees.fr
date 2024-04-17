@@ -45,7 +45,7 @@ module Administrateurs
       attestation_template = build_attestation_template
       @attestation = attestation_template.render_attributes_for({})
 
-      render 'administrateurs/attestation_templates/show', formats: [:pdf], locals: attestation_template.version(@procedure)
+      render 'administrateurs/attestation_templates/show', formats: [:pdf], locals: attestation_template.md_version(@procedure)
     end
 
     private

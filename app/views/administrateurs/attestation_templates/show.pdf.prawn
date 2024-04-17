@@ -7,7 +7,7 @@ page_size = 'A4'
 page_width = 595
 
 #----- margins
-body_width = version == :v2 ? 450 : 400
+body_width = md_version == :v2 ? 450 : 400
 top_margin = 50
 bottom_margin = 20
 
@@ -18,7 +18,7 @@ left_margin = right_margin
 qrcode_size = 30.mm
 max_signature_size = 40.mm
 max_logo_height = 40.mm
-max_logo_width = version == :v2 ? body_width - qrcode_size - 5.mm : body_width
+max_logo_width = md_version == :v2 ? body_width - qrcode_size - 5.mm : body_width
 
 def normalize_pdf_text(text)
   text&.tr("\t", '  ')
@@ -32,7 +32,7 @@ created_at = @attestation.fetch(:created_at)
 logo = @attestation[:logo]
 signature = @attestation[:signature]
 qrcode = @attestation[:qrcode]
-footer_height = qrcode.present? && version == :v1 ? qrcode_size + 40 : 30
+footer_height = qrcode.present? && md_version == :v1 ? qrcode_size + 40 : 30
 
 info = {
   :Title => title,
@@ -177,7 +177,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
       end
       pdf.image StringIO.new(logo_content), fit: [max_logo_width, max_logo_height], position: :left
     end
-    if qrcode.present? && version == :v2
+    if qrcode.present? && md_version == :v2
       logo_bottom_position = pdf.cursor
       pdf.move_cursor_to logo_top_position
       qrcode_align = :right
@@ -211,7 +211,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   pdf.repeat(:all) do
     margin = 2
     pdf.fill_color grey
-    if qrcode.present? && version == :v1
+    if qrcode.present? && md_version == :v1
       pdf.move_cursor_to footer_height
       qrcode_align = :center
       pdf.print_qr_code(qrcode, level: :q, extent: qrcode_size, margin: margin, align: qrcode_align)
