@@ -97,6 +97,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
     t.datetime "created_at", null: false
     t.string "encrypted_token", null: false
     t.date "expiration_notices_sent_at", default: [], array: true
+    t.date "expires_at"
     t.datetime "last_v1_authenticated_at"
     t.datetime "last_v2_authenticated_at"
     t.string "name", null: false
@@ -104,7 +105,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
     t.datetime "updated_at", null: false
     t.integer "version", default: 3, null: false
     t.boolean "write_access", default: true, null: false
-    t.date "expires_at"
     t.index ["administrateur_id"], name: "index_api_tokens_on_administrateur_id"
   end
 
@@ -266,8 +266,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
 
   create_table "commentaire_groupe_gestionnaires", force: :cascade do |t|
     t.string "body"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "discarded_at", precision: 6
+    t.datetime "created_at", null: false
+    t.datetime "discarded_at", precision: nil
     t.string "gestionnaire_email"
     t.bigint "gestionnaire_id"
     t.bigint "groupe_gestionnaire_id"
