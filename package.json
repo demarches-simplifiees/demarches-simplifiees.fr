@@ -121,9 +121,6 @@
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
-  "engines": {
-    "node": ">= 18.17.0"
-  },
   "resolutions": {
     "string-width": "4.2.2",
     "wrap-ansi": "7.0.0"
