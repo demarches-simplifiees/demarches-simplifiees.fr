@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
 
   create_table "administrateurs", id: :serial, force: :cascade do |t|
     t.datetime "commentaire_seen_at"
-    t.datetime "created_at", precision: nil
+    t.datetime "created_at"
     t.bigint "groupe_gestionnaire_id"
     t.datetime "updated_at"
     t.bigint "user_id", null: false
@@ -156,7 +156,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
     t.boolean "official_layout", default: true, null: false
     t.integer "procedure_id"
     t.text "title"
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "updated_at", null: false
     t.integer "version", default: 1, null: false
     t.index ["procedure_id", "version"], name: "index_attestation_templates_on_procedure_id_and_version", unique: true
   end
