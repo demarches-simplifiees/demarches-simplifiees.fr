@@ -47,7 +47,11 @@ class Procedure < ApplicationRecord
   foreign_key: "replaced_by_procedure_id", dependent: :nullify
 
   has_one :module_api_carto, dependent: :destroy
-  has_one :attestation_template, dependent: :destroy
+  has_many :attestation_templates, dependent: :destroy
+  has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+
+  has_one :attestation_template, -> { AttestationTemplate.v1.or(AttestationTemplate.v2) }, dependent: :destroy, inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -1060,6 +1064,14 @@ class Procedure < ApplicationRecord
 
   def header_sections
     draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
+  end
+
+  def dossier_for_preview(user)
+    # Try to use a preview or a dossier filled by current user
+    dossiers.where(for_procedure_preview: true).or(dossiers.not_brouillon)
+      .order(Arel.sql("CASE WHEN for_procedure_preview = True THEN 1 ELSE 0 END DESC,
+                       CASE WHEN user_id = #{user.id} THEN 1 ELSE 0 END DESC")) \
+      .first
   end
 
   private

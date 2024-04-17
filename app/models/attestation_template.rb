@@ -2,13 +2,14 @@ class AttestationTemplate < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include TagsSubstitutionConcern
 
-  belongs_to :procedure, inverse_of: :attestation_template
+  belongs_to :procedure, inverse_of: :attestation_template_v2
 
   has_one_attached :logo
   has_one_attached :signature
 
-  validates :title, tags: true, if: -> { procedure.present? }
-  validates :body, tags: true, if: -> { procedure.present? }
+  validates :title, tags: true, if: -> { procedure.present? && version == 1 }
+  validates :body, tags: true, if: -> { procedure.present? && version == 1 }
+  validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
   validates :footer, length: { maximum: 190 }
 
   FILE_MAX_SIZE = 1.megabytes
@@ -16,6 +17,54 @@ class AttestationTemplate < ApplicationRecord
   validates :signature, content_type: ['image/png', 'image/jpg', 'image/jpeg'], size: { less_than: FILE_MAX_SIZE }
 
   DOSSIER_STATE = Dossier.states.fetch(:accepte)
+
+  scope :v1, -> { where(version: 1) }
+  scope :v2, -> { where(version: 2) }
+
+  TIPTAP_BODY_DEFAULT = {
+    "type" => "doc",
+    "content" => [
+      {
+        "type" => "header",
+        "content" => [
+          {
+            "type" => "headerColumn",
+                      "content" => [
+                        {
+                          "type" => "paragraph",
+                          "attrs" => { "textAlign" => "left" },
+                          "content" => [{ "type" => "mention", "attrs" => { "id" => "dossier_service_name", "label" => "nom du service" } }]
+                        }
+                      ]
+          },
+          {
+            "type" => "headerColumn",
+            "content" => [
+              {
+                "type" => "paragraph",
+                          "attrs" => { "textAlign" => "left" },
+                          "content" => [
+                            { "text" => "Fait le ", "type" => "text" },
+                            { "type" => "mention", "attrs" => { "id" => "dossier_processed_at", "label" => "date de décision" } }
+                          ]
+              }
+            ]
+          }
+        ]
+      },
+      { "type" => "title", "attrs" => { "textAlign" => "center" }, "content" => [{ "text" => "Titre de l’attestation", "type" => "text" }] },
+      {
+        "type" => "paragraph",
+        "attrs" => { "textAlign" => "left" },
+        "content" => [
+          {
+            "text" => "Vous pouvez éditer ce texte pour personnaliser votre attestation. Pour ajouter du contenu issu du dossier, utilisez les balises situées sous cette zone de saisie.",
+            "type" => "text"
+          }
+        ]
+      }
+    ]
+  }.freeze
 
   def attestation_for(dossier)
     attestation = Attestation.new(title: replace_tags(title, dossier, escape: false))
@@ -60,27 +109,19 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def render_attributes_for(params = {})
-    attributes = {
-      created_at: Time.zone.now,
+    groupe_instructeur = params[:groupe_instructeur]
+    groupe_instructeur ||= params[:dossier]&.groupe_instructeur
+
+    base_attributes = {
+      created_at: Time.current,
       footer: params.fetch(:footer, footer),
-      logo: params.fetch(:logo, logo.attached? ? logo : nil)
+      signature: signature_to_render(groupe_instructeur)
     }
 
-    dossier = params[:dossier]
-
-    if dossier.present?
-      attributes.merge({
-        title: replace_tags(title, dossier, escape: false),
-        body: replace_tags(body, dossier, escape: false),
-        signature: signature_to_render(dossier.groupe_instructeur),
-        qrcode: dossier.id.present? ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
-      })
+    if version == 2
+      render_attributes_for_v2(params, base_attributes)
     else
-      attributes.merge({
-        title: params.fetch(:title, title),
-        body: params.fetch(:body, body),
-        signature: signature_to_render(params[:groupe_instructeur])
-      })
+      render_attributes_for_v1(params, base_attributes)
     end
   end
 
@@ -113,6 +154,48 @@ class AttestationTemplate < ApplicationRecord
   end
 
   private
+
+  def render_attributes_for_v1(params, base_attributes)
+    attributes = base_attributes.merge(
+      logo: params.fetch(:logo, logo.attached? ? logo : nil)
+    )
+
+    dossier = params[:dossier]
+
+    if dossier.present?
+      attributes.merge(
+        title: replace_tags(title, dossier, escape: false),
+        body: replace_tags(body, dossier, escape: false)
+      )
+    else
+      attributes.merge(
+        title: params.fetch(:title, title),
+        body: params.fetch(:body, body)
+      )
+    end
+  end
+
+  def render_attributes_for_v2(params, base_attributes)
+    dossier = params[:dossier]
+
+    json = json_body&.deep_symbolize_keys
+    tiptap = TiptapService.new
+
+    if dossier.present?
+      # 2x faster this way than with `replace_tags` which would reparse text
+      used_tags = tiptap.used_tags_and_libelle_for(json.deep_symbolize_keys)
+      substitutions = tags_substitutions(used_tags, dossier, escape: false)
+      body = tiptap.to_html(json, substitutions)
+
+      attributes.merge(
+        body:
+      )
+    else
+      attributes.merge(
+        body: params.fetch(:body) { tiptap.to_html(json) }
+      )
+    end
+  end
 
   def signature_to_render(groupe_instructeur)
     if groupe_instructeur&.signature&.attached?

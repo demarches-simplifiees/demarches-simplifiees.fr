@@ -2,17 +2,20 @@ import { isFormInputElement, matchInputElement } from '@coldwired/utils';
 
 import { ApplicationController } from './application_controller';
 
-const AUTOSUBMIT_DEBOUNCE_DELAY = 500;
 const AUTOSUBMIT_DATE_DEBOUNCE_DELAY = 5000;
 const AUTOSUBMIT_EVENTS = ['input', 'change', 'blur'];
 
 export class AutosubmitController extends ApplicationController {
   static targets = ['submitter', 'input'];
+  static values = {
+    debounceDelay: { type: Number, default: 500 }
+  };
 
   declare readonly submitterTarget: HTMLButtonElement | HTMLInputElement;
   declare readonly hasSubmitterTarget: boolean;
   declare readonly inputTarget: HTMLInputElement;
   declare readonly hasInputTarget: boolean;
+  declare readonly debounceDelayValue: number;
 
   #dateTimeChangedInputs = new WeakSet<HTMLElement>();
 
@@ -46,8 +49,8 @@ export class AutosubmitController extends ApplicationController {
 
     matchInputElement(target, {
       date: () => {},
-      inputable: () => this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY),
-      hidden: () => this.debounce(this.submit, AUTOSUBMIT_DEBOUNCE_DELAY)
+      inputable: () => this.debounce(this.submit, this.debounceDelayValue),
+      hidden: () => this.debounce(this.submit, this.debounceDelayValue)
     });
   }
 

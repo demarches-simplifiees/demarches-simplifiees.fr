@@ -14,7 +14,7 @@ module Administrateurs
     end
 
     def update
-      @attestation_template = @procedure.attestation_template
+      @attestation_template = @procedure.attestation_template_v1
 
       if @attestation_template.update(activated_attestation_params)
         flash.notice = "Le modèle de l’attestation a bien été modifié"
@@ -51,7 +51,7 @@ module Administrateurs
     private
 
     def build_attestation_template(attributes = {})
-      attestation_template = @procedure.attestation_template || @procedure.build_attestation_template
+      attestation_template = @procedure.attestation_template_v1 || @procedure.build_attestation_template_v1
       attestation_template.attributes = attributes
       attestation_template
     end

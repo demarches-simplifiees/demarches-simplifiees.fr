@@ -102,6 +102,7 @@ namespace :benchmarks do
       controller.request = ActionDispatch::TestRequest.create
       controller.response = ActionDispatch::TestResponse.new
       controller.request.env['warden'] = warden
+      # controller.request.path_parameters[:format] = 'pdf'
 
       params = ENV.fetch("PARAMS") { "" }.split(",")
       params.each do |param|

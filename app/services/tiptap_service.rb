@@ -1,74 +1,99 @@
 class TiptapService
-  class << self
-    def to_html(node, tags)
-      return '' if node.nil?
+  def to_html(node, substitutions = {})
+    return '' if node.nil?
 
-      children(node[:content], tags)
+    children(node[:content], substitutions, 0)
+  end
+
+  # NOTE: node must be deep symbolized keys
+  def used_tags_and_libelle_for(node, tags = Set.new)
+    case node
+    in type: 'mention', attrs: { id:, label: }, **rest
+      tags << [id, label]
+    in { content:, **rest } if content.is_a?(Array)
+      content.each { used_tags_and_libelle_for(_1, tags) }
+    in type:, **rest
+      # noop
     end
 
-    private
+    tags
+  end
 
-    def children(content, tags)
-      content.map { node_to_html(_1, tags) }.join
+  private
+
+  def initialize
+    @body_started = false
+  end
+
+  def children(content, substitutions, level)
+    content.map { node_to_html(_1, substitutions, level) }.join
+  end
+
+  def node_to_html(node, substitutions, level)
+    if level == 0 && !@body_started && node[:type].in?(['paragraph', 'heading']) && node.key?(:content)
+      @body_started = true
+      body_start_mark = " class=\"body-start\""
     end
 
-    def node_to_html(node, tags)
-      case node
-      in type: 'header', content:
-        "<header>#{children(content, tags)}</header>"
-      in type: 'footer', content:, **rest
-        "<footer#{text_align(rest[:attrs])}>#{children(content, tags)}</footer>"
-      in type: 'headerColumn', content:, **rest
-        "<div#{text_align(rest[:attrs])} class=\"column\">#{children(content, tags)}</div>"
-      in type: 'paragraph', content:, **rest
-        "<p#{text_align(rest[:attrs])}>#{children(content, tags)}</p>"
-      in type: 'title', content:, **rest
-        "<h1#{text_align(rest[:attrs])}>#{children(content, tags)}</h1>"
-      in type: 'heading', attrs: { level:, **attrs }, content:
-        "<h#{level}#{text_align(attrs)}>#{children(content, tags)}</h#{level}>"
-      in type: 'bulletList', content:
-        "<ul>#{children(content, tags)}</ul>"
-      in type: 'orderedList', content:
-        "<ol>#{children(content, tags)}</ol>"
-      in type: 'listItem', content:
-        "<li>#{children(content, tags)}</li>"
-      in type: 'text', text:, **rest
-        if rest[:marks].present?
-          apply_marks(text, rest[:marks])
-        else
-          text
-        end
-      in type: 'mention', attrs: { id: }, **rest
-        if rest[:marks].present?
-          apply_marks(tags[id], rest[:marks])
-        else
-          tags[id]
-        end
-      end
-    end
-
-    def text_align(attrs)
-      if attrs.present? && attrs[:textAlign].present?
-        " style=\"text-align: #{attrs[:textAlign]}\""
+    case node
+    in type: 'header', content:
+      "<header>#{children(content, substitutions, level + 1)}</header>"
+    in type: 'footer', content:, **rest
+      "<footer#{text_align(rest[:attrs])}>#{children(content, substitutions, level + 1)}</footer>"
+    in type: 'headerColumn', content:, **rest
+      "<div#{text_align(rest[:attrs])}>#{children(content, substitutions, level + 1)}</div>"
+    in type: 'paragraph', content:, **rest
+      "<p#{body_start_mark}#{text_align(rest[:attrs])}>#{children(content, substitutions, level + 1)}</p>"
+    in type: 'title', content:, **rest
+      "<h1#{text_align(rest[:attrs])}>#{children(content, substitutions, level + 1)}</h1>"
+    in type: 'heading', attrs: { level: hlevel, **attrs }, content:
+      "<h#{hlevel}#{body_start_mark}#{text_align(attrs)}>#{children(content, substitutions, level + 1)}</h#{hlevel}>"
+    in type: 'bulletList', content:
+      "<ul>#{children(content, substitutions, level + 1)}</ul>"
+    in type: 'orderedList', content:
+      "<ol>#{children(content, substitutions, level + 1)}</ol>"
+    in type: 'listItem', content:
+      "<li>#{children(content, substitutions, level + 1)}</li>"
+    in type: 'text', text:, **rest
+      if rest[:marks].present?
+        apply_marks(text, rest[:marks])
       else
-        ""
+        text
       end
-    end
+    in type: 'mention', attrs: { id: }, **rest
+      text = substitutions.fetch(id) { "--#{id}--" }
 
-    def apply_marks(text, marks)
-      marks.reduce(text) do |text, mark|
-        case mark
-        in type: 'bold'
-          "<strong>#{text}</strong>"
-        in type: 'italic'
-          "<em>#{text}</em>"
-        in type: 'underline'
-          "<u>#{text}</u>"
-        in type: 'strike'
-          "<s>#{text}</s>"
-        in type: 'highlight'
-          "<mark>#{text}</mark>"
-        end
+      if rest[:marks].present?
+        apply_marks(text, rest[:marks])
+      else
+        text
+      end
+    in { type: type } if ["paragraph", "title", "heading"].include?(type) && !node.key?(:content)
+      # noop
+    end
+  end
+
+  def text_align(attrs)
+    if attrs.present? && attrs[:textAlign].present?
+      " style=\"text-align: #{attrs[:textAlign]}\""
+    else
+      ""
+    end
+  end
+
+  def apply_marks(text, marks)
+    marks.reduce(text) do |text, mark|
+      case mark
+      in type: 'bold'
+        "<strong>#{text}</strong>"
+      in type: 'italic'
+        "<em>#{text}</em>"
+      in type: 'underline'
+        "<u>#{text}</u>"
+      in type: 'strike'
+        "<s>#{text}</s>"
+      in type: 'highlight'
+        "<mark>#{text}</mark>"
       end
     end
   end

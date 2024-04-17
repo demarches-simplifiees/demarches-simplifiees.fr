@@ -32,6 +32,48 @@ describe TagsSubstitutionConcern, type: :model do
     end).new(procedure, state)
   end
 
+  describe 'tags_substitutions' do
+    let(:individual) { nil }
+    let(:etablissement) { create(:etablissement) }
+    let(:dossier) { create(:dossier, :en_construction, procedure:, individual:, etablissement:) }
+    let(:instructeur) { create(:instructeur) }
+    let(:tags) { Set.new([["dossier_number", "numéro de dossier"]]) }
+
+    subject { template_concern.tags_substitutions(tags, dossier) }
+
+    context 'dossiers metadata' do
+      before { travel_to(Time.zone.local(2024, 1, 15, 12)) }
+      let(:tags) do
+        Set.new([
+          ["dossier_number", "n° de dossier"],
+          ["dossier_depose_at", "date de dépôt"],
+          ["dossier_processed_at", "date d’instruction"],
+          ["dossier_procedure_libelle", "Nom de la démarche"],
+          ["tdc_123", "Un champ"]
+        ])
+      end
+
+      it do
+        is_expected.to eq(
+          "dossier_number" => dossier.id.to_s,
+          "dossier_depose_at" => "15/01/2024",
+          "dossier_processed_at" => "",
+          "dossier_procedure_libelle" => procedure.libelle,
+          "tdc_123" => "Un champ"
+        )
+      end
+    end
+
+    context 'when the dossier and the procedure has an individual' do
+      let(:for_individual) { true }
+      let(:individual) { Individual.create(nom: 'Adama', prenom: 'William', gender: 'M') }
+
+      let(:tags) { Set.new(['individual_gender', 'individual_last_name']) }
+
+      it { is_expected.to eq({ "individual_gender" => 'M', "individual_last_name" => "Adama" }) }
+    end
+  end
+
   describe 'replace_tags' do
     let(:individual) { nil }
     let(:etablissement) { create(:etablissement) }
@@ -522,6 +564,23 @@ describe TagsSubstitutionConcern, type: :model do
     end
 
     it { is_expected.to eq([["public", procedure.draft_revision.types_de_champ.first.stable_id], ['yolo']]) }
+  end
+
+  describe 'tags_categorized' do
+    let(:types_de_champ_public) do
+      [
+        { libelle: 'public' },
+        { type: :email, libelle: 'email' }
+      ]
+    end
+
+    it do
+      categories = template_concern.tags_categorized
+      expect(categories.keys).to match([:etablissement, :dossier, :champ_public])
+      expect(categories[:etablissement].map { _1[:id] }).to include("entreprise_siren")
+      expect(categories[:dossier].map { _1[:id] }).to include("dossier_number")
+      expect(categories[:champ_public].map { _1[:libelle] }).to match_array(["public", "email"])
+    end
   end
 
   describe 'parser' do

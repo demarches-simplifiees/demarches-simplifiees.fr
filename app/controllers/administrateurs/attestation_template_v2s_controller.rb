@@ -1,10 +1,13 @@
 module Administrateurs
   class AttestationTemplateV2sController < AdministrateurController
+    include UninterlacePngConcern
+
     before_action :retrieve_procedure, :retrieve_attestation_template, :ensure_feature_active
 
     def show
-      json_body = @attestation_template.json_body&.deep_symbolize_keys
-      @body = TiptapService.to_html(json_body, {})
+      preview_dossier = @procedure.dossier_for_preview(current_user)
+
+      @body = @attestation_template.render_attributes_for(dossier: preview_dossier).fetch(:body)
 
       respond_to do |format|
         format.html do
@@ -31,9 +34,9 @@ module Administrateurs
           ['Souligner', 'underline', 'underline']
         ],
         [
-          ['Titre', 'title', 'h-1'],
-          ['Sous titre', 'heading2', 'h-2'],
-          ['Titre de section', 'heading3', 'h-3']
+          ['Titre', 'title', :hidden], # only for "title" section, without any action possible
+          ['Sous titre', 'heading2', 'h-1'],
+          ['Titre de section', 'heading3', 'h-2']
         ],
         [
           ['Liste à puces', 'bulletList', 'list-unordered'],
@@ -49,11 +52,31 @@ module Administrateurs
           ['Redo', 'redo', 'arrow-go-forward-line']
         ]
       ]
+
+      @attestation_template.validate
     end
 
     def update
-      @attestation_template.update!(editor_params)
+      attestation_params = editor_params
+      logo_file = attestation_params.delete(:logo)
+      signature_file = attestation_params.delete(:signature)
+
+      if logo_file
+        attestation_params[:logo] = uninterlace_png(logo_file)
+      end
+
+      if signature_file
+        attestation_params[:signature] = uninterlace_png(signature_file)
+      end
+
+      if !@attestation_template.update(attestation_params)
+        flash.alert = "Le modèle de l’attestation contient des erreurs et n'a pas pu être enregistré. Corriger les erreurs."
+      end
+
+      render :update
     end
+
+    def create = update
 
     private
 
@@ -62,11 +85,11 @@ module Administrateurs
     end
 
     def retrieve_attestation_template
-      @attestation_template = @procedure.attestation_template || @procedure.build_attestation_template
+      @attestation_template = @procedure.attestation_template_v2 || @procedure.build_attestation_template_v2(json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT)
     end
 
     def editor_params
-      params.required(:attestation_template).permit(:tiptap_body)
+      params.required(:attestation_template).permit(:official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated)
     end
   end
 end

@@ -155,14 +155,14 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::SOUMIS
     },
     {
-      id: 'individual_first_name',
+      id: 'individual_last_name',
       libelle: 'nom',
       description: "nom de l'usager",
       target: :nom,
       available_for_states: Dossier::SOUMIS
     },
     {
-      id: 'individual_last_name',
+      id: 'individual_first_name',
       libelle: 'prénom',
       description: "prénom de l'usager",
       target: :prenom,
@@ -240,8 +240,26 @@ module TagsSubstitutionConcern
     tags_for_dossier_state(identity_tags + dossier_tags + champ_public_tags + champ_private_tags + routage_tags)
   end
 
-  def used_type_de_champ_tags(text)
-    used_tags_and_libelle_for(text).filter_map do |(tag, libelle)|
+  def tags_categorized
+    identity_key = procedure.for_individual? ? :individual : :etablissement
+
+    {
+      identity_key => tags_for_dossier_state(identity_tags),
+      dossier: tags_for_dossier_state(dossier_tags + routage_tags),
+      champ_public: tags_for_dossier_state(champ_public_tags),
+      champ_private: tags_for_dossier_state(champ_private_tags)
+    }.reject { |_, ary| ary.empty? }
+  end
+
+  def used_type_de_champ_tags(text_or_tiptap)
+    used_tags =
+      if text_or_tiptap.respond_to?(:deconstruct_keys) # hash pattern matching
+        TiptapService.new.used_tags_and_libelle_for(text_or_tiptap.deep_symbolize_keys)
+      else
+        used_tags_and_libelle_for(text_or_tiptap.to_s)
+      end
+
+    used_tags.filter_map do |(tag, libelle)|
       if tag.nil?
         [libelle]
       elsif !tag.in?(SHARED_TAG_IDS) && tag.start_with?('tdc')
@@ -252,6 +270,34 @@ module TagsSubstitutionConcern
 
   def used_tags_for(text)
     used_tags_and_libelle_for(text).map { _1.first.nil? ? _1.second : _1.first }
+  end
+
+  def tags_substitutions(tags_and_libelles, dossier, escape: true)
+    # NOTE:
+    # - tags_and_libelles est un simple Set de couples (tag_id, libelle) (pas la même structure que dans replace_tags)
+    # - dans `replace_tags`, on fait référence à des tags avec ou sans id, mais pas ici,
+    #   (inutile car tiptap ne référence que des ids)
+
+    @escape_unsafe_tags = escape
+
+    flat_tags = tags_and_datas_list(dossier).each_with_object({}) do |(tags, data), result|
+      next if data.nil?
+
+      valid_tags = tags_for_dossier_state(tags)
+
+      valid_tags.each do |tag|
+        result[tag[:id]] = [tag, data]
+      end
+    end
+
+    tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
+      substitutions[tag_id] = case flat_tags[tag_id]
+      in tag, data
+        replace_tag(tag, data)
+      else # champ not in dossier, for example during preview on draft revision
+        libelle
+      end
+    end
   end
 
   private
@@ -323,14 +369,7 @@ module TagsSubstitutionConcern
 
     tokens = parse_tags(text)
 
-    tags_and_datas = [
-      [champ_public_tags(dossier: dossier), dossier.champs_public],
-      [champ_private_tags(dossier: dossier), dossier.champs_private],
-      [dossier_tags, dossier],
-      [ROUTAGE_TAGS, dossier],
-      [INDIVIDUAL_TAGS, dossier.individual],
-      [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
-    ].filter_map do |(tags, data)|
+    tags_and_datas = tags_and_datas_list(dossier).filter_map do |(tags, data)|
       data && [tags_for_dossier_state(tags).index_by { _1[:id] }, data]
     end
 
@@ -407,5 +446,16 @@ module TagsSubstitutionConcern
         nil
       end
     end
+  end
+
+  def tags_and_datas_list(dossier)
+    [
+      [champ_public_tags(dossier:), dossier.champs_public],
+      [champ_private_tags(dossier:), dossier.champs_private],
+      [dossier_tags, dossier],
+      [ROUTAGE_TAGS, dossier],
+      [INDIVIDUAL_TAGS, dossier.individual],
+      [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
+    ]
   end
 end

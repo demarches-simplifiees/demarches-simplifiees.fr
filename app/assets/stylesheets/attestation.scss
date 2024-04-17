@@ -36,24 +36,39 @@
 
 #attestation {
   @media screen {
-    max-width: 21cm;
-    padding: 17mm;
-    margin: 0 auto;
+    .a4-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between; // This will push the footer down
+      max-width: 21cm;
+      height: 29.7cm;
+      padding: 17mm;
+      margin: 0 auto;
+      background: #FFFFFF;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); // Optional: for better visualization
+    }
   }
 
   font-family: Marianne;
 
-  .header {
+  header {
     display: flex;
     justify-content: space-between;
+
+    p {
+      margin: 0;
+    }
   }
 
-  .right {
-    text-align: right;
+  .official-layout & {
+    .direction {
+      margin-top: 5.25mm;
+    }
   }
 
   .bloc-marque {
     margin-bottom: 14mm;
+    margin-right: 17mm; // 4x 4.25mm
   }
 
   .marianne {
@@ -65,6 +80,7 @@
     font-size: 12pt;
     font-weight: bold;
     margin: 0 0 1mm;
+    line-height: 12pt;
   }
 
   .devise {
@@ -72,36 +88,83 @@
     margin: 0;
   }
 
-  .issuer {
-    font-size: 10pt;
-    margin: 0 0 14mm; // pas sur, pour mettre une marge si issuer plus bas que date
+  // weasyprint flexbox with img is broken
+  // so we're using old inline tricks
+  .logo-co-emetteur,
+  .direction {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  .logo-co-emetteur {
+    img {
+      max-height: 28mm;
+      margin-right: 5mm;
+    }
   }
 
   .direction {
-    font-size: 12pt;
+    margin: 5.25mm 0 23.3mm;
+    line-height: 14pt;
     font-weight: bold;
-    margin: 0 0 23.3mm;
   }
 
-  .date {
-    font-size: 8pt;
-    margin: 0 0 14mm;
-  }
-
-  .title {
-    font-size: 12pt;
-    font-weight: bold;
-    text-align: center;
-    margin: 0 0 12.6mm;
+  .body-start {
+    margin-top: 12.6mm; // from masque traitement de texte
   }
 
   .main {
     font-size: 10pt;
+
+    .header {
+      &:first-of-type {
+        font-size: 10pt;
+      }
+
+      &:last-of-type {
+        font-size: 8pt;
+      }
+    }
   }
 
-  .notice {
-    font-size: 10pt;
-    font-style: italic;
+  h1,
+  h2 {
+    // both titles have the same size
+    font-size: 12pt;
+    font-weight: bold;
+  }
+
+  h1 {
+    margin: 14mm 0 8mm;
+  }
+
+  h2 {
+    margin: 0;
+    line-height: 8pt;
+  }
+
+  h3 {
+    font-size: 10pt; // same as text
+    font-weight: bold;
+    line-height: 4pt;
+  }
+
+  li p {
+    margin: 0.25rem 0;
+  }
+
+  .signature {
+    text-align: right;
+    margin-top: 14mm;
+    margin-right: 25mm;
+  }
+
+  .signature,
+  .logo-free-layout {
+    img {
+      max-height: 50mm;
+      max-width: 50mm;
+    }
   }
 
   .footer {

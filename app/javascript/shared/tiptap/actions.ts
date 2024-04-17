@@ -21,7 +21,7 @@ const EDITOR_ACTIONS: Record<string, (editor: Editor) => EditorAction> = {
     isDisabled: () => !editor.isActive('title')
   }),
   heading2: (editor) => ({
-    run: () => editor.chain().focus().setHeading({ level: 2 }).run(),
+    run: () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
     isActive: () => editor.isActive('heading', { level: 2 }),
     isDisabled: () =>
       editor.isActive('title') ||
@@ -29,7 +29,7 @@ const EDITOR_ACTIONS: Record<string, (editor: Editor) => EditorAction> = {
       editor.isActive('footer')
   }),
   heading3: (editor) => ({
-    run: () => editor.chain().focus().setHeading({ level: 3 }).run(),
+    run: () => editor.chain().focus().toggleHeading({ level: 3 }).run(),
     isActive: () => editor.isActive('heading', { level: 3 }),
     isDisabled: () =>
       editor.isActive('title') ||

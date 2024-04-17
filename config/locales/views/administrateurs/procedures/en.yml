@@ -57,3 +57,4 @@ en:
         submit: Publish
     autosave_notice:
       form_saved: "Form saved"
+      form_error: "Form in error"

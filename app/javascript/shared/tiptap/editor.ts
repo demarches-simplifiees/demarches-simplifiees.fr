@@ -25,13 +25,7 @@ import {
   type Extensions
 } from '@tiptap/core';
 
-import {
-  DocumentWithHeader,
-  Title,
-  Header,
-  Footer,
-  HeaderColumn
-} from './nodes';
+import { DocumentWithHeader, Title, Header, HeaderColumn } from './nodes';
 import { createSuggestionMenu, type TagSchema } from './tags';
 
 export function createEditor({
@@ -83,24 +77,8 @@ function getEditorOptions(
       case 'orderedList':
         extensions.push(OrderedList);
         break;
-      case 'left':
-      case 'center':
-      case 'right':
-      case 'justify':
-        extensions.push(
-          TextAlign.configure({
-            types: actions.includes('title')
-              ? ['headerColumn', 'title', 'footer', 'heading', 'paragraph']
-              : ['heading', 'paragraph']
-          })
-        );
-        break;
       case 'title':
-        extensions.push(Header, HeaderColumn, Title, Footer);
-        break;
-      case 'heading2':
-      case 'heading3':
-        extensions.push(Heading.configure({ levels: [2, 3] }));
+        extensions.push(Header, HeaderColumn, Title);
         break;
     }
   }
@@ -108,14 +86,34 @@ function getEditorOptions(
   if (actions.includes('bulletList') || actions.includes('orderedList')) {
     extensions.push(ListItem);
   }
+
+  if (actions.includes('heading2') || actions.includes('heading3')) {
+    extensions.push(Heading.configure({ levels: [2, 3] }));
+  }
+
+  if (
+    actions.includes('left') ||
+    actions.includes('center') ||
+    actions.includes('right') ||
+    actions.includes('justify')
+  ) {
+    extensions.push(
+      TextAlign.configure({
+        types: actions.includes('title')
+          ? ['headerColumn', 'title', 'heading', 'paragraph']
+          : ['heading', 'paragraph']
+      })
+    );
+  }
+
   if (tags.length > 0) {
     extensions.push(
       Mention.configure({
         renderLabel({ node }) {
-          return `--${node.attrs.label}--`;
+          return node.attrs.label;
         },
         HTMLAttributes: {
-          class: 'fr-badge fr-badge--sm fr-badge--info fr-badge--no-icon'
+          class: 'fr-tag fr-tag--sm'
         },
         suggestion: createSuggestionMenu(tags, element)
       })
