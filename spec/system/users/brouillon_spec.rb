@@ -44,7 +44,7 @@ describe 'The user' do
     fill_in('address', with: '78 Rue du Grés 30310 Vergè')
     find('li', text: '78 Rue du Grés 30310 Vergèze').click
     wait_until { champ_value_for('address') == '78 Rue du Grés 30310 Vergèze' }
-    expect(champ_for('address').full_address?).to be_truthy
+    wait_until { champ_for('address').full_address? }
     expect(champ_for('address').departement_code_and_name).to eq('30 – Gard')
 
     fill_in('dossier_link', with: '123')
