@@ -21,7 +21,7 @@
             .fr-header__navbar
               - if is_search_enabled
                 %button.fr-btn--search.fr-btn{ "aria-controls" => "search-modal", "data-fr-opened" => "false", :title => t('views.users.dossiers.search.search_file') }= t('views.users.dossiers.search.search_file')
-              %button#navbar-burger-button.fr-btn--menu.fr-btn{ "aria-controls" => "modal-header__menu", "aria-haspopup" => "menu", "data-fr-opened" => "false", title: "Menu" } Menu
+              %button#navbar-burger-button.fr-btn--menu.fr-btn{ "aria-controls" => "modal-header__menu", "data-fr-opened" => "false", title: "Menu" } Menu
           .fr-header__service
             - root_profile_link, root_profile_libelle = root_path_info_for_profile(nav_bar_profile)
 
