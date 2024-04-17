@@ -1,60 +1,61 @@
 describe Champs::DepartementChamp, type: :model do
   describe 'validations' do
     describe 'external link' do
-      subject { build(:champ_departements, external_id: external_id) }
+      let(:champ) { build(:champ_departements, external_id: external_id) }
+      subject { champ.validate(:champs_public_value) }
 
       context 'when nil' do
         let(:external_id) { nil }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_truthy }
       end
 
       context 'when blank' do
         let(:external_id) { '' }
 
-        it { is_expected.not_to be_valid }
+        it { is_expected.to be_falsey }
       end
 
       context 'when included in the departement codes' do
         let(:external_id) { "01" }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_truthy }
       end
 
       context 'when not included in the departement codes' do
         let(:external_id) { "totoro" }
 
-        it { is_expected.not_to be_valid }
+        it { is_expected.to be_falsey }
       end
     end
 
     describe 'value' do
-      subject { create(:champ_departements) }
-
-      before { subject.update_columns(value: value) }
+      let(:champ) { create(:champ_departements) }
+      subject { champ.validate(:champs_public_value) }
+      before { champ.update_columns(value: value) }
 
       context 'when nil' do
         let(:value) { nil }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_truthy }
       end
 
       context 'when blank' do
         let(:value) { '' }
 
-        it { is_expected.not_to be_valid }
+        it { is_expected.to be_falsey }
       end
 
       context 'when included in the departement names' do
         let(:value) { "Ain" }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_truthy }
       end
 
       context 'when not included in the departement names' do
         let(:value) { "totoro" }
 
-        it { is_expected.not_to be_valid }
+        it { is_expected.to be_falsey }
       end
     end
   end

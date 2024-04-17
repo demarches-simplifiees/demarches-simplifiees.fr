@@ -1,6 +1,5 @@
 class Champs::IbanChamp < Champ
-  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
-  validates_with IbanValidator, if: :validate_champ_value?
+  validates_with IbanValidator, if: :validate_champ_value_or_prefill?
   after_validation :format_iban
 
   def for_api

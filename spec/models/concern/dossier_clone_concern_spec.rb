@@ -209,15 +209,12 @@ RSpec.describe DossierCloneConcern do
         end
 
         it 'can still fork' do
-          # rubocop:disable Lint/BooleanSymbol
-          expect(dossier.valid?(context: :false)).to be_falsey
+          expect(dossier.validate(:champs_public_value)).to be_falsey
 
           new_dossier.champs.load # load relation so champs are validated below
 
-          expect(new_dossier.valid?(context: :false)).to be_falsey
+          expect(new_dossier.validate(:champs_public_value)).to be_falsey
           expect(new_dossier.champs.find { _1.stable_id == 992 }.value).to eq("Je ne sais pas")
-
-          # rubocop:enable Lint/BooleanSymbol
         end
 
         context 'when associated record is invalid' do

@@ -1,5 +1,6 @@
 class Champs::DecimalNumberChamp < Champ
   before_validation :format_value
+
   validates :value, format: {
     with: /\A-?[0-9]+([\.,][0-9]{1,3})?\z/,
     allow_nil: true,
@@ -14,7 +15,7 @@ class Champs::DecimalNumberChamp < Champ
     message: -> (object, _data) {
       object.errors.generate_message(:value, :not_a_number)
     }
-  }, if: -> { validate_champ_value? || validation_context == :prefill }
+  }, if: :validate_champ_value_or_prefill?
 
   def for_export(path = :value)
     processed_value
