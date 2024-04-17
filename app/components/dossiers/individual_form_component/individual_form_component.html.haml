@@ -65,7 +65,7 @@
         - Individual.notification_methods.each do |method, _|
           .fr-fieldset__element
             .fr-radio-group
-              = individual.radio_button :notification_method, method, id: "notification_method_#{method}", "data-action" => "for-tiers#toggleEmailInput", "data-for-tiers-target" => "notificationMethod"
+              = individual.radio_button :notification_method, method, required: true, id: "notification_method_#{method}", "data-action" => "for-tiers#toggleEmailInput", "data-for-tiers-target" => "notificationMethod"
               %label.fr-label{ for: "notification_method_#{method}" }
                 = t("activerecord.attributes.individual.notification_methods.#{method}")
 
