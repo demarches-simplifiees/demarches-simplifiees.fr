@@ -164,10 +164,6 @@
                         %span.cell-link
                           = column
                           = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
-                      - elsif p.for_tiers
-                        %a.cell-link{ href: path }
-                          = "#{column} (#{t('views.instructeurs.dossiers.acts_on_behalf')} #{p.prenom}  #{p.nom})"
-                          = "- #{t('views.instructeurs.dossiers.deleted_by_user')}" if p.hidden_by_user_at.present?
                       - else
                         %a.cell-link{ href: path }
                           = column
