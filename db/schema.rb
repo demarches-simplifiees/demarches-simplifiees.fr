@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
+ActiveRecord::Schema[7.0].define(version: 2024_01_26_071130) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -892,9 +892,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_01_23_085909) do
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
-    t.datetime "test_started_at"
-    t.datetime "unpublished_at"
-    t.datetime "updated_at", null: false
+    t.boolean "template", default: false, null: false
+    t.datetime "test_started_at", precision: nil
+    t.datetime "unpublished_at", precision: nil
+    t.datetime "updated_at", precision: nil, null: false
     t.string "web_hook_url"
     t.datetime "whitelisted_at"
     t.bigint "zone_id"

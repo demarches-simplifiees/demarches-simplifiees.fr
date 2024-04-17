@@ -51,6 +51,7 @@ en:
         published_at: Publication date
         aasm_state: Status
         admin_count: Administrators count
+        template: Is a template
     errors:
       models:
         procedure:
