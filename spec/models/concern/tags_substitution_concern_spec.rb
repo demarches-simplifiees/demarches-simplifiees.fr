@@ -55,7 +55,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       it do
         is_expected.to eq(
-          "dossier_number" => dossier.id.to_s,
+          "dossier_number" => dossier.id,
           "dossier_depose_at" => "15/01/2024",
           "dossier_processed_at" => "",
           "dossier_procedure_libelle" => procedure.libelle,
@@ -70,7 +70,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       let(:tags) { Set.new(['individual_gender', 'individual_last_name']) }
 
-      it { is_expected.to eq({ "individual_gender" => 'M', "individual_last_name" => "Adama" }) }
+      it { is_expected.to eq({ "individual_gender" => 'M', "individual_last_name" => "ADAMA" }) }
     end
   end
 
