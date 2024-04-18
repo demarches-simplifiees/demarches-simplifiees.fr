@@ -3,8 +3,8 @@ namespace :after_party do
   task feature_flag_visa_champs: :environment do
     puts "Running deploy task 'feature_flag_visa_champs'"
 
-    progress = ProgressReport.new(User.all.count)
-    User.all.each do |user|
+    progress = ProgressReport.new(User.count)
+    User.find_each do |user|
       if Flipper.enabled?(:visa, user) && user.administrateur?
         user.administrateur.procedures.each do |procedure|
           if procedure.types_de_champ_for_tags.where(type_champ: 'visa').any?

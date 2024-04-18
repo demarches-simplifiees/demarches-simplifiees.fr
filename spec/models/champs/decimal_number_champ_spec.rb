@@ -50,7 +50,7 @@ describe Champs::DecimalNumberChamp do
         let(:value) { 11 }
 
         it { is_expected.to_not be_valid(:champs_public_value) }
-        it { expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"]) }
+        it { expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"]) }
       end
     end
 
@@ -66,7 +66,7 @@ describe Champs::DecimalNumberChamp do
         let(:value) { 9 }
 
         it { is_expected.to_not be_valid(:champs_public_value) }
-        it { expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"]) }
+        it { expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"]) }
       end
     end
   end

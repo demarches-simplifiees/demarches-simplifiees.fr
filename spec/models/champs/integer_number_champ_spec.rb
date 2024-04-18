@@ -52,7 +52,7 @@ describe Champs::IntegerNumberChamp do
 
         it do
           is_expected.to_not be_valid(:champs_public_value)
-          expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"])
+          expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"])
         end
       end
     end
@@ -70,7 +70,7 @@ describe Champs::IntegerNumberChamp do
 
         it do
           is_expected.to_not be_valid(:champs_public_value)
-          expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"])
+          expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"])
         end
       end
     end

@@ -10,4 +10,3 @@
             #{t("views.shared.social_login.#{provider}")}
     - if FranceConnectService.enabled?
       = render partial: 'shared/france_connect_login', locals: { url: france_connect_particulier_path }
-
