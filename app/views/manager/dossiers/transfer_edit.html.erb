@@ -12,7 +12,7 @@
     <dt class="attribute-label" id="user">User</dt>
 
     <dd class="attribute-data attribute-data--belongs-to">
-      <%= link_to @dossier.user.email, manager_user_path(@dossier.user) %>
+      <%= link_to @dossier.user_email_for(:notification), manager_user_path(@dossier.user) %>
     </dd>
 
     <dt class="attribute-label" id="text_summary">Text summary</dt>
