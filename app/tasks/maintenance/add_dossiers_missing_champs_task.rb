@@ -5,7 +5,7 @@ module Maintenance
     csv_collection
 
     def process(row)
-      DataFixer::DossierChampsMissing(dossier: row["dossier_id"]).fix
+      DataFixer::DossierChampsMissing.new(dossier: row["dossier_id"]).fix
     end
   end
 end
