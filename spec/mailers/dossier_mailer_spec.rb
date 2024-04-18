@@ -32,7 +32,7 @@ RSpec.describe DossierMailer, type: :mailer do
       let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
 
       it 'includes the correct body content and sender email' do
-        expect(subject.body).to include(dossier_url(dossier, host: ENV.fetch('APP_HOST')))
+        expect(subject.body).to include(dossier_url(dossier, host: 'demarches.gouv.fr'))
         expect(header_value("From", subject)).to include("ne-pas-repondre@demarches.gouv.fr")
       end
     end
@@ -333,7 +333,7 @@ RSpec.describe DossierMailer, type: :mailer do
     context 'when recipient has preferred domain' do
       let(:dossier_transfer) { create(:dossier_transfer, email: create(:user, preferred_domain: :demarches_gouv_fr).email) }
       it 'includes a link with the preferred domain in the email body' do
-        expect(subject.body).to include(dossiers_url(statut: "dossiers-transferes", host: ENV.fetch("APP_HOST")))
+        expect(subject.body).to include(dossiers_url(statut: "dossiers-transferes", host: 'demarches.gouv.fr'))
       end
     end
 
