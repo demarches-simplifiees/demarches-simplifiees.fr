@@ -58,7 +58,7 @@ describe Champs::RNAController, type: :controller do
         end
 
         it 'displays a “RNA is invalid” error message' do
-          expect(response.body).to include("Le numéro RNA doit commencer par un W majuscule suivi de 9 chiffres")
+          expect(response.body).to include("Le numéro RNA doit commencer par un W majuscule suivi de 9 chiffres ou lettres")
         end
       end
 
