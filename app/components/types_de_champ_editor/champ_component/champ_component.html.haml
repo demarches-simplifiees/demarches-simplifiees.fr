@@ -4,6 +4,7 @@
       .position.flex.align-center= (@coordinate.position + 1).to_s
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
       %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-down-line.move-down{ move_button_options(:down) }
+      = render TypesDeChampEditor::SelectChampPositionComponent.new(revision:, coordinate:)
 
       .flex.right
         - if coordinate.used_by_routing_rules?
@@ -141,4 +142,3 @@
 
   .type-de-champ-add-button{ class: class_names(root: !coordinate.child?, flex: true) }
     = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate&.parent, is_annotation: coordinate.private?, after_stable_id: type_de_champ.stable_id)
-    = render TypesDeChampEditor::SelectChampPositionComponent.new(revision:, coordinate:)
