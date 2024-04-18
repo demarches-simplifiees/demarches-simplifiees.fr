@@ -46,6 +46,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     max_duree_conservation_dossiers_dans_ds: Field::Number,
     estimated_duration_visible: Field::Boolean,
     piece_justificative_multiple: Field::Boolean,
+    for_tiers_enabled: Field::Boolean,
     replaced_by_procedure_id: Field::String,
     tags: Field::Text,
     template: Field::Boolean
@@ -109,6 +110,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :max_duree_conservation_dossiers_dans_ds,
     :estimated_duration_visible,
     :piece_justificative_multiple,
+    :for_tiers_enabled,
     :replaced_by_procedure_id
   ].freeze
 
@@ -121,6 +123,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :max_duree_conservation_dossiers_dans_ds,
     :estimated_duration_visible,
     :piece_justificative_multiple,
+    :for_tiers_enabled,
     :replaced_by_procedure_id
   ].freeze
 
