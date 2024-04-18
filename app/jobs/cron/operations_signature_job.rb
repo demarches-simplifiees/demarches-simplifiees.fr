@@ -7,6 +7,7 @@ class Cron::OperationsSignatureJob < Cron::CronJob
 
     while start_date < last_midnight
       operations = DossierOperationLog
+        .select(:id, :digest)
         .where(executed_at: start_date...start_date.tomorrow, bill_signature: nil)
 
       BillSignatureService.sign_operations(operations, start_date) if operations.present?
