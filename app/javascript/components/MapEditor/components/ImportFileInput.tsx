@@ -19,8 +19,11 @@ export function ImportFileInput({
     useImportFiles(featureCollection, { createFeatures, deleteFeatures });
 
   return (
-    <div className="file-import" style={{ marginBottom: '10px' }}>
-      <button className="button send primary" onClick={addInputFile}>
+    <div className="file-import fr-mb-3w">
+      <button
+        className="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line"
+        onClick={addInputFile}
+      >
         Ajouter un fichier GPX ou KML
       </button>
       <div>

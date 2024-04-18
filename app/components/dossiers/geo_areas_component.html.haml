@@ -1,5 +1,5 @@
 - if champ.selections_utilisateur.present?
-  .areas-title Sélections utilisateur
+  .fr-label Sélections utilisateur
   .areas
     %ul
       - champ.selections_utilisateur.slice(0, 20).each do |geo_area|
@@ -10,7 +10,7 @@
             et #{champ.selections_utilisateur.size - 20} autres points, lignes ou polygones.
 
 - if champ.cadastres.present?
-  .areas-title Parcelles cadastrales
+  .fr-label Parcelles cadastrales
   .areas
     %ul
       - champ.cadastres.each do |geo_area|

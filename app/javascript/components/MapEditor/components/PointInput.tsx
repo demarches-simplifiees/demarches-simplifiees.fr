@@ -1,10 +1,13 @@
 import React, { useState, useId } from 'react';
 import { fire } from '@utils';
-import type { Feature } from 'geojson';
-import { PlusIcon, LocationMarkerIcon } from '@heroicons/react/outline';
+import type { Feature, FeatureCollection } from 'geojson';
 import CoordinateInput from 'react-coordinate-input';
 
-export function PointInput() {
+export function PointInput({
+  featureCollection
+}: {
+  featureCollection: FeatureCollection;
+}) {
   const inputId = useId();
   const [value, setValue] = useState('');
   const [feature, setFeature] = useState<Feature | null>(null);
@@ -20,38 +23,39 @@ export function PointInput() {
   };
   const addPoint = () => {
     if (feature) {
-      fire(document, 'map:feature:create', feature);
+      fire(document, 'map:feature:create', {
+        feature,
+        featureCollection
+      });
       setValue('');
       setFeature(null);
     }
   };
 
   return (
-    <>
-      <label
-        className="areas-title mt-1"
-        htmlFor={inputId}
-        style={{ fontSize: '16px' }}
-      >
+    <div className="fr-input-group fr-mt-3w">
+      <label className="fr-label" htmlFor={inputId}>
         Ajouter un point sur la carte
+        <span className="fr-hint-text">
+          Exemple : 43°48&#39;06&#34;N 006°14&#39;59&#34;E
+        </span>
       </label>
-      <div className="flex align-center mt-1 mb-2">
+      <div className="flex flex-gap-1 fr-mt-1w">
         {navigator.geolocation ? (
           <button
             type="button"
-            className="button mr-1"
+            className="fr-btn fr-btn--secondary fr-icon-map-pin-2-line"
             onClick={getCurrentPosition}
             title="Afficher votre position sur la carte"
           >
             <span className="sr-only">
               Afficher votre position sur la carte
             </span>
-            <LocationMarkerIcon className="icon-size-big" aria-hidden />
           </button>
         ) : null}
         <CoordinateInput
           id={inputId}
-          className="m-0 mr-1"
+          className="fr-input"
           value={value}
           onChange={(value: string, { dd }: { dd: [number, number] }) => {
             setValue(value);
@@ -63,7 +67,7 @@ export function PointInput() {
                 properties: {}
               };
               setFeature(feature);
-              fire(document, 'map:zoom', { feature });
+              fire(document, 'map:zoom', { featureCollection, feature });
             } else {
               setFeature(null);
             }
@@ -71,7 +75,7 @@ export function PointInput() {
         />
         <button
           type="button"
-          className="button"
+          className="fr-btn fr-icon-add-circle-line"
           onClick={addPoint}
           disabled={!feature}
           title="Ajouter le point avec les coordonnées saisies sur la carte"
@@ -79,9 +83,8 @@ export function PointInput() {
           <span className="sr-only">
             Ajouter le point avec les coordonnées saisies sur la carte
           </span>
-          <PlusIcon className="icon-size-big" aria-hidden />
         </button>
       </div>
-    </>
+    </div>
   );
 }
