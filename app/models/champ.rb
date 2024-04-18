@@ -189,7 +189,7 @@ class Champ < ApplicationRecord
   end
 
   def describedby_id
-    "#{html_id}-description" if description.present?
+    "#{html_id}-describedby_id"
   end
 
   def log_fetch_external_data_exception(exception)
