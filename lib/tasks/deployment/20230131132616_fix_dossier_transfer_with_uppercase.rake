@@ -4,7 +4,7 @@ namespace :after_party do
     puts "Running deploy task 'fix_dossier_transfer_with_uppercase'"
     # in production, about 1000, no need to track progress
 
-    DossierTransfer.all.find_each do |dt|
+    DossierTransfer.find_each do |dt|
       if /A-Z/.match?(dt.email)
         dt.email = dt.email.downcase
         dt.save

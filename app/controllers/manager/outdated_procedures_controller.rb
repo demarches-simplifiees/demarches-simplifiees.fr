@@ -2,7 +2,7 @@ module Manager
   class OutdatedProceduresController < Manager::ApplicationController
     def index
       @records_per_page = params[:records_per_page] || "10"
-      resources = Procedure.all
+      resources = Procedure
         .where(procedure_expires_when_termine_enabled: false)
         .order(created_at: :asc)
         .page(params[:_page])

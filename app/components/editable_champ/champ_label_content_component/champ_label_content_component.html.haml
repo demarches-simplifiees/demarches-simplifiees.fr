@@ -1,5 +1,5 @@
 = @champ.libelle
-- if @champ.public? && !@champ.checkbox?
+- if @champ.public?
   - if @champ.mandatory?
     = render EditableChamp::AsteriskMandatoryComponent.new
   - else

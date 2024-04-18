@@ -148,7 +148,7 @@ def render_single_champ(pdf, champ)
     add_libelle(pdf, champ)
     pdf.text champ.description
     pdf.text "\n"
-  when 'Champs::AddressChamp',  'Champs::CarteChamp', 'Champs::TextareaChamp'
+  when 'Champs::AddressChamp', 'Champs::CarteChamp', 'Champs::TextareaChamp'
     format_in_2_lines(pdf, champ, 5)
   when 'Champs::DropDownListChamp'
     add_libelle(pdf, champ)

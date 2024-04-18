@@ -45,7 +45,7 @@ class APIBretagneService
       end
     in Success(body:)
       body
-    else  # no response gives back a 204, so we don't try to JSON.parse(nil) to avoid error
+    else # no response gives back a 204, so we don't try to JSON.parse(nil) to avoid error
       { items: [] }
     end
   end

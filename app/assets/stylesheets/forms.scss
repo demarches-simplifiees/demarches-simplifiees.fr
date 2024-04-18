@@ -150,6 +150,7 @@
     &.editable-champ-checkbox {
       label {
         font-weight: normal;
+        gap: 0.25rem; // Space before mandatory icon because dsfr set display:flex on checkbox label
       }
 
       input[type=checkbox] {

@@ -16,7 +16,7 @@ describe 'user access to the list of their dossiers', js: true do
     @default_per_page = Dossier.default_per_page
     Dossier.paginates_per dossiers_per_page
 
-    last_updated_dossier.update_column(:updated_at, "19/07/2052 15:35".to_time)
+    last_updated_dossier.update_column(:updated_at, Time.zone.parse("19/07/2052 15:35"))
 
     login_as user, scope: :user
     visit dossiers_path
