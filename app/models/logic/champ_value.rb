@@ -51,19 +51,18 @@ class Logic::ChampValue < Logic::Term
       targeted_champ.selected
     when "Champs::MultipleDropDownListChamp"
       targeted_champ.selected_options
-    when "Champs::DepartementChamp", "Champs::RegionChamp"
+    when "Champs::RegionChamp"
       targeted_champ.code
-    end
-  end
-
-  def compute_value_json(champs)
-    targeted_champ = champ(champs)
-
-    return nil if !targeted_champ.visible?
-    return nil if targeted_champ.blank? & !targeted_champ.drop_down_other?
-
-    if targeted_champ.type.in?(["Champs::CommuneChamp", "Champs::EpciChamp", "Champs::DepartementChamp"])
-      targeted_champ.value_json
+    when "Champs::DepartementChamp"
+      {
+        value: targeted_champ.code,
+        code_region: targeted_champ.code_region
+      }
+    when "Champs::CommuneChamp", "Champs::EpciChamp"
+      {
+        code_departement: targeted_champ.code_departement,
+        code_region: targeted_champ.code_region
+      }
     end
   end
 

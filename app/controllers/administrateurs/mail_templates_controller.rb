@@ -1,6 +1,8 @@
 module Administrateurs
   class MailTemplatesController < AdministrateurController
     include ActionView::Helpers::SanitizeHelper
+    before_action :retrieve_procedure
+    before_action :preload_revisions
 
     def index
       @mail_templates = mail_templates
@@ -15,7 +17,7 @@ module Administrateurs
     end
 
     def show
-      redirect_to edit_admin_procedure_mail_template_path(procedure.id, params[:id])
+      redirect_to edit_admin_procedure_mail_template_path(@procedure.id, params[:id])
     end
 
     def update
@@ -35,11 +37,11 @@ module Administrateurs
 
     def preview
       mail_template = find_mail_template_by_slug(params[:id])
-      dossier = procedure.active_revision.dossier_for_preview(current_user)
+      dossier = @procedure.active_revision.dossier_for_preview(current_user)
 
       @dossier = dossier
-      @logo_url = procedure.logo_url
-      @service = procedure.service
+      @logo_url = @procedure.logo_url
+      @service = @procedure.service
       @rendered_template = sanitize(mail_template.body_for_dossier(dossier), scrubber: Sanitizers::MailScrubber.new)
       @actions = mail_template.actions_for_dossier(dossier)
 
@@ -48,18 +50,14 @@ module Administrateurs
 
     private
 
-    def procedure
-      @procedure ||= current_administrateur.procedures.find(params[:procedure_id])
-    end
-
     def mail_templates
       [
-        procedure.passer_en_construction_email_template,
-        procedure.passer_en_instruction_email_template,
-        procedure.accepter_email_template,
-        procedure.refuser_email_template,
-        procedure.classer_sans_suite_email_template,
-        procedure.repasser_en_instruction_email_template
+        @procedure.passer_en_construction_email_template,
+        @procedure.passer_en_instruction_email_template,
+        @procedure.accepter_email_template,
+        @procedure.refuser_email_template,
+        @procedure.classer_sans_suite_email_template,
+        @procedure.repasser_en_instruction_email_template
       ]
     end
 

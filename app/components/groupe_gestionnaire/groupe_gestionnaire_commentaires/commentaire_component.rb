@@ -1,11 +1,10 @@
 class GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent < ApplicationComponent
   include ApplicationHelper
 
-  def initialize(commentaire:, connected_user:, commentaire_seen_at: nil, is_gestionnaire: true)
+  def initialize(commentaire:, connected_user:, commentaire_seen_at: nil)
     @commentaire = commentaire
     @connected_user = connected_user
-    @is_gestionnaire = is_gestionnaire
-    @groupe_gestionnaire = commentaire.groupe_gestionnaire
+    @groupe_gestionnaire = commentaire.sender_type == "Administrateur" ? commentaire.groupe_gestionnaire : commentaire.groupe_gestionnaire.parent
     @commentaire_seen_at = commentaire_seen_at
   end
 

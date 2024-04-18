@@ -1,9 +1,9 @@
 class Dsfr::ComboboxComponent < ApplicationComponent
-  def initialize(form: nil, options: nil, url: nil, selected: nil, allows_custom_value: false, input_html_options: {}, hidden_html_options: {})
-    @form, @options, @url, @selected, @allows_custom_value, @input_html_options, @hidden_html_options = form, options, url, selected, allows_custom_value, input_html_options, hidden_html_options
+  def initialize(form: nil, options: nil, url: nil, selected: nil, allows_custom_value: false, limit: nil, input_html_options: {}, hidden_html_options: {})
+    @form, @options, @url, @selected, @allows_custom_value, @limit, @input_html_options, @hidden_html_options = form, options, url, selected, allows_custom_value, limit, input_html_options, hidden_html_options
   end
 
-  attr_reader :form, :options, :url, :selected, :allows_custom_value
+  attr_reader :form, :options, :url, :selected, :allows_custom_value, :limit
 
   private
 

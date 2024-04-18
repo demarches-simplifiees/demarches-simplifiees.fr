@@ -8,7 +8,7 @@ class GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireCompone
 
   def email
     if @commentaire.sender == current_gestionnaire
-      "#{current_gestionnaire.email} (C’est vous !)"
+      "Messages avec le groupe gestionnaire parent (#{@groupe_gestionnaire.parent.name})"
     else
       @commentaire.sender_email
     end
@@ -20,8 +20,8 @@ class GroupeGestionnaire::GroupeGestionnaireListCommentaires::CommentaireCompone
 
   def see_button
     link_to 'Voir',
-      gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire),
-      class: 'button'
+      @commentaire.sender == current_gestionnaire ? parent_groupe_gestionnaire_gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire) : gestionnaire_groupe_gestionnaire_commentaire_path(@groupe_gestionnaire, @commentaire),
+      class: 'fr-btn fr-btn--sm fr-btn--tertiary'
   end
 
   def highlight?

@@ -38,6 +38,7 @@ export type Fetcher = (
 
 export class Combobox {
   #allowsCustomValue = false;
+  #limit?: number;
   #open = false;
   #inputValue = '';
   #selectedOption: Option | null = null;
@@ -53,14 +54,17 @@ export class Combobox {
     options,
     selected,
     allowsCustomValue,
+    limit,
     render
   }: {
     options: Option[] | Fetcher;
     selected: Option | null;
     allowsCustomValue?: boolean;
+    limit?: number;
     render: (state: State) => void;
   }) {
     this.#allowsCustomValue = allowsCustomValue ?? false;
+    this.#limit = limit;
     this.#options = Array.isArray(options) ? options : [];
     this.#fetcher = Array.isArray(options) ? null : options;
     this.#selectedOption = selected;
@@ -139,13 +143,13 @@ export class Combobox {
       this._render(Action.Update);
 
       this.#selectedOption = null;
-      this.#visibleOptions = this.#options;
     } else {
       this.#selectedOption = null;
-      this.#visibleOptions = this._filterOptions();
-      if (this.#otherOption && this.displaysOther())
-        this.#visibleOptions.unshift(this.#otherOption);
     }
+
+    this.#visibleOptions = this._filterOptions();
+    if (this.#otherOption && this.displaysOther())
+      this.#visibleOptions.unshift(this.#otherOption);
 
     if (this.#visibleOptions.length > 0) {
       if (!this.#open) {
@@ -251,11 +255,18 @@ export class Combobox {
   }
 
   private _filterOptions(): Option[] {
-    if (!this.#inputValue || this.#inputValue == this.#selectedOption?.value) {
-      return this.#options;
-    }
+    const emptyOrSelected =
+      !this.#inputValue || this.#inputValue == this.#selectedOption?.value;
+    const options = emptyOrSelected
+      ? this.#options
+      : matchSorter(this.#options, this.#inputValue, {
+          keys: ['label']
+        });
 
-    return matchSorter(this.#options, this.#inputValue, { keys: ['label'] });
+    if (this.#limit) {
+      return options.slice(0, this.#limit);
+    }
+    return options;
   }
 
   private get _focusedOptionIndex(): number {
