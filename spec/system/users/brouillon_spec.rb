@@ -51,7 +51,7 @@ describe 'The user' do
     expect(champ_for('address').full_address?).to be_truthy
     expect(champ_for('address').departement_code_and_name).to eq('30 – Gard')
 
-    fill_in('dossier_link', with: '123')
+    fill_in('dossier_link', with: dossier_to_link.id.to_s)
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
 
     expect(page).to have_css('span', text: 'Votre brouillon est automatiquement enregistré', visible: true)
