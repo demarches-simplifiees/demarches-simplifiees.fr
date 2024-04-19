@@ -120,4 +120,5 @@ Rails.application.configure do
   # config.action_cable.disable_request_forgery_protection = true
 
   config.hosts << ENV.fetch("APP_HOST")
+  config.hosts << ENV.fetch("APP_HOST_LEGACY") if ENV.key?("APP_HOST_LEGACY")
 end

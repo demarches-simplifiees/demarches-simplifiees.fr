@@ -170,11 +170,11 @@ describe DossierProjectionService do
         let(:column) { 'email' }
 
         let(:dossier) { create(:dossier) }
-        let!(:follow1) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'b@host')) }
-        let!(:follow2) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'a@host')) }
-        let!(:follow3) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'c@host')) }
+        let!(:follow1) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'b@host.fr')) }
+        let!(:follow2) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'a@host.fr')) }
+        let!(:follow3) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'c@host.fr')) }
 
-        it { is_expected.to eq "a@host, b@host, c@host" }
+        it { is_expected.to eq "a@host.fr, b@host.fr, c@host.fr" }
       end
 
       context 'for type_de_champ table' do

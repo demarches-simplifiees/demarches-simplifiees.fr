@@ -2236,16 +2236,33 @@ describe Dossier, type: :model do
   describe "#spreadsheet_columns" do
     let(:dossier) { create(:dossier) }
 
+    context 'user france connected' do
+      let(:dossier) { build(:dossier, user: build(:user, france_connect_information: build(:france_connect_information))) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", true]) }
+    end
+
+    context 'user not france connected' do
+      let(:dossier) { build(:dossier) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", false]) }
+    end
+
+    context 'for_individual' do
+      let(:dossier) { create(:dossier, procedure: create(:procedure, :for_individual)) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Dépot pour un tier", :for_tiers]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(['Nom du mandataire', :mandataire_last_name]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(['Prénom du mandataire', :mandataire_first_name]) }
+    end
+
     it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["État du dossier", "Brouillon"]) }
 
     context 'procedure sva' do
-      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
+      let(:dossier) { build(:dossier, :en_instruction, procedure: create(:procedure, :sva)) }
 
       it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVA", :sva_svr_decision_on]) }
     end
 
     context 'procedure svr' do
-      let(:dossier) { create(:dossier, :en_instruction, procedure: create(:procedure, :svr)) }
+      let(:dossier) { build(:dossier, :en_instruction, procedure: create(:procedure, :svr)) }
 
       it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Date décision SVR", :sva_svr_decision_on]) }
     end

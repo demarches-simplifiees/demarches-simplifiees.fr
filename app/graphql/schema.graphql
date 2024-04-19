@@ -1472,6 +1472,7 @@ type Dossier {
   dateTraitementSVASVR: ISO8601DateTime
   demandeur: Demandeur!
   demarche: DemarcheDescriptor!
+  deposeParUnTiers: Boolean
 
   """
   L’URL du GeoJSON contenant les données cartographiques du dossier.
@@ -1483,6 +1484,7 @@ type Dossier {
   messages(id: ID): [Message!]!
   motivation: String
   motivationAttachment: File
+  nomMandataire: String
 
   """
   Le numero du dossier.
@@ -1494,6 +1496,7 @@ type Dossier {
   """
   pdf: File
   prefilled: Boolean!
+  prenomMandataire: String
   revision: Revision! @deprecated(reason: "Utilisez le champ `demarche.revision` à la place.")
 
   """

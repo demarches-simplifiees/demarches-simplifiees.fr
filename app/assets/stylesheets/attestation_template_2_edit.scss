@@ -1,11 +1,17 @@
 @import "constants";
 
 #attestation-edit {
-  .attestation-schema {
+  .attestation-preview {
     width: 100%;
-    margin-top: 3em;
-    top: 3em;
-    position: sticky;
+
+    @media (min-width: 62em) {
+      height: 664px; // empirical height for an A4 ratio at this width
+    }
+
+    @media (max-width: 62em) {
+      // PDF height is approximately tied to width
+      height: calc(90vw * 29.7 / 21);
+    }
   }
 
   .tiptap {
@@ -67,6 +73,16 @@
       // style span rendered by tiptap like a button/link tag
       color: var(--text-action-high-blue-france);
       background-color: var(--background-action-low-blue-france);
+    }
+  }
+
+  // scss-lint:disable SelectorFormat
+  #show_maybe_null + label {
+    margin-bottom: 0.25rem;
+
+    .fr-hint-text {
+      position: absolute;
+      top: 1.15rem;
     }
   }
 }

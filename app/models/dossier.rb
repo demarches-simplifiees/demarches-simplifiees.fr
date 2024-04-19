@@ -1202,14 +1202,18 @@ class Dossier < ApplicationRecord
     # any modification in this method must be reflected in procedure fixed_column_offset
     columns = [
       ['ID', id.to_s],
-      ['Email', user_email_for(:display)]
+      ['Email', user_email_for(:display)],
+      ['FranceConnect ?', user_from_france_connect?]
     ]
 
     if procedure.for_individual?
       columns += [
         ['Civilité', individual&.gender],
         ['Nom', individual&.nom],
-        ['Prénom', individual&.prenom]
+        ['Prénom', individual&.prenom],
+        ['Dépot pour un tier', :for_tiers],
+        ['Nom du mandataire', :mandataire_last_name],
+        ['Prénom du mandataire', :mandataire_first_name]
       ]
       if procedure.ask_birthday
         columns += [['Date de naissance', individual&.birthdate]]
@@ -1390,6 +1394,10 @@ class Dossier < ApplicationRecord
 
   def mandataire_full_name
     "#{mandataire_first_name} #{mandataire_last_name}"
+  end
+
+  def user_from_france_connect?
+    user.france_connect_information.present?
   end
 
   private

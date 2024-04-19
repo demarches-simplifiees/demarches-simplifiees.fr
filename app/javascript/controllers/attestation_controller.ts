@@ -5,7 +5,8 @@ export class AttestationController extends ApplicationController {
   static targets = [
     'layoutToggle',
     'logoMarianneLabelFieldset',
-    'logoAttachmentFieldset'
+    'logoAttachmentFieldset',
+    'preview'
   ];
   static values = {
     logoAttachmentOfficialLabel: String,
@@ -15,6 +16,7 @@ export class AttestationController extends ApplicationController {
   declare readonly layoutToggleTarget: HTMLInputElement;
   declare readonly logoMarianneLabelFieldsetTarget: HTMLElement;
   declare readonly logoAttachmentFieldsetTarget: HTMLElement;
+  declare readonly previewTarget: HTMLIFrameElement;
 
   declare readonly logoAttachmentOfficialLabelValue: string;
   declare readonly logoAttachmentFreeLabelValue: string;
@@ -22,6 +24,25 @@ export class AttestationController extends ApplicationController {
   connect() {
     this.layoutToggleTarget.addEventListener('change', () => {
       this.update();
+    });
+
+    this.on('turbo:submit-end', () => {
+      // eslint-disable-next-line no-self-assign
+      this.previewTarget.src = this.previewTarget.src; // reload the iframe
+    });
+  }
+
+  toggleMaybeNull(event: Event) {
+    const checkbox = event.target as HTMLInputElement;
+    const visible = checkbox.checked;
+
+    // toggle hidden class on next label element
+    checkbox.nextElementSibling
+      ?.querySelector('.fr-hint-text')
+      ?.classList?.toggle('hidden', !visible);
+
+    document.querySelectorAll('li[data-maybe-null]').forEach((tag) => {
+      tag.classList.toggle('hidden', !visible);
     });
   }
 

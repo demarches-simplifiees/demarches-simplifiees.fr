@@ -14,6 +14,13 @@ export class ClipboardController extends Controller {
 
   #timer?: ReturnType<typeof setTimeout>;
 
+  connect(): void {
+    // some extensions or browsers block clipboard
+    if (!navigator.clipboard) {
+      this.element.classList.add('hidden');
+    }
+  }
+
   disconnect(): void {
     clearTimeout(this.#timer);
   }

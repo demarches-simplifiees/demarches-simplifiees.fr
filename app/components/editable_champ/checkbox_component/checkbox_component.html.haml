@@ -5,4 +5,5 @@
       'true',
       'false'
     %label.fr-label{ for: @champ.input_id, id: @champ.labelledby_id }
-      = render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
+      %span
+        = render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at

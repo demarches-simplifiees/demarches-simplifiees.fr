@@ -830,4 +830,24 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(:forbidden) }
     end
   end
+
+  describe '#add_filter' do
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, :for_individual) }
+
+    before do
+      create(:assign_to, instructeur:, groupe_instructeur: build(:groupe_instructeur, procedure:))
+
+      sign_in(instructeur.user)
+    end
+
+    subject do
+      post :add_filter, params: { procedure_id: procedure.id, field: "individual/nom", value: "n" * 110, statut: "a-suivre" }
+    end
+
+    it 'should render the error' do
+      subject
+      expect(flash.alert[0]).to include("Le filtre Nom est trop long (maximum: 100 caractères)")
+    end
+  end
 end

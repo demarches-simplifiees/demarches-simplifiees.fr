@@ -311,20 +311,27 @@ en:
         email_missing: "If you have not received our email (have you checked your spam ?), we can resend it."
         resent: 'Resend the confirmation email'
     invites:
+      create:
+        success: "One invitation has been sent to %{email}."
+      destroy:
+        success: "The permission given to %{email} had been revoked."
+        error: "You can't revoke this invitation"
       dropdown:
         invite_to_edit: Invite someone to edit this file
         view_invited_people: "View invited people"
         invite_to_view: "Invite someone to view this file"
       form:
-        invite_to_edit_line1: You can invite someone to complete this file with you.
-        invite_to_edit_line2: This person will have the right to edit your file.
+        modal_title: Invite someone
+        modal_highlight: "Invited people can view and edit your file"
+        title: Invite someone
         email: Email address
         invite_message: Add a message to the person you invite (optional)
         send_invitation: Send an invitation
-        invite_to_participate: "Invited people to participate in this file"
         withdraw_permission: "Withdraw the permission"
-        want_to_withdraw_permission: "Would you like to withdraw the permission?"
-        edit_dossier: "These people can edit this file."
+        want_to_withdraw_permission: "Would you like to withdraw the permission of %{email}?"
+        edit_dossier:
+          one: "1 user can edit this file."
+          other: "%{count} users can edit this file."
         submit_dossier_yourself: "You must submit the file yourself when it is complete."
     pagination:
       next: Next
