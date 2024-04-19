@@ -68,7 +68,6 @@ module Manager
       @user = User.find(params[:id])
 
       email_services = [
-        Mailjet::API.new,
         Sendinblue::API.new,
         Dolist::API.new
       ]

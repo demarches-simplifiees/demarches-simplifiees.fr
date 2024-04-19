@@ -113,8 +113,7 @@ Rails.application.configure do
     ActionMailer::Base.add_delivery_method :balancer, BalancerDeliveryMethod
     config.action_mailer.balancer_settings = {
       sendinblue: sendinblue_weigth,
-      dolist_api: dolist_api_weight,
-      mailjet: 100 - (sendinblue_weigth + dolist_api_weight)
+      dolist_api: dolist_api_weight
     }
     config.action_mailer.delivery_method = :balancer
   end
