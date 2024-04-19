@@ -24,7 +24,7 @@
 
 - unless @no_description
   .fr-accordions-group.fr-mb-3w
-    - cache [I18n.locale, procedure, "description"] do
+    - cache_unless(procedure.brouillon?, [I18n.locale, procedure, "description"]) do
       %section.fr-accordion
         %h2.fr-accordion__title
           %button.fr-accordion__btn{ "aria-controls" => "accordion-114", "aria-expanded" => "true" }

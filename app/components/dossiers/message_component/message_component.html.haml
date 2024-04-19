@@ -17,15 +17,15 @@
     - elsif commentaire.sent_by_system?
       = sanitize(commentaire.body, scrubber: Sanitizers::MailScrubber.new)
     - else
-      = render SimpleFormatComponent.new(commentaire.body, allow_a: commentaire.sent_by_instructeur?, allow_autolink: commentaire.sent_by_instructeur?)
+      = render SimpleFormatComponent.new(commentaire.body, allow_a: groupe_gestionnaire.nil? && commentaire.sent_by_instructeur?, allow_autolink: groupe_gestionnaire.nil? && commentaire.sent_by_instructeur?)
 
 
   .message-extras.flex.justify-start
     - if soft_deletable?
-      = button_to instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire), method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
+      = button_to delete_url, method: :delete,  class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-icon-delete-line fr-btn--icon-left fr-text-default--warning', form: { data: { turbo: true, turbo_confirm: t('.confirm') } } do
         = delete_button_text
 
-    - if commentaire.piece_jointe.attached?
+    - if groupe_gestionnaire.nil? && commentaire.piece_jointe.attached?
       .fr-ml-2w
         = render Attachment::ShowComponent.new(attachment: commentaire.piece_jointe.attachment, new_tab: true)
 

@@ -46,7 +46,7 @@ module Manager
 
     def remove_gestionnaire
       groupe_gestionnaire = GroupeGestionnaire.find(params[:id])
-      if !groupe_gestionnaire.is_root? || groupe_gestionnaire.gestionnaires.one?
+      if groupe_gestionnaire.is_root? && groupe_gestionnaire.gestionnaires.one?
         flash[:alert] = I18n.t('groupe_gestionnaires.flash.alert.groupe_gestionnaire_gestionnaire.destroy_at_least_one')
       else
         gestionnaire = Gestionnaire.find(params[:gestionnaire][:id])

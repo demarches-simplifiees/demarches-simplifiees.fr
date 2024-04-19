@@ -127,7 +127,7 @@ describe Zone do
 
     describe "#self.default_for" do
       it 'returns zone related to tchap hs' do
-        expect(Zone.default_for('agent.education.tchap.gouv.fr').map(&:acronym)).to eq ['MEN', 'ESR']
+        expect(Zone.default_for('agent.education.tchap.gouv.fr').map(&:acronym)).to match_array(['MEN', 'ESR'])
         expect(Zone.default_for('agent.tchap.gouv.fr').map(&:acronym)).to eq []
       end
     end

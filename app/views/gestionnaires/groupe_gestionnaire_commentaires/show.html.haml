@@ -10,6 +10,6 @@
   %ul.messages-list{ data: { controller: 'scroll-to' } }
     - @groupe_gestionnaire.current_commentaires_groupe_and_children_commentaires_groupe.where(sender_id: @last_commentaire.sender_id, sender_type: @last_commentaire.sender_type).each do |commentaire|
       %li.message{ class: commentaire_is_from_me_class(commentaire, current_gestionnaire), id: dom_id(commentaire) }
-        = render(GroupeGestionnaire::GroupeGestionnaireCommentaires::CommentaireComponent.new(commentaire: commentaire, connected_user: current_gestionnaire, commentaire_seen_at: @commentaire_seen_at))
+        = render(Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: current_gestionnaire, messagerie_seen_at: @commentaire_seen_at, groupe_gestionnaire: @groupe_gestionnaire))
   - if @last_commentaire.sender
-    = render partial: "shared/groupe_gestionnaires/commentaires/form", locals: { commentaire: @commentaire, form_url: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire) }
+    = render partial: "shared/dossiers/messages/form", locals: { commentaire: @commentaire, form_url: gestionnaire_groupe_gestionnaire_commentaires_path(@groupe_gestionnaire), last_commentaire: @last_commentaire }

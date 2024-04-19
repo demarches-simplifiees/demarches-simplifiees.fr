@@ -5,6 +5,10 @@ module Gestionnaires
     before_action :retrieve_last_parent_groupe_gestionnaire_commentaire, only: [:index, :parent_groupe_gestionnaire, :create_parent_groupe_gestionnaire]
 
     def index
+      @commentaires = @groupe_gestionnaire.gestionnaire_commentaires(current_gestionnaire)
+        .select("sender_id, sender_type, sender_email, groupe_gestionnaire_id, MAX(id) as id, MAX(created_at) as created_at")
+        .group(:sender_id, :sender_type, :sender_email, :groupe_gestionnaire_id)
+        .order("MAX(id) DESC")
     end
 
     def show

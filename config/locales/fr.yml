@@ -361,10 +361,6 @@ fr:
     gestionnaires:
       groupe_gestionnaires:
         delete: Supprimer
-        messages:
-          form:
-            send_message: "Envoyer le message"
-            write_message_placeholder: "Écrivez votre message ici"
     instructeurs:
       dossiers:
         tab_steps:

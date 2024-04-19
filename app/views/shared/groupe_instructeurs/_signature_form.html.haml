@@ -1,8 +1,7 @@
 .card.mt-2
+  %h2.fr-h3 Tampon de l'attestation
   = render NestedForms::FormOwnerComponent.new
   = form_with url: { action: :add_signature }, method: :post, html: { multipart: true } do |f|
-    .card-title Tampon de l'attestation
-
     %p.fr-text--sm.fr-text-mention--grey
       Vous pouvez apposer sur l’attestation un tampon (ou signature) dédié à ce groupe d’instructeurs.
       Si vous n’en fournissez pas, celui de la démarche sera utilisé, le cas échéant.
