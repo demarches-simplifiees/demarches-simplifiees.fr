@@ -67,7 +67,7 @@ describe ProcedureExportService do
           "Civilité",
           "Nom",
           "Prénom",
-          "Dépot pour un tier",
+          "Dépôt pour un tiers",
           "Nom du mandataire",
           "Prénom du mandataire",
           "Archivé",

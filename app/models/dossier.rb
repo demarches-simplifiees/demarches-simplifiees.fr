@@ -1211,7 +1211,7 @@ class Dossier < ApplicationRecord
         ['Civilité', individual&.gender],
         ['Nom', individual&.nom],
         ['Prénom', individual&.prenom],
-        ['Dépot pour un tier', :for_tiers],
+        ['Dépôt pour un tiers', :for_tiers],
         ['Nom du mandataire', :mandataire_last_name],
         ['Prénom du mandataire', :mandataire_first_name]
       ]
