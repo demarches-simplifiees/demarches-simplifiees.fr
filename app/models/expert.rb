@@ -34,15 +34,13 @@ class Expert < ApplicationRecord
       .joins(:experts_procedures, :user)
       .where(experts_procedures: { procedure: procedure })
 
-    new_or_confirmed_experts = procedure_experts
-      .where.not(users: { last_sign_in_at: nil })
-      .or(procedure_experts.where(users: { created_at: 1.day.ago.. }))
-
     suggested_expert = if procedure.experts_require_administrateur_invitation?
-      new_or_confirmed_experts
+      procedure_experts
         .where(experts_procedures: { revoked_at: nil })
     else
-      new_or_confirmed_experts
+      procedure_experts
+        .where.not(users: { last_sign_in_at: nil })
+        .or(procedure_experts.where(users: { created_at: 1.day.ago.. }))
     end
 
     suggested_expert
