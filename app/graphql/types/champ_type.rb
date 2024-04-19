@@ -79,6 +79,8 @@ module Types
           Types::Champs::VisaChampType
         when ::Champs::EpciChamp
           Types::Champs::EpciChampType
+        when ::Champs::RNAChamp
+          Types::Champs::RNAChampType
         when ::Champs::RNFChamp
           Types::Champs::RNFChampType
         when ::Champs::EngagementJuridiqueChamp

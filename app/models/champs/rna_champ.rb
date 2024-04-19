@@ -22,4 +22,25 @@ class Champs::RNAChamp < Champ
   def search_terms
     etablissement.present? ? etablissement.search_terms : [value]
   end
+
+  def full_address
+    address = data&.dig("adresse")
+    return if address.blank?
+    "#{address["numero_voie"]} #{address["type_voie"]} #{address["libelle_voie"]} #{address["code_postal"]} #{address["commune"]}"
+  end
+
+  def rna_address
+    address = data&.dig("adresse")
+    return if address.blank?
+    {
+      label: full_address,
+      type: "housenumber",
+      street_address: address["libelle_voie"] ? [address["numero_voie"], address["type_voie"], address["libelle_voie"]].compact.join(' ') : nil,
+      street_number: address["numero_voie"],
+      street_name: [address["type_voie"], address["libelle_voie"]].compact.join(' '),
+      postal_code: address["code_postal"],
+      city_name: address["commune"],
+      city_code: address["code_insee"]
+    }
+  end
 end

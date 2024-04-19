@@ -68,7 +68,17 @@ RSpec.describe RNAChampAssociationFetchableConcern do
         "association_date_creation" => "2015-01-01",
         "association_date_declaration" => "2019-01-01",
         "association_date_publication" => "2018-01-01",
-        "association_rna" => "W751080001"
+        "association_rna" => "W751080001",
+        "adresse" => {
+          "complement" => "",
+          "numero_voie" => "33",
+          "type_voie" => "rue",
+          "libelle_voie" => "de Modagor",
+          "distribution" => "dummy",
+          "code_insee" => "75108",
+          "code_postal" => "75009",
+          "commune" => "Paris"
+        }
       }
     end
   end

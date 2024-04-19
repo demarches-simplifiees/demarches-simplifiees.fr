@@ -47,7 +47,6 @@ DOC_PROCEDURE_EXPIRES_URL = [FR_DOC_URL, "expiration-et-suppression-des-dossiers
 STATUS_PAGE_URL = ENV.fetch("STATUS_PAGE_URL", "https://updown.io/cugq")
 DEMANDE_INSCRIPTION_ADMIN_PAGE_URL = ENV.fetch("DEMANDE_INSCRIPTION_ADMIN_PAGE_URL", "https://www.demarches-simplifiees.fr/commencer/demande-d-inscription-a-demarches-simplifiees")
 MATOMO_IFRAME_URL = ENV.fetch("MATOMO_IFRAME_URL", "https://#{ENV.fetch('MATOMO_HOST', 'stats.data.gouv.fr')}/index.php?module=CoreAdminHome&action=optOut&language=fr&&fontColor=333333&fontSize=16px&fontFamily=Muli")
-CSP_REPORT_URI = ENV.fetch("CSP_REPORT_URI", "")
 
 #----- Polynesian variables
 

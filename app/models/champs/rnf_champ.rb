@@ -109,4 +109,10 @@ class Champs::RNFChamp < Champ
       }
     end
   end
+
+  def full_address
+    if address.present?
+      address['label']
+    end
+  end
 end

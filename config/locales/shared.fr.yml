@@ -28,7 +28,7 @@ fr:
           not_filled: non renseigné
           not_found: "RNA %{rna} (aucun établissement trouvé)"
         association:
-          data_fetched: "Ce RNA correspond à %{title}"
+          data_fetched: "Ce RNA correspond à %{title}, %{address}"
           not_found: "Aucun établissement trouvé"
           network_error: "Une erreur réseau a empêché l’association liée à ce RNA d’être trouvée"
       rnf:
