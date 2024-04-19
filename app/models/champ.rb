@@ -288,7 +288,7 @@ class Champ < ApplicationRecord
   end
 
   def cleanup_if_empty
-    if persisted? && external_id_changed?
+    if fetch_external_data? && persisted? && external_id_changed?
       self.data = nil
     end
   end

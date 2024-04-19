@@ -1,16 +1,20 @@
 .two-columns.avis-sign-up
   .columns-container
     .column.left
-      %p.description= @dossier.procedure.libelle
+      %h2.fr-py-5w.text-center= @dossier.procedure.libelle
       %p.dossier Dossier nº #{@dossier.id}
     .column
-      = form_for(User.new, url: sign_up_expert_avis_path(email: @email), method: :post, html: { class: "form" }) do |f|
-        %h1 Créez-vous un compte
+      = form_for(User.new(email: @email), url: sign_up_expert_avis_path(email: @email), method: :post, html: { class: "fr-py-5w" }) do |f|
+        %h1.fr-h2= t('views.registrations.new.title', name: APPLICATION_NAME)
+        %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'create-account-legend' } }
+          .fr-fieldset__element
+            %p.fr-text--sm= t('utils.mandatory_champs')
 
-        = f.label :email, "Email"
-        = f.email_field :email, value: @email, disabled: true
+          .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { disabled: true, autocomplete: 'email' })
+          .fr-fieldset__element
+            = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH }) do |c|
+              - c.with_describedby do
+                = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
-        = f.label :password, "Mot de passe"
-        = f.password_field :password, required: true, placeholder: "#{PASSWORD_MIN_LENGTH} caractères minimum"
-
-        = f.submit "Créer un compte", class: "button large primary expand"
+        %ul.fr-btns-group
+          %li= f.submit t('views.shared.account.create'), class: "fr-btn"

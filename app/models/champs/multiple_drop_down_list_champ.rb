@@ -90,7 +90,7 @@ class Champs::MultipleDropDownListChamp < Champ
     values = if value.is_a?(Array)
       value
     elsif value.starts_with?('[')
-      JSON.parse(value)
+      JSON.parse(value) rescue selected_options + [value] # value may start by [ without being a real JSON value
     else
       selected_options + [value]
     end.uniq.without('')

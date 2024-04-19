@@ -84,11 +84,23 @@ class PiecesJustificativesService
   def acl_for_dossier_export
     case @user_profile
     when Expert
-      { include_infos_administration: true, include_avis_for_expert: true, only_for_expert: @user_profile }
+      {
+        include_infos_administration: true,
+        include_avis_for_expert: true,
+        only_for_expert: @user_profile
+      }
     when Instructeur, Administrateur
-      { include_infos_administration: true, include_avis_for_expert: true, only_for_export: false }
+      {
+        include_infos_administration: true,
+        include_avis_for_expert: true,
+        only_for_export: false
+      }
     when User
-      { include_infos_administration: false, include_avis_for_expert: false, only_for_expert: false }
+      {
+        include_infos_administration: false,
+        include_avis_for_expert: false, # should be true, expert can use the messagerie, why not provide avis ?
+        only_for_expert: false
+      }
     else
       raise 'not supported'
     end
@@ -211,12 +223,21 @@ class PiecesJustificativesService
 
   def pjs_for_avis(dossiers)
     avis_ids_dossier_id_query = Avis.joins(:dossier).where(dossier: dossiers)
-    avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false) if !liste_documents_allows?(:with_avis_piece_justificative)
+    if !liste_documents_allows?(:with_avis_piece_justificative)
+      avis_ids_dossier_id_query = avis_ids_dossier_id_query.where(confidentiel: false)
+    end
+    if @user_profile.is_a?(Expert)
+      avis_ids = Avis.joins(:dossier, experts_procedure: :expert)
+        .where(experts_procedure: { expert: @user_profile })
+        .where(dossier: dossiers)
+        .pluck(:id)
+      avis_ids_dossier_id_query = avis_ids_dossier_id_query.or(Avis.where(id: avis_ids))
+    end
     avis_ids_dossier_id = avis_ids_dossier_id_query.pluck(:id, :dossier_id).to_h
 
     ActiveStorage::Attachment
       .includes(:blob)
-      .where(record_type: "Avis", name: "piece_justificative_file", record_id: avis_ids_dossier_id.keys)
+      .where(record_type: "Avis", record_id: avis_ids_dossier_id.keys)
       .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = avis_ids_dossier_id[a.record_id]

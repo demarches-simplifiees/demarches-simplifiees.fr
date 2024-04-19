@@ -9,6 +9,9 @@ module Gestionnaires
         .select("sender_id, sender_type, sender_email, groupe_gestionnaire_id, MAX(id) as id, MAX(created_at) as created_at")
         .group(:sender_id, :sender_type, :sender_email, :groupe_gestionnaire_id)
         .order("MAX(id) DESC")
+      @commentaires_parent_group = @commentaires.filter { |commentaire| commentaire.groupe_gestionnaire_id == @groupe_gestionnaire.parent_id }
+      @commentaires_children_groups = @commentaires.filter { |commentaire| commentaire.groupe_gestionnaire_id != @groupe_gestionnaire.parent_id && commentaire.groupe_gestionnaire_id != @groupe_gestionnaire.id }
+      @commentaires = @commentaires.filter { |commentaire| commentaire.groupe_gestionnaire_id == @groupe_gestionnaire.id }
     end
 
     def show

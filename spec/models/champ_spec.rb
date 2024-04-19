@@ -586,7 +586,7 @@ describe Champ do
   end
 
   describe "fetch_external_data" do
-    let(:champ) { create(:champ_text, data: 'some data') }
+    let(:champ) { create(:champ_rnf, data: 'some data') }
 
     context "cleanup_if_empty" do
       it "remove data if external_id changes" do
@@ -600,8 +600,7 @@ describe Champ do
       let(:data) { 'some other data' }
 
       it "fill data from external source" do
-        expect(champ).to receive(:fetch_external_data?) { true }
-        expect_any_instance_of(Champs::TextChamp).to receive(:fetch_external_data) { data }
+        expect_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data) { data }
 
         perform_enqueued_jobs do
           champ.update(external_id: 'external_id')
@@ -609,25 +608,25 @@ describe Champ do
         expect(champ.reload.data).to eq data
       end
     end
+  end
 
-    context "#input_name" do
-      let(:champ) { create(:champ_text) }
+  describe "#input_name" do
+    let(:champ) { create(:champ_text) }
+    it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
+
+    context "when private" do
+      let(:champ) { create(:champ_text, private: true) }
+      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
+    end
+
+    context "when has parent" do
+      let(:champ) { create(:champ_text, parent: create(:champ_text)) }
       it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
+    end
 
-      context "when private" do
-        let(:champ) { create(:champ_text, private: true) }
-        it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
-      end
-
-      context "when has parent" do
-        let(:champ) { create(:champ_text, parent: create(:champ_text)) }
-        it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
-      end
-
-      context "when has private parent" do
-        let(:champ) { create(:champ_text, private: true, parent: create(:champ_text, private: true)) }
-        it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
-      end
+    context "when has private parent" do
+      let(:champ) { create(:champ_text, private: true, parent: create(:champ_text, private: true)) }
+      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
     end
   end
 

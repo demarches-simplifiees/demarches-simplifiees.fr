@@ -152,7 +152,7 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
           click_on "Créer un compte"
 
           sign_up_with user_email, password
-          expect(page).to have_content "nous avons besoin de vérifier votre adresse #{user_email}"
+          expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
 
           click_confirmation_link_for user_email
           expect(page).to have_content('Votre compte a bien été confirmé.')
