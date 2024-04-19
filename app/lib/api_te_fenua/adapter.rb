@@ -12,10 +12,12 @@ class APITeFenua::Adapter
 
   def get_features
     response = self.class.search(@address)
-    result = JSON.parse(response, symbolize_names: true)
-    result[:content][:hits][:hits]
-  rescue RestClient::Exception, JSON::ParserError, TypeError
-    @blank_return
+    if response.success?
+      result = JSON.parse(response.body, symbolize_names: true)
+      result[:content][:hits][:hits]
+    else
+      @blank_return
+    end
   end
 
   def handle_result
@@ -32,28 +34,19 @@ class APITeFenua::Adapter
     raise NoMethodError
   end
 
+  TIMEOUT = 10
+
   def self.search(search)
     search_url = [API_TE_FENUA_URL, "recherche"].join("/")
-    RestClient::Request.execute(method: :get,
-                                url: search_url,
-                                timeout: 68,
-                                headers: {
-                                  params: {
-                                    # mandatory but unused parameters
-                                    d: '0',
-                                    x: '0',
-                                    y: '0',
-                                    id: '',
-                                    sid: 'reqId',
-                                    # query
-                                    q: search
-                                  }
-                                })
-  rescue RestClient::ServiceUnavailable
-    nil
-  rescue StandardError => e
-    puts e.message
-    puts e.backtrace
-    nil
+    Typhoeus.get(search_url, timeout: TIMEOUT, params: {
+      # mandatory but unused parameters
+      d: '0',
+      x: '0',
+      y: '0',
+      id: '',
+      sid: 'reqId',
+      # query
+      q: search
+    })
   end
 end
