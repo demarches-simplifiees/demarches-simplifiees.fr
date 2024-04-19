@@ -3,6 +3,18 @@ class Champs::AddressChamp < Champs::TextChamp
     data.present?
   end
 
+  def feature
+    ''
+  end
+
+  def feature=(value)
+    return if value.blank?
+    feature = JSON.parse(value)
+    self.data = APIGeoService.parse_ban_address(feature)
+  rescue JSON::ParserError
+    self.data = nil
+  end
+
   def address
     full_address? ? data : nil
   end
@@ -13,7 +25,7 @@ class Champs::AddressChamp < Champs::TextChamp
 
   def search_terms
     if full_address?
-      [data['label'], data['departement'], data['region'], data['city']]
+      [data['label'], data['department_name'], data['region_name'], data['city_name']]
     else
       [address_label]
     end
@@ -35,45 +47,48 @@ class Champs::AddressChamp < Champs::TextChamp
     address_label
   end
 
-  def fetch_external_data?
-    true
+  def code_departement
+    if full_address?
+      address.fetch('department_code')
+    end
   end
 
-  def fetch_external_data
-    APIAddress::AddressAdapter.new(external_id).to_params
+  def code_region
+    if full_address?
+      address.fetch('region_code')
+    end
   end
 
   def departement_name
-    APIGeoService.departement_name(address.fetch('department_code'))
+    APIGeoService.departement_name(code_departement)
   end
 
   def departement_code_and_name
     if full_address?
-      "#{address.fetch('department_code')} – #{departement_name}"
+      "#{code_departement} – #{departement_name}"
     end
   end
 
   def departement
     if full_address?
-      { code: address.fetch('department_code'), name: departement_name }
+      { code: code_departement, name: departement_name }
     end
   end
 
   def commune_name
     if full_address?
-      "#{APIGeoService.commune_name(address.fetch('department_code'), address['city_code'])} (#{address['postal_code']})"
+      "#{APIGeoService.commune_name(code_departement, address['city_code'])} (#{address['postal_code']})"
     end
   end
 
   def commune
     if full_address?
-      department_code = address.fetch('department_code')
       city_code = address.fetch('city_code')
       city_name = address.fetch('city_name')
       postal_code = address.fetch('postal_code')
 
-      commune_name = APIGeoService.commune_name(department_code, city_code)
-      commune_code = APIGeoService.commune_code(department_code, city_name)
+      commune_name = APIGeoService.commune_name(code_departement, city_code)
+      commune_code = APIGeoService.commune_code(code_departement, city_name)
 
       if commune_name.present?
         {

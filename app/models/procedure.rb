@@ -500,7 +500,7 @@ class Procedure < ApplicationRecord
     }
     include_list[:groupe_instructeurs] = [:instructeurs, :contact_information] if !is_different_admin
     procedure = self.deep_clone(include: include_list) do |original, kopy|
-      PiecesJustificativesService.clone_attachments(original, kopy)
+      ClonePiecesJustificativesService.clone_attachments(original, kopy)
     end
     procedure.path = SecureRandom.uuid
     procedure.aasm_state = :brouillon
@@ -721,7 +721,7 @@ class Procedure < ApplicationRecord
   end
 
   def instructeurs_self_management?
-    routing_enabled? || instructeurs_self_management_enabled?
+    instructeurs_self_management_enabled?
   end
 
   def groupe_instructeurs_but_defaut

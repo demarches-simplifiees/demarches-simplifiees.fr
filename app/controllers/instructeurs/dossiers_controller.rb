@@ -50,10 +50,9 @@ module Instructeurs
     def show
       @demande_seen_at = current_instructeur.follows.find_by(dossier: dossier_with_champs)&.demande_seen_at
       @is_dossier_in_batch_operation = dossier.batch_operation.present?
-
       respond_to do |format|
         format.pdf do
-          @include_infos_administration = true
+          @acls = PiecesJustificativesService.new(user_profile: current_instructeur).acl_for_dossier_export
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
@@ -326,7 +325,7 @@ module Instructeurs
     end
 
     def telecharger_pjs
-      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(Dossier.where(id: dossier.id), with_champs_private: true, include_infos_administration: true)
+      files = ActiveStorage::DownloadableFile.create_list_from_dossiers(dossiers: Dossier.where(id: dossier.id), user_profile: current_instructeur)
       cleaned_files = ActiveStorage::DownloadableFile.cleanup_list_from_dossier(files)
 
       zipline(cleaned_files, "dossier-#{dossier.id}.zip")
@@ -411,7 +410,7 @@ module Instructeurs
       champs_params = params.require(:dossier).permit(champs_private_attributes: [
         :id, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: [],
         champs_attributes: [
-          :id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: []
+          :id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, :feature, value: []
         ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
       champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}

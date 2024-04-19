@@ -13,7 +13,7 @@ module Instructeurs
 
     def create
       type = params[:type]
-      archive = Archive.find_or_create_archive(type, year_month, groupe_instructeurs)
+      archive = Archive.find_or_create_archive(type, year_month, groupe_instructeurs, current_instructeur)
       if archive.pending?
         ArchiveCreationJob.perform_later(@procedure, archive, current_instructeur)
         flash[:notice] = "Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes à plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible."

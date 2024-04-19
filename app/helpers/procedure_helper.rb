@@ -34,10 +34,6 @@ module ProcedureHelper
     procedure_auto_archive_date(procedure) + ' ' + procedure_auto_archive_time(procedure)
   end
 
-  def can_manage_groupe_instructeurs?(procedure)
-    procedure.routing_enabled? && current_administrateur&.owns?(procedure)
-  end
-
   def can_send_groupe_message?(procedure)
     groupe_instructeur_on_procedure_ids = procedure.groupe_instructeurs.active.ids.sort
     groupe_instructeur_on_instructeur_ids = current_instructeur.groupe_instructeurs.active.where(procedure: procedure).ids.sort

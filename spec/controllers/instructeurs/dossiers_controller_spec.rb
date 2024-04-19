@@ -798,7 +798,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq(["emaila.com : Le champ « Email » n'est pas valide"]) }
+        it { expect(flash.alert).to eq(["emaila.com : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"]) }
         it { expect { subject }.not_to change(Avis, :count) }
         it { expect(dossier.last_avis_updated_at).to eq(nil) }
       end
@@ -820,7 +820,7 @@ describe Instructeurs::DossiersController, type: :controller do
         before { subject }
 
         it { expect(response).to render_template :avis }
-        it { expect(flash.alert).to eq(["toto.fr : Le champ « Email » n'est pas valide"]) }
+        it { expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"]) }
         it { expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com") }
         it { expect(Avis.count).to eq(old_avis_count + 1) }
         it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
@@ -910,7 +910,7 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(assigns(:include_infos_administration)).to eq(true) }
+      it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: instructeur).acl_for_dossier_export) }
       it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
 
@@ -1053,7 +1053,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     before do
-      allow(PiecesJustificativesService).to receive(:generate_dossier_export).with([dossier], include_infos_administration: true, include_avis_for_expert: false).and_call_original
+      allow_any_instance_of(PiecesJustificativesService).to receive(:generate_dossiers_export).with([dossier]).and_call_original
     end
 
     it 'includes an attachment' do

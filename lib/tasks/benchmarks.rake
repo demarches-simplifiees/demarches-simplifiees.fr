@@ -4,8 +4,8 @@ namespace :benchmarks do
     p_45964 = Procedure.find(45964)
     p_55824 = Procedure.find(55824)
     Benchmark.bm do |x|
-      x.report("Démarche 45964") { ProcedureExportService.new(p_45964, p_45964.dossiers).to_xlsx }
-      x.report("Démarche 55824") { ProcedureExportService.new(p_55824, p_55824.dossiers).to_xlsx }
+      x.report("Démarche 45964") { ProcedureExportService.new(p_45964, p_45964.dossiers, p_45964.administrateurs.first).to_xlsx }
+      x.report("Démarche 55824") { ProcedureExportService.new(p_55824, p_55824.dossiers, p_55824.administrateurs.first).to_xlsx }
     end
   end
 
@@ -25,8 +25,8 @@ namespace :benchmarks do
     p_45964 = Procedure.find(45964)
     p_55824 = Procedure.find(55824)
     Benchmark.bm do |x|
-      x.report("Démarche 45964") { PiecesJustificativesService.generate_dossier_export(p_45964.dossiers) }
-      x.report("Démarche 55824") { PiecesJustificativesService.generate_dossier_export(p_55824.dossiers.limit(10_000)) }
+      x.report("Démarche 45964") { PiecesJustificativesService.new(user_profile: p_45964.administrateurs.first).generate_dossiers_export(p_45964.dossiers) }
+      x.report("Démarche 55824") { PiecesJustificativesService.new(user_profile: p_55824.administrateurs.first).generate_dossiers_export(p_55824.dossiers.limit(10_000)) }
     end
   end
 

@@ -1,8 +1,9 @@
 require 'csv'
 
 describe ProcedureExportService do
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
-  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers) }
+  let(:instructeur) { create(:instructeur) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs, instructeurs: [instructeur]) }
+  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur) }
 
   let(:tdc_to_ignore) { Set['repetition', 'header_section', 'explication'] }
   let(:champ_headers) do
@@ -169,7 +170,7 @@ describe ProcedureExportService do
 
       context 'as csv' do
         subject do
-          ProcedureExportService.new(procedure, procedure.dossiers)
+          ProcedureExportService.new(procedure, procedure.dossiers, instructeur)
             .to_csv
             .open { |f| CSV.read(f.path) }
         end
@@ -397,16 +398,16 @@ describe ProcedureExportService do
       end
     end
 
-    context 'generate_dossier_export' do
+    context 'generate_dossiers_export' do
       it 'include_infos_administration (so it includes avis, champs privés)' do
-        expect(ActiveStorage::DownloadableFile).to receive(:create_list_from_dossiers).with(anything, with_champs_private: true, include_infos_administration: true).and_return([])
+        expect(ActiveStorage::DownloadableFile).to receive(:create_list_from_dossiers).with(dossiers: anything, user_profile: instructeur).and_return([])
         subject
       end
     end
 
     context 'with files (and http calls)' do
       let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
-      let(:dossier_exports) { PiecesJustificativesService.generate_dossier_export(Dossier.where(id: dossier)) }
+      let(:dossier_exports) { PiecesJustificativesService.new(user_profile: instructeur).generate_dossiers_export(Dossier.where(id: dossier)) }
       before do
         allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
       end

@@ -22,7 +22,7 @@ class SimpleFormatComponent < ApplicationComponent
   }
 
   SIMPLE_URL_REGEX = %r{https?://[^\s<>]+}
-  EMAIL_IN_TEXT_REGEX = Regexp.new(Devise.email_regexp.source.gsub(/\\A|\\z/, '\b'))
+  EMAIL_IN_TEXT_REGEX = Regexp.new(StrictEmailValidator::REGEXP.source.gsub(/\\A|\\z/, '\b'))
 
   def initialize(text, allow_a: true, allow_autolink: true, class_names_map: {})
     @allow_a = allow_a

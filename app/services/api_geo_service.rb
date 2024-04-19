@@ -34,9 +34,9 @@ class APIGeoService
       regions.find { _1[:name] == name }&.dig(:code)
     end
 
-    def region_code_by_departement(name)
-      return if name.nil?
-      departements.find { _1[:name] == name }&.dig(:region_code)
+    def region_code_by_departement(code)
+      return if code.nil?
+      departements.find { _1[:code] == code }&.dig(:region_code)
     end
 
     def departements
@@ -81,6 +81,42 @@ class APIGeoService
       communes(departement_code).find { _1[:name] == name }&.dig(:code)
     end
 
+    def parse_ban_address(feature)
+      return unless ban_address_schema.valid?(feature)
+
+      properties = feature.fetch('properties')
+      city_code = properties.fetch('citycode')
+
+      territory = if properties['context'].present?
+        department_code = properties.fetch('context').split(',').first
+        region_code = region_code_by_departement(department_code)
+
+        {
+          department_name: departement_name(department_code),
+          department_code:,
+          region_name: region_name(region_code),
+          region_code:,
+          city_name: commune_name(department_code, city_code),
+          city_code:
+        }
+      else
+        {
+          city_name: properties['city'],
+          city_code:
+        }
+      end
+
+      {
+        label: properties.fetch('label'),
+        type: properties.fetch('type'),
+        street_address: properties.fetch('name'),
+        postal_code: properties.fetch('postcode'),
+        street_number: properties['housenumber'],
+        street_name: properties['street'],
+        geometry: feature['geometry']
+      }.merge(territory)
+    end
+
     private
 
     def communes_by_postal_code_map
@@ -113,6 +149,12 @@ class APIGeoService
         'FR' => { 'XK' => 'Kosovo' },
         'EN' => { 'XK' => 'Kosovo' }
       }
+    end
+
+    private
+
+    def ban_address_schema
+      JSONSchemer.schema(Rails.root.join('app/schemas/adresse-ban.json'))
     end
   end
 end

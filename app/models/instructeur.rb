@@ -18,8 +18,9 @@ class Instructeur < ApplicationRecord
   has_many :followed_dossiers, through: :follows, source: :dossier
   has_many :previously_followed_dossiers, -> { distinct }, through: :previous_follows, source: :dossier
   has_many :trusted_device_tokens, dependent: :destroy
-  has_many :archives
   has_many :bulk_messages, dependent: :destroy
+  has_many :exports, as: :user_profile
+  has_many :archives, as: :user_profile
 
   belongs_to :user
 

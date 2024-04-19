@@ -44,7 +44,7 @@ class Champs::EpciChamp < Champs::TextChamp
   end
 
   def code_region
-    APIGeoService.region_code_by_departement(departement_name)
+    APIGeoService.region_code_by_departement(code_departement)
   end
 
   def selected

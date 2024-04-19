@@ -1178,8 +1178,8 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when the dossier has been submitted' do
-        it { expect(assigns(:include_infos_administration)).to eq(false) }
-        it { expect(response).to render_template 'dossiers/show' }
+        it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: user).acl_for_dossier_export) }
+        it { expect(response).to render_template('dossiers/show') }
       end
     end
   end

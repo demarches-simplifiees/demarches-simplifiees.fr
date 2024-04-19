@@ -42,7 +42,7 @@ class Champs::DepartementChamp < Champs::TextChamp
   end
 
   def code_region
-    APIGeoService.region_code_by_departement(name)
+    APIGeoService.region_code_by_departement(code)
   end
 
   def value=(code)

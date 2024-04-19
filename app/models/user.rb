@@ -39,9 +39,13 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :france_connect_information
 
   default_scope { eager_load(:instructeur, :administrateur, :expert) }
-  before_validation -> { sanitize_email(:email) }
 
+  before_validation -> { sanitize_email(:email) }
   validate :does_not_merge_on_self, if: :requested_merge_into_id_changed?
+
+  before_validation :remove_devise_email_format_validator
+  # plug our custom validation a la devise (same options) https://github.com/heartcombo/devise/blob/main/lib/devise/models/validatable.rb#L30
+  validates :email, strict_email: true, allow_blank: true, if: :devise_will_save_change_to_email?
 
   def validate_password_complexity?
     min_password_complexity.positive?
@@ -287,5 +291,17 @@ class User < ApplicationRecord
 
   def link_invites!
     Invite.where(email: email).update_all(user_id: id)
+  end
+
+  # we just want to remove the devise format validator
+  #   https://github.com/heartcombo/devise/blob/main/lib/devise/models/validatable.rb#L30
+  def remove_devise_email_format_validator
+    _validators[:email]&.reject! { _1.is_a?(ActiveModel::Validations::FormatValidator) }
+    _validate_callbacks.each do |callback|
+      next if !callback.filter.is_a?(ActiveModel::Validations::FormatValidator)
+      next if !callback.filter.attributes.include? :email
+
+      callback.filter.attributes.delete(:email)
+    end
   end
 end

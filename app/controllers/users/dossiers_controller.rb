@@ -91,10 +91,11 @@ module Users
     end
 
     def show
+      pj_service = PiecesJustificativesService.new(user_profile: current_user)
       respond_to do |format|
         format.pdf do
           @dossier = dossier_with_champs(pj_template: false)
-          @include_infos_administration = false
+          @acls = pj_service.acl_for_dossier_export
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all do
@@ -506,6 +507,7 @@ module Users
         :code_departement,
         :accreditation_number,
         :accreditation_birthdate,
+        :feature,
         value: []
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS)
       champs_params[:champs_public_all_attributes] = champs_params.delete(:champs_public_attributes) || {}

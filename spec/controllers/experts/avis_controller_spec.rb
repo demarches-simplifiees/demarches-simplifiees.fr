@@ -116,17 +116,15 @@ describe Experts::AvisController, type: :controller do
 
     describe '#telecharger_pjs' do
       let(:avis) { avis_with_answer }
-
       subject { get :telecharger_pjs, params: { id: avis.id, procedure_id: } }
-
-      before do
-        allow(PiecesJustificativesService).to receive(:generate_dossier_export).and_return([]).with([dossier], include_infos_administration: false, include_avis_for_expert: expert)
-      end
 
       context 'with a valid avis' do
         it do
+          service = instance_double(PiecesJustificativesService)
+          expect(PiecesJustificativesService).to receive(:new).with(user_profile: expert).and_return(service)
+          expect(service).to receive(:generate_dossiers_export).with(Dossier.where(id: dossier)).and_return([])
+          expect(service).to receive(:liste_documents).with(Dossier.where(id: dossier)).and_return([])
           is_expected.to have_http_status(:success)
-          expect(PiecesJustificativesService).to have_received(:generate_dossier_export)
         end
       end
 
@@ -414,7 +412,7 @@ describe Experts::AvisController, type: :controller do
 
         it do
           expect(response).to render_template :instruction
-          expect(flash.alert).to eq(["toto.fr : Le champ « Email » n'est pas valide"])
+          expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"])
           expect(Avis.last).to eq(previous_avis)
           expect(dossier.last_avis_updated_at).to eq(nil)
         end
@@ -445,7 +443,7 @@ describe Experts::AvisController, type: :controller do
 
         it do
           expect(response).to render_template :instruction
-          expect(flash.alert).to eq(["toto.fr : Le champ « Email » n'est pas valide"])
+          expect(flash.alert).to eq(["toto.fr : Le champ « Email » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"])
           expect(flash.notice).to eq("Une demande d’avis a été envoyée à titi@titimail.com")
           expect(Avis.count).to eq(old_avis_count + 1)
         end

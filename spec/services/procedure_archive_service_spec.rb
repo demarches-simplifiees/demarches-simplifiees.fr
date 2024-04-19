@@ -1,6 +1,7 @@
 describe ProcedureArchiveService do
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
   let(:instructeur) { create(:instructeur) }
+  let(:administrateur) { create(:administrateur) }
   let(:service) { ProcedureArchiveService.new(procedure) }
   let(:year) { 2020 }
   let(:month) { 3 }
@@ -18,7 +19,7 @@ describe ProcedureArchiveService do
     after { Timecop.return }
 
     context 'for a specific month' do
-      let(:archive) { create(:archive, time_span_type: 'monthly', job_status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
+      let(:archive) { create(:archive, user_profile: administrateur, time_span_type: 'monthly', job_status: 'pending', month: date_month, groupe_instructeurs: groupe_instructeurs) }
       let(:year) { 2021 }
 
       it 'collects files with success' do
@@ -86,7 +87,7 @@ describe ProcedureArchiveService do
 
         let(:documents) { [pj, bad_pj].map { |p| ActiveStorage::DownloadableFile.pj_and_path(dossier.id, p) } }
         before do
-          allow(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
+          allow_any_instance_of(PiecesJustificativesService).to receive(:liste_documents).and_return(documents)
         end
 
         it 'collect files without raising exception' do
@@ -120,7 +121,7 @@ describe ProcedureArchiveService do
     end
 
     context 'for all months' do
-      let(:archive) { create(:archive, time_span_type: 'everything', job_status: 'pending', groupe_instructeurs: groupe_instructeurs) }
+      let(:archive) { create(:archive, user_profile: administrateur, time_span_type: 'everything', job_status: 'pending', groupe_instructeurs: groupe_instructeurs) }
 
       it 'collect files' do
         allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/5e61989aecb78e369c93674f877d7bf4ecde378850114a9563cdf8b6a2472536/typhoeus/typhoeus/issues/110")

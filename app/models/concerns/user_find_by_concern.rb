@@ -11,7 +11,7 @@ module UserFindByConcern
     end
 
     def self.find_all_by_identifier_with_emails(ids: [], emails: [])
-      valid_emails, invalid_emails = emails.partition { Devise.email_regexp.match?(_1) }
+      valid_emails, invalid_emails = emails.partition { StrictEmailValidator::REGEXP.match?(_1) }
 
       [
         where(id: ids).or(where(users: { email: valid_emails })).distinct(:id),
