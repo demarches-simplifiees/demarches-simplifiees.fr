@@ -54,6 +54,78 @@ describe 'Inviting an expert:', js: true do
       expect(invitation_email.body).to include(targeted_user_url)
     end
 
+    scenario 'I can paste a list of experts emails' do
+      allow(ClamavService).to receive(:safe_file?).and_return(true)
+
+      # assign instructeur to linked dossier
+      instructeur.assign_to_procedure(linked_dossier.procedure)
+
+      login_as instructeur.user, scope: :user
+      visit instructeur_dossier_path(procedure, dossier)
+
+      click_on 'Avis externes'
+      expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
+      within('.fr-sidemenu') { click_on 'Demander un avis' }
+      expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
+
+      fill_in 'Emails', with: "expert1@gouv.fr; expert2@gouv.fr; test@test.fr; email-invalide"
+      fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
+      check 'avis_invite_linked_dossiers'
+      page.select 'confidentiel', from: 'avis_confidentiel'
+
+      within('form#new_avis') { click_on 'Demander un avis' }
+      perform_enqueued_jobs
+
+      expect(page).to have_content('Une demande d’avis a été envoyée')
+      expect(page).to have_content('Avis des invités')
+      within('section') do
+        expect(page).to have_content('expert1@gouv.fr')
+        expect(page).to have_content('expert2@gouv.fr')
+        expect(page).to have_content('test@test.fr')
+        expect(page).not_to have_content('email-invalide')
+      end
+    end
+
+    context 'when experts list is restricted by admin' do
+      let!(:expert_procedure) { ExpertsProcedure.create(expert: expert, procedure: procedure, allow_decision_access: true) }
+      let(:expert_email) { expert.email }
+      let(:expert2_email) { expert2.email }
+
+      before do
+        procedure.update!(experts_require_administrateur_invitation: true)
+      end
+
+      scenario 'only allowed experts are invited' do
+        allow(ClamavService).to receive(:safe_file?).and_return(true)
+
+        # assign instructeur to linked dossier
+        instructeur.assign_to_procedure(linked_dossier.procedure)
+
+        login_as instructeur.user, scope: :user
+        visit instructeur_dossier_path(procedure, dossier)
+
+        click_on 'Avis externes'
+        expect(page).to have_current_path(avis_instructeur_dossier_path(procedure, dossier))
+        within('.fr-sidemenu') { click_on 'Demander un avis' }
+        expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
+
+        fill_in 'Emails', with: "#{expert.email}; #{expert2.email}"
+        fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
+        check 'avis_invite_linked_dossiers'
+        page.select 'confidentiel', from: 'avis_confidentiel'
+
+        within('form#new_avis') { click_on 'Demander un avis' }
+        perform_enqueued_jobs
+
+        expect(page).to have_content('Une demande d’avis a été envoyée')
+        expect(page).to have_content('Avis des invités')
+        within('section') do
+          expect(page).to have_content(expert.email)
+          expect(page).not_to have_content(expert2.email)
+        end
+      end
+    end
+
     context 'when experts submitted their answer' do
       let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: procedure) }
       let!(:answered_avis) { create(:avis, :with_answer, dossier: dossier, claimant: instructeur, experts_procedure: experts_procedure) }

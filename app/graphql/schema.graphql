@@ -3683,6 +3683,13 @@ type PersonneMoraleIncomplete implements Demandeur {
 type PersonnePhysique implements Demandeur {
   civilite: Civilite
   dateDeNaissance: ISO8601Date
+
+  """
+  Email du bénéficiaire (dans le cas d'un dossier déposé par et pour l'usager
+  connecté, l'email est celui de l'usager connecté. Dans le cas d'un dossier
+  déposé pour un bénéficiaire, l'email est celui du bénéficiaire, s'il a été renseigné)
+  """
+  email: String
   id: ID!
   nom: String!
   prenom: String!

@@ -4,15 +4,18 @@ require 'prawn/measurement_extensions'
 page_size = 'A4'
 page_width = 595
 
+# see, charte_graphique_de_letat.pdf
+#   a4: 210mm largueur
+#   margin left and right: 17mm
+#   calc ratio, 17*100/210: 8% de marge gauche/droite
+#   calc mm to pixel: 8*595/100: 47 <- final margin
 #----- margins
-top_margin = 20
-right_margin = 20
-bottom_margin = 20
-left_margin = 20
+top_margin = 47
+right_margin = 47
+bottom_margin = 47
+left_margin = 47
 
-body_width = 400
-
-body_left_margin = (page_width - body_width - left_margin - right_margin) / 2
+body_width = page_width - left_margin - right_margin
 
 prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], page_size: page_size) do |pdf|
   pdf.font_families.update('marianne' => {
@@ -21,8 +24,8 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
   })
   pdf.font 'marianne'
 
-  grey = '555555'
-  black = '333333'
+  grey = '3a3a3a'
+  black = '222222'
 
   pdf.pad_bottom(30) do
     pdf.image DOSSIER_PDF_EXPORT_LOGO_SRC, width: 300, position: :center
@@ -33,7 +36,7 @@ prawn_document(margin: [top_margin, right_margin, bottom_margin, left_margin], p
     end
   end
 
-  pdf.bounding_box([body_left_margin, pdf.cursor - 20], width: body_width) do
+  pdf.bounding_box([0, pdf.cursor - 20], width: body_width) do
     pdf.fill_color black
     pdf.pad_top(40) { pdf.text @dossier.procedure.libelle, size: 14, character_spacing: -0.2, align: :center }
 

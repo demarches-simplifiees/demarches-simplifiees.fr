@@ -243,7 +243,9 @@ describe Users::SessionsController, type: :controller do
   describe '#link_sent' do
     render_views
 
-    before { get :link_sent, params: { email: link_email } }
+    before { get :link_sent, params: { email: signed_email } }
+
+    let(:signed_email) { controller.message_verifier.generate(link_email, purpose: :reset_link) }
 
     context 'when the email is legit' do
       let(:link_email) { 'a@a.com' }
