@@ -19,6 +19,6 @@
         - elsif blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
           = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
             .thumbnail
-              = image_tag(blob.url)
+              = image_tag(blob.url, loading: :lazy)
               .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
                 = 'Visualiser'
