@@ -1,5 +1,8 @@
 fr:
   faq:
+    index:
+      meta_title: "Foire aux Questions"
+      title: Foire aux Questions (FAQ) de %{app_name}
     sidebar_button: Dans cette Foire Aux Questions
     categories:
       usager:

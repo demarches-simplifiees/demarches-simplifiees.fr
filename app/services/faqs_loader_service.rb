@@ -22,6 +22,16 @@ class FAQsLoaderService
       .group_by { |faq| faq[:subcategory] }
    end
 
+  def all
+    @faqs_by_path.values
+      .group_by { |faq| faq.fetch(:category) }
+      .sort_by { |category, _| ORDER.index(category) || ORDER.size }
+      .to_h
+      .transform_values do |faqs|
+        faqs.group_by { |faq| faq.fetch(:subcategory) }
+      end
+  end
+
   private
 
   def load_faqs

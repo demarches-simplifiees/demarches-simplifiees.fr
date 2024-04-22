@@ -715,6 +715,7 @@ Rails.application.routes.draw do
 
   resources :release_notes, only: [:index]
 
+  resources :faq, only: [:index]
   get '/faq/:category/:slug', to: 'faq#show', as: :faq
 
   get '/404', to: 'errors#not_found'

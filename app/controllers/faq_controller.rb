@@ -3,6 +3,10 @@
 class FAQController < ApplicationController
   before_action :load_faq_data, only: :show
 
+  def index
+    @faqs = loader_service.all
+  end
+
   def show
     @renderer = Redcarpet::Markdown.new(
       Redcarpet::BareRenderer.new(class_names_map: { list: 'fr-ol-content--override' })
