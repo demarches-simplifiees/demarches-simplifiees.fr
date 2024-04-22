@@ -1,0 +1,6 @@
+- content_for(:title, @metadata[:title])
+
+.fr-container.fr-my-4w
+  .fr-grid-row
+    .fr-col-12.fr-col-md-8.fr-py-12v
+      = @renderer.render(@content).html_safe

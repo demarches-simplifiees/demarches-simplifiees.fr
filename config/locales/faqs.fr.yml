@@ -1,0 +1,9 @@
+fr:
+  faq:
+      administrateur:
+        name: Administrateur (création d’un formulaire)
+        description: Informations pour les administrateurs sur la configuration de la plateforme ou la création de démarches.
+    subcategories:
+      create_procedure:
+        name: Je veux créer une démarche en ligne
+        description: Comment créer une nouvelle démarche ?

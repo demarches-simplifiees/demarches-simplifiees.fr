@@ -1,0 +1,32 @@
+# frozen_string_literal: true
+
+class FAQsLoaderService
+  PATH = Rails.root.join('doc', 'faqs').freeze
+  ORDER = ['usager', 'instructeur', 'administrateur'].freeze
+
+  def initialize
+    @faqs_by_path ||= Rails.cache.fetch("faqs_data", expires_in: 1.day) do
+      load_faqs
+    end
+  end
+
+  def find(path)
+    file_path = @faqs_by_path.fetch(path).fetch(:file_path)
+
+    FrontMatterParser::Parser.parse_file(file_path)
+  end
+
+  private
+
+  def load_faqs
+    Dir.glob("#{PATH}/**/*.md").each_with_object({}) do |file_path, faqs_by_path|
+      parsed = FrontMatterParser::Parser.parse_file(file_path)
+      front_matter = parsed.front_matter.symbolize_keys
+
+      faq_data = front_matter.slice(:slug, :title, :category, :subcategory, :locale, :keywords).merge(file_path: file_path)
+
+      path = front_matter.fetch(:category) + '/' + front_matter.fetch(:slug)
+      faqs_by_path[path] = faq_data
+    end
+  end
+end
