@@ -26,6 +26,7 @@ features = [
   :engagement_juridique_type_de_champ,
   :export_order_by_revision,
   :expression_reguliere_type_de_champ,
+  :gallery_demande,
   :groupe_instructeur_api_hack,
   :hide_instructeur_email,
   :sva,
