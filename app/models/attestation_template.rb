@@ -165,7 +165,8 @@ class AttestationTemplate < ApplicationRecord
     if dossier.present?
       attributes.merge(
         title: replace_tags(title, dossier, escape: false),
-        body: replace_tags(body, dossier, escape: false)
+        body: replace_tags(body, dossier, escape: false),
+        qrcode: dossier.created_at ? qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at)) : nil
       )
     else
       attributes.merge(
@@ -188,7 +189,8 @@ class AttestationTemplate < ApplicationRecord
       body = tiptap.to_html(json, substitutions)
 
       attributes.merge(
-        body:
+        body:,
+        qrcode: qrcode_dossier_url(dossier, created_at: dossier.encoded_date(:created_at))
       )
     else
       attributes.merge(
