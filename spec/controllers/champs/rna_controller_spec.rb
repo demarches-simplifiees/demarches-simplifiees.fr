@@ -7,8 +7,8 @@ describe Champs::RNAController, type: :controller do
     let(:champ) { dossier.champs_public.first }
 
     let(:champs_public_attributes) do
-      champ_attributes = []
-      champ_attributes[champ.id] = { value: rna }
+      champ_attributes = {}
+      champ_attributes[champ.public_id] = { value: rna }
       champ_attributes
     end
     let(:params) do
