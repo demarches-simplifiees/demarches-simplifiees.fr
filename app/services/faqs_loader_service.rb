@@ -9,7 +9,7 @@ class FAQsLoaderService
   def initialize(substitutions)
     @substitutions = substitutions
 
-    @faqs_by_path ||= Rails.cache.fetch(["faqs_data", substitutions], expires_in: 1.day) do
+    @faqs_by_path ||= Rails.cache.fetch(["faqs_data", ApplicationVersion.current, substitutions], expires_in: 1.week) do
       load_faqs
     end
   end
