@@ -125,6 +125,8 @@ group :test do
   gem 'selenium-devtools'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
+  gem 'simplecov', require: false
+  gem 'simplecov-cobertura', require: false
   gem 'timecop'
   gem 'vcr'
   gem 'webmock'
