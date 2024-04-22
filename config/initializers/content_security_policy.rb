@@ -32,9 +32,12 @@ Rails.application.config.content_security_policy do |policy|
   connect_whitelist << Rails.application.secrets.matomo[:host] if Rails.application.secrets.matomo[:enabled]
   policy.connect_src(:self, *connect_whitelist)
 
-  # Frames: allow Matomo's iframe on the /suivi page
+  # Frames: allow some iframes
   frame_whitelist = []
+  # allow Matomo's iframe on the /suivi page
   frame_whitelist << URI(MATOMO_IFRAME_URL).host if Rails.application.secrets.matomo[:enabled]
+  # allow pdf iframes in the PJ gallery
+  frame_whitelist << URI(DS_PROXY_URL).host if DS_PROXY_URL.present?
   policy.frame_src(:self, *frame_whitelist)
 
   # Everything else: allow us
