@@ -5,10 +5,15 @@ SimpleCov.start "rails" do
 
   command_name "RSpec process #{Process.pid}"
 
-  formatter SimpleCov::Formatter::MultiFormatter.new([
-    SimpleCov::Formatter::SimpleFormatter,
-    SimpleCov::Formatter::HTMLFormatter
-  ])
+  if ENV["CI"] # codecov compatibility
+    require 'simplecov-cobertura'
+    formatter SimpleCov::Formatter::CoberturaFormatter
+  else
+    formatter SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::SimpleFormatter,
+      SimpleCov::Formatter::HTMLFormatter
+    ])
+  end
 
   add_filter "/channels/" # not used
   groups.delete("Channels")
