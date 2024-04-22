@@ -290,6 +290,10 @@ class Champ < ApplicationRecord
     self.value = value.delete("\u0000")
   end
 
+  def self.update_by_stable_id?
+    Flipper.enabled?(:champ_update_by_stable_id, Current.user)
+  end
+
   class NotImplemented < ::StandardError
     def initialize(method)
       super(":#{method} not implemented")

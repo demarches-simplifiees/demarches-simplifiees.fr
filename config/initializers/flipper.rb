@@ -30,7 +30,8 @@ features = [
   :groupe_instructeur_api_hack,
   :hide_instructeur_email,
   :sva,
-  :switch_domain
+  :switch_domain,
+  :champ_update_by_stable_id
 ]
 
 def database_exists?
