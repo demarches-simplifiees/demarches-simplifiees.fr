@@ -42,6 +42,23 @@ RSpec.describe FAQsLoaderService do
       it 'returns a file with variable substitutions' do
         expect(service.find('usager/faq1').content).to include('Welcome to demarches.gouv.fr')
       end
+
+      it 'caches file readings', caching: true do
+        service # this load paths, and create a first hit on file
+        expect(File).to have_received(:read).with('path/to/faq1.md').exactly(1).times
+
+        2.times {
+          service.find('usager/faq1')
+          expect(File).to have_received(:read).with('path/to/faq1.md').exactly(2).times
+        }
+
+        # depends on substitutions and re-hit files
+        service = FAQsLoaderService.new(substitutions.merge(application_name: "other name"))
+        expect(File).to have_received(:read).with('path/to/faq1.md').exactly(3).times
+
+        service.find('usager/faq1')
+        expect(File).to have_received(:read).with('path/to/faq1.md').exactly(4).times
+      end
     end
 
     describe '#all' do
@@ -51,19 +68,8 @@ RSpec.describe FAQsLoaderService do
           "admin" => { "general" => [{ category: "admin", file_path: "path/to/faq2.md", slug: "faq2", subcategory: "general", title: "FAQ2" }] }
         })
       end
-    end
 
-    describe '#faqs_for_category' do
-      it 'returns FAQs grouped by subcategory for a given category' do
-        result = service.faqs_for_category('usager')
-        expect(result).to eq({
-          'account' => [{ category: 'usager', subcategory: 'account', title: 'FAQ1', slug: 'faq1', file_path: 'path/to/faq1.md' }]
-        })
-      end
-    end
-
-    describe 'caching' do
-      it 'works', caching: true do
+      it 'caches file readings', caching: true do
         2.times {
           service = FAQsLoaderService.new(substitutions)
           service.all
@@ -74,6 +80,15 @@ RSpec.describe FAQsLoaderService do
         service = FAQsLoaderService.new(substitutions.merge(application_name: "other name"))
         service.all
         expect(Dir).to have_received(:glob).twice
+      end
+    end
+
+    describe '#faqs_for_category' do
+      it 'returns FAQs grouped by subcategory for a given category' do
+        result = service.faqs_for_category('usager')
+        expect(result).to eq({
+          'account' => [{ category: 'usager', subcategory: 'account', title: 'FAQ1', slug: 'faq1', file_path: 'path/to/faq1.md' }]
+        })
       end
     end
   end

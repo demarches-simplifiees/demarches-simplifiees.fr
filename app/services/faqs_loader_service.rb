@@ -15,9 +15,11 @@ class FAQsLoaderService
   end
 
   def find(path)
-    file_path = @faqs_by_path.fetch(path).fetch(:file_path)
+    Rails.cache.fetch(["faq", path, ApplicationVersion.current, substitutions], expires_in: 1.week) do
+      file_path = @faqs_by_path.fetch(path).fetch(:file_path)
 
-    parse_with_substitutions(file_path)
+      parse_with_substitutions(file_path)
+    end
   end
 
   def faqs_for_category(category)
