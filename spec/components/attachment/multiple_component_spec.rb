@@ -105,7 +105,7 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     attached_file.attach(
       io: StringIO.new("x" * 2),
       filename: "me.jpg",
-      content_type: "image/jpeg",
+      content_type: "image/png",
       metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
     )
     champ.save!
