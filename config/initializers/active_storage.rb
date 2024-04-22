@@ -17,6 +17,7 @@ end
 ActiveSupport.on_load(:active_storage_attachment) do
   include AttachmentTitreIdentiteWatermarkConcern
   include AttachmentVirusScannerConcern
+  include AttachmentAutoRotateConcern
 end
 
 Rails.application.reloader.to_prepare do
