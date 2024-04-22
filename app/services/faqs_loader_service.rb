@@ -16,6 +16,12 @@ class FAQsLoaderService
     FrontMatterParser::Parser.parse_file(file_path)
   end
 
+  def faqs_for_category(category)
+    @faqs_by_path.values
+      .filter { |faq| faq[:category] == category }
+      .group_by { |faq| faq[:subcategory] }
+   end
+
   private
 
   def load_faqs

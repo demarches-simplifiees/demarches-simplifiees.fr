@@ -7,6 +7,8 @@ class FAQController < ApplicationController
     @renderer = Redcarpet::Markdown.new(
       Redcarpet::BareRenderer.new(class_names_map: { list: 'fr-ol-content--override' })
     )
+
+    @siblings = loader_service.faqs_for_category(@metadata[:category])
   end
 
   private
