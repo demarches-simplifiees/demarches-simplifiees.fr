@@ -63,5 +63,33 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     class DossierOperationLogMoveToColdStorageBatchJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class BatchOperationEnqueueAllJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class BatchOperationProcessOneJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class TitreIdentiteWatermarkJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class AdminUpdateDefaultZonesJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class ProcessStalledDeclarativeDossierJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class ResetExpiringDossiersJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class SendClosingNotificationJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
