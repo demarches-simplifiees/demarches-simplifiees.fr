@@ -22,7 +22,7 @@
 
 %p
   = t("layouts.mailers.for_tiers.second_part")
-  = "#{mail_to(@dossier.user.email)}."
+  = "#{mail_to(@dossier.user_email_for(:notification))}."
 
 %p
   = t(:best_regards, scope: [:views, :shared, :greetings])
