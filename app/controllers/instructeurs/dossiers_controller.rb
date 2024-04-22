@@ -295,10 +295,10 @@ module Instructeurs
     def annotation
       @dossier = dossier_with_champs(pj_template: false)
       annotation = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:annotation_id], :private)
+        type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
         @dossier.project_champ(type_de_champ, params[:row_id])
       else
-        @dossier.champs_private_all.find(params[:annotation_id])
+        @dossier.champs_private_all.find(params[:stable_id])
       end
 
       respond_to do |format|
