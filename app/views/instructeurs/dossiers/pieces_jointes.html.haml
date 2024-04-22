@@ -1,0 +1,40 @@
+- content_for(:title, "Pièces jointes")
+
+= render partial: "header", locals: { dossier: @dossier }
+
+.fr-container
+  - if @champs_with_pieces_jointes.map(&:piece_justificative_file).flatten.none?
+    .empty-text
+      Ce dossier ne contient pas de pièces jointes
+  - else
+    .gallery.gallery-pieces-jointes{ "data-controller": "lightbox" }
+      - @champs_with_pieces_jointes.each do |champ|
+        - champ.piece_justificative_file.each do |attachment|
+          .gallery-item
+            - blob = attachment.blob
+            - if blob.content_type.in?(AUTHORIZED_PDF_TYPES)
+              = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{champ.libelle} -- #{blob.filename}" do
+                .thumbnail
+                  = image_tag("pdf-placeholder.png")
+                  .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
+                    Visualiser
+              .champ-libelle
+                = champ.libelle.truncate(25)
+              = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)
+
+            - elsif blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
+              = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
+                .thumbnail
+                  = image_tag(blob.url)
+                  .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
+                    Visualiser
+              .champ-libelle
+                = champ.libelle.truncate(25)
+              = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)
+
+            - else
+              .thumbnail
+                = image_tag('apercu-indisponible.png')
+              .champ-libelle
+                = champ.libelle.truncate(25)
+              = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)

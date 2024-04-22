@@ -273,8 +273,8 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.assign_attributes(champs_private_params)
-      if dossier.champs_private_all.any?(&:changed?)
+      dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private)
+      if dossier.champs.any?(&:changed_for_autosave?) || dossier.champs_private_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
         dossier.last_champ_private_updated_at = Time.zone.now
       end
 
@@ -282,7 +282,7 @@ module Instructeurs
 
       respond_to do |format|
         format.turbo_stream do
-          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_params.fetch(:champs_private_all_attributes), dossier.champs_private_all)
+          @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.champs.filter(&:private?))
         end
       end
     end
@@ -294,7 +294,12 @@ module Instructeurs
 
     def annotation
       @dossier = dossier_with_champs(pj_template: false)
-      annotation = @dossier.champs_private_all.find(params[:annotation_id])
+      annotation = if params[:with_public_id].present?
+        type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:annotation_id], :private)
+        @dossier.project_champ(type_de_champ, params[:row_id])
+      else
+        @dossier.champs_private_all.find(params[:annotation_id])
+      end
 
       respond_to do |format|
         format.turbo_stream do
@@ -358,6 +363,13 @@ module Instructeurs
       redirect_to instructeur_procedure_path(procedure)
     end
 
+    def pieces_jointes
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      @champs_with_pieces_jointes = @dossier
+        .champs
+        .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
+    end
+
     private
 
     def dossier_scope
@@ -385,12 +397,36 @@ module Instructeurs
     end
 
     def champs_private_params
-      champs_params = params.require(:dossier).permit(champs_private_attributes: [
-        :id, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, value: [],
-        champs_attributes: [:id, :_destroy, :value, :primary_value, :secondary_value, :piece_justificative_file, :value_other, :external_id, :numero_allocataire, :code_postal, :code_departement, :feature, value: []]
-      ])
-      champs_params[:champs_private_all_attributes] = champs_params.delete(:champs_private_attributes) || {}
-      champs_params
+      champ_attributes = [
+        :id,
+        :value,
+        :value_other,
+        :external_id,
+        :primary_value,
+        :secondary_value,
+        :numero_allocataire,
+        :code_postal,
+        :identifiant,
+        :numero_fiscal,
+        :reference_avis,
+        :ine,
+        :piece_justificative_file,
+        :code_departement,
+        :accreditation_number,
+        :accreditation_birthdate,
+        :feature,
+        :with_public_id,
+        value: []
+      ]
+      # Strong attributes do not support records (indexed hash); they only support hashes with
+      # static keys. We create a static hash based on the available keys.
+      public_ids = params.dig(:dossier, :champs_private_attributes)&.keys || []
+      champs_private_attributes = public_ids.map { [_1, champ_attributes] }.to_h
+      params.require(:dossier).permit(champs_private_attributes:)
+    end
+
+    def champs_private_attributes_params
+      champs_private_params.fetch(:champs_private_attributes)
     end
 
     def mark_demande_as_read

@@ -23,7 +23,7 @@ class PrefillChamps
       .to_h
 
     dossier
-      .find_champs_by_stable_ids(value_by_stable_id.keys)
+      .champs_for_prefill(value_by_stable_id.keys)
       .map { |champ| [champ, value_by_stable_id[champ.stable_id]] }
       .map { |champ, value| PrefillValue.new(champ:, value:, dossier:) }
   end

@@ -1,8 +1,5 @@
-class Champs::RepetitionController < ApplicationController
-  before_action :authenticate_logged_user!
-
+class Champs::RepetitionController < Champs::ChampController
   def add
-    @champ = find_champ
     row = @champ.add_row(@champ.dossier.revision)
     @first_champ_id = row.map(&:focusable_input_id).compact.first
     @row_id = row.first&.row_id
@@ -10,21 +7,14 @@ class Champs::RepetitionController < ApplicationController
   end
 
   def remove
-    @champ = find_champ
-    @champ.champs.where(row_id: params[:row_id]).destroy_all
-    @champ.reload
-    @row_id = params[:row_id]
+    @champ.remove_row(params[:row_id])
+    @to_remove = "safe-row-selector-#{params[:row_id]}"
+    @to_focus = @champ.focusable_input_id || helpers.dom_id(@champ, :create_repetition)
   end
 
   private
 
-  def find_champ
-    if params[:champ_id].present?
-      policy_scope(Champ).includes(:champs).find(params[:champ_id])
-    else
-      policy_scope(Champ)
-        .includes(:champs, :type_de_champ)
-        .find_by!(dossier_id: params[:dossier_id], type_de_champ: { stable_id: params[:stable_id] })
-    end
+  def params_row_id
+    nil
   end
 end

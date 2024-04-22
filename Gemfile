@@ -103,7 +103,10 @@ gem 'view_component'
 gem 'vite_rails'
 gem 'warden'
 gem 'webrick', require: false
+gem 'yabeda-graphql'
 gem 'yabeda-prometheus'
+gem 'yabeda-puma-plugin'
+gem 'yabeda-rails'
 gem 'yabeda-sidekiq'
 gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'
@@ -122,6 +125,8 @@ group :test do
   gem 'selenium-devtools'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers', require: false
+  gem 'simplecov', require: false
+  gem 'simplecov-cobertura', require: false
   gem 'timecop'
   gem 'vcr'
   gem 'webmock'
