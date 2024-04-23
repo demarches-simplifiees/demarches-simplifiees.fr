@@ -6,18 +6,6 @@ GIT
       json (>= 2.5)
       sidekiq (~> 7.0)
 
-GIT
-  remote: https://github.com/heartcombo/devise.git
-  revision: edffc79bf05d7f1c58ba50ffeda645e2e4ae0cb1
-  ref: edffc79bf05d7f1c58ba50ffeda645e2e4ae0cb1
-  specs:
-    devise (4.9.3)
-      bcrypt (~> 3.0)
-      orm_adapter (~> 0.1)
-      railties (>= 4.1.0)
-      responders
-      warden (~> 1.2.3)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -213,6 +201,12 @@ GEM
       sinatra (>= 1.4.4)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
+    devise (4.9.4)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 4.1.0)
+      responders
+      warden (~> 1.2.3)
     devise-i18n (1.12.0)
       devise (>= 4.9.0)
     devise-two-factor (5.0.0)
@@ -910,7 +904,7 @@ DEPENDENCIES
   delayed_cron_job
   delayed_job_active_record
   delayed_job_web
-  devise!
+  devise
   devise-i18n
   devise-two-factor
   discard
