@@ -8,7 +8,7 @@
   = render NestedForms::FormOwnerComponent.new
   .fr-grid-row
     = render partial: 'champs_summary'
-    .fr-col
+    .fr-col.fr-col-md-9
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)
 
 .padded-fixed-footer
