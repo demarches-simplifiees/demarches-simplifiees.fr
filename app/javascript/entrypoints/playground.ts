@@ -24,8 +24,7 @@ function GraphiQLWithExplorer() {
     plugins: [explorer],
     query: query,
     variables: defaultVariables,
-    onEditQuery: setQuery,
-    isHeadersEditorEnabled: false
+    onEditQuery: setQuery
   });
 }
 
