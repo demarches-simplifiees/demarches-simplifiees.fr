@@ -56,12 +56,11 @@ class DossierProjectionService
       case table
       when 'type_de_champ', 'type_de_champ_private'
         Champ
-          .includes(:type_de_champ)
           .where(
-            types_de_champ: { stable_id: fields.map { |f| f[COLUMN] } },
+            stable_id: fields.map { |f| f[COLUMN] },
             dossier_id: dossiers_ids
           )
-          .select(:dossier_id, :value, :type_de_champ_id, 'types_de_champ.stable_id', :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
+          .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
           .map do |stable_id, champs|
             field = fields.find { |f| f[COLUMN] == stable_id.to_s }
