@@ -144,16 +144,19 @@ describe Champs::EpciChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) { described_class.new }
+    let(:champ) { build(:champ_epci, external_id: nil, value: nil) }
+    let(:epci) { APIGeoService.epcis('01').first }
+
     it 'with departement and code' do
       champ.code_departement = '01'
-      champ.value = '200042935'
-      expect(champ.external_id).to eq('200042935')
-      expect(champ.value).to eq('CA Haut - Bugey Agglomération')
-      expect(champ.selected).to eq('200042935')
-      expect(champ.code).to eq('200042935')
+      champ.value = epci[:code]
+      expect(champ.blank?).to be_falsey
+      expect(champ.external_id).to eq(epci[:code])
+      expect(champ.value).to eq(epci[:name])
+      expect(champ.selected).to eq(epci[:code])
+      expect(champ.code).to eq(epci[:code])
       expect(champ.departement?).to be_truthy
-      expect(champ.to_s).to eq('CA Haut - Bugey Agglomération')
+      expect(champ.to_s).to eq(epci[:name])
     end
   end
 end

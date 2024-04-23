@@ -61,7 +61,7 @@ describe Champs::DepartementChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) { described_class.new }
+    let(:champ) { build(:champ_departements, value: nil) }
 
     it 'with code having 2 chars' do
       champ.value = '01'

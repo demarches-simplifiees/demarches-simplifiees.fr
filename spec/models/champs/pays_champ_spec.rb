@@ -1,5 +1,5 @@
 describe Champs::PaysChamp, type: :model do
-  let(:champ) { described_class.new }
+  let(:champ) { build(:champ_pays, value: nil) }
 
   describe 'value' do
     it 'with code' do
