@@ -5,36 +5,6 @@ class Champs::DepartementChamp < Champs::TextChamp
   validate :external_id_in_departement_codes, if: -> { validate_champ_value_or_prefill? && !external_id.nil? }
   before_save :store_code_region
 
-  def for_export(path = :value)
-    case path
-    when :code
-      code
-    when :value
-      name
-    end
-  end
-
-  def to_s
-    formatted_value
-  end
-
-  def for_tag(path = :value)
-    case path
-    when :code
-      code
-    when :value
-      formatted_value
-    end
-  end
-
-  def for_api
-    formatted_value
-  end
-
-  def for_api_v2
-    formatted_value.tr('–', '-')
-  end
-
   def selected
     code
   end
@@ -70,10 +40,6 @@ class Champs::DepartementChamp < Champs::TextChamp
   end
 
   private
-
-  def formatted_value
-    blank? ? "" : "#{code} – #{name}"
-  end
 
   def value_in_departement_names
     return if value.in?(APIGeoService.departements.pluck(:name))

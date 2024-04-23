@@ -17,27 +17,7 @@ class Champs::BooleanChamp < Champ
     end
   end
 
-  def to_s
-    processed_value
-  end
-
-  def for_tag(path = :value)
-    processed_value
-  end
-
-  def for_export(path = :value)
-    processed_value
-  end
-
-  def for_api_v2
-    true? ? 'true' : 'false'
-  end
-
   private
-
-  def processed_value
-    true? ? 'Oui' : 'Non'
-  end
 
   def set_value_to_nil
     self.value = nil

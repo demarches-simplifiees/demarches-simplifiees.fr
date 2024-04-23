@@ -7,28 +7,6 @@ class Champs::EpciChamp < Champs::TextChamp
   validate :external_id_in_departement_epci_codes, if: -> { !(code_departement.nil? || external_id.nil?) && validate_champ_value_or_prefill? }
   validate :value_in_departement_epci_names, if: -> { !(code_departement.nil? || external_id.nil? || value.nil?) && validate_champ_value_or_prefill? }
 
-  def for_export(path = :value)
-    case path
-    when :value
-      value
-    when :code
-      code
-    when :departement
-      departement_code_and_name
-    end
-  end
-
-  def for_tag(path = :value)
-    case path
-    when :value
-      value
-    when :code
-      code
-    when :departement
-      departement_code_and_name
-    end
-  end
-
   def departement_name
     APIGeoService.departement_name(code_departement)
   end

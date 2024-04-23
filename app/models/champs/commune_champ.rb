@@ -2,28 +2,6 @@ class Champs::CommuneChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement, :code_postal, :code_region
   before_save :on_codes_change, if: :should_refresh_after_code_change?
 
-  def for_export(path = :value)
-    case path
-    when :value
-      to_s
-    when :departement
-      departement_code_and_name || ''
-    when :code
-      code || ''
-    end
-  end
-
-  def for_tag(path = :value)
-    case path
-    when :value
-      to_s
-    when :departement
-      departement_code_and_name || ''
-    when :code
-      code || ''
-    end
-  end
-
   def departement_name
     APIGeoService.departement_name(code_departement)
   end
@@ -58,10 +36,6 @@ class Champs::CommuneChamp < Champs::TextChamp
 
   def name
     APIGeoService.safely_normalize_city_name(code_departement, code, safe_to_s)
-  end
-
-  def to_s
-    code_postal? ? "#{name} (#{code_postal})" : name
   end
 
   def code

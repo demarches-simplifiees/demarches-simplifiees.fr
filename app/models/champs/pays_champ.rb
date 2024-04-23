@@ -11,28 +11,6 @@ class Champs::PaysChamp < Champs::TextChamp
     validates :value, inclusion: APIGeoService.countries.pluck(:name), allow_nil: false, allow_blank: false
   end
 
-  def for_export(path = :value)
-    case path
-    when :code
-      code
-    when :value
-      name
-    end
-  end
-
-  def to_s
-    name
-  end
-
-  def for_tag(path = :value)
-    case path
-    when :code
-      code
-    when :value
-      name
-    end
-  end
-
   def selected
     code || value
   end

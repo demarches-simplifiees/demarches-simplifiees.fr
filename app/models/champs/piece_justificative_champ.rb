@@ -25,20 +25,4 @@ class Champs::PieceJustificativeChamp < Champ
   def blank?
     piece_justificative_file.blank?
   end
-
-  def for_export(path = :value)
-    piece_justificative_file.map { _1.filename.to_s }.join(', ')
-  end
-
-  def for_api
-    return nil unless piece_justificative_file.attached?
-
-    # API v1 don't support multiple PJ
-    attachment = piece_justificative_file.first
-    return nil if attachment.nil?
-
-    if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
-      attachment.url
-    end
-  end
 end
