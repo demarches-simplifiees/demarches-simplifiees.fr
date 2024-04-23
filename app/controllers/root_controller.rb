@@ -1,4 +1,5 @@
 class RootController < ApplicationController
+  before_action :authenticate_administrateur!, only: :patron
   include ApplicationHelper
 
   def index
@@ -25,72 +26,51 @@ class RootController < ApplicationController
   def patron
     description = "Allez voir le super site : #{Current.application_base_url}"
 
-    all_champs = TypeDeChamp.type_champs
-      .map.with_index { |(name, _), i| TypeDeChamp.new(type_champ: name, private: false, libelle: name.humanize, description:, mandatory: true, stable_id: i) }
-      .map.with_index { |type_de_champ, i| type_de_champ.champ.build(id: i) }
+    procedure = Procedure.create_with(for_individual: true,
+        administrateurs: [current_administrateur],
+        duree_conservation_dossiers_dans_ds: 1,
+        max_duree_conservation_dossiers_dans_ds: Expired::DEFAULT_DOSSIER_RENTENTION_IN_MONTH,
+        cadre_juridique: 'http://www.legifrance.gouv.fr',
+        description:).find_or_initialize_by(libelle: 'Démarche de demo pour la page patron')
 
-    all_champs
-      .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:header_section) }
-      .each { |champ| champ.type_de_champ.libelle = 'Un super titre de section' }
+    if procedure.new_record?
+      Procedure.transaction do
+        procedure.draft_revision = procedure.revisions.build
+        procedure.save!
+        after_stable_id = nil
+        TypeDeChamp.type_champs.values.sort.each do |type_champ|
+          type_de_champ = procedure.draft_revision
+            .add_type_de_champ(type_champ:, libelle: type_champ.humanize, description:, mandatory: true, private: false, after_stable_id:)
+          after_stable_id = type_de_champ.stable_id
 
-    all_champs
-      .filter { |champ| champ.type_de_champ.drop_down_list? }
-      .each do |champ|
-        if champ.type_de_champ.linked_drop_down_list?
-          champ.type_de_champ.drop_down_list_value =
-            "-- section 1 --
-            option A
-            option B
--- section 2 --
-            option C"
-        else
-          champ.type_de_champ.drop_down_list_value =
-            "option A
-            option B
--- avant l'option C --
-            option C"
-          champ.value = '["option B", "option C"]'
-          champ.type_de_champ.drop_down_other = "1"
+          if type_de_champ.repetition?
+            repetition_after_stable_id = nil
+            ['text', 'integer_number', 'checkbox'].each do |type_champ|
+              repetition_type_de_champ = procedure.draft_revision
+                .add_type_de_champ(type_champ:, libelle: type_champ.humanize, description:, mandatory: true, private: false, parent_stable_id: type_de_champ.stable_id, after_stable_id: repetition_after_stable_id)
+              repetition_after_stable_id = repetition_type_de_champ.stable_id
+            end
+          elsif type_de_champ.linked_drop_down_list?
+            type_de_champ.drop_down_list_value =
+              "-- section 1 --
+              option A
+              option B
+              -- section 2 --
+              option C"
+            type_de_champ.save
+          elsif type_de_champ.drop_down_list?
+            type_de_champ.drop_down_list_value =
+              "option A
+              option B
+              -- avant l'option C --
+              option C"
+            type_de_champ.save
+          end
         end
       end
-
-    all_champs
-      .filter { |champ| champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .each do |champ_repetition|
-        libelles = ['Prénom', 'Nom'];
-        champ_repetition.champs << libelles.map.with_index do |libelle, i|
-          text_tdc = TypeDeChamp.new(type_champ: :text, private: false, libelle: libelle, description: description, mandatory: true)
-          text_tdc.champ.build(id: all_champs.length + i)
-        end
-      end
-
-    type_champ_values = {
-      TypeDeChamp.type_champs.fetch(:date)      => '2016-07-26',
-      TypeDeChamp.type_champs.fetch(:datetime)  => '26/07/2016 07:35',
-      TypeDeChamp.type_champs.fetch(:textarea)  => 'Une description de mon projet'
-    }
-
-    type_champ_values.each do |(type_champ, value)|
-      all_champs
-        .filter { |champ| champ.type_champ == type_champ }
-        .each { |champ| champ.value = value }
     end
 
-    @dossier = Dossier.new(champs: all_champs)
-    @dossier.association(:procedure).target = Procedure.new
-    all_champs.each do |champ|
-      champ.association(:dossier).target = @dossier
-      champ.champs.each do |champ|
-        champ.association(:dossier).target = @dossier
-      end
-    end
-
-    draft_revision = @dossier.procedure.build_draft_revision(types_de_champ: all_champs.map(&:type_de_champ))
-    @dossier.association(:revision).target = draft_revision
-    @dossier.champs_public.map(&:type_de_champ).map do |tdc|
-      tdc.association(:revision_type_de_champ).target = tdc.build_revision_type_de_champ(revision: draft_revision)
-      tdc.association(:revision).target = draft_revision
-    end
+    @dossier = procedure.draft_revision.dossier_for_preview(current_user)
   end
 
   def suivi
