@@ -327,7 +327,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
         # check reorder rerendered champ component between target->destination
         reordered_coordinates.map(&:reload).map do |coordinate|
-          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position)
+          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position + 1)
         end
       end
     end
@@ -380,7 +380,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
         # check reorder rerendered champ component between target->destination
         reordered_coordinates.map(&:reload).map do |coordinate|
-          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position)
+          expect(page).to have_selector("##{ActionView::RecordIdentifier.dom_id(coordinate, :type_de_champ_editor)} .position", text: coordinate.position + 1)
         end
       end
     end
