@@ -782,7 +782,7 @@ GEM
     timecop (0.9.8)
     timeout (0.4.1)
     ttfunk (1.7.0)
-    turbo-rails (2.0.2)
+    turbo-rails (2.0.5)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
       railties (>= 6.0.0)
