@@ -30,6 +30,43 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     secondary_options
   end
 
+  class << self
+    def champ_value(champ)
+      [champ.primary_value, champ.secondary_value].filter(&:present?).join(' / ')
+    end
+
+    def champ_value_for_tag(champ, path = :value)
+      case path
+      when :primary
+        champ.primary_value
+      when :secondary
+        champ.secondary_value
+      when :value
+        champ_value(champ)
+      end
+    end
+
+    def champ_value_for_export(champ, path = :value)
+      case path
+      when :primary
+        champ.primary_value
+      when :secondary
+        champ.secondary_value
+      when :value
+        "#{champ.primary_value || ''};#{champ.secondary_value || ''}"
+      end
+    end
+
+    def champ_value_for_api(champ, version = 2)
+      case version
+      when 1
+        { primary: champ.primary_value, secondary: champ.secondary_value }
+      else
+        super
+      end
+    end
+  end
+
   private
 
   def paths
