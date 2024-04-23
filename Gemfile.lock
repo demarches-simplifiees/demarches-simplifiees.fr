@@ -235,7 +235,7 @@ GEM
     email_validator (2.2.4)
       activemodel
     erubi (1.12.0)
-    et-orbi (1.2.7)
+    et-orbi (1.2.11)
       tzinfo
     ethon (0.16.0)
       ffi (>= 1.15.0)
@@ -278,7 +278,7 @@ GEM
       fog-core (~> 2.1)
       fog-json (>= 1.0)
     formatador (1.1.0)
-    fugit (1.9.0)
+    fugit (1.10.1)
       et-orbi (~> 1, >= 1.2.7)
       raabro (~> 1.4)
     geo_coord (0.2.0)
