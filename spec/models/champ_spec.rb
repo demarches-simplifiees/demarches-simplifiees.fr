@@ -537,21 +537,21 @@ describe Champ do
 
   describe "#input_name" do
     let(:champ) { create(:champ_text) }
-    it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
+    it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }
 
     context "when private" do
       let(:champ) { create(:champ_text, private: true) }
-      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
     end
 
     context "when has parent" do
       let(:champ) { create(:champ_text, parent: create(:champ_text)) }
-      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }
     end
 
     context "when has private parent" do
       let(:champ) { create(:champ_text, private: true, parent: create(:champ_text, private: true)) }
-      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.id}]" }
+      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
     end
   end
 
