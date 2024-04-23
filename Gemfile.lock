@@ -763,7 +763,7 @@ GEM
       sprockets (>= 3.0.0)
     stackprof (0.2.26)
     stringio (3.1.0)
-    strong_migrations (1.7.0)
+    strong_migrations (1.8.0)
       activerecord (>= 5.2)
     swd (2.0.3)
       activesupport (>= 3)
