@@ -564,9 +564,10 @@ class Procedure < ApplicationRecord
     procedure.update!(defaut_groupe_instructeur: new_defaut_groupe)
 
     Flipper.features.each do |feature|
-      if feature_enabled?(feature.key)
-        Flipper.enable(feature.key, procedure)
-      end
+      next if feature.enabled? # don't clone features globally enabled
+      next unless feature_enabled?(feature.key)
+
+      Flipper.enable(feature.key, procedure)
     end
 
     procedure

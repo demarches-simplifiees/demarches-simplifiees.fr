@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+module Maintenance
+  class SpreadDossierDeletionTask < MaintenanceTasks::Task
+    ERROR_OCCURED_AT = Date.new(2024, 2, 14)
+    SPREAD_DURATION_IN_DAYS = 150
+
+    def collection
+      Dossier.where(termine_close_to_expiration_notice_sent_at: ERROR_OCCURED_AT)
+        .in_batches
+    end
+
+    def process(element)
+      element.update_all(termine_close_to_expiration_notice_sent_at: ERROR_OCCURED_AT + random_date_spread.days)
+    end
+
+    # since we do not keep track of current batch idx,
+    # delay termine_close_to_expiration_notice_sent_at using random approach
+    # should be good enough
+    def random_date_spread
+      rand(1..SPREAD_DURATION_IN_DAYS)
+    end
+  end
+end

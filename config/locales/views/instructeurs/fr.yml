@@ -10,13 +10,13 @@ fr:
           en_instruction: Le %{processed_at} ce dossier a été passé en instruction
           accepte: Le %{processed_at} ce dossier a été accepté
           refuse: Le %{processed_at} ce dossier a été refusé
-          classe_sans_suite: Le %{processed_at} ce dossier a été classé sans suite
+          sans_suite: Le %{processed_at} ce dossier a été classé sans suite
         with_email:
           en_construction: Le %{processed_at}, %{email} a passé ce dossier en construction
           en_instruction: Le %{processed_at}, %{email} a passé ce dossier en instruction
           accepte: Le %{processed_at}, %{email} a accepté ce dossier
           refuse: Le %{processed_at}, %{email} a refusé ce dossier
-          classe_sans_suite: Le %{processed_at}, %{email} a classé ce dossier sans suite
+          sans_suite: Le %{processed_at}, %{email} a classé ce dossier sans suite
       filterable_state:
         en_construction: "En construction"
         pending_correction: "En attente"

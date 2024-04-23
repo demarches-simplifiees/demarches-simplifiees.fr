@@ -18,11 +18,20 @@ class DataSources::AdresseController < ApplicationController
   private
 
   def fetch_results
-    Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: params[:q], limit: 10 })
+    Typhoeus.get("#{API_ADRESSE_URL}/search", params: { q: params[:q], limit: 10 }, timeout: 3)
   end
 
   def format_results(results)
-    results[:features].map do
+    results[:features].flat_map do |feature|
+      if feature[:properties][:type] == 'municipality'
+        departement_code = feature[:properties][:context].split(',').first
+        APIGeoService.commune_postal_codes(departement_code, feature[:properties][:citycode]).map do |postcode|
+          feature.deep_merge(properties: { postcode:, label: "#{feature[:properties][:label]} (#{postcode})" })
+        end
+      else
+        feature
+      end
+    end.map do
       {
         label: _1[:properties][:label],
         value: _1[:properties][:label],

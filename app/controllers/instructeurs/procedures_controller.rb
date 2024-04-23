@@ -258,7 +258,7 @@ module Instructeurs
 
     def email_usagers
       @procedure = procedure
-      @bulk_messages = BulkMessage.includes(:groupe_instructeurs).where(groupe_instructeurs: { procedure: procedure })
+      @bulk_messages = BulkMessage.where(procedure: procedure)
       @bulk_message = current_instructeur.bulk_messages.build
       @dossiers_without_groupe_count = procedure.dossiers.state_brouillon.for_groupe_instructeur(nil).count
     end
@@ -283,7 +283,8 @@ module Instructeurs
         dossier_state: Dossier.states.fetch(:brouillon),
         sent_at: Time.zone.now,
         instructeur_id: current_instructeur.id,
-        groupe_instructeurs: GroupeInstructeur.for_dossiers(dossiers)
+        groupe_instructeurs: GroupeInstructeur.for_dossiers(dossiers),
+        procedure_id: @procedure.id
       )
       bulk_message.save!
 

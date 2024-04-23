@@ -31,7 +31,7 @@ class DataSources::CommuneController < ApplicationController
       nom: name,
       boost: 'population',
       limit: 100
-    })
+    }, timeout: 3)
   end
 
   def fetch_by_postal_code(postal_code)
@@ -39,8 +39,8 @@ class DataSources::CommuneController < ApplicationController
       type: 'commune-actuelle,arrondissement-municipal',
       codePostal: postal_code,
       boost: 'population',
-      limit: 20
-    })
+      limit: 50
+    }, timeout: 3)
   end
 
   def postal_code?(string)

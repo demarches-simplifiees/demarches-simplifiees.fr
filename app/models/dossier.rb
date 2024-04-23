@@ -1397,6 +1397,7 @@ class Dossier < ApplicationRecord
   end
 
   def user_from_france_connect?
+    return false if user_deleted?
     user.france_connect_information.present?
   end
 
