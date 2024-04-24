@@ -80,3 +80,7 @@ fr:
     update_expression_reguliere_exemple_text: L’exemple d’expression régulière de l’annotation privée « %{label} » a été modifiée. Le nouvel exemple est « %{to} ».
     remove_expression_reguliere_error_message: Le message d’erreur de l’expression régulière de l’annotation privée « %{label} » a été supprimé.
     update_expression_reguliere_error_message: Le message d’erreur de l’expression régulière de l’annotation privée « %{label} » a été modifiée. Le nouveau message est « %{to} ».
+  transitions_rules:
+    add: La condition d’elligibilité « %{new_condition} » a été ajoutée.
+    remove: La condition d’elligibilité « %{previous_condition} » a été supprimée
+    update: La conditon d’elligibilité  « %{previous_condition} » a été changée pour « %{new_condition} »

@@ -13,6 +13,10 @@
         Plus d'informations sur l'eligibilité des dossiers dans la
         = link_to('doc', ELIGIBILITE_URL, title: "Document sur l'eligibilité des dossiers", **external_link_attributes)
 
+      = render Dsfr::AlertComponent.new(title: nil, size: :sm, state: :info, heading_level: 'h2', extra_class_names: 'fr-my-2w') do |c| 
+        - c.with_body do
+          %p Seuls les dossiers répondant à vos critères d'eligibilité pourront être déposés
+
       - if @procedure.active_revision.conditionable_types_de_champ.present?
         = render Conditions::TransitionsRulesComponent.new(revision: @procedure.draft_revision)
       - else

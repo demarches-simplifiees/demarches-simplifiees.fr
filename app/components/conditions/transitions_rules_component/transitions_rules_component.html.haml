@@ -19,6 +19,6 @@
                 %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
                 %td.delete-column= delete_condition_tag(row_index)
 
-        = add_condition_tag
+        %p.fr-mt-2w= add_condition_tag
     - else
       = tag.button "Activer l'éligibilité des dossiers", formaction: add_condition_path, formvalidate: true, class: 'fr-btn fr-btn--primary'

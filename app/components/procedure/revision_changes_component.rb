@@ -1,9 +1,12 @@
 class Procedure::RevisionChangesComponent < ApplicationComponent
-  def initialize(changes:, previous_revision:)
-    @changes = changes
+  def initialize(new_revision:, previous_revision:)
     @previous_revision = previous_revision
-    @public_move_changes, @private_move_changes = changes.filter { _1.op == :move }.partition { !_1.private? }
-    @delete_champ_warning = !total_dossiers.zero? && !@changes.all?(&:can_rebase?)
+
+    @tdc_changes = previous_revision.compare_types_de_champ(new_revision)
+    @public_move_changes, @private_move_changes = @tdc_changes.filter { _1.op == :move }.partition { !_1.private? }
+    @delete_champ_warning = !total_dossiers.zero? && !@tdc_changes.all?(&:can_rebase?)
+
+    @transition_rules_changes = previous_revision.compare_transitions_rules(new_revision)
   end
 
   private

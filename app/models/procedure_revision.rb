@@ -143,9 +143,15 @@ class ProcedureRevision < ApplicationRecord
     !draft?
   end
 
-  def compare(revision)
+  def compare_types_de_champ(revision)
     changes = []
     changes += compare_revision_types_de_champ(revision_types_de_champ, revision.revision_types_de_champ)
+    changes
+  end
+
+  def compare_transitions_rules(revision)
+    changes = []
+    changes += compare_revision_transitions_rules(revision)
     changes
   end
 
@@ -322,6 +328,20 @@ class ProcedureRevision < ApplicationRecord
         .flat_map { |from, to| compare_type_de_champ(from.type_de_champ, to.type_de_champ, from_coordinates, to_coordinates) }
 
       (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids.index(_1.stable_id) : to_sids.index(_1.stable_id) }
+    end
+  end
+
+  def compare_revision_transitions_rules(new_revision)
+    from_transitions_rules = transitions_rules
+    to_transitions_rules = new_revision.transitions_rules
+    if from_transitions_rules == to_transitions_rules
+      []
+    elsif from_transitions_rules.present? && !to_transitions_rules.present?
+      [ProcedureRevisionChange::RemoveTransitionsRule.new(self, new_revision)]
+    elsif !from_transitions_rules.present? && to_transitions_rules.present?
+      [ProcedureRevisionChange::AddTransitionsRule.new(self, new_revision)]
+    else
+      [ProcedureRevisionChange::ChangeTransitionsRule.new(self, new_revision)]
     end
   end
 

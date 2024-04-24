@@ -423,11 +423,15 @@ class Procedure < ApplicationRecord
 
   def draft_changed?
     preload_draft_and_published_revisions
-    !brouillon? && revision_changes.present?
+    !brouillon? && (types_de_champ_revision_changes.present? || transitions_rules_revision_changes.present?)
   end
 
-  def revision_changes
-    published_revision.compare(draft_revision)
+  def types_de_champ_revision_changes
+    published_revision.compare_types_de_champ(draft_revision)
+  end
+
+  def transitions_rules_revision_changes
+    published_revision.compare_transitions_rules(draft_revision)
   end
 
   def preload_draft_and_published_revisions

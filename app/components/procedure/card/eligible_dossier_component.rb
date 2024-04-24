@@ -13,6 +13,6 @@ class Procedure::Card::EligibleDossierComponent < ApplicationComponent
   end
 
   def completed?
-    false
+    @procedure.draft_revision.transitions_rules.present?
   end
 end

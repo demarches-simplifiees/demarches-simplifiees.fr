@@ -176,3 +176,7 @@
     - list.with_item do
       .fr-alert.fr-alert--warning.fr-mt-1v
         = t(".invalid_routing_rules_alert")
+
+  - @transition_rules_changes.each do |change|
+    - list.with_item do
+      = t(".transitions_rules.#{change.op}", previous_condition: change.previous_condition, new_condition: change.new_condition)
