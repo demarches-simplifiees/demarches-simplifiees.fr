@@ -14,11 +14,11 @@ module Maintenance
       return if champ.external_id.present?
       return if champ.value.blank?
 
-      data = champ.data
-      return if data.blank?
-      return if data['code_departement'].blank?
+      value_json = champ.value_json
+      return if value_json.blank?
+      return if value_json['code_departement'].blank?
 
-      external_id = APIGeoService.commune_code(data['code_departement'], champ.value)
+      external_id = APIGeoService.commune_code(value_json['code_departement'], champ.value)
 
       if external_id.present?
         champ.update(external_id:)
