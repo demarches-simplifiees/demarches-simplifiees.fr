@@ -26,7 +26,7 @@ gem 'deep_cloneable' # Enable deep clone of active record models
 gem 'delayed_cron_job', require: false # Cron jobs
 gem 'delayed_job_active_record'
 gem 'delayed_job_web'
-gem 'devise', git: 'https://github.com/heartcombo/devise.git', ref: "edffc79bf05d7f1c58ba50ffeda645e2e4ae0cb1" # Gestion des comptes utilisateurs, drop ref on next release: 4.9.4
+gem 'devise'
 gem 'devise-i18n'
 gem 'devise-two-factor'
 gem 'discard'
