@@ -38,36 +38,6 @@ class Champs::AddressChamp < Champs::TextChamp
     end
   end
 
-  def to_s
-    address_label.presence || ''
-  end
-
-  def for_tag(path = :value)
-    case path
-    when :value
-      address_label
-    when :departement
-      departement_code_and_name || ''
-    when :commune
-      commune_name || ''
-    end
-  end
-
-  def for_export(path = :value)
-    case path
-    when :value
-      value.present? ? address_label : nil
-    when :departement
-      departement_code_and_name
-    when :commune
-      commune_name
-    end
-  end
-
-  def for_api
-    address_label
-  end
-
   def code_departement
     if full_address?
       address.fetch('department_code')

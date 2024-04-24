@@ -17,4 +17,14 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def tags_for_template = [].freeze
+
+  class << self
+    def champ_value_for_api(champ, version = 2)
+      nil
+    end
+
+    def champ_value_for_export(champ, path = :value)
+      champ.geo_areas.map(&:label).join("\n")
+    end
+  end
 end

@@ -1,4 +1,28 @@
 class TypesDeChamp::EpciTypeDeChamp < TypesDeChamp::TextTypeDeChamp
+  class << self
+    def champ_value_for_export(champ, path = :value)
+      case path
+      when :value
+        champ_value(champ)
+      when :code
+        champ.code
+      when :departement
+        champ.departement_code_and_name
+      end
+    end
+
+    def champ_value_for_tag(champ, path = :value)
+      case path
+      when :value
+        champ_value(champ)
+      when :code
+        champ.code
+      when :departement
+        champ.departement_code_and_name
+      end
+    end
+  end
+
   private
 
   def paths

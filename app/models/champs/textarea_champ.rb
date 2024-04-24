@@ -1,8 +1,4 @@
 class Champs::TextareaChamp < Champs::TextChamp
-  def for_export(path = :value)
-    value.present? ? ActionView::Base.full_sanitizer.sanitize(value) : nil
-  end
-
   def remaining_characters
     character_limit_base - character_count if character_count >= character_limit_threshold_75
   end

@@ -214,7 +214,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
-        before { dossier.champs_public.first.update(data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
+        before { dossier.champs_public.first.update(value: '18 a la bonne rue', data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
 
         it { is_expected.to eq('18 a la bonne rue') }
       end

@@ -34,10 +34,6 @@ class Champs::COJOChamp < Champ
     COJOService.new.(accreditation_number:, accreditation_birthdate:)
   end
 
-  def to_s
-    "#{accreditation_number} – #{accreditation_birthdate}"
-  end
-
   def accreditation_number_input_id
     "#{input_id}-accreditation_number"
   end

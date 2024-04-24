@@ -47,7 +47,7 @@ describe Champs::PieceJustificativeChamp do
 
     context 'without attached file' do
       before { champ_pj.piece_justificative_file.purge }
-      it { is_expected.to eq('') }
+      it { is_expected.to eq(nil) }
     end
   end
 

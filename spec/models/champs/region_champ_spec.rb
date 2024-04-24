@@ -1,7 +1,7 @@
 describe Champs::RegionChamp, type: :model do
   describe 'validations' do
     describe 'external link' do
-      let(:champ) { build(:champ_regions, external_id: external_id) }
+      let(:champ) { build(:champ_regions, value: nil, external_id: external_id) }
       subject { champ.validate(:champs_public_value) }
       context 'when nil' do
         let(:external_id) { nil }
@@ -29,7 +29,7 @@ describe Champs::RegionChamp, type: :model do
     end
 
     describe 'value' do
-      let(:champ) { create(:champ_regions) }
+      let(:champ) { create(:champ_regions, value: nil) }
       subject { champ.validate(:champs_public_value) }
 
       before { champ.update_columns(value: value) }
@@ -61,7 +61,7 @@ describe Champs::RegionChamp, type: :model do
   end
 
   describe 'value' do
-    let(:champ) { described_class.new }
+    let(:champ) { build(:champ_regions, value: nil) }
 
     it 'with code' do
       champ.value = '01'
