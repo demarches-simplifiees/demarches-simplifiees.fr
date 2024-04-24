@@ -2,7 +2,7 @@
   - list.with_empty do
     = t('.no_changes')
 
-  - @changes.each do |change|
+  - @tdc_changes.each do |change|
     - prefix = change.private? ? 'private' : 'public'
     - case change.op
     - when :add
