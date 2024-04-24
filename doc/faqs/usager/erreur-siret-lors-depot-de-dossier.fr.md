@@ -1,5 +1,5 @@
 ---
-title: "Erreur SIRET lors d’un dépôt de dossier sur %{application_name}"
+title: "Erreur SIRET lors d’un dépôt de dossier"
 category: usager
 subcategory: dossier_technical_issue
 slug: "erreur-siret-lors-d-un-depot-de-dossier"

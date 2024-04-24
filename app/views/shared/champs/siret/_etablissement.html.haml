@@ -8,7 +8,7 @@
 - when :not_found
   %p.fr-error-text
     Nous n’avons pas trouvé d’établissement correspondant à ce numéro de SIRET.
-    = link_to('Plus d’informations', t("links.common.faq.erreur_siret_url"), **external_link_attributes)
+    = link_to('Plus d’informations', t("links.common.faq.erreur_siret_url"))
 
 - when :network_error
   %p.fr-error-text= t('errors.messages.siret_network_error')

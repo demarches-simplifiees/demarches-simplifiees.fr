@@ -170,12 +170,12 @@ fr:
         page_six: "Accueil connecté - Résultats de recherche usager"
         page_seven:
           label: "FAQ"
-          url: "https://faq.demarches-simplifiees.fr/"
+          url: "/faq"
           title: "FAQ - nouvel onglet"
         page_eight:
           label: "FAQ - Usager (dépôt d'un dossier)"
-          url: "https://faq.demarches-simplifiees.fr/collection/17-usager-depot-dun-dossier"
-          title: "FAQ - Usager (dépôt d'un dossier) - nouvel onglet"
+          url: "/faq#accordion-usager-0"
+          title: "FAQ - Usager (dépôt d'un dossier)"
         page_nine: "Documentation - Présentation"
         page_ten: "Documentation - Démarrage"
         page_eleven: "Documentation - Généralités"
