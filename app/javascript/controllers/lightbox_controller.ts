@@ -19,7 +19,10 @@ export default class extends Controller {
       zoomFromOrigin: false,
       allowMediaOverlap: true,
       toggleThumb: true,
-      selector: '.gallery-link'
+      selector: '.gallery-link',
+      // license key is not mandatory for open source projects but we purchased
+      // an organization license to show our support (see https://www.lightgalleryjs.com/license/)
+      licenseKey: import.meta.env.VITE_LIGHTGALLERY_LICENSE_KEY
     };
 
     const gallery = document.querySelector('.gallery');

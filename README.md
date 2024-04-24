@@ -38,6 +38,8 @@ Pour faire tourner sidekiq, vous aurez besoin de :
 
 - redis
 
+- lightgallery : une license a été souscrite pour soutenir le projet, mais elle n'est pas obligatoire si la librairie est utilisée dans le cadre d'une application open source.
+
 #### Développement
 
 - rbenv : voir https://github.com/rbenv/rbenv-installer#rbenv-installer--doctor-scripts
