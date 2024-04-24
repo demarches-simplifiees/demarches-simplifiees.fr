@@ -143,10 +143,6 @@ class ProcedureRevision < ApplicationRecord
     !draft?
   end
 
-  def different_from?(revision)
-    revision_types_de_champ != revision.revision_types_de_champ
-  end
-
   def compare(revision)
     changes = []
     changes += compare_revision_types_de_champ(revision_types_de_champ, revision.revision_types_de_champ)
