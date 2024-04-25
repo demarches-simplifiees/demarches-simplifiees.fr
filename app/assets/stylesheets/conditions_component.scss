@@ -3,7 +3,9 @@
 
 form.form > .conditionnel {
   .condition-table {
-    table-layout: fixed;
+    table-layout: auto;
+    width: 95%;
+    margin-left: 5%;
 
     .far-left {
       width: 100px;
