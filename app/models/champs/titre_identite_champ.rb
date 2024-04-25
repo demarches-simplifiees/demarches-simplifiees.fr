@@ -25,8 +25,4 @@ class Champs::TitreIdentiteChamp < Champ
   def blank?
     piece_justificative_file.blank?
   end
-
-  def allow_multiple_attachments?
-    false
-  end
 end
