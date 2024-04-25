@@ -11,6 +11,8 @@ module DossierSearchableConcern
     kredis_flag :debounce_update_search_terms_flag
 
     def update_search_terms
+      DossierPreloader.load_one(self)
+
       search_terms = [
         user&.email,
         *champs_public.flat_map(&:search_terms),
