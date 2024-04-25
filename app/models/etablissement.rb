@@ -17,6 +17,8 @@ class Etablissement < ApplicationRecord
     fermé: "fermé"
   }, _prefix: true
 
+  after_commit -> { dossier&.debounce_update_search_terms }
+
   def entreprise_raison_sociale
     read_attribute(:entreprise_raison_sociale).presence || raison_sociale_for_ei
   end
