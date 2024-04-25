@@ -1,4 +1,4 @@
-RSpec.describe DossierUpdateSearchTermsJob, type: :job do
+RSpec.describe DossierIndexSearchTermsJob, type: :job do
   let(:dossier) { create(:dossier) }
 
   subject(:perform_job) { described_class.perform_now(dossier.reload) }

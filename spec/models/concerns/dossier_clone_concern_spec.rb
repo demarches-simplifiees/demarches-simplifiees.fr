@@ -51,7 +51,7 @@ RSpec.describe DossierCloneConcern do
     it "updates search terms" do
       subject
 
-      perform_enqueued_jobs(only: DossierUpdateSearchTermsJob)
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
       sql = "SELECT search_terms, private_search_terms FROM dossiers where id = :id"
       result = Dossier.connection.execute(Dossier.sanitize_sql_array([sql, id: new_dossier.id])).first
 
@@ -338,7 +338,7 @@ RSpec.describe DossierCloneConcern do
 
       it { expect { subject }.to change { dossier.reload.champs.size }.by(0) }
       it { expect { subject }.not_to change { dossier.reload.champs.order(:created_at).reject { _1.stable_id.in?([99, 994]) }.map(&:value) } }
-      it { expect { subject }.to have_enqueued_job(DossierUpdateSearchTermsJob).with(dossier) }
+      it { expect { subject }.to have_enqueued_job(DossierIndexSearchTermsJob).with(dossier) }
       it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 99 }.value }.from('old value').to('new value') }
       it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
 

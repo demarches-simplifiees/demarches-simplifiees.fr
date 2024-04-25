@@ -24,7 +24,7 @@ describe DossierSearchService do
       dossier_3
       dossier_archived
 
-      perform_enqueued_jobs(only: DossierUpdateSearchTermsJob)
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
     end
 
     let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }
@@ -116,7 +116,7 @@ describe DossierSearchService do
       dossier_2
       dossier_3
       dossier_archived
-      perform_enqueued_jobs(only: DossierUpdateSearchTermsJob)
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
     end
 
     let(:liste_dossiers) do

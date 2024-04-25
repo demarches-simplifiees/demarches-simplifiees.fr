@@ -36,9 +36,10 @@ describe Individual do
       end
     end
 
-    it "schedule update search terms" do
-      assert_enqueued_jobs(1, only: DossierUpdateSearchTermsJob) do
-        subject
+    it "schedule index search terms" do
+      subject.dossier.debounce_index_search_terms_flag.remove
+      assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
+        individual.update(nom: "new name")
       end
     end
   end

@@ -4,13 +4,13 @@ module DossierSearchableConcern
   extend ActiveSupport::Concern
 
   included do
-    after_commit :update_search_terms_later
+    after_commit :index_search_terms_later
 
     SEARCH_TERMS_DEBOUNCE = 30.seconds
 
-    kredis_flag :debounce_update_search_terms_flag
+    kredis_flag :debounce_index_search_terms_flag
 
-    def update_search_terms
+    def index_search_terms
       DossierPreloader.load_one(self)
 
       search_terms = [
@@ -28,11 +28,11 @@ module DossierSearchableConcern
       self.class.connection.execute(sanitized_sql)
     end
 
-    def update_search_terms_later
-      return if debounce_update_search_terms_flag.marked?
+    def index_search_terms_later
+      return if debounce_index_search_terms_flag.marked?
 
-      debounce_update_search_terms_flag.mark(expires_in: SEARCH_TERMS_DEBOUNCE)
-      DossierUpdateSearchTermsJob.set(wait: SEARCH_TERMS_DEBOUNCE).perform_later(self)
+      debounce_index_search_terms_flag.mark(expires_in: SEARCH_TERMS_DEBOUNCE)
+      DossierIndexSearchTermsJob.set(wait: SEARCH_TERMS_DEBOUNCE).perform_later(self)
     end
   end
 end

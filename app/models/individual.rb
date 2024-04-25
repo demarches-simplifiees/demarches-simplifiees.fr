@@ -17,7 +17,7 @@ class Individual < ApplicationRecord
 
   validates :email, presence: true, if: -> { dossier.for_tiers? && self.email? }, on: :update
 
-  after_commit -> { dossier.debounce_update_search_terms }, if: -> { nom_previously_changed? || prenom_previously_changed? }
+  after_commit -> { dossier.index_search_terms_later }, if: -> { nom_previously_changed? || prenom_previously_changed? }
 
   GENDER_MALE = "M."
   GENDER_FEMALE = 'Mme'
