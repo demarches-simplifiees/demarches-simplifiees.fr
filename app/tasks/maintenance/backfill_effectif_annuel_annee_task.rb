@@ -3,7 +3,7 @@
 module Maintenance
   class BackfillEffectifAnnuelAnneeTask < MaintenanceTasks::Task
     def collection
-      Etablissement.where.not(effectif_annuel: nil).where(effectif_annuel_annee: nil)
+      Etablissement.where.not(entreprise_effectif_annuel: nil).where(entreprise_effectif_annuel_annee: nil)
     end
 
     def process(etablissement)

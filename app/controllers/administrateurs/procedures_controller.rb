@@ -425,6 +425,7 @@ module Administrateurs
       procedures_result = procedures_result.where('published_at >= ?', filter.from_publication_date) if filter.from_publication_date.present?
       procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
       procedures_result = procedures_result.where(service: services) if services
+      procedures_result = procedures_result.where(for_individual: filter.for_individual) if filter.for_individual.present?
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 

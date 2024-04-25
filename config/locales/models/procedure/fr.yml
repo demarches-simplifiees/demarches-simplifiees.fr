@@ -40,6 +40,9 @@ fr:
           close: Close
           hidden: Supprimée
           depubliee: Dépubliée
+        kind_usager:
+          individual: Particulier
+          personne_morale: 'Personne morale'
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
         api_particulier_token: Jeton API Particulier
