@@ -857,12 +857,12 @@ ActiveRecord::Schema[7.0].define(version: 2024_02_27_163855) do
     t.boolean "cerfa_flag", default: false
     t.jsonb "chorus", default: {}, null: false
     t.boolean "cloned_from_library", default: false
-    t.datetime "closed_at", precision: nil
+    t.datetime "closed_at"
     t.string "closing_details"
     t.boolean "closing_notification_brouillon", default: false, null: false
     t.boolean "closing_notification_en_cours", default: false, null: false
     t.string "closing_reason"
-    t.datetime "created_at", precision: nil, null: false
+    t.datetime "created_at", null: false
     t.string "declarative_with_state"
     t.bigint "defaut_groupe_instructeur_id"
     t.string "description"
