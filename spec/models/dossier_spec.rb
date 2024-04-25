@@ -2110,7 +2110,7 @@ describe Dossier, type: :model do
           ]
         end
 
-        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
 
         before do
           yes_no, text, code_postal_de_polynesie = dossier.champs_public
