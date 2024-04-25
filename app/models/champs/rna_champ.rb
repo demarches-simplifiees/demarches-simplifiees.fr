@@ -41,6 +41,6 @@ class Champs::RNAChamp < Champ
       postal_code: address["code_postal"],
       city_name: address["commune"],
       city_code: address["code_insee"]
-    }
+    }.with_indifferent_access
   end
 end

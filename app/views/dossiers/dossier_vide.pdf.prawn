@@ -186,12 +186,11 @@ def add_champs(pdf, champs)
   champs.each do |champ|
     if champ.type == 'Champs::RepetitionChamp'
       add_libelle(pdf, champ)
-      3.times { champ.add_row(champ.type_de_champ.revision) }
+      added_champs = champ.add_row(champ.type_de_champ.revision)
+
       3.times do
-        champ.rows.each do |row|
-          row.each do |inner_champ|
-            render_single_champ(pdf, inner_champ)
-          end
+        added_champs.each do |champ|
+          render_single_champ(pdf, champ)
         end
       end
     else
