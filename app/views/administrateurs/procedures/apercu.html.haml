@@ -7,7 +7,7 @@
         = tab_item('le dossier',
           apercu_admin_procedure_path(@dossier.procedure, tab: 'dossier'),
           active: @tab == 'dossier')
-        - if @dossier.champs_private.size > 0
+        - if @dossier.has_annotations?
           = tab_item('les annotations privées',
             apercu_admin_procedure_path(@dossier.procedure, tab: 'annotations-privees'),
             active: @tab == 'annotations-privees')

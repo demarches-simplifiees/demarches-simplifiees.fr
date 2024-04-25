@@ -370,7 +370,7 @@ prawn_document(page_size: "A4") do |pdf|
   add_title(pdf, 'Formulaire')
   add_champs(pdf, @dossier.champs_public)
 
-  if @acls[:include_infos_administration] && @dossier.champs_private.present?
+  if @acls[:include_infos_administration] && @dossier.has_annotations?
     add_title(pdf, "Annotations privées")
     add_champs(pdf, @dossier.champs_private)
   end

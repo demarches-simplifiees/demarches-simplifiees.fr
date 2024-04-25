@@ -381,6 +381,10 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:drop_down_list)
   end
 
+  def multiple_drop_down_list?
+    type_champ == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+  end
+
   def linked_drop_down_list?
     type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
   end

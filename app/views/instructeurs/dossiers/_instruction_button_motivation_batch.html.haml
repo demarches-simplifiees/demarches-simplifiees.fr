@@ -8,6 +8,6 @@
   .hidden.js_delete_motivation{ id: "delete_motivation_import_#{instruction_operation}" }
     %button.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline.fr-btn--icon-left.fr-icon-delete-line.fr-ml-0.fr-mt-1w{ type: 'button', onclick: "DS.deleteJustificatif('#{instruction_operation}');" } Supprimer le  justificatif
 
-  = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--sm fr-btn--secondary', onclick: 'DS.motivationCancelBatch();'
+  = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--sm fr-btn--secondary', onclick: 'DS.motivationCancel();'
 
   = form.button "Valider la décision", class: ['fr-btn fr-btn--sm fr-mt-2w'], disabled: true, name: "#{form.object_name}[operation]", value: opt[:operation], data: { operation: opt[:operation], action: "batch-operation#onSubmitInstruction" }

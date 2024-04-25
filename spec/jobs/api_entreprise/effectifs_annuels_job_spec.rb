@@ -22,5 +22,6 @@ RSpec.describe APIEntreprise::EffectifsAnnuelsJob, type: :job do
   it 'updates etablissement' do
     subject
     expect(Etablissement.find(etablissement.id).entreprise_effectif_annuel).to eq(100.5)
+    expect(Etablissement.find(etablissement.id).entreprise_effectif_annuel_annee).to eq("2017")
   end
 end

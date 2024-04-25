@@ -19,7 +19,6 @@ import { toggleCondidentielExplanation } from '../new_design/avis';
 import {
   showMotivation,
   motivationCancel,
-  motivationCancelBatchDropdown,
   showImportJustificatif,
   showDeleteJustificatif,
   deleteJustificatif
@@ -34,7 +33,6 @@ const DS = {
   toggleCondidentielExplanation,
   showMotivation,
   motivationCancel,
-  motivationCancelBatchDropdown,
   showImportJustificatif,
   showDeleteJustificatif,
   deleteJustificatif,

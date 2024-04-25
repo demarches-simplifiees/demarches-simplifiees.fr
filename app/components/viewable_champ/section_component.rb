@@ -2,9 +2,9 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   include ApplicationHelper
   include TreeableConcern
 
-  def initialize(champs: nil, nodes: nil, demande_seen_at:, profile:)
-    @demande_seen_at, @profile, @repetition = demande_seen_at, profile
-    nodes ||= to_tree(champs:)
+  def initialize(nodes: nil, types_de_champ: nil, row_id: nil, demande_seen_at:, profile:, champs_by_stable_id_with_row:)
+    @demande_seen_at, @profile, @row_id, @champs_by_stable_id_with_row = demande_seen_at, profile, row_id, champs_by_stable_id_with_row
+    nodes ||= to_tree(types_de_champ:)
     @nodes = to_sections(nodes:)
   end
 
@@ -13,17 +13,18 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   end
 
   def header_section
-    if @nodes.first.is_a?(Champs::HeaderSectionChamp)
-      @nodes.first
+    maybe_header_section = @nodes.first
+    if maybe_header_section.is_a?(TypeDeChamp) && maybe_header_section.header_section?
+      champ_for_type_de_champ(maybe_header_section)
     end
   end
 
   def champs
-    tail.filter { _1.is_a?(Champ) }
+    tail.filter_map { _1.is_a?(TypeDeChamp) ? champ_for_type_de_champ(_1) : nil }
   end
 
   def sections
-    tail.filter { !_1.is_a?(Champ) }
+    tail.filter { _1.is_a?(ViewableChamp::SectionComponent) }
   end
 
   def tail
@@ -48,6 +49,10 @@ class ViewableChamp::SectionComponent < ApplicationComponent
   private
 
   def to_sections(nodes:)
-    nodes.map { _1.is_a?(Array) ? ViewableChamp::SectionComponent.new(nodes: _1, demande_seen_at: @demande_seen_at, profile: @profile) : _1 }
+    nodes.map { _1.is_a?(Array) ? ViewableChamp::SectionComponent.new(nodes: _1, demande_seen_at: @demande_seen_at, profile: @profile, champs_by_stable_id_with_row: @champs_by_stable_id_with_row) : _1 }
+  end
+
+  def champ_for_type_de_champ(type_de_champ)
+    @champs_by_stable_id_with_row[[@row_id, type_de_champ.stable_id].compact]
   end
 end

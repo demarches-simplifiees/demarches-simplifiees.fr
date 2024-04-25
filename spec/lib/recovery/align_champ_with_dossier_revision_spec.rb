@@ -25,8 +25,8 @@ describe Recovery::AlignChampWithDossierRevision do
       expect(procedure.revisions.size).to eq(3)
       expect(bad_dossier.revision).to eq(procedure.published_revision)
       expect(bad_dossier.champs.size).to eq(2)
-      expect(bad_dossier.champs_public.size).to eq(1)
-      expect { DossierPreloader.load_one(bad_dossier) }.to raise_error(ArgumentError)
+      expect(bad_dossier.champs_public.size).to eq(2)
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error
 
       fixer = Recovery::AlignChampWithDossierRevision.new(Dossier)
       fixer.run
@@ -53,7 +53,7 @@ describe Recovery::AlignChampWithDossierRevision do
       expect(bad_dossier.revision).to eq(procedure.published_revision)
       expect(bad_dossier.champs.size).to eq(2)
       expect(bad_dossier.champs_public.size).to eq(2)
-      expect { DossierPreloader.load_one(bad_dossier) }.to raise_error(ArgumentError)
+      expect { DossierPreloader.load_one(bad_dossier) }.not_to raise_error
 
       fixer = Recovery::AlignChampWithDossierRevision.new(Dossier)
       fixer.run(destroy_extra_champs: true)

@@ -299,7 +299,13 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
       end
 
       if type.in?([:drop_down_list, :multiple_drop_down_list, :linked_drop_down_list])
-        type_de_champ_attributes[:drop_down_list_value] = options.join("\r\n")
+        if options.delete(:short).present?
+          type_de_champ_attributes[:drop_down_list_value] = "val1\r\nval2\r\n--separateur--\r\nval3"
+        elsif options.delete(:long).present?
+          type_de_champ_attributes[:drop_down_list_value] = "alpha\r\nbravo\r\n--separateur--\r\ncharly\r\ndelta\r\necho\r\nfox-trot\r\ngolf"
+        else
+          type_de_champ_attributes[:drop_down_list_value] = options.join("\r\n")
+        end
       end
     end
 

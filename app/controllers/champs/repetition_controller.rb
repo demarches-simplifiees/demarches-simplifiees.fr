@@ -3,7 +3,9 @@ class Champs::RepetitionController < ApplicationController
 
   def add
     @champ = policy_scope(Champ).includes(:champs).find(params[:champ_id])
-    @champs = @champ.add_row(@champ.dossier.revision)
+    row = @champ.add_row(@champ.dossier.revision)
+    @first_champ_id = row.map(&:focusable_input_id).compact.first
+    @row_id = row.first&.row_id
   end
 
   def remove

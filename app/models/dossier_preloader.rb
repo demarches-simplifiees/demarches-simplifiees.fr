@@ -118,9 +118,9 @@ class DossierPreloader
       dossier.association(:champs_private_all).target += champs
     end
 
-    parent.association(name).target = champs.sort_by do |champ|
-      [champ.row_id, positions[dossier.revision_id][champ.type_de_champ_id]]
-    end
+    parent.association(name).target = champs
+      .filter { positions[dossier.revision_id][_1.type_de_champ_id].present? }
+      .sort_by { [_1.row_id, positions[dossier.revision_id][_1.type_de_champ_id]] }
 
     # Load children champs
     champs.filter(&:block?).each do |parent_champ|

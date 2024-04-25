@@ -357,26 +357,6 @@ describe Dossier, type: :model do
     end
   end
 
-  describe '#champs' do
-    let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, libelle: 'l2', position: 2, procedure: procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-
-    it { expect(dossier.champs_public.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
-  end
-
-  describe '#champs_private' do
-    let(:procedure) { create(:procedure) }
-    let!(:tdc_1) { create(:type_de_champ, :private, libelle: 'l1', position: 1, procedure: procedure) }
-    let!(:tdc_3) { create(:type_de_champ, :private, libelle: 'l3', position: 3, procedure: procedure) }
-    let!(:tdc_2) { create(:type_de_champ, :private, libelle: 'l2', position: 2, procedure: procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-
-    it { expect(dossier.champs_private.pluck(:libelle)).to match(['l1', 'l2', 'l3']) }
-  end
-
   describe "#text_summary" do
     let(:service) { create(:service, nom: 'nom du service') }
     let(:procedure) { create(:procedure, libelle: "Démarche", organisation: "Organisme", service: service) }
@@ -1540,10 +1520,10 @@ describe Dossier, type: :model do
 
     context "with mandatory SIRET champ" do
       let(:type_de_champ) { { type: :siret, mandatory: true } }
-      let(:champ_siret) { dossier.champs_public.first }
+      let(:champ_siret) { dossier.champs.first }
 
       before do
-        champ_siret.value = '44011762001530'
+        champ_siret.update(value: '44011762001530')
       end
 
       it 'should not have errors' do
@@ -1776,6 +1756,7 @@ describe Dossier, type: :model do
 
     it "should solve N+1 problem" do
       dossier.champs_public << create_list(:champ_carte, 3, type_de_champ: type_de_champ_carte, geo_areas: [create(:geo_area)])
+      dossier.champs_for_revision
 
       count = 0
 
@@ -1928,9 +1909,9 @@ describe Dossier, type: :model do
       let(:repetition_second_revision_champ) { dossier_second_revision.champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
-      let(:dossier_champs_for_export) { Dossier.champs_for_export(dossier.champs_public, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
-      let(:dossier_second_revision_champs_for_export) { Dossier.champs_for_export(dossier_second_revision.champs_public, procedure.types_de_champ_for_procedure_presentation.not_repetition) }
-      let(:repetition_second_revision_champs_for_export) { Dossier.champs_for_export(repetition_second_revision_champ.champs, procedure.types_de_champ_for_procedure_presentation.repetition) }
+      let(:dossier_champs_for_export) { Dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition, dossier.champs_by_stable_id_with_row) }
+      let(:dossier_second_revision_champs_for_export) { Dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition, dossier_second_revision.champs_by_stable_id_with_row) }
+      let(:repetition_second_revision_champs_for_export) { Dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.repetition, dossier.champs_by_stable_id_with_row) }
 
       context "when procedure published" do
         before do
@@ -1968,7 +1949,7 @@ describe Dossier, type: :model do
             repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
             type_champs = proc_test.types_de_champ_for_procedure_presentation(repetition).to_a
             expect(type_champs.size).to eq(1)
-            expect(Dossier.champs_for_export(dossier.champs_public, type_champs).size).to eq(3)
+            expect(Dossier.champs_for_export(type_champs, dossier.champs_by_stable_id_with_row).size).to eq(3)
           end
         end
       end
@@ -1991,7 +1972,7 @@ describe Dossier, type: :model do
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
       let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
 
-      subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+      subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
 
       before do
         text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))

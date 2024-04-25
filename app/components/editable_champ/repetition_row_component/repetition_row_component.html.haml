@@ -1,12 +1,11 @@
-- row_id = "safe-row-selector-#{@row.first.row_id}"
-.row{ id: row_id }
-  - if @row.size > 1
+.row{ id: "safe-row-selector-#{row_id}" }
+  - if @types_de_champ.size > 1
     %fieldset
       %legend.block-id= "#{@champ.libelle} "
-      = render EditableChamp::SectionComponent.new(champs: @row)
+      = render section_component
   - else
-    = render EditableChamp::SectionComponent.new(champs: @row)
+    = render section_component
 
   .flex.row-reverse
-    = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.id, row_id: @row.first.row_id), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne", title: t(".delete_title", row_number: @champ.rows.find_index(@row))}) do
+    = render NestedForms::OwnedButtonComponent.new(formaction: champs_repetition_path(@champ.id, row_id:), http_method: :delete, opt: { class: "fr-btn fr-btn--sm fr-btn--tertiary fr-text-action-high--red-marianne", title: t(".delete_title", row_number:)}) do
       = t(".delete")
