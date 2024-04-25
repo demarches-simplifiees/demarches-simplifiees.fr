@@ -127,4 +127,22 @@ RSpec.describe UserMailer, type: :mailer do
       end
     end
   end
+
+  describe '.notify_after_closing' do
+    let(:procedure) { create(:procedure) }
+    let(:content) { "Bonjour,\r\nsaut de ligne" }
+    subject { described_class.notify_after_closing(user, content, procedure) }
+
+    it { expect(subject.to).to eq([user.email]) }
+    it { expect(subject.body).to include("Clôture d&#39;une démarche sur Démarches simplifiées") }
+    it { expect(subject.body).to include("Bonjour,\r\n<br />saut de ligne") }
+
+    context 'when perform_later is called' do
+      let(:custom_queue) { 'low_priority' }
+      before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
+      it 'enqueues email is custom queue for low priority delivery' do
+        expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
+      end
+    end
+  end
 end

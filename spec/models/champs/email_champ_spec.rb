@@ -60,6 +60,11 @@ describe Champs::EmailChamp do
       it { is_expected.to be_truthy }
     end
 
+    context 'when value includes accents' do
+      let(:value) { 'prenom.nom@etu.univ-rouen.fr' }
+      it { is_expected.to be_truthy }
+    end
+
     context 'when value is the classic standard user@domain.ext' do
       let(:value) { 'username@mailserver.domain' }
       it { is_expected.to be_truthy }

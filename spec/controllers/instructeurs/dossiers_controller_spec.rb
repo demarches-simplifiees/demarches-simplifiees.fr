@@ -910,7 +910,7 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: instructeur).acl_for_dossier_export) }
+      it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: instructeur).acl_for_dossier_export(dossier.procedure)) }
       it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
 

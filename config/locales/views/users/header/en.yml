@@ -11,7 +11,7 @@ en:
           procedure_close_content: You can still consult your file, but it will not be processed by the administration
           new_procedure_link: see the procedure
           new_procedure_content: "A new procedure is available, consult it here:"
-          contact_service: For more information, please contact the service %{service_name}, available at  %{service_phone_number} or by email %{service_email}
+          contact_service_html: For more information, please contact the service %{service_name}, available at  %{service_phone_number} or by email to <a href="mailto:%{service_email}">%{service_email}</a>
           states:
             brouillon: Your file is still in draft and will soon expire. So it will be deleted soon without being instructed. If you want to pursue your procedure you can submit it now. Otherwise you are able to delay its expiration by clicking on the underneath button.
             en_construction: Your file is pending for instruction. The maximum delay is %{nominal_duration_months} months, but you can extend the duration by clicking on the underneath button.

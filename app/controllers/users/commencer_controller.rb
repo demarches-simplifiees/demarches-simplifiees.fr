@@ -81,6 +81,11 @@ module Users
       current_user ? :user : :guest
     end
 
+    def closing_details
+      @procedure = Procedure.find_by(path: params[:path])
+      render 'closing_details', layout: 'closing_details'
+    end
+
     private
 
     def extra_query_params
@@ -139,9 +144,8 @@ module Users
         redirect_to commencer_path(procedure.replaced_by_procedure.path, **extra_query_params)
         return
       elsif procedure&.close?
-        flash.alert = procedure.service.presence ?
-          t('errors.messages.procedure_archived.with_service_and_phone_email', service_name: procedure.service.nom, service_phone_number: procedure.service.telephone, service_email: procedure.service.email) :
-          t('errors.messages.procedure_archived.with_organisation_only', organisation_name: procedure.organisation)
+        redirect_to closing_details_path(procedure.path)
+        return
       else
         flash.alert = t('errors.messages.procedure_not_found')
       end
@@ -156,7 +160,7 @@ module Users
     end
 
     def generate_empty_pdf(revision)
-      @dossier = revision.new_dossier
+      @revision = revision
       data = render_to_string(template: 'dossiers/dossier_vide', formats: [:pdf])
       send_data(data, filename: "#{revision.procedure.libelle}.pdf")
     end

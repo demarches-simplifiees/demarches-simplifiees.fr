@@ -398,6 +398,7 @@ Rails.application.routes.draw do
     post 'accept_merge' => 'profil#accept_merge'
     post 'refuse_merge' => 'profil#refuse_merge'
     delete 'france_connect_information' => 'profil#destroy_fci'
+    get 'fermeture/:path', to: 'commencer#closing_details', as: :closing_details
   end
 
   get 'procedures/:id/logo', to: 'procedures#logo', as: :procedure_logo
@@ -616,6 +617,8 @@ Rails.application.routes.draw do
       put 'publish_revision' => 'procedures#publish_revision', as: :publish_revision
       get 'transfert' => 'procedures#transfert', as: :transfert
       get 'close' => 'procedures#close', as: :close
+      get 'closing_notification' => 'procedures#closing_notification', as: :closing_notification
+      post 'notify_after_closing' => 'procedures#notify_after_closing', as: :notify_after_closing
       get 'confirmation' => 'procedures#confirmation', as: :confirmation
       post 'transfer' => 'procedures#transfer', as: :transfer
       resources :mail_templates, only: [:edit, :update, :show]

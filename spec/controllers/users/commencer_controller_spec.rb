@@ -43,7 +43,7 @@ describe Users::CommencerController, type: :controller do
         published_procedure.organisation = "hello"
         published_procedure.close!
         get :commencer, params: { path: published_procedure.path }
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(closing_details_path(published_procedure.path))
       end
     end
 
@@ -52,7 +52,7 @@ describe Users::CommencerController, type: :controller do
         published_procedure.service = create(:service)
         published_procedure.close!
         get :commencer, params: { path: published_procedure.path }
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(closing_details_path(published_procedure.path))
       end
     end
 

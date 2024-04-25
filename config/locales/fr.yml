@@ -503,7 +503,13 @@ fr:
           no_result_reset_search: Réinitialiser la recherche
           no_result_text_with_filter: ne correspond aux filtres sélectionnés
           no_result_reset_filter: Réinitialiser les filtres
-          procedure_closed: Cette démarche a été clôturée, vous ne pourrez pas redéposer de dossier à partir du lien de la démarche, contactez votre administration pour plus d’information.
+          procedure_closed:
+            brouillon:
+              internal_procedure: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la <a href="%{link}" target="_blank" rel="noopener noreferrer">démarche</a> qui la remplace
+              other: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Plus d'informations <a href="%{link}" target="_blank" rel="noopener noreferrer">ici</a>
+            en_cours:
+              internal_procedure: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration
+              other: "Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Plus d'informations <a href=%{link} target=_blank rel=noopener noreferrer>ici</a>"
           pending_correction: Ce dossier attend vos corrections. Consultez les modifications à apporter dans la messagerie.
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
@@ -747,7 +753,7 @@ fr:
       cps_network_error: 'Désolé, la vérification du numéro DN auprès de la CPS est temporairement indisponible. Vérifiez bien vos informations'
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
-        forbidden_html: "Seul-e-s les usager-e-s peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
+        forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
       omniauth:
         connexion: "Erreur lors de la connexion à %{provider}."
         forbidden_html: "Seul-e-s les usager-e-s peuvent se connecter via %{provider}. En tant qu'instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>créer un mot de passe</a>."

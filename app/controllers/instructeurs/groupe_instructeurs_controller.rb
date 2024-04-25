@@ -22,7 +22,9 @@ module Instructeurs
       instructeur = Instructeur.by_email(instructeur_email) ||
         create_instructeur(instructeur_email)
 
-      if groupe_instructeur.instructeurs.include?(instructeur)
+      if instructeur.blank?
+        flash[:alert] = "L’adresse email « #{instructeur_email} » n’est pas valide."
+      elsif groupe_instructeur.instructeurs.include?(instructeur)
         flash[:alert] = "L’instructeur « #{instructeur_email} » est déjà dans le groupe."
       else
         groupe_instructeur.add(instructeur)
@@ -62,7 +64,8 @@ module Instructeurs
         SecureRandom.hex,
         administrateurs: [procedure.administrateurs.first]
       )
-      user.invite!
+
+      user.invite! if user.valid?
       user.instructeur
     end
 

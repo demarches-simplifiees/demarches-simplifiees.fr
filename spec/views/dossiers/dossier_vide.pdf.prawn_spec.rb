@@ -1,10 +1,9 @@
 describe 'dossiers/dossier_vide', type: :view do
   let(:procedure) { create(:procedure, :with_all_champs) }
-  let(:dossier) { create(:dossier, procedure: procedure) }
 
   before do
     assign(:procedure, procedure)
-    assign(:dossier, dossier)
+    assign(:revision, procedure.draft_revision)
   end
 
   subject { render }

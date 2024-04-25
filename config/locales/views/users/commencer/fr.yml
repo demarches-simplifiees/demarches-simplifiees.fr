@@ -22,3 +22,5 @@ fr:
         other: "Vos %{count} derniers dossiers créés :"
       already_created_details_html:
         "N° %{id}, créé il y a %{created_at} et %{state}"
+    closing_details:
+      page_title: "La démarche %{libelle} est close depuis le %{closed_at}"

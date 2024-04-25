@@ -33,6 +33,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.notify_inactive_close_to_deletion(user)
   end
 
+  def notify_after_closing
+    UserMailer.notify_after_closing([user])
+  end
+
   private
 
   def user

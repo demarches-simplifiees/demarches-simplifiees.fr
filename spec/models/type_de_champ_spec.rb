@@ -174,9 +174,13 @@ describe TypeDeChamp do
       let(:expression_reguliere_exemple_text) { "01234567" }
       let(:expression_reguliere) { "[A-Z]+" }
 
-      it "should add error message" do
+      it "should add only one error message" do
         expect(subject).to be_truthy
-        expect(tdc.errors.messages[:expression_reguliere_exemple_text]).to be_present
+        expect(tdc.errors.messages[:expression_reguliere_exemple_text].size).to eq(1)
+
+        tdc.invalid_regexp?
+
+        expect(tdc.errors.messages[:expression_reguliere_exemple_text].size).to eq(1)
       end
     end
 

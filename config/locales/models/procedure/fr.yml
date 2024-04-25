@@ -14,6 +14,8 @@ fr:
           cadre_juridique: "Exemple: 'https://www.legifrance.gouv.fr/'"
           old_procedure: Cette démarche remplace une close ? Si oui, veuillez indiquer le n° de la démarche remplacée
           procedure_path: "Personnalisez si besoin la suite de l’URL, pour faciliter l'accès à la démarche. De 3 à 200 caractères :  minuscules, chiffres et tiret seulement"
+          closing_details: Donnez le plus d'explication possible aux usagers sur la raison de la fermeture de la démarche
+          closing_details_placeholder: "Cette démarche a été remplacée par la page…\n\nLe guide de la nouvelle démarche est disponible ici\n\nPour toute information complémentaire, contactez…\n\nCordialement,"
         path: Lien public
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers sur Mes-Démarches (choisi par un usager)
@@ -27,6 +29,12 @@ fr:
         lien_site_web: Où les usagers trouveront-ils le lien vers la démarche ?
         old_procedure: Numéro de la démarche remplacée
         new_procedure: Numéro de la nouvelle démarche
+        replaced_by_procedure_id: Nouvelle démarche
+        closing_details: Message d'information remplaçant la démarche
+        closing_reason: Raison de la clôture
+        closing_reasons:
+          other: Autre
+          internal_procedure: Je remplace ma démarche par une autre dans Démarches simplifiées
         procedure_path: Lien de la démarche à diffuser aux usagers
         procedure_path_placeholder: nom-de-la-demarche
         cadre_juridique: Lien vers le texte

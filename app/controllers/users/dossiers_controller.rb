@@ -95,7 +95,7 @@ module Users
       respond_to do |format|
         format.pdf do
           @dossier = dossier_with_champs(pj_template: false)
-          @acls = pj_service.acl_for_dossier_export
+          @acls = pj_service.acl_for_dossier_export(@dossier.procedure)
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all do

@@ -16,7 +16,10 @@ RSpec.describe ApplicationController::ErrorHandling, type: :controller do
       { 'some_cookie': true }
     end
 
-    before { cookies.update(request_cookies) }
+    before do
+      cookies.update(request_cookies)
+      allow(controller).to receive(:rand).and_return(0)
+    end
 
     it 'logs the error' do
       allow(Sentry).to receive(:capture_message)

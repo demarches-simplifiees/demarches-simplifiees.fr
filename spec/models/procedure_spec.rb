@@ -178,6 +178,20 @@ describe Procedure do
       it { is_expected.to allow_value('Demande de subvention').for(:libelle) }
     end
 
+    context 'closing procedure' do
+      context 'without replacing procedure in DS' do
+        let(:procedure) { create(:procedure) }
+
+        context 'valid' do
+          before do
+            procedure.update!(closing_details: "Bonjour,\nLa démarche est désormais hébergée sur une autre plateforme\nCordialement", closing_reason: Procedure.closing_reasons.fetch(:other))
+          end
+
+          it { expect(procedure).to be_valid }
+        end
+      end
+    end
+
     context 'description' do
       it { is_expected.not_to allow_value(nil).for(:description) }
       it { is_expected.not_to allow_value('').for(:description) }
@@ -1371,26 +1385,6 @@ describe Procedure do
 
   describe ".default_sort" do
     it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
-  end
-
-  describe '#new_dossier' do
-    let(:procedure) do
-      create(:procedure,
-        types_de_champ_public: [{}, { type: :number }],
-        types_de_champ_private: [{ type: :textarea }])
-    end
-
-    let(:dossier) { procedure.active_revision.new_dossier }
-
-    it { expect(dossier.procedure).to eq(procedure) }
-
-    it { expect(dossier.champs_public.size).to eq(2) }
-    it { expect(dossier.champs_public.first.type).to eq("Champs::TextChamp") }
-
-    it { expect(dossier.champs_private.size).to eq(1) }
-    it { expect(dossier.champs_private.first.type).to eq("Champs::TextareaChamp") }
-
-    it { expect(Champ.count).to eq(0) }
   end
 
   describe "#organisation_name" do
