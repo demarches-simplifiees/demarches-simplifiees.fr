@@ -29,13 +29,21 @@ describe DossierSearchableConcern do
     context 'with an update' do
       before do
         stub_const("DossierSearchableConcern::SEARCH_TERMS_DEBOUNCE", 1.second)
+
+        # dossier creation trigger a first indexation and flag,
+        # so we we have to remove this flag
+        dossier.debounce_index_search_terms_flag.remove
       end
 
-      it "update columns" do
+      it "update columns en construction" do
         dossier.update(
           champs_public_attributes: [{ id: champ_public.id, value: 'nouvelle valeur publique' }],
           champs_private_attributes: [{ id: champ_private.id, value: 'nouvelle valeur privee' }]
         )
+
+        assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
+          dossier.passer_en_construction
+        end
 
         perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
 
@@ -52,15 +60,21 @@ describe DossierSearchableConcern do
         sleep 1.01.seconds
 
         assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
-          dossier.update(champs_public_attributes: [{ id: champ_public.id, value: rand(10).to_s }])
+          dossier.index_search_terms_later
         end
       end
     end
 
     context 'mandataire' do
       it "update columns" do
-        dossier.update(mandataire_first_name: "Chris")
+        dossier.debounce_index_search_terms_flag.remove
+
+        assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
+          dossier.update!(mandataire_first_name: "Chris")
+        end
+
         perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
+
         expect(result["search_terms"]).to include("Chris")
       end
     end

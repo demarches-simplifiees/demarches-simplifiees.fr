@@ -13,6 +13,8 @@ module DossierStateConcern
 
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_construction))
     procedure.compute_dossiers_count
+
+    index_search_terms_later
   end
 
   def after_commit_passer_en_construction

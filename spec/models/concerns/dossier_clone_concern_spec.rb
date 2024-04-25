@@ -49,9 +49,15 @@ RSpec.describe DossierCloneConcern do
     end
 
     it "updates search terms" do
-      subject
+      # In spec, dossier and flag reference are created just before deep clone,
+      # which keep the flag reference from the original, pointing to the original id.
+      # We have to remove the flag reference before the clone
+      dossier.remove_instance_variable(:@debounce_index_search_terms_flag_kredis_flag)
 
-      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob) do
+        subject
+      end
+
       sql = "SELECT search_terms, private_search_terms FROM dossiers where id = :id"
       result = Dossier.connection.execute(Dossier.sanitize_sql_array([sql, id: new_dossier.id])).first
 
@@ -334,6 +340,7 @@ RSpec.describe DossierCloneConcern do
         end
         updated_champ.update(value: 'new value')
         updated_repetition_champ.update(value: 'new value in repetition')
+        dossier.debounce_index_search_terms_flag.remove
       end
 
       it { expect { subject }.to change { dossier.reload.champs.size }.by(0) }

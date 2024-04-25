@@ -1041,6 +1041,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(champ_drop_down_list.value).to eq('other value')
           expect(dossier.reload.last_champ_private_updated_at).to eq(now)
           expect(response).to have_http_status(200)
+          assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
         }
 
         it 'updates the annotations' do
