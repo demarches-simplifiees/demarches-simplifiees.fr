@@ -2019,20 +2019,21 @@ describe Dossier, type: :model do
       let(:dossier) { create(:dossier, procedure:) }
       let(:yes_no_tdc) { procedure.active_revision.types_de_champ_public.first }
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
+      let(:commune_tdc) { procedure.active_revision.types_de_champ_public[2] }
       let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
       context 'with no value for commune_de_polynesie' do
         let(:expected) do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            ["commune", ''],
-            ["commune (Code postal)", ''],
-            ["commune (Ile)", ""],
-            ["commune (Archipel)", ""]
+            [commune_tdc.libelle, ''],
+            [commune_tdc.libelle + " (Code postal)", ''],
+            [commune_tdc.libelle + " (Ile)", ""],
+            [commune_tdc.libelle + " (Archipel)", ""]
           ]
         end
 
-        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
 
         before do
           yes_no, text, commune_de_polynesie = dossier.champs_public
@@ -2048,14 +2049,14 @@ describe Dossier, type: :model do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            ["commune", 'Avera'],
-            ["commune (Code postal)", '98736'],
-            ["commune (Ile)", "Raiatea"],
-            ["commune (Archipel)", "Iles Sous Le Vent"]
+            [commune_tdc.libelle + "", 'Avera'],
+            [commune_tdc.libelle + " (Code postal)", '98736'],
+            [commune_tdc.libelle + " (Ile)", "Raiatea"],
+            [commune_tdc.libelle + " (Archipel)", "Iles Sous Le Vent"]
           ]
         end
 
-        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
 
         before do
           yes_no, text, commune_de_polynesie = dossier.champs_public
@@ -2074,20 +2075,21 @@ describe Dossier, type: :model do
       let(:dossier) { create(:dossier, procedure:) }
       let(:yes_no_tdc) { procedure.active_revision.types_de_champ_public.first }
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
+      let(:cp_tdc) { procedure.active_revision.types_de_champ_public[2] }
       let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
       context 'with no value for code_postal_de_polynesie' do
         let(:expected) do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            ["code postal", ''],
-            ["code postal (Commune)", ''],
-            ["code postal (Ile)", ""],
-            ["code postal (Archipel)", ""]
+            [cp_tdc.libelle, ''],
+            [cp_tdc.libelle + " (Commune)", ''],
+            [cp_tdc.libelle + " (Ile)", ""],
+            [cp_tdc.libelle + " (Archipel)", ""]
           ]
         end
 
-        subject { Dossier.champs_for_export(dossier.champs_public, tdcs) }
+        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
 
         before do
           yes_no, text, code_postal_de_polynesie = dossier.champs_public
@@ -2103,10 +2105,10 @@ describe Dossier, type: :model do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            ["code postal", '98736'],
-            ["code postal (Commune)", 'Avera'],
-            ["code postal (Ile)", "Raiatea"],
-            ["code postal (Archipel)", "Iles Sous Le Vent"]
+            [cp_tdc.libelle, '98736'],
+            [cp_tdc.libelle + " (Commune)", 'Avera'],
+            [cp_tdc.libelle + " (Ile)", "Raiatea"],
+            [cp_tdc.libelle + " (Archipel)", "Iles Sous Le Vent"]
           ]
         end
 
