@@ -56,5 +56,13 @@ describe DossierSearchableConcern do
         end
       end
     end
+
+    context 'mandataire' do
+      it "update columns" do
+        dossier.update(mandataire_first_name: "Chris")
+        perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
+        expect(result["search_terms"]).to include("Chris")
+      end
+    end
   end
 end
