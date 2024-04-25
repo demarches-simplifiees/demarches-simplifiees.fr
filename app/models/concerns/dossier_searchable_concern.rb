@@ -1,8 +1,14 @@
+# frozen_string_literal: true
+
 module DossierSearchableConcern
   extend ActiveSupport::Concern
 
   included do
     after_commit :update_search_terms_later
+
+    SEARCH_TERMS_DEBOUNCE = 30.seconds
+
+    kredis_flag :debounce_update_search_terms_flag
 
     def update_search_terms
       search_terms = [
@@ -21,7 +27,10 @@ module DossierSearchableConcern
     end
 
     def update_search_terms_later
-      DossierUpdateSearchTermsJob.perform_later(self)
+      return if debounce_update_search_terms_flag.marked?
+
+      debounce_update_search_terms_flag.mark(expires_in: SEARCH_TERMS_DEBOUNCE)
+      DossierUpdateSearchTermsJob.set(wait: SEARCH_TERMS_DEBOUNCE).perform_later(self)
     end
   end
 end
