@@ -33,15 +33,17 @@
       color: var(--text-active-blue-france);
       border: 1px solid var(--border-active-blue-france);
       padding: 0.25rem 0.75rem;
-
-      &:hover {
-        background-color: var(--hover-tint);
-      }
-
-      &:active {
-        background-color: var(--active-tint);
-      }
+      display: none;
     }
+  }
+
+  a.gallery-link:hover .fr-btn,
+  a.gallery-link:active .fr-btn {
+    display: flex;
+  }
+
+  a.gallery-link:active .fr-btn {
+    background-color: var(--hover-tint);
   }
 }
 
@@ -52,17 +54,16 @@
   .gallery-item {
     margin: 0 2rem 1.5rem 0;
   }
-
-  img {
-    height: 200px;
-    width: 200px;
-  }
 }
 
 .gallery-demande {
-  img {
-    height: 150px;
-    width: 150px;
+  .gallery-items-list {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .gallery-item {
+    margin: 0.5rem 2rem 1rem 0;
   }
 
   .fr-download {
@@ -71,7 +72,7 @@
 
   .thumbnail {
     width: fit-content;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
   }
 }
 
