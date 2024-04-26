@@ -81,6 +81,8 @@ describe Users::SessionsController, type: :controller do
 
   describe '#destroy' do
     let!(:user) { create(:user, email: email, password: password, loged_in_with_france_connect: loged_in_with_france_connect) }
+    let!(:instructeur) { create(:instructeur, user: user, agent_connect_id_token:) }
+    let(:agent_connect_id_token) { nil }
 
     before do
       sign_in user
@@ -127,6 +129,16 @@ describe Users::SessionsController, type: :controller do
 
       it 'redirect to root page' do
         expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context 'when user is connect with agent connect' do
+      let(:loged_in_with_france_connect) { nil }
+      let(:agent_connect_id_token) { 'qwerty' }
+
+      it 'redirect to agent connect logout page' do
+        expect(response.location).to include(agent_connect_id_token)
+        expect(instructeur.reload.agent_connect_id_token).to be_nil
       end
     end
   end

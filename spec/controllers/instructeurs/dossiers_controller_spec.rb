@@ -826,6 +826,13 @@ describe Instructeurs::DossiersController, type: :controller do
         it { expect(saved_avis.expert.email).to eq("titi@titimail.com") }
       end
 
+      context 'when the expert do not want to receive notification' do
+        let(:emails) { "[\"email@a.com\"]" }
+        let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure, notify_on_new_avis: false) }
+
+        before { subject }
+      end
+
       context 'with linked dossiers' do
         let(:asked_confidentiel) { false }
         let(:previous_avis_confidentiel) { false }

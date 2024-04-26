@@ -59,7 +59,9 @@ module CreateAvisConcern
       persisted.each do |avis|
         avis.dossier.demander_un_avis!(avis)
         if avis.dossier == dossier
-          AvisMailer.avis_invitation(avis).deliver_later
+          if avis.experts_procedure.notify_on_new_avis?
+            AvisMailer.avis_invitation(avis).deliver_later
+          end
           sent_emails_addresses << avis.expert.email
           # the email format is already verified, we update value to nil
           avis.update_column(:email, nil)

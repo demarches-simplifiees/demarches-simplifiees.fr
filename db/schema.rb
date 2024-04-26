@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
+ActiveRecord::Schema[7.0].define(version: 2024_03_18_134256) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -95,14 +95,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
     t.string "belonging_population"
     t.datetime "created_at", null: false
     t.string "email", null: false
-    t.string "given_name", null: false
+    t.string "given_name"
     t.bigint "instructeur_id", null: false
     t.string "organizational_unit"
     t.string "phone"
     t.string "siret"
     t.string "sub", null: false
     t.datetime "updated_at", null: false
-    t.string "usual_name", null: false
+    t.string "usual_name"
     t.index ["instructeur_id"], name: "index_agent_connect_informations_on_instructeur_id"
   end
 
@@ -588,6 +588,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
     t.boolean "allow_decision_access", default: false, null: false
     t.datetime "created_at", null: false
     t.bigint "expert_id", null: false
+    t.boolean "notify_on_new_avis", default: true, null: false
+    t.boolean "notify_on_new_message", default: false, null: false
     t.bigint "procedure_id", null: false
     t.datetime "revoked_at"
     t.datetime "updated_at", null: false
@@ -763,6 +765,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_16_065520) do
 
   create_table "instructeurs", id: :serial, force: :cascade do |t|
     t.string "agent_connect_id"
+    t.string "agent_connect_id_token"
     t.boolean "bypass_email_login_token", default: false, null: false
     t.datetime "created_at"
     t.text "encrypted_login_token"

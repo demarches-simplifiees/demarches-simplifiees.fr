@@ -155,6 +155,7 @@ Rails.application.routes.draw do
     get 'lien-envoye' => 'users/sessions#link_sent', as: 'link_sent'
     post '/instructeurs/reset-link-sent' => 'users/sessions#reset_link_sent'
     get '/users/password/reset-link-sent' => 'users/passwords#reset_link_sent'
+    get 'logout' => 'users/sessions#logout'
   end
 
   get 'password_complexity/:complexity' => 'password_complexity#show', as: 'show_password_complexity', constraints: { complexity: /\d/ }
@@ -413,6 +414,9 @@ Rails.application.routes.draw do
 
     resources :procedures, only: [], param: :procedure_id do
       member do
+        get 'notification_settings', to: 'avis#notification_settings'
+        patch 'update_notification_settings', to: 'avis#update_notification_settings'
+
         resources :avis, only: [:show, :update] do
           get '', action: 'procedure', on: :collection, as: :procedure
           member do
