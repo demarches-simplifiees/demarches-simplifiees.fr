@@ -73,6 +73,7 @@ describe ProcedureExportService do
           "Archivé",
           "État du dossier",
           "Dernière mise à jour le",
+          "Dernière mise à jour du dossier le",
           "Déposé le",
           "Passé en instruction le",
           "Traité le",
@@ -93,8 +94,8 @@ describe ProcedureExportService do
 
         # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
         offset = dossier.depose_at.utc_offset
-        depose_at = Time.zone.at(dossiers_sheet.data[0][12] - offset.seconds)
-        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][13] - offset.seconds)
+        depose_at = Time.zone.at(dossiers_sheet.data[0][13] - offset.seconds)
+        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][14] - offset.seconds)
         expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size)
         expect(depose_at).to eq(dossier.depose_at.round)
         expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
@@ -163,6 +164,7 @@ describe ProcedureExportService do
           "Archivé",
           "État du dossier",
           "Dernière mise à jour le",
+          "Dernière mise à jour du dossier le",
           "Déposé le",
           "Passé en instruction le",
           "Traité le",
@@ -219,6 +221,7 @@ describe ProcedureExportService do
             "Archivé",
             "État du dossier",
             "Dernière mise à jour le",
+            "Dernière mise à jour du dossier le",
             "Déposé le",
             "Passé en instruction le",
             "Traité le",

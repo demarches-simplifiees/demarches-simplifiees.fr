@@ -7,7 +7,9 @@ class Champs::RepetitionChamp < Champ
   def rows
     dossier
       .champs_for_revision(scope: type_de_champ)
-      .group_by(&:row_id).values
+      .group_by(&:row_id)
+      .sort
+      .map(&:second)
   end
 
   def row_ids
@@ -55,17 +57,19 @@ class Champs::RepetitionChamp < Champ
   end
 
   def rows_for_export
-    champs = dossier.champs_by_stable_id_with_row
     row_ids.map.with_index(1) do |row_id, index|
-      Champs::RepetitionChamp::Row.new(index: index, row_id:, dossier_id: dossier_id.to_s, champs:)
+      Champs::RepetitionChamp::Row.new(index:, row_id:, dossier:)
     end
   end
 
   class Row < Hashie::Dash
     property :index
     property :row_id
-    property :dossier_id
-    property :champs
+    property :dossier
+
+    def dossier_id
+      dossier.id.to_s
+    end
 
     def read_attribute_for_serialization(attribute)
       self[attribute]
@@ -75,7 +79,7 @@ class Champs::RepetitionChamp < Champ
       [
         ['Dossier ID', :dossier_id],
         ['Ligne', :index]
-      ] + Dossier.champs_for_export(types_de_champ, champs, row_id)
+      ] + dossier.champs_for_export(types_de_champ, row_id)
     end
   end
 end

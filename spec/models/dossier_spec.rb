@@ -1897,9 +1897,9 @@ describe Dossier, type: :model do
       let(:repetition_second_revision_champ) { dossier_second_revision.champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
-      let(:dossier_champs_for_export) { Dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition, dossier.champs_by_stable_id_with_row) }
-      let(:dossier_second_revision_champs_for_export) { Dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition, dossier_second_revision.champs_by_stable_id_with_row) }
-      let(:repetition_second_revision_champs_for_export) { Dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.repetition, dossier.champs_by_stable_id_with_row) }
+      let(:dossier_champs_for_export) { dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+      let(:dossier_second_revision_champs_for_export) { dossier_second_revision.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+      let(:repetition_second_revision_champs_for_export) { dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.repetition) }
 
       context "when procedure published" do
         before do
@@ -1937,7 +1937,7 @@ describe Dossier, type: :model do
             repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
             type_champs = proc_test.types_de_champ_for_procedure_presentation(repetition).to_a
             expect(type_champs.size).to eq(1)
-            expect(Dossier.champs_for_export(type_champs, dossier.champs_by_stable_id_with_row).size).to eq(3)
+            expect(dossier.champs_for_export(type_champs).size).to eq(3)
           end
         end
       end
@@ -1960,7 +1960,7 @@ describe Dossier, type: :model do
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
       let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
 
-      subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
+      subject { dossier.champs_for_export(tdcs) }
 
       before do
         text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))
