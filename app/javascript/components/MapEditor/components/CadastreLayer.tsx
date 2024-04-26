@@ -87,7 +87,7 @@ export function CadastreLayer({
   });
 
   const onHighlight = useCallback(
-    ({ detail }) => {
+    ({ detail }: CustomEvent<{ cid: string; highlight: boolean }>) => {
       highlightFeature(detail.cid, detail.highlight);
     },
     [highlightFeature]
