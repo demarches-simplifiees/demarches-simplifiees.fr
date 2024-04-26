@@ -79,7 +79,7 @@ module Instructeurs
     end
 
     def set_all_pj
-      @all_pj ||= @procedure.pieces_jointes_exportables_list
+      @all_pj ||= @procedure.exportables_pieces_jointes
     end
 
     def export_params

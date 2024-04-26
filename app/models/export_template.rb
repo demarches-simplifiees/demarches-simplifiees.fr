@@ -13,7 +13,7 @@ class ExportTemplate < ApplicationRecord
     content["pdf_name"] = tiptap_json("export_")
 
     content["pjs"] = []
-    procedure.pieces_jointes_exportables_list.each do |pj|
+    procedure.exportables_pieces_jointes.each do |pj|
       content["pjs"] << { "stable_id" => pj.stable_id.to_s, "path" => tiptap_json("#{pj.libelle.parameterize}-") }
     end
   end

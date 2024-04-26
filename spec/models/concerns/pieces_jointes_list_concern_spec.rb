@@ -44,7 +44,7 @@ describe PiecesJointesListConcern do
     end
 
     it "returns the list of pieces jointes with private, without parent repetition, without titre identite" do
-      expect(procedure.pieces_jointes_exportables_list.map(&:libelle)).to match_array([pj1, pj2, pjcond, pj5, pjcond2, pj6].map(&:libelle))
+      expect(procedure.exportables_pieces_jointes.map(&:libelle)).to match_array([pj1, pj2, pjcond, pj5, pjcond2, pj6].map(&:libelle))
     end
   end
 end

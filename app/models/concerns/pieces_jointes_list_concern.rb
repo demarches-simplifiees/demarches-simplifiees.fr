@@ -3,17 +3,17 @@ module PiecesJointesListConcern
 
   included do
     def public_wrapped_partionned_pjs
-      pieces_jointes_list(public_only: true, wrap_with_parent: true)
+      pieces_jointes(public_only: true, wrap_with_parent: true)
         .partition { |(pj, _)| pj.condition.nil? }
     end
 
-    def pieces_jointes_exportables_list
-      pieces_jointes_list(exclude_titre_identite: true)
+    def exportables_pieces_jointes
+      pieces_jointes(exclude_titre_identite: true)
     end
 
     private
 
-    def pieces_jointes_list(
+    def pieces_jointes(
       exclude_titre_identite: false,
       public_only: false,
       wrap_with_parent: false

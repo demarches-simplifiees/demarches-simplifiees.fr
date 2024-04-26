@@ -38,7 +38,7 @@ class ExportTemplateValidator < ActiveModel::Validator
   def validate_pjs(record)
     record.content["pjs"]&.each do |pj|
       pj_sym = pj.symbolize_keys
-      libelle = record.groupe_instructeur.procedure.pieces_jointes_exportables_list.find { _1.stable_id.to_s == pj_sym[:stable_id] }&.libelle&.to_sym
+      libelle = record.groupe_instructeur.procedure.exportables_pieces_jointes.find { _1.stable_id.to_s == pj_sym[:stable_id] }&.libelle&.to_sym
       validate_content(record, pj_sym[:path], libelle)
     end
   end
