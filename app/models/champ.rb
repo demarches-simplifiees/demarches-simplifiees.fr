@@ -166,7 +166,7 @@ class Champ < ApplicationRecord
   end
 
   def input_group_id
-    "champ-#{html_id}"
+    html_id
   end
 
   def input_id
@@ -227,7 +227,7 @@ class Champ < ApplicationRecord
   end
 
   def clone(fork = false)
-    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id]
+    champ_attributes = [:parent_id, :private, :row_id, :type, :type_de_champ_id, :stable_id, :stream]
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
     relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
@@ -264,7 +264,7 @@ class Champ < ApplicationRecord
   end
 
   def html_id
-    "champ-#{stable_id}-#{id}"
+    row_id.present? ? "champ-#{stable_id}-#{row_id}" : "champ-#{stable_id}"
   end
 
   def needs_dossier_id?

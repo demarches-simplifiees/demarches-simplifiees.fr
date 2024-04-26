@@ -13,9 +13,9 @@ class MonAvisEmbedValidator < ActiveModel::Validator
       check_img(embed.css('img'))
     end
   rescue MonAvisEmbedError => e
-    record.errors.add :base, :invalid, message: "Le code fourni ne correspond pas au format des codes MonAvis reconnus par la plateforme. #{e.message}"
+    record.errors.add :monavis_embed, :invalid, message: "Le code fourni ne correspond pas au format des codes MonAvis reconnus par la plateforme. #{e.message}"
   rescue # nokogiri
-    record.errors.add :base, :invalid, message: "Le code fourni ne correspond pas au format des codes MonAvis reconnus par la plateforme."
+    record.errors.add :monavis_embed, :invalid, message: "Le code fourni ne correspond pas au format des codes MonAvis reconnus par la plateforme."
   end
 
   def check_link(links)

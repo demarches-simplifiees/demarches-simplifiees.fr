@@ -322,6 +322,10 @@ def build_types_de_champ(types_de_champ, revision:, scope: :public, parent: nil)
       type_de_champ_attributes[:editable_options] = layers.index_with { '1' }
     end
 
+    if type == :header_section
+      type_de_champ_attributes[:header_section_level] = type_de_champ_attributes.delete(:level)
+    end
+
     type_de_champ = if scope == :private
       build(:"type_de_champ_#{type}", :private, no_coordinate: true, **type_de_champ_attributes)
     else

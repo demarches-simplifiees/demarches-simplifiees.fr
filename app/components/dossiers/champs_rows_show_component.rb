@@ -3,15 +3,17 @@ class Dossiers::ChampsRowsShowComponent < ApplicationComponent
   attr_reader :seen_at
 
   def initialize(champs:, profile:, seen_at:)
-    @champs = champs
-    @seen_at = seen_at
-    @profile = profile
+    @champs, @profile, @seen_at = champs, profile, seen_at
   end
 
-  def updated_after_deposer?(champ)
-    return false if champ.dossier.depose_at.blank?
+  private
 
-    champ.updated_at > champ.dossier.depose_at
+  def updated_at_after_deposer(champ)
+    return if champ.dossier.depose_at.blank?
+
+    if champ.updated_at > champ.dossier.depose_at
+      champ.updated_at
+    end
   end
 
   def number_with_html_delimiter(num)

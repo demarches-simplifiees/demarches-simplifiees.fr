@@ -1,12 +1,14 @@
 describe EditableChamp::SectionComponent, type: :component do
   include TreeableConcern
-  let(:types_de_champ) { champs.map(&:type_de_champ) }
-  let(:champs_by_stable_id_with_row) { champs.index_by(&:stable_id_with_row) }
-  let(:component) { described_class.new(types_de_champ:, champs_by_stable_id_with_row:) }
+  let(:procedure) { create(:procedure, types_de_champ_public:) }
+  let(:types_de_champ_public) { [] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:types_de_champ) { dossier.revision.types_de_champ_public }
+  let(:component) { described_class.new(types_de_champ:, dossier:) }
   before { render_inline(component).to_html }
 
   context 'list of champs without an header_section' do
-    let(:champs) { [build(:champ_text), build(:champ_textarea)] }
+    let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }
 
     it 'render in a fieldset' do
       expect(page).to have_selector("fieldset", count: 1)
@@ -19,7 +21,7 @@ describe EditableChamp::SectionComponent, type: :component do
   end
 
   context 'list of champs with an header_section' do
-    let(:champs) { [build(:champ_header_section_level_1), build(:champ_text), build(:champ_textarea)] }
+    let(:types_de_champ_public) { [{ type: :header_section, level: 1 }, { type: :text }, { type: :textarea }] }
 
     it 'renders fieldset' do
       expect(page).to have_selector("fieldset")
@@ -33,7 +35,7 @@ describe EditableChamp::SectionComponent, type: :component do
   end
 
   context 'list of champs without section and an header_section having champs' do
-    let(:champs) { [build(:champ_text), build(:champ_header_section_level_1), build(:champ_text)] }
+    let(:types_de_champ_public) { [{ type: :text }, { type: :header_section, level: 1 }, { type: :text }] }
 
     it 'renders fieldset' do
       expect(page).to have_selector("fieldset", count: 2)
@@ -47,7 +49,7 @@ describe EditableChamp::SectionComponent, type: :component do
   end
 
   context 'list of header_section without champs' do
-    let(:champs) { [build(:champ_header_section_level_1), build(:champ_header_section_level_2), build(:champ_header_section_level_3)] }
+    let(:types_de_champ_public) { [{ type: :header_section, level: 1 }, { type: :header_section, level: 2 }, { type: :header_section, level: 3 }] }
 
     it 'render header within fieldset' do
       expect(page).to have_selector("fieldset > legend", count: 3)
@@ -58,7 +60,7 @@ describe EditableChamp::SectionComponent, type: :component do
   end
 
   context 'header_section followed by explication and another fieldset' do
-    let(:champs) { [build(:champ_header_section_level_1), build(:champ_explication), build(:champ_header_section_level_1), build(:champ_text)] }
+    let(:types_de_champ_public) { [{ type: :header_section, level: 1 }, { type: :explication }, { type: :header_section, level: 1 }, { type: :text }] }
 
     it 'render fieldset, header_section, also render explication' do
       expect(page).to have_selector("h2", count: 2)
@@ -69,7 +71,7 @@ describe EditableChamp::SectionComponent, type: :component do
   end
 
   context 'nested fieldsset' do
-    let(:champs) { [build(:champ_header_section_level_1), build(:champ_text), build(:champ_header_section_level_2), build(:champ_textarea)] }
+    let(:types_de_champ_public) { [{ type: :header_section, level: 1 }, { type: :text }, { type: :header_section, level: 2 }, { type: :textarea }] }
 
     it 'render nested fieldsets' do
       expect(page).to have_selector("fieldset")
@@ -85,22 +87,19 @@ describe EditableChamp::SectionComponent, type: :component do
   end
 
   context 'with repetition' do
-    let(:procedure) do
-      create(:procedure, types_de_champ_public: [
-        { type: :header_section, header_section_level: 1 },
+    let(:types_de_champ_public) do
+      [
+        { type: :header_section, level: 1 },
         {
           type: :repetition,
           libelle: 'repetition',
           children: [
-            { type: :header_section, header_section_level: 1, libelle: 'child_1' },
+            { type: :header_section, level: 1, libelle: 'child_1' },
             { type: :text, libelle: 'child_2' }
           ]
         }
-      ])
+      ]
     end
-    let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
-    let(:champs) { dossier.champs_public }
-    let(:champs_by_stable_id_with_row) { dossier.champs_by_stable_id_with_row }
 
     it 'render nested fieldsets, increase heading level for repetition header_section' do
       expect(page).to have_selector("fieldset")
@@ -137,24 +136,24 @@ describe EditableChamp::SectionComponent, type: :component do
       end
     end
 
-    let(:champs) {
+    let(:types_de_champ_public) {
       [
-        build(:champ_header_section_level_1),
-        build(:champ_header_section_level_2),
-        build(:champ_header_section_level_3),
-        build(:champ_integer_number),
+        { type: :header_section, level: 1 },
+        { type: :header_section, level: 2 },
+        { type: :header_section, level: 3 },
+        { type: :integer_number },
 
-        build(:champ_header_section_level_3),
-        build(:champ_yes_no),
+        { type: :header_section, level: 3 },
+        { type: :yes_no },
 
-        build(:champ_header_section_level_2),
-        build(:champ_header_section_level_3),
-        build(:champ_integer_number),
+        { type: :header_section, level: 2 },
+        { type: :header_section, level: 3 },
+        { type: :integer_number },
 
-        build(:champ_header_section_level_1),
-        build(:champ_text),
-        build(:champ_header_section_level_2),
-        build(:champ_text)
+        { type: :header_section, level: 1 },
+        { type: :text },
+        { type: :header_section, level: 2 },
+        { type: :text }
       ]
     }
 

@@ -1,1 +1,34 @@
-[{"name":"CC de Granville, Terre et Mer","code":"200042604"},{"name":"CC de la Baie du Cotentin","code":"200042729"},{"name":"CC de Villedieu Intercom","code":"200043354"},{"name":"CA Saint-Lô Agglo","code":"200066389"},{"name":"CC Coutances Mer et Bocage","code":"200067023"},{"name":"CC Côte Ouest Centre Manche","code":"200067031"},{"name":"CA du Cotentin","code":"200067205"},{"name":"CA Mont-Saint-Michel-Normandie","code":"200069425"}]
+[
+  {
+    "name": "CC de Granville, Terre et Mer",
+    "code": "200042604"
+  },
+  {
+    "name": "CC de la Baie du Cotentin",
+    "code": "200042729"
+  },
+  {
+    "name": "CC de Villedieu Intercom",
+    "code": "200043354"
+  },
+  {
+    "name": "CA Saint-Lô Agglo",
+    "code": "200066389"
+  },
+  {
+    "name": "CC Coutances Mer et Bocage",
+    "code": "200067023"
+  },
+  {
+    "name": "CC Côte Ouest Centre Manche",
+    "code": "200067031"
+  },
+  {
+    "name": "CA du Cotentin",
+    "code": "200067205"
+  },
+  {
+    "name": "CA Mont-Saint-Michel-Normandie",
+    "code": "200069425"
+  }
+]
