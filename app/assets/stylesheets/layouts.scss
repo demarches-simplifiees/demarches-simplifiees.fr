@@ -45,7 +45,14 @@
 
   .form-column {
     @extend .column;
-    background: $light-grey;
+  }
+}
+
+.three-columns {
+  @extend .two-columns;
+
+  @media (min-width: $two-columns-breakpoint) {
+    background: linear-gradient(to right, transparent 0%, transparent 66%, var(--background-alt-blue-france) 33%, var(--background-alt-blue-france) 100%);
   }
 }
 
