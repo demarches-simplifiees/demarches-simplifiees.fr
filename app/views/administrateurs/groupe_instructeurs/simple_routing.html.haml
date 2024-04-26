@@ -9,10 +9,10 @@
   %h1 Routage à partir d’un champ
   = form_for :create_simple_routing,
     method: :post,
-    data: { controller: 'radio-enabled-submit' },
+    data: { controller: 'enable-submit-if-checked' },
     url: create_simple_routing_admin_procedure_groupe_instructeurs_path(@procedure) do |f|
 
-    %div{ data: { 'action': "click->radio-enabled-submit#click" } }
+    %div{ data: { 'action': "click->enable-submit-if-checked#click" } }
       .notice
         Sélectionner le champ à partir duquel créer des groupes d’instructeurs
       - buttons_content = @procedure.active_revision.routable_types_de_champ.map { |tdc| { label: tdc.libelle, value: tdc.stable_id } }
@@ -24,4 +24,4 @@
         %li
           = link_to 'Retour', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn fr-btn--secondary'
         %li
-          %button.fr-btn{ disabled: true,  data: { disable_with: 'Création des groupes…', 'radio-enabled-submit-target': 'submit' } } Créer les groupes
+          %button.fr-btn{ disabled: true,  data: { disable_with: 'Création des groupes…', 'enable-submit-if-checked-target': 'submit' } } Créer les groupes

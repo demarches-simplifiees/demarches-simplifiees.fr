@@ -35,6 +35,9 @@ class AgentConnect::AgentController < ApplicationController
       instructeur.update(agent_connect_id: user_info['sub'])
     end
 
+    aci = AgentConnectInformation.find_or_initialize_by(instructeur:)
+    aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone'))
+
     sign_in(:user, instructeur.user)
 
     redirect_to instructeur_procedures_path

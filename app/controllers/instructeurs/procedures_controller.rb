@@ -394,7 +394,7 @@ module Instructeurs
     end
 
     def last_export_for(statut)
-      Export.where(instructeur_id: current_instructeur.id, statut: statut, updated_at: 1.hour.ago..).last
+      Export.where(user_profile: current_instructeur, statut: statut, updated_at: 1.hour.ago..).last
     end
 
     def cookies_export_key

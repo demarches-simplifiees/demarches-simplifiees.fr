@@ -2,6 +2,8 @@ class Instructeur < ApplicationRecord
   include UserFindByConcern
   has_and_belongs_to_many :administrateurs
 
+  has_one :agent_connect_information, dependent: :destroy
+
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, -> { order(:label) }, through: :assign_to
   has_many :unordered_groupe_instructeurs, through: :assign_to, source: :groupe_instructeur

@@ -1,0 +1,640 @@
+{
+  "results": [
+    {
+      "siren": "200065415",
+      "nom_complet": "COMMUNE DE LA HAGUE",
+      "nom_raison_sociale": "COMMUNE DE LA HAGUE",
+      "sigle": null,
+      "nombre_etablissements": 51,
+      "nombre_etablissements_ouverts": 48,
+      "siege": {
+        "activite_principale": "84.11Z",
+        "activite_principale_registre_metier": null,
+        "annee_tranche_effectif_salarie": "2021",
+        "adresse": "8 RUE DES TOHAGUES 50440 LA HAGUE",
+        "caractere_employeur": null,
+        "cedex": null,
+        "code_pays_etranger": null,
+        "code_postal": "50440",
+        "commune": "50041",
+        "complement_adresse": null,
+        "coordonnees": "49.66215,-1.830805",
+        "date_creation": "2017-01-01",
+        "date_debut_activite": "2017-01-01",
+        "date_mise_a_jour": "2023-11-27T13:18:35",
+        "departement": "50",
+        "distribution_speciale": null,
+        "est_siege": true,
+        "etat_administratif": "A",
+        "geo_adresse": "8 Rue des Tohagues 50440 La Hague",
+        "geo_id": "50041_0120_00008",
+        "indice_repetition": null,
+        "latitude": "49.66215",
+        "libelle_cedex": null,
+        "libelle_commune": "LA HAGUE",
+        "libelle_commune_etranger": null,
+        "libelle_pays_etranger": null,
+        "libelle_voie": "DES TOHAGUES",
+        "liste_enseignes": [
+          "MAIRIE"
+        ],
+        "liste_finess": null,
+        "liste_id_bio": null,
+        "liste_idcc": [
+          "5021"
+        ],
+        "liste_id_organisme_formation": null,
+        "liste_rge": null,
+        "liste_uai": null,
+        "longitude": "-1.830805",
+        "nom_commercial": null,
+        "numero_voie": "8",
+        "region": "28",
+        "siret": "20006541500016",
+        "tranche_effectif_salarie": "32",
+        "type_voie": "RUE"
+      },
+      "activite_principale": "84.11Z",
+      "categorie_entreprise": "ETI",
+      "caractere_employeur": null,
+      "annee_categorie_entreprise": "2021",
+      "date_creation": "2017-01-01",
+      "date_mise_a_jour": "2023-11-30T10:17:45",
+      "dirigeants": [],
+      "etat_administratif": "A",
+      "nature_juridique": "7210",
+      "section_activite_principale": "O",
+      "tranche_effectif_salarie": "32",
+      "annee_tranche_effectif_salarie": "2021",
+      "statut_diffusion": "O",
+      "matching_etablissements": [
+        {
+          "activite_principale": "84.11Z",
+          "annee_tranche_effectif_salarie": "2021",
+          "adresse": "8 RUE DES TOHAGUES 50440 LA HAGUE",
+          "caractere_employeur": null,
+          "code_postal": "50440",
+          "commune": "50041",
+          "date_creation": "2017-01-01",
+          "date_debut_activite": "2017-01-01",
+          "est_siege": true,
+          "etat_administratif": "A",
+          "geo_id": "50041_0120_00008",
+          "latitude": "49.66215",
+          "libelle_commune": "LA HAGUE",
+          "liste_enseignes": [
+            "MAIRIE"
+          ],
+          "liste_finess": null,
+          "liste_id_bio": null,
+          "liste_idcc": [
+            "5021"
+          ],
+          "liste_id_organisme_formation": null,
+          "liste_rge": null,
+          "liste_uai": null,
+          "longitude": "-1.830805",
+          "nom_commercial": null,
+          "region": "28",
+          "siret": "20006541500016",
+          "tranche_effectif_salarie": "32"
+        }
+      ],
+      "finances": {},
+      "complements": {
+        "collectivite_territoriale": {
+          "code": "50041",
+          "code_insee": "50041",
+          "elus": [
+            {
+              "nom": "ADOUE",
+              "prenoms": "Chantal",
+              "annee_de_naissance": "19/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "ALLENO",
+              "prenoms": "Gwladys",
+              "annee_de_naissance": "04/0",
+              "fonction": "8ème adjoint au Maire",
+              "sexe": "F"
+            },
+            {
+              "nom": "BEAUMONT",
+              "prenoms": "Monique",
+              "annee_de_naissance": "29/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "BECQUET",
+              "prenoms": "Dominique",
+              "annee_de_naissance": "17/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "BEDEL",
+              "prenoms": "Pauline",
+              "annee_de_naissance": "29/0",
+              "fonction": "Maire délégué",
+              "sexe": "F"
+            },
+            {
+              "nom": "BELHOMME",
+              "prenoms": "Dominique",
+              "annee_de_naissance": "12/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "BELHOMME",
+              "prenoms": "Jérôme",
+              "annee_de_naissance": "14/0",
+              "fonction": "1er adjoint au Maire",
+              "sexe": "M"
+            },
+            {
+              "nom": "BELHOMME",
+              "prenoms": "Jérôme",
+              "annee_de_naissance": "14/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "BONNISSENT",
+              "prenoms": "Marie-Suzanne",
+              "annee_de_naissance": "05/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "CANOVILLE",
+              "prenoms": "Laurent",
+              "annee_de_naissance": "29/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "CERVANTÈS",
+              "prenoms": "Simon",
+              "annee_de_naissance": "06/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "CHARDOT",
+              "prenoms": "Mélanie",
+              "annee_de_naissance": "12/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "CHARLES",
+              "prenoms": "Véronique",
+              "annee_de_naissance": "04/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "COLLET",
+              "prenoms": "Christian",
+              "annee_de_naissance": "20/1",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "CRANOIS",
+              "prenoms": "Louis",
+              "annee_de_naissance": "16/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "DALMONT",
+              "prenoms": "Hubert",
+              "annee_de_naissance": "29/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "DAMOURETTE",
+              "prenoms": "Etienne",
+              "annee_de_naissance": "02/1",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "DELACOUR",
+              "prenoms": "Thérèse",
+              "annee_de_naissance": "31/0",
+              "fonction": "Maire délégué",
+              "sexe": "F"
+            },
+            {
+              "nom": "DESBOIS",
+              "prenoms": "Noëmie",
+              "annee_de_naissance": "14/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "DIGARD",
+              "prenoms": "Antoine",
+              "annee_de_naissance": "03/0",
+              "fonction": "3ème adjoint au Maire",
+              "sexe": "M"
+            },
+            {
+              "nom": "DIGARD",
+              "prenoms": "Antoine",
+              "annee_de_naissance": "03/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "DUBOST",
+              "prenoms": "Hubert",
+              "annee_de_naissance": "17/1",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "DUBOST",
+              "prenoms": "Nathalie",
+              "annee_de_naissance": "07/0",
+              "fonction": "4ème adjoint au Maire",
+              "sexe": "F"
+            },
+            {
+              "nom": "FLEURY",
+              "prenoms": "Jean-Marie",
+              "annee_de_naissance": "21/0",
+              "fonction": "11ème adjoint au Maire",
+              "sexe": "M"
+            },
+            {
+              "nom": "FRACHET",
+              "prenoms": "Nadine",
+              "annee_de_naissance": "26/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "FRIGOUT",
+              "prenoms": "Jean-Marc",
+              "annee_de_naissance": "20/1",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "GASNIER",
+              "prenoms": "Philippe",
+              "annee_de_naissance": "22/1",
+              "fonction": "5ème adjoint au Maire",
+              "sexe": "M"
+            },
+            {
+              "nom": "GASNIER",
+              "prenoms": "Philippe",
+              "annee_de_naissance": "22/1",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "GAUMAIN",
+              "prenoms": "Mathieu",
+              "annee_de_naissance": "06/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "GOACHET",
+              "prenoms": "Joseph",
+              "annee_de_naissance": "27/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "GROF",
+              "prenoms": "Béatrice",
+              "annee_de_naissance": "17/0",
+              "fonction": "2ème adjoint au Maire",
+              "sexe": "F"
+            },
+            {
+              "nom": "GUILLEMETTE",
+              "prenoms": "Nathalie",
+              "annee_de_naissance": "30/0",
+              "fonction": "6ème adjoint au Maire",
+              "sexe": "F"
+            },
+            {
+              "nom": "HAMELIN",
+              "prenoms": "Magali",
+              "annee_de_naissance": "16/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "HENRY",
+              "prenoms": "Claude",
+              "annee_de_naissance": "30/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "JACQUET-ROCQUET",
+              "prenoms": "Sophie",
+              "annee_de_naissance": "26/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "JOURDAIN",
+              "prenoms": "Patrick",
+              "annee_de_naissance": "28/0",
+              "fonction": "7ème adjoint au Maire",
+              "sexe": "M"
+            },
+            {
+              "nom": "JOURDAIN",
+              "prenoms": "Patrick",
+              "annee_de_naissance": "28/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "JUMELIN",
+              "prenoms": "Pascale",
+              "annee_de_naissance": "24/0",
+              "fonction": "Maire délégué",
+              "sexe": "F"
+            },
+            {
+              "nom": "LADVENU",
+              "prenoms": "Nathalie",
+              "annee_de_naissance": "14/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "LAGALLE",
+              "prenoms": "Marie-Laure",
+              "annee_de_naissance": "23/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "LAPPREND",
+              "prenoms": "Marie",
+              "annee_de_naissance": "08/1",
+              "fonction": "10ème adjoint au Maire",
+              "sexe": "F"
+            },
+            {
+              "nom": "LARGERIE",
+              "prenoms": "Anne",
+              "annee_de_naissance": "03/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "LAVENU",
+              "prenoms": "Patrick",
+              "annee_de_naissance": "01/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "LECOSTEY",
+              "prenoms": "Fabrice",
+              "annee_de_naissance": "25/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "LECOSTEY",
+              "prenoms": "Jean",
+              "annee_de_naissance": "14/1",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "LEDAUPHIN",
+              "prenoms": "Nathalie",
+              "annee_de_naissance": "05/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "LEFRÉTEUR",
+              "prenoms": "Emmanuel",
+              "annee_de_naissance": "10/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "LEGELEUX",
+              "prenoms": "Yann",
+              "annee_de_naissance": "20/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "LELONG",
+              "prenoms": "Nadine",
+              "annee_de_naissance": "29/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "LELONG",
+              "prenoms": "Sébastien",
+              "annee_de_naissance": "15/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "LERENDU",
+              "prenoms": "Patrick",
+              "annee_de_naissance": "08/1",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "LESEIGNEUR-COURVAL",
+              "prenoms": "Thérèse",
+              "annee_de_naissance": "22/0",
+              "fonction": "Maire délégué",
+              "sexe": "F"
+            },
+            {
+              "nom": "LETOURNEUR",
+              "prenoms": "Bruno",
+              "annee_de_naissance": "21/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "LUPO",
+              "prenoms": "Antoine",
+              "annee_de_naissance": "16/1",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "MAHIER",
+              "prenoms": "Manuela",
+              "annee_de_naissance": "30/1",
+              "fonction": "Maire",
+              "sexe": "F"
+            },
+            {
+              "nom": "MAUGÉ",
+              "prenoms": "Caroline",
+              "annee_de_naissance": "13/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "MERCIER",
+              "prenoms": "Philippe",
+              "annee_de_naissance": "06/0",
+              "fonction": "9ème adjoint au Maire",
+              "sexe": "M"
+            },
+            {
+              "nom": "MERCIER",
+              "prenoms": "Philippe",
+              "annee_de_naissance": "06/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "MONHUREL",
+              "prenoms": "Pascal",
+              "annee_de_naissance": "23/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "NICOLLE",
+              "prenoms": "Stéphanie",
+              "annee_de_naissance": "21/1",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "NOEL",
+              "prenoms": "Nelly",
+              "annee_de_naissance": "24/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "PELLERIN",
+              "prenoms": "Eric",
+              "annee_de_naissance": "17/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "PERROTTE",
+              "prenoms": "Thomas",
+              "annee_de_naissance": "15/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "RENOUF",
+              "prenoms": "Jean-Luc",
+              "annee_de_naissance": "17/0",
+              "fonction": "Maire délégué",
+              "sexe": "M"
+            },
+            {
+              "nom": "ROUCAN",
+              "prenoms": "Robert",
+              "annee_de_naissance": "27/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "SANSON",
+              "prenoms": "Fabienne",
+              "annee_de_naissance": "10/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "SANSON",
+              "prenoms": "Noël",
+              "annee_de_naissance": "25/1",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "SEBIRE",
+              "prenoms": "Marine",
+              "annee_de_naissance": "07/0",
+              "fonction": null,
+              "sexe": "F"
+            },
+            {
+              "nom": "TARDIF",
+              "prenoms": "Pierre",
+              "annee_de_naissance": "13/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "TESTELIN",
+              "prenoms": "Sébastien",
+              "annee_de_naissance": "03/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "TOLLEMER",
+              "prenoms": "Pierre",
+              "annee_de_naissance": "05/0",
+              "fonction": null,
+              "sexe": "M"
+            },
+            {
+              "nom": "TRAVERT",
+              "prenoms": "Laurent",
+              "annee_de_naissance": "24/0",
+              "fonction": null,
+              "sexe": "M"
+            }
+          ],
+          "niveau": "commune"
+        },
+        "convention_collective_renseignee": true,
+        "egapro_renseignee": false,
+        "est_association": false,
+        "est_bio": false,
+        "est_entrepreneur_individuel": false,
+        "est_entrepreneur_spectacle": true,
+        "est_ess": false,
+        "est_finess": false,
+        "est_organisme_formation": false,
+        "est_qualiopi": false,
+        "liste_id_organisme_formation": null,
+        "est_rge": false,
+        "est_service_public": true,
+        "est_societe_mission": false,
+        "est_uai": true,
+        "identifiant_association": null,
+        "statut_entrepreneur_spectacle": "valide"
+      }
+    }
+  ],
+  "total_results": 1,
+  "page": 1,
+  "per_page": 10,
+  "total_pages": 1
+}
