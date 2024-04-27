@@ -21,7 +21,7 @@ max_logo_height = 40.mm
 max_logo_width = md_version == :v2 ? body_width - qrcode_size - 5.mm : body_width
 
 def normalize_pdf_text(text)
-  strip_tags(text&.tr("\t", '  '))
+  text&.tr("\t", '  ')
 end
 
 title = normalize_pdf_text(@attestation.fetch(:title))
