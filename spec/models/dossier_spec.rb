@@ -2021,7 +2021,7 @@ describe Dossier, type: :model do
           ]
         end
 
-        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
+        subject { dossier.champs_for_export(tdcs) }
 
         before do
           yes_no, text, commune_de_polynesie = dossier.champs_public
@@ -2044,7 +2044,7 @@ describe Dossier, type: :model do
           ]
         end
 
-        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
+        subject { dossier.champs_for_export(tdcs) }
 
         before do
           yes_no, text, commune_de_polynesie = dossier.champs_public
@@ -2077,7 +2077,7 @@ describe Dossier, type: :model do
           ]
         end
 
-        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
+        subject { dossier.champs_for_export(tdcs) }
 
         before do
           yes_no, text, code_postal_de_polynesie = dossier.champs_public
@@ -2100,7 +2100,7 @@ describe Dossier, type: :model do
           ]
         end
 
-        subject { Dossier.champs_for_export(tdcs, dossier.champs_by_stable_id_with_row) }
+        subject { dossier.champs_for_export(tdcs) }
 
         before do
           yes_no, text, code_postal_de_polynesie = dossier.champs_public
