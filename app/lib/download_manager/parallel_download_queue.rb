@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DownloadManager
   class ParallelDownloadQueue
     DOWNLOAD_MAX_PARALLEL = ENV.fetch('DOWNLOAD_MAX_PARALLEL') { 10 }

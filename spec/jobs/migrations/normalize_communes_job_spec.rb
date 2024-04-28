@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Migrations::NormalizeCommunesJob, type: :job do
   context 'when value is "", external_id is "", and code_departement is "undefined"' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }

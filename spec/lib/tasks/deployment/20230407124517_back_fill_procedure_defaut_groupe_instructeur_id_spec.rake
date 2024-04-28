@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20230407124517_back_fill_procedure_defaut_groupe_instructeur_id' do
   let(:rake_task) { Rake::Task['after_party:back_fill_procedure_defaut_groupe_instructeur_id'] }
   let(:procedure) { create(:procedure) }

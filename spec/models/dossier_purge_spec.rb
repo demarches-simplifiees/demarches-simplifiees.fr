@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Dossier, type: :model do
   describe '.purge_discarded' do
     it 'discards brouillon, en_construction and termine' do

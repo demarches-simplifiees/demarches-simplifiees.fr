@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe RecoveryService, type: :service do
   describe '.recoverable_procedures' do
     subject { described_class.recoverable_procedures(previous_user:, siret:) }

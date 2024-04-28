@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureStatsConcern do
   describe '#stats_dossiers_funnel' do
     let(:procedure) { create(:procedure) }

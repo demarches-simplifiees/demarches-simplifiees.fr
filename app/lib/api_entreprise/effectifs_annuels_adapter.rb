@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::EffectifsAnnuelsAdapter < APIEntreprise::Adapter
   def initialize(siret, procedure_id, year = default_year)
     @siret = siret

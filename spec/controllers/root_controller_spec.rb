@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RootController, type: :controller do
   subject { get :index }
 

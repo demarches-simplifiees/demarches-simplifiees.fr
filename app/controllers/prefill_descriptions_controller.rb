@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrefillDescriptionsController < ApplicationController
   before_action :retrieve_procedure
   before_action :set_prefill_description

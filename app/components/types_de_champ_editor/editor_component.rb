@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::EditorComponent < ApplicationComponent
   def initialize(revision:, is_annotation: false)
     @revision = revision

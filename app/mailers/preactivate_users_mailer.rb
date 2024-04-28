@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PreactivateUsersMailer < ApplicationMailer
   layout 'mailers/layout'
 

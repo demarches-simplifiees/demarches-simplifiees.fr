@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # references:
 # https://github.com/Shopify/graphql-batch/blob/master/examples/record_loader.rb
 

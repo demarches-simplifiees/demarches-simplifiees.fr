@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_hidden_by_reason_nil'
   task fix_hidden_by_reason_nil: :environment do

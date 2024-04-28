@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RecoveriesController, type: :controller do
   include Dry::Monads[:result]
 

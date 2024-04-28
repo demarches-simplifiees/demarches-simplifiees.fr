@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: strip_type_de_champ_libelle'
   task strip_type_de_champ_libelle: :environment do

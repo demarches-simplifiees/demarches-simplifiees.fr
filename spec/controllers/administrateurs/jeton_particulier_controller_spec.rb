@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::JetonParticulierController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, administrateur: admin) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::PendingRepublishComponent < ApplicationComponent
   def initialize(procedure:, render_if:)
     @procedure = procedure

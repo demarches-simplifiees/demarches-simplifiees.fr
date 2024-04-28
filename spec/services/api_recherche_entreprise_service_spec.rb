@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'APIRechercheEntreprisesService' do
   include Dry::Monads[:result]
   OK = Data.define(:body, :response)

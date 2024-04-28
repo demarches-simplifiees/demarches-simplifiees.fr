@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_dossiers_with_missing_identification'
   task fix_dossiers_with_missing_identification: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::TvaAdapter do
   let(:siren) { '418166096' }
   let(:procedure) { create(:procedure) }

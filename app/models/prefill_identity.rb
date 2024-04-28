@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrefillIdentity
   attr_reader :dossier, :params
 

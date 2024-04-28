@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::AttestationFiscaleAdapter < APIEntreprise::Adapter
   # Doc métier : https://entreprise.api.gouv.fr/catalogue/dgfip/attestations_fiscales
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Attestations-sociales-et-fiscales/paths/~1v4~1dgfip~1unites_legales~1%7Bsiren%7D~1attestation_fiscale/get

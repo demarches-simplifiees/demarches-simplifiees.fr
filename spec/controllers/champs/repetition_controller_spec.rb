@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::RepetitionController, type: :controller do
   describe '#remove' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'Nom' }, { type: :integer_number, libelle: 'Age' }] }]) }

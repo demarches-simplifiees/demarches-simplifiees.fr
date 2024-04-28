@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Profile::APITokenComponent < ApplicationComponent
   def initialize(api_token:)
     @api_token = api_token

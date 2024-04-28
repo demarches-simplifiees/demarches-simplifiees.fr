@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeGestionnaireMailerPreview < ActionMailer::Preview
   def notify_removed_gestionnaire
     groupe_gestionnaire = GroupeGestionnaire.new(name: 'un groupe gestionnaire')

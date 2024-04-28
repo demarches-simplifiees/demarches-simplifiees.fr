@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Stat, type: :model do
   describe '.deleted_dossiers_states' do
     subject { Stat.send(:deleted_dossiers_states) }

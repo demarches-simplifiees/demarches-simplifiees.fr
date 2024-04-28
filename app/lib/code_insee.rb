@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CodeInsee
   def initialize(code_insee)
     @code_insee = code_insee

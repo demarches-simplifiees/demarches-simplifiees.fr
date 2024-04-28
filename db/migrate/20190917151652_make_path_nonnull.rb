@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MakePathNonnull < ActiveRecord::Migration[5.2]
   def change
     change_column_null :procedures, :path, false

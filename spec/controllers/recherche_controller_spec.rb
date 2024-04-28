@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe RechercheController, type: :controller do
   let(:procedure) {
     create(:procedure, :published,

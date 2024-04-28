@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GeoArea, type: :model do
   describe '#area' do
     let(:geo_area) { build(:geo_area, :polygon, champ: nil) }

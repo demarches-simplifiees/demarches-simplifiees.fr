@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StatsController < ApplicationController
   before_action :authenticate_super_admin!, only: [:download]
 

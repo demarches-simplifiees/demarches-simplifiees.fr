@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: update_procedure_with_only_inactive_instructor_group'
   task update_procedure_with_only_inactive_instructor_group: :environment do

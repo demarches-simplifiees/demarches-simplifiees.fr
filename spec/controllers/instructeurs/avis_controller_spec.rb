@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::AvisController, type: :controller do
   context 'with a instructeur signed in' do
     render_views

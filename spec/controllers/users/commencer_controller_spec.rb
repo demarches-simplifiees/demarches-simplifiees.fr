@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::CommencerController, type: :controller do
   let(:user) { create(:user) }
   let(:published_procedure) { create(:procedure, :for_individual, :published) }

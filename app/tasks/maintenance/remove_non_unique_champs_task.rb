@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Maintenance
   class RemoveNonUniqueChampsTask < MaintenanceTasks::Task
     attribute :stable_ids, :string

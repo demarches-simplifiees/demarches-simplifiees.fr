@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: block_dubious_email'
   task block_dubious_email: :environment do

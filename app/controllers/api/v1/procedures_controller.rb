@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V1::ProceduresController < APIController
   before_action :check_api_token
   before_action :fetch_procedure

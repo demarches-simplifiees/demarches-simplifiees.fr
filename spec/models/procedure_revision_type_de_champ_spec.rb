@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureRevisionTypeDeChamp do
   describe '#upper_coordinates' do
     context 'when the coordinate is in a bloc bellow another coordinate' do

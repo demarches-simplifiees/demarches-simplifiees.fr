@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::SourcesParticulierController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
 

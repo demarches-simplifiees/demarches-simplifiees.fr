@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe StatsController, type: :controller do
   before { Timecop.travel(Date.parse("2021/12/15")) }
   after { Timecop.return }

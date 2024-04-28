@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'jobs' do
   describe 'schedule' do
     subject { Rake::Task['jobs:schedule'].invoke }

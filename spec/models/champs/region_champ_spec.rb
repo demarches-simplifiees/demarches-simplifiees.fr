@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::RegionChamp, type: :model do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :regions, stable_id: 99 }]) }
   let(:dossier) { create(:dossier, procedure:) }

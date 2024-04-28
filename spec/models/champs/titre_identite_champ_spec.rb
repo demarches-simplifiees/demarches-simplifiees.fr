@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::TitreIdentiteChamp do
   describe "#for_export" do
     let(:champ) { described_class.new }

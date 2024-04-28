@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: format_iban_champ_values'
   task format_iban_champ_values: :environment do

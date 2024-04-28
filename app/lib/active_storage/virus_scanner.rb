@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActiveStorage::VirusScanner
   def initialize(blob)
     @blob = blob

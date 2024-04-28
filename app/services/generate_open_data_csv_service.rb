@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GenerateOpenDataCsvService
   def self.save_csv_to_tmp(file_name, data)
     f = Tempfile.create(["#{file_name}_#{date_last_month}", '.csv'], 'tmp')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: add_traitements_from_dossiers'
   task add_traitements_from_dossiers: :environment do

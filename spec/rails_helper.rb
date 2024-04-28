@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 # The generated `.rspec` file contains `--require rails_helper` which will cause
 # this file to always be loaded, without a need to explicitly require it in any

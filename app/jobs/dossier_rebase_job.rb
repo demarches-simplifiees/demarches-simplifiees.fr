@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierRebaseJob < ApplicationJob
   queue_as :low_priority # they are massively enqueued, so don't interfere with others especially antivirus
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SerializerService
   def self.dossier(dossier)
     Sentry.with_scope do |scope|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Instructeurs
   class AvisController < InstructeurController
     include CreateAvisConcern

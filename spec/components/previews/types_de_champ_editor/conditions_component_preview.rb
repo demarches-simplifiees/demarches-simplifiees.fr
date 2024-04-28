@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::ConditionsComponentPreview < ViewComponent::Preview
   include Logic
 

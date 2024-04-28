@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Redcarpet::TrustedRenderer do
   let(:view_context) { ActionController::Base.new.view_context }
   subject(:renderer) { Redcarpet::Markdown.new(described_class.new(view_context), autolink: true) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::ExtraitKbisJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
   let(:siret) { '13002526500013' }

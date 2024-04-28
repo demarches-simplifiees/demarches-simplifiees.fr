@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::MesriChamp, type: :model do
   let(:champ) { described_class.new }
 

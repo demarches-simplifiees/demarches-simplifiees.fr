@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: reclean_attachments'
   task reclean_attachments: :environment do

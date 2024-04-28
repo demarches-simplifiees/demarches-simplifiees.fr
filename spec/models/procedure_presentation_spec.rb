@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedurePresentation do
   include ActiveSupport::Testing::TimeHelpers
 

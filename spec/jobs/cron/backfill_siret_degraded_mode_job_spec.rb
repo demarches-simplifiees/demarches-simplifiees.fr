@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::BackfillSiretDegradedModeJob, type: :job do
   describe '.perform' do
     let(:etablissement) { create(:etablissement, adresse: nil, siret: '01234567891011') }

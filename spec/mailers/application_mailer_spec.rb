@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ApplicationMailer, type: :mailer do
   describe 'dealing with invalid emails' do
     let(:dossier) { create(:dossier, procedure: create(:simple_procedure)) }

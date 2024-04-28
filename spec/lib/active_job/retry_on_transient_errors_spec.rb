@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ActiveJob::RetryOnTransientErrors do
   # rubocop:disable Rails/ApplicationJob
   class Job < ActiveJob::Base

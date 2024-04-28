@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Expired::UsersDeletionService < Expired::MailRateLimiter
   def process_expired
     # we are working on two dataset because we apply two incompatible join on the same query

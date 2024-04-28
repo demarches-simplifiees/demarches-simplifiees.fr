@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeInstructeurMailerPreview < ActionMailer::Preview
   def notify_removed_instructeur
     procedure = Procedure.new(id: 1, libelle: 'une superbe procedure')

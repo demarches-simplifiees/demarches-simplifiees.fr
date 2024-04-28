@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_expert_id_on_avis_table'
   task backfill_experts_procedure_id_on_avis_table: :environment do

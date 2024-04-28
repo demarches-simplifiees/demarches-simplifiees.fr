@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeurs/procedures/_tabs', type: :view do
   let(:procedure) { create(:procedure, id: 1, procedure_expires_when_termine_enabled: expiration_enabled) }
 

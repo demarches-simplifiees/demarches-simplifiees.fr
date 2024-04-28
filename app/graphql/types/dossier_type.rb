@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class DossierType < Types::BaseObject
     class DossierState < Types::BaseEnum

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/identite', type: :view do
   let(:dossier) { create(:dossier, :with_service, state: Dossier.states.fetch(:brouillon), procedure: procedure) }
 

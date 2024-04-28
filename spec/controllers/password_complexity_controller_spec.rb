@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PasswordComplexityController, type: :controller do
   describe '#show' do
     let(:params) do

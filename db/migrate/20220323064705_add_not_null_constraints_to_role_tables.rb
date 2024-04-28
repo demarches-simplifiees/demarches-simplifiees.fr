@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNotNullConstraintsToRoleTables < ActiveRecord::Migration[6.1]
   include Database::MigrationHelpers
 

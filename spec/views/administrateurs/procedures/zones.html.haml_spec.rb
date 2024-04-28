@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'administrateurs/procedures/zones' do
   let(:administrateur) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure) }

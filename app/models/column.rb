@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Column
   attr_reader :table, :column, :label, :classname, :type, :scope, :value_column, :filterable, :displayable
 

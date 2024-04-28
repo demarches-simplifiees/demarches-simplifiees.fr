@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::InvalidIneligibiliteRulesComponent < ApplicationComponent
   delegate :can_passer_en_construction?, to: :@dossier
 

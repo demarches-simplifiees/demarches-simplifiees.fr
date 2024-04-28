@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::SiretTypeDeChamp < TypesDeChamp::TypeDeChampBase
   include AddressableColumnConcern
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierOperationLog < ApplicationRecord
   enum operation: {
     changer_groupe_instructeur: 'changer_groupe_instructeur',

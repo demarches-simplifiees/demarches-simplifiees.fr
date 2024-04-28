@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'service tasks' do
   let(:rake_task) { Rake::Task[task] }
   subject { rake_task.invoke }

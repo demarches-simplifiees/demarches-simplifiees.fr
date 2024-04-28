@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20230421091957_fix_defaut_groupe_instructeur_id_for_cloned_procedure' do
   let(:rake_task) { Rake::Task['after_party:fix_defaut_groupe_instructeur_id_for_cloned_procedure'] }
 

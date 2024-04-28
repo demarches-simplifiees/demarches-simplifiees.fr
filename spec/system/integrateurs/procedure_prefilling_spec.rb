@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'As an integrator:', js: true do
   let(:procedure) { create(:procedure, :for_individual, :published, opendata: true) }
   let!(:type_de_champ) { create(:type_de_champ_text, procedure: procedure) }

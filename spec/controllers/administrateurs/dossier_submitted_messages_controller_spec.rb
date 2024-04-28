@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::DossierSubmittedMessagesController, type: :controller do
    let(:administrateur) { administrateurs(:default_admin) }
 

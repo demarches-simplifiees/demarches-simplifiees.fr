@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProceduresController < ApplicationController
   before_action :retrieve_procedure
 

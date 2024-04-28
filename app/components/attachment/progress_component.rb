@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Attachment::ProgressComponent < ApplicationComponent
   attr_reader :attachment
   attr_reader :ignore_antivirus

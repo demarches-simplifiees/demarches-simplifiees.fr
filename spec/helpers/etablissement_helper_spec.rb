@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe EtablissementHelper, type: :helper do
   let(:code_effectif) { '00' }
   let(:raison_sociale) { 'GRTGaz' }

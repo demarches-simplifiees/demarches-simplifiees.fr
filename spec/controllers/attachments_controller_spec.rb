@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
   let(:attachment) { champ.piece_justificative_file.attachments.first }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Individual < ApplicationRecord
   enum notification_method: {
     email: 'email',

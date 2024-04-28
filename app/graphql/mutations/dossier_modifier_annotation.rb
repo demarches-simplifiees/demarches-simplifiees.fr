@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierModifierAnnotation < Mutations::BaseMutation
     argument :dossier_id, ID, "Dossier ID", required: true, loads: Types::DossierType

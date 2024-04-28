@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Dossier::Recovery::LifeCycle' do
   describe '.load_export_destroy_and_import' do
     let(:procedure) do

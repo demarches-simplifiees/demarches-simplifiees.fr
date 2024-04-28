@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Manager::GroupeGestionnairesController, type: :controller do
   let(:super_admin) { create(:super_admin) }
   let(:groupe_gestionnaire) { create(:groupe_gestionnaire) }

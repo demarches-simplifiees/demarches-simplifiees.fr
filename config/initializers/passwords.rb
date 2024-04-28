@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # complexity of the required password for the three kinds of users (user, instructeur, admnistrateur)
 # valid values are from 0 to 4, 0 means very simple, 4 means high level of complexity.
 if !defined?(PASSWORD_MIN_LENGTH)

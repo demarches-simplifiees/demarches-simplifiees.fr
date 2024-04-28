@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddManagerToAssignTos < ActiveRecord::Migration[6.1]
   def up
     add_column :assign_tos, :manager, :boolean

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PhoneTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   # We want to allow:
   # * international (e164) phone numbers

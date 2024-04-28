@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::EffectifsJob < APIEntreprise::Job
   def perform(etablissement_id, procedure_id)
     etablissement = Etablissement.find(etablissement_id)

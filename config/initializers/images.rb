@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Favicons
 FAVICONS_SRC = {
   "16px" => ENV.fetch("FAVICON_16PX_SRC", "favicons/16x16.png"),

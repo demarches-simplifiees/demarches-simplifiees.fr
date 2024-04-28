@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Helpscout::UserConversationsAdapter do
   let(:from) { Date.new(2017, 11) }
   let(:to)   { Date.new(2017, 12) }

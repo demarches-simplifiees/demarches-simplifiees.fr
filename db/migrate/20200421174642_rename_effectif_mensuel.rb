@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameEffectifMensuel < ActiveRecord::Migration[5.2]
   def change
     rename_column :etablissements, :effectif_mensuel, :entreprise_effectif_mensuel

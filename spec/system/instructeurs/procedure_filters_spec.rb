@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "procedure filters" do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, :published, types_de_champ_public:, instructeurs: [instructeur]) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Siret, type: :model do
   subject { Siret.new(siret: siret) }
 

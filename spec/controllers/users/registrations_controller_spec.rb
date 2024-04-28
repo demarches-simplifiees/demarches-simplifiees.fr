@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::RegistrationsController, type: :controller do
   let(:email) { 'test@octo.com' }
   let(:password) { SECURE_PASSWORD }

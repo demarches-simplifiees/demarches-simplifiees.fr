@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GraphqlController < ApplicationController
   def playground
     procedure = current_administrateur&.procedures&.last

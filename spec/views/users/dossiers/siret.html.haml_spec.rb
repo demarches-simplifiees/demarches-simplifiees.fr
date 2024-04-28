@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/siret', type: :view do
   let(:dossier) { create(:dossier) }
 
