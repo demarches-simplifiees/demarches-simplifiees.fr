@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: update_procedure_routing_enabled'
   task update_procedure_routing_enabled: :environment do

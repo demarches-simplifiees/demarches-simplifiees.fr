@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BackfillProceduresZones < ActiveRecord::Migration[6.1]
   def up
     # rubocop:disable DS/Unscoped

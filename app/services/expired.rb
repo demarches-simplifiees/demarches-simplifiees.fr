@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Expired
   # User is considered inactive after two years of idleness regarding
   #   when he does not have a dossier en instruction

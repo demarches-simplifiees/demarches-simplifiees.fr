@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PrefillTypeDeChampsController < ApplicationController
   before_action :retrieve_procedure
   before_action :set_prefill_type_de_champ

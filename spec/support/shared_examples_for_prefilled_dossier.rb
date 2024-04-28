@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples "the user has got a prefilled dossier, owned by themselves" do
   scenario "the user has got a prefilled dossier, owned by themselves" do
     expect(dossier.user).to eq(user)

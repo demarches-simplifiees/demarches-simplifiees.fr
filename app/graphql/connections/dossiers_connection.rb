@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Connections
   class DossiersConnection < CursorConnection
     def initialize(items, lookahead: nil, **kwargs)

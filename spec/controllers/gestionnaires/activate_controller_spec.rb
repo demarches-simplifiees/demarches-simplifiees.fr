@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Gestionnaires::ActivateController, type: :controller do
   describe '#new' do
     let(:gestionnaire) { create(:gestionnaire) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypeDeChampPolicy < ApplicationPolicy
   class Scope < ApplicationScope
     def resolve

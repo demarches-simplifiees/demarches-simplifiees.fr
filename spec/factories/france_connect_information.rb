@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :france_connect_information do
     given_name { 'Angela Claire Louise' }

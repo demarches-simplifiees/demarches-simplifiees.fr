@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDeviseTwoFactorToAdministrations < ActiveRecord::Migration[6.0]
   def change
     add_column :administrations, :encrypted_otp_secret, :string

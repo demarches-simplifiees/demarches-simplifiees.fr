@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DropDownListChamp do
   describe 'validations' do
     describe 'inclusion' do

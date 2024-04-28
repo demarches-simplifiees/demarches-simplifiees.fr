@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :ds do
   desc 'DS task: destroy_expired_dossiers_mae'
   task destroy_expired_dossiers_mae: :environment do

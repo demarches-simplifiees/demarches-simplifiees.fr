@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::AccountByMonthJob, type: :job do
   let!(:user) { create(:user, created_at: 1.month.ago) }
   let(:status) { 200 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # TODO: Enable cookies rotation when new SHA256 will be enforced
 # See new_framework_defaults_7.0.rb
 # key_generator_hash_digest_class = OpenSSL::Digest::SHA256 will be

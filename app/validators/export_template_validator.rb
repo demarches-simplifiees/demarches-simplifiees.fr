@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExportTemplateValidator < ActiveModel::Validator
   def validate(export_template)
     validate_all_templates(export_template)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::AssociationJob < APIEntreprise::Job
   def perform(etablissement_id, procedure_id)
     find_etablissement(etablissement_id)

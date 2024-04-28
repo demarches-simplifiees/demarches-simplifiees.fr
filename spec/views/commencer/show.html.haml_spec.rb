@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'commencer/show', type: :view do
   include Rails.application.routes.url_helpers
 

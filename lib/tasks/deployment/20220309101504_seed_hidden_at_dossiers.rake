@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: seed_hidden_at_dossiers'
   task seed_hidden_at_dossiers: :environment do

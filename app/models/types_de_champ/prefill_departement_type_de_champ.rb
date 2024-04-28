@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PrefillDepartementTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   def all_possible_values
     departements.map { |departement| "#{departement[:code]} (#{departement[:name]})" }

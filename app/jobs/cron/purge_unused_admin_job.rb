@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::PurgeUnusedAdminJob < Cron::CronJob
   self.schedule_expression = "every monday at 5:15"
 

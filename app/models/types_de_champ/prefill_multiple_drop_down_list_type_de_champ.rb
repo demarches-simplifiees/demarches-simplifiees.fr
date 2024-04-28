@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp < TypesDeChamp::PrefillDropDownListTypeDeChamp
   def example_value
     return nil if all_possible_values.empty?

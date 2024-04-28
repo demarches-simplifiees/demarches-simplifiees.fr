@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Procedure::OneGroupeManagementComponent, type: :component do
   include Logic
 

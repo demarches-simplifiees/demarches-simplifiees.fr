@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailChecker
   # Extracted 100 most used domain on our users table [june 2024]
   # + all .gouv.fr domain on our users table

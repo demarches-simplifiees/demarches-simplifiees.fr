@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::RNAChamp do
   let(:champ) { Champs::RNAChamp.new(value: "W182736273", dossier: build(:dossier)) }
   before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rna)) }

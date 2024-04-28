@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::AddressTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   def libelles_for_export
     path = paths.first

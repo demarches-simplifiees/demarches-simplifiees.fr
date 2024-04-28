@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Preview all emails at http://localhost:3000/rails/mailers/notification_mailer
 
 # A Notification is attached as a Comment to the relevant discussion,

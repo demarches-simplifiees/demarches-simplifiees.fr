@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Gestionnaires
   class GestionnaireController < ApplicationController
     before_action :authenticate_gestionnaire!

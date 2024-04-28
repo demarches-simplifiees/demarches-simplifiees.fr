@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recovery
   class Exporter
     FILE_PATH = Rails.root.join('lib', 'data', 'export.dump')

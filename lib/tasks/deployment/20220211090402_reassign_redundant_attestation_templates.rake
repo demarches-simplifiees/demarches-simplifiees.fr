@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: reassign_redundant_attestation_templates'
   task reassign_redundant_attestation_templates: :environment do

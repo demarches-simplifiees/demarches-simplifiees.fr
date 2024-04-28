@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureExternalURLCheckJob < ApplicationJob
   def perform(procedure)
     procedure.validate

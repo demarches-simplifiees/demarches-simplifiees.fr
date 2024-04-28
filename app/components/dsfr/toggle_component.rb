@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dsfr::ToggleComponent < ApplicationComponent
   def initialize(form:, target:, title:, disabled: nil, hint: nil, toggle_labels: { checked: 'Activé', unchecked: 'Désactivé' }, opt: nil, extra_class_names: nil)
     @form = form

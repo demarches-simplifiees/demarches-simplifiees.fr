@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Manager::DossierChampRowComponent < ApplicationComponent
   with_collection_parameter :row
 

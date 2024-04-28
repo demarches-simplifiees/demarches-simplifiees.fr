@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Connections::CursorConnection do
   describe '.limit_and_inverted' do
     let(:max_page_size) { 100 }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DubiousProcedure
   extend ActiveModel::Naming
   extend ActiveModel::Translation

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRelationsToDeletedDossiers < ActiveRecord::Migration[6.0]
   def change
     add_column :deleted_dossiers, :user_id, :bigint

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::HeaderSectionConsistencyValidator < ActiveModel::EachValidator
   def validate_each(procedure, attribute, types_de_champ)
     public_tdcs = types_de_champ.to_a

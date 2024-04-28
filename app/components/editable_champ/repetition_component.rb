@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::RepetitionComponent < EditableChamp::EditableChampBaseComponent
   def legend_params
     @champ.description.present? ? { describedby: dom_id(@champ, :repetition) } : {}

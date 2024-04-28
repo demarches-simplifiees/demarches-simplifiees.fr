@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::CarteChamp < Champ
   # Default map location. Center of the World, ahm, France...
   DEFAULT_LON = 2.428462

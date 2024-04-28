@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe CommentaireHelper, type: :helper do
   let(:commentaire) { create(:commentaire, email: "michel@pref.fr") }
 

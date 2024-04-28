@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MailerHelper
   def vertical_margin(height)
     render 'shared/mailer_vertical_margin', height: height

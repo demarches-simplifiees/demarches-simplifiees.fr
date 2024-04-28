@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SVASVRConfiguration
   include ActiveModel::Model
   include ActiveModel::Attributes

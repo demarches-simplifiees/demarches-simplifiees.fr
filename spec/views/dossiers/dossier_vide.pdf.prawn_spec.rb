@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'dossiers/dossier_vide', type: :view do
   let(:procedure) { create(:procedure, :with_all_champs) }
 

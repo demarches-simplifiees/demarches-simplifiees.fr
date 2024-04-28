@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddNotNullConstraintsToAdministrateursInstructeur < ActiveRecord::Migration[6.1]
   def change
     # We ignore strong_migrations safety warnings, because those tables are relatively small, and the null check

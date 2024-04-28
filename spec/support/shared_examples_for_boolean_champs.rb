@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples "a boolean champ" do
   describe 'before validation' do
     subject { boolean_champ.valid? }

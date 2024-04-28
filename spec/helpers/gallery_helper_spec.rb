@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GalleryHelper, type: :helper do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile' }] }

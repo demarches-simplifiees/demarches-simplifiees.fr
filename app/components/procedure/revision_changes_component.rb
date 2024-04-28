@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::RevisionChangesComponent < ApplicationComponent
   def initialize(new_revision:, previous_revision:)
     @previous_revision = previous_revision

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Zone < ApplicationRecord
   validates :acronym, presence: true, uniqueness: true
   has_many :labels, -> { order(designated_on: :desc) }, class_name: 'ZoneLabel', inverse_of: :zone

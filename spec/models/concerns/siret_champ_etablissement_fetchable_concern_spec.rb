@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe SiretChampEtablissementFetchableConcern do
   describe '.fetch_etablissement!' do
     let(:api_etablissement_status) { 200 }

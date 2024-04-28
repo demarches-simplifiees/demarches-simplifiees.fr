@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern

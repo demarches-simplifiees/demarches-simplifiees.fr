@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe APIEntreprise::EffectifsJob, type: :job do
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }

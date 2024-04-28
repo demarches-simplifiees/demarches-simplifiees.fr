@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class CorrectionType < Types::BaseObject
     class CorrectionReason < Types::BaseEnum

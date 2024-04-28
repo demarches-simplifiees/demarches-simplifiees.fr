@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 include ActionView::Helpers::SanitizeHelper
 
 describe Manager::DossiersController, type: :controller do

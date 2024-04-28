@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Some of this file is lifted from Gitlab's `lib/gitlab/database/migration_helpers.rb`
 
 # Copyright (c) 2011-present GitLab B.V.

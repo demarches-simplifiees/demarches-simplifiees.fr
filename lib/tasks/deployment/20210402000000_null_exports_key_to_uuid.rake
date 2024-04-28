@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: null_exports_key_to_uuid'
   task null_exports_key_to_uuid: :environment do

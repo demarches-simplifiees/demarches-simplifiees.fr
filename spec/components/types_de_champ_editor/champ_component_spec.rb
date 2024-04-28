@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TypesDeChampEditor::ChampComponent, type: :component do
   describe 'render' do
     let(:component) { described_class.new(coordinate:, upper_coordinates: []) }

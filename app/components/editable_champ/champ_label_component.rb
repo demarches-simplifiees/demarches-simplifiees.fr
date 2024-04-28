@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::ChampLabelComponent < ApplicationComponent
   include Dsfr::InputErrorable
 

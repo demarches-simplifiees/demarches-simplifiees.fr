@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GroupeInstructeurMailer, type: :mailer do
   describe '#notify_removed_instructeur' do
     let(:procedure) { create(:procedure) }

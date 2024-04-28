@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::ExportTemplatesController, type: :controller do
   before { sign_in(instructeur.user) }
 

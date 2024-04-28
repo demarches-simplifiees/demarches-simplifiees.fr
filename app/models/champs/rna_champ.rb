@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RNAChamp < Champ
   include RNAChampAssociationFetchableConcern
 

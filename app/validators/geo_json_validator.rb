@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeoJSONValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     if options[:allow_nil] == false && value.nil?

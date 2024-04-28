@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ProcedureHelper, type: :helper do
   describe '#procedure_auto_archive_datetime' do
     let(:auto_archive_date) { Time.zone.local(2020, 8, 2, 12, 00) }

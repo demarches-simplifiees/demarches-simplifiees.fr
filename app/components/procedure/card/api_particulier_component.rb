@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::Card::APIParticulierComponent < ApplicationComponent
   def initialize(procedure:)
     @procedure = procedure

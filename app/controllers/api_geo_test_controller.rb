@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIGeoTestController < ActionController::Base
   def regions
     render json: [{ nom: 'Martinique' }]

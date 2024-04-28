@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::RNFChamp, type: :model do
   let(:champ) { described_class.new(external_id:) }
   let(:external_id) { '075-FDD-00003-01' }

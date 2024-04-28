@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::SectionComponent < ApplicationComponent
   include ApplicationHelper
   include TreeableConcern

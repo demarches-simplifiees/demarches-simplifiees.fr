@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::Public::V1::BaseController < ApplicationController
   skip_forgery_protection
 

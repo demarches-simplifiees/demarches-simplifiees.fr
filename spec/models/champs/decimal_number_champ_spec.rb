@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DecimalNumberChamp do
   describe 'validation' do
     let(:champ) { Champs::DecimalNumberChamp.new(value:, dossier: build(:dossier)) }

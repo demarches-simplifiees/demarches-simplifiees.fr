@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
     let(:champ) { Champs::LinkedDropDownListChamp.new(value: '["tata", "tutu"]') }

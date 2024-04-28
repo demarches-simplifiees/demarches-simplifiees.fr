@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe InvitesController, type: :controller do
   let(:dossier) { create(:dossier, :en_construction) }
   let(:email) { 'plop@octo.com' }

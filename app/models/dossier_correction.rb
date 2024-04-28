@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierCorrection < ApplicationRecord
   belongs_to :dossier
   belongs_to :commentaire

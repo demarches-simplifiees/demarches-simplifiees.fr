@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpertMailerPreview < ActionMailer::Preview
   def send_dossier_decision
     procedure = Procedure.new(id: 1, libelle: 'Démarche pour faire des marches')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::EmailChamp do
   describe 'validation' do
     let(:champ) { described_class.new(value:, dossier: build(:dossier)) }

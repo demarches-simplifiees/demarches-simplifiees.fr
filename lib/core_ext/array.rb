@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Adapted from https://github.com/thirtysixthspan/descriptive_statistics
 
 # Copyright (c) 2010-2014 Derrick Parkhurst (derrick.parkhurst@gmail.com)

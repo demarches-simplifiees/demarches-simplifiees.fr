@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: force_dossiers_to_fill_missing_individual'
   task force_dossiers_to_fill_missing_individual: :environment do

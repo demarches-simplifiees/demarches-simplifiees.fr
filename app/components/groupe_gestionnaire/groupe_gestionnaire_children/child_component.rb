@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeGestionnaire::GroupeGestionnaireChildren::ChildComponent < ApplicationComponent
   include ApplicationHelper
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::PurgeOldEmailEventJob, type: :job do
   describe 'perform' do
     subject { Cron::PurgeOldEmailEventJob.perform_now }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:groupe_label) { |n| "label_#{n}" }
 

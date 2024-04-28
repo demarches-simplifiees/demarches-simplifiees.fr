@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ResetExpiringDossiersJob < ApplicationJob
   def perform(procedure)
     procedure

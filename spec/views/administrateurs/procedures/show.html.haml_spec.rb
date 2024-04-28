@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'administrateurs/procedures/show', type: :view do
   let(:closed_at) { nil }
   let(:procedure) { create(:procedure, :with_service, closed_at: closed_at) }

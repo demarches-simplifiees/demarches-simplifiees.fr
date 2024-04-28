@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierPolicy < ApplicationPolicy
   # Scope for WRITING to a dossier.
   #

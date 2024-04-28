@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dropdown::MenuComponent < ApplicationComponent
   renders_one :button_inner_html
   renders_one :menu_header_html

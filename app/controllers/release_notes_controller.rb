@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReleaseNotesController < ApplicationController
   before_action :ensure_access_allowed!
   after_action :touch_default_categories_seen_at

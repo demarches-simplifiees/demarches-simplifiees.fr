@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'dropdown list with other option activated', js: true do
   let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }

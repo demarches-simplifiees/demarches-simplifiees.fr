@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommentaireGroupeGestionnaire < ApplicationRecord
   include Discard::Model
   belongs_to :groupe_gestionnaire

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe BatchOperation, type: :model do
   describe 'association' do
     it { is_expected.to have_many(:dossiers) }

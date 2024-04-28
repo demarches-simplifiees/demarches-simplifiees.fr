@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Champs
   class RNAChampType < Types::BaseObject
     implements Types::ChampType
