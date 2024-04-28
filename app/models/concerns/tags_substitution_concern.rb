@@ -12,7 +12,7 @@ module TagsSubstitutionConcern
     extend self
 
     def parse(io)
-      doc.parse io
+      doc.parse(+io) # parsby mutates the StringIO during parsing!
     end
 
     def self.normalize(str)
