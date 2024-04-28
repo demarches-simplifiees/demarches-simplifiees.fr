@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::DateTypeDeChamp < TypesDeChamp::TypeDeChampBase
   class << self
     def champ_value(champ)

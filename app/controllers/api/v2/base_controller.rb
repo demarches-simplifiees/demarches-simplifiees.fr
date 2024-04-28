@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V2::BaseController < ApplicationController
   skip_forgery_protection if: -> { request.headers.key?('HTTP_AUTHORIZATION') }
   skip_before_action :setup_tracking

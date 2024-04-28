@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DataSources::AdresseController < ApplicationController
   def search
     if params[:q].present? && params[:q].length > 3

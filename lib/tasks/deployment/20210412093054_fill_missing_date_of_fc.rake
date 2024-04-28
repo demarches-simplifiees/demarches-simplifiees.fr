@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fill_missing_date_of_fc'
   task fill_missing_date_of_fc: :environment do

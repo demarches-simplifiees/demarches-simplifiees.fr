@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe WebhookController, type: :controller do
   before do
     allow(controller).to receive(:verify_helpscout_signature!).and_return(true)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::InDepartementOperator < Logic::BinaryOperator
   def operation
     :est_dans_le_departement

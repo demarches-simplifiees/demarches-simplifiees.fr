@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDossierBatchOperations < ActiveRecord::Migration[6.1]
   def change
     create_table :dossier_batch_operations do |t|

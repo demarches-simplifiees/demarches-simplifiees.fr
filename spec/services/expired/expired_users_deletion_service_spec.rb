@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Expired::UsersDeletionService do
   let(:last_signed_in_not_expired) { (Expired::INACTIVE_USER_RETATION_IN_YEAR - 1).years.ago }
   let(:last_signed_in_expired) { (Expired::INACTIVE_USER_RETATION_IN_YEAR + 1).years.ago }

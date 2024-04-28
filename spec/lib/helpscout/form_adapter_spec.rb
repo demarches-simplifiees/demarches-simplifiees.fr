@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Helpscout::FormAdapter do
   describe '#send_form' do
     let(:api) { spy(double(:api)) }

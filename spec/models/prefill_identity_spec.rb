@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe PrefillIdentity do
   describe "#to_h" do
     let(:dossier) { create(:dossier, :brouillon, :with_individual) }

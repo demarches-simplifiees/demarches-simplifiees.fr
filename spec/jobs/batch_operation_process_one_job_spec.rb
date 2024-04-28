@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe BatchOperationProcessOneJob, type: :job do
   describe 'perform' do
     let(:batch_operation) do

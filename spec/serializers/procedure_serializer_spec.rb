@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureSerializer do
   describe '#attributes' do
     subject { ProcedureSerializer.new(procedure).serializable_hash }

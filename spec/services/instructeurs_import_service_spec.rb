@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe InstructeursImportService do
   describe '#import_groupes' do
     let(:procedure) { create(:procedure) }

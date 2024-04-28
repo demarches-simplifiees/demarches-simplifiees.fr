@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system/administrateurs/procedure_spec_helper'
 
 describe 'As an administrateur I wanna clone a procedure', js: true do

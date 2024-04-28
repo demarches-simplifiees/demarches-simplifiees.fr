@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierSectionsConcern do
   describe '#auto_numbering_section_headers_for?' do
     let(:public_libelle) { "Infos" }

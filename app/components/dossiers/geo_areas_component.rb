@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::GeoAreasComponent < ApplicationComponent
   attr_reader :champ, :editing
 

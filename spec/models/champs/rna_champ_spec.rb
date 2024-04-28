@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::RNAChamp do
   let(:champ) { create(:champ_rna, value: "W182736273") }
 

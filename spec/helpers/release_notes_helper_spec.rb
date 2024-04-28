@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ReleaseNotesHelper, type: :helper do
   describe "#render_release_note_content" do
     let(:release_note) { build(:release_note) }

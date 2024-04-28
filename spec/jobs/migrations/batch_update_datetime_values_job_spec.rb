@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   before do
     datetime_champ.save(validate: false)

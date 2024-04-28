@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'views/shared/champs/multiple_drop_down_list/_show', type: :view do
   let(:champ) { build(:champ_multiple_drop_down_list, value: ['abc', '2, 3, 4']) }
 

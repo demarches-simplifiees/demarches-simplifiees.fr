@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def estimated_fill_duration(revision)
     estimated_rows_in_repetition = 2.5

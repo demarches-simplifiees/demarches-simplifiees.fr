@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dolist
   class APISender
     def initialize(mail); end

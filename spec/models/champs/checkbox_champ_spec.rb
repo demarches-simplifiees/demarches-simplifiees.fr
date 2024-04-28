@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::CheckboxChamp do
   it_behaves_like "a boolean champ" do
     let(:boolean_champ) { build(:champ_checkbox, value: value) }

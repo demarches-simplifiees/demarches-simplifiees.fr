@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:super_admin_email) { |n| "plop#{n}@plop.com" }
   factory :super_admin do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Recovery::AlignChampWithDossierRevision
   def initialize(dossiers, progress: nil)
     @dossiers = dossiers

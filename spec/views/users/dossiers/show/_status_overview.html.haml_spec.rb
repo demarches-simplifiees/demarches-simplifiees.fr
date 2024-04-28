@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/show/_status_overview', type: :view do
   before { allow(dossier.procedure).to receive(:usual_traitement_time_for_recent_dossiers).and_return([1.day, 2.days, 3.days]) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BillSignatureService
   def self.sign_operations(operations, day)
     return unless Certigna::API.enabled?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe FranceConnectService do
   describe '.retrieve_user_informations_particulier' do
     let(:code) { 'plop' }

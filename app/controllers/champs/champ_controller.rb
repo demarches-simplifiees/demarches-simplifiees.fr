@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::ChampController < ApplicationController
   before_action :authenticate_logged_user!
   before_action :set_champ

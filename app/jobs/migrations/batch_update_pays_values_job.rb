@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::BatchUpdatePaysValuesJob < ApplicationJob
   UNUSUAL_COUNTRY_NAME_MATCHER = {
     "ACORES, MADERE" => "Portugal",

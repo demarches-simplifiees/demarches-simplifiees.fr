@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APITchap::HsAdapter
   def initialize(email)
     @email = email

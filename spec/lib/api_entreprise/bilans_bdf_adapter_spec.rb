@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::BilansBdfAdapter do
   let(:siret) { '41816609600069' }
   let(:siren) { '418166096' }

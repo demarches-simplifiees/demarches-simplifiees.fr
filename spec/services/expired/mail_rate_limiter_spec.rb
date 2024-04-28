@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Expired::MailRateLimiter do
   describe 'hits limits' do
     let(:limit) { 10 }

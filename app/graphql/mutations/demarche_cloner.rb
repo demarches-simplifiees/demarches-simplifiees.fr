@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DemarcheCloner < Mutations::BaseMutation
     description "Cloner une démarche."

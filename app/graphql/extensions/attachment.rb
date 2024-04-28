@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # references:
 # https://evilmartians.com/chronicles/active-storage-meets-graphql-pt-2-exposing-attachment-urls
 

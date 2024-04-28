@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Siret
   include ActiveModel::Model
   include ActiveModel::Validations::Callbacks

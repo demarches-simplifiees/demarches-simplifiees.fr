@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ViteHelper
   # This module is a port of code in @vitejs/plugin-legacy. We need it because ruby vite_plugin_legacy
   # has ommited to implement this logic. Original code here:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TagsButtonListComponent, type: :component do
   let(:tags) do
     {

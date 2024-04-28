@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'csv'
 
 # PR : https://github.com/wvengen/ruby-acsv/pull/3

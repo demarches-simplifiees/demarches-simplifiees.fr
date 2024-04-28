@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::SiretController < Champs::ChampController
   def show
     champs_attributes = params.dig(:dossier, :champs_public_attributes) || params.dig(:dossier, :champs_private_attributes)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Instructeurs
   class ProceduresController < InstructeurController
     before_action :ensure_ownership!, except: [:index]

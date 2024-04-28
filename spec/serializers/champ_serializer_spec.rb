@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ChampSerializer do
   describe '#attributes' do
     subject { ChampSerializer.new(serializable_object).serializable_hash }

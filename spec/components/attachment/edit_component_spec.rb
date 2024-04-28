@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Attachment::EditComponent, type: :component do
   let(:champ) { create(:champ_titre_identite, dossier: create(:dossier)) }
   let(:attached_file) { champ.piece_justificative_file }

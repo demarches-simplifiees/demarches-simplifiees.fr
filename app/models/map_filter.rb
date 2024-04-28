@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class MapFilter
   # https://api.rubyonrails.org/v7.1.1/classes/ActiveModel/Errors.html
 

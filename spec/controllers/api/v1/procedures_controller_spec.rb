@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe API::V1::ProceduresController, type: :controller do
   let!(:admin) { create(:administrateur, :with_api_token) }
   let!(:token) { APIToken.generate(admin)[1] }

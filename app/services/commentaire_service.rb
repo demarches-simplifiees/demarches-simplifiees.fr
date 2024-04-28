@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CommentaireService
   def self.create(sender, dossier, params)
     save(dossier, prepare_params(sender, params))

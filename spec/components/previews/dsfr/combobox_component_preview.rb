@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dsfr::ComboboxComponentPreview < ViewComponent::Preview
   OPTIONS = [
     'Cheddar',

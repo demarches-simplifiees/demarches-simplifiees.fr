@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChampsValidateConcern
   extend ActiveSupport::Concern
 

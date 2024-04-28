@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUniqueConstraintOnAdministrateurEmails < ActiveRecord::Migration[5.2]
   def up
     # Drop the index entirely

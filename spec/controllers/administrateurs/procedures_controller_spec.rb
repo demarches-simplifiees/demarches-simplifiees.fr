@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::ProceduresController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:bad_procedure_id) { 100000 }

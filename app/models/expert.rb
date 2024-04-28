@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Expert < ApplicationRecord
   belongs_to :user
   has_many :experts_procedures

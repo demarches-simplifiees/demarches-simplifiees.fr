@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ChampConditionalConcern do
   include Logic
 

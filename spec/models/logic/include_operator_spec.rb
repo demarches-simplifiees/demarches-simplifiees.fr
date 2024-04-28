@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Logic::IncludeOperator do
   include Logic
 

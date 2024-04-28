@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class GroupeInstructeurType < Types::BaseObject
     description "Un groupe instructeur"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'prawn/measurement_extensions'
 
 #----- A4 page size

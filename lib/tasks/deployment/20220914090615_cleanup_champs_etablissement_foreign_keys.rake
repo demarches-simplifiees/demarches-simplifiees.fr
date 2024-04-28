@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: cleanup_champs_etablissement_foreign_keys'
   task cleanup_champs_etablissement_foreign_keys: :environment do

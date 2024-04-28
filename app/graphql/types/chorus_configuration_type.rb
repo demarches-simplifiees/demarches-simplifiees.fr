@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class ChorusConfigurationType < Types::BaseObject
     field :centre_de_cout, String, "Le code du centre de cout auquel est rattaché la démarche.", null: true

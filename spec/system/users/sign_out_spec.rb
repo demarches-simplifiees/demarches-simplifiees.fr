@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Sign out' do
   context 'when a user is logged in' do
     let(:user) { create(:administrateur).user }

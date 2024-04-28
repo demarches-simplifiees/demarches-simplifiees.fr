@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::PoleEmploiChamp, type: :model do
   let(:champ) { build(:champ_pole_emploi) }
 

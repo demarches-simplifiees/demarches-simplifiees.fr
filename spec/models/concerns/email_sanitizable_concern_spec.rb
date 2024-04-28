@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EmailSanitizableConcern, type: :model do
   describe 'sanitize_email' do
     let(:email_concern) do

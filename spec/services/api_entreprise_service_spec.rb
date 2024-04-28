@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntrepriseService do
   shared_examples 'schedule fetch of all etablissement params' do
     [

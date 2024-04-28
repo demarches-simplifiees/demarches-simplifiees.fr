@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIParticulier::CnafAdapter
   class InvalidSchemaError < ::StandardError
     def initialize(errors)

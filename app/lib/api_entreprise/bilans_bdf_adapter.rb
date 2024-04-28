@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::BilansBdfAdapter < APIEntreprise::Adapter
   def initialize(siret, procedure_id)
     @siret = siret

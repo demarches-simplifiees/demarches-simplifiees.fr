@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureOverview, type: :model do
   let(:procedure) { create(:procedure, libelle: 'libelle') }
   let(:friday) { Time.zone.local(2017, 5, 12) } # vendredi 12 mai 2017, de la semaine du 8 mai

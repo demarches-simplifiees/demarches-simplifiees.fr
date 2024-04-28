@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::ServicesController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:procedure) { create(:procedure, administrateur: admin) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Attachment::PendingPollComponent < ApplicationComponent
   attr_reader :attachments
 

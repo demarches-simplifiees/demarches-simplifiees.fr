@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: assign_attestation_templates_to_procedures'
   task assign_attestation_templates_to_procedures: :environment do

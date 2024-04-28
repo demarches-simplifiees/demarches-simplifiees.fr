@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Recovery::AlignChampWithDossierRevision do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ stable_id: bad_stable_id }, {}]) }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }

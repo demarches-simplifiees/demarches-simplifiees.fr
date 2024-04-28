@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierUpdateSearchTermsJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
 

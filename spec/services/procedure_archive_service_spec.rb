@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureArchiveService do
   let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
   let(:instructeur) { create(:instructeur) }

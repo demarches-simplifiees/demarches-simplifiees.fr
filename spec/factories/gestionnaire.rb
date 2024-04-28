@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:gestionnaire_email) { |n| "gestionnaire#{n}@demarches-simplifiees.fr" }
 

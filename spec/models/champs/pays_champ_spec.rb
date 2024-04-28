@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::PaysChamp, type: :model do
   let(:champ) { build(:champ_pays, value: nil) }
 

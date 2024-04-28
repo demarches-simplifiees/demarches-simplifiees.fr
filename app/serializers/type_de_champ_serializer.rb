@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypeDeChampSerializer < ActiveModel::Serializer
   attributes :id,
     :libelle,

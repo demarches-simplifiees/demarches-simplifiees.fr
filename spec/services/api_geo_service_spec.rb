@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIGeoService do
   describe 'pays' do
     it 'countrie_code' do

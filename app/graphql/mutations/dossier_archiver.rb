@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierArchiver < Mutations::BaseMutation
     description "Archiver le dossier."

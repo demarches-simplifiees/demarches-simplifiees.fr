@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_examples 'champ_spec' do
   describe 'mandatory_blank?' do
     let(:type_de_champ) { build(:type_de_champ, mandatory: mandatory) }

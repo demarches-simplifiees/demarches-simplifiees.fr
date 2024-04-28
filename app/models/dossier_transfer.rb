@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierTransfer < ApplicationRecord
   include EmailSanitizableConcern
   has_many :dossiers, dependent: :nullify

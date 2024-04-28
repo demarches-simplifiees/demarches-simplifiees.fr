@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APITchap::API
   class ResourceNotFound < StandardError
   end

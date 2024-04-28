@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Certigna::API
   ## Certigna Timestamp POST API
   # the CAfile used to controle the timestamp token is build:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SerializerService do
   let(:dossier) { create(:dossier, :en_construction) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CustomRoutes
   def self.load
     Rails.application.routes.draw do

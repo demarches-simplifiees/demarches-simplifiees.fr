@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::TitreIdentiteChamp do
   describe "#for_export" do
     let(:champ_titre_identite) { create(:champ_titre_identite) }

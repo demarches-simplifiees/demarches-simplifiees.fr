@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_invites_missing_existing_user'
   task backfill_invites_missing_existing_user: :environment do

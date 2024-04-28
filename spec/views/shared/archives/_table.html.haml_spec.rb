@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe 'shared/archives/_table', type: :view do
   include Rails.application.routes.url_helpers
 

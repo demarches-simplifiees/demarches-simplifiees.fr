@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::AddressChamp do
   let(:champ) { build(:champ_address, value:, data:) }
   let(:value) { '' }

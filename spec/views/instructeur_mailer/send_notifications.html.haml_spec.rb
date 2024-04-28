@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeur_mailer/send_notifications', type: :view do
   let(:instructeur) { create(:instructeur) }
 

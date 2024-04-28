@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   sequence(:published_path) { |n| "fake_path#{n}" }
 

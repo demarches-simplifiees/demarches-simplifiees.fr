@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::API
   ENTREPRISE_RESOURCE_NAME = "v3/insee/sirene/unites_legales/%{id}"
   ETABLISSEMENT_RESOURCE_NAME = "v3/insee/sirene/etablissements/%{id}"

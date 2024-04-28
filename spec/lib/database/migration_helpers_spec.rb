@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Database::MigrationHelpers do
   describe 'handling duplicates' do
     class TestLabel < ApplicationRecord

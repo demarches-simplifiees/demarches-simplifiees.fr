@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'The routing with rules', js: true do
   let(:password) { 'a very complicated password' }
 

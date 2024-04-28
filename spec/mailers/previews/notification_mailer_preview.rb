@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationMailerPreview < ActionMailer::Preview
   def send_en_construction_notification
     NotificationMailer.send_en_construction_notification(dossier_with_image)

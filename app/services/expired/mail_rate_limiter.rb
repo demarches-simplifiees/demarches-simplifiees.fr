@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Expired::MailRateLimiter
   attr_reader :delay, :current_window
 

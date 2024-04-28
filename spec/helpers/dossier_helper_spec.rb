@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe DossierHelper, type: :helper do
   describe ".highlight_if_unseen_class" do
     let(:seen_at) { Time.zone.now }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::RNFChamp, type: :model do
   let(:champ) { build(:champ_rnf, external_id:) }
   let(:stub) { stub_request(:get, "#{url}/#{external_id}").to_return(body:, status:) }

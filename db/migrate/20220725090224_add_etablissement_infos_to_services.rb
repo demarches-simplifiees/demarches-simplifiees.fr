@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddEtablissementInfosToServices < ActiveRecord::Migration[6.1]
   def up
     add_column :services, :etablissement_infos, :jsonb

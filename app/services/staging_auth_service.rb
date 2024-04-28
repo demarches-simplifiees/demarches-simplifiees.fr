@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StagingAuthService
   def self.authenticate(username, password)
     if enabled?

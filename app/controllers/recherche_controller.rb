@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RechercheController < ApplicationController
   before_action :authenticate_logged_user!
   ITEMS_PER_PAGE = 25

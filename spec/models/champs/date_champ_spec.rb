@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DateChamp do
   let(:date_champ) { create(:champ_date) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Etablissement do
   describe '#geo_adresse' do
     let(:etablissement) { create(:etablissement) }

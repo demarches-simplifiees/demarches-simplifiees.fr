@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProgressReport, lib: true do
   context 'when the count pass above 100%' do
     let(:total) { 2 }

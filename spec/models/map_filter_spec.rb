@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe MapFilter do
   let(:map_filter) do
     mf = MapFilter.new(params)

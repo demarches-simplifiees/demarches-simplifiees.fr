@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTargetedUserLinks < ActiveRecord::Migration[6.1]
   def change
     # avoid target links with pk sequence

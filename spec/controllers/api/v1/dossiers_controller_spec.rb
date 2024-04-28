@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe API::V1::DossiersController do
   let(:admin) { create(:administrateur) }
   let(:token) { APIToken.generate(admin)[1] }

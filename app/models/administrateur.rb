@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Administrateur < ApplicationRecord
   include UserFindByConcern
   UNUSED_ADMIN_THRESHOLD = ENV.fetch('UNUSED_ADMIN_THRESHOLD') { 6 }.to_i.months

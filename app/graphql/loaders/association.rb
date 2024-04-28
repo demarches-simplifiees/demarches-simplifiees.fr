@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # references:
 # https://github.com/Shopify/graphql-batch/blob/master/examples/association_loader.rb
 # https://gist.github.com/palkan/03eb5306a1a3e8addbe8df97a298a466

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Rack::Attack, type: :request do
   let(:limit) { 5 }
   let(:period) { 20 }

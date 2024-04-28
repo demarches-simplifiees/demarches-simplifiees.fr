@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierLinkHelper do
   describe "#dossier_linked_path" do
     context "when no access as a instructeur" do

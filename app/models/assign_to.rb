@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AssignTo < ApplicationRecord
   belongs_to :instructeur, optional: false
   belongs_to :groupe_instructeur, optional: false

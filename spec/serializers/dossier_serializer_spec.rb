@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierSerializer do
   describe '#attributes' do
     subject { DossierSerializer.new(dossier).serializable_hash }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ActiveStorage::FakeAttachment < Hashie::Dash
   property :filename
   property :name

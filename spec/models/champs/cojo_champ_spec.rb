@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::COJOChamp, type: :model do
   let(:champ) { build(:champ_cojo, accreditation_number:, accreditation_birthdate:) }
   let(:external_id) { nil }

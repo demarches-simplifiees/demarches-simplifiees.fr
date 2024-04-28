@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class URL < Types::BaseScalar
     description "A valid URL, transported as a string"
