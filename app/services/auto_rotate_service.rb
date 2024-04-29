@@ -1,13 +1,14 @@
 class AutoRotateService
   def process(file, output)
     auto_rotate_image(file, output)
-    output
   end
 
   private
 
   def auto_rotate_image(file, output)
     image = MiniMagick::Image.new(file.to_path)
+
+    return nil if !image.valid?
 
     case image["%[orientation]"]
     when 'LeftBottom'
@@ -16,6 +17,8 @@ class AutoRotateService
       rotate_image(file, output, 180)
     when 'RightTop'
       rotate_image(file, output, 270)
+    else
+      nil
     end
   end
 
@@ -26,5 +29,6 @@ class AutoRotateService
       convert.auto_orient
       convert << output.to_path
     end
+    output
   end
 end

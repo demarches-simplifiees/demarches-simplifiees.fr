@@ -2,7 +2,7 @@ class Champs::PieceJustificativeChamp < Champ
   FILE_MAX_SIZE = 200.megabytes
 
   has_many_attached :piece_justificative_file do |attachable|
-    attachable.variant :medium, resize: '400x400'
+    attachable.variant :medium, resize_to_limit: [400, 400], preprocessed: true
   end
 
   # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
