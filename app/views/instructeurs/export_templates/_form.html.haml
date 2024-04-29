@@ -72,20 +72,4 @@
   - sample_dossier = @procedure.dossier_for_preview(current_instructeur)
   - if sample_dossier
     .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
-      .export-template-preview.fr-p-2w.sticky--top
-        %h2.fr-h4 Aperçu
-        %ul.tree.fr-text--sm
-          %li= DownloadableFileService::EXPORT_DIRNAME
-          %li
-            %ul
-              %li
-                %span#preview_default_dossier_directory= @export_template.tiptap_convert(sample_dossier, "default_dossier_directory")
-                %ul
-                  %li#preview_pdf_name= @export_template.tiptap_convert(sample_dossier, "pdf_name")
-                  - @procedure.exportables_pieces_jointes.each do |pj|
-                    %li{ id: "preview_pj_#{pj.stable_id}" }= @export_template.tiptap_convert_pj(sample_dossier, pj.stable_id)
-                %ul
-                  %li
-                    %span messagerie
-                    %ul
-                      %li un-autre-fichier
+      = render partial: 'preview', locals: { dossier: sample_dossier, export_template: @export_template, procedure: @procedure }
