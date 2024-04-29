@@ -4,7 +4,7 @@ Rails.application.config.active_storage.analyzers.delete ActiveStorage::Analyzer
 Rails.application.config.active_storage.analyzers.delete ActiveStorage::Analyzer::VideoAnalyzer
 
 ActiveSupport.on_load(:active_storage_blob) do
-  include BlobTitreIdentiteWatermarkConcern
+  include BlobImageProcessorConcern
   include BlobVirusScannerConcern
   include BlobSignedIdConcern
 
@@ -15,9 +15,8 @@ ActiveSupport.on_load(:active_storage_blob) do
 end
 
 ActiveSupport.on_load(:active_storage_attachment) do
-  include AttachmentTitreIdentiteWatermarkConcern
+  include AttachmentImageProcessorConcern
   include AttachmentVirusScannerConcern
-  include AttachmentAutoRotateConcern
 end
 
 Rails.application.reloader.to_prepare do
