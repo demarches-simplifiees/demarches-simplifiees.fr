@@ -46,11 +46,13 @@ module Instructeurs
     end
 
     def preview
-      param = params.require(:export_template).keys.first
-      @preview_param = param.delete_prefix("tiptap_")
-      hash = JSON.parse(params[:export_template][param]).deep_symbolize_keys
-      export_template = ExportTemplate.new(kind: 'zip', groupe_instructeur: @groupe_instructeurs.first)
-      @preview_value = export_template.render_attributes_for(hash, @procedure.dossier_for_preview(current_instructeur))
+      set_groupe_instructeur
+      @export_template = @groupe_instructeur.export_templates.build(export_template_params)
+      @export_template.assign_pj_names(pj_params)
+
+      @sample_dossier = @procedure.dossier_for_preview(current_instructeur)
+
+      render turbo_stream: turbo_stream.replace('preview', partial: 'preview', locals: { export_template: @export_template, procedure: @procedure, dossier: @sample_dossier })
     end
 
     private

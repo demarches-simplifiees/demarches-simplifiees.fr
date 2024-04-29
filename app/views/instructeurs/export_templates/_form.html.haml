@@ -9,7 +9,7 @@
 
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
-    = form_with url: form_url, model: @export_template, local: true do |f|
+    = form_with url: form_url, model: @export_template, local: true, data: { turbo: 'true', controller: 'autosubmit' } do |f|
 
       = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
 
@@ -34,7 +34,7 @@
             = t('activerecord.attributes.export_template.hints.tiptap_default_dossier_directory')
 
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
+        = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input' }
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
@@ -44,7 +44,7 @@
           %span.fr-hint-text
             = t('activerecord.attributes.export_template.hints.tiptap_pdf_name')
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
+        = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input' }
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       - if @all_pj.any?
@@ -58,14 +58,15 @@
           .fr-input-group{ data: { controller: 'tiptap' } }
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
             .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input', controller: 'turbo-input', turbo_input_url_value: preview_instructeur_export_templates_path }
+              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input' }
             .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags_for_pj })
 
       .fixed-footer
         .fr-container
           %ul.fr-btns-group.fr-btns-group--inline-md
             %li
-              = f.submit "Enregistrer", class: "fr-btn"
+              %input.hidden{ type: 'submit', formaction: preview_instructeur_export_templates_path, data: { autosubmit_target: 'submitter' }, formnovalidate: 'true', formmethod: 'get' }
+              = f.button "Enregistrer", class: "fr-btn", data: { turbo: 'false' }
             %li
               = link_to "Annuler", instructeur_procedure_path(@procedure), class: "fr-btn fr-btn--secondary"
             - if @export_template.persisted?
