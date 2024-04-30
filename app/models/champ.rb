@@ -96,7 +96,9 @@ class Champ < ApplicationRecord
   end
 
   def row_index
-    Champ.where(parent:).pluck(:row_id).sort.index(:id)
+    return nil if parent_id.nil?
+
+    Champ.where(parent_id:).pluck(:row_id).sort.index(row_id)
   end
 
   # used for the `required` html attribute

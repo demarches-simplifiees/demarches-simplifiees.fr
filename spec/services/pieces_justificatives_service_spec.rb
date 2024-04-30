@@ -1,4 +1,92 @@
 describe PiecesJustificativesService do
+  describe 'pjs_for_champs' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }, { type: :repetition, children: [{ type: :piece_justificative }] }]) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossiers) { Dossier.where(id: dossier.id) }
+    let(:witness) { create(:dossier, procedure: procedure) }
+    let(:export_template) { double('ExportTemplate') }
+    let(:pj_service) { PiecesJustificativesService.new(user_profile:, export_template:) }
+    let(:user_profile) { build(:administrateur) }
+
+    def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')
+    def repetition(d) = d.champs.find_by(type: "Champs::RepetitionChamp")
+    def attachments(champ) = champ.piece_justificative_file.attachments
+
+    before { attach_file_to_champ(pj_champ(witness)) }
+
+    subject { pj_service.send(:pjs_for_champs, dossiers) }
+
+    context 'without any attachment' do
+      it { expect(subject).to be_empty }
+    end
+
+    context 'with a single attachment' do
+      let(:champ) { pj_champ(dossier) }
+      before { attach_file_to_champ(champ) }
+
+      it do
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, attachments(pj_champ(dossier)).first, index: 0, row_index: nil, champ:)
+        subject
+      end
+    end
+
+    context 'with multiple attachments' do
+      let(:champ) { pj_champ(dossier) }
+
+      before do
+        attach_file_to_champ(champ)
+        attach_file_to_champ(champ)
+      end
+
+      it do
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, attachments(pj_champ(dossier)).first, index: 0, row_index: nil, champ:)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, attachments(pj_champ(dossier)).second, index: 1, row_index: nil, champ:)
+        subject
+      end
+    end
+
+    context 'with a repetition' do
+      let(:first_champ) { repetition(dossier).champs.first }
+      let(:second_champ) { repetition(dossier).champs.second }
+
+      before do
+        repetition(dossier).add_row(dossier.revision)
+        attach_file_to_champ(first_champ)
+        attach_file_to_champ(first_champ)
+
+        repetition(dossier).add_row(dossier.revision)
+        attach_file_to_champ(second_champ)
+      end
+
+      it do
+        first_child_attachments = attachments(repetition(dossier).champs.first)
+        second_child_attachments = attachments(repetition(dossier).champs.second)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, first_child_attachments.first, index: 0, row_index: 0, champ: first_champ)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, first_child_attachments.second, index: 1, row_index: 0, champ: first_champ)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, second_child_attachments.first, index: 0, row_index: 1, champ: second_champ)
+
+        count = 0
+
+        callback = lambda { |*_args| count += 1 }
+        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+          subject
+        end
+
+        expect(count).to eq(18)
+      end
+    end
+  end
+
   describe '.liste_documents' do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
