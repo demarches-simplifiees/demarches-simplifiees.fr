@@ -1,6 +1,12 @@
 class Champs::TitreIdentiteChamp < Champ
   FILE_MAX_SIZE = 20.megabytes
   ACCEPTED_FORMATS = ['image/png', 'image/jpeg']
+
+  has_many_attached :piece_justificative_file do |attachable|
+    attachable.variant :small, resize: '300x300'
+    attachable.variant :medium, resize: '400x400'
+  end
+
   # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validates :piece_justificative_file, content_type: ACCEPTED_FORMATS, size: { less_than: FILE_MAX_SIZE }
 
