@@ -6,9 +6,7 @@
         uniquement au format zip). Ainsi, vous pouvez notamment normaliser le nom des pièces jointes.
         Essayez-le et donnez-nous votre avis
         en nous envoyant un email à #{mail_to(CONTACT_EMAIL, subject: "Editeur de modèle d'export")}.
-  .fr-highlight
-    %p.fr-text--sm
-      N'incluez pas les extensions de fichier (.pdf, .jpg, …) dans les noms de pièces jointes et de fichiers.
+
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
     = form_with url: form_url, model: @export_template, local: true do |f|
@@ -51,6 +49,10 @@
 
       - if @all_pj.any?
         %h3 Pieces justificatives
+
+        .fr-highlight
+          %p.fr-text--sm
+            N'incluez pas les extensions de fichier (.pdf, .jpg, …) dans les noms de pièces jointes.
 
         - @all_pj.each do |pj|
           .fr-input-group{ data: { controller: 'tiptap' } }
