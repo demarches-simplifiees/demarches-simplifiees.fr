@@ -82,7 +82,7 @@ describe PiecesJustificativesService do
           subject
         end
 
-        expect(count).to eq(18)
+        expect(count).to eq(10)
       end
     end
   end

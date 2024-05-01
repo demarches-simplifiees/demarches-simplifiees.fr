@@ -158,13 +158,16 @@ class PiecesJustificativesService
       .includes(:blob)
       .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
       .filter { |a| safe_attachment(a) }
-      .map do |a, _i|
-        dossier_id = champ_id_dossier_id[a.record_id]
-        pj_index = Champ.find(a.record_id).piece_justificative_file.blobs.map(&:id).index(a.blob_id)
-        if @export_template
-          @export_template.attachment_and_path(Dossier.find(dossier_id), a, index: pj_index, row_index: a.record.row_index)
-        else
-          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+      .group_by(&:record_id)
+      .flat_map do |champ_id, attachments|
+        dossier_id = champ_id_dossier_id[champ_id]
+
+        attachments.map.with_index do |attachment, index|
+          if @export_template
+            @export_template.attachment_and_path(Dossier.find(dossier_id), attachment, index: index, row_index: attachment.record.row_index)
+          else
+            ActiveStorage::DownloadableFile.pj_and_path(dossier_id, attachment)
+          end
         end
       end
   end
