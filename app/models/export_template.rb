@@ -148,11 +148,8 @@ class ExportTemplate < ApplicationRecord
   end
 
   def suffix(attachment, index, row_index)
-    suffix = ""
-    if index >= 1 && !row_index.nil?
-      suffix += "-#{index + 1}"
-      suffix += "-#{row_index + 1}" if row_index
-    end
+    suffix = "-#{index + 1}"
+    suffix += "-#{row_index + 1}" if row_index.present?
 
     suffix + attachment.filename.extension_with_delimiter
   end

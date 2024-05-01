@@ -544,7 +544,7 @@ describe ProcedureExportService do
               structure = [
                 "#{base_fn}/",
                 "#{base_fn}/dossier-#{dossier.id}/",
-                "#{base_fn}/dossier-#{dossier.id}/piece_justificative-#{dossier.id}.txt",
+                "#{base_fn}/dossier-#{dossier.id}/piece_justificative-#{dossier.id}-1.txt",
                 "#{base_fn}/dossier-#{dossier.id}/export_#{dossier.id}.pdf"
               ]
               expect(files.size).to eq(structure.size)
