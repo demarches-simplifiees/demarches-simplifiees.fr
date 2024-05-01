@@ -3,5 +3,6 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
     FILL_DURATION_LONG
   end
 
-  def tags_for_template = [].freeze
+  # pf allows referencing PJs
+  # def tags_for_template = [].freeze
 end
