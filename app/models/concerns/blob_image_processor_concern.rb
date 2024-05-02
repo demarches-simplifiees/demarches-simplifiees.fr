@@ -7,7 +7,7 @@ module BlobImageProcessorConcern
     watermarked_at.present?
   end
 
-  def variant_required?
+  def representation_required?
     attachments.any? { _1.record.class == Champs::TitreIdentiteChamp || _1.record.class == Champs::PieceJustificativeChamp }
   end
 

@@ -4,11 +4,11 @@ class ImageProcessorJob < ApplicationJob
 
   # If by the time the job runs the blob has been deleted, ignore the error
   discard_on ActiveRecord::RecordNotFound
-   # If the file is deleted during the scan, ignore the error
-   discard_on ActiveStorage::FileNotFoundError
-   # If the file is not analyzed or scanned for viruses yet, retry later
-   # (to avoid modifying the file while it is being scanned).
-   retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
+  # If the file is deleted during the scan, ignore the error
+  discard_on ActiveStorage::FileNotFoundError
+  # If the file is not analyzed or scanned for viruses yet, retry later
+  # (to avoid modifying the file while it is being scanned).
+  retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
 
   def perform(blob)
     return if blob.nil?
@@ -16,7 +16,7 @@ class ImageProcessorJob < ApplicationJob
     return if ActiveStorage::Attachment.find_by(blob_id: blob.id).record_type == "ActiveStorage::VariantRecord"
 
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
-    create_variants(blob) if blob.variant_required?
+    create_representations(blob) if representation_required?
     add_watermark(blob) if blob.watermark_pending?
   end
 
@@ -34,10 +34,9 @@ class ImageProcessorJob < ApplicationJob
     end
   end
 
-  def create_variants(blob)
+  def create_representations(blob)
     blob.attachments.each do |attachment|
       next unless attachment&.representable?
-      attachment.representation(resize_to_limit: [300, 300]).processed
       attachment.representation(resize_to_limit: [400, 400]).processed
     end
   end
