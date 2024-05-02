@@ -5,9 +5,10 @@
 
     .procedure-details
       .flex.clipboard-container
-        %p.fr-mb-2w
+        .fr-mb-2w
           = procedure_badge(p)
-          = link_to("#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p), class: "fr-link fr-ml-1w")
+          %h3.font-weight-normal.fr-link.fr-ml-1w
+            = link_to("#{p.libelle} - n°#{p.id}", instructeur_procedure_path(p))
           = render Dsfr::CopyButtonComponent.new(title: t('instructeurs.procedures.index.copy_link_button'), text: commencer_url(p.path))
 
       %ul.procedure-stats.flex
