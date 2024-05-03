@@ -1,4 +1,4 @@
 en:
   procedures:
-    label: Filter by procedure
-    prompt: All procedures
+    label: Show files by procedure
+    prompt: Select a procedure
