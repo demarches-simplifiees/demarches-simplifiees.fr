@@ -86,6 +86,7 @@ export class MenuButtonController extends ApplicationController {
       target.isConnected &&
       !this.element.contains(target) &&
       !target.closest('reach-portal') &&
+      !target.closest('#rac-portal') &&
       this.isOpen
     );
   }
