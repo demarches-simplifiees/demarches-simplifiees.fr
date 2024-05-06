@@ -160,7 +160,7 @@ class Dossier < ApplicationRecord
     state :sans_suite
 
     event :passer_en_construction, after: :after_passer_en_construction, after_commit: :after_commit_passer_en_construction do
-      transitions from: :brouillon, to: :en_construction
+      transitions from: :brouillon, to: :en_construction, guard: :can_passer_en_construction?
     end
 
     event :passer_en_instruction, after: :after_passer_en_instruction, after_commit: :after_commit_passer_en_instruction do
@@ -560,6 +560,13 @@ class Dossier < ApplicationRecord
     return true if procedure.svr? && can_terminer_automatiquement_by_sva_svr?
 
     false
+  end
+
+  def can_passer_en_construction?
+    return true if revision.transitions_rules.blank?
+    # binding.irb
+
+    revision.transitions_rules.compute(champs)
   end
 
   def can_passer_en_instruction?
