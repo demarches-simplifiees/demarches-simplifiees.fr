@@ -3,10 +3,6 @@ class Champs::AddressChamp < Champs::TextChamp
     data.present?
   end
 
-  def feature
-    data.to_json if full_address?
-  end
-
   def feature=(value)
     if value.blank?
       self.data = nil
@@ -20,6 +16,14 @@ class Champs::AddressChamp < Champs::TextChamp
     end
   rescue JSON::ParserError
     self.data = nil
+  end
+
+  def selected_items
+    if value.present?
+      [{ value:, label: value, data: full_address? ? data : nil }]
+    else
+      []
+    end
   end
 
   def address
