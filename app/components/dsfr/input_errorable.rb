@@ -73,22 +73,26 @@ module Dsfr
         }
       end
 
-      def input_opts(other_opts = {})
+      def react_input_opts(other_opts = {})
+        input_opts(other_opts, true)
+      end
+
+      def input_opts(other_opts = {}, react = false)
         @opts = @opts.deep_merge!(other_opts)
-        @opts[:class] = class_names(map_array_to_hash_with_true(@opts[:class])
+        @opts[react ? :class_name : :class] = class_names(map_array_to_hash_with_true(@opts[:class])
                                       .merge({
                                         'fr-password__input': password?,
-                                             'fr-input': true,
+                                             'fr-input': !react,
                                              'fr-mb-0': true
                                       }.merge(input_error_class_names)))
         if errors_on_attribute?
-          @opts.deep_merge!(aria: { describedby: describedby_id })
+          @opts.deep_merge!('aria-describedby': describedby_id)
         elsif hintable?
-          @opts.deep_merge!(aria: { describedby: hint_id })
+          @opts.deep_merge!('aria-describedby': hint_id)
         end
 
         if @required
-          @opts[:required] = true
+          @opts[react ? :is_required : :required] = true
         end
 
         if email?
