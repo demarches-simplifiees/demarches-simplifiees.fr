@@ -45,7 +45,7 @@
     display: inline-block;
   }
 
-  [data-react-component-value^="ComboMultiple"] {
+  react-fragment[data-component-name^="ComboMultiple"] {
     margin-bottom: $default-fields-spacer;
 
     [data-reach-combobox-token-list] {

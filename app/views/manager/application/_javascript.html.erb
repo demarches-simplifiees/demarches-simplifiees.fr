@@ -11,6 +11,8 @@ by providing a `content_for(:javascript)` block.
   <%= javascript_include_tag js_path %>  
 <% end %>
 
+<%= vite_client_tag %>
+<%= vite_react_refresh_tag %>
 <%= vite_typescript_tag 'manager' %>
 
 <%= yield :javascript %>
