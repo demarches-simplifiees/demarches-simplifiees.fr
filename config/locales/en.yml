@@ -504,7 +504,6 @@ en:
           no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
-          procedure_closed: This procedure has been closed, you will not be able to submit a file again from the procedure link, contact your administration for more information.
           pending_correction_html: "This file is waiting for your corrections. Consult the changes to be made in the <a href=\"%{link}\">messaging system</a>."
           depose_at: First submission on %{date}
           created_at: Created at %{date}
@@ -515,15 +514,15 @@ en:
           procedure_closed:
             brouillon:
               internal_procedure_html: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the %{link} which replaces it
-              other_html: This process is closed, you cannot submit this file. More information %{link}
+              other_html: This process is closed, you cannot submit this file. %{link}
             en_cours:
               internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration
-              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. More information %{link}
+              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. %{link}
             termine:
               internal_procedure_html: This procedure is closed and replaced by %{link}. Your file has been processed by the administration
-              other_html: This process is closed, you cannot submit a new file. More information %{link}
+              other_html: This process is closed, you cannot submit a new file. %{link}
             closing_details: Details on the closed procedure
-            here: here
+            more_details: More information
             procedure: procedure
             this_procedure: this procedure
         transfers:
