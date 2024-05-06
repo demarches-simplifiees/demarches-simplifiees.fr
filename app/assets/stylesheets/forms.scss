@@ -634,10 +634,6 @@ textarea::placeholder {
   .fr-menu__item {
     list-style-type: none;
     margin-bottom: $default-spacer;
-
-    &[aria-selected] {
-      font-weight: bold;
-    }
   }
 }
 
