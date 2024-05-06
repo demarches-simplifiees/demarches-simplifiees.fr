@@ -550,6 +550,7 @@ class Procedure < ApplicationRecord
     procedure.closing_details = nil
     procedure.closing_notification_brouillon = false
     procedure.closing_notification_en_cours = false
+    procedure.template = false
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
