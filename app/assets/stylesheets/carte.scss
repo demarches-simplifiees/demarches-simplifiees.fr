@@ -10,7 +10,7 @@
   }
 }
 
-.form [data-react-component-value='MapEditor'] [data-reach-combobox-input] {
+.form react-fragment[data-component-name='MapEditor'] [data-reach-combobox-input] {
   margin-bottom: 0;
 }
 

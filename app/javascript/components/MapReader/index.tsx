@@ -1,4 +1,3 @@
-import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import type { FeatureCollection } from 'geojson';
 

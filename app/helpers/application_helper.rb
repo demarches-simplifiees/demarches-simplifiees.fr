@@ -59,10 +59,6 @@ module ApplicationHelper
     'alert'
   end
 
-  def react_component(name, props = {}, html = {})
-    tag.div(**html.merge(data: { controller: 'react', react_component_value: name, react_props_value: props.to_json }))
-  end
-
   def current_email
     current_user&.email ||
       current_instructeur&.email ||
