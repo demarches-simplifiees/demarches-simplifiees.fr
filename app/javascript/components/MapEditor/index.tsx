@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { CursorClickIcon } from '@heroicons/react/outline';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
@@ -12,21 +12,18 @@ import { AddressInput } from './components/AddressInput';
 import { PointInput } from './components/PointInput';
 import { ImportFileInput } from './components/ImportFileInput';
 import { FlashMessage } from '../shared/FlashMessage';
-import { ComboSearchProps } from '../ComboSearch';
 
 export default function MapEditor({
   featureCollection: initialFeatureCollection,
   url,
+  adresseSource,
   options,
-  autocompleteAnnounceTemplateId,
-  autocompleteScreenReaderInstructions,
   champId
 }: {
   featureCollection: FeatureCollection;
   url: string;
+  adresseSource: string;
   options: { layers: string[] };
-  autocompleteAnnounceTemplateId: ComboSearchProps['announceTemplateId'];
-  autocompleteScreenReaderInstructions: ComboSearchProps['screenReaderInstructions'];
   champId: string;
 }) {
   const [cadastreEnabled, setCadastreEnabled] = useState(false);
@@ -41,15 +38,10 @@ export default function MapEditor({
       {error && <FlashMessage message={error} level="alert" fixed={true} />}
 
       <ImportFileInput featureCollection={featureCollection} {...actions} />
-      <label className="fr-label" htmlFor={champId}>
-        Rechercher une Adresse
-        <span className="fr-hint-text">Saisissez au moins 2 caractères</span>
-      </label>
       <AddressInput
+        source={adresseSource}
         champId={champId}
         featureCollection={featureCollection}
-        screenReaderInstructions={autocompleteScreenReaderInstructions}
-        announceTemplateId={autocompleteAnnounceTemplateId}
       />
 
       <MapLibre layers={options.layers}>
