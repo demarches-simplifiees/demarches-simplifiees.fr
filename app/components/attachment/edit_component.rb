@@ -2,6 +2,7 @@
 class Attachment::EditComponent < ApplicationComponent
   attr_reader :champ
   attr_reader :attachment
+  attr_reader :attachments
   attr_reader :user_can_destroy
   alias user_can_destroy? user_can_destroy
   attr_reader :as_multiple
@@ -9,24 +10,23 @@ class Attachment::EditComponent < ApplicationComponent
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
 
-  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, **kwargs)
-    @as_multiple = as_multiple
-    @attached_file = attached_file
-    @auto_attach_url = auto_attach_url
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, user_can_replace: false, attachments: [], **kwargs)
     @champ = champ
+    @attached_file = attached_file
     @direct_upload = direct_upload
     @index = index
     @view_as = view_as
     @user_can_destroy = user_can_destroy
+    @user_can_replace = user_can_replace
+    @as_multiple = as_multiple
+    @auto_attach_url = auto_attach_url
+    # Adaptation pour la gestion des pièces jointes multiples
+    @attachments = attachments.presence || (kwargs.key?(:attachment) ? [kwargs.delete(:attachment)] : [])
+    @attachments << attached_file.attachment if attached_file.respond_to?(:attachment) && @attachments.empty?
+    @attachments.compact!
 
-    # attachment passed by kwarg because we don't want a default (nil) value.
-    @attachment = if kwargs.key?(:attachment)
-      kwargs.delete(:attachment)
-    elsif attached_file.respond_to?(:attachment)
-      attached_file.attachment
-    else
-      fail ArgumentError, "You must pass an `attachment` kwarg when not using as single attachment like in #{attached_file.name}. Set it to nil for a new attachment."
-    end
+    # Utilisation du premier attachement comme référence pour la rétrocompatibilité
+    @attachment = @attachments.first
 
     # When parent form has nested attributes, pass the form builder object_name
     # to correctly infer the input attribute name.
@@ -63,7 +63,7 @@ class Attachment::EditComponent < ApplicationComponent
 
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
-    {
+    options = {
       class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true, "hidden": persisted?),
       direct_upload: @direct_upload,
       id: input_id,
@@ -71,8 +71,13 @@ class Attachment::EditComponent < ApplicationComponent
       data: {
         auto_attach_url:,
         turbo_force: :server
-      }.merge(has_file_size_validator? ? { max_file_size: } : {})
-    }.merge(has_content_type_validator? ? { accept: accept_content_type } : {})
+      }.merge(has_file_size_validator? ? { max_file_size: max_file_size } : {})
+    }
+
+    options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
+    options[:multiple] = true if as_multiple?
+
+    options
   end
 
   def poll_url
@@ -90,7 +95,8 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def field_name(object_name = nil, method_name = nil, *method_names, multiple: false, index: nil)
-    helpers.field_name(@form_object_name || ActiveModel::Naming.param_key(@attached_file.record), attribute_name)
+    field_name = @form_object_name || ActiveModel::Naming.param_key(@attached_file.record)
+    "#{field_name}[#{attribute_name}]#{'[]' if as_multiple?}"
   end
 
   def attribute_name
@@ -126,24 +132,24 @@ class Attachment::EditComponent < ApplicationComponent
     !!attachment&.persisted?
   end
 
-  def downloadable?
+  def downloadable?(attachment)
     return false unless @view_as == :download
 
-    viewable?
+    viewable?(attachment)
   end
 
-  def viewable?
+  def viewable?(attachment)
     return false if attachment.virus_scanner_error?
     return false if attachment.watermark_pending?
 
     true
   end
 
-  def error?
+  def error?(attachment)
     attachment.virus_scanner_error?
   end
 
-  def error_message
+  def error_message(attachment)
     case
     when attachment.virus_scanner.infected?
       t(".errors.virus_infected")

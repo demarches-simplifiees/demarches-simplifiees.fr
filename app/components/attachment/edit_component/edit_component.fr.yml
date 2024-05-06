@@ -5,6 +5,7 @@ fr:
   retry: Réessayer
   delete: Supprimer
   delete_file: Supprimer le fichier %{filename}
+  multiple_files: Plusieurs fichiers possibles.
   replace: Remplacer
   replace_file: Remplacer le fichier %{filename}
   open_file: Ouvrir le fichier %{filename}
