@@ -1,4 +1,4 @@
-import React, { useState, useId } from 'react';
+import { useState, useId } from 'react';
 import { Popover, RadioGroup } from '@headlessui/react';
 import { usePopper } from 'react-popper';
 import { MapIcon } from '@heroicons/react/outline';
