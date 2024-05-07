@@ -8,7 +8,9 @@ shared_examples "the user has got a prefilled dossier, owned by themselves" do
       expect(page).to have_field('Prénom', with: prenom_value)
       expect(page).to have_field('Nom', with: nom_value)
     end
-    click_on 'Continuer'
+    within "#identite-form" do
+      click_on 'Continuer'
+    end
 
     expect(page).to have_current_path(brouillon_dossier_path(dossier))
     expect(page).to have_field(type_de_champ_text.libelle, with: text_value)
