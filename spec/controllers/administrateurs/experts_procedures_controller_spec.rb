@@ -25,7 +25,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
     subject do
       post :create, params: {
         procedure_id: procedure.id,
-        emails: "[\"#{expert.email}\",\"#{expert2.email}\"]"
+        emails: [expert.email, expert2.email]
       }
     end
 

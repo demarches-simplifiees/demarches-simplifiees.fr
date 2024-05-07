@@ -29,7 +29,7 @@ describe Instructeurs::DossiersController, type: :controller do
       post(
         :send_to_instructeurs,
         params: {
-          recipients: [recipient.id].to_json,
+          recipients: [recipient.id],
           procedure_id: procedure.id,
           dossier_id: dossier.id
         }
@@ -777,7 +777,7 @@ describe Instructeurs::DossiersController, type: :controller do
       }
     end
 
-    let(:emails) { "[\"email@a.com\"]" }
+    let(:emails) { ["email@a.com"] }
 
     context "notifications updates" do
       context 'when an instructeur follows the dossier' do
@@ -812,7 +812,7 @@ describe Instructeurs::DossiersController, type: :controller do
       it { expect(response).to redirect_to(avis_instructeur_dossier_path(dossier.procedure, dossier)) }
 
       context "with an invalid email" do
-        let(:emails) { "[\"emaila.com\"]" }
+        let(:emails) { ["emaila.com"] }
 
         before { subject }
 
@@ -823,7 +823,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context "with no email" do
-        let(:emails) { "" }
+        let(:emails) { [] }
 
         before { subject }
 
@@ -834,7 +834,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'with multiple emails' do
-        let(:emails) { "[\"toto.fr\",\"titi@titimail.com\"]" }
+        let(:emails) { ["toto.fr", "titi@titimail.com"] }
 
         before { subject }
 
@@ -846,7 +846,7 @@ describe Instructeurs::DossiersController, type: :controller do
       end
 
       context 'when the expert do not want to receive notification' do
-        let(:emails) { "[\"email@a.com\"]" }
+        let(:emails) { ["email@a.com"] }
         let(:experts_procedure) { create(:experts_procedure, expert: expert, procedure: dossier.procedure, notify_on_new_avis: false) }
 
         before { subject }
