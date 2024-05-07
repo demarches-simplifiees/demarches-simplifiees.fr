@@ -10,8 +10,8 @@ describe EditableChamp::SectionComponent, type: :component do
   context 'list of champs without an header_section' do
     let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }
 
-    it 'render in a fieldset' do
-      expect(page).to have_selector("fieldset", count: 1)
+    it 'does not renders within a fieldset' do
+      expect(page).to have_selector("fieldset", count: 0)
     end
 
     it 'renders champs' do
@@ -37,14 +37,16 @@ describe EditableChamp::SectionComponent, type: :component do
   context 'list of champs without section and an header_section having champs' do
     let(:types_de_champ_public) { [{ type: :text }, { type: :header_section, level: 1 }, { type: :text }] }
 
-    it 'renders fieldset' do
-      expect(page).to have_selector("fieldset", count: 2)
-      expect(page).to have_selector("legend h2")
+    it 'renders nested champs (after an header section) within a fieldset' do
+      expect(page).to have_selector("fieldset", count: 1)
+      expect(page).to have_selector("fieldset legend h2")
+      expect(page).to have_selector("input[type=text]", count: 2)
+      expect(page).to have_selector("fieldset input[type=text]", count: 1)
     end
 
-    it 'renders all champs, each in its fieldset' do
+    it 'renders nested within its fieldset' do
       expect(page).to have_selector("input[type=text]", count: 2)
-      expect(page).to have_selector("fieldset > .fr-fieldset__element input[type=text]", count: 2)
+      expect(page).to have_selector("fieldset > .fr-fieldset__element input[type=text]", count: 1)
     end
   end
 
