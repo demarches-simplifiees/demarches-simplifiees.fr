@@ -60,7 +60,7 @@ describe 'Administrateurs can edit procedures', js: true do
       procedure.update!(tags: ['social'])
 
       visit edit_admin_procedure_path(procedure)
-      select_combobox('procedure_tags_combo', 'planete', 'planete', check: false)
+      select_combobox('procedure_tags_combo', 'planete', custom_value: true)
       click_on 'Enregistrer'
 
       expect(procedure.reload.tags).to eq(['social', 'planete'])
