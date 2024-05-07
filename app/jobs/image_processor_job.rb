@@ -13,7 +13,7 @@ class ImageProcessorJob < ApplicationJob
   def perform(blob)
     return if blob.nil?
     raise FileNotScannedYetError if blob.virus_scanner.pending?
-    return if ActiveStorage::Attachment.find_by(blob_id: blob.id).record_type == "ActiveStorage::VariantRecord"
+    return if ActiveStorage::Attachment.find_by(blob_id: blob.id)&.record_type == "ActiveStorage::VariantRecord"
 
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
     create_variants(blob) if blob.variant_required?
