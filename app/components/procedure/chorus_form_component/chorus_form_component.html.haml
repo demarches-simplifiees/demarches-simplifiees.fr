@@ -1,12 +1,10 @@
-= form_for([procedure, @chorus_configuration],url: admin_procedure_chorus_path(procedure), method: :put) do |f|
+= form_for([procedure, @chorus_configuration], url: admin_procedure_chorus_path(procedure), method: :put) do |f|
   - map_attribute_to_autocomplete_endpoint.map do |chorus_configuration_attribute, datasource_endpoint|
     -  label_id = "#{chorus_configuration_attribute}-label"
     .fr-select-group
-      = f.label chorus_configuration_attribute, class: 'fr-label', id: label_id
-      = render Dsfr::ComboboxComponent.new form: f,
-         url: datasource_endpoint,
-         selected: format_displayed_value(chorus_configuration_attribute),
-         input_html_options: { id: chorus_configuration_attribute, class: 'fr-select', describedby: label_id, name: :chorus_configuration_attribute } do
-        = f.hidden_field chorus_configuration_attribute, data: { value_slot: 'data' }, value: format_hidden_value(chorus_configuration_attribute)
+      = f.label chorus_configuration_attribute, class: 'fr-label', id: label_id, for: chorus_configuration_attribute
+      %react-fragment
+        = render ReactComponent.new "ComboBox/RemoteComboBox", **react_props(f.field_name(:chorus_configuration_attribute), chorus_configuration_attribute, datasource_endpoint) do
+          = render ReactComponent.new "ComboBox/ComboBoxValueSlot", field: :data, name: f.field_name(chorus_configuration_attribute)
 
   = f.submit "Enregister", class: 'fr-btn'
