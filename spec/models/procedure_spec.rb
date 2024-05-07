@@ -587,7 +587,8 @@ describe Procedure do
         types_de_champ_private: [{}, {}, { type: :drop_down_list }, { type: :repetition, children: [{}] }],
         api_particulier_token: '123456789012345',
         api_particulier_scopes: ['cnaf_famille'],
-        estimated_dossiers_count: 4)
+        estimated_dossiers_count: 4,
+        template: true)
     end
     let(:type_de_champ_repetition) { procedure.draft_revision.types_de_champ_public.last }
     let(:type_de_champ_private_repetition) { procedure.draft_revision.types_de_champ_private.last }
@@ -611,6 +612,10 @@ describe Procedure do
     end
 
     it { expect(subject.parent_procedure).to eq(procedure) }
+
+    it 'the cloned procedure should not be a template anymore' do
+      expect(subject.template).to be_falsey
+    end
 
     describe "should keep groupe instructeurs " do
       it "should clone groupe instructeurs" do
@@ -680,7 +685,7 @@ describe Procedure do
       expect(cloned_procedure).to have_same_attributes_as(procedure, except: [
         "path", "draft_revision_id", "service_id", 'estimated_dossiers_count',
         "duree_conservation_etendue_par_ds", "duree_conservation_dossiers_dans_ds", 'max_duree_conservation_dossiers_dans_ds',
-        "defaut_groupe_instructeur_id"
+        "defaut_groupe_instructeur_id", "template"
       ])
     end
 
