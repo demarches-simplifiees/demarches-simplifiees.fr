@@ -332,12 +332,12 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     # faire la meme chose sur une procedure non routee
     let(:procedure_non_routee) { create :procedure }
     let!(:groupe_instructeur) { create(:administrateurs_procedure, procedure: procedure_non_routee, administrateur: admin, manager: manager) }
-    let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'].to_json }
+    let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'] }
     subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
     let(:manager) { false }
 
     context 'when all emails are valid' do
-      let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'].to_json }
+      let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'] }
       it do
         expect(response.status).to eq(200)
         expect(subject.request.flash[:alert]).to be_nil
@@ -347,7 +347,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when there is at least one bad email' do
-      let(:emails) { ['badmail', 'instructeur2@gmail.com'].to_json }
+      let(:emails) { ['badmail', 'instructeur2@gmail.com'] }
       it do
         expect(response.status).to eq(200)
         expect(subject.request.flash[:alert]).to be_present
@@ -359,7 +359,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
       let(:instructeur) { create(:instructeur) }
       before { procedure_non_routee.groupe_instructeurs.first.add_instructeurs(emails: [instructeur.user.email]) }
-      let(:emails) { [instructeur.email].to_json }
+      let(:emails) { [instructeur.email] }
       it { expect(subject).to have_http_status(200) }
     end
 
@@ -376,7 +376,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         params: {
           procedure_id: procedure.id,
           id: gi_1_2.id,
-          emails: new_instructeur_emails.to_json
+          emails: new_instructeur_emails
         }
     end
 

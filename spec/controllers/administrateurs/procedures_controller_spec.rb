@@ -13,7 +13,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:lien_site_web) { 'http://mon-site.gouv.fr' }
   let(:zone) { create(:zone) }
   let(:zone_ids) { [zone.id] }
-  let(:tags) { "[\"planete\",\"environnement\"]" }
+  let(:tags) { ["planete", "environnement"] }
 
   describe '#apercu' do
     subject { get :apercu, params: { id: procedure.id } }

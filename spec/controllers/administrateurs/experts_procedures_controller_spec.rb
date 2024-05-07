@@ -27,7 +27,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
     before { subject }
 
     context 'when inviting multiple valid experts' do
-      let(:params) { { procedure_id: procedure.id, emails: [expert.email, expert2.email].to_json } }
+      let(:params) { { procedure_id: procedure.id, emails: [expert.email, expert2.email] } }
 
       it 'creates experts' do
         expect(procedure.experts.include?(expert)).to be_truthy
