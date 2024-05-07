@@ -89,11 +89,11 @@ describe ImageProcessorJob, type: :job do
 
     context "when representation is required" do
       before do
-        allow(blob).to receive(:variant_required?).and_return(true)
+        allow(blob).to receive(:representation_required?).and_return(true)
       end
 
       it "it creates blob representation" do
-        expect { described_class.perform_now(blob) }.to change { ActiveStorage::VariantRecord.count }.by(2)
+        expect { described_class.perform_now(blob) }.to change { ActiveStorage::VariantRecord.count }.by(1)
       end
     end
   end

@@ -16,7 +16,7 @@ class ImageProcessorJob < ApplicationJob
     return if ActiveStorage::Attachment.find_by(blob_id: blob.id)&.record_type == "ActiveStorage::VariantRecord"
 
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
-    create_variants(blob) if blob.variant_required?
+    create_representations(blob) if blob.representation_required?
     add_watermark(blob) if blob.watermark_pending?
   end
 
@@ -34,10 +34,9 @@ class ImageProcessorJob < ApplicationJob
     end
   end
 
-  def create_variants(blob)
+  def create_representations(blob)
     blob.attachments.each do |attachment|
       next unless attachment&.representable?
-      attachment.representation(resize_to_limit: [300, 300]).processed
       attachment.representation(resize_to_limit: [400, 400]).processed
     end
   end
