@@ -687,7 +687,7 @@ class TypeDeChamp < ApplicationRecord
     def champ_value(type_champ, champ)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
       # special case for linked drop down champ – it's blank implementation is not what you think
-      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+      if (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?) && champ.blank?
         dynamic_type_class.champ_default_value
       else
         dynamic_type_class.champ_value(champ)
@@ -697,7 +697,7 @@ class TypeDeChamp < ApplicationRecord
     def champ_value_for_api(type_champ, champ, version = 2)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
       # special case for linked drop down champ – it's blank implementation is not what you think
-      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+      if (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?) && champ.blank?
         dynamic_type_class.champ_default_api_value(version)
       else
         dynamic_type_class.champ_value_for_api(champ, version)
@@ -707,7 +707,7 @@ class TypeDeChamp < ApplicationRecord
     def champ_value_for_export(type_champ, champ, path = :value)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
       # special case for linked drop down champ – it's blank implementation is not what you think
-      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+      if (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?) && champ.blank?
         dynamic_type_class.champ_default_export_value(path)
       else
         dynamic_type_class.champ_value_for_export(champ, path)
@@ -717,7 +717,7 @@ class TypeDeChamp < ApplicationRecord
     def champ_value_for_tag(type_champ, champ, path = :value)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
       # special case for linked drop down champ – it's blank implementation is not what you think
-      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+      if (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?) && champ.blank?
         ''
       else
         dynamic_type_class.champ_value_for_tag(champ, path)
