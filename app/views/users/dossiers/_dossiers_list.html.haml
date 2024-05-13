@@ -1,12 +1,12 @@
 - if dossiers.present?
-  .fr-h6.fr-mb-2w
+  %h2.fr-h6.fr-mb-2w
     = page_entries_info dossiers
 
   - dossiers.each do |dossier|
     .card
       .flex.justify-between
         %div
-          %h2.card-title
+          %h3.card-title
             - if ["dossiers-transferes", "dossiers-supprimes-recemment"].exclude?(@statut)
               = link_to(url_for_dossier(dossier), class: 'cell-link') do
                 = dossier.procedure.libelle

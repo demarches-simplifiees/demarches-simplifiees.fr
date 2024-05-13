@@ -1,8 +1,10 @@
 - content_for(:title, "Avis")
 
-.container
-  %h1.page-title Avis
+.sub-header
+  .fr-container
+    %h1.fr-h3 Avis
 
+.fr-container
   %ul.procedure-list.fr-pl-0
     - @avis_by_procedure.each do |p, procedure_avis|
       %li.flex.align-start.fr-my-3w.fr-p-2w{ id: dom_id(p) }

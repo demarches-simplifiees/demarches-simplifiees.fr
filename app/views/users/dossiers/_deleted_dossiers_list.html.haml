@@ -1,12 +1,12 @@
 - if deleted_dossiers.present?
-  .fr-h6.fr-mb-2w
+  %h2.fr-h6.fr-mb-2w
     = page_entries_info deleted_dossiers
 
   - deleted_dossiers.each do |dossier|
     .card
       .flex.justify-between
         %div
-          %h2.card-title
+          %h3.card-title
             = dossier.procedure.libelle
 
           %p.fr-icon--sm.fr-icon-delete-line.fr-mb-0
