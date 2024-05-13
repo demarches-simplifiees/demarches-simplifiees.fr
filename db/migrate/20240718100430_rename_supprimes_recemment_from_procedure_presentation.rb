@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameSupprimesRecemmentFromProcedurePresentation < ActiveRecord::Migration[7.0]
   def up
     ProcedurePresentation.update_all(%Q(filters = filters || '{"supprimes": []}'))
