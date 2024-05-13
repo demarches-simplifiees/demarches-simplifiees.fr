@@ -12,7 +12,7 @@ describe ChampSerializer do
     end
 
     context 'when type champ is not piece justificative' do
-      let(:champ) { create(:champ, value: "blah") }
+      let(:champ) { create(:champ_text, value: "blah") }
 
       it { is_expected.to include(value: "blah") }
     end

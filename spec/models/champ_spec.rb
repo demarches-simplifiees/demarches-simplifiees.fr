@@ -185,6 +185,14 @@ describe Champ do
 
       it { expect(champ.for_export).to eq('Crétinier, Mousserie') }
     end
+
+    context 'when type_de_champ and champ.type mismatch' do
+      let(:champ_yes_no) { create(:champ_yes_no, value: 'true') }
+      let(:champ_text) { create(:champ_text, value: 'Hello') }
+
+      it { expect(TypeDeChamp.champ_value_for_export(champ_text.type_champ, champ_yes_no)).to eq(nil) }
+      it { expect(TypeDeChamp.champ_value_for_export(champ_yes_no.type_champ, champ_text)).to eq('Non') }
+    end
   end
 
   describe '#search_terms' do
