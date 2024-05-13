@@ -280,6 +280,7 @@ describe 'user access to the list of their dossiers', js: true do
 
         it "can be filtered by procedure and display the result - one item" do
           select dossier_en_construction.procedure.libelle, from: 'procedure_id'
+          click_on 'Afficher'
           expect(page).to have_link(dossier_en_construction.procedure.libelle)
           expect(page).not_to have_link(dossier_with_champs.procedure.libelle)
           expect(page).to have_text("1 dossier")
@@ -287,6 +288,7 @@ describe 'user access to the list of their dossiers', js: true do
 
         it "can be filtered by procedure and display the result - no item" do
           select dossier_brouillon.procedure.libelle, from: 'procedure_id'
+          click_on 'Afficher'
           expect(page).not_to have_link(String(dossier_en_construction.id))
           expect(page).not_to have_link(String(dossier_with_champs.id))
           expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.champs_public.first.value} » et pour la procédure « #{dossier_brouillon.procedure.libelle} » ")
@@ -301,8 +303,9 @@ describe 'user access to the list of their dossiers', js: true do
       it "can filter by procedure" do
         expect(page).to have_text('7 en cours')
         expect(page).to have_text('3 traités')
-        expect(page).to have_select('procedure_id', selected: 'Toutes les démarches')
+        expect(page).to have_select('procedure_id', selected: 'Sélectionner une démarche')
         select dossier_brouillon.procedure.libelle, from: 'procedure_id'
+        click_on 'Afficher'
         expect(page).to have_text('1 en cours')
       end
     end
