@@ -17,7 +17,7 @@ class TypesDeChamp::DepartementTypeDeChamp < TypesDeChamp::TextTypeDeChamp
       end
     end
 
-    def champ_value_for_tag(path = :value)
+    def champ_value_for_tag(champ, path = :value)
       case path
       when :code
         champ.code
