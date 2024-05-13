@@ -2,3 +2,4 @@ fr:
   procedures:
     label: Afficher les dossiers par démarche
     prompt: Sélectionner une démarche
+    button: Afficher
