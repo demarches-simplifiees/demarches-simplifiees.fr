@@ -40,7 +40,7 @@ describe ProcedureExportService do
               subject
             end
 
-            expect(sql_count).to eq(474)
+            expect(sql_count).to eq(296)
 
             dossier = dossiers.first
 

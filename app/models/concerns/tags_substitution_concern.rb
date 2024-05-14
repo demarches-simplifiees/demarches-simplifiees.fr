@@ -283,17 +283,19 @@ module TagsSubstitutionConcern
 
     @escape_unsafe_tags = escape
 
-    flat_tags = available_tags(dossier).each_with_object({}) do |tags, result|
-      valid_tags = tags_for_dossier_state(tags)
+    if @flat_tags.nil?
+      @flat_tags = available_tags(dossier).each_with_object({}) do |tags, result|
+        valid_tags = tags_for_dossier_state(tags)
 
-      valid_tags.each do |tag|
-        result[tag[:id]] = tag
+        valid_tags.each do |tag|
+          result[tag[:id]] = tag
+        end
       end
     end
 
     tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
-      substitutions[tag_id] = if flat_tags[tag_id].present?
-        replace_tag(flat_tags[tag_id], dossier)
+      substitutions[tag_id] = if @flat_tags[tag_id].present?
+        replace_tag(@flat_tags[tag_id], dossier)
       else # champ not in dossier, for example during preview on draft revision
         libelle
       end
