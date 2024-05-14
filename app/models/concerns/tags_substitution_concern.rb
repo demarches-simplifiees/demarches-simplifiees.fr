@@ -66,7 +66,7 @@ module TagsSubstitutionConcern
       label: 'numéro du dossier',
       libelle: 'numéro du dossier',
       description: '',
-      target: :id,
+      lambda: -> (d) { d.id },
       available_for_states: Dossier::SOUMIS
   }
 
@@ -154,21 +154,21 @@ module TagsSubstitutionConcern
       id: 'individual_gender',
       libelle: 'civilité',
       description: 'M., Mme',
-      target: :gender,
+      lambda: -> (d) { d.individual&.gender },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'individual_last_name',
       libelle: 'nom',
       description: "nom de l'usager",
-      target: :nom,
+      lambda: -> (d) { d.individual&.nom },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'individual_first_name',
       libelle: 'prénom',
       description: "prénom de l'usager",
-      target: :prenom,
+      lambda: -> (d) { d.individual&.prenom },
       available_for_states: Dossier::SOUMIS
     }
   ]
@@ -178,35 +178,35 @@ module TagsSubstitutionConcern
       id: 'entreprise_siren',
       libelle: 'SIREN',
       description: '',
-      target: :siren,
+      lambda: -> (d) { d.etablissement&.entreprise&.siren },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_numero_tva_intracommunautaire',
       libelle: 'numéro de TVA intracommunautaire',
       description: '',
-      target: :numero_tva_intracommunautaire,
+      lambda: -> (d) { d.etablissement&.entreprise&.numero_tva_intracommunautaire },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_siret_siege_social',
       libelle: 'SIRET du siège social',
       description: '',
-      target: :siret_siege_social,
+      lambda: -> (d) { d.etablissement&.entreprise&.siret_siege_social },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_raison_sociale',
       libelle: 'raison sociale',
       description: '',
-      target: :raison_sociale,
+      lambda: -> (d) { d.etablissement&.entreprise&.raison_sociale },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_adresse',
       libelle: 'adresse',
       description: '',
-      target: :inline_adresse,
+      lambda: -> (d) { d.etablissement&.entreprise&.inline_adresse },
       available_for_states: Dossier::SOUMIS
     }
   ]
@@ -399,12 +399,8 @@ module TagsSubstitutionConcern
     end.join('')
   end
 
-  def replace_tag(tag, data)
-    value = if tag.key?(:target)
-      data.public_send(tag[:target])
-    else
-      instance_exec(data, &tag[:lambda])
-    end
+  def replace_tag(tag, dossier)
+    value = instance_exec(dossier, &tag[:lambda])
 
     if escape_unsafe_tags? && tag.fetch(:escapable, true)
       escape_once(value)
@@ -457,8 +453,8 @@ module TagsSubstitutionConcern
       [champ_private_tags(dossier:), dossier],
       [dossier_tags, dossier],
       [ROUTAGE_TAGS, dossier],
-      [INDIVIDUAL_TAGS, dossier.individual],
-      [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
+      [INDIVIDUAL_TAGS, dossier],
+      [ENTREPRISE_TAGS, dossier]
     ]
   end
 end
