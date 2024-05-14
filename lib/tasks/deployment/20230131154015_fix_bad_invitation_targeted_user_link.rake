@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_bad_invitation_targeted_user_link'
   task fix_bad_invitation_targeted_user_link: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20220705164551_remove_unused_champs' do
   let(:rake_task) { Rake::Task['after_party:remove_unused_champs'] }
   let(:procedure) { create(:procedure, :with_all_champs) }

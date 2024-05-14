@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::IntegerNumberChamp < Champ
   validates :value, numericality: {
     only_integer: true,

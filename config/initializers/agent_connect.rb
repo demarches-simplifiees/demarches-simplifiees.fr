@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV['AGENT_CONNECT_BASE_URL'].present?
   discover = OpenIDConnect::Discovery::Provider::Config.discover!("#{ENV.fetch('AGENT_CONNECT_BASE_URL')}/api/v2")
 

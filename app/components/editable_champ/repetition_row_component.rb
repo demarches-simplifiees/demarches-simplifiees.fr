@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::RepetitionRowComponent < ApplicationComponent
   def initialize(form:, dossier:, type_de_champ:, row_id:, row_number:, seen_at: nil)
     @form, @dossier, @type_de_champ, @row_id, @row_number, @seen_at = form, dossier, type_de_champ, row_id, row_number, seen_at

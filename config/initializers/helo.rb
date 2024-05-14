@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if ENV['HELO_ENABLED'] == 'enabled'
   ActiveSupport.on_load(:action_mailer) do
     module Helo

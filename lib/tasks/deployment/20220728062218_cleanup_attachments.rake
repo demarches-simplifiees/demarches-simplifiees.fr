@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: cleanup_attachments'
   task cleanup_attachments: :environment do

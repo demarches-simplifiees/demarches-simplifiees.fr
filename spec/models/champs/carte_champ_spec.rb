@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::CarteChamp do
   let(:champ) { build(:champ_carte, geo_areas:) }
   let(:value) { '' }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V2::Context < GraphQL::Query::Context
   # This method is used to check if a given fragment is used in the given query. We need that in
   # order to maintain backward compatibility for Types de Champ that we extended in later iterations

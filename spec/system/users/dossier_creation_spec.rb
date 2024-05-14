@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Creating a new dossier:', js: true do
   let(:user)  { create(:user) }
   let(:siret) { '41816609600051' }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::BackfillVirusScanBlobsJob < ApplicationJob
   def perform(batch)
     ActiveStorage::Blob.where(id: batch)

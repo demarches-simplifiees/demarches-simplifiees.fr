@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveInstructeurIdAndAddInstructeurEmailToTraitements < ActiveRecord::Migration[5.2]
   def change
     add_column :traitements, :instructeur_email, :string

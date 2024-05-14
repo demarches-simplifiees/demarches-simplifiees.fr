@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureRevisionChange
   attr_reader :type_de_champ
   def initialize(type_de_champ)

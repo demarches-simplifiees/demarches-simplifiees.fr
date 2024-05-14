@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Attachment::MultipleComponent, type: :component do
   let(:champ) { create(:champ_titre_identite) }
   let(:attached_file) { champ.piece_justificative_file }

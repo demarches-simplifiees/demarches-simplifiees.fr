@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: normalize_commune_code_departement'
   task normalize_commune_code_departement: :environment do

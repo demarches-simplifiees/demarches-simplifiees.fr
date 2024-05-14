@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FalsifyOpendataService
   def self.call(lines)
     errors = []

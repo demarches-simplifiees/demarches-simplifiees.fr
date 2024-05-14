@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PiecesJustificativesService do
   describe '.liste_documents' do
     let(:dossier) { create(:dossier, procedure: procedure) }

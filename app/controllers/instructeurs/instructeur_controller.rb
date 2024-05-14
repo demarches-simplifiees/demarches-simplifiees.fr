@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Instructeurs
   class InstructeurController < ApplicationController
     before_action :authenticate_instructeur!

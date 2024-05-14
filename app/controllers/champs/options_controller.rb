@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::OptionsController < Champs::ChampController
   include TurboChampsConcern
 

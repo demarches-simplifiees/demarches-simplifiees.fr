@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::IntegerNumberChamp do
   let(:champ) { build(:champ_integer_number, value:) }
   subject { champ.validate(:champs_public_value) }

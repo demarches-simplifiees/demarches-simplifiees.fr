@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Fetch and compute monthly reports about the users conversations on Helpscout
 class Helpscout::UserConversationsAdapter
   def initialize(from, to)

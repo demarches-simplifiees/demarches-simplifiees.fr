@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 class Archive < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern

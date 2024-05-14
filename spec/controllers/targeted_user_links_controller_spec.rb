@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TargetedUserLinksController, type: :controller do
   describe '#show' do
     context 'avis' do

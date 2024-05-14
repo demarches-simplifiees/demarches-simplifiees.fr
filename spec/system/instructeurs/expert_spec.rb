@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Inviting an expert:', js: true do
   include ActiveJob::TestHelper
   include ActionView::Helpers

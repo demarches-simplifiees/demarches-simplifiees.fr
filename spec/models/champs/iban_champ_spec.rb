@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::IbanChamp do
   describe '#valid?' do
     it do

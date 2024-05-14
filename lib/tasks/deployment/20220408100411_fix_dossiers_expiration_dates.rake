@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_dossiers_expiration_dates'
   task fix_dossiers_expiration_dates: :environment do

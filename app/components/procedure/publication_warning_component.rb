@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::PublicationWarningComponent < ApplicationComponent
   def initialize(procedure:)
     @procedure = procedure

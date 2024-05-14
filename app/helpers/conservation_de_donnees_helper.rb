@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ConservationDeDonneesHelper
   def politiques_conservation_de_donnees(procedure)
     [conservation_dans_ds(procedure)].compact

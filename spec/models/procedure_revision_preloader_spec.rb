@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureRevisionPreloader do
   let(:procedure) do
     create(:procedure, :published,

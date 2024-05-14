@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportJob do
   let(:procedure) { create(:procedure, instructeurs: [user_profile]) }
   let(:user_profile) { create(:instructeur) }

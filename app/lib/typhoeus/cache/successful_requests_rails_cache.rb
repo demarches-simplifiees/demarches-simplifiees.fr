@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Typhoeus
   module Cache
     # Cache successful Typhoeus requests in the Rails cache

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe RNAChampAssociationFetchableConcern do
   describe '.fetch_association!' do
     let!(:champ) { create(:champ_rna, data: "not nil data", value: 'W173847273') }

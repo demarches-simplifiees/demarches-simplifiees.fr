@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'user access to the list of their dossiers', js: true do
   let(:user) { create(:user) }
   let(:procedure_accuse_lecture)    { create(:procedure, :accuse_lecture) }

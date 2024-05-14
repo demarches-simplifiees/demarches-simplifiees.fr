@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierSearchService do
   describe '#matching_dossiers' do
     subject { liste_dossiers }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AvisSerializer < ActiveModel::Serializer
   attributes :answer,
     :introduction,

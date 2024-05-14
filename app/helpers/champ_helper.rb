@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ChampHelper
   def format_text_value(text)
     sanitized_text = sanitize(text)

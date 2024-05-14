@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system/administrateurs/procedure_spec_helper'
 
 describe 'As an administrateur, I want to manage the procedure’s attestation', js: true do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::Public::V1::StatsController < API::Public::V1::BaseController
   before_action :retrieve_procedure
 

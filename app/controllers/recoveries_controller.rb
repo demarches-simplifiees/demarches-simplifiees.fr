@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RecoveriesController < ApplicationController
   before_action :ensure_agent_connect_is_used, except: [:nature, :post_nature, :support]
   before_action :ensure_collectivite_territoriale, except: [:nature, :post_nature, :support]

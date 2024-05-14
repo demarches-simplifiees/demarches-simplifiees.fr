@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Dossier, type: :model do
   let(:user) { create(:user) }
 

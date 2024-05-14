@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EditableChamp::EditableChampComponent, type: :component do
   let(:component) { described_class.new(form: nil, champ: champ) }
 

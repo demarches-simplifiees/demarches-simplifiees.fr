@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClamavService
   def self.safe_file?(file_path)
     return true if !Rails.configuration.x.clamav.enabled

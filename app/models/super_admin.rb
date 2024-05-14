@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SuperAdmin < ApplicationRecord
   include PasswordComplexityConcern
 

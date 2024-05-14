@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dsfr
   module InputErrorable
     extend ActiveSupport::Concern

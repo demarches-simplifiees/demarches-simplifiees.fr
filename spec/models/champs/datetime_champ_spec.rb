@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DatetimeChamp do
   let(:datetime_champ) { build(:champ_datetime) }
 

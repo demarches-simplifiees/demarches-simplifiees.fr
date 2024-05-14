@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Recovery::Exporter do
   let(:dossier_ids) { [create(:dossier, :with_individual).id, create(:dossier, :with_individual).id] }
   let(:fp) { Rails.root.join('spec', 'fixtures', 'export.dump') }

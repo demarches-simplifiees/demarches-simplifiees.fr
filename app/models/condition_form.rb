@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConditionForm
   include ActiveModel::Model
   include Logic

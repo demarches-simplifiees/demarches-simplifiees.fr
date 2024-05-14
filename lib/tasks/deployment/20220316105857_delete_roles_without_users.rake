@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: delete_roles_without_users'
   task delete_roles_without_users: :environment do

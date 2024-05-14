@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: cleanup_deleted_dossiers'
   task cleanup_deleted_dossiers: :environment do

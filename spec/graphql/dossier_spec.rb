@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Types::DossierType, type: :graphql do
   let(:query) { DOSSIER_QUERY }
   let(:context) { { internal_use: true } }

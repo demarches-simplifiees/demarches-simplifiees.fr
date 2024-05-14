@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Expert, type: :model do
   describe 'an expert could be add to a procedure' do
     let(:procedure) { create(:procedure) }

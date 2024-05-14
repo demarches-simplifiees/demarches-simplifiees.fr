@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::PhoneChamp do
   let(:champ) { build(:champ_phone) }
 

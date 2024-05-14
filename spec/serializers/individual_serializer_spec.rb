@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe IndividualSerializer do
   describe '#attributes' do
     let(:procedure) { create(:procedure) }

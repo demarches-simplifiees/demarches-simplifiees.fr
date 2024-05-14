@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::CommuneChamp do
   let(:code_insee) { '63102' }
   let(:code_postal) { '63290' }

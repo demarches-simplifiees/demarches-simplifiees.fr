@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SupportController, type: :controller do
   render_views
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TiptapService do
   let(:json) do
     {

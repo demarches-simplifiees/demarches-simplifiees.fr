@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureArchiveService do
   let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
   let(:instructeur) { create(:instructeur) }
@@ -110,7 +112,7 @@ describe ProcedureArchiveService do
             expect(zip_entries.map(&:filename)).to match_array(structure)
             zip_entries.map do |entry|
               next unless entry.filename == "#{service.send(:zip_root_folder, archive)}/-LISTE-DES-FICHIERS-EN-ERREURS.txt"
-              extracted_content = ""
+              extracted_content = +""
               extractor = entry.extractor_from(f)
               extracted_content << extractor.extract(1024 * 1024) until extractor.eof?
               expect(extracted_content).to match(/Impossible de .* .*cni.*png/)

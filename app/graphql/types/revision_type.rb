@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class RevisionType < Types::BaseObject
     global_id_field :id

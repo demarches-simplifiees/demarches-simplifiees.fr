@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DolistReportJob < ApplicationJob
   # Consolidate random recent emails dispatched to Dolist with their statuses
   # and send a report by email.

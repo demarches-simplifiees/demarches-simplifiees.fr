@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpertMailer < ApplicationMailer
   helper MailerHelper
   layout 'mailers/layout'

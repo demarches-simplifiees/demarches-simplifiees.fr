@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierPreloader do
   let(:types_de_champ) do
     [

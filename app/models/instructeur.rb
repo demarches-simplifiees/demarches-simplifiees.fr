@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Instructeur < ApplicationRecord
   self.ignored_columns += [:agent_connect_id]
 

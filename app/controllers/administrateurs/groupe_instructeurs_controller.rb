@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class GroupeInstructeursController < AdministrateurController
     include ActiveSupport::NumberHelper

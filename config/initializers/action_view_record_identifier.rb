@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionView::RecordIdentifier
   alias original_dom_class dom_class
   alias original_record_key_for_dom_id record_key_for_dom_id

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::EditFooterComponent < ApplicationComponent
   def initialize(dossier:, annotation:)
     @dossier = dossier

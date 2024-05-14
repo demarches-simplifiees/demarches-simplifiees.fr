@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::Eq < Logic::BinaryOperator
   def operation = :==
 

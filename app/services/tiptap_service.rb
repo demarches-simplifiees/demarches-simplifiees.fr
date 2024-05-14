@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TiptapService
   def to_html(node, substitutions = {})
     return '' if node.nil?

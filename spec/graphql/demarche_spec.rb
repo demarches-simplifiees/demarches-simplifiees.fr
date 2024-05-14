@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Types::DemarcheType, type: :graphql do
   let(:admin) { create(:administrateur) }
   let(:query) { '' }

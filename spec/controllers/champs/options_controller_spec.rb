@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::OptionsController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :multiple_drop_down_list }]) }

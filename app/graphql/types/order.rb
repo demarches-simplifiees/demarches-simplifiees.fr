@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class Order < Types::BaseEnum
     value('ASC', 'L’ordre ascendant.', value: :asc)

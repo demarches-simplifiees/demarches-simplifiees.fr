@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::MessageComponent < ApplicationComponent
   def initialize(commentaire:, connected_user:, messagerie_seen_at: nil, show_reply_button: false, groupe_gestionnaire: nil)
     @commentaire = commentaire

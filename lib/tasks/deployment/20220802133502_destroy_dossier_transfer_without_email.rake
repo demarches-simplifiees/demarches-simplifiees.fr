@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: destroy_dossier_transfer_without_email'
   task destroy_dossier_transfer_without_email: :environment do

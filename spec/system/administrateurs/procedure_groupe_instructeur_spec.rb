@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system/administrateurs/procedure_spec_helper'
 
 describe 'Manage procedure instructeurs', js: true do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class ProceduresController < AdministrateurController
     layout 'all', only: [:all, :administrateurs]

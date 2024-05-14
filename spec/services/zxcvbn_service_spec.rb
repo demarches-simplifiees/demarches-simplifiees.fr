@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ZxcvbnService do
   let(:password) { 'medium-strength-password' }
   subject(:service) { ZxcvbnService.new(password) }

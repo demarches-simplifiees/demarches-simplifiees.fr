@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EditableChamp::PieceJustificativeComponent, type: :component do
   let(:champ) { create(:champ_piece_justificative, dossier: create(:dossier)) }
   let(:component) {

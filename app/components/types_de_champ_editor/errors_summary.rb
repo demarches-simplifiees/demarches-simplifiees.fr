@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::ErrorsSummary < ApplicationComponent
   def initialize(revision:)
     @revision = revision

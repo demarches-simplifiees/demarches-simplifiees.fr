@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Dsfr
   class InputStatusMessageComponent < ApplicationComponent
     def initialize(errors_on_attribute:, error_full_messages:, describedby_id:, champ:)

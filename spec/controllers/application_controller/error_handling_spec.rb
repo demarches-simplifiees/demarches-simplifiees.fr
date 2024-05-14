@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ApplicationController::ErrorHandling, type: :controller do
   controller(ActionController::Base) do
     include ApplicationController::ErrorHandling

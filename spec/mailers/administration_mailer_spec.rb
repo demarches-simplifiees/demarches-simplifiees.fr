@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe AdministrationMailer, type: :mailer do
   describe '#invite_admin' do
     let(:admin_user) { create(:user, last_sign_in_at: last_sign_in_at) }

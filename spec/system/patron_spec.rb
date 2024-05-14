@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Accessing the /patron page:' do
   let(:administrateur) { create(:administrateur) }
   before { sign_in administrateur.user }

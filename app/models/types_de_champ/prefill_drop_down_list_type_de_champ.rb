@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PrefillDropDownListTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   def all_possible_values
     if drop_down_other?

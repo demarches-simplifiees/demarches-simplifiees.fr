@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_depose_at_nil_on_dossier_state_not_brouillon'
   task fix_depose_at_nil_on_dossier_state_not_brouillon: :environment do

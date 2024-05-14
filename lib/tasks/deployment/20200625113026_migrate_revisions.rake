@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: migrate_revisions'
   task migrate_revisions: :environment do

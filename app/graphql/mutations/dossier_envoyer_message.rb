@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierEnvoyerMessage < Mutations::BaseMutation
     description "Envoyer un message à l'usager du dossier."

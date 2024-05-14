@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe DossierUpdateSearchTermsJob, type: :job do
   let(:dossier) { create(:dossier) }
   let(:champ_public) { dossier.champs_public.first }

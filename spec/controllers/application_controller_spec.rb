@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ApplicationController, type: :controller do
   describe 'before_action: set_sentry_user' do
     it 'is present' do

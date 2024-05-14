@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: drop_down_list_options_to_json'
   task drop_down_list_options_to_json: :environment do

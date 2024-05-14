@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntrepriseService
   class << self
     # create etablissement with EtablissementAdapter

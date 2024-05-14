@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Connections
   class CursorConnection < GraphQL::Pagination::Connection
     def initialize(items, deprecated_order: nil, **kwargs)

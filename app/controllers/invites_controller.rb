@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InvitesController < ApplicationController
   before_action :authenticate_user!, only: [:create]
   before_action :store_user_location!, only: [:show]

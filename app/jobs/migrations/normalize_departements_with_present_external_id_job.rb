@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::NormalizeDepartementsWithPresentExternalIdJob < ApplicationJob
   def perform(ids)
     Champs::DepartementChamp.where(id: ids).find_each do |champ|

@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 describe Siret, type: :model do
-  subject { Siret.new(siret: siret) }
+  subject { Siret.new(siret: siret.dup) } # .dup in order to simulate a non literal user string
 
   context 'with no siret provided' do
     let(:siret) { '' }

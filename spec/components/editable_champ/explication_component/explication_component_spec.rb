@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EditableChamp::ExplicationComponent, type: :component do
   let(:component) {
     described_class.new(form: instance_double(ActionView::Helpers::FormBuilder, object_name: "dossier[champs_public_attributes]"), champ:)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossier < ApplicationRecord
   self.ignored_columns += [:re_instructed_at]
 

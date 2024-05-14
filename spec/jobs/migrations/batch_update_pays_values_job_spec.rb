@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   subject { described_class.perform_now([pays_champ.id]) }
 

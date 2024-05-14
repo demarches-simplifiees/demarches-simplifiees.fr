@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ProcedureSpecHelper
   def fill_in_dummy_procedure_details(fill_path: true)
     fill_in 'procedure_libelle', with: 'libelle de la procedure'

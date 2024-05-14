@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::TvaJob, type: :job do
   let(:etablissement) { create(:etablissement, siret: siret) }
   let(:siret) { '41816609600069' }

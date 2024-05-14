@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateMergeLogs < ActiveRecord::Migration[6.1]
   def change
     create_table :merge_logs do |t|

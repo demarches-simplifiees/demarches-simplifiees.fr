@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: schedule_rebase_for_all_dossiers'
   task schedule_rebase_for_all_dossiers: :environment do

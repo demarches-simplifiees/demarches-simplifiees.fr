@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'prawn/measurement_extensions'
 
 # Render text in a box that expands vertically, then move the cursor down to the end of the rendered text

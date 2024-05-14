@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_watermarked_blobs'
   task backfill_watermarked_blobs: :environment do

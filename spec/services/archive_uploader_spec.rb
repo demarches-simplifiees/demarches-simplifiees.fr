@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureArchiveService do
   let(:procedure) { build(:procedure) }
   let(:archive) { create(:archive) }

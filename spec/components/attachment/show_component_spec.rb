@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Attachment::ShowComponent, type: :component do
   let(:champ) { create(:champ_piece_justificative) }
   let(:virus_scan_result) { nil }

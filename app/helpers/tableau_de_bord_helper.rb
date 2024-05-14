@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TableauDeBordHelper
   def tableau_de_bord_helper_path
     if current_administrateur.present?

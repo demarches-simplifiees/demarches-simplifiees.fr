@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TitreIdentiteWatermarkJob < ApplicationJob
   class FileNotScannedYetError < StandardError
   end

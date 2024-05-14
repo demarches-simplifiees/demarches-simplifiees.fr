@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::TextareaChamp < Champs::TextChamp
   def remaining_characters
     character_limit_base - character_count if character_count >= character_limit_threshold_75

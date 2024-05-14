@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BillSignature < ApplicationRecord
   has_many :dossier_operation_logs
 

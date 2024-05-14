@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ProcedureHelper
   def procedure_libelle(procedure)
     parts = procedure.brouillon? ? [procedure_badge(procedure)] : []
