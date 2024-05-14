@@ -287,14 +287,13 @@ module TagsSubstitutionConcern
       valid_tags = tags_for_dossier_state(tags)
 
       valid_tags.each do |tag|
-        result[tag[:id]] = [tag, dossier]
+        result[tag[:id]] = tag
       end
     end
 
     tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
-      substitutions[tag_id] = case flat_tags[tag_id]
-      in tag, dossier
-        replace_tag(tag, dossier)
+      substitutions[tag_id] = if flat_tags[tag_id].present?
+        replace_tag(flat_tags[tag_id], dossier)
       else # champ not in dossier, for example during preview on draft revision
         libelle
       end
