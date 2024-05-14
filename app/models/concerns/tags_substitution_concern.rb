@@ -283,7 +283,7 @@ module TagsSubstitutionConcern
 
     @escape_unsafe_tags = escape
 
-    flat_tags = tags_and_datas_list(dossier).each_with_object({}) do |tags, result|
+    flat_tags = available_tags(dossier).each_with_object({}) do |tags, result|
       valid_tags = tags_for_dossier_state(tags)
 
       valid_tags.each do |tag|
@@ -369,7 +369,7 @@ module TagsSubstitutionConcern
 
     tokens = parse_tags(text)
 
-    tags_and_datas = tags_and_datas_list(dossier).filter_map do |tags|
+    tags_and_datas = available_tags(dossier).filter_map do |tags|
       dossier && [tags_for_dossier_state(tags).index_by { _1[:id] }, dossier]
     end
 
@@ -444,7 +444,7 @@ module TagsSubstitutionConcern
     end
   end
 
-  def tags_and_datas_list(dossier)
+  def available_tags(dossier)
     [
       champ_public_tags(dossier:),
       champ_private_tags(dossier:),
