@@ -283,20 +283,18 @@ module TagsSubstitutionConcern
 
     @escape_unsafe_tags = escape
 
-    flat_tags = tags_and_datas_list(dossier).each_with_object({}) do |(tags, data), result|
-      next if data.nil?
-
+    flat_tags = tags_and_datas_list(dossier).each_with_object({}) do |tags, result|
       valid_tags = tags_for_dossier_state(tags)
 
       valid_tags.each do |tag|
-        result[tag[:id]] = [tag, data]
+        result[tag[:id]] = [tag, dossier]
       end
     end
 
     tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
       substitutions[tag_id] = case flat_tags[tag_id]
-      in tag, data
-        replace_tag(tag, data)
+      in tag, dossier
+        replace_tag(tag, dossier)
       else # champ not in dossier, for example during preview on draft revision
         libelle
       end
@@ -372,8 +370,8 @@ module TagsSubstitutionConcern
 
     tokens = parse_tags(text)
 
-    tags_and_datas = tags_and_datas_list(dossier).filter_map do |(tags, data)|
-      data && [tags_for_dossier_state(tags).index_by { _1[:id] }, data]
+    tags_and_datas = tags_and_datas_list(dossier).filter_map do |tags|
+      dossier && [tags_for_dossier_state(tags).index_by { _1[:id] }, dossier]
     end
 
     tags_and_datas.reduce(tokens) do |tokens, (tags, data)|
@@ -449,12 +447,12 @@ module TagsSubstitutionConcern
 
   def tags_and_datas_list(dossier)
     [
-      [champ_public_tags(dossier:), dossier],
-      [champ_private_tags(dossier:), dossier],
-      [dossier_tags, dossier],
-      [ROUTAGE_TAGS, dossier],
-      [INDIVIDUAL_TAGS, dossier],
-      [ENTREPRISE_TAGS, dossier]
+      champ_public_tags(dossier:),
+      champ_private_tags(dossier:),
+      dossier_tags,
+      ROUTAGE_TAGS,
+      INDIVIDUAL_TAGS,
+      ENTREPRISE_TAGS
     ]
   end
 end
