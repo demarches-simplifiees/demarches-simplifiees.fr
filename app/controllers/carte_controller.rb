@@ -1,6 +1,13 @@
 class CarteController < ApplicationController
   def show
-    @map_filter = MapFilter.new(params)
+    @map_filter = MapFilter.new(params.fetch(:map_filter, {}).permit(:kind, :year))
+    @map_filter.validate
+
+    # Reset to default params in case of invalid params injection
+    @map_filter.kind = MapFilter.new.kind if @map_filter.errors.key?(:kind)
+    @map_filter.year = MapFilter.new.year if @map_filter.errors.key?(:year)
+    @map_filter.errors.clear
+
     @map_filter.stats = stats
   end
 
