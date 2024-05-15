@@ -4,7 +4,7 @@ module CreateAvisConcern
   private
 
   def create_avis_from_params(dossier, instructeur_or_expert, confidentiel = false)
-    if create_avis_params[:emails].empty?
+    if create_avis_params[:emails].blank?
       avis = Avis.new(create_avis_params)
       errors = avis.errors
       errors.add(:emails, :blank)
@@ -19,8 +19,8 @@ module CreateAvisConcern
     # the :emails parameter is a 1-element array.
     # Hence the call to first
     # https://github.com/rails/rails/issues/17225
-    expert_emails = create_avis_params[:emails].presence || [].to_json
-    expert_emails = JSON.parse(expert_emails).map(&:strip).map(&:downcase)
+    expert_emails = create_avis_params[:emails].presence || []
+    expert_emails = expert_emails.map(&:strip).map(&:downcase)
     allowed_dossiers = [dossier]
 
     if create_avis_params[:invite_linked_dossiers].present?
@@ -84,6 +84,6 @@ module CreateAvisConcern
   end
 
   def create_avis_params
-    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :emails, :question_label)
+    params.require(:avis).permit(:introduction_file, :introduction, :confidentiel, :invite_linked_dossiers, :question_label, emails: [])
   end
 end
