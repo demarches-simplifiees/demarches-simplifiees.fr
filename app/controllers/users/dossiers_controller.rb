@@ -139,7 +139,7 @@ module Users
       respond_to do |format|
         format.html
         format.turbo_stream do
-          @dossier.update_columns(params.require(:dossier).permit(:for_tiers).to_h)
+          @dossier.for_tiers = params[:dossier][:for_tiers]
         end
       end
     end
