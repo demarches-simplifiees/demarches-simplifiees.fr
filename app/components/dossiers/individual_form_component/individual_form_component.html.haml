@@ -1,0 +1,77 @@
+= form_for @dossier, url: update_identite_dossier_path(@dossier), html: { id: 'identite-form', class: "form",  "data-controller" => "for-tiers" } do |f|
+  = f.hidden_field :for_tiers
+  - if for_tiers?
+    .fr-alert.fr-alert--info.fr-mb-2w
+      %p.fr-notice__text
+        = t('.callout_text')
+        = link_to(t('.callout_link'),
+                'https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070721/LEGISCTA000006136404/#LEGISCTA000006136404',
+                title: helpers.new_tab_suffix(t('.callout_link_title')),
+                **helpers.external_link_attributes)
+
+    %fieldset.fr-fieldset.mandataire-infos
+      %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+        %h2.fr-h4
+          = t('.self_title')
+
+      .fr-fieldset__element.fr-fieldset__element--short-text
+        = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_first_name, opts: { autocomplete: 'given-name' })
+
+      .fr-fieldset__element.fr-fieldset__element--short-text
+        = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_last_name, opts: { autocomplete: 'family-name' })
+
+  = f.fields_for :individual, include_id: false do |individual|
+    %fieldset.fr-fieldset.fr-mb-0.individual-infos
+      %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+        %h2.fr-h4
+          - if for_tiers?
+            = t('.beneficiaire_title')
+          - else
+            = t('.self_title')
+
+      .fr-fieldset__element.fr-mb-0
+        %fieldset.fr-fieldset
+          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            = t('activerecord.attributes.individual.gender')
+            = render EditableChamp::AsteriskMandatoryComponent.new
+
+          .fr-fieldset__element
+            .fr-radio-group
+              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
+              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
+                = Individual.human_attribute_name('gender.female')
+          .fr-fieldset__element
+            .fr-radio-group
+              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
+              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
+                = Individual.human_attribute_name('gender.male')
+      .fr-fieldset__element.fr-mb-0
+        %fieldset.fr-fieldset.width-100
+          .fr-fieldset__element.fr-fieldset__element--short-text
+            = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: (for_tiers? ? false : 'given-name') })
+          .fr-fieldset__element.fr-fieldset__element--short-text
+            = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: (for_tiers? ? false : 'family-name') })
+
+          - if @dossier.procedure.ask_birthday?
+            .fr-fieldset__element
+              = render Dsfr::InputComponent.new(form: individual, attribute: :birthdate, input_type: :date_field,
+                  opts: { placeholder: 'Format : AAAA-MM-JJ', max: Date.today.iso8601, min: "1900-01-01", autocomplete: 'bday' })
+
+    - if for_tiers?
+      %fieldset.fr-fieldset
+        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          = t('activerecord.attributes.individual.notification_method')
+          = render EditableChamp::AsteriskMandatoryComponent.new
+
+        - Individual.notification_methods.each do |method, _|
+          .fr-fieldset__element
+            .fr-radio-group
+              = individual.radio_button :notification_method, method, required: true, id: "notification_method_#{method}", "data-action" => "for-tiers#toggleEmailInput", "data-for-tiers-target" => "notificationMethod"
+              %label.fr-label{ for: "notification_method_#{method}" }
+                = t("activerecord.attributes.individual.notification_methods.#{method}")
+
+
+      .fr-fieldset__element.fr-fieldset__element--short-text{ "data-for-tiers-target" => "emailContainer", class: class_names(hidden: !email_notifications?(individual)) }
+        = render Dsfr::InputComponent.new(form: individual, attribute: :email, input_type: :email_field, opts: { "data-for-tiers-target" => "emailInput" })
+
+  = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn"

@@ -1,5 +1,5 @@
 describe Champs::AddressChamp do
-  let(:champ) { Champs::AddressChamp.new(value: value, data: data, type_de_champ: create(:type_de_champ_address)) }
+  let(:champ) { build(:champ_address, value:, data:) }
   let(:value) { '' }
   let(:data) { nil }
 

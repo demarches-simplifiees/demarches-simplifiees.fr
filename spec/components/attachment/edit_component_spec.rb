@@ -66,8 +66,8 @@ RSpec.describe Attachment::EditComponent, type: :component do
       )
     end
 
-    it 'does not render an empty file' do # (is is rendered by MultipleComponent)
-      expect(subject).not_to have_selector('input[type=file]')
+    it 'does render an empty file' do # (is is rendered by MultipleComponent)
+      expect(subject).to have_selector('input[type=file]')
     end
 
     it 'renders max size for first index' do

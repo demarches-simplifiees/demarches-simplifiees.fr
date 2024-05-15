@@ -4,7 +4,7 @@
   = react_component("MapEditor",
     { featureCollection: @champ.to_feature_collection,
     champId: @champ.input_id,
-    url: champs_carte_features_path(@champ),
+    url: update_path,
     options: @champ.render_options,
     autocompleteAnnounceTemplateId: @autocomplete_component.announce_template_id,
     autocompleteScreenReaderInstructions: t("combo_search_component.screen_reader_instructions") },

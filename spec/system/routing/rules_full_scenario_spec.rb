@@ -258,7 +258,9 @@ describe 'The routing with rules', js: true do
     find('label', text: 'Monsieur').click
     fill_in('Prénom', with: 'prenom', visible: true)
     fill_in('Nom', with: 'Nom', visible: true)
-    click_button('Continuer')
+    within "#identite-form" do
+      click_button('Continuer')
+    end
 
     # the old system should not be present
     expect(page).not_to have_selector("#dossier_groupe_instructeur_id")

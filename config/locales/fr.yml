@@ -382,6 +382,7 @@ fr:
           messaging: Messagerie
           involved_persons: Personnes impliquées
           reaffectation: Réaffectation
+          attachments: Pièces jointes
         tab_explainations:
           a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
           suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
@@ -425,11 +426,6 @@ fr:
         archived_dossier: "Votre dossier sera conservé %{duree_conservation_dossiers_dans_ds} mois supplémentaire"
         identite:
           legend: 'Ce dossier est : '
-          self_title: Votre identité
-          callout_text: Vous agissez en tant que mandataire, soit professionnellement (comme expert-comptable, avocat, agent public…) soit personnellement (famille). Assurez-vous de respecter les conditions
-          callout_link: des Articles 1984 et suivants du Code civil.
-          callout_link_title: Articles 1984 et suivants du Code civil
-          beneficiaire_title: Identité du bénéficiaire
           identity_siret: Identifier votre établissement
           civility: Civilité
           first_name: Prénom
@@ -492,6 +488,8 @@ fr:
           edit_dossier_title: "Modifier mon dossier - Vous pouvez modifier votre dossier tant qu’il n’est pas passé en instruction"
         search:
           search_file: Rechercher un dossier (N° de dossier, mots-clés)
+          prompt: (N° de dossier, nom / prénom, mots-clés)
+          label: Rechercher un dossier
           simple: Rechercher
           result_term_title: Résultat de la recherche pour « %{search_terms} »
           result_procedure_title: et pour la procédure « %{procedure_libelle} »
@@ -509,15 +507,15 @@ fr:
           procedure_closed:
             brouillon:
               internal_procedure_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace
-              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Plus d’informations %{link}
+              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. %{link}
             en_cours:
               internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration
-              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier. Plus d’informations %{link}
+              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier. %{link}
             termine:
               internal_procedure_html: Cette démarche est close et remplacée par %{link}. Votre dossier a été traité par l'administration
-              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. Plus d’informations %{link}
+              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. %{link}
             closing_details: Détails sur la fermeture de la démarche
-            here: ici
+            more_details: Plus d’informations
             procedure: démarche
             this_procedure: cette démarche
           pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie</a>."
@@ -982,7 +980,7 @@ fr:
         sva: "Silence Vaut Accord"
         svr: "Silence Vaut Rejet"
     procedure_description:
-      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} mn"
+      estimated_fill_duration: "Temps de remplissage estimé : %{estimated_minutes} min"
       estimated_fill_duration_title: Quelle est la durée de remplissage de la démarche ?
       estimated_fill_duration_detail: "La durée de remplissage est estimée à %{estimated_minutes} min. Ce délai peut varier selon les options que vous choisirez."
       usual_traitement_time_title: Quels sont les délais d'instruction pour cette démarche ?

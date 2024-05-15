@@ -9,8 +9,8 @@ fr:
         display_entries: "%{first} - %{last} <span class='fr-text--sm'>sur %{total} %{entry_name}</span>"
       one_page:
         display_entries:
-          one: "<b>%{count}</b> %{entry_name}"
-          other: "%{count} <span class='fr-text--sm'>sur %{count} %{entry_name}</span>"
+          one: "%{count} %{entry_name}"
+          other: "%{count} %{entry_name}"
   views:
     pagination:
       first: "&laquo; Premier"

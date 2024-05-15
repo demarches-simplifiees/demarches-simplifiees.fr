@@ -21,7 +21,7 @@
 
           = render Procedure::NoticeComponent.new(procedure: dossier.procedure)
 
-    = render EditableChamp::SectionComponent.new(dossier: dossier_for_editing, types_de_champ: dossier_for_editing.revision.types_de_champ_public)
+    %fieldset.fr-fieldset= render EditableChamp::SectionComponent.new(dossier: dossier_for_editing, types_de_champ: dossier_for_editing.revision.types_de_champ_public)
 
     = render Dossiers::PendingCorrectionCheckboxComponent.new(dossier: dossier)
 

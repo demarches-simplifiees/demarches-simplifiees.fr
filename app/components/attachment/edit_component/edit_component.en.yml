@@ -5,6 +5,7 @@ en:
   retry: Retry
   delete: Delete
   delete_file: Delete file %{filename}
+  multiple_files: Multiple files possible.
   replace: Replace
   replace_file: Replace file %{filename}
   open_file: Open file %{filename}

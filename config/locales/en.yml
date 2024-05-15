@@ -379,6 +379,7 @@ en:
           messaging: Messaging
           involved_persons: Involved persons
           reaffectation: reassignment
+          attachments: Attachments
         tab_explainations:
           a_suivre: No instructor is assigned to follow up on these files. Be the first !
           suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
@@ -422,11 +423,6 @@ en:
         archived_dossier: "Your file will be kept %{duree_conservation_dossiers_dans_ds} more months"
         identite:
           legend: 'This file is:'
-          self_title: Your identity
-          callout_text: "You are acting as a proxy for a principal, either professionally (such as accountant, lawyer, civil servant…) or personally (family). Make sure to respect the conditions of"
-          callout_link: Articles 1984 and following of the Civil Code.
-          callout_link_title: Articles 1984 and following of the Civil Code
-          beneficiaire_title: "Identity of the beneficiary"
           identity_siret: Identify your establishment
           civility: Civility
           first_name: First Name
@@ -489,6 +485,8 @@ en:
           edit_dossier_title: "Edit my file - You can modify your file as long as it has not been sent for processing"
         search:
           search_file: Search a file (File number, keywords)
+          prompt: (File number, last name / first name, keywords)
+          label: Search a file
           simple: Search
           result_term_title: Search result for « %{search_terms} »
           result_procedure_title: and procedure « %{procedure_libelle} »
@@ -503,7 +501,6 @@ en:
           no_result_reset_search: Reset search
           no_result_text_with_filter: found with selected filters
           no_result_reset_filter: Reset filters
-          procedure_closed: This procedure has been closed, you will not be able to submit a file again from the procedure link, contact your administration for more information.
           pending_correction_html: "This file is waiting for your corrections. Consult the changes to be made in the <a href=\"%{link}\">messaging system</a>."
           depose_at: First submission on %{date}
           created_at: Created at %{date}
@@ -514,15 +511,15 @@ en:
           procedure_closed:
             brouillon:
               internal_procedure_html: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the %{link} which replaces it
-              other_html: This process is closed, you cannot submit this file. More information %{link}
+              other_html: This process is closed, you cannot submit this file. %{link}
             en_cours:
               internal_procedure_html: This procedure is closed. Your file has been submitted and can be investigated by the administration
-              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. More information %{link}
+              other_html: This procedure is closed. Your file has been submitted and can be processed by the administration. %{link}
             termine:
               internal_procedure_html: This procedure is closed and replaced by %{link}. Your file has been processed by the administration
-              other_html: This process is closed, you cannot submit a new file. More information %{link}
+              other_html: This process is closed, you cannot submit a new file. %{link}
             closing_details: Details on the closed procedure
-            here: here
+            more_details: More information
             procedure: procedure
             this_procedure: this procedure
         transfers:
@@ -912,9 +909,9 @@ en:
         sva: "Silence Vaut Accord"
         svr: "Silence Vaut Rejet"
     procedure_description:
-      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mn"
+      estimated_fill_duration: "Estimated fill time: %{estimated_minutes} mins."
       estimated_fill_duration_title: What is the procedure estimated fill time ?
-      estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} min. This period may vary depending on the options you choose"
+      estimated_fill_duration_detail: "The fill time is etimated to %{estimated_minutes} mins. This period may vary depending on the options you choose"
       usual_traitement_time_title: What are the processing times for this procedure?
       pieces_jointes : What are the required attachments ?
       pieces_jointes_conditionnal_list_title : Attachments list according to your situation

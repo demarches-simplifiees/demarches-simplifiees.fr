@@ -3,23 +3,24 @@ describe DossierProjectionService do
     subject { described_class.project(dossiers_ids, fields) }
 
     context 'with multiple dossier' do
-      let!(:procedure) { create(:procedure, :with_type_de_champ) }
+      let!(:procedure) { create(:procedure, types_de_champ_public: [{}, { type: :linked_drop_down_list }]) }
       let!(:dossier_1) { create(:dossier, procedure: procedure) }
       let!(:dossier_2) { create(:dossier, :en_construction, :archived, procedure: procedure) }
       let!(:dossier_3) { create(:dossier, :en_instruction, procedure: procedure) }
 
       let(:dossiers_ids) { [dossier_3.id, dossier_1.id, dossier_2.id] }
       let(:fields) do
-        [
+        procedure.active_revision.types_de_champ_public.map do |type_de_champ|
           {
             "table" => "type_de_champ",
-            "column" => procedure.active_revision.types_de_champ_public[0].stable_id.to_s
+            "column" => type_de_champ.stable_id.to_s
           }
-        ]
+        end
       end
 
       before do
         dossier_1.champs_public.first.update(value: 'champ_1')
+        dossier_1.champs_public.second.update(value: '["test"]')
         dossier_2.champs_public.first.update(value: 'champ_2')
         dossier_3.champs_public.first.destroy
       end
@@ -214,7 +215,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
-        before { dossier.champs_public.first.update(data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
+        before { dossier.champs_public.first.update(value: '18 a la bonne rue', data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
 
         it { is_expected.to eq('18 a la bonne rue') }
       end

@@ -83,14 +83,6 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def for_api
-    nil
-  end
-
-  def for_export(path = :value)
-    geo_areas.map(&:label).join("\n")
-  end
-
   def blank?
     geo_areas.blank?
   end

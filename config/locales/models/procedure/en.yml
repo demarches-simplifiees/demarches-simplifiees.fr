@@ -37,6 +37,7 @@ en:
         lien_dpo: Link or email to contact the data protection officer (DPO)
         duree_conservation_dossiers_dans_ds: Duration files will be kept
         max_duree_conservation_dossiers_dans_ds: Max duration allowed to keep files
+        for_tiers_enabled: Enable a third party to submit a file
         aasm_state:
           brouillon: Draft
           publiee: Published

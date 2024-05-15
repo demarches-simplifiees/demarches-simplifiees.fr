@@ -10,6 +10,8 @@ class ExportJob < ApplicationJob
   def perform(export)
     return if export.generated?
 
+    Sentry.set_tags(procedure: export.procedure.id)
+
     export.compute_with_safe_stale_for_purge do
       export.compute
     end

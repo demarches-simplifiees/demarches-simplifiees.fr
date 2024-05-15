@@ -1,0 +1,6 @@
+en:
+  activerecord:
+    attributes:
+      commentaire:
+        body: 'Your message'
+        piece_jointe: "Attachment"

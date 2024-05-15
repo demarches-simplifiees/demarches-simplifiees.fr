@@ -321,7 +321,7 @@ describe Experts::AvisController, type: :controller do
       let(:now) { Time.zone.parse("14/07/1789") }
       let(:avis) { avis_without_answer }
 
-      subject { post :create_commentaire, params: { id: avis.id, procedure_id:, commentaire: { body: 'commentaire body', piece_jointe: file } } }
+      subject { post :create_commentaire, params: { id: avis.id, procedure_id:, commentaire: { body: 'commentaire body', piece_jointe: [file] } } }
 
       before do
         allow(ClamavService).to receive(:safe_file?).and_return(scan_result)
@@ -343,7 +343,7 @@ describe Experts::AvisController, type: :controller do
 
         it do
           expect { subject }.to change(Commentaire, :count).by(1)
-          expect(Commentaire.last.piece_jointe.filename).to eq("piece_justificative_0.pdf")
+          expect(Commentaire.last.piece_jointe.first.filename).to eq("piece_justificative_0.pdf")
         end
       end
 

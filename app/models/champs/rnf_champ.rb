@@ -25,36 +25,6 @@ class Champs::RNFChamp < Champ
     rnf_id.blank?
   end
 
-  def for_export(path = :value)
-    case path
-    when :value
-      rnf_id
-    when :departement
-      departement_code_and_name
-    when :code_insee
-      commune&.fetch(:code)
-    when :address
-      full_address
-    when :nom
-      title
-    end
-  end
-
-  def for_tag(path = :value)
-    case path
-    when :value
-      rnf_id
-    when :departement
-      departement_code_and_name || ''
-    when :code_insee
-      commune&.fetch(:code) || ''
-    when :address
-      full_address || ''
-    when :nom
-      title || ''
-    end
-  end
-
   def code_departement
     address.present? && address['departmentCode']
   end

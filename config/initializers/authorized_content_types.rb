@@ -1,15 +1,25 @@
-AUTHORIZED_CONTENT_TYPES = [
-  # multimedia
+AUTHORIZED_PDF_TYPES = [
+  'application/pdf', # text x 4628654
+  'application/x-pdf', # text x 30
+  'image/pdf', # text x 23
+  'text/pdf' # text x 12
+]
+
+AUTHORIZED_IMAGE_TYPES = [
   'image/jpeg', # multimedia x 1467465
   'image/png', # multimedia x 126662
   'image/tiff', # multimedia x 3985
   'image/bmp', # multimedia x 3656
-  'video/mp4', # multimedia x 2075
   'image/webp', # multimedia x 529
-  'video/quicktime', # multimedia x 486
   'image/gif', # multimedia x 463
+  'image/vnd.dwg' # multimedia x 137 auto desk
+]
+
+AUTHORIZED_CONTENT_TYPES = AUTHORIZED_IMAGE_TYPES + AUTHORIZED_PDF_TYPES + [
+  # multimedia
+  'video/mp4', # multimedia x 2075
+  'video/quicktime', # multimedia x 486
   'video/3gpp', # multimedia x 216
-  'image/vnd.dwg', # multimedia x 137 auto desk
   'audio/mpeg', # multimedia x 26
   'video/x-ms-wm', # multimedia x 15 video microsoft ?
   'audio/mp4', # audio .mp4, .m4a
@@ -45,7 +55,6 @@ AUTHORIZED_CONTENT_TYPES = [
   'text/xml', # program x 10
 
   # text / sheet / presentation
-  'application/pdf', # text x 4628654
   'application/vnd.ms-excel', # text x 166674
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document', # text x 103879
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', # text x 86336
@@ -69,18 +78,15 @@ AUTHORIZED_CONTENT_TYPES = [
   'application/vnd.ms-word.document.macroenabled.12', # text x 61
   'application/vnd.openxmlformats-officedocument.spreadsheetml.template', # text x 59
   'application/vnd.openxmlformats-officedocument.presentationml.slideshow', # text x 32
-  'application/x-pdf', # text x 30
   'application/kswps', # inconnu x 26 , text ?
   'application/x-iwork-numbers-sffnumbers', # text x 25
   'text/rtf', # text x 25
-  'image/pdf', # text x 23
   'application/vnd.ms-xpsdocument', # text x 23
   'application/vnd.ms-excel.sheet.binary.macroenabled.12', # text x 21
   'application/vnd.ms-powerpoint.presentation.macroenabled.12', # text x 15
   'application/x-msword', # text x 15
   'application/vnd.oasis.opendocument.spreadsheet-template', # text x 14
   'application/vnd.oasis.opendocument.text-master', # text x 12
-  'text/pdf', # text x 12
   'application/x-abiword', # text x 11
   'application/x-iwork-keynote-sffnumbers', # text x 11
   'application/x-iwork-keynote-sffkey', # text x 10

@@ -10,6 +10,7 @@ class Procedure::SVASVRFormComponent < ApplicationComponent
 
   def form_disabled?
     return false if procedure.brouillon?
+    return true if !procedure.feature_enabled?(:sva)
 
     procedure.sva_svr_enabled?
   end

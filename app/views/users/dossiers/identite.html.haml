@@ -3,98 +3,28 @@
 = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
 
 - if !dossier_submission_is_closed?(@dossier)
-  = form_for @dossier, url: update_identite_dossier_path(@dossier), html: { class: "form",  "data-controller" => "for-tiers" } do |f|
+  - if @dossier.procedure.for_tiers_enabled?
+    = form_for @dossier, url: identite_dossier_path(@dossier), method: :patch, html: { class: "form" }, data: {turbo: true, controller: :autosubmit} do |f|
 
-    %fieldset#radio-rich-hint.fr-fieldset{ "aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages" }
-      %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
-        = t('views.users.dossiers.identite.legend')
+      %fieldset#radio-rich-hint.fr-fieldset{ "aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages" }
+        %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          = t('views.users.dossiers.identite.legend')
 
-      .fr-fieldset__element
-        .fr-radio-group.fr-radio-rich
-          = f.radio_button :for_tiers, false, required: true, id: "radio-self-manage", "data-action" => "click->for-tiers#toggleFieldRequirements", "data-for-tiers-target" => "forTiers"
-          %label.fr-label{ for: "radio-self-manage" }
-            = t('activerecord.attributes.dossier.for_tiers.false')
-          .fr-radio-rich__img
-            %span.fr-icon-user-fill
-      .fr-fieldset__element
-        .fr-radio-group.fr-radio-rich
-          = f.radio_button :for_tiers, true, required: true, id: "radio-tiers-manage", "data-action" => "click->for-tiers#toggleFieldRequirements", "data-for-tiers-target" => "forTiers"
-          %label.fr-label{ for: "radio-tiers-manage" }
-            = t('activerecord.attributes.dossier.for_tiers.true')
-          .fr-radio-rich__img
-            %span.fr-icon-parent-fill
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            = f.radio_button :for_tiers, false, required: true, id: "radio-self-manage"
+            %label.fr-label{ for: "radio-self-manage" }
+              = t('activerecord.attributes.dossier.for_tiers.false')
+            .fr-radio-rich__img
+              %span.fr-icon-user-fill
+        .fr-fieldset__element
+          .fr-radio-group.fr-radio-rich
+            = f.radio_button :for_tiers, true, required: true, id: "radio-tiers-manage"
+            %label.fr-label{ for: "radio-tiers-manage" }
+              = t('activerecord.attributes.dossier.for_tiers.true')
+            .fr-radio-rich__img
+              %span.fr-icon-parent-fill
 
-    .mandataire-infos{ "data-for-tiers-target" => "mandataireBlock" }
-      .fr-alert.fr-alert--info.fr-mb-2w
-        %p.fr-notice__text
-          = t('views.users.dossiers.identite.callout_text')
-          = link_to(t('views.users.dossiers.identite.callout_link'),
-                  'https://www.legifrance.gouv.fr/codes/section_lc/LEGITEXT000006070721/LEGISCTA000006136404/#LEGISCTA000006136404',
-                  title: new_tab_suffix(t('views.users.dossiers.identite.callout_link_title')),
-                  **external_link_attributes)
+        = f.submit t('views.users.dossiers.identite.continue'), class: 'visually-hidden'
 
-
-      %fieldset.fr-fieldset
-        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-          %h2.fr-h4= t('views.users.dossiers.identite.self_title')
-
-        .fr-fieldset__element.fr-fieldset__element--short-text
-          = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_first_name, opts: { "data-for-tiers-target" => "mandataireFirstName" })
-
-        .fr-fieldset__element.fr-fieldset__element--short-text
-          = render Dsfr::InputComponent.new(form: f, attribute: :mandataire_last_name, opts: { "data-for-tiers-target" => "mandataireLastName" })
-
-    = f.fields_for :individual, include_id: false do |individual|
-      .individual-infos
-        %fieldset.fr-fieldset
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend{ "data-for-tiers-target" => "mandataireTitle" }
-            %h2.fr-h4= t('views.users.dossiers.identite.self_title')
-
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend.hidden{ "data-for-tiers-target" => "beneficiaireTitle" }
-            %h2.fr-h4= t('views.users.dossiers.identite.beneficiaire_title')
-
-
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-            = t('activerecord.attributes.individual.gender')
-            = render EditableChamp::AsteriskMandatoryComponent.new
-          .fr-fieldset__element
-            .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_FEMALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_FEMALE}"
-              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_FEMALE}" }
-                = Individual.human_attribute_name('gender.female')
-          .fr-fieldset__element
-            .fr-radio-group
-              = individual.radio_button :gender, Individual::GENDER_MALE, required: true, id: "identite_champ_radio_#{Individual::GENDER_MALE}"
-              %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
-                = Individual.human_attribute_name('gender.male')
-
-          .fr-fieldset__element.fr-fieldset__element--short-text
-            = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
-
-          .fr-fieldset__element.fr-fieldset__element--short-text
-            = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: 'family-name' })
-
-        %fieldset.fr-fieldset{ "data-for-tiers-target" => "beneficiaireNotificationBlock" }
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-            = t('activerecord.attributes.individual.notification_method')
-            = render EditableChamp::AsteriskMandatoryComponent.new
-
-          - Individual.notification_methods.each do |method, _|
-            .fr-fieldset__element
-              .fr-radio-group
-                = individual.radio_button :notification_method, method, id: "notification_method_#{method}", "data-action" => "for-tiers#toggleFieldRequirements", "data-for-tiers-target" => "notificationMethod"
-                %label.fr-label{ for: "notification_method_#{method}" }
-                  = t("activerecord.attributes.individual.notification_methods.#{method}")
-
-
-          .fr-fieldset__element.fr-fieldset__element--short-text.hidden{ "data-for-tiers-target" => "email" }
-            = render Dsfr::InputComponent.new(form: individual, attribute: :email)
-
-
-        - if @dossier.procedure.ask_birthday?
-          .fr-fieldset__element
-            = render Dsfr::InputComponent.new(form: individual, attribute: :birthdate, input_type: :date_field,
-              opts: { placeholder: 'Format : AAAA-MM-JJ', max: Date.today.iso8601, min: "1900-01-01", autocomplete: 'bday' })
-
-
-    = f.submit t('views.users.dossiers.identite.continue'), class: "fr-btn"
+  = render Dossiers::IndividualFormComponent.new(dossier: @dossier)

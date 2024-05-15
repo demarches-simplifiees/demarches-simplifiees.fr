@@ -19,18 +19,6 @@ class Champs::MultipleDropDownListChamp < Champ
     value.blank? ? [] : JSON.parse(value)
   end
 
-  def to_s
-    selected_options.join(', ')
-  end
-
-  def for_tag(path = :value)
-    selected_options.join(', ')
-  end
-
-  def for_export(path = :value)
-    value.present? ? selected_options.join(', ') : nil
-  end
-
   def render_as_checkboxes?
     enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
   end

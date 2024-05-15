@@ -2,6 +2,9 @@ class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern
 
+  # TODO: remove after one deploy
+  attr_writer :with_public_id
+
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
@@ -106,24 +109,29 @@ class Champ < ApplicationRecord
     [to_s]
   end
 
-  def to_s
-    value.present? ? value.to_s : ''
-  end
-
-  def for_export(path = :value)
-    path == :value ? value.presence : nil
-  end
-
-  def for_api
+  def valid_value
+    return unless valid_champ_value?
     value
   end
 
+  def to_s
+    TypeDeChamp.champ_value(type_champ, self)
+  end
+
+  def for_api
+    TypeDeChamp.champ_value_for_api(type_champ, self, 1)
+  end
+
   def for_api_v2
-    to_s
+    TypeDeChamp.champ_value_for_api(type_champ, self, 2)
+  end
+
+  def for_export(path = :value)
+    TypeDeChamp.champ_value_for_export(type_champ, self, path)
   end
 
   def for_tag(path = :value)
-    path == :value && value.present? ? value.to_s : ''
+    TypeDeChamp.champ_value_for_tag(type_champ, self, path)
   end
 
   def main_value_name
@@ -174,13 +182,13 @@ class Champ < ApplicationRecord
   # However the field index makes it difficult to render a single field, independent from the ordering of the others.
   #
   # Luckily, this is only used to make the name unique, but the actual value is ignored when Rails parses nested
-  # attributes. So instead of the field index, this method uses the champ id; which gives us an independent and
+  # attributes. So instead of the field index, this method uses the champ public_id; which gives us an independent and
   # predictable input name.
   def input_name
     if private?
-      "dossier[champs_private_attributes][#{id}]"
+      "dossier[champs_private_attributes][#{public_id}]"
     else
-      "dossier[champs_public_attributes][#{id}]"
+      "dossier[champs_public_attributes][#{public_id}]"
     end
   end
 
@@ -280,6 +288,10 @@ class Champ < ApplicationRecord
     return if value.present? && !value.include?("\u0000")
 
     self.value = value.delete("\u0000")
+  end
+
+  def self.update_by_stable_id?
+    Flipper.enabled?(:champ_update_by_stable_id, Current.user)
   end
 
   class NotImplemented < ::StandardError

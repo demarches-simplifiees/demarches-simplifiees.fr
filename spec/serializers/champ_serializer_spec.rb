@@ -12,7 +12,7 @@ describe ChampSerializer do
     end
 
     context 'when type champ is not piece justificative' do
-      let(:champ) { create(:champ, value: "blah") }
+      let(:champ) { create(:champ_text, value: "blah") }
 
       it { is_expected.to include(value: "blah") }
     end
@@ -104,7 +104,7 @@ describe ChampSerializer do
 
     context 'when type champ is siret' do
       let(:etablissement) { create(:etablissement) }
-      let(:champ) { create(:type_de_champ_siret).champ.create(etablissement: etablissement, value: etablissement.siret) }
+      let(:champ) { create(:champ_siret, etablissement:, value: etablissement.siret) }
 
       it {
         is_expected.to include(value: etablissement.siret)

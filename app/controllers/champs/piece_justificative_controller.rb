@@ -1,7 +1,4 @@
-class Champs::PieceJustificativeController < ApplicationController
-  before_action :authenticate_logged_user!
-  before_action :set_champ
-
+class Champs::PieceJustificativeController < Champs::ChampController
   def show
     respond_to do |format|
       format.turbo_stream
@@ -22,10 +19,6 @@ class Champs::PieceJustificativeController < ApplicationController
   end
 
   private
-
-  def set_champ
-    @champ = policy_scope(Champ).find(params[:champ_id])
-  end
 
   def attach_piece_justificative
     save_succeed = nil

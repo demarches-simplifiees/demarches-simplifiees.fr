@@ -8,20 +8,4 @@ class Champs::IntegerNumberChamp < Champ
       object.errors.generate_message(:value, :not_an_integer)
     }
   }, if: :validate_champ_value_or_prefill?
-
-  def for_export(path = :value)
-    processed_value
-  end
-
-  def for_api
-    processed_value
-  end
-
-  private
-
-  def processed_value
-    return unless valid_champ_value?
-
-    value&.to_i
-  end
 end

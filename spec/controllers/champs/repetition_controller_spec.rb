@@ -5,8 +5,9 @@ describe Champs::RepetitionController, type: :controller do
 
     before { sign_in dossier.user }
     it 'removes repetition' do
-      rows, repetitions = dossier.champs.partition { _1.parent_id.present? }
-      expect { delete :remove, params: { champ_id: repetitions.first.id, row_id: rows.first.row_id }, format: :turbo_stream }
+      rows, repetitions = dossier.champs.partition(&:child?)
+      repetition = repetitions.first
+      expect { delete :remove, params: { dossier_id: repetition.dossier, stable_id: repetition.stable_id, row_id: rows.first.row_id }, format: :turbo_stream }
         .to change { dossier.reload.champs.size }.from(3).to(1)
     end
   end

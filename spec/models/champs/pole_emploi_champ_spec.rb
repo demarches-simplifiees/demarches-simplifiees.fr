@@ -1,5 +1,5 @@
 describe Champs::PoleEmploiChamp, type: :model do
-  let(:champ) { described_class.new }
+  let(:champ) { build(:champ_pole_emploi) }
 
   describe 'identifiant' do
     before do

@@ -13,7 +13,7 @@ module ApplicationHelper
   end
 
   def switch_domain_enabled?(request)
-    request.params.key?(:switch_domain) || Flipper.enabled?(:switch_domain)
+    request.params.key?(:switch_domain) || Flipper.enabled?(:switch_domain, Current.user)
   end
 
   def html_lang

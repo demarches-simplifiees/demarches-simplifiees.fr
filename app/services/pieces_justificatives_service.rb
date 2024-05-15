@@ -161,7 +161,7 @@ class PiecesJustificativesService
 
   def pjs_for_commentaires(dossiers)
     commentaire_id_dossier_id = Commentaire
-      .joins(:piece_jointe_attachment)
+      .joins(:piece_jointe_attachments)
       .where(dossier: dossiers)
       .pluck(:id, :dossier_id)
       .to_h
