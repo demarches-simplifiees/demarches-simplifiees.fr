@@ -130,7 +130,7 @@ describe ExportTemplate do
         dossier.champs_public << champ_pj
       end
       it 'returns pj and custom name for pj' do
-        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/superpj_justif.png"])
+        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/superpj_justif-1.png"])
       end
     end
     context 'pj repetable' do
@@ -161,7 +161,7 @@ describe ExportTemplate do
         dossier.champs_public << champ_pj
       end
       it 'rename repetable pj' do
-        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/pj_repet_#{dossier.id}.png"])
+        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/pj_repet_#{dossier.id}-1.png"])
       end
     end
   end
