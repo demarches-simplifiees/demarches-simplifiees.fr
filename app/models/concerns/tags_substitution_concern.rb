@@ -284,13 +284,10 @@ module TagsSubstitutionConcern
     @escape_unsafe_tags = escape
 
     if @flat_tags.nil?
-      @flat_tags = available_tags(dossier).each_with_object({}) do |tags, result|
-        valid_tags = tags_for_dossier_state(tags)
-
-        valid_tags.each do |tag|
-          result[tag[:id]] = tag
-        end
-      end
+      @flat_tags = available_tags(dossier)
+        .flatten
+        .then { tags_for_dossier_state(_1) }
+        .index_by { _1[:id] }
     end
 
     tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
