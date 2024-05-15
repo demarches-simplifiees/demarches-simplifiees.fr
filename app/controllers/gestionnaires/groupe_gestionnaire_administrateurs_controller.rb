@@ -6,8 +6,8 @@ module Gestionnaires
     end
 
     def create
-      emails = [params.require(:administrateur)[:email]].to_json
-      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
+      emails = [params.require(:administrateur)[:email]].compact
+      emails = emails.map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
 
       administrateurs_to_add, valid_emails, invalid_emails = Administrateur.find_all_by_identifier_with_emails(emails:)
       not_found_emails = valid_emails - administrateurs_to_add.map(&:email)

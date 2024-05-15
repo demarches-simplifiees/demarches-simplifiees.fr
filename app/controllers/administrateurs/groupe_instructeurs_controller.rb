@@ -218,8 +218,8 @@ module Administrateurs
     end
 
     def add_instructeur
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
+      emails = params[:emails].presence || []
+      emails = emails.map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
 
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 

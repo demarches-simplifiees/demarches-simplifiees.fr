@@ -9,14 +9,8 @@
       - if disabled_as_super_admin
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
       - else
-        = hidden_field_tag :emails, nil
-        = react_component("ComboMultiple",
-          options: available_instructeur_emails, selected: [], disabled: [],
-          group: '.instructeur-wrapper',
-          id: 'instructeur_emails',
-          name: 'emails',
-          label: 'Emails',
-          acceptNewValues: true)
+        %react-fragment
+          = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
 
       = f.submit 'Affecter', class: 'fr-btn', disabled: disabled_as_super_admin
 
