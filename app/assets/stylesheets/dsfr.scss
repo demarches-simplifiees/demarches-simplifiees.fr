@@ -37,6 +37,15 @@ trix-editor.fr-input {
   }
 }
 
+.fr-ds-combobox__multiple {
+  .fr-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin-bottom: 0.3rem;
+  }
+}
+
 .fr-ds-combobox__menu {
   &[data-placement=top] {
     --origin: translateY(8px);
