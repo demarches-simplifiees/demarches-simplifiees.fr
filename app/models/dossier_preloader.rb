@@ -1,10 +1,10 @@
 class DossierPreloader
   DEFAULT_BATCH_SIZE = 2000
 
-  def initialize(dossiers, includes_for_dossier: [], includes_for_etablissement: [])
+  def initialize(dossiers, includes_for_champ: [], includes_for_etablissement: [])
     @dossiers = dossiers
     @includes_for_etablissement = includes_for_etablissement
-    @includes_for_dossier = includes_for_dossier
+    @includes_for_champ = includes_for_champ
   end
 
   def in_batches(size = DEFAULT_BATCH_SIZE)
@@ -37,7 +37,7 @@ class DossierPreloader
   end
 
   def load_dossiers(dossiers, pj_template: false)
-    to_include = @includes_for_dossier.dup
+    to_include = @includes_for_champ.dup
     to_include << [piece_justificative_file_attachments: :blob]
 
     if pj_template
