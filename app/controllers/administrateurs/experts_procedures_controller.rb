@@ -11,8 +11,8 @@ module Administrateurs
     end
 
     def create
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map(&:strip).map(&:downcase)
+      emails = params['emails'].presence || []
+      emails = emails.map(&:strip).map(&:downcase)
 
       valid_users, invalid_users = emails
         .map { |email| User.create_or_promote_to_expert(email, SecureRandom.hex) }
