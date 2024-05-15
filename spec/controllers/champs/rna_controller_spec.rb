@@ -13,7 +13,8 @@ describe Champs::RNAController, type: :controller do
     end
     let(:params) do
       {
-        champ_id: champ.id,
+        dossier_id: champ.dossier_id,
+        stable_id: champ.stable_id,
         dossier: {
           champs_public_attributes: champs_public_attributes
         }
