@@ -523,7 +523,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def level_for_revision(revision)
-    rtdc = revision.revision_types_de_champ.find { |rtdc| rtdc.stable_id == stable_id }
+    rtdc = revision.revision_types_de_champ.includes(:type_de_champ, parent: :type_de_champ).find { |rtdc| rtdc.stable_id == stable_id }
     if rtdc.child?
       header_section_level_value.to_i + rtdc.parent.type_de_champ.current_section_level(revision)
     elsif header_section_level_value
