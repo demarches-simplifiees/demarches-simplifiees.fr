@@ -67,7 +67,7 @@ class ExportTemplate < ApplicationRecord
   def render_attributes_for(content_for, dossier, attachment = nil)
     tiptap = TiptapService.new
     used_tags = tiptap.used_tags_and_libelle_for(content_for.deep_symbolize_keys)
-    substitutions = tags_substitutions(used_tags, dossier, escape: false)
+    substitutions = tags_substitutions(used_tags, dossier, escape: false, memoize: true)
     substitutions['original-filename'] = attachment.filename.base if attachment
     tiptap.to_path(content_for.deep_symbolize_keys, substitutions)
   end

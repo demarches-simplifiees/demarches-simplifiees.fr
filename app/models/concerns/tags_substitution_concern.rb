@@ -275,7 +275,7 @@ module TagsSubstitutionConcern
     used_tags_and_libelle_for(text).map { _1.first.nil? ? _1.second : _1.first }
   end
 
-  def tags_substitutions(tags_and_libelles, dossier, escape: true)
+  def tags_substitutions(tags_and_libelles, dossier, escape: true, memoize: false)
     # NOTE:
     # - tags_and_libelles est un simple Set de couples (tag_id, libelle) (pas la même structure que dans replace_tags)
     # - dans `replace_tags`, on fait référence à des tags avec ou sans id, mais pas ici,
@@ -283,16 +283,20 @@ module TagsSubstitutionConcern
 
     @escape_unsafe_tags = escape
 
-    if @flat_tags.nil?
-      @flat_tags = available_tags(dossier)
+    flat_tags = if memoize && @flat_tags.present?
+      @flat_tags
+    else
+      available_tags(dossier)
         .flatten
         .then { tags_for_dossier_state(_1) }
         .index_by { _1[:id] }
     end
 
+    @flat_tags = flat_tags if memoize
+
     tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
-      substitutions[tag_id] = if @flat_tags[tag_id].present?
-        replace_tag(@flat_tags[tag_id], dossier)
+      substitutions[tag_id] = if flat_tags[tag_id].present?
+        replace_tag(flat_tags[tag_id], dossier)
       else # champ not in dossier, for example during preview on draft revision
         libelle
       end
