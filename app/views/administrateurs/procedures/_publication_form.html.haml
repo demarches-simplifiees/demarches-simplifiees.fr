@@ -16,7 +16,7 @@
         - c.with_body do
           %p
             = t('.faq_test_alert')
-            = link_to t('.faq_test_alert_link'), t('.faq_test_alert_link_url'), **external_link_attributes
+            = link_to t('.faq_test_alert_link'), t('.faq_test_alert_link_url')
       = render partial: 'publication_form_inputs', locals: { procedure: procedure, closed_procedures: @closed_procedures, form: f }
       = render Dsfr::CalloutComponent.new(title: t('.dpd_title'), heading_level: 'h2') do |c|
         - c.with_body do

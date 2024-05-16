@@ -1,0 +1,13 @@
+- content_for(:title, @metadata[:title])
+
+.fr-container.fr-my-4w
+
+  .fr-grid-row
+    .fr-col-12.fr-col-md-4
+      = render partial: "sidebar", locals: { faqs: @siblings, current: @metadata }
+    .fr-col-12.fr-col-md-8
+      -# i18n-tasks-use t("faq.categories.#{@metadata[:category]}.short_name")
+      = render partial: "breadcrumb", locals: { faq_title: "#{t(:short_name, scope: [:faq, :categories, @metadata[:category]])} : #{@metadata[:title]}" }
+
+      .markdown-content
+        = @renderer.render(@content).html_safe

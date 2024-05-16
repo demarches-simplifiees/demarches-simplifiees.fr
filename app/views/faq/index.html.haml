@@ -1,0 +1,26 @@
+- content_for(:title, t('.meta_title'))
+
+.fr-container.fr-my-4w
+  = render partial: "breadcrumb"
+  .fr-grid-row
+    .fr-col-12.fr-col-md-10
+      %h1= t('.title', app_name: Current.application_name)
+
+      - @faqs.each do |category, subcategories|
+        %h2= t(:name, scope: [:faq, :categories, category], raise: true) # i18n-tasks-use t("faq.categories.#{category}.name")
+        %p= t(:description, scope: [:faq, :categories, category], raise: true) # i18n-tasks-use t("faq.categories.#{category}.description")
+
+        .fr-accordions-group.fr-mb-6w
+          - subcategories.each_with_index do |(subcategory, faqs), index|
+            %section.fr-accordion
+              %h3.fr-accordion__title
+                %button.fr-accordion__btn{ 'aria-expanded': "false", 'aria-controls': "accordion-#{category}-#{index}" }
+                  = t(:name, scope: [:faq, :subcategories, subcategory], raise: true) # i18n-tasks-use t("faq.subcategories.#{subcategory}.name")
+
+              .fr-collapse{ id: "accordion-#{category}-#{index}" }
+                - description = t(:description, scope: [:faq, :subcategories, subcategory], default: nil) # i18n-tasks-use t("faq.subcategories.#{subcategory}.description")
+                %p= description if description.present?
+
+                %ul
+                  - faqs.each do |faq|
+                    %li= link_to faq[:title], faq_path(category: faq[:category], slug: faq[:slug]), class: "fr-link"

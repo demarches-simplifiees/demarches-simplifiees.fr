@@ -339,7 +339,7 @@ class ApplicationController < ActionController::Base
       environment: sentry[:environment],
       browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user,
-      release: SentryRelease.current
+      release: ApplicationVersion.current
     }
   end
 

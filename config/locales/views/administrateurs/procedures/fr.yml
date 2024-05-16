@@ -58,7 +58,7 @@ fr:
       publication_form:
         faq_test_alert: Avez-vous bien pensé à tester votre démarche avant de la publier ? Pour vous aider dans cette phase de test, vous pouvez
         faq_test_alert_link: consulter notre guide de bonnes pratiques.
-        faq_test_alert_link_url: "https://faq.demarches-simplifiees.fr/category/49-comment-tester-ma-demarche"
+        faq_test_alert_link_url: "/faq#accordion-administrateur-2"
         draft_changed_procedure_alert: "Publiez une nouvelle version de votre démarche. Les modifications suivantes seront appliquées :"
         dpd_title: Avant de publier
         dpd_part_1: Avez-vous bien pensé à informer votre Délégué à la Protection des Données personnelles (DPD).

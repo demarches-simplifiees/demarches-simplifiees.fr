@@ -1,0 +1,46 @@
+fr:
+  faq:
+    index:
+      meta_title: "Foire aux Questions"
+      title: Foire aux Questions (FAQ) de %{app_name}
+    sidebar_button: Dans cette Foire Aux Questions
+    categories:
+      usager:
+        short_name: Usager
+        name: Usager (dépôt d’un dossier)
+        description: Aide pour les usagers sur la soumission et le suivi des dossiers, incluant la résolution des problèmes courants.
+      instructeur:
+        short_name: Instructeur
+        name: Instructeur (traitement des dossiers)
+        description: À destination des instructeurs sur l’accès et la gestion des dossiers.
+      administrateur:
+        short_name: Administrateur
+        name: Administrateur (création d’un formulaire)
+        description: Informations pour les administrateurs sur la configuration de la plateforme ou la création de démarches.
+    subcategories:
+      dossier_technical_issue:
+        name: Je rencontre un problème technique avec ma démarche
+      find_dossier:
+        name: Je veux retrouver mon dossier
+        description: Quelles sont les solutions si je ne retrouve pas mon dossier ?
+      fill_dossier:
+        name: Je veux faire une démarche
+      dossier_state:
+        name: Je veux suivre l’instruction de ma démarche
+      account:
+        name: Gestion de mon compte
+      instructeur_account:
+        name: Connexion à mon espace
+      instruction:
+        name: Instruction
+      create_procedure:
+        name: Je veux créer une démarche en ligne
+        description: Comment créer une nouvelle démarche ?
+      general:
+        name: Général
+      administrateur_departure:
+        name: Je quitte mon poste
+        description: Les bonnes pratiques à anticiper avant mon départ
+      procedure_test:
+        name: Comment tester ma démarche
+        description: Comment tester une nouvelle demarche ?

@@ -1,15 +1,3 @@
-class SentryRelease
-  @@current = nil
-
-  def self.current
-    @@current ||= begin
-      version = Rails.root.join('version')
-      version.readable? ? version.read.strip : ''
-    end
-    @@current.presence
-  end
-end
-
 Sentry.init do |config|
   secrets = Rails.application.secrets.sentry
 
@@ -19,7 +7,7 @@ Sentry.init do |config|
 
   config.dsn = secrets[:enabled] ? secrets[:rails_client_key] : nil
   config.send_default_pii = false
-  config.release = SentryRelease.current
+  config.release = ApplicationVersion.current
   config.environment = secrets[:environment] || Rails.env
   config.enabled_environments = ['production', secrets[:environment].presence].compact
   config.breadcrumbs_logger = [:active_support_logger]
