@@ -4,7 +4,7 @@ class MailTemplatePresenterService
 
   def self.create_commentaire_for_state(dossier, state)
     if dossier.procedure.accuse_lecture? && Dossier::TERMINE.include?(state)
-      CommentaireService.create!(CONTACT_EMAIL, dossier, body: I18n.t('layouts.mailers.accuse_lecture.commentaire_html', service: dossier.procedure.service.nom))
+      CommentaireService.create!(CONTACT_EMAIL, dossier, body: I18n.t('layouts.mailers.accuse_lecture.commentaire_html', service: dossier.procedure.service&.nom))
     else
       service = new(dossier, state)
       body = ["<p>[#{service.safe_subject}]</p>", service.safe_body].join('')
