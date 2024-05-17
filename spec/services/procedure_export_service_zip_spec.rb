@@ -1,7 +1,7 @@
 describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, libelle: 'pj' }, { type: :repetition, children: [{ type: :piece_justificative }] }]) }
-  let(:dossiers) { create_list(:dossier, 10, procedure: procedure) }
+  let(:dossiers) { create_list(:dossier, 100, procedure: procedure) }
   let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
 
@@ -40,7 +40,7 @@ describe ProcedureExportService do
               subject
             end
 
-            expect(sql_count).to eq(296)
+            expect(sql_count).to eq(272)
 
             dossier = dossiers.first
 
