@@ -9,6 +9,19 @@ title: "Comment trouver ma démarche ?"
 
 # Comment trouver ma démarche ?
 
+> [!INFO]
+> *%{application_name}* est un service de la direction interministérielle du numérique, service du Premier ministre,
+intervenant sous l’égide du ministère de la Transformation et de la Fonction publiques,
+permettant aux administrations publiques de l’État, aux opérateurs et collectivités de dématérialiser leurs démarches administratives.
+
+> À ce jour, [%{procedures_count} formulaires sont disponibles sur %{application_name}](/stats), mis en oeuvre par %{services_count} services et organismes publics.
+>
+> Les administrations peuvent utiliser d’autres dispositifs de dématérialisation et dont vous pouvez retrouver les informations sur le site [services-public.fr](https://www.service-public.fr), ou bien à partir des sites internet de chaque organisme.
+
+> Ce site ne répertorie donc pas l’ensemble des démarches en ligne déployées par les administrations et services publics. Nous vous invitons à parcourir [service-public.fr](https://www.service-public.fr), le site officiel d’information et de démarches administratives si vous avez une question sur vos droits, une démarche à faire pour être davantage guidé(e).
+>
+> Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
+
 ## 1. Trouver le lien de votre démarche
 
 Pour déposer un dossier sur %{application_name}, il est nécessaire de disposer du lien de la démarche qui vous intéresse. Il ressemble à un lien de cette forme :
