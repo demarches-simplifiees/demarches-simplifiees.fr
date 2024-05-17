@@ -45,10 +45,10 @@ class ExportTemplate < ApplicationRecord
     end
   end
 
-  def attachment_and_path(dossier, attachment, index: 0, row_index: nil)
+  def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     [
       attachment,
-      path(dossier, attachment, index, row_index)
+      path(dossier, attachment, index, row_index, champ)
     ]
   end
 
@@ -116,7 +116,7 @@ class ExportTemplate < ApplicationRecord
     "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
   end
 
-  def path(dossier, attachment, index, row_index)
+  def path(dossier, attachment, index, row_index, champ)
     if attachment.name == 'pdf_export_for_instructeur'
       return export_path(dossier)
     end
@@ -130,15 +130,14 @@ class ExportTemplate < ApplicationRecord
       'avis'
     else
       # for attachment
-      return attachment_path(dossier, attachment, index, row_index)
+      return attachment_path(dossier, attachment, index, row_index, champ)
     end
 
     File.join(folder(dossier), dir_path, attachment.filename.to_s)
   end
 
-  def attachment_path(dossier, attachment, index, row_index)
-    type_de_champ_id = dossier.champs.find(attachment.record_id).type_de_champ_id
-    stable_id = TypeDeChamp.find(type_de_champ_id).stable_id
+  def attachment_path(dossier, attachment, index, row_index, champ)
+    stable_id = champ.stable_id
     tiptap_pj = content["pjs"].find { |pj| pj["stable_id"] == stable_id.to_s }
     if tiptap_pj
       File.join(folder(dossier), tiptap_convert_pj(dossier, stable_id, attachment) + suffix(attachment, index, row_index))
