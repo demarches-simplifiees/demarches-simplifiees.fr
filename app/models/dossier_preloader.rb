@@ -13,6 +13,16 @@ class DossierPreloader
     dossiers
   end
 
+  def in_batches_with_block(size = DEFAULT_BATCH_SIZE, &block)
+    @dossiers.in_batches(of: size) do |batch|
+      data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert], revision: :revision_types_de_champ)
+
+      dossiers = data.to_a
+      load_dossiers(dossiers)
+      yield(dossiers)
+    end
+  end
+
   def all(pj_template: false)
     dossiers = @dossiers.to_a
     load_dossiers(dossiers, pj_template:)

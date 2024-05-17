@@ -4,11 +4,12 @@ class ActiveStorage::DownloadableFile
   def self.create_list_from_dossiers(dossiers:, user_profile:, export_template: nil)
     pj_service = PiecesJustificativesService.new(user_profile:, export_template:)
 
-    dossiers = dossiers
-      .includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert], revision: [:revision_types_de_champ, :types_de_champ_public, :types_de_champ_private])
+    files = []
+    DossierPreloader.new(dossiers).in_batches_with_block do |loaded_dossiers|
+      files += pj_service.generate_dossiers_export(loaded_dossiers) + pj_service.liste_documents(loaded_dossiers)
+    end
 
-    loaded_dossiers = DossierPreloader.new(dossiers).in_batches
-    pj_service.generate_dossiers_export(loaded_dossiers) + pj_service.liste_documents(loaded_dossiers)
+    files
   end
 
   def self.cleanup_list_from_dossier(files)
