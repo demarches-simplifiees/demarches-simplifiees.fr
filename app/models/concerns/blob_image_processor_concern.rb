@@ -1,4 +1,4 @@
-module BlobTitreIdentiteWatermarkConcern
+module BlobImageProcessorConcern
   def watermark_pending?
     watermark_required? && !watermark_done?
   end
@@ -7,10 +7,8 @@ module BlobTitreIdentiteWatermarkConcern
     watermarked_at.present?
   end
 
-  def watermark_later
-    if watermark_pending?
-      TitreIdentiteWatermarkJob.perform_later(self)
-    end
+  def representation_required?
+    attachments.any? { _1.record.class == Champs::TitreIdentiteChamp || _1.record.class == Champs::PieceJustificativeChamp }
   end
 
   private
