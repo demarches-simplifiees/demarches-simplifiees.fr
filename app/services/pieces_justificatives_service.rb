@@ -7,22 +7,18 @@ class PiecesJustificativesService
   def liste_documents(dossiers)
     bill_ids = []
 
-    docs = dossiers.in_batches.flat_map do |batch|
-      pjs = pjs_for_champs(batch) +
-        pjs_for_commentaires(batch) +
-        pjs_for_dossier(batch) +
-        pjs_for_avis(batch)
+    docs = pjs_for_champs(dossiers) +
+      pjs_for_commentaires(dossiers) +
+      pjs_for_dossier(dossiers) +
+      pjs_for_avis(dossiers)
 
-      if liste_documents_allows?(:with_bills)
-        # some bills are shared among operations
-        # so first, all the bill_ids are fetched
-        operation_logs, some_bill_ids = operation_logs_and_signature_ids(batch)
+    if liste_documents_allows?(:with_bills)
+      # some bills are shared among operations
+      # so first, all the bill_ids are fetched
+      operation_logs, some_bill_ids = operation_logs_and_signature_ids(dossiers)
 
-        pjs += operation_logs
-        bill_ids += some_bill_ids
-      end
-
-      pjs
+      docs += operation_logs
+      bill_ids += some_bill_ids
     end
 
     if liste_documents_allows?(:with_bills)
@@ -33,14 +29,12 @@ class PiecesJustificativesService
     docs
   end
 
-  def generate_dossiers_export(dossiers)
+  def generate_dossiers_export(dossiers) # TODO: renommer generate_dossier_export sans s
     return [] if dossiers.empty?
 
     pdfs = []
 
     procedure = dossiers.first.procedure
-    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
-    dossiers = DossierPreloader.new(dossiers).in_batches
     dossiers.each do |dossier|
       dossier.association(:procedure).target = procedure
 
@@ -50,7 +44,6 @@ class PiecesJustificativesService
                   acls: acl_for_dossier_export(procedure),
                   dossier: dossier
                 })
-
       a = ActiveStorage::FakeAttachment.new(
         file: StringIO.new(pdf),
         filename: "export-#{dossier.id}.pdf",
@@ -142,34 +135,21 @@ class PiecesJustificativesService
   end
 
   def pjs_for_champs(dossiers)
-    champs = Champ
-      .joins(:piece_justificative_file_attachments)
-      .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
+    champs = dossiers.flat_map(&:champs).filter { _1.type == "Champs::PieceJustificativeChamp" }
 
     if !liste_documents_allows?(:with_champs_private)
-      champs = champs.where(private: false)
+      champs = champs.reject(&:private?)
     end
 
-    champ_id_dossier_id = champs
-      .pluck(:id, :dossier_id)
-      .to_h
-
-    ActiveStorage::Attachment
-      .includes(:blob)
-      .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
-      .filter { |a| safe_attachment(a) }
-      .group_by(&:record_id)
-      .flat_map do |champ_id, attachments|
-        dossier_id = champ_id_dossier_id[champ_id]
-
-        attachments.map.with_index do |attachment, index|
-          if @export_template
-            @export_template.attachment_and_path(Dossier.find(dossier_id), attachment, index: index, row_index: attachment.record.row_index)
-          else
-            ActiveStorage::DownloadableFile.pj_and_path(dossier_id, attachment)
-          end
+    champs.flat_map do |champ|
+      champ.piece_justificative_file_attachments.map.with_index do |attachment, index|
+        if @export_template
+          @export_template.attachment_and_path(champ.dossier, attachment, index:, row_index: champ.row_index, champ:)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(champ.dossier_id, attachment)
         end
       end
+    end
   end
 
   def pjs_for_commentaires(dossiers)
