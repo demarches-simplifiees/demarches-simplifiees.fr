@@ -558,6 +558,10 @@ module Users
       @dossier.update_champs_attributes(champs_public_attributes_params, :public, updated_by: current_user.email)
       if @dossier.champs.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
+
+        if @dossier.champs_public.filter(&:changed_for_autosave?).any?(&:used_by_routing_rules?)
+          RoutingEngine.compute(@dossier)
+        end
       end
 
       # We save the dossier without validating fields, and if it is successful and the client
