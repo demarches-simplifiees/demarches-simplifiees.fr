@@ -10,16 +10,13 @@ title: "Comment trouver ma démarche ?"
 # Comment trouver ma démarche ?
 
 > [!INFO]
-> *%{application_name}* est un service de la direction interministérielle du numérique, service du Premier ministre,
-intervenant sous l’égide du ministère de la Transformation et de la Fonction publiques,
-permettant aux administrations publiques de l’État, aux opérateurs et collectivités de dématérialiser leurs démarches administratives.
+> *%{application_name}* est un service de la direction interministérielle du numérique, service du Premier ministre.
 
-> À ce jour, [%{procedures_count} formulaires sont disponibles sur %{application_name}](/stats), mis en oeuvre par %{services_count} services et organismes publics.
->
-> Les administrations peuvent utiliser d’autres dispositifs de dématérialisation et dont vous pouvez retrouver les informations sur le site [services-public.fr](https://www.service-public.fr), ou bien à partir des sites internet de chaque organisme.
+> Ce site ne dispose pas d’un annuaire comprenant l’ensemble des démarches administratives en ligne. Vous pouvez retrouver des informations soit :
 
-> Ce site ne répertorie donc pas l’ensemble des démarches en ligne déployées par les administrations et services publics. Nous vous invitons à parcourir [service-public.fr](https://www.service-public.fr), le site officiel d’information et de démarches administratives si vous avez une question sur vos droits, une démarche à faire pour être davantage guidé(e).
->
+> - sur le site [service-public.fr](https://www.service-public.fr) : site officiel d'information sur les démarches administratives
+> - sur le site internet de l’administration concernée (ministère, organisme, préfecture, mairie…)
+
 > Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
 
 ## 1. Trouver le lien de votre démarche
@@ -68,5 +65,3 @@ Pour commencer un nouveau dossier sur une démarche déjà réalisée, [connecte
 Pour connaitre le nouveau lien vers la démarche en ligne, nous vous invitons à contacter le service en charge de la démarche. Vous trouverez les informations de contact en bas du formulaire dans la partie **« Poser une questions sur la démarche »** (en cliquant sur le numéro de dossier).
 
 ![Image montrant comment trouver les informations de contact d’une démarche](faq/usager-procedure-close-focus-contact.png)
-
-
