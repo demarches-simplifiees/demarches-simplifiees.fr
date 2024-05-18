@@ -141,10 +141,18 @@ class PiecesJustificativesService
       champs = champs.reject(&:private?)
     end
 
+    champs_id_row_index = champs.filter { _1.row_id.present? }.group_by(&:dossier_id).values.each_with_object({}) do |champs_for_dossier, hash|
+      champs_for_dossier.group_by(&:stable_id).values.each do |champs_for_stable_id|
+        champs_for_stable_id.sort_by(&:row_id).each.with_index { |c, index| hash[c.id] = index }
+      end
+    end
+
     champs.flat_map do |champ|
-      champ.piece_justificative_file_attachments.map.with_index do |attachment, index|
+      champ.piece_justificative_file_attachments.filter { |a| safe_attachment(a) }.map.with_index do |attachment, index|
+        row_index = champs_id_row_index[champ.id]
+
         if @export_template
-          @export_template.attachment_and_path(champ.dossier, attachment, index:, row_index: champ.row_index, champ:)
+          @export_template.attachment_and_path(champ.dossier, attachment, index:, row_index:, champ:)
         else
           ActiveStorage::DownloadableFile.pj_and_path(champ.dossier_id, attachment)
         end

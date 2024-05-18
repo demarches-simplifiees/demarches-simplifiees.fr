@@ -40,7 +40,7 @@ describe ProcedureExportService do
               subject
             end
 
-            expect(sql_count).to eq(89)
+            expect(sql_count).to eq(58)
 
             dossier = dossiers.first
 
@@ -58,7 +58,7 @@ describe ProcedureExportService do
                 "export/dossier-#{dossier.id}/libelle-du-champ-2-#{dossier.id}-1-2.png"
               ]
 
-              expect(files.size).to eq(10 * 6 + 1)
+              expect(files.size).to eq(dossiers.count * 6 + 1)
               expect(structure - files.map(&:filename)).to be_empty
             end
             FileUtils.remove_entry_secure('tmp.zip')

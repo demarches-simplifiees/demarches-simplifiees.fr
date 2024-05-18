@@ -95,12 +95,6 @@ class Champ < ApplicationRecord
     [row_id, stable_id].compact
   end
 
-  def row_index
-    return nil if parent_id.nil?
-
-    Champ.where(parent_id:).pluck(:row_id).sort.index(row_id)
-  end
-
   # used for the `required` html attribute
   # check visibility to avoid hidden required input
   # which prevent the form from being sent.
