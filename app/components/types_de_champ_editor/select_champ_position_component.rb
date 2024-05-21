@@ -5,7 +5,7 @@ class TypesDeChampEditor::SelectChampPositionComponent < ApplicationComponent
   end
 
   def options
-    [["Sélectionner une option", @coordinate.stable_id]]
+    [["Déplacer le champ après", @coordinate.stable_id]]
   end
 
   def describedby_id

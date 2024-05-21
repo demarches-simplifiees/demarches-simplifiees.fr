@@ -1,24 +1,10 @@
-%li.type-de-champ.flex.column.justify-start.fr-mb-6w{ html_options }
+%li.type-de-champ.flex.column.justify-start.fr-mb-5v{ html_options }
   .type-de-champ-container
-    .flex.justify-between.section.head
-      .position.flex.align-center= (@coordinate.position + 1).to_s
-      %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
-      %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-down-line.move-down{ move_button_options(:down) }
-
-      .flex.right
-        - if coordinate.used_by_routing_rules?
-          %span
-            utilisé pour
-            = link_to('le routage', admin_procedure_groupe_instructeurs_path(revision.procedure_id, anchor: 'routing-rules'))
-        - else
-          = button_to type_de_champ_path, class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
-            %span.sr-only Supprimer
-
     - if @errors.present?
       .types-de-champ-errors
         = @errors
 
-    .flex.justify-start.section
+    .flex.justify-start.section.head
       = form_for(type_de_champ, form_options) do |form|
         .flex.justify-start.flex-gap
           .flex.justify-start.width-33
@@ -131,7 +117,7 @@
               = form.select :character_limit, options_for_character_limit, {}, { id: dom_id(type_de_champ, :character_limit), class: 'fr-select' }
 
     - if type_de_champ.block?
-      .flex.justify-start.section.fr-ml-1w.fr-mb-2w
+      .flex.justify-start.section.fr-ml-1w
         .editor-block.flex-grow.cell
           = render TypesDeChampEditor::BlockComponent.new(block: coordinate, coordinates: coordinate.revision_types_de_champ, upper_coordinates: @upper_coordinates)
           .type-de-champ-add-button{ id: dom_id(coordinate, :type_de_champ_add_button), class: class_names(hidden: !coordinate.empty?) }
@@ -139,6 +125,20 @@
 
     = render(Conditions::ChampsConditionsComponent.new(tdc: type_de_champ, upper_tdcs: @upper_coordinates.map(&:type_de_champ), procedure_id: procedure.id))
 
+    .flex.justify-between.section.footer
+      .position.flex.align-center= (@coordinate.position + 1).to_s
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-up-line.move-up{ move_button_options(:up) }
+      %button.fr-btn.fr-btn--tertiary-no-outline.fr-icon-arrow-down-line.move-down{ move_button_options(:down) }
+      = render TypesDeChampEditor::SelectChampPositionComponent.new(revision:, coordinate:)
+
+      .flex.right
+        - if coordinate.used_by_routing_rules?
+          %span
+            utilisé pour
+            = link_to('le routage', admin_procedure_groupe_instructeurs_path(revision.procedure_id, anchor: 'routing-rules'))
+        - else
+          = button_to type_de_champ_path, class: 'fr-btn fr-btn--tertiary-no-outline fr-icon-delete-line', title: "Supprimer le champ", method: :delete, form: { data: { turbo_confirm: 'Êtes vous sûr de vouloir supprimer ce champ ?' } } do
+            %span.sr-only Supprimer
+
   .type-de-champ-add-button{ class: class_names(root: !coordinate.child?, flex: true) }
     = render TypesDeChampEditor::AddChampButtonComponent.new(revision: coordinate.revision, parent: coordinate&.parent, is_annotation: coordinate.private?, after_stable_id: type_de_champ.stable_id)
-    = render TypesDeChampEditor::SelectChampPositionComponent.new(revision:, coordinate:)
