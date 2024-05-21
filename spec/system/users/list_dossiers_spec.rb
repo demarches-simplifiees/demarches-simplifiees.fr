@@ -268,6 +268,7 @@ describe 'user access to the list of their dossiers', js: true do
       context 'when it matches multiple dossiers' do
         let!(:dossier_with_champs) { create(:dossier, :with_populated_champs, :en_construction, user: user) }
         before do
+          perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
           find('.fr-search-bar .fr-btn').click
         end
 

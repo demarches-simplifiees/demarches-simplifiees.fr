@@ -899,7 +899,7 @@ describe Dossier, type: :model do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
       expect {
-        dossier.update_column(:search_terms, 'bonjour')
+        dossier.update_column(:conservation_extension, 'P1W')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -907,7 +907,7 @@ describe Dossier, type: :model do
       }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_construction', anything)
 
       expect {
-        dossier.update_column(:search_terms, 'bonjour2')
+        dossier.update_column(:conservation_extension, 'P2W')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -995,28 +995,28 @@ describe Dossier, type: :model do
       allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
-      Timecop.freeze(now)
+      travel_to now
       dossier.accepter!(instructeur: instructeur, motivation: 'motivation')
       dossier.reload
     end
 
-    after { Timecop.return }
-
-    it { expect(dossier.traitements.last.motivation).to eq('motivation') }
-    it { expect(dossier.motivation).to eq('motivation') }
-    it { expect(dossier.traitements.last.instructeur_email).to eq(instructeur.email) }
-    it { expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at) }
-    it { expect(dossier.traitements.last.processed_at).to eq(now) }
-    it { expect(dossier.processed_at).to eq(now) }
-    it { expect(dossier.state).to eq('accepte') }
-    it { expect(last_operation.operation).to eq('accepter') }
-    it { expect(last_operation.automatic_operation?).to be_falsey }
-    it { expect(operation_serialized['operation']).to eq('accepter') }
-    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
-    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
-    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
-    it { expect(dossier.attestation).to eq(attestation) }
-    it { expect(dossier.commentaires.count).to eq(1) }
+    it "update attributes" do
+      expect(dossier.traitements.last.motivation).to eq('motivation')
+      expect(dossier.motivation).to eq('motivation')
+      expect(dossier.traitements.last.instructeur_email).to eq(instructeur.email)
+      expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at)
+      expect(dossier.traitements.last.processed_at).to eq(now)
+      expect(dossier.processed_at).to eq(now)
+      expect(dossier.state).to eq('accepte')
+      expect(last_operation.operation).to eq('accepter')
+      expect(last_operation.automatic_operation?).to be_falsey
+      expect(operation_serialized['operation']).to eq('accepter')
+      expect(operation_serialized['dossier_id']).to eq(dossier.id)
+      expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+      expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
+      expect(dossier.attestation).to eq(attestation)
+      expect(dossier.commentaires.count).to eq(1)
+    end
   end
 
   describe '#accepter_automatiquement!' do
@@ -1642,24 +1642,24 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
     before do
-      Timecop.freeze
+      freeze_time
       allow(NotificationMailer).to receive(:send_repasser_en_instruction_notification).and_return(double(deliver_later: true))
       dossier.repasser_en_instruction!(instructeur: instructeur)
       dossier.reload
     end
 
-    it { expect(dossier.state).to eq('en_instruction') }
-    it { expect(dossier.archived).to be_falsey }
-    it { expect(dossier.motivation).to be_nil }
-    it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
-    it { expect(dossier.attestation).to be_nil }
-    it { expect(dossier.sva_svr_decision_on).to be_nil }
-    it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
-    it { expect(last_operation.operation).to eq('repasser_en_instruction') }
-    it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
-    it { expect(NotificationMailer).to have_received(:send_repasser_en_instruction_notification).with(dossier) }
-
-    after { Timecop.return }
+    it "update attributes" do
+      expect(dossier.state).to eq('en_instruction')
+      expect(dossier.archived).to be_falsey
+      expect(dossier.motivation).to be_nil
+      expect(dossier.justificatif_motivation.attached?).to be_falsey
+      expect(dossier.attestation).to be_nil
+      expect(dossier.sva_svr_decision_on).to be_nil
+      expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil
+      expect(last_operation.operation).to eq('repasser_en_instruction')
+      expect(last_operation.data['author']['email']).to eq(instructeur.email)
+      expect(NotificationMailer).to have_received(:send_repasser_en_instruction_notification).with(dossier)
+    end
   end
 
   describe '#notify_draft_not_submitted' do

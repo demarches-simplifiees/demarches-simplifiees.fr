@@ -19,37 +19,50 @@ RSpec.describe DossierCloneConcern do
     let(:types_de_champ_public) { [{}] }
     let(:types_de_champ_private) { [{}] }
     let(:fork) { false }
-    let(:new_dossier) { dossier.clone(fork:) }
+    subject(:new_dossier) { dossier.clone(fork:) }
 
-    context 'reset most attributes' do
-      it { expect(new_dossier.id).not_to eq(dossier.id) }
-      it { expect(new_dossier.api_entreprise_job_exceptions).to be_nil }
-      it { expect(new_dossier.archived).to be_falsey }
-      it { expect(new_dossier.brouillon_close_to_expiration_notice_sent_at).to be_nil }
-      it { expect(new_dossier.conservation_extension).to eq(0.seconds) }
-      it { expect(new_dossier.declarative_triggered_at).to be_nil }
-      it { expect(new_dossier.deleted_user_email_never_send).to be_nil }
-      it { expect(new_dossier.depose_at).to be_nil }
-      it { expect(new_dossier.en_construction_at).to be_nil }
-      it { expect(new_dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil }
-      it { expect(new_dossier.en_instruction_at).to be_nil }
-      it { expect(new_dossier.for_procedure_preview).to be_falsey }
-      it { expect(new_dossier.groupe_instructeur_updated_at).to be_nil }
-      it { expect(new_dossier.hidden_at).to be_nil }
-      it { expect(new_dossier.hidden_by_administration_at).to be_nil }
-      it { expect(new_dossier.hidden_by_reason).to be_nil }
-      it { expect(new_dossier.hidden_by_user_at).to be_nil }
-      it { expect(new_dossier.identity_updated_at).to be_nil }
-      it { expect(new_dossier.last_avis_updated_at).to be_nil }
-      it { expect(new_dossier.last_champ_private_updated_at).to be_nil }
-      it { expect(new_dossier.last_champ_updated_at).to be_nil }
-      it { expect(new_dossier.last_commentaire_updated_at).to be_nil }
-      it { expect(new_dossier.motivation).to be_nil }
-      it { expect(new_dossier.private_search_terms).to eq("") }
-      it { expect(new_dossier.processed_at).to be_nil }
-      it { expect(new_dossier.search_terms).to match(dossier.user.email) }
-      it { expect(new_dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
-      it { expect(new_dossier.dossier_transfer_id).to be_nil }
+    it 'resets most of the attributes for the cloned dossier' do
+      expect(new_dossier.id).not_to eq(dossier.id)
+      expect(new_dossier.api_entreprise_job_exceptions).to be_nil
+      expect(new_dossier.archived).to be_falsey
+      expect(new_dossier.brouillon_close_to_expiration_notice_sent_at).to be_nil
+      expect(new_dossier.conservation_extension).to eq(0.seconds)
+      expect(new_dossier.declarative_triggered_at).to be_nil
+      expect(new_dossier.deleted_user_email_never_send).to be_nil
+      expect(new_dossier.depose_at).to be_nil
+      expect(new_dossier.en_construction_at).to be_nil
+      expect(new_dossier.en_construction_close_to_expiration_notice_sent_at).to be_nil
+      expect(new_dossier.en_instruction_at).to be_nil
+      expect(new_dossier.for_procedure_preview).to be_falsey
+      expect(new_dossier.groupe_instructeur_updated_at).to be_nil
+      expect(new_dossier.hidden_at).to be_nil
+      expect(new_dossier.hidden_by_administration_at).to be_nil
+      expect(new_dossier.hidden_by_reason).to be_nil
+      expect(new_dossier.hidden_by_user_at).to be_nil
+      expect(new_dossier.identity_updated_at).to be_nil
+      expect(new_dossier.last_avis_updated_at).to be_nil
+      expect(new_dossier.last_champ_private_updated_at).to be_nil
+      expect(new_dossier.last_champ_updated_at).to be_nil
+      expect(new_dossier.last_commentaire_updated_at).to be_nil
+      expect(new_dossier.motivation).to be_nil
+      expect(new_dossier.processed_at).to be_nil
+    end
+
+    it "updates search terms" do
+      # In spec, dossier and flag reference are created just before deep clone,
+      # which keep the flag reference from the original, pointing to the original id.
+      # We have to remove the flag reference before the clone
+      dossier.remove_instance_variable(:@debounce_index_search_terms_flag_kredis_flag)
+
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob) do
+        subject
+      end
+
+      sql = "SELECT search_terms, private_search_terms FROM dossiers where id = :id"
+      result = Dossier.connection.execute(Dossier.sanitize_sql_array([sql, id: new_dossier.id])).first
+
+      expect(result["search_terms"]).to match(dossier.user.email)
+      expect(result["private_search_terms"]).to eq("")
     end
 
     context 'copies some attributes' do
@@ -59,18 +72,22 @@ RSpec.describe DossierCloneConcern do
       end
 
       context 'when not forked' do
-        it { expect(new_dossier.groupe_instructeur).to be_nil }
+        it "copies or reset attributes" do
+          expect(new_dossier.groupe_instructeur).to be_nil
+          expect(new_dossier.autorisation_donnees).to eq(dossier.autorisation_donnees)
+          expect(new_dossier.revision_id).to eq(dossier.revision_id)
+          expect(new_dossier.user_id).to eq(dossier.user_id)
+        end
       end
-      it { expect(new_dossier.autorisation_donnees).to eq(dossier.autorisation_donnees) }
-      it { expect(new_dossier.revision_id).to eq(dossier.revision_id) }
-      it { expect(new_dossier.user_id).to eq(dossier.user_id) }
     end
 
     context 'forces some attributes' do
       let(:dossier) { create(:dossier, :accepte) }
 
-      it { expect(new_dossier.brouillon?).to eq(true) }
-      it { expect(new_dossier.parent_dossier).to eq(dossier) }
+      it do
+        expect(new_dossier.brouillon?).to eq(true)
+        expect(new_dossier.parent_dossier).to eq(dossier)
+      end
 
       context 'destroy parent' do
         before { new_dossier }
@@ -83,22 +100,28 @@ RSpec.describe DossierCloneConcern do
 
     context 'procedure with_individual' do
       let(:procedure) { create(:procedure, :for_individual) }
-      it { expect(new_dossier.individual.slice(:nom, :prenom, :gender)).to eq(dossier.individual.slice(:nom, :prenom, :gender)) }
-      it { expect(new_dossier.individual.id).not_to eq(dossier.individual.id) }
+      it do
+        expect(new_dossier.individual.slice(:nom, :prenom, :gender)).to eq(dossier.individual.slice(:nom, :prenom, :gender))
+        expect(new_dossier.individual.id).not_to eq(dossier.individual.id)
+      end
     end
 
     context 'procedure with etablissement' do
       let(:dossier) { create(:dossier, :with_entreprise) }
-      it { expect(new_dossier.etablissement.slice(:siret)).to eq(dossier.etablissement.slice(:siret)) }
-      it { expect(new_dossier.etablissement.id).not_to eq(dossier.etablissement.id) }
+      it do
+        expect(new_dossier.etablissement.slice(:siret)).to eq(dossier.etablissement.slice(:siret))
+        expect(new_dossier.etablissement.id).not_to eq(dossier.etablissement.id)
+      end
     end
 
     describe 'champs' do
       it { expect(new_dossier.id).not_to eq(dossier.id) }
 
       context 'public are duplicated' do
-        it { expect(new_dossier.champs_public.count).to eq(dossier.champs_public.count) }
-        it { expect(new_dossier.champs_public.ids).not_to eq(dossier.champs_public.ids) }
+        it do
+          expect(new_dossier.champs_public.count).to eq(dossier.champs_public.count)
+          expect(new_dossier.champs_public.ids).not_to eq(dossier.champs_public.ids)
+        end
 
         it 'keeps champs.values' do
           original_first_champ = dossier.champs_public.first
@@ -113,8 +136,10 @@ RSpec.describe DossierCloneConcern do
           let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
           before { dossier.champs_public << champ_repetition }
 
-          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4) }
-          it { expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids) }
+          it do
+            expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4)
+            expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids)
+          end
         end
 
         context 'for Champs::CarteChamp with geo areas, original_champ.geo_areas are duped' do
@@ -124,8 +149,10 @@ RSpec.describe DossierCloneConcern do
           let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
           before { dossier.champs_public << champ_carte }
 
-          it { expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.count).to eq(1) }
-          it { expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.ids).not_to eq(champ_carte.geo_areas.ids) }
+          it do
+            expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.count).to eq(1)
+            expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.ids).not_to eq(champ_carte.geo_areas.ids)
+          end
         end
 
         context 'for Champs::SiretChamp, original_champ.etablissement is duped' do
@@ -135,8 +162,10 @@ RSpec.describe DossierCloneConcern do
          let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champs_siret, etablissement: create(:etablissement)) }
          before { dossier.champs_public << champ_siret }
 
-         it { expect(Champs::SiretChamp.where(dossier: dossier).first.etablissement).not_to be_nil }
-         it { expect(Champs::SiretChamp.where(dossier: new_dossier).first.etablissement.id).not_to eq(champ_siret.etablissement.id) }
+         it do
+          expect(Champs::SiretChamp.where(dossier: dossier).first.etablissement).not_to be_nil
+          expect(Champs::SiretChamp.where(dossier: new_dossier).first.etablissement.id).not_to eq(champ_siret.etablissement.id)
+        end
        end
 
         context 'for Champs::PieceJustificative, original_champ.piece_justificative_file is duped' do
@@ -153,18 +182,19 @@ RSpec.describe DossierCloneConcern do
           let(:champ_address) { create(:champ_address, type_de_champ: type_de_champs_adress, external_id: 'Address', data: { city_code: '75019' }) }
           before { dossier.champs_public << champ_address }
 
-          it { expect(Champs::AddressChamp.where(dossier: dossier).first.data).not_to be_nil }
-          it { expect(Champs::AddressChamp.where(dossier: dossier).first.external_id).not_to be_nil }
-          it { expect(Champs::AddressChamp.where(dossier: new_dossier).first.external_id).to eq(champ_address.external_id) }
-          it { expect(Champs::AddressChamp.where(dossier: new_dossier).first.data).to eq(champ_address.data) }
+          it do
+            expect(Champs::AddressChamp.where(dossier: dossier).first.data).not_to be_nil
+            expect(Champs::AddressChamp.where(dossier: dossier).first.external_id).not_to be_nil
+            expect(Champs::AddressChamp.where(dossier: new_dossier).first.external_id).to eq(champ_address.external_id)
+            expect(Champs::AddressChamp.where(dossier: new_dossier).first.data).to eq(champ_address.data)
+          end
         end
       end
 
       context 'private are renewd' do
-        it { expect(new_dossier.champs_private.count).to eq(dossier.champs_private.count) }
-        it { expect(new_dossier.champs_private.ids).not_to eq(dossier.champs_private.ids) }
-
         it 'reset champs private values' do
+          expect(new_dossier.champs_private.count).to eq(dossier.champs_private.count)
+          expect(new_dossier.champs_private.ids).not_to eq(dossier.champs_private.ids)
           original_first_champs_private = dossier.champs_private.first
           original_first_champs_private.update!(value: 'kthxbye')
 
@@ -178,10 +208,12 @@ RSpec.describe DossierCloneConcern do
       let(:new_dossier) { dossier.clone(fork: true) }
       before { dossier.champs_public.reload } # we compare timestamps so we have to get the precision limit from the db }
 
-      it { expect(new_dossier.editing_fork_origin).to eq(dossier) }
-      it { expect(new_dossier.champs_public[0].id).not_to eq(dossier.champs_public[0].id) }
-      it { expect(new_dossier.champs_public[0].created_at).to eq(dossier.champs_public[0].created_at) }
-      it { expect(new_dossier.champs_public[0].updated_at).to eq(dossier.champs_public[0].updated_at) }
+      it do
+        expect(new_dossier.editing_fork_origin).to eq(dossier)
+        expect(new_dossier.champs_public[0].id).not_to eq(dossier.champs_public[0].id)
+        expect(new_dossier.champs_public[0].created_at).to eq(dossier.champs_public[0].created_at)
+        expect(new_dossier.champs_public[0].updated_at).to eq(dossier.champs_public[0].updated_at)
+      end
 
       context "piece justificative champ" do
         let(:types_de_champ_public) { [{ type: :piece_justificative }] }
@@ -253,8 +285,10 @@ RSpec.describe DossierCloneConcern do
         forked_dossier.assign_to_groupe_instructeur(dossier.procedure.defaut_groupe_instructeur, DossierAssignment.modes.fetch(:manual))
       }
 
-      it { is_expected.to eq(added: [], updated: [], removed: []) }
-      it { expect(forked_dossier.forked_with_changes?).to be_truthy }
+      it do
+        expect(subject).to eq(added: [], updated: [], removed: [])
+        expect(forked_dossier.forked_with_changes?).to be_truthy
+      end
     end
 
     context 'with updated champ' do
@@ -262,8 +296,8 @@ RSpec.describe DossierCloneConcern do
 
       before { updated_champ.update(value: 'new value') }
 
-      it { is_expected.to eq(added: [], updated: [updated_champ], removed: []) }
       it 'forked_with_changes? should reflect dossier state' do
+        expect(subject).to eq(added: [], updated: [updated_champ], removed: [])
         expect(dossier.forked_with_changes?).to be_falsey
         expect(forked_dossier.forked_with_changes?).to be_truthy
         expect(updated_champ.forked_with_changes?).to be_truthy
@@ -306,16 +340,14 @@ RSpec.describe DossierCloneConcern do
         end
         updated_champ.update(value: 'new value')
         updated_repetition_champ.update(value: 'new value in repetition')
+        dossier.debounce_index_search_terms_flag.remove
       end
 
       it { expect { subject }.to change { dossier.reload.champs.size }.by(0) }
       it { expect { subject }.not_to change { dossier.reload.champs.order(:created_at).reject { _1.stable_id.in?([99, 994]) }.map(&:value) } }
+      it { expect { subject }.to have_enqueued_job(DossierIndexSearchTermsJob).with(dossier) }
       it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 99 }.value }.from('old value').to('new value') }
       it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
-
-      it 'update dossier search terms' do
-        expect { subject }.to have_enqueued_job(DossierUpdateSearchTermsJob).with(dossier)
-      end
 
       it 'fork is hidden after merge' do
         subject

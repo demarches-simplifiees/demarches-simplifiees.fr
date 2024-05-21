@@ -162,6 +162,7 @@ describe 'Invitations' do
       before do
         navigate_to_invited_dossier(invite)
         visit dossiers_path
+        perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
       end
 
       it "can search by id and it displays the dossier" do

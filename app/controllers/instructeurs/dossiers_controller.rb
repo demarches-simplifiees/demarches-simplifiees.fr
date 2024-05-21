@@ -280,6 +280,7 @@ module Instructeurs
       end
 
       dossier.save(context: :champs_private_value)
+      dossier.index_search_terms_later
 
       respond_to do |format|
         format.turbo_stream do

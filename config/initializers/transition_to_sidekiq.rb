@@ -44,7 +44,7 @@ if Rails.env.production? && SIDEKIQ_ENABLED
       self.queue_adapter = :sidekiq
     end
 
-    class DossierUpdateSearchTermsJob < ApplicationJob
+    class DossierIndexSearchTermsJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
 

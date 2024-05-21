@@ -115,6 +115,16 @@ describe Etablissement do
     end
   end
 
+  describe 'update search terms' do
+    let(:etablissement) { create(:etablissement, dossier: build(:dossier)) }
+
+    it "schedule update search terms" do
+      assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
+        etablissement.update(entreprise_nom: "nom")
+      end
+    end
+  end
+
   private
 
   def csv_to_array_of_hash(lines)

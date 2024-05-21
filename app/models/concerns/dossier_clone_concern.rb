@@ -71,7 +71,7 @@ module DossierCloneConcern
       touch(:last_champ_updated_at)
     end
     reload
-    update_search_terms_later
+    index_search_terms_later
     editing_fork.destroy_editing_fork!
   end
 
@@ -120,6 +120,7 @@ module DossierCloneConcern
       end
     end
 
+    cloned_dossier.index_search_terms_later if !fork
     cloned_dossier.reload
   end
 
