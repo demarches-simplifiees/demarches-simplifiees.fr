@@ -39,6 +39,7 @@ class Champ < ApplicationRecord
     :departement?,
     :region?,
     :textarea?,
+    :piece_justificative?,
     :titre_identite?,
     :header_section?,
     :checkbox?,
