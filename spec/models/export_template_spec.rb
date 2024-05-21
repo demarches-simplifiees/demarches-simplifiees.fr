@@ -130,7 +130,7 @@ describe ExportTemplate do
         dossier.champs_public << champ_pj
       end
       it 'returns pj and custom name for pj' do
-        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/superpj_justif-1.png"])
+        expect(export_template.attachment_and_path(dossier, attachment, champ: champ_pj)).to eq([attachment, "DOSSIER_#{dossier.id}/superpj_justif-1.png"])
       end
     end
     context 'pj repetable' do
@@ -161,7 +161,7 @@ describe ExportTemplate do
         dossier.champs_public << champ_pj
       end
       it 'rename repetable pj' do
-        expect(export_template.attachment_and_path(dossier, attachment)).to eq([attachment, "DOSSIER_#{dossier.id}/pj_repet_#{dossier.id}-1.png"])
+        expect(export_template.attachment_and_path(dossier, attachment, champ: champ_pj)).to eq([attachment, "DOSSIER_#{dossier.id}/pj_repet_#{dossier.id}-1.png"])
       end
     end
   end
@@ -272,7 +272,7 @@ describe ExportTemplate do
         let(:pdf_mention) { { "type" => "mention", "attrs" => {} } }
         it "add error for pdf name" do
           expect(subject.valid?).to be_falsey
-          expect(subject.errors.full_messages).to include "Le champ « Nom de l'export » doit être rempli"
+          expect(subject.errors.full_messages).to include "Le champ « Nom du dossier au format pdf » doit être rempli"
         end
       end
     end

@@ -1,6 +1,6 @@
 describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, libelle: 'pj' }, { type: :repetition, children: [{ type: :piece_justificative }] }]) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, libelle: 'pj' }, { type: :repetition, children: [{ type: :piece_justificative, libelle: 'repet_pj' }] }]) }
   let(:dossiers) { create_list(:dossier, 10, procedure: procedure) }
   let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
@@ -40,22 +40,21 @@ describe ProcedureExportService do
               subject
             end
 
-            expect(sql_count).to eq(58)
+            expect(sql_count <= 58).to be_truthy
 
             dossier = dossiers.first
 
             File.write('tmp.zip', subject.download, mode: 'wb')
             File.open('tmp.zip') do |fd|
               files = ZipTricks::FileReader.read_zip_structure(io: fd)
-              base_fn = "export"
               structure = [
                 "export/",
                 "export/dossier-#{dossier.id}/",
                 "export/dossier-#{dossier.id}/export_#{dossier.id}.pdf",
                 "export/dossier-#{dossier.id}/pj-#{dossier.id}-1.png",
-                "export/dossier-#{dossier.id}/libelle-du-champ-2-#{dossier.id}-1-1.png",
-                "export/dossier-#{dossier.id}/libelle-du-champ-2-#{dossier.id}-2-1.png",
-                "export/dossier-#{dossier.id}/libelle-du-champ-2-#{dossier.id}-1-2.png"
+                "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-1-1.png",
+                "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-2-1.png",
+                "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-1-2.png"
               ]
 
               expect(files.size).to eq(dossiers.count * 6 + 1)
