@@ -39,6 +39,7 @@ class Champ < ApplicationRecord
     :departement?,
     :region?,
     :textarea?,
+    :piece_justificative?,
     :titre_identite?,
     :header_section?,
     :checkbox?,
@@ -238,7 +239,7 @@ class Champ < ApplicationRecord
         kopy.write_attribute(:stable_id, original.stable_id)
         kopy.write_attribute(:stream, 'main')
       end
-      ClonePiecesJustificativesService.clone_attachments(original, kopy)
+      ClonePiecesJustificativesService.clone_attachments(original, kopy) if fork || !private?
     end
   end
 
