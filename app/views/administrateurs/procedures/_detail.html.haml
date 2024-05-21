@@ -5,15 +5,23 @@
     - params = show_detail ? {} : { show_detail: true }
     = button_to detail_admin_procedure_path(procedure["id"]), method: :post, params:, title:, class: [icon, "fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline" ] do
       = title
-
   %td
     - if procedure.template
-      %p.fr-badge.fr-badge--info.fr-badge--sm= "Modèle DS"
-      %br
+      %p.fr-badge.fr-badge--info.fr-badge--sm= "Modèle"
+      %abbr{ title: APPLICATION_NAME }= acronymize(APPLICATION_NAME)
     = procedure.libelle
   %td= procedure.id
   %td= procedure.estimated_dossiers_count
-  %td= procedure.administrateurs.count
+  %td
+    - if procedure.respond_to?(:parsed_latest_zone_labels)
+      - procedure.parsed_latest_zone_labels.uniq.each do |zone_label|
+        %span.mb-2= zone_label
+        .mb-2
+    - else
+      - procedure.zones.uniq.each do |zone|
+        %span= zone.current_label
+        .mb-1
+
   %td= t procedure.aasm_state, scope: 'activerecord.attributes.procedure.aasm_state'
   %td= l(procedure.published_at, format: :message_date_without_time) if procedure.published_at
   %td
@@ -21,16 +29,10 @@
     = link_to('Cloner', admin_procedure_clone_path(procedure.id, from_new_from_existing: true), 'data-method' => :put, class: 'fr-btn fr-btn--tertiary fr-btn--sm')
 
 
-
-
 - if show_detail
   %tr.procedure{ id: "procedure_detail_#{procedure.id}" }
     %td.fr-highlight--beige-gris-galet{ colspan: '8' }
       .fr-container
-        .fr-grid-row
-          .fr-col-6
-            - procedure.zones.uniq.each do |zone|
-              = zone.label_at(procedure.published_or_created_at)
-          .fr-col-6
-            - procedure.administrateurs.uniq.each do |admin|
-              = admin.email
+        .fr-col-6
+          - procedure.administrateurs.uniq.each do |admin|
+            = admin.email
