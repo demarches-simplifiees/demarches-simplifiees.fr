@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_18_053843) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1152,6 +1152,49 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
+<<<<<<< HEAD
+=======
+  create_table "virus_scans", force: :cascade do |t|
+    t.string "blob_key"
+    t.bigint "champ_id"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "scanned_at", precision: nil
+    t.string "status"
+    t.datetime "updated_at", precision: nil, null: false
+    t.index ["champ_id"], name: "index_virus_scans_on_champ_id"
+  end
+
+  create_table "webhook_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "delivered_at"
+    t.datetime "enqueued_at", null: false
+    t.string "event_type", null: false, array: true
+    t.string "resource_id", null: false
+    t.string "resource_type", null: false
+    t.string "resource_version", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "webhook_id", null: false
+    t.index ["webhook_id"], name: "index_webhook_events_on_webhook_id"
+  end
+
+  create_table "webhooks", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "enabled", default: true, null: false
+    t.string "event_type", null: false, array: true
+    t.text "label", null: false
+    t.datetime "last_error_at"
+    t.text "last_error_message"
+    t.datetime "last_success_at"
+    t.bigint "procedure_id", null: false
+    t.integer "retries", default: 0, null: false
+    t.text "secret", null: false
+    t.datetime "updated_at", null: false
+    t.text "url", null: false
+    t.index ["event_type"], name: "index_webhooks_on_event_type"
+    t.index ["procedure_id"], name: "index_webhooks_on_procedure_id"
+  end
+
+>>>>>>> 9168066df (feat(webhook): create tables)
   create_table "without_continuation_mails", id: :serial, force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", precision: nil, null: false
@@ -1249,6 +1292,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
+  add_foreign_key "webhook_events", "webhooks"
+  add_foreign_key "webhooks", "procedures"
   add_foreign_key "without_continuation_mails", "procedures"
   add_foreign_key "zone_labels", "zones"
 end

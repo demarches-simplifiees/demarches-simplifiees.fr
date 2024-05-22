@@ -342,6 +342,7 @@ module Users
 
       if @commentaire.errors.empty?
         @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        Webhook.enqueue(dossier, Webhook.event_types.fetch(:dossier_message_recu))
 
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)

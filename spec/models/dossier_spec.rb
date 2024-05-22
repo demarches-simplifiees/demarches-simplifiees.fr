@@ -869,53 +869,6 @@ describe Dossier, type: :model do
     end
   end
 
-  describe 'webhook' do
-    let(:dossier) { create(:dossier) }
-    let(:instructeur) { create(:instructeur) }
-
-    it 'should not call webhook' do
-      expect {
-        dossier.accepte!
-      }.to_not have_enqueued_job(WebHookJob)
-    end
-
-    it 'should not call webhook with empty value' do
-      dossier.procedure.update_column(:web_hook_url, '')
-
-      expect {
-        dossier.accepte!
-      }.to_not have_enqueued_job(WebHookJob)
-    end
-
-    it 'should not call webhook with blank value' do
-      dossier.procedure.update_column(:web_hook_url, '   ')
-
-      expect {
-        dossier.accepte!
-      }.to_not have_enqueued_job(WebHookJob)
-    end
-
-    it 'should call webhook' do
-      dossier.procedure.update_column(:web_hook_url, '/webhook.json')
-
-      expect {
-        dossier.update_column(:conservation_extension, 'P1W')
-      }.to_not have_enqueued_job(WebHookJob)
-
-      expect {
-        dossier.passer_en_construction!
-      }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_construction', anything)
-
-      expect {
-        dossier.update_column(:conservation_extension, 'P2W')
-      }.to_not have_enqueued_job(WebHookJob)
-
-      expect {
-        dossier.passer_en_instruction!(instructeur: instructeur)
-      }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_instruction', anything)
-    end
-  end
-
   describe "#can_transition_to_en_construction?" do
     let(:procedure) { create(:procedure, :published) }
     let(:dossier) { create(:dossier, state: state, procedure: procedure) }

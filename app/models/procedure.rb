@@ -161,6 +161,7 @@ class Procedure < ApplicationRecord
   # as order scope introduces invalid sql in some combinations.
   has_many :unordered_revisions, class_name: 'ProcedureRevision', inverse_of: :procedure, dependent: :destroy
   has_many :dossiers, through: :unordered_revisions, dependent: :restrict_with_exception
+  has_many :webhooks, dependent: :destroy
 
   has_one :initiated_mail, class_name: "Mails::InitiatedMail", dependent: :destroy
   has_one :received_mail, class_name: "Mails::ReceivedMail", dependent: :destroy

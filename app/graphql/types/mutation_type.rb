@@ -24,5 +24,9 @@ module Types
     field :groupe_instructeur_ajouter_instructeurs, mutation: Mutations::GroupeInstructeurAjouterInstructeurs
     field :groupe_instructeur_supprimer_instructeurs, mutation: Mutations::GroupeInstructeurSupprimerInstructeurs
     field :demarche_cloner, mutation: Mutations::DemarcheCloner
+
+    field :webhook_create, mutation: Mutations::WebhookCreate
+    field :webhook_delete, mutation: Mutations::WebhookDelete
+    field :webhook_update, mutation: Mutations::WebhookUpdate
   end
 end

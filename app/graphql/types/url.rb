@@ -3,9 +3,9 @@ module Types
     description "A valid URL, transported as a string"
 
     def self.coerce_input(input_value, context)
-      url = Addressable::URI(input_value)
+      uri = Addressable::URI.parse(input_value)
       if uri.scheme.in?(['http', 'https'])
-        url
+        uri.to_s
       else
         raise GraphQL::CoercionError, "#{input_value.inspect} is not a valid URL"
       end
