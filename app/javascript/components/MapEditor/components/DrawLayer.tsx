@@ -1,7 +1,7 @@
 import { useCallback, useRef, useEffect } from 'react';
-import type { LngLatBoundsLike } from 'maplibre-gl';
+import type { LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
 import DrawControl from '@mapbox/mapbox-gl-draw';
-import type { FeatureCollection } from 'geojson';
+import type { FeatureCollection, Feature, Point } from 'geojson';
 
 import { useMapLibre } from '../../shared/maplibre/MapLibre';
 import {
@@ -78,15 +78,24 @@ export function DrawLayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, enabled]);
 
-  const onSetId = useCallback(({ detail }) => {
-    drawRef.current?.setFeatureProperty(detail.lid, 'id', detail.id);
-  }, []);
-  const onAddFeature = useCallback(({ detail }) => {
-    drawRef.current?.add(detail.feature);
-  }, []);
-  const onDeleteFature = useCallback(({ detail }) => {
-    drawRef.current?.delete(detail.id);
-  }, []);
+  const onSetId = useCallback(
+    ({ detail }: CustomEvent<{ lid: string; id: string }>) => {
+      drawRef.current?.setFeatureProperty(detail.lid, 'id', detail.id);
+    },
+    []
+  );
+  const onAddFeature = useCallback(
+    ({ detail }: CustomEvent<{ feature: Feature }>) => {
+      drawRef.current?.add(detail.feature);
+    },
+    []
+  );
+  const onDeleteFature = useCallback(
+    ({ detail }: CustomEvent<{ id: string }>) => {
+      drawRef.current?.delete(detail.id);
+    },
+    []
+  );
 
   useMapEvent('draw.create', createFeatures);
   useMapEvent('draw.update', updateFeatures);
@@ -122,7 +131,7 @@ function useExternalEvents(
   const flyTo = useFlyTo();
 
   const onFeatureFocus = useCallback(
-    ({ detail }) => {
+    ({ detail }: CustomEvent<{ id: string; bbox: LngLatBoundsLike }>) => {
       const { id, bbox } = detail;
       if (id) {
         const feature = findFeature(featureCollection, id);
@@ -137,16 +146,26 @@ function useExternalEvents(
   );
 
   const onZoomFocus = useCallback(
-    ({ detail }) => {
+    ({
+      detail
+    }: CustomEvent<{
+      feature: Feature<Point>;
+      featureCollection: FeatureCollection;
+    }>) => {
       if (detail.feature && detail.featureCollection == featureCollection) {
-        flyTo(17, detail.feature.geometry.coordinates);
+        flyTo(17, detail.feature.geometry.coordinates as LngLatLike);
       }
     },
     [flyTo, featureCollection]
   );
 
   const onFeatureCreate = useCallback(
-    ({ detail }) => {
+    ({
+      detail
+    }: CustomEvent<{
+      feature: Feature;
+      featureCollection: FeatureCollection;
+    }>) => {
       const { feature } = detail;
       const { geometry, properties } = feature;
       if (
@@ -164,7 +183,9 @@ function useExternalEvents(
   );
 
   const onFeatureUpdate = useCallback(
-    ({ detail }) => {
+    ({
+      detail
+    }: CustomEvent<{ id: string; properties: Feature['properties'] }>) => {
       const { id, properties } = detail;
       const feature = findFeature(featureCollection, id);
 
@@ -177,7 +198,7 @@ function useExternalEvents(
   );
 
   const onFeatureDelete = useCallback(
-    ({ detail }) => {
+    ({ detail }: CustomEvent<{ id: string }>) => {
       const { id } = detail;
       const feature = findFeature(featureCollection, id);
 

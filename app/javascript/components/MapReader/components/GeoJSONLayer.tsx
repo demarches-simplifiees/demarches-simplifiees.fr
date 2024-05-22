@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { Popup, LngLatBoundsLike } from 'maplibre-gl';
-import type { Feature, FeatureCollection } from 'geojson';
+import { Popup, LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
+import type { Feature, FeatureCollection, Point } from 'geojson';
 
 import { useMapLibre } from '../../shared/maplibre/MapLibre';
 import {
@@ -102,7 +102,7 @@ function useExternalEvents(featureCollection: FeatureCollection) {
   const fitBounds = useFitBounds();
   const flyTo = useFlyTo();
   const onFeatureFocus = useCallback(
-    ({ detail }) => {
+    ({ detail }: CustomEvent<{ id: string }>) => {
       const { id } = detail;
       const feature = findFeature(featureCollection, id);
       if (feature) {
@@ -112,10 +112,10 @@ function useExternalEvents(featureCollection: FeatureCollection) {
     [featureCollection, fitBounds]
   );
   const onZoomFocus = useCallback(
-    ({ detail }) => {
+    ({ detail }: CustomEvent<{ feature: Feature<Point> }>) => {
       const { feature } = detail;
       if (feature) {
-        flyTo(17, feature.geometry.coordinates);
+        flyTo(17, feature.geometry.coordinates as LngLatLike);
       }
     },
     [flyTo]
