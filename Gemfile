@@ -72,6 +72,7 @@ gem 'openid_connect'
 gem 'parsby'
 gem 'pg'
 gem 'phonelib'
+gem 'poppler', '~> 3.0', '>= 3.0.7'
 gem 'prawn-rails' # PDF Generation
 gem 'premailer-rails'
 gem 'puma' # Use Puma as the app server
