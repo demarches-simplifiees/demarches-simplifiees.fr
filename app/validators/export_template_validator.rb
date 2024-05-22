@@ -1,8 +1,10 @@
 class ExportTemplateValidator < ActiveModel::Validator
   def validate(record)
-    validate_default_dossier_directory(record)
-    validate_pdf_name(record)
-    validate_pjs(record)
+    if record.zip?
+      validate_default_dossier_directory(record)
+      validate_pdf_name(record)
+      validate_pjs(record)
+    end
   end
 
   private

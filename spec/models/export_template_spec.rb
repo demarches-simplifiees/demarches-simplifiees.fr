@@ -43,7 +43,7 @@ describe ExportTemplate do
   describe 'new' do
     let(:export_template) { build(:export_template, groupe_instructeur: groupe_instructeur) }
     it 'set default values' do
-      export_template.set_default_values
+      export_template.set_default_values_for_zip
       expect(export_template.content).to eq({
         "pdf_name" => {
           "type" => "doc",

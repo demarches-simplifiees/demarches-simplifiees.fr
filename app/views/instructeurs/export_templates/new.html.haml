@@ -3,4 +3,7 @@
                     [t('.title')]] }
 .fr-container
   %h1 Nouveau modèle d'export
-  = render partial: 'form', locals: { form_url: instructeur_export_templates_path, groupe_instructeurs: @groupe_instructeurs }
+  - if params[:kind] == 'tabular'
+    = render partial: 'form_tabular', locals: { form_url: instructeur_export_templates_path, groupe_instructeurs: @groupe_instructeurs }
+  - else
+    = render partial: 'form', locals: { form_url: instructeur_export_templates_path, groupe_instructeurs: @groupe_instructeurs }

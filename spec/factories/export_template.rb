@@ -31,13 +31,13 @@ FactoryBot.define do
     kind { "zip" }
 
     to_create do |export_template, _context|
-      export_template.set_default_values
+      export_template.set_default_values_for_zip
       export_template.save
     end
 
     trait :with_custom_content do
       to_create do |export_template, context|
-        export_template.set_default_values
+        export_template.set_default_values_for_zip
         export_template.content = context.content
         export_template.save
       end
@@ -49,7 +49,7 @@ FactoryBot.define do
       end
 
       to_create do |export_template, context|
-        export_template.set_default_values
+        export_template.set_default_values_for_zip
         export_template.content["default_dossier_directory"]["content"] = [
           {
             "type" => "paragraph",
@@ -67,7 +67,7 @@ FactoryBot.define do
 
     trait :with_date_depot_for_export_pdf do
       to_create do |export_template, _|
-        export_template.set_default_values
+        export_template.set_default_values_for_zip
         export_template.content["pdf_name"]["content"] = [
           {
             "type" => "paragraph",

@@ -27,6 +27,17 @@ class TypesDeChamp::TypeDeChampBase
     paths.map { [_1[:libelle], _1[:path]] }
   end
 
+  def paths_for_export(repetition_champ: nil)
+    prefix = "repet_#{repetition_champ}_" if repetition_champ
+    paths.map do
+      { full_path: "#{prefix}tdc_#{stable_id}_#{_1[:path]}", libelle: _1[:libelle] }
+    end
+  end
+
+  def libelle_for_path(path)
+    libelles_for_export.find{ _1[1] == path.to_sym }&.first
+  end
+
   # Default estimated duration to fill the champ in a form, in seconds.
   # May be overridden by subclasses.
   def estimated_fill_duration(revision)
