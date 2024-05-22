@@ -39,6 +39,6 @@
       .fr-container
         %ul.fr-btns-group.fr-btns-group--inline-md
           %li
-            = f.submit "Enregistrer", class: "fr-btn"
+            = link_to "Annuler et revenir à l'écran de gestion", admin_procedure_path(id: @procedure.id), class: "fr-btn fr-btn--secondary"
           %li
-            = link_to "Annuler et revenir à la page de suivi", admin_procedure_path(id: @procedure.id), class: "fr-btn fr-btn--secondary"
+            = f.submit "Enregistrer", class: "fr-btn"
