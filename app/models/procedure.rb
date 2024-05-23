@@ -398,7 +398,7 @@ class Procedure < ApplicationRecord
     slug = [prefix, core].compact.reject(&:empty?).join('-').first(50)
     suggestion = slug
     counter = 1
-    until path_available?(administrateur, suggestion)
+    until path_available?(suggestion)
       counter = counter + 1
       suggestion = "#{slug}-#{counter}"
     end
@@ -411,10 +411,8 @@ class Procedure < ApplicationRecord
       .find_by(path: path)
   end
 
-  def path_available?(administrateur, path)
-    procedure = other_procedure_with_path(path)
-
-    procedure.blank? || (administrateur.owns?(procedure) && canonical_procedure_child?(procedure))
+  def path_available?(path)
+    other_procedure_with_path(path).blank?
   end
 
   def canonical_procedure_child?(procedure)

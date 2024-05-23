@@ -1331,7 +1331,7 @@ describe Procedure do
         create(:procedure, aasm_state: :publiee, path: 'inscription-au-college', administrateurs: procedure.administrateurs, zones: [create(:zone)])
       end
 
-      it { is_expected.to eq 'inscription-au-college' }
+      it { is_expected.to eq 'inscription-au-college-2' }
     end
 
     context 'when a service is given' do
