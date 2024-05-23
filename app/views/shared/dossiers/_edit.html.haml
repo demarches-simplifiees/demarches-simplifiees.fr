@@ -2,7 +2,7 @@
 
 - if dossier.france_connected_with_one_identity?  && current_user.instructeur? && !current_user.owns_or_invite?(dossier)
   - content_for(:notice_info) do
-    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.france_connect_informations.first, provider: dossier.user.loged_in_with_france_connect  }
+    = render partial: "shared/dossiers/france_connect_informations_notice", locals: { user_information: dossier.user.france_connect_informations.first, provider: dossier.user.loged_in_with_france_connect  }
 
 
 .dossier-edit.container.counter-start-header-section

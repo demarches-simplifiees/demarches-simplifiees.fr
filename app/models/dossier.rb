@@ -130,7 +130,6 @@ class Dossier < ApplicationRecord
   belongs_to :batch_operation, optional: true
   has_many :dossier_batch_operations, dependent: :destroy
   has_many :batch_operations, through: :dossier_batch_operations
-  has_many :france_connect_informations, through: :user
 
   has_one :procedure, through: :revision
   has_one :attestation_template, through: :procedure
@@ -519,7 +518,7 @@ class Dossier < ApplicationRecord
   def build_default_individual
     if procedure.for_individual? && individual.blank?
       self.individual = if france_connected_with_one_identity?
-        Individual.from_france_connect(france_connect_informations.first)
+        Individual.from_france_connect(user.france_connect_informations.first)
       else
         Individual.new
       end
