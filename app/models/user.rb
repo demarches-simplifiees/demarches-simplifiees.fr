@@ -101,8 +101,8 @@ class User < ApplicationRecord
     UserMailer.invite_gestionnaire(self, set_reset_password_token, groupe_gestionnaire).deliver_later
   end
 
-  def invite_administrateur!(administration_id)
-    AdministrationMailer.invite_admin(self, set_reset_password_token, administration_id).deliver_later
+  def invite_administrateur!
+    AdministrationMailer.invite_admin(self, set_reset_password_token).deliver_later
   end
 
   def remind_invitation!

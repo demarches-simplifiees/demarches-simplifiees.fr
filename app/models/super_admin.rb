@@ -32,7 +32,7 @@ class SuperAdmin < ApplicationRecord
     user = User.create_or_promote_to_administrateur(email, SecureRandom.hex)
 
     if user.valid?
-      user.invite_administrateur!(id)
+      user.invite_administrateur!
       Procedure.create_initiation_procedure(user.administrateur)
     end
 

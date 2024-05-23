@@ -16,7 +16,7 @@ module Gestionnaires
       if not_found_emails.present?
         administrateurs_to_add += not_found_emails.map do |email|
           user = User.create_or_promote_to_administrateur(email, SecureRandom.hex)
-          user.invite_administrateur!(@groupe_gestionnaire)
+          user.invite_administrateur!
           user.administrateur
         end
       end

@@ -2,18 +2,10 @@
 class AdministrationMailer < ApplicationMailer
   layout 'mailers/layout'
 
-  def new_admin_email(admin, administration)
-    @admin = admin
-    @administration = administration
-    subject = "Création d'un compte admininistrateur"
-
-    mail(to: TECH_EMAIL, subject: subject)
-  end
-
-  def invite_admin(user, reset_password_token, administration_id)
+  def invite_admin(user, reset_password_token)
     @reset_password_token = reset_password_token
     @user = user
-    @author_name = BizDev.full_name(administration_id)
+    @author_name = "Équipe de #{APPLICATION_NAME}"
     subject = "Activez votre compte administrateur"
 
     mail(to: user.email,

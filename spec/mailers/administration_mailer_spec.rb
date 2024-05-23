@@ -11,10 +11,9 @@ RSpec.describe AdministrationMailer, type: :mailer do
   describe '#invite_admin' do
     let(:admin_user) { create(:user, last_sign_in_at: last_sign_in_at) }
     let(:token) { "some_token" }
-    let(:administration_id) { BizDev::PIPEDRIVE_ID }
     let(:last_sign_in_at) { nil }
 
-    subject { described_class.invite_admin(admin_user, token, administration_id) }
+    subject { described_class.invite_admin(admin_user, token) }
 
     it { expect(subject.subject).not_to be_empty }
 

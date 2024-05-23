@@ -223,12 +223,12 @@ describe User, type: :model do
 
     before { allow(AdministrationMailer).to receive(:invite_admin).and_return(mailer_double) }
 
-    subject { user.invite_administrateur!(super_admin.id) }
+    subject { user.invite_administrateur! }
 
     context 'when the user is inactif' do
       before { subject }
 
-      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), super_admin.id) }
+      it { expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String)) }
     end
 
     context 'when the user is actif' do
@@ -238,7 +238,7 @@ describe User, type: :model do
       end
 
       it 'receives an invitation to update its password' do
-        expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String), super_admin.id)
+        expect(AdministrationMailer).to have_received(:invite_admin).with(user, kind_of(String))
       end
     end
   end
