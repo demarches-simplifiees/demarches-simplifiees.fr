@@ -2,8 +2,9 @@ require 'csv'
 
 describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs, instructeurs: [instructeur]) }
-  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur) }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
+  let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
+  let(:export_template) { nil }
 
   describe 'to_xlsx' do
     subject do
@@ -243,7 +244,7 @@ describe ProcedureExportService do
 
       context 'as csv' do
         subject do
-          ProcedureExportService.new(procedure, procedure.dossiers, instructeur)
+          ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template)
             .to_csv
             .open { |f| CSV.read(f.path) }
         end
@@ -519,38 +520,68 @@ describe ProcedureExportService do
       end
     end
 
-    context 'generate_dossiers_export' do
+    describe 'generate_dossiers_export' do
       it 'include_infos_administration (so it includes avis, champs privés)' do
-        expect(ActiveStorage::DownloadableFile).to receive(:create_list_from_dossiers).with(dossiers: anything, user_profile: instructeur).and_return([])
+        expect(ActiveStorage::DownloadableFile).to receive(:create_list_from_dossiers).with(dossiers: anything, user_profile: instructeur, export_template:).and_return([])
         subject
       end
-    end
 
-    context 'with files (and http calls)' do
-      let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
-      let(:dossier_exports) { PiecesJustificativesService.new(user_profile: instructeur).generate_dossiers_export(Dossier.where(id: dossier)) }
-      before do
-        allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
+      context 'with export_template' do
+        let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
+        let(:dossier_exports) { PiecesJustificativesService.new(user_profile: instructeur, export_template:).generate_dossiers_export(Dossier.where(id: dossier)) }
+        let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
+        before do
+          allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
+        end
+
+        it 'returns a blob with custom filenames' do
+          VCR.use_cassette('archive/new_file_to_get_200') do
+            subject
+            File.write('tmp.zip', subject.download, mode: 'wb')
+            File.open('tmp.zip') do |fd|
+              files = ZipTricks::FileReader.read_zip_structure(io: fd)
+              base_fn = "export"
+              structure = [
+                "#{base_fn}/",
+                "#{base_fn}/dossier-#{dossier.id}/",
+                "#{base_fn}/dossier-#{dossier.id}/piece_justificative-#{dossier.id}-1.txt",
+                "#{base_fn}/dossier-#{dossier.id}/export_#{dossier.id}.pdf"
+              ]
+              expect(files.size).to eq(structure.size)
+              expect(files.map(&:filename)).to match_array(structure)
+            end
+            FileUtils.remove_entry_secure('tmp.zip')
+          end
+        end
       end
 
-      it 'returns a blob with valid files' do
-        VCR.use_cassette('archive/new_file_to_get_200') do
-          subject
+      context 'with files (and http calls)' do
+        let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
+        let(:dossier_exports) { PiecesJustificativesService.new(user_profile: instructeur, export_template: nil).generate_dossiers_export(Dossier.where(id: dossier)) }
+        before do
+          allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
+        end
 
-          File.write('tmp.zip', subject.download, mode: 'wb')
-          File.open('tmp.zip') do |fd|
-            files = ZipTricks::FileReader.read_zip_structure(io: fd)
-            structure = [
-              "#{service.send(:base_filename)}/",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/pieces_justificatives/",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
-              "#{service.send(:base_filename)}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(dossier_exports.first.first)}"
-            ]
-            expect(files.size).to eq(structure.size)
-            expect(files.map(&:filename)).to match_array(structure)
+        it 'returns a blob with valid files' do
+          VCR.use_cassette('archive/new_file_to_get_200') do
+            subject
+
+            File.write('tmp.zip', subject.download, mode: 'wb')
+            File.open('tmp.zip') do |fd|
+              files = ZipTricks::FileReader.read_zip_structure(io: fd)
+              base_fn = 'export'
+              structure = [
+                "#{base_fn}/",
+                "#{base_fn}/dossier-#{dossier.id}/",
+                "#{base_fn}/dossier-#{dossier.id}/pieces_justificatives/",
+                "#{base_fn}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(ActiveStorage::Attachment.where(record_type: "Champ").first)}",
+                "#{base_fn}/dossier-#{dossier.id}/#{ActiveStorage::DownloadableFile.timestamped_filename(dossier_exports.first.first)}"
+              ]
+              expect(files.size).to eq(structure.size)
+              expect(files.map(&:filename)).to match_array(structure)
+            end
+            FileUtils.remove_entry_secure('tmp.zip')
           end
-          FileUtils.remove_entry_secure('tmp.zip')
         end
       end
     end

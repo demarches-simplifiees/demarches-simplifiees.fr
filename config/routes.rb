@@ -450,6 +450,11 @@ Rails.application.routes.draw do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :archives, only: [:index, :create]
+        resources :export_templates, only: [:new, :create, :edit, :update, :destroy] do
+          collection do
+            get 'preview'
+          end
+        end
 
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           resource :contact_information

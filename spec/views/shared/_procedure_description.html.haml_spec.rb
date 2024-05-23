@@ -110,7 +110,7 @@ describe 'shared/_procedure_description', type: :view do
 
   context 'caching', caching: true do
     it "works" do
-      expect(procedure).to receive(:pieces_jointes_list?).once
+      expect(procedure).to receive(:public_wrapped_partionned_pjs).once
       2.times { render partial: 'shared/procedure_description', locals: { procedure: } }
     end
 

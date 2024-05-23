@@ -45,7 +45,7 @@ module Instructeurs
       @is_dossier_in_batch_operation = dossier.batch_operation.present?
       respond_to do |format|
         format.pdf do
-          @acls = PiecesJustificativesService.new(user_profile: current_instructeur).acl_for_dossier_export(dossier.procedure)
+          @acls = PiecesJustificativesService.new(user_profile: current_instructeur, export_template: nil).acl_for_dossier_export(dossier.procedure)
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
