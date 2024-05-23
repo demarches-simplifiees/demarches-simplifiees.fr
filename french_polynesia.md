@@ -36,5 +36,5 @@ This journal lists modifications built on top of demarches-simplifiees.
 | 11/4/2024 | Edition des champs                  | la liste permettant de déplacer un élément est placé dans l'entête et non en dessous du champ.                                                                                     |
 | 11/4/2024 | Description des champs              | La fonte est légèrement plus grande pour être lisible sur téléphone                                                                                                                | 
 | 11/4/2024 | Télécharger le PDF                  | Le lien en bas du formulaire permettant de télécharger le PDF est moins visible car les usagers ont tendance à l'utiliser même quand ils remplissent le formulaire en ligne        |
-
+| 23/5/2024 | EQUIPE_EMAIL                        | Mail not removed as it is used to communicate on published procedures                                                                                                              |
 
