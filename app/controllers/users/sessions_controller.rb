@@ -119,6 +119,6 @@ class Users::SessionsController < Devise::SessionsController
 
   def build_agent_connect_logout_url(id_token)
     h = { id_token_hint: id_token, post_logout_redirect_uri: logout_url }
-    "#{ENV['AGENT_CONNECT_BASE_URL']}/api/v2/session/end?#{h.to_query}"
+    "#{AGENT_CONNECT[:end_session_endpoint]}?#{h.to_query}"
   end
 end

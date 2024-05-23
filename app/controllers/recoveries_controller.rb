@@ -56,7 +56,7 @@ class RecoveriesController < ApplicationController
   private
 
   def nature_params = params[:nature]
-  def siret = current_instructeur.agent_connect_information.siret
+  def siret = current_instructeur.last_agent_connect_information.siret
   def previous_email = params[:previous_email]
   def procedure_ids = params[:procedure_ids].map(&:to_i)
 
@@ -70,7 +70,7 @@ class RecoveriesController < ApplicationController
   end
 
   def ensure_agent_connect_is_used
-    if current_instructeur&.agent_connect_information.nil?
+    if current_instructeur&.last_agent_connect_information.nil?
       redirect_to support_recovery_path(error: :must_use_agent_connect)
     end
   end

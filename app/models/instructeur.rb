@@ -1,8 +1,10 @@
 class Instructeur < ApplicationRecord
+  self.ignored_columns += [:agent_connect_id]
+
   include UserFindByConcern
   has_and_belongs_to_many :administrateurs
 
-  has_one :agent_connect_information, dependent: :destroy
+  has_many :agent_connect_information, dependent: :destroy
 
   has_many :assign_to, dependent: :destroy
   has_many :groupe_instructeurs, -> { order(:label) }, through: :assign_to
@@ -294,6 +296,10 @@ class Instructeur < ApplicationRecord
     Avis
       .where(claimant_id: old_instructeur.id, claimant_type: Instructeur.name)
       .update_all(claimant_id: id)
+  end
+
+  def last_agent_connect_information
+    agent_connect_information.order(updated_at: :desc).first
   end
 
   private
