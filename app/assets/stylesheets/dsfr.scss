@@ -10,7 +10,6 @@ ol.fr-ol-content--override {
   }
 }
 
-
 // with Marianne font, weight of font is less bolder, so bold it up
 .button.primary {
   font-weight: bold;
@@ -20,10 +19,17 @@ trix-editor.fr-input {
   max-height: none;
 }
 
-.fr-label + .fr-ds-combobox { // same as .fr-label + .fr-input
-  margin-top: 0.5rem;
+.fr-header {
+  .fr-notice {
+    // get back link underlined in notices, because they are usually hidden in headers
+    --underline-img: linear-gradient(0deg, currentColor, currentColor);
+  }
 }
 
+.fr-label + .fr-ds-combobox {
+  // same as .fr-label + .fr-input
+  margin-top: 0.5rem;
+}
 
 .fr-ds-combobox {
   .fr-menu {

@@ -2,11 +2,18 @@
 class Dsfr::NoticeComponent < ApplicationComponent
   renders_one :title
 
-  def initialize(closable: false)
+  attr_reader :data_attributes
+
+  def initialize(closable: false, data_attributes: {})
     @closable = closable
+    @data_attributes = data_attributes
   end
 
   def closable?
     !!@closable
+  end
+
+  def notice_data_attributes
+    { "data-dsfr-header-target": "notice" }.merge(data_attributes)
   end
 end
