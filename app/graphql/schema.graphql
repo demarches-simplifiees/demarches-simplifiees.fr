@@ -72,6 +72,11 @@ type Address {
 
 type AddressChamp implements Champ {
   address: Address
+
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   commune: Commune
   departement: Departement
   id: ID!
@@ -230,6 +235,10 @@ type COJOChampDescriptor implements ChampDescriptor {
 }
 
 type CarteChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   geoAreas: [GeoArea!]!
   id: ID!
 
@@ -279,6 +288,10 @@ type CarteChampDescriptor implements ChampDescriptor {
 }
 
 interface Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -327,6 +340,10 @@ interface ChampDescriptor {
 }
 
 type CheckboxChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -405,6 +422,10 @@ enum Civilite {
 }
 
 type CiviliteChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -527,6 +548,10 @@ type Commune {
 }
 
 type CommuneChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   commune: Commune
   departement: Departement
   id: ID!
@@ -696,6 +721,11 @@ type CreateDirectUploadPayload {
 
 type DateChamp implements Champ {
   """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
   La valeur du champ formaté en ISO8601 (Date).
   """
   date: ISO8601Date
@@ -753,6 +783,11 @@ type DateChampDescriptor implements ChampDescriptor {
 
 type DatetimeChamp implements Champ {
   """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
   La valeur du champ formaté en ISO8601 (DateTime).
   """
   datetime: ISO8601DateTime
@@ -804,6 +839,10 @@ type DatetimeChampDescriptor implements ChampDescriptor {
 }
 
 type DecimalNumberChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -1295,6 +1334,10 @@ type Departement {
 }
 
 type DepartementChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   departement: Departement
   id: ID!
 
@@ -1770,6 +1813,10 @@ type DossierEnvoyerMessagePayload {
 }
 
 type DossierLinkChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   dossier: Dossier
   id: ID!
 
@@ -2345,6 +2392,11 @@ type EngagementJuridique {
 
 type EngagementJuridiqueChamp implements Champ {
   """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
   Montant engagé et payé de l'EJ.
   """
   engagementJuridique: EngagementJuridique
@@ -2447,6 +2499,10 @@ type Epci {
 }
 
 type EpciChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   departement: Departement
   epci: Epci
   id: ID!
@@ -3005,6 +3061,10 @@ type IbanChampDescriptor implements ChampDescriptor {
 }
 
 type IntegerNumberChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -3054,6 +3114,10 @@ type IntegerNumberChampDescriptor implements ChampDescriptor {
 }
 
 type LinkedDropDownListChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -3147,6 +3211,10 @@ type Message {
 }
 
 type MultipleDropDownListChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -3603,6 +3671,10 @@ type Pays {
 }
 
 type PaysChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -3724,6 +3796,10 @@ type PhoneChampDescriptor implements ChampDescriptor {
 }
 
 type PieceJustificativeChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   file: File @deprecated(reason: "Utilisez le champ `files` à la place.")
   files: [File!]!
   id: ID!
@@ -3874,6 +3950,10 @@ type RNA {
 }
 
 type RNAChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   commune: Commune
   departement: Departement
   id: ID!
@@ -3931,6 +4011,10 @@ type RNF {
 }
 
 type RNFChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   commune: Commune
   departement: Departement
   id: ID!
@@ -3987,6 +4071,10 @@ type Region {
 }
 
 type RegionChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -4041,6 +4129,10 @@ type RegionChampDescriptor implements ChampDescriptor {
 }
 
 type RepetitionChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   champs: [Champ!]! @deprecated(reason: "Utilisez le champ `rows` à la place.")
   id: ID!
 
@@ -4143,6 +4235,10 @@ type Service {
 }
 
 type SiretChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   etablissement: PersonneMorale
   id: ID!
 
@@ -4220,6 +4316,10 @@ type TeFenuaChampDescriptor implements ChampDescriptor {
 }
 
 type TextChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """
@@ -4297,6 +4397,10 @@ type TextareaChampDescriptor implements ChampDescriptor {
 }
 
 type TitreIdentiteChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   filled: Boolean!
   grantType: TitreIdentiteGrantType!
   id: ID!

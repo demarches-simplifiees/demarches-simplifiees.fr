@@ -140,6 +140,10 @@ class Champ < ApplicationRecord
     :value
   end
 
+  def champ_descriptor_id
+    type_de_champ.to_typed_id
+  end
+
   def to_typed_id
     if row_id.present?
       GraphQL::Schema::UniqueWithinType.encode('Champ', "#{stable_id}|#{row_id}")

@@ -26,10 +26,10 @@
           = link_to t(".how_to_find_procedure"), t("links.common.faq.comment_trouver_ma_demarche_url"), class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure")), **external_link_attributes
           = link_to t("views.users.sessions.new.connection"), new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
 
-  - cache [I18n.locale, "numbers-panel"], expires_in: 3.hours do
-    .fr-py-6w
-      .container
-        %h2.center.fr-mb-4w= t(".our_numbers", name: Current.application_name)
+  .fr-py-6w
+    .container
+      %h2.center.fr-mb-4w= t(".our_numbers", name: Current.application_name)
+      - cache [I18n.locale, "numbers-panel"], expires_in: 3.hours do
         %ul.numbers
           %li.number
             .number-value
