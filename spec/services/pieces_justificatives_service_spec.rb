@@ -417,6 +417,67 @@ describe PiecesJustificativesService do
     end
   end
 
+  describe '#compute_champ_id_row_index' do
+    let(:user_profile) { build(:administrateur) }
+    let(:types_de_champ_public) do
+      [
+        { type: :repetition, children: [{ type: :piece_justificative }] },
+        { type: :repetition, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
+      ]
+    end
+
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:dossier_1) { create(:dossier, procedure:) }
+    let(:champs) { dossier_1.champs }
+
+    def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')
+    def repetition(d, index:) = d.champs_public.filter(&:repetition?)[index]
+
+    subject { PiecesJustificativesService.new(user_profile:, export_template: nil).send(:compute_champ_id_row_index, champs) }
+
+    before do
+      pj_champ(dossier_1)
+
+      # repet_0 (stable_id: r0)
+      # # row_0
+      # # # pj_champ_0 (stable_id: 0)
+      # # row_1
+      # # # pj_champ_1 (stable_id: 0)
+      # repet_1 (stable_id: r1)
+      # # row_0
+      # # # pj_champ_2 (stable_id: 1)
+      # # # pj_champ_3 (stable_id: 2)
+      # # row_1
+      # # # pj_champ_4 (stable_id: 1)
+      # # # pj_champ_5 (stable_id: 2)
+
+      repet_0 = repetition(dossier_1, index: 0)
+      repet_1 = repetition(dossier_1, index: 1)
+
+      repet_0.add_row(dossier_1.revision)
+      repet_0.add_row(dossier_1.revision)
+
+      repet_1.add_row(dossier_1.revision)
+      repet_1.add_row(dossier_1.revision)
+    end
+
+    it do
+      champs = dossier_1.champs_public
+      repet_0 = champs[0]
+      pj_0 = repet_0.rows.first.first
+      pj_1 = repet_0.rows.second.first
+
+      repet_1 = champs[1]
+      pj_2 = repet_1.rows.first.first
+      pj_3 = repet_1.rows.first.second
+
+      pj_4 = repet_1.rows.second.first
+      pj_5 = repet_1.rows.second.second
+
+      is_expected.to eq({ pj_0.id => 0, pj_1.id => 1, pj_2.id => 0, pj_3.id => 0, pj_4.id => 1, pj_5.id => 1 })
+    end
+  end
+
   def attach_file_to_champ(champ, safe = true)
     attach_file(champ.piece_justificative_file, safe)
   end

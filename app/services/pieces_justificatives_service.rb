@@ -141,11 +141,7 @@ class PiecesJustificativesService
       champs = champs.reject(&:private?)
     end
 
-    champs_id_row_index = champs.filter { _1.row_id.present? }.group_by(&:dossier_id).values.each_with_object({}) do |champs_for_dossier, hash|
-      champs_for_dossier.group_by(&:stable_id).values.each do |champs_for_stable_id|
-        champs_for_stable_id.sort_by(&:row_id).each.with_index { |c, index| hash[c.id] = index }
-      end
-    end
+    champs_id_row_index = compute_champ_id_row_index(champs)
 
     champs.flat_map do |champ|
       champ.piece_justificative_file_attachments.filter { |a| safe_attachment(a) }.map.with_index do |attachment, index|
@@ -300,5 +296,27 @@ class PiecesJustificativesService
     attachment
       .blob
       .virus_scan_result == ActiveStorage::VirusScanner::SAFE
+  end
+
+  # given
+  # repet_0 (stable_id: r0)
+  # # row_0
+  # # # pj_champ_0 (stable_id: 0)
+  # # row_1
+  # # # pj_champ_1 (stable_id: 0)
+  # repet_1 (stable_id: r1)
+  # # row_0
+  # # # pj_champ_2 (stable_id: 1)
+  # # # pj_champ_3 (stable_id: 2)
+  # # row_1
+  # # # pj_champ_4 (stable_id: 1)
+  # # # pj_champ_5 (stable_id: 2)
+  # it returns { pj_0.id => 0, pj_1.id => 1, pj_2.id => 0, pj_3.id => 0, pj_4.id => 1, pj_5.id => 1 }
+  def compute_champ_id_row_index(champs)
+    champs.filter(&:child?).group_by(&:dossier_id).values.each_with_object({}) do |children_for_dossier, hash|
+      children_for_dossier.group_by(&:stable_id).values.each do |champs_for_stable_id|
+        champs_for_stable_id.sort_by(&:row_id).each.with_index { |c, index| hash[c.id] = index }
+      end
+    end
   end
 end
