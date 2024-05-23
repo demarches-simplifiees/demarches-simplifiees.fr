@@ -1,9 +1,9 @@
-= content_for :title, "Fusion des comptes FC et #{APPLICATION_NAME}"
+= content_for :title, "Fusion des comptes FC et #{Current.application_name}"
 
 .container
-  %h1.page-title= t('.title', application_name: APPLICATION_NAME)
+  %h1.page-title= t('.title', application_name: Current.application_name)
 
-  %p= t('.subtitle', email: sanitize(@fci.email_france_connect), application_name: APPLICATION_NAME).html_safe
+  %p= t('.subtitle_html', email: @fci.email_france_connect, application_name: Current.application_name)
 
   .form.mt-2
     %label= t('.label_select_merge_flow', email: @fci.email_france_connect)
@@ -34,7 +34,7 @@
 
 
   .new-account.hidden
-    %p= t('.title_fill_in_email', application_name: APPLICATION_NAME)
+    %p= t('.title_fill_in_email', application_name: Current.application_name)
 
     = form_tag france_connect_particulier_merge_with_new_account_path, data: { turbo: true }, class: 'mt-2 form' do
       = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :new_account_merge_token)

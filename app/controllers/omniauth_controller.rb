@@ -62,7 +62,7 @@ class OmniauthController < ApplicationController
         @fci.update(user: user)
         @fci.delete_merge_token!
 
-        flash.notice = t('omniauth.flash.connection_done', application_name: APPLICATION_NAME, provider: t("omniauth.provider.#{provider}"))
+        flash.notice = t('omniauth.flash.connection_done', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
         connect_user(provider, user)
       end
     else
@@ -77,7 +77,7 @@ class OmniauthController < ApplicationController
       @fci.update(user: user)
       @fci.delete_merge_token!
 
-      flash.notice = t('omniauth.flash.connection_done', application_name: APPLICATION_NAME, provider: t("omniauth.provider.#{provider}"))
+      flash.notice = t('omniauth.flash.connection_done', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
       connect_user(provider, user)
     else # same behaviour as redirect nicely with message when instructeur/administrateur
       @fci.destroy
@@ -93,7 +93,7 @@ class OmniauthController < ApplicationController
       @fci.associate_user!(sanitized_email_params)
       @fci.delete_merge_token!
 
-      flash.notice = t('omniauth.flash.connection_done', application_name: APPLICATION_NAME, provider: t("omniauth.provider.#{provider}"))
+      flash.notice = t('omniauth.flash.connection_done', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
       connect_user(provider, @fci.user)
     else
       @email = sanitized_email_params
@@ -117,7 +117,7 @@ class OmniauthController < ApplicationController
     provider = provider_param
 
     if @fci.nil? || !@fci.valid_for_merge?
-      flash.alert = t('omniauth.flash.merger_token_expired', application_name: APPLICATION_NAME, provider: t("omniauth.provider.#{provider}"))
+      flash.alert = t('omniauth.flash.merger_token_expired', application_name: Current.application_name, provider: t("omniauth.provider.#{provider}"))
 
       redirect_to root_path
     end

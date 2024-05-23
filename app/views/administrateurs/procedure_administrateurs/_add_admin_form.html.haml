@@ -6,7 +6,7 @@
     = f.label :email, class: "fr-label" do
       Ajouter un administrateur
       %span.fr-hint-text
-        = "Renseignez l’email d’un administrateur déjà enregistré sur #{APPLICATION_NAME} pour lui permettre de modifier « #{procedure.libelle} ». Exemple : marie.dupont@exemple.fr"
+        = "Renseignez l’email d’un administrateur déjà enregistré sur #{Current.application_name} pour lui permettre de modifier « #{procedure.libelle} ». Exemple : marie.dupont@exemple.fr"
 
     = f.email_field :email, required: true, class: "fr-input", autofocus: true, disabled: disabled_as_super_admin
 

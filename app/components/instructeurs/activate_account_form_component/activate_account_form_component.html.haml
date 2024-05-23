@@ -1,6 +1,6 @@
 = form_for user, url: { controller: 'users/activate', action: :create }, html: { class: "fr-py-5w" } do |f|
 
-  %h1.fr-h2.fr-mb-7w= t('.title', application_name: APPLICATION_NAME)
+  %h1.fr-h2.fr-mb-7w= t('.title', application_name: Current.application_name)
 
   .fr-background-alt--grey.fr-px-12w.fr-py-7w
     %fieldset.fr-mb-0.fr-fieldset{ aria: { labelledby: 'activate-account-legend' } }

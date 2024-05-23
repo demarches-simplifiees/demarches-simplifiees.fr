@@ -29,7 +29,7 @@
 
             = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-my-2w') do |c|
               - c.with_body do
-                %p= t('.public_link_procedure_html', link: APPLICATION_NAME)
+                %p= t('.public_link_procedure_html', link: Current.application_name)
 
           - elsif @procedure.brouillon?
             - if @procedure.missing_steps.empty?

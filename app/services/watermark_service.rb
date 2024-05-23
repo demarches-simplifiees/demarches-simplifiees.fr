@@ -7,7 +7,7 @@ class WatermarkService
   attr_reader :text
   attr_reader :text_length
 
-  def initialize(text = APPLICATION_NAME)
+  def initialize(text = Current.application_name)
     @text = " #{text} " # give more space around each occurence
     @text_length = @text.length
   end

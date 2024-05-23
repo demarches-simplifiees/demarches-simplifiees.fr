@@ -42,7 +42,7 @@ class COJOService
 
   def jwt_payload
     {
-      iss: APPLICATION_NAME,
+      iss: Current.application_name,
       iat: Time.zone.now.to_i,
       exp: 1.hour.from_now.to_i
     }

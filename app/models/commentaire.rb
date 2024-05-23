@@ -48,7 +48,7 @@ class Commentaire < ApplicationRecord
   end
 
   def sent_by_system?
-    [CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email)
+    ["demarches.gouv.fr", CONTACT_EMAIL, OLD_CONTACT_EMAIL].include?(email)
   end
 
   def sent_by_instructeur?

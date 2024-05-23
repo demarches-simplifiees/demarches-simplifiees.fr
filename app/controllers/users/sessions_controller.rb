@@ -23,7 +23,7 @@ class Users::SessionsController < Devise::SessionsController
 
   def reset_link_sent
     if send_login_token_or_bufferize(current_instructeur)
-      flash[:notice] = "Nous venons de vous renvoyer un nouveau lien de connexion sécurisée à #{APPLICATION_NAME}"
+      flash[:notice] = "Nous venons de vous renvoyer un nouveau lien de connexion sécurisée à #{Current.application_name}"
     end
 
     signed_email = message_verifier.generate(current_instructeur.email, purpose: :reset_link, expires_in: 1.hour)

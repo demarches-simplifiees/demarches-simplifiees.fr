@@ -60,7 +60,7 @@ class FranceConnect::ParticulierController < ApplicationController
         @fci.delete_merge_token!
         @fci.delete_email_merge_token!
 
-        flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
+        flash.notice = t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
         connect_france_connect_particulier(user)
       end
     else
@@ -74,7 +74,7 @@ class FranceConnect::ParticulierController < ApplicationController
       @fci.update(user: user)
       @fci.delete_merge_token!
 
-      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
+      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
       connect_france_connect_particulier(user)
     else # same behaviour as redirect nicely with message when instructeur/administrateur
       @fci.destroy
@@ -89,7 +89,7 @@ class FranceConnect::ParticulierController < ApplicationController
       @fci.associate_user!(sanitized_email_params)
       @fci.delete_merge_token!
 
-      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: APPLICATION_NAME)
+      flash.notice = t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
       connect_france_connect_particulier(@fci.user)
     else
       @email = sanitized_email_params
@@ -117,7 +117,7 @@ class FranceConnect::ParticulierController < ApplicationController
     @fci = FranceConnectInformation.find_by(email_merge_token: email_merge_token_params)
 
     if @fci.nil? || !@fci.valid_for_email_merge?
-      flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: APPLICATION_NAME)
+      flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: Current.application_name)
 
       redirect_to root_path
     else
@@ -129,7 +129,7 @@ class FranceConnect::ParticulierController < ApplicationController
     @fci = FranceConnectInformation.find_by(merge_token: merge_token_params)
 
     if @fci.nil? || !@fci.valid_for_merge?
-      flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: APPLICATION_NAME)
+      flash.alert = t('france_connect.particulier.flash.merger_token_expired', application_name: Current.application_name)
 
       redirect_to root_path
     end

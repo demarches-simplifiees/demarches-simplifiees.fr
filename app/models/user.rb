@@ -195,7 +195,7 @@ class User < ApplicationRecord
   def can_openid_connect?(provider)
     can_france_connect? || provider == 'microsoft'
   end
-  
+
   def france_connected_with_one_identity?
     france_connect_informations.size == 1
   end

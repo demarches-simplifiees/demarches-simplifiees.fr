@@ -7,7 +7,7 @@
   - when 'other_nature', 'not_collectivite_territoriale'
     %p Votre situation nécessite un traitement particulier.
 
-    = mail_to(CONTACT_EMAIL,
+    = mail_to(Current.contact_email,
       'Contactez le support',
       subject: 'Récupération de dossiers',
       class: 'fr-btn')
@@ -30,7 +30,7 @@
       %li
         = link_to 'Essayer avec une autre adresse email', identification_recovery_path, class: 'fr-btn'
       %li
-        = mail_to(CONTACT_EMAIL,
+        = mail_to(Current.contact_email,
           'Contactez le support',
           subject: 'Récupération de dossiers',
           class: 'fr-btn fr-btn--secondary')
