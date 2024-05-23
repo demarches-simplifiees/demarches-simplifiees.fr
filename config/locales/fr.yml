@@ -970,6 +970,7 @@ fr:
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour fusionner les comptes."
   omniauth:
     provider:
+      particulier: FranceConnect
       facebook: Facebook
       google: Google
       microsoft: Microsoft 365

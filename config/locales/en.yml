@@ -910,6 +910,7 @@ en:
           merger_token_expired: "The delay to merge your FranceConnect and %{application_name} accounts is expired. Please retry."
   omniauth:
     provider:
+      particulier: FranceConnect
       facebook: Facebook
       google: Google
       microsoft: Microsoft 365
