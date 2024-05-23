@@ -6,7 +6,7 @@
 .fr-container
   .fr-grid-row.fr-grid-row--gutters
     .fr-col-12
-      %h1 Configuration des emails
+      %h1.fr-h2 Configuration des emails
       - if @procedure.accuse_lecture?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
           - c.with_body do
