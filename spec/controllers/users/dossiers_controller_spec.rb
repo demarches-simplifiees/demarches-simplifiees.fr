@@ -660,7 +660,8 @@ describe Users::DossiersController, type: :controller do
   describe '#update brouillon' do
     before { sign_in(user) }
 
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
+    let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{}, { type: :piece_justificative }] }
     let(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:piece_justificative_champ) { dossier.champs_public.last }
@@ -739,6 +740,33 @@ describe Users::DossiersController, type: :controller do
 
       it { expect(first_champ.reload.value).to eq('beautiful value') }
       it { expect(response).to have_http_status(:ok) }
+    end
+
+    context 'when saves a champ changing a champ visible' do
+      include Logic
+      let(:types_de_champ_public) { [{ type: :integer_number }, { type: :text, condition: ds_eq(champ_value(value), constant(true)) }] }
+
+      let(:value) { 42 }
+      let(:second_champ) { dossier.champs_public.last }
+      let(:submit_payload) do
+        {
+          id: dossier.id,
+          dossier: {
+            groupe_instructeur_id: dossier.groupe_instructeur_id,
+            champs_public_attributes: {
+              first_champ.public_id => {
+                with_public_id: true,
+                value: value
+              }
+            }
+          }
+        }
+      end
+      render_views
+      before { subject }
+
+      let(:doc) { Nokogiri::HTML5.fragment(response.body) }
+      it { doc.xpath(%Q(turbo-stream[@action="show"][@targets="##{second_champ.stable_id}"])) }
     end
 
     context 'decimal number champ separator' do
