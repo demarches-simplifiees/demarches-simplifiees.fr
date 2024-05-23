@@ -130,7 +130,7 @@ class Dossier < ApplicationRecord
   belongs_to :batch_operation, optional: true
   has_many :dossier_batch_operations, dependent: :destroy
   has_many :batch_operations, through: :dossier_batch_operations
-  has_one :france_connect_information, through: :user
+  has_many :france_connect_informations, through: :user
 
   has_one :procedure, through: :revision
   has_one :attestation_template, through: :procedure
@@ -440,8 +440,7 @@ class Dossier < ApplicationRecord
   scope :not_having_batch_operation, -> { where(batch_operation_id: nil) }
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
-  delegate :france_connect_information, to: :user, allow_nil: true
-
+  delegate :france_connected_with_one_identity?, to: :user, allow_nil: true
   before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? && editing_fork_origin_id.nil? }
 
   after_save :send_web_hook
@@ -519,8 +518,8 @@ class Dossier < ApplicationRecord
 
   def build_default_individual
     if procedure.for_individual? && individual.blank?
-      self.individual = if france_connect_information.present?
-        Individual.from_france_connect(france_connect_information)
+      self.individual = if france_connected_with_one_identity?
+        Individual.from_france_connect(france_connect_informations.first)
       else
         Individual.new
       end
@@ -1391,7 +1390,7 @@ class Dossier < ApplicationRecord
 
   def user_from_france_connect?
     return false if user_deleted?
-    user.france_connect_information.present?
+    user.france_connected_with_one_identity?
   end
 
   def champs_for_revision(scope: nil, root: false)

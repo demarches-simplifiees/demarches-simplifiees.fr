@@ -12,5 +12,9 @@ FactoryBot.define do
     trait :with_strong_password do
       password { '{my-%s3cure[]-p4$$w0rd' }
     end
+
+    trait :with_fci do
+      france_connect_informations { [association(:france_connect_information)] }
+    end
   end
 end

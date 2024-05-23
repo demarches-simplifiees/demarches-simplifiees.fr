@@ -37,7 +37,7 @@ describe 'users/dossiers/demande', type: :view do
   context 'when the user is logged in with france connect' do
     let(:france_connect_information) { build(:france_connect_information) }
     let(:loged_in_with_france_connect) { User.loged_in_with_france_connects.fetch(:particulier) }
-    let(:user) { build(:user, france_connect_information: france_connect_information, loged_in_with_france_connect: loged_in_with_france_connect) }
+    let(:user) { build(:user, france_connect_informations: [france_connect_information], loged_in_with_france_connect: loged_in_with_france_connect) }
     let(:procedure1) { create(:procedure, :with_type_de_champ, for_individual: true) }
     let(:dossier) { create(:dossier, procedure: procedure1, user: user) }
 

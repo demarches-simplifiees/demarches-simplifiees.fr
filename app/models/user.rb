@@ -28,15 +28,15 @@ class User < ApplicationRecord
   has_many :deleted_dossiers
   has_many :merge_logs, dependent: :destroy
   has_many :requested_merge_from, class_name: 'User', dependent: :nullify, inverse_of: :requested_merge_into, foreign_key: :requested_merge_into_id
+  has_many :france_connect_informations, dependent: :destroy
 
-  has_one :france_connect_information, dependent: :destroy
   has_one :instructeur, dependent: :destroy
   has_one :administrateur, dependent: :destroy
   has_one :gestionnaire, dependent: :destroy
   has_one :expert, dependent: :destroy
   belongs_to :requested_merge_into, class_name: 'User', optional: true
 
-  accepts_nested_attributes_for :france_connect_information
+  accepts_nested_attributes_for :france_connect_informations
 
   default_scope { eager_load(:instructeur, :administrateur, :expert) }
 
@@ -119,7 +119,7 @@ class User < ApplicationRecord
     if user.valid?
       if user.instructeur.nil?
         user.create_instructeur!
-        user.update(france_connect_information: nil)
+        user.france_connect_informations.delete_all
       end
 
       user.instructeur.administrateurs << administrateurs
@@ -143,7 +143,7 @@ class User < ApplicationRecord
 
     if user.valid? && user.administrateur.nil?
       user.create_administrateur!
-      user.update(france_connect_information: nil)
+      user.france_connect_informations.delete_all
       AdminUpdateDefaultZonesJob.perform_later(user.administrateur)
     end
 
@@ -195,6 +195,10 @@ class User < ApplicationRecord
   def can_openid_connect?(provider)
     can_france_connect? || provider == 'microsoft'
   end
+  
+  def france_connected_with_one_identity?
+    france_connect_informations.size == 1
+  end
 
   def can_be_deleted?
     !administrateur? && !instructeur? && !expert?
@@ -210,7 +214,6 @@ class User < ApplicationRecord
       Invite.where(dossier: dossiers).destroy_all
 
       delete_and_keep_track_dossiers(super_admin, reason: :user_removed)
-
       destroy!
     end
   end
