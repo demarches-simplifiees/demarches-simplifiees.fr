@@ -24,6 +24,11 @@ AUTHORIZED_GALLERY_IMAGE_TYPES = [
   'image/vnd.dwg' # multimedia x 137 auto desk
 ]
 
+IMAGEMAGICK_COMPATIBLE_IMAGE_TYPES = [
+  'image/jpeg', # multimedia x 1467465
+  'image/png', # multimedia x 126662
+]
+
 AUTHORIZED_CONTENT_TYPES = AUTHORIZED_IMAGE_TYPES + AUTHORIZED_PDF_TYPES + [
   # multimedia
   'video/mp4', # multimedia x 2075
