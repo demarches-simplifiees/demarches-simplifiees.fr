@@ -7,7 +7,7 @@
   .fr-grid-row
     .fr-col-12.fr-col-offset-md-2.fr-col-md-8
       %h1= t('administrateurs.procedures.closing_notification.page_title')
-      - if @procedure.closing_reason == Procedure.closing_reasons.fetch(:other)
+      - if @procedure.closing_reason_other?
         %h2.fr-h5= I18n.t('administrateurs.procedures.closing_notification.page_subtitle', closing_path: closing_details_path(@procedure.path)).html_safe
       - else
         %h2.fr-h5= I18n.t('administrateurs.procedures.closing_notification.page_subtitle_with_redirection', redirection_path: commencer_path(@procedure.replaced_by_procedure.path)).html_safe

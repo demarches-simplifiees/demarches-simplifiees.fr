@@ -806,9 +806,10 @@ describe Administrateurs::ProceduresController, type: :controller do
         procedure.reload
       end
 
-      it 'closes the procedure without redirection to the new procedure in DS' do
-        expect(response).to redirect_to admin_procedure_path(procedure.id)
-        expect(flash[:notice]).to have_content 'Démarche close'
+      it 'does not close the procedure' do
+        expect(response).to redirect_to admin_procedure_close_path
+        expect(flash[:alert]).to have_content 'Le champ « Nouvelle démarche » doit être rempli'
+        expect(procedure.close?).to be_falsey
         expect(procedure.replaced_by_procedure).to eq(nil)
       end
     end
