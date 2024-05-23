@@ -40,17 +40,26 @@ export class SelectChampPositionTemplateController extends ApplicationController
     if (template) {
       const fragment = template.cloneNode(true) as HTMLSelectElement;
 
-      const options = Array.from(fragment.querySelectorAll('option'))
-        .map((option) => {
-          if (option.value == focusedSelectStableId) {
-            option.setAttribute('selected', 'selected');
-            option.setAttribute('disabled', 'disabled');
-          }
+      const options = Array.from(fragment.querySelectorAll('option'));
+      options.map((option) => {
+        // can't move current element after current element
+        if (option.value == focusedSelectStableId) {
+          option.setAttribute('selected', 'selected');
+          option.setAttribute('disabled', 'disabled');
+        }
+      });
+      options.map((option, index) => {
+        const previousOption = options[index - 1];
+        // can't move current element after previous element
+        if (previousOption && option.value == focusedSelectStableId) {
+          previousOption.setAttribute('selected', 'selected');
+          previousOption.setAttribute('disabled', 'disabled');
+        }
+      });
 
-          return option.outerHTML;
-        })
+      focusedSelect.innerHTML = options
+        .map((option) => option.outerHTML)
         .join('');
-      focusedSelect.innerHTML = options;
     }
   }
 

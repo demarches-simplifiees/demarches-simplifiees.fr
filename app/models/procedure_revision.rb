@@ -82,6 +82,23 @@ class ProcedureRevision < ApplicationRecord
     coordinate
   end
 
+  def move_type_de_champ_after(stable_id, position)
+    coordinate, _ = coordinate_and_tdc(stable_id)
+    siblings = coordinate.siblings
+
+    if position > coordinate.position
+      siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+      coordinate.update_column(:position, position)
+    else
+      siblings.where(position: (position + 1)...coordinate.position).update_all("position = position + 1")
+      coordinate.update_column(:position, position + 1)
+    end
+
+    coordinate.reload
+
+    coordinate
+  end
+
   def remove_type_de_champ(stable_id)
     coordinate, tdc = coordinate_and_tdc(stable_id)
 
