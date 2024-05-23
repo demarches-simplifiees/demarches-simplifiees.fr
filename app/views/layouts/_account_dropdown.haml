@@ -2,9 +2,10 @@
   .fr-nav__item
     %button.account-btn.fr-translate__btn.fr-btn{ "aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts]) }
       %span= current_email
-      - if dossier.present? && dossier&.france_connect_information.present?
+      - if current_user.loged_in_with_france_connect
         %span
-          &nbsp;via FranceConnect
+          &nbsp;via
+          = current_user.loged_in_with_france_connect.capitalize
       %span{ class: "fr-badge fr-badge--sm fr-ml-1w #{color_by_role(nav_bar_profile)}" }
         = t("layouts.#{nav_bar_profile}")
     #account.fr-collapse.fr-menu
