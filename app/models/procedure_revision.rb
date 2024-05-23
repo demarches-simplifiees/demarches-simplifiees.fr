@@ -181,6 +181,16 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
+  def parent_of(tdc)
+    revision_types_de_champ
+      .find { _1.type_de_champ_id == tdc.id }.parent&.type_de_champ
+  end
+
+  def child?(tdc)
+    revision_types_de_champ
+      .find { _1.type_de_champ_id == tdc.id }.child?
+  end
+
   def remove_children_of(tdc)
     children_of(tdc).each do |child|
       remove_type_de_champ(child.stable_id)
