@@ -675,7 +675,7 @@ en:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               invalid: is not valid. It must countain between 3 and 50 characters among a-z, 0-9, '_' and '-'.
-        "dossier/champs":
+        champ:
           format: "%{attribute} %{message}"
           attributes:
             value:
