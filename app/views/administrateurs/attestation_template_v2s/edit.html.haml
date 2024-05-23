@@ -38,8 +38,8 @@
             %h2.fr-h4 En-tête
 
           .fr-fieldset__element
-            .fr-toggle
-              = f.check_box :official_layout, class: "fr-toggle-input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
+            .fr-toggle.fr-toggle--label-left
+              = f.check_box :official_layout, class: "fr-toggle__input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
               %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
                 Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
 

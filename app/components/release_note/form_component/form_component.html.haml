@@ -6,7 +6,7 @@
 
     .fr-fieldset__element
       .fr-toggle
-        = f.check_box :published, class: "fr-toggle-input", id: dom_id(release_note, :published)
+        = f.check_box :published, class: "fr-toggle__input", id: dom_id(release_note, :published)
         %label.fr-toggle__label{ for: dom_id(release_note, :published), data: { fr_checked_label: "Publié", fr_unchecked_label: "Brouillon" } }
           Publier
 
