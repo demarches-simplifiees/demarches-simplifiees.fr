@@ -91,5 +91,9 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     class SendClosingNotificationJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
+
+    class ImageProcessorJob < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end
