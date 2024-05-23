@@ -557,6 +557,7 @@ module Users
     def update_dossier_and_compute_errors
       @dossier.update_champs_attributes(champs_public_attributes_params, :public)
       if @dossier.champs.any?(&:changed_for_autosave?) || @dossier.champs_public_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
+        @dossier.champs.map(&:reset_visible)
         @dossier.last_champ_updated_at = Time.zone.now
       end
 
