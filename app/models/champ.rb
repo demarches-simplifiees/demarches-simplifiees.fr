@@ -93,10 +93,6 @@ class Champ < ApplicationRecord
     parent_id.present?
   end
 
-  def stable_id_with_row
-    [row_id, stable_id].compact
-  end
-
   # used for the `required` html attribute
   # check visibility to avoid hidden required input
   # which prevent the form from being sent.
@@ -252,6 +248,14 @@ class Champ < ApplicationRecord
     public? && dossier.champ_forked_with_changes?(self)
   end
 
+  def public_id
+    if row_id.blank?
+      stable_id.to_s
+    else
+      "#{stable_id}-#{row_id}"
+    end
+  end
+
   protected
 
   def valid_champ_value?
@@ -272,7 +276,7 @@ class Champ < ApplicationRecord
   end
 
   def html_id
-    row_id.present? ? "champ-#{stable_id}-#{row_id}" : "champ-#{stable_id}"
+    "champ-#{public_id}"
   end
 
   def needs_dossier_id?

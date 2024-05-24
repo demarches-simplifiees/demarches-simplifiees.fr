@@ -752,6 +752,14 @@ class TypeDeChamp < ApplicationRecord
     true
   end
 
+  def public_id(row_id)
+    if row_id.blank?
+      stable_id.to_s
+    else
+      "#{stable_id}-#{row_id}"
+    end
+  end
+
   private
 
   DEFAULT_EMPTY = ['']
