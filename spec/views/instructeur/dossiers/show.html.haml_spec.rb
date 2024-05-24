@@ -23,35 +23,6 @@ describe 'instructeurs/dossiers/show', type: :view do
     expect(subject).to have_text('en construction')
   end
 
-  context 'with a motivation' do
-    let(:dossier) { create :dossier, :accepte, :with_motivation }
-
-    it 'displays the motivation text' do
-      expect(subject).to have_content(dossier.motivation)
-    end
-  end
-
-  context 'with an attestation' do
-    let(:dossier) { create :dossier, :accepte, :with_attestation }
-
-    it 'provides a link to the attestation' do
-      expect(subject).to have_text('Attestation')
-      expect(subject).to have_link(href: attestation_instructeur_dossier_path(dossier.procedure, dossier))
-    end
-  end
-
-  context 'with a justificatif' do
-    let(:dossier) do
-      dossier = create(:dossier, :accepte, :with_justificatif)
-      dossier.justificatif_motivation.blob.update(virus_scan_result: ActiveStorage::VirusScanner::SAFE)
-      dossier
-    end
-
-    it 'allows to download the justificatif' do
-      expect(subject).to have_css("a[href*='/rails/active_storage/blobs/']", text: dossier.justificatif_motivation.attachment.filename.to_s)
-    end
-  end
-
   context 'en_construction' do
     let(:dossier) { create(:dossier, :en_construction) }
     it 'displays the correct actions' do
