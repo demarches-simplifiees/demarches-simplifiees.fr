@@ -1,44 +1,45 @@
 describe Champs::PhoneChamp do
-  let(:phone_champ) { build(:champ_phone) }
+  let(:champ) { build(:champ_phone) }
+  # subject { champ }
 
-  describe '#valid?' do
+  describe '#validate' do
     it do
-      expect(champ_with_value(nil)).to be_valid
-      expect(champ_with_value("0123456789 0123456789")).to_not be_valid
-      expect(champ_with_value("01.23.45.67.89 01.23.45.67.89")).to_not be_valid
-      expect(champ_with_value("3646")).to be_valid
-      expect(champ_with_value("0123456789")).to be_valid
-      expect(champ_with_value("01.23.45.67.89")).to be_valid
-      expect(champ_with_value("0123 45.67.89")).to be_valid
-      expect(champ_with_value("0033 123-456-789")).to be_valid
-      expect(champ_with_value("0033 123-456-789")).to be_valid
-      expect(champ_with_value("0033(0)123456789")).to be_valid
-      expect(champ_with_value("+33-1.23.45.67.89")).to be_valid
-      expect(champ_with_value("+33 - 123 456 789")).to be_valid
-      expect(champ_with_value("+33(0) 123 456 789")).to be_valid
-      expect(champ_with_value("+33 (0)123 45 67 89")).to be_valid
-      expect(champ_with_value("+33 (0)1 2345-6789")).to be_valid
-      expect(champ_with_value("+33(0) - 123456789")).to be_valid
-      expect(champ_with_value("+1(0) - 123456789")).to be_valid
-      expect(champ_with_value("+49 2109 87654321")).to be_valid
-      expect(champ_with_value("012345678")).to be_valid
+      expect(champ_with_value(nil).validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0123456789 0123456789").validate(:champs_public_value)).to_not be_truthy
+      expect(champ_with_value("01.23.45.67.89 01.23.45.67.89").validate(:champs_public_value)).to_not be_truthy
+      expect(champ_with_value("3646").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0123456789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("01.23.45.67.89").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0123 45.67.89").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0033 123-456-789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0033 123-456-789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0033(0)123456789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+33-1.23.45.67.89").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+33 - 123 456 789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+33(0) 123 456 789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+33 (0)123 45 67 89").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+33 (0)1 2345-6789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+33(0) - 123456789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+1(0) - 123456789").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+49 2109 87654321").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("012345678").validate(:champs_public_value)).to be_truthy
       # DROM numbers should be valid
-      expect(champ_with_value("06 96 04 78 07")).to be_valid
-      expect(champ_with_value("05 94 22 31 31")).to be_valid
-      expect(champ_with_value("+594 5 94 22 31 31")).to be_valid
+      expect(champ_with_value("06 96 04 78 07").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("05 94 22 31 31").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("+594 5 94 22 31 31").validate(:champs_public_value)).to be_truthy
       # polynesian numbers should not return errors in any way
       ## landline numbers start with 40 or 45
-      expect(champ_with_value("45187272")).to be_valid
-      expect(champ_with_value("40 473 500")).to be_valid
-      expect(champ_with_value("40473500")).to be_valid
-      expect(champ_with_value("45473500")).to be_valid
+      expect(champ_with_value("45187272").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("40 473 500").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("40473500").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("45473500").validate(:champs_public_value)).to be_truthy
       ## +689 is the international indicator
-      expect(champ_with_value("+689 45473500")).to be_valid
-      expect(champ_with_value("0145473500")).to be_valid
+      expect(champ_with_value("+689 45473500").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("0145473500").validate(:champs_public_value)).to be_truthy
       ## polynesian mobile numbers start with 87, 88, 89
-      expect(champ_with_value("87473500")).to be_valid
-      expect(champ_with_value("88473500")).to be_valid
-      expect(champ_with_value("89473500")).to be_valid
+      expect(champ_with_value("87473500").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("88473500").validate(:champs_public_value)).to be_truthy
+      expect(champ_with_value("89473500").validate(:champs_public_value)).to be_truthy
     end
   end
 
@@ -61,6 +62,6 @@ describe Champs::PhoneChamp do
   end
 
   def champ_with_value(number)
-    phone_champ.tap { |c| c.value = number }
+    champ.tap { |c| c.value = number }
   end
 end

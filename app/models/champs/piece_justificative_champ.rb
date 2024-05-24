@@ -2,6 +2,7 @@ class Champs::PieceJustificativeChamp < Champ
   include ActionView::Helpers::TagHelper
   FILE_MAX_SIZE = 200.megabytes
 
+  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validates :piece_justificative_file,
             size: { less_than: FILE_MAX_SIZE },
             if: -> { !type_de_champ.skip_pj_validation }

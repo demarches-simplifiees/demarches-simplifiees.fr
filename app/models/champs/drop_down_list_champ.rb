@@ -5,6 +5,7 @@ class Champs::DropDownListChamp < Champ
   OTHER = '__other__'
   delegate :options_without_empty_value_when_mandatory, to: :type_de_champ
 
+  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validate :value_is_in_options, unless: -> { value.blank? || drop_down_other? }
 
   def render_as_radios?

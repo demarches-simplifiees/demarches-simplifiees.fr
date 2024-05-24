@@ -1,5 +1,8 @@
 class Champs::CiviliteChamp < Champ
-  validates :value, inclusion: ["M.", "Mme"], allow_nil: true, allow_blank: false
+  validates :value, inclusion: ["M.", "Mme"],
+                    allow_nil: true,
+                    allow_blank: false,
+                    if: -> { validate_champ_value? || validation_context == :prefill }
 
   def legend_label?
     true

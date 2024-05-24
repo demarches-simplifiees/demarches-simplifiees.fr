@@ -12,8 +12,12 @@ class Champs::DecimalNumberChamp < Champ
   }, numericality: {
     allow_nil: true,
     allow_blank: true
-  }
-  validate :min_max_validation, if: :validate_champ_value?
+    message: -> (object, _data) {
+      object.errors.generate_message(:value, :not_a_number)
+    }
+  }, if: -> { validate_champ_value? || validation_context == :prefill }
+
+  validate :min_max_validation, if: -> { validate_champ_value? || validation_context == :prefill }
 
   def min_max_validation
     return if value.blank?

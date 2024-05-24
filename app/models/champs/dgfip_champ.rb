@@ -1,5 +1,6 @@
 class Champs::DgfipChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/dgfip-input-validation.middleware.ts
+  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validates :numero_fiscal, format: { with: /\A\w{13,14}\z/ }, if: -> { reference_avis.present? && validate_champ_value? }
   validates :reference_avis, format: { with: /\A\w{13,14}\z/ }, if: -> { numero_fiscal.present? && validate_champ_value? }
 

@@ -1,5 +1,6 @@
 class Champs::DepartementChamp < Champs::TextChamp
   store_accessor :value_json,  :code_region
+  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validate :value_in_departement_names, unless: -> { value.nil? }
   validate :external_id_in_departement_codes, unless: -> { external_id.nil? }
   before_save :store_code_region

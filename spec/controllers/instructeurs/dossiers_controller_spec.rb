@@ -940,14 +940,18 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe "#update_annotations" do
     let(:procedure) do
-      create(:procedure, :published, types_de_champ_private: [
+      create(:procedure, :published, types_de_champ_public:, types_de_champ_private:, instructeurs: instructeurs)
+    end
+    let(:types_de_champ_private) do
+      [
         { type: :multiple_drop_down_list },
         { type: :linked_drop_down_list },
         { type: :datetime },
         { type: :repetition, children: [{}] },
         { type: :drop_down_list, options: [:a, :b, :other] }
-      ], instructeurs: instructeurs)
+      ]
     end
+    let(:types_de_champ_public) { [] }
     let(:dossier) { create(:dossier, :en_construction, :with_populated_annotations, procedure: procedure) }
     let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
@@ -958,24 +962,105 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:champ_repetition) { dossier.champs_private.fourth }
     let(:champ_drop_down_list) { dossier.champs_private.fifth }
 
-    before do
-      expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
-      another_instructeur.follow(dossier)
-      Timecop.freeze(now)
-      patch :update_annotations, params: params, format: :turbo_stream
+    context 'when no invalid champs_public' do
+      context "with new values for champs_private" do
+        before do
+          expect(controller.current_instructeur).to receive(:mark_tab_as_seen).with(dossier, :annotations_privees)
+          another_instructeur.follow(dossier)
+          Timecop.freeze(now)
+          patch :update_annotations, params: params, format: :turbo_stream
 
-      champ_multiple_drop_down_list.reload
-      champ_linked_drop_down_list.reload
-      champ_datetime.reload
-      champ_repetition.reload
-      champ_drop_down_list.reload
+          champ_multiple_drop_down_list.reload
+          champ_linked_drop_down_list.reload
+          champ_datetime.reload
+          champ_repetition.reload
+          champ_drop_down_list.reload
+        end
+
+        after do
+          Timecop.return
+        end
+        let(:params) do
+          {
+            procedure_id: procedure.id,
+            dossier_id: dossier.id,
+            dossier: {
+              champs_private_attributes: {
+                '0': {
+                  id: champ_multiple_drop_down_list.id,
+                  value: ['', 'val1', 'val2']
+                },
+                '1': {
+                  id: champ_datetime.id,
+                  value: '2019-12-21T13:17'
+                },
+                '2': {
+                  id: champ_linked_drop_down_list.id,
+                  primary_value: 'primary',
+                  secondary_value: 'secondary'
+                },
+                '3': {
+                  id: champ_repetition.champs.first.id,
+                  value: 'text'
+                },
+                '4': {
+                  id: champ_drop_down_list.id,
+                  value: '__other__',
+                  value_other: 'other value'
+                }
+              }
+            }
+          }
+        end
+
+        it {
+          expect(champ_multiple_drop_down_list.value).to eq('["val1","val2"]')
+          expect(champ_linked_drop_down_list.primary_value).to eq('primary')
+          expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
+          expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
+          expect(champ_repetition.champs.first.value).to eq('text')
+          expect(champ_drop_down_list.value).to eq('other value')
+          expect(dossier.reload.last_champ_private_updated_at).to eq(now)
+          expect(response).to have_http_status(200)
+        }
+
+        it 'updates the annotations' do
+          Timecop.travel(now + 1.hour)
+          expect(instructeur.followed_dossiers.with_notifications).to eq([])
+          expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
+        end
+      end
+
+      context "without new values for champs_private" do
+        let(:params) do
+          {
+            procedure_id: procedure.id,
+            dossier_id: dossier.id,
+            dossier: {
+              champs_private_attributes: {},
+              champs_public_attributes: {
+                '0': {
+                  id: champ_multiple_drop_down_list.id,
+                  value: ['', 'val1', 'val2']
+                }
+              }
+            }
+          }
+        end
+
+        it {
+          expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
+          expect(response).to have_http_status(200)
+        }
+      end
     end
 
-    after do
-      Timecop.return
-    end
-
-    context "with new values for champs_private" do
+    context 'with invalid champs_public (DecimalNumberChamp)' do
+      let(:types_de_champ_public) do
+        [
+          { type: :decimal_number }
+        ]
+      end
       let(:params) do
         {
           procedure_id: procedure.id,
@@ -983,71 +1068,21 @@ describe Instructeurs::DossiersController, type: :controller do
           dossier: {
             champs_private_attributes: {
               '0': {
-                id: champ_multiple_drop_down_list.id,
-                value: ['', 'val1', 'val2']
-              },
-              '1': {
                 id: champ_datetime.id,
-                value: '2019-12-21T13:17'
-              },
-              '2': {
-                id: champ_linked_drop_down_list.id,
-                primary_value: 'primary',
-                secondary_value: 'secondary'
-              },
-              '3': {
-                id: champ_repetition.champs.first.id,
-                value: 'text'
-              },
-              '4': {
-                id: champ_drop_down_list.id,
-                value: '__other__',
-                value_other: 'other value'
+                value: '2024-03-30T07:03'
               }
             }
           }
         }
       end
 
-      it {
-        expect(champ_multiple_drop_down_list.value).to eq('["val1","val2"]')
-        expect(champ_linked_drop_down_list.primary_value).to eq('primary')
-        expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
-        expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
-        expect(champ_repetition.champs.first.value).to eq('text')
-        expect(champ_drop_down_list.value).to eq('other value')
-        expect(dossier.reload.last_champ_private_updated_at).to eq(now)
-        expect(response).to have_http_status(200)
-      }
-
-      it 'updates the annotations' do
-        Timecop.travel(now + 1.hour)
-        expect(instructeur.followed_dossiers.with_notifications).to eq([])
-        expect(another_instructeur.followed_dossiers.with_notifications).to eq([dossier.reload])
+      it 'update champs_private' do
+        too_long_float = '3.1415'
+        dossier.champs_public.first.update_column(:value, too_long_float)
+        patch :update_annotations, params: params, format: :turbo_stream
+        champ_datetime.reload
+        expect(champ_datetime.value).to eq(Time.zone.parse('2024-03-30T07:03:00').iso8601)
       end
-    end
-
-    context "without new values for champs_private" do
-      let(:params) do
-        {
-          procedure_id: procedure.id,
-          dossier_id: dossier.id,
-          dossier: {
-            champs_private_attributes: {},
-            champs_public_attributes: {
-              '0': {
-                id: champ_multiple_drop_down_list.id,
-                value: ['', 'val1', 'val2']
-              }
-            }
-          }
-        }
-      end
-
-      it {
-        expect(dossier.reload.last_champ_private_updated_at).to eq(nil)
-        expect(response).to have_http_status(200)
-      }
     end
   end
 

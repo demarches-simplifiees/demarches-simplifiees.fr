@@ -1,4 +1,5 @@
 class Champs::IbanChamp < Champ
+  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
   validates_with IbanValidator, if: :validate_champ_value?
   after_validation :format_iban
 
