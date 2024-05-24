@@ -26,6 +26,9 @@ module Types
     field :date_traitement, GraphQL::Types::ISO8601DateTime, "Date du dernier traitement.", null: true, method: :processed_at
     field :date_derniere_modification, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification.", null: false, method: :updated_at
 
+    field :date_derniere_modification_champs, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification des champs.", null: false
+    field :date_derniere_modification_annotations, GraphQL::Types::ISO8601DateTime, "Date de la dernière modification des annotations.", null: false
+
     field :date_suppression_par_usager, GraphQL::Types::ISO8601DateTime, "Date de la suppression par l’usager.", null: true, method: :hidden_by_user_at
     field :date_suppression_par_administration, GraphQL::Types::ISO8601DateTime, "Date de la suppression par l’administration.", null: true, method: :hidden_by_administration_at
     field :date_expiration, GraphQL::Types::ISO8601DateTime, "Date d’expiration.", null: true
@@ -87,6 +90,14 @@ module Types
 
     def date_derniere_correction_en_attente
       Loaders::Association.for(object.class, :pending_correction).load(object).then { _1&.created_at }
+    end
+
+    def date_derniere_modification_champs
+      object.last_champ_updated_at || object.created_at
+    end
+
+    def date_derniere_modification_annotations
+      object.last_champ_private_updated_at || object.created_at
     end
 
     def connection_usager
