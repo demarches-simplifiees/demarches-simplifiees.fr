@@ -116,6 +116,9 @@ GEM
     administrate-field-enum (0.0.9)
       administrate (~> 0.12)
     aes_key_wrap (1.1.0)
+    after_commit_everywhere (1.4.0)
+      activerecord (>= 4.2)
+      activesupport
     after_party (1.11.2)
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
@@ -887,6 +890,7 @@ DEPENDENCIES
   addressable
   administrate
   administrate-field-enum
+  after_commit_everywhere
   after_party
   ancestry
   anchored

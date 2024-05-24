@@ -10,6 +10,7 @@ gem 'active_storage_validations'
 gem 'addressable'
 gem 'administrate'
 gem 'administrate-field-enum' # Allow using Field::Enum in administrate
+gem 'after_commit_everywhere'
 gem 'after_party'
 gem 'ancestry'
 gem 'anchored'
