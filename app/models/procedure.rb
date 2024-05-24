@@ -547,6 +547,10 @@ class Procedure < ApplicationRecord
     procedure.canonical_procedure = nil
     procedure.replaced_by_procedure = nil
     procedure.service = nil
+    procedure.closing_reason = nil
+    procedure.closing_details = nil
+    procedure.closing_notification_brouillon = false
+    procedure.closing_notification_en_cours = false
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
