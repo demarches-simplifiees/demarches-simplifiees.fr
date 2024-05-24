@@ -1,8 +1,9 @@
 describe Champs::IntegerNumberChamp do
   let(:min) { nil }
   let(:max) { nil }
+  let(:type_de_champ) { create(:type_de_champ, min:, max:) }
 
-  let(:champ) { build(:champ_integer_number, value:) }
+  let(:champ) { build(:champ_integer_number, value:, type_de_champ:) }
   subject { champ.validate(:champs_public_value) }
 
   describe '#valid?' do
@@ -17,7 +18,7 @@ describe Champs::IntegerNumberChamp do
 
       it 'is not valid and contains errors' do
         is_expected.to be_falsey
-        expect(champ.errors[:value]).to eq(["doit être un nombre entier (sans chiffres après la virgule)"])
+        expect(champ.errors[:value]).to eq(["doit être un nombre entier (sans chiffre après la virgule)"])
       end
     end
 
@@ -26,7 +27,7 @@ describe Champs::IntegerNumberChamp do
 
       it 'is not valid and contains errors' do
         is_expected.to be_falsey
-        expect(champ.errors[:value]).to eq(["doit être un nombre entier (sans chiffres après la virgule)"])
+        expect(champ.errors[:value]).to eq(["doit être un nombre entier (sans chiffre après la virgule)"])
       end
     end
 
@@ -47,15 +48,15 @@ describe Champs::IntegerNumberChamp do
       context 'when the value is equal to max' do
         let(:value) { '10' }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_truthy }
       end
 
       context 'when the value is greater than max' do
         let(:value) { 11 }
 
         it do
-          is_expected.to_not be_valid(:champs_public_value)
-          expect(subject.errors[:value]).to eq(["doit être inférieur ou égal à 10"])
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être inférieur ou égal à 10"])
         end
       end
     end
@@ -65,15 +66,15 @@ describe Champs::IntegerNumberChamp do
       context 'when the value is equal to min' do
         let(:value) { '10' }
 
-        it { is_expected.to be_valid }
+        it { is_expected.to be_truthy }
       end
 
       context 'when the value is less than min' do
         let(:value) { 9 }
 
         it do
-          is_expected.to_not be_valid(:champs_public_value)
-          expect(subject.errors[:value]).to eq(["doit être supérieur ou égal à 10"])
+          is_expected.to be_falsey
+          expect(champ.errors[:value]).to eq(["doit être supérieur ou égal à 10"])
         end
       end
     end
