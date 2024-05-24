@@ -48,7 +48,7 @@ describe 'The user' do
     fill_in('address', with: '78 Rue du Grés 30310 Vergè')
     expect(page).to have_css('li', text: "78 Rue du Grés 30310 Vergèze", visible: :visible, wait: 5)
     find('li', text: '78 Rue du Grés 30310 Vergèze').click
-    wait_until { champ_value_for('address') == '78 Rue du Grés 30310 Vergèze' }
+    wait_until { champ_for('address').full_address? }
     expect(champ_for('address').full_address?).to be_truthy
     expect(champ_for('address').departement_code_and_name).to eq('30 – Gard')
 
