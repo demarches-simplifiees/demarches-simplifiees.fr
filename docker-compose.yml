@@ -93,6 +93,7 @@ services:
       - DOLIST_PASSWORD
       - DOLIST_USERNAME
       - DS_PROXY_URL
+      - DS_ENV
       - ENCRYPTION_SERVICE_SALT
       - FAVICON_16PX_SRC
       - FAVICON_32PX_SRC
