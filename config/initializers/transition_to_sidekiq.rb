@@ -21,5 +21,9 @@ if Rails.env.production? && sidekiq_enabled
     class MaintenanceTasks::TaskJob
       self.queue_adapter = :sidekiq
     end
+
+    class PriorizedMailDeliveryJob < ActionMailer::MailDeliveryJob
+      self.queue_adapter = :sidekiq
+    end
   end
 end

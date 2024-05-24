@@ -585,6 +585,9 @@ GEM
     rails-i18n (7.0.8)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 8)
+    rails-pg-extras (5.3.1)
+      rails
+      ruby-pg-extras (= 5.3.1)
     railties (7.0.8.1)
       actionpack (= 7.0.8.1)
       activesupport (= 7.0.8.1)
@@ -598,7 +601,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rdoc (6.6.2)
+    rdoc (6.6.3.1)
       psych (>= 4.0.0)
     redcarpet (3.6.0)
     redis (5.1.0)
@@ -675,6 +678,9 @@ GEM
       rubocop-factory_bot (~> 2.22)
     ruby-graphviz (1.2.5)
       rexml
+    ruby-pg-extras (5.3.1)
+      pg
+      terminal-table
     ruby-progressbar (1.13.0)
     ruby-vips (2.2.0)
       ffi (~> 1.12)
@@ -953,6 +959,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-erd
   rails-i18n
+  rails-pg-extras
   rake-progressbar
   redcarpet
   redis
