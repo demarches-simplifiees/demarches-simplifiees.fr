@@ -115,14 +115,14 @@ en:
         line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."
     accessibility_statement:
       title: "Accessibility statement"
-      line_one: "DINUM is committed to making this service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
+      line_one: "DINUM is committed to making its service accessible in accordance with Article 47 of Law No. 2005-102 of 11 February 2005."
       line_two: "This accessibility statement applies to %{app_name} (%{host})."
       compliance:
         title: "Compliance status"
         line_one_html: "The Mes-Démarches website is <strong>partially compliant</strong> with the General Accessibility Guidelines (RGAA) version 4."
       results:
         title: "Test results"
-        line_one: "As of August, 28th 2023, the site's average compliance rate is 80%."
+        line_one: "As of 13 June 2023, the average compliance rate of the site is 80%."
         line_three: "Users can follow the measures taken by the service to improve the accessibility of the site at the following address:"
         programme:
           label: "Follow the DS accessibility continuous improvement programme"
@@ -759,6 +759,7 @@ en:
       #   one: "Aucune parcelle cadastrale sur la zone sélectionnée"
       #   other: "Aucune parcelle cadastrale sur les zones sélectionnées"
       # not_an_integer: "must be an integer (without decimal)"
+      not_a_float: "must have maximum 3 digits after the decimal point"
       not_a_date: "must be a correct date"
       not_a_datetime: "must be a correct datetime"
       blank: "can't be blank"

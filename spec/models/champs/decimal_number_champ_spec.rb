@@ -26,6 +26,13 @@ describe Champs::DecimalNumberChamp do
       it { expect(subject.errors[:value]).to eq(["n'est pas un nombre"]) }
     end
 
+    context 'when the value has too many decimal' do
+      let(:value) { '2.6666' }
+
+      it { is_expected.to_not be_valid }
+      it { expect(subject.errors[:value]).to eq(["doit comprendre maximum 3 chiffres après la virgule"]) }
+    end
+
     context 'when the value is blank' do
       let(:value) { '' }
 
