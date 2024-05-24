@@ -63,7 +63,6 @@ describe ImageProcessorJob, type: :job do
   end
 
   describe 'create representation' do
-    let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
     let(:blob_info) do
       {
         filename: file.original_filename,
@@ -81,19 +80,35 @@ describe ImageProcessorJob, type: :job do
       blob
     end
 
-    context "when representation is not required" do
-      it "it does not create blob representation" do
-        expect { described_class.perform_now(blob) }.not_to change { ActiveStorage::VariantRecord.count }
+    context "when type image is usual" do
+      let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
+
+      context "when representation is not required" do
+        it "it does not create blob representation" do
+          expect { described_class.perform_now(blob) }.not_to change { ActiveStorage::VariantRecord.count }
+        end
+      end
+
+      context "when representation is required" do
+        before do
+          allow(blob).to receive(:representation_required?).and_return(true)
+        end
+
+        it "it creates blob representation" do
+          expect { described_class.perform_now(blob) }.to change { ActiveStorage::VariantRecord.count }.by(1)
+        end
       end
     end
 
-    context "when representation is required" do
+    context "when type image is rare" do
+      let(:file) { fixture_file_upload('spec/fixtures/files/pencil.tiff', 'image/tiff') }
+
       before do
         allow(blob).to receive(:representation_required?).and_return(true)
       end
 
-      it "it creates blob representation" do
-        expect { described_class.perform_now(blob) }.to change { ActiveStorage::VariantRecord.count }.by(1)
+      it "creates a second variant" do
+        expect { described_class.perform_now(blob) }.to change { ActiveStorage::VariantRecord.count }.by(2)
       end
     end
   end

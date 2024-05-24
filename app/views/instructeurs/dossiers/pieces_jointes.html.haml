@@ -19,7 +19,8 @@
             = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)
 
           - elsif blob.variable? && blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
-            = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
+            - blob_url = blob.content_type.in?(RARE_IMAGE_TYPES) ? attachment.variant(resize_to_limit: [2000, 2000]).processed.url : blob.url
+            = link_to image_url(blob_url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
               .thumbnail
                 = image_tag(attachment.variant(resize_to_limit: [400, 400]).processed.url, loading: :lazy)
                 .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
