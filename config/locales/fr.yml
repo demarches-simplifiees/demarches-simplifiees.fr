@@ -513,7 +513,7 @@ fr:
             termine:
               internal_procedure_html: Cette démarche est close et remplacée par <a href="%{link}" target="_blank" rel="noopener noreferrer">cette démarche</a>. Votre dossier a été traité par l'administration
               other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. Plus d'informations <a href="%{link}" target="_blank" rel="noopener noreferrer">ici</a>
-          pending_correction: Ce dossier attend vos corrections. Consultez les modifications à apporter dans la messagerie.
+          pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie</a>."
           depose_at: Déposé le %{date}
           created_at: Créé le %{date}
           updated_at: modifié le %{date}
