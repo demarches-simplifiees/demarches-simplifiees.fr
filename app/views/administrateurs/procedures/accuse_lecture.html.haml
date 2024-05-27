@@ -33,10 +33,4 @@
               hint: "L’accusé de lecture est à activer uniquement pour les démarches avec voies de recours car il complexifie l’accès à la décision finale pour les usagers",
               opt: {"checked" => @procedure.accuse_lecture})
 
-.padded-fixed-footer
-  .fixed-footer
-    .fr-container
-      .fr-grid-row
-        .fr-col-12.fr-col-offset-md-2.fr-col-md-8.fr-pb-2w
-          = link_to admin_procedure_path(id: @procedure), class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mb-2w' do
-            Revenir à l'écran de gestion
+= render Procedure::FixedFooterComponent.new(procedure: @procedure, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8' )

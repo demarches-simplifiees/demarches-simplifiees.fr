@@ -11,8 +11,5 @@
     available_instructeur_emails: @available_instructeur_emails,
     disabled_as_super_admin: @disabled_as_super_admin }
 
-.padded-fixed-footer
-  .fixed-footer.fr-pb-2w
-    .fr-container
-      = link_to admin_procedure_path(id: @procedure), class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left' do
-        Revenir à l'écran de gestion
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

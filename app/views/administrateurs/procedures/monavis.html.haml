@@ -11,11 +11,4 @@
   .fr-container
     = render partial: 'monavis', locals: { f: f }
 
-  .padded-fixed-footer
-    .fixed-footer
-      .fr-container
-        %ul.fr-btns-group.fr-btns-group--inline-md
-          %li
-            = link_to "Annuler et revenir à l'écran de gestion", admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
-          %li
-            = f.button 'Enregistrer', class: 'fr-btn'
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
