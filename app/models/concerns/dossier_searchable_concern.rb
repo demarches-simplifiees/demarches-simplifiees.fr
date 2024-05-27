@@ -6,7 +6,7 @@ module DossierSearchableConcern
   included do
     after_commit :index_search_terms_later, if: -> { previously_new_record? || user_previously_changed? || mandataire_first_name_previously_changed? || mandataire_last_name_previously_changed? }
 
-    SEARCH_TERMS_DEBOUNCE = 30.seconds
+    SEARCH_TERMS_DEBOUNCE = 5.minutes
 
     kredis_flag :debounce_index_search_terms_flag
 
