@@ -1168,10 +1168,15 @@ class Dossier < ApplicationRecord
       .transform_values { _1.sort_by(&:id).uniq(&:row_id) }
 
     if scope.is_a?(TypeDeChamp)
-      revision.children_of(scope)
+      revision
+        .children_of(scope)
+        .flat_map { champs_index[_1.stable_id] || [] }
+        .filter(&:child?) # TODO: remove once bad data (child champ without a row id) is cleaned
     else
-      revision.types_de_champ_for(scope:, root:)
-    end.flat_map { champs_index[_1.stable_id] || [] }
+      revision
+        .types_de_champ_for(scope:, root:)
+        .flat_map { champs_index[_1.stable_id] || [] }
+    end
   end
 
   def has_annotations?

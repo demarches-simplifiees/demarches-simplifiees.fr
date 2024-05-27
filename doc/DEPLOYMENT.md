@@ -11,7 +11,7 @@ Usually, a deployment goes like this (in pseudo-code):
 # For each server:
   # Stop the server
   # Get the new code (e.g. `git clone git@github.com:betagouv/demarches-simplifiees.fr.git`)
-  # Install new dependencies (e.g. `bundle install && yarn install`)
+  # Install new dependencies (e.g. `bundle install && bun install`)
   # Restart the app server
 # Run data migrations (e.g. `rake after_party:run`)
 ```
