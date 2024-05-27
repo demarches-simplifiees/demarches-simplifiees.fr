@@ -323,14 +323,14 @@ describe PiecesJustificativesService do
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -346,7 +346,7 @@ describe PiecesJustificativesService do
           let(:experts_procedure) { create(:experts_procedure, expert: user_profile, procedure:) }
           let(:avis) { create(:avis, experts_procedure:, dossier: dossier, confidentiel: true) }
           let(:user_profile) { create(:expert) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -370,21 +370,21 @@ describe PiecesJustificativesService do
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an expert' do
           let(:user_profile) { create(:expert) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
