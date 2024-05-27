@@ -3,12 +3,19 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['MonAvis']] }
 
-.container
-  %h1.page-title
-    Insérer un lien vers « MonAvis »
+.fr-container
+  %h1.fr-h2
+    Bouton « MonAvis »
 
-.container
-  %h1
-  = form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), html: { class: 'form', multipart: true } do |f|
+= form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), html: { class: 'form', multipart: true } do |f|
+  .fr-container
     = render partial: 'monavis', locals: { f: f }
-    = f.button 'Enregistrer', class: 'fr-btn'
+
+  .padded-fixed-footer
+    .fixed-footer
+      .fr-container
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to "Annuler et revenir à l'écran de gestion", admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+          %li
+            = f.button 'Enregistrer', class: 'fr-btn'

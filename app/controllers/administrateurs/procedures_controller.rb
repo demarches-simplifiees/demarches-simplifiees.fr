@@ -270,10 +270,11 @@ module Administrateurs
     def update_monavis
       if !@procedure.update(procedure_params)
         flash.now.alert = @procedure.errors.full_messages
+        render 'monavis'
       else
         flash.notice = 'le champ MonAvis a bien été mis à jour'
+        redirect_to admin_procedure_path(id: @procedure.id)
       end
-      render 'monavis'
     end
 
     def accuse_lecture
