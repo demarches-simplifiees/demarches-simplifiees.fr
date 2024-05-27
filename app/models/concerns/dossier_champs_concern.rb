@@ -65,13 +65,6 @@ module DossierChampsConcern
   end
 
   def update_champs_attributes(attributes, scope)
-    # TODO: remove after one deploy
-    if attributes.present? && attributes.values.filter { _1.key?(:with_public_id) }.empty?
-      assign_attributes("champs_#{scope}_all_attributes".to_sym => attributes)
-      @champs_by_public_id = nil
-      return
-    end
-
     champs_attributes = attributes.to_h.map do |public_id, attributes|
       champ_attributes_by_public_id(public_id, attributes, scope)
     end

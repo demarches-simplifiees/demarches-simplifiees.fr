@@ -49,8 +49,6 @@ class Dossier < ApplicationRecord
   has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
-  has_many :champs_public_all, -> { public_only }, class_name: 'Champ', inverse_of: false
-  has_many :champs_private_all, -> { private_only }, class_name: 'Champ', inverse_of: false
   has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
@@ -145,8 +143,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
-  accepts_nested_attributes_for :champs_public_all
-  accepts_nested_attributes_for :champs_private_all
   accepts_nested_attributes_for :individual
 
   include AASM

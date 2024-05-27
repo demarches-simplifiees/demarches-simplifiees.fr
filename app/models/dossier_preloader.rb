@@ -93,8 +93,6 @@ class DossierPreloader
     champs_public, champs_private = champs.partition(&:public?)
 
     dossier.association(:champs).target = []
-    dossier.association(:champs_public_all).target = []
-    dossier.association(:champs_private_all).target = []
     load_champs(dossier, :champs_public, champs_public, dossier, children_by_parent)
     load_champs(dossier, :champs_private, champs_private, dossier, children_by_parent)
 
@@ -121,12 +119,6 @@ class DossierPreloader
     end
 
     dossier.association(:champs).target += champs
-
-    if champs.first.public?
-      dossier.association(:champs_public_all).target += champs
-    else
-      dossier.association(:champs_private_all).target += champs
-    end
 
     parent.association(name).target = champs
       .filter { positions[dossier.revision_id][_1.type_de_champ_id].present? }

@@ -275,7 +275,7 @@ module Instructeurs
 
     def update_annotations
       dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private)
-      if dossier.champs.any?(&:changed_for_autosave?) || dossier.champs_private_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
+      if dossier.champs.any?(&:changed_for_autosave?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
 
@@ -296,13 +296,8 @@ module Instructeurs
 
     def annotation
       @dossier = dossier_with_champs(pj_template: false)
-      annotation_id_or_stable_id = params[:stable_id]
-      annotation = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(annotation_id_or_stable_id, :private)
-        @dossier.project_champ(type_de_champ, params[:row_id])
-      else
-        @dossier.champs_private_all.find(annotation_id_or_stable_id)
-      end
+      type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
+      annotation = @dossier.project_champ(type_de_champ, params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do
@@ -418,7 +413,6 @@ module Instructeurs
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
-        :with_public_id,
         value: []
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with

@@ -347,7 +347,7 @@ describe DossierRebaseConcern do
       it "updates the brouillon champs with the latest revision changes" do
         expect(dossier.revision).to eq(procedure.published_revision)
         expect(dossier.champs_public.size).to eq(5)
-        expect(dossier.champs_public_all.size).to eq(7)
+        expect(dossier.champs.count(&:public?)).to eq(7)
         expect(repetition_champ.rows.size).to eq(2)
         expect(repetition_champ.rows[0].size).to eq(1)
         expect(repetition_champ.rows[1].size).to eq(1)
@@ -360,7 +360,7 @@ describe DossierRebaseConcern do
         expect(procedure.revisions.size).to eq(3)
         expect(dossier.revision).to eq(procedure.published_revision)
         expect(dossier.champs_public.size).to eq(6)
-        expect(dossier.champs_public_all.size).to eq(12)
+        expect(dossier.champs.count(&:public?)).to eq(12)
         expect(rebased_text_champ.value).to eq(text_champ.value)
         expect(rebased_text_champ.type_de_champ_id).not_to eq(text_champ.type_de_champ_id)
         expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))

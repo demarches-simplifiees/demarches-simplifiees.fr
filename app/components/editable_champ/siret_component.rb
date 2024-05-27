@@ -12,10 +12,6 @@ class EditableChamp::SiretComponent < EditableChamp::EditableChampBaseComponent
   end
 
   def update_path
-    if Champ.update_by_stable_id?
-      champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
-    else
-      champs_legacy_siret_path(@champ)
-    end
+    champs_siret_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id)
   end
 end

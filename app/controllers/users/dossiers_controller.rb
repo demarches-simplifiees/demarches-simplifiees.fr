@@ -319,13 +319,8 @@ module Users
 
     def champ
       @dossier = dossier_with_champs(pj_template: false)
-      champ_id_or_stable_id = params[:stable_id]
-      champ = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(champ_id_or_stable_id, :public)
-        @dossier.project_champ(type_de_champ, params[:row_id])
-      else
-        @dossier.champs_public_all.find(champ_id_or_stable_id)
-      end
+      type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :public)
+      champ = @dossier.project_champ(type_de_champ, params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do
@@ -511,7 +506,6 @@ module Users
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
-        :with_public_id,
         value: []
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with
@@ -556,7 +550,7 @@ module Users
 
     def update_dossier_and_compute_errors
       @dossier.update_champs_attributes(champs_public_attributes_params, :public)
-      if @dossier.champs.any?(&:changed_for_autosave?) || @dossier.champs_public_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
+      if @dossier.champs.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end
 
