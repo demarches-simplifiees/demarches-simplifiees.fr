@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_24_120336) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -752,6 +752,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_24_120336) do
     t.datetime "created_at", precision: nil
     t.integer "dossier_id"
     t.string "email"
+    t.datetime "email_verified_at"
     t.string "gender"
     t.string "nom"
     t.string "notification_method"
