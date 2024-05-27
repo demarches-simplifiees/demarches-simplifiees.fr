@@ -893,7 +893,6 @@ fr:
         configure_api_particulier_token: "Configurer le jeton API particulier"
     jeton_particulier:
       show:
-        configure_token: "Configurer le jeton API Particulier"
         api_particulier_description_html: "%{app_name} utilise <a href=\"https://api.gouv.fr/les-api/api-particulier\">API Particulier</a> qui permet d’accéder aux données familiales (CAF), aux données fiscales (DGFiP), au statut pôle-emploi et au statut étudiant d’un citoyen.<br />Renseignez ici le <a href=\"https://api.gouv.fr/les-api/api-particulier/demande-acces\">jeton API Particulier</a> propre à votre démarche."
         token_description: "Il doit contenir au minimum 15 caractères."
       update:
