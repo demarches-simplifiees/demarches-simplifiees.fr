@@ -1,40 +1,47 @@
 = form_for [procedure, configuration], url: admin_procedure_sva_svr_path(procedure), method: :put do |f|
-  - if !procedure.feature_enabled?(:sva)
-    .fr-alert.fr-alert--info.fr-alert--sm.fr-my-8w
-      %p
-        Pour activer le paramétrage de cette fonctionnalité, contactez-nous sur
-        = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}", **helpers.external_link_attributes
-        en indiquant votre numéro de démarche (#{@procedure.id}) et le cadre d’application du SVA/SVR.
+  .fr-container
+    - if !procedure.feature_enabled?(:sva)
+      .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-5w
+        %p
+          Pour activer le paramétrage de cette fonctionnalité, contactez-nous sur
+          = link_to CONTACT_EMAIL, "mailto:#{CONTACT_EMAIL}", **helpers.external_link_attributes
+          en indiquant votre numéro de démarche (#{@procedure.id}) et le cadre d’application du SVA/SVR.
 
-  - elsif procedure.publiee? && !procedure.sva_svr_enabled?
-    .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-4w
-      %p= t('.notice_new_files_only')
+    - elsif procedure.publiee? && !procedure.sva_svr_enabled?
+      .fr-alert.fr-alert--info.fr-alert--sm.fr-mb-4w
+        %p= t('.notice_new_files_only')
 
-  - if procedure.publiee? && procedure.sva_svr_enabled?
-    .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-4w
-      %p= t('.notice_edit_denied')
+    - if procedure.publiee? && procedure.sva_svr_enabled?
+      .fr-alert.fr-alert--warning.fr-alert--sm.fr-mb-4w
+        %p= t('.notice_edit_denied')
 
-  %fieldset.fr-fieldset
-    %legend.fr-fieldset__legend= t(".rule")
-    = render Dsfr::RadioButtonListComponent.new(form: f, target: :decision, buttons: decision_buttons, error: configuration.errors[:decision].first)
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend= t(".rule")
+      = render Dsfr::RadioButtonListComponent.new(form: f, target: :decision, buttons: decision_buttons, error: configuration.errors[:decision].first)
 
-  %fieldset.fr-fieldset
-    %legend.fr-fieldset__legend= t(".delay")
-    .fr-fieldset__element.fr-fieldset__element--inline
-      .fr-input-group
-        = f.number_field :period, class: 'fr-input', disabled: form_disabled?
-    .fr-fieldset__element.fr-fieldset__element--inline
-      .fr-select-group
-        = f.select :unit, options_for_select(SVASVRConfiguration.unit_options.map { [t(_1, scope: ".unit_labels"), _1] }, selected: configuration.unit), {}, class: 'fr-select', disabled: form_disabled?
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend= t(".delay")
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-input-group
+          = f.number_field :period, class: 'fr-input', disabled: form_disabled?
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-select-group
+          = f.select :unit, options_for_select(SVASVRConfiguration.unit_options.map { [t(_1, scope: ".unit_labels"), _1] }, selected: configuration.unit), {}, class: 'fr-select', disabled: form_disabled?
 
-  %fieldset.fr-fieldset
-    %legend.fr-fieldset__legend
-      = t(".resume_method")
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend
+        = t(".resume_method")
 
-      %span.fr-hint-text
-        = t(".resume_intro")
+        %span.fr-hint-text
+          = t(".resume_intro")
 
-    = render Dsfr::RadioButtonListComponent.new(form: f, target: :resume, buttons: resume_buttons)
+      = render Dsfr::RadioButtonListComponent.new(form: f, target: :resume, buttons: resume_buttons)
 
-  = f.submit t(".submit"), class: "fr-btn", disabled: form_disabled?
-  = link_to t(".cancel"), admin_procedure_path(procedure.id), class: "fr-btn fr-btn--secondary fr-ml-2w"
+  .padded-fixed-footer
+    .fixed-footer
+      .fr-container
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to "Annuler et revenir à l'écran de gestion", admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+          %li
+            = f.submit t(".submit"), class: "fr-btn", disabled: form_disabled?
