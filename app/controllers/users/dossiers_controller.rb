@@ -149,6 +149,8 @@ module Users
       @no_description = true
 
       if @dossier.update(dossier_params) && @dossier.individual.valid?
+        # TODO: remove this after proper mandat email validation
+        @dossier.individual.update!(email_verified_at: Time.zone.now)
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
