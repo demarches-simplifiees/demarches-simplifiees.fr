@@ -3,31 +3,38 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Fin de dépot']] }
+                    ['Fin de dépôt']] }
 
-.procedure-form
-  .procedure-form__columns.container
-    = form_for @dossier_submitted_message,
-      url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }),
-      html: { class: 'form procedure-form__column--form fr-background-alt--blue-france' } do |f|
+= form_for @dossier_submitted_message,
+  url: url_for({ controller: 'administrateurs/dossier_submitted_messages', action: :update, id: @procedure.id }),
+  html: { class: 'form' } do |f|
 
-      %h1.page-title
-        Fin du dépot
-      %p.notice
-        L'utilisateur se verra afficher ce message une fois le dossier envoyé
+  .procedure-form
+    .procedure-form__columns.container
+      .procedure-form__column--form.fr-background-alt--blue-france.fr-pt-5w
+        %h1.fr-h2
+          Fin de dépôt
+        %p.notice
+          L'utilisateur se verra afficher ce message une fois le dossier envoyé
 
-      = render partial: 'administrateurs/dossier_submitted_messages/informations', locals: { f: f }
+        = render partial: 'administrateurs/dossier_submitted_messages/informations', locals: { f: f }
 
-      .procedure-form__actions
-        .actions-left
-          = f.submit 'Enregistrer', class: 'fr-btn send'
 
-    .procedure-form__column--preview
-      %h3
-        .procedure-form__preview-title
-          Aperçu
-          .notice
-            Cet aperçu est mis à jour après chaque sauvegarde.
+      .procedure-form__column--preview
+        %h3
+          .procedure-form__preview-title
+            Aperçu
+            .notice
+              Cet aperçu est mis à jour après chaque sauvegarde.
 
-      .procedure-preview
-        = render partial: 'users/dossiers/merci', locals: { procedure: @procedure, dossier: nil}
+        .procedure-preview
+          = render partial: 'users/dossiers/merci', locals: { procedure: @procedure, dossier: nil}
+
+  .padded-fixed-footer
+    .fixed-footer
+      .fr-container
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to "Annuler et revenir à l'écran de gestion", admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
+          %li
+            = f.button 'Enregistrer', class: 'fr-btn'
