@@ -211,6 +211,7 @@ describe Users::DossiersController, type: :controller do
         expect(individual.errors.full_messages).to be_empty
         expect(individual.notification_method).to eq('email')
         expect(individual.email).to eq('mickey@gmail.com')
+        expect(individual.email_verified_at).to be_present
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
 

@@ -19,6 +19,7 @@ describe FranceConnectInformation, type: :model do
       it do
         subject
         expect(fci.user.email).to eq('a@email.com')
+        expect(fci.user.email_verified_at).to be_present
       end
     end
   end

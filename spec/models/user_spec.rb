@@ -16,6 +16,12 @@ describe User, type: :model do
       user.confirm
       expect(user.reload.invites.size).to eq(2)
     end
+
+    it 'verifies its email' do
+      expect(user.email_verified_at).to be_nil
+      user.confirm
+      expect(user.email_verified_at).to be_present
+    end
   end
 
   describe '#owns?' do
@@ -111,6 +117,7 @@ describe User, type: :model do
         user = subject
         expect(user.valid_password?(password)).to be true
         expect(user.confirmed_at).to be_present
+        expect(user.email_verified_at).to be_present
         expect(user.instructeur).to be_present
       end
 
@@ -184,6 +191,7 @@ describe User, type: :model do
         user = subject
         expect(user.valid_password?(password)).to be true
         expect(user.confirmed_at).to be_present
+        expect(user.email_verified_at).to be_present
         expect(user.expert).to be_present
       end
     end
@@ -211,6 +219,18 @@ describe User, type: :model do
           expect(user.expert).to eq(expert)
         end
       end
+    end
+  end
+
+  describe '.create_or_promote_to_gestionnaire' do
+    let(:email) { 'inst1@gmail.com' }
+    let(:password) { 'un super password !' }
+
+    subject { User.create_or_promote_to_gestionnaire(email, password) }
+
+    it 'verifies its email' do
+      user = subject
+      expect(user.email_verified_at).to be_present
     end
   end
 
