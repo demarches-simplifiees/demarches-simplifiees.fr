@@ -48,7 +48,7 @@ class ExportTemplate < ApplicationRecord
   def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     [
       attachment,
-      path(dossier, attachment, index, row_index, champ)
+      path(dossier, attachment, index:, row_index:, champ:)
     ]
   end
 
@@ -116,7 +116,7 @@ class ExportTemplate < ApplicationRecord
     "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
   end
 
-  def path(dossier, attachment, index, row_index, champ)
+  def path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     if attachment.name == 'pdf_export_for_instructeur'
       return export_path(dossier)
     end
