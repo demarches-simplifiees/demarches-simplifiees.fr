@@ -1,6 +1,6 @@
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-  let(:export_template) { create(:export_template, groupe_instructeur:, content:) }
+  let(:export_template) { create(:export_template, :with_custom_content, groupe_instructeur:, content:) }
   let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:) }
   let(:dossier) { procedure.dossiers.first }
   let(:for_individual) { false }

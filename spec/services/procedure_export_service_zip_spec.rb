@@ -2,7 +2,7 @@ describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, libelle: 'pj' }, { type: :repetition, children: [{ type: :piece_justificative, libelle: 'repet_pj' }] }]) }
   let(:dossiers) { create_list(:dossier, 10, procedure: procedure) }
-  let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
+  let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
 
   def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')

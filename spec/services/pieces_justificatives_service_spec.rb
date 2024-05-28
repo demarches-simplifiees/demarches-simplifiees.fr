@@ -110,7 +110,7 @@ describe PiecesJustificativesService do
         it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
 
         context 'with export_template' do
-          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
+          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur) }
           it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
         end
       end
