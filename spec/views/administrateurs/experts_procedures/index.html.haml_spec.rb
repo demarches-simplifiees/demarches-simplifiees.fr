@@ -40,7 +40,7 @@ describe 'administrateurs/experts_procedures/index', type: :view do
 
   context 'when the experts_require_administrateur_invitation is false' do
     it 'authorize instructors to invite any expert' do
-      expect(rendered).not_to have_content "Affecter des experts à la démarche"
+      expect(rendered).not_to have_content "Entrez les adresses emails des experts que vous souhaitez ajouter à la liste prédéfinie"
     end
   end
 
@@ -50,7 +50,7 @@ describe 'administrateurs/experts_procedures/index', type: :view do
       subject
     end
     it 'does not authorize instructors to invite any expert but only those presents in admin list' do
-      expect(rendered).to have_content "Affecter des experts à la démarche"
+      expect(rendered).to have_content "Entrez les adresses emails des experts que vous souhaitez ajouter à la liste prédéfinie"
     end
   end
 end

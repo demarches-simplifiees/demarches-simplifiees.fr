@@ -6,8 +6,11 @@ fr:
           main: Experts invités sur %{libelle}
           allow_invite_experts: "Autoriser les instructeurs à solliciter des experts invités"
           allow_expert_messaging: "Autoriser les experts à accéder à la messagerie usager"
-          manage_procedure_experts: "Gérer les experts invités de la démarche"
+          manage_procedure_experts: "Gérer les experts invités de la démarche avec une liste prédéfinie"
         descriptions:
           allow_invite_experts : Lorsque cette fonctionnalité est active, les instructeurs peuvent solliciter les experts
           allow_expert_messaging: Lorsque cette fonctionnalité est active, les experts peuvent demander des informations aux usagers
           manage_procedure_experts: Lorsque cette fonctionnalité est active, les instructeurs peuvent uniquement solliciter les experts de votre liste
+        experts_doc:
+          title: Avis externes documentation
+          url: 'https://app.gitbook.com/o/-L7_aClyGhmMzzsqtO4_/s/-L7_aKvpAJdAIEfxHudA/tutoriels/tutoriel-administrateur/~/comments?context=post&node=ff7bd481c1994d6aa56817b7237b9e59#id-12.-la-gestion-des-avis-experts-invites-de-votre-demarche'
