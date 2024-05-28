@@ -230,8 +230,9 @@ RSpec.describe DossierHelper, type: :helper do
   end
 
   describe ".france_connect_information" do
-    subject { france_connect_informations(user_information, provider) }
     let(:provider) { "particulier" }
+    let(:user) { build(:user, france_connect_informations: [user_information], loged_in_with_france_connect: provider) }
+    subject { france_connect_informations(user) }
 
     context "with complete france_connect information" do
       let(:user_information) { build(:france_connect_information, updated_at: Time.zone.now) }

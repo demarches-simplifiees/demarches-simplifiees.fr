@@ -972,7 +972,7 @@ class Dossier < ApplicationRecord
     columns = [
       ['ID', id.to_s],
       ['Email', user_email_for(:display)],
-      ['FranceConnect ?', user_from_france_connect?]
+      ['Connecté via', user_provider]
     ]
 
     if procedure.for_individual?
@@ -1160,6 +1160,11 @@ class Dossier < ApplicationRecord
   def user_from_france_connect?
     return false if user_deleted?
     user.france_connected_with_one_identity?
+  end
+
+  def user_provider
+    return "" if user_deleted? || user.loged_in_with_france_connect.blank?
+    I18n.t("omniauth.provider.#{user.loged_in_with_france_connect}")
   end
 
   def champs_for_revision(scope: nil, root: false)

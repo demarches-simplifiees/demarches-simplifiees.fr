@@ -140,11 +140,9 @@ module DossierHelper
     end
   end
 
-  def france_connect_informations(user_information, provider)
-    if provider
-      provider = 'FranceConnect' if provider == 'particulier' || provider == 'entreprise'
-      provider = provider.camelize
-    end
+  def france_connect_informations(user)
+    user_information = user.france_connect_informations.first
+    provider = t("omniauth.provider.#{user.loged_in_with_france_connect}")
     if user_information.full_name.empty?
       t("shared.dossiers.france_connect_informations.details_no_name", provider: provider)
     elsif user_information.updated_at.present?

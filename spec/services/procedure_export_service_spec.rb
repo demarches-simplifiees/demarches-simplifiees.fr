@@ -63,7 +63,7 @@ describe ProcedureExportService do
         [
           "ID",
           "Email",
-          "FranceConnect ?",
+          "Connecté via",
           "Civilité",
           "Nom",
           "Prénom",
@@ -159,7 +159,7 @@ describe ProcedureExportService do
         [
           "ID",
           "Email",
-          "FranceConnect ?",
+          "Connecté via",
           "Entreprise raison sociale",
           "Archivé",
           "État du dossier",
@@ -186,7 +186,7 @@ describe ProcedureExportService do
           [
             "ID",
             "Email",
-            "FranceConnect ?",
+            "Connecté via",
             "Établissement Numéro TAHITI",
             "Établissement siège social",
             "Établissement NAF",
