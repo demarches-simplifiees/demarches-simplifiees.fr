@@ -1,23 +1,19 @@
+#---------------------------------------------------------------------------------
+# Builder
+# Intermediate container to bundle all gems
+# Building gems requires dev librairies we don't need in production container
+#---------------------------------------------------------------------------------
 FROM ruby:3.3.0-slim AS base
-
-#------------ intermediate container with specific dev tools
 FROM base AS builder
 
-RUN apt-get update && apt-get install -y \
-  curl build-essential git libpq-dev libicu-dev gnupg zip &&\
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-  curl -sL "https://deb.nodesource.com/setup_18.x" | bash - && \
-  apt-get install -y nodejs yarn
-
-#cf https://imagetragick.com/
-ADD image_magick_policy.xml /etc/ImageMagick-6/policy.xml
+RUN apt-get update && \
+    curl -sL "https://deb.nodesource.com/setup_18.x" | bash - && \
+      apt-get install -y curl build-essential git libpq-dev libicu-dev gnupg zip nodejs
 
 ENV INSTALL_PATH /app
 RUN mkdir -p ${INSTALL_PATH}
 WORKDIR ${INSTALL_PATH}
-COPY Gemfile Gemfile.lock package.json yarn.lock  ./
-COPY patches ./patches/
+COPY Gemfile Gemfile.lock ./
 
 # sassc https://github.com/sass/sassc-ruby/issues/146#issuecomment-608489863
 RUN bundle config specific_platform x86_64-linux \
@@ -26,36 +22,36 @@ RUN bundle config specific_platform x86_64-linux \
        && bundle config without "development test" \
          && bundle install
 
-RUN yarn install --production
-
-#----------- final tps
+#---------------------------------------------------------------------------------
+#  App/Worker container
+#---------------------------------------------------------------------------------
 FROM base
 ENV APP_PATH /app
-#----- minimum set of packages including PostgreSQL client, yarn
-RUN apt-get update && apt-get install -y \
-  curl git postgresql-client libicu72 imagemagick gnupg zip &&\
-  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-  curl -sL "https://deb.nodesource.com/setup_18.x" | bash - && \
-  apt-get install -y nodejs yarn
+#----- minimum set of packages
+RUN apt-get update && apt-get install -y curl git postgresql-client libicu72 imagemagick gnupg zip
+RUN (curl -sL "https://deb.nodesource.com/setup_18.x" | bash -) \
+      && apt-get install -y nodejs
 
 RUN adduser --disabled-password --home ${APP_PATH} userapp
 USER userapp
 WORKDIR ${APP_PATH}
 
-#----- copy from previous container the dependency gems plus the current application files
+#----- Building js dependencies (node_modules)
+COPY Gemfile Gemfile.lock package.json bun.lockb ./
+COPY patches ./patches/
+RUN (curl -fsSL https://bun.sh/install | bash)
+RUN .bun/bin/bun install
 
+#----- Bundle gems: copy from builder container the dependency gems
+#cf https://imagetragick.com/
+ADD image_magick_policy.xml /etc/ImageMagick-6/policy.xml
 COPY --chown=userapp:userapp --from=builder /app ${APP_PATH}/
 
 RUN bundle config specific_platform x86_64-linux \
-  && bundle config build.sassc --disable-march-tune-native \
-    && bundle config deployment true \
-       && bundle config without "development test" \
-         && bundle install
-
-RUN yarn install --production
-
-RUN rm -fr .git
+      && bundle config build.sassc --disable-march-tune-native \
+        && bundle config deployment true \
+          && bundle config without "development test" \
+            && bundle install
 
 ENV \
     ACTIVE_STORAGE_SERVICE="s3"\
@@ -200,6 +196,9 @@ ENV \
     YAHOO_CLIENT_SECRET=""
 
 COPY --chown=userapp:userapp . ${APP_PATH}
+RUN rm -fr .git
+
+#----- Precompile assets
 RUN RAILS_ENV=production NODE_OPTIONS=--max-old-space-size=4000 bundle exec rails assets:precompile
 
 RUN chmod a+x $APP_PATH/app/lib/*.sh

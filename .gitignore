@@ -22,8 +22,6 @@ uploads/*
 storage/
 /node_modules
 /yarn-error.log
-yarn-debug.log*
-.yarn-integrity
 /.vscode
 /.idea
 /public/assets
