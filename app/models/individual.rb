@@ -29,4 +29,6 @@ class Individual < ApplicationRecord
       gender: fc_information.gender == 'female' ? GENDER_FEMALE : GENDER_MALE
     )
   end
+
+  def unverified_email? = !email_verified_at?
 end

@@ -1,7 +1,11 @@
 RSpec.describe BalancerDeliveryMethod do
   class ExampleMailer < ApplicationMailer
-    def greet(name)
-      mail(to: "smtp_to", from: "smtp_from", body: "Hello #{name}")
+    def greet(name, bypass_unverified_mail_protection: true)
+      mail(to: name, from: "smtp_from", body: "Hello #{name}")
+
+      if bypass_unverified_mail_protection
+        headers['BYPASS_UNVERIFIED_MAIL_PROTECTION'] = true
+      end
     end
   end
 
@@ -9,7 +13,8 @@ RSpec.describe BalancerDeliveryMethod do
     before_action :set_x_deliver_with
 
     def greet(name)
-      mail(to: "smtp_to", from: "smtp_from", body: "Hello #{name}")
+      mail(to: name, from: "smtp_from", body: "Hello #{name}")
+      headers['BYPASS_UNVERIFIED_MAIL_PROTECTION'] = true
     end
 
     private
@@ -141,6 +146,57 @@ RSpec.describe BalancerDeliveryMethod do
 
         mail3 = ImportantEmail.greet('Rahwa').deliver_now
         expect(mail3).to have_been_delivered_using(MockSmtp)
+      end
+    end
+  end
+
+  context 'when the email does not bypass unverified mail protection' do
+    let(:mail) { ExampleMailer.greet(email, bypass_unverified_mail_protection:) }
+    let(:bypass_unverified_mail_protection) { false }
+
+    before do
+      ActionMailer::Base.balancer_settings = { mock_smtp: 10 }
+      mail.deliver_now
+    end
+
+    context 'when the email belongs to a user' do
+      let(:email) { user.email }
+      let(:user) { create(:user, email: 'u@a.com', email_verified_at:) }
+
+      context 'and the email is not verified' do
+        let(:email_verified_at) { nil }
+
+        it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
+      end
+
+      context 'and the email is not verified but a bypass flag is added' do
+        let(:email_verified_at) { nil }
+        let(:bypass_unverified_mail_protection) { true }
+
+        it { expect(mail).to have_been_delivered_using(MockSmtp) }
+      end
+
+      context 'and the email is verified' do
+        let(:email_verified_at) { Time.current }
+
+        it { expect(mail).to have_been_delivered_using(MockSmtp) }
+      end
+    end
+
+    context 'when the email belongs to a individual' do
+      let(:email) { individual.email }
+      let(:individual) { create(:individual, email: 'u@a.com', email_verified_at:) }
+
+      context 'and the email is not verified' do
+        let(:email_verified_at) { nil }
+
+        it { expect(mail).not_to have_been_delivered_using(MockSmtp) }
+      end
+
+      context 'and the email is verified' do
+        let(:email_verified_at) { Time.current }
+
+        it { expect(mail).to have_been_delivered_using(MockSmtp) }
       end
     end
   end

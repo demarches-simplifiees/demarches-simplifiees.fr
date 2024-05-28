@@ -267,6 +267,8 @@ class User < ApplicationRecord
     super && blocked_at.nil?
   end
 
+  def unverified_email? = !email_verified_at?
+
   private
 
   def does_not_merge_on_self
