@@ -128,6 +128,8 @@ class ExportTemplate < ApplicationRecord
       'messagerie'
     when 'Avis'
       'avis'
+    when 'Attestation'
+      'pieces_justificatives'
     else
       # for attachment
       return attachment_path(dossier, attachment, index, row_index, champ)
