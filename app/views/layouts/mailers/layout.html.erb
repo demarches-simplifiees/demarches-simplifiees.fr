@@ -42,29 +42,6 @@
                 <!--[if mso | IE]>
                   <table role="presentation" border="0" cellpadding="0" cellspacing="0">
                   <tr>
-                  <td style="vertical-align:top;width:396px;">
-                <![endif]-->
-                <div class="outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
-                  <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div class="" style="text-align:center;">
-                            <img alt="<%= APPLICATION_NAME %>" src="<%= image_url(MAILER_LOGO_SRC) %>" style="max-width:600px; height: auto; padding: 5px 0px; display: inline; border: 0px;margin: auto;"/>
-                          </div>
-                            <!--
-                        <td style="word-wrap:break-word;font-size:0px;padding:0;padding-top:0px;padding-bottom:0px;" align="left">
-                          <div class="" style="cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;text-align:left;">
-                            <img align="middle" alt="Logo <%= "#{APPLICATION_NAME}" %>" src="<%= image_url("#{MAILER_LOGO_SRC}") %>" style="max-width=600px; padding=30px 0; display=inline !important; vertical-align=bottom; border=0; height=auto; outline=none; text-decoration=none; -ms-interpolation-mode=bicubic;" />
-                          </div>
--->
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!--[if mso | IE]>
-                  </td>
                   <td style="vertical-align:top;width:198px;">
                 <![endif]-->
                 <div class="mj-column-per-33 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
@@ -114,7 +91,20 @@
                 <div class="mj-column-per-100 outlook-group-fix" style="vertical-align:top;display:inline-block;direction:ltr;font-size:13px;text-align:left;width:100%;">
                   <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                     <tbody>
-                      <%= yield(:procedure_logo) %>
+                      <%- if content_for?(:procedure_logo) %>
+                        <%= yield :procedure_logo %>
+                      <%- else -%>
+                        <tr>
+                          <td style="word-wrap:break-word;font-size:0px;padding:0;padding-top:0px;padding-bottom:0px;" align="left">
+                            <p class="" style="cursor:auto;color:#000091;font-family:Helvetica, Arial, sans-serif;font-size:14px;text-align:center">
+                              <img align="middle" alt="Logo <%= "#{Current.application_name}" %>" src="<%= image_url(MAILER_LOGO_SRC) %>" style="max-height:100px; padding:15px 30px 15px 30px; vertical-aligne:middle; display:inline !important; border:0; height:auto; outline:none; text-decoration:none; -ms-interpolation-mode:bicubic;" />
+                              <!-- b style="font-size:28px;font-weight:600;display:inline-block">
+                                <%= Current.application_name %>
+                              </b -->
+                            </p>
+                          </td>
+                        </tr>
+                      <%- end -%>
                       <tr>
                         <td style="word-wrap:break-word;font-size:0px;padding:0px 25px 0px 25px;padding-top:0px;padding-bottom:0px;" align="left">
                           <div class="" style="cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:13px;line-height:22px;text-align:left;">
@@ -172,10 +162,9 @@
                   <table role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
                     <tbody>
                       <tr>
-                        <td style="word-wrap:break-word;font-size:0px;" align="center">
-                          <div class="" style="">
-                            <img align="middle" alt="Logo DMRA" src="<%= image_url('footer/dmra-footer.png') %>" style="padding: 10px 30px; height: 20px;border: 10px;vertical-align:middle;" />
-                            <img align="middle" alt="Logo Beta Gouv Fr" src="<%= image_url('mailer/instructeur_mailer/logo-beta-gouv-fr.png') %>" style="padding:30px 0px; display:inline; vertical-align:middle; height:auto;" />
+                        <td style="word-wrap:break-word;font-size:0px;padding:0px 20px 0px 20px;padding-top:0px;padding-bottom:0px;" align="center">
+                          <div class="" style="cursor:auto;color:#55575d;font-family:Helvetica, Arial, sans-serif;font-size:11px;line-height:22px;text-align:center;">
+                            <%= "#{Current.application_name}" %> est un service fourni par <%= t("links.provider.provided_by") %>
                           </div>
                         </td>
                       </tr>

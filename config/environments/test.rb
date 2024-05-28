@@ -63,9 +63,10 @@ Rails.application.configure do
 
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
-  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST") }
+  config.action_mailer.asset_host = "http://" + ENV.fetch("APP_HOST")
   Rails.application.routes.default_url_options = {
-    host: 'localhost:3000',
+    host: ENV.fetch("APP_HOST"),
     protocol: :http
   }
 

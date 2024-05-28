@@ -14,9 +14,7 @@ HEADER_LOGO_WIDTH = ENV.fetch("HEADER_LOGO_WIDTH", "65")
 HEADER_LOGO_HEIGHT = ENV.fetch("HEADER_LOGO_HEIGHT", "56")
 
 # Mailer logos
-# not used in pf because of specific header, footer
-MAILER_LOGO_SRC = ENV.fetch("MAILER_LOGO_SRC", "mailer/instructeur_mailer/logo.png")
-MAILER_FOOTER_LOGO_SRC = ENV.fetch("MAILER_FOOTER_LOGO_SRC", "mailer/instructeur_mailer/logo-beta-gouv-fr.png")
+MAILER_LOGO_SRC = ENV.fetch("MAILER_LOGO_SRC", "republique-francaise-logo.png")
 
 # Default logo of a procedure
 PROCEDURE_DEFAULT_LOGO_SRC = ENV.fetch("PROCEDURE_DEFAULT_LOGO_SRC", "polynesie.png")
