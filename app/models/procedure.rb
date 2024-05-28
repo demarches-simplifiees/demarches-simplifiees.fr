@@ -50,7 +50,7 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
-  has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
   has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 

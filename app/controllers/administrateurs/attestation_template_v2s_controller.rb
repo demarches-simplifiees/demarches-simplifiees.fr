@@ -77,6 +77,13 @@ module Administrateurs
 
     def update
       attestation_params = editor_params
+
+      if @attestation_template.published?
+        @attestation_template = @attestation_template.dup
+        @attestation_template.state = :draft
+        @attestation_template.procedure = @procedure
+      end
+
       logo_file = attestation_params.delete(:logo)
       signature_file = attestation_params.delete(:signature)
 
@@ -88,11 +95,29 @@ module Administrateurs
         attestation_params[:signature] = uninterlace_png(signature_file)
       end
 
-      if !@attestation_template.update(attestation_params)
-        flash.alert = "Le modèle de l’attestation contient des erreurs et n'a pas pu être enregistré. Corriger les erreurs."
-      end
+      @attestation_template.assign_attributes(attestation_params)
 
-      render :update
+      if @attestation_template.invalid?
+        flash.alert = "L’attestation contient des erreurs et n'a pas pu être enregistrée. Corriger les erreurs."
+      else
+        # - draft just published
+        if @attestation_template.published? && should_edit_draft?
+          published = @procedure.attestation_templates.published
+
+          @attestation_template.transaction do
+            were_published = published.destroy_all
+            @attestation_template.save!
+            flash.notice = were_published.any? ? "La nouvelle version de l’attestation a été publiée." : "L’attestation a été publiée."
+          end
+
+          redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure)
+        else
+          # - draft updated
+          # - or, attestation already published, without need for publication (draft procedure)
+          @attestation_template.save!
+          render :update
+        end
+      end
     end
 
     def create = update
@@ -104,11 +129,12 @@ module Administrateurs
     end
 
     def retrieve_attestation_template
-      @attestation_template = @procedure.attestation_template_v2 || @procedure.build_attestation_template_v2(json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT)
+      v2s = @procedure.attestation_templates_v2
+      @attestation_template = v2s.find(&:draft?) || v2s.find(&:published?) || @procedure.build_attestation_template(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, state: :draft)
     end
 
     def editor_params
-      params.required(:attestation_template).permit(:official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated)
+      params.required(:attestation_template).permit(:official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state)
     end
   end
 end

@@ -19,11 +19,12 @@
           tout en respectant la charte de l’état. Essayez-la et donnez-nous votre avis
           en nous envoyant un email à #{mail_to(Current.contact_email, subject: "Feedback attestation v2")}.
           %br
-          %strong Les attestations délivrées suivent encore l’ancien format :
-          l’activation des attestations basées sur ce format sera bientôt disponible.
-          %br
+          - if !@procedure.feature_enabled?(:attestation_v2)
+            %strong Les attestations délivrées suivent encore l’ancien format :
+            l’activation des attestations basées sur ce format sera bientôt disponible.
+            %br
 
-          = link_to("Suivez ce lien pour revenir aux attestations actuellement délivrées", edit_admin_procedure_attestation_template_path(@procedure))
+            = link_to("Suivez ce lien pour revenir aux attestations actuellement délivrées", edit_admin_procedure_attestation_template_path(@procedure))
 
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-12.fr-col-lg-7
@@ -77,10 +78,10 @@
                       %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
                         = label
 
-              #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
+              #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: "attestation-template-json-body-messages"} }
               = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
 
-              .fr-error-text{ id: dom_id(f.object, "json-body-messages"), class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
+              .fr-error-text{ id: "attestation-template-json-body-messages", class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
                 - if f.object.errors.include?(:json_body)
                   = render partial: "shared/errors_list", locals: { object: f.object, attribute: :json_body }
 
@@ -118,20 +119,5 @@
             Pour générer un aperçu fidèle avec tous les champs et les dates, créez-vous un dossier et acceptez-le : l’aperçu l’utilisera.
 
   .padded-fixed-footer
-    .fixed-footer
-      .fr-container
-        .fr-grid-row
-          .fr-col-12.fr-col-md-7
-            %ul.fr-btns-group.fr-btns-group--inline-md
-              %li
-                = link_to admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary' do
-                  %span.fr-icon-arrow-go-back-line.fr-icon--sm.fr-mr-1v
-                  Revenir à la démarche
-
-          .fr-col-12.fr-col-md-5
-            -# .fr-toggle
-            -#   = f.check_box :activated, class: "fr-toggle-input", disabled: true, id: dom_id(@attestation_template, :activated)
-            -#   %label.fr-toggle__label{ for: dom_id(@attestation_template, :activated), data: { fr_checked_label: "Attestation activée", fr_unchecked_label: "Attestation désactivée" } }
-            .text-right
-              %span#autosave-notice
-              %p.fr-hint-text L’activation de cette attestation sera bientôt disponible.
+    .fixed-footer#fixed_footer
+      = render partial: "fixed_footer", locals: { procedure: @procedure, attestation_template: @attestation_template }
