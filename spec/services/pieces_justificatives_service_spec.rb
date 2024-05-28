@@ -439,7 +439,8 @@ describe PiecesJustificativesService do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :piece_justificative }] }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
-    subject { PiecesJustificativesService.new(user_profile:, export_template: nil).generate_dossiers_export(dossiers) }
+    let(:export_template) { nil }
+    subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
 
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }
@@ -451,10 +452,23 @@ describe PiecesJustificativesService do
       let!(:not_confidentiel_avis) { create(:avis, :not_confidentiel, dossier: dossier) }
       let!(:expert_avis) { create(:avis, :confidentiel, dossier: dossier, expert: user_profile) }
 
-      subject { PiecesJustificativesService.new(user_profile:, export_template: nil).generate_dossiers_export(dossiers) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
       it "includes avis not confidentiel as well as expert's avis" do
         expect_any_instance_of(Dossier).to receive(:avis_for_expert).with(user_profile).and_return([])
         subject
+      end
+
+      it 'gives default name to export pdf file' do
+        expect(subject.first.second.starts_with?("dossier-#{dossier.id}/export-#{dossier.id}")).to eq true
+      end
+    end
+
+    context 'with export template' do
+      let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
+
+      it 'gives custom name to export pdf file' do
+        expect(subject.first.second).to eq "DOSSIER-#{dossier.id}/export_#{dossier.id}.pdf"
       end
     end
   end
