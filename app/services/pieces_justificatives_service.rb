@@ -195,7 +195,12 @@ class PiecesJustificativesService
       .where(record_type: "Etablissement", record_id: etablissement_id_dossier_id.keys)
       .map do |a|
         dossier_id = etablissement_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        if @export_template
+          dossier = dossiers.find { _1.id == dossier_id }
+          @export_template.attachment_and_path(dossier, a)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 

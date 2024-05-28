@@ -128,7 +128,7 @@ class ExportTemplate < ApplicationRecord
       'messagerie'
     when 'Avis'
       'avis'
-    when 'Attestation'
+    when 'Attestation', 'Etablissement'
       'pieces_justificatives'
     else
       # for attachment

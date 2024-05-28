@@ -236,6 +236,17 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array([attestation_sociale.attachment, attestation_fiscale.attachment]) }
+
+        it 'uses default name for dossier directory' do
+          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
+        end
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
+          end
+        end
       end
     end
 
