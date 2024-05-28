@@ -96,7 +96,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def dup
-    attestation_template = AttestationTemplate.new(title: title, body: body, footer: footer, activated: activated)
+    attestation_template = super
     ClonePiecesJustificativesService.clone_attachments(self, attestation_template)
     attestation_template
   end
