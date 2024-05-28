@@ -187,6 +187,13 @@ describe PiecesJustificativesService do
         let!(:witness) { create(:dossier, :with_justificatif) }
 
         it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/dossier")).to be true
+          end
+        end
       end
 
       context 'with a motivation not safe' do
