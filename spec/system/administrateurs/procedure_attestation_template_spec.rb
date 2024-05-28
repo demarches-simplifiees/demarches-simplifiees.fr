@@ -81,7 +81,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         find("a").click
       end
 
-      expect(procedure.reload.attestation_template_v2).to be_nil
+      expect(procedure.reload.attestation_templates.v2).to be_empty
 
       expect(page).to have_css("label", text: "Logo additionnel")
 
@@ -90,7 +90,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       attestation = nil
       wait_until {
-        attestation = procedure.reload.attestation_template_v2
+        attestation = procedure.reload.attestation_templates.v2.draft.first
         attestation.present?
       }
       expect(attestation.label_logo).to eq("System Test")
@@ -130,6 +130,10 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       fill_in "Contenu du pied de page", with: ["line1", "line2", "line3", "line4"].join("\n")
       expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3\nline4")
+
+      click_on "Publier"
+      expect(page).to have_text("L’attestation a été publiée")
+      expect(attestation.reload).to be_published
     end
 
     context "tag in error" do
@@ -137,7 +141,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         tdc = procedure.active_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'age')
         procedure.publish_revision!
 
-        attestation = procedure.build_attestation_template_v2(json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, label_logo: "test")
+        attestation = procedure.build_attestation_template(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, label_logo: "test")
         attestation.json_body["content"] << { type: :mention, attrs: { id: "tdc#{tdc.stable_id}", label: tdc.libelle } }
         attestation.save!
 

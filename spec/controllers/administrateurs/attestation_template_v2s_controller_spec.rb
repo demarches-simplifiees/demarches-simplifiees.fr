@@ -140,8 +140,9 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
       it "create template" do
         subject
-        attestation_template = procedure.reload.attestation_template
+        attestation_template = procedure.reload.attestation_templates.first
 
+        expect(attestation_template).to be_draft
         expect(attestation_template.official_layout).to eq(true)
         expect(attestation_template.label_logo).to eq("Ministère des specs")
         expect(attestation_template.label_direction).to eq("RSPEC")
@@ -157,7 +158,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
         it "upload files" do
           subject
-          attestation_template = procedure.reload.attestation_template
+          attestation_template = procedure.reload.attestation_templates.first
 
           expect(attestation_template.logo.download).to eq(logo.read)
           expect(attestation_template.signature.download).to eq(signature.read)
@@ -174,10 +175,16 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
     end
 
     context 'when attestation template is valid' do
-      it "update template" do
-        subject
-        attestation_template.reload
+      it "create a draft template" do
+        expect { subject }.to change { procedure.attestation_templates.count }.by(1)
 
+        # published remains inchanged
+        expect(attestation_template.reload).to be_published
+        expect(attestation_template.label_logo).to eq("Ministère des devs")
+
+        attestation_template = procedure.attestation_templates.draft.first
+
+        expect(attestation_template).to be_draft
         expect(attestation_template.official_layout).to eq(true)
         expect(attestation_template.label_logo).to eq("Ministère des specs")
         expect(attestation_template.label_direction).to eq("RSPEC")
@@ -186,6 +193,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
         expect(response.body).to include("Formulaire enregistré")
+        expect(response.body).to include("Publier")
       end
 
       context "with files" do
@@ -193,7 +201,8 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
         it "upload files" do
           subject
-          attestation_template.reload
+
+          attestation_template = procedure.attestation_templates.draft.first
 
           expect(attestation_template.logo.download).to eq(logo.read)
           expect(attestation_template.signature.download).to eq(signature.read)
@@ -209,6 +218,17 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           subject
           expect(response.body).to include("Formulaire en erreur")
           expect(response.body).to include('Supprimer cette balise')
+        end
+      end
+
+      context "publishing a draft" do
+        let(:attestation_template) { build(:attestation_template, :draft, :v2) }
+        let(:update_params) { super().merge(state: :published) }
+
+        it "publish and redirect with notice" do
+          subject
+          expect(attestation_template.reload).to be_published
+          expect(flash.notice).to eq("L’attestation a été publiée.")
         end
       end
     end

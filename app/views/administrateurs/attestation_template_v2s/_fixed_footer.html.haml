@@ -1,0 +1,18 @@
+.fr-container
+  .fr-grid-row.fr-grid-row--middle.fr-pb-3v
+    .fr-col-12.fr-col-md-4
+      = link_to admin_procedure_path(id: procedure), class: 'fr-link' do
+        %span.fr-icon-arrow-left-line.fr-icon--sm
+        Revenir à l’écran de gestion
+
+    .fr-col-12.fr-col-md-8.text-right
+
+      - if attestation_template.published?
+        %p.fr-hint-text Cette attestation est actuellement délivrée aux usagers.
+
+      %span#autosave-notice
+
+      - if procedure.feature_enabled?(:attestation_v2) && attestation_template.draft?
+        %button.fr-btn.fr-ml-2w{ name: field_name(:attestation_template, :state), value: "published",
+          data: { 'disable-with': "Publication en cours…", controller: 'autosave-submit' } }
+          Publier
