@@ -6,12 +6,8 @@ require 'flipper/adapters/active_record'
 require 'flipper/adapters/active_support_cache_store'
 
 def setup_features(features)
-  existing = Flipper.preload(features).map { _1.name.to_sym }
-  missing = features - existing
-
-  missing.each do |feature|
-    # Feature is disabled by default
-    Flipper.add(feature.to_s)
+  features.each do |feature|
+    Flipper.add(feature) unless Flipper.exist?(feature)
   end
 end
 
