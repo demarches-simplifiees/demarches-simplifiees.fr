@@ -260,10 +260,20 @@ services:
     networks:
       - md-network
 
-  sidekiq:
+  sidekiq_high:
     image: ${IMAGE}:${TAG}
     container_name: sidekiq
-    command: bundle exec sidekiq -q default -q low_priority -q expires
+    command: bundle exec sidekiq -q default,4 mailers,2 active_storage_analysis,2 sva,1 webhooks_v1,1
+    depends_on:
+      - redis
+    environment: *worker_env
+    networks:
+      - md-network
+
+  sidekiq_low:
+    image: ${IMAGE}:${TAG}
+    container_name: sidekiq
+    command: bundle exec sidekiq low_priority,2 purge,2
     depends_on:
       - redis
     environment: *worker_env
