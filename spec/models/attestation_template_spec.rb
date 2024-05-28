@@ -21,9 +21,11 @@ describe AttestationTemplate, type: :model do
     context 'with an attestation without images' do
       let(:attributes) { attributes_for(:attestation_template) }
 
-      it { is_expected.to have_attributes(attributes) }
-      it { is_expected.to have_attributes(id: nil) }
-      it { expect(subject.logo.attached?).to be_falsey }
+      it "works" do
+        is_expected.to have_attributes(attributes)
+        is_expected.to have_attributes(id: nil)
+        expect(subject.logo.attached?).to be_falsey
+      end
     end
 
     context 'with an attestation with images' do
