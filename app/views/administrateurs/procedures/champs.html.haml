@@ -4,7 +4,11 @@
                     ['Champs du formulaire']], preview: @procedure.draft_revision.valid? }
 
 .fr-container
-  %h1.fr-h2 Champs du formulaire
+  .flex.justify-between.align-center.fr-mb-3w
+    %h1.fr-h2 Champs du formulaire
+    - if @procedure.revised?
+      = link_to "Voir l'historique des modifications du formulaire", modifications_admin_procedure_path(@procedure), class: 'fr-link'
+
   = render NestedForms::FormOwnerComponent.new
   .fr-grid-row
     = render partial: 'champs_summary'
