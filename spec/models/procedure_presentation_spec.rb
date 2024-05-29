@@ -55,44 +55,46 @@ describe ProcedurePresentation do
     context 'when the procedure can have a SIRET number' do
       let(:procedure) do
         create(:procedure,
-               types_de_champ_public: Array.new(4) { { type: :text } },
+               types_de_champ_public: Array.new(4) { { type: :text } } + [{ type: :repetition, libelle: 'Un bloc répétable', children: [{ type: :text, libelle: 'Un texte dans un bloc répétable' }] }],
                types_de_champ_private: Array.new(4) { { type: :text } })
       end
       let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
       let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
+      let(:tdc_child) { procedure.active_revision.types_de_champ.find_by(libelle: 'Un texte dans un bloc répétable') }
       let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
-          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'En instruction le', "table" => 'self', "column" => 'en_instruction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Terminé le', "table" => 'self', "column" => 'processed_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "En construction depuis", "table" => "self", "column" => "en_construction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "En instruction depuis", "table" => "self", "column" => "en_instruction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Terminé depuis", "table" => "self", "column" => "processed_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum, "value_column" => :value, 'filterable' => true },
-          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Avis oui/non', "table" => 'avis', "column" => 'question_answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => false },
-          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true }
+          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'En instruction le', "table" => 'self', "column" => 'en_instruction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Terminé le', "table" => 'self', "column" => 'processed_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => "En construction depuis", "table" => "self", "column" => "en_construction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => "En instruction depuis", "table" => "self", "column" => "en_instruction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => "Terminé depuis", "table" => "self", "column" => "processed_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum, "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Avis oui/non', "table" => 'avis', "column" => 'question_answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => false, 'filter_only' => false },
+          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => tdc_child.libelle, "table" => 'type_de_champ', "column" => tdc_child.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => true },
+          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false },
+          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false }
         ]
       }
 
@@ -109,9 +111,9 @@ describe ProcedurePresentation do
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
+      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
+      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -124,8 +126,8 @@ describe ProcedurePresentation do
       let(:procedure) { create(:procedure, :for_individual, :sva) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { { "label" => "Date décision SVA", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:decision_before_field) { { "label" => "Date décision SVA avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:decision_on) { { "label" => "Date décision SVA", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
+      let(:decision_before_field) { { "label" => "Date décision SVA avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
 
       subject { procedure_presentation.fields }
 
@@ -136,8 +138,8 @@ describe ProcedurePresentation do
       let(:procedure) { create(:procedure, :for_individual, :svr) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { { "label" => "Date décision SVR", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:decision_before_field) { { "label" => "Date décision SVR avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:decision_on) { { "label" => "Date décision SVR", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
+      let(:decision_before_field) { { "label" => "Date décision SVR avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true, 'filter_only' => false } }
 
       subject { procedure_presentation.fields }
 
