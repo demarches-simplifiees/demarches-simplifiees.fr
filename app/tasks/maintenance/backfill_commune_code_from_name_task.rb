@@ -2,11 +2,12 @@
 
 module Maintenance
   class BackfillCommuneCodeFromNameTask < MaintenanceTasks::Task
-    attribute :champ_ids, :string
-    validates :champ_ids, presence: true
+    attribute :procedure_id, :string
+    validates :procedure_id, presence: true
 
     def collection
-      Champ.where(id: champ_ids.split(',').map(&:strip).map(&:to_i))
+      procedure = Procedure.find(procedure_id.strip.to_i)
+      Champs::CommuneChamp.where(dossier_id: procedure.dossiers.not_brouillon)
     end
 
     def process(champ)
