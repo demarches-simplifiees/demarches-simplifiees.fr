@@ -9,13 +9,19 @@ module GalleryHelper
 
   def preview_url_for(attachment)
     attachment.preview(resize_to_limit: [400, 400]).processed.url
+  rescue ActiveStorage::Error
+    'pdf-placeholder.png'
   end
 
   def variant_url_for(attachment)
     attachment.variant(resize_to_limit: [400, 400]).processed.url
+  rescue ActiveStorage::Error
+    'apercu-indisponible.png'
   end
 
   def blob_url(attachment)
     attachment.blob.content_type.in?(RARE_IMAGE_TYPES) ? attachment.variant(resize_to_limit: [2000, 2000]).processed.url : attachment.blob.url
+  rescue ActiveStorage::Error
+    attachment.blob.url
   end
 end
