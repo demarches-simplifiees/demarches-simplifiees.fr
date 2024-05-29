@@ -165,7 +165,8 @@ services:
     depends_on:
       - clamav
       - worker
-      - sidekiq
+      - sidekiq_high
+      - sidekiq_low
 
   worker:
     image: ${IMAGE}:${TAG}
@@ -262,7 +263,7 @@ services:
 
   sidekiq_high:
     image: ${IMAGE}:${TAG}
-    container_name: sidekiq
+    container_name: sidekiq_high
     command: bundle exec sidekiq -q default,4 mailers,2 active_storage_analysis,2 sva,1 webhooks_v1,1
     depends_on:
       - redis
@@ -272,8 +273,8 @@ services:
 
   sidekiq_low:
     image: ${IMAGE}:${TAG}
-    container_name: sidekiq
-    command: bundle exec sidekiq low_priority,2 purge,2
+    container_name: sidekiq_low
+    command: bundle exec sidekiq low_priority,1 purge,1 expires,1
     depends_on:
       - redis
     environment: *worker_env
