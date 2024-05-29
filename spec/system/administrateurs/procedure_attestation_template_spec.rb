@@ -14,8 +14,14 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
   before { login_as(administrateur.user, scope: :user) }
 
   def find_attestation_card(with_nested_selector: nil)
+    attestation_path = if procedure.attestation_template&.version == 2 || procedure.feature_enabled?(:attestation_v2)
+      edit_admin_procedure_attestation_template_v2_path(procedure)
+    else
+      edit_admin_procedure_attestation_template_path(procedure)
+    end
+
     full_selector = [
-      "a[href=\"#{edit_admin_procedure_attestation_template_path(procedure)}\"]",
+      "a[href=\"#{attestation_path}\"]",
       with_nested_selector
     ].compact.join(" ")
     page.find(full_selector)
