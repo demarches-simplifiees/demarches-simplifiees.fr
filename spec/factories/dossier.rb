@@ -114,6 +114,11 @@ FactoryBot.define do
       hidden_at { Time.zone.now }
     end
 
+    trait :hidden_by_administration do
+      hidden_by_administration_at { 1.day.ago }
+      hidden_by_reason { DeletedDossier.reasons.fetch(:instructeur_request) }
+    end
+
     trait :with_dossier_link do
       after(:create) do |dossier, _evaluator|
         # create linked dossier
