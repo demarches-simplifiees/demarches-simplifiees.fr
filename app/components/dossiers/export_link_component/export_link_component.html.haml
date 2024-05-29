@@ -7,6 +7,9 @@
             = export_title(export)
           %span.fr-text-mention--grey.fr-mb-1w
             = time_info(export)
+          - if export.export_template
+            %span.fr-tag.fr-tag--sm.fr-ml-1w
+              = export.export_template.name
         .fr-ml-auto
           = badge(export)
 
