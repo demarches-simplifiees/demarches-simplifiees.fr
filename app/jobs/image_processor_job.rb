@@ -10,6 +10,10 @@ class ImageProcessorJob < ApplicationJob
   # (to avoid modifying the file while it is being scanned).
   retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
 
+  rescue_from ActiveStorage::PreviewError do
+    retry_or_discard
+  end
+
   def perform(blob)
     return if blob.nil?
     raise FileNotScannedYetError if blob.virus_scanner.pending?
@@ -57,5 +61,15 @@ class ImageProcessorJob < ApplicationJob
         blob.save!
       end
     end
+  end
+
+  def retry_or_discard
+    if executions < max_attempts
+      retry_job wait: 5.minutes
+    end
+  end
+
+  def max_attempts
+    3
   end
 end
