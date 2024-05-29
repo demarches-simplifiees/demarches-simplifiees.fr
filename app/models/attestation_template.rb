@@ -7,6 +7,11 @@ class AttestationTemplate < ApplicationRecord
   has_one_attached :logo
   has_one_attached :signature
 
+  enum state: {
+    draft: 'draft',
+    published: 'published'
+  }
+
   validates :title, tags: true, if: -> { procedure.present? && version == 1 }
   validates :body, tags: true, if: -> { procedure.present? && version == 1 }
   validates :json_body, tags: true, if: -> { procedure.present? && version == 2 }
