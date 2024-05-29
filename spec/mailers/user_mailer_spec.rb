@@ -168,4 +168,17 @@ RSpec.describe UserMailer, type: :mailer do
       end
     end
   end
+
+  describe '.invite_instructeur' do
+    subject { described_class.invite_instructeur(user, "reset_token") }
+
+    it { expect(subject['BYPASS_UNVERIFIED_MAIL_PROTECTION']).to be_present }
+  end
+
+  describe '.invite_gestionnaire' do
+    let(:groupe_gestionnaire) { create(:groupe_gestionnaire) }
+    subject { described_class.invite_gestionnaire(user, "reset_token", groupe_gestionnaire) }
+
+    it { expect(subject['BYPASS_UNVERIFIED_MAIL_PROTECTION']).to be_present }
+  end
 end
