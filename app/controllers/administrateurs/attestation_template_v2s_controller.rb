@@ -20,27 +20,9 @@ module Administrateurs
         format.pdf do
           html = render_to_string('/administrateurs/attestation_template_v2s/show', layout: 'attestation', formats: [:html])
 
-          headers = {
-            'Content-Type' => 'application/json',
-            'X-Request-Id' => Current.request_id
-          }
+          pdf = WeasyprintService.generate_pdf(html, procedure_id: @procedure.id, path: request.path, user_id: current_user.id)
 
-          body = {
-            html: html,
-            upstream_context: {
-              procedure_id: @procedure.id,
-              path: request.path,
-              user_id: current_user.id
-            }
-          }.to_json
-
-          response = Typhoeus.post(WEASYPRINT_URL, headers:, body:)
-
-          if response.success?
-            send_data(response.body, filename: 'attestation.pdf', type: 'application/pdf', disposition: 'inline')
-          else
-            raise StandardError.new("PDF Generation failed: #{response.return_code} #{response.status_message}")
-          end
+          send_data(pdf, filename: 'attestation.pdf', type: 'application/pdf', disposition: 'inline')
         end
       end
     end
