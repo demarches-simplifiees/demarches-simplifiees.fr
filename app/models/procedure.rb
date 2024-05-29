@@ -52,7 +52,7 @@ class Procedure < ApplicationRecord
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
   has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
-  has_one :attestation_template, -> { order(Arel.sql("CASE WHEN version = '1' THEN 0 ELSE 1 END")) }, dependent: :destroy, inverse_of: :procedure
+  has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
