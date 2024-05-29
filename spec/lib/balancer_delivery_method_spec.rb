@@ -1,20 +1,23 @@
 RSpec.describe BalancerDeliveryMethod do
   class ExampleMailer < ApplicationMailer
+    include BalancedDeliveryConcern
+
     def greet(name, bypass_unverified_mail_protection: true)
       mail(to: name, from: "smtp_from", body: "Hello #{name}")
 
-      if bypass_unverified_mail_protection
-        headers['BYPASS_UNVERIFIED_MAIL_PROTECTION'] = true
-      end
+      bypass_unverified_mail_protection! if bypass_unverified_mail_protection
     end
   end
 
   class ImportantEmail < ApplicationMailer
+    include BalancedDeliveryConcern
+
     before_action :set_x_deliver_with
 
     def greet(name)
       mail(to: name, from: "smtp_from", body: "Hello #{name}")
-      headers['BYPASS_UNVERIFIED_MAIL_PROTECTION'] = true
+
+      bypass_unverified_mail_protection!
     end
 
     private

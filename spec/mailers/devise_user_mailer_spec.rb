@@ -5,7 +5,10 @@ RSpec.describe DeviseUserMailer, type: :mailer do
     subject { described_class.confirmation_instructions(user, token, opts = {}) }
 
     context 'without SafeMailer configured' do
-      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
+      it do
+        expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil)
+        expect(subject[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION]).to be_present
+      end
     end
 
     context 'with SafeMailer configured' do

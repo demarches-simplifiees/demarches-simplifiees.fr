@@ -8,6 +8,10 @@ module BalancedDeliveryConcern
       self.class.critical_email?(action_name)
     end
 
+    def bypass_unverified_mail_protection!
+      headers[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION] = true
+    end
+
     private
 
     def forced_delivery_provider?

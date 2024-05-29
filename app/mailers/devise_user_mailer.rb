@@ -34,6 +34,8 @@ class DeviseUserMailer < Devise::Mailer
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
 
+    bypass_unverified_mail_protection!
+
     I18n.with_locale(record.locale) do
       super
     end
