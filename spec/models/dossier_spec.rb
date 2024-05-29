@@ -23,6 +23,43 @@ describe Dossier, type: :model do
 
       it { expect(Dossier.brouillons_recently_updated).to eq([dossier_en_brouillon_2, dossier_en_brouillon]) }
     end
+
+    describe 'by_statut' do
+      let(:procedure) { create(:procedure) }
+      let(:dossier_en_construction) { create(:dossier, :en_construction, procedure:) }
+      let(:dossier_en_instruction) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier_accepte) { create(:dossier, :accepte, procedure:) }
+      let(:dossier_refuse) { create(:dossier, :refuse, procedure:) }
+      let(:dossier_accepte_archive) { create(:dossier, :accepte, :archived, procedure:) }
+      let(:dossier_accepte_deleted) { create(:dossier, :accepte, :hidden_by_administration, procedure:) }
+      let(:dossier_accepte_archive_deleted) { create(:dossier, :accepte, :archived, :hidden_by_administration, procedure:) }
+
+      let!(:dossiers) { [dossier_en_construction, dossier_en_instruction, dossier_accepte, dossier_refuse] }
+
+      context 'tous' do
+        it do
+          expect(procedure.dossiers.by_statut('tous')).to match_array(dossiers - [dossier_accepte_archive, dossier_accepte_archive_deleted])
+        end
+      end
+
+      context 'a-suivre' do
+        it do
+          expect(procedure.dossiers.by_statut('a-suivre')).to match_array([dossier_en_construction, dossier_en_instruction])
+        end
+      end
+
+      context 'supprimes_recemment' do
+        it do
+          expect(procedure.dossiers.by_statut('supprimes_recemment')).to match_array([dossier_accepte_deleted, dossier_accepte_archive_deleted])
+        end
+      end
+
+      context 'archives' do
+        it do
+          expect(procedure.dossiers.by_statut('archives')).to match_array([dossier_accepte_archive])
+        end
+      end
+    end
   end
 
   describe 'validations' do
