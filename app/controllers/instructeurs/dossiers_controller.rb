@@ -30,9 +30,10 @@ module Instructeurs
     end
 
     def apercu_attestation
-      @attestation = dossier.attestation_template.render_attributes_for(dossier: dossier)
-
-      render 'administrateurs/attestation_templates/show', formats: [:pdf]
+      send_data dossier.attestation_template.send(:build_pdf, dossier).string,
+                filename: 'attestation.pdf',
+                type: 'application/pdf',
+                disposition: 'inline'
     end
 
     def bilans_bdf

@@ -184,7 +184,7 @@ class AttestationTemplate < ApplicationRecord
 
     if dossier.present?
       # 2x faster this way than with `replace_tags` which would reparse text
-      used_tags = tiptap.used_tags_and_libelle_for(json.deep_symbolize_keys)
+      used_tags = TiptapService.used_tags_and_libelle_for(json.deep_symbolize_keys)
       substitutions = tags_substitutions(used_tags, dossier, escape: false)
       body = tiptap.to_html(json, substitutions)
 
@@ -207,10 +207,23 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def used_tags
-    used_tags_for(title) + used_tags_for(body)
+    if version == 2
+      json = json_body&.deep_symbolize_keys
+      TiptapService.used_tags_and_libelle_for(json.deep_symbolize_keys)
+    else
+      used_tags_for(title) + used_tags_for(body)
+    end
   end
 
   def build_pdf(dossier)
+    if version == 2
+      build_v2_pdf(dossier)
+    else
+      build_v1_pdf(dossier)
+    end
+  end
+
+  def build_v1_pdf(dossier)
     attestation = render_attributes_for(dossier: dossier)
     attestation_view = ApplicationController.render(
       template: 'administrateurs/attestation_templates/show',
@@ -219,5 +232,37 @@ class AttestationTemplate < ApplicationRecord
     )
 
     StringIO.new(attestation_view)
+  end
+
+  def build_v2_pdf(dossier)
+    body = render_attributes_for(dossier:).fetch(:body)
+
+    html = ApplicationController.render(
+      template: '/administrateurs/attestation_template_v2s/show',
+      formats: [:html],
+      layout: 'attestation',
+      assigns: { attestation_template: self, body: body }
+    )
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'X-Request-Id' => Current.request_id
+    }
+
+    body = {
+      html: html,
+      upstream_context: {
+        procedure_id: procedure.id,
+        dossier_id: dossier.id,
+      }
+    }.to_json
+
+    response = Typhoeus.post(WEASYPRINT_URL, headers:, body:)
+
+    if response.success?
+      StringIO.new(response.body)
+    else
+      raise StandardError.new("PDF Generation failed: #{response.return_code} #{response.status_message}")
+    end
   end
 end
