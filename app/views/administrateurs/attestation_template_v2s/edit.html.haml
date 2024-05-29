@@ -4,7 +4,8 @@
                     ['Attestation']] }
 
 = render NestedForms::FormOwnerComponent.new
-= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), html: { multipart: true },
+= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure),
+  html: { multipart: true , id: "attestation-template" },
   data: { turbo: 'true',
     controller: 'autosubmit attestation',
     autosubmit_debounce_delay_value: 1000,
@@ -117,6 +118,10 @@
           %p.fr-hint-text
             L’aperçu est mis à jour automatiquement après chaque modification.
             Pour générer un aperçu fidèle avec tous les champs et les dates, créez-vous un dossier et acceptez-le : l’aperçu l’utilisera.
+
+  - if @procedure.feature_enabled?(:attestation_v2) && @attestation_template.draft?
+    - content_for(:sticky_header) do
+      = render partial: "sticky_header"
 
   .padded-fixed-footer
     .fixed-footer#fixed_footer

@@ -1,0 +1,10 @@
+.sticky-header.sticky-header-warning
+  .fr-container
+    %p.flex.justify-between.align-center.fr-text-default--warning
+      %span
+        = dsfr_icon("fr-icon-warning-fill fr-mr-1v")
+        Les modifications effectuées ne seront appliquées qu’une fois que vous aurez publié cette version de l’attestation.
+      %span
+        %button.fr-btn.fr-ml-2w{ form: "attestation-template", name: field_name(:attestation_template, :state), value: "published",
+          data: { 'disable-with': "Publication en cours…", controller: 'autosave-submit' } }
+          Publier l’attestation

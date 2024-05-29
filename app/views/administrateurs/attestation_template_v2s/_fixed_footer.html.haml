@@ -11,8 +11,3 @@
         %p.fr-hint-text Cette attestation est actuellement délivrée aux usagers.
 
       %span#autosave-notice
-
-      - if procedure.feature_enabled?(:attestation_v2) && attestation_template.draft?
-        %button.fr-btn.fr-ml-2w{ name: field_name(:attestation_template, :state), value: "published",
-          data: { 'disable-with': "Publication en cours…", controller: 'autosave-submit' } }
-          Publier
