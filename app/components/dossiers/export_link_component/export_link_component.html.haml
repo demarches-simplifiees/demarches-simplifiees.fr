@@ -14,4 +14,4 @@
         = export_button(export)
 
         - if export.failed?
-          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut), refresh_button_options(export)
+          = button_to refresh_button_options(export)[:title], download_export_path(export_template_id: export.export_template&.id, export_format: export.format, statut: export.statut), refresh_button_options(export)

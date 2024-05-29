@@ -11,9 +11,10 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
     @export_url = export_url
   end
 
-  def download_export_path(export_format:, statut:, no_progress_notification: nil)
+  def download_export_path(export_format:, statut:, export_template_id: nil, no_progress_notification: nil)
     @export_url.call(@procedure,
       export_format: export_format,
+      export_template_id:,
       statut: statut,
       no_progress_notification: no_progress_notification)
   end
