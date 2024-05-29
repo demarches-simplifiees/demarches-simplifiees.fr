@@ -69,6 +69,22 @@ describe ExportTemplate do
     end
   end
 
+  describe '#assign_pj_names' do
+    let(:pj_params) do
+      {
+        "tiptap_pj_1" => {
+          "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+        }.to_json
+      }
+    end
+    it 'values content from pj params' do
+      export_template.assign_pj_names(pj_params)
+      expect(export_template.content["pjs"]).to eq [
+        { :path => { "content" => [{ "content" => [{ "text" => "avis-commission-", "type" => "text" }, { "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" }, "type" => "mention" }], "type" => "paragraph" }], "type" => "doc" }, :stable_id => "1" }
+      ]
+    end
+  end
+
   describe '#tiptap_default_dossier_directory' do
     it 'returns tiptap_default_dossier_directory from content' do
       expect(export_template.tiptap_default_dossier_directory).to eq({
@@ -297,20 +313,36 @@ describe ExportTemplate do
     end
   end
 
-  describe 'specific_tags' do
-    context 'for entreprise procedure' do
-      let(:for_individual) { false }
+  context 'for entreprise procedure' do
+    let(:for_individual) { false }
+    describe 'specific_tags' do
       it do
         tags = export_template.specific_tags
         expect(tags.map { _1[:id] }).to eq ["entreprise_siren", "entreprise_numero_tva_intracommunautaire", "entreprise_siret_siege_social", "entreprise_raison_sociale", "entreprise_adresse", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur"]
       end
     end
 
-    context 'for individual procedure' do
-      let(:for_individual) { true }
+    describe 'tags_for_pj' do
+      it do
+        tags = export_template.tags_for_pj
+        expect(tags.map { _1[:id] }).to eq ["entreprise_siren", "entreprise_numero_tva_intracommunautaire", "entreprise_siret_siege_social", "entreprise_raison_sociale", "entreprise_adresse", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur", "original-filename"]
+      end
+    end
+  end
+
+  context 'for individual procedure' do
+    let(:for_individual) { true }
+    describe 'specific_tags' do
       it do
         tags = export_template.specific_tags
         expect(tags.map { _1[:id] }).to eq ["individual_gender", "individual_last_name", "individual_first_name", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur"]
+      end
+    end
+
+    describe 'tags_for_pj' do
+      it do
+        tags = export_template.tags_for_pj
+        expect(tags.map { _1[:id] }).to eq ["individual_gender", "individual_last_name", "individual_first_name", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur", "original-filename"]
       end
     end
   end
