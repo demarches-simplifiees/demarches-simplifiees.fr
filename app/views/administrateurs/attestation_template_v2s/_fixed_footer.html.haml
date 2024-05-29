@@ -7,7 +7,7 @@
 
     .fr-col-12.fr-col-md-8.text-right
 
-      - if attestation_template.published?
+      - if attestation_template.published? && attestation_template.activated?
         %p.fr-hint-text Cette attestation est actuellement délivrée aux usagers.
 
       %span#autosave-notice
