@@ -62,7 +62,6 @@ module DossierStateConcern
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
 
     if procedure.sva_svr_enabled?
-      # TODO: handle serialization errors when SIRET demandeur was not completed
       log_automatic_dossier_operation(:passer_en_instruction, self)
     else
       log_automatic_dossier_operation(:passer_en_instruction)
