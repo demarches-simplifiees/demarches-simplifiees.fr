@@ -2,7 +2,7 @@ module Manager
   class InstructeursController < Manager::ApplicationController
     def reinvite
       instructeur = Instructeur.find(params[:id])
-      instructeur.user.invite!
+      instructeur.user.invite_instructeur!
       flash[:notice] = "Instructeur réinvité."
       redirect_to manager_instructeur_path(instructeur)
     end

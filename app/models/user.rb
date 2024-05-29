@@ -79,7 +79,7 @@ class User < ApplicationRecord
     owns?(dossier) || invite?(dossier)
   end
 
-  def invite!
+  def invite_instructeur!
     UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
   end
 
