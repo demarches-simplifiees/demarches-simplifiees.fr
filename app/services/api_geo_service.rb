@@ -122,6 +122,35 @@ class APIGeoService
       }.merge(territory)
     end
 
+    def parse_etablissement_address(etablissement)
+      postal_code = etablissement.code_postal
+      city_name_fallback = etablissement.localite.presence || ''
+      city_code = etablissement.code_insee_localite
+      departement_code, region_code = if postal_code.present? && city_code.present?
+        commune = communes_by_postal_code(postal_code).find { _1[:code] == city_code }
+        if commune.present?
+          [commune[:departement_code], commune[:region_code]]
+        else
+          []
+        end
+      end
+
+      {
+        label: etablissement.adresse,
+        type: "housenumber",
+        street_number: etablissement.numero_voie,
+        street_name: etablissement.nom_voie,
+        street_address: etablissement.nom_voie.present? ? [etablissement.numero_voie, etablissement.type_voie, etablissement.nom_voie].compact.join(' ') : nil,
+        postal_code: postal_code.presence || '',
+        city_name: safely_normalize_city_name(departement_code, city_code, city_name_fallback),
+        city_code: city_code.presence || '',
+        departement_code:,
+        departement_name: departement_name(departement_code),
+        region_code:,
+        region_name: region_name(region_code)
+      }
+    end
+
     def safely_normalize_city_name(department_code, city_code, fallback)
       return fallback if department_code.blank? || city_code.blank?
 
