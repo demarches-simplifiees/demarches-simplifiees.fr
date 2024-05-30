@@ -115,7 +115,8 @@
     "postinstall": "patch-package",
     "test": "vitest",
     "coverage": "vitest run --coverage",
-    "up": "bunx npm-check-updates --root --format group -i"
+    "up": "bunx npm-check-updates --root --format group -i",
+    "vite-bundle-visualizer": "bunx vite-bundle-visualizer"
   },
   "resolutions": {
     "string-width": "4.2.2",
