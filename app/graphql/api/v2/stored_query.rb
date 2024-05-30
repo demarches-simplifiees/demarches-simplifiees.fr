@@ -281,6 +281,8 @@ class API::V2::StoredQuery
     dateExpiration
     dateSuppressionParUsager
     dateDerniereCorrectionEnAttente @include(if: $includeCorrections)
+    dateDerniereModificationChamps
+    dateDerniereModificationAnnotations
     motivation
     motivationAttachment {
       ...FileFragment
