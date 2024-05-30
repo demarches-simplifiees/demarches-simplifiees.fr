@@ -1,4 +1,4 @@
-import { Controller } from '@hotwired/stimulus';
+import { ApplicationController } from '../application_controller';
 import lightGallery from 'lightgallery';
 import { LightGallery } from 'lightgallery/lightgallery';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
@@ -7,7 +7,7 @@ import lgRotate from 'lightgallery/plugins/rotate';
 import lgHash from 'lightgallery/plugins/hash';
 import 'lightgallery/css/lightgallery-bundle.css';
 
-export default class extends Controller {
+export default class extends ApplicationController {
   lightGallery?: LightGallery;
 
   connect(): void {
