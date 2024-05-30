@@ -1,31 +1,31 @@
 .container
   - if current_administrateur.procedures.brouillons.count == 0
-    .card.feedback
-      .card-title
-      Bienvenue,
-      %br
-      vous allez pouvoir créer une première démarche de test.
-      Celle-ci sera visible uniquement par vous et ne sera publiée nulle part, alors pas de crainte à avoir.
-      %br
-      %br
-      Besoin d’aide ?
-      %br
-      > Vous pouvez
-      = link_to "visionner cette vidéo",
-        "https://vimeo.com/261478872",
-        target: "_blank"
-      %br
-      > Vous pouvez lire notre
-      = link_to "documentation en ligne",
-        ADMINISTRATEUR_TUTORIAL_URL,
-        target: "_blank"
-
-      %br
-      > Vous pouvez enfin
-      = link_to "prendre un rendez-vous téléphonique avec nous",
-        CALENDLY_URL,
-        target: "_blank"
-
+    .card-welcome
+      = render Dsfr::CalloutComponent.new(title: nil, icon: "fr-icon-information-line") do |c|
+        - c.with_html_body do
+          %p
+            Bienvenue,
+            %br
+            vous allez pouvoir créer une première démarche de test.
+            Celle-ci sera visible uniquement par vous et ne sera publiée nulle part, alors pas de crainte à avoir.
+            %br
+            %br
+            Besoin d’aide ?
+            %br
+            > Vous pouvez
+            = link_to "visionner cette vidéo",
+              "https://vimeo.com/261478872",
+              target: "_blank"
+            %br
+            > Vous pouvez lire notre
+            = link_to "documentation en ligne",
+              ADMINISTRATEUR_TUTORIAL_URL,
+              target: "_blank"
+            %br
+            > Vous pouvez enfin
+            = link_to "prendre un rendez-vous téléphonique avec nous",
+              CALENDLY_URL,
+              target: "_blank"
       :javascript
         document.addEventListener("DOMContentLoaded", function() {
           $crisp.push(["do", "trigger:run", ["admin-signup"]]);
