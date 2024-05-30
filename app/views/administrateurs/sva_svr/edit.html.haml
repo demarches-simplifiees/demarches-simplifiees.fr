@@ -1,10 +1,10 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
                     ["#{@procedure.libelle.truncate_words(10)}", admin_procedure_path(@procedure)],
-                    ["Configuration SVA/SVR"]] }
+                    ["Silence Vaut Accord ou Rejet"]] }
 
 .fr-container.fr-my-5w
-  %h1.fr-h1 Règle du Silence Vaut Accord ou Silence Vaut Rejet
+  %h1.fr-h2 Silence Vaut Accord ou Rejet
 
   = render Dsfr::CalloutComponent.new(title: "Fonctionnement du SVA/SVR") do |c|
     - c.with_body do
@@ -40,4 +40,4 @@
         = link_to("Liste des démarches encadrées par ce principe", "https://www.service-public.fr/demarches-silence-vaut-accord", class: "fr-link", title: new_tab_suffix("Rechercher les démarches avec SVA sur service-public.fr"), **external_link_attributes)
 
 
-  = render Procedure::SVASVRFormComponent.new(procedure: @procedure, configuration: @configuration)
+= render Procedure::SVASVRFormComponent.new(procedure: @procedure, configuration: @configuration)

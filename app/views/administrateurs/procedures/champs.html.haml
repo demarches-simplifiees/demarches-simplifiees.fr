@@ -1,10 +1,10 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Configuration des champs']], preview: @procedure.draft_revision.valid? }
+                    ['Champs du formulaire']], preview: @procedure.draft_revision.valid? }
 
 .fr-container
-  %h1 Configuration des champs
+  %h1.fr-h2 Champs du formulaire
   = render NestedForms::FormOwnerComponent.new
   .fr-grid-row
     = render partial: 'champs_summary'
@@ -15,12 +15,13 @@
   .fixed-footer
     .fr-container
       .flex
-        %ul.fr-btns-group.fr-btns-group--inline-md
+        %ul.fr-btns-group.fr-btns-group--inline-md.fr-ml-0
           %li
-            = link_to t('continue', scope: [:layouts, :breadcrumb]), admin_procedure_path(@procedure), title: t('continue_title', scope: [:layouts, :breadcrumb]), class: 'fr-btn'
+            = link_to admin_procedure_path(id: @procedure), class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mb-2w fr-mr-2w' do
+              Revenir à l'écran de gestion
           - if @procedure.draft_revision.revision_types_de_champ_public.count > 0
             %li
-              = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-btn fr-btn--secondary'
+              = link_to t('preview', scope: [:layouts, :breadcrumb]), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-link fr-mb-2w'
         .fr-ml-auto
           #autosave-notice.hidden
           = render TypesDeChampEditor::EstimatedFillDurationComponent.new(revision: @procedure.draft_revision, is_annotation: false)

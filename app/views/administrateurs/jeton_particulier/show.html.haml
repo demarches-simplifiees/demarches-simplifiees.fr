@@ -2,14 +2,13 @@
   locals: { steps: [['Démarches', admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     [Procedure.human_attribute_name(:jeton_api_particulier), admin_procedure_api_particulier_path(@procedure)],
-                    ['Jeton']] }
+                    ['Jeton Particulier']] }
 
-.container
-  %h1.page-title
-    = t('.configure_token')
+.fr-container
+  %h1.fr-h2
+    Jeton Particulier
 
-.container
-  %h1
+.fr-container
   = form_with model: @procedure, url: admin_procedure_api_particulier_jeton_path, local: true do |f|
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do

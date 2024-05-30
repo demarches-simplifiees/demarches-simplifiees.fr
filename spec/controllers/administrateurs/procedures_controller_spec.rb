@@ -977,7 +977,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           end
 
           it { expect(flash[:notice]).to be_present }
-          it { expect(response.body).to include "MonAvis" }
+          it { expect(response).to redirect_to(admin_procedure_path(procedure.id)) }
         end
 
         context 'when the embed code is not valid' do

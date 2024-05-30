@@ -1,15 +1,13 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Jeton']] }
+                    ['Jeton Entreprise']] }
 
-.container
-  %h1.page-title
-    Configurer le jeton API Entreprise
+.fr-container
+  %h1.fr-h2 Jeton Entreprise
 
-.container
-  %h1
-  = form_with model: @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_jeton }) do |f|
+= form_with model: @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_jeton }) do |f|
+  .fr-container
     = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do
         %p
@@ -23,4 +21,5 @@
     .fr-input-group
       = f.label :api_entreprise_token, "Jeton", class: 'fr-label'
       = f.password_field :api_entreprise_token, value: @procedure.read_attribute(:api_entreprise_token), class: 'fr-input'
-    = f.button 'Enregistrer', class: 'fr-btn'
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
