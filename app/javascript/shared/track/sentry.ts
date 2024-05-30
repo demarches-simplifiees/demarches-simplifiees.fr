@@ -23,10 +23,9 @@ if (enabled && key) {
     ]
   });
 
-  Sentry.configureScope((scope) => {
-    scope.setUser(user);
-    scope.setExtra('browser', browser.modern ? 'modern' : 'legacy');
-  });
+  const scope = Sentry.getCurrentScope();
+  scope.setUser(user);
+  scope.setExtra('browser', browser.modern ? 'modern' : 'legacy');
 
   // Register a way to explicitely capture messages from a different bundle.
   addEventListener('sentry:capture-exception', (event) => {
