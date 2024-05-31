@@ -39,6 +39,12 @@ class DeviseUserMailer < Devise::Mailer
     end
   end
 
+  def reset_password_instructions(record, token, opts = {})
+    bypass_unverified_mail_protection!
+
+    super
+  end
+
   def self.critical_email?(action_name)
     true
   end

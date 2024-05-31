@@ -70,6 +70,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         it "respect preferred domain" do
           expect(header_value("From", subject.message)).to include(CONTACT_EMAIL)
           expect(subject.message.to_s).to include("#{ENV.fetch("APP_HOST_LEGACY")}/users/password")
+          expect(subject[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION]).to be_present
         end
       end
 
