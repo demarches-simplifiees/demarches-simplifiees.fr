@@ -1006,7 +1006,6 @@ class Dossier < ApplicationRecord
     else
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
     end
-
     if procedure.chorusable? && procedure.chorus_configuration.complete?
       columns += [
         ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' }],

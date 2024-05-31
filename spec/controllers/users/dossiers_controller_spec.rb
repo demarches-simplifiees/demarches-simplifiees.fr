@@ -1489,15 +1489,18 @@ describe Users::DossiersController, type: :controller do
   end
 
   describe '#clone' do
-    let(:procedure) { create(:procedure, :with_all_champs) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     subject { post :clone, params: { id: dossier.id } }
 
     context 'not signed in' do
+      let(:procedure) { create(:procedure) }
+
       it { expect(subject).to redirect_to(new_user_session_path) }
     end
 
     context 'signed with user dossier' do
+      let(:procedure) { create(:procedure, :with_all_champs) }
+
       before { sign_in dossier.user }
 
       it { expect(subject).to redirect_to(brouillon_dossier_path(Dossier.last)) }
