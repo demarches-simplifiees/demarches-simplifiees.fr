@@ -233,4 +233,25 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       end
     end
   end
+
+  describe 'POST reset' do
+    render_views
+
+    before {
+      create(:attestation_template, :v2, :draft, procedure:)
+    }
+
+    subject do
+      patch :reset, params: { procedure_id: procedure.id }
+      response.body
+    end
+
+    it "delete draft, keep published" do
+      expect(procedure.attestation_templates.count).to eq(2)
+      expect(subject).to redirect_to(edit_admin_procedure_attestation_template_v2_path(procedure))
+      expect(flash.notice).to include("réinitialisées")
+      expect(procedure.attestation_templates.count).to eq(1)
+      expect(procedure.attestation_templates.first).to eq(attestation_template)
+    end
+  end
 end

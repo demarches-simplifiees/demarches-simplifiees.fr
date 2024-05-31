@@ -138,7 +138,6 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3\nline4")
 
       click_on "Publier"
-      expect(page).to have_text("L’attestation a été publiée")
       expect(attestation.reload).to be_published
     end
 

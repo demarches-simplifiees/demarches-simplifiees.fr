@@ -104,6 +104,13 @@ module Administrateurs
 
     def create = update
 
+    def reset
+      @procedure.attestation_templates_v2.draft&.destroy_all
+
+      flash.notice = "Les modifications ont été réinitialisées."
+      redirect_to edit_admin_procedure_attestation_template_v2_path(@procedure)
+    end
+
     private
 
     def ensure_feature_active
