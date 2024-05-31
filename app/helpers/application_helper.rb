@@ -126,14 +126,6 @@ module ApplicationHelper
     !BrowserSupport.supported?(browser)
   end
 
-  def vite_legacy?
-    if ENV['VITE_LEGACY'] == 'disabled'
-      false
-    else
-      Rails.env.production? || ENV['VITE_LEGACY'] == 'enabled'
-    end
-  end
-
   def external_link_attributes
     { target: "_blank", rel: "noopener noreferrer" }
   end
