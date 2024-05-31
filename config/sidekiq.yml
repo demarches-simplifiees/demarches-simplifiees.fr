@@ -1,0 +1,10 @@
+:concurrency: 25
+:queues:
+  - default
+  - mailers
+  - active_storage_analysis
+  - sva
+  - webhooks_v1
+  - low_priority
+  - purge
+  - expires

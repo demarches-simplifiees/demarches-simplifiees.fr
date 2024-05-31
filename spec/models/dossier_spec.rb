@@ -295,7 +295,7 @@ describe Dossier, type: :model do
         end
 
         context 'and the user signs-in using France Connect' do
-          let(:user) { create(:user, france_connect_informations: [build(:france_connect_information)]) }
+          let(:user) { create(:user, france_connect_informations: [build(:france_connect_information)], loged_in_with_france_connect: 'particulier') }
 
           it 'fills the individual with the informations from France Connect' do
             subject
@@ -2216,13 +2216,13 @@ describe Dossier, type: :model do
     let(:dossier) { create(:dossier) }
 
     context 'user france connected' do
-      let(:dossier) { build(:dossier, user: build(:user, france_connect_informations: [build(:france_connect_information)])) }
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", true]) }
+      let(:dossier) { build(:dossier, user: build(:user, france_connect_informations: [build(:france_connect_information)], loged_in_with_france_connect: 'microsoft')) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Connecté via", "Microsoft 365"]) }
     end
 
     context 'user not france connected' do
       let(:dossier) { build(:dossier) }
-      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["FranceConnect ?", false]) }
+      it { expect(dossier.spreadsheet_columns(types_de_champ: [])).to include(["Connecté via", ""]) }
     end
 
     context 'for_individual' do
