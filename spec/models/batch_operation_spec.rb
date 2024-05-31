@@ -239,17 +239,17 @@ describe BatchOperation, type: :model do
 
     context 'accepter' do
       let(:operation) { :accepter }
-      it { expect { subject.process_one(dossier) }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name) }
+      it { expect { subject.process_one(dossier) }.to have_enqueued_job(PriorizedMailDeliveryJob) }
     end
 
     context 'refuser' do
       let(:operation) { :refuser }
-      it { expect { subject.process_one(dossier) }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name) }
+      it { expect { subject.process_one(dossier) }.to have_enqueued_job(PriorizedMailDeliveryJob) }
     end
 
     context 'classer_sans_suite' do
       let(:operation) { :classer_sans_suite }
-      it { expect { subject.process_one(dossier) }.to have_enqueued_job.on_queue(Rails.application.config.action_mailer.deliver_later_queue_name) }
+      it { expect { subject.process_one(dossier) }.to have_enqueued_job(PriorizedMailDeliveryJob) }
     end
   end
 
