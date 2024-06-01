@@ -32,7 +32,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when i am an instructeur of the procedure and instructeurs_self_management_enabled is true' do
-      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: true) }
+      let(:procedure) { create(:procedure, :published, instructeurs_self_management_enabled: true) }
       before { get :index, params: { procedure_id: procedure.id } }
 
       context 'when a procedure has multiple groups' do
@@ -44,7 +44,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'when i am an instructor of the procedure, and instructeurs_self_management_enabled is false' do
-      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: false) }
+      let(:procedure) { create(:procedure, :published, :new_administrateur, instructeurs_self_management_enabled: false) }
       before { get :index, params: { procedure_id: procedure.id } }
 
       it { expect(response).to have_http_status(:redirect) }
@@ -52,7 +52,7 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
     end
 
     context 'i am an instructor, not on the procedure' do
-      let(:procedure) { create(:procedure, :published, administrateurs: [create(:administrateur)], instructeurs_self_management_enabled: true) }
+      let(:procedure) { create(:procedure, :published, :new_administrateur, instructeurs_self_management_enabled: true) }
       before do
         sign_in(create(:instructeur).user)
         get :index, params: { procedure_id: procedure.id }

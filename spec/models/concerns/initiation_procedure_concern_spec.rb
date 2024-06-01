@@ -1,6 +1,6 @@
 describe InitiationProcedureConcern do
   describe '.create_initiation_procedure' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     subject { Procedure.create_initiation_procedure(administrateur) }
 
     it "returns a new procedure" do

@@ -1,5 +1,5 @@
 describe Administrateurs::ServicesController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, administrateur: admin) }
 
   describe '#create' do
@@ -159,7 +159,7 @@ describe Administrateurs::ServicesController, type: :controller do
   end
 
   describe "#index" do
-    let(:admin) { create(:administrateur) }
+    let(:admin) { administrateurs(:default_admin) }
 
     before do
       sign_in(admin.user)

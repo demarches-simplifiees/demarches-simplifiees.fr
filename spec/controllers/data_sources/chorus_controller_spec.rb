@@ -1,5 +1,5 @@
 describe DataSources::ChorusController do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   render_views
 

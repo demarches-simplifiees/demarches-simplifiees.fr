@@ -1,5 +1,5 @@
 describe Administrateurs::AttestationTemplateV2sController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:attestation_template) { build(:attestation_template, :v2) }
   let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }

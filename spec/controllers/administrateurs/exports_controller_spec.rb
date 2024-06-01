@@ -1,6 +1,6 @@
 describe Administrateurs::ExportsController, type: :controller do
   describe '#download' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     before { sign_in(administrateur.user) }
 
     subject do
@@ -8,7 +8,7 @@ describe Administrateurs::ExportsController, type: :controller do
     end
 
     context 'when the procedure does not belongs to admin' do
-      let!(:procedure) { create(:procedure, administrateurs: [create(:administrateur)]) }
+      let!(:procedure) { create(:procedure, :new_administrateur) }
       it 'blocks' do
         is_expected.to have_http_status(:not_found)
       end
@@ -66,7 +66,9 @@ describe Administrateurs::ExportsController, type: :controller do
 
     context 'when admin is allowed present as manager' do
       let!(:procedure) { create(:procedure) }
-      let!(:administrateur_procedure) { create(:administrateurs_procedure, procedure: procedure, administrateur: administrateur, manager: true) }
+      before do
+        procedure.administrateurs_procedures.update_all(manager: true)
+      end
 
       context 'get #index.html' do
         it { is_expected.to have_http_status(:forbidden) }

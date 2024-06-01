@@ -1,5 +1,5 @@
 describe 'Accessing the /patron page:' do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   before { sign_in administrateur.user }
 
   scenario 'I can display a page with all form fields and UI elements' do

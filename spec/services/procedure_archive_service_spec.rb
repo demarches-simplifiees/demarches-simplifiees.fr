@@ -1,7 +1,7 @@
 describe ProcedureArchiveService do
   let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
   let(:instructeur) { create(:instructeur) }
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let(:service) { ProcedureArchiveService.new(procedure) }
   let(:year) { 2020 }
   let(:month) { 3 }

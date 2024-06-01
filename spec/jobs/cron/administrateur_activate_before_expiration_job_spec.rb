@@ -1,6 +1,6 @@
 RSpec.describe Cron::AdministrateurActivateBeforeExpirationJob, type: :job do
   describe 'perform' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
     let(:mailer_double) { double('mailer', deliver_later: true) }
 

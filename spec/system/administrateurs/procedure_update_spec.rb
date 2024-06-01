@@ -3,7 +3,7 @@ require 'system/administrateurs/procedure_spec_helper'
 describe 'Administrateurs can edit procedures', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
   let!(:procedure) do
     create(:procedure_with_dossiers,
       :published,

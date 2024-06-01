@@ -1,5 +1,5 @@
 describe API::V2::GraphqlController do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:generated_token) { APIToken.generate(admin) }
   let(:api_token) { generated_token.first }
   let(:token) { generated_token.second }
@@ -1386,7 +1386,7 @@ describe API::V2::GraphqlController do
       }
 
       context 'when unauthorized' do
-        let(:dossier) { create(:dossier, :en_construction, :with_individual) }
+        let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: create(:procedure, :new_administrateur, :for_individual)) }
 
         it {
           expect(message.discarded?).to be_falsey

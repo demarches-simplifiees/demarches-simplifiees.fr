@@ -1,5 +1,5 @@
 describe 'fetch API Particulier Data', js: true do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   let(:expected_token) { 'd7e9c9f4c3ca00caadde31f50fd4521a' }
 

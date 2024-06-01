@@ -1,5 +1,5 @@
 describe Administrateurs::ProceduresController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:bad_procedure_id) { 100000 }
 
   let(:path) { 'ma-jolie-demarche' }
@@ -124,8 +124,8 @@ describe Administrateurs::ProceduresController, type: :controller do
     context 'for default admin zones' do
       let(:zone1) { create(:zone) }
       let(:zone2) { create(:zone) }
-      let!(:procedure1) { create(:procedure, :published, zones: [zone1]) }
-      let!(:procedure2) { create(:procedure, :published, zones: [zone1, zone2]) }
+      let!(:procedure1) { create(:procedure, :published, :new_administrateur, zones: [zone1]) }
+      let!(:procedure2) { create(:procedure, :published, :new_administrateur, zones: [zone1, zone2]) }
       let!(:admin_procedure) { create(:procedure, :published, zones: [zone2], administrateur: admin) }
 
       subject { get :all, params: { zone_ids: :admin_default } }
@@ -673,7 +673,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when admin is not the owner of the procedure' do
-      let(:admin_2) { create(:administrateur) }
+      let(:admin_2) { administrateurs(:default_admin) }
 
       before do
         sign_out(admin.user)
@@ -688,7 +688,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'when procedure has invalid fields' do
-      let(:admin_2) { create(:administrateur) }
+      let(:admin_2) { administrateurs(:default_admin) }
       let(:path) { 'spec/fixtures/files/invalid_file_format.json' }
 
       before do
@@ -915,7 +915,7 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context "when administrateur does not own the procedure" do
-      let(:dossier) { create(:dossier) }
+      let(:dossier) { create(:dossier, procedure: create(:procedure, :new_administrateur)) }
 
       it { expect { subject }.to raise_error(ActiveRecord::RecordNotFound) }
     end
@@ -1068,7 +1068,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   describe 'PUT #publish' do
     let(:procedure) { create(:procedure, administrateur: admin, lien_site_web: lien_site_web) }
     let(:procedure2) { create(:procedure, :published, administrateur: admin, lien_site_web: lien_site_web) }
-    let(:procedure3) { create(:procedure, :published, lien_site_web: lien_site_web) }
+    let(:procedure3) { create(:procedure, :published, :new_administrateur, lien_site_web: lien_site_web) }
     let(:lien_site_web) { 'http://some.administration/' }
 
     subject(:perform_request) { put :publish, params: { procedure_id: procedure.id, path: path, lien_site_web: lien_site_web } }

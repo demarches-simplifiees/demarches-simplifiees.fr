@@ -1848,7 +1848,7 @@ describe Dossier, type: :model do
   end
 
   describe 'brouillon_expired and en_construction_expired' do
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
     let(:reason) { DeletedDossier.reasons.fetch(:user_request) }
 
