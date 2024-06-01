@@ -1,5 +1,4 @@
-- if @attestation_template.previously_new_record? || @attestation_template.state_changed?
-  = turbo_stream.update "fixed_footer", render(partial: "fixed_footer", locals: { procedure: @procedure, attestation_template: @attestation_template })
+- if @attestation_template.draft?
   = turbo_stream.update "sticky-header", render(partial: "sticky_header")
 
 = turbo_stream.show 'autosave-notice'

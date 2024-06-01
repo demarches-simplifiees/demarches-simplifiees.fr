@@ -1,7 +1,7 @@
 describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:attestation_template) { build(:attestation_template, :v2) }
-  let!(:procedure) { create(:procedure, administrateur: admin, attestation_template: attestation_template, libelle: "Ma démarche") }
+  let(:procedure) { create(:procedure, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
 
@@ -11,7 +11,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       label_logo: "Ministère des specs",
       label_direction: "RSPEC",
       footer: "en bas",
-      activated: false,
+      activated: true,
       tiptap_body: {
         type: :doc,
         content: [
@@ -147,7 +147,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.label_logo).to eq("Ministère des specs")
         expect(attestation_template.label_direction).to eq("RSPEC")
         expect(attestation_template.footer).to eq("en bas")
-        expect(attestation_template.activated).to eq(false)
+        expect(attestation_template.activated).to eq(true)
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
         expect(response.body).to include("Formulaire enregistré")
@@ -189,7 +189,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.label_logo).to eq("Ministère des specs")
         expect(attestation_template.label_direction).to eq("RSPEC")
         expect(attestation_template.footer).to eq("en bas")
-        expect(attestation_template.activated).to eq(false)
+        expect(attestation_template.activated).to eq(true)
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
         expect(response.body).to include("Formulaire enregistré")
@@ -229,6 +229,29 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           subject
           expect(attestation_template.reload).to be_published
           expect(flash.notice).to eq("L’attestation a été publiée.")
+        end
+      end
+    end
+
+    context 'toggle activation' do
+      let(:update_params) { super().merge(activated: false) }
+
+      it 'toggle attribute of current published attestation' do
+        subject
+        expect(procedure.attestation_templates.v2.count).to eq(1)
+        expect(procedure.attestation_templates.v2.first.activated?).to eq(false)
+        expect(flash.notice).to be_nil
+      end
+
+      context 'when there is a draft' do
+        before {
+          create(:attestation_template, :v2, :draft, procedure:)
+        }
+
+        it 'toggle attribute of both draft & published v2 attestations' do
+          subject
+          expect(procedure.attestation_templates.v2.count).to eq(2)
+          expect(procedure.attestation_templates.v2.all?(&:activated?)).to eq(false)
         end
       end
     end

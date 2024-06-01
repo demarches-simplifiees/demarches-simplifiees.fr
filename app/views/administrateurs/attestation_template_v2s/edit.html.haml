@@ -37,12 +37,22 @@
               Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
           .fr-fieldset__element
+            = render Dsfr::CalloutComponent.new(title: "Activation de la délivrance de l’attestation", theme: :neutral) do |c|
+              - c.with_html_body do
+                .fr-toggle.fr-toggle--label-left
+                  = f.check_box :activated, class: "fr-toggle__input", id: dom_id(@attestation_template, :activated)
+                  %label.fr-toggle__label{ for: dom_id(@attestation_template, :activated),
+                    data: { fr_checked_label: "Activée", fr_unchecked_label: "Désactivée" } }
+                    Activer cette option permet la délivrance automatique de l’attestation dès l’acceptation du dossier.
+                    Désactiver cette option arrête immédiatement l’émission de nouvelles attestations.
+
+          .fr-fieldset__element
             %h2.fr-h4 En-tête
 
           .fr-fieldset__element
             .fr-toggle.fr-toggle--label-left
               = f.check_box :official_layout, class: "fr-toggle__input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
-              %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
+              %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Oui", fr_unchecked_label: "Non" } }
                 Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
@@ -125,4 +135,4 @@
 
   .padded-fixed-footer
     .fixed-footer#fixed_footer
-      = render partial: "fixed_footer", locals: { procedure: @procedure, attestation_template: @attestation_template }
+      = render partial: "fixed_footer", locals: { procedure: @procedure }

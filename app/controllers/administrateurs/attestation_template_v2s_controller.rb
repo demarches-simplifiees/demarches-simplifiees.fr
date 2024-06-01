@@ -60,6 +60,12 @@ module Administrateurs
     def update
       attestation_params = editor_params
 
+      # toggle activation
+      if @attestation_template.persisted? && @attestation_template.activated? != cast_bool(attestation_params[:activated])
+        @procedure.attestation_templates.v2.update_all(activated: attestation_params[:activated])
+        render :update && return
+      end
+
       if @attestation_template.published?
         @attestation_template = @attestation_template.dup
         @attestation_template.state = :draft
@@ -123,7 +129,7 @@ module Administrateurs
     end
 
     def editor_params
-      params.required(:attestation_template).permit(:official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state)
+      params.required(:attestation_template).permit(:activated, :official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state)
     end
   end
 end
