@@ -26,6 +26,14 @@ as well as a link to its edit page.
   </h1>
 
   <div class="buttons">
+    <% if user.unverified_email? %>
+      <%= link_to(
+        "Débloquer mails",
+        [:unblock_mails, namespace, page.resource], 
+        method: :post,
+        class: "button") %>
+    <% end %>
+
     <%= link_to(
       "Modifier",
       edit_manager_user_path(page.resource),

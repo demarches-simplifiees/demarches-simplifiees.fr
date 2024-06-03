@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
       post 'resend_reset_password_instructions', on: :member
+      post 'unblock_mails', on: :member
       put 'enable_feature', on: :member
       get 'emails', on: :member
       put 'unblock_email'
