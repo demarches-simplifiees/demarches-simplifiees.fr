@@ -17,10 +17,6 @@ class ProcedureRevision < ApplicationRecord
 
   scope :ordered, -> { order(:created_at) }
 
-  validate :conditions_are_valid?
-  validate :header_sections_are_valid?
-  validate :expressions_regulieres_are_valid?
-
   delegate :path, to: :procedure, prefix: true
 
   def build_champs_public
@@ -452,49 +448,5 @@ class ProcedureRevision < ApplicationRecord
     end
     coordinate.update!(type_de_champ: cloned_type_de_champ)
     cloned_type_de_champ
-  end
-
-  def conditions_are_valid?
-    public_tdcs = types_de_champ_public.to_a
-      .flat_map { _1.repetition? ? children_of(_1) : _1 }
-
-    public_tdcs
-      .map.with_index
-      .filter_map { |tdc, i| tdc.condition? ? [tdc, i] : nil }
-      .map do |tdc, i|
-        [tdc, tdc.condition.errors(public_tdcs.take(i))]
-      end
-      .filter { |_tdc, errors| errors.present? }
-      .each { |tdc, message| errors.add(:condition, message, type_de_champ: tdc) }
-  end
-
-  def header_sections_are_valid?
-    public_tdcs = types_de_champ_public.to_a
-
-    root_tdcs_errors = errors_for_header_sections_order(public_tdcs)
-    repetition_tdcs_errors = public_tdcs
-      .filter_map { _1.repetition? ? children_of(_1) : nil }
-      .map { errors_for_header_sections_order(_1) }
-
-    repetition_tdcs_errors + root_tdcs_errors
-  end
-
-  def expressions_regulieres_are_valid?
-    types_de_champ_public.to_a
-      .flat_map { _1.repetition? ? children_of(_1) : _1 }
-      .each do |tdc|
-        if tdc.expression_reguliere? && tdc.invalid_regexp?
-          errors.add(:expression_reguliere, type_de_champ: tdc)
-        end
-      end
-  end
-
-  def errors_for_header_sections_order(tdcs)
-    tdcs
-      .map.with_index
-      .filter_map { |tdc, i| tdc.header_section? ? [tdc, i] : nil }
-      .map { |tdc, i| [tdc, tdc.check_coherent_header_level(tdcs.take(i))] }
-      .filter { |_tdc, errors| errors.present? }
-      .each { |tdc, message| errors.add(:header_section, message, type_de_champ: tdc) }
   end
 end

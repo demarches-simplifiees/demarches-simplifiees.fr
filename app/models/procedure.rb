@@ -259,13 +259,19 @@ class Procedure < ApplicationRecord
   validates :lien_dpo, url: { no_local: true, allow_blank: true, accept_email: true }
 
   validates :draft_types_de_champ_public,
+    'types_de_champ/condition': true,
+    'types_de_champ/expression_reguliere': true,
+    'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    on: :publication
+    on: [:types_de_champ_public_editor, :publication]
+
   validates :draft_types_de_champ_private,
+    'types_de_champ/condition': true,
+    'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    on: :publication
+    on: [:types_de_champ_private_editor, :publication]
 
   validate :check_juridique, on: [:create, :publication]
 

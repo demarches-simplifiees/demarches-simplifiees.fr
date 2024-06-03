@@ -11,7 +11,8 @@ class TypesDeChamp::NoEmptyBlockValidator < ActiveModel::EachValidator
     if procedure.draft_revision.children_of(parent).empty?
       procedure.errors.add(
         attribute,
-        procedure.errors.generate_message(attribute, :empty_repetition, { value: parent.libelle })
+        procedure.errors.generate_message(attribute, :empty_repetition, { value: parent.libelle }),
+        type_de_champ: parent
       )
     end
   end
