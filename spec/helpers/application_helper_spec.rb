@@ -112,4 +112,29 @@ describe ApplicationHelper do
       it { is_expected.to eq("") }
     end
   end
+  describe '#acronymize' do
+    it 'returns the acronym of a given string' do
+      expect(helper.acronymize('Application Name')).to eq('AN')
+      expect(helper.acronymize('Hello World')).to eq('HW')
+      expect(helper.acronymize('Demarches Simplifiees')).to eq('DS')
+    end
+
+    it 'handles single word input' do
+      expect(helper.acronymize('Word')).to eq('W')
+    end
+
+    it 'returns an empty string for empty input' do
+      expect(helper.acronymize('')).to eq('')
+    end
+
+    it 'handles strings with extensions' do
+      expect(helper.acronymize('file_name.txt')).to eq('FN')
+      expect(helper.acronymize('example.pdf')).to eq('E')
+    end
+
+    it 'handles strings with various word separators' do
+      expect(helper.acronymize('multi-word_string')).to eq('MWS')
+      expect(helper.acronymize('another_example-test')).to eq('AET')
+    end
+  end
 end
