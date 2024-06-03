@@ -14,11 +14,11 @@ class Stat < ApplicationRecord
         dossiers_termines: states['termines'],
         dossiers_cumulative: cumulative_month_serie([
           [Dossier.state_not_brouillon, :depose_at],
-          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+          [DeletedDossier.where.not(state: :brouillon), :depose_at]
         ]),
         dossiers_in_the_last_4_months: last_four_months_serie([
           [Dossier.state_not_brouillon, :depose_at],
-          [DeletedDossier.where.not(state: :brouillon), :deleted_at]
+          [DeletedDossier.where.not(state: :brouillon), :depose_at]
         ]),
         administrations_partenaires: AdministrateursProcedure.joins(:procedure).merge(Procedure.publiees_ou_closes).select('distinct administrateur_id').count
       )
@@ -37,8 +37,7 @@ class Stat < ApplicationRecord
           COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "en_instruction",
           COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "termines"
         FROM dossiers
-          WHERE hidden_at IS NULL
-          AND revision_id NOT IN (SELECT r.id FROM procedure_revisions r LEFT JOIN procedures p ON r.procedure_id=p.id WHERE p.aasm_state = 'brouillon')
+          WHERE revision_id NOT IN (SELECT r.id FROM procedure_revisions r LEFT JOIN procedures p ON r.procedure_id=p.id WHERE p.aasm_state = 'brouillon')
       EOF
       )
     end
@@ -47,8 +46,8 @@ class Stat < ApplicationRecord
       sanitize_and_exec(DeletedDossier, <<-EOF
         SELECT
           COUNT(*) AS "not_brouillon",
-          COUNT(*) FILTER ( WHERE deleted_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
-          COUNT(*) FILTER ( WHERE deleted_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
+          COUNT(*) FILTER ( WHERE depose_at BETWEEN :one_month_ago AND :now ) AS "dossiers_depose_avant_30_jours",
+          COUNT(*) FILTER ( WHERE depose_at BETWEEN :two_months_ago AND :one_month_ago ) AS "dossiers_deposes_entre_60_et_30_jours",
           COUNT(*) FILTER ( WHERE state = 'en_construction' ) AS "en_construction",
           COUNT(*) FILTER ( WHERE state = 'en_instruction' ) AS "en_instruction",
           COUNT(*) FILTER ( WHERE state in ('accepte', 'refuse', 'sans_suite') ) AS "termines"

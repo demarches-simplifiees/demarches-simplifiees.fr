@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_02_212902) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -356,6 +356,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_03_25_161743) do
   create_table "deleted_dossiers", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
+    t.date "depose_at"
     t.bigint "dossier_id"
     t.bigint "groupe_instructeur_id"
     t.bigint "procedure_id"

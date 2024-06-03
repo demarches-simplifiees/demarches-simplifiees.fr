@@ -226,7 +226,6 @@ Rails.application.routes.draw do
 
   get "patron" => "root#patron" if Rails.env.development? || Rails.env.test?
   get "suivi" => "root#suivi"
-  post "dismiss_outdated_browser" => "root#dismiss_outdated_browser"
   post "save_locale" => "root#save_locale"
 
   get "contact", to: "support#index"

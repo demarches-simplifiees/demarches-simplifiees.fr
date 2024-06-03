@@ -1,5 +1,5 @@
 describe Champs::CnafChamp, type: :model do
-  let(:champ) { described_class.new }
+  let(:champ) { build(:champ_cnaf) }
 
   describe 'numero_allocataire and code_postal' do
     before do
