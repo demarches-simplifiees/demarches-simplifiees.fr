@@ -4,7 +4,7 @@ describe Champs::NumeroDnChamp do
   let!(:iso_ddn) { '1983-11-28' }
 
   describe '#pack_value', vcr: { cassette_name: 'numero_dn_check' } do
-    let(:champ) { described_class.new(numero_dn: dn, date_de_naissance: ddn) }
+    let(:champ) { build(:champ_numero_dn,numero_dn: dn, date_de_naissance: ddn) }
 
     before { champ.save }
 
