@@ -263,6 +263,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
     t.string "type"
     t.integer "type_de_champ_id"
     t.datetime "updated_at", precision: nil
+    t.text "updated_by"
     t.string "value"
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
