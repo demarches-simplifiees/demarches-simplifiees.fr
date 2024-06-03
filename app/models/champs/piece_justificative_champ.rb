@@ -27,7 +27,7 @@ class Champs::PieceJustificativeChamp < Champ
     piece_justificative_file.blank?
   end
 
-  def for_export
+  def for_export(path = :value)
     piece_justificative_file.map { _1.filename.to_s }.join(', ')
   end
 

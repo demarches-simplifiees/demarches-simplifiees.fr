@@ -8,8 +8,26 @@ class Champs::EpciChamp < Champs::TextChamp
   validate :external_id_in_departement_epci_codes, unless: -> { code_departement.blank? || external_id.nil? }
   validate :value_in_departement_epci_names, unless: -> { code_departement.blank? || external_id.nil? || value.nil? }
 
-  def for_export
-    [value, code, "#{code_departement} – #{departement_name}"]
+  def for_export(path = :value)
+    case path
+    when :value
+      value
+    when :code
+      code
+    when :departement
+      departement_code_and_name
+    end
+  end
+
+  def for_tag(path = :value)
+    case path
+    when :value
+      value
+    when :code
+      code
+    when :departement
+      departement_code_and_name
+    end
   end
 
   def departement_name
@@ -59,6 +77,12 @@ class Champs::EpciChamp < Champs::TextChamp
     else
       self.external_id = code
       super(APIGeoService.epci_name(code_departement, code))
+    end
+  end
+
+  def departement_code_and_name
+    if departement?
+      "#{code_departement} – #{departement_name}"
     end
   end
 

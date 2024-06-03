@@ -25,11 +25,33 @@ class Champs::RNFChamp < Champ
     rnf_id.blank?
   end
 
-  def for_export
-    if address.present?
-      [rnf_id, title, address['label'], address['cityCode'], departement_code_and_name]
-    else
-      [rnf_id, nil, nil, nil, nil]
+  def for_export(path = :value)
+    case path
+    when :value
+      rnf_id
+    when :departement
+      departement_code_and_name
+    when :code_insee
+      commune&.fetch(:code)
+    when :address
+      full_address
+    when :nom
+      title
+    end
+  end
+
+  def for_tag(path = :value)
+    case path
+    when :value
+      rnf_id
+    when :departement
+      departement_code_and_name || ''
+    when :code_insee
+      commune&.fetch(:code) || ''
+    when :address
+      full_address || ''
+    when :nom
+      title || ''
     end
   end
 
@@ -59,7 +81,7 @@ class Champs::RNFChamp < Champ
 
   def commune_name
     if departement?
-      "#{APIGeoService.commune_name(department_code, address['cityCode'])} (#{address['postalCode']})"
+      "#{APIGeoService.commune_name(code_departement, address['cityCode'])} (#{address['postalCode']})"
     end
   end
 
@@ -69,8 +91,8 @@ class Champs::RNFChamp < Champ
       city_name = address['cityName']
       postal_code = address['postalCode']
 
-      commune_name = APIGeoService.commune_name(department_code, city_code)
-      commune_code = APIGeoService.commune_code(department_code, city_name)
+      commune_name = APIGeoService.commune_name(code_departement, city_code)
+      commune_code = APIGeoService.commune_code(code_departement, city_name)
 
       if commune_name.present?
         {

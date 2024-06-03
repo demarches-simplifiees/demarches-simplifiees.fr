@@ -1057,14 +1057,8 @@ class Dossier < ApplicationRecord
   def champs_for_export(types_de_champ, row_id = nil)
     types_de_champ.flat_map do |type_de_champ|
       champ = champ_for_export(type_de_champ, row_id)
-
-      # nil => [nil]
-      # text => [text]
-      # [commune, insee, departement] => [commune, insee, departement]
-      wrapped_exported_values = [champ.for_export].flatten
-
-      wrapped_exported_values.map.with_index do |champ_value, index|
-        [type_de_champ.libelle_for_export(index), champ_value]
+      type_de_champ.libelles_for_export.map do |(libelle, path)|
+        [libelle, champ&.for_export(path)]
       end
     end
   end
@@ -1199,11 +1193,8 @@ class Dossier < ApplicationRecord
 
   def champ_for_export(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.nil? || !champ.visible?
-      # some champs export multiple columns
-      # ex: commune.for_export => [commune, insee, departement]
-      # so we build a fake champ to have the right export
-      type_de_champ.build_champ(dossier: self, row_id:)
+    if champ.blank? || !champ.visible?
+      nil
     else
       champ
     end

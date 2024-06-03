@@ -26,7 +26,7 @@ class Champs::IntegerNumberChamp < Champ
     end
   end
 
-  def for_export
+  def for_export(path = :value)
     processed_value
   end
 

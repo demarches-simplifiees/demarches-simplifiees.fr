@@ -24,7 +24,9 @@ class Champs::DateChamp < Champ
     value.presence || "" # old dossiers can have not parseable dates
   end
 
-  alias for_tag to_s
+  def for_tag(path = :value)
+    to_s if path == :value
+  end
 
   def for_export
     value.present? ? Date.parse(value) : ""
