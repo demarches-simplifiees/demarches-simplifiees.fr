@@ -1,8 +1,4 @@
 %p= champ.to_s
-- if champ.full_address?
-  %p.fr-text--sm
-    Code INSEE :
-    = champ.commune&.fetch(:code)
-  %p.fr-text--sm
-    Departement :
-    = champ.departement_code_and_name
+%p.fr-text--sm
+  Né(e) le
+  = champ&.for_tag(:date_de_naissance)

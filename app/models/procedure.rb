@@ -919,8 +919,8 @@ class Procedure < ApplicationRecord
     champ_start = fixed_column_offset
     private_champ_start = champ_start + exported_champs.length
     [{ columns: (date_index..date_index + 3), styles: { format_code: 'dd/mm/yyyy hh:mm:ss' } }] +
-      exported_champs.filter_map.with_index(champ_start, &method(:column_style)) +
-      exported_annotations.filter_map.with_index(private_champ_start, &method(:column_style))
+      exported_champs.flat_map(&:libelles_for_export).filter_map.with_index(champ_start, &method(:column_style)) +
+      exported_annotations.flat_map(&:libelles_for_export).filter_map.with_index(private_champ_start, &method(:column_style))
   end
 
   def etablissement_column_styles
@@ -933,7 +933,7 @@ class Procedure < ApplicationRecord
     return [] if first_row.blank? || first_row[:champs].blank?
 
     # compute column_style on type de champs of the first line of champs
-    table.last.first[:champs].map(&:type_de_champ).filter_map.with_index(offset, &method(:column_style))
+    table.last.first[:champs].map(&:type_de_champ).flat_map(&:libelles_for_export).filter_map.with_index(offset, &method(:column_style))
   end
 
   def fixed_column_offset
@@ -955,10 +955,11 @@ class Procedure < ApplicationRecord
     size
   end
 
-  def column_style(type_de_champ, i)
-    if type_de_champ.date?
+  def column_style(column, i)
+    example = column[2]
+    if example.is_a?(Date)
       { columns: i, styles: { format_code: 'dd/mm/yyyy' } }
-    elsif type_de_champ.datetime?
+    elsif example.is_a?(DateTime)
       { columns: i, styles: { format_code: 'dd/mm/yyyy hh:mm:ss' } }
     end
   end

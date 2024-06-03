@@ -24,7 +24,17 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def libelles_for_export
-    paths.map { [_1[:libelle], _1[:path]] }
+    paths.map { [_1[:libelle], _1[:path], _1[:example] || default_example] }
+  end
+
+  def default_example
+    if @type_de_champ.date?
+      Date.today
+    elsif @type_de_champ.datetime?
+      Time.zone.now
+    else
+      ""
+    end
   end
 
   # Default estimated duration to fill the champ in a form, in seconds.

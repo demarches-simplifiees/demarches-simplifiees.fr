@@ -28,7 +28,7 @@ class Champs::DateChamp < Champ
     to_s if path == :value
   end
 
-  def for_export
+  def for_export(path = :value)
     value.present? ? Date.parse(value) : ""
   end
 

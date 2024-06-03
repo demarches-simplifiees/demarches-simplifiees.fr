@@ -24,19 +24,26 @@ class Champs::NumeroDnChamp < Champ
   end
 
   def to_s
-    for_tag
+    blank? ? "" : "#{for_tag(:value)} né(e) le #{for_tag(:date_de_naissance)}"
   end
 
-  def for_tag
-    if value.present?
-      "#{numero_dn || ''}#{(ddn = displayed_date_de_naissance).present? ? " né(e) le #{ddn}" : ''}"
-    else
-      ''
+  def for_export(path = :value)
+    return nil if value.blank?
+    case path
+    when :value
+      numero_dn
+    when :date_de_naissance
+      date_de_naissance&.to_date
     end
   end
 
-  def for_export
-    value.present? ? "#{numero_dn || ''};#{displayed_date_de_naissance || ''}" : nil
+  def for_tag(path = :value)
+    case path
+    when :value
+      numero_dn || ''
+    when :date_de_naissance
+      date_de_naissance ? I18n.l(date_de_naissance.to_date, format: '%d %B %Y') : ''
+    end
   end
 
   def for_api

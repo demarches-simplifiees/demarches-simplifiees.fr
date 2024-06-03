@@ -1,4 +1,16 @@
 class TypesDeChamp::NumeroDnTypeDeChamp < TypesDeChamp::TypeDeChampBase
+  def paths
+    paths = super
+    paths.push({
+      libelle: "#{libelle} (Date de naissance)",
+                 description: "#{description} (Date de naissance)",
+                 path: :date_de_naissance,
+                 example: Date.today,
+                 maybe_null: public? && !mandatory?
+    })
+    paths
+  end
+
   def tags_for_template
     tags = super
     tdc = @type_de_champ

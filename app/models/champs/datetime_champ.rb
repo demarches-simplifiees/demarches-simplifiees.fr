@@ -14,7 +14,7 @@ class Champs::DatetimeChamp < Champ
     value.present? ? I18n.l(Time.zone.parse(value)) : ""
   end
 
-  def for_export
+  def for_export(path = :value)
     value.present? ? Time.zone.parse(value) : ""
   end
 

@@ -1,9 +1,10 @@
 class Champs::CommuneDePolynesieChamp < Champs::TextChamp
-  def for_export
-    if value.present? && (city_postal_code = APIGeo::API.commune_by_city_postal_code(value))
-      [city_postal_code[:commune], city_postal_code[:code_postal].to_s, city_postal_code[:ile], city_postal_code[:archipel]]
+  def for_export(path = :value)
+    if value.present? && (city = APIGeo::API.commune_by_city_postal_code(value))
+      path = :commune if path == :value
+      city[path]
     else
-      ['', '', '', '']
+      ''
     end
   end
 
