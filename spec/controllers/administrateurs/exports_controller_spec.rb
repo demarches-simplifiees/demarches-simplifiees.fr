@@ -19,11 +19,10 @@ describe Administrateurs::ExportsController, type: :controller do
 
       context 'when the export is does not exist' do
         it 'displays an notice' do
-          is_expected.to redirect_to(admin_procedure_archives_url(procedure))
+          expect { subject }.to change(Export, :count).by(1)
+          expect(subject).to redirect_to(admin_procedure_archives_url(procedure))
           expect(flash.notice).to be_present
         end
-
-        it { expect { subject }.to change(Export, :count).by(1) }
       end
 
       context 'when the export is not ready' do
