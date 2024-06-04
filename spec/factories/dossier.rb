@@ -3,7 +3,7 @@ FactoryBot.define do
     autorisation_donnees { true }
     state { Dossier.states.fetch(:brouillon) }
 
-    user { association :user }
+    user { User.find_by(email: 'user@a.com') }
     groupe_instructeur { procedure.routing_enabled? ? nil : procedure.defaut_groupe_instructeur }
     revision { procedure.active_revision }
     individual { association(:individual, :empty, dossier: instance, strategy: :build) if procedure.for_individual? }
