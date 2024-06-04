@@ -1,5 +1,3 @@
-SIDEKIQ_ENABLED = ENV.has_key?('REDIS_SIDEKIQ_SENTINELS') || ENV.has_key?('REDIS_URL')
-
 if Rails.env.production? && SIDEKIQ_ENABLED
   ActiveSupport.on_load(:after_initialize) do
     class ActiveStorage::PurgeJob < ActiveStorage::BaseJob
@@ -59,6 +57,10 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     end
 
     class APIEntreprise::Job < ApplicationJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class DossierOperationLogMoveToColdStorageBatchJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
   end

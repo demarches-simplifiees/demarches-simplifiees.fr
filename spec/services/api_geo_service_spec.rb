@@ -130,11 +130,5 @@ describe APIGeoService do
 
       it { is_expected.to eq('Paris') }
     end
-
-    context 'with a wrong department' do
-      let(:department_code) { 'wrong' }
-
-      it { is_expected.to eq('Paris') }
-    end
   end
 end

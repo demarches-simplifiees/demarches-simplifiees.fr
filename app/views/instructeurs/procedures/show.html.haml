@@ -97,11 +97,6 @@
                 - if batch_operation_component.render?
                   %th.text-center
                     %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
-                - else
-                  - if @statut.in? %w(suivis traites tous)
-                    = render partial: "header_field", locals: { field: { "label" => "●", "table" => "notifications", "column" => "notifications" }, classname: "notification-col text-center" }
-                  - else
-                    %th.notification-col
 
                 - @procedure_presentation.displayed_fields_for_headers.each do |field|
                   = render partial: "header_field", locals: { field: field, classname: field['classname'] }
@@ -133,30 +128,22 @@
               - @projected_dossiers.each do |p|
                 - path = instructeur_dossier_path(@procedure, p.dossier_id)
                 %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }
-                  %td.text-center
-                    - if batch_operation_component.render?
+                  - if batch_operation_component.render?
+                    %td.text-center
                       - if p.batch_operation_id.present?
                         = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier_id) }
                       - else
                         = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
 
-                      - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                        %span.notifications{ 'aria-label': 'notifications' }
-                    - else
-                      - if p.hidden_by_administration_at.present?
-                        %span.cell-link
-                          = dsfr_icon('fr-icon-file-text-line')
-                      - else
-                        %a.cell-link{ href: path }
-                          = dsfr_icon('fr-icon-file-text-line')
-                          - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                            %span.notifications{ 'aria-label': 'notifications' }
-
                   %td.number-col
                     - if p.hidden_by_administration_at.present?
                       %span.cell-link= p.dossier_id
                     - else
-                      %a.cell-link{ href: path }= p.dossier_id
+                      %a.cell-link.relative{ href: path }
+                        = p.dossier_id
+                        - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                          %span.notifications.absolute-right{ 'aria-label': 'notifications' }
+
 
                   - p.columns.each do |column|
                     %td
