@@ -2019,10 +2019,10 @@ describe Dossier, type: :model do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            [commune_tdc.libelle, ''],
-            [commune_tdc.libelle + " (Code postal)", ''],
-            [commune_tdc.libelle + " (Ile)", ""],
-            [commune_tdc.libelle + " (Archipel)", ""]
+            [commune_tdc.libelle, nil],
+            [commune_tdc.libelle + " (Code postal)", nil],
+            [commune_tdc.libelle + " (Ile)", nil],
+            [commune_tdc.libelle + " (Archipel)", nil]
           ]
         end
 
@@ -2043,7 +2043,7 @@ describe Dossier, type: :model do
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
             [commune_tdc.libelle + "", 'Avera'],
-            [commune_tdc.libelle + " (Code postal)", '98736'],
+            [commune_tdc.libelle + " (Code postal)", 98736],
             [commune_tdc.libelle + " (Ile)", "Raiatea"],
             [commune_tdc.libelle + " (Archipel)", "Iles Sous Le Vent"]
           ]
@@ -2075,10 +2075,10 @@ describe Dossier, type: :model do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            [cp_tdc.libelle, ''],
-            [cp_tdc.libelle + " (Commune)", ''],
-            [cp_tdc.libelle + " (Ile)", ""],
-            [cp_tdc.libelle + " (Archipel)", ""]
+            [cp_tdc.libelle, nil],
+            [cp_tdc.libelle + " (Commune)", nil],
+            [cp_tdc.libelle + " (Ile)", nil],
+            [cp_tdc.libelle + " (Archipel)", nil]
           ]
         end
 
@@ -2098,7 +2098,7 @@ describe Dossier, type: :model do
           [
             [yes_no_tdc.libelle, "Oui"],
             [text_tdc.libelle, "text"],
-            [cp_tdc.libelle, '98736'],
+            [cp_tdc.libelle, 98736],
             [cp_tdc.libelle + " (Commune)", 'Avera'],
             [cp_tdc.libelle + " (Ile)", "Raiatea"],
             [cp_tdc.libelle + " (Archipel)", "Iles Sous Le Vent"]
