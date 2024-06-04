@@ -789,10 +789,10 @@ fr:
   time:
     formats:
       default: "%d %B %Y %R"
-      long: "%d %B %y %H:%m"
+      long: "%d %B %y %H:%M"
   datetime:
     formats:
-      long: "%d %B %y %H:%m"
+      long: "%d %B %y %H:%M"
   pluralize:
     case:
       one: dossier
