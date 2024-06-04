@@ -1,72 +1,81 @@
 import type { ReactNode } from 'react';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 import type { Loader } from './hooks';
 
-export const Item = z.object({
-  label: z.string(),
-  value: z.string(),
-  data: z.any().optional()
+export const Item = s.object({
+  label: s.string(),
+  value: s.string(),
+  data: s.any()
 });
-export type Item = z.infer<typeof Item>;
+export type Item = s.Infer<typeof Item>;
 
-const ComboBoxPropsSchema = z
-  .object({
-    id: z.string(),
-    className: z.string(),
-    name: z.string(),
-    label: z.string(),
-    description: z.string(),
-    isRequired: z.boolean(),
-    'aria-label': z.string(),
-    'aria-labelledby': z.string(),
-    'aria-describedby': z.string(),
-    items: z
-      .array(Item)
-      .or(
-        z
-          .string()
-          .array()
-          .transform((items) =>
-            items.map<Item>((label) => ({ label, value: label }))
-          )
-      )
-      .or(
-        z
-          .tuple([z.string(), z.string().or(z.number())])
-          .array()
-          .transform((items) =>
-            items.map<Item>(([label, value]) => ({
-              label,
-              value: String(value)
-            }))
-          )
-      ),
-    formValue: z.enum(['text', 'key']),
-    form: z.string(),
-    data: z.record(z.string())
+const ArrayOfTuples = s.coerce(
+  s.array(Item),
+  s.array(s.tuple([s.string(), s.union([s.string(), s.number()])])),
+  (items) =>
+    items.map<Item>(([label, value]) => ({
+      label,
+      value: String(value)
+    }))
+);
+
+const ArrayOfStrings = s.coerce(s.array(Item), s.array(s.string()), (items) =>
+  items.map<Item>((label) => ({ label, value: label }))
+);
+
+const ComboBoxPropsSchema = s.partial(
+  s.object({
+    id: s.string(),
+    className: s.string(),
+    name: s.string(),
+    label: s.string(),
+    description: s.string(),
+    isRequired: s.boolean(),
+    'aria-label': s.string(),
+    'aria-labelledby': s.string(),
+    'aria-describedby': s.string(),
+    items: s.union([s.array(Item), ArrayOfStrings, ArrayOfTuples]),
+    formValue: s.enums(['text', 'key']),
+    form: s.string(),
+    data: s.record(s.string(), s.string())
   })
-  .partial();
-export const SingleComboBoxProps = ComboBoxPropsSchema.extend({
-  selectedKey: z.string().nullable(),
-  emptyFilterKey: z.string()
-}).partial();
-export const MultiComboBoxProps = ComboBoxPropsSchema.extend({
-  selectedKeys: z.string().array(),
-  allowsCustomValue: z.boolean(),
-  valueSeparator: z.string()
-}).partial();
-export const RemoteComboBoxProps = ComboBoxPropsSchema.extend({
-  selectedKey: z.string().nullable(),
-  minimumInputLength: z.number(),
-  limit: z.number(),
-  allowsCustomValue: z.boolean()
-}).partial();
-export type SingleComboBoxProps = z.infer<typeof SingleComboBoxProps> & {
+);
+export const SingleComboBoxProps = s.assign(
+  ComboBoxPropsSchema,
+  s.partial(
+    s.object({
+      selectedKey: s.nullable(s.string()),
+      emptyFilterKey: s.string()
+    })
+  )
+);
+export const MultiComboBoxProps = s.assign(
+  ComboBoxPropsSchema,
+  s.partial(
+    s.object({
+      selectedKeys: s.array(s.string()),
+      allowsCustomValue: s.boolean(),
+      valueSeparator: s.string()
+    })
+  )
+);
+export const RemoteComboBoxProps = s.assign(
+  ComboBoxPropsSchema,
+  s.partial(
+    s.object({
+      selectedKey: s.nullable(s.string()),
+      minimumInputLength: s.number(),
+      limit: s.number(),
+      allowsCustomValue: s.boolean()
+    })
+  )
+);
+export type SingleComboBoxProps = s.Infer<typeof SingleComboBoxProps> & {
   children?: ReactNode;
 };
-export type MultiComboBoxProps = z.infer<typeof MultiComboBoxProps>;
-export type RemoteComboBoxProps = z.infer<typeof RemoteComboBoxProps> & {
+export type MultiComboBoxProps = s.Infer<typeof MultiComboBoxProps>;
+export type RemoteComboBoxProps = s.Infer<typeof RemoteComboBoxProps> & {
   children?: ReactNode;
   loader: Loader | string;
   onChange?: (item: Item | null) => void;

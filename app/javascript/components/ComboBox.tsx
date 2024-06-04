@@ -15,6 +15,7 @@ import {
 import { useMemo, useRef, createContext, useContext } from 'react';
 import type { RefObject } from 'react';
 import { findOrCreateContainerElement } from '@coldwired/react';
+import * as s from 'superstruct';
 
 import {
   useLabelledBy,
@@ -98,7 +99,7 @@ export function SingleComboBox({
     form,
     data,
     ...props
-  } = useMemo(() => SingleComboBoxProps.parse(maybeProps), [maybeProps]);
+  } = useMemo(() => s.create(maybeProps, SingleComboBoxProps), [maybeProps]);
 
   const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
@@ -146,7 +147,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
     allowsCustomValue,
     valueSeparator,
     ...props
-  } = useMemo(() => MultiComboBoxProps.parse(maybeProps), [maybeProps]);
+  } = useMemo(() => s.create(maybeProps, MultiComboBoxProps), [maybeProps]);
 
   const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
@@ -235,7 +236,7 @@ export function RemoteComboBox({
     form,
     data,
     ...props
-  } = useMemo(() => RemoteComboBoxProps.parse(maybeProps), [maybeProps]);
+  } = useMemo(() => s.create(maybeProps, RemoteComboBoxProps), [maybeProps]);
 
   const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
