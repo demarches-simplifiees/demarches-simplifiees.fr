@@ -101,7 +101,7 @@ class APIGeoService
           department_code:,
           region_name: region_name(region_code),
           region_code:,
-          city_name: commune_name(department_code, city_code) || properties['city'], # fallback to city name if commune not found
+          city_name: safely_normalize_city_name(department_code, city_code, properties['city']),
           city_code:
         }
       else
@@ -120,6 +120,15 @@ class APIGeoService
         street_name: properties['street'],
         geometry: feature['geometry']
       }.merge(territory)
+    end
+
+    def safely_normalize_city_name(department_code, city_code, fallback)
+      return fallback if department_code.nil? || city_code.nil?
+
+      commune_name(department_code, city_code) || fallback
+
+    rescue StandardError
+      fallback
     end
 
     private
