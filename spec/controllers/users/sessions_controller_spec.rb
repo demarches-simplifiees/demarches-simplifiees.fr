@@ -69,12 +69,17 @@ describe Users::SessionsController, type: :controller do
       context 'when user has not yet a preferred domain' do
         before do
           allow(Current).to receive(:host).and_return(ENV.fetch("APP_HOST"))
+          Flipper.enable(:switch_domain)
+        end
+
+        after do
+          Flipper.disable(:switch_domain)
         end
 
         it 'update preferred domain' do
           subject
 
-          # expect(user.reload.preferred_domain_demarches_gouv_fr?).to be_truthy
+          expect(user.reload.preferred_domain_demarches_gouv_fr?).to be_truthy
         end
       end
     end
