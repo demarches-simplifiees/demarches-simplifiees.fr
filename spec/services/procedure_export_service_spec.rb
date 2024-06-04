@@ -2,7 +2,6 @@ require 'csv'
 
 describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
   let(:export_template) { nil }
 
@@ -18,159 +17,166 @@ describe ProcedureExportService do
     let(:avis_sheet) { subject.sheets.third }
     let(:repetition_sheet) { subject.sheets.fourth }
 
-    before do
-      # change one tdc place to check if the header is ordered
-      tdc_first = procedure.active_revision.revision_types_de_champ_public.first
-      tdc_last = procedure.active_revision.revision_types_de_champ_public.last
-
-      tdc_first.update(position: tdc_last.position + 1)
-      procedure.reload
-    end
-
     describe 'sheets' do
+      let(:procedure) { create(:procedure) }
+
       it 'should have a sheet for each record type' do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis'])
       end
     end
 
     describe 'Dossiers sheet' do
-      let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
+      context 'with all data for individual' do
+        let(:procedure) { create(:procedure, :published, :for_individual, :with_all_champs) }
+        let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
 
-      let(:nominal_headers) do
-        [
-          "ID",
-          "Email",
-          "FranceConnect ?",
-          "Civilité",
-          "Nom",
-          "Prénom",
-          "Dépôt pour un tiers",
-          "Nom du mandataire",
-          "Prénom du mandataire",
-          "Archivé",
-          "État du dossier",
-          "Dernière mise à jour le",
-          "Dernière mise à jour du dossier le",
-          "Déposé le",
-          "Passé en instruction le",
-          "Traité le",
-          "Motivation de la décision",
-          "Instructeurs",
-          "textarea",
-          "date",
-          "datetime",
-          "number",
-          "decimal_number",
-          "integer_number",
-          "checkbox",
-          "civilite",
-          "email",
-          "phone",
-          "address",
-          "yes_no",
-          "simple_drop_down_list",
-          "multiple_drop_down_list",
-          "linked_drop_down_list",
-          "communes",
-          "communes (Code INSEE)",
-          "communes (Département)",
-          "departements",
-          "departements (Code)",
-          "regions",
-          "regions (Code)",
-          "pays",
-          "pays (Code)",
-          "dossier_link",
-          "piece_justificative",
-          "rna",
-          "carte",
-          "titre_identite",
-          "iban",
-          "siret",
-          "annuaire_education",
-          "cnaf",
-          "dgfip",
-          "pole_emploi",
-          "mesri",
-          "text",
-          "epci",
-          "epci (Code)",
-          "epci (Département)",
-          "cojo",
-          "expression_reguliere",
-          "rnf",
-          "rnf (Nom)",
-          "rnf (Adresse)",
-          "rnf (Code INSEE Ville)",
-          "rnf (Département)",
-          "engagement_juridique"
-        ]
-      end
+        # before do
+        #   # change one tdc place to check if the header is ordered
+        #   tdc_first = procedure.active_revision.revision_types_de_champ_public.first
+        #   tdc_last = procedure.active_revision.revision_types_de_champ_public.last
 
-      it 'should have headers' do
-        expect(dossiers_sheet.headers).to match_array(nominal_headers)
-      end
+        #   tdc_first.update(position: tdc_last.position + 1)
+        #   procedure.reload
+        # end
 
-      it 'should have data' do
-        expect(dossiers_sheet.data.size).to eq(1)
-        expect(etablissements_sheet.data.size).to eq(1)
+        let(:nominal_headers) do
+          [
+            "ID",
+            "Email",
+            "FranceConnect ?",
+            "Civilité",
+            "Nom",
+            "Prénom",
+            "Dépôt pour un tiers",
+            "Nom du mandataire",
+            "Prénom du mandataire",
+            "Archivé",
+            "État du dossier",
+            "Dernière mise à jour le",
+            "Dernière mise à jour du dossier le",
+            "Déposé le",
+            "Passé en instruction le",
+            "Traité le",
+            "Motivation de la décision",
+            "Instructeurs",
+            "textarea",
+            "date",
+            "datetime",
+            "number",
+            "decimal_number",
+            "integer_number",
+            "checkbox",
+            "civilite",
+            "email",
+            "phone",
+            "address",
+            "simple_drop_down_list",
+            "multiple_drop_down_list",
+            "linked_drop_down_list",
+            "communes",
+            "communes (Code INSEE)",
+            "communes (Département)",
+            "departements",
+            "departements (Code)",
+            "regions",
+            "regions (Code)",
+            "pays",
+            "pays (Code)",
+            "dossier_link",
+            "piece_justificative",
+            "rna",
+            "carte",
+            "titre_identite",
+            "iban",
+            "siret",
+            "annuaire_education",
+            "cnaf",
+            "dgfip",
+            "pole_emploi",
+            "mesri",
+            "text",
+            "epci",
+            "epci (Code)",
+            "epci (Département)",
+            "cojo",
+            "expression_reguliere",
+            "rnf",
+            "rnf (Nom)",
+            "rnf (Adresse)",
+            "rnf (Code INSEE Ville)",
+            "rnf (Département)",
+            "engagement_juridique",
+            "yes_no"
+          ]
+        end
 
-        # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
-        offset = dossier.depose_at.utc_offset
-        depose_at = Time.zone.at(dossiers_sheet.data[0][13] - offset.seconds)
-        en_instruction_at = Time.zone.at(dossiers_sheet.data[0][14] - offset.seconds)
-        expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size)
-        expect(depose_at).to eq(dossier.depose_at.round)
-        expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
+        it 'should have data' do
+          expect(dossiers_sheet.headers).to match_array(nominal_headers)
+
+          expect(dossiers_sheet.data.size).to eq(1)
+          expect(etablissements_sheet.data.size).to eq(1)
+
+          # SimpleXlsxReader is transforming datetimes in utc... It is only used in test so we just hack around.
+          offset = dossier.depose_at.utc_offset
+          depose_at = Time.zone.at(dossiers_sheet.data[0][13] - offset.seconds)
+          en_instruction_at = Time.zone.at(dossiers_sheet.data[0][14] - offset.seconds)
+          expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size)
+          expect(depose_at).to eq(dossier.depose_at.round)
+          expect(en_instruction_at).to eq(dossier.en_instruction_at.round)
+        end
       end
 
       context 'with a birthdate' do
-        before { procedure.update(ask_birthday: true) }
+        let(:procedure) { create(:procedure, :published, :for_individual, ask_birthday: true) }
+        let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
 
-        let(:birthdate_headers) { nominal_headers.insert(nominal_headers.index('Archivé'), 'Date de naissance') }
-
-        it { expect(dossiers_sheet.headers).to match_array(birthdate_headers) }
-        it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Date de naissance')]).to be_a(Date) }
+        it 'find date de naissance' do
+          expect(dossiers_sheet.headers).to include('Date de naissance')
+          expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Date de naissance')]).to be_a(Date)
+        end
       end
 
       context 'with a procedure routee' do
-        before { create(:groupe_instructeur, label: '2', procedure: procedure) }
+        let(:procedure) { create(:procedure, :published, :for_individual) }
+        let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
+        before { create(:groupe_instructeur, label: '2', procedure:) }
 
-        let(:routee_headers) { nominal_headers.insert(nominal_headers.index('textarea'), 'Groupe instructeur') }
-
-        it { expect(dossiers_sheet.headers).to match_array(routee_headers) }
-        it { expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut') }
+        it 'find groupe instructeur data' do
+          expect(dossiers_sheet.headers).to include('Groupe instructeur')
+          expect(dossiers_sheet.data[0][dossiers_sheet.headers.index('Groupe instructeur')]).to eq('défaut')
+        end
       end
 
       context 'with a dossier having multiple pjs' do
-        let!(:dossier_2) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
+        let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:) }
+        let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+        let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
+        let!(:dossier_2) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
         before do
           dossier_2.champs_public
             .find { _1.is_a? Champs::PieceJustificativeChamp }
             .piece_justificative_file
             .attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
         end
-        it { expect(dossiers_sheet.data.first.size).to eq(nominal_headers.size) }
+        it { expect(dossiers_sheet.data.first.size).to eq(19) } # default number of header when procedure has only one champ
       end
 
       context 'with procedure chorus' do
-        let(:procedure) { create(:procedure, :published, :for_individual, :filled_chorus, :with_all_champs) }
-        let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, procedure: procedure) }
+        before { expect_any_instance_of(Procedure).to receive(:chorusable?).and_return(true) }
+        let(:procedure) { create(:procedure, :published, :for_individual, :filled_chorus) }
+        let!(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
 
         it 'includes chorus headers' do
-          expected_headers = [
-            'Domaine Fonctionnel',
-            'Référentiel De Programmation',
-            'Centre De Coup'
-          ]
-
-          expect(dossiers_sheet.headers).to match_array(nominal_headers)
+          expect(dossiers_sheet.headers).to include('Domaine Fonctionnel')
+          expect(dossiers_sheet.headers).to include('Référentiel De Programmation')
+          expect(dossiers_sheet.headers).to include('Centre De Coût')
         end
       end
     end
 
     describe 'Etablissement sheet' do
-      let(:procedure) { create(:procedure, :published, :with_all_champs) }
+      let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+      let(:types_de_champ_public) { [{ type: :siret, libelle: 'siret' }] }
       let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_entreprise, procedure: procedure) }
 
       let(:dossier_etablissement) { etablissements_sheet.data[1] }
@@ -191,54 +197,7 @@ describe ProcedureExportService do
           "Traité le",
           "Motivation de la décision",
           "Instructeurs",
-          "textarea",
-          "date",
-          "datetime",
-          "number",
-          "decimal_number",
-          "integer_number",
-          "checkbox",
-          "civilite",
-          "email",
-          "phone",
-          "address",
-          "yes_no",
-          "simple_drop_down_list",
-          "multiple_drop_down_list",
-          "linked_drop_down_list",
-          "communes",
-          "communes (Code INSEE)",
-          "communes (Département)",
-          "departements",
-          "departements (Code)",
-          "regions",
-          "regions (Code)",
-          "pays",
-          "pays (Code)",
-          "dossier_link",
-          "piece_justificative",
-          "rna",
-          "carte",
-          "titre_identite",
-          "iban",
-          "siret",
-          "annuaire_education",
-          "cnaf",
-          "dgfip",
-          "pole_emploi",
-          "mesri",
-          "text",
-          "epci",
-          "epci (Code)",
-          "epci (Département)",
-          "cojo",
-          "expression_reguliere",
-          "rnf",
-          "rnf (Nom)",
-          "rnf (Adresse)",
-          "rnf (Code INSEE Ville)",
-          "rnf (Département)",
-          "engagement_juridique"
+          'siret'
         ]
       end
 
@@ -294,54 +253,7 @@ describe ProcedureExportService do
             "Traité le",
             "Motivation de la décision",
             "Instructeurs",
-            "textarea",
-            "date",
-            "datetime",
-            "number",
-            "decimal_number",
-            "integer_number",
-            "checkbox",
-            "civilite",
-            "email",
-            "phone",
-            "address",
-            "yes_no",
-            "simple_drop_down_list",
-            "multiple_drop_down_list",
-            "linked_drop_down_list",
-            "communes",
-            "communes (Code INSEE)",
-            "communes (Département)",
-            "departements",
-            "departements (Code)",
-            "regions",
-            "regions (Code)",
-            "pays",
-            "pays (Code)",
-            "dossier_link",
-            "piece_justificative",
-            "rna",
-            "carte",
-            "titre_identite",
-            "iban",
-            "siret",
-            "annuaire_education",
-            "cnaf",
-            "dgfip",
-            "pole_emploi",
-            "mesri",
-            "text",
-            "epci",
-            "epci (Code)",
-            "epci (Département)",
-            "cojo",
-            "expression_reguliere",
-            "rnf",
-            "rnf (Nom)",
-            "rnf (Adresse)",
-            "rnf (Code INSEE Ville)",
-            "rnf (Département)",
-            "engagement_juridique"
+            'siret'
           ]
         end
 
@@ -352,7 +264,7 @@ describe ProcedureExportService do
         end
       end
 
-      it 'should have headers' do
+      it 'should have headers and data' do
         expect(dossiers_sheet.headers).to match_array(nominal_headers)
 
         expect(etablissements_sheet.headers).to eq([
@@ -391,9 +303,7 @@ describe ProcedureExportService do
           "Association date de déclaration",
           "Association date de publication"
         ])
-      end
 
-      it 'should have data' do
         expect(etablissements_sheet.data.size).to eq(2)
         expect(dossier_etablissement[1]).to eq("Dossier")
         expect(champ_etablissement[1]).to eq("siret")
@@ -401,10 +311,11 @@ describe ProcedureExportService do
     end
 
     describe 'Avis sheet' do
+      let(:procedure) { create(:procedure, :published, :for_individual) }
       let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
       let!(:avis) { create(:avis, :with_answer, dossier: dossier) }
 
-      it 'should have headers' do
+      it 'should have headers and data' do
         expect(avis_sheet.headers).to eq([
           "Dossier ID",
           "Introduction",
@@ -416,14 +327,20 @@ describe ProcedureExportService do
           "Instructeur",
           "Expert"
         ])
-      end
-
-      it 'should have data' do
         expect(avis_sheet.data.size).to eq(1)
       end
     end
 
     describe 'Repetitions sheet' do
+      before do
+        # change one tdc place to check if the header is ordered
+        tdc_first = procedure.active_revision.revision_types_de_champ_public.first
+        tdc_last = procedure.active_revision.revision_types_de_champ_public.last
+
+        tdc_first.update(position: tdc_last.position + 1)
+        procedure.reload
+      end
+
       let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, children: [{ libelle: 'Nom' }, { libelle: 'Age' }] }]) }
       let!(:dossiers) do
         [
@@ -509,6 +426,9 @@ describe ProcedureExportService do
   end
 
   describe 'to_zip' do
+    let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :piece_justificative, libelle: 'piece_justificative' }] }
+
     subject { service.to_zip }
     context 'without files' do
       it 'does not raises in_batches' do
@@ -588,6 +508,9 @@ describe ProcedureExportService do
   end
 
   describe 'to_geo_json' do
+    let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:) }
+    let(:types_de_champ_public) { [{ type: :carte }] }
+
     subject do
       service
         .to_geo_json
