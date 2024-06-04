@@ -1,10 +1,10 @@
 describe User, type: :model do
   describe '#after_confirmation' do
-    let(:email) { 'mail@beta.gouv.fr' }
+    let(:email) { user.email }
     let!(:invite) { create(:invite, email: email) }
     let!(:invite2) { create(:invite, email: email) }
     let(:user) do
-      users(:unconfirmed_user)
+      users(:unconfirmed)
       # create(:user,
       #   email: email,
       #   password: SECURE_PASSWORD,
