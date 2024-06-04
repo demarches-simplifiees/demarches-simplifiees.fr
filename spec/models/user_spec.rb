@@ -26,7 +26,7 @@ describe User, type: :model do
   end
 
   describe '#owns?' do
-    let(:owner) { create(:user) }
+    let(:owner) { users(:confirmed) }
     let(:dossier) { create(:dossier, user: owner) }
     let(:invite_user) { create(:user) }
     let(:invite_instructeur) { create(:user) }
