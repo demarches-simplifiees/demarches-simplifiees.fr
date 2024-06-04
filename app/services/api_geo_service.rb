@@ -123,7 +123,7 @@ class APIGeoService
     end
 
     def safely_normalize_city_name(department_code, city_code, fallback)
-      return fallback if department_code.nil? || city_code.nil?
+      return fallback if department_code.blank? || city_code.blank?
 
       commune_name(department_code, city_code) || fallback
     end

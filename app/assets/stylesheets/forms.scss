@@ -426,11 +426,6 @@
   }
 
   [data-reach-combobox-input] {
-    min-height: 62px;
-    border-radius: 4px;
-    border: solid 1px $border-grey;
-    padding: $default-padding;
-
     &:not([class^='width-']) {
       width: 100%;
       min-width: 50%;

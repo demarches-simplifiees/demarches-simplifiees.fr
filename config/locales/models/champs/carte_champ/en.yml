@@ -1,0 +1,7 @@
+en:
+  activerecord:
+    attributes:
+      champs/carte_champ:
+        hints:
+          value_html: |
+            Need help ? <a href="https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/cartographie" target="_blank" rel="noreferrer">Check our video tutorial</a>"

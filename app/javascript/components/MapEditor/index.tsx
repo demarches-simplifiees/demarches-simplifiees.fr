@@ -19,13 +19,15 @@ export default function MapEditor({
   url,
   options,
   autocompleteAnnounceTemplateId,
-  autocompleteScreenReaderInstructions
+  autocompleteScreenReaderInstructions,
+  champId
 }: {
   featureCollection: FeatureCollection;
   url: string;
   options: { layers: string[] };
   autocompleteAnnounceTemplateId: ComboSearchProps['announceTemplateId'];
   autocompleteScreenReaderInstructions: ComboSearchProps['screenReaderInstructions'];
+  champId: string;
 }) {
   const [cadastreEnabled, setCadastreEnabled] = useState(false);
 
@@ -36,20 +38,15 @@ export default function MapEditor({
 
   return (
     <>
-      <p className="fr-hint-text fr-mb-2w">
-        Besoin d&apos;aide ?&nbsp;
-        <a
-          href="https://doc.demarches-simplifiees.fr/pour-aller-plus-loin/cartographie"
-          target="_blank"
-          rel="noreferrer"
-        >
-          consulter les tutoriels video
-        </a>
-      </p>
       {error && <FlashMessage message={error} level="alert" fixed={true} />}
 
       <ImportFileInput featureCollection={featureCollection} {...actions} />
+      <label className="fr-label" htmlFor={champId}>
+        Rechercher une Adresse
+        <span className="fr-hint-text">Saisissez au moins 2 caractères</span>
+      </label>
       <AddressInput
+        champId={champId}
         featureCollection={featureCollection}
         screenReaderInstructions={autocompleteScreenReaderInstructions}
         announceTemplateId={autocompleteAnnounceTemplateId}
