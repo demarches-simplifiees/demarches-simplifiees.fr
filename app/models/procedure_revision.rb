@@ -1,5 +1,4 @@
 class ProcedureRevision < ApplicationRecord
-  self.ignored_columns += [:attestation_template_id]
   self.implicit_order_column = :created_at
   belongs_to :procedure, -> { with_discarded }, inverse_of: :revisions, optional: false
   belongs_to :dossier_submitted_message, inverse_of: :revisions, optional: true, dependent: :destroy

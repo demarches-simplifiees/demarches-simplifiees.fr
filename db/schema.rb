@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_10_193614) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_11_091345) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -852,13 +852,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_10_193614) do
   end
 
   create_table "procedure_revisions", force: :cascade do |t|
-    t.bigint "attestation_template_id"
     t.datetime "created_at", null: false
     t.bigint "dossier_submitted_message_id"
     t.bigint "procedure_id", null: false
     t.datetime "published_at"
     t.datetime "updated_at", null: false
-    t.index ["attestation_template_id"], name: "index_procedure_revisions_on_attestation_template_id"
     t.index ["dossier_submitted_message_id"], name: "index_procedure_revisions_on_dossier_submitted_message_id"
     t.index ["procedure_id"], name: "index_procedure_revisions_on_procedure_id"
   end
@@ -1258,7 +1256,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_10_193614) do
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
   add_foreign_key "procedure_revision_types_de_champ", "types_de_champ"
-  add_foreign_key "procedure_revisions", "attestation_templates"
   add_foreign_key "procedure_revisions", "dossier_submitted_messages"
   add_foreign_key "procedure_revisions", "procedures"
   add_foreign_key "procedures", "groupe_instructeurs", column: "defaut_groupe_instructeur_id"
