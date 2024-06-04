@@ -190,6 +190,14 @@ describe ExportTemplate do
     it 'convert pdf_name' do
       expect(export_template.tiptap_convert(procedure.dossiers.first, "pdf_name")).to eq "mon_export_#{dossier.id}"
     end
+
+    context 'for date' do
+      let(:export_template) { create(:export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:, depose_at: Date.parse("2024/03/30")) }
+      it 'convert date with dash' do
+        expect(export_template.tiptap_convert(dossier, "pdf_name")).to eq "export_#{dossier.id}-2024-03-30"
+      end
+    end
   end
 
   describe '#tiptap_convert_pj' do

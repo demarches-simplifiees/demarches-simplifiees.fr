@@ -7,6 +7,7 @@ class ExportTemplate < ApplicationRecord
   validates_with ExportTemplateValidator
 
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
+  FORMAT_DATE = "%Y-%m-%d"
 
   def set_default_values
     content["default_dossier_directory"] = tiptap_json("dossier-")
