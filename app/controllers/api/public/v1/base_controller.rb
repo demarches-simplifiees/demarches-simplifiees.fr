@@ -1,7 +1,11 @@
-class API::Public::V1::BaseController < APIController
+class API::Public::V1::BaseController < ApplicationController
   skip_forgery_protection
 
   before_action :check_content_type_is_json, if: -> { request.post? || request.patch? || request.put? }
+
+  before_action do
+    Current.browser = 'api'
+  end
 
   protected
 
