@@ -67,15 +67,31 @@ class APIEntrepriseService
       APIEntreprise::AttestationFiscaleJob.set(wait:).perform_later(etablissement.id, procedure_id, user_id)
     end
 
-    def fr_api_up?
-      APIEntreprise::API.new.current_status.fetch(:page).fetch(:status) == 'UP'
+    # See: https://entreprise.api.gouv.fr/developpeurs#surveillance-etat-fournisseurs
+    def api_insee_up?
+      APIEntreprise::PfAPI.api_up?
+    end
+
+    def fr_api_insee_up?
+      api_up?("https://entreprise.api.gouv.fr/ping/insee/sirene")
+    end
+
+    def api_djepva_up?
+      api_up?("https://entreprise.api.gouv.fr/ping/djepva/api-association")
+    end
+
+    private
+
+    def api_up?(url)
+      response = Typhoeus.get(url, timeout: 1)
+      if response.success?
+        JSON.parse(response.body).fetch('status') == 'ok'
+      else
+        false
+      end
     rescue => e
       Sentry.capture_exception(e)
       false
-    end
-
-    def api_up?(uname = "apie_2_etablissements")
-      APIEntreprise::PfAPI.api_up?
     end
   end
 end

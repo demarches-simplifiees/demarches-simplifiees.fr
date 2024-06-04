@@ -83,7 +83,7 @@ describe Champs::SiretController, type: :controller do
         let(:api_etablissement_status) { 503 }
 
         before do
-          expect(APIEntrepriseService).to receive(:api_up?).and_return(true)
+          expect(APIEntrepriseService).to receive(:api_insee_up?).and_return(true)
         end
 
         subject! { get :show, params: params, format: :turbo_stream }
@@ -102,7 +102,7 @@ describe Champs::SiretController, type: :controller do
         let(:api_etablissement_status) { 502 }
 
         before do
-          expect(APIEntrepriseService).to receive(:api_up?).and_return(false)
+          expect(APIEntrepriseService).to receive(:api_insee_up?).and_return(false)
         end
 
         subject! { get :show, params: params, format: :turbo_stream }

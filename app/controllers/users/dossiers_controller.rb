@@ -194,7 +194,7 @@ module Users
       etablissement = begin
         APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
                       rescue => error
-                        if error.try(:network_error?) && !APIEntrepriseService.api_up?
+                        if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
                           # TODO: notify ops
                           APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
                         else

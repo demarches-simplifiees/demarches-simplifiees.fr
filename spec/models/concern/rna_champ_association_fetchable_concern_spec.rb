@@ -52,7 +52,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 503 }
       let(:body) { File.read('spec/fixtures/files/api_entreprise/associations.json') }
 
-      before { expect(APIEntrepriseService).to receive(:api_up?).and_return(false) }
+      before { expect(APIEntrepriseService).to receive(:api_djepva_up?).and_return(false) }
 
       it_behaves_like "an association fetcher", false, :network_error, 'W595001988', nil
     end

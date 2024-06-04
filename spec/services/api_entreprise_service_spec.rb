@@ -85,13 +85,13 @@ describe APIEntrepriseService do
     it_behaves_like 'schedule fetch of all etablissement params'
   end
 
-  xdescribe "#api_up?" do
-    subject { described_class.api_up? }
-    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read }
+  describe "#api_insee_up?" do
+    subject { described_class.fr_api_insee_up? }
+    let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read }
     let(:status) { 200 }
 
     before do
-      stub_request(:get, "https://status.entreprise.api.gouv.fr/summary.json")
+      stub_request(:get, "https://entreprise.api.gouv.fr/ping/insee/sirene")
         .to_return(body: body, status: status)
     end
 
@@ -100,7 +100,7 @@ describe APIEntrepriseService do
     end
 
     context "when api entreprise is down" do
-      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/status.json').read.gsub('UP', 'HASISSUES') }
+      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/ping.json').read.gsub('ok', 'HASISSUES') }
 
       it "returns false" do
         expect(subject).to be_falsey
@@ -117,8 +117,8 @@ describe APIEntrepriseService do
     end
   end
 
-  describe "#api_up? for pf" do
-    subject { described_class.api_up? }
+  describe "#api_insee_up? for pf" do
+    subject { described_class.api_insee_up? }
 
     let(:body) { File.read('spec/fixtures/files/api_entreprise/i-taiete_status.xml') }
     let(:status) { 200 }
