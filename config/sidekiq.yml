@@ -5,6 +5,8 @@
   - active_storage_analysis
   - sva
   - webhooks_v1
+  - api_entreprise
+  - cron
   - low_priority
   - purge
   - expires
