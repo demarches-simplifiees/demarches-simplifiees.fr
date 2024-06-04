@@ -16,6 +16,7 @@ en:
         ou_en_est_mon_dossier_url: "https://faq.demarches-simplifiees.fr/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche"
     footer:
       top_labels:
+        hidden_title: Useful links
         communication: Communication
         legals: Legal information
         resources: Resources
@@ -35,9 +36,9 @@ en:
         title: "API Documentation"
         url: "https://doc.demarches-simplifiees.fr/api-graphql"
       dinum:
-        title: "The DINUM website - Government"
+        title: "Le site de la DINUM — Direction interministérielle du numérique"
         url: "https://www.numerique.gouv.fr/dinum/"
-        alt: "Interministerial Directorate for Digital Affairs"
+        alt: "Direction interministérielle du numérique"
       code:
         label: "Source code"
         title: "Our Source code is open source"
