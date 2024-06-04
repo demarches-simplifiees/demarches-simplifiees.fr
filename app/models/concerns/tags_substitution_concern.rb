@@ -307,7 +307,8 @@ module TagsSubstitutionConcern
 
   def format_date(date)
     if date.present?
-      date.strftime('%d/%m/%Y')
+      format = defined?(self.class::FORMAT_DATE) ? self.class::FORMAT_DATE : '%d/%m/%Y'
+      date.strftime(format)
     else
       ''
     end

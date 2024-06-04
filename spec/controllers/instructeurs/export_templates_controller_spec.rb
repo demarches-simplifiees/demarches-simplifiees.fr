@@ -21,25 +21,44 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
         ]
       }.to_json,
-      "pjs" =>
-      [
-        { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " _justif", "type" => "text" }] }] }, stable_id: "3" },
-        {
-          path:
-                   { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "cni_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
-           stable_id: "5"
-        },
-        {
-          path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "pj_repet_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
-         stable_id: "10"
-        }
-      ]
+      tiptap_pj_3: {
+        "type" => "doc",
+        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+      }.to_json,
+      tiptap_pj_5: {
+
+        "type" => "doc",
+        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+      }.to_json,
+      tiptap_pj_10: {
+
+        "type" => "doc",
+        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+      }.to_json
     }
   end
 
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+  let(:procedure) do
+    create(
+      :procedure, instructeurs: [instructeur],
+      types_de_champ_public: [
+        { type: :piece_justificative, libelle: "pj1", stable_id: 3 },
+        { type: :piece_justificative, libelle: "pj2", stable_id: 5 },
+        { type: :piece_justificative, libelle: "pj3", stable_id: 10 }
+      ]
+    )
+  end
   let(:groupe_instructeur) { procedure.defaut_groupe_instructeur }
+
+  describe '#new' do
+    let(:subject) { get :new, params: { procedure_id: procedure.id } }
+
+    it do
+      subject
+      expect(assigns(:export_template)).to be_present
+    end
+  end
 
   describe '#create' do
     let(:subject) { post :create, params: { procedure_id: procedure.id, export_template: export_template_params } }
@@ -128,6 +147,21 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         expect(response).to redirect_to(exports_instructeur_procedure_path(procedure:))
         expect(flash.notice).to eq "Le modèle d'export Mon export a bien été supprimé"
       end
+    end
+  end
+
+  describe '#preview' do
+    render_views
+
+    let(:export_template) { create(:export_template, groupe_instructeur:) }
+
+    let(:subject) { get :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
+
+    it '' do
+      dossier = create(:dossier, procedure: procedure, for_procedure_preview: true)
+      subject
+      expect(response.body).to include "DOSSIER_#{dossier.id}"
+      expect(response.body).to include "mon_export_#{dossier.id}.pdf"
     end
   end
 end

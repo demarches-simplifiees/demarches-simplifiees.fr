@@ -7,6 +7,9 @@
             = export_title(export)
           %span.fr-text-mention--grey.fr-mb-1w
             = time_info(export)
+          - if export.export_template
+            %span.fr-tag.fr-tag--sm.fr-ml-1w
+              = export.export_template.name
         .fr-ml-auto
           = badge(export)
 
@@ -14,4 +17,4 @@
         = export_button(export)
 
         - if export.failed?
-          = button_to refresh_button_options(export)[:title], download_export_path(export_format: export.format, statut: export.statut), refresh_button_options(export)
+          = button_to refresh_button_options(export)[:title], download_export_path(export_template_id: export.export_template&.id, export_format: export.format, statut: export.statut), refresh_button_options(export)
