@@ -321,8 +321,8 @@ describe Users::DossiersController, type: :controller do
       stub_request(:get, Regexp.quote("#{API_ISPF_URL}/etablissements/Entreprise/#{siret}"))
         .to_return(status: api_etablissement_status, body: api_etablissement_body)
 
-      if api_current_status_response
-        has_issues = api_current_status_response.include?("502") || api_current_status_response.include?("HASISSUES")
+      if api_insee_status_response
+        has_issues = api_insee_status_response.include?("502") || api_insee_status_response.include?("HASISSUES")
         stub_request(:get, API_ISPF_URL).to_return(status: has_issues ? 502 : 200)
       end
     end
