@@ -215,6 +215,7 @@ class Champ < ApplicationRecord
   end
 
   def fetch_external_data_pending?
+    Rails.logger.info("fetch_external_data_pending?: fetch_external_data?=#{fetch_external_data?}, poll_external_data?=#{poll_external_data?}, external_id.present?: #{external_id}, data.nil?=#{data}, fetch_external_data_error?=#{fetch_external_data_error?}")
     fetch_external_data? && poll_external_data? && external_id.present? && data.nil? && !fetch_external_data_error?
   end
 
