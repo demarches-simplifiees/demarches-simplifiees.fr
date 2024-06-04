@@ -19,6 +19,8 @@
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = dossier.dossier_id
 
+          = status_badge(dossier.state, 'fr-mb-1w')
+          %br
           %span.fr-badge.fr-badge--sm.fr-badge--warning
             = t('views.users.dossiers.dossiers_list.deleted_badge')
 

@@ -84,23 +84,23 @@ RSpec.describe DossierMailer, type: :mailer do
     it { expect(subject.perform_deliveries).to be_falsy }
   end
 
-  def notify_deletion_to_administration(deleted_dossier, to_email)
-    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
-    @deleted_dossier = deleted_dossier
+  def notify_deletion_to_administration(hidden_dossier, to_email)
+    @subject = default_i18n_subject(dossier_id: hidden_dossier.id)
+    @hidden_dossier = hidden_dossier
 
     mail(to: to_email, subject: @subject)
   end
 
   describe '.notify_deletion_to_administration' do
-    let(:deleted_dossier) { build(:deleted_dossier) }
+    let(:hidden_dossier) { build(:dossier) }
 
-    subject { described_class.notify_deletion_to_administration(deleted_dossier, to_email) }
+    subject { described_class.notify_deletion_to_administration(hidden_dossier, to_email) }
 
     it 'verifies subject and body content for deletion notification' do
-      expect(subject.subject).to eq("Le dossier nº #{deleted_dossier.dossier_id} a été supprimé à la demande de l’usager")
+      expect(subject.subject).to eq("Le dossier nº #{hidden_dossier.id} a été supprimé à la demande de l’usager")
       expect(subject.body).to include("À la demande de l’usager")
-      expect(subject.body).to include(deleted_dossier.dossier_id)
-      expect(subject.body).to include(deleted_dossier.procedure.libelle)
+      expect(subject.body).to include(hidden_dossier.id)
+      expect(subject.body).to include(hidden_dossier.procedure.libelle)
     end
   end
 
@@ -127,46 +127,49 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_automatic_deletion_to_user' do
-    let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
+    # let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
+    # let(:hidden_dossier) { build(:dossier, :en_construction, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
 
     describe 'en_construction' do
-      let(:dossier) { create(:dossier, :en_construction) }
+      # let(:dossier) { create(:dossier, :en_construction) }
+      let(:hidden_dossier) { create(:dossier, :en_construction, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
 
-      subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
+      subject { described_class.notify_automatic_deletion_to_user([hidden_dossier], hidden_dossier.user.email) }
 
       it 'checks email subject, to, and body for correct inclusions and exclusions for en_construction status' do
-        expect(subject.to).to eq([dossier.user.email])
+        expect(subject.to).to eq([hidden_dossier.user.email])
         expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte")
-        expect(subject.body).to include("N° #{dossier.id} ")
-        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("N° #{hidden_dossier.id} ")
+        expect(subject.body).to include(hidden_dossier.procedure.libelle)
         expect(subject.body).to include("nous nous excusons de la gêne occasionnée")
       end
     end
 
     describe 'termine' do
-      let(:dossier) { create(:dossier, :accepte) }
+      let(:hidden_dossier) { create(:dossier, :accepte, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
 
-      subject { described_class.notify_automatic_deletion_to_user([deleted_dossier], dossier.user.email) }
+      subject { described_class.notify_automatic_deletion_to_user([hidden_dossier], hidden_dossier.user.email) }
 
       it 'checks email subject, to, and body for correct inclusions and exclusions for termine status' do
-        expect(subject.to).to eq([dossier.user.email])
+        expect(subject.to).to eq([hidden_dossier.user.email])
         expect(subject.subject).to eq("Un dossier a été supprimé automatiquement de votre compte")
-        expect(subject.body).to include("N° #{dossier.id} ")
-        expect(subject.body).to include(dossier.procedure.libelle)
+        expect(subject.body).to include("N° #{hidden_dossier.id} ")
+        expect(subject.body).to include(hidden_dossier.procedure.libelle)
         expect(subject.body).not_to include("nous nous excusons de la gêne occasionnée")
       end
     end
   end
 
   describe '.notify_automatic_deletion_to_administration' do
-    let(:dossier) { create(:dossier, :en_construction) }
-    let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
+    # let(:dossier) { create(:dossier, :en_construction) }
+    let(:hidden_dossier) { create(:dossier, :accepte, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
+    # let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
 
-    subject { described_class.notify_automatic_deletion_to_administration([deleted_dossier], dossier.user.email) }
+    subject { described_class.notify_automatic_deletion_to_administration([hidden_dossier], hidden_dossier.user.email) }
 
     it 'verifies subject and body content for automatic deletion notification' do
       expect(subject.subject).to eq("Un dossier a été supprimé automatiquement")
-      expect(subject.body).to include("n° #{dossier.id} (#{dossier.procedure.libelle})")
+      expect(subject.body).to include("n° #{hidden_dossier.id} (#{hidden_dossier.procedure.libelle})")
     end
   end
 

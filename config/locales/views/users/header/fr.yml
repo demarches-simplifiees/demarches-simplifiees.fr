@@ -12,10 +12,11 @@ fr:
           new_procedure_content: "Une nouvelle démarche est disponible, consultez-la ici :"
           contact_service_html: Pour plus d’informations, veuillez vous rapprocher du service %{service_name}, disponible au %{service_phone_number} ou par email à <a href="mailto:%{service_email}">%{service_email}</a>
           title: Votre dossier va expirer
+          title_expired: Votre dossier a expiré
           states:
-            brouillon: Votre dossier est en brouillon, mais va bientôt expirer. Cela signifie qu’il va bientôt être supprimé sans avoir été déposé. Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez étendre la durée de conversation en cliquant sur le bouton ci-dessous.
+            brouillon: Votre dossier est en brouillon, mais va bientôt être supprimé sans avoir été déposé. Si vous souhaitez le conserver afin de poursuivre la démarche, vous pouvez étendre la durée de conversation en cliquant sur le bouton ci-dessous.
             en_construction: Votre dossier est en attente de prise en charge par l’administration. Le délai de prise en charge maximal est de %{nominal_duration_months} mois. Vous pouvez toutefois étendre cette durée en cliquant sur le bouton ci-dessous.
-            termine: Le traitement de votre dossier est terminé, mais il va bientôt expirer. Cela signifie qu’il va bientôt être supprimé. Si vous souhaitez en conserver une trace, vous pouvez le télécharger au format PDF.
+            termine: Le traitement de votre dossier est terminé, mais il va bientôt être supprimé. Si vous souhaitez en conserver une trace, vous pouvez le télécharger au format PDF.
           button_delay_expiration:
             one: "Conserver %{count} mois supplémentaire"
             other: "Conserver %{count} mois supplémentaires"

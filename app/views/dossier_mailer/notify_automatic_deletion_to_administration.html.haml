@@ -3,9 +3,9 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.header', count: @deleted_dossiers.size)
+  = t('.header', count: @hidden_dossiers.size)
   %ul
-    - @deleted_dossiers.each do |d|
-      %li n° #{d.dossier_id} (#{d.procedure.libelle})
+    - @hidden_dossiers.each do |d|
+      %li n° #{d.id} (#{d.procedure.libelle})
 
 = render partial: "layouts/mailers/signature"
