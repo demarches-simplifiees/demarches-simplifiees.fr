@@ -24,6 +24,11 @@ if ENV.has_key?('REDIS_SIDEKIQ_SENTINELS')
     if ENV['SKIP_RELIABLE_FETCH'].blank?
       Sidekiq::ReliableFetch.setup_reliable_fetch!(config)
     end
+
+    config.capsule('api_entreprise') do |cap|
+      cap.concurrency = 1
+      cap.queues = ['api_entreprise']
+    end
   end
 
   Sidekiq.configure_client do |config|
