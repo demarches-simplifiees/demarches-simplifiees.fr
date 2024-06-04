@@ -34,7 +34,7 @@ if Rails.env.production? && SIDEKIQ_ENABLED
       self.queue_adapter = :sidekiq
     end
 
-    class WebhookJob < ApplicationJob
+    class WebHookJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
 
@@ -51,6 +51,10 @@ if Rails.env.production? && SIDEKIQ_ENABLED
     end
 
     class Migrations::BackfillStableIdJob
+      self.queue_adapter = :sidekiq
+    end
+
+    class Cron::CronJob < ApplicationJob
       self.queue_adapter = :sidekiq
     end
   end
