@@ -558,8 +558,12 @@ class Dossier < ApplicationRecord
     false
   end
 
+  def blocked_with_pending_correction?
+    procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+  end
+
   def can_passer_en_instruction?
-    return false if procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+    return false if blocked_with_pending_correction?
 
     true
   end
