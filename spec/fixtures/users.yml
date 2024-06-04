@@ -1,0 +1,10 @@
+default_user:
+  email: 'user@a.com'
+  encrypted_password: '{My-$3cure-p4ssWord}'
+  confirmed_at:  <%= Time.current.to_s(:db) %>
+
+unconfirmed_user:
+  email: 'user@a.com'
+  encrypted_password: '{My-$3cure-p4ssWord}'
+  confirmation_token: '123'
+

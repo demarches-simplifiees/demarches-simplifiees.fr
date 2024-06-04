@@ -4,11 +4,12 @@ describe User, type: :model do
     let!(:invite) { create(:invite, email: email) }
     let!(:invite2) { create(:invite, email: email) }
     let(:user) do
-      create(:user,
-        email: email,
-        password: SECURE_PASSWORD,
-        confirmation_token: '123',
-        confirmed_at: nil)
+      users(:unconfirmed_user)
+      # create(:user,
+      #   email: email,
+      #   password: SECURE_PASSWORD,
+      #   confirmation_token: '123',
+      #   confirmed_at: nil)
     end
 
     it 'when confirming a user, it links the pending invitations to this user' do
