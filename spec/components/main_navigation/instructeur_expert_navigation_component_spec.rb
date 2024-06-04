@@ -24,7 +24,7 @@ describe MainNavigation::InstructeurExpertNavigationComponent, type: :component 
   describe 'when instructor is signed in' do
     it 'renders a link to instructeur procedures with current page class' do
       expect(subject).to have_link('Démarches', href: component.helpers.instructeur_procedures_path)
-      expect(subject).to have_selector('a[aria-current="page"]', text: 'Démarches')
+      expect(subject).to have_selector('a[aria-current="true"]', text: 'Démarches')
     end
 
     it 'does not have Avis' do
@@ -39,7 +39,7 @@ describe MainNavigation::InstructeurExpertNavigationComponent, type: :component 
 
       it 'render have Avis link' do
         expect(subject).to have_link('Avis', href: component.helpers.expert_all_avis_path)
-        expect(subject).not_to have_selector('a[aria-current="page"]', text: 'Avis')
+        expect(subject).not_to have_selector('a[aria-current="true"]', text: 'Avis')
       end
     end
 
@@ -65,7 +65,7 @@ describe MainNavigation::InstructeurExpertNavigationComponent, type: :component 
 
     it 'renders a link to expert all avis with current page class' do
       expect(subject).to have_link('Avis', href: component.helpers.expert_all_avis_path)
-      expect(subject).to have_selector('a[aria-current="page"]', text: 'Avis')
+      expect(subject).to have_selector('a[aria-current="true"]', text: 'Avis')
       expect(subject).not_to have_selector('span.badge')
     end
 
@@ -86,7 +86,7 @@ describe MainNavigation::InstructeurExpertNavigationComponent, type: :component 
 
       it 'render have Démarches link' do
         expect(subject).to have_link('Démarches', href: component.helpers.instructeur_procedures_path)
-        expect(subject).not_to have_selector('a[aria-current="page"]', text: 'Démarches')
+        expect(subject).not_to have_selector('a[aria-current="true"]', text: 'Démarches')
       end
     end
   end
