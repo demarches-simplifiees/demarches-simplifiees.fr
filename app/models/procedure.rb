@@ -431,11 +431,15 @@ class Procedure < ApplicationRecord
 
   def draft_changed?
     preload_draft_and_published_revisions
-    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && (types_de_champ_revision_changes.present? || ineligibilite_rules_revision_changes.present?)
   end
 
-  def revision_changes
-    published_revision.compare(draft_revision)
+  def types_de_champ_revision_changes
+    published_revision.compare_types_de_champ(draft_revision)
+  end
+
+  def ineligibilite_rules_revision_changes
+    published_revision.compare_ineligibilite_rules(draft_revision)
   end
 
   def preload_draft_and_published_revisions

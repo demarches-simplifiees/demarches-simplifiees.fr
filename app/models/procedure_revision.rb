@@ -148,13 +148,15 @@ class ProcedureRevision < ApplicationRecord
     !draft?
   end
 
-  def different_from?(revision)
-    revision_types_de_champ != revision.revision_types_de_champ
-  end
-
-  def compare(revision)
+  def compare_types_de_champ(revision)
     changes = []
     changes += compare_revision_types_de_champ(revision_types_de_champ, revision.revision_types_de_champ)
+    changes
+  end
+
+  def compare_ineligibilite_rules(revision)
+    changes = []
+    changes += compare_revision_ineligibilite_rules(revision)
     changes
   end
 
@@ -332,6 +334,29 @@ class ProcedureRevision < ApplicationRecord
 
       (removed + added + moved + changed).sort_by { _1.op == :remove ? from_sids.index(_1.stable_id) : to_sids.index(_1.stable_id) }
     end
+  end
+
+  def compare_revision_ineligibilite_rules(new_revision)
+    from_ineligibilite_rules = ineligibilite_rules
+    to_ineligibilite_rules = new_revision.ineligibilite_rules
+    changes = []
+
+    if from_ineligibilite_rules.present? && to_ineligibilite_rules.blank?
+      changes << ProcedureRevisionChange::RemoveEligibiliteRuleChange
+    end
+    if from_ineligibilite_rules.blank? && to_ineligibilite_rules.present?
+      changes << ProcedureRevisionChange::AddEligibiliteRuleChange
+    end
+    if from_ineligibilite_rules != to_ineligibilite_rules
+      changes << ProcedureRevisionChange::UpdateEligibiliteRuleChange
+    end
+    if ineligibilite_message != new_revision.ineligibilite_message
+      changes << ProcedureRevisionChange::UpdateEligibiliteMessageChange
+    end
+    if ineligibilite_enabled != new_revision.ineligibilite_enabled
+      changes << (new_revision.ineligibilite_enabled ? ProcedureRevisionChange::EligibiliteEnabledChange : ProcedureRevisionChange::EligibiliteDisabledChange)
+    end
+    changes.map { _1.new(self, new_revision) }
   end
 
   def compare_type_de_champ(from_type_de_champ, to_type_de_champ, from_coordinates, to_coordinates)
