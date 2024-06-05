@@ -354,10 +354,10 @@ describe Procedure do
     describe 'draft_types_de_champ validations' do
       let(:repetition) { repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?) }
       let(:text_field) { build(:type_de_champ_text) }
-      let(:invalid_repetition_error_message) { 'Le champ « Enfants » doit comporter au moins un champ répétable' }
+      let(:invalid_repetition_error_message) { "doit comporter au moins un champ répétable" }
+      let(:invalid_drop_down_error_message) { "doit comporter au moins un choix sélectionnable" }
 
       let(:drop_down) { build(:type_de_champ_drop_down_list, :without_selectable_values, libelle: 'Civilité') }
-      let(:invalid_drop_down_error_message) { 'Le champ « Civilité » doit comporter au moins un choix sélectionnable' }
 
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
       let(:draft) { procedure.draft_revision }
@@ -379,7 +379,7 @@ describe Procedure do
       context 'when validating for publication' do
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
 
           new_draft = procedure.draft_revision
 
@@ -387,16 +387,16 @@ describe Procedure do
           new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
 
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
 
           drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
           procedure.reload.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
         end
       end
 
@@ -406,17 +406,19 @@ describe Procedure do
           drop_down.update(private: true)
         end
 
-        let(:invalid_repetition_error_message) { 'L’annotation privée « Enfants » doit comporter au moins un champ répétable' }
-        let(:invalid_drop_down_error_message) { 'L’annotation privée « Civilité » doit comporter au moins un choix sélectionnable' }
+        let(:invalid_repetition_error_message) { "doit comporter au moins un champ répétable" }
+        let(:invalid_drop_down_error_message) { "doit comporter au moins un choix sélectionnable" }
 
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(repetition)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(drop_down)
         end
       end
     end
