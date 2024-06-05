@@ -940,7 +940,7 @@ class Dossier < ApplicationRecord
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
-        champ.errors.add(:value, :missing)
+        errors.import(champ.errors.add(:value, :missing))
       end
   end
 
