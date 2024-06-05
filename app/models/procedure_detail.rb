@@ -14,7 +14,7 @@ ProcedureDetail = Struct.new(:id, :libelle, :published_at, :aasm_state, :estimat
   end
 
   def parsed_latest_zone_labels
-    # Replace curly braces with square brackets to make it a valid JSON array
+    return [] if latest_zone_labels.nil? || latest_zone_labels.strip.empty?
     JSON.parse(latest_zone_labels.tr('{', '[').tr('}', ']'))
   rescue JSON::ParserError
     []
