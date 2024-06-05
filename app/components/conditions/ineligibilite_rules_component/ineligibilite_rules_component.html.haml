@@ -1,0 +1,42 @@
+%div{ id: dom_id(@draft_revision, :ineligibilite_rules) }
+  = render Procedure::PendingRepublishComponent.new(procedure: @draft_revision.procedure, render_if: pending_changes?)
+  = render Conditions::ConditionsErrorsComponent.new(conditions: condition_per_row, source_tdcs: @source_tdcs)
+  %fieldset.fr-fieldset
+    %legend.fr-mx-1w.fr-label.fr-py-0.fr-mb-1w.fr-mt-2w
+      Règles d’inéligibilité
+      %span.fr-hint-text Vous pouvez utiliser 1 ou plusieurs critère pour bloquer le dépot
+    .fr-fieldset__element
+      = form_tag admin_procedure_ineligibilite_rules_path(@draft_revision.procedure_id), method: :patch, data: { turbo: true, controller: 'autosave' }, class: 'form width-100' do
+        .conditionnel.width-100
+          %table.condition-table
+            %thead
+              %tr
+                %th.fr-pt-0.far-left
+                %th.fr-pt-0.target Champ Cible
+                %th.fr-pt-0.operator Opérateur
+                %th.fr-pt-0.value Valeur
+                %th.fr-pt-0.delete-column
+            %tbody
+              - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
+                %tr
+                  %td.far-left= far_left_tag(row_index)
+                  %td.target= left_operand_tag(targeted_champ, row_index)
+                  %td.operator= operator_tag(operator_name, targeted_champ, row_index)
+                  %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
+                  %td.delete-column= delete_condition_tag(row_index)
+            %tfoot
+              %tr
+                %td.text-right{ colspan: 5 }= add_condition_tag
+
+
+
+    = form_for(@draft_revision, url: change_admin_procedure_ineligibilite_rules_path(@draft_revision.procedure_id)) do |f|
+      .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :ineligibilite_message, input_type: :text_area, opts: {rows: 5})
+      .fr-fieldset__element
+        .fr-toggle
+          = f.check_box :ineligibilite_enabled, class: 'fr-toggle__input', data: @opt
+          = f.label :ineligibilite_enabled, "Inéligibilité des dossiers", data: { 'fr-checked-label': "Actif", 'fr-unchecked-label': "Inactif" }, class: 'fr-toggle__label'
+          %p.fr-hint-text Passer l’intérrupteur sur activé pour que les critères d’inéligibilité configurés s'appliquent
+
+
+      = render Procedure::FixedFooterComponent.new(procedure: @draft_revision.procedure, form: f, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8')
