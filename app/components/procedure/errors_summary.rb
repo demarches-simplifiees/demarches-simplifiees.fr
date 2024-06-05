@@ -32,6 +32,8 @@ class Procedure::ErrorsSummary < ApplicationComponent
 
   def error_correction_page(error)
     case error.attribute
+    when :ineligibilite_rules
+      edit_admin_procedure_ineligibilite_rules_path(@procedure)
     when :draft_types_de_champ_public
       tdc = error.options[:type_de_champ]
       champs_admin_procedure_path(@procedure, anchor: dom_id(tdc.stable_self, :editor_error))

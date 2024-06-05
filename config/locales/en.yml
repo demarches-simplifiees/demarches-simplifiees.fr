@@ -606,6 +606,7 @@ en:
         otp_attempt: 'OTP code (only if you have already activated 2FA)'
       procedure:
         zone: This procedure is run by
+        ineligibilite_rules: "Eligibility rules"
       champs:
         value: Value
       default_mail_attributes: &default_mail_attributes
@@ -667,6 +668,10 @@ en:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               invalid: is not valid. It must countain between 3 and 200 characters among a-z, 0-9, '_' and '-'.
+        procedure_revision:
+          attributes:
+            ineligibilite_rules:
+              invalid: are invalid
         "dossier/champs":
           format: "%{message}"
           attributes:

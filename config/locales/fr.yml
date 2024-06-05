@@ -610,6 +610,7 @@ fr:
         otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
+        ineligibilite_rules: "Les règles d’Inéligibilité"
       champs:
         value: Valeur du champ
       default_mail_attributes: &default_mail_attributes
@@ -669,6 +670,10 @@ fr:
             path:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 200 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+        procedure_revision:
+          attributes:
+            ineligibilite_rules:
+              invalid: ne sont pas valides
         "dossier/champs":
           format: "%{message}"
           attributes:

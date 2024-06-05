@@ -496,6 +496,13 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
+  def ineligibilite_rules_are_valid?
+    if ineligibilite_rules
+      ineligibilite_rules.errors(types_de_champ_for(scope: :public).to_a)
+        .each { errors.add(:ineligibilite_rules, :invalid) }
+    end
+  end
+
   def replace_type_de_champ_by_clone(coordinate)
     cloned_type_de_champ = coordinate.type_de_champ.deep_clone do |original, kopy|
       ClonePiecesJustificativesService.clone_attachments(original, kopy)

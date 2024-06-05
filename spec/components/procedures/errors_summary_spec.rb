@@ -74,6 +74,8 @@ describe Procedure::ErrorsSummary, type: :component do
   end
 
   describe 'render error for other kind of associated objects' do
+    include Logic
+
     let(:validation_context) { :publication }
     let(:procedure) { create(:procedure, attestation_template:, initiated_mail:) }
     let(:attestation_template) { build(:attestation_template) }
@@ -81,10 +83,12 @@ describe Procedure::ErrorsSummary, type: :component do
 
     before do
       [:attestation_template, :initiated_mail].map { procedure.send(_1).update_column(:body, '--invalidtag--') }
+      procedure.draft_revision.update(ineligibilite_enabled: true, ineligibilite_rules: ds_eq(constant(true), constant(1)), ineligibilite_message: 'ko')
       subject
     end
 
     it 'render error nicely' do
+      expect(page).to have_selector("a", text: "Les règles d’inéligibilité")
       expect(page).to have_selector("a", text: "Le modèle d’attestation")
       expect(page).to have_selector("a", text: "L’email de notification de passage de dossier en instruction")
       expect(page).to have_text("n'est pas valide", count: 2)
