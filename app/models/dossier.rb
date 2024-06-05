@@ -156,7 +156,7 @@ class Dossier < ApplicationRecord
     state :sans_suite
 
     event :passer_en_construction, after: :after_passer_en_construction, after_commit: :after_commit_passer_en_construction do
-      transitions from: :brouillon, to: :en_construction
+      transitions from: :brouillon, to: :en_construction, guard: :can_passer_en_construction?
     end
 
     event :passer_en_instruction, after: :after_passer_en_instruction, after_commit: :after_commit_passer_en_instruction do
@@ -560,6 +560,12 @@ class Dossier < ApplicationRecord
 
   def blocked_with_pending_correction?
     procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+  end
+
+  def can_passer_en_construction?
+    return true if !revision.ineligibilite_enabled
+
+    !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
   end
 
   def can_passer_en_instruction?
