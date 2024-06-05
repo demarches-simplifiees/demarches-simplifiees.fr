@@ -505,15 +505,15 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def check_coherent_header_level(upper_tdcs)
-    errs = []
     previous_level = previous_section_level(upper_tdcs)
-
     current_level = header_section_level_value.to_i
+
     difference = current_level - previous_level
     if current_level > previous_level && difference != 1
-      errs << I18n.t('activerecord.errors.type_de_champ.attributes.header_section_level.gap_error', level: current_level - previous_level - 1)
+      I18n.t('activerecord.errors.type_de_champ.attributes.header_section_level.gap_error', level: current_level - previous_level - 1)
+    else
+      nil
     end
-    errs
   end
 
   def current_section_level(revision)

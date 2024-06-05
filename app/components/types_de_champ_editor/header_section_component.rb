@@ -31,7 +31,7 @@ class TypesDeChampEditor::HeaderSectionComponent < ApplicationComponent
   end
 
   def errors?
-    !errors.empty?
+    errors.present?
   end
 
   def to_html_list(messages)

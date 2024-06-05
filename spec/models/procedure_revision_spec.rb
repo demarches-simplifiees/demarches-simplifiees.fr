@@ -828,23 +828,22 @@ describe ProcedureRevision do
   describe 'conditions_are_valid' do
     include Logic
 
-    def first_champ = procedure.draft_revision.types_de_champ_public.first
-
-    def second_champ = procedure.draft_revision.types_de_champ_public.second
-
-    let(:procedure) do
-      create(:procedure).tap do |p|
-        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l1')
-        p.draft_revision.add_type_de_champ(type_champ: :integer_number, libelle: 'l2')
-      end
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :integer_number, libelle: 'l1' },
+        { type: :integer_number, libelle: 'l2' }
+      ]
     end
+    def first_champ = procedure.draft_revision.types_de_champ_public.first
+    def second_champ = procedure.draft_revision.types_de_champ_public.second
 
     let(:draft_revision) { procedure.draft_revision }
     let(:condition) { nil }
 
     subject do
-      draft_revision.save
-      draft_revision.errors
+      procedure.validate(:publication)
+      procedure.errors
     end
 
     context 'when a champ has a valid condition (type)' do
@@ -865,7 +864,7 @@ describe ProcedureRevision do
       before { second_champ.update(condition: condition) }
       let(:condition) { ds_eq(constant(true), constant(1)) }
 
-      it { expect(subject.first.attribute).to eq(:condition) }
+      it { expect(subject.first.attribute).to eq(:draft_types_de_champ_public) }
     end
 
     context 'when a champ has an invalid condition: needed tdc is down in the forms' do
@@ -876,7 +875,7 @@ describe ProcedureRevision do
         first_champ.update(condition: need_second_champ)
       end
 
-      it { expect(subject.first.attribute).to eq(:condition) }
+      it { expect(subject.first.attribute).to eq(:draft_types_de_champ_public) }
     end
 
     context 'with a repetition' do
@@ -904,7 +903,7 @@ describe ProcedureRevision do
       context 'when a champ belongs to a repetition' do
         let(:condition) { ds_eq(champ_value(-1), constant(1)) }
 
-        it { expect(subject.first.attribute).to eq(:condition) }
+        it { expect(subject.first.attribute).to eq(:draft_types_de_champ_public) }
       end
     end
   end
@@ -918,8 +917,8 @@ describe ProcedureRevision do
     let(:draft_revision) { procedure.draft_revision }
 
     subject do
-      draft_revision.save
-      draft_revision.errors
+      procedure.validate(:publication)
+      procedure.errors
     end
 
     it 'find error' do
@@ -936,8 +935,8 @@ describe ProcedureRevision do
     let(:draft_revision) { procedure.draft_revision }
 
     subject do
-      draft_revision.save
-      draft_revision.errors
+      procedure.validate(:publication)
+      procedure.errors
     end
 
     context "When no regexp and no example" do

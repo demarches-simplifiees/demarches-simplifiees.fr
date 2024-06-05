@@ -72,8 +72,30 @@ en:
               invalid: 'invalid format'
             draft_types_de_champ_public:
               format: 'Public field %{message}'
+              invalid_condition: "« %{value} » have an invalid logic"
+              empty_repetition: '« %{value} » requires at least one field'
+              empty_drop_down: '« %{value} » requires at least one option'
+              inconsistent_header_section: "« %{value} » %{custom_message}"
             draft_types_de_champ_private:
               format: 'Private field %{message}'
+              invalid_condition: "« %{value} » have an invalid logic"
+              empty_repetition: '« %{value} » requires at least one field'
+              empty_drop_down: '« %{value} » requires at least one option'
+              inconsistent_header_section: "« %{value} » %{custom_message}"
+            attestation_template:
+              format: "%{attribute} %{message}"
+            initiated_mail:
+              format: "%{attribute} %{message}"
+            received_mail:
+              format: "%{attribute} %{message}"
+            closed_mail:
+              format: "%{attribute} %{message}"
+            refused_mail:
+              format: "%{attribute} %{message}"
+            without_continuation_mail:
+              format: "%{attribute} %{message}"
+            re_instructed_mail:
+              format: "%{attribute} %{message}"
             lien_dpo:
               invalid_uri_or_email: "Fill in with an email or a link"
             sva_svr:

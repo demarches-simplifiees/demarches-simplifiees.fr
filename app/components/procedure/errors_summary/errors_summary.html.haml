@@ -1,0 +1,9 @@
+#errors-summary
+  - if invalid?
+    = render Dsfr::AlertComponent.new(state: :error, title: , extra_class_names: 'fr-mb-2w') do |c|
+      - c.with_body do
+        - error_messages.each do |(error, path)|
+          %p.mt-2
+            = error.full_message
+            - if path.present?
+              = "(#{link_to 'corriger', path, class: 'fr-link'})"

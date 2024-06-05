@@ -228,9 +228,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
           click_on 'Supprimer'
         end
       end
-
-      expect(page).to have_content("Le formulaire contient des erreurs")
-      expect(page).to have_content("Le titre de section suivant est invalide, veuillez le corriger :")
+      expect(page).to have_content("devrait être précédé d'un titre de niveau 1")
     end
   end
 
