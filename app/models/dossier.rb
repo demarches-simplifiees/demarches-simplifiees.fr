@@ -938,6 +938,10 @@ class Dossier < ApplicationRecord
       end
   end
 
+  def ineligibilite_rules_computable?
+    revision.ineligibilite_rules_computable?(champs_for_revision(scope: :public))
+  end
+
   def demander_un_avis!(avis)
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end
