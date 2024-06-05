@@ -25,4 +25,6 @@
 
     = render Dossiers::PendingCorrectionCheckboxComponent.new(dossier: dossier)
 
+  = render Dossiers::InvalidIneligibiliteRulesComponent.new(dossier: dossier)
+
   = render Dossiers::EditFooterComponent.new(dossier: dossier_for_editing, annotation: false)

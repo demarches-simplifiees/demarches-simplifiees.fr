@@ -303,10 +303,13 @@ module Users
     def update
       @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
-      @errors = update_dossier_and_compute_errors
-
-      @dossier.index_search_terms_later if @errors.empty?
-
+      @ineligibilite_rules_was_computable = @dossier.ineligibilite_rules_computable?
+      @can_passer_en_construction_was = @dossier.can_passer_en_construction?
+      update_dossier_and_compute_errors
+      @dossier.index_search_terms_later if @dossier.errors.empty?
+      @ineligibilite_rules_is_computable = @dossier.ineligibilite_rules_computable?
+      @can_passer_en_construction_is = @dossier.can_passer_en_construction?
+      @ineligibilite_rules_computable_changed = !@ineligibilite_rules_was_computable && @ineligibilite_rules_is_computable
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_attributes_params, dossier.champs.filter(&:public?))
