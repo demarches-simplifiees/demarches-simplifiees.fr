@@ -251,6 +251,10 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_public.filter(&:routable?)
   end
 
+  def conditionable_types_de_champ
+    types_de_champ_for(scope: :public).filter(&:conditionable?)
+  end
+
   private
 
   def compute_estimated_fill_duration

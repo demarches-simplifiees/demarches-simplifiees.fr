@@ -1,0 +1,8 @@
+---
+fr:
+  title: Inéligibilité des dossiers
+  state:
+    pending: Champs à configurer
+    ready: À configurer
+    completed: Activé
+  subtitle: Gérez vos critères d’inéligibilité en fonction des champs du formulaire
