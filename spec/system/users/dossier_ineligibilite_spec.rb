@@ -9,7 +9,7 @@ describe 'Dossier Inéligibilité', js: true do
 
   let(:published_revision) { procedure.published_revision }
   let(:first_tdc) { published_revision.types_de_champ.first }
-  let(:second_tdc) { published_revision.types_de_champ.last }
+  let(:second_tdc) { published_revision.types_de_champ.second }
   let(:ineligibilite_message) { 'sry vous pouvez aps soumettre votre dossier' }
   let(:eligibilite_params) { { ineligibilite_enabled: true, ineligibilite_message: } }
 
@@ -18,8 +18,8 @@ describe 'Dossier Inéligibilité', js: true do
     login_as user, scope: :user
   end
 
-  context 'single condition' do
-    let(:types_de_champ_public) { [{ type: :yes_no }] }
+  describe 'ineligibilite_rules with a single BinaryOperator' do
+    let(:types_de_champ_public) { [{ type: :yes_no, stable_id: 1 }] }
     let(:ineligibilite_rules) { ds_eq(champ_value(first_tdc.stable_id), constant(true)) }
 
     scenario 'can submit, can not submit, reload' do
@@ -28,24 +28,33 @@ describe 'Dossier Inéligibilité', js: true do
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
       expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
 
-      # does raise error when dossier is filled with valid condition
-      find("label", text: "Non").click
+      # does raise error when dossier is filled with condition that does not match
+      within "#champ-1" do
+        find("label", text: "Non").click
+      end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
       expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
 
-      # raise error when dossier is filled with invalid condition
-      find("label", text: "Oui").click
+      # raise error when dossier is filled with condition that matches
+      within "#champ-1" do
+        find("label", text: "Oui").click
+      end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: true)
       expect(page).to have_content("Vous ne pouvez pas déposer votre dossier")
 
-      # reload page and see error because it was filled
+      # reload page and see error
       visit brouillon_dossier_path(dossier)
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: true)
       expect(page).to have_content("Vous ne pouvez pas déposer votre dossier")
 
       # modal is closable, and we can change our dossier response to be eligible
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
       within("#modal-eligibilite-rules-dialog") { click_on "Fermer" }
-      find("label", text: "Non").click
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
+
+      within "#champ-1" do
+        find("label", text: "Non").click
+      end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
 
       # it works, yay
@@ -54,7 +63,7 @@ describe 'Dossier Inéligibilité', js: true do
     end
   end
 
-  context 'or condition' do
+  describe 'ineligibilite_rules with a Or' do
     let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'l1' }, { type: :drop_down_list, libelle: 'l2', options: ['Paris', 'Marseille'] }] }
     let(:ineligibilite_rules) do
       ds_or([
@@ -69,15 +78,17 @@ describe 'Dossier Inéligibilité', js: true do
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
       expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
 
-      # only one condition is matches, cannot submit dossier and error message is clear
+      # first condition matches (so ineligible), cannot submit dossier and error message is clear
       within "#champ-#{first_tdc.stable_id}" do
         find("label", text: "Oui").click
       end
       expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: true)
       expect(page).to have_content("Vous ne pouvez pas déposer votre dossier")
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
       within("#modal-eligibilite-rules-dialog") { click_on "Fermer" }
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
-      # only one condition does not matches, I can conitnue
+      # first condition does not matches, I can conitnue
       within "#champ-#{first_tdc.stable_id}" do
         find("label", text: "Non").click
       end
@@ -88,12 +99,15 @@ describe 'Dossier Inéligibilité', js: true do
       click_on "Accéder à votre dossier"
       click_on "Modifier le dossier"
 
-      # one condition matches, means i'm blocked to send my file.
+      # first matches, means i'm blocked to send my file.
       within "#champ-#{first_tdc.stable_id}" do
         find("label", text: "Oui").click
       end
       expect(page).to have_selector(:button, text: "Déposer les modifications", disabled: true)
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
       within("#modal-eligibilite-rules-dialog") { click_on "Fermer" }
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
+
       within "#champ-#{first_tdc.stable_id}" do
         find("label", text: "Non").click
       end
@@ -104,7 +118,56 @@ describe 'Dossier Inéligibilité', js: true do
         find("label", text: 'Paris').click
       end
       expect(page).to have_selector(:button, text: "Déposer les modifications", disabled: true)
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
       within("#modal-eligibilite-rules-dialog") { click_on "Fermer" }
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
+
+      # none of conditions matches, i can submit
+      within "#champ-#{second_tdc.stable_id}" do
+        find("label", text: 'Marseille').click
+      end
+
+      # it works, yay
+      click_on "Déposer les modifications"
+      wait_until { dossier.reload.en_construction? == true }
+    end
+  end
+
+  describe 'ineligibilite_rules with a And and all visible champs' do
+    let(:types_de_champ_public) { [{ type: :yes_no, libelle: 'l1' }, { type: :drop_down_list, libelle: 'l2', options: ['Paris', 'Marseille'] }] }
+    let(:ineligibilite_rules) do
+      ds_and([
+        ds_eq(champ_value(first_tdc.stable_id), constant(true)),
+        ds_eq(champ_value(second_tdc.stable_id), constant('Paris'))
+      ])
+    end
+
+    scenario 'can submit, can not submit, can edit, etc...' do
+      visit brouillon_dossier_path(dossier)
+      # no error while dossier is empty
+      expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
+      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+
+      # only one condition is matches, can submit dossier
+      within "#champ-#{first_tdc.stable_id}" do
+        find("label", text: "Oui").click
+      end
+      expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
+      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+
+      # Now test dossier modification
+      click_on "Déposer le dossier"
+      click_on "Accéder à votre dossier"
+      click_on "Modifier le dossier"
+
+      # second condition matches, means i'm blocked to send my file
+      within "#champ-#{second_tdc.stable_id}" do
+        find("label", text: 'Paris').click
+      end
+      expect(page).to have_selector(:button, text: "Déposer les modifications", disabled: true)
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: true)
+      within("#modal-eligibilite-rules-dialog") { click_on "Fermer" }
+      expect(page).to have_selector("#modal-eligibilite-rules-dialog", visible: false)
 
       # none of conditions matches, i can submit
       within "#champ-#{second_tdc.stable_id}" do

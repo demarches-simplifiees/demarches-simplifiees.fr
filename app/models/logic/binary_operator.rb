@@ -42,15 +42,6 @@ class Logic::BinaryOperator < Logic::Term
     l&.send(operation, r) || false
   end
 
-  def computable?(champs = [])
-    return true if sources.blank?
-
-    visible_champs_sources = champs.filter { _1.stable_id.in?(sources) && _1.visible? }
-
-    return false if visible_champs_sources.size != sources.size
-    visible_champs_sources.all? { _1.value.present? }
-  end
-
   def to_s(type_de_champs) = "(#{@left.to_s(type_de_champs)} #{operation} #{@right.to_s(type_de_champs)})"
 
   def ==(other)

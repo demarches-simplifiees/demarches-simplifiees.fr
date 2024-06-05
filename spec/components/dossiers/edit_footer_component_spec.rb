@@ -10,14 +10,14 @@ RSpec.describe Dossiers::EditFooterComponent, type: :component do
     let(:dossier) { create(:dossier, :brouillon) }
 
     context 'when dossier can be submitted' do
-      before { allow(component).to receive(:ineligibilite_rules_invalid?).and_return(false) }
+      before { allow(component).to receive(:can_passer_en_construction?).and_return(true) }
       it 'renders submit button without disabled' do
         expect(subject).to have_selector('button', text: 'Déposer le dossier')
       end
     end
 
     context 'when dossier can not be submitted' do
-      before { allow(component).to receive(:ineligibilite_rules_invalid?).and_return(true) }
+      before { allow(component).to receive(:can_passer_en_construction?).and_return(false) }
       it 'renders submit button with disabled' do
         expect(subject).to have_selector('a', text: 'Pourquoi je ne peux pas déposer mon dossier ?')
         expect(subject).to have_selector('button[disabled]', text: 'Déposer le dossier')
@@ -31,7 +31,7 @@ RSpec.describe Dossiers::EditFooterComponent, type: :component do
     before { allow(dossier).to receive(:forked_with_changes?).and_return(true) }
 
     context 'when dossier can be submitted' do
-      before { allow(component).to receive(:ineligibilite_rules_invalid?).and_return(false) }
+      before { allow(component).to receive(:can_passer_en_construction?).and_return(true) }
 
       it 'renders submit button without disabled' do
         expect(subject).to have_selector('button', text: 'Déposer les modifications')
@@ -39,7 +39,7 @@ RSpec.describe Dossiers::EditFooterComponent, type: :component do
     end
 
     context 'when dossier can not be submitted' do
-      before { allow(component).to receive(:ineligibilite_rules_invalid?).and_return(true) }
+      before { allow(component).to receive(:can_passer_en_construction?).and_return(false) }
 
       it 'renders submit button with disabled' do
         expect(subject).to have_selector('a', text: 'Pourquoi je ne peux pas déposer mon dossier ?')

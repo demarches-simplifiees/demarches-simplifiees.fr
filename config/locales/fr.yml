@@ -610,7 +610,7 @@ fr:
         otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
-        ineligibilite_rules: "Les règles d’Inéligibilité"
+        ineligibilite_rules: "Les règles d’inéligibilité"
       champs:
         value: Valeur du champ
       default_mail_attributes: &default_mail_attributes

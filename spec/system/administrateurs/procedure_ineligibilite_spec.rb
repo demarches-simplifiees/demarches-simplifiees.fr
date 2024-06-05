@@ -9,13 +9,13 @@ describe 'Administrateurs can edit procedures', js: true do
   scenario 'setup eligibilite' do
     # explain no champ compatible
     visit admin_procedure_path(procedure)
-    expect(page).to have_content("Champs à configurer")
+    expect(page).to have_content("Désactivé")
 
     # explain which champs are compatible
     visit edit_admin_procedure_ineligibilite_rules_path(procedure)
     expect(page).to have_content("Inéligibilité des dossiers")
-    expect(page).to have_content("Pour configurer l’inéligibilité des dossiers, votre formulaire doit comporter au moins un champ supportant les critères d’inéligibilité. Il vous faut donc ajouter au moins un des champs suivant à votre formulaire : ")
-    click_on "Ajouter un champ supportant les critères d’inéligibilité"
+    expect(page).to have_content("Pour configurer l’inéligibilité des dossiers, votre formulaire doit comporter au moins un champ supportant les conditions d’inéligibilité. Il vous faut donc ajouter au moins un des champs suivant à votre formulaire : ")
+    click_on "Ajouter un champ supportant les conditions d’inéligibilité"
 
     # setup a compatible champ
     expect(page).to have_content('Champs du formulaire')
@@ -32,7 +32,7 @@ describe 'Administrateurs can edit procedures', js: true do
     # setup rules and stuffs
     expect(page).to have_content("Inéligibilité des dossiers")
     fill_in "Message d’inéligibilité", with: "vous n'etes pas eligible"
-    find('label', text: 'Inéligibilité des dossiers').click
+    find('label', text: 'Bloquer le dépôt des dossiers répondant à des conditions d’inéligibilité').click
     click_on "Ajouter une règle d’inéligibilité"
     all('select').first.select 'Un champ oui non'
     click_on 'Enregistrer'

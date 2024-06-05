@@ -28,19 +28,6 @@ describe Logic::BinaryOperator do
     it { expect(greater_than(constant(2), champ_value(champ.stable_id)).sources).to eq([champ.stable_id]) }
     it { expect(greater_than(champ_value(champ.stable_id), champ_value(champ2.stable_id)).sources).to eq([champ.stable_id, champ2.stable_id]) }
   end
-
-  describe '#computable?' do
-    let(:champ) { create(:champ_integer_number, value: nil) }
-
-    it 'computable?' do
-      expect(greater_than(champ_value(champ.stable_id), constant(1)).computable?([])).to be(false)
-      expect(greater_than(champ_value(champ.stable_id), constant(1)).computable?([champ])).to be(false)
-      allow(champ).to receive(:value).and_return(double(present?: true))
-      expect(greater_than(champ_value(champ.stable_id), constant(1)).computable?([champ])).to be(true)
-      allow(champ).to receive(:visible?).and_return(false)
-      expect(greater_than(champ_value(champ.stable_id), constant(1)).computable?([champ])).to be(false)
-    end
-  end
 end
 
 describe Logic::GreaterThan do

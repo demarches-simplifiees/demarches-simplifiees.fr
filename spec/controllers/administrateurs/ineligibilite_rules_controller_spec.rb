@@ -197,14 +197,14 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
         let(:types_de_champ_public) { [] }
         render_views
 
-        it { expect(response.body).to have_link("Ajouter un champ supportant les critères d’inéligibilité") }
+        it { expect(response.body).to have_link("Ajouter un champ supportant les conditions d’inéligibilité") }
       end
 
       context 'rendered with tdc' do
         let(:types_de_champ_public) { [{ type: :yes_no }] }
         render_views
 
-        it { expect(response.body).not_to have_link("Ajouter un champ supportant les critères d’inéligibilité") }
+        it { expect(response.body).not_to have_link("Ajouter un champ supportant les conditions d’inéligibilité") }
       end
     end
   end

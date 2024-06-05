@@ -1,5 +1,5 @@
 class Dossiers::InvalidIneligibiliteRulesComponent < ApplicationComponent
-  delegate :can_passer_en_construction?, :ineligibilite_rules_computable?, to: :@dossier
+  delegate :can_passer_en_construction?, to: :@dossier
 
   def initialize(dossier:)
     @dossier = dossier
@@ -7,7 +7,7 @@ class Dossiers::InvalidIneligibiliteRulesComponent < ApplicationComponent
   end
 
   def render?
-    ineligibilite_rules_computable? && !can_passer_en_construction?
+    !can_passer_en_construction?
   end
 
   def error_message

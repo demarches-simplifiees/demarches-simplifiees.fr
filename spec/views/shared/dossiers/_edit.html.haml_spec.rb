@@ -155,7 +155,6 @@ describe 'shared/dossiers/edit', type: :view do
     let(:dossier) { create(:dossier, procedure:) }
 
     before do
-      allow_any_instance_of(Dossiers::InvalidIneligibiliteRulesComponent).to receive(:ineligibilite_rules_computable?).and_return(true)
       allow(dossier).to receive(:can_passer_en_construction?).and_return(false)
     end
 

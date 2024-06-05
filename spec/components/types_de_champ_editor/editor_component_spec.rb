@@ -19,7 +19,7 @@ describe TypesDeChampEditor::EditorComponent, type: :component do
     context 'types_de_champ_private' do
       let(:is_annotation) { true }
       it 'does not render public champs errors' do
-        expect(subject).to have_selector("a", "private")
+        expect(subject).to have_selector("a", text: "private")
         expect(subject).to have_text("doit comporter au moins un choix sélectionnable")
         expect(subject).not_to have_text("public")
       end

@@ -269,12 +269,6 @@ class ProcedureRevision < ApplicationRecord
     types_de_champ_for(scope: :public).filter(&:conditionable?)
   end
 
-  def ineligibilite_rules_computable?(champs)
-    ineligibilite_enabled && ineligibilite_rules&.computable?(champs)
-  ensure
-    champs.map(&:reset_visible) # otherwise @visible is cached, then dossier can be updated. champs are not updated
-  end
-
   private
 
   def compute_estimated_fill_duration
@@ -487,13 +481,6 @@ class ProcedureRevision < ApplicationRecord
       end
     end
     changes
-  end
-
-  def ineligibilite_rules_are_valid?
-    if ineligibilite_rules
-      ineligibilite_rules.errors(types_de_champ_for(scope: :public).to_a)
-        .each { errors.add(:ineligibilite_rules, :invalid) }
-    end
   end
 
   def ineligibilite_rules_are_valid?

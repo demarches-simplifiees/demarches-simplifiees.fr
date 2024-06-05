@@ -940,12 +940,9 @@ class Dossier < ApplicationRecord
       .filter(&:visible?)
       .filter(&:mandatory_blank?)
       .map do |champ|
-        errors.import(champ.errors.add(:value, :missing))
+        champ.errors.add(:value, :missing)
       end
-  end
-
-  def ineligibilite_rules_computable?
-    revision.ineligibilite_rules_computable?(champs_for_revision(scope: :public))
+      .each { errors.import(_1) }
   end
 
   def demander_un_avis!(avis)

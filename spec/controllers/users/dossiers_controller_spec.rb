@@ -791,26 +791,27 @@ describe Users::DossiersController, type: :controller do
       end
       render_views
 
-      context 'when it pass from undefined to true' do
+      context 'when it switches from true to false' do
         let(:value) { must_be_greater_than + 1 }
 
         it 'raises popup' do
           subject
           dossier.reload
           expect(dossier.can_passer_en_construction?).to be_falsey
-          expect(assigns(:ineligibilite_rules_was_computable)).to eq(false)
-          expect(assigns(:ineligibilite_rules_is_computable)).to eq(true)
+          expect(assigns(:can_passer_en_construction_was)).to eq(true)
+          expect(assigns(:can_passer_en_construction_is)).to eq(false)
           expect(response.body).to match(ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken))
         end
       end
-      context 'when it pass from undefined to false' do
+
+      context 'when it stays true' do
         let(:value) { must_be_greater_than - 1 }
         it 'does nothing' do
           subject
           dossier.reload
           expect(dossier.can_passer_en_construction?).to be_truthy
-          expect(assigns(:ineligibilite_rules_was_computable)).to eq(false)
-          expect(assigns(:ineligibilite_rules_is_computable)).to eq(true)
+          expect(assigns(:can_passer_en_construction_was)).to eq(true)
+          expect(assigns(:can_passer_en_construction_is)).to eq(true)
           expect(response.body).not_to have_selector("##{ActionView::RecordIdentifier.dom_id(dossier, :ineligibilite_rules_broken)}")
         end
       end
