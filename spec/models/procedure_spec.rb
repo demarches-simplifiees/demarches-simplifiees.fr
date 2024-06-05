@@ -372,12 +372,12 @@ describe Procedure do
           ]
         end
         let(:types_de_champ_private) { [] }
-        let(:invalid_repetition_error_message) { 'Le champ « Enfants » doit comporter au moins un champ répétable' }
-        let(:invalid_drop_down_error_message) { 'Le champ « Civilité » doit comporter au moins un choix sélectionnable' }
+        let(:invalid_repetition_error_message) { "doit comporter au moins un champ répétable" }
+        let(:invalid_drop_down_error_message) { "doit comporter au moins un choix sélectionnable" }
 
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
 
           new_draft = procedure.draft_revision
           repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?)
@@ -385,17 +385,17 @@ describe Procedure do
           new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
 
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
 
           drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
           drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
           procedure.reload.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
         end
       end
 
@@ -408,17 +408,21 @@ describe Procedure do
         end
         let(:types_de_champ_public) { [] }
 
-        let(:invalid_repetition_error_message) { 'L’annotation privée « Enfants » doit comporter au moins un champ répétable' }
-        let(:invalid_drop_down_error_message) { 'L’annotation privée « Civilité » doit comporter au moins un choix sélectionnable' }
+        let(:invalid_repetition_error_message) { "doit comporter au moins un champ répétable" }
+        let(:invalid_drop_down_error_message) { "doit comporter au moins un choix sélectionnable" }
 
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+          repetition = procedure.draft_revision.types_de_champ_private.find(&:repetition?)
+          expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(repetition)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+          drop_down = procedure.draft_revision.types_de_champ_private.find(&:drop_down_list?)
+          expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(drop_down)
         end
       end
 
@@ -441,7 +445,7 @@ describe Procedure do
         include Logic
         let(:types_de_champ_public) { [{ type: :text, libelle: 'condition', condition: ds_eq(champ_value(1), constant(2)), stable_id: 2 }] }
         let(:types_de_champ_private) { [{ type: :decimal_number, stable_id: 1 }] }
-        let(:error_on_condition) { "Le champ « condition » a une logique conditionnelle invalide" }
+        let(:error_on_condition) { "Le champ a une logique conditionnelle invalide" }
 
         it 'validate without context' do
           procedure.validate

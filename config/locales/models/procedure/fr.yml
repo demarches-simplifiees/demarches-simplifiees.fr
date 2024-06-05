@@ -78,16 +78,16 @@ fr:
               invalid: 'n’a pas le bon format'
             draft_types_de_champ_public:
               format: 'Le champ %{message}'
-              invalid_condition: "« %{value} » a une logique conditionnelle invalide"
-              empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
-              empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
-              inconsistent_header_section: "« %{value} » %{custom_message}"
+              invalid_condition: "a une logique conditionnelle invalide"
+              empty_repetition: 'doit comporter au moins un champ répétable'
+              empty_drop_down: 'doit comporter au moins un choix sélectionnable'
+              inconsistent_header_section: "%{custom_message}"
             draft_types_de_champ_private:
               format: 'L’annotation privée %{message}'
-              invalid_condition: "« %{value} » a une logique conditionnelle invalide"
-              empty_repetition: '« %{value} » doit comporter au moins un champ répétable'
-              empty_drop_down: '« %{value} » doit comporter au moins un choix sélectionnable'
-              inconsistent_header_section: "« %{value} » %{custom_message}"
+              invalid_condition: "a une logique conditionnelle invalide"
+              empty_repetition: 'doit comporter au moins un champ répétable'
+              empty_drop_down: 'doit comporter au moins un choix sélectionnable'
+              inconsistent_header_section: "%{custom_message}"
             attestation_template:
               format: "%{attribute} %{message}"
             initiated_mail:
