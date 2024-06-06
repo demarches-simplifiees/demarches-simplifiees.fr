@@ -3,8 +3,8 @@
   = render partial: "root/footer"
 
 #contact-form
-  .container
-    %h1.new-h1
+  .fr-container
+    %h1
       = t('.contact')
 
     = form_tag contact_path, method: :post, multipart: true, class: 'fr-form-group', data: {controller: :support } do
