@@ -1,0 +1,19 @@
+%main#content{ role: "main" }
+  .fr-container
+    .fr-my-7w.fr-mt-md-12w.fr-mb-md-10w.fr-grid-row.fr-grid-row--gutters.fr-grid-row--middle.fr-grid-row--center
+      .fr-py-0.fr-col-12.fr-col-md-6
+        %h1 Unexpected Error
+        %p.fr-text--sm.fr-mb-3w Error 500
+        %p.fr-text--lead.fr-mb-3w
+          Sorry, an error has occurred. Our teams have been notified
+          to resolve the issue as quickly as possible.
+        %p.fr-text--sm.fr-mb-5w
+          Try refreshing the page or try again a little later.
+          %br
+          If you need immediate assistance, please contact us.
+
+        %ul.fr-btns-group.fr-btns-group--inline-md
+          %li
+            = link_to("Contact Us", contact_path, class: "fr-btn fr-btn--secondary")
+
+      = render partial: "artwork"

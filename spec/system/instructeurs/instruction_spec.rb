@@ -139,7 +139,7 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text("Export .csv d’un dossier « à suivre » demandé il y a moins d'une minute")
     expect(page).to have_text("En préparation")
 
-    assert_performed_jobs 2 do
+    assert_performed_jobs 1 do
       perform_enqueued_jobs(only: ExportJob)
     end
 

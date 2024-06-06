@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
+ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -266,6 +266,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
     t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["row_id"], name: "index_champs_on_row_id"
+    t.index ["stable_id"], name: "index_champs_on_stable_id"
     t.index ["type"], name: "index_champs_on_type"
     t.index ["type_de_champ_id", "dossier_id", "row_id"], name: "index_champs_on_type_de_champ_id_and_dossier_id_and_row_id", unique: true
     t.index ["type_de_champ_id"], name: "index_champs_on_type_de_champ_id"
@@ -1155,16 +1156,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_11_164502) do
     t.index ["requested_merge_into_id"], name: "index_users_on_requested_merge_into_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
-  end
-
-  create_table "virus_scans", force: :cascade do |t|
-    t.string "blob_key"
-    t.bigint "champ_id"
-    t.datetime "created_at", null: false
-    t.datetime "scanned_at"
-    t.string "status"
-    t.datetime "updated_at", null: false
-    t.index ["champ_id"], name: "index_virus_scans_on_champ_id"
   end
 
   create_table "without_continuation_mails", id: :serial, force: :cascade do |t|

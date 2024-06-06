@@ -108,6 +108,8 @@ module TPS
     config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption.fetch(:primary_key)
     config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption.fetch(:key_derivation_salt)
 
+    config.exceptions_app = self.routes
+
     # Copied from rgeo/activerecord-postgis-adapter
     ActiveRecord::SchemaDumper.ignore_tables |= [
       'geography_columns',
