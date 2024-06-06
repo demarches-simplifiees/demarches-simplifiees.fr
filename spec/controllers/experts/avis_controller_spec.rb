@@ -355,26 +355,12 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#avis_new' do
-      let!(:revoked_expert) { create(:experts_procedure, revoked_at: 2.days.ago, procedure: procedure, expert: create(:expert)).expert }
       before do
+        allow(Expert).to receive(:autocomplete_mails).and_return([])
         get :avis_new, params: { procedure_id: procedure.id, id: avis_without_answer.id }
       end
-      context 'when procedure experts need administrateur invitation' do
-        let!(:procedure) { create(:procedure, experts_require_administrateur_invitation: true) }
 
-        it 'limit invited email list to not revoked experts' do
-          expect(assigns(:experts_emails)).to include(experts_procedure.expert.user.email)
-          expect(assigns(:experts_emails)).not_to include(revoked_expert.user.email)
-        end
-      end
-      context 'when procedure experts can be anyone' do
-        let!(:procedure) { create(:procedure, experts_require_administrateur_invitation: false) }
-
-        it 'prefill autocomplete with all experts in the procedure' do
-          expect(assigns(:experts_emails)).to include(experts_procedure.expert.user.email)
-          expect(assigns(:experts_emails)).to include(revoked_expert.user.email)
-        end
-      end
+      it { expect(Expert).to have_received(:autocomplete_mails).with(procedure) }
     end
 
     describe '#create_avis' do

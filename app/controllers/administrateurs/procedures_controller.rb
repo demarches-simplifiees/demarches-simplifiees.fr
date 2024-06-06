@@ -387,7 +387,7 @@ module Administrateurs
 
     def close
       @published_procedures = current_administrateur.procedures.publiees.to_h { |p| ["#{p.libelle} (#{p.id})", p.id] }
-      @closing_reason_options = Procedure.closing_reasons.values.map { |reason| [I18n.t("activerecord.attributes.procedure.closing_reasons.#{reason}"), reason] }
+      @closing_reason_options = Procedure.closing_reasons.values.map { |reason| [I18n.t("activerecord.attributes.procedure.closing_reasons.#{reason}", app_name: Current.application_name), reason] }
     end
 
     def confirmation

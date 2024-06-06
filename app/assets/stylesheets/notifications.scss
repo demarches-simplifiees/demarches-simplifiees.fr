@@ -8,8 +8,7 @@ span.notifications {
   background-color: $orange;
 }
 
-.fr-tabs__list span.notifications,
-span.notifications.absolute-right {
+.fr-tabs__list span.notifications {
   z-index: 2;
   top: 5px;
   right: 8px;
