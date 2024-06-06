@@ -214,10 +214,10 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
           super().merge(tiptap_body: { type: :doc, content: [{ type: :mention, attrs: { id: "tdc12", label: "oops" } }] }.to_json)
         end
 
-        it "render error" do
+        it "renders error" do
           subject
           expect(response.body).to include("Formulaire en erreur")
-          expect(response.body).to include('Supprimer cette balise')
+          expect(response.body).to include('Supprimer la balise')
         end
       end
 
