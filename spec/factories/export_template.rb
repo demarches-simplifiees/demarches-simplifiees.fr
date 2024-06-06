@@ -86,5 +86,21 @@ FactoryBot.define do
         end
       end
     end
+
+    factory :tabular_export_template do
+      kind { "ods" }
+      content {
+        {
+          "columns" => [
+            { "path" => "email", "source" => "dossier", "libelle" => "Email" },
+            { "path" => "value", "source" => "tdc", "libelle" => "Ca va ?", "stable_id" => 1 },
+            { "path" => "code", "source" => "tdc", "libelle" => "Commune", "stable_id" => 2 },
+            { "path" => "value", "source" => "repet", "libelle" => "PJ répétable", "stable_id" => 4, "repetition_champ_stable_id" => 3 },
+            { "path" => "value", "source" => "repet", "libelle" => "Champ repetable", "stable_id" => 5, "repetition_champ_stable_id" => 3 },
+            { "path" => "value", "source" => "repet", "libelle" => "PJ", "stable_id" => 7, "repetition_champ_stable_id" => 6 }
+          ]
+        }
+      }
+    end
   end
 end
