@@ -66,7 +66,7 @@ module Administrateurs
         render :update && return
       end
 
-      if @attestation_template.published?
+      if @attestation_template.published? && should_edit_draft?
         @attestation_template = @attestation_template.dup
         @attestation_template.state = :draft
         @attestation_template.procedure = @procedure
@@ -125,8 +125,15 @@ module Administrateurs
 
     def retrieve_attestation_template
       v2s = @procedure.attestation_templates_v2
-      @attestation_template = v2s.find(&:draft?) || v2s.find(&:published?) || @procedure.build_attestation_template(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, state: :draft)
+      @attestation_template = v2s.find(&:draft?) || v2s.find(&:published?) || build_default_attestation
     end
+
+    def build_default_attestation
+      state = should_edit_draft? ? :draft : :published
+      @procedure.build_attestation_template(version: 2, json_body: AttestationTemplate::TIPTAP_BODY_DEFAULT, activated: true, state:)
+    end
+
+    def should_edit_draft? = !@procedure.brouillon?
 
     def editor_params
       params.required(:attestation_template).permit(:activated, :official_layout, :label_logo, :label_direction, :tiptap_body, :footer, :logo, :signature, :activated, :state)

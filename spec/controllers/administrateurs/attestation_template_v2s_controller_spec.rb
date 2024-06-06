@@ -1,7 +1,7 @@
 describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   let(:admin) { create(:administrateur) }
   let(:attestation_template) { build(:attestation_template, :v2) }
-  let(:procedure) { create(:procedure, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+  let(:procedure) { create(:procedure, :published, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
   let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
 
@@ -96,17 +96,21 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   end
 
   describe 'GET edit' do
+    render_views
+    let(:attestation_template) { nil }
+
     subject do
       get :edit, params: { procedure_id: procedure.id }
       response.body
     end
 
     context 'if an attestation template does not exists yet on the procedure' do
-      let(:attestation_template) { nil }
-
       it 'creates new v2 attestation template' do
         subject
         expect(assigns(:attestation_template).version).to eq(2)
+        expect(assigns(:attestation_template)).to be_draft
+        expect(response.body).to have_button("Publier")
+        expect(response.body).not_to have_link("Réinitialiser les modifications")
       end
     end
 
@@ -116,13 +120,51 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
       it 'build new v2 attestation template' do
         subject
         expect(assigns(:attestation_template).version).to eq(2)
+        expect(assigns(:attestation_template)).to be_draft
       end
     end
 
-    context 'if attestation template already exist on v2' do
-      it 'assigns v2 attestation template' do
+    context 'attestation template published exist without draft' do
+      let(:attestation_template) { build(:attestation_template, :v2, :published) }
+
+      it 'mention publication' do
         subject
         expect(assigns(:attestation_template)).to eq(attestation_template)
+        expect(response.body).not_to have_link("Réinitialiser les modifications")
+        expect(response.body).not_to have_button("Publier les modifications")
+      end
+    end
+
+    context 'attestation template draft already exist on v2' do
+      let(:attestation_template) { build(:attestation_template, :v2, :draft) }
+
+      it 'assigns this draft' do
+        subject
+        expect(assigns(:attestation_template)).to eq(attestation_template)
+        expect(response.body).not_to have_link("Réinitialiser les modifications")
+        expect(response.body).to have_button("Publier")
+      end
+
+      context 'and a published template also exists' do
+        before { create(:attestation_template, :v2, :published, procedure:) }
+
+        it 'mention publication' do
+          subject
+          expect(assigns(:attestation_template)).to eq(attestation_template)
+          expect(response.body).to have_link("Réinitialiser les modifications")
+          expect(response.body).to have_button("Publier les modifications")
+        end
+      end
+    end
+
+    context 'when procedure is draft' do
+      let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+
+      it 'built template is already live (published)' do
+        subject
+        expect(assigns(:attestation_template).version).to eq(2)
+        expect(assigns(:attestation_template)).to be_published
+        expect(response.body).not_to have_button(/Publier/)
       end
     end
   end

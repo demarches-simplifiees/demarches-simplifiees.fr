@@ -71,6 +71,13 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
   end
 
   context 'Update attestation v2' do
+    let(:procedure) do
+      create(:procedure, :published,
+        administrateurs: [administrateur],
+        libelle: 'libellé de la procédure',
+        path: 'libelle-de-la-procedure')
+    end
+
     before do
       Flipper.enable(:attestation_v2)
 
@@ -100,7 +107,7 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         attestation.present?
       }
       expect(attestation.label_logo).to eq("System Test")
-      expect(attestation.activated?).to be_falsey
+      expect(attestation.activated?).to be_truthy
       expect(page).to have_content("Formulaire enregistré")
 
       click_on "date de décision"
@@ -139,6 +146,12 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
       click_on "Publier"
       expect(attestation.reload).to be_published
+      expect(page).to have_text("L’attestation a été publiée")
+
+      fill_in "Intitulé de la direction", with: "plop"
+      click_on "Publier les modifications"
+      expect(procedure.reload.attestation_template.label_direction).to eq("plop")
+      expect(page).to have_text(/La nouvelle version de l’attestation/)
     end
 
     context "tag in error" do
