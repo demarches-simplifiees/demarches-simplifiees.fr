@@ -106,6 +106,15 @@ describe APIGeoService do
 
       it { expect(subject[:city_name]).to eq('Paris') }
     end
+
+    context 'without postcode (nouméa…)' do
+      let(:feature) do
+        features.first.tap { _1["properties"].delete("postcode") }
+      end
+
+      it { expect(subject[:postal_code]).to eq('') }
+      it { expect(subject[:city_name]).to eq('Paris') }
+    end
   end
 
   describe 'safely_normalize_city_name' do

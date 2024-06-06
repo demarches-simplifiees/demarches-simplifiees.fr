@@ -51,7 +51,6 @@ class Champ < ApplicationRecord
     :carte?,
     :te_fenua?,
     :datetime?,
-    :stable_id,
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,

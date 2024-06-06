@@ -115,7 +115,7 @@ class APIGeoService
         label: properties.fetch('label'),
         type: properties.fetch('type'),
         street_address: properties.fetch('name'),
-        postal_code: properties.fetch('postcode'),
+        postal_code: properties.fetch('postcode') { '' }, # API graphql / serializer requires non-null data
         street_number: properties['housenumber'],
         street_name: properties['street'],
         geometry: feature['geometry']
