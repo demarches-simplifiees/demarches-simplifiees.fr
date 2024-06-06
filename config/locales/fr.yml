@@ -449,6 +449,8 @@ fr:
           dossier_edit_l4: échanger avec un instructeur.
           acces_dossier: Accéder à votre dossier
           submit_dossier: Déposer un autre dossier
+          jdma_l1: Aidez-nous à améliorer ce service !
+          jdma_l2: Donnez-nous votre avis, cela ne prend que 2 minutes.
         show:
           header:
             summary: "Résumé"

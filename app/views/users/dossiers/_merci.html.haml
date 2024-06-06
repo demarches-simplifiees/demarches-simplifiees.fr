@@ -20,7 +20,11 @@
 
     .flex.column.align-center
       = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'fr-btn fr-btn--xl fr-mt-5w'
-      = link_to t('views.users.dossiers.merci.submit_dossier'), commencer_url(procedure.path), class: 'fr-btn fr-btn--secondary fr-mt-3w'
+      = link_to t('views.users.dossiers.merci.submit_dossier'), commencer_url(procedure.path), class: 'fr-btn fr-btn--secondary fr-mt-3w fr-mb-2w'
 
       .monavis
+        %p.fr-mt-5w.fr-mb-1w
+          %strong= t('views.users.dossiers.merci.jdma_l1')
+        %p= t('views.users.dossiers.merci.jdma_l2')
+
         != procedure.monavis_embed
