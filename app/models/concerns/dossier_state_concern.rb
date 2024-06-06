@@ -120,7 +120,11 @@ module DossierStateConcern
     disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
-      NotificationMailer.send_accepte_notification(self).deliver_later
+      if procedure.accuse_lecture?
+        NotificationMailer.send_accuse_lecture_notification(self).deliver_later
+      else
+        NotificationMailer.send_accepte_notification(self).deliver_later
+      end
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
 
@@ -152,7 +156,11 @@ module DossierStateConcern
   end
 
   def after_commit_accepter_automatiquement
-    NotificationMailer.send_accepte_notification(self).deliver_later
+    if procedure.accuse_lecture?
+      NotificationMailer.send_accuse_lecture_notification(self).deliver_later
+    else
+      NotificationMailer.send_accepte_notification(self).deliver_later
+    end
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
 
     send_dossier_decision_to_experts(self)
@@ -184,7 +192,11 @@ module DossierStateConcern
     disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
-      NotificationMailer.send_refuse_notification(self).deliver_later
+      if procedure.accuse_lecture?
+        NotificationMailer.send_accuse_lecture_notification(self).deliver_later
+      else
+        NotificationMailer.send_refuse_notification(self).deliver_later
+      end
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
 
@@ -209,7 +221,11 @@ module DossierStateConcern
   end
 
   def after_commit_refuser_automatiquement
-    NotificationMailer.send_refuse_notification(self).deliver_later
+    if procedure.accuse_lecture?
+      NotificationMailer.send_accuse_lecture_notification(self).deliver_later
+    else
+      NotificationMailer.send_refuse_notification(self).deliver_later
+    end
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
 
     send_dossier_decision_to_experts(self)
@@ -241,7 +257,11 @@ module DossierStateConcern
     disable_notification = h.fetch(:disable_notification, false)
 
     if !disable_notification
-      NotificationMailer.send_sans_suite_notification(self).deliver_later
+      if procedure.accuse_lecture?
+        NotificationMailer.send_accuse_lecture_notification(self).deliver_later
+      else
+        NotificationMailer.send_sans_suite_notification(self).deliver_later
+      end
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
 

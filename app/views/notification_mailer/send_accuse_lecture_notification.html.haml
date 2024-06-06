@@ -1,0 +1,23 @@
+- content_for :procedure_logo do
+  = render 'layouts/mailers/logo', url: @logo_url
+
+%p
+  = t("layouts.mailers.accuse_lecture.good_morning")
+
+%p
+  = t("layouts.mailers.accuse_lecture.first_part",
+  dossier_id: number_with_delimiter(@dossier.id))
+
+  %span{ :style => "font-weight: bold;" }
+    = @dossier.procedure.libelle
+
+  = t("layouts.mailers.accuse_lecture.second_part")
+%p
+  = t("layouts.mailers.accuse_lecture.third_part")
+  = link_to APPLICATION_NAME, dossier_url(@dossier)
+
+%p
+  = t(:best_regards, scope: [:views, :shared, :greetings])
+  %br
+    = t('layouts.mailers.signature.team')
+    = APPLICATION_NAME

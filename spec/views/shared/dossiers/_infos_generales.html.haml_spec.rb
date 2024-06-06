@@ -1,6 +1,6 @@
 describe 'shared/dossiers/_infos_generales', type: :view do
   let(:dossier) { create(:dossier, :en_construction) }
-  subject { render }
+  subject { render 'shared/dossiers/infos_generales', dossier: dossier, profile: 'instructeur' }
   before do
     sign_in(current_role.user)
     allow(view).to receive(:current_instructeur).and_return(current_role)
@@ -28,6 +28,14 @@ describe 'shared/dossiers/_infos_generales', type: :view do
       let(:dossier) { create :dossier, :accepte, :with_motivation }
 
       it 'displays the motivation text' do
+        expect(subject).to have_content(dossier.motivation)
+      end
+    end
+
+    context 'with a motivation and procedure with accuse de lecture' do
+      let(:dossier) { create :dossier, :accepte, :with_justificatif, procedure: create(:procedure, :accuse_lecture) }
+
+      it 'still displays the motivation text for the instructeur' do
         expect(subject).to have_content(dossier.motivation)
       end
     end

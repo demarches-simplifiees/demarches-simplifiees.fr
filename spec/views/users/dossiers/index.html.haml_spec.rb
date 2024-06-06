@@ -1,10 +1,13 @@
 describe 'users/dossiers/index', type: :view do
   let(:user) { create(:user) }
+  let(:procedure_accuse_lecture) { create(:procedure, :accuse_lecture) }
   let(:dossier_brouillon) { create(:dossier, state: Dossier.states.fetch(:brouillon), user: user) }
   let(:dossier_en_construction) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user) }
+  let(:dossier_en_construction_with_accuse_lecture) { create(:dossier, state: Dossier.states.fetch(:en_construction), user: user, procedure: procedure_accuse_lecture) }
   let(:dossier_termine) { create(:dossier, state: Dossier.states.fetch(:accepte), user: user) }
+  let(:dossier_termine_with_accuse_lecture) { create(:dossier, state: Dossier.states.fetch(:accepte), user: user, procedure: procedure_accuse_lecture) }
   let(:dossiers_invites) { [] }
-  let(:user_dossiers) { Kaminari.paginate_array([dossier_brouillon, dossier_en_construction, dossier_termine]).page(1) }
+  let(:user_dossiers) { Kaminari.paginate_array([dossier_brouillon, dossier_en_construction, dossier_termine, dossier_en_construction_with_accuse_lecture, dossier_termine_with_accuse_lecture]).page(1) }
   let(:statut) { 'en-cours' }
   let(:filter) { DossiersFilter.new(user, ActionController::Parameters.new(random_param: 'random_param')) }
 
@@ -28,7 +31,7 @@ describe 'users/dossiers/index', type: :view do
   end
 
   it 'affiche les dossiers' do
-    expect(rendered).to have_selector('.card', count: 3)
+    expect(rendered).to have_selector('.card', count: 5)
   end
 
   it 'affiche les informations des dossiers' do
@@ -40,6 +43,9 @@ describe 'users/dossiers/index', type: :view do
     expect(rendered).to have_text(dossier_en_construction.id.to_s)
     expect(rendered).to have_text(dossier_en_construction.procedure.libelle)
     expect(rendered).to have_link(dossier_en_construction.procedure.libelle, href: dossier_path(dossier_en_construction))
+
+    expect(rendered).to have_selector('.fr-badge', text: 'traité', count: 1)
+    expect(rendered).to have_selector('.fr-badge', text: 'en construction', count: 2)
   end
 
   it 'n’affiche pas une alerte pour continuer à remplir un dossier' do
@@ -132,13 +138,13 @@ describe 'users/dossiers/index', type: :view do
 
     it "cache key depends on dossiers list" do
       render
-      expect(rendered).to have_text(/3\s+en cours/)
+      expect(rendered).to have_text(/5\s+en cours/)
 
       assign(:user_dossiers, Kaminari.paginate_array(user_dossiers.concat([create(:dossier, :en_construction, user: user)])).page(1))
       user.reload
 
       render
-      expect(rendered).to have_text(/4\s+en cours/)
+      expect(rendered).to have_text(/6\s+en cours/)
     end
 
     it "cache key dpeends on dossier invites" do

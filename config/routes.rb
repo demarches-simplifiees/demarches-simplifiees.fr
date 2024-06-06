@@ -384,6 +384,7 @@ Rails.application.routes.draw do
         get 'qrcode/:created_at', action: 'qrcode', as: :qrcode
         get 'transferer', to: 'dossiers#transferer'
         get 'papertrail', format: :pdf
+        get 'set_accuse_lecture_agreement_at'
       end
 
       collection do
@@ -586,6 +587,8 @@ Rails.application.routes.draw do
         get 'modifications'
         get 'monavis'
         patch 'update_monavis'
+        get 'accuse_lecture'
+        patch 'update_accuse_lecture'
         get 'jeton'
         patch 'update_jeton'
         put :allow_expert_review

@@ -282,6 +282,10 @@ FactoryBot.define do
                                 referentiel_de_programmation: { c: 3 })
       end
     end
+
+    trait :accuse_lecture do
+      accuse_lecture { true }
+    end
   end
 end
 

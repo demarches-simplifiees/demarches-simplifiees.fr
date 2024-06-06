@@ -366,6 +366,9 @@ fr:
           form: "Sections du formulaire"
           edit_siret: "Modifier le Numéro TAHITI"
           edit_identity: "Modifier l’identité"
+          accuse_lecture: Cette démarche est soumise à un accusé de lecture.
+          accuse_lecture_with_agreement: L’usager a pris connaissance de la décision concernant son dossier le %{agreement}.
+          accuse_lecture_without_agreement: L’usager n’a pas encore pris connaissance de la décision concernant son dossier.
     gestionnaires:
       groupe_gestionnaires:
         delete: Supprimer
