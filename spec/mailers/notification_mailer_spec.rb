@@ -45,7 +45,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     subject { described_class.send_accuse_lecture_notification(dossier) }
 
     it { expect(subject.subject).to include("La décision a été rendue pour votre démarche #{dossier.procedure.libelle}") }
-    it { expect(subject.body).to include("Pour en connaitre la nature, veuillez vous connecter à votre compte\r\n<a href=\"#{dossier_url(dossier)}\">demarches-simplifiees.fr</a>") }
+    it { expect(subject.body).to include("Pour en connaitre la nature, veuillez vous connecter à votre compte\r\n<a href=\"#{dossier_url(dossier)}\">#{APPLICATION_NAME}</a>") }
   end
 
   describe 'send_en_construction_notification' do

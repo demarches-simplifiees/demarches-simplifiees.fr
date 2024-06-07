@@ -57,8 +57,8 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         it "respect preferred domain" do
           expect(header_value("From", subject.message)).to eq("Ne pas répondre <ne-pas-repondre@demarches.gouv.fr>")
           expect(header_value("Reply-To", subject.message)).to eq("Ne pas répondre <ne-pas-repondre@demarches.gouv.fr>")
-          expect(subject.message.to_s).to include("#{ENV.fetch("APP_HOST")}/users/confirmation")
-          expect(subject.message.to_s).to include("//#{ENV.fetch("APP_HOST")}/assets/#{MAILER_LOGO_SRC[0..8]}")
+          expect(subject.message.to_s).to include("demarches.gouv.fr/users/confirmation")
+          expect(subject.message.to_s).to include("//demarches.gouv.fr/assets/mailer/republique")
         end
       end
     end
@@ -78,7 +78,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
 
         it "respect preferred domain" do
           expect(header_value("From", subject.message)).to include("@demarches.gouv.fr")
-          expect(subject.message.to_s).to include("#{ENV.fetch("APP_HOST")}/users/password")
+          expect(subject.message.to_s).to include("demarches.gouv.fr/users/password")
         end
       end
     end
