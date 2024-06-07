@@ -210,7 +210,7 @@ class AttestationTemplate < ApplicationRecord
   def used_tags
     if version == 2
       json = json_body&.deep_symbolize_keys
-      TiptapService.used_tags_and_libelle_for(json.deep_symbolize_keys)
+      TiptapService.used_tags_and_libelle_for(json.deep_symbolize_keys).map(&:first)
     else
       used_tags_for(title) + used_tags_for(body)
     end
