@@ -27,4 +27,4 @@
           %p.fr-mt-5w.fr-mb-1w
             %strong= t('views.users.dossiers.merci.jdma_l1')
           %p= t('views.users.dossiers.merci.jdma_l2')
-          != procedure.monavis_embed.gsub('nd_source=button', 'nd_source=site')
+          != procedure.monavis_embed.gsub('nd_source=button', 'nd_source=site').gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
