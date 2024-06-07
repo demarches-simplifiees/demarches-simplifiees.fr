@@ -31,11 +31,12 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
   describe 'GET #show' do
     subject do
-      get :show, params: { procedure_id: procedure.id }
+      get :show, params: { procedure_id: procedure.id, format: }
       response.body
     end
 
-    context 'if an attestation template exists on the procedure' do
+    context 'html' do
+      let(:format) { :html }
       render_views
 
       context 'with preview dossier' do
@@ -91,6 +92,24 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         it do
           is_expected.to include("black.png")
         end
+      end
+    end
+
+    context 'pdf' do
+      render_views
+      let(:format) { :pdf }
+      let(:attestation_template) { build(:attestation_template, :v2, signature:) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:, for_procedure_preview: true) }
+
+      before do
+        html_content = /Ministère des devs.+Mon titre pour Ma démarche.+n° #{dossier.id}/m
+        context = { procedure_id: procedure.id }
+
+        allow(WeasyprintService).to receive(:generate_pdf).with(a_string_matching(html_content), hash_including(context)).and_return('PDF_DATA')
+      end
+
+      it do
+        is_expected.to eq('PDF_DATA')
       end
     end
   end
