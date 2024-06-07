@@ -27,4 +27,4 @@
           %strong= t('views.users.dossiers.merci.jdma_l1')
         %p= t('views.users.dossiers.merci.jdma_l2')
 
-        != procedure.monavis_embed
+        != procedure.monavis_embed.gsub('nd_source=button', 'nd_source=site')
