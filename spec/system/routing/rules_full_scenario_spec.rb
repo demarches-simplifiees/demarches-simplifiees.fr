@@ -125,6 +125,9 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Le groupe d’instructeurs « artistique » a été créé. ')
     expect(procedure.groupe_instructeurs.count).to eq(4)
 
+    # add contact_information to all groupes instructeur
+    procedure.groupe_instructeurs.each { |gi| gi.update!(contact_information: create(:contact_information)) }
+
     # publish
     publish_procedure(procedure)
     log_out
@@ -267,8 +270,17 @@ describe 'The routing with rules', js: true do
     # the old system should not be present
     expect(page).not_to have_selector("#dossier_groupe_instructeur_id")
 
+    dossier = user.dossiers.first
+
+    expect(dossier.groupe_instructeur_id).to be_nil
+    expect(page).to have_text(procedure.service.nom)
+
     choose(groupe)
     wait_for_autosave
+
+    expect(dossier.reload.groupe_instructeur_id).not_to be_nil
+    expect(page).to have_text(dossier.service.nom)
+    expect(page).not_to have_text(procedure.service.nom)
 
     click_on 'Déposer le dossier'
     expect(page).to have_text('Merci')
