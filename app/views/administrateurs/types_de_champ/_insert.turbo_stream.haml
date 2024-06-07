@@ -18,7 +18,7 @@
 
 - unless flash.alert
   = turbo_stream.show 'autosave-notice'
-  = turbo_stream.replace 'autosave-notice', render(partial: 'administrateurs/autosave_notice')
+  = turbo_stream.replace 'autosave-notice', render(AutosaveNoticeComponent.new(success: true, label_scope: :form))
   = turbo_stream.hide 'autosave-notice', delay: 30000
 
 - if @destroyed.present?

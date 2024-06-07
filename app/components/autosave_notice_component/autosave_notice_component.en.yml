@@ -1,0 +1,8 @@
+---
+en:
+  form:
+    saved: 'Form saved'
+    error: 'Form in error'
+  attestation:
+    saved: 'Attestation saved'
+    error: 'Attestation in error'

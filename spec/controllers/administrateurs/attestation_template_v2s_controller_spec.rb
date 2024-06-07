@@ -192,7 +192,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.activated).to eq(true)
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
-        expect(response.body).to include("Formulaire enregistré")
+        expect(response.body).to include("Attestation enregistrée")
       end
 
       context "with files" do
@@ -234,7 +234,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(attestation_template.activated).to eq(true)
         expect(attestation_template.tiptap_body).to eq(update_params[:tiptap_body])
 
-        expect(response.body).to include("Formulaire enregistré")
+        expect(response.body).to include("Attestation enregistrée")
         expect(response.body).to include("Publier")
       end
 
@@ -258,7 +258,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
 
         it "renders error" do
           subject
-          expect(response.body).to include("Formulaire en erreur")
+          expect(response.body).to include("Attestation en erreur")
           expect(response.body).to include('Supprimer la balise')
         end
       end

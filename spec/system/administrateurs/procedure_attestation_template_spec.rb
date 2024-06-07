@@ -106,9 +106,9 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
         attestation = procedure.reload.attestation_templates.v2.draft.first
         attestation.present?
       }
+      expect(page).to have_content("Attestation enregistrée")
       expect(attestation.label_logo).to eq("System Test")
       expect(attestation.activated?).to be_truthy
-      expect(page).to have_content("Formulaire enregistré")
 
       click_on "date de décision"
 
@@ -172,14 +172,14 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
 
         click_on "date de décision"
 
-        expect(page).to have_content("Formulaire en erreur")
+        expect(page).to have_content("Attestation en erreur")
         expect(page).to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
 
         page.execute_script("document.getElementById('attestation_template_tiptap_body').type = 'text'")
         fill_in "attestation_template[tiptap_body]", with: AttestationTemplate::TIPTAP_BODY_DEFAULT.to_json
 
-        expect(page).to have_content("Formulaire enregistré")
-        expect(page).not_to have_content("Formulaire en erreur")
+        expect(page).to have_content("Attestation enregistrée")
+        expect(page).not_to have_content("Attestation en erreur")
         expect(page).not_to have_content("Le champ « Contenu de l’attestation » contient la balise \"age\"")
       end
     end
