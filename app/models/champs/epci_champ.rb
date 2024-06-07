@@ -3,10 +3,9 @@ class Champs::EpciChamp < Champs::TextChamp
   before_validation :on_departement_change
   before_validation :on_epci_name_changes
 
-  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
-  validate :code_departement_in_departement_codes, unless: -> { code_departement.blank? }
-  validate :external_id_in_departement_epci_codes, unless: -> { code_departement.blank? || external_id.nil? }
-  validate :value_in_departement_epci_names, unless: -> { code_departement.blank? || external_id.nil? || value.nil? }
+  validate :code_departement_in_departement_codes, if: -> { !(code_departement.nil?) && validate_champ_value_or_prefill? }
+  validate :external_id_in_departement_epci_codes, if: -> { !(code_departement.nil? || external_id.nil?) && validate_champ_value_or_prefill? }
+  validate :value_in_departement_epci_names, if: -> { !(code_departement.nil? || external_id.nil? || value.nil?) && validate_champ_value_or_prefill? }
 
   def for_export(path = :value)
     case path

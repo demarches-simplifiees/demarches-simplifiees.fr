@@ -1,5 +1,6 @@
 class Champ < ApplicationRecord
   include ChampConditionalConcern
+  include ChampsValidateConcern
 
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
@@ -194,7 +195,7 @@ class Champ < ApplicationRecord
   end
 
   def describedby_id
-    "#{html_id}-description" if description.present?
+    "#{html_id}-describedby_id"
   end
 
   def log_fetch_external_data_exception(exception)
@@ -252,27 +253,6 @@ class Champ < ApplicationRecord
       stable_id.to_s
     else
       "#{stable_id}-#{row_id}"
-    end
-  end
-
-  protected
-
-  def valid_champ_value?
-    valid?(public? ? :champs_public_value : :champs_private_value)
-  end
-
-  private
-
-  def validate_champ_value?
-    return false unless visible?
-
-    case validation_context
-    when :champs_public_value
-      public?
-    when :champs_private_value
-      private?
-    else
-      false
     end
   end
 

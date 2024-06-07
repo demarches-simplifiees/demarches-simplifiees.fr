@@ -105,8 +105,12 @@ module DossierCloneConcern
     end
 
     transaction do
-      cloned_dossier.save!(validate: !fork)
-
+      if fork
+        cloned_dossier.save!(validate: false)
+      else
+        cloned_dossier.validate(:champs_public_value)
+        cloned_dossier.save!
+      end
       cloned_dossier.rebase!
     end
 

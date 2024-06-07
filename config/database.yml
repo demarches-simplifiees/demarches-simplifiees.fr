@@ -2,7 +2,6 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("DB_POOL") { 5 } %>
-  timeout: 5000
   # sql queries will be killed after 60s
   # we should reduce this number
   # A bigger timeout can be set for jobs

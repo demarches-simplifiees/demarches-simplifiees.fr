@@ -83,12 +83,6 @@ describe Champs::DgfipChamp, type: :model do
         is_expected.to be false
         expect(champ.errors.full_messages).to eq(["le numéro fiscal doit posséder 13 ou 14 caractères"])
       end
-
-      context 'and the validation_context is :brouillon' do
-        let(:validation_context) { :brouillon }
-
-        it { is_expected.to be true }
-      end
     end
 
     context 'when reference_avis is invalid' do

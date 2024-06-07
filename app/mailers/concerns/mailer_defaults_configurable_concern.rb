@@ -57,7 +57,7 @@ module MailerDefaultsConfigurableConcern
 
     def set_currents_for_demarches_gouv_fr
       Current.application_name = "demarches.gouv.fr"
-      Current.host = ENV.fetch("APP_HOST")
+      Current.host = "demarches.gouv.fr"
       Current.contact_email = "contact@demarches.gouv.fr"
       Current.no_reply_email = NO_REPLY_EMAIL.sub(/@[a-z.-]+/, "@demarches.gouv.fr")
     end

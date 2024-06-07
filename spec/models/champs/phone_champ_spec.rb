@@ -1,6 +1,5 @@
 describe Champs::PhoneChamp do
   let(:champ) { build(:champ_phone) }
-  # subject { champ }
 
   describe '#validate' do
     it do

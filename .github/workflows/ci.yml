@@ -38,14 +38,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
 
       - name: Install Node modules
         run: |
-          node --version
           bun --version
           bun install
         shell: bash

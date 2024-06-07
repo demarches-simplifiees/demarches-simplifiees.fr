@@ -1,7 +1,8 @@
 describe Champs::DropDownListChamp do
   describe 'validations' do
     describe 'inclusion' do
-      let(:drop_down) { build(:champ_drop_down_list, other: other, value: value) }
+      let(:champ) { build(:champ_drop_down_list, other: other, value: value) }
+      subject { champ.validate(:champs_public_value) }
 
       context 'when the other value is accepted' do
         let(:other) { true }
@@ -9,19 +10,19 @@ describe Champs::DropDownListChamp do
         context 'when the value is blank' do
           let(:value) { '' }
 
-          it { expect(drop_down).to be_valid }
+          it { is_expected.to be_truthy }
         end
 
         context 'when the value is included in the option list' do
           let(:value) { 'val1' }
 
-          it { expect(drop_down).to be_valid }
+          it { is_expected.to be_truthy }
         end
 
         context 'when the value is not included in the option list' do
           let(:value) { 'something else' }
 
-          it { expect(drop_down).to be_valid }
+          it { is_expected.to be_truthy }
         end
       end
 
@@ -31,19 +32,19 @@ describe Champs::DropDownListChamp do
         context 'when the value is blank' do
           let(:value) { '' }
 
-          it { expect(drop_down).to be_valid }
+          it { is_expected.to be_truthy }
         end
 
         context 'when the value is included in the option list' do
           let(:value) { 'val1' }
 
-          it { expect(drop_down).to be_valid }
+          it { is_expected.to be_truthy }
         end
 
         context 'when the value is not included in the option list' do
           let(:value) { 'something else' }
 
-          it { expect(drop_down).not_to be_valid }
+          it { is_expected.to be_falsey }
         end
       end
     end

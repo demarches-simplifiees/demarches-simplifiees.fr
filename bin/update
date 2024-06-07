@@ -15,7 +15,6 @@ FileUtils.chdir APP_ROOT do
   puts '== Installing dependencies =='
   system! 'gem install bundler --conservative'
   system('bundle check') || system!('bundle install')
-  system! 'node --version'
   system! 'bun --version'
   system! 'bun install'
 

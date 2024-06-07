@@ -34,6 +34,14 @@ module Dsfr
         errors.full_messages_for(attribute_or_rich_body)
       end
 
+      def fieldset_error_opts
+        if dsfr_champ_container == :fieldset && errors_on_attribute?
+          { aria: { labelledby: "#{describedby_id} #{object.labelledby_id}" } }
+        else
+          {}
+        end
+      end
+
       private
 
       # lookup for edge case from `form.rich_text_area`
@@ -73,11 +81,10 @@ module Dsfr
                                              'fr-input': true,
                                              'fr-mb-0': true
                                       }.merge(input_error_class_names)))
-
         if errors_on_attribute?
-          @opts.deep_merge!(aria: {
-            describedby: describedby_id
-          })
+          @opts.deep_merge!(aria: { describedby: describedby_id })
+        elsif hintable?
+          @opts.deep_merge!(aria: { describedby: hint_id })
         end
 
         if @required
@@ -127,6 +134,10 @@ module Dsfr
       end
 
       def autoresize?
+        false
+      end
+
+      def hintable?
         false
       end
 

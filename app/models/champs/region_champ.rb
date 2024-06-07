@@ -1,7 +1,6 @@
 class Champs::RegionChamp < Champs::TextChamp
-  # TODO: if: -> { validate_champ_value? || validation_context == :prefill }
-  validate :value_in_region_names, unless: -> { value.nil? }
-  validate :external_id_in_region_codes, unless: -> { external_id.nil? }
+  validate :value_in_region_names, if: -> { !value.nil? && validate_champ_value_or_prefill? }
+  validate :external_id_in_region_codes, if: -> { !external_id.nil? && validate_champ_value_or_prefill? }
 
   def for_export(path = :value)
     case path

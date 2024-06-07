@@ -112,7 +112,7 @@ RSpec.describe NotificationMailer, type: :mailer do
         let(:user) { create(:user, preferred_domain: :demarches_gouv_fr) }
 
         it 'adjusts links and sender email for user preferred domain' do
-          expect(mail.body).to have_link(href: dossier_url(dossier, host: ENV.fetch("APP_HOST")))
+          expect(mail.body).to have_link(href: dossier_url(dossier, host: 'demarches.gouv.fr'))
           expect(header_value("From", mail)).to include("@demarches.gouv.fr")
         end
       end

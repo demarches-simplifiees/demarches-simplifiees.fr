@@ -19,14 +19,13 @@ class Champs::PhoneChamp < Champs::TextChamp
   #
   # See issue #6996.
   DEFAULT_COUNTRY_CODES = [:FR, :GP, :GF, :MQ, :RE, :YT, :NC, :PF].freeze
-
   validates :value,
     phone: {
       possible: true,
       allow_blank: true,
       message: I18n.t(:not_a_phone, scope: 'activerecord.errors.messages')
     },
-    if: -> { (validate_champ_value? || validation_context == :prefill) && !Phonelib.valid_for_countries?(value, DEFAULT_COUNTRY_CODES) }
+    if: -> { !Phonelib.valid_for_countries?(value, DEFAULT_COUNTRY_CODES) && validate_champ_value_or_prefill? }
 
   def to_s
     return '' if value.blank?

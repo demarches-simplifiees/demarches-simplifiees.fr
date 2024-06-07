@@ -83,12 +83,6 @@ describe Champs::CnafChamp, type: :model do
         is_expected.to be false
         expect(champ.errors.full_messages).to eq(["le numéro d’allocataire CAF doit être composé au maximum de 7 chiffres"])
       end
-
-      context 'and the validation_context is :brouillon' do
-        let(:validation_context) { :brouillon }
-
-        it { is_expected.to be true }
-      end
     end
 
     context 'when code_postal is invalid' do
