@@ -9,5 +9,8 @@
 - if @services_publics_plus_url.present?
   = render 'layouts/mailers/services_publics_plus'
 
+- if @jdma_html.present?
+  = render 'layouts/mailers/jdma'
+
 - content_for :footer do
   = render 'layouts/mailers/service_footer', service: @service, dossier: @dossier
