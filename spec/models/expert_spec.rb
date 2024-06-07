@@ -113,8 +113,14 @@ RSpec.describe Expert, type: :model do
     end
 
     context 'when procedure experts need administrateur invitation' do
-      it 'returns only confirmed not revoked experts' do
-        expect(subject).to eq([expert.user.email, new_unsigned_expert.user.email].sort)
+      it 'returns only not revoked experts' do
+        expect(subject).to eq([
+          expert,
+          unsigned_expert,
+          new_unsigned_expert
+        ]
+          .map { _1.user.email }
+          .sort)
       end
     end
 
