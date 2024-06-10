@@ -142,6 +142,8 @@ module DossierHelper
 
   def france_connect_informations(user)
     user_information = user.france_connect_informations.first
+    return unless user_information
+
     provider = t("omniauth.provider.#{user.loged_in_with_france_connect}")
     if user_information.full_name.empty?
       t("shared.dossiers.france_connect_informations.details_no_name", provider: provider)
