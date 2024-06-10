@@ -43,7 +43,7 @@ class Champs::PieceJustificativeChamp < Champ
     end
   end
 
-  def for_tag
+  def for_tag(path = :value)
     return nil unless piece_justificative_file.attached?
 
     piece_justificative_file.each_with_index.filter_map do |attachment, i|

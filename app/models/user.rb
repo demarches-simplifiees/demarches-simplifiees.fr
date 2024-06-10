@@ -199,9 +199,8 @@ class User < ApplicationRecord
 
   def france_connected_with_one_identity?
     # pf fci may be known while the user logged with regular password
-    # ==> uses loged_in_with_france instead of fci numbers
-    loged_in_with_france_connect.present?
-    # france_connect_informations.size == 1
+    # ==> adds loged_in_with_france_connect
+    loged_in_with_france_connect.present? && france_connect_informations.size == 1
   end
 
   def can_be_deleted?
