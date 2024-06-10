@@ -211,7 +211,7 @@ describe Procedure do
       it { is_expected.to allow_value('text').on(:publication).for(:cadre_juridique) }
 
       context 'with deliberation' do
-        let(:procedure) { build(:procedure, cadre_juridique: nil) }
+        let(:procedure) { build(:procedure, cadre_juridique: nil, revisions: [build(:procedure_revision)]) }
 
         it { expect(procedure.valid?(:publication)).to eq(false) }
 
@@ -420,22 +420,37 @@ describe Procedure do
           procedure.validate(:publication)
           expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
         end
-
-        it 'validates that types de champ private condition works types de champ public and private' do
-        end
       end
 
       context 'when condition on champ private use public champ' do
         include Logic
-        let(:types_de_champ_private) { [{ type: :text, condition: ds_eq(champ_value(1), constant(2)) }] }
-        let(:types_de_champ_public) { [{ type: :number, stable_id: 1 }] }
-
+        let(:types_de_champ_public) { [{ type: :decimal_number, stable_id: 1 }] }
+        let(:types_de_champ_private) { [{ type: :text, condition: ds_eq(champ_value(1), constant(2)), stable_id: 2 }] }
         it 'validate without context' do
-          expect(procedure.validate).to be_truthy
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
         end
 
-        it 'validate with types_de_champ_private_editor' do
-          expect(procedure.validate(:types_de_champ_private_editor)).to be_falsey
+        it 'validate allows condition' do
+          procedure.validate(:types_de_champ_private_editor)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+      end
+
+      context 'when condition on champ public use private champ' do
+        include Logic
+        let(:types_de_champ_public) { [{ type: :text, libelle: 'condition', condition: ds_eq(champ_value(1), constant(2)), stable_id: 2 }] }
+        let(:types_de_champ_private) { [{ type: :decimal_number, stable_id: 1 }] }
+        let(:error_on_condition) { "Le champ « condition » a une logique conditionnelle invalide" }
+
+        it 'validate without context' do
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to be_empty
+        end
+
+        it 'validate prevent condition' do
+          procedure.validate(:types_de_champ_public_editor)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(error_on_condition)
         end
       end
     end
