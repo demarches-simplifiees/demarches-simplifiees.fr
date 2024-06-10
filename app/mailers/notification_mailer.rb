@@ -90,9 +90,9 @@ class NotificationMailer < ApplicationMailer
   end
 
   def set_jdma
-    return unless params[:state] == Dossier.states.fetch(:en_construction)
+    return unless params[:state] == Dossier.states.fetch(:en_construction) && @dossier.procedure.monavis_embed
 
-    @jdma_html = @dossier.procedure.monavis_embed_html_source("email").presence
+    @jdma_html = @dossier.procedure.monavis_embed_html_source("email")
   end
 
   def set_dossier
