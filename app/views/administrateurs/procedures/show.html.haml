@@ -30,8 +30,8 @@
   - if @procedure.draft_changed?
     = render Dsfr::CalloutComponent.new(title: t(:has_changes, scope: [:administrateurs, :revision_changes]), icon: "fr-fi-information-line") do |c|
       - c.with_body do
-        = render Procedure::RevisionChangesComponent.new changes: @procedure.revision_changes, previous_revision: @procedure.published_revision
         = render Procedure::ErrorsSummary.new(procedure: @procedure, validation_context: :publication)
+        = render Procedure::RevisionChangesComponent.new new_revision: @procedure.draft_revision, previous_revision: @procedure.published_revision
 
       - c.with_bottom do
         %ul.fr-mt-2w.fr-btns-group.fr-btns-group--inline
@@ -71,6 +71,7 @@
     = render Procedure::Card::PresentationComponent.new(procedure: @procedure)
     = render Procedure::Card::ZonesComponent.new(procedure: @procedure) if Rails.application.config.ds_zonage_enabled
     = render Procedure::Card::ChampsComponent.new(procedure: @procedure)
+    = render Procedure::Card::IneligibiliteDossierComponent.new(procedure: @procedure)
     = render Procedure::Card::ServiceComponent.new(procedure: @procedure, administrateur: current_administrateur)
     = render Procedure::Card::AdministrateursComponent.new(procedure: @procedure)
     = render Procedure::Card::InstructeursComponent.new(procedure: @procedure)

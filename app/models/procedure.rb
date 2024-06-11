@@ -293,7 +293,7 @@ class Procedure < ApplicationRecord
 
   validates_with MonAvisEmbedValidator
 
-  validates_associated :draft_revision, on: :publication
+  validate :validates_associated_draft_revision_with_context
   validates_associated :initiated_mail, on: :publication
   validates_associated :received_mail, on: :publication
   validates_associated :closed_mail, on: :publication
@@ -431,11 +431,15 @@ class Procedure < ApplicationRecord
 
   def draft_changed?
     preload_draft_and_published_revisions
-    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && (types_de_champ_revision_changes.present? || ineligibilite_rules_revision_changes.present?)
   end
 
-  def revision_changes
-    published_revision.compare(draft_revision)
+  def types_de_champ_revision_changes
+    published_revision.compare_types_de_champ(draft_revision)
+  end
+
+  def ineligibilite_rules_revision_changes
+    published_revision.compare_ineligibilite_rules(draft_revision)
   end
 
   def preload_draft_and_published_revisions
@@ -1016,6 +1020,13 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def validates_associated_draft_revision_with_context
+    return if draft_revision.blank?
+    return if draft_revision.validate(validation_context)
+
+    draft_revision.errors.map { errors.import(_1) }
+  end
 
   def validate_auto_archive_on_in_the_future
     return if auto_archive_on.nil?

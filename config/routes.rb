@@ -608,6 +608,14 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
+      resource :ineligibilite_rules, only: [:edit, :update, :destroy], param: :revision_id do
+        patch :change_targeted_champ, on: :member
+        patch :update_all_rows, on: :member
+        patch :add_row, on: :member
+        delete :delete_row, on: :member
+        patch :change
+      end
+
       patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 
       put 'clone'
