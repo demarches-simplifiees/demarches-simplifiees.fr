@@ -1,8 +1,16 @@
 #---------------------------------------------------------------------------------
+# Build node_modules dependencies using Bun image
+#---------------------------------------------------------------------------------
+FROM oven/bun:1 as bun
+WORKDIR /app
+COPY package.json bun.lockb ./
+RUN bun install --frozen-lockfile --production
+
+#--------------------------------------------------
 # Builder
 # Intermediate container to bundle all gems
 # Building gems requires dev librairies we don't need in production container
-#---------------------------------------------------------------------------------
+#--------------------------------------------------
 FROM ruby:3.3.0-slim AS base
 FROM base AS builder
 
@@ -37,9 +45,10 @@ USER userapp
 WORKDIR ${APP_PATH}
 
 #----- Building js dependencies (node_modules)
-COPY Gemfile Gemfile.lock package.json bun.lockb ./
-COPY patches ./patches/
 RUN (curl -fsSL https://bun.sh/install | bash)
+COPY package.json bun.lockb ./
+COPY --chown=userapp:userapp --from=bun /app/node_modules ${APP_PATH}/node_modules
+COPY patches ./patches/
 RUN .bun/bin/bun install
 
 #----- Bundle gems: copy from builder container the dependency gems
@@ -152,6 +161,7 @@ ENV \
     MICROSOFT_CLIENT_ID=""\
     MICROSOFT_CLIENT_SECRET=""\
     OTP_SECRET_KEY="" \
+    PATH="${PATH}:${APP_PATH}/.bun/bin"\
     PIPEDRIVE_KEY=""\
     PROCEDURE_DEFAULT_LOGO_SRC="polynesie.png"\
     RAILS_ENV="production"\
@@ -199,6 +209,8 @@ COPY --chown=userapp:userapp . ${APP_PATH}
 RUN rm -fr .git
 
 #----- Precompile assets
+RUN echo $PATH
+RUN which bun
 RUN RAILS_ENV=production NODE_OPTIONS=--max-old-space-size=4000 bundle exec rails assets:precompile
 
 RUN chmod a+x $APP_PATH/app/lib/*.sh
