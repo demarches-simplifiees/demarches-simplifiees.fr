@@ -1,0 +1,5 @@
+#errors-summary
+  - if invalid?
+    = render Dsfr::AlertComponent.new(state: :error, title: , extra_class_names: 'fr-mb-2w') do |c|
+      - c.with_body do
+        = render ExpandableErrorList.new(errors:)

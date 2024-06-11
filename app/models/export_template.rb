@@ -7,6 +7,7 @@ class ExportTemplate < ApplicationRecord
   validates_with ExportTemplateValidator
 
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
+  FORMAT_DATE = "%Y-%m-%d"
 
   def set_default_values
     content["default_dossier_directory"] = tiptap_json("dossier-")
@@ -48,7 +49,7 @@ class ExportTemplate < ApplicationRecord
   def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     [
       attachment,
-      path(dossier, attachment, index, row_index, champ)
+      path(dossier, attachment, index:, row_index:, champ:)
     ]
   end
 
@@ -116,7 +117,7 @@ class ExportTemplate < ApplicationRecord
     "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
   end
 
-  def path(dossier, attachment, index, row_index, champ)
+  def path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     if attachment.name == 'pdf_export_for_instructeur'
       return export_path(dossier)
     end
@@ -128,6 +129,8 @@ class ExportTemplate < ApplicationRecord
       'messagerie'
     when 'Avis'
       'avis'
+    when 'Attestation', 'Etablissement'
+      'pieces_justificatives'
     else
       # for attachment
       return attachment_path(dossier, attachment, index, row_index, champ)

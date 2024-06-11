@@ -2,8 +2,8 @@ RSpec.describe BalancerDeliveryMethod do
   class ExampleMailer < ApplicationMailer
     include BalancedDeliveryConcern
 
-    def greet(name, bypass_unverified_mail_protection: true)
-      mail(to: name, from: "smtp_from", body: "Hello #{name}")
+    def greet(name, bypass_unverified_mail_protection: true, **mail_args)
+      mail(to: name, from: "smtp_from", body: "Hello #{name}", **mail_args)
 
       bypass_unverified_mail_protection! if bypass_unverified_mail_protection
     end
@@ -201,6 +201,13 @@ RSpec.describe BalancerDeliveryMethod do
 
         it { expect(mail).to have_been_delivered_using(MockSmtp) }
       end
+    end
+
+    context 'when there are only bcc recipients' do
+      let(:bypass_unverified_mail_protection) { false }
+      let(:mail) { ExampleMailer.greet(nil, bypass_unverified_mail_protection: false, bcc: ["'u@a.com'"]) }
+
+      it { expect(mail).to have_been_delivered_using(MockSmtp) }
     end
   end
 

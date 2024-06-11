@@ -259,13 +259,19 @@ class Procedure < ApplicationRecord
   validates :lien_dpo, url: { no_local: true, allow_blank: true, accept_email: true }
 
   validates :draft_types_de_champ_public,
+    'types_de_champ/condition': true,
+    'types_de_champ/expression_reguliere': true,
+    'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    on: :publication
+    on: [:types_de_champ_public_editor, :publication]
+
   validates :draft_types_de_champ_private,
+    'types_de_champ/condition': true,
+    'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    on: :publication
+    on: [:types_de_champ_private_editor, :publication]
 
   validate :check_juridique, on: [:create, :publication]
 
@@ -287,7 +293,7 @@ class Procedure < ApplicationRecord
 
   validates_with MonAvisEmbedValidator
 
-  validates_associated :draft_revision, on: :publication
+  validate :validates_associated_draft_revision_with_context
   validates_associated :initiated_mail, on: :publication
   validates_associated :received_mail, on: :publication
   validates_associated :closed_mail, on: :publication
@@ -425,11 +431,15 @@ class Procedure < ApplicationRecord
 
   def draft_changed?
     preload_draft_and_published_revisions
-    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && (types_de_champ_revision_changes.present? || ineligibilite_rules_revision_changes.present?)
   end
 
-  def revision_changes
-    published_revision.compare(draft_revision)
+  def types_de_champ_revision_changes
+    published_revision.compare_types_de_champ(draft_revision)
+  end
+
+  def ineligibilite_rules_revision_changes
+    published_revision.compare_ineligibilite_rules(draft_revision)
   end
 
   def preload_draft_and_published_revisions
@@ -553,6 +563,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_brouillon = false
     procedure.closing_notification_en_cours = false
     procedure.template = false
+    procedure.monavis_embed = nil
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
@@ -1013,6 +1024,13 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def validates_associated_draft_revision_with_context
+    return if draft_revision.blank?
+    return if draft_revision.validate(validation_context)
+
+    draft_revision.errors.map { errors.import(_1) }
+  end
 
   def validate_auto_archive_on_in_the_future
     return if auto_archive_on.nil?

@@ -1,6 +1,6 @@
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-  let(:export_template) { create(:export_template, groupe_instructeur:, content:) }
+  let(:export_template) { create(:export_template, :with_custom_content, groupe_instructeur:, content:) }
   let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:) }
   let(:dossier) { procedure.dossiers.first }
   let(:for_individual) { false }
@@ -66,6 +66,22 @@ describe ExportTemplate do
           }
         ]
       })
+    end
+  end
+
+  describe '#assign_pj_names' do
+    let(:pj_params) do
+      {
+        "tiptap_pj_1" => {
+          "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+        }.to_json
+      }
+    end
+    it 'values content from pj params' do
+      export_template.assign_pj_names(pj_params)
+      expect(export_template.content["pjs"]).to eq [
+        { :path => { "content" => [{ "content" => [{ "text" => "avis-commission-", "type" => "text" }, { "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" }, "type" => "mention" }], "type" => "paragraph" }], "type" => "doc" }, :stable_id => "1" }
+      ]
     end
   end
 
@@ -173,6 +189,14 @@ describe ExportTemplate do
 
     it 'convert pdf_name' do
       expect(export_template.tiptap_convert(procedure.dossiers.first, "pdf_name")).to eq "mon_export_#{dossier.id}"
+    end
+
+    context 'for date' do
+      let(:export_template) { create(:export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
+      let(:dossier) { create(:dossier, :en_construction, procedure:, depose_at: Date.parse("2024/03/30")) }
+      it 'convert date with dash' do
+        expect(export_template.tiptap_convert(dossier, "pdf_name")).to eq "export_#{dossier.id}-2024-03-30"
+      end
     end
   end
 
@@ -297,20 +321,36 @@ describe ExportTemplate do
     end
   end
 
-  describe 'specific_tags' do
-    context 'for entreprise procedure' do
-      let(:for_individual) { false }
+  context 'for entreprise procedure' do
+    let(:for_individual) { false }
+    describe 'specific_tags' do
       it do
         tags = export_template.specific_tags
         expect(tags.map { _1[:id] }).to eq ["entreprise_siren", "entreprise_numero_tva_intracommunautaire", "entreprise_siret_siege_social", "entreprise_raison_sociale", "entreprise_adresse", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur"]
       end
     end
 
-    context 'for individual procedure' do
-      let(:for_individual) { true }
+    describe 'tags_for_pj' do
+      it do
+        tags = export_template.tags_for_pj
+        expect(tags.map { _1[:id] }).to eq ["entreprise_siren", "entreprise_numero_tva_intracommunautaire", "entreprise_siret_siege_social", "entreprise_raison_sociale", "entreprise_adresse", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur", "original-filename"]
+      end
+    end
+  end
+
+  context 'for individual procedure' do
+    let(:for_individual) { true }
+    describe 'specific_tags' do
       it do
         tags = export_template.specific_tags
         expect(tags.map { _1[:id] }).to eq ["individual_gender", "individual_last_name", "individual_first_name", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur"]
+      end
+    end
+
+    describe 'tags_for_pj' do
+      it do
+        tags = export_template.tags_for_pj
+        expect(tags.map { _1[:id] }).to eq ["individual_gender", "individual_last_name", "individual_first_name", "dossier_depose_at", "dossier_procedure_libelle", "dossier_service_name", "dossier_number", "dossier_groupe_instructeur", "original-filename"]
       end
     end
   end

@@ -211,7 +211,7 @@ describe Procedure do
       it { is_expected.to allow_value('text').on(:publication).for(:cadre_juridique) }
 
       context 'with deliberation' do
-        let(:procedure) { build(:procedure, cadre_juridique: nil) }
+        let(:procedure) { build(:procedure, cadre_juridique: nil, revisions: [build(:procedure_revision)]) }
 
         it { expect(procedure.valid?(:publication)).to eq(false) }
 
@@ -352,24 +352,12 @@ describe Procedure do
     end
 
     describe 'draft_types_de_champ validations' do
-      let(:repetition) { repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?) }
-      let(:text_field) { build(:type_de_champ_text) }
-      let(:invalid_repetition_error_message) { 'Le champ « Enfants » doit comporter au moins un champ répétable' }
-
-      let(:drop_down) { build(:type_de_champ_drop_down_list, :without_selectable_values, libelle: 'Civilité') }
-      let(:invalid_drop_down_error_message) { 'Le champ « Civilité » doit comporter au moins un choix sélectionnable' }
-
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :text }, { type: :integer_number }] }]) }
-      let(:draft) { procedure.draft_revision }
-
-      before do
-        draft.revision_types_de_champ.create(type_de_champ: drop_down, position: 100)
-
-        repetition.update(libelle: 'Enfants')
-        draft.children_of(repetition).destroy_all
-      end
+      let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
 
       context 'on a draft procedure' do
+        let(:types_de_champ_private) { [] }
+        let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Enfants', children: [] }] }
+
         it 'doesn’t validate the types de champs' do
           procedure.validate
           expect(procedure.errors[:draft_types_de_champ_public]).not_to be_present
@@ -377,46 +365,123 @@ describe Procedure do
       end
 
       context 'when validating for publication' do
+        let(:types_de_champ_public) do
+          [
+            { type: :repetition, libelle: 'Enfants', children: [] },
+            { type: :drop_down_list, libelle: 'Civilité', options: [] }
+          ]
+        end
+        let(:types_de_champ_private) { [] }
+        let(:invalid_repetition_error_message) { "doit comporter au moins un champ répétable" }
+        let(:invalid_drop_down_error_message) { "doit comporter au moins un choix sélectionnable" }
+
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
 
           new_draft = procedure.draft_revision
-
+          repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?)
           parent_coordinate = new_draft.revision_types_de_champ.find_by(type_de_champ: repetition)
           new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
 
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
 
+          drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
           drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
           procedure.reload.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
         end
       end
 
       context 'when the champ is private' do
-        before do
-          repetition.update(private: true)
-          drop_down.update(private: true)
+        let(:types_de_champ_private) do
+          [
+            { type: :repetition, libelle: 'Enfants', children: [] },
+            { type: :drop_down_list, libelle: 'Civilité', options: [] }
+          ]
         end
+        let(:types_de_champ_public) { [] }
 
-        let(:invalid_repetition_error_message) { 'L’annotation privée « Enfants » doit comporter au moins un champ répétable' }
-        let(:invalid_drop_down_error_message) { 'L’annotation privée « Civilité » doit comporter au moins un choix sélectionnable' }
+        let(:invalid_repetition_error_message) { "doit comporter au moins un champ répétable" }
+        let(:invalid_drop_down_error_message) { "doit comporter au moins un choix sélectionnable" }
 
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+          repetition = procedure.draft_revision.types_de_champ_private.find(&:repetition?)
+          expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(repetition)
         end
 
         it 'validates that no drop-down type de champ is empty' do
           procedure.validate(:publication)
-          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
+          drop_down = procedure.draft_revision.types_de_champ_private.find(&:drop_down_list?)
+          expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(drop_down)
+        end
+      end
+
+      context 'when condition on champ private use public champ' do
+        include Logic
+        let(:types_de_champ_public) { [{ type: :decimal_number, stable_id: 1 }] }
+        let(:types_de_champ_private) { [{ type: :text, condition: ds_eq(champ_value(1), constant(2)), stable_id: 2 }] }
+        it 'validate without context' do
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+
+        it 'validate allows condition' do
+          procedure.validate(:types_de_champ_private_editor)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+      end
+
+      context 'when condition on champ private use public champ having a position higher than the champ private' do
+        include Logic
+
+        let(:types_de_champ_public) do
+          [
+            { type: :decimal_number, stable_id: 1 },
+            { type: :decimal_number, stable_id: 2 }
+          ]
+        end
+
+        let(:types_de_champ_private) do
+          [
+            { type: :text, condition: ds_eq(champ_value(2), constant(2)), stable_id: 3 }
+          ]
+        end
+
+        it 'validate without context' do
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+
+        it 'validate allows condition' do
+          procedure.validate(:types_de_champ_private_editor)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+      end
+
+      context 'when condition on champ public use private champ' do
+        include Logic
+        let(:types_de_champ_public) { [{ type: :text, libelle: 'condition', condition: ds_eq(champ_value(1), constant(2)), stable_id: 2 }] }
+        let(:types_de_champ_private) { [{ type: :decimal_number, stable_id: 1 }] }
+        let(:error_on_condition) { "Le champ a une logique conditionnelle invalide" }
+
+        it 'validate without context' do
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to be_empty
+        end
+
+        it 'validate prevent condition' do
+          procedure.validate(:types_de_champ_public_editor)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_public)).to include(error_on_condition)
         end
       end
     end
@@ -1773,6 +1838,37 @@ describe Procedure do
       end
 
       it { expect(procedure.attestation_template.version).to eq(2) }
+    end
+  end
+
+  describe "#parsed_latest_zone_labels" do
+    let!(:draft_procedure) { create(:procedure) }
+    let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
+    let!(:closed_procedure) { create(:procedure, :closed) }
+    let!(:procedure_detail_draft) { ProcedureDetail.new(id: draft_procedure.id, latest_zone_labels: '{ "zone1", "zone2" }') }
+    let!(:procedure_detail_published) { ProcedureDetail.new(id: published_procedure.id, latest_zone_labels: '{ "zone3", "zone4" }') }
+    let!(:procedure_detail_closed) { ProcedureDetail.new(id: closed_procedure.id, latest_zone_labels: '{ "zone5", "zone6" }') }
+    context 'with parsed latest zone labels' do
+      it 'parses the latest zone labels correctly' do
+        expect(procedure_detail_draft.parsed_latest_zone_labels).to eq(["zone1", "zone2"])
+        expect(procedure_detail_published.parsed_latest_zone_labels).to eq(["zone3", "zone4"])
+        expect(procedure_detail_closed.parsed_latest_zone_labels).to eq(["zone5", "zone6"])
+      end
+
+      it 'returns an empty array for invalid JSON' do
+        procedure_detail_draft.latest_zone_labels = '{ invalid json }'
+        expect(procedure_detail_draft.parsed_latest_zone_labels).to eq([])
+      end
+
+      it 'returns an empty array when latest_zone_labels is nil' do
+        procedure_detail_draft.latest_zone_labels = nil
+        expect(procedure_detail_draft.parsed_latest_zone_labels).to eq([])
+      end
+
+      it 'returns an empty array when latest_zone_labels is empty' do
+        procedure_detail_draft.latest_zone_labels = ''
+        expect(procedure_detail_draft.parsed_latest_zone_labels).to eq([])
+      end
     end
   end
 

@@ -1,7 +1,0 @@
-= render Dsfr::AlertComponent.new(state: :warning, title:) do |c|
-  - c.with_body do
-    - error_messages.each do |(messages, path)|
-      %p.mt-2
-        = messages.to_sentence
-        - if path.present?
-          = "(#{link_to 'corriger', path, class: 'fr-link'})"

@@ -110,7 +110,7 @@ describe PiecesJustificativesService do
         it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
 
         context 'with export_template' do
-          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur).tap(&:set_default_values) }
+          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur) }
           it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
         end
       end
@@ -164,6 +164,13 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachments) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/messagerie")).to be true
+          end
+        end
       end
 
       context 'with a pj not safe on a commentaire' do
@@ -180,6 +187,13 @@ describe PiecesJustificativesService do
         let!(:witness) { create(:dossier, :with_justificatif) }
 
         it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/dossier")).to be true
+          end
+        end
       end
 
       context 'with a motivation not safe' do
@@ -195,6 +209,16 @@ describe PiecesJustificativesService do
         let!(:witness) { create(:dossier, :with_attestation) }
 
         it { expect(subject).to match_array(dossier.attestation.pdf.attachment) }
+        it 'uses default name for dossier directory' do
+          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
+        end
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
+          end
+        end
       end
 
       context 'with an etablissement' do
@@ -212,6 +236,17 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array([attestation_sociale.attachment, attestation_fiscale.attachment]) }
+
+        it 'uses default name for dossier directory' do
+          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
+        end
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
+          end
+        end
       end
     end
 
@@ -323,14 +358,14 @@ describe PiecesJustificativesService do
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -346,7 +381,7 @@ describe PiecesJustificativesService do
           let(:experts_procedure) { create(:experts_procedure, expert: user_profile, procedure:) }
           let(:avis) { create(:avis, experts_procedure:, dossier: dossier, confidentiel: true) }
           let(:user_profile) { create(:expert) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -370,21 +405,28 @@ describe PiecesJustificativesService do
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
+          end
+
+          context 'with export_template' do
+            let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+            it 'uses specific name for dossier directory' do
+              expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/avis")).to be true
+            end
           end
         end
 
         context 'given an expert' do
           let(:user_profile) { create(:expert) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -397,7 +439,8 @@ describe PiecesJustificativesService do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :piece_justificative }] }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
-    subject { PiecesJustificativesService.new(user_profile:, export_template: nil).generate_dossiers_export(dossiers) }
+    let(:export_template) { nil }
+    subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
 
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }
@@ -409,10 +452,23 @@ describe PiecesJustificativesService do
       let!(:not_confidentiel_avis) { create(:avis, :not_confidentiel, dossier: dossier) }
       let!(:expert_avis) { create(:avis, :confidentiel, dossier: dossier, expert: user_profile) }
 
-      subject { PiecesJustificativesService.new(user_profile:, export_template: nil).generate_dossiers_export(dossiers) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
       it "includes avis not confidentiel as well as expert's avis" do
         expect_any_instance_of(Dossier).to receive(:avis_for_expert).with(user_profile).and_return([])
         subject
+      end
+
+      it 'gives default name to export pdf file' do
+        expect(subject.first.second.starts_with?("dossier-#{dossier.id}/export-#{dossier.id}")).to eq true
+      end
+    end
+
+    context 'with export template' do
+      let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
+
+      it 'gives custom name to export pdf file' do
+        expect(subject.first.second).to eq "DOSSIER-#{dossier.id}/export_#{dossier.id}.pdf"
       end
     end
   end

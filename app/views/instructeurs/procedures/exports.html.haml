@@ -23,7 +23,7 @@
   - else
     = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
 
-  - if feature_enabled?(:export_template)
+  - if @procedure.feature_enabled?(:export_template)
     %h2.fr-mb-1w.fr-mt-8w
       Liste des modèles d'export
     %p.fr-hint-text

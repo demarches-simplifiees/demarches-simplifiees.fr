@@ -16,24 +16,28 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:tags) { "[\"planete\",\"environnement\"]" }
 
   describe '#apercu' do
-    render_views
-
-    let(:procedure) { create(:procedure, :with_all_champs) }
-
     subject { get :apercu, params: { id: procedure.id } }
 
     before do
       sign_in(admin.user)
     end
 
-    it do
-      subject
-      expect(response).to have_http_status(:ok)
-      expect(procedure.dossiers.visible_by_user).to be_empty
-      expect(procedure.dossiers.for_procedure_preview).not_to be_empty
+    context 'all tdc can be rendered' do
+      render_views
+
+      let(:procedure) { create(:procedure, :with_all_champs) }
+
+      it do
+        subject
+        expect(response).to have_http_status(:ok)
+        expect(procedure.dossiers.visible_by_user).to be_empty
+        expect(procedure.dossiers.for_procedure_preview).not_to be_empty
+      end
     end
 
     context 'when the draft is invalid' do
+      let(:procedure) { create(:procedure) }
+
       before do
         allow_any_instance_of(ProcedureRevision).to receive(:invalid?).and_return(true)
       end
@@ -91,9 +95,6 @@ describe Administrateurs::ProceduresController, type: :controller do
     let!(:draft_procedure)     { create(:procedure) }
     let!(:published_procedure) { create(:procedure_with_dossiers, :published, dossiers_count: 2) }
     let!(:closed_procedure)    { create(:procedure, :closed) }
-    let!(:procedure_detail_draft)     { ProcedureDetail.new(id: draft_procedure.id, latest_zone_labels: '{ "zone1", "zone2" }') }
-    let!(:procedure_detail_published) { ProcedureDetail.new(id: published_procedure.id, latest_zone_labels: '{ "zone3", "zone4" }') }
-    let!(:procedure_detail_closed)    { ProcedureDetail.new(id: closed_procedure.id, latest_zone_labels: '{ "zone5", "zone6" }') }
 
     subject { get :all }
 
@@ -118,19 +119,6 @@ describe Administrateurs::ProceduresController, type: :controller do
     it 'doesn’t display draft procedures' do
       subject
       expect(assigns(:procedures).any? { |p| p.id == draft_procedure.id }).to be_falsey
-    end
-
-    context 'with parsed latest zone labels' do
-      it 'parses the latest zone labels correctly' do
-        expect(procedure_detail_draft.parsed_latest_zone_labels).to eq(["zone1", "zone2"])
-        expect(procedure_detail_published.parsed_latest_zone_labels).to eq(["zone3", "zone4"])
-        expect(procedure_detail_closed.parsed_latest_zone_labels).to eq(["zone5", "zone6"])
-      end
-
-      it 'returns an empty array for invalid JSON' do
-        procedure_detail_draft.latest_zone_labels = '{ invalid json }'
-        expect(procedure_detail_draft.parsed_latest_zone_labels).to eq([])
-      end
     end
 
     context 'for default admin zones' do

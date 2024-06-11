@@ -3,8 +3,13 @@
     = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?)
 
     - if !annotation? && @dossier.can_transition_to_en_construction?
+      - if !can_passer_en_construction?
+        = link_to t('.submit_disabled'), "#", disabled_submit_buttons_options
       = button_to t('.submit'), brouillon_dossier_url(@dossier), submit_draft_button_options
-    - elsif @dossier.forked_with_changes?
+
+    - if @dossier.forked_with_changes?
+      - if !can_passer_en_construction?
+        = link_to t('.submit_disabled'), "#", disabled_submit_buttons_options
       = button_to t('.submit_changes'), modifier_dossier_url(@dossier.editing_fork_origin), submit_en_construction_button_options
 
 
