@@ -559,6 +559,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_brouillon = false
     procedure.closing_notification_en_cours = false
     procedure.template = false
+    procedure.monavis_embed = nil
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
