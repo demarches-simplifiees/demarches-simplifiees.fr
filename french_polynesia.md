@@ -37,6 +37,5 @@ This journal lists modifications built on top of demarches-simplifiees.
 | 11/4/2024 | Télécharger le PDF                  | Le lien en bas du formulaire permettant de télécharger le PDF est moins visible car les usagers ont tendance à l'utiliser même quand ils remplissent le formulaire en ligne                   |
 | 23/5/2024 | EQUIPE_EMAIL                        | Mail not removed as it is used to communicate on published procedures                                                                                                                         |
 | 23/5/2024 | Connecté via                        | Le mail de l'usager en haut à droite affiche quel fournisseur d'identité a servi à connecter l'usager                                                                                         |
-| 28/5/2024 | france_connect_informations         | DS se base sur la présence d'un FCI pour dire que l'usager est connecté via FC alors qu'il peut s'etre entre temps connecté via un mot de passe. Sur MD, on teste via le champ loged_via...   |
 
 
