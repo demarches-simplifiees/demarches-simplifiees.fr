@@ -7,6 +7,8 @@ class Helpscout::API
   PHONES = 'phones'
   OAUTH2_TOKEN = 'oauth2/token'
 
+  RATELIMIT_KEY = "helpscout-rate-limit-remaining"
+
   def ready?
     required_secrets = [
       Rails.application.secrets.helpscout[:mailbox_id],
@@ -40,6 +42,30 @@ class Helpscout::API
     }.compact
 
     call_api(:post, CONVERSATIONS, body)
+  end
+
+  def list_old_conversations(status, before, page: 1)
+    body = {
+      page:,
+      status:, # active, open, closed, pending, spam. "all" does not work
+      query: "(
+        modifiedAt:[* TO #{before.iso8601}]
+      )",
+      sortField: "modifiedAt",
+      sortOrder: "desc"
+    }
+
+    response = call_api(:get, "#{CONVERSATIONS}?#{body.to_query}")
+    if !response.success?
+      raise StandardError, "Error while listing conversations: #{response.response_code} '#{response.body}'"
+    end
+
+    body = parse_response_body(response)
+    [body[:_embedded][:conversations], body[:page]]
+  end
+
+  def delete_conversation(conversation_id)
+    call_api(:delete, "#{CONVERSATIONS}/#{conversation_id}")
   end
 
   def add_phone_number(email, phone)
@@ -129,6 +155,13 @@ class Helpscout::API
         body: body.to_json,
         headers: headers
       })
+    when :delete
+      Typhoeus.delete(url, {
+        body: body.to_json,
+        headers: headers
+      })
+    end.tap do |response|
+      Rails.cache.write(RATELIMIT_KEY, response.headers["X-Ratelimit-Remaining-Minute"], expires_in: 1.minute)
     end
   end
 
