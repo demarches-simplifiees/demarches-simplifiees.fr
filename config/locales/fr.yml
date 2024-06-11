@@ -409,6 +409,7 @@ fr:
         acts_on_behalf: "agit pour"
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"
+        restore_and_extend: "Restaurer et étendre la conservation"
         filters:
           title: Sélectionner un filtre
         select_all: Tout selectionner

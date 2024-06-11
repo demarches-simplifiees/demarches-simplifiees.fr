@@ -1307,6 +1307,19 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe '#extend_conservation and restore' do
+    before do
+      dossier.update(hidden_at: 1.hour.ago, hidden_by_reason: 'expired')
+    end
+    subject { post :extend_conservation, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+
+    it "puts hidden_at to nil and extends conservation_extension by 1 month" do
+      subject
+      expect(dossier.reload.hidden_at).to eq(nil)
+      expect(dossier.reload.conservation_extension).to eq(1.month)
+    end
+  end
+
   describe '#reaffectation' do
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
     let!(:gi_3) { GroupeInstructeur.create(label: 'troisième groupe', procedure: procedure) }

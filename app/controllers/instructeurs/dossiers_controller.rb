@@ -376,6 +376,10 @@ module Instructeurs
         Dossier
           .where(id: current_instructeur.dossiers.visible_by_administration)
           .or(Dossier.where(id: current_user.dossiers.for_procedure_preview))
+      elsif action_name == 'extend_conservation'
+        Dossier
+          .where(id: current_instructeur.dossiers.visible_by_administration)
+          .or(Dossier.where(id: current_instructeur.dossiers.hidden_by_automatic))
       else
         current_instructeur.dossiers.visible_by_administration
       end

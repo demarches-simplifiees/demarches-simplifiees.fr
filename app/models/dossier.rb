@@ -689,6 +689,10 @@ class Dossier < ApplicationRecord
       brouillon_close_to_expiration_notice_sent_at: nil,
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
+
+    if hidden_at.present?
+      update(hidden_at: nil, hidden_by_reason: nil)
+    end
   end
 
   def show_procedure_state_warning?
