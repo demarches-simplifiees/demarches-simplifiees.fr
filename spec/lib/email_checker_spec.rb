@@ -1,6 +1,6 @@
 describe EmailChecker do
   describe 'check' do
-    subject { described_class }
+    subject { described_class.new }
 
     it 'works with identified use cases' do
       expect(subject.check(email: nil)).to eq({ success: false })

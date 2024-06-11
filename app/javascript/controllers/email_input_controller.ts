@@ -21,7 +21,11 @@ export class EmailInputController extends ApplicationController {
   declare readonly inputTarget: HTMLInputElement;
 
   async checkEmail() {
-    if (!this.inputTarget.value) {
+    if (
+      !this.inputTarget.value ||
+      this.inputTarget.value.length < 5 ||
+      !this.inputTarget.value.includes('@')
+    ) {
       return;
     }
 

@@ -1,4 +1,7 @@
 class EmailChecker
+  # Extracted 100 most used domain on our users table [june 2024]
+  # + all .gouv.fr domain on our users table
+  # + all .ac-xxx on our users table
   KNOWN_DOMAINS = [
     'gmail.com',
     'hotmail.fr',
@@ -612,10 +615,10 @@ class EmailChecker
     'ac-toulous.fr'
   ].freeze
 
-  def self.check(email:)
+  def check(email:)
     return { success: false } if email.blank?
 
-    parsed_email = Mail::Address.new(email)
+    parsed_email = Mail::Address.new(EmailSanitizableConcern::EmailSanitizer.sanitize(email))
     return { success: false } if parsed_email.domain.blank?
 
     return { success: true } if KNOWN_DOMAINS.any? { _1 == parsed_email.domain }
@@ -628,22 +631,22 @@ class EmailChecker
 
   private
 
-  def self.closest_domains(domain:)
+  def closest_domains(domain:)
     KNOWN_DOMAINS.filter do |known_domain|
       close_by_distance_of(domain, known_domain, distance: 1) ||
       with_same_chars_and_close_by_distance_of(domain, known_domain, distance: 2)
     end
   end
 
-  def self.close_by_distance_of(a, b, distance:)
+  def close_by_distance_of(a, b, distance:)
     String::Similarity.levenshtein_distance(a, b) == distance
   end
 
-  def self.with_same_chars_and_close_by_distance_of(a, b, distance:)
+  def with_same_chars_and_close_by_distance_of(a, b, distance:)
     close_by_distance_of(a, b, distance: 2) && a.chars.sort == b.chars.sort
   end
 
-  def self.email_suggestions(parsed_email:, similar_domains:)
+  def email_suggestions(parsed_email:, similar_domains:)
     similar_domains.map { Mail::Address.new("#{parsed_email.local}@#{_1}").to_s }
   end
 end
