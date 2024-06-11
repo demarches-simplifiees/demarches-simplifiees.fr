@@ -441,6 +441,33 @@ describe Procedure do
         end
       end
 
+      context 'when condition on champ private use public champ having a position higher than the champ private' do
+        include Logic
+
+        let(:types_de_champ_public) do
+          [
+            { type: :decimal_number, stable_id: 1 },
+            { type: :decimal_number, stable_id: 2 }
+          ]
+        end
+
+        let(:types_de_champ_private) do
+          [
+            { type: :text, condition: ds_eq(champ_value(2), constant(2)), stable_id: 3 }
+          ]
+        end
+
+        it 'validate without context' do
+          procedure.validate
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+
+        it 'validate allows condition' do
+          procedure.validate(:types_de_champ_private_editor)
+          expect(procedure.errors.full_messages_for(:draft_types_de_champ_private)).to be_empty
+        end
+      end
+
       context 'when condition on champ public use private champ' do
         include Logic
         let(:types_de_champ_public) { [{ type: :text, libelle: 'condition', condition: ds_eq(champ_value(1), constant(2)), stable_id: 2 }] }
