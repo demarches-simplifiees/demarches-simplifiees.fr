@@ -14,6 +14,14 @@ import { Item } from './props';
 
 export type Loader = AsyncListOptions<Item, string>['load'];
 
+export function distinctBy<T>(key: keyof T, array: T[]|undefined):T[] | undefined {
+  if (array) {
+    const keys = array.map(value => value[key]);
+    return array.filter((value, index) => keys.indexOf(value[key]) === index);
+  }
+}
+
+
 export interface ComboBoxProps
   extends Omit<AriaComboBoxProps<Item>, 'children'> {
   children: React.ReactNode | ((item: Item) => React.ReactNode);

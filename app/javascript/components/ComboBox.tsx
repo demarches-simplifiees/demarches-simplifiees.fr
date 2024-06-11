@@ -23,6 +23,7 @@ import {
   useSingleList,
   useRemoteList,
   createLoader,
+  distinctBy,
   type ComboBoxProps
 } from './react-aria/hooks';
 import {
@@ -103,7 +104,7 @@ export function SingleComboBox({
   const { ref, dispatch } = useDispatchChangeEvent();
 
   const { selectedItem, ...comboBoxProps } = useSingleList({
-    defaultItems,
+    defaultItems: distinctBy('label', defaultItems),
     defaultSelectedKey,
     emptyFilterKey,
     onChange: dispatch
@@ -149,10 +150,10 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
   const inputRef = useRef<HTMLInputElement>(null);
-
+  
   const { selectedItems, hiddenInputValues, onRemove, ...comboBoxProps } =
     useMultiList({
-      defaultItems,
+      defaultItems: distinctBy('label', defaultItems),
       defaultSelectedKeys,
       onChange: dispatch,
       formValue,
