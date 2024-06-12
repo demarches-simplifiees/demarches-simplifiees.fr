@@ -405,7 +405,9 @@ fr:
           expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Supprimer le dossier"
-        deleted_by_user: "Dossier supprimé par l’usager"
+        deleted_reason:
+          user_request: supprimé par l'usager
+          expired: a expiré
         acts_on_behalf: "agit pour"
         deleted_by_administration: "Dossier supprimé par l’administration"
         restore: "Restaurer"

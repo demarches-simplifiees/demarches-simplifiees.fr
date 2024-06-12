@@ -208,7 +208,6 @@ class Dossier < ApplicationRecord
   scope :state_en_construction,                -> { where(state: states.fetch(:en_construction)) }
   scope :state_not_en_construction,            -> { where.not(state: states.fetch(:en_construction)) }
   scope :state_en_instruction,                 -> { where(state: states.fetch(:en_instruction)) }
-  scope :state_not_en_instruction,             -> { where.not(state: states.fetch(:en_instruction)) }
   scope :state_en_construction_ou_instruction, -> { where(state: EN_CONSTRUCTION_OU_INSTRUCTION) }
   scope :state_instruction_commencee,          -> { where(state: INSTRUCTION_COMMENCEE) }
   scope :state_termine,                        -> { where(state: TERMINE) }
@@ -221,13 +220,12 @@ class Dossier < ApplicationRecord
   scope :not_archived,              -> { where(archived: false) }
   scope :prefilled,                 -> { where(prefilled: true) }
   scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
-  scope :hidden_by_automatic,       -> { where.not(hidden_at: nil).where(hidden_by_reason: 'expired') }
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
-  scope :visible_by_user,           -> { where(for_procedure_preview: false).where(hidden_by_user_at: nil, editing_fork_origin_id: nil).where(hidden_at: nil) }
+  scope :hidden_by_expired,         -> { where(hidden_by_reason: 'expired') }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false).where(hidden_by_user_at: nil, editing_fork_origin_id: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
-      .where(hidden_at: nil)
       .merge(visible_by_user.or(state_not_en_construction))
   }
   scope :visible_by_user_or_administration, -> { visible_by_user.or(visible_by_administration) }
@@ -366,14 +364,11 @@ class Dossier < ApplicationRecord
   scope :without_brouillon_expiration_notice_sent, -> { where(brouillon_close_to_expiration_notice_sent_at: nil) }
   scope :without_en_construction_expiration_notice_sent, -> { where(en_construction_close_to_expiration_notice_sent_at: nil) }
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
-
   scope :deleted_by_user_expired, -> { where('dossiers.hidden_by_user_at < ?', 1.week.ago) }
-  scope :deleted_by_automatic_expired, -> { where('dossiers.hidden_at < ?', 1.week.ago) }
   scope :deleted_by_administration_expired, -> { where('dossiers.hidden_by_administration_at < ?', 1.week.ago) }
   scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired }
   scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired }
   scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired }
-  scope :not_en_instruction_expired_to_delete, -> { state_not_en_instruction.deleted_by_automatic_expired }
 
   scope :brouillon_near_procedure_closing_date, -> do
     # select users who have submitted dossier for the given 'procedures.id'
@@ -420,7 +415,7 @@ class Dossier < ApplicationRecord
     when 'tous'
       visible_by_administration.all_state
     when 'supprimes_recemment'
-      hidden_by_administration.state_termine.or(hidden_by_automatic)
+      hidden_by_administration
     when 'archives'
       visible_by_administration.archived
     when 'expirant'
@@ -606,7 +601,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_automatic?(reason)
-    reason == :expired
+    brouillon? || en_construction? || termine? || reason == :expired
   end
 
   def can_terminer_automatiquement_by_sva_svr?
@@ -690,8 +685,8 @@ class Dossier < ApplicationRecord
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
 
-    if hidden_at.present?
-      update(hidden_at: nil, hidden_by_reason: nil)
+    if hidden_by_reason == 'expired'
+      update(hidden_by_administration_at: nil, hidden_by_user_at: nil, hidden_by_reason: nil)
     end
   end
 
@@ -857,7 +852,7 @@ class Dossier < ApplicationRecord
       elsif author_is_user(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
       elsif author_is_automatic(author) && can_be_deleted_by_automatic?(reason)
-        update(hidden_at: Time.zone.now, hidden_by_reason: reason)
+        update(hidden_by_administration_at: Time.zone.now, hidden_by_user_at: Time.zone.now, hidden_by_reason: reason)
       else
         raise "Unauthorized dossier hide attempt Dossier##{id} by #{author} for reason #{reason}"
       end
@@ -1113,7 +1108,6 @@ class Dossier < ApplicationRecord
     en_brouillon_expired_to_delete.find_each(&:purge_discarded)
     en_construction_expired_to_delete.find_each(&:purge_discarded)
     termine_expired_to_delete.find_each(&:purge_discarded)
-    not_en_instruction_expired_to_delete.find_each(&:purge_discarded)
   end
 
   def skip_user_notification_email?

@@ -246,7 +246,8 @@ describe Expired::DossiersDeletionService do
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier], dossier.procedure.administrateurs.first.email) }
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier], dossier.followers_instructeurs.first.email) }
 
-        it { expect(dossier.reload.hidden_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+        it { expect(dossier.reload.hidden_by_user_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+        it { expect(dossier.reload.hidden_by_administration_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
         it { expect(dossier.reload.hidden_by_reason).to eq('expired') }
       end
     end
@@ -270,9 +271,11 @@ describe Expired::DossiersDeletionService do
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier_1], dossier_1.procedure.administrateurs.first.email) }
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier_2], dossier_2.procedure.administrateurs.first.email) }
 
-      it { expect(dossier_1.reload.hidden_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_1.reload.hidden_by_user_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_1.reload.hidden_by_administration_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
       it { expect(dossier_1.reload.hidden_by_reason).to eq('expired') }
-      it { expect(dossier_2.reload.hidden_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_2.reload.hidden_by_user_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_2.reload.hidden_by_administration_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
       it { expect(dossier_2.reload.hidden_by_reason).to eq('expired') }
     end
   end
@@ -389,7 +392,8 @@ describe Expired::DossiersDeletionService do
       context 'when a notice has been sent a long time ago' do
         let(:notice_sent_at) { (warning_period + 4.days).ago }
 
-        it { expect(dossier.reload.hidden_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+        it { expect(dossier.reload.hidden_by_user_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+        it { expect(dossier.reload.hidden_by_administration_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
         it { expect(dossier.reload.hidden_by_reason).to eq('expired') }
 
         it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_user).once }
@@ -420,9 +424,11 @@ describe Expired::DossiersDeletionService do
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier_1], dossier_1.procedure.administrateurs.first.email) }
       it { expect(DossierMailer).to have_received(:notify_automatic_deletion_to_administration).with([dossier_2], dossier_2.procedure.administrateurs.first.email) }
 
-      it { expect(dossier_1.reload.hidden_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_1.reload.hidden_by_user_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_1.reload.hidden_by_administration_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
       it { expect(dossier_1.reload.hidden_by_reason).to eq('expired') }
-      it { expect(dossier_2.reload.hidden_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_2.reload.hidden_by_user_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
+      it { expect(dossier_2.reload.hidden_by_administration_at).to be_an_instance_of(ActiveSupport::TimeWithZone) }
       it { expect(dossier_2.reload.hidden_by_reason).to eq('expired') }
     end
 

@@ -379,7 +379,7 @@ module Instructeurs
       elsif action_name == 'extend_conservation'
         Dossier
           .where(id: current_instructeur.dossiers.visible_by_administration)
-          .or(Dossier.where(id: current_instructeur.dossiers.hidden_by_automatic))
+          .or(Dossier.where(id: current_instructeur.dossiers.hidden_by_expired))
       else
         current_instructeur.dossiers.visible_by_administration
       end

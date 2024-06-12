@@ -10,7 +10,7 @@ RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
       dossier.send(:log_dossier_operation, instructeur, :supprimer, dossier)
       dossier.update_columns(hidden_by_user_at: hidden_at, hidden_by_administration_at: hidden_at)
       dossier.update_column(:hidden_by_reason, "user_request")
-      dossier_2.update_columns(hidden_at: hidden_at)
+      dossier_2.update_columns(hidden_by_user_at: hidden_at, hidden_by_administration_at: hidden_at)
       dossier_2.update_column(:hidden_by_reason, "expired")
     end
 

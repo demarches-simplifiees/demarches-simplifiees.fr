@@ -406,7 +406,6 @@ en:
           expirant: Records will not expire prior to the data retention period.
         archived_dossier: "This file will be kept for an additional month"
         delete_dossier: "Delete file"
-        deleted_by_user: "File deleted by user"
         acts_on_behalf: "acts for"
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"

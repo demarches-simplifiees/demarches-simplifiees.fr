@@ -16,12 +16,12 @@
           %p.fr-icon--sm.fr-icon-user-line
             = demandeur_dossier(dossier)
 
-          - if dossier.hidden_by_user?
+          - if dossier.hidden_by_reason == 'expired'
+            %p.fr-icon--sm.fr-icon-delete-line
+              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_user_at.to_date))
+          - elsif dossier.hidden_by_user?
             %p.fr-icon--sm.fr-icon-delete-line
               = t('views.users.dossiers.dossiers_list.deleted_by_user', date: l(dossier.hidden_by_user_at.to_date))
-          - elsif dossier.hidden_at?
-            %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_at.to_date))
           - else
             %p.fr-icon--sm.fr-icon-edit-box-line
               - if dossier.depose_at.present?
@@ -108,7 +108,7 @@
 
       - if @statut == "dossiers-supprimes-recemment"
         .flex.justify-end
-          - if dossier.hidden_at.blank?
+          - if dossier.hidden_by_reason != 'expired'
             = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
               Restaurer
 
