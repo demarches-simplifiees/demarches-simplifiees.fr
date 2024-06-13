@@ -304,7 +304,6 @@ module Users
       @dossier = dossier_with_champs(pj_template: false)
       @can_passer_en_construction_was = @dossier.can_passer_en_construction?
       update_dossier_and_compute_errors
-      @dossier.index_search_terms_later if @dossier.errors.empty?
       @can_passer_en_construction_is = @dossier.can_passer_en_construction?
       respond_to do |format|
         format.turbo_stream do
