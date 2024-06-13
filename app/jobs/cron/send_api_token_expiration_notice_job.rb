@@ -1,5 +1,5 @@
 class Cron::SendAPITokenExpirationNoticeJob < Cron::CronJob
-  self.schedule_expression = "every day at midnight"
+  self.schedule_expression = "every day at 23:45"
 
   def perform
     windows = [

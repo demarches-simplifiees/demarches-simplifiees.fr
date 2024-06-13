@@ -1,5 +1,5 @@
 class Cron::DossierOperationLogMoveToColdStorageJob < Cron::CronJob
-  self.schedule_expression = "every day at 1 am"
+  self.schedule_expression = "every day at 10:00"
 
   def perform
     DossierOperationLog

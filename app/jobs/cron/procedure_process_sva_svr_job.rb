@@ -1,5 +1,5 @@
 class Cron::ProcedureProcessSVASVRJob < Cron::CronJob
-  self.schedule_expression = "every day at 1:00"
+  self.schedule_expression = "every day at 01:15"
 
   def perform
     Procedure.sva_svr.find_each do |procedure|
