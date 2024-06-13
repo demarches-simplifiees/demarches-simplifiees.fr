@@ -14,6 +14,7 @@ if Rails.env.production? && SIDEKIQ_ENABLED
       DossierIndexSearchTermsJob,
       DossierOperationLogMoveToColdStorageBatchJob,
       DossierRebaseJob,
+      HelpscoutCreateConversationJob,
       ImageProcessorJob,
       MaintenanceTasks::TaskJob,
       Migrations::BackfillStableIdJob,
