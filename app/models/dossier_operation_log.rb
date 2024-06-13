@@ -80,11 +80,6 @@ class DossierOperationLog < ApplicationRecord
   def self.serialize_author(author)
     if author.nil?
       nil
-    elsif author == :automatic
-      {
-        id: "Automatic",
-        email: CONTACT_EMAIL
-      }.as_json
     else
       {
         id: serialize_author_id(author),

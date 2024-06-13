@@ -601,7 +601,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_be_deleted_by_automatic?(reason)
-    brouillon? || en_construction? || termine? || reason == :expired
+    reason == :expired && !en_instruction?
   end
 
   def can_terminer_automatiquement_by_sva_svr?
@@ -849,15 +849,16 @@ class Dossier < ApplicationRecord
     transaction do
       if author_is_administration(author) && can_be_deleted_by_administration?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
+        log_dossier_operation(author, :supprimer, self)
       elsif author_is_user(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
+        log_dossier_operation(author, :supprimer, self)
       elsif author_is_automatic(author) && can_be_deleted_by_automatic?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_user_at: Time.zone.now, hidden_by_reason: reason)
+        log_automatic_dossier_operation(:supprimer, self)
       else
         raise "Unauthorized dossier hide attempt Dossier##{id} by #{author} for reason #{reason}"
       end
-
-      log_dossier_operation(author, :supprimer, self)
     end
 
     if en_construction? && !hidden_by_administration?
