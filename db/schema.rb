@@ -863,6 +863,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
   create_table "procedure_revisions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.bigint "dossier_submitted_message_id"
+    t.boolean "ineligibilite_enabled", default: false, null: false
+    t.text "ineligibilite_message"
+    t.jsonb "ineligibilite_rules"
     t.bigint "procedure_id", null: false
     t.datetime "published_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false

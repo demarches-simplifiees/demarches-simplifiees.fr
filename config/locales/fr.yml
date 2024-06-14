@@ -447,6 +447,7 @@ fr:
           dossier_edit_l2: le modifier
           dossier_edit_l3: et
           dossier_edit_l4: échanger avec un instructeur.
+          download_dossier: Télécharger mon dossier
           acces_dossier: Accéder à votre dossier
           submit_dossier: Déposer un autre dossier
         show:
@@ -556,6 +557,9 @@ fr:
           connect_with_agent_connect: Accédez à notre page dédiée
           subtitle: "Se connecter avec son compte"
           for_tiers_alert: Si vous remplissez un dossier pour un tiers, vous devez utiliser vos propres identifiants.
+        link_sent:
+          consult_help_page_html: Si vous voyez cette page trop souvent, <a target="_blank" rel="noopener noreferrer" href="%{href}">consultez notre aide</a>.
+          email_cta_html: "Nous avons besoin de vérifier votre adresse électronique <strong>%{email}</strong>."
       passwords:
         edit:
           subtitle: Changement de mot de passe
@@ -609,6 +613,7 @@ fr:
         otp_attempt: 'Code OTP (uniquement si vous avez déjà activé 2FA)'
       procedure:
         zone: La démarche est mise en œuvre par
+        ineligibilite_rules: "Les règles d’inéligibilité"
       champs:
         value: Valeur du champ
       default_mail_attributes: &default_mail_attributes
@@ -668,6 +673,10 @@ fr:
             path:
               taken: est déjà utilisé par une démarche. Vous ne pouvez pas l’utiliser car il appartient à un autre administrateur.
               invalid: n’est pas valide. Il doit comporter au moins 3 caractères, au plus 200 caractères et seuls les caractères a-z, 0-9, '_' et '-' sont autorisés.
+        procedure_revision:
+          attributes:
+            ineligibilite_rules:
+              invalid: ne sont pas valides
         "dossier/champs":
           format: "%{message}"
           attributes:

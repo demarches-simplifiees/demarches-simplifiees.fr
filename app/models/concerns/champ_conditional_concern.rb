@@ -21,6 +21,10 @@ module ChampConditionalConcern
       end
     end
 
+    def reset_visible # recompute after a dossier update
+      remove_instance_variable :@visible if instance_variable_defined? :@visible
+    end
+
     private
 
     def champs_for_condition

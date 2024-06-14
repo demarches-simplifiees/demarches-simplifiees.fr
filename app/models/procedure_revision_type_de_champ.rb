@@ -75,4 +75,8 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   def used_by_routing_rules?
     stable_id.in?(procedure.stable_ids_used_by_routing_rules)
   end
+
+  def used_by_ineligibilite_rules?
+    revision.ineligibilite_enabled? && stable_id.in?(revision.ineligibilite_rules&.sources || [])
+  end
 end

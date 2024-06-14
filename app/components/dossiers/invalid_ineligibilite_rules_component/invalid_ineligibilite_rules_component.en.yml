@@ -1,0 +1,6 @@
+fr:
+  modal:
+    title: "Your file does not match submission criteria"
+    close: "Close"
+    close_alt: "Close this modal"
+    body: "The procedure « %{procedure_libelle} » have submission criteria, unfortunately your file does not match them. You can not submit your file"

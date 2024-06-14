@@ -13,7 +13,6 @@
   - previous_revision = nil
   - @procedure.revisions.each do |revision|
     - if previous_revision.present? && !revision.draft?
-      - changes = previous_revision.compare(revision)
       - dossiers = revision.dossiers.visible_by_administration
       - dossiers_en_construction_count = dossiers.state_en_construction.count
       - dossiers_en_instruction_count = dossiers.state_en_instruction.count
@@ -31,7 +30,7 @@
           %p= t('.dossiers_en_construction', count: dossiers_en_construction_count)
         - elsif !dossiers_en_instruction_count.zero?
           %p= t('.dossiers_en_instruction', count: dossiers_en_instruction_count)
-        = render Procedure::RevisionChangesComponent.new changes:, previous_revision:
+        = render Procedure::RevisionChangesComponent.new new_revision: revision, previous_revision:
     - previous_revision = revision
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)

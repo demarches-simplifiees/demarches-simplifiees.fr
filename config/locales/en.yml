@@ -444,6 +444,7 @@ en:
           dossier_edit_l2: edit it
           dossier_edit_l3: and
           dossier_edit_l4: talk with an instructor.
+          download_dossier: Download your file
           acces_dossier: Access your file
           submit_dossier: Submit an other file
         show:
@@ -553,6 +554,9 @@ en:
           connect_with_agent_connect: Visit our dedicated page
           subtitle: "Sign in with my account"
           for_tiers_alert: If you are completing a forme for someone else, you must use your own credentials.
+        link_sent:
+          consult_help_page_html: If you're seeing this page too often, <a target="_blank" rel="noopener noreferrer" href="%{href}">please consult our help page</a>.
+          email_cta_html: "We have to validate your email address <strong>%{email}</strong>."
       passwords:
         edit:
           subtitle: Change password
@@ -605,6 +609,7 @@ en:
         otp_attempt: 'OTP code (only if you have already activated 2FA)'
       procedure:
         zone: This procedure is run by
+        ineligibilite_rules: "Eligibility rules"
       champs:
         value: Value
       default_mail_attributes: &default_mail_attributes
@@ -666,6 +671,10 @@ en:
             path:
               taken: is already used for procedure. You cannot use it because it belongs to another administrator.
               invalid: is not valid. It must countain between 3 and 200 characters among a-z, 0-9, '_' and '-'.
+        procedure_revision:
+          attributes:
+            ineligibilite_rules:
+              invalid: are invalid
         "dossier/champs":
           format: "%{message}"
           attributes:

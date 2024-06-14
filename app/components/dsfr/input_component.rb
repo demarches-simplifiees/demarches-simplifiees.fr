@@ -32,7 +32,7 @@ class Dsfr::InputComponent < ApplicationComponent
       }.merge(input_group_error_class_names))
     }
     if email?
-      opts[:data] = { controller: 'email-input' }
+      opts[:data] = { controller: 'email-input', email_input_url_value: show_email_suggestions_path }
     end
     opts
   end

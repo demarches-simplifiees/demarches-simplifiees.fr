@@ -61,7 +61,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
 
   def available_targets_for_select
     @source_tdcs
-      .filter { |tdc| ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(tdc.type_champ) }
+      .filter(&:conditionable?)
       .map { |tdc| [tdc.libelle, champ_value(tdc.stable_id).to_json] }
   end
 
