@@ -92,11 +92,8 @@ class NotificationMailer < ApplicationMailer
   def set_jdma
     if params[:state] == Dossier.states.fetch(:en_construction) && @dossier.procedure.monavis_embed
       @jdma_html = @dossier.procedure.monavis_embed_html_source("email")
-    else
-      return
     end
   end
-
   def set_dossier
     @dossier = params[:dossier]
     configure_defaults_for_user(@dossier.user)
