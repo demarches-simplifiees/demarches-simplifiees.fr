@@ -94,7 +94,7 @@ class NotificationMailer < ApplicationMailer
       @jdma_html = @dossier.procedure.monavis_embed_html_source("email")
     end
   end
-  
+
   def set_dossier
     @dossier = params[:dossier]
     configure_defaults_for_user(@dossier.user)
