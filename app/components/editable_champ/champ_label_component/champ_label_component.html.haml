@@ -1,13 +1,8 @@
 = # we do this trick because some html elements should use 'label' and some should be plain paragraphs
 
 - if @champ.html_label?
-  - if @champ.piece_justificative? && !@champ.procedure.piece_justificative_multiple
-    -# champ piece_justificative : remove the asociation with the input
-    = @form.label @champ.main_value_name, id: @champ.labelledby_id, class: 'fr-label' do
-      - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
-  - else
-    = @form.label @champ.main_value_name, id: @champ.labelledby_id, for: @champ.input_id, class: 'fr-label' do
-      - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
+  = @form.label @champ.main_value_name, id: @champ.labelledby_id, for: @champ.input_id, class: 'fr-label' do
+    - render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
 - elsif @champ.legend_label?
   %legend.fr-fieldset__legend.fr-text--regular{ id: @champ.labelledby_id }= render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
 - elsif @champ.single_checkbox?
