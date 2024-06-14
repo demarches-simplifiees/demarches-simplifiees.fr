@@ -58,6 +58,15 @@
 
       - if @procedure.experts_require_administrateur_invitation?
         .card
+          - if @maybe_typo
+            = render Dsfr::AlertComponent.new(title: "Attention, nous pensons avoir identifié une faute faute de frappe : ", state: :warning) do |c|
+              - c.with_body do
+                %ul
+                - @maybe_typo.each do |email|
+                  %li
+                    = "#{email}, devrait s'écrire #{EmailChecker.new.check(email:)[:email_suggestions].first}."
+                    = "Ce n'est pas une faute ? "
+                    = button_to "Envoyer l'invitation", admin_procedure_experts_path(@procedure), method: :POST, params: {maybe_typo: email}, class: 'fr-btn fr-btn--secondary fr-btn--sm', form: {class: 'inline'}
           = form_for :experts_procedure,
             url: admin_procedure_experts_path(@procedure),
             html: { class: 'form' } do |f|
