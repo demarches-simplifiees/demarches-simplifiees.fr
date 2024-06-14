@@ -5,5 +5,5 @@
     = turbo_stream.append('contenu', render(Dossiers::InvalidIneligibiliteRulesComponent.new(dossier: @dossier)))
   - else @ineligibilite_rules_is_computable
     = turbo_stream.remove(dom_id(@dossier, :ineligibilite_rules_broken))
-
-= turbo_stream.update "contact_information", partial: 'shared/dossiers/update_contact_information', locals: { dossier: @dossier, procedure: @procedure }
+- if @dossier.champs.filter(&:used_by_routing_rules?).pluck(:stable_id).any? { |id| params[:dossier][:champs_public_attributes].key?("#{id}") }
+  = turbo_stream.update "contact_information", partial: 'shared/dossiers/update_contact_information', locals: { dossier: @dossier, procedure: @procedure }
