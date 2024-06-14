@@ -21,23 +21,45 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
   describe '#create' do
     let(:expert) { create(:expert) }
     let(:expert2) { create(:expert) }
+    let(:procedure) { create :procedure, administrateur: admin, experts_require_administrateur_invitation: true }
 
-    subject do
-      post :create, params: {
-        procedure_id: procedure.id,
-        emails: "[\"#{expert.email}\",\"#{expert2.email}\"]"
-      }
+    subject { post :create, params: params }
+    before { subject }
+
+    context 'when inviting multiple valid experts' do
+      let(:params) { { procedure_id: procedure.id, emails: [expert.email, expert2.email].to_json } }
+
+      it 'creates experts' do
+        expect(procedure.experts.include?(expert)).to be_truthy
+        expect(procedure.experts.include?(expert2)).to be_truthy
+        expect(flash.notice).to be_present
+        expect(assigns(:maybe_typo)).to eq([])
+        expect(response).to have_http_status(:success)
+      end
     end
 
-    before do
-      subject
+    context 'when inviting expert using an email with typos' do
+      let(:params) { { procedure_id: procedure.id, emails: ['martin@oraneg.fr'].to_json } }
+      render_views
+      it 'warns' do
+        expect(flash.alert).to be_present
+        expect(assigns(:maybe_typo)).to eq(['martin@oraneg.fr'])
+        expect(response).to have_http_status(:success)
+      end
     end
 
-    context 'of multiple experts' do
-      it { expect(procedure.experts.include?(expert)).to be_truthy }
-      it { expect(procedure.experts.include?(expert2)).to be_truthy }
-      it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(admin_procedure_experts_path(procedure)) }
+    context 'when forcing email with typos' do
+      let(:maybe_typo) { 'martin@oraneg.fr' }
+      let(:params) { { procedure_id: procedure.id, maybe_typo: } }
+
+      it 'works' do
+        created_user = User.where(email: maybe_typo).first
+        expect(created_user).to be_an_instance_of(User)
+        expect(created_user.expert).to be_an_instance_of(Expert)
+        expect(procedure.experts.include?(created_user.expert)).to be_truthy
+        expect(flash.notice).to be_present
+        expect(response).to have_http_status(:success)
+      end
     end
   end
 

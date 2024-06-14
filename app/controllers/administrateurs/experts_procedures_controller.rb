@@ -1,25 +1,31 @@
 module Administrateurs
   class ExpertsProceduresController < AdministrateurController
+    include EmailSanitizableConcern
     before_action :retrieve_procedure
+    before_action :retrieve_experts_procedure, only: [:index, :create]
+    before_action :retrieve_experts_emails, only: [:index, :create]
 
     def index
-      @experts_procedure = @procedure
-        .experts_procedures
-        .where(revoked_at: nil)
-        .sort_by { |expert_procedure| expert_procedure.expert.email }
-      @experts_emails = experts_procedure_emails
     end
 
     def create
       emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map(&:strip).map(&:downcase)
+      @maybe_typo, emails = JSON.parse(emails)
+        .map { EmailSanitizer.sanitize(_1) }
+        .partition { EmailChecker.new.check(email: _1)[:email_suggestions].present? }
+      errors = if !@maybe_typo.empty?
+        ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typo.join(', ')}"]
+      else
+        []
+      end
+      emails += [EmailSanitizer.sanitize(params['maybe_typo'])] if params['maybe_typo'].present?
 
       valid_users, invalid_users = emails
         .map { |email| User.create_or_promote_to_expert(email, SecureRandom.hex) }
         .partition(&:valid?)
 
       if invalid_users.any?
-        flash[:alert] = invalid_users
+        errors += invalid_users
           .filter { |user| user.errors.present? }
           .map { |user| "#{user.email} : #{user.errors.full_messages_for(:email).join(', ')}" }
       end
@@ -37,7 +43,9 @@ module Administrateurs
           value: valid_users.map(&:email).join(', '),
           procedure: @procedure.id)
       end
-      redirect_to admin_procedure_experts_path(@procedure)
+
+      flash[:alert] = errors.join(". ") if !errors.empty?
+      render :index
     end
 
     def update
@@ -57,8 +65,12 @@ module Administrateurs
 
     private
 
-    def experts_procedure_emails
-      @procedure.experts.map(&:email).sort
+    def retrieve_experts_procedure
+      @experts_procedure ||= @procedure.experts_procedures.where(revoked_at: nil).sort_by { _1.expert.email }
+    end
+
+    def retrieve_experts_emails
+      @experts_emails ||= @experts_procedure.map { _1.expert.email }
     end
 
     def expert_procedure_params
