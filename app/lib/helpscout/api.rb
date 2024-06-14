@@ -22,7 +22,7 @@ class Helpscout::API
     })
   end
 
-  def create_conversation(email, subject, text, file)
+  def create_conversation(email, subject, text, blob)
     body = {
       subject: subject,
       customer: customer(email),
@@ -34,7 +34,7 @@ class Helpscout::API
           type: 'customer',
           customer: customer(email),
           text: text,
-          attachments: attachments(file)
+          attachments: attachments(blob)
         }
       ]
     }.compact
@@ -76,13 +76,13 @@ class Helpscout::API
 
   private
 
-  def attachments(file)
-    if file.present?
+  def attachments(blob)
+    if blob.present?
       [
         {
-          fileName: file.original_filename,
-          mimeType: file.content_type,
-          data: Base64.strict_encode64(file.read)
+          fileName: blob.filename,
+          mimeType: blob.content_type,
+          data: Base64.strict_encode64(blob.download)
         }
       ]
     else

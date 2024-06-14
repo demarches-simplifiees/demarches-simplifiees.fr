@@ -58,9 +58,9 @@ describe SupportController, type: :controller do
         let(:params) { { subject: 'bonjour', text: 'un message' } }
 
         it 'creates a conversation on HelpScout' do
-          expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
-
-          expect { subject }.to change(Commentaire, :count).by(0)
+          expect { subject }.to \
+            change(Commentaire, :count).by(0).and \
+            have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params))
 
           expect(flash[:notice]).to match('Votre message a été envoyé.')
           expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
@@ -80,9 +80,9 @@ describe SupportController, type: :controller do
           end
 
           it 'creates a conversation on HelpScout' do
-            expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
-
-            expect { subject }.to change(Commentaire, :count).by(0)
+            expect { subject }.to \
+              change(Commentaire, :count).by(0).and \
+              have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(subject: 'bonjour', dossier_id: dossier.id))
 
             expect(flash[:notice]).to match('Votre message a été envoyé.')
             expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
@@ -103,9 +103,8 @@ describe SupportController, type: :controller do
           end
 
           it 'posts the message to the dossier messagerie' do
-            expect_any_instance_of(Helpscout::FormAdapter).not_to receive(:send_form)
-
             expect { subject }.to change(Commentaire, :count).by(1)
+            assert_no_enqueued_jobs(only: HelpscoutCreateConversationJob)
 
             expect(Commentaire.last.email).to eq(user.email)
             expect(Commentaire.last.dossier).to eq(dossier)
@@ -159,9 +158,20 @@ describe SupportController, type: :controller do
 
     describe "when form is filled" do
       it "creates a conversation on HelpScout" do
-        expect_any_instance_of(Helpscout::FormAdapter).to receive(:send_form).and_return(true)
-        subject
+        expect { subject }.to have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:admin)))
         expect(flash[:notice]).to match('Votre message a été envoyé.')
+      end
+
+      context "with a piece justificative" do
+        let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
+        let(:params) { super().merge(piece_jointe: logo) }
+
+        it "create blob and pass it to conversation job" do
+          expect { subject }.to \
+            change(ActiveStorage::Blob, :count).by(1).and \
+              have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(blob_id: Integer)).and \
+              have_enqueued_job(VirusScannerJob)
+        end
       end
     end
 
