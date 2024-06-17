@@ -21,8 +21,10 @@
               = link_to t("links.footer.stats.label"), stats_path, title: t("links.footer.stats.title"), class: "fr-footer__top-link"
             %li.fr-footer__top_link
               = link_to t("links.footer.carte.label"), carte_path, title: t("links.footer.carte.title"), class: "fr-footer__top-link"
-            %li.fr-footer__top-link
-              = link_to t("links.footer.cgu.label"), t("links.footer.cgu.url"), title: t("links.footer.cgu.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+            %li.fr-footer__top-link                
+              %a{ :href => t("links.footer.cgu.url"), :class => "fr-footer__top-link", :rel => "noopener noreferrer" }
+                %abbr{ title: t("links.footer.cgu.title") }
+                  = t("links.footer.cgu.label")
         .fr-col-12.fr-col-sm-3.fr-col-md-3
           %h3.fr-footer__top-cat= t("links.footer.top_labels.resources")
           %ul.fr-footer__top-list
@@ -31,7 +33,9 @@
             %li.fr-footer__top-link
               = link_to t("links.footer.api_doc.label"), t("links.footer.api_doc.url"), title: t("links.footer.api_doc.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
             %li.fr-footer__top-link
-              = link_to t("links.common.faq.label"), t("links.common.faq.url"), title: t("links.common.faq.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+              %a{ :href => t("links.common.faq.url"), :class => "fr-footer__top-link", :rel => "noopener noreferrer" }
+                %abbr{ title: t("links.common.faq.title") }
+                  = t("links.common.faq.label")
             %li.fr-footer__top-link
               = link_to t("links.footer.code.label"), t("links.footer.code.url"), title: t("links.footer.code.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
         .fr-col-12.fr-col-sm-3.fr-col-md-3
