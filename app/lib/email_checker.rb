@@ -627,6 +627,8 @@ class EmailChecker
     return { success: true } if similar_domains.empty?
 
     { success: true, email_suggestions: email_suggestions(parsed_email:, similar_domains:) }
+  rescue Mail::Field::IncompleteParseError
+    return { success: false }
   end
 
   private
