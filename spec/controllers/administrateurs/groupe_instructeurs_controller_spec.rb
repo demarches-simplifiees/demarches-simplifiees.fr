@@ -324,6 +324,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     let(:emails) { ['instructeur_3@ministere_a.gouv.fr', 'instructeur_4@ministere_b.gouv.fr'].to_json }
     subject { post :add_instructeur, params: { emails: emails, procedure_id: procedure_non_routee.id, id: procedure_non_routee.defaut_groupe_instructeur.id } }
     let(:manager) { false }
+
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'].to_json }
       it { expect(response.status).to eq(200) }
@@ -369,7 +370,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'of news instructeurs' do
       let!(:user_email_verified) { create(:user, :with_email_verified) }
       let!(:instructeur_email_verified) { create(:instructeur, user: user_email_verified) }
-      let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com', instructeur_email_verified.email] }
+      let(:new_instructeur_emails) { ['new_i1@gmail.com', 'new_i2@gmail.com', instructeur_email_verified.email] }
 
       before do
         allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
@@ -379,11 +380,12 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
           .and_return(double(deliver_later: true))
         do_request
       end
-      it { expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails) }
-      it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
-      it { expect(procedure.routing_enabled?).to be_truthy }
-      it "calls GroupeInstructeurMailer with the right params" do
+
+      it do
+        expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails)
+        expect(flash.notice).to be_present
+        expect(response).to have_http_status(200)
+        expect(procedure.routing_enabled?).to be_truthy
         expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
           gi_1_2,
           [instructeur_email_verified],
@@ -393,13 +395,13 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it "calls InstructeurMailer with the right params" do
         expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
-          User.find_by(email: 'new_i1@mail.com').instructeur,
+          User.find_by(email: 'new_i1@gmail.com').instructeur,
           gi_1_2,
           admin.email
         )
 
         expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
-          User.find_by(email: 'new_i2@mail.com').instructeur,
+          User.find_by(email: 'new_i2@gmail.com').instructeur,
           gi_1_2,
           admin.email
         )
@@ -409,20 +411,31 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'of an instructeur already in the group' do
       let(:new_instructeur_emails) { [instructeur.email] }
       before { do_request }
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it { expect(response).to have_http_status(200) }
     end
 
     context 'of badly formed email' do
       let(:new_instructeur_emails) { ['badly_formed_email'] }
       before { do_request }
-      it { expect(flash.alert).to be_present }
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it do
+        expect(flash.alert).to eq("badly_formed_email n’est pas une adresse email valide")
+        expect(response).to have_http_status(200)
+      end
+    end
+
+    context 'of typo formed email' do
+      let(:new_instructeur_emails) { ['badly_formed_email@gail.com'] }
+      before { do_request }
+      it do
+        expect(flash.alert).to eq("Attention, nous pensons avoir identifié une faute de frappe dans les invitations : badly_formed_email@gail.com. Veuillez, <a href=\"#maybe_typos_errors\"> verifier l&#39;orthographe</a> des invitations.")
+        expect(response).to have_http_status(200)
+      end
     end
 
     context 'of an empty string' do
       let(:new_instructeur_emails) { [''] }
       before { do_request }
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2)) }
+      it { expect(response).to have_http_status(200) }
     end
 
     context 'when connected as an administrateur from manager' do
