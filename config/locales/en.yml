@@ -522,7 +522,6 @@ en:
           updated_at: updated at %{date}
           shared_with: File shared by %{owner} with
           deleted: Deleted at %{date}
-          deleted_badge: Deleted
           procedure_closed:
             brouillon:
               internal_procedure_html: This procedure is closed, you cannot submit this file. We invite you to submit a new one on the %{link} which replaces it

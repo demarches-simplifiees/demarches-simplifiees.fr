@@ -45,12 +45,6 @@
 
           = status_badge_user(dossier, 'fr-mb-1w')
 
-          - if @statut == "dossiers-supprimes-recemment"
-            %br
-            %span.fr-badge.fr-badge--sm.fr-badge--warning
-              = t('views.users.dossiers.dossiers_list.deleted_badge')
-
-
           - if dossier.pending_correction?
             %br
             = pending_correction_badge(:for_user)
