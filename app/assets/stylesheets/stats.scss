@@ -70,51 +70,8 @@ $stat-card-half-horizontal-spacing: 4 * $default-space;
   font-style: italic;
 }
 
-$segmented-control-margin-top: $default-space;
-
-.segmented-control {
-  border-radius: 36px;
-  height: 36px;
-  line-height: 36px;
-  font-size: 0;
-  padding: 0;
-  display: inline-block;
-  margin-top: $segmented-control-margin-top;
-}
-
 $segmented-control-item-horizontal-padding: $default-space;
-$segmented-control-item-border-radius: 2 * $default-space;
-
-.segmented-control-item {
-  display: inline-block;
-  font-size: 15px;
-  border: 2px solid $blue-france-700;
-  margin-right: -2px;
-  padding-top: var(--li-bottom);
-  padding-left: $segmented-control-item-horizontal-padding;
-  padding-right: $segmented-control-item-horizontal-padding;
-  color: $blue-france-700;
-
-  &:first-of-type {
-    border-radius: $segmented-control-item-border-radius 0px 0px $segmented-control-item-border-radius;
-  }
-
-  &:last-of-type {
-    border-radius: 0px $segmented-control-item-border-radius $segmented-control-item-border-radius 0px;
-    margin-right: 0;
-  }
-
-  &:hover {
-    background-color: $blue-france-500;
-    color: #FFFFFF;
-    cursor: pointer;
-  }
-}
-
-.segmented-control-item-active {
-  background-color: $blue-france-700;
-  color: #FFFFFF;
-}
+$segmented-control-item-border-radius: 0.25rem;
 
 .chart-container {
   margin-top: 36px;
@@ -147,10 +104,10 @@ $big-number-card-padding: 2 * $segmented-control-item-border-radius;
 .big-number-card-number {
   display: block;
   text-align: center;
-  font-size: 80px;
-  line-height: 1em;
+  font-size: 4.5rem;
+  line-height: 1.5em;
   font-weight: bold;
-  color: $blue-france-500;
+  color: var(--text-title-blue-france);
   white-space: nowrap;
 }
 
