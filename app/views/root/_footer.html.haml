@@ -7,7 +7,7 @@
           %h3.fr-footer__top-cat= t("links.footer.top_labels.communication")
           %ul.fr-footer__top-list
             %li
-              = link_to t("links.footer.releases.label"), t("links.footer.releases.url"), title: t("links.footer.releases.title"), class: "fr-footer__top-link"
+              = link_to t("links.footer.releases.label"), t("links.footer.releases.url"), title: t("links.footer.releases.title"), class: "fr-footer__top-link", hreflang: "fr"
             %li
               = link_to t("links.footer.contact.label"), contact_path, title: t("links.footer.contact.title"), class: "fr-footer__top-link"
         .fr-col-12.fr-col-sm-3.fr-col-md-3
@@ -16,35 +16,35 @@
             %li
               = link_to t("links.footer.mentions_legales.label"), MENTIONS_LEGALES_URL, title: t("links.footer.mentions_legales.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
             %li
-              = link_to t("links.footer.suivi.label"), suivi_path, title: t("links.footer.suivi.title"), class: "fr-footer__top-link"
+              = link_to t("links.footer.suivi.label"), suivi_path, title: t("links.footer.suivi.title"), class: "fr-footer__top-link", hreflang: "fr"
             %li
-              = link_to t("links.footer.stats.label"), stats_path, title: t("links.footer.stats.title"), class: "fr-footer__top-link"
+              = link_to t("links.footer.stats.label"), stats_path, title: t("links.footer.stats.title"), class: "fr-footer__top-link", hreflang: "fr"
             %li
               = link_to t("links.footer.carte.label"), carte_path, title: t("links.footer.carte.title"), class: "fr-footer__top-link"
             %li
-              %a{ :href => t("links.footer.cgu.url"), :class => "fr-footer__top-link", :rel => "noopener noreferrer" }
+              %a{ :href => t("links.footer.cgu.url"), :class => "fr-footer__top-link", :rel => "noopener noreferrer", :hreflang => "fr" }
                 %abbr{ title: t("links.footer.cgu.title") }
                   = t("links.footer.cgu.label")
         .fr-col-12.fr-col-sm-3.fr-col-md-3
           %h3.fr-footer__top-cat= t("links.footer.top_labels.resources")
           %ul.fr-footer__top-list
             %li
-              = link_to t("links.footer.doc.label"), t("links.footer.doc.url"), title: t("links.footer.doc.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+              = link_to t("links.footer.doc.label"), t("links.footer.doc.url"), title: t("links.footer.doc.title"), class: "fr-footer__top-link", rel: "noopener noreferrer", hreflang: "fr"
             %li
-              = link_to t("links.footer.api_doc.label"), t("links.footer.api_doc.url"), title: t("links.footer.api_doc.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+              = link_to t("links.footer.api_doc.label"), t("links.footer.api_doc.url"), title: t("links.footer.api_doc.title"), class: "fr-footer__top-link", rel: "noopener noreferrer", hreflang: "fr"
             %li
               %a{ :href => t("links.common.faq.url"), :class => "fr-footer__top-link", :rel => "noopener noreferrer" }
                 %abbr{ title: t("links.common.faq.title") }
                   = t("links.common.faq.label")
             %li
-              = link_to t("links.footer.code.label"), t("links.footer.code.url"), title: t("links.footer.code.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+              = link_to t("links.footer.code.label"), t("links.footer.code.url"), title: t("links.footer.code.title"), class: "fr-footer__top-link", rel: "noopener noreferrer", hreflang: "fr"
         .fr-col-12.fr-col-sm-3.fr-col-md-3
           %h3.fr-footer__top-cat= t("links.footer.top_labels.diagnostic")
           %ul.fr-footer__top-list
             %li
-              = link_to t("links.footer.status_page.label"), t("links.footer.status_page.url"), title: t("links.footer.status_page.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+              = link_to t("links.footer.status_page.label"), t("links.footer.status_page.url"), title: t("links.footer.status_page.title"), class: "fr-footer__top-link", rel: "noopener noreferrer", hreflang: "fr"
             %li
-              = link_to t("links.footer.security.label"), t("links.footer.security.url"), title: t("links.footer.security.title"), class: "fr-footer__top-link", rel: "noopener noreferrer"
+              = link_to t("links.footer.security.label"), t("links.footer.security.url"), title: t("links.footer.security.title"), class: "fr-footer__top-link", rel: "noopener noreferrer", hreflang: "fr"
   .fr-container
     .fr-footer__body
       .fr-footer__brand.fr-enlarge-link{ lang: "fr" }
