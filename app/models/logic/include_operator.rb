@@ -17,6 +17,10 @@ class Logic::IncludeOperator < Logic::BinaryOperator
     result + @left.errors(type_de_champs) + @right.errors(type_de_champs)
   end
 
+  def sql_condition(types_de_champ = [])
+    Champ.arel_table[:value].matches("%#{Champ.sanitize_sql_like(@right.to_s)}%")
+  end
+
   private
 
   def left_not_a_list?(type_de_champs)

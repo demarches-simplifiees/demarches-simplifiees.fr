@@ -11,4 +11,8 @@ class Logic::NotInDepartementOperator < Logic::InDepartementOperator
 
     l.fetch(:code_departement) != r
   end
+
+  def sql_condition(types_de_champ = [])
+    Champ.arel_table[:external_id].not_eq(@right.to_s)
+  end
 end

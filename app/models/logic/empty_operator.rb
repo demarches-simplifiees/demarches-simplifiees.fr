@@ -8,4 +8,8 @@ class Logic::EmptyOperator < Logic::BinaryOperator
   def compute(_champs = [])
     true
   end
+
+  def sql_condition(types_de_champ = [])
+    Champ.arel_table[:value].eq(nil)
+  end
 end

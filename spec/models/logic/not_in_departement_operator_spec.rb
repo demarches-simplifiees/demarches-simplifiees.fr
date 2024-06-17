@@ -20,4 +20,10 @@ describe Logic::NotInDepartementOperator do
       end
     end
   end
+
+  describe '#to_query' do
+    let(:stable_id) { 2 }
+    let(:value) { 'abc' }
+    it { expect(ds_not_in_departement(champ_value(stable_id), constant(value)).to_query([]).to_sql).to eq(Champ.where(stable_id:).where(Champ.arel_table[:external_id].not_eq(value)).to_sql) }
+  end
 end

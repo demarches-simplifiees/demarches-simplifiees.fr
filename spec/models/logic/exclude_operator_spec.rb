@@ -26,4 +26,10 @@ describe Logic::ExcludeOperator do
   describe '#==' do
     it { expect(ds_include(champ_value(champ.stable_id), constant('val1'))).to eq(ds_include(champ_value(champ.stable_id), constant('val1'))) }
   end
+
+  describe '#to_query' do
+    let(:stable_id) { 2 }
+    let(:value) { 'abc' }
+    it { expect(ds_exclude(champ_value(stable_id), constant(value)).to_query([]).to_sql).to eq(Champ.where(stable_id:).where(Champ.arel_table[:value].does_not_match("%#{value}%")).to_sql) }
+  end
 end
