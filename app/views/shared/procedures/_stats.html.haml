@@ -12,8 +12,8 @@
         %h2.fr-callout__title= t('.processing_time')
         %p.fr-callout__text.fr-text--md= t('.since_procedure_creation')
 
-        .chart-container
-          .chart-procedures-chart{ data: { 'chartkick-target': 'chart' }}
+        .fr-mt-4w
+          .chart-procedures-chart{ data: { 'chartkick-target': 'chart' } }
             = column_chart @usual_traitement_time_by_month,
               library: Chartkick.options[:default_library_config],
               ytitle: t('.nb_days'), legend: "bottom", label: t('.processing_time_graph_description')
@@ -23,7 +23,7 @@
         %h2.fr-callout__title= t('.status_evolution')
         %p.fr-callout__text.fr-text--md= t('.status_evolution_details')
 
-        .chart-container
+        .fr-mt-4w
           .chart
             = area_chart @dossiers_funnel,
               library: Chartkick.options[:default_library_config],
@@ -34,7 +34,7 @@
         %h2.fr-callout__title= t('.acceptance_rate')
         %p.fr-callout__text.fr-text--md= t('.acceptance_rate_details')
 
-        .chart-container
+        .fr-mt-4w
           .chart
             = pie_chart @termines_states,
               library: Chartkick.options[:default_library_config],
@@ -48,7 +48,7 @@
         %h2.fr-callout__title= t('.weekly_distribution')
         %p.fr-callout__text.fr-text--md= t('.weekly_distribution_details')
 
-        .chart-container
+        .fr-mt-4w
           .chart
             = line_chart @termines_by_week,
               library: Chartkick.options[:default_library_config],

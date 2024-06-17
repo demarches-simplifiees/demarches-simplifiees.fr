@@ -27,8 +27,8 @@
               %label.fr-label{ for: "segmented-procedures-2" }
                 Cumul
 
-        .chart-container
-          .chart.monthly-procedures-chart{ data: { 'chartkick-target': 'chart' }}
+        .fr-mt-4w
+          .chart.monthly-procedures-chart{ data: { 'chartkick-target': 'chart' } }
             = column_chart @procedures_in_the_last_4_months, library: Chartkick.options[:default_library_config]
           .chart.cumulative-procedures-chart.hidden{ data: { 'chartkick-target': 'chart' } }
             = area_chart @procedures_cumulative, library: Chartkick.options[:default_library_config]
@@ -55,8 +55,8 @@
                 Cumul
 
 
-        .chart-container
-          .chart.monthly-dossiers-chart{ data: { 'chartkick-target': 'chart' }}
+        .fr-mt-4w
+          .chart.monthly-dossiers-chart{ data: { 'chartkick-target': 'chart' } }
             = column_chart @dossiers_in_the_last_4_months, library: Chartkick.options[:default_library_config]
           .chart.cumulative-dossiers-chart.hidden{ data: { 'chartkick-target': 'chart' } }
             = area_chart @dossiers_cumulative, library: Chartkick.options[:default_library_config]
@@ -65,7 +65,7 @@
       .fr-callout
         %h2.fr-callout__title Répartition des dossiers
 
-        .chart-container
+        .fr-mt-4w
           .chart
             = pie_chart @dossiers_states_for_pie, library: Chartkick.options[:default_library_config],
               colors: ["#000091", "#7F7FC8", "#9A9AFF", "#00006D"]
