@@ -51,6 +51,11 @@ jobs:
         run: |
           bun run test
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   unit_tests:
     name: Unit tests
     runs-on: ubuntu-latest
@@ -107,6 +112,11 @@ jobs:
           name: rspec-results-${{ github.job }}-${{ strategy.job-index }}
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
 
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   system_tests:
     name: System tests
     runs-on: ubuntu-latest
@@ -160,6 +170,11 @@ jobs:
         with:
           name: rspec-results-${{ github.job }}-${{ strategy.job-index }}
           path: tmp/rspec_${{ github.job }}_${{ strategy.job-index }}.junit.xml
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   save_test_reports:
     name: Save test reports

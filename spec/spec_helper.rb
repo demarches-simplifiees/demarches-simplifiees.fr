@@ -16,6 +16,10 @@
 # users commonly want.
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
+#
+#
+require 'simplecov' # see config in .simplecov file
+
 require 'rspec/retry'
 
 SECURE_PASSWORD = 'PARAU TAHITI ‘OE'

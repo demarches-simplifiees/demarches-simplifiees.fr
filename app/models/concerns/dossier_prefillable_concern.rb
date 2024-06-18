@@ -13,8 +13,4 @@ module DossierPrefillableConcern
     assign_attributes(attributes)
     save(validate: false)
   end
-
-  def find_champs_by_stable_ids(stable_ids)
-    champs.joins(:type_de_champ).where(types_de_champ: { stable_id: stable_ids.compact.uniq })
-  end
 end

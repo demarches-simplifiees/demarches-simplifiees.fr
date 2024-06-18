@@ -54,14 +54,17 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     def to_assignable_attributes
       return unless repetition.is_a?(Hash)
 
-      row = champ.rows[index] || champ.add_row(champ.dossier_revision)
+      row = champ.rows[index] || champ.add_row(revision)
+      row_id = row.first.row_id
 
       repetition.map do |key, value|
         next unless key.is_a?(String) && key.starts_with?("champ_")
 
-        subchamp = row.find { |champ| champ.stable_id == Champ.stable_id_from_typed_id(key) }
-        next unless subchamp
+        stable_id = Champ.stable_id_from_typed_id(key)
+        type_de_champ = revision.types_de_champ.find { _1.stable_id == stable_id }
+        next unless type_de_champ
 
+        subchamp = champ.dossier.champ_for_update(type_de_champ, row_id)
         TypesDeChamp::PrefillTypeDeChamp.build(subchamp.type_de_champ, revision).to_assignable_attributes(subchamp, value)
       end.compact
     end

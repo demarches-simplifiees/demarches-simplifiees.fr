@@ -203,9 +203,21 @@ Rails.application.routes.draw do
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
-    post ':champ_id/repetition', to: 'repetition#add'
-    delete ':champ_id/repetition', to: 'repetition#remove'
 
+    get ':dossier_id/:stable_id/siret', to: 'siret#show'
+    get ':dossier_id/:stable_id/rna', to: 'rna#show'
+    delete ':dossier_id/:stable_id/options', to: 'options#remove'
+
+    get ':dossier_id/:stable_id/carte/features', to: 'carte#index'
+    post ':dossier_id/:stable_id/carte/features', to: 'carte#create'
+    patch ':dossier_id/:stable_id/carte/features/:id', to: 'carte#update'
+    delete ':dossier_id/:stable_id/carte/features/:id', to: 'carte#destroy'
+
+    get ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#show'
+    put ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#update'
+    get ':dossier_id/:stable_id/piece_justificative/template', to: 'piece_justificative#template'
+
+    # TODO: remove after migration is ower
     get ':champ_id/siret', to: 'siret#show', as: :siret
     get ':champ_id/rna', to: 'rna#show', as: :rna
     get ':champ_id/dn', to: 'numero_dn#show', as: :dn

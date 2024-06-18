@@ -1,7 +1,4 @@
-class Champs::PieceJustificativeController < ApplicationController
-  before_action :authenticate_logged_user!
-  before_action :set_champ
-
+class Champs::PieceJustificativeController < Champs::ChampController
   def show
     # pf used to redirect to this route to download PJ ==> if param h is present (old pf link) then redirect to new route
     return redirect_to download_path if params[:h].present?
@@ -56,16 +53,6 @@ class Champs::PieceJustificativeController < ApplicationController
 
   private
 
-  def set_champ
-    h = params[:h]
-
-    @champ = if h.blank?
-      policy_scope(Champ).find(params[:champ_id])
-    else
-      find_champ
-    end
-  end
-
   def attach_piece_justificative
     save_succeed = nil
 
@@ -81,9 +68,9 @@ class Champs::PieceJustificativeController < ApplicationController
 
   def find_champ
     h = params[:h]
-    return if h.blank?
+    return super if h.blank?
 
     champ = Champ.find(params[:champ_id])
-    champ&.match_encoded_date?(:created_at, h) ? champ : nil
+    champ&.match_encoded_date?(:created_at, h) ? champ : super
   end
 end

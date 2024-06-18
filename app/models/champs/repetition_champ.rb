@@ -27,6 +27,15 @@ class Champs::RepetitionChamp < Champ
     added_champs
   end
 
+  def remove_row(row_id)
+    dossier.champs.where(row_id:).destroy_all
+    dossier.champs.reload
+  end
+
+  def focusable_input_id
+    rows.last&.first&.focusable_input_id
+  end
+
   def blank?
     champs.empty?
   end

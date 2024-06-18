@@ -27,6 +27,7 @@ storage/
 /public/assets
 /spec/support/spec_config.local.rb
 /config/initializers/config.local.rb
+/coverage
 
 # Local Netlify folder
 .netlify
