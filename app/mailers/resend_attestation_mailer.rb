@@ -2,7 +2,7 @@ class ResendAttestationMailer < ApplicationMailer
   include Rails.application.routes.url_helpers
 
   def resend_attestation(dossier)
-    to = dossier.user.email
+    to = dossier.user_email_for(:notification)
     subject = "Nouvelle attestation pour votre dossier nº #{dossier.id}"
 
     mail(to: to, subject: subject, body: body(dossier))

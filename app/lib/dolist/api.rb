@@ -190,9 +190,11 @@ module Dolist
       format(base, account_id: account_id)
     end
 
-    def sender_id
-      Rails.cache.fetch("dolist_api_sender_id", expires_in: 1.hour) do
-        senders.dig("ItemList", 0, "Sender", "ID")
+    def sender_id(domain)
+      if domain == "demarches.gouv.fr"
+        Rails.application.secrets.dolist[:gouv_sender_id]
+      else
+        Rails.application.secrets.dolist[:default_sender_id]
       end
     end
 
@@ -267,7 +269,7 @@ module Dolist
         "Message": {
           "Name": mail['X-Dolist-Message-Name'].value,
           "Subject": mail.subject,
-          "SenderID": sender_id,
+          "SenderID": sender_id(mail.from_address.domain),
           "ForceHttp": false, # ForceHttp : force le tracking http non sécurisé (True/False).
           "Format": "html",
           "DisableOpenTracking": true, # DisableOpenTracking : désactivation du tracking d'ouverture (True/False).

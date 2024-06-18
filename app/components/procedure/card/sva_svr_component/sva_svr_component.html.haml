@@ -4,7 +4,7 @@
       - if @procedure.sva_svr_enabled?
         %p.fr-badge.fr-badge--success= t('.ready')
       - else
-        %p.fr-badge.fr-badge--info= t('.needs_configuration')
+        %p.fr-badge= t('.disabled')
       %h3.fr-h6.fr-mt-10v= t('.title')
       %p.fr-tile-subtitle= t('.subtitle')
       %p.fr-btn.fr-btn--tertiary= t('views.shared.actions.edit')

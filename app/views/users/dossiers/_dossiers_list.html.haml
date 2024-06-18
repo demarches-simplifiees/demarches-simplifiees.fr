@@ -79,9 +79,9 @@
             - c.with_body do
               %p
                 - if dossier.transfer.from_support?
-                  = t('views.users.dossiers.transfers.receiver_demande_en_cours_from_support', id: dossier.id, email: dossier.user.email)
+                  = t('views.users.dossiers.transfers.receiver_demande_en_cours_from_support', id: dossier.id, email: dossier.user_email_for(:notification))
                 - else
-                  = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: dossier.user.email)
+                  = t('views.users.dossiers.transfers.receiver_demande_en_cours', id: dossier.id, email: dossier.user_email_for(:notification))
               %p
                 = link_to t('views.users.dossiers.transfers.accept'), transfer_path(dossier.transfer), class: "fr-link fr-mr-1w", method: :put
                 = link_to t('views.users.dossiers.transfers.reject'), transfer_path(dossier.transfer), class: "fr-link", method: :delete

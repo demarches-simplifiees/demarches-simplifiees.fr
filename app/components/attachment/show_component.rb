@@ -1,10 +1,11 @@
 class Attachment::ShowComponent < ApplicationComponent
-  def initialize(attachment:, new_tab: false)
+  def initialize(attachment:, new_tab: false, truncate: false)
     @attachment = attachment
     @new_tab = new_tab
+    @truncate = truncate
   end
 
-  attr_reader :attachment, :new_tab
+  attr_reader :attachment, :new_tab, :truncate
 
   def should_display_link?
     (attachment.virus_scanner.safe? || !attachment.virus_scanner.started?) && !attachment.watermark_pending?

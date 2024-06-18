@@ -28,7 +28,7 @@ class DossierTransfer < ApplicationRecord
       DossierTransferLog.create(transfer.dossiers.map do |dossier|
         {
           dossier: dossier,
-          from: dossier.user.email,
+          from: dossier.user_email_for(:notification),
           from_support: transfer.from_support,
           to: transfer.email
         }

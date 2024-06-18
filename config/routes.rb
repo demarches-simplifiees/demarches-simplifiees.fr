@@ -517,6 +517,7 @@ Rails.application.routes.draw do
             get 'print' => 'dossiers#print'
             get 'telecharger_pjs' => 'dossiers#telecharger_pjs'
             get 'reaffectation'
+            get 'pieces_jointes'
             post 'reaffecter'
           end
         end
