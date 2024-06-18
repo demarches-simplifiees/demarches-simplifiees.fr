@@ -926,6 +926,7 @@ en:
       facebook: Facebook
       google: Google
       microsoft: Microsoft 365
+      tatou: Tātou
       yahoo: Yahoo
     password_confirmation:
       back: 'back to previous step'

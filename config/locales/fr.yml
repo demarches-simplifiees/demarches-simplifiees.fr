@@ -986,6 +986,7 @@ fr:
       facebook: Facebook
       google: Google
       microsoft: Microsoft 365
+      tatou: Tātou
       yahoo: Yahoo
     password_confirmation:
       back: 'revenir en arrière'
