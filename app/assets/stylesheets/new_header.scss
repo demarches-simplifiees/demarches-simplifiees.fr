@@ -5,3 +5,13 @@
     filter: none;
   }
 }
+
+.fr-header__menu.fr-modal {
+  // Avoid overflow on mobile version
+  // Due to button width
+  overflow-x: hidden;
+
+  .fr-btn {
+    width: auto;
+  }
+}
