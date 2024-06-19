@@ -5,7 +5,7 @@ module TurboChampsConcern
 
   def champs_to_turbo_update(params, champs)
     to_update = if params.values.filter { _1.key?(:with_public_id) }.empty?
-                  champ_ids = params.keys.map(&:to_i)
+                  champ_ids = params.values.map { _1[:id] }.compact.map(&:to_i)
                   champs.filter { _1.id.in?(champ_ids) }
                 else
                   champ_public_ids = params.keys

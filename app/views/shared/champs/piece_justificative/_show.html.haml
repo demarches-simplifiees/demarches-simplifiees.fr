@@ -1,19 +1,24 @@
 .fr-downloads-group
-  - champ.piece_justificative_file.attachments.each do |attachment|
+  - if !feature_enabled?(:gallery_demande)
     %ul
-      %li= render Attachment::ShowComponent.new(attachment:, new_tab: true, truncate: true)
-    .gallery-item
-      - blob = attachment.blob
-      - if blob.content_type.in?(AUTHORIZED_PDF_TYPES)
-        = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{champ.libelle} -- #{blob.filename}" do
-          .thumbnail
-            = image_tag("pdf-placeholder.png")
-            .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
-              = 'Visualiser'
+      - champ.piece_justificative_file.attachments.each do |attachment|
+        %li= render Attachment::ShowComponent.new(attachment:, new_tab: true)
+  - else
+    - champ.piece_justificative_file.attachments.each do |attachment|
+      %ul
+        %li= render Attachment::ShowComponent.new(attachment:, new_tab: true, truncate: true)
+      .gallery-item
+        - blob = attachment.blob
+        - if blob.content_type.in?(AUTHORIZED_PDF_TYPES)
+          = link_to blob.url, id: blob.id, data: { iframe: true, src: blob.url }, class: 'gallery-link', type: blob.content_type, title: "#{champ.libelle} -- #{blob.filename}" do
+            .thumbnail
+              = image_tag("pdf-placeholder.png")
+              .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
+                = 'Visualiser'
 
-      - elsif blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
-        = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
-          .thumbnail
-            = image_tag(blob.url)
-            .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
-              = 'Visualiser'
+        - elsif blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
+          = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
+            .thumbnail
+              = image_tag(blob.url, loading: :lazy)
+              .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
+                = 'Visualiser'
