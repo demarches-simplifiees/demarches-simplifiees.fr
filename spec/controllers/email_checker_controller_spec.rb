@@ -35,5 +35,13 @@ describe EmailCheckerController, type: :controller do
         expect(body).to eq({ success: false })
       end
     end
+
+    context 'incomplete' do
+      let(:params) { { email: 'bikram.subedi81@' } }
+      it do
+        expect(response).to have_http_status(:success)
+        expect(body).to eq({ success: false })
+      end
+    end
   end
 end
