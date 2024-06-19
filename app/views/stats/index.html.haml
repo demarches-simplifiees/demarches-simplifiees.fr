@@ -2,71 +2,75 @@
 - content_for :footer do
   = render partial: "root/footer"
 
-.statistiques{ 'data-controller': 'chartkick' }
-  %h1.new-h1 Statistiques
+.fr-container.fr-my-4w
+  %h1 Statistiques d’utilisation de la plateforme
 
-  .stat-cards
-    .stat-card.stat-card-half.big-number-card.pull-left
-      %span.big-number-card-title.long-title TOTAL DÉMARCHES DÉMAT. OU EN COURS DE DÉMAT.
-      %span.big-number-card-number
-        = number_with_delimiter(@procedures_numbers[:total])
-      %span.big-number-card-detail
-        #{number_with_delimiter(@procedures_numbers[:last_30_days_count])} (#{@procedures_numbers[:evolution]} %) sur les 30 derniers jours
-      %span.big-number-card-detail
-        = link_to "Voir carte de déploiement", carte_path
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout{ data: { controller: 'chartkick' } }
+        %h2.fr-callout__title Démarches dématérialisées (total)
+        %p.fr-callout__text.big-number-card-number.fr-mb-2w
+          %span.big-number-card-number= number_with_delimiter(@procedures_numbers[:total])
+        %p.fr-callout__text.fr-text--md.text-center
+          #{number_with_delimiter(@procedures_numbers[:last_30_days_count])} (#{@procedures_numbers[:evolution]} %) sur les 30 derniers jours
+          %br
+          = link_to "Voir carte de déploiement", carte_path
 
-    .stat-card.stat-card-half.big-number-card.pull-left
-      %span.big-number-card-title TOTAL DOSSIERS DÉPOSÉS
-      %span.big-number-card-number
-        = number_with_delimiter(@dossiers_numbers[:total])
-      %span.big-number-card-detail
-        #{number_with_delimiter(@dossiers_numbers[:last_30_days_count])} (#{@dossiers_numbers[:evolution]} %) sur les 30 derniers jours
-      %span.big-number-card-detail
-        = link_to "Voir carte de déploiement", carte_path(map_filter: { kind: :nb_dossiers })
+        %fieldset.fr-segmented.fr-segmented--sm.pull-right.fr-mt-2w.fr-my-1w
+          .fr-segmented__elements
+            .fr-segmented__element
+              %input{ value: "1", checked: true, type: "radio", id: "segmented-procedures-1", name: "segmented-procedures", data: { action: 'chartkick#toggleChart', 'toggle-chart': '.monthly-procedures-chart' } }
+              %label.fr-label{ for: "segmented-procedures-1" }
+                Par mois
+            .fr-segmented__element
+              %input{ value: "2", type: "radio", id: "segmented-procedures-2", name: "segmented-procedures", data: { action: 'chartkick#toggleChart', 'toggle-chart': '.cumulative-procedures-chart' } }
+              %label.fr-label{ for: "segmented-procedures-2" }
+                Cumul
+
+        .fr-mt-4w
+          .chart.monthly-procedures-chart{ data: { 'chartkick-target': 'chart' } }
+            = column_chart @procedures_in_the_last_4_months, library: Chartkick.options[:default_library_config]
+          .chart.cumulative-procedures-chart.hidden{ data: { 'chartkick-target': 'chart' } }
+            = area_chart @procedures_cumulative, library: Chartkick.options[:default_library_config]
+
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout{ data: { controller: 'chartkick' } }
+        %h2.fr-callout__title Dossiers déposés (total)
+        %p.fr-callout__text.big-number-card-number.fr-mb-2w
+          = number_with_delimiter(@dossiers_numbers[:total])
+        %p.fr-callout__text.fr-text--md.text-center
+          #{number_with_delimiter(@dossiers_numbers[:last_30_days_count])} (#{@dossiers_numbers[:evolution]} %) sur les 30 derniers jours
+          %br
+          = link_to "Voir carte de déploiement", carte_path(map_filter: { kind: :nb_dossiers })
+
+        %fieldset.fr-segmented.fr-segmented--sm.pull-right.fr-mt-2w.fr-my-1w
+          .fr-segmented__elements
+            .fr-segmented__element
+              %input{ value: "1", checked: true, type: "radio", id: "segmented-dossiers-1", name: "segmented-dossiers", data: { action: 'chartkick#toggleChart', 'toggle-chart': '.monthly-dossiers-chart' } }
+              %label.fr-label{ for: "segmented-dossiers-1" }
+                Par mois
+            .fr-segmented__element
+              %input{ value: "2", type: "radio", id: "segmented-dossiers-2", name: "segmented-dossiers",  data: { action: 'chartkick#toggleChart', 'toggle-chart': '.cumulative-dossiers-chart' } }
+              %label.fr-label{ for: "segmented-dossiers-2" }
+                Cumul
 
 
-    .stat-card.stat-card-half.pull-left
-      %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ data: { 'toggle-chart': '.monthly-procedures-chart' } }
-          Par mois
-        %li.segmented-control-item{ data: { 'toggle-chart': '.cumulative-procedures-chart' } }
-          Cumul
-      %span.stat-card-title.pull-left Démarches dématérialisées
-      .clearfix
+        .fr-mt-4w
+          .chart.monthly-dossiers-chart{ data: { 'chartkick-target': 'chart' } }
+            = column_chart @dossiers_in_the_last_4_months, library: Chartkick.options[:default_library_config]
+          .chart.cumulative-dossiers-chart.hidden{ data: { 'chartkick-target': 'chart' } }
+            = area_chart @dossiers_cumulative, library: Chartkick.options[:default_library_config]
 
-      .chart-container
-        .chart.monthly-procedures-chart
-          = column_chart @procedures_in_the_last_4_months
-        .chart.cumulative-procedures-chart.hidden
-          = area_chart @procedures_cumulative
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout
+        %h2.fr-callout__title Répartition des dossiers
 
-    .stat-card.stat-card-half.pull-left
-      %ul.segmented-control.pull-right
-        %li.segmented-control-item.segmented-control-item-active{ data: { 'toggle-chart': '.monthly-dossiers-chart' } }
-          Par mois
-        %li.segmented-control-item{ data: { 'toggle-chart': '.cumulative-dossiers-chart' } }
-          Cumul
-      %span.stat-card-title.pull-left Dossiers déposés
-      .clearfix
-
-      .chart-container
-        .chart.monthly-dossiers-chart
-          = column_chart @dossiers_in_the_last_4_months
-        .chart.cumulative-dossiers-chart.hidden
-          = area_chart @dossiers_cumulative
-
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title
-        Répartition des dossiers
-
-      .chart-container
-        .chart
-          = pie_chart @dossiers_states_for_pie,
-            colors: ["#000091", "#7F7FC8", "#9A9AFF", "#00006D"]
-
-    .clearfix
+        .fr-mt-4w
+          .chart
+            = pie_chart @dossiers_states_for_pie, library: Chartkick.options[:default_library_config],
+              colors: ["#000091", "#7F7FC8", "#9A9AFF", "#00006D"]
 
   - if super_admin_signed_in?
-    %h2.new-h2 Téléchargement
+    %h2.fr-h4 Téléchargement
 
-    = link_to "Télécharger les statistiques (CSV)", stats_download_path(format: :csv), class: 'fr-btn fr-btn-primary mb-4'
+    = link_to "Télécharger les statistiques (CSV)", stats_download_path(format: :csv), class: 'fr-btn fr-btn-primary fr-mb-4w'
