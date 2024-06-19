@@ -1002,8 +1002,12 @@ class Procedure < ApplicationRecord
     lien_dpo.present? && lien_dpo.match?(/@/)
   end
 
-  def header_sections
+  def draft_revision_header_sections_public
     draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
+  end
+
+  def draft_revision_header_sections_private
+    draft_revision.revision_types_de_champ_private.filter { _1.type_de_champ.header_section? }
   end
 
   def dossier_for_preview(user)

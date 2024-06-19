@@ -7,6 +7,7 @@
   %h1.fr-h2 Annotations privées
   = render  NestedForms::FormOwnerComponent.new
   .fr-grid-row
+    = render partial: 'champs_summary', locals: { header_sections: @procedure.draft_revision_header_sections_private }
     .fr-col
       = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: true)
 
