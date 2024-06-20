@@ -71,6 +71,6 @@ class Champs::PieceJustificativeController < Champs::ChampController
     return super if h.blank?
 
     champ = Champ.find(params[:champ_id])
-    champ&.match_encoded_date?(:created_at, h) ? champ : super
+    champ&.match_encoded_date?(:created_at, h) ? champ : nil
   end
 end
