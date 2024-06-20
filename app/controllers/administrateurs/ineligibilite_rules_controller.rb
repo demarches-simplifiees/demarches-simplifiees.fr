@@ -6,7 +6,9 @@ module Administrateurs
     end
 
     def change
-      if draft_revision.update(procedure_revision_params)
+      draft_revision.assign_attributes(procedure_revision_params)
+
+      if draft_revision.validate(:ineligibilite_rules_editor) && draft_revision.save
         redirect_to edit_admin_procedure_ineligibilite_rules_path(@procedure)
       else
         flash[:alert] = draft_revision.errors.full_messages

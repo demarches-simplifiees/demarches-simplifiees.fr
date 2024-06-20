@@ -563,7 +563,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_passer_en_construction?
-    return true if !revision.ineligibilite_enabled
+    return true if !revision.ineligibilite_enabled || !revision.ineligibilite_rules
 
     !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
   end
