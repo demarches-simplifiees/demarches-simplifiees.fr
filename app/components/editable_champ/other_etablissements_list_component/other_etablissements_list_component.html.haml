@@ -1,0 +1,4 @@
+%ul.fr-text--sm.fr-text-mention--grey
+  - @other_etablissements.each do |etablissement|
+    %li
+      = "#{etablissement[:siret]}-#{"%03d" % etablissement[:num_entreprise]}, #{etablissement[:entreprise_nom_commercial]} (#{etablissement[:adresse]})"

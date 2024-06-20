@@ -12,6 +12,7 @@ class Siret
   def remove_whitespace
     if siret.present?
       siret.delete!(' ')
+      siret.delete!('-')
     end
   end
 end
