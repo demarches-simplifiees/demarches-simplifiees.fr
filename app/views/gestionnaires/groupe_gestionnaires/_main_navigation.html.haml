@@ -1,4 +1,4 @@
 - content_for(:main_navigation) do
-  %nav#header-navigation.fr-nav{ role: 'navigation', 'aria-label': 'Menu principal gestionnaire' }
+  #header-navigation.fr-nav
     %ul.fr-nav__list
       %li.fr-nav__item= link_to 'Mes groupes gestionnaires', gestionnaire_groupe_gestionnaires_path, class:'fr-nav__link', 'aria-current': current_page?(controller: 'groupe_gestionnaires', action: :index) ? 'page' : nil
