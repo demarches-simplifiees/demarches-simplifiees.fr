@@ -78,24 +78,18 @@
           .number
             %dt.number-value
               = number_with_delimiter(Administrateur.with_publiees_ou_closes.uniq.count, :locale => :fr)
-            %dd.number-label<
-              administrations
-              %br<>
-              partenaires
+            %dd.number-label
+              administrations partenaires
           .number
             %dt.number-value
               = number_with_delimiter(Dossier.state_not_brouillon.count, :locale => :fr)
-            %dd.number-label<
-              dossiers
-              %br<>
-              déposés
+            %dd.number-label
+              dossiers déposés
           .number
             %dt.number-value
               = "#{number_with_delimiter(50, :locale => :fr)} %"
-            %dd.number-label<
-              de réduction
-              %br<>
-              des délais de traitement
+            %dd.number-label
+              de réduction des délais de traitement
 
   = render partial: "root/users" if  LANDING_USERS_ENABLED
 
