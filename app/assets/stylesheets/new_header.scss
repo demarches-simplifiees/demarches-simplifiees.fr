@@ -20,4 +20,9 @@
     margin-left: 0;
     margin-right: 0;
   }
+
+  // Remove border on when there is one item only
+  .fr-nav__item:only-child::before {
+    box-shadow: none;
+  }
 }
