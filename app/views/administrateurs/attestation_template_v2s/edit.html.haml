@@ -120,7 +120,7 @@
               - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
 
       #preview-column.fr-col-12.fr-col-lg-5.fr-background-alt--blue-france
-        .sticky--top.fr-px-1w
+        .sticky--top.fr-px-1w{ data: { controller: "sticky-top" } }
           .flex.justify-between.align-center
             %h2.fr-h4 Aperçu
             %p= link_to 'Prévisualiser en taille réelle', admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), class: 'fr-link', target: '_blank', rel: 'noopener'
