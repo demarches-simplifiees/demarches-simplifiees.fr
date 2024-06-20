@@ -3,7 +3,7 @@ module Instructeurs
     before_action :ensure_ownership!, except: [:index]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
 
-    ITEMS_PER_PAGE = 25
+    ITEMS_PER_PAGE = 100
     BATCH_SELECTION_LIMIT = 500
 
     def index
