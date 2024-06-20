@@ -423,7 +423,7 @@ module Instructeurs
         :feature,
         :with_public_id,
         value: []
-      ] + INSTANCE_CHAMPS_PARAMS
+      ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       # Strong attributes do not support records (indexed hash); they only support hashes with
       # static keys. We create a static hash based on the available keys.
       public_ids = params.dig(:dossier, :champs_private_attributes)&.keys || []
@@ -439,7 +439,7 @@ module Instructeurs
       # return if there's no checked visa in the dossier
       visa_type = TypeDeChamp.type_champs.fetch(:visa)
       checked_visa_champ = Champ.where(type_de_champ: { type_champ: visa_type }).where.not(value: "")
-      return champs_private_params unless Champ.private_only.joins(:type_de_champ).where(dossier: params[:dossier_id]).and(checked_visa_champ).any?
+      return champs_private_attributes_params unless Champ.private_only.joins(:type_de_champ).where(dossier: params[:dossier_id]).and(checked_visa_champ).any?
 
       header_type = TypeDeChamp.type_champs.fetch(:header_section)
       header_champ = Champ.where(type_de_champ: { type_champ: header_type })
@@ -456,7 +456,7 @@ module Instructeurs
         following_champ = champs.find { |c| c.visa? || (c.header_section? && c.header_section_level_value == 1) }
         following_champ.present? && following_champ.visa?
       end
-      champs_private_params
+      champs_private_attributes_params
     end
 
     def mark_demande_as_read
