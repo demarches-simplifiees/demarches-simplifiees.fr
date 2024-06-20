@@ -1,11 +1,11 @@
 %nav.fr-translate.fr-nav{ role: "navigation", "aria-label"=> t('my_account', scope: [:layouts]) }
   .fr-nav__item
     %button.account-btn.fr-translate__btn.fr-btn{ "aria-controls" => "account", "aria-expanded" => "false", :title => t('my_account', scope: [:layouts]) }
-      %span= current_email
+      %span.fr-mr-1w= current_email
       - if dossier.present? && dossier&.france_connected_with_one_identity?
         %span
           &nbsp;via FranceConnect
-      %span{ class: "fr-badge fr-badge--sm fr-ml-1w #{color_by_role(nav_bar_profile)}" }
+      %span{ class: "fr-badge fr-badge--sm #{color_by_role(nav_bar_profile)}" }
         = t("layouts.#{nav_bar_profile}")
     #account.fr-collapse.fr-menu
       %ul.fr-menu__list.max-content
