@@ -5,9 +5,13 @@ class TypesDeChampEditor::HeaderSectionsSummaryComponent < ApplicationComponent
   end
 
   def header_sections
-    @procedure.draft_revision
-      .send(@is_private ? :revision_types_de_champ_private : :revision_types_de_champ_public)
-      .filter { _1.type_de_champ.header_section? }
+    coordinates = if @is_private
+      @procedure.draft_revision.revision_types_de_champ_private
+    else
+      @procedure.draft_revision.revision_types_de_champ_public
+    end
+
+    coordinates.filter { _1.type_de_champ.header_section? }
   end
 
   def href(header_section) # used by type de champ editor to anchor elements

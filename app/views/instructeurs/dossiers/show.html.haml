@@ -16,6 +16,6 @@
 
 .fr-container
   .fr-grid-row.fr-grid-row--center
-    .fr-col-md-3= render ViewableChamp::HeaderSectionsSummaryComponent.new(dossier: @dossier, is_private: false)
+    = render ViewableChamp::HeaderSectionsSummaryComponent.new(dossier: @dossier, is_private: false)
     .fr-col-md-9
       = render partial: "shared/dossiers/demande", locals: { dossier: @dossier, demande_seen_at: @demande_seen_at, profile: 'instructeur' }
