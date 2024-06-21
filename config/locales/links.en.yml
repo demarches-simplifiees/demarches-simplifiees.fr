@@ -29,7 +29,6 @@ en:
       license: "licensed under etalab 2.0"
       accessibilite:
         label: "Accessibility: partially compliant"
-        title: "Accessibility declaration"
       api_doc:
         label: "API Documentation"
         title: "API Documentation"
@@ -40,7 +39,6 @@ en:
         alt: "Direction interministérielle du numérique"
       code:
         label: "Source code"
-        title: "Our Source code is open source"
         url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr"
       cgu:
         label: "ToS"
@@ -55,7 +53,6 @@ en:
         title: "Vote for your priority improvements or share your own ideas"
       mentions_legales:
         label: "Legal notices"
-        title: "Legal notices regarding our platform"
       releases:
         label: "Releases notes"
         title: "Our last updates"
@@ -73,11 +70,8 @@ en:
         url: "https://status.demarches-simplifiees.fr"
       suivi:
         label: "Audience tracking and privacy"
-        title: "Tracking and privacy of demarches-simplifiees"
       cookies:
         label: Cookies
-        title: Cookies
       contact:
         label: Contact
-        title: Contact
       display_params: Display params
