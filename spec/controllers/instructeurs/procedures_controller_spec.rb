@@ -330,6 +330,20 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:filtered_sorted_paginated_ids)).to match_array([new_unfollow_dossier].map(&:id)) }
         end
 
+        context 'with pagination' do
+          let(:dossiers) { 26.times.map { create(:dossier, :en_instruction, procedure: procedure) } }
+          before { dossiers }
+          it 'keeps request count stable' do
+            count = 0
+            callback = lambda { |*_args| count += 1 }
+            ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+              subject
+              expect(assigns(:projected_dossiers).size).to eq(25)
+            end
+            expect(count).to eq(43)
+          end
+        end
+
         context 'with a dossier en contruction hidden by user' do
           let!(:hidden_dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2, hidden_by_user_at: 1.hour.ago) }
           before { subject }
