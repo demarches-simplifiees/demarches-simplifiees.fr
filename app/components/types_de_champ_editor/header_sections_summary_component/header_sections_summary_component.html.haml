@@ -6,6 +6,6 @@
           %li.fr-sidemenu__item
             - level = header.type_de_champ.header_section_level_value.to_i
             - if level == 1
-              %a.fr-sidemenu__link{ href: "##{dom_id(header, :type_de_champ_editor)}" }= header.libelle
+              %a.fr-sidemenu__link{ href: href(header) }= header.libelle
             - else
-              %a.fr-sidemenu__link{ class: level >= 3 ? 'custom-link-grey': '', href: "##{dom_id(header, :type_de_champ_editor)}" }= "-- #{header.libelle}"
+              %a.fr-sidemenu__link{ class: level >= 3 ? 'custom-link-grey': '', href: href(header) }= "-- #{header.libelle}"
