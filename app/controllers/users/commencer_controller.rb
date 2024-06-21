@@ -106,11 +106,11 @@ module Users
     end
 
     def retrieve_procedure
-      Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
+      Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path]&.downcase)
     end
 
     def retrieve_procedure_with_closed
-      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_by(path: params[:path])
+      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_by(path: params[:path]&.downcase)
     end
 
     def build_prefilled_dossier
