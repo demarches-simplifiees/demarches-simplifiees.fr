@@ -331,16 +331,28 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
 
         context 'with pagination' do
-          let(:dossiers) { 26.times.map { create(:dossier, :en_instruction, procedure: procedure) } }
-          before { dossiers }
+          let(:dossiers) { Array.new(26) { create(:dossier, :en_instruction, procedure: procedure) } }
+          before do # warmup cache
+            get :show, params: { procedure_id: procedure.id, statut: statut }
+            dossiers
+          end
+
           it 'keeps request count stable' do
-            count = 0
-            callback = lambda { |*_args| count += 1 }
-            ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-              subject
+            count_with_25, count_with_100 = 0, 0
+
+            stub_const('Instructeurs::ProceduresController::ITEMS_PER_PAGE', 25)
+            ActiveSupport::Notifications.subscribed(lambda { |*_args| count_with_25 += 1 }, "sql.active_record") do
+              get :show, params: { procedure_id: procedure.id, statut: statut }
               expect(assigns(:projected_dossiers).size).to eq(25)
             end
-            expect(count).to eq(43)
+
+            stub_const('Instructeurs::ProceduresController::ITEMS_PER_PAGE', 100)
+            ActiveSupport::Notifications.subscribed(lambda { |*_args| count_with_100 += 1 }, "sql.active_record") do
+              get :show, params: { procedure_id: procedure.id, statut: statut }
+              expect(assigns(:projected_dossiers).size).to eq(dossiers.size + 1) # +1 due to let!(:new_unfollow_dossier)
+            end
+
+            expect(count_with_100).to eq(count_with_25)
           end
         end
 
