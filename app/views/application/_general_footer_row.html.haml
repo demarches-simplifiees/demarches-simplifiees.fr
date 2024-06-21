@@ -12,7 +12,7 @@
   %li.fr-footer__bottom-item
     = link_to t("links.footer.mentions_legales.label"), MENTIONS_LEGALES_URL, class: "fr-footer__bottom-link", rel: "noopener noreferrer"
   %li.fr-footer__bottom-item
-    = link_to t("links.footer.cookies.label"), suivi_path, class: "fr-footer__bottom-link"
+    = link_to t("links.footer.cookies.label"), suivi_path, class: "fr-footer__bottom-link", hreflang: "fr"
   %li.fr-footer__bottom-item
     %button.fr-footer__bottom-link.fr-icon-theme-fill.fr-btn--icon-left{ aria: {controls: "fr-theme-modal" }, data: {'fr-opened': "false" } }
       = t('links.footer.display_params')
