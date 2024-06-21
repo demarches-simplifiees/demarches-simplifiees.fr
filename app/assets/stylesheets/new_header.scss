@@ -26,3 +26,11 @@
     box-shadow: none;
   }
 }
+
+// Add space between button edge and content
+#modal-header__menu .fr-translate__btn {
+  margin-right: 0;
+  margin-left: 0;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
