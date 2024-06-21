@@ -9,20 +9,20 @@
       .fr-col-xl-8
         %h1.fr-mb-4w
           = t('views.accessibility_statement.title')
-        %p.fr-mb-2w= t('views.accessibility_statement.line_one')
-        %p.fr-mb-2w= t('views.accessibility_statement.line_two', app_name: Current.application_name, host: URI(Current.application_base_url).host)
+        %p.fr-mb-2w= t('views.accessibility_statement.line_one_html')
+        %p.fr-mb-2w= t('views.accessibility_statement.line_two_html', app_name: Current.application_name, host: URI(Current.application_base_url).host)
 
         %div
           %h2
             = t('views.accessibility_statement.compliance.title')
-          %p.fr-mb-2w= t('views.accessibility_statement.compliance.line_one_html')
-
+          %p.fr-mb-2w= t('views.accessibility_statement.compliance.content_html')
           %h3
             = t('views.accessibility_statement.results.title')
-          %p.fr-mb-2w= t('views.accessibility_statement.results.line_one')
-          %p.fr-mb-2w= t('views.accessibility_statement.results.line_three')
+          %p.fr-mb-2w= t('views.accessibility_statement.results.content')
           %p.fr-mb-2w
+            = t('views.accessibility_statement.results.programme.intro')
             = link_to t("views.accessibility_statement.results.programme.label"), t("views.accessibility_statement.results.programme.url"), title: t("views.accessibility_statement.results.programme.title"), target: "_blank", rel: "noopener noreferrer"
+            = "."
 
         %div
           %h2
@@ -31,6 +31,9 @@
             = t('views.accessibility_statement.no_accessible.subtitle_one')
           .fr-mb-2w
             = t('views.accessibility_statement.no_accessible.examples_html')
+          %h3
+            = t('views.accessibility_statement.no_accessible.subtitle_two')
+          = t('views.accessibility_statement.no_accessible.content_html')
 
         %div
           %h2
@@ -45,6 +48,10 @@
               = "HTML 5"
             %li
               = "CSS 3"
+            %li
+              = "SVG"
+            %li
+              = "ARIA"
             %li
               = "Javascript"
             %li
@@ -94,18 +101,6 @@
             %li
               = t("views.accessibility_statement.preparation.page_six")
             %li
-              = link_to t("views.accessibility_statement.preparation.page_seven.label"), t("views.accessibility_statement.preparation.page_seven.url"),
-                title: t("views.accessibility_statement.preparation.page_seven.title")
-            %li
-              = link_to t("views.accessibility_statement.preparation.page_eight.label"), t("views.accessibility_statement.preparation.page_eight.url"),
-                title: t("views.accessibility_statement.preparation.page_eight.title")
-            %li
-              = t("views.accessibility_statement.preparation.page_nine")
-            %li
-              = t("views.accessibility_statement.preparation.page_ten")
-            %li
-              = t("views.accessibility_statement.preparation.page_eleven")
-            %li
               = t("views.accessibility_statement.preparation.page_twelve")
             %li
               = t("views.accessibility_statement.preparation.page_thirteen")
@@ -131,11 +126,18 @@
           %h2
             = t('views.accessibility_statement.remedies.title')
           %p.fr-mb-2w= t('views.accessibility_statement.remedies.line_one')
-          %p.fr-mb-2w= t('views.accessibility_statement.remedies.line_two')
-          %ul.fr-mb-2w
+          %h3
+            = t('views.accessibility_statement.remedies.arcom_title')
+          %p.fr-mb-2w= t('views.accessibility_statement.remedies.arcom_content_html')
+          %h3
+            = t('views.accessibility_statement.remedies.ddd_title')
+          %p.fr-mb-2w= t('views.accessibility_statement.remedies.ddd_intro')
+          %ul
             %li
               = link_to t("views.accessibility_statement.remedies.remedies_one.label"), t("views.accessibility_statement.remedies.remedies_one.url"), title: t("views.accessibility_statement.remedies.remedies_one.title"), target: "_blank", rel: "noopener noreferrer"
+              %br
+              = t('views.accessibility_statement.remedies.remedies_one.info')
             %li
               = link_to t("views.accessibility_statement.remedies.remedies_two.label"), t("views.accessibility_statement.remedies.remedies_two.url"), title: t("views.accessibility_statement.remedies.remedies_two.title"), target: "_blank", rel: "noopener noreferrer"
             %li
-              = t('views.accessibility_statement.remedies.remedies_three')
+              = t('views.accessibility_statement.remedies.remedies_three_html')
