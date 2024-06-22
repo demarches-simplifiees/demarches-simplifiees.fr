@@ -1,6 +1,6 @@
 class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
-  self.schedule_expression = "every month at 3:00"
+  self.schedule_expression = "every month at 4:30"
   FILE_NAME = "nb_comptes_crees_par_mois"
 
   def perform(*args)
