@@ -135,6 +135,8 @@ class TypeDeChamp < ApplicationRecord
 
   ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
+    type_champs.fetch(:commune_de_polynesie),
+    type_champs.fetch(:code_postal_de_polynesie),
     type_champs.fetch(:communes),
     type_champs.fetch(:departements),
     type_champs.fetch(:regions),

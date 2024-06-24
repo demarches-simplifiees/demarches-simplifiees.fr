@@ -104,6 +104,11 @@ class Conditions::ConditionsComponent < ApplicationComponent
         [t(InRegionOperator.name, scope: 'logic.operators'), InRegionOperator.name],
         [t(NotInRegionOperator.name, scope: 'logic.operators'), NotInRegionOperator.name]
       ]
+    when ChampValue::CHAMP_VALUE_TYPE.fetch(:commune_de_polynesie_enum), ChampValue::CHAMP_VALUE_TYPE.fetch(:code_postal_de_polynesie_enum)
+      [
+        [t(InArchipelOperator.name, scope: 'logic.operators'), InArchipelOperator.name],
+        [t(NotInArchipelOperator.name, scope: 'logic.operators'), NotInArchipelOperator.name]
+      ]
     when ChampValue::CHAMP_VALUE_TYPE.fetch(:departement_enum)
       [
         [t('is', scope: 'logic'), Eq.name],
@@ -149,7 +154,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
         id: input_id_for('value', row_index),
         class: 'fr-select'
       )
-    when :enum, :enums, :commune_enum, :epci_enum, :departement_enum
+    when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :commune_de_polynesie_enum, :code_postal_de_polynesie_enum
       enums_for_select = left.options(@source_tdcs, operator_name)
 
       if right_invalid

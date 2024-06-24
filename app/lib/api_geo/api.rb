@@ -47,6 +47,10 @@ class APIGeo::API
     big_cities + ['------------------------'] + small_cities
   end
 
+  def self.archipels_de_polynesie
+    polynesian_cities.map { |city| city[:archipel] }.uniq.sort
+  end
+
   def self.commune_by_city_postal_code(value)
     polynesian_cities.find { city_postal_code(_1) == value }
   end

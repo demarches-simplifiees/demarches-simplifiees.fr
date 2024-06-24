@@ -19,3 +19,5 @@ fr:
       'Logic::NotInDepartementOperator': N'est pas dans le département
       'Logic::InRegionOperator': Est dans la région
       'Logic::NotInRegionOperator': N'est pas dans la région
+      'Logic::InArchipelOperator': Est dans l'archipel
+      'Logic::NotInArchipelOperator': N'est pas dans l'archipel

@@ -155,6 +155,44 @@ describe RoutingEngine, type: :model do
       end
     end
 
+    context 'with a commune_de_polynesie type de champ' do
+      let(:procedure) do
+        create(:procedure, types_de_champ_public: [{ type: :commune_de_polynesie }]).tap do |p|
+          p.groupe_instructeurs.create(label: 'a third group')
+        end
+      end
+
+      let(:commune_de_polynesie_tdc) { procedure.draft_revision.types_de_champ.first }
+
+      context 'with a matching rule' do
+        before do
+          gi_2.update(routing_rule: ds_in_archipel(champ_value(commune_de_polynesie_tdc.stable_id), constant('Tuamotu-Gambiers')))
+          dossier.champs.first.update(value: 'Mangareva - 98755')
+        end
+
+        it { is_expected.to eq(gi_2) }
+      end
+    end
+
+    context 'with a code_postal_de_polynesie type de champ' do
+      let(:procedure) do
+        create(:procedure, types_de_champ_public: [{ type: :code_postal_de_polynesie }]).tap do |p|
+          p.groupe_instructeurs.create(label: 'a third group')
+        end
+      end
+
+      let(:code_postal_de_polynesie_tdc) { procedure.draft_revision.types_de_champ.first }
+
+      context 'with a matching rule' do
+        before do
+          gi_2.update(routing_rule: ds_in_archipel(champ_value(code_postal_de_polynesie_tdc.stable_id), constant('Tuamotu-Gambiers')))
+          dossier.champs.first.update(value: '98755 - Mangareva')
+        end
+
+        it { is_expected.to eq(gi_2) }
+      end
+    end
+
     context 'routing rules priorities' do
       let(:procedure) do
         create(:procedure,

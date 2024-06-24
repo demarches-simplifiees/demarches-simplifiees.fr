@@ -26,7 +26,9 @@ module Logic
       InDepartementOperator,
       NotInDepartementOperator,
       InRegionOperator,
-      NotInRegionOperator
+      NotInRegionOperator,
+      InArchipelOperator,
+      NotInArchipelOperator
     ].find { |c| c.name == name }
   end
 
@@ -44,6 +46,8 @@ module Logic
       operator_class = Eq
     in [:commune_enum, _] | [:epci_enum, _]
       operator_class = InDepartementOperator
+    in [:commune_de_polynesie_enum, _] | [:code_postal_de_polynesie_enum, _]
+      operator_class = InArchipelOperator
     in [:departement_enum, _]
       operator_class = Eq
     in [:enums, _]
@@ -59,7 +63,7 @@ module Logic
         Constant.new(true)
       when :empty
         Empty.new
-      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum
+      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :commune_de_polynesie_enum, :code_postal_de_polynesie_enum
         Constant.new(left.options(type_de_champs).first.second)
       when :number
         Constant.new(0)
@@ -73,7 +77,7 @@ module Logic
     case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
-    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string]
+    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string] | [:commune_de_polynesie_enum, :string] | [:code_postal_de_polynesie_enum, :string]
       true
     else
       false
@@ -117,6 +121,10 @@ module Logic
   def ds_in_region(left, right) = Logic::InRegionOperator.new(left, right)
 
   def ds_not_in_region(left, right) = Logic::NotInRegionOperator.new(left, right)
+
+  def ds_in_archipel(left, right) = Logic::InArchipelOperator.new(left, right)
+
+  def ds_not_in_archipel(left, right) = Logic::NotInArchipelOperator.new(left, right)
 
   def ds_exclude(left, right) = Logic::ExcludeOperator.new(left, right)
 
