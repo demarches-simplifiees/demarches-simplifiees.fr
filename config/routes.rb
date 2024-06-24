@@ -460,6 +460,12 @@ Rails.application.routes.draw do
             get 'remind'
           end
         end
+        # back
+        resources :procedure_presentations, only: [:update, :destroy] do
+          patch :add_row, on: :member
+          patch :change_targeted_champ, on: :member
+          delete :delete_row, on: :member
+        end
 
         patch 'update_displayed_fields'
         get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'

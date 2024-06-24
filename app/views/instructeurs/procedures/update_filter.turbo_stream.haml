@@ -1,2 +1,3 @@
 = turbo_stream.replace 'filter-component' do
-  = render Dossiers::InstructeurFilterComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation, statut: @statut, field_id: @field)
+  -# = render Dossiers::InstructeurFilterComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation, statut: @statut, field_id: @field)
+  = render Dossiers::InstructeurFilterComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation, statut: @statut)

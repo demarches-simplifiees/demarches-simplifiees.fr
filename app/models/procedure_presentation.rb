@@ -1,4 +1,6 @@
 class ProcedurePresentation < ApplicationRecord
+  include Logic
+
   EXTRA_SORT_COLUMNS = {
     'notifications' => ['notifications'],
     'self' => ['id', 'state']
@@ -24,6 +26,8 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
+
+  serialize :conditions, LogicSerializer
 
   def self_fields
     [
