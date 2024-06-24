@@ -9,7 +9,9 @@ class Logic::ChampValue < Logic::Term
     :communes,
     :epci,
     :departements,
-    :regions
+    :regions,
+    :commune_de_polynesie,
+    :code_postal_de_polynesie
   )
 
   CHAMP_VALUE_TYPE = {
@@ -21,7 +23,9 @@ class Logic::ChampValue < Logic::Term
     departement_enum: :departement_enum,
     enums: :enums, # multiple choice from a dropdownlist (multipledropdownlist)
     empty: :empty,
-    unmanaged: :unmanaged
+    unmanaged: :unmanaged,
+    commune_de_polynesie_enum: :commune_de_polynesie_enum,
+    code_postal_de_polynesie_enum: :code_postal_de_polynesie_enum
   }
 
   attr_reader :stable_id
@@ -64,6 +68,10 @@ class Logic::ChampValue < Logic::Term
         code_departement: targeted_champ.code_departement,
         code_region: targeted_champ.code_region
       }
+    when "Champs::CommuneDePolynesieChamp", "Champs::CodePostalDePolynesieChamp"
+      {
+        archipel: targeted_champ.archipel
+      }
     end
   end
 
@@ -83,6 +91,10 @@ class Logic::ChampValue < Logic::Term
       CHAMP_VALUE_TYPE.fetch(:commune_enum)
     when MANAGED_TYPE_DE_CHAMP.fetch(:epci)
       CHAMP_VALUE_TYPE.fetch(:epci_enum)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:commune_de_polynesie)
+      CHAMP_VALUE_TYPE.fetch(:commune_de_polynesie_enum)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:code_postal_de_polynesie)
+      CHAMP_VALUE_TYPE.fetch(:code_postal_de_polynesie_enum)
     when MANAGED_TYPE_DE_CHAMP.fetch(:departements)
       CHAMP_VALUE_TYPE.fetch(:departement_enum)
     when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
@@ -122,6 +134,8 @@ class Logic::ChampValue < Logic::Term
       APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif operator_name.in?([Logic::InDepartementOperator.name, Logic::NotInDepartementOperator.name]) || tdc.type_champ.in?([MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci), MANAGED_TYPE_DE_CHAMP.fetch(:departements)])
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+    elsif operator_name.in?([Logic::InArchipelOperator.name, Logic::NotInArchipelOperator.name]) || tdc.type_champ.in?([MANAGED_TYPE_DE_CHAMP.fetch(:commune_de_polynesie), MANAGED_TYPE_DE_CHAMP.fetch(:code_postal_de_polynesie)])
+      APIGeo::API.archipels_de_polynesie.map { [_1, _1] }
     else
       tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1 : [_1, _1] }
     end

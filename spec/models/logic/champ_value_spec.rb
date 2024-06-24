@@ -114,6 +114,18 @@ describe Logic::ChampValue do
       it { is_expected.to eq({ code_departement: '92', code_region: '11' }) }
     end
 
+    context 'commune_de_polynesie tdc' do
+      let(:champ) { create(:champ_commune_de_polynesie, value: 'Mangareva - 98755') }
+
+      it { is_expected.to eq({ archipel: 'Tuamotu-Gambiers' }) }
+    end
+
+    context 'code_postal_de_polynesie tdc' do
+      let(:champ) { create(:champ_code_postal_de_polynesie, value: '98755 - Mangareva') }
+
+      it { is_expected.to eq({ archipel: 'Tuamotu-Gambiers' }) }
+    end
+
     context 'epci tdc' do
       let(:champ) { build(:champ_epci, code_departement: '43') }
 

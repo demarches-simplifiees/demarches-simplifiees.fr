@@ -811,6 +811,46 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
+  context 'with a commune_de_polynesie type de champ' do
+    let!(:procedure3) do
+      create(:procedure,
+             types_de_champ_public: [{ type: :commune_de_polynesie }],
+             administrateurs: [admin])
+    end
+
+    let!(:commune_de_polynesie_tdc) { procedure3.draft_revision.types_de_champ.first }
+
+    before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: commune_de_polynesie_tdc.stable_id } } }
+
+    it do
+      expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
+      expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+      expect(procedure3.groupe_instructeurs.pluck(:label)).to include("Australes")
+      expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_in_archipel(champ_value(commune_de_polynesie_tdc.stable_id), constant('Australes')))
+      expect(procedure3.routing_enabled).to be_truthy
+    end
+  end
+
+  context 'with a code_postal_de_polynesie type de champ' do
+    let!(:procedure3) do
+      create(:procedure,
+             types_de_champ_public: [{ type: :code_postal_de_polynesie }],
+             administrateurs: [admin])
+    end
+
+    let!(:code_postal_de_polynesie_tdc) { procedure3.draft_revision.types_de_champ.first }
+
+    before { post :create_simple_routing, params: { procedure_id: procedure3.id, create_simple_routing: { stable_id: code_postal_de_polynesie_tdc.stable_id } } }
+
+    it do
+      expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
+      expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+      expect(procedure3.groupe_instructeurs.pluck(:label)).to include("Australes")
+      expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_in_archipel(champ_value(code_postal_de_polynesie_tdc.stable_id), constant('Australes')))
+      expect(procedure3.routing_enabled).to be_truthy
+    end
+  end
+
   describe '#wizard' do
     let!(:procedure4) do
       create(:procedure,

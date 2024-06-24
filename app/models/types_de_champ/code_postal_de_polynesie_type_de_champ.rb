@@ -25,8 +25,10 @@ class TypesDeChamp::CodePostalDePolynesieTypeDeChamp < TypesDeChamp::TextTypeDeC
     paths
   end
 
+  LABELS = ["", " (Commune)", " (Ile)", " (Archipel)"]
+
   def libelle_for_export(index)
-    [libelle, "#{libelle} (Commune)", "#{libelle} (Ile)", "#{libelle} (Archipel)"][index]
+    libelle + LABELS[index]
   end
 
   class << self

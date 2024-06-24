@@ -51,6 +51,10 @@ module Administrateurs
         tdc_options = APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
         rule_operator = :ds_in_departement
         create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)
+      when TypeDeChamp.type_champs.fetch(:commune_de_polynesie), TypeDeChamp.type_champs.fetch(:code_postal_de_polynesie)
+        tdc_options = APIGeo::API.archipels_de_polynesie.map { [_1, _1] }
+        rule_operator = :ds_in_archipel
+        create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)
       when TypeDeChamp.type_champs.fetch(:regions)
         rule_operator = :ds_eq
         tdc_options = APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
