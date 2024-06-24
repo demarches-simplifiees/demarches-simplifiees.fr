@@ -32,17 +32,17 @@
       - cache [I18n.locale, "numbers-panel"], expires_in: 3.hours do
         %dl.numbers
           .number
-            %dt.number-value
+            %dt.number-label= t(".numbers.administrations")
+            %dd.number-value
               = number_with_delimiter(@stat&.administrations_partenaires)
-            %dd.number-label= t(".numbers.administrations")
           .number
-            %dt.number-value
+            %dt.number-label= t(".numbers.files")
+            %dd.number-value
               = number_with_delimiter(@stat&.dossiers_not_brouillon)
-            %dd.number-label= t(".numbers.files")
           .number
-            %dt.number-value
+            %dt.number-label.number-label-third= t(".numbers.processing_time")
+            %dd.number-value
               = "#{number_with_delimiter(50)} %"
-            %dd.number-label.number-label-third= t(".numbers.processing_time")
 
   .fr-background-alt--blue-france.fr-py-6w
     .container

@@ -76,20 +76,20 @@
         %h2.center.fr-mb-4w #{Current.application_name} en chiffres
         %dl.numbers
           .number
-            %dt.number-value
-              = number_with_delimiter(Administrateur.with_publiees_ou_closes.uniq.count, :locale => :fr)
-            %dd.number-label
+            %dt.number-label
               administrations partenaires
+            %dd.number-value
+              = number_with_delimiter(Administrateur.with_publiees_ou_closes.uniq.count, :locale => :fr)
           .number
-            %dt.number-value
-              = number_with_delimiter(Dossier.state_not_brouillon.count, :locale => :fr)
-            %dd.number-label
+            %dt.number-label
               dossiers déposés
+            %dd.number-value
+              = number_with_delimiter(Dossier.state_not_brouillon.count, :locale => :fr)
           .number
-            %dt.number-value
-              = "#{number_with_delimiter(50, :locale => :fr)} %"
-            %dd.number-label
+            %dt.number-label
               de réduction des délais de traitement
+            %dd.number-value
+              = "#{number_with_delimiter(50, :locale => :fr)} %"
 
   = render partial: "root/users" if  LANDING_USERS_ENABLED
 
