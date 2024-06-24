@@ -39,6 +39,8 @@ class TiptapService
     case node
     in type: 'paragraph', content:
       children_path(content, substitutions)
+    in type: 'paragraph' # empty paragraph
+      ''
     in type: 'text', text:, **rest
       text.strip
     in type: 'mention', attrs: { id: }, **rest

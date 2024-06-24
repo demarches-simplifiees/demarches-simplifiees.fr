@@ -54,15 +54,11 @@ class ExportTemplate < ApplicationRecord
   end
 
   def tiptap_convert(dossier, param)
-    if content[param]["content"]&.first&.[]("content")
-      render_attributes_for(content[param], dossier)
-    end
+    render_attributes_for(content[param], dossier)
   end
 
   def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
-    if content_for_pj_id(pj_stable_id)["content"]&.first&.[]("content")
-      render_attributes_for(content_for_pj_id(pj_stable_id), dossier, attachment)
-    end
+    render_attributes_for(content_for_pj_id(pj_stable_id), dossier, attachment)
   end
 
   def render_attributes_for(content_for, dossier, attachment = nil)
