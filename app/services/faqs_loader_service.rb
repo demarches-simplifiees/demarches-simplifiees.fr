@@ -9,13 +9,13 @@ class FAQsLoaderService
   def initialize(substitutions)
     @substitutions = substitutions
 
-    @faqs_by_path ||= Rails.cache.fetch(["faqs_data", ApplicationVersion.current, substitutions], expires_in: 1.week) do
+    @faqs_by_path ||= Rails.cache.fetch(["faqs_data", ApplicationVersion.current, substitutions], expires_in: 1.day) do
       load_faqs
     end
   end
 
   def find(path)
-    Rails.cache.fetch(["faq", path, ApplicationVersion.current, substitutions], expires_in: 1.week) do
+    Rails.cache.fetch(["faq", path, ApplicationVersion.current, substitutions], expires_in: 1.day) do
       file_path = @faqs_by_path.fetch(path).fetch(:file_path)
 
       parse_with_substitutions(file_path)

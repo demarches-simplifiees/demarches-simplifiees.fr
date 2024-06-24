@@ -32,4 +32,28 @@ RSpec.describe Redcarpet::TrustedRenderer do
       expect(renderer.render(markdown)).to include('<a href="mailto:user@example.com">user@example.com</a>')
     end
   end
+
+  context 'with block_quote DSFR alert' do
+    it 'renders [!INFO] blocks as DSFR info alerts' do
+      markdown = "> [!INFO]\n> This is an information alert with *emphasis*."
+      expected_html = <<~HTML
+        <div class='fr-alert fr-alert--info fr-my-3w'>
+        <h2 class="fr-alert__title">Information : </h2>
+        <p>This is an information alert with <em>emphasis</em>.</p>
+        </div>
+      HTML
+      expect(renderer.render(markdown).delete("\n")).to include(expected_html.delete("\n"))
+    end
+
+    it 'renders [!WARNING] blocks as DSFR warning alerts' do
+      markdown = "> [!WARNING]\n> This is a warning alert."
+      expected_html = <<~HTML
+        <div class='fr-alert fr-alert--warning fr-my-3w'>
+        <h2 class="fr-alert__title">Attention : </h2>
+        <p>This is a warning alert.</p>
+        </div>
+      HTML
+      expect(renderer.render(markdown).delete("\n")).to include(expected_html.delete("\n"))
+    end
+  end
 end
