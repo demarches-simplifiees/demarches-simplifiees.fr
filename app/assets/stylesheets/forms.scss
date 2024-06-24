@@ -627,7 +627,7 @@ textarea::placeholder {
   fill: currentColor;
 }
 
-.fr-menu__list {
+:not(.fr-translate) .fr-menu__list {
   padding: $default-spacer;
   overflow-y: auto;
 
