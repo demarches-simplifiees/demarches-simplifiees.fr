@@ -1,5 +1,11 @@
 class API::V2::BaseController < ApplicationController
-  skip_forgery_protection if: -> { request.headers.key?('HTTP_AUTHORIZATION') }
+  # This controller is used for API v2 through api endpoint (/api/v2/graphql)
+  # and through the web interface (/graphql). When used through the web interface,
+  # we use connected administrateur to authenticate the request. We want CSRF protection
+  # for the web interface, but not for the API endpoint. :null_session means that when the
+  # request is not CSRF protected, we will not raise an exception,
+  # but we will provide the controller with an empty session.
+  protect_from_forgery with: :null_session
   skip_before_action :setup_tracking
   before_action :authenticate_from_token
   before_action :ensure_authorized_network, if: -> { @api_token.present? }
