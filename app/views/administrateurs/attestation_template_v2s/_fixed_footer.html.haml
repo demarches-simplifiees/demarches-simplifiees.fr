@@ -1,0 +1,9 @@
+.fr-container
+  .fr-grid-row.fr-grid-row--middle.fr-pb-3v
+    .fr-col-12.fr-col-md-4
+      = link_to admin_procedure_path(id: procedure), class: 'fr-link' do
+        %span.fr-icon-arrow-left-line.fr-icon--sm
+        Revenir à l’écran de gestion
+
+    .fr-col-12.fr-col-md-8.text-right
+      %span#autosave-notice

@@ -21,9 +21,11 @@ describe AttestationTemplate, type: :model do
     context 'with an attestation without images' do
       let(:attributes) { attributes_for(:attestation_template) }
 
-      it { is_expected.to have_attributes(attributes) }
-      it { is_expected.to have_attributes(id: nil) }
-      it { expect(subject.logo.attached?).to be_falsey }
+      it "works" do
+        is_expected.to have_attributes(attributes)
+        is_expected.to have_attributes(id: nil)
+        expect(subject.logo.attached?).to be_falsey
+      end
     end
 
     context 'with an attestation with images' do
@@ -56,81 +58,78 @@ describe AttestationTemplate, type: :model do
       create(:procedure,
         types_de_champ_public: types_de_champ,
         types_de_champ_private: types_de_champ_private,
-        for_individual: for_individual,
         attestation_template: attestation_template)
     end
-    let(:for_individual) { false }
-    let(:individual) { nil }
     let(:etablissement) { create(:etablissement) }
     let(:types_de_champ) { [] }
     let(:types_de_champ_private) { [] }
-    let!(:dossier) { create(:dossier, procedure: procedure, individual: individual, etablissement: etablissement) }
-    let(:template_title) { 'title' }
-    let(:template_body) { 'body' }
-    let(:attestation_template) do
-      build(:attestation_template,
-        title: template_title,
-        body: template_body,
-        logo: @logo,
-        signature: @signature)
+    let(:dossier) { create(:dossier, :accepte, procedure:) }
+
+    let(:types_de_champ) do
+      [
+        { libelle: 'libelleA' },
+        { libelle: 'libelleB' }
+      ]
     end
 
     before do
-      Timecop.freeze(Time.zone.now)
-    end
+      dossier.champs_public
+        .find { |champ| champ.libelle == 'libelleA' }
+        .update(value: 'libelle1')
 
-    after do
-      Timecop.return
-    end
-
-    let(:view_args) do
-      arguments = nil
-
-      allow(ApplicationController).to receive(:render).and_wrap_original do |m, *args|
-        arguments = args.first[:assigns]
-        m.call(*args)
-      end
-
-      attestation_template.attestation_for(dossier)
-
-      arguments
+      dossier.champs_public
+        .find { |champ| champ.libelle == 'libelleB' }
+        .update(value: 'libelle2')
     end
 
     let(:attestation) { attestation_template.attestation_for(dossier) }
 
-    context 'when the procedure has a type de champ named libelleA et libelleB' do
-      let(:types_de_champ) do
-        [
-          { libelle: 'libelleA' },
-          { libelle: 'libelleB' }
-        ]
+    context 'attestation v1' do
+      let(:template_title) { 'title --libelleA--' }
+      let(:template_body) { 'body --libelleB--' }
+      let(:attestation_template) do
+        build(:attestation_template,
+          title: template_title,
+          body: template_body)
       end
 
-      context 'and the are used in the template title and body' do
-        let(:template_title) { 'title --libelleA--' }
-        let(:template_body) { 'body --libelleB--' }
+      let(:view_args) do
+        arguments = nil
 
-        context 'and their value in the dossier are not nil' do
-          before do
-            dossier.champs_public
-              .find { |champ| champ.libelle == 'libelleA' }
-              .update(value: 'libelle1')
-
-            dossier.champs_public
-              .find { |champ| champ.libelle == 'libelleB' }
-              .update(value: 'libelle2')
-          end
-
-          it 'passes the correct parameters to the view' do
-            expect(view_args[:attestation][:title]).to eq('title libelle1')
-            expect(view_args[:attestation][:body]).to eq('body libelle2')
-          end
-
-          it 'generates an attestation' do
-            expect(attestation.title).to eq('title libelle1')
-            expect(attestation.pdf).to be_attached
-          end
+        allow(ApplicationController).to receive(:render).and_wrap_original do |m, *args|
+          arguments = args.first[:assigns]
+          m.call(*args)
         end
+
+        attestation_template.attestation_for(dossier)
+
+        arguments
+      end
+
+      it 'passes the correct parameters and generates an attestation' do
+        expect(view_args[:attestation][:title]).to eq('title libelle1')
+        expect(view_args[:attestation][:body]).to eq('body libelle2')
+        expect(attestation.title).to eq('title libelle1')
+        expect(attestation.pdf).to be_attached
+      end
+    end
+
+    context 'attestation v2' do
+      let(:attestation_template) do
+        build(:attestation_template, :v2, :with_files, label_logo: "Ministère des specs")
+      end
+
+      before do
+        stub_request(:post, WEASYPRINT_URL)
+          .with(body: {
+            html: /Ministère des specs.+Mon titre pour #{procedure.libelle}.+Dossier: n° #{dossier.id}/m,
+            upstream_context: { procedure_id: procedure.id, dossier_id: dossier.id }
+          })
+          .to_return(body: 'PDF_DATA')
+      end
+
+      it 'generates an attestation' do
+        expect(attestation.pdf).to be_attached
       end
     end
   end

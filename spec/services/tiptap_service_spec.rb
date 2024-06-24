@@ -189,7 +189,7 @@ RSpec.describe TiptapService do
 
   describe '#used_tags' do
     it 'returns used tags' do
-      expect(described_class.new.used_tags_and_libelle_for(json)).to eq(Set.new([['name', 'Nom']]))
+      expect(described_class.used_tags_and_libelle_for(json)).to eq(Set.new([['name', 'Nom']]))
     end
   end
 
