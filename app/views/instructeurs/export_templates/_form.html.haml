@@ -73,6 +73,5 @@
               %li
                 = link_to "Supprimer", instructeur_export_template_path(@export_template, procedure_id: @procedure.id), method: :delete, data: { confirm: "Voulez-vous vraiment supprimer ce modèle ? Il sera supprimé pour tous les instructeurs du groupe"}, class: "fr-btn fr-btn--secondary"
   - sample_dossier = @procedure.dossier_for_preview(current_instructeur)
-  - if sample_dossier
-    .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
-      = render partial: 'preview', locals: { dossier: sample_dossier, export_template: @export_template, procedure: @procedure }
+  .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+    = render partial: 'preview', locals: { dossier: sample_dossier, export_template: @export_template, procedure: @procedure }
