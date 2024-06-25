@@ -21,10 +21,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
-    [
-      attachment,
-      path(dossier, attachment, index:, row_index:, champ:)
-    ]
+    path(dossier, attachment, index:, row_index:, champ:)
   end
 
   def pj_path(stable_id)
