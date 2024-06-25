@@ -293,8 +293,8 @@ describe 'The routing with rules', js: true do
   end
 
   def register_instructeur_and_log_in(email)
-    confirmation_email = emails_sent_to(email)
-      .find { |m| m.subject == 'Activez votre compte instructeur' }
+    confirmation_email = emails_sent_to(email).reverse
+      .find { |m| m.subject.starts_with?('Vous avez été ajouté(e) au groupe') }
     token_params = confirmation_email.body.match(/token=[^"]+/)
 
     visit "users/activate?#{token_params}"

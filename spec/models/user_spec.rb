@@ -224,13 +224,14 @@ describe User, type: :model do
 
   describe '.create_or_promote_to_gestionnaire' do
     let(:email) { 'inst1@gmail.com' }
-    let(:password) { 'un super password !' }
+    let(:password) { 'un super p1ssw0rd !' }
 
     subject { User.create_or_promote_to_gestionnaire(email, password) }
 
-    it 'verifies its email' do
+    it 'creates a gestionnaire with unverified email' do
       user = subject
-      expect(user.email_verified_at).not_to be_present
+      expect(user.email_verified_at).to be_nil
+      expect(user.reload.gestionnaire?).to be true
     end
   end
 
