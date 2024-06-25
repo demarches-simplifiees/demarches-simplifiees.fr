@@ -33,7 +33,7 @@ describe DemarchesPubliquesExportService do
             {
               description: procedure.active_revision.types_de_champ_public.first.description,
               label: procedure.active_revision.types_de_champ_public.first.libelle,
-              required: false,
+              required: true,
               __typename: "TextChampDescriptor"
             }
           ]

@@ -12,6 +12,10 @@ describe Migrations::BatchUpdatePaysValuesJob, type: :job do
   end
 
   context "the value is incorrect" do
+    before do
+      pays_champ.type_de_champ.update!(mandatory: false)
+    end
+
     let(:pays_champ) { create(:champ_pays).tap { _1.update_columns(value: 'Incorrect') } }
 
     it 'updates value to nil' do
