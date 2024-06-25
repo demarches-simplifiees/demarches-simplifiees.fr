@@ -8,7 +8,7 @@ module BlobImageProcessorConcern
   end
 
   def representation_required?
-    attachments.any? { _1.record.class == Champs::TitreIdentiteChamp || _1.record.class == Champs::PieceJustificativeChamp }
+    attachments.any? { _1.record.class == Champs::TitreIdentiteChamp || _1.record.class == Champs::PieceJustificativeChamp || _1.record.class == Commentaire }
   end
 
   private
