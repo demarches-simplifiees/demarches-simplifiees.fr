@@ -57,15 +57,15 @@ describe Champs::DecimalNumberChamp do
     subject { champ.for_export }
     context 'with nil' do
       let(:value) { 0 }
-      it { is_expected.to be_nil }
+      it { is_expected.to eq(0.0) }
     end
     context 'with simple number' do
       let(:value) { "120" }
       it { is_expected.to eq(120) }
     end
-    context 'with nuber with space' do
+    context 'with number having spaces' do
       let(:value) { " 120 " }
-      it { is_expected.to eq(120) }
+      it { is_expected.to be_nil }
     end
   end
 end
