@@ -20,10 +20,6 @@ class ExportTemplate < ApplicationRecord
     end
   end
 
-  def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
-    path(dossier, attachment, index:, row_index:, champ:)
-  end
-
   def pj_path(stable_id)
     pjs.find { _1['stable_id'] == stable_id.to_s }&.fetch('path')
   end
@@ -52,18 +48,7 @@ class ExportTemplate < ApplicationRecord
     render_attributes_for(pj_path(pj_stable_id), dossier, attachment)
   end
 
-  private
-
-  def path_with_dossier_id_suffix(prefix)
-    {
-      "type" => "doc",
-      "content" => [
-        { "type" => "paragraph", "content" => [{ "text" => prefix, "type" => "text" }, { "type" => "mention", "attrs" => DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
-      ]
-    }
-  end
-
-  def path(dossier, attachment, index: 0, row_index: nil, champ: nil)
+  def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     filename = attachment.filename.to_s
 
     dir_path = case [attachment.record_type, attachment.name]
@@ -82,6 +67,17 @@ class ExportTemplate < ApplicationRecord
     end
 
     File.join(folder(dossier), File.join(dir_path)) if dir_path.present?
+  end
+
+  private
+
+  def path_with_dossier_id_suffix(prefix)
+    {
+      "type" => "doc",
+      "content" => [
+        { "type" => "paragraph", "content" => [{ "text" => prefix, "type" => "text" }, { "type" => "mention", "attrs" => DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
+      ]
+    }
   end
 
   def suffix(attachment, index, row_index)

@@ -53,7 +53,7 @@ class PiecesJustificativesService
       )
 
       if @export_template
-        pdfs << [a, @export_template.attachment_and_path(dossier, a)]
+        pdfs << [a, @export_template.attachment_path(dossier, a)]
       else
         pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
       end
@@ -148,7 +148,7 @@ class PiecesJustificativesService
         row_index = champs_id_row_index[champ.id]
 
         if @export_template
-          [attachment, @export_template.attachment_and_path(champ.dossier, attachment, index:, row_index:, champ:)]
+          [attachment, @export_template.attachment_path(champ.dossier, attachment, index:, row_index:, champ:)]
         else
           ActiveStorage::DownloadableFile.pj_and_path(champ.dossier_id, attachment)
         end
@@ -171,7 +171,7 @@ class PiecesJustificativesService
         dossier_id = commentaire_id_dossier_id[a.record_id]
         if @export_template
           dossier = dossiers.find { _1.id == dossier_id }
-          [a, @export_template.attachment_and_path(dossier, a)]
+          [a, @export_template.attachment_path(dossier, a)]
         else
           ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
         end
@@ -197,7 +197,7 @@ class PiecesJustificativesService
         dossier_id = etablissement_id_dossier_id[a.record_id]
         if @export_template
           dossier = dossiers.find { _1.id == dossier_id }
-          [a, @export_template.attachment_and_path(dossier, a)]
+          [a, @export_template.attachment_path(dossier, a)]
         else
           ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
         end
@@ -213,7 +213,7 @@ class PiecesJustificativesService
         dossier_id = a.record_id
         if @export_template
           dossier = dossiers.find { _1.id == dossier_id }
-          [a, @export_template.attachment_and_path(dossier, a)]
+          [a, @export_template.attachment_path(dossier, a)]
         else
           ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
         end
@@ -234,7 +234,7 @@ class PiecesJustificativesService
         dossier_id = attestation_id_dossier_id[a.record_id]
         if @export_template
           dossier = dossiers.find { _1.id == dossier_id }
-          [a, @export_template.attachment_and_path(dossier, a)]
+          [a, @export_template.attachment_path(dossier, a)]
         else
           ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
         end
@@ -263,7 +263,7 @@ class PiecesJustificativesService
         dossier_id = avis_ids_dossier_id[a.record_id]
         if @export_template
           dossier = dossiers.find { _1.id == dossier_id }
-          [a, @export_template.attachment_and_path(dossier, a)]
+          [a, @export_template.attachment_path(dossier, a)]
         else
           ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
         end
