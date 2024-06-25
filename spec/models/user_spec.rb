@@ -117,7 +117,7 @@ describe User, type: :model do
         user = subject
         expect(user.valid_password?(password)).to be true
         expect(user.confirmed_at).to be_present
-        expect(user.email_verified_at).to be_present
+        expect(user.email_verified_at).not_to be_present
         expect(user.instructeur).to be_present
       end
 
@@ -230,7 +230,7 @@ describe User, type: :model do
 
     it 'verifies its email' do
       user = subject
-      expect(user.email_verified_at).to be_present
+      expect(user.email_verified_at).not_to be_present
     end
   end
 

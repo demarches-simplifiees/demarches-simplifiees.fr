@@ -65,7 +65,6 @@ module Instructeurs
         administrateurs: [procedure.administrateurs.first]
       )
 
-      user.invite_instructeur! if user.valid?
       user.instructeur
     end
 

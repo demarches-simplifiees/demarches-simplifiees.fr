@@ -25,7 +25,7 @@ class AgentConnect::AgentController < ApplicationController
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
 
     if instructeur.nil?
-      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20])
+      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], agent_connect: true)
       instructeur = user.instructeur
     end
 
