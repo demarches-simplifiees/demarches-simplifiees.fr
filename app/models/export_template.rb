@@ -66,40 +66,25 @@ class ExportTemplate < ApplicationRecord
     }
   end
 
-  def export_path(dossier)
-    File.join(folder(dossier), export_filename(dossier))
-  end
-
   def path(dossier, attachment, index: 0, row_index: nil, champ: nil)
-    if attachment.name == 'pdf_export_for_instructeur'
-      return export_path(dossier)
-    end
+    filename = attachment.filename.to_s
 
-    dir_path = case attachment.record_type
-    when 'Dossier'
-      'dossier'
-    when 'Commentaire'
-      'messagerie'
-    when 'Avis'
-      'avis'
-    when 'Attestation', 'Etablissement'
-      'pieces_justificatives'
+    dir_path = case [attachment.record_type, attachment.name]
+    in _, 'pdf_export_for_instructeur'
+      [export_filename(dossier)]
+    in 'Dossier', _
+      ['dossier', filename]
+    in 'Commentaire', _
+      ['messagerie', filename]
+    in 'Avis', _
+      ['avis', filename]
+    in 'Attestation' | 'Etablissement', _
+      ['pieces_justificatives', filename]
     else
-      # for attachment
-      return attachment_path(dossier, attachment, index, row_index, champ)
+      [tiptap_convert_pj(dossier, champ.stable_id, attachment) + suffix(attachment, index, row_index)] if pj_path(champ.stable_id)
     end
 
-    File.join(folder(dossier), dir_path, attachment.filename.to_s)
-  end
-
-  def attachment_path(dossier, attachment, index, row_index, champ)
-    stable_id = champ.stable_id
-
-    if pj_path(stable_id)
-      File.join(folder(dossier), tiptap_convert_pj(dossier, stable_id, attachment) + suffix(attachment, index, row_index))
-    else
-      File.join(folder(dossier), "erreur_renommage", attachment.filename.to_s)
-    end
+    File.join(folder(dossier), File.join(dir_path)) if dir_path.present?
   end
 
   def suffix(attachment, index, row_index)
