@@ -61,7 +61,7 @@ class ExportTemplate < ApplicationRecord
     {
       "type" => "doc",
       "content" => [
-        { "type" => "paragraph", "content" => [{ "text" => prefix, "type" => "text" }, { "type" => "mention", "attrs" => DOSSIER_ID_TAG.stringify_keys }] }
+        { "type" => "paragraph", "content" => [{ "text" => prefix, "type" => "text" }, { "type" => "mention", "attrs" => DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
       ]
     }
   end
