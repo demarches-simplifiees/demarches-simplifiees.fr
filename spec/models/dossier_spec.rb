@@ -23,6 +23,43 @@ describe Dossier, type: :model do
 
       it { expect(Dossier.brouillons_recently_updated).to eq([dossier_en_brouillon_2, dossier_en_brouillon]) }
     end
+
+    describe 'by_statut' do
+      let(:procedure) { create(:procedure) }
+      let(:dossier_en_construction) { create(:dossier, :en_construction, procedure:) }
+      let(:dossier_en_instruction) { create(:dossier, :en_instruction, procedure:) }
+      let(:dossier_accepte) { create(:dossier, :accepte, procedure:) }
+      let(:dossier_refuse) { create(:dossier, :refuse, procedure:) }
+      let(:dossier_accepte_archive) { create(:dossier, :accepte, :archived, procedure:) }
+      let(:dossier_accepte_deleted) { create(:dossier, :accepte, :hidden_by_administration, procedure:) }
+      let(:dossier_accepte_archive_deleted) { create(:dossier, :accepte, :archived, :hidden_by_administration, procedure:) }
+
+      let!(:dossiers) { [dossier_en_construction, dossier_en_instruction, dossier_accepte, dossier_refuse] }
+
+      context 'tous' do
+        it do
+          expect(procedure.dossiers.by_statut('tous')).to match_array(dossiers - [dossier_accepte_archive, dossier_accepte_archive_deleted])
+        end
+      end
+
+      context 'a-suivre' do
+        it do
+          expect(procedure.dossiers.by_statut('a-suivre')).to match_array([dossier_en_construction, dossier_en_instruction])
+        end
+      end
+
+      context 'supprimes_recemment' do
+        it do
+          expect(procedure.dossiers.by_statut('supprimes_recemment')).to match_array([dossier_accepte_deleted, dossier_accepte_archive_deleted])
+        end
+      end
+
+      context 'archives' do
+        it do
+          expect(procedure.dossiers.by_statut('archives')).to match_array([dossier_accepte_archive])
+        end
+      end
+    end
   end
 
   describe 'validations' do
@@ -648,8 +685,24 @@ describe Dossier, type: :model do
   describe "#unspecified_attestation_champs" do
     let(:procedure) { create(:procedure, attestation_template: attestation_template, types_de_champ_public: types_de_champ, types_de_champ_private: types_de_champ_private) }
     let(:dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-    let(:types_de_champ) { [] }
-    let(:types_de_champ_private) { [] }
+
+    let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
+    let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
+
+    let(:tdc_1) { { libelle: "specified champ-in-title" } }
+    let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
+    let(:tdc_3) { { libelle: "specified champ-in-body" } }
+    let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
+    let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
+    let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
+    let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
+    let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
+
+    before do
+      (dossier.champs_public + dossier.champs_private)
+        .filter { |c| c.libelle.match?(/^specified/) }
+        .each { |c| c.update_attribute(:value, "specified") }
+    end
 
     subject { dossier.unspecified_attestation_champs.map(&:libelle) }
 
@@ -659,11 +712,11 @@ describe Dossier, type: :model do
       it { is_expected.to eq([]) }
     end
 
-    context "with attestation template" do
+    context "with attestation template v1" do
       # Test all combinations:
       # - with tag specified and unspecified
       # - with tag in body and tag in title
-      # - with tag correponsing to a champ and an annotation privée
+      # - with tag correponding to a champ and an annotation privée
       # - with a dash in the champ libelle / tag
       let(:title) { "voici --specified champ-in-title-- un --unspecified champ-in-title-- beau --specified annotation privée-in-title-- titre --unspecified annotation privée-in-title-- non --numéro du dossier--" }
       let(:body) { "voici --specified champ-in-body-- un --unspecified champ-in-body-- beau --specified annotation privée-in-body-- body --unspecified annotation privée-in-body-- non ?" }
@@ -675,26 +728,8 @@ describe Dossier, type: :model do
         it { is_expected.to eq([]) }
       end
 
-      context "wich is enabled" do
+      context "which is enabled" do
         let(:activated) { true }
-
-        let(:types_de_champ) { [tdc_1, tdc_2, tdc_3, tdc_4] }
-        let(:types_de_champ_private) { [tdc_5, tdc_6, tdc_7, tdc_8] }
-
-        let(:tdc_1) { { libelle: "specified champ-in-title" } }
-        let(:tdc_2) { { libelle: "unspecified champ-in-title" } }
-        let(:tdc_3) { { libelle: "specified champ-in-body" } }
-        let(:tdc_4) { { libelle: "unspecified champ-in-body" } }
-        let(:tdc_5) { { libelle: "specified annotation privée-in-title" } }
-        let(:tdc_6) { { libelle: "unspecified annotation privée-in-title" } }
-        let(:tdc_7) { { libelle: "specified annotation privée-in-body" } }
-        let(:tdc_8) { { libelle: "unspecified annotation privée-in-body" } }
-
-        before do
-          (dossier.champs_public + dossier.champs_private)
-            .filter { |c| c.libelle.match?(/^specified/) }
-            .each { |c| c.update_attribute(:value, "specified") }
-        end
 
         it do
           is_expected.to eq([
@@ -704,6 +739,40 @@ describe Dossier, type: :model do
             "unspecified annotation privée-in-body"
           ])
         end
+      end
+    end
+
+    context "with attestation template v2" do
+      # Test all combinations:
+      # - with tag specified and unspecified
+      # - with tag correponding to a champ and an annotation privée
+      let(:body) {
+        [
+          { "type" => "mention", "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find {  _1.libelle == "unspecified champ-in-body" }.stable_id}", "label" => "unspecified champ-in-body" } }
+        ]
+      }
+      let(:attestation_template) { build(:attestation_template, :v2) }
+
+      before do
+        tdc_content = (types_de_champ + types_de_champ_private).filter_map do |tdc_config|
+          next if tdc_config[:libelle].include?("in-title")
+
+          {
+            "type" => "mention",
+            "attrs" => { "id" => "tdc#{procedure.types_de_champ_for_tags.find { _1.libelle == tdc_config[:libelle] }.stable_id}", "label" => tdc_config[:libelle] }
+          }
+        end
+
+        json_body = attestation_template.json_body["content"]
+        attestation_template.json_body["content"][-1]["content"].concat(tdc_content)
+        attestation_template.save!
+      end
+
+      it do
+        is_expected.to eq([
+          "unspecified champ-in-body",
+          "unspecified annotation privée-in-body"
+        ])
       end
     end
   end
@@ -899,7 +968,7 @@ describe Dossier, type: :model do
       dossier.procedure.update_column(:web_hook_url, '/webhook.json')
 
       expect {
-        dossier.update_column(:search_terms, 'bonjour')
+        dossier.update_column(:conservation_extension, 'P1W')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -907,7 +976,7 @@ describe Dossier, type: :model do
       }.to have_enqueued_job(WebHookJob).with(dossier.procedure.id, dossier.id, 'en_construction', anything)
 
       expect {
-        dossier.update_column(:search_terms, 'bonjour2')
+        dossier.update_column(:conservation_extension, 'P2W')
       }.to_not have_enqueued_job(WebHookJob)
 
       expect {
@@ -995,28 +1064,28 @@ describe Dossier, type: :model do
       allow(NotificationMailer).to receive(:send_accepte_notification).and_return(double(deliver_later: true))
       allow(dossier).to receive(:build_attestation).and_return(attestation)
 
-      Timecop.freeze(now)
+      travel_to now
       dossier.accepter!(instructeur: instructeur, motivation: 'motivation')
       dossier.reload
     end
 
-    after { Timecop.return }
-
-    it { expect(dossier.traitements.last.motivation).to eq('motivation') }
-    it { expect(dossier.motivation).to eq('motivation') }
-    it { expect(dossier.traitements.last.instructeur_email).to eq(instructeur.email) }
-    it { expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at) }
-    it { expect(dossier.traitements.last.processed_at).to eq(now) }
-    it { expect(dossier.processed_at).to eq(now) }
-    it { expect(dossier.state).to eq('accepte') }
-    it { expect(last_operation.operation).to eq('accepter') }
-    it { expect(last_operation.automatic_operation?).to be_falsey }
-    it { expect(operation_serialized['operation']).to eq('accepter') }
-    it { expect(operation_serialized['dossier_id']).to eq(dossier.id) }
-    it { expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601) }
-    it { expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier) }
-    it { expect(dossier.attestation).to eq(attestation) }
-    it { expect(dossier.commentaires.count).to eq(1) }
+    it "update attributes" do
+      expect(dossier.traitements.last.motivation).to eq('motivation')
+      expect(dossier.motivation).to eq('motivation')
+      expect(dossier.traitements.last.instructeur_email).to eq(instructeur.email)
+      expect(dossier.en_instruction_at).to eq(dossier.en_instruction_at)
+      expect(dossier.traitements.last.processed_at).to eq(now)
+      expect(dossier.processed_at).to eq(now)
+      expect(dossier.state).to eq('accepte')
+      expect(last_operation.operation).to eq('accepter')
+      expect(last_operation.automatic_operation?).to be_falsey
+      expect(operation_serialized['operation']).to eq('accepter')
+      expect(operation_serialized['dossier_id']).to eq(dossier.id)
+      expect(operation_serialized['executed_at']).to eq(last_operation.executed_at.iso8601)
+      expect(NotificationMailer).to have_received(:send_accepte_notification).with(dossier)
+      expect(dossier.attestation).to eq(attestation)
+      expect(dossier.commentaires.count).to eq(1)
+    end
   end
 
   describe '#accepter_automatiquement!' do
@@ -1642,24 +1711,24 @@ describe Dossier, type: :model do
     let(:last_operation) { dossier.dossier_operation_logs.last }
 
     before do
-      Timecop.freeze
+      freeze_time
       allow(NotificationMailer).to receive(:send_repasser_en_instruction_notification).and_return(double(deliver_later: true))
       dossier.repasser_en_instruction!(instructeur: instructeur)
       dossier.reload
     end
 
-    it { expect(dossier.state).to eq('en_instruction') }
-    it { expect(dossier.archived).to be_falsey }
-    it { expect(dossier.motivation).to be_nil }
-    it { expect(dossier.justificatif_motivation.attached?).to be_falsey }
-    it { expect(dossier.attestation).to be_nil }
-    it { expect(dossier.sva_svr_decision_on).to be_nil }
-    it { expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil }
-    it { expect(last_operation.operation).to eq('repasser_en_instruction') }
-    it { expect(last_operation.data['author']['email']).to eq(instructeur.email) }
-    it { expect(NotificationMailer).to have_received(:send_repasser_en_instruction_notification).with(dossier) }
-
-    after { Timecop.return }
+    it "update attributes" do
+      expect(dossier.state).to eq('en_instruction')
+      expect(dossier.archived).to be_falsey
+      expect(dossier.motivation).to be_nil
+      expect(dossier.justificatif_motivation.attached?).to be_falsey
+      expect(dossier.attestation).to be_nil
+      expect(dossier.sva_svr_decision_on).to be_nil
+      expect(dossier.termine_close_to_expiration_notice_sent_at).to be_nil
+      expect(last_operation.operation).to eq('repasser_en_instruction')
+      expect(last_operation.data['author']['email']).to eq(instructeur.email)
+      expect(NotificationMailer).to have_received(:send_repasser_en_instruction_notification).with(dossier)
+    end
   end
 
   describe '#notify_draft_not_submitted' do
@@ -2075,25 +2144,19 @@ describe Dossier, type: :model do
       create(:attestation, dossier: dossier)
     end
 
-    it "can destroy dossier" do
+    it "can destroy dossier, reset demarche, logg context" do
+      json_message = nil
+      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
+
       expect(dossier.destroy).to be_truthy
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it "can reset demarche" do
-      expect { dossier.procedure.reset! }.not_to raise_error
-      expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it "call logger with context" do
-      json_message = nil
-
-      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
-      dossier.destroy
 
       expect(JSON.parse(json_message)).to a_hash_including(
         { message: "Dossier destroyed", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
       )
+
+      expect { dossier.procedure.reset! }.not_to raise_error
+      expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 

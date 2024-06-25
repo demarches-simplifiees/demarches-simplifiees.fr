@@ -312,7 +312,8 @@ class ApplicationController < ActionController::Base
       path == '/contact-admin' ||
       path.start_with?('/connexion-par-jeton') ||
       path.start_with?('/api/') ||
-      path.start_with?('/lien-envoye')
+      path.start_with?('/lien-envoye') ||
+      path.start_with?('/faq')
 
       false
     else
@@ -339,7 +340,7 @@ class ApplicationController < ActionController::Base
       environment: sentry[:environment],
       browser: { modern: BrowserSupport.supported?(browser) },
       user: sentry_user,
-      release: SentryRelease.current
+      release: ApplicationVersion.current
     }
   end
 

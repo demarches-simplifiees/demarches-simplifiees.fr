@@ -1,42 +1,30 @@
 describe 'wcag rules for usager', js: true do
-  let(:procedure) { create(:procedure, :published, :with_all_champs, :with_service, :for_individual) }
+  let(:procedure) { create(:procedure, :published, :with_service, :for_individual) }
   let(:password) { 'a very complicated password' }
   let(:litteraire_user) { create(:user, password: password) }
 
-  before do
-    procedure.active_revision.types_de_champ_public.find { |tdc| tdc.type_champ == TypeDeChamp.type_champs.fetch(:carte) }.destroy
-  end
+  def test_external_links_have_title_says_it_opens_in_a_new_tab
+    links = page.all("a[target=_blank]")
+    expect(links.count).to be_positive
 
-  shared_examples "external links have title says it opens in a new tab" do
-    it do
-      links = page.all("a[target=_blank]")
-      expect(links.count).to be_positive
-
-      links.each do |link|
-        expect(link[:title]).to include("Nouvel onglet"), "link #{link[:href]} does not have title mentioning it opens in a new tab"
-      end
+    links.each do |link|
+      expect(link[:title]).to include("Nouvel onglet"), "link #{link[:href]} does not have title mentioning it opens in a new tab"
     end
   end
 
-  shared_examples "aria-label do not mix with title attribute" do
-    it do
-      elements = page.all("[aria-label][title]")
-      elements.each do |element|
-        expect(element[:title]).to be_blank, "path=#{path}, element title=\"#{element[:title]}\" mixes aria-label and title attributes"
-      end
+  def test_aria_label_do_not_mix_with_title_attribute
+    elements = page.all("[aria-label][title]")
+    elements.each do |element|
+      expect(element[:title]).to be_blank, "path=#{path}, element title=\"#{element[:title]}\" mixes aria-label and title attributes"
     end
   end
 
-  def expect_axe_clean_without_main_navigation
+  def test_expect_axe_clean_without_main_navigation
     # On page without main navigation content (like anonymous home page),
     # there are either a bug in axe, either dsfr markup is not conform to wcag2a.
     # There is no issue on pages having a child navigation.
     expect(page).to be_axe_clean.excluding("#modal-header__menu")
     expect(page).to be_axe_clean.within("#modal-header__menu").skipping("aria-prohibited-attr")
-  end
-
-  shared_examples "axe clean without main navigation" do
-    it { expect_axe_clean_without_main_navigation }
   end
 
   context 'pages without the need to be logged in' do
@@ -46,16 +34,20 @@ describe 'wcag rules for usager', js: true do
 
     context 'homepage' do
       let(:path) { root_path }
-      it_behaves_like "axe clean without main navigation"
-      it_behaves_like "external links have title says it opens in a new tab"
-      it_behaves_like "aria-label do not mix with title attribute"
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
     end
 
     context 'sign_up page' do
       let(:path) { new_user_registration_path }
-      it_behaves_like "axe clean without main navigation"
-      it_behaves_like "external links have title says it opens in a new tab"
-      it_behaves_like "aria-label do not mix with title attribute"
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
     end
 
     scenario 'account confirmation page' do
@@ -66,43 +58,51 @@ describe 'wcag rules for usager', js: true do
 
       perform_enqueued_jobs do
         click_button 'Créer un compte'
-        expect_axe_clean_without_main_navigation
+        test_expect_axe_clean_without_main_navigation
       end
     end
 
     context 'sign_up confirmation' do
       let(:path) { user_confirmation_path("user[email]" => "some@email.com") }
 
-      it_behaves_like "external links have title says it opens in a new tab"
-      it_behaves_like "aria-label do not mix with title attribute"
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+      end
     end
 
     context 'sign_in page' do
       let(:path) { new_user_session_path }
-      it_behaves_like "axe clean without main navigation"
-      it_behaves_like "external links have title says it opens in a new tab"
-      it_behaves_like "aria-label do not mix with title attribute"
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
     end
 
     context 'contact page' do
       let(:path) { contact_path }
-      it_behaves_like "axe clean without main navigation"
-      it_behaves_like "external links have title says it opens in a new tab"
-      it_behaves_like "aria-label do not mix with title attribute"
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
     end
 
     context 'commencer page' do
       let(:path) { commencer_path(path: procedure.path) }
-      it_behaves_like "axe clean without main navigation"
-      it_behaves_like "external links have title says it opens in a new tab"
-      it_behaves_like "aria-label do not mix with title attribute"
+      it 'pass wcag tests' do
+        test_external_links_have_title_says_it_opens_in_a_new_tab
+        test_aria_label_do_not_mix_with_title_attribute
+        test_expect_axe_clean_without_main_navigation
+      end
     end
 
     scenario 'commencer page, help dropdown' do
       visit commencer_path(path: procedure.reload.path)
 
       page.find("#help-menu_button").click
-      expect_axe_clean_without_main_navigation
+      test_expect_axe_clean_without_main_navigation
     end
   end
 
@@ -135,7 +135,7 @@ describe 'wcag rules for usager', js: true do
   end
 
   context "logged in, depot d'un dossier entreprise" do
-    let(:procedure) { create(:procedure, :with_all_champs, :with_service, :published) }
+    let(:procedure) { create(:procedure, :with_service, :published) }
 
     before do
       login_as litteraire_user, scope: :user
@@ -163,11 +163,6 @@ describe 'wcag rules for usager', js: true do
       dossier
       visit dossiers_path
       expect(page).to be_axe_clean
-    end
-
-    scenario 'liste des dossiers et actions sur le dossier' do
-      dossier
-      visit dossiers_path
       page.find("#actions_menu_dossier_#{dossier.id}_button").click
       expect(page).to be_axe_clean
     end

@@ -12,7 +12,7 @@ RSpec.describe InstructeurMailer, type: :mailer do
       before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
 
       it 'enqueues email is custom queue for low priority delivery' do
-        expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
+        expect { subject.deliver_later }.to have_enqueued_job(PriorizedMailDeliveryJob).on_queue(custom_queue)
       end
     end
   end

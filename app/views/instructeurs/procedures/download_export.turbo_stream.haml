@@ -2,10 +2,10 @@
 - if @can_download_dossiers
   - if @statut.nil?
     = turbo_stream.update_all '.procedure-actions' do
-      = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_url: method(:download_export_instructeur_procedure_path))
+      = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), export_url: method(:download_export_instructeur_procedure_path))
   - else
     = turbo_stream.update_all '.dossiers-export' do
-      = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
+      = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, export_url: method(:download_export_instructeur_procedure_path))
 
 = turbo_stream.update "last-export-alert" do
   = render partial: "last_export_alert", locals: { export: @last_export, statut: @statut }

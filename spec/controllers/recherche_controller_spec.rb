@@ -27,6 +27,8 @@ describe RechercheController, type: :controller do
     dossier_with_expert.champs_private[0].value = "Dossier B is incomplete"
     dossier_with_expert.champs_private[1].value = "Dossier B is invalid"
     dossier_with_expert.save!
+
+    perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
   end
 
   describe 'GET #index' do

@@ -1,9 +1,98 @@
 describe PiecesJustificativesService do
+  describe 'pjs_for_champs' do
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }, { type: :repetition, children: [{ type: :piece_justificative }] }]) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossiers) { Dossier.where(id: dossier.id) }
+    let(:witness) { create(:dossier, procedure: procedure) }
+    let(:export_template) { double('ExportTemplate') }
+    let(:pj_service) { PiecesJustificativesService.new(user_profile:, export_template:) }
+    let(:user_profile) { build(:administrateur) }
+
+    def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')
+    def repetition(d) = d.champs.find_by(type: "Champs::RepetitionChamp")
+    def attachments(champ) = champ.piece_justificative_file.attachments
+
+    before { attach_file_to_champ(pj_champ(witness)) }
+
+    subject { pj_service.send(:pjs_for_champs, dossiers) }
+
+    context 'without any attachment' do
+      it { expect(subject).to be_empty }
+    end
+
+    context 'with a single attachment' do
+      let(:champ) { pj_champ(dossier) }
+      before { attach_file_to_champ(champ) }
+
+      it do
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, attachments(pj_champ(dossier)).first, index: 0, row_index: nil, champ:)
+        subject
+      end
+    end
+
+    context 'with multiple attachments' do
+      let(:champ) { pj_champ(dossier) }
+
+      before do
+        attach_file_to_champ(champ)
+        attach_file_to_champ(champ)
+      end
+
+      it do
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, attachments(pj_champ(dossier)).first, index: 0, row_index: nil, champ:)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, attachments(pj_champ(dossier)).second, index: 1, row_index: nil, champ:)
+        subject
+      end
+    end
+
+    context 'with a repetition' do
+      let(:first_champ) { repetition(dossier).champs.first }
+      let(:second_champ) { repetition(dossier).champs.second }
+
+      before do
+        repetition(dossier).add_row(dossier.revision)
+        attach_file_to_champ(first_champ)
+        attach_file_to_champ(first_champ)
+
+        repetition(dossier).add_row(dossier.revision)
+        attach_file_to_champ(second_champ)
+      end
+
+      it do
+        first_child_attachments = attachments(repetition(dossier).champs.first)
+        second_child_attachments = attachments(repetition(dossier).champs.second)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, first_child_attachments.first, index: 0, row_index: 0, champ: first_champ)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, first_child_attachments.second, index: 1, row_index: 0, champ: first_champ)
+
+        expect(export_template).to receive(:attachment_and_path)
+          .with(dossier, second_child_attachments.first, index: 0, row_index: 1, champ: second_champ)
+
+        count = 0
+
+        callback = lambda { |*_args| count += 1 }
+        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+          subject
+        end
+
+        expect(count).to eq(10)
+      end
+    end
+  end
+
   describe '.liste_documents' do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
+    let(:export_template) { nil }
     subject do
-      PiecesJustificativesService.new(user_profile:).liste_documents(dossiers).map(&:first)
+      PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:first)
     end
 
     context 'no acl' do
@@ -19,6 +108,11 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it { expect(subject).to match_array(pj_champ.call(dossier).piece_justificative_file.attachments) }
+        end
       end
 
       context 'with a multiple attachments' do
@@ -70,6 +164,13 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachments) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/messagerie")).to be true
+          end
+        end
       end
 
       context 'with a pj not safe on a commentaire' do
@@ -86,6 +187,13 @@ describe PiecesJustificativesService do
         let!(:witness) { create(:dossier, :with_justificatif) }
 
         it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/dossier")).to be true
+          end
+        end
       end
 
       context 'with a motivation not safe' do
@@ -101,6 +209,16 @@ describe PiecesJustificativesService do
         let!(:witness) { create(:dossier, :with_attestation) }
 
         it { expect(subject).to match_array(dossier.attestation.pdf.attachment) }
+        it 'uses default name for dossier directory' do
+          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
+        end
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
+          end
+        end
       end
 
       context 'with an etablissement' do
@@ -118,6 +236,17 @@ describe PiecesJustificativesService do
         end
 
         it { expect(subject).to match_array([attestation_sociale.attachment, attestation_fiscale.attachment]) }
+
+        it 'uses default name for dossier directory' do
+          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
+        end
+
+        context 'with export_template' do
+          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+          it 'uses specific name for dossier directory' do
+            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
+          end
+        end
       end
     end
 
@@ -229,14 +358,14 @@ describe PiecesJustificativesService do
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -252,7 +381,7 @@ describe PiecesJustificativesService do
           let(:experts_procedure) { create(:experts_procedure, expert: user_profile, procedure:) }
           let(:avis) { create(:avis, experts_procedure:, dossier: dossier, confidentiel: true) }
           let(:user_profile) { create(:expert) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -276,21 +405,28 @@ describe PiecesJustificativesService do
 
         context 'given an administrateur' do
           let(:user_profile) { build(:administrateur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
 
         context 'given an instructeur' do
           let(:user_profile) { create(:instructeur) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
+          end
+
+          context 'with export_template' do
+            let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+            it 'uses specific name for dossier directory' do
+              expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/avis")).to be true
+            end
           end
         end
 
         context 'given an expert' do
           let(:user_profile) { create(:expert) }
-          it "doesn't return confidentiel avis.piece_justificative_file" do
+          it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
           end
         end
@@ -303,7 +439,8 @@ describe PiecesJustificativesService do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, children: [{ type: :piece_justificative }] }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
     let(:dossiers) { Dossier.where(id: dossier.id) }
-    subject { PiecesJustificativesService.new(user_profile:).generate_dossiers_export(dossiers) }
+    let(:export_template) { nil }
+    subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
 
     it "doesn't update dossier" do
       expect { subject }.not_to change { dossier.updated_at }
@@ -315,11 +452,85 @@ describe PiecesJustificativesService do
       let!(:not_confidentiel_avis) { create(:avis, :not_confidentiel, dossier: dossier) }
       let!(:expert_avis) { create(:avis, :confidentiel, dossier: dossier, expert: user_profile) }
 
-      subject { PiecesJustificativesService.new(user_profile:).generate_dossiers_export(dossiers) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
       it "includes avis not confidentiel as well as expert's avis" do
         expect_any_instance_of(Dossier).to receive(:avis_for_expert).with(user_profile).and_return([])
         subject
       end
+
+      it 'gives default name to export pdf file' do
+        expect(subject.first.second.starts_with?("dossier-#{dossier.id}/export-#{dossier.id}")).to eq true
+      end
+    end
+
+    context 'with export template' do
+      let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
+      subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
+
+      it 'gives custom name to export pdf file' do
+        expect(subject.first.second).to eq "DOSSIER-#{dossier.id}/export_#{dossier.id}.pdf"
+      end
+    end
+  end
+
+  describe '#compute_champ_id_row_index' do
+    let(:user_profile) { build(:administrateur) }
+    let(:types_de_champ_public) do
+      [
+        { type: :repetition, children: [{ type: :piece_justificative }] },
+        { type: :repetition, children: [{ type: :piece_justificative }, { type: :piece_justificative }] }
+      ]
+    end
+
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:dossier_1) { create(:dossier, procedure:) }
+    let(:champs) { dossier_1.champs }
+
+    def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')
+    def repetition(d, index:) = d.champs_public.filter(&:repetition?)[index]
+
+    subject { PiecesJustificativesService.new(user_profile:, export_template: nil).send(:compute_champ_id_row_index, champs) }
+
+    before do
+      pj_champ(dossier_1)
+
+      # repet_0 (stable_id: r0)
+      # # row_0
+      # # # pj_champ_0 (stable_id: 0)
+      # # row_1
+      # # # pj_champ_1 (stable_id: 0)
+      # repet_1 (stable_id: r1)
+      # # row_0
+      # # # pj_champ_2 (stable_id: 1)
+      # # # pj_champ_3 (stable_id: 2)
+      # # row_1
+      # # # pj_champ_4 (stable_id: 1)
+      # # # pj_champ_5 (stable_id: 2)
+
+      repet_0 = repetition(dossier_1, index: 0)
+      repet_1 = repetition(dossier_1, index: 1)
+
+      repet_0.add_row(dossier_1.revision)
+      repet_0.add_row(dossier_1.revision)
+
+      repet_1.add_row(dossier_1.revision)
+      repet_1.add_row(dossier_1.revision)
+    end
+
+    it do
+      champs = dossier_1.champs_public
+      repet_0 = champs[0]
+      pj_0 = repet_0.rows.first.first
+      pj_1 = repet_0.rows.second.first
+
+      repet_1 = champs[1]
+      pj_2 = repet_1.rows.first.first
+      pj_3 = repet_1.rows.first.second
+
+      pj_4 = repet_1.rows.second.first
+      pj_5 = repet_1.rows.second.second
+
+      is_expected.to eq({ pj_0.id => 0, pj_1.id => 1, pj_2.id => 0, pj_3.id => 0, pj_4.id => 1, pj_5.id => 1 })
     end
   end
 

@@ -8,6 +8,8 @@ class AdministrationMailer < ApplicationMailer
     @author_name = "Équipe de #{APPLICATION_NAME}"
     subject = "Activez votre compte administrateur"
 
+    bypass_unverified_mail_protection!
+
     mail(to: user.email,
       subject: subject,
       reply_to: CONTACT_EMAIL)
@@ -15,6 +17,8 @@ class AdministrationMailer < ApplicationMailer
 
   def refuse_admin(admin_email)
     subject = "Votre demande de compte a été refusée"
+
+    bypass_unverified_mail_protection!
 
     mail(to: admin_email,
       subject: subject,

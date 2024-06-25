@@ -23,7 +23,10 @@ RSpec.describe AdministrateurMailer, type: :mailer do
     subject { described_class.activate_before_expiration(user, token) }
 
     context 'without SafeMailer configured' do
-      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
+      it do
+        expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil)
+        expect(subject['BYPASS_UNVERIFIED_MAIL_PROTECTION']).to be_present
+      end
     end
 
     context 'with SafeMailer configured' do

@@ -33,6 +33,7 @@ class ActiveJob::ApplicationLogSubscriber < ::ActiveJob::LogSubscriber
   def process_event(event, type)
     data = extract_metadata(event)
     data.merge!(extract_exception(event))
+    data[:request_id] = Current.request_id if Current.request_id.present?
 
     case type
     when 'enqueue_at'

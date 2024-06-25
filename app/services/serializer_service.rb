@@ -164,6 +164,7 @@ class SerializerService
       demandeur {
         ...PersonnePhysiqueFragment
         ...PersonneMoraleFragment
+        ...PersonneMoraleIncompleteFragment
       }
       motivation
       motivationAttachment {
@@ -307,6 +308,10 @@ class SerializerService
         dateDeclaration
         datePublication
       }
+    }
+
+    fragment PersonneMoraleIncompleteFragment on PersonneMoraleIncomplete {
+      siret
     }
 
     fragment AddressFragment on Address {

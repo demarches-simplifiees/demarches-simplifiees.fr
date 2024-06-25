@@ -44,13 +44,10 @@ describe 'Publishing a procedure', js: true do
   end
 
   context 'when a procedure isn’t published yet' do
-    before do
-      visit admin_procedures_path(statut: "brouillons")
-      click_on procedure.libelle
-      find('#publish-procedure-link').click
-    end
-
     scenario 'an admin can publish it' do
+      visit admin_procedure_path(procedure)
+      find('#publish-procedure-link').click
+
       expect(find_field('procedure_path').value).to eq procedure.path
       fill_in 'lien_site_web', with: 'http://some.website'
       within('form') { click_on 'Publier' }
@@ -72,10 +69,13 @@ describe 'Publishing a procedure', js: true do
       end
 
       scenario 'an error message prevents the publication' do
-        expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
-        expect(page).to have_content("Le champ « Enfants » doit comporter au moins un champ répétable")
-        expect(page).to have_content("L’annotation privée « Civilité » doit comporter au moins un choix sélectionnable")
+        visit admin_procedure_path(procedure)
 
+        expect(page).to have_content('Des problèmes empêchent la publication de la démarche')
+        expect(page).to have_content("Enfants doit comporter au moins un champ répétable")
+        expect(page).to have_content("Civilité doit comporter au moins un choix sélectionnable")
+
+        visit admin_procedure_publication_path(procedure)
         expect(find_field('procedure_path').value).to eq procedure.path
         fill_in 'lien_site_web', with: 'http://some.website'
 
@@ -85,8 +85,9 @@ describe 'Publishing a procedure', js: true do
 
     context 'when the procedure has the same path as another procedure from another admin ' do
       scenario 'an error message prevents the publication' do
-        expect(find_field('procedure_path').value).to eq procedure.path
+        visit admin_procedure_publication_path(procedure)
         fill_in 'procedure_path', with: other_procedure.path
+
         expect(page).to have_content 'vous devez la modifier afin de pouvoir publier votre démarche'
 
         fill_in 'lien_site_web', with: 'http://some.website'
@@ -194,7 +195,7 @@ describe 'Publishing a procedure', js: true do
     scenario 'an error message prevents the publication' do
       visit admin_procedure_path(procedure)
       expect(page).to have_content('Des problèmes empêchent la publication des modifications')
-      expect(page).to have_link('corriger', href: edit_admin_procedure_mail_template_path(procedure, Mails::InitiatedMail::SLUG))
+      expect(page).to have_link(href: edit_admin_procedure_mail_template_path(procedure, Mails::InitiatedMail::SLUG))
       expect(page).to have_button('Publier les modifications', disabled: true)
     end
   end

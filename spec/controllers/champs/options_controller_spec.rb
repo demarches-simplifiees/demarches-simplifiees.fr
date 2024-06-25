@@ -18,13 +18,5 @@ describe Champs::OptionsController, type: :controller do
         expect { subject }.to change { champ.reload.selected_options.size }.from(2).to(1)
       end
     end
-
-    context 'with champ_id' do
-      subject { delete :remove, params: { champ_id: champ.id, option: 'tata' }, format: :turbo_stream }
-
-      it 'remove option' do
-        expect { subject }.to change { champ.reload.selected_options.size }.from(2).to(1)
-      end
-    end
   end
 end

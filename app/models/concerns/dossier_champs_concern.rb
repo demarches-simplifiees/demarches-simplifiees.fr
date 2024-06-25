@@ -55,25 +55,18 @@ module DossierChampsConcern
       .types_de_champ
       .filter { _1.stable_id.in?(stable_ids) }
       .filter { !revision.child?(_1) }
-      .map { champ_for_update(_1, nil) }
+      .map { champ_for_update(_1, nil, updated_by: nil) }
   end
 
-  def champ_for_update(type_de_champ, row_id)
-    champ, attributes = champ_with_attributes_for_update(type_de_champ, row_id)
+  def champ_for_update(type_de_champ, row_id, updated_by:)
+    champ, attributes = champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
     champ.assign_attributes(attributes)
     champ
   end
 
-  def update_champs_attributes(attributes, scope)
-    # TODO: remove after one deploy
-    if attributes.present? && attributes.values.filter { _1.key?(:with_public_id) }.empty?
-      assign_attributes("champs_#{scope}_all_attributes".to_sym => attributes)
-      @champs_by_public_id = nil
-      return
-    end
-
+  def update_champs_attributes(attributes, scope, updated_by:)
     champs_attributes = attributes.to_h.map do |public_id, attributes|
-      champ_attributes_by_public_id(public_id, attributes, scope)
+      champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
     end
 
     assign_attributes(champs_attributes:)
@@ -94,13 +87,13 @@ module DossierChampsConcern
     end
   end
 
-  def champ_attributes_by_public_id(public_id, attributes, scope)
+  def champ_attributes_by_public_id(public_id, attributes, scope, updated_by:)
     stable_id, row_id = public_id.split('-')
     type_de_champ = find_type_de_champ_by_stable_id(stable_id, scope)
-    champ_with_attributes_for_update(type_de_champ, row_id).last.merge(attributes)
+    champ_with_attributes_for_update(type_de_champ, row_id, updated_by:).last.merge(attributes)
   end
 
-  def champ_with_attributes_for_update(type_de_champ, row_id)
+  def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
@@ -108,6 +101,7 @@ module DossierChampsConcern
       .find_or_create_by!(stable_id: type_de_champ.stable_id, row_id:)
 
     attributes[:id] = champ.id
+    attributes[:updated_by] = updated_by
 
     # Needed when a revision change the champ type in this case, we reset the champ data
     if champ.type != attributes[:type]

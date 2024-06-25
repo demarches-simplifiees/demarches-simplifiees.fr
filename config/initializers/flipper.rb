@@ -25,13 +25,13 @@ features = [
   :dossier_pdf_vide,
   :engagement_juridique_type_de_champ,
   :export_order_by_revision,
+  :export_template,
   :expression_reguliere_type_de_champ,
   :gallery_demande,
   :groupe_instructeur_api_hack,
   :hide_instructeur_email,
   :sva,
-  :switch_domain,
-  :champ_update_by_stable_id
+  :switch_domain
 ]
 
 def database_exists?

@@ -1,16 +1,26 @@
 class DossierPreloader
   DEFAULT_BATCH_SIZE = 2000
 
-  def initialize(dossiers, includes_for_dossier: [], includes_for_etablissement: [])
+  def initialize(dossiers, includes_for_champ: [], includes_for_etablissement: [])
     @dossiers = dossiers
     @includes_for_etablissement = includes_for_etablissement
-    @includes_for_dossier = includes_for_dossier
+    @includes_for_champ = includes_for_champ
   end
 
   def in_batches(size = DEFAULT_BATCH_SIZE)
     dossiers = @dossiers.to_a
     dossiers.each_slice(size) { |slice| load_dossiers(slice) }
     dossiers
+  end
+
+  def in_batches_with_block(size = DEFAULT_BATCH_SIZE, &block)
+    @dossiers.in_batches(of: size) do |batch|
+      data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert], revision: :revision_types_de_champ)
+
+      dossiers = data.to_a
+      load_dossiers(dossiers)
+      yield(dossiers)
+    end
   end
 
   def all(pj_template: false)
@@ -37,7 +47,7 @@ class DossierPreloader
   end
 
   def load_dossiers(dossiers, pj_template: false)
-    to_include = @includes_for_dossier.dup
+    to_include = @includes_for_champ.dup
     to_include << [piece_justificative_file_attachments: :blob]
 
     if pj_template
@@ -83,8 +93,6 @@ class DossierPreloader
     champs_public, champs_private = champs.partition(&:public?)
 
     dossier.association(:champs).target = []
-    dossier.association(:champs_public_all).target = []
-    dossier.association(:champs_private_all).target = []
     load_champs(dossier, :champs_public, champs_public, dossier, children_by_parent)
     load_champs(dossier, :champs_private, champs_private, dossier, children_by_parent)
 
@@ -111,12 +119,6 @@ class DossierPreloader
     end
 
     dossier.association(:champs).target += champs
-
-    if champs.first.public?
-      dossier.association(:champs_public_all).target += champs
-    else
-      dossier.association(:champs_private_all).target += champs
-    end
 
     parent.association(name).target = champs
       .filter { positions[dossier.revision_id][_1.type_de_champ_id].present? }

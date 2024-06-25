@@ -59,6 +59,7 @@ jobs:
   unit_tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
     services:
@@ -80,7 +81,8 @@ jobs:
       - name: Install build dependancies
         # - fonts pickable by ImageMagick
         # - rust for YJIT support
-        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server
+        # - poppler-utils for pdf previews
+        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server poppler-utils
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
@@ -113,6 +115,7 @@ jobs:
   system_tests:
     name: System tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
     services:

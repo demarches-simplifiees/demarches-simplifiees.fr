@@ -23,6 +23,13 @@ module Manager
       end
     end
 
+    def unblock_mails
+      user = User.find(params[:id])
+      user.update!(email_verified_at: Time.current)
+      flash[:notice] = "Les emails ont été débloqués."
+      redirect_to manager_user_path(user)
+    end
+
     def resend_confirmation_instructions
       user = User.find(params[:id])
       user.resend_confirmation_instructions

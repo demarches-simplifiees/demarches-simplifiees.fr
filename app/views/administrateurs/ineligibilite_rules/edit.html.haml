@@ -1,0 +1,28 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Inéligibilité des dossiers']] }
+
+
+.fr-container
+  .fr-grid-row
+    .fr-col-12.fr-col-offset-md-2.fr-col-md-8
+      %h1.fr-h1 Inéligibilité des dossiers
+
+      = render Dsfr::AlertComponent.new(title: nil, size: :sm, state: :info, heading_level: 'h2', extra_class_names: 'fr-my-2w') do |c|
+        - c.with_body do
+          %p
+            Les dossiers répondant à vos conditions d’inéligibilité ne pourront pas être déposés. Plus d’informations sur l’inéligibilité des dossiers dans la
+            = link_to('doc', ELIGIBILITE_URL, title: "Document sur l’inéligibilité des dossiers", **external_link_attributes)
+
+      - if !@procedure.draft_revision.conditionable_types_de_champ.present?
+        %p.fr-mt-2w.fr-mb-2w
+          Pour configurer l’inéligibilité des dossiers, votre formulaire doit comporter au moins un champ supportant les conditions d’inéligibilité. Il vous faut donc ajouter au moins un des champs suivant à votre formulaire :
+          %ul
+            - Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.each do
+              %li= "« #{t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »"
+        %p.fr-mt-2w
+          = link_to 'Ajouter un champ supportant les conditions d’inéligibilité', champs_admin_procedure_path(@procedure), class: 'fr-link fr-icon-arrow-right-line fr-link--icon-right'
+          = render Procedure::FixedFooterComponent.new(procedure: @procedure)
+      - else
+        = render Conditions::IneligibiliteRulesComponent.new(draft_revision: @procedure.draft_revision)

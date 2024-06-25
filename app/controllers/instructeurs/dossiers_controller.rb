@@ -30,9 +30,10 @@ module Instructeurs
     end
 
     def apercu_attestation
-      @attestation = dossier.attestation_template.render_attributes_for(dossier: dossier)
-
-      render 'administrateurs/attestation_templates/show', formats: [:pdf]
+      send_data dossier.attestation_template.send(:build_pdf, dossier),
+                filename: 'attestation.pdf',
+                type: 'application/pdf',
+                disposition: 'inline'
     end
 
     def bilans_bdf
@@ -45,7 +46,7 @@ module Instructeurs
       @is_dossier_in_batch_operation = dossier.batch_operation.present?
       respond_to do |format|
         format.pdf do
-          @acls = PiecesJustificativesService.new(user_profile: current_instructeur).acl_for_dossier_export(dossier.procedure)
+          @acls = PiecesJustificativesService.new(user_profile: current_instructeur, export_template: nil).acl_for_dossier_export(dossier.procedure)
           render(template: 'dossiers/show', formats: [:pdf])
         end
         format.all
@@ -274,12 +275,13 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private)
-      if dossier.champs.any?(&:changed_for_autosave?) || dossier.champs_private_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
+      dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private, updated_by: current_user.email)
+      if dossier.champs.any?(&:changed_for_autosave?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
 
       dossier.save(context: :champs_private_value)
+      dossier.index_search_terms_later
 
       respond_to do |format|
         format.turbo_stream do
@@ -295,13 +297,8 @@ module Instructeurs
 
     def annotation
       @dossier = dossier_with_champs(pj_template: false)
-      annotation_id_or_stable_id = params[:stable_id]
-      annotation = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(annotation_id_or_stable_id, :private)
-        @dossier.project_champ(type_de_champ, params[:row_id])
-      else
-        @dossier.champs_private_all.find(annotation_id_or_stable_id)
-      end
+      type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
+      annotation = @dossier.project_champ(type_de_champ, params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do
@@ -417,7 +414,6 @@ module Instructeurs
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
-        :with_public_id,
         value: []
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with

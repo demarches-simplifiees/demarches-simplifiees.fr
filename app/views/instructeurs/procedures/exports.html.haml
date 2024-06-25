@@ -22,3 +22,25 @@
 
   - else
     = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
+
+  - if @procedure.feature_enabled?(:export_template)
+    %h2.fr-mb-1w.fr-mt-8w
+      Liste des modèles d'export
+    %p.fr-hint-text
+      Un modèle d'export permet de personnaliser le nom des fichiers (pour un export au format Zip)
+    - if @export_templates.any?
+      .fr-table.fr-table--no-caption.fr-mt-5w
+        %table
+          %thead
+            %tr
+              %th{ scope: 'col' } Nom du modèle
+              %th{ scope: 'col' }= "Groupe instructeur" if @procedure.groupe_instructeurs.many?
+          %tbody
+            - @export_templates.each do |export_template|
+              %tr
+                %td= link_to export_template.name, edit_instructeur_export_template_path(export_template, procedure_id: @procedure.id)
+                %td= export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
+
+    %p
+      = link_to new_instructeur_export_template_path(procedure_id: params[:procedure_id]), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line' do
+        Ajouter un modèle d'export

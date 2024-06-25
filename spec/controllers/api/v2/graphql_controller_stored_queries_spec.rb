@@ -912,6 +912,17 @@ describe API::V2::GraphqlController do
           expect(ActionMailer::Base.deliveries.size).to eq(0)
         }
       end
+
+      context 'with pending corrections' do
+        before { Flipper.enable(:blocking_pending_correction, dossier.procedure) }
+        let!(:dossier_correction) { create(:dossier_correction, dossier:) }
+
+        it {
+          expect(dossier.pending_correction?).to be_truthy
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierPasserEnInstruction][:errors]).to eq([{ message: "Le dossier est en attente de correction" }])
+        }
+      end
     end
 
     context 'dossierRepasserEnConstruction' do
@@ -1329,6 +1340,78 @@ describe API::V2::GraphqlController do
           expect(gql_data[:demarcheCloner][:errors]).to be_nil
           expect(gql_data[:demarcheCloner][:demarche][:id]).to eq(Procedure.last.to_typed_id)
           expect(Procedure.last.libelle).to eq(new_title)
+        }
+      end
+    end
+
+    context 'dossierEnvoyerMessage' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:) }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, body: 'Hello World!' } } }
+      let(:operation_name) { 'dossierEnvoyerMessage' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:dossierEnvoyerMessage][:errors]).to be_nil
+        expect(gql_data[:dossierEnvoyerMessage][:message][:id]).to eq(dossier.commentaires.first.to_typed_id)
+        perform_enqueued_jobs
+        expect(ActionMailer::Base.deliveries.size).to eq(1)
+      }
+    end
+
+    context 'dossierSupprimerMessage' do
+      let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:) }
+      let(:message) { create(:commentaire, dossier:, instructeur:) }
+      let(:dossier_correction) { create(:dossier_correction, dossier:, commentaire: message) }
+      let(:variables) { { input: { messageId: message.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:operation_name) { 'dossierSupprimerMessage' }
+
+      it {
+        expect(message.discarded?).to be_falsey
+        expect(gql_errors).to be_nil
+        expect(gql_data[:dossierSupprimerMessage][:errors]).to be_nil
+        expect(gql_data[:dossierSupprimerMessage][:message][:id]).to eq(message.to_typed_id)
+        expect(gql_data[:dossierSupprimerMessage][:message][:discardedAt]).not_to be_nil
+        expect(message.reload.discarded?).to be_truthy
+      }
+
+      it {
+        expect(dossier_correction.commentaire.discarded?).to be_falsey
+        expect(dossier.pending_correction?).to be_truthy
+        expect(gql_errors).to be_nil
+        expect(gql_data[:dossierSupprimerMessage][:errors]).to be_nil
+        expect(gql_data[:dossierSupprimerMessage][:message][:id]).to eq(message.to_typed_id)
+        expect(gql_data[:dossierSupprimerMessage][:message][:discardedAt]).not_to be_nil
+        expect(message.reload.discarded?).to be_truthy
+        expect(dossier.pending_correction?).to be_falsey
+      }
+
+      context 'when unauthorized' do
+        let(:dossier) { create(:dossier, :en_construction, :with_individual) }
+
+        it {
+          expect(message.discarded?).to be_falsey
+          expect(gql_errors.first[:message]).to eq("An object of type Message was hidden due to permissions")
+        }
+      end
+
+      context 'when from not the same instructeur' do
+        let(:other_instructeur) { create(:instructeur, followed_dossiers: dossiers) }
+        let(:variables) { { input: { messageId: message.to_typed_id, instructeurId: other_instructeur.to_typed_id } } }
+
+        it {
+          expect(message.discarded?).to be_falsey
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierSupprimerMessage][:errors]).to eq([{ message: "Le message ne peut pas être supprimé" }])
+        }
+      end
+
+      context 'when from usager' do
+        let(:message) { create(:commentaire, dossier:) }
+
+        it {
+          expect(message.discarded?).to be_falsey
+          expect(gql_errors).to be_nil
+          expect(gql_data[:dossierSupprimerMessage][:errors]).to eq([{ message: "Le message ne peut pas être supprimé" }])
         }
       end
     end

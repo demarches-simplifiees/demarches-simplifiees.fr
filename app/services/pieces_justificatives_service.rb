@@ -1,27 +1,24 @@
 class PiecesJustificativesService
-  def initialize(user_profile:)
+  def initialize(user_profile:, export_template:)
     @user_profile = user_profile
+    @export_template = export_template
   end
 
   def liste_documents(dossiers)
     bill_ids = []
 
-    docs = dossiers.in_batches.flat_map do |batch|
-      pjs = pjs_for_champs(batch) +
-        pjs_for_commentaires(batch) +
-        pjs_for_dossier(batch) +
-        pjs_for_avis(batch)
+    docs = pjs_for_champs(dossiers) +
+      pjs_for_commentaires(dossiers) +
+      pjs_for_dossier(dossiers) +
+      pjs_for_avis(dossiers)
 
-      if liste_documents_allows?(:with_bills)
-        # some bills are shared among operations
-        # so first, all the bill_ids are fetched
-        operation_logs, some_bill_ids = operation_logs_and_signature_ids(batch)
+    if liste_documents_allows?(:with_bills)
+      # some bills are shared among operations
+      # so first, all the bill_ids are fetched
+      operation_logs, some_bill_ids = operation_logs_and_signature_ids(dossiers)
 
-        pjs += operation_logs
-        bill_ids += some_bill_ids
-      end
-
-      pjs
+      docs += operation_logs
+      bill_ids += some_bill_ids
     end
 
     if liste_documents_allows?(:with_bills)
@@ -32,14 +29,12 @@ class PiecesJustificativesService
     docs
   end
 
-  def generate_dossiers_export(dossiers)
+  def generate_dossiers_export(dossiers) # TODO: renommer generate_dossier_export sans s
     return [] if dossiers.empty?
 
     pdfs = []
 
     procedure = dossiers.first.procedure
-    dossiers = dossiers.includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
-    dossiers = DossierPreloader.new(dossiers).in_batches
     dossiers.each do |dossier|
       dossier.association(:procedure).target = procedure
 
@@ -49,7 +44,6 @@ class PiecesJustificativesService
                   acls: acl_for_dossier_export(procedure),
                   dossier: dossier
                 })
-
       a = ActiveStorage::FakeAttachment.new(
         file: StringIO.new(pdf),
         filename: "export-#{dossier.id}.pdf",
@@ -58,7 +52,11 @@ class PiecesJustificativesService
         created_at: dossier.updated_at
       )
 
-      pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+      if @export_template
+        pdfs << @export_template.attachment_and_path(dossier, a)
+      else
+        pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
+      end
     end
 
     pdfs
@@ -137,26 +135,25 @@ class PiecesJustificativesService
   end
 
   def pjs_for_champs(dossiers)
-    champs = Champ
-      .joins(:piece_justificative_file_attachments)
-      .where(type: "Champs::PieceJustificativeChamp", dossier: dossiers)
+    champs = dossiers.flat_map(&:champs).filter { _1.type == "Champs::PieceJustificativeChamp" }
 
     if !liste_documents_allows?(:with_champs_private)
-      champs = champs.where(private: false)
+      champs = champs.reject(&:private?)
     end
 
-    champ_id_dossier_id = champs
-      .pluck(:id, :dossier_id)
-      .to_h
+    champs_id_row_index = compute_champ_id_row_index(champs)
 
-    ActiveStorage::Attachment
-      .includes(:blob)
-      .where(record_type: "Champ", record_id: champ_id_dossier_id.keys)
-      .filter { |a| safe_attachment(a) }
-      .map do |a|
-        dossier_id = champ_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+    champs.flat_map do |champ|
+      champ.piece_justificative_file_attachments.filter { |a| safe_attachment(a) }.map.with_index do |attachment, index|
+        row_index = champs_id_row_index[champ.id]
+
+        if @export_template
+          @export_template.attachment_and_path(champ.dossier, attachment, index:, row_index:, champ:)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(champ.dossier_id, attachment)
+        end
       end
+    end
   end
 
   def pjs_for_commentaires(dossiers)
@@ -172,7 +169,12 @@ class PiecesJustificativesService
       .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = commentaire_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        if @export_template
+          dossier = dossiers.find { _1.id == dossier_id }
+          @export_template.attachment_and_path(dossier, a)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 
@@ -193,7 +195,12 @@ class PiecesJustificativesService
       .where(record_type: "Etablissement", record_id: etablissement_id_dossier_id.keys)
       .map do |a|
         dossier_id = etablissement_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        if @export_template
+          dossier = dossiers.find { _1.id == dossier_id }
+          @export_template.attachment_and_path(dossier, a)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 
@@ -204,7 +211,12 @@ class PiecesJustificativesService
       .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = a.record_id
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        if @export_template
+          dossier = dossiers.find { _1.id == dossier_id }
+          @export_template.attachment_and_path(dossier, a)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 
@@ -220,7 +232,12 @@ class PiecesJustificativesService
       .where(record_type: "Attestation", record_id: attestation_id_dossier_id.keys)
       .map do |a|
         dossier_id = attestation_id_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        if @export_template
+          dossier = dossiers.find { _1.id == dossier_id }
+          @export_template.attachment_and_path(dossier, a)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 
@@ -244,7 +261,12 @@ class PiecesJustificativesService
       .filter { |a| safe_attachment(a) }
       .map do |a|
         dossier_id = avis_ids_dossier_id[a.record_id]
-        ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        if @export_template
+          dossier = dossiers.find { _1.id == dossier_id }
+          @export_template.attachment_and_path(dossier, a)
+        else
+          ActiveStorage::DownloadableFile.pj_and_path(dossier_id, a)
+        end
       end
   end
 
@@ -299,5 +321,27 @@ class PiecesJustificativesService
     attachment
       .blob
       .virus_scan_result == ActiveStorage::VirusScanner::SAFE
+  end
+
+  # given
+  # repet_0 (stable_id: r0)
+  # # row_0
+  # # # pj_champ_0 (stable_id: 0)
+  # # row_1
+  # # # pj_champ_1 (stable_id: 0)
+  # repet_1 (stable_id: r1)
+  # # row_0
+  # # # pj_champ_2 (stable_id: 1)
+  # # # pj_champ_3 (stable_id: 2)
+  # # row_1
+  # # # pj_champ_4 (stable_id: 1)
+  # # # pj_champ_5 (stable_id: 2)
+  # it returns { pj_0.id => 0, pj_1.id => 1, pj_2.id => 0, pj_3.id => 0, pj_4.id => 1, pj_5.id => 1 }
+  def compute_champ_id_row_index(champs)
+    champs.filter(&:child?).group_by(&:dossier_id).values.each_with_object({}) do |children_for_dossier, hash|
+      children_for_dossier.group_by(&:stable_id).values.each do |champs_for_stable_id|
+        champs_for_stable_id.sort_by(&:row_id).each.with_index { |c, index| hash[c.id] = index }
+      end
+    end
   end
 end

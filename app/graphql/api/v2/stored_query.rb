@@ -281,6 +281,8 @@ class API::V2::StoredQuery
     dateExpiration
     dateSuppressionParUsager
     dateDerniereCorrectionEnAttente @include(if: $includeCorrections)
+    dateDerniereModificationChamps
+    dateDerniereModificationAnnotations
     motivation
     motivationAttachment {
       ...FileFragment
@@ -810,6 +812,19 @@ class API::V2::StoredQuery
       message {
         id
         createdAt
+      }
+      errors {
+        message
+      }
+    }
+  }
+
+  mutation dossierSupprimerMessage($input: DossierSupprimerMessageInput!) {
+    dossierSupprimerMessage(input: $input) {
+      message {
+        id
+        createdAt
+        discardedAt
       }
       errors {
         message

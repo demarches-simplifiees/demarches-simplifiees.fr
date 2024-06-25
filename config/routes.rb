@@ -50,6 +50,7 @@ Rails.application.routes.draw do
       delete 'delete', on: :member
       post 'resend_confirmation_instructions', on: :member
       post 'resend_reset_password_instructions', on: :member
+      post 'unblock_mails', on: :member
       put 'enable_feature', on: :member
       get 'emails', on: :member
       put 'unblock_email'
@@ -160,6 +161,7 @@ Rails.application.routes.draw do
   end
 
   get 'password_complexity' => 'password_complexity#show', as: 'show_password_complexity'
+  get 'check_email' => 'email_checker#show', as: 'show_email_suggestions'
 
   resources :targeted_user_links, only: [:show]
 
@@ -208,20 +210,6 @@ Rails.application.routes.draw do
     get ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#show', as: :piece_justificative
     put ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#update'
     get ':dossier_id/:stable_id/piece_justificative/template', to: 'piece_justificative#template', as: :piece_justificative_template
-
-    # TODO: remove after migration is ower
-    get ':champ_id/siret', to: 'siret#show', as: :legacy_siret
-    get ':champ_id/rna', to: 'rna#show', as: :legacy_rna
-    delete ':champ_id/options', to: 'options#remove', as: :legacy_options
-
-    get ':champ_id/carte/features', to: 'carte#index', as: :legacy_carte_features
-    post ':champ_id/carte/features', to: 'carte#create'
-    patch ':champ_id/carte/features/:id', to: 'carte#update'
-    delete ':champ_id/carte/features/:id', to: 'carte#destroy'
-
-    get ':champ_id/piece_justificative', to: 'piece_justificative#show', as: :legacy_piece_justificative
-    put ':champ_id/piece_justificative', to: 'piece_justificative#update'
-    get ':champ_id/piece_justificative/template', to: 'piece_justificative#template'
   end
 
   resources :attachments, only: [:show, :destroy]
@@ -450,6 +438,11 @@ Rails.application.routes.draw do
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :archives, only: [:index, :create]
+        resources :export_templates, only: [:new, :create, :edit, :update, :destroy] do
+          collection do
+            get 'preview'
+          end
+        end
 
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           resource :contact_information
@@ -615,6 +608,14 @@ Rails.application.routes.draw do
         delete :delete_row, on: :member
       end
 
+      resource :ineligibilite_rules, only: [:edit, :update, :destroy], param: :revision_id do
+        patch :change_targeted_champ, on: :member
+        patch :update_all_rows, on: :member
+        patch :add_row, on: :member
+        delete :delete_row, on: :member
+        patch :change
+      end
+
       patch :update_defaut_groupe_instructeur, controller: 'routing_rules', as: :update_defaut_groupe_instructeur
 
       put 'clone'
@@ -683,7 +684,9 @@ Rails.application.routes.draw do
         get 'add_champ_engagement_juridique'
       end
 
-      resource :attestation_template_v2, only: [:show, :edit, :update, :create]
+      resource :attestation_template_v2, only: [:show, :edit, :update, :create] do
+        post :reset
+      end
 
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME
@@ -714,6 +717,9 @@ Rails.application.routes.draw do
   end
 
   resources :release_notes, only: [:index]
+
+  resources :faq, only: [:index]
+  get '/faq/:category/:slug', to: 'faq#show', as: :faq
 
   get '/404', to: 'errors#not_found'
   get '/422', to: 'errors#unprocessable_entity'

@@ -9,11 +9,7 @@ module ChampHelper
 
   def auto_attach_url(object, params = {})
     if object.is_a?(Champ)
-      if Champ.update_by_stable_id?
-        champs_piece_justificative_url(object.dossier, object.stable_id, params.merge(row_id: object.row_id))
-      else
-        champs_legacy_piece_justificative_url(object.id, params)
-      end
+      champs_piece_justificative_url(object.dossier, object.stable_id, params.merge(row_id: object.row_id))
     elsif object.is_a?(TypeDeChamp) && object.piece_justificative?
       piece_justificative_template_admin_procedure_type_de_champ_url(stable_id: object.stable_id, procedure_id: object.procedure.id, **params)
     elsif object.is_a?(TypeDeChamp) && object.explication?

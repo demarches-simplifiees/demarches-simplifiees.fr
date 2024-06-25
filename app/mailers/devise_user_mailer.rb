@@ -34,9 +34,17 @@ class DeviseUserMailer < Devise::Mailer
     @procedure = opts[:procedure_after_confirmation] || nil
     @prefill_token = opts[:prefill_token]
 
+    bypass_unverified_mail_protection!
+
     I18n.with_locale(record.locale) do
       super
     end
+  end
+
+  def reset_password_instructions(record, token, opts = {})
+    bypass_unverified_mail_protection!
+
+    super
   end
 
   def self.critical_email?(action_name)

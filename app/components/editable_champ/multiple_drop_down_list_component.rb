@@ -10,10 +10,6 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
   end
 
   def update_path(option)
-    if Champ.update_by_stable_id?
-      champs_options_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, option:)
-    else
-      champs_legacy_options_path(@champ, option:)
-    end
+    champs_options_path(@champ.dossier, @champ.stable_id, row_id: @champ.row_id, option:)
   end
 end

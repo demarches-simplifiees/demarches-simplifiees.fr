@@ -8,6 +8,8 @@ class AdministrateurMailer < ApplicationMailer
     @expiration_date = @user.reset_password_sent_at + Devise.reset_password_within
     @subject = "N'oubliez pas d’activer votre compte administrateur"
 
+    bypass_unverified_mail_protection!
+
     mail(to: user.email,
       subject: @subject,
       reply_to: CONTACT_EMAIL)

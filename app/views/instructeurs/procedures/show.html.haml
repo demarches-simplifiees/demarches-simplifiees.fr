@@ -11,7 +11,7 @@
 
       .procedure-actions
         - if @can_download_dossiers
-          = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_url: method(:download_export_instructeur_procedure_path))
+          = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), export_url: method(:download_export_instructeur_procedure_path))
 
     .fr-container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,
@@ -72,7 +72,7 @@
 
           - if @dossiers_count > 0
             %span.dossiers-export
-              = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
+              = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       = render partial: "dossiers_filter_tags", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut }

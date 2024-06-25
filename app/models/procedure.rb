@@ -5,6 +5,7 @@ class Procedure < ApplicationRecord
   include ProcedureGroupeInstructeurAPIHackConcern
   include ProcedureSVASVRConcern
   include ProcedureChorusConcern
+  include PiecesJointesListConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -49,9 +50,9 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
-  has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
-  has_one :attestation_template, -> { order(Arel.sql("CASE WHEN version = '1' THEN 0 ELSE 1 END")) }, dependent: :destroy, inverse_of: :procedure
+  has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -153,6 +154,7 @@ class Procedure < ApplicationRecord
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, -> { order(:label) }, inverse_of: :procedure, dependent: :destroy
   has_many :instructeurs, through: :groupe_instructeurs
+  has_many :export_templates, through: :groupe_instructeurs
 
   has_many :active_groupe_instructeurs, -> { active }, class_name: 'GroupeInstructeur', inverse_of: false
   has_many :closed_groupe_instructeurs, -> { closed }, class_name: 'GroupeInstructeur', inverse_of: false
@@ -257,13 +259,19 @@ class Procedure < ApplicationRecord
   validates :lien_dpo, url: { no_local: true, allow_blank: true, accept_email: true }
 
   validates :draft_types_de_champ_public,
+    'types_de_champ/condition': true,
+    'types_de_champ/expression_reguliere': true,
+    'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    on: :publication
+    on: [:types_de_champ_public_editor, :publication]
+
   validates :draft_types_de_champ_private,
+    'types_de_champ/condition': true,
+    'types_de_champ/header_section_consistency': true,
     'types_de_champ/no_empty_block': true,
     'types_de_champ/no_empty_drop_down': true,
-    on: :publication
+    on: [:types_de_champ_private_editor, :publication]
 
   validate :check_juridique, on: [:create, :publication]
 
@@ -285,7 +293,7 @@ class Procedure < ApplicationRecord
 
   validates_with MonAvisEmbedValidator
 
-  validates_associated :draft_revision, on: :publication
+  validate :validates_associated_draft_revision_with_context
   validates_associated :initiated_mail, on: :publication
   validates_associated :received_mail, on: :publication
   validates_associated :closed_mail, on: :publication
@@ -423,11 +431,15 @@ class Procedure < ApplicationRecord
 
   def draft_changed?
     preload_draft_and_published_revisions
-    !brouillon? && published_revision.different_from?(draft_revision) && revision_changes.present?
+    !brouillon? && (types_de_champ_revision_changes.present? || ineligibilite_rules_revision_changes.present?)
   end
 
-  def revision_changes
-    published_revision.compare(draft_revision)
+  def types_de_champ_revision_changes
+    published_revision.compare_types_de_champ(draft_revision)
+  end
+
+  def ineligibilite_rules_revision_changes
+    published_revision.compare_ineligibilite_rules(draft_revision)
   end
 
   def preload_draft_and_published_revisions
@@ -551,6 +563,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_brouillon = false
     procedure.closing_notification_en_cours = false
     procedure.template = false
+    procedure.monavis_embed = nil
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
@@ -981,32 +994,12 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def pieces_jointes_list?
-    pieces_jointes_list_without_conditionnal.present? || pieces_jointes_list_with_conditionnal.present?
-  end
-
-  def pieces_jointes_list_without_conditionnal
-    pieces_jointes_list do |base_scope|
-      base_scope.where(types_de_champ: { condition: nil })
-    end
-  end
-
-  def pieces_jointes_list_with_conditionnal
-    pieces_jointes_list do |base_scope|
-      base_scope.where.not(types_de_champ: { condition: nil })
-    end
-  end
-
   def toggle_routing
     update!(routing_enabled: self.groupe_instructeurs.active.many?)
   end
 
   def lien_dpo_email?
     lien_dpo.present? && lien_dpo.match?(/@/)
-  end
-
-  def header_sections
-    draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
   end
 
   def dossier_for_preview(user)
@@ -1022,22 +1015,17 @@ class Procedure < ApplicationRecord
     update!(closing_reason: nil, closing_details: nil, replaced_by_procedure_id: nil, closing_notification_brouillon: false, closing_notification_en_cours: false)
   end
 
+  def monavis_embed_html_source(source)
+    monavis_embed.gsub('nd_source=button', "nd_source=#{source}").gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+  end
+
   private
 
-  def pieces_jointes_list
-    scope = yield active_revision.revision_types_de_champ_public
-      .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
-      .where(types_de_champ: { type_champ: ['repetition', 'piece_justificative', 'titre_identite'] })
+  def validates_associated_draft_revision_with_context
+    return if draft_revision.blank?
+    return if draft_revision.validate(validation_context)
 
-    scope.each_with_object([]) do |rtdc, list|
-      if rtdc.type_de_champ.repetition?
-        rtdc.revision_types_de_champ.each do |rtdc_in_repetition|
-          list << [rtdc_in_repetition.type_de_champ, rtdc.type_de_champ] if rtdc_in_repetition.type_de_champ.piece_justificative?
-        end
-      else
-        list << [rtdc.type_de_champ]
-      end
-    end
+    draft_revision.errors.map { errors.import(_1) }
   end
 
   def validate_auto_archive_on_in_the_future

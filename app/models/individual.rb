@@ -17,6 +17,8 @@ class Individual < ApplicationRecord
 
   validates :email, strict_email: true, presence: true, if: -> { dossier.for_tiers? && self.email? }, on: :update
 
+  after_commit -> { dossier.index_search_terms_later }, if: -> { nom_previously_changed? || prenom_previously_changed? }
+
   GENDER_MALE = "M."
   GENDER_FEMALE = 'Mme'
 
@@ -27,4 +29,6 @@ class Individual < ApplicationRecord
       gender: fc_information.gender == 'female' ? GENDER_FEMALE : GENDER_MALE
     )
   end
+
+  def unverified_email? = !email_verified_at?
 end

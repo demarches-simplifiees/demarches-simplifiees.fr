@@ -33,7 +33,7 @@ module Redcarpet
       when :url
         link(link, nil, link)
       when :email
-        # NOTE: As of Redcarpet 3.6.0, autolinking email containing is broken https://github.com/vmg/redcarpet/issues/402
+        # NOTE: As of Redcarpet 3.6.0, autolinking email containing underscore is broken https://github.com/vmg/redcarpet/issues/402
         content_tag(:a, link, { href: "mailto:#{link}" })
       else
         link

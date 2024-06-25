@@ -1,12 +1,6 @@
 class TiptapService
-  def to_html(node, substitutions = {})
-    return '' if node.nil?
-
-    children(node[:content], substitutions, 0)
-  end
-
   # NOTE: node must be deep symbolized keys
-  def used_tags_and_libelle_for(node, tags = Set.new)
+  def self.used_tags_and_libelle_for(node, tags = Set.new)
     case node
     in type: 'mention', attrs: { id:, label: }, **rest
       tags << [id, label]
@@ -19,10 +13,37 @@ class TiptapService
     tags
   end
 
+  def to_html(node, substitutions = {})
+    return '' if node.nil?
+
+    children(node[:content], substitutions, 0)
+  end
+
+  def to_path(node, substitutions = {})
+    return '' if node.nil?
+
+    children_path(node[:content], substitutions)
+  end
+
   private
 
   def initialize
     @body_started = false
+  end
+
+  def children_path(content, substitutions)
+    content.map { node_to_path(_1, substitutions) }.join
+  end
+
+  def node_to_path(node, substitutions)
+    case node
+    in type: 'paragraph', content:
+      children_path(content, substitutions)
+    in type: 'text', text:, **rest
+      text.strip
+    in type: 'mention', attrs: { id: }, **rest
+      substitutions.fetch(id) { "--#{id}--" }
+    end
   end
 
   def children(content, substitutions, level)

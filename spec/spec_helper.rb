@@ -18,7 +18,7 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 #
 #
-require 'simplecov' # see config in .simplecov file
+require 'simplecov' if ENV["CI"] || ENV["COVERAGE"] # see config in .simplecov file
 
 require 'rspec/retry'
 

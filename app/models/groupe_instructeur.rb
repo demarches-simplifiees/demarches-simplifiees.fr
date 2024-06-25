@@ -9,6 +9,7 @@ class GroupeInstructeur < ApplicationRecord
   has_many :batch_operations, through: :dossiers, source: :batch_operations
   has_many :assignments, class_name: 'DossierAssignment', dependent: :nullify, inverse_of: :groupe_instructeur
   has_many :previous_assignments, class_name: 'DossierAssignment', dependent: :nullify, inverse_of: :previous_groupe_instructeur
+  has_many :export_templates
   has_and_belongs_to_many :exports, dependent: :destroy
 
   has_one :defaut_procedure, -> { with_discarded }, class_name: 'Procedure', foreign_key: :defaut_groupe_instructeur_id, dependent: :nullify, inverse_of: :defaut_groupe_instructeur
@@ -57,7 +58,7 @@ class GroupeInstructeur < ApplicationRecord
     if not_found_emails.present?
       instructeurs_to_add += not_found_emails.map do |email|
         user = User.create_or_promote_to_instructeur(email, SecureRandom.hex, administrateurs: procedure.administrateurs)
-        user.invite!
+        user.invite_instructeur!
         user.instructeur
       end
     end

@@ -11,7 +11,7 @@ fr:
     Lorsqu’un instructeur demande de corriger un dossier, le décompte du délai est interrompu.
     Le délai reprend lorsque le demandeur redépose son dossier en déclarant avoir effectué les corrections demandées.
     Si le dossier avait été déclaré incomplet, le délai sera réinitialisé, quelle que soit la configuration ci-dessous.
-  submit: Appliquer la configuration SVA/SVR
+  submit: Enregistrer
   cancel: Annuler
   decision_buttons:
     disabled: "Désactivé"

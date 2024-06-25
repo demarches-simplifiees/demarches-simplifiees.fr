@@ -1,34 +1,37 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Choix du service']] }
+                    ['Service']] }
 
-#services-index.container
-  %h1.fr-h1 Liste des Services
-  %h2.fr-h4 La démarche “#{@procedure.libelle}” peut être affectée aux services dans la liste ci-dessous
+#services-index.fr-container
+  %h1.fr-h2 Service
 
-  %table.fr-table.width-100.mt-3
-    %thead
-      %tr
-        %th{ scope: "col" }
-          Nom
-        %th.change{ scope: "col" }
-          = link_to "Nouveau service", new_admin_service_path(procedure_id: @procedure.id), class: "fr-btn fr-btn--secondary"
-
-    %tbody
-      - @services.each do |service|
+  .fr-table.fr-table--layout-fixed
+    %table
+      %caption Liste des services pouvant être affectés à la démarche
+      %thead
         %tr
-          %td
-            = service.nom
-          %td.change
-            - if @procedure.service == service
-              %strong.mr-2 (Assigné)
-            - else
-              = button_to "Assigner", add_to_procedure_admin_services_path(procedure: { id: @procedure.id, service_id: service.id, }), method: :patch, class: 'link mr-2', form_class: 'inline'
-            = link_to('Modifier', edit_admin_service_path(service, procedure_id: @procedure.id), class: 'link my-2')
-            - if @procedure.service != service
-              = link_to 'Supprimer',
-                admin_service_path(service, procedure_id: @procedure.id),
-                method: :delete,
-                data: { confirm: "Confirmez vous la suppression de #{service.nom}" },
-                class: 'btn btn-link ml-2'
+          %th{ scope: "col" }
+            Nom
+          %th.change{ scope: "col" }
+            = link_to "Nouveau service", new_admin_service_path(procedure_id: @procedure.id), class: "fr-btn fr-btn--secondary"
+
+      %tbody
+        - @services.each do |service|
+          %tr
+            %td
+              = service.nom
+            %td.change
+              - if @procedure.service == service
+                %strong.mr-2 (Assigné)
+              - else
+                = button_to "Assigner", add_to_procedure_admin_services_path(procedure: { id: @procedure.id, service_id: service.id, }), method: :patch, class: 'link mr-2', form_class: 'inline'
+              = link_to('Modifier', edit_admin_service_path(service, procedure_id: @procedure.id), class: 'link my-2')
+              - if @procedure.service != service
+                = link_to 'Supprimer',
+                  admin_service_path(service, procedure_id: @procedure.id),
+                  method: :delete,
+                  data: { confirm: "Confirmez vous la suppression de #{service.nom}" },
+                  class: 'btn btn-link ml-2'
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

@@ -936,7 +936,7 @@ describe Instructeurs::DossiersController, type: :controller do
         subject
       end
 
-      it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: instructeur).acl_for_dossier_export(dossier.procedure)) }
+      it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: instructeur, export_template: nil).acl_for_dossier_export(dossier.procedure)) }
       it { expect(assigns(:is_dossier_in_batch_operation)).to eq(false) }
       it { expect(response).to render_template 'dossiers/show' }
 
@@ -1006,24 +1006,19 @@ describe Instructeurs::DossiersController, type: :controller do
             dossier: {
               champs_private_attributes: {
                 champ_multiple_drop_down_list.public_id => {
-                  with_public_id: true,
                   value: ['', 'val1', 'val2']
                 },
                 champ_datetime.public_id => {
-                  with_public_id: true,
                   value: '2019-12-21T13:17'
                 },
                 champ_linked_drop_down_list.public_id => {
-                  with_public_id: true,
                   primary_value: 'primary',
                   secondary_value: 'secondary'
                 },
                 champ_repetition.champs.first.public_id => {
-                  with_public_id: true,
                   value: 'text'
                 },
                 champ_drop_down_list.public_id => {
-                  with_public_id: true,
                   value: '__other__',
                   value_other: 'other value'
                 }
@@ -1041,6 +1036,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(champ_drop_down_list.value).to eq('other value')
           expect(dossier.reload.last_champ_private_updated_at).to eq(now)
           expect(response).to have_http_status(200)
+          assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
         }
 
         it 'updates the annotations' do
@@ -1078,29 +1074,6 @@ describe Instructeurs::DossiersController, type: :controller do
       Timecop.return
     end
 
-    context "with new values for champs_private (legacy)" do
-      let(:params) do
-        {
-          procedure_id: procedure.id,
-          dossier_id: dossier.id,
-          dossier: {
-            champs_private_attributes: {
-              '0': {
-                id: champ_datetime.id,
-                value: '2024-03-30T07:03'
-              }
-            }
-          }
-        }
-      end
-
-      it 'update champs_private' do
-        patch :update_annotations, params: params, format: :turbo_stream
-        champ_datetime.reload
-        expect(champ_datetime.value).to eq(Time.zone.parse('2024-03-30T07:03:00').iso8601)
-      end
-    end
-
     context "without new values for champs_private" do
       let(:params) do
         {
@@ -1110,7 +1083,6 @@ describe Instructeurs::DossiersController, type: :controller do
             champs_private_attributes: {},
             champs_public_attributes: {
               champ_multiple_drop_down_list.public_id => {
-                with_public_id: true,
                 value: ['', 'val1', 'val2']
               }
             }
@@ -1140,7 +1112,6 @@ describe Instructeurs::DossiersController, type: :controller do
           dossier: {
             champs_private_attributes: {
               champ_datetime.public_id => {
-                with_public_id: true,
                 value: '2024-03-30T07:03'
               }
             }
@@ -1429,13 +1400,13 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#pieces_jointes' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs:) }
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
+    let(:path) { 'spec/fixtures/files/logo_test_procedure.png' }
 
     before do
       dossier.champs.first.piece_justificative_file.attach(
-        io: StringIO.new("image file"),
-        filename: "image.jpeg",
-        content_type: "image/jpeg",
-        # we don't want to run virus scanner on this file
+        io: File.open(path),
+        filename: "logo_test_procedure.png",
+        content_type: "image/png",
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
       get :pieces_jointes, params: {
@@ -1446,7 +1417,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     it do
       expect(response.body).to include('Télécharger le fichier toto.txt')
-      expect(response.body).to include('Télécharger le fichier image.jpeg')
+      expect(response.body).to include('Télécharger le fichier logo_test_procedure.png')
       expect(response.body).to include('Visualiser')
     end
   end

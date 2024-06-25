@@ -1,5 +1,5 @@
 - content_for(:title, 'Instructeurs')
-%h1 Gestion des instructeurs
+%h1.fr-h2 Instructeurs
 
 = render partial: 'administrateurs/groupe_instructeurs/import_export',
     locals: { procedure: @procedure }
@@ -10,3 +10,6 @@
     instructeurs: @instructeurs,
     available_instructeur_emails: @available_instructeur_emails,
     disabled_as_super_admin: @disabled_as_super_admin }
+
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

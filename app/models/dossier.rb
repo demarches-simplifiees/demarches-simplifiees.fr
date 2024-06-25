@@ -1,5 +1,5 @@
 class Dossier < ApplicationRecord
-  self.ignored_columns += [:re_instructed_at]
+  self.ignored_columns += [:re_instructed_at, :search_terms, :private_search_terms]
 
   include DossierCloneConcern
   include DossierCorrectableConcern
@@ -49,8 +49,6 @@ class Dossier < ApplicationRecord
   has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
-  has_many :champs_public_all, -> { public_only }, class_name: 'Champ', inverse_of: false
-  has_many :champs_private_all, -> { private_only }, class_name: 'Champ', inverse_of: false
   has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
@@ -61,7 +59,7 @@ class Dossier < ApplicationRecord
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
   has_many :followers_instructeurs, through: :follows, source: :instructeur
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
-  has_many :avis, inverse_of: :dossier, dependent: :destroy
+  has_many :avis, -> { order(:created_at) }, inverse_of: :dossier, dependent: :destroy
   has_many :experts, through: :avis
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy do
     def passer_en_construction(instructeur: nil, processed_at: Time.zone.now)
@@ -145,8 +143,6 @@ class Dossier < ApplicationRecord
   accepts_nested_attributes_for :champs
   accepts_nested_attributes_for :champs_public
   accepts_nested_attributes_for :champs_private
-  accepts_nested_attributes_for :champs_public_all
-  accepts_nested_attributes_for :champs_private_all
   accepts_nested_attributes_for :individual
 
   include AASM
@@ -160,7 +156,7 @@ class Dossier < ApplicationRecord
     state :sans_suite
 
     event :passer_en_construction, after: :after_passer_en_construction, after_commit: :after_commit_passer_en_construction do
-      transitions from: :brouillon, to: :en_construction
+      transitions from: :brouillon, to: :en_construction, guard: :can_passer_en_construction?
     end
 
     event :passer_en_instruction, after: :after_passer_en_instruction, after_commit: :after_commit_passer_en_instruction do
@@ -424,7 +420,7 @@ class Dossier < ApplicationRecord
     when 'tous'
       visible_by_administration.all_state
     when 'supprimes_recemment'
-      hidden_by_administration.termine
+      hidden_by_administration.state_termine
     when 'archives'
       visible_by_administration.archived
     when 'expirant'
@@ -562,8 +558,18 @@ class Dossier < ApplicationRecord
     false
   end
 
+  def blocked_with_pending_correction?
+    procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+  end
+
+  def can_passer_en_construction?
+    return true if !revision.ineligibilite_enabled || !revision.ineligibilite_rules
+
+    !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
+  end
+
   def can_passer_en_instruction?
-    return false if procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+    return false if blocked_with_pending_correction?
 
     true
   end
@@ -936,6 +942,7 @@ class Dossier < ApplicationRecord
       .map do |champ|
         champ.errors.add(:value, :missing)
       end
+      .each { errors.import(_1) }
   end
 
   def demander_un_avis!(avis)
@@ -1010,7 +1017,6 @@ class Dossier < ApplicationRecord
     else
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
     end
-
     if procedure.chorusable? && procedure.chorus_configuration.complete?
       columns += [
         ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' }],
@@ -1140,6 +1146,18 @@ class Dossier < ApplicationRecord
 
   def termine_and_accuse_lecture?
     procedure.accuse_lecture? && termine?
+  end
+
+  def track_can_passer_en_construction
+    if !revision.ineligibilite_enabled
+      yield
+      [true, true] # without eligibilite rules, we never reach dossier.champs.visible?, don't cache anything
+    else
+      from = can_passer_en_construction? # with eligibilite rules, self.champ[x].visible is cached by passing thru conditions checks
+      yield
+      champs.map(&:reset_visible) # we must reset self.champs[x].visible?, because an update occurred and we should re-evaluate champs[x] visibility
+      [from, can_passer_en_construction?]
+    end
   end
 
   private

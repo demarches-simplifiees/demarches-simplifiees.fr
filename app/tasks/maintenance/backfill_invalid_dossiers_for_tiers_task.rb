@@ -7,7 +7,7 @@ module Maintenance
     end
 
     def process(element)
-      element.update_column(for_tiers: false)
+      element.update_column(:for_tiers, false)
     end
   end
 end

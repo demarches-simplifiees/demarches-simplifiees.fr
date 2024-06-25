@@ -63,6 +63,7 @@ class User < ApplicationRecord
 
   # Callback provided by Devise
   def after_confirmation
+    update!(email_verified_at: Time.zone.now)
     link_invites!
   end
 
@@ -78,7 +79,7 @@ class User < ApplicationRecord
     owns?(dossier) || invite?(dossier)
   end
 
-  def invite!
+  def invite_instructeur!
     UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
   end
 
@@ -98,7 +99,7 @@ class User < ApplicationRecord
 
   def self.create_or_promote_to_instructeur(email, password, administrateurs: [])
     user = User
-      .create_with(password: password, confirmed_at: Time.zone.now)
+      .create_with(password: password, confirmed_at: Time.zone.now, email_verified_at: Time.zone.now)
       .find_or_create_by(email: email)
 
     if user.valid?
@@ -137,7 +138,7 @@ class User < ApplicationRecord
 
   def self.create_or_promote_to_expert(email, password)
     user = User
-      .create_with(password: password, confirmed_at: Time.zone.now)
+      .create_with(password: password, confirmed_at: Time.zone.now, email_verified_at: Time.zone.now)
       .find_or_create_by(email: email)
 
     if user.valid?
@@ -265,6 +266,8 @@ class User < ApplicationRecord
   def active_for_authentication?
     super && blocked_at.nil?
   end
+
+  def unverified_email? = !email_verified_at?
 
   private
 

@@ -134,6 +134,8 @@ describe 'The routing with rules', js: true do
     user_send_dossier(litteraire_user, 'littéraire')
     user_send_dossier(artistique_user, 'artistique')
 
+    perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
+
     # the litteraires instructeurs only manage the litteraires dossiers
     register_instructeur_and_log_in(victor.email)
     click_on procedure.libelle

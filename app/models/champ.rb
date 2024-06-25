@@ -2,9 +2,6 @@ class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern
 
-  # TODO: remove after one deploy
-  attr_writer :with_public_id
-
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
@@ -39,6 +36,7 @@ class Champ < ApplicationRecord
     :departement?,
     :region?,
     :textarea?,
+    :piece_justificative?,
     :titre_identite?,
     :header_section?,
     :checkbox?,
@@ -238,7 +236,7 @@ class Champ < ApplicationRecord
         kopy.write_attribute(:stable_id, original.stable_id)
         kopy.write_attribute(:stream, 'main')
       end
-      ClonePiecesJustificativesService.clone_attachments(original, kopy)
+      ClonePiecesJustificativesService.clone_attachments(original, kopy) if fork || !private?
     end
   end
 
@@ -288,10 +286,6 @@ class Champ < ApplicationRecord
     return if value.present? && !value.include?("\u0000")
 
     self.value = value.delete("\u0000")
-  end
-
-  def self.update_by_stable_id?
-    Flipper.enabled?(:champ_update_by_stable_id, Current.user)
   end
 
   class NotImplemented < ::StandardError

@@ -22,7 +22,7 @@ module DossierRebaseConcern
   end
 
   def pending_changes
-    procedure.published_revision.present? ? revision.compare(procedure.published_revision) : []
+    procedure.published_revision.present? ? revision.compare_types_de_champ(procedure.published_revision) : []
   end
 
   def can_rebase_mandatory_change?(stable_id)

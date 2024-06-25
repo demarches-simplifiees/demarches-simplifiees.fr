@@ -88,7 +88,7 @@ module Users
     end
 
     def show
-      pj_service = PiecesJustificativesService.new(user_profile: current_user)
+      pj_service = PiecesJustificativesService.new(user_profile: current_user, export_template: nil)
       respond_to do |format|
         format.pdf do
           @dossier = dossier_with_champs(pj_template: false)
@@ -149,6 +149,8 @@ module Users
       @no_description = true
 
       if @dossier.update(dossier_params) && @dossier.individual.valid?
+        # TODO: remove this after proper mandat email validation
+        @dossier.individual.update!(email_verified_at: Time.zone.now)
         @dossier.update!(autorisation_donnees: true, identity_updated_at: Time.zone.now)
         flash.notice = t('.identity_saved')
 
@@ -229,9 +231,9 @@ module Users
 
     def submit_brouillon
       @dossier = dossier_with_champs(pj_template: false)
-      @errors = submit_dossier_and_compute_errors
+      submit_dossier_and_compute_errors
 
-      if @errors.blank?
+      if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         @dossier.passer_en_construction!
         @dossier.process_declarative!
         @dossier.process_sva_svr!
@@ -276,9 +278,9 @@ module Users
         editing_fork_origin.resolve_pending_correction
       end
 
-      @errors = submit_dossier_and_compute_errors
+      submit_dossier_and_compute_errors
 
-      if @errors.blank?
+      if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         editing_fork_origin.merge_fork(@dossier)
         editing_fork_origin.submit_en_construction!
 
@@ -286,7 +288,6 @@ module Users
       else
         respond_to do |format|
           format.html do
-            @dossier = editing_fork_origin
             render :modifier
           end
 
@@ -301,7 +302,9 @@ module Users
     def update
       @dossier = dossier.en_construction? ? dossier.find_editing_fork(dossier.user) : dossier
       @dossier = dossier_with_champs(pj_template: false)
-      @errors = update_dossier_and_compute_errors
+      @can_passer_en_construction_was, @can_passer_en_construction_is = @dossier.track_can_passer_en_construction do
+        update_dossier_and_compute_errors
+      end
 
       respond_to do |format|
         format.turbo_stream do
@@ -317,13 +320,8 @@ module Users
 
     def champ
       @dossier = dossier_with_champs(pj_template: false)
-      champ_id_or_stable_id = params[:stable_id]
-      champ = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(champ_id_or_stable_id, :public)
-        @dossier.project_champ(type_de_champ, params[:row_id])
-      else
-        @dossier.champs_public_all.find(champ_id_or_stable_id)
-      end
+      type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :public)
+      champ = @dossier.project_champ(type_de_champ, params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do
@@ -509,7 +507,6 @@ module Users
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
-        :with_public_id,
         value: []
       ]
       # Strong attributes do not support records (indexed hash); they only support hashes with
@@ -553,8 +550,8 @@ module Users
     end
 
     def update_dossier_and_compute_errors
-      @dossier.update_champs_attributes(champs_public_attributes_params, :public)
-      if @dossier.champs.any?(&:changed_for_autosave?) || @dossier.champs_public_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
+      @dossier.update_champs_attributes(champs_public_attributes_params, :public, updated_by: current_user.email)
+      if @dossier.champs.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end
 
@@ -569,21 +566,14 @@ module Users
 
     def submit_dossier_and_compute_errors
       @dossier.validate(:champs_public_value)
-
-      errors = @dossier.errors
-      @dossier.check_mandatory_and_visible_champs.each do |error_on_champ|
-        errors.import(error_on_champ)
-      end
+      @dossier.check_mandatory_and_visible_champs
 
       if @dossier.editing_fork_origin&.pending_correction?
         @dossier.editing_fork_origin.validate(:champs_public_value)
         @dossier.editing_fork_origin.errors.where(:pending_correction).each do |error|
-          errors.import(error)
+          @dossier.errors.import(error)
         end
-
       end
-
-      errors
     end
 
     def ensure_ownership!

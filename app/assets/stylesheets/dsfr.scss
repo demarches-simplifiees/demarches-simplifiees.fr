@@ -132,6 +132,18 @@ button.fr-tag-bug {
   }
 }
 
+// on applique le comportement desktop du sélecteur de langue aux terminaux de toute dimension
+.fr-translate .fr-menu__list {
+  display: grid;
+  grid-template-rows: repeat(var(--rows), auto);
+  grid-auto-flow: column;
+}
+
+.fr-translate__language[aria-current]:not([aria-current="false"]) {
+  display: inline-flex;
+}
+
+
 // on veut ajouter un gris plus clair dans le side_menu
 .fr-sidemenu__item .fr-sidemenu__link.custom-link-grey {
   color: var(--text-disabled-grey);
@@ -178,4 +190,11 @@ button.fr-tag-bug {
   white-space: initial;
   border: initial;
   display: block; // Pour cette valeur spécifique, on récupère celle de .fr-label
+}
+
+// Fix toggles having labels on 2 lines
+// From upstream https://github.com/GouvernementFR/dsfr/pull/928
+// Remove it when PR is merged (v1.12 ?)
+.fr-toggle label[data-fr-unchecked-label][data-fr-checked-label]::before {
+  word-wrap: normal;
 }

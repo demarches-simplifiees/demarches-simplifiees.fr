@@ -124,7 +124,7 @@ RSpec.describe DossierChampsConcern do
     let(:row_id) { nil }
 
     context "public champ" do
-      subject { dossier.champ_for_update(type_de_champ_public, row_id) }
+      subject { dossier.champ_for_update(type_de_champ_public, row_id, updated_by: dossier.user.email) }
 
       it {
         expect(subject.persisted?).to be_truthy
@@ -165,7 +165,7 @@ RSpec.describe DossierChampsConcern do
     end
 
     context "private champ" do
-      subject { dossier.champ_for_update(type_de_champ_private, row_id) }
+      subject { dossier.champ_for_update(type_de_champ_private, row_id, updated_by: dossier.user.email) }
 
       it {
         expect(subject.persisted?).to be_truthy
@@ -181,9 +181,9 @@ RSpec.describe DossierChampsConcern do
 
     let(:attributes) do
       {
-        "99" => { value: "Hello", with_public_id: true },
-        "991" => { value: "World", with_public_id: true },
-        "994-#{row_id}" => { value: "Greer", with_public_id: true }
+        "99" => { value: "Hello" },
+        "991" => { value: "World" },
+        "994-#{row_id}" => { value: "Greer" }
       }
     end
 
@@ -191,7 +191,7 @@ RSpec.describe DossierChampsConcern do
     let(:champ_991) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(991), nil) }
     let(:champ_994) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(994), row_id) }
 
-    subject { dossier.update_champs_attributes(attributes, :public) }
+    subject { dossier.update_champs_attributes(attributes, :public, updated_by: dossier.user.email) }
 
     it {
       subject
@@ -218,42 +218,18 @@ RSpec.describe DossierChampsConcern do
         expect(champ_994.value).to eq("Greer")
       }
     end
-
-    context 'legacy attributes' do
-      let(:attributes) do
-        {
-          champ_99.id => { value: "Hello", id: champ_99.id },
-          champ_991.id => { value: "World", id: champ_991.id },
-          champ_994.id => { value: "Greer", id: champ_994.id }
-        }
-      end
-
-      let(:champ_99_updated) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(99), nil) }
-      let(:champ_991_updated) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(991), nil) }
-      let(:champ_994_updated) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(994), row_id) }
-
-      it {
-        subject
-        expect(dossier.champs_public_all.any?(&:changed_for_autosave?)).to be_truthy
-        dossier.save
-        dossier.reload
-        expect(champ_99_updated.value).to eq("Hello")
-        expect(champ_991_updated.value).to eq("World")
-        expect(champ_994_updated.value).to eq("Greer")
-      }
-    end
   end
 
   describe "#update_champs_attributes(private)" do
     let(:attributes) do
       {
-        "995" => { value: "Hello", with_public_id: true }
+        "995" => { value: "Hello" }
       }
     end
 
     let(:annotation_995) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(995), nil) }
 
-    subject { dossier.update_champs_attributes(attributes, :private) }
+    subject { dossier.update_champs_attributes(attributes, :private, updated_by: dossier.user.email) }
 
     it {
       subject
@@ -270,24 +246,6 @@ RSpec.describe DossierChampsConcern do
         expect(dossier.champs.any?(&:changed_for_autosave?)).to be_truthy
         expect(annotation_995.changed?).to be_truthy
         expect(annotation_995.value).to eq("Hello")
-      }
-    end
-
-    context 'legacy attributes' do
-      let(:attributes) do
-        {
-          annotation_995.id => { value: "Hello", id: annotation_995.id }
-        }
-      end
-
-      let(:annotation_995_updated) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(995), nil) }
-
-      it {
-        subject
-        expect(dossier.champs_private_all.any?(&:changed_for_autosave?)).to be_truthy
-        dossier.save
-        dossier.reload
-        expect(annotation_995_updated.value).to eq("Hello")
       }
     end
   end

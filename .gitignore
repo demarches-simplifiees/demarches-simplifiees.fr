@@ -18,6 +18,9 @@ public/downloads
 doc/*.svg
 uploads/*
 .byebug_history
+.DS_Store
+*.swp
+.envrc
 .env
 storage/
 /node_modules

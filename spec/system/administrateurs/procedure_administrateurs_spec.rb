@@ -11,26 +11,17 @@ describe 'Administrateurs can manage administrateurs', js: true do
     login_as administrateur.user, scope: :user
   end
 
-  scenario 'card is clickable' do
+  scenario "card is clickable, and i can send invitation when i'm not a manager" do
+    another_administrateur = create(:administrateur)
     visit admin_procedure_path(procedure)
     find('#administrateurs').click
-    expect(page).to have_css("h1", text: "Gérer les administrateurs de « #{procedure.libelle} »")
-  end
+    expect(page).to have_css("h1", text: "Administrateurs")
 
-  context 'as admin not flagged from manager' do
-    let(:manager) { false }
+    fill_in('administrateur_email', with: another_administrateur.email)
 
-    scenario 'the administrator can add another administrator' do
-      another_administrateur = create(:administrateur)
-      visit admin_procedure_administrateurs_path(procedure)
-
-      fill_in('administrateur_email', with: another_administrateur.email)
-
-      click_on 'Ajouter comme administrateur'
-
-      within('.alert-success') do
-        expect(page).to have_content(another_administrateur.email)
-      end
+    click_on 'Ajouter comme administrateur'
+    within('.alert-success') do
+      expect(page).to have_content(another_administrateur.email)
     end
   end
 

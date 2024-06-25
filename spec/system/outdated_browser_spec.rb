@@ -7,7 +7,7 @@ describe 'Outdated browsers support:' do
 
     scenario 'a banner is displayed' do
       visit new_user_session_path
-      expect(page).to have_content('1 juin 2024')
+      expect(page).to have_content('Il n’est plus compatible avec')
       expect(page).to have_content('Votre navigateur internet, Internet Explorer 10, est malheureusement trop ancien')
     end
   end

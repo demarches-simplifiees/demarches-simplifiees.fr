@@ -61,6 +61,15 @@ module TagsSubstitutionConcern
     end
   end
 
+  DOSSIER_ID_TAG = {
+    id: 'dossier_number',
+      label: 'numéro du dossier',
+      libelle: 'numéro du dossier',
+      description: '',
+      lambda: -> (d) { d.id },
+      available_for_states: Dossier::SOUMIS
+  }
+
   DOSSIER_TAGS = [
     {
       id: 'dossier_motivation',
@@ -99,20 +108,13 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::SOUMIS
     },
     {
-      id: 'dossier_number',
-      libelle: 'numéro du dossier',
-      description: '',
-      target: :id,
-      available_for_states: Dossier::SOUMIS
-    },
-    {
       id: 'dossier_service_name',
       libelle: 'nom du service',
       description: 'Le nom du service instructeur qui traite le dossier',
       lambda: -> (d) { d.procedure.organisation_name || '' },
       available_for_states: Dossier::SOUMIS
     }
-  ]
+  ].push(DOSSIER_ID_TAG)
 
   DOSSIER_TAGS_FOR_MAIL = [
     {
@@ -152,21 +154,21 @@ module TagsSubstitutionConcern
       id: 'individual_gender',
       libelle: 'civilité',
       description: 'M., Mme',
-      target: :gender,
+      lambda: -> (d) { d.individual&.gender },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'individual_last_name',
       libelle: 'nom',
       description: "nom de l'usager",
-      target: :nom,
+      lambda: -> (d) { d.individual&.nom },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'individual_first_name',
       libelle: 'prénom',
       description: "prénom de l'usager",
-      target: :prenom,
+      lambda: -> (d) { d.individual&.prenom },
       available_for_states: Dossier::SOUMIS
     }
   ]
@@ -176,35 +178,35 @@ module TagsSubstitutionConcern
       id: 'entreprise_siren',
       libelle: 'SIREN',
       description: '',
-      target: :siren,
+      lambda: -> (d) { d.etablissement&.entreprise&.siren },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_numero_tva_intracommunautaire',
       libelle: 'numéro de TVA intracommunautaire',
       description: '',
-      target: :numero_tva_intracommunautaire,
+      lambda: -> (d) { d.etablissement&.entreprise&.numero_tva_intracommunautaire },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_siret_siege_social',
       libelle: 'SIRET du siège social',
       description: '',
-      target: :siret_siege_social,
+      lambda: -> (d) { d.etablissement&.entreprise&.siret_siege_social },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_raison_sociale',
       libelle: 'raison sociale',
       description: '',
-      target: :raison_sociale,
+      lambda: -> (d) { d.etablissement&.entreprise&.raison_sociale },
       available_for_states: Dossier::SOUMIS
     },
     {
       id: 'entreprise_adresse',
       libelle: 'adresse',
       description: '',
-      target: :inline_adresse,
+      lambda: -> (d) { d.etablissement&.entreprise&.inline_adresse },
       available_for_states: Dossier::SOUMIS
     }
   ]
@@ -255,7 +257,7 @@ module TagsSubstitutionConcern
   def used_type_de_champ_tags(text_or_tiptap)
     used_tags =
       if text_or_tiptap.respond_to?(:deconstruct_keys) # hash pattern matching
-        TiptapService.new.used_tags_and_libelle_for(text_or_tiptap.deep_symbolize_keys)
+        TiptapService.used_tags_and_libelle_for(text_or_tiptap.deep_symbolize_keys)
       else
         used_tags_and_libelle_for(text_or_tiptap.to_s)
       end
@@ -273,7 +275,7 @@ module TagsSubstitutionConcern
     used_tags_and_libelle_for(text).map { _1.first.nil? ? _1.second : _1.first }
   end
 
-  def tags_substitutions(tags_and_libelles, dossier, escape: true)
+  def tags_substitutions(tags_and_libelles, dossier, escape: true, memoize: false)
     # NOTE:
     # - tags_and_libelles est un simple Set de couples (tag_id, libelle) (pas la même structure que dans replace_tags)
     # - dans `replace_tags`, on fait référence à des tags avec ou sans id, mais pas ici,
@@ -281,20 +283,20 @@ module TagsSubstitutionConcern
 
     @escape_unsafe_tags = escape
 
-    flat_tags = tags_and_datas_list(dossier).each_with_object({}) do |(tags, data), result|
-      next if data.nil?
-
-      valid_tags = tags_for_dossier_state(tags)
-
-      valid_tags.each do |tag|
-        result[tag[:id]] = [tag, data]
-      end
+    flat_tags = if memoize && @flat_tags.present?
+      @flat_tags
+    else
+      available_tags(dossier)
+        .flatten
+        .then { tags_for_dossier_state(_1) }
+        .index_by { _1[:id] }
     end
 
+    @flat_tags = flat_tags if memoize
+
     tags_and_libelles.each_with_object({}) do |(tag_id, libelle), substitutions|
-      substitutions[tag_id] = case flat_tags[tag_id]
-      in tag, data
-        replace_tag(tag, data)
+      substitutions[tag_id] = if flat_tags[tag_id].present?
+        replace_tag(flat_tags[tag_id], dossier)
       else # champ not in dossier, for example during preview on draft revision
         libelle
       end
@@ -305,7 +307,8 @@ module TagsSubstitutionConcern
 
   def format_date(date)
     if date.present?
-      date.strftime('%d/%m/%Y')
+      format = defined?(self.class::FORMAT_DATE) ? self.class::FORMAT_DATE : '%d/%m/%Y'
+      date.strftime(format)
     else
       ''
     end
@@ -370,8 +373,8 @@ module TagsSubstitutionConcern
 
     tokens = parse_tags(text)
 
-    tags_and_datas = tags_and_datas_list(dossier).filter_map do |(tags, data)|
-      data && [tags_for_dossier_state(tags).index_by { _1[:id] }, data]
+    tags_and_datas = available_tags(dossier).filter_map do |tags|
+      dossier && [tags_for_dossier_state(tags).index_by { _1[:id] }, dossier]
     end
 
     tags_and_datas.reduce(tokens) do |tokens, (tags, data)|
@@ -397,12 +400,8 @@ module TagsSubstitutionConcern
     end.join('')
   end
 
-  def replace_tag(tag, data)
-    value = if tag.key?(:target)
-      data.public_send(tag[:target])
-    else
-      instance_exec(data, &tag[:lambda])
-    end
+  def replace_tag(tag, dossier)
+    value = instance_exec(dossier, &tag[:lambda])
 
     if escape_unsafe_tags? && tag.fetch(:escapable, true)
       escape_once(value)
@@ -449,14 +448,14 @@ module TagsSubstitutionConcern
     end
   end
 
-  def tags_and_datas_list(dossier)
+  def available_tags(dossier)
     [
-      [champ_public_tags(dossier:), dossier],
-      [champ_private_tags(dossier:), dossier],
-      [dossier_tags, dossier],
-      [ROUTAGE_TAGS, dossier],
-      [INDIVIDUAL_TAGS, dossier.individual],
-      [ENTREPRISE_TAGS, dossier.etablissement&.entreprise]
+      champ_public_tags(dossier:),
+      champ_private_tags(dossier:),
+      dossier_tags,
+      ROUTAGE_TAGS,
+      INDIVIDUAL_TAGS,
+      ENTREPRISE_TAGS
     ]
   end
 end

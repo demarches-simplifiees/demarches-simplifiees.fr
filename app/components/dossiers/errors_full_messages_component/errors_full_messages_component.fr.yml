@@ -5,4 +5,3 @@ fr:
       Votre dossier contient 1 champ en erreur. <a href="%{url}">Corrigez-la</a> pour poursuivre :
     other: |
       Votre dossier contient  %{count} champs en erreurs. <a href="%{url}">Corrigez-les</a> pour poursuivre :
-  see_more: Afficher toutes les erreurs

@@ -6,7 +6,7 @@ describe MapFilter do
   end
 
   describe 'css_class_for_departement' do
-    let(:params) { { kind: :nb_demarches } }
+    let(:params) { { kind: "nb_demarches" } }
     context 'for nb_demarches' do
       it 'return class css' do
         expect(map_filter.css_class_for_departement('63')).to eq :medium
@@ -14,7 +14,7 @@ describe MapFilter do
     end
 
     context 'fr nb_dossiers' do
-      let(:params) { { kind: :nb_dossiers } }
+      let(:params) { { kind: "nb_dossiers" } }
       it 'return class css' do
         expect(map_filter.css_class_for_departement('63')).to eq :medium
       end

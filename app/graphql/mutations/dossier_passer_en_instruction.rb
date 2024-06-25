@@ -21,6 +21,9 @@ module Mutations
       if !dossier.en_construction?
         return false, { errors: ["Le dossier est déjà #{dossier_display_state(dossier, lower: true)}"] }
       end
+      if dossier.blocked_with_pending_correction?
+        return false, { errors: ["Le dossier est en attente de correction"] }
+      end
       dossier_authorized_for?(dossier, instructeur)
     end
   end

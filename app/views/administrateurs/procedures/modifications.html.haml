@@ -1,16 +1,18 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Modifications']] }
-.container
-  %h1.page-title
+                    ['Champs du formulaire', champs_admin_procedure_path(@procedure)],
+                    ['Historique des modifications du formulaire']] }
+.fr-container
+  .fr-mb-3w
+    = link_to "Champs du formulaire", champs_admin_procedure_path(@procedure), class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
+  %h1.fr-h2
     Historique des modifications du formulaire
 
-.container
+.fr-container
   - previous_revision = nil
   - @procedure.revisions.each do |revision|
     - if previous_revision.present? && !revision.draft?
-      - changes = previous_revision.compare(revision)
       - dossiers = revision.dossiers.visible_by_administration
       - dossiers_en_construction_count = dossiers.state_en_construction.count
       - dossiers_en_instruction_count = dossiers.state_en_instruction.count
@@ -28,5 +30,7 @@
           %p= t('.dossiers_en_construction', count: dossiers_en_construction_count)
         - elsif !dossiers_en_instruction_count.zero?
           %p= t('.dossiers_en_instruction', count: dossiers_en_instruction_count)
-        = render Procedure::RevisionChangesComponent.new changes:, previous_revision:
+        = render Procedure::RevisionChangesComponent.new new_revision: revision, previous_revision:
     - previous_revision = revision
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

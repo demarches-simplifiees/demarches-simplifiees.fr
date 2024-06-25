@@ -1,0 +1,46 @@
+en:
+  faq:
+    index:
+      meta_title: "Frequently Asked Questions"
+      title: Frequently Asked Questions (FAQ) of %{app_name}
+    sidebar_button: In this FAQ
+    categories:
+      usager:
+        short_name: User
+        name: User (file application)
+        description: Help users submit and follow up on files, including resolving common problems.
+      instructeur:
+        short_name: Instructor
+        name: Instructor (file processing)
+        description: For instructors on accessing and managing files.
+      administrateur:
+        short_name: Administrator
+        name: Administrator (form creation)
+        description: Information for administrators on configuring the platform or creating procedures.
+    subcategories:
+      dossier_technical_issue:
+        name: I'm encountering a technical problem with my file
+      find_dossier:
+        name: I want to find my file
+        description: What if I can't find my file?
+      fill_dossier:
+        name: I want to make a
+      dossier_state:
+        name: I want to follow the progress of my application
+      account:
+        name: Manage my account
+      instructeur_account:
+        name: Login to my account
+      instruction:
+        name: Instruction
+      create_procedure:
+        name: I want to create an online procedure
+        description: How do you create a new procedure?
+      general:
+        name: General
+      administrateur_departure:
+        name: I'm leaving my job
+        description: Good practices to anticipate before my departure
+      procedure_test:
+        name: How to test my form
+        description: How do you test a new procedure?

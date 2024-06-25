@@ -14,6 +14,7 @@
 #
 # Be sure to restart your server when you modify this file.
 class BalancerDeliveryMethod
+  BYPASS_UNVERIFIED_MAIL_PROTECTION = 'BYPASS_UNVERIFIED_MAIL_PROTECTION'.freeze
   FORCE_DELIVERY_METHOD_HEADER = 'X-deliver-with'
   # Allows configuring the random number generator used for selecting a delivery method,
   # mostly for testing purposes.
@@ -24,6 +25,8 @@ class BalancerDeliveryMethod
   end
 
   def deliver!(mail)
+    return if prevent_delivery?(mail)
+
     balanced_delivery_method = delivery_method(mail)
     ApplicationMailer.wrap_delivery_behavior(mail, balanced_delivery_method)
 
@@ -39,6 +42,19 @@ class BalancerDeliveryMethod
   end
 
   private
+
+  def prevent_delivery?(mail)
+    return false if mail[BYPASS_UNVERIFIED_MAIL_PROTECTION].present?
+    return false if mail.to.blank? # bcc list
+
+    user = User.find_by(email: mail.to.first)
+    return user.unverified_email? if user.present?
+
+    individual = Individual.find_by(email: mail.to.first)
+    return individual.unverified_email? if individual.present?
+
+    true
+  end
 
   def force_delivery_method?(mail)
     @delivery_methods.keys.map(&:to_s).include?(mail[FORCE_DELIVERY_METHOD_HEADER]&.value)

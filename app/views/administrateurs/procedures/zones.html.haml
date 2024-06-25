@@ -4,12 +4,12 @@
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Description']] }
-.container
-  = form_for @procedure,
-    url: url_for({ controller: 'administrateurs/procedures', action: :update, id: @procedure.id }),
-    html: { multipart: true } do |f|
+= form_for @procedure,
+  url: url_for({ controller: 'administrateurs/procedures', action: :update, id: @procedure.id }),
+  html: { multipart: true } do |f|
 
-    %h1.page-title Zones
+  .fr-container
+    %h1.fr-h2 Zones
 
     - if Rails.application.config.ds_zonage_enabled
       %fieldset.fr-fieldset{ aria: { labelledby: "zones-legend"} }
@@ -25,7 +25,4 @@
               = b.check_box
               = b.label class: "fr-label"
 
-    .procedure-form__actions.sticky--bottom
-      .actions-right
-        = link_to 'Annuler', admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--tertiary fr-mr-2w', data: { confirm: 'Êtes-vous sûr de vouloir annuler les modifications effectuées ?'}
-        = f.button 'Enregistrer', class: 'fr-btn fr-btn--primary'
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

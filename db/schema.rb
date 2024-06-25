@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -175,10 +175,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.string "label_logo"
     t.boolean "official_layout", default: true, null: false
     t.integer "procedure_id"
+    t.string "state", default: "published"
     t.text "title"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "version", default: 1, null: false
-    t.index ["procedure_id", "version"], name: "index_attestation_templates_on_procedure_id_and_version", unique: true
+    t.index ["procedure_id", "version", "state"], name: "index_attestation_templates_on_procedure_version_state", unique: true
   end
 
   create_table "attestations", id: :serial, force: :cascade do |t|
@@ -263,6 +264,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.string "type"
     t.integer "type_de_champ_id"
     t.datetime "updated_at", precision: nil
+    t.text "updated_by"
     t.string "value"
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
@@ -593,9 +595,20 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.index ["procedure_id"], name: "index_experts_procedures_on_procedure_id"
   end
 
+  create_table "export_templates", force: :cascade do |t|
+    t.jsonb "content", default: {}
+    t.datetime "created_at", null: false
+    t.bigint "groupe_instructeur_id", null: false
+    t.string "kind", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["groupe_instructeur_id"], name: "index_export_templates_on_groupe_instructeur_id"
+  end
+
   create_table "exports", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.integer "dossiers_count"
+    t.bigint "export_template_id"
     t.string "format", null: false
     t.bigint "instructeur_id"
     t.string "job_status", default: "pending", null: false
@@ -607,6 +620,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.datetime "updated_at", precision: nil, null: false
     t.bigint "user_profile_id"
     t.string "user_profile_type"
+    t.index ["export_template_id"], name: "index_exports_on_export_template_id"
     t.index ["instructeur_id"], name: "index_exports_on_instructeur_id"
     t.index ["key"], name: "index_exports_on_key"
     t.index ["procedure_presentation_id"], name: "index_exports_on_procedure_presentation_id"
@@ -740,6 +754,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.datetime "created_at", precision: nil
     t.integer "dossier_id"
     t.string "email"
+    t.datetime "email_verified_at"
     t.string "gender"
     t.string "nom"
     t.string "notification_method"
@@ -849,6 +864,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
   create_table "procedure_revisions", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.bigint "dossier_submitted_message_id"
+    t.boolean "ineligibilite_enabled", default: false, null: false
+    t.text "ineligibilite_message"
+    t.jsonb "ineligibilite_rules"
     t.bigint "procedure_id", null: false
     t.datetime "published_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false
@@ -1125,6 +1143,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
     t.datetime "current_sign_in_at", precision: nil
     t.string "current_sign_in_ip"
     t.string "email", default: "", null: false
+    t.datetime "email_verified_at"
     t.string "encrypted_password", default: "", null: false
     t.integer "failed_attempts", default: 0, null: false
     t.datetime "inactive_close_to_expiration_notice_sent_at"
@@ -1224,6 +1243,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_17_053843) do
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
+  add_foreign_key "export_templates", "groupe_instructeurs"
+  add_foreign_key "exports", "export_templates"
   add_foreign_key "exports", "instructeurs"
   add_foreign_key "france_connect_informations", "users"
   add_foreign_key "geo_areas", "champs"
