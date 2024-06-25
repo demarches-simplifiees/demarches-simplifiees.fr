@@ -18,6 +18,7 @@
         .fr-input-group
           = label_tag :email, class: 'fr-label' do
             Email
+            = t('.notice_email')
             = render EditableChamp::AsteriskMandatoryComponent.new
           = email_field_tag :email, params[:email], required: true, autocomplete: 'email', class: 'fr-input'
 
