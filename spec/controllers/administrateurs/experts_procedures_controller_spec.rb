@@ -43,7 +43,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
       render_views
       it 'warns' do
         expect(flash.alert).to be_present
-        expect(assigns(:maybe_typo)).to eq(['martin@oraneg.fr'])
+        expect(assigns(:maybe_typo)).to eq([['martin@oraneg.fr', 'martin@orange.fr']])
         expect(response).to have_http_status(:success)
       end
     end
