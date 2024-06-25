@@ -45,13 +45,13 @@ module Administrateurs
           end
         end
 
-        flash[:notice] = t('.experts_assignment',
+        flash.now[:notice] = t('.experts_assignment',
           count: valid_users.count,
           value: valid_users.map(&:email).join(', '),
           procedure: @procedure.id)
       end
 
-      flash[:alert] = errors.join(". ") if !errors.empty?
+      flash.now[:alert] = errors.join(". ") if !errors.empty?
       render :index
     end
 
