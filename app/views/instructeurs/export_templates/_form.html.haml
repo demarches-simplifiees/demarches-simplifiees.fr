@@ -34,7 +34,7 @@
             = t('activerecord.attributes.export_template.hints.tiptap_default_dossier_directory')
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :default_dossier_directory, data: { tiptap_target: 'input' }, value: @export_template.default_dossier_directory.to_json
-        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
+        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
         = f.label :tiptap_pdf_name, class: "fr-label" do
@@ -44,7 +44,7 @@
             = t('activerecord.attributes.export_template.hints.tiptap_pdf_name')
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
         = f.hidden_field :pdf_name, data: { tiptap_target: 'input' }, value: @export_template.pdf_name.to_json
-        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
+        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       - if @exportable_pjs.any?
         %h3 Pieces justificatives

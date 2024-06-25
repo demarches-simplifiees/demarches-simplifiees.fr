@@ -35,12 +35,12 @@ class ExportTemplate < ApplicationRecord
     render_attributes_for(content_for_pj_id(pj_stable_id), dossier, attachment)
   end
 
-  def specific_tags
+  def tags
     tags_categorized.slice(:individual, :etablissement, :dossier).values.flatten
   end
 
   def tags_for_pj
-    specific_tags.push({
+    tags.push({
       libelle: 'nom original du fichier',
       id: 'original-filename',
       maybe_null: false
