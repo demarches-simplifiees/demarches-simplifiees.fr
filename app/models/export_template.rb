@@ -39,7 +39,7 @@ class ExportTemplate < ApplicationRecord
     tags_categorized.slice(:individual, :etablissement, :dossier).values.flatten
   end
 
-  def tags_for_pj
+  def pj_tags
     tags.push({
       libelle: 'nom original du fichier',
       id: 'original-filename',
