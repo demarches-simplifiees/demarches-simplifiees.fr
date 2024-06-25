@@ -35,13 +35,6 @@ class ExportTemplate < ApplicationRecord
     render_attributes_for(content_for_pj_id(pj_stable_id), dossier, attachment)
   end
 
-  def render_attributes_for(content_for, dossier, attachment = nil)
-    used_tags = TiptapService.used_tags_and_libelle_for(content_for.deep_symbolize_keys)
-    substitutions = tags_substitutions(used_tags, dossier, escape: false, memoize: true)
-    substitutions['original-filename'] = attachment.filename.base if attachment
-    TiptapService.new.to_path(content_for.deep_symbolize_keys, substitutions)
-  end
-
   def specific_tags
     tags_categorized.slice(:individual, :etablissement, :dossier).values.flatten
   end
@@ -119,5 +112,12 @@ class ExportTemplate < ApplicationRecord
     suffix += "-#{row_index + 1}" if row_index.present?
 
     suffix + attachment.filename.extension_with_delimiter
+  end
+
+  def render_attributes_for(content_for, dossier, attachment = nil)
+    used_tags = TiptapService.used_tags_and_libelle_for(content_for.deep_symbolize_keys)
+    substitutions = tags_substitutions(used_tags, dossier, escape: false, memoize: true)
+    substitutions['original-filename'] = attachment.filename.base if attachment
+    TiptapService.new.to_path(content_for.deep_symbolize_keys, substitutions)
   end
 end
