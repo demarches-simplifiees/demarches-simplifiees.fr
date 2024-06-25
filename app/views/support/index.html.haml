@@ -66,7 +66,7 @@
           = t('.notice_pj_product')
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
           = t('.notice_pj_other')
-        = file_field_tag :piece_jointe, class: 'fr-upload'
+        = file_field_tag :piece_jointe, class: 'fr-upload', accept: '.jpg, .jpeg, .png, .pdf'
 
       = hidden_field_tag :tags, @tags&.join(',')
 
