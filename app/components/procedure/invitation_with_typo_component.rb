@@ -1,8 +1,7 @@
 class Procedure::InvitationWithTypoComponent < ApplicationComponent
-  def initialize(maybe_typo:, url:, params:, title:)
+  def initialize(maybe_typo:, url:, title:)
     @maybe_typo = maybe_typo
     @url = url
-    @params = params
     @title = title
   end
 

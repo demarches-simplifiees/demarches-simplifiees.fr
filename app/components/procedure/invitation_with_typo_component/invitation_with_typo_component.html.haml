@@ -5,6 +5,6 @@
       - maybe_typos.each do |(actual_email, suggested_email)|
         %li
           = "Je confirme "
-          = button_to "#{actual_email}", @url, method: :POST, params: @params.call(actual_email), class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
+          = button_to "#{actual_email}", @url, method: :POST, params: { maybe_typo: actual_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
           = " ou "
-          = button_to "#{suggested_email}", @url, method: :POST, params: @params.call(suggested_email), class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
+          = button_to "#{suggested_email}", @url, method: :POST, params: { maybe_typo: suggested_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
