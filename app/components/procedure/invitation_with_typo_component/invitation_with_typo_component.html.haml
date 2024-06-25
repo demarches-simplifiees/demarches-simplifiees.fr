@@ -2,7 +2,7 @@
   - c.with_body do
     %p= @title
     %ul
-      - maybe_typos.each do |(actual_email, suggested_email)|
+      - @maybe_typo.each do |(actual_email, suggested_email)|
         %li
           = "Je confirme "
           = button_to "#{actual_email}", @url, method: :POST, params: { maybe_typo: actual_email }, class: 'fr-btn fr-btn--tertiary fr-btn--sm', form: {class: 'inline'}
