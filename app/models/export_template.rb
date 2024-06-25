@@ -12,10 +12,10 @@ class ExportTemplate < ApplicationRecord
   FORMAT_DATE = "%Y-%m-%d"
 
   def set_default_values
-    content["default_dossier_directory"] = tiptap_json("dossier-")
-    content["pdf_name"] = tiptap_json("export_")
+    self.default_dossier_directory = tiptap_json("dossier-")
+    self.pdf_name = tiptap_json("export_")
 
-    content["pjs"] = procedure.exportables_pieces_jointes.map do |pj|
+    self.pjs = procedure.exportables_pieces_jointes.map do |pj|
       { "stable_id" => pj.stable_id.to_s, "path" => tiptap_json("#{pj.libelle.parameterize}-") }
     end
   end
