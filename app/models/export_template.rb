@@ -27,10 +27,6 @@ class ExportTemplate < ApplicationRecord
     ]
   end
 
-  def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
-    render_attributes_for(pj_path(pj_stable_id), dossier, attachment)
-  end
-
   def pj_path(stable_id)
     pjs.find { _1['stable_id'] == stable_id.to_s }&.fetch('path')
   end
@@ -53,6 +49,10 @@ class ExportTemplate < ApplicationRecord
 
   def folder(dossier)
     render_attributes_for(default_dossier_directory, dossier)
+  end
+
+  def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
+    render_attributes_for(pj_path(pj_stable_id), dossier, attachment)
   end
 
   private
