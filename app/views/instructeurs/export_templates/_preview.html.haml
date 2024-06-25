@@ -10,9 +10,9 @@
       %li
         %ul
           %li
-            %span#preview_default_dossier_directory #{export_template.tiptap_convert(dossier, "default_dossier_directory")}/
+            %span#preview_default_dossier_directory #{export_template.folder(dossier)}/
             %ul
-              %li#preview_pdf_name #{export_template.tiptap_convert(dossier, "pdf_name")}.pdf
+              %li#preview_pdf_name #{export_template.export_filename(dossier)}
               - procedure.exportables_pieces_jointes.each do |pj|
                 %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.tiptap_convert_pj(dossier, pj.stable_id)}-1.jpg
             %ul

@@ -32,9 +32,8 @@
           = render EditableChamp::AsteriskMandatoryComponent.new
           %span.fr-hint-text
             = t('activerecord.attributes.export_template.hints.tiptap_default_dossier_directory')
-
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input' }
+        = f.hidden_field :default_dossier_directory, data: { tiptap_target: 'input' }, value: @export_template.default_dossier_directory.to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
@@ -44,21 +43,21 @@
           %span.fr-hint-text
             = t('activerecord.attributes.export_template.hints.tiptap_pdf_name')
         .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input' }
+        = f.hidden_field :pdf_name, data: { tiptap_target: 'input' }, value: @export_template.pdf_name.to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
 
-      - if @all_pj.any?
+      - if @exportable_pjs.any?
         %h3 Pieces justificatives
 
         .fr-highlight
           %p.fr-text--sm
             N'incluez pas les extensions de fichier (.pdf, .jpg, …) dans les noms de pièces jointes.
 
-        - @all_pj.each do |pj|
+        - @exportable_pjs.each do |pj|
           .fr-input-group{ data: { controller: 'tiptap' } }
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
             .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input' }
+              = hidden_field_tag field_name(:export_template, "pjs", [pj.stable_id]), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input' }
             .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags_for_pj })
 
       .fixed-footer

@@ -10,13 +10,13 @@ class ExportTemplateValidator < ActiveModel::Validator
   def validate_default_dossier_directory(record)
     mention = attribute_content_mention(record, :default_dossier_directory)
     if mention&.fetch("id", nil) != "dossier_number"
-      record.errors.add :tiptap_default_dossier_directory, :dossier_number_mandatory
+      record.errors.add :default_dossier_directory, :dossier_number_mandatory
     end
   end
 
   def validate_pdf_name(record)
     if attribute_content_text(record, :pdf_name).blank? && attribute_content_mention(record, :pdf_name).blank?
-      record.errors.add :tiptap_pdf_name, :blank
+      record.errors.add :pdf_name, :blank
     end
   end
 

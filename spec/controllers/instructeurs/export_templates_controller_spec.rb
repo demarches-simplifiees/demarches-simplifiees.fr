@@ -1,6 +1,6 @@
 describe Instructeurs::ExportTemplatesController, type: :controller do
   before { sign_in(instructeur.user) }
-  let(:tiptap_pdf_name) {
+  let(:pdf_name) {
     {
       "type" => "doc",
       "content" => [
@@ -14,27 +14,28 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       name: "coucou",
       kind: "zip",
       groupe_instructeur_id: groupe_instructeur.id,
-      tiptap_pdf_name: tiptap_pdf_name,
-      tiptap_default_dossier_directory: {
+      pdf_name:,
+      default_dossier_directory: {
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
         ]
       }.to_json,
-      tiptap_pj_3: {
-        "type" => "doc",
-        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
-      }.to_json,
-      tiptap_pj_5: {
+      pjs: {
+        "3" => {
+          "type" => "doc",
+          "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+        }.to_json,
+        "5" => {
+          "type" => "doc",
+          "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+        }.to_json,
+        "10" => {
 
-        "type" => "doc",
-        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
-      }.to_json,
-      tiptap_pj_10: {
-
-        "type" => "doc",
-        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
-      }.to_json
+          "type" => "doc",
+          "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+        }.to_json
+      }
     }
   end
 
@@ -72,7 +73,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:tiptap_pdf_name) { { content: "invalid" }.to_json }
+      let(:pdf_name) { { content: "invalid" }.to_json }
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present
@@ -109,7 +110,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
   describe '#update' do
     let(:export_template) { create(:export_template, groupe_instructeur:) }
-    let(:tiptap_pdf_name) {
+    let(:pdf_name) {
       {
         "type" => "doc",
         "content" => [
@@ -129,7 +130,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:tiptap_pdf_name) { { content: "invalid" }.to_json }
+      let(:pdf_name) { { content: "invalid" }.to_json }
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present
@@ -155,7 +156,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
     let(:export_template) { create(:export_template, groupe_instructeur:) }
 
-    let(:subject) { get :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
+    subject { get :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
 
     it '' do
       dossier = create(:dossier, procedure: procedure, for_procedure_preview: true)

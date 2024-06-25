@@ -6,6 +6,8 @@ class ExportTemplate < ApplicationRecord
   has_many :exports, dependent: :nullify
   validates_with ExportTemplateValidator
 
+  store_accessor :content, :default_dossier_directory, :pdf_name, :pjs
+
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
   FORMAT_DATE = "%Y-%m-%d"
 
@@ -13,37 +15,13 @@ class ExportTemplate < ApplicationRecord
     content["default_dossier_directory"] = tiptap_json("dossier-")
     content["pdf_name"] = tiptap_json("export_")
 
-    content["pjs"] = []
-    procedure.exportables_pieces_jointes.each do |pj|
-      content["pjs"] << { "stable_id" => pj.stable_id.to_s, "path" => tiptap_json("#{pj.libelle.parameterize}-") }
+    content["pjs"] = procedure.exportables_pieces_jointes.map do |pj|
+      { "stable_id" => pj.stable_id.to_s, "path" => tiptap_json("#{pj.libelle.parameterize}-") }
     end
-  end
-
-  def tiptap_default_dossier_directory=(body)
-    self.content["default_dossier_directory"] = JSON.parse(body)
-  end
-
-  def tiptap_default_dossier_directory
-    tiptap_content("default_dossier_directory")
-  end
-
-  def tiptap_pdf_name=(body)
-    self.content["pdf_name"] = JSON.parse(body)
-  end
-
-  def tiptap_pdf_name
-    tiptap_content("pdf_name")
   end
 
   def content_for_pj(pj)
     content_for_pj_id(pj.stable_id)&.to_json
-  end
-
-  def assign_pj_names(pj_params)
-    self.content["pjs"] = []
-    pj_params.each do |pj_param|
-      self.content["pjs"] << { stable_id: pj_param[0].delete_prefix("tiptap_pj_"), path: JSON.parse(pj_param[1]) }
-    end
   end
 
   def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
@@ -51,10 +29,6 @@ class ExportTemplate < ApplicationRecord
       attachment,
       path(dossier, attachment, index:, row_index:, champ:)
     ]
-  end
-
-  def tiptap_convert(dossier, param)
-    render_attributes_for(content[param], dossier)
   end
 
   def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
@@ -80,11 +54,15 @@ class ExportTemplate < ApplicationRecord
     })
   end
 
-  private
-
-  def tiptap_content(key)
-    content[key]&.to_json
+  def export_filename(dossier)
+    "#{render_attributes_for(pdf_name, dossier)}.pdf"
   end
+
+  def folder(dossier)
+    render_attributes_for(default_dossier_directory, dossier)
+  end
+
+  private
 
   def tiptap_json(prefix)
     {
@@ -100,16 +78,8 @@ class ExportTemplate < ApplicationRecord
     content_for_stable_id.symbolize_keys.fetch(:path)
   end
 
-  def folder(dossier)
-    render_attributes_for(content["default_dossier_directory"], dossier)
-  end
-
   def export_path(dossier)
     File.join(folder(dossier), export_filename(dossier))
-  end
-
-  def export_filename(dossier)
-    "#{render_attributes_for(content["pdf_name"], dossier)}.pdf"
   end
 
   def path(dossier, attachment, index: 0, row_index: nil, champ: nil)

@@ -1,10 +1,8 @@
 module Instructeurs
   class ExportTemplatesController < InstructeurController
-    before_action :set_procedure
-    before_action :set_groupe_instructeur, only: [:create, :update]
+    before_action :set_procedure, :set_groupe_instructeurs, :set_exportable_pjs
+    before_action :set_groupe_instructeur, only: [:create, :update, :preview]
     before_action :set_export_template, only: [:edit, :update, :destroy]
-    before_action :set_groupe_instructeurs
-    before_action :set_all_pj
 
     def new
       @export_template = ExportTemplate.new(kind: 'zip', groupe_instructeur: @groupe_instructeurs.first)
@@ -13,7 +11,7 @@ module Instructeurs
 
     def create
       @export_template = @groupe_instructeur.export_templates.build(export_template_params)
-      @export_template.assign_pj_names(pj_params)
+
       if @export_template.save
         redirect_to exports_instructeur_procedure_path(procedure: @procedure), notice: "Le modèle d'export #{@export_template.name} a bien été créé"
       else
@@ -28,7 +26,7 @@ module Instructeurs
     def update
       @export_template.assign_attributes(export_template_params)
       @export_template.groupe_instructeur = @groupe_instructeur
-      @export_template.assign_pj_names(pj_params)
+
       if @export_template.save
         redirect_to exports_instructeur_procedure_path(procedure: @procedure), notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
       else
@@ -46,9 +44,7 @@ module Instructeurs
     end
 
     def preview
-      set_groupe_instructeur
       @export_template = @groupe_instructeur.export_templates.build(export_template_params)
-      @export_template.assign_pj_names(pj_params)
 
       @sample_dossier = @procedure.dossier_for_preview(current_instructeur)
 
@@ -58,14 +54,23 @@ module Instructeurs
     private
 
     def export_template_params
-      params.require(:export_template).permit(*export_params)
+      pj_stable_ids = @exportable_pjs.map { _1.stable_id.to_s }
+
+      h = params.require(:export_template)
+        .permit(:name, :kind, :pdf_name, :default_dossier_directory, pjs: pj_stable_ids).to_h
+
+      # StrongParameters does not handle nested hashes
+      [:pdf_name, :default_dossier_directory].each { h[_1] = JSON.parse(h[_1]) if h[_1].present? }
+
+      # from { "pjs" => { "stable_id" => "path" } } to { "pjs" => [{ stable_id:, path: }] }
+      h['pjs'] = h['pjs'].map { |stable_id, path| { stable_id: stable_id, path: JSON.parse(path) } }
+
+      h
     end
 
     def set_procedure
-      @procedure = current_instructeur.procedures.find params[:procedure_id]
-      Sentry.configure_scope do |scope|
-        scope.set_tags(procedure: @procedure.id)
-      end
+      @procedure = current_instructeur.procedures.find(params[:procedure_id])
+      Sentry.configure_scope { |scope| scope.set_tags(procedure: @procedure.id) }
     end
 
     def set_export_template
@@ -80,21 +85,8 @@ module Instructeurs
       @groupe_instructeurs = current_instructeur.groupe_instructeurs.where(procedure: @procedure)
     end
 
-    def set_all_pj
-      @all_pj ||= @procedure.exportables_pieces_jointes
-    end
-
-    def export_params
-      [:name, :kind, :tiptap_default_dossier_directory, :tiptap_pdf_name]
-    end
-
-    def pj_params
-      @procedure = current_instructeur.procedures.find params[:procedure_id]
-      pj_params = []
-      @all_pj.each do |pj|
-        pj_params << "tiptap_pj_#{pj.stable_id}".to_sym
-      end
-      params.require(:export_template).permit(*pj_params)
+    def set_exportable_pjs
+      @exportable_pjs = @procedure.exportables_pieces_jointes
     end
   end
 end
