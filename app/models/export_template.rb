@@ -20,10 +20,6 @@ class ExportTemplate < ApplicationRecord
     end
   end
 
-  def content_for_pj(pj)
-    content_for_pj_id(pj.stable_id)&.to_json
-  end
-
   def attachment_and_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     [
       attachment,
@@ -32,7 +28,11 @@ class ExportTemplate < ApplicationRecord
   end
 
   def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
-    render_attributes_for(content_for_pj_id(pj_stable_id), dossier, attachment)
+    render_attributes_for(pj_path(pj_stable_id), dossier, attachment)
+  end
+
+  def pj_path(stable_id)
+    pjs.find { _1['stable_id'] == stable_id.to_s }&.fetch('path')
   end
 
   def tags
@@ -66,11 +66,6 @@ class ExportTemplate < ApplicationRecord
     }
   end
 
-  def content_for_pj_id(stable_id)
-    content_for_stable_id = content["pjs"].find { _1.symbolize_keys[:stable_id] == stable_id.to_s }
-    content_for_stable_id.symbolize_keys.fetch(:path)
-  end
-
   def export_path(dossier)
     File.join(folder(dossier), export_filename(dossier))
   end
@@ -99,8 +94,8 @@ class ExportTemplate < ApplicationRecord
 
   def attachment_path(dossier, attachment, index, row_index, champ)
     stable_id = champ.stable_id
-    tiptap_pj = content["pjs"].find { |pj| pj["stable_id"] == stable_id.to_s }
-    if tiptap_pj
+
+    if pj_path(stable_id)
       File.join(folder(dossier), tiptap_convert_pj(dossier, stable_id, attachment) + suffix(attachment, index, row_index))
     else
       File.join(folder(dossier), "erreur_renommage", attachment.filename.to_s)
