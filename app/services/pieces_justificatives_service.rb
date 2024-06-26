@@ -53,7 +53,7 @@ class PiecesJustificativesService
       )
 
       if @export_template
-        pdfs << [a, @export_template.attachment_path(dossier, a)]
+        pdfs << [a, @export_template.dossier_pdf_path(dossier)]
       else
         pdfs << ActiveStorage::DownloadableFile.pj_and_path(dossier.id, a)
       end

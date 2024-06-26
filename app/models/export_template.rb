@@ -51,16 +51,14 @@ class ExportTemplate < ApplicationRecord
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
     filename = attachment.filename.to_s
 
-    dir_path = case [attachment.record_type, attachment.name]
-    in _, 'pdf_export_for_instructeur'
-      [export_filename(dossier)]
-    in 'Dossier', _
+    dir_path = case attachment.record_type
+    when 'Dossier'
       ['dossier', filename]
-    in 'Commentaire', _
+    when 'Commentaire'
       ['messagerie', filename]
-    in 'Avis', _
+    when 'Avis'
       ['avis', filename]
-    in 'Attestation' | 'Etablissement', _
+    when 'Attestation', 'Etablissement'
       ['pieces_justificatives', filename]
     else
       [pj_path(dossier, champ.stable_id, attachment) + suffix(attachment, index, row_index)] if pj(champ.stable_id)
