@@ -11,6 +11,10 @@ class ExportTemplate < ApplicationRecord
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
   FORMAT_DATE = "%Y-%m-%d"
 
+  def pj(stable_id)
+    pjs.find { _1['stable_id'] == stable_id.to_s }&.fetch('path')
+  end
+
   def set_default_values
     self.default_dossier_directory = path_with_dossier_id_suffix("dossier-")
     self.pdf_name = path_with_dossier_id_suffix("export_")
@@ -18,10 +22,6 @@ class ExportTemplate < ApplicationRecord
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
       { "stable_id" => pj.stable_id.to_s, "path" => path_with_dossier_id_suffix("#{pj.libelle.parameterize}-") }
     end
-  end
-
-  def pj_path(stable_id)
-    pjs.find { _1['stable_id'] == stable_id.to_s }&.fetch('path')
   end
 
   def tags
@@ -36,16 +36,16 @@ class ExportTemplate < ApplicationRecord
     })
   end
 
-  def export_filename(dossier)
-    "#{render_attributes_for(pdf_name, dossier)}.pdf"
-  end
-
-  def folder(dossier)
+  def folder_path(dossier)
     render_attributes_for(default_dossier_directory, dossier)
   end
 
-  def tiptap_convert_pj(dossier, pj_stable_id, attachment = nil)
-    render_attributes_for(pj_path(pj_stable_id), dossier, attachment)
+  def dossier_pdf_path(dossier)
+    "#{render_attributes_for(pdf_name, dossier)}.pdf"
+  end
+
+  def pj_path(dossier, pj_stable_id, attachment = nil)
+    render_attributes_for(pj(pj_stable_id), dossier, attachment)
   end
 
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
@@ -63,10 +63,10 @@ class ExportTemplate < ApplicationRecord
     in 'Attestation' | 'Etablissement', _
       ['pieces_justificatives', filename]
     else
-      [tiptap_convert_pj(dossier, champ.stable_id, attachment) + suffix(attachment, index, row_index)] if pj_path(champ.stable_id)
+      [pj_path(dossier, champ.stable_id, attachment) + suffix(attachment, index, row_index)] if pj(champ.stable_id)
     end
 
-    File.join(folder(dossier), File.join(dir_path)) if dir_path.present?
+    File.join(folder_path(dossier), File.join(dir_path)) if dir_path.present?
   end
 
   private

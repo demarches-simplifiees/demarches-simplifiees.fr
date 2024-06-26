@@ -10,11 +10,11 @@
       %li
         %ul
           %li
-            %span#preview_default_dossier_directory #{export_template.folder(dossier)}/
+            %span#preview_default_dossier_directory #{export_template.folder_path(dossier)}/
             %ul
-              %li#preview_pdf_name #{export_template.export_filename(dossier)}
+              %li#preview_pdf_name= export_template.dossier_pdf_path(dossier)
               - procedure.exportables_pieces_jointes.each do |pj|
-                %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.tiptap_convert_pj(dossier, pj.stable_id)}-1.jpg
+                %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.pj_path(dossier, pj.stable_id)}-1.jpg
             %ul
               %li
                 %span messagerie/

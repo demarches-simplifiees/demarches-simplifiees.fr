@@ -57,7 +57,7 @@
           .fr-input-group{ data: { controller: 'tiptap' } }
             = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
             .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-              = hidden_field_tag field_name(:export_template, "pjs", [pj.stable_id]), "#{@export_template.pj_path(pj.stable_id)&.to_json}" , data: { tiptap_target: 'input' }
+              = hidden_field_tag field_name(:export_template, "pjs", pj.stable_id), "#{@export_template.pj(pj.stable_id)&.to_json}" , data: { tiptap_target: 'input' }
             .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.pj_tags })
 
       .fixed-footer
