@@ -39,16 +39,28 @@ describe Logic::GreaterThan do
     expect(greater_than(constant(2), constant(1)).compute).to be(true)
     expect(greater_than(champ_value(champ.stable_id), constant(2)).compute([champ])).to be(false)
   end
+
+  describe '#to_query' do
+    let(:two_greater_than_one) { greater_than(champ_value(2), constant(1)) }
+    it { expect(two_greater_than_one.to_query([]).to_sql).to eq(Champ.where(stable_id: 2).where(Champ.arel_table[:value].gt(1)).to_sql) }
+  end
 end
 
 describe Logic::GreaterThanEq do
   include Logic
-  let(:champ) { create(:champ_integer_number, value: nil) }
 
   it 'computes' do
     expect(greater_than_eq(constant(0), constant(1)).compute).to be(false)
     expect(greater_than_eq(constant(1), constant(1)).compute).to be(true)
     expect(greater_than_eq(constant(2), constant(1)).compute).to be(true)
+  end
+
+  describe '#to_query' do
+    let(:value) { 1 }
+    let(:stable_id) { 2 }
+    let(:champ) { create(:champ_integer_number, value:, stable_id:) }
+    let(:two_greater_than_one) { greater_than_eq(champ_value(stable_id), constant(value)) }
+    it { expect(two_greater_than_one.to_query([]).to_sql).to eq(Champ.where(stable_id:).where(Champ.arel_table[:value].gteq(1)).to_sql) }
   end
 end
 
@@ -58,6 +70,14 @@ describe Logic::LessThan do
     expect(less_than(constant(1), constant(1)).compute).to be(false)
     expect(less_than(constant(1), constant(2)).compute).to be(true)
   end
+
+  describe '#to_query' do
+    let(:value) { 1 }
+    let(:stable_id) { 2 }
+    let(:champ) { create(:champ_integer_number, value:, stable_id:) }
+    let(:two_greater_than_one) { less_than(champ_value(stable_id), constant(value)) }
+    it { expect(two_greater_than_one.to_query([]).to_sql).to eq(Champ.where(stable_id:).where(Champ.arel_table[:value].lt(1)).to_sql) }
+  end
 end
 
 describe Logic::LessThanEq do
@@ -66,5 +86,13 @@ describe Logic::LessThanEq do
     expect(less_than_eq(constant(0), constant(1)).compute).to be(true)
     expect(less_than_eq(constant(1), constant(1)).compute).to be(true)
     expect(less_than_eq(constant(2), constant(1)).compute).to be(false)
+  end
+
+  describe '#to_query' do
+    let(:value) { 1 }
+    let(:stable_id) { 2 }
+    let(:champ) { create(:champ_integer_number, value:, stable_id:) }
+    let(:two_greater_than_one) { less_than_eq(champ_value(stable_id), constant(value)) }
+    it { expect(two_greater_than_one.to_query([]).to_sql).to eq(Champ.where(stable_id:).where(Champ.arel_table[:value].lteq(1)).to_sql) }
   end
 end

@@ -11,4 +11,8 @@ class Logic::NotInRegionOperator < Logic::InRegionOperator
 
     l.fetch(:code_region) != r
   end
+
+  def sql_condition(types_de_champ = [])
+    Champ.arel_table[:external_id].not_eq(@right.to_s)
+  end
 end

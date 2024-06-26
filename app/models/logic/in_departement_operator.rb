@@ -15,4 +15,8 @@ class Logic::InDepartementOperator < Logic::BinaryOperator
   def errors(type_de_champs = [])
     @left.errors(type_de_champs) + @right.errors(type_de_champs)
   end
+
+  def sql_condition(types_de_champ = [])
+    Champ.arel_table[:external_id].eq(@right.to_s)
+  end
 end

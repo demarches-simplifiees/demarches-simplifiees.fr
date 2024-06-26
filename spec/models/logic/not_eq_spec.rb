@@ -35,4 +35,10 @@ describe Logic::NotEq do
   describe '#==' do
     it { expect(ds_not_eq(constant(true), constant(false))).to eq(ds_not_eq(constant(false), constant(true))) }
   end
+
+  describe '#to_query' do
+    let(:stable_id) { 2 }
+    let(:value) { 'abc' }
+    it { expect(ds_not_eq(champ_value(stable_id), constant(value)).to_query([]).to_sql).to eq(Champ.where(stable_id:).where(Champ.arel_table[:value].not_eq(value)).to_sql) }
+  end
 end

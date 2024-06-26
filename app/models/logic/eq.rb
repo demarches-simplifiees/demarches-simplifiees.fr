@@ -35,4 +35,8 @@ class Logic::Eq < Logic::BinaryOperator
     self.class == other.class &&
       [@left, @right].permutation.any? { |p| p == [other.left, other.right] }
   end
+
+  def sql_condition(types_de_champ = [])
+    Champ.arel_table[:value].eq(@right.to_s)
+  end
 end

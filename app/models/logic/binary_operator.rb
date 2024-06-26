@@ -44,6 +44,10 @@ class Logic::BinaryOperator < Logic::Term
 
   def to_s(type_de_champs) = "(#{@left.to_s(type_de_champs)} #{operation} #{@right.to_s(type_de_champs)})"
 
+  def to_query(type_de_champs)
+    Champ.where(stable_id: @left.sources).where(sql_condition)
+  end
+
   def ==(other)
     self.class == other.class &&
       @left == other.left &&
