@@ -25,7 +25,7 @@ describe PiecesJustificativesService do
       before { attach_file_to_champ(champ) }
 
       it do
-        expect(export_template).to receive(:attachment_and_path)
+        expect(export_template).to receive(:attachment_path)
           .with(dossier, attachments(pj_champ(dossier)).first, index: 0, row_index: nil, champ:)
         subject
       end
@@ -40,10 +40,10 @@ describe PiecesJustificativesService do
       end
 
       it do
-        expect(export_template).to receive(:attachment_and_path)
+        expect(export_template).to receive(:attachment_path)
           .with(dossier, attachments(pj_champ(dossier)).first, index: 0, row_index: nil, champ:)
 
-        expect(export_template).to receive(:attachment_and_path)
+        expect(export_template).to receive(:attachment_path)
           .with(dossier, attachments(pj_champ(dossier)).second, index: 1, row_index: nil, champ:)
         subject
       end
@@ -66,13 +66,13 @@ describe PiecesJustificativesService do
         first_child_attachments = attachments(repetition(dossier).champs.first)
         second_child_attachments = attachments(repetition(dossier).champs.second)
 
-        expect(export_template).to receive(:attachment_and_path)
+        expect(export_template).to receive(:attachment_path)
           .with(dossier, first_child_attachments.first, index: 0, row_index: 0, champ: first_champ)
 
-        expect(export_template).to receive(:attachment_and_path)
+        expect(export_template).to receive(:attachment_path)
           .with(dossier, first_child_attachments.second, index: 1, row_index: 0, champ: first_champ)
 
-        expect(export_template).to receive(:attachment_and_path)
+        expect(export_template).to receive(:attachment_path)
           .with(dossier, second_child_attachments.first, index: 0, row_index: 1, champ: second_champ)
 
         count = 0

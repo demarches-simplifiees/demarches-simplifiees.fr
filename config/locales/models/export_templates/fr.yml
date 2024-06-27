@@ -6,11 +6,11 @@ fr:
       export_template:
         hints:
           name: "Le nom sera visible par vous et les autres instructeurs pour générer un export"
-          tiptap_default_dossier_directory: "Comment souhaitez-vous nommer le répertoire contenant les documents d'un dossier ?"
-          tiptap_pdf_name: "Comment souhaitez-vous nommer le fichier pdf qui contient toutes les réponses de l'usager ?"
+          default_dossier_directory: "Comment souhaitez-vous nommer le répertoire contenant les documents d'un dossier ?"
+          pdf_name: "Comment souhaitez-vous nommer le fichier pdf qui contient toutes les réponses de l'usager ?"
         name: "Nom du modèle"
-        tiptap_default_dossier_directory: Nom du répertoire
-        tiptap_pdf_name: "Nom du dossier au format pdf"
+        default_dossier_directory: Nom du répertoire
+        pdf_name: "Nom du dossier au format pdf"
     errors:
       models:
         export_template:

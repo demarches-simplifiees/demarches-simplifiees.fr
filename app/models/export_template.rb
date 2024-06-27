@@ -40,6 +40,7 @@ class ExportTemplate < ApplicationRecord
     render_attributes_for(default_dossier_directory, dossier)
   end
 
+  # pdf_export_path ?
   def dossier_pdf_path(dossier)
     "#{render_attributes_for(pdf_name, dossier)}.pdf"
   end
@@ -49,6 +50,8 @@ class ExportTemplate < ApplicationRecord
   end
 
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
+    return File.join(folder_path(dossier), dossier_pdf_path(dossier)) if attachment.name == 'pdf_export_for_instructeur'
+
     filename = attachment.filename.to_s
 
     dir_path = case attachment.record_type
