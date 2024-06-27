@@ -75,8 +75,8 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
   context 'max attachments' do
     let(:kwargs) { { max: 1 } }
 
-    it 'does not render visible input file where max attachments has been reached' do
-      expect(subject).to have_selector('.hidden input[type=file]')
+    it 'renders a disabled input file where max attachments has been reached' do
+      expect(subject).to have_selector('input[type=file][disabled]')
     end
   end
 
