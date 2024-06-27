@@ -18,20 +18,6 @@ class Champs::DateChamp < Champ
     # Text search is pretty useless for dates so we’re not including these champs
   end
 
-  def to_s
-    value.present? ? I18n.l(Time.zone.parse(value), format: '%d %B %Y') : ""
-  rescue ArgumentError
-    value.presence || "" # old dossiers can have not parseable dates
-  end
-
-  def for_tag(path = :value)
-    to_s if path == :value
-  end
-
-  def for_export(path = :value)
-    value.present? ? Date.parse(value) : ""
-  end
-
   private
 
   def convert_to_iso8601

@@ -31,25 +31,11 @@ class Champs::DecimalNumberChamp < Champ
     end
   end
 
-  def for_export(path = :value)
-    processed_value
-  end
-
-  def for_api
-    processed_value
-  end
-
   private
 
   def format_value
     return if value.blank?
 
     self.value = value.tr(",", ".")
-  end
-
-  def processed_value
-    return unless valid_champ_value?
-
-    value&.to_f
   end
 end

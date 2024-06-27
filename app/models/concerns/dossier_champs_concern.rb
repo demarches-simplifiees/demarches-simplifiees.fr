@@ -25,7 +25,7 @@ module DossierChampsConcern
     types_de_champ.flat_map do |type_de_champ|
       champ = champ_for_export(type_de_champ, row_id)
       type_de_champ.libelles_for_export.map do |(libelle, path)|
-        [libelle, champ&.for_export(path)]
+        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
       end
     end
   end

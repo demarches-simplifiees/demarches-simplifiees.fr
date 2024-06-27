@@ -274,7 +274,7 @@ class TypeDeChamp < ApplicationRecord
   def params_for_champ
     {
       private: private?,
-      type: "Champs::#{type_champ.classify}Champ",
+      type: self.class.type_champ_to_champ_class_name(type_champ),
       stable_id:,
       stream: 'main'
     }
@@ -505,10 +505,6 @@ class TypeDeChamp < ApplicationRecord
 
   def public?
     !private?
-  end
-
-  def self.type_champ_to_class_name(type_champ)
-    "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
   end
 
   def filename_for_attachement(attachment_sym)
@@ -757,6 +753,56 @@ class TypeDeChamp < ApplicationRecord
       stable_id.to_s
     else
       "#{stable_id}-#{row_id}"
+    end
+  end
+
+  class << self
+    def champ_value(type_champ, champ)
+      dynamic_type_class = type_champ_to_class_name(type_champ).constantize
+      # special case for linked drop down champ – it's blank implementation is not what you think
+      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+        dynamic_type_class.champ_default_value
+      else
+        dynamic_type_class.champ_value(champ)
+      end
+    end
+
+    def champ_value_for_api(type_champ, champ, version = 2)
+      dynamic_type_class = type_champ_to_class_name(type_champ).constantize
+      # special case for linked drop down champ – it's blank implementation is not what you think
+      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+        dynamic_type_class.champ_default_api_value(version)
+      else
+        dynamic_type_class.champ_value_for_api(champ, version)
+      end
+    end
+
+    def champ_value_for_export(type_champ, champ, path = :value)
+      dynamic_type_class = type_champ_to_class_name(type_champ).constantize
+      # special case for linked drop down champ – it's blank implementation is not what you think
+      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+        dynamic_type_class.champ_default_export_value(path)
+      else
+        dynamic_type_class.champ_value_for_export(champ, path)
+      end
+    end
+
+    def champ_value_for_tag(type_champ, champ, path = :value)
+      dynamic_type_class = type_champ_to_class_name(type_champ).constantize
+      # special case for linked drop down champ – it's blank implementation is not what you think
+      if champ.blank? && (type_champ != TypeDeChamp.type_champs.fetch(:linked_drop_down_list) || champ.nil? || champ.value.blank?)
+        ''
+      else
+        dynamic_type_class.champ_value_for_tag(champ, path)
+      end
+    end
+
+    def type_champ_to_champ_class_name(type_champ)
+      "Champs::#{type_champ.classify}Champ"
+    end
+
+    def type_champ_to_class_name(type_champ)
+      "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
     end
   end
 

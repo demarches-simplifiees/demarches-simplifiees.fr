@@ -49,6 +49,7 @@ class DossierProjectionService
     individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
     sva_svr_decision_on_field = { TABLE => 'self', COLUMN => 'sva_svr_decision_on' }
     dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
+    champ_value = champ_value_formatter(dossiers_ids, fields)
     ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, for_tiers_field, individual_first_name, individual_last_name, batch_operation_field, dossier_corrections] + fields) # the view needs state and archived dossier attributes
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
@@ -64,7 +65,7 @@ class DossierProjectionService
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
           .map do |stable_id, champs|
             field = fields.find { |f| f[COLUMN] == stable_id.to_s }
-            field[:id_value_h] = champs.to_h { |c| [c.dossier_id, c.to_s] }
+            field[:id_value_h] = champs.to_h { |c| [c.dossier_id, champ_value.(c)] }
           end
       when 'self'
         Dossier
@@ -157,6 +158,29 @@ class DossierProjectionService
         dossier_corrections[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
+    end
+  end
+
+  class << self
+    private
+
+    def champ_value_formatter(dossiers_ids, fields)
+      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ', 'type_de_champ_private']) }.map { _1[COLUMN] }
+      revision_ids_by_dossier_ids = Dossier.where(id: dossiers_ids).pluck(:id, :revision_id).to_h
+      stable_ids_and_types_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
+        .where(revision_id: revision_ids_by_dossier_ids.values.uniq, type_de_champ: { stable_id: stable_ids })
+        .pluck(:revision_id, 'type_de_champ.stable_id', 'type_de_champ.type_champ')
+        .group_by(&:first)
+        .transform_values { _1.map { |_, stable_id, type_champ| [stable_id, type_champ] }.to_h }
+      stable_ids_and_types_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_champ_by_revision_ids[_1] }.compact
+      -> (champ) {
+        type_champ = stable_ids_and_types_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
+        if type_champ.present? && TypeDeChamp.type_champ_to_champ_class_name(type_champ) == champ.type
+          TypeDeChamp.champ_value(type_champ, champ)
+        else
+          ''
+        end
+      }
     end
   end
 end

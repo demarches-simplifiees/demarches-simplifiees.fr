@@ -23,20 +23,4 @@ class Champs::IntegerNumberChamp < Champ
       errors.add(:value, :less_than_or_equal_to, value: value, count: type_de_champ.max.to_i)
     end
   end
-
-  def for_export(path = :value)
-    processed_value
-  end
-
-  def for_api
-    processed_value
-  end
-
-  private
-
-  def processed_value
-    return unless valid_champ_value?
-
-    value&.to_i
-  end
 end

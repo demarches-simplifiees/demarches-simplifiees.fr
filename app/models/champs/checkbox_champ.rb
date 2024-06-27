@@ -1,8 +1,4 @@
 class Champs::CheckboxChamp < Champs::BooleanChamp
-  def for_export(path = :value)
-    true? ? 'on' : 'off'
-  end
-
   def mandatory_blank?
     mandatory? && (blank? || !true?)
   end

@@ -115,24 +115,29 @@ class Champ < ApplicationRecord
     [to_s]
   end
 
-  def to_s
-    value.present? ? value.to_s : ''
-  end
-
-  def for_export(path = :value)
-    path == :value ? value.presence : nil
-  end
-
-  def for_api
+  def valid_value
+    return unless valid_champ_value?
     value
   end
 
+  def to_s
+    TypeDeChamp.champ_value(type_champ, self)
+  end
+
+  def for_api
+    TypeDeChamp.champ_value_for_api(type_champ, self, 1)
+  end
+
   def for_api_v2
-    to_s
+    TypeDeChamp.champ_value_for_api(type_champ, self, 2)
+  end
+
+  def for_export(path = :value)
+    TypeDeChamp.champ_value_for_export(type_champ, self, path)
   end
 
   def for_tag(path = :value)
-    path == :value && value.present? ? value.to_s : ''
+    TypeDeChamp.champ_value_for_tag(type_champ, self, path)
   end
 
   def main_value_name
