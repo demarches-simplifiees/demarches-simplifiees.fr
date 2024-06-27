@@ -18,10 +18,6 @@
   Lors de vos prochaines connexions sur #{Current.application_name} cliquez sur le bouton « Se connecter » positionné sur le haut de page ou bien sur ce lien : 
   = link_to new_user_session_url, new_user_session_url
 
-- if AgentConnectService.enabled?
-  %p
-    Vous êtes un agent de l'état et avez accès à AgentConnect ? Vous pouvez utiliser la connexion AgentConnect en suivant ce lien : 
-    = link_to agent_connect_url, agent_connect_url
 %p
   Nous vous invitons aussi à consulter notre tutoriel à destination des nouveaux instructeurs :
   = link_to(INSTRUCTEUR_TUTORIAL_URL, INSTRUCTEUR_TUTORIAL_URL)
