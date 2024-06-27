@@ -50,9 +50,9 @@ class Procedure < ApplicationRecord
   has_one :module_api_carto, dependent: :destroy
   has_many :attestation_templates, dependent: :destroy
   has_one :attestation_template_v1, -> { AttestationTemplate.v1 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
-  has_one :attestation_template_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
+  has_many :attestation_templates_v2, -> { AttestationTemplate.v2 }, dependent: :destroy, class_name: "AttestationTemplate", inverse_of: :procedure
 
-  has_one :attestation_template, -> { order(Arel.sql("CASE WHEN version = '1' THEN 0 ELSE 1 END")) }, dependent: :destroy, inverse_of: :procedure
+  has_one :attestation_template, -> { published }, dependent: :destroy, inverse_of: :procedure
 
   belongs_to :parent_procedure, class_name: 'Procedure', optional: true
   belongs_to :canonical_procedure, class_name: 'Procedure', optional: true
@@ -1002,10 +1002,6 @@ class Procedure < ApplicationRecord
     lien_dpo.present? && lien_dpo.match?(/@/)
   end
 
-  def header_sections
-    draft_revision.revision_types_de_champ_public.filter { _1.type_de_champ.header_section? }
-  end
-
   def dossier_for_preview(user)
     # Try to use a preview or a dossier filled by current user
     dossiers.where(for_procedure_preview: true).or(dossiers.not_brouillon)
@@ -1017,6 +1013,10 @@ class Procedure < ApplicationRecord
 
   def reset_closing_params
     update!(closing_reason: nil, closing_details: nil, replaced_by_procedure_id: nil, closing_notification_brouillon: false, closing_notification_en_cours: false)
+  end
+
+  def monavis_embed_html_source(source)
+    monavis_embed.gsub('nd_source=button', "nd_source=#{source}").gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
   end
 
   private

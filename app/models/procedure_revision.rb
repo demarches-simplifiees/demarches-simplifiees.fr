@@ -28,6 +28,10 @@ class ProcedureRevision < ApplicationRecord
     presence: true,
     if: -> { ineligibilite_enabled? },
     on: [:ineligibilite_rules_editor, :publication]
+  validates :ineligibilite_rules,
+    presence: true,
+    if: -> { ineligibilite_enabled? },
+    on: [:ineligibilite_rules_editor, :publication]
 
   serialize :ineligibilite_rules, LogicSerializer
 

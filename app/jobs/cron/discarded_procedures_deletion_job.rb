@@ -1,5 +1,5 @@
 class Cron::DiscardedProceduresDeletionJob < Cron::CronJob
-  self.schedule_expression = "every day at 1 am"
+  self.schedule_expression = "every day at 00:45"
 
   def perform
     Procedure.purge_discarded

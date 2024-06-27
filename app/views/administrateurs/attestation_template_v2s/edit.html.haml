@@ -4,7 +4,8 @@
                     ['Attestation']] }
 
 = render NestedForms::FormOwnerComponent.new
-= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure), html: { multipart: true },
+= form_for @attestation_template, url: admin_procedure_attestation_template_v2_path(@procedure),
+  html: { multipart: true , id: "attestation-template" },
   data: { turbo: 'true',
     controller: 'autosubmit attestation',
     autosubmit_debounce_delay_value: 1000,
@@ -19,11 +20,12 @@
           tout en respectant la charte de l’état. Essayez-la et donnez-nous votre avis
           en nous envoyant un email à #{mail_to(Current.contact_email, subject: "Feedback attestation v2")}.
           %br
-          %strong Les attestations délivrées suivent encore l’ancien format :
-          l’activation des attestations basées sur ce format sera bientôt disponible.
-          %br
+          - if !@procedure.feature_enabled?(:attestation_v2)
+            %strong Les attestations délivrées suivent encore l’ancien format :
+            l’activation des attestations basées sur ce format sera bientôt disponible.
+            %br
 
-          = link_to("Suivez ce lien pour revenir aux attestations actuellement délivrées", edit_admin_procedure_attestation_template_path(@procedure))
+            = link_to("Suivez ce lien pour revenir aux attestations actuellement délivrées", edit_admin_procedure_attestation_template_path(@procedure))
 
     .fr-grid-row.fr-grid-row--gutters
       .fr-col-12.fr-col-lg-7
@@ -35,12 +37,22 @@
               Elle est également disponible au téléchargement depuis l’espace personnel de l’usager.
 
           .fr-fieldset__element
+            = render Dsfr::CalloutComponent.new(title: "Activation de la délivrance de l’attestation", theme: :neutral) do |c|
+              - c.with_html_body do
+                .fr-toggle.fr-toggle--label-left
+                  = f.check_box :activated, class: "fr-toggle__input", id: dom_id(@attestation_template, :activated)
+                  %label.fr-toggle__label{ for: dom_id(@attestation_template, :activated),
+                    data: { fr_checked_label: "Activée", fr_unchecked_label: "Désactivée" } }
+                    Activer cette option permet la délivrance automatique de l’attestation dès l’acceptation du dossier.
+                    Désactiver cette option arrête immédiatement l’émission de nouvelles attestations.
+
+          .fr-fieldset__element
             %h2.fr-h4 En-tête
 
           .fr-fieldset__element
             .fr-toggle.fr-toggle--label-left
               = f.check_box :official_layout, class: "fr-toggle__input", id: dom_id(@attestation_template, :official_layout), data: { "attestation-target": "layoutToggle"}
-              %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Activé", fr_unchecked_label: "Désactivé" } }
+              %label.fr-toggle__label{ for: dom_id(@attestation_template, :official_layout), data: { fr_checked_label: "Oui", fr_unchecked_label: "Non" } }
                 Je souhaite générer une attestation à la charte de l’état (logo avec Marianne)
 
           .fr-fieldset__element{ class: class_names("hidden" => !@attestation_template.official_layout?), data: { "attestation-target": 'logoMarianneLabelFieldset'} }
@@ -77,10 +89,10 @@
                       %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
                         = label
 
-              #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
+              #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: "attestation-template-json-body-messages"} }
               = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
 
-              .fr-error-text{ id: dom_id(f.object, "json-body-messages"), class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
+              .fr-error-text{ id: "attestation-template-json-body-messages", class: class_names("hidden" => !f.object.errors.include?(:json_body)) }
                 - if f.object.errors.include?(:json_body)
                   = render partial: "shared/errors_list", locals: { object: f.object, attribute: :json_body }
 
@@ -108,7 +120,7 @@
               - c.with_hint { "Exemple: 20 avenue de Ségur, 75007 Paris" }
 
       #preview-column.fr-col-12.fr-col-lg-5.fr-background-alt--blue-france
-        .sticky--top.fr-px-1w
+        .sticky--top.fr-px-1w{ data: { controller: "sticky-top" } }
           .flex.justify-between.align-center
             %h2.fr-h4 Aperçu
             %p= link_to 'Prévisualiser en taille réelle', admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), class: 'fr-link', target: '_blank', rel: 'noopener'
@@ -117,21 +129,10 @@
             L’aperçu est mis à jour automatiquement après chaque modification.
             Pour générer un aperçu fidèle avec tous les champs et les dates, créez-vous un dossier et acceptez-le : l’aperçu l’utilisera.
 
-  .padded-fixed-footer
-    .fixed-footer
-      .fr-container
-        .fr-grid-row
-          .fr-col-12.fr-col-md-7
-            %ul.fr-btns-group.fr-btns-group--inline-md
-              %li
-                = link_to admin_procedure_path(id: @procedure), class: 'fr-btn fr-btn--secondary' do
-                  %span.fr-icon-arrow-go-back-line.fr-icon--sm.fr-mr-1v
-                  Revenir à la démarche
+  - if @procedure.feature_enabled?(:attestation_v2) && @attestation_template.draft?
+    - content_for(:sticky_header) do
+      = render partial: "sticky_header"
 
-          .fr-col-12.fr-col-md-5
-            -# .fr-toggle
-            -#   = f.check_box :activated, class: "fr-toggle-input", disabled: true, id: dom_id(@attestation_template, :activated)
-            -#   %label.fr-toggle__label{ for: dom_id(@attestation_template, :activated), data: { fr_checked_label: "Attestation activée", fr_unchecked_label: "Attestation désactivée" } }
-            .text-right
-              %span#autosave-notice
-              %p.fr-hint-text L’activation de cette attestation sera bientôt disponible.
+  .padded-fixed-footer
+    .fixed-footer#fixed_footer
+      = render partial: "fixed_footer", locals: { procedure: @procedure }

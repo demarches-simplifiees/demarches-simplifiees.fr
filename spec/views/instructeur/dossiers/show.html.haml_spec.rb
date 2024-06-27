@@ -201,4 +201,18 @@ describe 'instructeurs/dossiers/show', type: :view do
       end
     end
   end
+
+  describe 'when header_sections are present' do
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
+    let(:types_de_champ_public) do
+      [
+        { type: :header_section, level: 1, libelle: 'l1' }
+      ]
+    end
+    let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+    it 'displays a link to header_section' do
+      expect(subject).to have_selector('a.fr-sidemenu__link', text: 'l1')
+    end
+  end
 end

@@ -16,7 +16,7 @@ def setup_driver(app, download_path, options)
 
     if ENV['JS_LOG'].present?
       driver.browser.on_log_event(:console) do |event|
-        puts event.args if event.type == ENV['JS_LOG'].downcase.to_sym
+        puts event.args.join(" ") if event.type.in? ENV['JS_LOG'].downcase.split(',').map(&:to_sym)
       end
     end
   end

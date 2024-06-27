@@ -563,7 +563,7 @@ class Dossier < ApplicationRecord
   end
 
   def can_passer_en_construction?
-    return true if !revision.ineligibilite_enabled
+    return true if !revision.ineligibilite_enabled || !revision.ineligibilite_rules
 
     !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
   end
@@ -1146,6 +1146,18 @@ class Dossier < ApplicationRecord
 
   def termine_and_accuse_lecture?
     procedure.accuse_lecture? && termine?
+  end
+
+  def track_can_passer_en_construction
+    if !revision.ineligibilite_enabled
+      yield
+      [true, true] # without eligibilite rules, we never reach dossier.champs.visible?, don't cache anything
+    else
+      from = can_passer_en_construction? # with eligibilite rules, self.champ[x].visible is cached by passing thru conditions checks
+      yield
+      champs.map(&:reset_visible) # we must reset self.champs[x].visible?, because an update occurred and we should re-evaluate champs[x] visibility
+      [from, can_passer_en_construction?]
+    end
   end
 
   private

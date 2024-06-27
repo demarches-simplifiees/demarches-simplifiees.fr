@@ -175,10 +175,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
     t.string "label_logo"
     t.boolean "official_layout", default: true, null: false
     t.integer "procedure_id"
+    t.string "state", default: "published"
     t.text "title"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "version", default: 1, null: false
-    t.index ["procedure_id", "version"], name: "index_attestation_templates_on_procedure_id_and_version", unique: true
+    t.index ["procedure_id", "version", "state"], name: "index_attestation_templates_on_procedure_version_state", unique: true
   end
 
   create_table "attestations", id: :serial, force: :cascade do |t|

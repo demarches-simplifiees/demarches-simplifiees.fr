@@ -21,7 +21,7 @@ class FAQController < ApplicationController
                             application_base_url: Current.application_base_url,
                             application_name: Current.application_name,
                             contact_email: Current.contact_email
-                          }
+                          }.merge(dynamic_substitutions)
 
                           FAQsLoaderService.new(substitutions)
                         end
@@ -35,5 +35,14 @@ class FAQController < ApplicationController
     @metadata = faq_data.front_matter.symbolize_keys
   rescue KeyError
     raise ActionController::RoutingError.new("FAQ not found: #{path}")
+  end
+
+  # Hash of dynamic values used for substitutions.
+  # The values are fetched from or calculated into the Rails cache.
+  def dynamic_substitutions
+    {
+      # Example:
+      # procedures_count: Rails.cache.fetch("faq/procedures_count", expires_in: 1.day) { helpers.number_with_delimiter(Procedure.publiee.count, delimiter: ' ') },
+    }
   end
 end

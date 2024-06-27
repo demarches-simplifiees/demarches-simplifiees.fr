@@ -684,7 +684,9 @@ Rails.application.routes.draw do
         get 'add_champ_engagement_juridique'
       end
 
-      resource :attestation_template_v2, only: [:show, :edit, :update, :create]
+      resource :attestation_template_v2, only: [:show, :edit, :update, :create] do
+        post :reset
+      end
 
       resource :dossier_submitted_message, only: [:edit, :update, :create]
       # ADDED TO ACCESS IT FROM THE IFRAME

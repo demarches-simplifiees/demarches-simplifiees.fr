@@ -1,6 +1,6 @@
 class Cron::Datagouv::UserConnectedWithFranceConnectByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
-  self.schedule_expression = "every month at 3:00"
+  self.schedule_expression = "every month at 3:45"
   FILE_NAME = "nb_utilisateurs_connectes_france_connect_par_mois"
 
   def perform(*args)

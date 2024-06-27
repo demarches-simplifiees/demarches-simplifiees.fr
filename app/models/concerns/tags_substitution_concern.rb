@@ -257,7 +257,7 @@ module TagsSubstitutionConcern
   def used_type_de_champ_tags(text_or_tiptap)
     used_tags =
       if text_or_tiptap.respond_to?(:deconstruct_keys) # hash pattern matching
-        TiptapService.new.used_tags_and_libelle_for(text_or_tiptap.deep_symbolize_keys)
+        TiptapService.used_tags_and_libelle_for(text_or_tiptap.deep_symbolize_keys)
       else
         used_tags_and_libelle_for(text_or_tiptap.to_s)
       end

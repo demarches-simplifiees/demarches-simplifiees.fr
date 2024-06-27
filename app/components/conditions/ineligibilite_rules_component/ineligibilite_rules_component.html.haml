@@ -2,7 +2,7 @@
   = render Procedure::PendingRepublishComponent.new(procedure: @draft_revision.procedure, render_if: pending_changes?)
   = render Conditions::ConditionsErrorsComponent.new(conditions: condition_per_row, source_tdcs: @source_tdcs)
   .fr-fieldset
-    = form_for(@draft_revision, url: change_admin_procedure_ineligibilite_rules_path(@draft_revision.procedure_id), html: { id: 'ineligibilite_form', class: 'width-100' }) do |f|
+    = form_for(@draft_revision, url: change_admin_procedure_ineligibilite_rules_path(@draft_revision.procedure_id), html: { id: 'ineligibilite_form', class: 'width-100', novalidate: true }) do |f|
       .fr-fieldset__element
         .fr-toggle.fr-toggle--label-left
           = f.check_box :ineligibilite_enabled, class: 'fr-toggle__input', data: @opt

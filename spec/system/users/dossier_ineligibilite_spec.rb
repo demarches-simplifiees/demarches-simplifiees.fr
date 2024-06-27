@@ -179,4 +179,27 @@ describe 'Dossier Inéligibilité', js: true do
       wait_until { dossier.reload.en_construction? == true }
     end
   end
+
+  describe 'ineligibilite_rules does not mess with champs.visible' do
+    let(:types_de_champ_public) do
+      [
+        { type: :yes_no, libelle: 'l1', stable_id: 1 },
+        { type: :yes_no, libelle: 'l2', stable_id: 2, condition: ds_eq(champ_value(1), constant(false)) }
+      ]
+    end
+    let(:ineligibilite_rules) do
+      ds_eq(champ_value(2), constant(false))
+    end
+
+    scenario 'ineligibilite rules without validation on champ ensure to re-process cached champs.visible' do
+      visit brouillon_dossier_path(dossier)
+      expect(page).to have_selector(:button, text: "Déposer le dossier", disabled: false)
+      expect(page).not_to have_content("Vous ne pouvez pas déposer votre dossier")
+
+      within "#champ-1" do
+        find("label", text: "Non").click
+      end
+      expect(page).to have_selector("#champ-2", visible: true)
+    end
+  end
 end

@@ -62,16 +62,20 @@ Rails.application.configure do
 
   # Use a different cache store in production.
   if ENV['REDIS_CACHE_URL'].present?
-    redis_options = { url: ENV['REDIS_CACHE_URL'] }
-    redis_options[:ssl] = (ENV['REDIS_CACHE_SSL'] == 'enabled')
+    redis_options = {
+      url: ENV['REDIS_CACHE_URL'],
+      connect_timeout: 0.2,
+      error_handler: -> (method:, returning:, exception:) {
+        Sentry.capture_exception exception, level: 'warning',
+          tags: { method: method, returning: returning }
+      }
+    }
+
+    redis_options[:ssl] = ENV['REDIS_CACHE_SSL'] == 'enabled'
+
     if ENV['REDIS_CACHE_SSL_VERIFY_NONE'] == 'enabled'
       redis_options[:ssl_params] = { verify_mode: OpenSSL::SSL::VERIFY_NONE }
     end
-
-    redis_options[:error_handler] = -> (method:, returning:, exception:) {
-      Sentry.capture_exception exception, level: 'warning',
-        tags: { method: method, returning: returning }
-    }
 
     config.cache_store = :redis_cache_store, redis_options
   end

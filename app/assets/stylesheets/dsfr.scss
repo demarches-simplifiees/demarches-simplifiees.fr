@@ -132,6 +132,18 @@ button.fr-tag-bug {
   }
 }
 
+// on applique le comportement desktop du sélecteur de langue aux terminaux de toute dimension
+.fr-translate .fr-menu__list {
+  display: grid;
+  grid-template-rows: repeat(var(--rows), auto);
+  grid-auto-flow: column;
+}
+
+.fr-translate__language[aria-current]:not([aria-current="false"]) {
+  display: inline-flex;
+}
+
+
 // on veut ajouter un gris plus clair dans le side_menu
 .fr-sidemenu__item .fr-sidemenu__link.custom-link-grey {
   color: var(--text-disabled-grey);

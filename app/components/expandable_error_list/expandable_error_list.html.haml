@@ -6,7 +6,7 @@
         = error_descriptor.error_message
 
   - if tail.size > 0
-    %button.fr-mt-0.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ type: "button", "aria-controls": 'tail-errors', "aria-expanded": "false", class: "" }= t('see_more')
+    %button.fr-mt-0.fr-btn.fr-btn--sm.fr-btn--tertiary-no-outline{ type: "button", "aria-controls": 'tail-errors', "aria-expanded": "false", class: "" }= t('.see_more')
     %ul#tail-errors.fr-collapse.fr-mt-0
       - tail.each do |error_descriptor|
         %li

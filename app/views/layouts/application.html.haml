@@ -45,6 +45,9 @@
         #beta
           Env Test
 
+      #sticky-header.sticky-header-container
+        = content_for(:sticky_header)
+
       = render partial: "layouts/header"
       %main#contenu{ role: :main }
         = render partial: "layouts/flash_messages"

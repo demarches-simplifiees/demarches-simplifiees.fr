@@ -27,7 +27,7 @@ describe LockableConcern, type: :controller do
     context 'when there are concurrent requests' do
       it 'aborts the second request' do
         # Simulating the first request acquiring the lock
-        Kredis.flag(lock_key, config: :volatile).mark(expires_in: 3.seconds)
+        Kredis.flag(lock_key).mark(expires_in: 3.seconds)
 
         # Making the second request
         expect(subject).to have_http_status(:locked)
@@ -36,7 +36,7 @@ describe LockableConcern, type: :controller do
 
     context 'when the lock expires' do
       it 'allows another request after expiration' do
-        Kredis.flag(lock_key, config: :volatile).mark(expires_in: 0.001.seconds)
+        Kredis.flag(lock_key).mark(expires_in: 0.001.seconds)
         sleep 0.002
 
         expect(subject).to have_http_status(:ok)

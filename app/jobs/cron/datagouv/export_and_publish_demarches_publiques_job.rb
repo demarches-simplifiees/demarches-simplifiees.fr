@@ -1,6 +1,6 @@
 class Cron::Datagouv::ExportAndPublishDemarchesPubliquesJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
-  self.schedule_expression = "every month at 4:00"
+  self.schedule_expression = "every month at 4:10"
 
   def perform(*args)
     gzip_filepath = [

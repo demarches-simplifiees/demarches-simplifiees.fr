@@ -1,6 +1,6 @@
 class Cron::Datagouv::FileDeposeByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
-  self.schedule_expression = "every month at 3:00"
+  self.schedule_expression = "every month at 5:00"
   FILE_NAME = "nb_dossiers_deposes_par_mois"
 
   def perform(*args)

@@ -1,5 +1,5 @@
 class Cron::WeeklyOverviewJob < Cron::CronJob
-  self.schedule_expression = "every monday at 4 am"
+  self.schedule_expression = "every monday at 04:05"
 
   def perform
     # Feature flipped to avoid mails in staging due to unprocessed dossier

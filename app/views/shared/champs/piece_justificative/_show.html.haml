@@ -1,9 +1,5 @@
 .fr-downloads-group
-  - if !feature_enabled?(:gallery_demande)
-    %ul
-      - champ.piece_justificative_file.attachments.each do |attachment|
-        %li= render Attachment::ShowComponent.new(attachment:, new_tab: true)
-  - else
+  - if instructeur_signed_in? && feature_enabled?(:gallery_demande)
     .gallery-items-list
       - champ.piece_justificative_file.attachments.with_all_variant_records.each do |attachment|
         .gallery-item
@@ -25,3 +21,7 @@
             .thumbnail
               = image_tag('apercu-indisponible.png')
           = render Attachment::ShowComponent.new(attachment:, new_tab: true, truncate: true)
+  - else
+    %ul
+      - champ.piece_justificative_file.attachments.each do |attachment|
+        %li= render Attachment::ShowComponent.new(attachment:, new_tab: true)

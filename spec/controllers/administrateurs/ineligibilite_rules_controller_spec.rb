@@ -220,12 +220,29 @@ describe Administrateurs::IneligibiliteRulesController, type: :controller do
       }
     end
     before { sign_in(admin.user) }
-    it 'works' do
-      patch :change, params: params
-      draft_revision = procedure.reload.draft_revision
-      expect(draft_revision.ineligibilite_message).to eq('panpan')
-      expect(draft_revision.ineligibilite_enabled).to eq(true)
-      expect(response).to redirect_to(edit_admin_procedure_ineligibilite_rules_path(procedure))
+
+    context 'when ineligibilite rules is empty' do
+      it 'fails gracefull without ineligibilite rules' do
+        patch :change, params: params
+        draft_revision = procedure.reload.draft_revision
+        expect(draft_revision.ineligibilite_enabled).to eq(false)
+        expect(flash[:alert]).to include("Le champ « Les conditions d’inéligibilité » doit être rempli")
+      end
+    end
+
+    context 'when ineligibilite rules is present' do
+      let(:types_de_champ_public) { [{ type: :drop_down_list, stable_id: 1, options: ['opt'] }] }
+      before do
+        procedure.draft_revision.update(ineligibilite_rules: ds_eq(champ_value(1), constant('opt')))
+      end
+
+      it 'works' do
+        patch :change, params: params
+        draft_revision = procedure.reload.draft_revision
+        expect(draft_revision.ineligibilite_message).to eq('panpan')
+        expect(draft_revision.ineligibilite_enabled).to eq(true)
+        expect(response).to redirect_to(edit_admin_procedure_ineligibilite_rules_path(procedure))
+      end
     end
   end
 end

@@ -1,6 +1,6 @@
 class Cron::Datagouv::ProcedureDeletedByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
-  self.schedule_expression = "every month at 3:00"
+  self.schedule_expression = "every month at 3:30"
   FILE_NAME = "nb_procedures_supprimees_par_mois"
 
   def perform(*args)

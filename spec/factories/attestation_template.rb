@@ -32,10 +32,10 @@ FactoryBot.define do
           { "type" => "paragraph", "attrs" => { "textAlign" => "left" }, "content" => [{ "text" => "Dossier: n° ", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] },
           {
             "type" => "paragraph",
-           "content" => [
-             { "text" => "Nom: ", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "individual_last_name", "label" => "prénom" } }, { "text" => " ", "type" => "text" },
-             { "type" => "mention", "attrs" => { "id" => "individual_first_name", "label" => "nom" } }, { "text" => " ", "type" => "text" }
-           ]
+            "content" => [
+              { "text" => "Nom: ", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "individual_last_name", "label" => "prénom" } }, { "text" => " ", "type" => "text" },
+              { "type" => "mention", "attrs" => { "id" => "individual_first_name", "label" => "nom" } }, { "text" => " ", "type" => "text" }
+            ]
           }
         ]
       }

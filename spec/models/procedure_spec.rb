@@ -1813,23 +1813,23 @@ describe Procedure do
 
   describe "#attestation_template" do
     let(:procedure) { create(:procedure) }
+    subject { procedure.reload }
 
-    context "when there is a v2 created after v1" do
+    context "when there is a v2 draft and a v1" do
       before do
         create(:attestation_template, procedure: procedure)
-        create(:attestation_template, :v2, procedure: procedure)
+        create(:attestation_template, :v2, :draft, procedure: procedure)
       end
 
-      it { expect(procedure.attestation_template.version).to eq(1) }
+      it { expect(subject.attestation_template.version).to eq(1) }
     end
 
-    context "when there is a v2 created before v1" do
+    context "when there is only a v1" do
       before do
-        create(:attestation_template, :v2, procedure: procedure)
-        create(:attestation_template, procedure: procedure, activated: true)
+        create(:attestation_template, procedure: procedure)
       end
 
-      it { expect(procedure.attestation_template.version).to eq(1) }
+      it { expect(subject.attestation_template.version).to eq(1) }
     end
 
     context "when there is only a v2" do
@@ -1837,7 +1837,23 @@ describe Procedure do
         create(:attestation_template, :v2, procedure: procedure)
       end
 
-      it { expect(procedure.attestation_template.version).to eq(2) }
+      it { expect(subject.attestation_template.version).to eq(2) }
+    end
+
+    context "when there is a v2 draft" do
+      before do
+        create(:attestation_template, :v2, :draft, procedure: procedure)
+      end
+
+      it { expect(subject.attestation_template).to be_nil }
+
+      context "and a published" do
+        before do
+          create(:attestation_template, :v2, :published, procedure: procedure)
+        end
+
+        it { expect(subject.attestation_template).to be_published }
+      end
     end
   end
 

@@ -1,0 +1,8 @@
+---
+fr:
+  form:
+    saved: 'Formulaire enregistré'
+    error: 'Formulaire en erreur'
+  attestation:
+    saved: 'Attestation enregistrée'
+    error: 'Attestation en erreur'

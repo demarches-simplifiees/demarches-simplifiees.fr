@@ -1,45 +1,56 @@
-.statistiques{ 'data-controller': 'chartkick' }
-  %h1.new-h1= title
-  .stat-cards
+.fr-container.fr-my-4w
+  %h1= title
+  .fr-grid-row.fr-grid-row--gutters
     - if @usual_traitement_time.present?
-      .stat-card.big-number-card
-        %span.big-number-card-title= t('.usual_processing_time')
-        = render Procedure::EstimatedDelayComponent.new(procedure: @procedure)
+      .fr-col-xs-12
+        .fr-callout
+          %h2.fr-callout__title= t('.usual_processing_time')
+          = render Procedure::EstimatedDelayComponent.new(procedure: @procedure)
 
-  .stat-cards
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title= t('.processing_time')
-      .stat-card-details= t('.since_procedure_creation')
-      .chart-container
-        .chart
-          - colors = %w(#C3D9FF #0069CC #1C7EC9) # from _colors.scss
-          = column_chart @usual_traitement_time_by_month, ytitle: t('.nb_days'), legend: "bottom", label: t('.processing_time_graph_description')
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout{ data: { controller: 'chartkick' } }
+        %h2.fr-callout__title= t('.processing_time')
+        %p.fr-callout__text.fr-text--md= t('.since_procedure_creation')
 
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title= t('.status_evolution')
-      .stat-card-details= t('.status_evolution_details')
-      .chart-container
-        .chart
-          = area_chart @dossiers_funnel, ytitle: t('.dossiers_count'), label: t('.dossiers_count')
+        .fr-mt-4w
+          .chart-procedures-chart{ data: { 'chartkick-target': 'chart' } }
+            = column_chart @usual_traitement_time_by_month,
+              library: Chartkick.options[:default_library_config],
+              ytitle: t('.nb_days'), legend: "bottom", label: t('.processing_time_graph_description')
 
-  .stat-cards
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title= t('.acceptance_rate')
-      .stat-card-details= t('.acceptance_rate_details')
-      .chart-container
-        .chart
-          = pie_chart @termines_states,
-            code: true,
-            colors: %w(#387EC3 #AE2C2B #FAD859),
-            label: t('.rate'),
-            suffix: '%',
-            library: { plotOptions: { pie: {  dataLabels: { enabled: true, format: '{point.name} : {point.percentage: .1f}%' } } } }
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout
+        %h2.fr-callout__title= t('.status_evolution')
+        %p.fr-callout__text.fr-text--md= t('.status_evolution_details')
 
+        .fr-mt-4w
+          .chart
+            = area_chart @dossiers_funnel,
+              library: Chartkick.options[:default_library_config],
+              ytitle: t('.dossiers_count'), label: t('.dossiers_count')
 
-    .stat-card.stat-card-half.pull-left
-      %span.stat-card-title= t('.weekly_distribution')
-      .stat-card-details= t('.weekly_distribution_details')
-      .chart-container
-        .chart
-          = line_chart @termines_by_week, colors: ["#387EC3", "#AE2C2B", "#FAD859"], ytitle: t('.dossiers_count')
-.clearfix
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout
+        %h2.fr-callout__title= t('.acceptance_rate')
+        %p.fr-callout__text.fr-text--md= t('.acceptance_rate_details')
+
+        .fr-mt-4w
+          .chart
+            = pie_chart @termines_states,
+              library: Chartkick.options[:default_library_config],
+              code: true,
+              colors: ["var(--background-flat-success)", "var(--background-flat-error)", "#FAD859" ],
+              label: t('.rate'),
+              suffix: '%'
+
+    .fr-col-xs-12.fr-col-sm-12.fr-col-lg-6
+      .fr-callout
+        %h2.fr-callout__title= t('.weekly_distribution')
+        %p.fr-callout__text.fr-text--md= t('.weekly_distribution_details')
+
+        .fr-mt-4w
+          .chart
+            = line_chart @termines_by_week,
+              library: Chartkick.options[:default_library_config],
+              colors: ["var(--background-flat-success)", "var(--background-flat-error)", "#FAD859" ],
+              ytitle: t('.dossiers_count')

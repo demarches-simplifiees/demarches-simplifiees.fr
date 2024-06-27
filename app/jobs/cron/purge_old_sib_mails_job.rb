@@ -1,5 +1,5 @@
 class Cron::PurgeOldSibMailsJob < Cron::CronJob
-  self.schedule_expression = "every day at midnight"
+  self.schedule_expression = "every day at 00:15"
 
   def perform
     sib = Sendinblue::API.new
