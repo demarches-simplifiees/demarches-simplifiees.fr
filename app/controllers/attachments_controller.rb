@@ -21,7 +21,6 @@ class AttachmentsController < ApplicationController
     @attachment.purge_later
     flash.notice = 'La pièce jointe a bien été supprimée.'
 
-    @champ_id = params[:champ_id]
     @champ = Champ.find(params[:champ]) if params[:champ]
 
     respond_to do |format|
