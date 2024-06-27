@@ -9,8 +9,9 @@ class Attachment::EditComponent < ApplicationComponent
   alias as_multiple? as_multiple
 
   EXTENSIONS_ORDER = ['jpeg', 'png', 'pdf', 'zip'].freeze
+  DEFAULT_MAX_ATTACHMENTS = 10
 
-  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, user_can_replace: false, attachments: [], **kwargs)
+  def initialize(champ: nil, auto_attach_url: nil, attached_file:, direct_upload: true, index: 0, as_multiple: false, view_as: :link, user_can_destroy: true, user_can_replace: false, attachments: [], max: nil, **kwargs)
     @champ = champ
     @attached_file = attached_file
     @direct_upload = direct_upload
@@ -24,6 +25,7 @@ class Attachment::EditComponent < ApplicationComponent
     @attachments = attachments.presence || (kwargs.key?(:attachment) ? [kwargs.delete(:attachment)] : [])
     @attachments << attached_file.attachment if attached_file.respond_to?(:attachment) && @attachments.empty?
     @attachments.compact!
+    @max = max || DEFAULT_MAX_ATTACHMENTS
 
     # Utilisation du premier attachement comme référence pour la rétrocompatibilité
     @attachment = @attachments.first
@@ -54,7 +56,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def destroy_attachment_path
-    attachment_path(champ_id: champ&.public_id)
+    attachment_path(champ_id: champ&.public_id, champ: @champ)
   end
 
   def attachment_input_class
@@ -63,6 +65,7 @@ class Attachment::EditComponent < ApplicationComponent
 
   def file_field_options
     track_issue_with_missing_validators if missing_validators?
+
     options = {
       class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true, "hidden": persisted?),
       direct_upload: @direct_upload,
@@ -76,6 +79,7 @@ class Attachment::EditComponent < ApplicationComponent
 
     options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
     options[:multiple] = true if as_multiple?
+    options[:disabled] = true if @index >= @max
 
     options
   end
