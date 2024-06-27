@@ -5,3 +5,9 @@
   = turbo_stream.focus_all "#attachment-multiple-empty-#{@champ_id} input"
 
 = turbo_stream.show_all ".attachment-input-#{@attachment.id}"
+
+- if @champ
+  = fields_for @champ.input_name, @champ do |form|
+    = turbo_stream.replace @champ.input_group_id do
+      = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
+  = turbo_stream.focus_all "#attachment-multiple-empty-#{@champ_id} input"
