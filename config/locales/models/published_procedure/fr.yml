@@ -1,0 +1,10 @@
+fr:
+  activemodel:
+    models:
+      published_procedure:
+        one: Démarche publiée
+        other: Démarches publiées
+    attributes:
+      published_procedure:
+        published_at: Publiée le
+        libelle: Libellé
