@@ -1,4 +1,5 @@
 class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBase
+  extend ActionView::Helpers::TagHelper
   def estimated_fill_duration(revision)
     FILL_DURATION_LONG
   end
@@ -8,11 +9,11 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
 
   class << self
     def champ_value_for_tag(champ, path = nil)
-      return nil unless piece_justificative_file.attached?
+      return nil unless champ.piece_justificative_file.attached?
 
-      piece_justificative_file.each_with_index.filter_map do |attachment, i|
+      champ.piece_justificative_file.each_with_index.filter_map do |attachment, i|
         if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
-          url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: id, h: encoded_date(:created_at), i: })
+          url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id, h: champ.encoded_date(:created_at), i: })
           display = attachment.filename
           if attachment.image?
             tag.img '', src: url, width: '100', id: attachment.id, display: display

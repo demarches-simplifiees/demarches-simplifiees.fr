@@ -12,7 +12,7 @@ describe Champs::NumeroDnChamp do
   end
 
   describe '#to_s' do
-    let(:champ) { described_class.new(numero_dn: numero_dn, date_de_naissance: date_de_naissance) }
+    let(:champ) { build(:champ_numero_dn, numero_dn:, date_de_naissance:) }
     let(:numero_dn) { nil }
     let(:date_de_naissance) { nil }
 
@@ -40,19 +40,19 @@ describe Champs::NumeroDnChamp do
     subject { champ.for_export }
 
     context 'with no value' do
-      let(:champ) { described_class.new }
+      let(:champ) { build(:champ_numero_dn, numero_dn: nil, date_de_naissance: nil) }
 
       it { is_expected.to be_nil }
     end
 
     context 'with dn value' do
-      let(:champ) { described_class.new(numero_dn: dn) }
+      let(:champ) { build(:champ_numero_dn, numero_dn: dn, date_de_naissance: nil) }
 
       it { is_expected.to be_nil }
     end
 
     context 'with dn & ddn values' do
-      let(:champ) { described_class.new(numero_dn: dn, date_de_naissance: ddn) }
+      let(:champ) { build(:champ_numero_dn, numero_dn: dn, date_de_naissance: ddn) }
 
       it { is_expected.to eq(dn) }
     end

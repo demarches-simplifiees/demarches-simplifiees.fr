@@ -32,7 +32,7 @@ class Champs::NumeroDnChamp < Champ
   end
 
   def search_terms
-    [numero_dn, date_de_naissance]
+    [numero_dn, displayed_date_de_naissance]
   end
 
   private

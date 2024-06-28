@@ -3841,7 +3841,7 @@ type PfCommune {
   """
   Le code postal
   """
-  postalCode: String
+  postalCode: Int
 }
 
 type PhoneChampDescriptor implements ChampDescriptor {

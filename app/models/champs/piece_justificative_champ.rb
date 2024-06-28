@@ -1,5 +1,4 @@
 class Champs::PieceJustificativeChamp < Champ
-  include ActionView::Helpers::TagHelper
   FILE_MAX_SIZE = 200.megabytes
 
   has_many_attached :piece_justificative_file do |attachable|

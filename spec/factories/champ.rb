@@ -117,7 +117,9 @@ FactoryBot.define do
 
     factory :champ_numero_dn, class: 'Champs::NumeroDnChamp' do
       type_de_champ { association :type_de_champ_numero_dn, procedure: dossier.procedure }
-      value { '["1234567", null]' }
+      # value { '["1234567", "2000-01-01"]' }
+      numero_dn { "1234567" }
+      date_de_naissance { "2000-01-01" }
     end
 
     factory :champ_multiple_drop_down_list, class: 'Champs::MultipleDropDownListChamp' do

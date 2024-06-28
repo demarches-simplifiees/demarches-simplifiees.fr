@@ -185,6 +185,53 @@ describe Champ do
 
       it { expect(champ.for_export).to eq('Crétinier, Mousserie') }
     end
+
+    # pf displays links for PJs
+    context 'when type_de_champ is piece_justificative' do
+      let(:champ) { create(:champ_piece_justificative) }
+
+      it { expect(champ.for_export).to eq('toto.txt') }
+    end
+  end
+
+  describe '#for_tag' do
+    # pf displays links for PJs
+    context 'when type_de_champ is piece_justificative' do
+      let(:champ) { create(:champ_piece_justificative) }
+
+      it { expect(champ.for_tag).to include('<a href="http://') }
+    end
+
+    context 'when type_de_champ is numero_dn' do
+      let(:champ) { create(:champ_numero_dn) }
+
+      it do
+        expect(champ.for_tag).to eq("1234567")
+        expect(champ.for_tag(:date_de_naissance)).to eq('01 janvier 2000')
+      end
+    end
+
+    context 'when type_de_champ is commune de polynesie' do
+      let(:champ) { create(:champ_commune_de_polynesie) }
+
+      it do
+        expect(champ.for_tag).to eq("Arue")
+        expect(champ.for_tag(:ile)).to eq('Tahiti')
+        expect(champ.for_tag(:archipel)).to eq('Iles Du Vent')
+        expect(champ.for_tag(:code_postal)).to eq(98701)
+      end
+    end
+
+    context 'when type_de_champ is code postal de polynesie' do
+      let(:champ) { create(:champ_code_postal_de_polynesie) }
+
+      it do
+        expect(champ.for_tag).to eq(98701)
+        expect(champ.for_tag(:ile)).to eq('Tahiti')
+        expect(champ.for_tag(:archipel)).to eq('Iles Du Vent')
+        expect(champ.for_tag(:commune)).to eq('Arue')
+      end
+    end
   end
 
   describe '#search_terms' do
@@ -243,7 +290,7 @@ describe Champ do
     end
 
     context 'for nationalités champ' do
-      let(:champ) { create(:champ_nationalite, value:) }
+      let(:champ) { create(:champ_nationalites, value:) }
       let(:value) { "Française" }
 
       it { is_expected.to eq([value]) }
@@ -253,14 +300,14 @@ describe Champ do
       let(:champ) { create(:champ_commune_de_polynesie, value:) }
       let(:value) { "Arue - Tahiti - 98701" }
 
-      it { is_expected.to eq([value]) }
+      it { is_expected.to eq(["Arue"]) }
     end
 
     context 'for code postal de polynésie champ' do
       let(:champ) { create(:champ_code_postal_de_polynesie, value:) }
       let(:value) { "98701 - Arue - Tahiti" }
 
-      it { is_expected.to eq([value]) }
+      it { is_expected.to eq(["98701"]) }
     end
 
     context 'for dossier link champ' do
@@ -303,10 +350,9 @@ describe Champ do
     end
 
     context 'for numero dn champ' do
-      let(:champ) { create(:champ_numero_dn, value:) }
-      let(:value) { JSON.generate([numero_dn: "1234567", date_de_naissance: nil]) }
+      let(:champ) { create(:champ_numero_dn, numero_dn: "1234567", date_de_naissance: "2000-01-01") }
 
-      it { is_expected.to eq(["1234567", nil]) }
+      it { is_expected.to eq(["1234567", "01/01/2000"]) }
     end
 
     context 'for multiple drop down list champ' do
@@ -340,7 +386,7 @@ describe Champ do
     end
 
     context 'for nationalites champ' do
-      let(:type_de_champ) { build(:type_de_champ_nationalites) }
+      let(:champ) { build(:champ_nationalites) }
       let(:value) { "Française" }
 
       it { is_expected.to eq([value]) }
