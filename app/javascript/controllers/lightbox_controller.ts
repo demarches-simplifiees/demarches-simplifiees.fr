@@ -4,6 +4,7 @@ import { LightGallery } from 'lightgallery/lightgallery';
 import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 import lgRotate from 'lightgallery/plugins/rotate';
+import lgHash from 'lightgallery/plugins/hash';
 import 'lightgallery/css/lightgallery-bundle.css';
 
 export default class extends Controller {
@@ -11,7 +12,7 @@ export default class extends Controller {
 
   connect(): void {
     const options = {
-      plugins: [lgZoom, lgThumbnail, lgRotate],
+      plugins: [lgZoom, lgThumbnail, lgRotate, lgHash],
       flipVertical: false,
       flipHorizontal: false,
       animateThumb: false,
@@ -20,6 +21,14 @@ export default class extends Controller {
       toggleThumb: true,
       selector: '.gallery-link'
     };
+
+    const gallery = document.querySelector('.gallery');
+
+    if (gallery != null) {
+      gallery.addEventListener('lgBeforeOpen', () => {
+        window.history.pushState({}, 'Gallery opened');
+      });
+    }
 
     this.lightGallery = lightGallery(this.element as HTMLElement, options);
 

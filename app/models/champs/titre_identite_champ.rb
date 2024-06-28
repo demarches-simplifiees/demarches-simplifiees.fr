@@ -3,7 +3,6 @@ class Champs::TitreIdentiteChamp < Champ
   ACCEPTED_FORMATS = ['image/png', 'image/jpeg']
 
   has_many_attached :piece_justificative_file do |attachable|
-    attachable.variant :small, resize: '300x300'
     attachable.variant :medium, resize: '400x400'
   end
 

@@ -3,7 +3,6 @@ class Champs::PieceJustificativeChamp < Champ
   FILE_MAX_SIZE = 200.megabytes
 
   has_many_attached :piece_justificative_file do |attachable|
-    attachable.variant :small, resize: '300x300'
     attachable.variant :medium, resize: '400x400'
   end
 

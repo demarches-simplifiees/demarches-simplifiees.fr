@@ -7,7 +7,7 @@
         instructeur_dossier_path(dossier.procedure, dossier),
         notification: notifications_summary[:demande])
 
-      - if dossier.revision.types_de_champ.any?(&:piece_justificative?)
+      - if dossier.champs.map(&:piece_justificative_file).flatten.any?
         = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.attachments'),
           pieces_jointes_instructeur_dossier_path(dossier.procedure, dossier))
 
