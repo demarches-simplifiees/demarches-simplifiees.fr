@@ -3,4 +3,4 @@ fr:
     attributes:
       commentaire:
         body: 'Votre message'
-        file: fichier
+        piece_jointe: "Pièce jointe"

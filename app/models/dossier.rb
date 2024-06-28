@@ -55,7 +55,7 @@ class Dossier < ApplicationRecord
   has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
-  has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachment: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
+  has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
 
   has_many :invites, dependent: :destroy
   has_many :follows, -> { active }, inverse_of: :dossier
@@ -295,7 +295,7 @@ class Dossier < ApplicationRecord
   scope :for_api, -> {
     with_champs
       .with_annotations
-      .includes(commentaires: { piece_jointe_attachment: :blob },
+      .includes(commentaires: { piece_jointe_attachments: :blob },
         justificatif_motivation_attachment: :blob,
         attestation: [],
         avis: { piece_justificative_file_attachment: :blob },

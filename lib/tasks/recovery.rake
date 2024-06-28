@@ -48,7 +48,7 @@ namespace :recovery do
     rake_puts "Will export #{dossier_ids}"
 
     dossiers_with_data = Dossier.where(id: dossier_ids)
-      .preload(commentaires: { piece_jointe_attachment: :blob },
+      .preload(commentaires: { pieces_jointes_attachments: :blob },
                                avis: { introduction_file_attachment: :blob, piece_justificative_file_attachment: :blob },
                                dossier_operation_logs: { serialized_attachment: :blob },
                                attestation: { pdf_attachment: :blob },
@@ -67,7 +67,7 @@ namespace :recovery do
       blob_keys_for_dossier += dossier.commentaires.flat_map do |commentaire|
         commentaire_blob_key = []
         if commentaire.piece_jointe.attached?
-          commentaire_blob_key += [commentaire.piece_jointe_attachment.blob.key]
+          commentaire_blob_key += [commentaire.piece_jointe_attachments.blob.key]
         end
         commentaire_blob_key
       end
