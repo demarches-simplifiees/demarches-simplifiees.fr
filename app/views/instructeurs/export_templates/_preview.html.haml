@@ -12,9 +12,12 @@
           %li
             %span#preview_default_dossier_directory #{export_template.folder_path(dossier)}/
             %ul
-              %li#preview_pdf_name= export_template.dossier_pdf_path(dossier)
+              - if export_template.pdf_name&.fetch('enabled')
+                %li#preview_pdf_name= export_template.dossier_pdf_path(dossier)
+
               - procedure.exportables_pieces_jointes.each do |pj|
-                %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.pj_path(dossier, pj.stable_id)}-1.jpg
+                - if export_template.pj(pj.stable_id)&.fetch('enabled')
+                  %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.pj_path(dossier, pj.stable_id)}-1.jpg
             %ul
               %li
                 %span messagerie/

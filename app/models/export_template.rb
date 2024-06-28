@@ -12,15 +12,19 @@ class ExportTemplate < ApplicationRecord
   FORMAT_DATE = "%Y-%m-%d"
 
   def pj(stable_id)
-    pjs.find { _1['stable_id'] == stable_id.to_s }&.fetch('path')
+    pjs.find { _1['stable_id'] == stable_id.to_s }
   end
 
   def set_default_values
     self.default_dossier_directory = path_with_dossier_id_suffix("dossier-")
-    self.pdf_name = path_with_dossier_id_suffix("export_")
+    self.pdf_name = { "template" => path_with_dossier_id_suffix("export_"), "enabled" => true }
 
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
-      { "stable_id" => pj.stable_id.to_s, "path" => path_with_dossier_id_suffix("#{pj.libelle.parameterize}-") }
+      {
+        "stable_id" => pj.stable_id.to_s,
+        "template" => path_with_dossier_id_suffix("#{pj.libelle.parameterize}-"),
+        "enabled" => true
+      }
     end
   end
 
@@ -42,11 +46,11 @@ class ExportTemplate < ApplicationRecord
 
   # pdf_export_path ?
   def dossier_pdf_path(dossier)
-    "#{render_attributes_for(pdf_name, dossier)}.pdf"
+    "#{render_attributes_for(pdf_name['template'], dossier)}.pdf"
   end
 
   def pj_path(dossier, pj_stable_id, attachment = nil)
-    render_attributes_for(pj(pj_stable_id), dossier, attachment)
+    render_attributes_for(pj(pj_stable_id)['template'], dossier, attachment)
   end
 
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
