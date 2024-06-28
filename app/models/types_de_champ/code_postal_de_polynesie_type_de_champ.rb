@@ -32,7 +32,7 @@ class TypesDeChamp::CodePostalDePolynesieTypeDeChamp < TypesDeChamp::TextTypeDeC
   class << self
     def champ_value(champ)
       city = APIGeo::API.commune_by_postal_code_city_label(champ.value)
-      city ? city[:code_postal] : ''
+      city ? city[:code_postal].to_s : ''
     end
 
     def champ_value_for_export(champ, path = :value)

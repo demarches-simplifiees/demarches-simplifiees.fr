@@ -4,7 +4,7 @@ module Types::Champs
 
     class PfCommuneType < Types::BaseObject
       field :name, String, "Le nom de la commune", null: false
-      field :postal_code, String, "Le code postal", null: true
+      field :postal_code, Integer, "Le code postal", null: true
       field :island, String, "L'ile", null: true
       field :archipelago, String, "L'archipel", null: true
     end
