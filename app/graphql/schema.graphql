@@ -502,6 +502,31 @@ type CnafChampDescriptor implements ChampDescriptor {
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
 }
 
+type CodePostalDePolynesieChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+  commune: PfCommune
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+}
+
 type CodePostalDePolynesieChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.
@@ -599,6 +624,31 @@ type CommuneChampDescriptor implements ChampDescriptor {
   Type de la valeur du champ.
   """
   type: TypeDeChamp! @deprecated(reason: "Utilisez le champ `__typename` à la place.")
+}
+
+type CommuneDePolynesieChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+  commune: PfCommune
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
 }
 
 type CommuneDePolynesieChampDescriptor implements ChampDescriptor {
@@ -3554,6 +3604,11 @@ type NumberChampDescriptor implements ChampDescriptor {
 
 type NumeroDnChamp implements Champ {
   """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+
+  """
   La date de naissance associée
   """
   dateDeNaissance: ISO8601Date
@@ -3765,6 +3820,28 @@ type PersonnePhysique implements Demandeur {
   id: ID!
   nom: String!
   prenom: String!
+}
+
+type PfCommune {
+  """
+  L'archipel
+  """
+  archipelago: String
+
+  """
+  L'ile
+  """
+  island: String
+
+  """
+  Le nom de la commune
+  """
+  name: String!
+
+  """
+  Le code postal
+  """
+  postalCode: String
 }
 
 type PhoneChampDescriptor implements ChampDescriptor {
@@ -4780,6 +4857,10 @@ type ValidationError {
 }
 
 type VisaChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
   id: ID!
 
   """

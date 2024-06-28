@@ -553,9 +553,24 @@ class API::V2::StoredQuery
         ...DepartementFragment
       }
     }
+    ... on CommuneDePolynesieChamp {
+      commune {
+        ...PfCommuneFragment
+      }
+    }
+    ... on CodePostalDePolynesieChamp {
+      commune {
+        ...PfCommuneFragment
+      }
+    }
     ... on DepartementChamp {
       departement {
         ...DepartementFragment
+      }
+    }
+    ... on CommuneDePolynesieChamp {
+      commune {
+        ...PfCommuneFragment
       }
     }
     ... on RegionChamp {
@@ -690,6 +705,13 @@ class API::V2::StoredQuery
     name
     code
     postalCode
+  }
+
+  fragment PfCommuneFragment on PfCommune {
+    name
+    postalCode
+    island
+    archipelago
   }
 
   fragment RNFFragment on RNF {

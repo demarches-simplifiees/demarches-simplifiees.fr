@@ -57,6 +57,8 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::CheckboxChampType,
     Types::Champs::CiviliteChampType,
     Types::Champs::CommuneChampType,
+    Types::Champs::CommuneDePolynesieChampType,
+    Types::Champs::CodePostalDePolynesieChampType,
     Types::Champs::DateChampType,
     Types::Champs::DatetimeChampType,
     Types::Champs::DecimalNumberChampType,

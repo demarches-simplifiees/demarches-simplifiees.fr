@@ -244,6 +244,24 @@
               "deprecationReason": null
             },
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "commune",
               "description": null,
               "args": [
@@ -1119,6 +1137,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "geoAreas",
               "description": null,
               "args": [
@@ -1373,6 +1409,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -1487,7 +1541,17 @@
             },
             {
               "kind": "OBJECT",
+              "name": "CodePostalDePolynesieChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "CommuneChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "CommuneDePolynesieChamp",
               "ofType": null
             },
             {
@@ -1513,6 +1577,11 @@
             {
               "kind": "OBJECT",
               "name": "DossierLinkChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "EngagementJuridiqueChamp",
               "ofType": null
             },
             {
@@ -1548,6 +1617,16 @@
             {
               "kind": "OBJECT",
               "name": "PieceJustificativeChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "RNAChamp",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
+              "name": "RNFChamp",
               "ofType": null
             },
             {
@@ -1794,6 +1873,11 @@
             },
             {
               "kind": "OBJECT",
+              "name": "EngagementJuridiqueChampDescriptor",
+              "ofType": null
+            },
+            {
+              "kind": "OBJECT",
               "name": "EpciChampDescriptor",
               "ofType": null
             },
@@ -1934,6 +2018,24 @@
           "name": "CheckboxChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,
@@ -2176,6 +2278,61 @@
           "possibleTypes": null
         },
         {
+          "kind": "OBJECT",
+          "name": "ChorusConfiguration",
+          "description": null,
+          "fields": [
+            {
+              "name": "centreDeCout",
+              "description": "Le code du centre de cout auquel est rattaché la démarche.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "domaineFonctionnel",
+              "description": "Le code du domaine fonctionnel auquel est rattaché la démarche.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "referentielDeProgrammation",
+              "description": "Le code du référentiel de programmation auquel est rattaché la démarche..",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
           "kind": "ENUM",
           "name": "Civilite",
           "description": null,
@@ -2203,6 +2360,24 @@
           "name": "CiviliteChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,
@@ -2567,6 +2742,141 @@
         },
         {
           "kind": "OBJECT",
+          "name": "CodePostalDePolynesieChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commune",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PfCommune",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "prefilled",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Date de dernière modification du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "CodePostalDePolynesieChampDescriptor",
           "description": null,
           "fields": [
@@ -2758,6 +3068,24 @@
           "name": "CommuneChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "commune",
               "description": null,
@@ -3011,6 +3339,141 @@
         },
         {
           "kind": "OBJECT",
+          "name": "CommuneDePolynesieChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commune",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "PfCommune",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "prefilled",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Date de dernière modification du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "CommuneDePolynesieChampDescriptor",
           "description": null,
           "fields": [
@@ -3237,6 +3700,12 @@
               "description": "Le dossier est incomplet et nécessite d’être complété",
               "isDeprecated": false,
               "deprecationReason": null
+            },
+            {
+              "name": "outdated",
+              "description": "Le dossier doit être mis à jour et revalidé",
+              "isDeprecated": false,
+              "deprecationReason": null
             }
           ],
           "possibleTypes": null
@@ -3394,6 +3863,24 @@
           "name": "DateChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "date",
               "description": "La valeur du champ formaté en ISO8601 (Date).",
@@ -3651,6 +4138,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "datetime",
               "description": "La valeur du champ formaté en ISO8601 (DateTime).",
               "args": [
@@ -3892,6 +4397,24 @@
           "name": "DecimalNumberChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,
@@ -4465,6 +4988,20 @@
               },
               "isDeprecated": true,
               "deprecationReason": "Utilisez le champ `activeRevision.champDescriptors` à la place."
+            },
+            {
+              "name": "chorusConfiguration",
+              "description": "Cadre budgétaire Chorus",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "ChorusConfiguration",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
             },
             {
               "name": "dateCreation",
@@ -5805,6 +6342,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "departement",
               "description": null,
               "args": [
@@ -6642,6 +7197,20 @@
               "deprecationReason": null
             },
             {
+              "name": "deposeParUnTiers",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "geojson",
               "description": "L’URL du GeoJSON contenant les données cartographiques du dossier.",
               "args": [
@@ -6783,6 +7352,20 @@
               "deprecationReason": null
             },
             {
+              "name": "nomMandataire",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "number",
               "description": "Le numero du dossier.",
               "args": [
@@ -6828,6 +7411,20 @@
                   "name": "Boolean",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "prenomMandataire",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -6896,7 +7493,7 @@
             },
             {
               "name": "usager",
-              "description": null,
+              "description": "Profile de l'usager déposant le dossier",
               "args": [
 
               ],
@@ -7900,6 +8497,24 @@
           "name": "DossierLinkChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "dossier",
               "description": null,
@@ -10097,6 +10712,307 @@
         },
         {
           "kind": "OBJECT",
+          "name": "EngagementJuridique",
+          "description": null,
+          "fields": [
+            {
+              "name": "montantEngage",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "montantPaye",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "EngagementJuridiqueChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "engagementJuridique",
+              "description": "Montant engagé et payé de l'EJ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "EngagementJuridique",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "prefilled",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Date de dernière modification du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "EngagementJuridiqueChampDescriptor",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptors",
+              "description": "Description des champs d’un bloc répétable.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "LIST",
+                "name": null,
+                "ofType": {
+                  "kind": "NON_NULL",
+                  "name": null,
+                  "ofType": {
+                    "kind": "INTERFACE",
+                    "name": "ChampDescriptor",
+                    "ofType": null
+                  }
+                }
+              },
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `RepetitionChampDescriptor.champ_descriptors` à la place."
+            },
+            {
+              "name": "description",
+              "description": "Description du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "required",
+              "description": "Est-ce que le champ est obligatoire ?",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "type",
+              "description": "Type de la valeur du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "TypeDeChamp",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": true,
+              "deprecationReason": "Utilisez le champ `__typename` à la place."
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "ChampDescriptor",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "Entreprise",
           "description": null,
           "fields": [
@@ -10193,6 +11109,20 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "Effectif",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "enseigne",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -10457,6 +11387,24 @@
           "name": "EpciChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "departement",
               "description": null,
@@ -12790,6 +13738,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -13031,6 +13997,24 @@
           "name": "LinkedDropDownListChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,
@@ -13573,6 +14557,24 @@
           "name": "MultipleDropDownListChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,
@@ -14780,6 +15782,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "dateDeNaissance",
               "description": "La date de naissance associée",
               "args": [
@@ -15486,6 +16506,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -16104,6 +17142,20 @@
               "deprecationReason": null
             },
             {
+              "name": "email",
+              "description": "Email du bénéficiaire (dans le cas d'un dossier déposé par et pour l'usager connecté, l'email est celui de l'usager connecté. Dans le cas d'un dossier déposé pour un bénéficiaire, l'email est celui du bénéficiaire, s'il a été renseigné)",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -16165,6 +17217,79 @@
               "name": "Demandeur",
               "ofType": null
             }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "PfCommune",
+          "description": null,
+          "fields": [
+            {
+              "name": "archipelago",
+              "description": "L'archipel",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "island",
+              "description": "L'ile",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "name",
+              "description": "Le nom de la commune",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "postalCode",
+              "description": "Le code postal",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
           ],
           "enumValues": null,
           "possibleTypes": null
@@ -16299,6 +17424,24 @@
           "name": "PieceJustificativeChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "file",
               "description": null,
@@ -16704,11 +17847,11 @@
         {
           "kind": "OBJECT",
           "name": "Profile",
-          "description": null,
+          "description": "Profil d'un usager connecté (déposant un dossier, instruisant un dossier...)",
           "fields": [
             {
               "name": "email",
-              "description": null,
+              "description": "Email de l'usager",
               "args": [
 
               ],
@@ -16928,6 +18071,228 @@
         },
         {
           "kind": "OBJECT",
+          "name": "RNA",
+          "description": null,
+          "fields": [
+            {
+              "name": "address",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Address",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "RNAChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commune",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Commune",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "departement",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Departement",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "prefilled",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "rna",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "RNA",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Date de dernière modification du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
           "name": "RNAChampDescriptor",
           "description": null,
           "fields": [
@@ -17045,6 +18410,228 @@
             {
               "kind": "INTERFACE",
               "name": "ChampDescriptor",
+              "ofType": null
+            }
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "RNF",
+          "description": null,
+          "fields": [
+            {
+              "name": "address",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Address",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+
+          ],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "RNFChamp",
+          "description": null,
+          "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "commune",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Commune",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "departement",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "Departement",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "id",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ID",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "label",
+              "description": "Libellé du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "prefilled",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "rnf",
+              "description": null,
+              "args": [
+
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "RNF",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "stringValue",
+              "description": "La valeur du champ sous forme texte.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updatedAt",
+              "description": "Date de dernière modification du champ.",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "ISO8601DateTime",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [
+            {
+              "kind": "INTERFACE",
+              "name": "Champ",
               "ofType": null
             }
           ],
@@ -17230,6 +18817,24 @@
           "name": "RegionChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,
@@ -17494,6 +19099,24 @@
           "name": "RepetitionChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "champs",
               "description": null,
@@ -18131,6 +19754,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "etablissement",
               "description": null,
               "args": [
@@ -18508,6 +20149,24 @@
           "description": null,
           "fields": [
             {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [
@@ -18874,6 +20533,24 @@
           "name": "TitreIdentiteChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "filled",
               "description": null,
@@ -19292,6 +20969,12 @@
           "interfaces": null,
           "enumValues": [
             {
+              "name": "engagement_juridique",
+              "description": "Translation missing: fr.activerecord.attributes.type_de_champ.type_champs.engagement_juridique",
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "header_section",
               "description": "Titre de section",
               "isDeprecated": false,
@@ -19663,6 +21346,24 @@
           "name": "VisaChamp",
           "description": null,
           "fields": [
+            {
+              "name": "champDescriptorId",
+              "description": "L'identifiant du champDescriptor de ce champ",
+              "args": [
+
+              ],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
             {
               "name": "id",
               "description": null,

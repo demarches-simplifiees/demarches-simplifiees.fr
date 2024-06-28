@@ -34,6 +34,18 @@ module Types
           else
             Types::Champs::TextChampType
           end
+        when ::Champs::CommuneDePolynesieChamp
+          if context.has_fragment?(:CommuneDePolynesieChamp)
+            Types::Champs::CommuneDePolynesieChampType
+          else
+            Types::Champs::TextChampType
+          end
+        when ::Champs::CodePostalDePolynesieChamp
+          if context.has_fragment?(:CommuneDePolynesieChamp)
+            Types::Champs::CodePostalDePolynesieChampType
+          else
+            Types::Champs::TextChampType
+          end
         when ::Champs::DepartementChamp
           if context.has_fragment?(:DepartementChamp)
             Types::Champs::DepartementChampType

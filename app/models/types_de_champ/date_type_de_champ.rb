@@ -7,7 +7,7 @@ class TypesDeChamp::DateTypeDeChamp < TypesDeChamp::TypeDeChampBase
     end
 
     def champ_value_for_export(champ, path = nil)
-      Date.parse(value)
+      Date.parse(champ.value)
     rescue ArgumentError
       nil
     end
