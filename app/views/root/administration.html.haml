@@ -74,28 +74,22 @@
     .fr-py-6w.fr-background-alt--blue-france
       .container
         %h2.center.fr-mb-4w #{Current.application_name} en chiffres
-        %ul.numbers
-          %li.number
-            .number-value
+        %dl.numbers
+          .number
+            %dt.number-label
+              administrations partenaires
+            %dd.number-value
               = number_with_delimiter(Administrateur.with_publiees_ou_closes.uniq.count, :locale => :fr)
-            .number-label<
-              administrations
-              %br<>
-              partenaires
-          %li.number
-            .number-value
+          .number
+            %dt.number-label
+              dossiers déposés
+            %dd.number-value
               = number_with_delimiter(Dossier.state_not_brouillon.count, :locale => :fr)
-            .number-label<
-              dossiers
-              %br<>
-              déposés
-          %li.number
-            .number-value
+          .number
+            %dt.number-label
+              de réduction des délais de traitement
+            %dd.number-value
               = "#{number_with_delimiter(50, :locale => :fr)} %"
-            .number-label<
-              de réduction
-              %br<>
-              des délais de traitement
 
   = render partial: "root/users" if  LANDING_USERS_ENABLED
 

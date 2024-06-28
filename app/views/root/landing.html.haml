@@ -30,19 +30,19 @@
     .container
       %h2.center.fr-mb-4w= t(".our_numbers", name: Current.application_name)
       - cache [I18n.locale, "numbers-panel"], expires_in: 3.hours do
-        %ul.numbers
-          %li.number
-            .number-value
+        %dl.numbers
+          .number
+            %dt.number-label= t(".numbers.administrations")
+            %dd.number-value
               = number_with_delimiter(@stat&.administrations_partenaires)
-            .number-label= t(".numbers.administrations")
-          %li.number
-            .number-value
+          .number
+            %dt.number-label= t(".numbers.files")
+            %dd.number-value
               = number_with_delimiter(@stat&.dossiers_not_brouillon)
-            .number-label= t(".numbers.files")
-          %li.number
-            .number-value
+          .number
+            %dt.number-label.number-label-third= t(".numbers.processing_time")
+            %dd.number-value
               = "#{number_with_delimiter(50)} %"
-            .number-label.number-label-third= t(".numbers.processing_time")
 
   .fr-background-alt--blue-france.fr-py-6w
     .container
