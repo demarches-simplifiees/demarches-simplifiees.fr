@@ -511,15 +511,15 @@ fr:
           procedure_closed:
             brouillon:
               internal_procedure_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Nous vous invitons à en déposer un nouveau sur la %{link} qui la remplace
-              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. Plus d’informations %{link}
+              other_html: Cette démarche est close, vous ne pouvez pas déposer ce dossier. %{link}
             en_cours:
               internal_procedure_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l’administration
-              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier. Plus d’informations %{link}
+              other_html: Cette démarche est close. Votre dossier est bien déposé et peut être instruit par l'administration. Vous ne pouvez pas déposer de nouveau dossier. %{link}
             termine:
               internal_procedure_html: Cette démarche est close et remplacée par %{link}. Votre dossier a été traité par l'administration
-              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. Plus d’informations %{link}
+              other_html: Cette démarche est close, vous ne pourrez pas déposer de nouveau dossier à partir du lien de la démarche. %{link}
             closing_details: Détails sur la fermeture de la démarche
-            here: ici
+            more_details: Plus d’informations
             procedure: démarche
             this_procedure: cette démarche
           pending_correction_html: "Ce dossier attend vos corrections. Consultez les modifications à apporter dans la <a href=\"%{link}\">messagerie</a>."
