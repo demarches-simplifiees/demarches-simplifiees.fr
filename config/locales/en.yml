@@ -108,11 +108,18 @@ en:
       editing_content:
         line_one: "Interministerial Directorate for Digital Affairs (DINUM)"
       direction: "Publishing Department"
-      direction_content: "Ms. Stéphanie Schaer , Interministerial Director of Digital Affairs."
+      direction_content: "Ms. Stéphanie Schaer, Interministerial Director of Digital Affairs."
       hosting: "Hosting provider"
       hosting_content:
-        line_four: "VAT NUMBER: FR 22 424 761 419"
-        line_five: "Head office : 2 rue Kellermann - 59100 Roubaix - France."
+        firm: "OVH"
+        RCS_term: "Commercial register"
+        RCS_value: "Roubaix – Tourcoing 424 761 419 00045"
+        APE_term: "APE (business activity) code"
+        APE_value: "6202A"
+        TVA_term_html: "VAT NUMBER"
+        TVA_value: "FR 22 424 761 419"
+        headquarters_term: "Head office"
+        headquarters_value: "2 rue Kellermann - 59100 Roubaix - France"
     accessibility_statement:
       title: "Accessibility statement"
       line_one_html: "DINUM is committed to making its service accessible in accordance with <a href=\"https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000037388867\" hreflang=\"fr\">Article 47 of Law No. 2005-102 of 11 February 2005</a>."
