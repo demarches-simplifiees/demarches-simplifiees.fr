@@ -20,6 +20,7 @@ fr:
         organisation: Organisme
         duree_conservation_dossiers_dans_ds: Durée de conservation des dossiers
         max_duree_conservation_dossiers_dans_ds: Durée maximale de conservation des dossiers (autorisée par un super admin)
+        for_tiers_enabled: Activer le dépot par un tiers
         id: Id
         libelle: Titre de la démarche
         description: Quel est l’objet de la démarche ?

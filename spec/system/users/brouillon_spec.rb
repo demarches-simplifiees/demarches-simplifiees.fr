@@ -677,7 +677,9 @@ describe 'The user' do
     find('label', text: 'Monsieur').click
     fill_in('Prénom', with: 'prenom', visible: true)
     fill_in('Nom', with: 'Nom', visible: true)
-    click_on 'Continuer'
+    within "#identite-form" do
+      click_on 'Continuer'
+    end
     expect(page).to have_current_path(brouillon_dossier_path(user_dossier))
   end
 end

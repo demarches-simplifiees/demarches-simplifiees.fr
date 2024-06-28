@@ -22,7 +22,7 @@ class Individual < ApplicationRecord
                                   if: -> { dossier.for_tiers? },
                                   on: :update
 
-  validates :email, presence: true, if: -> { dossier.for_tiers? && self.email? }, on: :update
+  validates :email, strict_email: true, presence: true, if: -> { dossier.for_tiers? && self.email? }, on: :update
 
   GENDER_MALE = "M."
   GENDER_FEMALE = 'Mme'

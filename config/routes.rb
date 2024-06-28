@@ -375,6 +375,7 @@ Rails.application.routes.draw do
     resources :dossiers, only: [:index, :show, :destroy, :new] do
       member do
         get 'identite'
+        patch 'identite'
         patch 'update_identite'
         post 'clone'
         get 'siret'

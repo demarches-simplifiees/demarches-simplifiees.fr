@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_24_133645) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -241,6 +241,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
     t.bigint "procedure_id"
     t.datetime "sent_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "champ_revisions", force: :cascade do |t|
+    t.bigint "champ_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "instructeur_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["champ_id"], name: "index_champ_revisions_on_champ_id"
+    t.index ["instructeur_id"], name: "index_champ_revisions_on_instructeur_id"
   end
 
   create_table "champs", id: :serial, force: :cascade do |t|
@@ -893,6 +902,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
     t.boolean "euro_flag", default: false
     t.boolean "experts_require_administrateur_invitation", default: false
     t.boolean "for_individual", default: false
+    t.boolean "for_tiers_enabled", default: true, null: false
     t.datetime "hidden_at"
     t.datetime "hidden_at_as_template", precision: nil
     t.boolean "instructeurs_self_management_enabled", default: false
@@ -1206,6 +1216,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_04_16_062900) do
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
+  add_foreign_key "champ_revisions", "champs"
   add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
