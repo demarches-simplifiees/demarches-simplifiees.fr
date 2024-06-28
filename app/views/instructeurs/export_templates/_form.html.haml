@@ -41,9 +41,10 @@
           = check_box_tag "export_template[pdf_name][enabled]", true, @export_template.pdf_name.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_pdf_name_enabled"
           = label_tag "export_template_pdf_name_enabled", f.object.class.human_attribute_name(:pdf_name), class: 'fr-toggle__label', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
 
-        .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-          = f.hidden_field "[pdf_name][template]", data: { tiptap_target: 'input' }, value: @export_template.pdf_name.fetch('template').to_json
-        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
+        %div{ class: class_names('hidden': !@export_template.pdf_name.fetch('enabled')) }
+          .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
+            = f.hidden_field "[pdf_name][template]", data: { tiptap_target: 'input' }, value: @export_template.pdf_name.fetch('template').to_json
+          .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       - if @exportable_pjs.any?
         %h3 Pieces justificatives
