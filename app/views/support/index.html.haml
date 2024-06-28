@@ -18,6 +18,7 @@
         .fr-input-group
           = label_tag :email, class: 'fr-label' do
             Email
+            = t('.notice_email')
             = render EditableChamp::AsteriskMandatoryComponent.new
           = email_field_tag :email, params[:email], required: true, autocomplete: 'email', class: 'fr-input'
 
@@ -65,7 +66,7 @@
           = t('.notice_pj_product')
         %p.notice.hidden{ data: { 'contact-type-only': Helpscout::FormAdapter::TYPE_AUTRE } }
           = t('.notice_pj_other')
-        = file_field_tag :piece_jointe, class: 'fr-upload', max: 200.megabytes
+        = file_field_tag :piece_jointe, class: 'fr-upload', accept: '.jpg, .jpeg, .png, .pdf'
 
       = hidden_field_tag :tags, @tags&.join(',')
 
