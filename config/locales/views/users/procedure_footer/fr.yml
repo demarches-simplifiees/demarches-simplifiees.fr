@@ -27,8 +27,8 @@ fr:
           title: legifrance.gouv.fr
           url: "https://legifrance.gouv.fr"
         gouvernement:
-          title: gouvernement.fr
-          url: "https://gouvernement.fr"
+          title: info.gouv.fr
+          url: "https://info.gouv.fr"
         service_public:
           title: service-public.fr
           url: "https://service-public.fr"
