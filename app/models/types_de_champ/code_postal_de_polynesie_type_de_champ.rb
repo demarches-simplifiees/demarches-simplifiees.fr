@@ -36,7 +36,7 @@ class TypesDeChamp::CodePostalDePolynesieTypeDeChamp < TypesDeChamp::TextTypeDeC
     end
 
     def champ_value_for_export(champ, path = :value)
-      champ_value_for_tag(champ,path)
+      champ_value_for_tag(champ, path)
     end
 
     def champ_value_for_tag(champ, path = :value)

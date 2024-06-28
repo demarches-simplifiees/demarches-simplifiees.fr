@@ -339,7 +339,6 @@ describe Champ do
       it { is_expected.to eq(['France']) }
     end
 
-
     context 'for nationalites champ' do
       let(:type_de_champ) { build(:type_de_champ_nationalites) }
       let(:value) { "Française" }
