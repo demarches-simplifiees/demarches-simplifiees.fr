@@ -54,23 +54,23 @@ module Instructeurs
     private
 
     def export_template_params
-      pj_stable_ids = @exportable_pjs.map { _1.stable_id.to_s }
-
       h = params.require(:export_template)
-        .permit(:name, :kind, :default_dossier_directory, pdf_name: [:enabled, :template], pjs: [:stable_id, :enabled, :template]).to_h
+        .permit(:name, :kind, default_dossier_directory: [:template], pdf_name: [:enabled, :template], pjs: [:stable_id, :enabled, :template]).to_h
 
-      # StrongParameters does not handle nested hashes
-      h[:default_dossier_directory] = JSON.parse(h[:default_dossier_directory]) if h[:default_dossier_directory].present?
+      [h[:default_dossier_directory], h[:pdf_name], *h[:pjs]].each { cast_in_json(_1) }
 
-      h[:pdf_name][:template] = JSON.parse(h[:pdf_name][:template]) if h[:pdf_name][:template].present?
-      h[:pdf_name][:enabled] = false if h[:pdf_name][:enabled].blank?
+      # default_dossier_directory is always enabled
+      h[:default_dossier_directory][:enabled] = true
 
+      pj_stable_ids = @exportable_pjs.map { _1.stable_id.to_s }
       h[:pjs] = h[:pjs].filter { _1[:stable_id].in?(pj_stable_ids) }
-      h[:pjs].map { _1[:template] = JSON.parse(_1[:template]) if _1[:template].present? }
-
-      h[:pjs].map { _1[:enabled] = false if _1[:enabled].blank? }
 
       h
+    end
+
+    def cast_in_json(h)
+      h[:template] = JSON.parse(h[:template]) if h[:template].present?
+      h[:enabled] = h[:enabled] == 'true'
     end
 
     def set_procedure
