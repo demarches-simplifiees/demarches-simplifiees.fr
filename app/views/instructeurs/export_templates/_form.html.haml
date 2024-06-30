@@ -38,11 +38,11 @@
 
       .fr-input-group{ data: { controller: 'tiptap' } }
         .fr-toggle.fr-toggle--label-left
-          = check_box_tag "export_template[pdf_name][enabled]", true, @export_template.pdf_name.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_pdf_name_enabled"
-          = label_tag "export_template_pdf_name_enabled", f.object.class.human_attribute_name(:pdf_name), class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
+          = check_box_tag "export_template[export_pdf][enabled]", true, @export_template.export_pdf.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_export_pdf_enabled"
+          = label_tag "export_template_export_pdf_enabled", f.object.class.human_attribute_name(:export_pdf), class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
 
         .tiptap-editor{ data: { tiptap_target: 'editor' } }
-          = f.hidden_field "[pdf_name][template]", data: { tiptap_target: 'input' }, value: @export_template.pdf_name.fetch('template').to_json
+          = f.hidden_field "[export_pdf][template]", data: { tiptap_target: 'input' }, value: @export_template.export_pdf.fetch('template').to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       - if @exportable_pjs.any?

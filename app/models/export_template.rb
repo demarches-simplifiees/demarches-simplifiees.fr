@@ -7,7 +7,7 @@ class ExportTemplate < ApplicationRecord
   has_many :exports, dependent: :nullify
   validates_with ExportTemplateValidator
 
-  store_accessor :content, :default_dossier_directory, :pdf_name, :pjs
+  store_accessor :content, :default_dossier_directory, :export_pdf, :pjs
 
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
   FORMAT_DATE = "%Y-%m-%d"
@@ -17,8 +17,8 @@ class ExportTemplate < ApplicationRecord
   end
 
   def set_default_values
-    self.default_dossier_directory = { "template" => path_with_dossier_id_suffix("dossier") }
-    self.pdf_name = { "template" => path_with_dossier_id_suffix("export"), "enabled" => true }
+    self.default_dossier_directory = { "template" => path_with_dossier_id_suffix("dossier"), "enabled" => true }
+    self.export_pdf = { "template" => path_with_dossier_id_suffix("export"), "enabled" => true }
 
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
       nice_libelle = transliterate(pj.libelle).downcase
@@ -49,9 +49,8 @@ class ExportTemplate < ApplicationRecord
     render_attributes_for(default_dossier_directory['template'], dossier)
   end
 
-  # pdf_export_path ?
-  def dossier_pdf_path(dossier)
-    "#{render_attributes_for(pdf_name['template'], dossier)}.pdf"
+  def export_pdf_path(dossier)
+    "#{render_attributes_for(export_pdf['template'], dossier)}.pdf"
   end
 
   def pj_path(dossier, pj_stable_id, attachment = nil)
@@ -59,7 +58,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def attachment_path(dossier, attachment, index: 0, row_index: nil, champ: nil)
-    return File.join(folder_path(dossier), dossier_pdf_path(dossier)) if attachment.name == 'pdf_export_for_instructeur'
+    return File.join(folder_path(dossier), export_pdf_path(dossier)) if attachment.name == 'pdf_export_for_instructeur'
 
     filename = attachment.filename.to_s
 
