@@ -123,7 +123,7 @@ function getEditorOptions(
   return {
     element,
     content,
-    editorProps: { attributes: { class: 'fr-input' } },
+    editorProps: { attributes: { class: 'fr-input plop' } },
     extensions: [
       actions.includes('title') ? DocumentWithHeader : Document,
       Hystory,

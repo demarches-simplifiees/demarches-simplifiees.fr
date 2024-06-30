@@ -11,4 +11,11 @@
     color: var(--text-action-high-blue-france);
     background-color: var(--background-action-low-blue-france);
   }
+
+  .plop {
+    > p {
+      white-space: nowrap;
+      overflow: hidden;
+    }
+  }
 }
