@@ -28,7 +28,7 @@ class ExportTemplate < ApplicationRecord
       {
         "stable_id" => pj.stable_id.to_s,
         "template" => path_with_dossier_id_suffix(nice_libelle),
-        "enabled" => true
+        "enabled" => false
       }
     end
   end
