@@ -1,25 +1,34 @@
 #preview.export-template-preview.fr-p-2w.sticky--top
   %h2.fr-h4 Aperçu
   - if dossier.nil?
-    %p.fr-text--sm
-      Saisissez un premier dossier pour prévisualiser.
+    %p.fr-text--sm Saisissez un premier dossier pour prévisualiser.
 
   - else
     %ul.tree.fr-text--sm
-      %li #{DownloadableFileService::EXPORT_DIRNAME}/
+      %li
+        %span.fr-icon-folder-zip-line
+        #{DownloadableFileService::EXPORT_DIRNAME}/
       %li
         %ul
           %li
-            %span#preview_dossier_folder #{export_template.folder_path(dossier)}/
+            %span.fr-icon-folder-line
+            #{export_template.folder_path(dossier)}/
             %ul
               - if export_template.export_pdf&.fetch('enabled')
-                %li#preview_export_pdf= export_template.export_pdf_path(dossier)
+                %li
+                  %span.fr-icon-pdf-2-line
+                  = export_template.export_pdf_path(dossier)
 
               - procedure.exportables_pieces_jointes.each do |pj|
                 - if export_template.pj(pj.stable_id)&.fetch('enabled')
-                  %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.pj_path(dossier, pj.stable_id)}-1.jpg
+                  %li
+                    %span.fr-icon-file-image-line
+                    #{export_template.pj_path(dossier, pj.stable_id)}-1.jpg
             %ul
               %li
-                %span messagerie/
+                %span.fr-icon-folder-line
+                messagerie/
                 %ul
-                  %li un-autre-fichier.png
+                  %li
+                    %span.fr-icon-file-image-line
+                    un-autre-fichier.png
