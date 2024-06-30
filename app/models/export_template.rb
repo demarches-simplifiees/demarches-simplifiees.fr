@@ -1,5 +1,6 @@
 class ExportTemplate < ApplicationRecord
   include TagsSubstitutionConcern
+  include ActiveSupport::Inflector
 
   belongs_to :groupe_instructeur
   has_one :procedure, through: :groupe_instructeur
@@ -16,13 +17,17 @@ class ExportTemplate < ApplicationRecord
   end
 
   def set_default_values
-    self.default_dossier_directory = path_with_dossier_id_suffix("dossier-")
-    self.pdf_name = { "template" => path_with_dossier_id_suffix("export_"), "enabled" => true }
+    self.default_dossier_directory = path_with_dossier_id_suffix("dossier")
+    self.pdf_name = { "template" => path_with_dossier_id_suffix("export"), "enabled" => true }
 
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
+      nice_libelle = transliterate(pj.libelle).downcase
+        .gsub(/[^0-9a-z]/, ' ').gsub(/[[:space:]]+/, ' ').strip
+        .then { truncate(_1, omission: '', separator: ' ') }.parameterize
+
       {
         "stable_id" => pj.stable_id.to_s,
-        "template" => path_with_dossier_id_suffix("#{pj.libelle.parameterize}-"),
+        "template" => path_with_dossier_id_suffix(nice_libelle),
         "enabled" => true
       }
     end
@@ -80,7 +85,7 @@ class ExportTemplate < ApplicationRecord
     {
       "type" => "doc",
       "content" => [
-        { "type" => "paragraph", "content" => [{ "text" => prefix, "type" => "text" }, { "type" => "mention", "attrs" => DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
+        { "type" => "paragraph", "content" => [{ "text" => "#{prefix}-", "type" => "text" }, { "type" => "mention", "attrs" => DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
       ]
     }
   end
