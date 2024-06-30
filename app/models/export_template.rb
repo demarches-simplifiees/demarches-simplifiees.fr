@@ -17,7 +17,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def set_default_values
-    self.default_dossier_directory = path_with_dossier_id_suffix("dossier")
+    self.default_dossier_directory = { "template" => path_with_dossier_id_suffix("dossier") }
     self.pdf_name = { "template" => path_with_dossier_id_suffix("export"), "enabled" => true }
 
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
@@ -46,7 +46,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def folder_path(dossier)
-    render_attributes_for(default_dossier_directory, dossier)
+    render_attributes_for(default_dossier_directory['template'], dossier)
   end
 
   # pdf_export_path ?

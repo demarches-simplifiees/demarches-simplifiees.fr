@@ -33,7 +33,7 @@
           %span.fr-hint-text
             = t('activerecord.attributes.export_template.hints.default_dossier_directory')
         .tiptap-editor{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :default_dossier_directory, data: { tiptap_target: 'input' }, value: @export_template.default_dossier_directory.to_json
+          = f.hidden_field "[default_dossier_directory][template]", data: { tiptap_target: 'input' }, value: @export_template.default_dossier_directory.fetch('template').to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }
