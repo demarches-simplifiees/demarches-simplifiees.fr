@@ -7,10 +7,10 @@ en:
         hints:
           name: "The name will be visible by you and the other instructors"
           default_dossier_directory: "How would you like to name the directory containing the documents of a folder?"
-          pdf_name: "How would you like to name the pdf file containing all the user's answers?"
+          export_pdf: "How would you like to name the pdf file containing all the user's answers?"
         name: "Template's name"
         default_dossier_directory: "Directory's name for pdf format"
-        pdf_name: "Export's filename"
+        export_pdf: "Export's filename"
     errors:
       models:
         export_template:

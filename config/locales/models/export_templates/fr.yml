@@ -7,10 +7,10 @@ fr:
         hints:
           name: "Le nom sera visible par vous et les autres instructeurs pour générer un export"
           default_dossier_directory: "Comment souhaitez-vous nommer le répertoire contenant les documents d'un dossier ?"
-          pdf_name: "Comment souhaitez-vous nommer le fichier pdf qui contient toutes les réponses de l'usager ?"
+          export_pdf: "Comment souhaitez-vous nommer le fichier pdf qui contient toutes les réponses de l'usager ?"
         name: "Nom du modèle"
         default_dossier_directory: Nom du répertoire
-        pdf_name: "Nom du dossier au format pdf"
+        export_pdf: "Nom du dossier au format pdf"
     errors:
       models:
         export_template:

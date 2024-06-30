@@ -1,6 +1,6 @@
 describe Instructeurs::ExportTemplatesController, type: :controller do
   before { sign_in(instructeur.user) }
-  let(:pdf_name) {
+  let(:export_pdf) {
     {
       "type" => "doc",
       "content" => [
@@ -14,7 +14,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       name: "coucou",
       kind: "zip",
       groupe_instructeur_id: groupe_instructeur.id,
-      pdf_name:,
+      export_pdf:,
       default_dossier_directory: {
         "type" => "doc",
         "content" => [
@@ -73,7 +73,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:pdf_name) { { content: "invalid" }.to_json }
+      let(:export_pdf) { { content: "invalid" }.to_json }
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present
@@ -110,7 +110,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
   describe '#update' do
     let(:export_template) { create(:export_template, groupe_instructeur:) }
-    let(:pdf_name) {
+    let(:export_pdf) {
       {
         "type" => "doc",
         "content" => [
@@ -130,7 +130,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:pdf_name) { { content: "invalid" }.to_json }
+      let(:export_pdf) { { content: "invalid" }.to_json }
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present

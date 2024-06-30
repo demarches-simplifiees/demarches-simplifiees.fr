@@ -12,7 +12,7 @@ describe ExportTemplate do
   end
   let(:content) do
     {
-      "pdf_name" => {
+      "export_pdf" => {
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
@@ -45,7 +45,7 @@ describe ExportTemplate do
     it 'set default values' do
       export_template.set_default_values
       expect(export_template.content).to eq({
-        "pdf_name" => {
+        "export_pdf" => {
           "type" => "doc",
           "content" => [
             { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
@@ -80,9 +80,9 @@ describe ExportTemplate do
     end
   end
 
-  describe '#pdf_name' do
-    it 'returns pdf_name from content' do
-      expect(export_template.pdf_name).to eq({
+  describe '#export_pdf' do
+    it 'returns export_pdf from content' do
+      expect(export_template.export_pdf).to eq({
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
@@ -172,7 +172,7 @@ describe ExportTemplate do
       expect(export_template.folder_path(procedure.dossiers.first)).to eq "DOSSIER_#{dossier.id}"
     end
 
-    it 'convert pdf_name' do
+    it 'convert export_pdf' do
       expect(export_template.dossier_pdf_path(procedure.dossiers.first)).to eq "mon_export_#{dossier.id}.pdf"
     end
 
@@ -206,7 +206,7 @@ describe ExportTemplate do
     let(:pj_mention) { mention }
     let(:content) do
       {
-        "pdf_name" => {
+        "export_pdf" => {
           "type" => "doc",
           "content" => [
             { "type" => "paragraph", "content" => [{ "text" => pdf_text, "type" => "text" }, pdf_mention] }
@@ -253,7 +253,7 @@ describe ExportTemplate do
     context 'with valid pdf name' do
       it 'has no error for pdf name' do
         expect(subject.valid?).to be_truthy
-        expect(subject.errors[:pdf_name]).not_to be_present
+        expect(subject.errors[:export_pdf]).not_to be_present
       end
     end
 
@@ -272,7 +272,7 @@ describe ExportTemplate do
       context 'with mention' do
         it 'has no error for default_dossier_directory' do
           expect(subject.valid?).to be_truthy
-          expect(subject.errors[:tiptap_pdf_name]).not_to be_present
+          expect(subject.errors[:export_pdf]).not_to be_present
         end
       end
 

@@ -4,7 +4,7 @@ FactoryBot.define do
     groupe_instructeur
     content {
   {
-    "pdf_name" =>
+    "export_pdf" =>
    {
      "type" => "doc",
     "content" => [
@@ -68,7 +68,7 @@ FactoryBot.define do
     trait :with_date_depot_for_export_pdf do
       to_create do |export_template, _|
         export_template.set_default_values
-        export_template.content["pdf_name"]["content"] = [
+        export_template.content["export_pdf"]["content"] = [
           {
             "type" => "paragraph",
             "content" =>

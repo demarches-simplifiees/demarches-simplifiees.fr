@@ -1,7 +1,7 @@
 class ExportTemplateValidator < ActiveModel::Validator
   def validate(record)
     validate_default_dossier_directory(record)
-    validate_pdf_name(record)
+    validate_export_pdf(record)
     validate_pjs(record)
   end
 
@@ -15,10 +15,10 @@ class ExportTemplateValidator < ActiveModel::Validator
     end
   end
 
-  def validate_pdf_name(record)
-    content = record.pdf_name['template']['content']&.first&.fetch('content', nil)
+  def validate_export_pdf(record)
+    content = record.export_pdf['template']['content']&.first&.fetch('content', nil)
     if attribute_content_text(content).blank? && attribute_content_mention(content).blank?
-      record.errors.add :pdf_name, :blank
+      record.errors.add :export_pdf, :blank
     end
   end
 
