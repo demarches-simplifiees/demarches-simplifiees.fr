@@ -18,7 +18,7 @@ describe ExportTemplate do
           { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
         ]
       },
-      "default_dossier_directory" => {
+      "dossier_folder" => {
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
@@ -51,7 +51,7 @@ describe ExportTemplate do
             { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
           ]
         },
-        "default_dossier_directory" => {
+        "dossier_folder" => {
           "type" => "doc",
           "content" => [
             { "type" => "paragraph", "content" => [{ "text" => "dossier-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
@@ -69,9 +69,9 @@ describe ExportTemplate do
     end
   end
 
-  describe '#default_dossier_directory' do
-    it 'returns default_dossier_directory from content' do
-      expect(export_template.default_dossier_directory).to eq({
+  describe '#dossier_folder' do
+    it 'returns dossier_folder from content' do
+      expect(export_template.dossier_folder).to eq({
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
@@ -212,7 +212,7 @@ describe ExportTemplate do
             { "type" => "paragraph", "content" => [{ "text" => pdf_text, "type" => "text" }, pdf_mention] }
           ]
         },
-        "default_dossier_directory" => {
+        "dossier_folder" => {
           "type" => "doc",
           "content" => [
             { "type" => "paragraph", "content" => [{ "text" => ddd_text, "type" => "text" }, ddd_mention] }
@@ -226,7 +226,7 @@ describe ExportTemplate do
     end
 
     context 'with valid default dossier directory' do
-      it 'has no error for default_dossier_directory' do
+      it 'has no error for dossier_folder' do
         expect(subject.valid?).to be_truthy
       end
     end
@@ -235,16 +235,16 @@ describe ExportTemplate do
       let(:ddd_text) { " " }
       context 'with mention' do
         let(:ddd_mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
-        it 'has no error for default_dossier_directory' do
+        it 'has no error for dossier_folder' do
           expect(subject.valid?).to be_truthy
         end
       end
 
       context 'without numéro de dossier' do
         let(:ddd_mention) { { "type" => "mention", "attrs" => { "id" => 'dossier_service_name', "label" => "nom du service" } } }
-        it "add error for default_dossier_directory" do
+        it "add error for dossier_folder" do
           expect(subject.valid?).to be_falsey
-          expect(subject.errors[:default_dossier_directory]).to be_present
+          expect(subject.errors[:dossier_folder]).to be_present
           expect(subject.errors.full_messages).to include "Le champ « Nom du répertoire » doit contenir le numéro du dossier"
         end
       end
@@ -270,7 +270,7 @@ describe ExportTemplate do
       let(:pdf_text) { " " }
 
       context 'with mention' do
-        it 'has no error for default_dossier_directory' do
+        it 'has no error for dossier_folder' do
           expect(subject.valid?).to be_truthy
           expect(subject.errors[:export_pdf]).not_to be_present
         end

@@ -10,7 +10,7 @@
       %li
         %ul
           %li
-            %span#preview_default_dossier_directory #{export_template.folder_path(dossier)}/
+            %span#preview_dossier_folder #{export_template.folder_path(dossier)}/
             %ul
               - if export_template.export_pdf&.fetch('enabled')
                 %li#preview_export_pdf= export_template.export_pdf_path(dossier)

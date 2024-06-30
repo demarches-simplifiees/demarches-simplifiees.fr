@@ -1,17 +1,17 @@
 class ExportTemplateValidator < ActiveModel::Validator
   def validate(record)
-    validate_default_dossier_directory(record)
+    validate_dossier_folder(record)
     validate_export_pdf(record)
     validate_pjs(record)
   end
 
   private
 
-  def validate_default_dossier_directory(record)
-    content = record.default_dossier_directory['content']&.first&.fetch('content', nil)
+  def validate_dossier_folder(record)
+    content = record.dossier_folder['content']&.first&.fetch('content', nil)
     mention = attribute_content_mention(content)
     if mention&.fetch("id", nil) != "dossier_number"
-      record.errors.add :default_dossier_directory, :dossier_number_mandatory
+      record.errors.add :dossier_folder, :dossier_number_mandatory
     end
   end
 

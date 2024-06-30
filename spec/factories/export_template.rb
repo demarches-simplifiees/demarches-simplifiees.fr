@@ -11,7 +11,7 @@ FactoryBot.define do
       { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_id", "label" => "id dossier" } }, { "text" => " .pdf", "type" => "text" }] }
     ]
    },
-   "default_dossier_directory" => {
+   "dossier_folder" => {
      "type" => "doc",
      "content" =>
      [
@@ -50,7 +50,7 @@ FactoryBot.define do
 
       to_create do |export_template, context|
         export_template.set_default_values
-        export_template.content["default_dossier_directory"]["content"] = [
+        export_template.content["dossier_folder"]["content"] = [
           {
             "type" => "paragraph",
             "content" =>

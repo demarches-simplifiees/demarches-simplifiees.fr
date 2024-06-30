@@ -55,12 +55,12 @@ module Instructeurs
 
     def export_template_params
       h = params.require(:export_template)
-        .permit(:name, :kind, default_dossier_directory: [:template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template]).to_h
+        .permit(:name, :kind, dossier_folder: [:template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template]).to_h
 
-      [h[:default_dossier_directory], h[:export_pdf], *h[:pjs]].each { cast_in_json(_1) }
+      [h[:dossier_folder], h[:export_pdf], *h[:pjs]].each { cast_in_json(_1) }
 
-      # default_dossier_directory is always enabled
-      h[:default_dossier_directory][:enabled] = true
+      # dossier_folder is always enabled
+      h[:dossier_folder][:enabled] = true
 
       pj_stable_ids = @exportable_pjs.map { _1.stable_id.to_s }
       h[:pjs] = h[:pjs].filter { _1[:stable_id].in?(pj_stable_ids) }

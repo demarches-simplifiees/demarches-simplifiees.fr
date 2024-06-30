@@ -15,7 +15,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       kind: "zip",
       groupe_instructeur_id: groupe_instructeur.id,
       export_pdf:,
-      default_dossier_directory: {
+      dossier_folder: {
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }

@@ -27,13 +27,13 @@
       = f.hidden_field :kind
 
       .fr-input-group{ data: { controller: 'tiptap' } }
-        = f.label :default_dossier_directory, class: "fr-label" do
-          = f.object.class.human_attribute_name(:default_dossier_directory)
+        = f.label :dossier_folder, class: "fr-label" do
+          = f.object.class.human_attribute_name(:dossier_folder)
           = render EditableChamp::AsteriskMandatoryComponent.new
           %span.fr-hint-text
-            = t('activerecord.attributes.export_template.hints.default_dossier_directory')
+            = t('activerecord.attributes.export_template.hints.dossier_folder')
         .tiptap-editor{ data: { tiptap_target: 'editor' } }
-          = f.hidden_field "[default_dossier_directory][template]", data: { tiptap_target: 'input' }, value: @export_template.default_dossier_directory.fetch('template').to_json
+          = f.hidden_field "[dossier_folder][template]", data: { tiptap_target: 'input' }, value: @export_template.dossier_folder.fetch('template').to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       .fr-input-group{ data: { controller: 'tiptap' } }

@@ -7,7 +7,7 @@ class ExportTemplate < ApplicationRecord
   has_many :exports, dependent: :nullify
   validates_with ExportTemplateValidator
 
-  store_accessor :content, :default_dossier_directory, :export_pdf, :pjs
+  store_accessor :content, :dossier_folder, :export_pdf, :pjs
 
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
   FORMAT_DATE = "%Y-%m-%d"
@@ -17,7 +17,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def set_default_values
-    self.default_dossier_directory = { "template" => path_with_dossier_id_suffix("dossier"), "enabled" => true }
+    self.dossier_folder = { "template" => path_with_dossier_id_suffix("dossier"), "enabled" => true }
     self.export_pdf = { "template" => path_with_dossier_id_suffix("export"), "enabled" => true }
 
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
@@ -46,7 +46,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def folder_path(dossier)
-    render_attributes_for(default_dossier_directory['template'], dossier)
+    render_attributes_for(dossier_folder['template'], dossier)
   end
 
   def export_pdf_path(dossier)
