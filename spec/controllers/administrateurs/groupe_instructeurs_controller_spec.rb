@@ -360,7 +360,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let(:instructeur) { create(:instructeur) }
       before { procedure_non_routee.groupe_instructeurs.first.add_instructeurs(emails: [instructeur.user.email]) }
       let(:emails) { [instructeur.email].to_json }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
+      it { expect(subject).to have_http_status(200) }
     end
 
     context 'when signed in admin comes from manager' do
