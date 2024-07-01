@@ -1,0 +1,8 @@
+.fr-container
+  %h1.text-center.mt-1= t('.confirmation_sent_by_email')
+
+  %p= t('.intro', email: email)
+
+  %p= t('.click_the_link_in_the_email')
+
+  = link_to t('.continue'), destination_path, class: 'fr-btn'
