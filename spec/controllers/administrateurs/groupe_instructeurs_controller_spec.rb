@@ -366,10 +366,16 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
     before { gi_1_2.instructeurs << instructeur }
 
-    context 'of a news instructeurs' do
-      let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com'] }
+    context 'of news instructeurs' do
+      let!(:user_email_verified) { create(:user, :with_email_verified) }
+      let!(:instructeur_email_verified) { create(:instructeur, user: user_email_verified) }
+      let(:new_instructeur_emails) { ['new_i1@mail.com', 'new_i2@mail.com', instructeur_email_verified.email] }
+
       before do
         allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
+          .and_return(double(deliver_later: true))
+
+        allow(InstructeurMailer).to receive(:confirm_and_notify_added_instructeur)
           .and_return(double(deliver_later: true))
         do_request
       end
@@ -380,7 +386,21 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it "calls GroupeInstructeurMailer with the right params" do
         expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
           gi_1_2,
-          gi_1_2.instructeurs.last(2),
+          [instructeur_email_verified],
+          admin.email
+        )
+      end
+
+      it "calls InstructeurMailer with the right params" do
+        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
+          User.find_by(email: 'new_i1@mail.com').instructeur,
+          gi_1_2,
+          admin.email
+        )
+
+        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
+          User.find_by(email: 'new_i2@mail.com').instructeur,
+          gi_1_2,
           admin.email
         )
       end

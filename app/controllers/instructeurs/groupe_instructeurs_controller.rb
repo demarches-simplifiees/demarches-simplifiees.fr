@@ -30,9 +30,13 @@ module Instructeurs
         groupe_instructeur.add(instructeur)
         flash[:notice] = "L’instructeur « #{instructeur_email} » a été affecté au groupe."
 
-        GroupeInstructeurMailer
-          .notify_added_instructeurs(groupe_instructeur, [instructeur], current_user.email)
-          .deliver_later
+        if instructeur.user.email_verified_at
+          GroupeInstructeurMailer
+            .notify_added_instructeurs(groupe_instructeur, [instructeur], current_user.email)
+            .deliver_later
+        else
+          InstructeurMailer.confirm_and_notify_added_instructeur(instructeur, groupe_instructeur, current_user.email).deliver_later
+        end
       end
 
       redirect_to instructeur_groupe_path(procedure, groupe_instructeur)
@@ -65,7 +69,6 @@ module Instructeurs
         administrateurs: [procedure.administrateurs.first]
       )
 
-      user.invite_instructeur! if user.valid?
       user.instructeur
     end
 
