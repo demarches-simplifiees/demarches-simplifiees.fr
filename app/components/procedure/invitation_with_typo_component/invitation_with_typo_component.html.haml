@@ -1,7 +1,7 @@
 = render Dsfr::AlertComponent.new(title: "nous pensons avoir identifié une faute de frappe : ", state: :warning, extra_class_names: 'fr-mb-3w') do |c|
   - c.with_body do
     %p= @title
-    %ul
+    %ul#maybe_typos_errors
       - @maybe_typos.each do |(actual_email, suggested_email)|
         %li
           = "Je confirme "
