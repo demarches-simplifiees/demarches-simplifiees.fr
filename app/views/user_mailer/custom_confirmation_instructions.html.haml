@@ -1,0 +1,17 @@
+- content_for(:title, 'Confirmez votre email')
+%p
+  Bonjour
+  = @user.email
+  !
+
+%p
+  Veuillez confirmer votre email en cliquant sur le lien ci-dessous:
+
+%p
+  = link_to 'Confirmer mon email', france_connect_confirm_email_url(@token)
+
+%p
+  Tant que vous n'aurez pas confirmé votre email, vous ne recevrez aucune notification sur l'avancement de vos dossiers.
+
+%p
+  Merci

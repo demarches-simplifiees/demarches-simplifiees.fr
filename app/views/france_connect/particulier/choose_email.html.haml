@@ -1,0 +1,35 @@
+.fr-container
+  %h1.text-center.mt-1
+    = t('.choose_email_contact')
+
+  %p
+    = t('.greetings')
+
+  %p
+    = t('.intro', email: france_connect_email)
+
+  %p
+    = t('.use_email_for_notifications')
+
+  = form_with url: france_connect_particulier_associate_user_path, method: :post, data: { controller: "email-france-connect" } do |f|
+    = hidden_field_tag :france_connect_email, france_connect_email
+
+    %fieldset.fr-fieldset
+      %legend.fr-fieldset__legend
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-radio-group
+          = f.radio_button :use_france_connect_email, true, id: 'use_france_connect_email_yes', class: 'fr-radio', required: true, data: { action: "email-france-connect#toggleEmailField", email_france_connect_target: "useFranceConnectEmail" }
+          %label.fr-label{ for: 'use_france_connect_email_yes' }
+            = t('.yes')
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-radio-group
+          = f.radio_button :use_france_connect_email, false, id: 'use_france_connect_email_no', class: 'fr-radio', required: true, data: { action: "email-france-connect#toggleEmailField", email_france_connect_target: "useFranceConnectEmail" }
+          %label.fr-label{ for: 'use_france_connect_email_no' }
+            = t('.no')
+
+    .fr-fieldset__element.fr-fieldset__element--inline.hidden{ data: { email_france_connect_target: "emailField" } }
+      = f.label :alternative_email, t('.alternative_email'), class: "fr-label"
+      = f.email_field :alternative_email, class: "fr-input", placeholder: "john.doe@exemple.fr"
+
+    %div
+      = f.submit t('.confirm'), class: 'fr-btn'
