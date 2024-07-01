@@ -2,8 +2,8 @@ module Administrateurs
   class ExpertsProceduresController < AdministrateurController
     include EmailSanitizableConcern
     before_action :retrieve_procedure
-    before_action :retrieve_experts_procedure, only: [:index, :create]
-    before_action :retrieve_experts_emails, only: [:index, :create]
+    before_action :retrieve_experts_procedure, only: [:index]
+    before_action :retrieve_experts_emails, only: [:index]
 
     def index
     end
@@ -11,15 +11,15 @@ module Administrateurs
     def create
       emails = params['emails'].presence || [].to_json
       emails = JSON.parse(emails).map { EmailSanitizer.sanitize(_1) }
-      @maybe_typo, emails = emails
+      @maybe_typos, emails = emails
         .map { |email| [email, EmailChecker.check(email:)[:suggestions]&.first] }
         .partition { _1[1].present? }
-      errors = if !@maybe_typo.empty?
-        ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typo.map(&:first).join(', ')}"]
+      errors = if !@maybe_typos.empty?
+        ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typos.map(&:first).join(', ')}"]
       else
         []
       end
-      emails += [EmailSanitizer.sanitize(params['maybe_typo'])] if params['maybe_typo'].present?
+      emails += [EmailSanitizer.sanitize(params['final_email'])] if params['final_email'].present?
 
       valid_users, invalid_users = emails
         .map { |email| User.create_or_promote_to_expert(email, SecureRandom.hex) }
@@ -46,6 +46,8 @@ module Administrateurs
       end
 
       flash.now[:alert] = errors.join(". ") if !errors.empty?
+      retrieve_experts_procedure
+      retrieve_experts_emails
       render :index
     end
 

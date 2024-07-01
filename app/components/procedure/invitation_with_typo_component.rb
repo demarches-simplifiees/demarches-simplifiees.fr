@@ -1,11 +1,11 @@
 class Procedure::InvitationWithTypoComponent < ApplicationComponent
-  def initialize(maybe_typo:, url:, title:)
-    @maybe_typo = maybe_typo
+  def initialize(maybe_typos:, url:, title:)
+    @maybe_typos = maybe_typos
     @url = url
     @title = title
   end
 
   def render?
-    @maybe_typo.present?
+    @maybe_typos.present?
   end
 end

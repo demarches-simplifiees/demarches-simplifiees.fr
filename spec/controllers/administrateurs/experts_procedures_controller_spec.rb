@@ -33,7 +33,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
         expect(procedure.experts.include?(expert)).to be_truthy
         expect(procedure.experts.include?(expert2)).to be_truthy
         expect(flash.notice).to be_present
-        expect(assigns(:maybe_typo)).to eq([])
+        expect(assigns(:maybe_typos)).to eq([])
         expect(response).to have_http_status(:success)
       end
     end
@@ -43,22 +43,24 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
       render_views
       it 'warns' do
         expect(flash.alert).to be_present
-        expect(assigns(:maybe_typo)).to eq([['martin@oraneg.fr', 'martin@orange.fr']])
+        expect(assigns(:maybe_typos)).to eq([['martin@oraneg.fr', 'martin@orange.fr']])
         expect(response).to have_http_status(:success)
       end
     end
 
     context 'when forcing email with typos' do
-      let(:maybe_typo) { 'martin@oraneg.fr' }
-      let(:params) { { procedure_id: procedure.id, maybe_typo: } }
+      render_views
+      let(:final_email) { 'martin@oraneg.fr' }
+      let(:params) { { procedure_id: procedure.id, final_email: } }
 
       it 'works' do
-        created_user = User.where(email: maybe_typo).first
+        created_user = User.where(email: final_email).first
         expect(created_user).to be_an_instance_of(User)
         expect(created_user.expert).to be_an_instance_of(Expert)
         expect(procedure.experts.include?(created_user.expert)).to be_truthy
         expect(flash.notice).to be_present
         expect(response).to have_http_status(:success)
+        expect(response.body).to have_content(final_email)
       end
     end
   end
