@@ -1,7 +1,7 @@
 
-.card
+.card#instructeurs-block
   .card-title Affectation des instructeurs
-  = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
+  = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, method: :post, data: { turbo: true }, html: { class: 'form' } do |f|
     .instructeur-wrapper
       - if !procedure.routing_enabled?
         %p Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
@@ -20,23 +20,6 @@
 
       = f.submit 'Affecter', class: 'fr-btn', disabled: disabled_as_super_admin
 
-  %table.fr-table.fr-mt-2w.width-100
-    %thead
-      %tr
-        %th{ colspan: 2 }= t('.assigned_instructeur', count: instructeurs.count)
-    %tbody
-      - instructeurs.each do |instructeur|
-        %tr
-          %td
-            = dsfr_icon('fr-icon-user-fill')
-            #{instructeur.email}
-
-          - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-          %td.actions= button_to 'Retirer',
-            { action: :remove_instructeur, id: groupe_instructeur.id },
-            { method: :delete,
-              form: { data: { turbo: true, confirm: confirmation_message } },
-              params: { instructeur: { id: instructeur.id }},
-              class: 'fr-btn fr-btn--secondary' }
+  = render partial: "instructeurs_list", locals: { instructeurs:, procedure:, groupe_instructeur: }
 
   = paginate instructeurs, views_prefix: 'shared'

@@ -1,0 +1,18 @@
+%table.fr-table.fr-mt-2w.width-100#instructeur_list
+  %thead
+    %tr
+      %th{ colspan: 2 }= t('.assigned_instructeur', count: instructeurs.count)
+  %tbody
+    - instructeurs.each do |instructeur|
+      %tr
+        %td
+          = dsfr_icon('fr-icon-user-fill')
+          #{instructeur.email}
+
+        - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
+        %td.actions= button_to 'Retirer',
+          { action: :remove_instructeur, id: groupe_instructeur.id },
+          { method: :delete,
+            form: { data: { turbo: true, confirm: confirmation_message } },
+            params: { instructeur: { id: instructeur.id }},
+            class: 'fr-btn fr-btn--secondary' }

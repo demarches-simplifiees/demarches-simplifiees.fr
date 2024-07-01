@@ -261,7 +261,9 @@ module Administrateurs
 
       flash.now[:alert] = errors.join(". ") if !errors.empty?
 
-      render :show
+      respond_to do |format|
+        format.turbo_stream
+      end
     end
 
     def remove_instructeur
