@@ -190,9 +190,13 @@ Rails.application.routes.draw do
     get 'particulier/callback' => 'particulier#callback'
     get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
     get 'particulier/mail_merge_with_existing_account/:email_merge_token' => 'particulier#mail_merge_with_existing_account', as: :particulier_mail_merge_with_existing_account
+    get 'confirm_email/:token', to: 'particulier#confirm_email', as: :confirm_email
+    get 'resend_confirmation', to: 'particulier#resend_confirmation', as: 'resend_confirmation'
+    post 'post_resend_confirmation', to: 'particulier#post_resend_confirmation', as: 'post_resend_confirmation'
     post 'particulier/resend_and_renew_merge_confirmation' => 'particulier#resend_and_renew_merge_confirmation', as: :particulier_resend_and_renew_merge_confirmation
     post 'particulier/merge_with_existing_account' => 'particulier#merge_with_existing_account'
     post 'particulier/merge_with_new_account' => 'particulier#merge_with_new_account'
+    post 'particulier/associate_user', to: 'particulier#associate_user', as: :particulier_associate_user
   end
 
   namespace :agent_connect do
