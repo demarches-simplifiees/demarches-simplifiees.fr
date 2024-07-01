@@ -36,14 +36,15 @@
           = f.hidden_field "[dossier_folder][template]", data: { tiptap_target: 'input' }, value: @export_template.dossier_folder.fetch('template').to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
-      .fr-input-group{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+      .fr-input-group{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
         .fr-toggle.fr-toggle--label-left
-          = check_box_tag "export_template[export_pdf][enabled]", true, @export_template.export_pdf.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_export_pdf_enabled"
+          = check_box_tag "export_template[export_pdf][enabled]", true, @export_template.export_pdf.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_export_pdf_enabled", data: { 'hide-target_target': 'source' }
           = label_tag "export_template_export_pdf_enabled", f.object.class.human_attribute_name(:export_pdf), class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
 
-        .tiptap-editor{ data: { tiptap_target: 'editor' } }
-          = f.hidden_field "[export_pdf][template]", data: { tiptap_target: 'input' }, value: @export_template.export_pdf.fetch('template').to_json
-        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
+        %div{ class: class_names( 'fr-hidden': !@export_template.export_pdf.fetch('enabled') ), data: { hide_target_target: 'toHide' } }
+          .tiptap-editor{ data: { tiptap_target: 'editor' } }
+            = f.hidden_field "[export_pdf][template]", data: { tiptap_target: 'input' }, value: @export_template.export_pdf.fetch('template').to_json
+          .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       - if @exportable_pjs.any?
         %h3 Pieces justificatives
@@ -53,18 +54,19 @@
             N'incluez pas les extensions de fichier (.pdf, .jpg, …) dans les noms de pièces jointes.
 
         - @exportable_pjs.each do |pj|
-          .fr-input-group{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+          .fr-input-group{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
             - export_pj = @export_template.pj(pj.stable_id)
 
             = hidden_field_tag "export_template[pjs][][stable_id]", pj.stable_id
 
             .fr-toggle.fr-toggle--label-left
-              = check_box_tag "export_template[pjs][][enabled]", true, export_pj&.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_pjs_#{pj.stable_id}_enabled"
+              = check_box_tag "export_template[pjs][][enabled]", true, export_pj&.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_pjs_#{pj.stable_id}_enabled", data: { 'hide-target_target': 'source' }
               = label_tag "export_template_pjs_#{pj.stable_id}_enabled", pj.libelle, class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
 
-            .tiptap-editor{ data: { tiptap_target: 'editor' } }
-              = hidden_field_tag "export_template[pjs][][template]", "#{export_pj&.fetch('template')&.to_json}" , data: { tiptap_target: 'input' }
-            .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.pj_tags })
+            %div{ class: class_names( 'fr-hidden': !export_pj&.fetch('enabled') ), data: { hide_target_target: 'toHide' } }
+              .tiptap-editor{ data: { tiptap_target: 'editor' } }
+                = hidden_field_tag "export_template[pjs][][template]", "#{export_pj&.fetch('template')&.to_json}" , data: { tiptap_target: 'input' }
+              .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.pj_tags })
 
       .fixed-footer
         .fr-container

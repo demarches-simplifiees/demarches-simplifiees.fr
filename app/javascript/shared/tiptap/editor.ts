@@ -43,7 +43,13 @@ export function createEditor({
   onChange(change: { editor: Editor }): void;
   attributes?: Record<string, string>;
 }): Editor {
-  const options = getEditorOptions(editorElement, tags, buttons, content, attributes);
+  const options = getEditorOptions(
+    editorElement,
+    tags,
+    buttons,
+    content,
+    attributes
+  );
   const editor = new Editor(options);
   editor.on('transaction', onChange);
   return editor;
