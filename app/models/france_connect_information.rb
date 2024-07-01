@@ -1,5 +1,6 @@
 class FranceConnectInformation < ApplicationRecord
   MERGE_VALIDITY = 15.minutes
+  CONFIRMATION_EMAIL_VALIDITY = 2.days
 
   belongs_to :user, optional: true
 
@@ -12,16 +13,23 @@ class FranceConnectInformation < ApplicationRecord
         password: Devise.friendly_token[0, 20],
         confirmed_at: Time.zone.now
       )
-      user.after_confirmation
+      send_custom_confirmation_instructions(user)
     rescue ActiveRecord::RecordNotUnique
-      # ignore this exception because we check before is user is nil.
+      # ignore this exception because we check before if user is nil.
       # exception can be raised in race conditions, when FranceConnect calls callback 2 times.
       # At the 2nd call, user is nil but exception is raised at the creation of the user
       # because the first call has already created a user
+      user = User.find_by(email: email.downcase)
     end
 
     update_attribute('user_id', user.id)
     touch # needed to update updated_at column
+  end
+
+  def send_custom_confirmation_instructions(user)
+    token = SecureRandom.hex(10)
+    user.update!(confirmation_token: token, confirmation_sent_at: Time.zone.now)
+    UserMailer.custom_confirmation_instructions(user, token).deliver_now
   end
 
   def create_merge_token!
