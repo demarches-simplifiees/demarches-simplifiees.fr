@@ -122,7 +122,7 @@ describe User, type: :model do
       end
 
       context 'with an administrateur' do
-        let(:admins) { [create(:administrateur)] }
+        let(:admins) { [administrateurs(:default_admin)] }
 
         it do
           user = subject
@@ -141,7 +141,7 @@ describe User, type: :model do
       end
 
       context 'with an existing instructeur' do
-        let(:old_admins) { [create(:administrateur)] }
+        let(:old_admins) { [administrateurs(:default_admin)] }
         let(:admins) { [create(:administrateur)] }
         let!(:instructeur) { create(:instructeur, email: 'i@mail.com', administrateurs: old_admins) }
 
@@ -237,7 +237,7 @@ describe User, type: :model do
 
   describe 'invite_administrateur!' do
     let(:super_admin) { create(:super_admin) }
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:user) { administrateur.user }
 
     let(:mailer_double) { double('mailer', deliver_later: true) }
@@ -284,7 +284,7 @@ describe User, type: :model do
 
   describe '#can_be_deleted?' do
     let(:user) { create(:user) }
-    let(:administrateur) { create(:administrateur) }
+    let(:administrateur) { administrateurs(:default_admin) }
     let(:instructeur) { create(:instructeur) }
     let(:expert) { create(:expert) }
 
@@ -383,7 +383,7 @@ describe User, type: :model do
 
       it { expect { subject }.not_to raise_error }
       it { expect { subject }.to change { FranceConnectInformation.count }.from(2).to(0) }
-      it { expect { subject }.to change { User.count }.from(1).to(0) }
+      it { expect { subject }.to change { User.count }.by(-1) }
     end
   end
 

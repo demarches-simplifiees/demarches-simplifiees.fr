@@ -1,5 +1,5 @@
 RSpec.describe Types::DemarcheType, type: :graphql do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:query) { '' }
   let(:context) { { procedure_ids: admin.procedure_ids } }
   let(:variables) { {} }

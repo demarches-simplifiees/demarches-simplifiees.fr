@@ -1,7 +1,6 @@
 describe Administrateurs::ArchivesController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create :procedure, groupe_instructeurs: [groupe_instructeur1, groupe_instructeur2] }
-  let(:administrateur_procedure) { create(:administrateurs_procedure, procedure: procedure, administrateur: admin, manager: manager) }
   let(:groupe_instructeur1) { create(:groupe_instructeur) }
   let(:groupe_instructeur2) { create(:groupe_instructeur) }
 
@@ -15,7 +14,7 @@ describe Administrateurs::ArchivesController, type: :controller do
     context 'when logged in as administrateur_procedure.manager=false' do
       let(:manager) { false }
       before do
-        administrateur_procedure
+        admin.administrateurs_procedures.where(procedure:).update_all(manager:)
         sign_in(admin.user)
       end
 
@@ -30,7 +29,7 @@ describe Administrateurs::ArchivesController, type: :controller do
       let(:manager) { true }
 
       before do
-        administrateur_procedure
+        admin.administrateurs_procedures.where(procedure:).update_all(manager:)
         sign_in(admin.user)
       end
 
@@ -49,13 +48,13 @@ describe Administrateurs::ArchivesController, type: :controller do
       let(:manager) { false }
 
       before do
-        administrateur_procedure
+        admin.administrateurs_procedures.where(procedure:).update_all(manager:)
         sign_in(admin.user)
       end
 
-      it { is_expected.to redirect_to(admin_procedure_archives_path(procedure)) }
       it 'enqueue the creation job' do
         expect { subject }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), admin)
+        expect(subject).to redirect_to(admin_procedure_archives_path(procedure))
       end
     end
 
@@ -63,7 +62,7 @@ describe Administrateurs::ArchivesController, type: :controller do
       let(:manager) { true }
 
       before do
-        administrateur_procedure
+        admin.administrateurs_procedures.where(procedure:).update_all(manager:)
         sign_in(admin.user)
       end
 

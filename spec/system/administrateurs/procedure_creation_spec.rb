@@ -3,7 +3,7 @@ require 'system/administrateurs/procedure_spec_helper'
 describe 'Creating a new procedure', js: true do
   include ProcedureSpecHelper
 
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   before do
     login_as administrateur.user, scope: :user

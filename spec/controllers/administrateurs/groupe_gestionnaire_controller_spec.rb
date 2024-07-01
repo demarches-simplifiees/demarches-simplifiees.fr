@@ -1,5 +1,5 @@
 describe Administrateurs::GroupeGestionnaireController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
 
   describe "#show" do
     subject { get :show }

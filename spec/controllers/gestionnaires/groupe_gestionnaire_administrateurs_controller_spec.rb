@@ -47,7 +47,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
     end
 
     context 'when administrateur has some procedure' do
-      let(:administrateur_with_procedure) { create(:administrateur) }
+      let(:administrateur_with_procedure) { administrateurs(:default_admin) }
       let!(:procedure) { create(:procedure_with_dossiers, administrateur: administrateur_with_procedure) }
       before do
         groupe_gestionnaire.administrateurs << administrateur_with_procedure
@@ -59,7 +59,7 @@ describe Gestionnaires::GroupeGestionnaireAdministrateursController, type: :cont
     end
 
     context 'when administrateur is not in the groupe_gestionnaire' do
-      let(:other_administrateur) { create(:administrateur) }
+      let(:other_administrateur) { administrateurs(:default_admin) }
       before { destroy(other_administrateur) }
 
       it { expect(groupe_gestionnaire.reload.administrateurs.count).to eq(1) }

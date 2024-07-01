@@ -6,8 +6,8 @@ describe DossierSearchService do
       described_class.matching_dossiers(instructeur_1.dossiers, terms)
     end
 
-    let(:administrateur_1) { create(:administrateur) }
-    let(:administrateur_2) { create(:administrateur) }
+    let(:administrateur_1) { administrateurs(:default_admin) }
+    let(:administrateur_2) { administrateurs(:default_admin) }
 
     let(:instructeur_1) { create(:instructeur, administrateurs: [administrateur_1]) }
     let(:instructeur_2) { create(:instructeur, administrateurs: [administrateur_2]) }

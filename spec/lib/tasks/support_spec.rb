@@ -10,7 +10,7 @@ describe 'support' do
     after { rake_task.reenable }
 
     # the admin to remove
-    let(:admin) { create(:administrateur) }
+    let(:admin) { administrateurs(:default_admin) }
 
     # the super admin doing the removal
     let(:super_admin) { create(:super_admin) }

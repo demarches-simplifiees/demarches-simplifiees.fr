@@ -1,5 +1,5 @@
 describe APIToken, type: :model do
-  let(:administrateur) { create(:administrateur) }
+  let(:administrateur) { administrateurs(:default_admin) }
 
   describe '#generate' do
     let(:api_token_and_packed_token) { APIToken.generate(administrateur) }
@@ -59,7 +59,7 @@ describe APIToken, type: :model do
       end
 
       context 'but acces to a wrong procedure_id' do
-        let(:forbidden_procedure) { create(:procedure) }
+        let(:forbidden_procedure) { create(:procedure, :new_administrateur) }
 
         before do
           api_token.update(allowed_procedure_ids: [forbidden_procedure.id])

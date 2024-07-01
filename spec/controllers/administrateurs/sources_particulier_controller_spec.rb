@@ -1,5 +1,5 @@
 describe Administrateurs::SourcesParticulierController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
 
   before { sign_in(admin.user) }
 

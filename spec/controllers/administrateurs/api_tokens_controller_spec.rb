@@ -1,5 +1,5 @@
 describe Administrateurs::APITokensController, type: :controller do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, administrateur: admin) }
 
   before { sign_in(admin.user) }
@@ -84,7 +84,7 @@ describe Administrateurs::APITokensController, type: :controller do
     end
 
     context 'with procedure filtering on a procedure not owned by the admin' do
-      let(:another_procedure) { create(:procedure) }
+      let(:another_procedure) { create(:procedure, :new_administrateur) }
       let(:params) { default_params.merge(target: 'custom', targets: [another_procedure.id]) }
 
       it do

@@ -4,7 +4,7 @@ describe Expired::DossiersDeletionService do
   let(:user) { create(:user) }
   let(:procedure_opts) { {} }
   let(:procedure) { create(:procedure, :published, procedure_opts) }
-  let(:procedure_2) { create(:procedure, :published, procedure_opts) }
+  let(:procedure_2) { create(:procedure, :published, :new_administrateur, procedure_opts) }
   let(:reference_date) { Date.parse("March 8") }
   let(:service) { Expired::DossiersDeletionService.new }
   describe '#process_expired_dossiers_brouillon' do

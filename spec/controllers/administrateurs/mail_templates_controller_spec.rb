@@ -3,7 +3,7 @@ describe Administrateurs::MailTemplatesController, type: :controller do
   let(:procedure) { create :procedure }
   let(:initiated_mail) { Mails::InitiatedMail.default_for_procedure(procedure) }
 
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
 
   before do
     sign_in(procedure.administrateurs.first.user)

@@ -196,7 +196,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
   describe 'groupe_gestionnaire' do
     let(:show_reply_button) { false }
-    let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: create(:administrateur)) }
+    let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin)) }
     let(:groupe_gestionnaire) { commentaire.groupe_gestionnaire }
     let(:connected_user) { commentaire.sender }
     subject { render_inline(component).to_html }
@@ -222,7 +222,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
     context 'with an gestionnaire message' do
       let(:gestionnaire) { create(:gestionnaire) }
-      let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: create(:administrateur), gestionnaire: gestionnaire, body: 'Second message') }
+      let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin), gestionnaire: gestionnaire, body: 'Second message') }
 
       it 'should display gestionnaire\'s email' do
         is_expected.to have_text(gestionnaire.email)
@@ -237,14 +237,14 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
         end
 
         context 'when commentaire had been written by connected gestionnaire and discarded' do
-          let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: create(:administrateur), gestionnaire: gestionnaire, body: 'Second message', discarded_at: 2.days.ago) }
+          let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin), gestionnaire: gestionnaire, body: 'Second message', discarded_at: 2.days.ago) }
 
           it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
           it { is_expected.to have_selector(".rich-text", text: component.t('.deleted_body')) }
         end
 
         context 'on a procedure where commentaire had been written another gestionnaire' do
-          let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: create(:administrateur), gestionnaire: create(:gestionnaire), body: 'Second message') }
+          let(:commentaire) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin), gestionnaire: create(:gestionnaire), body: 'Second message') }
 
           it { is_expected.not_to have_selector("form[action=\"#{form_url}\"]") }
         end
@@ -261,7 +261,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       let(:present_date) { Time.zone.local(2018, 9, 2, 10, 5, 0) }
       let(:creation_date) { present_date }
       let(:commentaire) do
-        Timecop.freeze(creation_date) { create(:commentaire_groupe_gestionnaire, sender: create(:administrateur)) }
+        Timecop.freeze(creation_date) { create(:commentaire_groupe_gestionnaire, sender: administrateurs(:default_admin)) }
       end
 
       subject do

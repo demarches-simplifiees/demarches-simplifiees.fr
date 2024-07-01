@@ -114,7 +114,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     context 'administrateur' do
-      let(:role) { create(:administrateur) }
+      let(:role) { administrateurs(:default_admin) }
       it 'sends email with correct links to administrateur' do
         expect(subject.to).to eq([role.user.email])
         expect(subject.body).to have_link('Consulter mes archives', href: admin_procedure_archives_url(procedure, host: ENV.fetch("APP_HOST_LEGACY")))
@@ -123,7 +123,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     context 'when perform_later is called' do
-      let(:role) { create(:administrateur) }
+      let(:role) { administrateurs(:default_admin) }
       let(:custom_queue) { 'low_priority' }
       before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
       it 'enqueues email is custom queue for low priority delivery' do

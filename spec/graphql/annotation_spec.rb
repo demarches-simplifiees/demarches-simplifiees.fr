@@ -1,5 +1,5 @@
 RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
-  let(:admin) { create(:administrateur) }
+  let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_private: [{ type: :repetition, children: [{ libelle: 'Nom' }, { type: :integer_number, libelle: 'Age' }] }, {}], administrateurs: [admin]) }
   let(:dossiers) { [] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
