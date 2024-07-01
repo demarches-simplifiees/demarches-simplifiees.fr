@@ -210,7 +210,7 @@ fr:
           label: "Contacter le délégué du Défenseur des droits dans votre région"
           url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
           title: "Contacter le délégué du Défenseur des droits dans votre région - nouvel onglet"
-        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :  
+        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :
           <p class=\"fr-mb-2w\">Défenseur des droits
           <br >Libre réponse 71120
           <br>75342 Paris CEDEX 07</p>"
@@ -937,6 +937,24 @@ fr:
     ministeres: Ministères
   france_connect:
     particulier:
+      associate_user:
+        errors:
+          unable_to_retrieve_information: "Impossible de récupérer les informations via FranceConnect."
+          unable_to_send_confirmation: "Impossible d'envoyer la confirmation."
+      choose_email:
+        intro: Votre compte FranceConnect utilise %{email} comme email de contact.
+        use_email_for_notifications: Souhaitez-vous l'utiliser pour recevoir les notifications concernant l'avancement de vos dossiers ?
+        'yes': Oui
+        'no': Non
+        confirm: Confirmer
+        choose_email_contact: Choisissez votre e-mail de contact
+        alternative_email: Veuillez nous fournir l'email à utiliser pour vous contacter.
+        greetings: Bonjour,
+      confirmation_sent:
+        confirmation_sent_by_email: Confirmation envoyée par mail
+        intro: Un mail de confirmation a été envoyé à votre adresse %{email}
+        click_the_link_in_the_email: Veuillez cliquer sur le lien du mail pour confirmer votre compte et vous connecter avec France Connect pour les prochaines fois.
+        continue: Continuer
       password_confirmation:
         back: 'revenir en arrière'
         already_exists: Le compte %{email} existe déjà sur %{application_name}

@@ -156,7 +156,7 @@ en:
         content_html: "<p class=\"fr-mb-2w\">The documentation pages are managed by a third-party tool. They are not fully accessible.</p>
           <p class=\"fr-mb-2w\">FAQ management was delegated to a third-party tool. It was reintegrated into the platform in May 2024 and has not yet been audited.</p>"
 
-          
+
       preparation:
         title: "Preparation of this accessibility declaration"
         intro: "This declaration was drawn up on 27 April 2022. It was updated on 14 June 2024."
@@ -890,6 +890,24 @@ en:
           to_follow: to follow
   france_connect:
     particulier:
+      associate_user:
+        errors:
+          unable_to_retrieve_information: "Unable to retrieve information from FranceConnect."
+          unable_to_send_confirmation: "Unable to send confirmation."
+      choose_email:
+        intro: "Your FranceConnect account uses %{email} as the contact email."
+        use_email_for_notifications: "Would you like to use it to receive notifications regarding the progress of your cases?"
+        'yes': "Yes"
+        'no': "No"
+        confirm: "Confirm"
+        choose_email_contact: "Choose your contact email"
+        alternative_email: "Please provide the email to use for contacting you."
+        greetings: "Hello,"
+      confirmation_sent:
+        confirmation_sent_by_email: "Confirmation sent by email"
+        intro: "A confirmation email has been sent to your address %{email}"
+        click_the_link_in_the_email: "Please click the link in the email to confirm your account and connect with France Connect in the future."
+        continue: "Continue"
       password_confirmation:
         back: 'back to previous step'
         already_exists: An account with %{email} already existis on %{application_name}
