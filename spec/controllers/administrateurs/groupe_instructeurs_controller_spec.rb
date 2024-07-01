@@ -104,17 +104,20 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'with a valid name' do
       let(:label) { "nouveau_groupe" }
 
-      it { expect(flash.notice).to be_present }
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, procedure.groupe_instructeurs.last)) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(3) }
+      it do
+        expect(flash.notice).to be_present
+        expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, procedure.groupe_instructeurs.last))
+        expect(procedure.groupe_instructeurs.count).to eq(3)
+      end
     end
 
     context 'with an invalid group name' do
       let(:label) { gi_1_1.label }
-
-      it { expect(response).to render_template(:index) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
-      it { expect(flash.alert).to be_present }
+      it do
+        expect(response).to render_template(:index)
+        expect(procedure.groupe_instructeurs.count).to eq(2)
+        expect(flash.alert).to be_present
+      end
     end
   end
 
@@ -132,28 +135,33 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         delete_group gi_1_1
       end
 
-      it { expect(flash.alert).to be_present }
-      it { expect(flash.alert).to eq "Suppression impossible : le groupe « défaut » est le groupe par défaut." }
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(procedure.groupe_instructeurs.count).to eq(2) }
+      it do
+        expect(flash.alert).to be_present
+        expect(flash.alert).to eq "Suppression impossible : le groupe « défaut » est le groupe par défaut."
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+        expect(procedure.groupe_instructeurs.count).to eq(2)
+      end
     end
 
     context 'with many groups' do
       context 'of a group that can be deleted' do
         before { delete_group gi_1_2 }
-        it { expect(flash.notice).to eq "le groupe « deuxième groupe » a été supprimé et le routage a été désactivé." }
-        it { expect(procedure.groupe_instructeurs.count).to eq(1) }
-        it { expect(procedure.reload.routing_enabled?).to eq(false) }
-        it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
+        it do
+          expect(flash.notice).to eq "le groupe « deuxième groupe » a été supprimé et le routage a été désactivé."
+          expect(procedure.groupe_instructeurs.count).to eq(1)
+          expect(procedure.reload.routing_enabled?).to eq(false)
+          expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+        end
       end
 
       context 'of a group with dossiers, that cannot be deleted' do
         let!(:dossier12) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_construction), groupe_instructeur: gi_1_2) }
         before { delete_group gi_1_2 }
-
-        it { expect(flash.alert).to be_present }
-        it { expect(procedure.groupe_instructeurs.count).to eq(2) }
-        it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
+        it do
+          expect(flash.alert).to be_present
+          expect(procedure.groupe_instructeurs.count).to eq(2)
+          expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+        end
       end
     end
   end
@@ -172,11 +180,12 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       reaffecter_admin_procedure_groupe_instructeur_path(:id => gi_1_2,
                                                     :target_group => group)
     end
-
-    it { expect(response).to have_http_status(:ok) }
-    it { expect(response.body).to include(reaffecter_url(procedure.defaut_groupe_instructeur)) }
-    it { expect(response.body).not_to include(reaffecter_url(gi_1_2)) }
-    it { expect(response.body).to include(reaffecter_url(gi_1_3)) }
+    it do
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(reaffecter_url(procedure.defaut_groupe_instructeur))
+      expect(response.body).not_to include(reaffecter_url(gi_1_2))
+      expect(response.body).to include(reaffecter_url(gi_1_3))
+    end
   end
 
   describe '#reaffecter' do
@@ -195,12 +204,14 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
         dossier12.reload
       end
 
-      it { expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure)) }
-      it { expect(gi_1_2.dossiers.last.id).to be(dossier12.id) }
-      it { expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id) }
-      it { expect(dossier12.dossier_assignment.dossier_id).to be(dossier12.id) }
-      it { expect(dossier12.dossier_assignment.groupe_instructeur_id).to be(gi_1_2.id) }
-      it { expect(dossier12.dossier_assignment.assigned_by).to eq(admin.email) }
+      it do
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+        expect(gi_1_2.dossiers.last.id).to be(dossier12.id)
+        expect(dossier12.groupe_instructeur.id).to be(gi_1_2.id)
+        expect(dossier12.dossier_assignment.dossier_id).to be(dossier12.id)
+        expect(dossier12.dossier_assignment.groupe_instructeur_id).to be(gi_1_2.id)
+        expect(dossier12.dossier_assignment.assigned_by).to eq(admin.email)
+      end
     end
 
     describe 'when the target group is not a possible group' do
@@ -327,18 +338,22 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'].to_json }
-      it { expect(response.status).to eq(200) }
-      it { expect(subject.request.flash[:alert]).to be_nil }
-      it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
+      it do
+        expect(response.status).to eq(200)
+        expect(subject.request.flash[:alert]).to be_nil
+        expect(subject.request.flash[:notice]).to be_present
+        expect(subject).to have_http_status(200)
+      end
     end
 
     context 'when there is at least one bad email' do
       let(:emails) { ['badmail', 'instructeur2@gmail.com'].to_json }
-      it { expect(response.status).to eq(200) }
-      it { expect(subject.request.flash[:alert]).to be_present }
-      it { expect(subject.request.flash[:notice]).to be_present }
-      it { expect(subject).to redirect_to admin_procedure_groupe_instructeurs_path(procedure_non_routee) }
+      it do
+        expect(response.status).to eq(200)
+        expect(subject.request.flash[:alert]).to be_present
+        expect(subject.request.flash[:notice]).to be_present
+        expect(subject).to have_http_status(200)
+      end
     end
 
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do

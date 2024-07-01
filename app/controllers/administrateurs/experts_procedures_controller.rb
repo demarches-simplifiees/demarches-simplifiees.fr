@@ -16,7 +16,6 @@ module Administrateurs
         []
       end
       emails += [EmailSanitizer.sanitize(params['final_email'])] if params['final_email'].present?
-
       valid_users, invalid_users = emails
         .map { |email| User.create_or_promote_to_expert(email, SecureRandom.hex) }
         .partition(&:valid?)
