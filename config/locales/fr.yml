@@ -210,7 +210,7 @@ fr:
           label: "Contacter le délégué du Défenseur des droits dans votre région"
           url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
           title: "Contacter le délégué du Défenseur des droits dans votre région - nouvel onglet"
-        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :  
+        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :
           <p class=\"fr-mb-2w\">Défenseur des droits
           <br >Libre réponse 71120
           <br>75342 Paris CEDEX 07</p>"
@@ -937,6 +937,24 @@ fr:
     ministeres: Ministères
   france_connect:
     particulier:
+      associate_user:
+        errors:
+          unable_to_retrieve_information: "Impossible de récupérer les informations via FranceConnect."
+          unable_to_send_confirmation: "Impossible d'envoyer la confirmation."
+      choose_email:
+        intro: "Votre compte FranceConnect utilise <strong>%{email}</strong> comme email de contact."
+        use_email_for_notifications: Souhaitez-vous l'utiliser pour recevoir les notifications concernant l'avancement de vos dossiers ?
+        'yes': Oui
+        'no': Non
+        confirm: Confirmer
+        choose_email_contact: Choisissez votre e-mail de contact
+        alternative_email: Veuillez nous fournir l'email à utiliser pour vous contacter.
+        greetings: Bonjour,
+      confirmation_sent:
+        confirmation_sent_by_email: Confirmation envoyée par mail
+        intro: Un mail de confirmation a été envoyé à votre adresse %{email}
+        click_the_link_in_the_email: Vous devez impérativement cliquer sur le lien du mail pour activer votre adresse et recevoir les notifications sur l'avancement de vos dossiers.
+        continue: Continuer
       password_confirmation:
         back: 'revenir en arrière'
         already_exists: Le compte %{email} existe déjà sur %{application_name}
@@ -954,6 +972,7 @@ fr:
         confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
         invalid_password: "Mauvais mot de passe"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
+        connection_done_verify_email: "Les comptes FranceConnect et %{application_name} sont maintenant fusionnés. Veuillez confirmer votre e-mail en cliquant sur le lien que vous avez reçu par mail"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes."
   groupe_gestionnaires:
     flash:
