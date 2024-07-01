@@ -9,17 +9,11 @@ module Administrateurs
     end
 
     def create
-      email_checker = EmailChecker.new
       emails = params['emails'].presence || [].to_json
       emails = JSON.parse(emails).map { EmailSanitizer.sanitize(_1) }
-      @maybe_typo, emails = emails.map do |email|
-          result = email_checker.check(email: email)
-          if result[:email_suggestions].present?
-            [email, result[:email_suggestions].first]
-          else
-            [email, nil]
-          end
-        end.partition { _1[1].present? }
+      @maybe_typo, emails = emails
+        .map { |email| [email, EmailChecker.check(email:)[:suggestions]&.first] }
+        .partition { _1[1].present? }
       errors = if !@maybe_typo.empty?
         ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typo.map(&:first).join(', ')}"]
       else
