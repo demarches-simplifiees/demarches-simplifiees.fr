@@ -26,7 +26,7 @@
 
       = f.hidden_field :kind
 
-      .fr-input-group{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+      %div{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
         = f.label :dossier_folder, class: "fr-label" do
           = f.object.class.human_attribute_name(:dossier_folder)
           = render EditableChamp::AsteriskMandatoryComponent.new
@@ -36,7 +36,7 @@
           = f.hidden_field "[dossier_folder][template]", data: { tiptap_target: 'input' }, value: @export_template.dossier_folder.fetch('template').to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
-      .fr-input-group{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+      %div{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
         .fr-toggle.fr-toggle--label-left
           = check_box_tag "export_template[export_pdf][enabled]", true, @export_template.export_pdf.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_export_pdf_enabled", data: { 'hide-target_target': 'source' }
           = label_tag "export_template_export_pdf_enabled", f.object.class.human_attribute_name(:export_pdf), class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
@@ -47,14 +47,10 @@
           .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
       - if @exportable_pjs.any?
-        %h3 Pieces justificatives
-
-        .fr-highlight
-          %p.fr-text--sm
-            N'incluez pas les extensions de fichier (.pdf, .jpg, …) dans les noms de pièces jointes.
+        .fr-h3.fr-mt-4w Pieces justificatives
 
         - @exportable_pjs.each do |pj|
-          .fr-input-group{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+          %div{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
             - export_pj = @export_template.pj(pj.stable_id)
 
             = hidden_field_tag "export_template[pjs][][stable_id]", pj.stable_id
