@@ -10,16 +10,16 @@
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
     = form_with url: form_url, model: @export_template, local: true, data: { turbo: 'true', controller: 'autosubmit' } do |f|
+      - scope = 'activerecord.attributes.export_template'
 
       = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
 
       - if groupe_instructeurs.many?
         .fr-input-group
           = f.label :groupe_instructeur_id, class: 'fr-label' do
-            = f.object.class.human_attribute_name(:groupe_instructeur_id)
-            = render EditableChamp::AsteriskMandatoryComponent.new
-            %span.fr-hint-text
-              Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+            = "#{t('groupe_instructeur_id', scope:)} #{asterisk}"
+            %span.fr-hint-text Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+
           = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
       - else
         = f.hidden_field :groupe_instructeur_id
@@ -27,11 +27,10 @@
       = f.hidden_field :kind
 
       %div{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
-        = f.label :dossier_folder, class: "fr-label" do
-          = f.object.class.human_attribute_name(:dossier_folder)
-          = render EditableChamp::AsteriskMandatoryComponent.new
-          %span.fr-hint-text
-            = t('activerecord.attributes.export_template.hints.dossier_folder')
+        = f.label '[dossier_folder][template]', class: "fr-label" do
+          = "#{t('dossier_folder', scope:)} #{asterisk}"
+          %span.fr-hint-text= t('hints.dossier_folder', scope:)
+
         .tiptap-editor{ data: { tiptap_target: 'editor' } }
           = f.hidden_field "[dossier_folder][template]", data: { tiptap_target: 'input' }, value: @export_template.dossier_folder.fetch('template').to_json
         .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
