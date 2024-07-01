@@ -4,6 +4,8 @@ module Administrateurs
     include Logic
     include UninterlacePngConcern
     include GroupeInstructeursSignatureConcern
+    include EmailSanitizableConcern
+    include UserInvitationConcern
 
     before_action :ensure_not_super_admin!, only: [:add_instructeur]
 
@@ -218,15 +220,18 @@ module Administrateurs
     end
 
     def add_instructeur
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map { EmailSanitizableConcern::EmailSanitizer.sanitize(_1) }
+      @maybe_typos, emails = maybe_typos_and_emails
 
-      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+      errors = if !@maybe_typos.empty?
+        ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typos.map(&:first).join(', ')}. Veuillez, #{view_context.link_to(" verifier l'orthographe", "#maybe_typos_errors")} des invitations."]
+      else
+        []
+      end
+
+      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails: emails.map(&:first))
 
       if invalid_emails.present?
-        flash[:alert] = t('.wrong_address',
-          count: invalid_emails.size,
-          emails: invalid_emails.join(', '))
+        errors += [t('.wrong_address', count: invalid_emails.size, emails: invalid_emails.join(', '))]
       end
 
       if instructeurs.present?
@@ -238,7 +243,6 @@ module Administrateurs
         else
           "Les instructeurs ont bien été affectés à la démarche"
         end
-
         known_instructeurs, new_instructeurs = instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
 
         new_instructeurs.each { InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe_instructeur, current_administrateur.email).deliver_later }
@@ -250,11 +254,14 @@ module Administrateurs
         end
       end
 
-      if procedure.routing_enabled?
-        redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
-      else
-        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
-      end
+      @procedure = groupe_instructeur.procedure
+      @groupe_instructeur = groupe_instructeur
+      @instructeurs = paginated_instructeurs
+      @available_instructeur_emails = available_instructeur_emails
+
+      flash.now[:alert] = errors.join(". ") if !errors.empty?
+
+      render :show
     end
 
     def remove_instructeur
@@ -284,7 +291,6 @@ module Administrateurs
           end
         end
       end
-
       if procedure.routing_enabled?
         redirect_to admin_procedure_groupe_instructeur_path(procedure, groupe_instructeur)
       else

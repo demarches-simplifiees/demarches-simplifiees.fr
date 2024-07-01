@@ -35,7 +35,7 @@
           %td.actions= button_to 'Retirer',
             { action: :remove_instructeur, id: groupe_instructeur.id },
             { method: :delete,
-              data: { confirm: confirmation_message },
+              form: { data: { turbo: true, confirm: confirmation_message } },
               params: { instructeur: { id: instructeur.id }},
               class: 'fr-btn fr-btn--secondary' }
 

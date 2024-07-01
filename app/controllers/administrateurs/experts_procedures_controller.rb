@@ -1,6 +1,6 @@
 module Administrateurs
   class ExpertsProceduresController < AdministrateurController
-    include EmailSanitizableConcern
+    include UserInvitationConcern
     before_action :retrieve_procedure
     before_action :retrieve_experts_procedure, only: [:index]
     before_action :retrieve_experts_emails, only: [:index]
@@ -9,18 +9,13 @@ module Administrateurs
     end
 
     def create
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map { EmailSanitizer.sanitize(_1) }
-      @maybe_typos, emails = emails
-        .map { |email| [email, EmailChecker.check(email:)[:suggestions]&.first] }
-        .partition { _1[1].present? }
+      @maybe_typos, emails = maybe_typos_and_emails
       errors = if !@maybe_typos.empty?
         ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typos.map(&:first).join(', ')}. Veuillez, #{view_context.link_to(" verifier l'orthographe", "#maybe_typos_errors")} des invitations."]
       else
         []
       end
       emails += [EmailSanitizer.sanitize(params['final_email'])] if params['final_email'].present?
-
       valid_users, invalid_users = emails
         .map { |email| User.create_or_promote_to_expert(email, SecureRandom.hex) }
         .partition(&:valid?)
