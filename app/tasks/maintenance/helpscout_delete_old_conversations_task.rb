@@ -14,7 +14,7 @@ module Maintenance
 
     throttle_on do
       limit = Rails.cache.read(Helpscout::API::RATELIMIT_KEY)
-      limit.present? && limit <= 26 # check is made after each page (of 25 elements), and we need 25 calls to delete them all
+      limit.present? && limit.to_i <= 26 # check is made after each page (of 25 elements), and we need 25 calls to delete them all
     end
 
     def count
