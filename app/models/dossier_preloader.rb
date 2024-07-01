@@ -15,7 +15,7 @@ class DossierPreloader
 
   def in_batches_with_block(size = DEFAULT_BATCH_SIZE, &block)
     @dossiers.in_batches(of: size) do |batch|
-      data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert], revision: :revision_types_de_champ)
+      data = Dossier.where(id: batch.ids).includes(:individual, :traitement, :etablissement, user: :france_connect_informations, avis: :expert, commentaires: [:instructeur, :expert])
 
       dossiers = data.to_a
       load_dossiers(dossiers)
@@ -30,38 +30,31 @@ class DossierPreloader
   end
 
   def self.load_one(dossier, pj_template: false)
-    DossierPreloader.new([dossier]).all(pj_template: pj_template).first
+    DossierPreloader.new([dossier]).all(pj_template:).first
   end
 
   private
 
-  # returns: { revision_id : { type_de_champ_id : position } }
+  def revisions
+    @revisions ||= ProcedureRevision.where(id: @dossiers.pluck(:revision_id).uniq)
+      .includes(types_de_champ: { piece_justificative_template_attachment: :blob })
+      .index_by(&:id)
+  end
+
+  # returns: { revision_id : { stable_id : position } }
   def positions
-    @positions ||= ProcedureRevisionTypeDeChamp
-      .where(revision_id: @dossiers.pluck(:revision_id).uniq)
-      .select(:revision_id, :type_de_champ_id, :position)
-      .group_by(&:revision_id)
-      .transform_values do |coordinates|
-        coordinates.index_by(&:type_de_champ_id).transform_values(&:position)
-      end
+    @positions ||= revisions
+      .transform_values { |revision| revision.revision_types_de_champ.map { [_1.stable_id, _1.position] }.to_h }
   end
 
   def load_dossiers(dossiers, pj_template: false)
     to_include = @includes_for_champ.dup
     to_include << [piece_justificative_file_attachments: :blob]
 
-    if pj_template
-      to_include << { type_de_champ: { piece_justificative_template_attachment: :blob } }
-    else
-      to_include << :type_de_champ
-    end
-
     all_champs = Champ
       .includes(to_include)
       .where(dossier_id: dossiers)
       .to_a
-
-    load_etablissements(all_champs)
 
     children_champs, root_champs = all_champs.partition(&:child?)
     champs_by_dossier = root_champs.group_by(&:dossier_id)
@@ -74,6 +67,8 @@ class DossierPreloader
     dossiers.each do |dossier|
       load_dossier(dossier, champs_by_dossier[dossier.id] || [], champs_by_dossier_by_parent[dossier.id] || {})
     end
+
+    load_etablissements(all_champs)
   end
 
   def load_etablissements(champs)
@@ -90,6 +85,11 @@ class DossierPreloader
   end
 
   def load_dossier(dossier, champs, children_by_parent = {})
+    revision = revisions[dossier.revision_id]
+    if revision.present?
+      dossier.association(:revision).target = revision
+    end
+
     champs_public, champs_private = champs.partition(&:public?)
 
     dossier.association(:champs).target = []
@@ -121,8 +121,8 @@ class DossierPreloader
     dossier.association(:champs).target += champs
 
     parent.association(name).target = champs
-      .filter { positions[dossier.revision_id][_1.type_de_champ_id].present? }
-      .sort_by { [_1.row_id, positions[dossier.revision_id][_1.type_de_champ_id]] }
+      .filter { positions[dossier.revision_id][_1.stable_id].present? }
+      .sort_by { [_1.row_id, positions[dossier.revision_id][_1.stable_id]] }
 
     # Load children champs
     champs.filter(&:block?).each do |parent_champ|

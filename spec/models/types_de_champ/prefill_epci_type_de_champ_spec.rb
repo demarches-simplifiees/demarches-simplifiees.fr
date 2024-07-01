@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillEpciTypeDeChamp do
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { build(:procedure) }
   let(:type_de_champ) { build(:type_de_champ_epci, procedure: procedure) }
-  let(:champ) { create(:champ_epci, type_de_champ: type_de_champ) }
+  let(:champ) { Champs::EpciChamp.new }
 
   describe 'ancestors' do
     subject { described_class.new(type_de_champ, procedure.active_revision) }

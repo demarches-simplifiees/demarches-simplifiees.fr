@@ -35,14 +35,14 @@ class ProcedureRevision < ApplicationRecord
 
   serialize :ineligibilite_rules, LogicSerializer
 
-  def build_champs_public
+  def build_champs_public(dossier)
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_public.reload.map(&:build_champ)
+    types_de_champ_public.reload.map { _1.build_champ(dossier:) }
   end
 
-  def build_champs_private
+  def build_champs_private(dossier)
     # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_private.reload.map(&:build_champ)
+    types_de_champ_private.reload.map { _1.build_champ(dossier:) }
   end
 
   def add_type_de_champ(params)

@@ -8,7 +8,8 @@ describe Experts::AvisController, type: :controller do
     let(:another_instructeur) { create(:instructeur) }
     let(:claimant) { create(:expert) }
     let(:expert) { create(:expert) }
-    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification]) }
+    let(:types_de_champ_public) { [] }
+    let(:procedure) { create(:procedure, :published, instructeurs: [instructeur, another_instructeur, instructeur_with_instant_avis_notification], types_de_champ_public:) }
     let(:procedure_id) { procedure.id }
     let(:another_procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
@@ -464,7 +465,8 @@ describe Experts::AvisController, type: :controller do
       end
 
       context 'with linked dossiers' do
-        let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+        let(:types_de_champ_public) { [{ type: :dossier_link }] }
+        let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
 
         context 'when the expert doesn’t share linked dossiers' do
           let(:invite_linked_dossiers) { false }

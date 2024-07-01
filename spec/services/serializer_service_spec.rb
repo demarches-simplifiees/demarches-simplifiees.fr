@@ -1,13 +1,13 @@
 describe SerializerService do
-  let(:dossier) { create(:dossier, :en_construction) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret }]) }
+  let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
+  let(:etablissement) { champ.etablissement }
 
   describe 'champ' do
     subject { SerializerService.champ(champ) }
 
     describe 'type champ is siret' do
-      let(:etablissement) { create(:etablissement) }
-      let(:champ) { create(:champ_siret, etablissement:, dossier:) }
-
       it {
         is_expected.to include("stringValue" => etablissement.siret)
         expect(subject["etablissement"]).to include("siret" => etablissement.siret)
@@ -15,7 +15,7 @@ describe SerializerService do
       }
 
       context 'with entreprise_date_creation is nil' do
-        let(:etablissement) { create(:etablissement, entreprise_date_creation: nil) }
+        before { etablissement.update(entreprise_date_creation: nil) }
 
         it {
           expect(subject["etablissement"]["entreprise"]).to include("nomCommercial" => etablissement.entreprise_nom_commercial)

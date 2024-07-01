@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
-  let(:procedure) { create(:procedure) }
+  let(:procedure) { build(:procedure) }
   let(:type_de_champ) { build(:type_de_champ_communes, procedure: procedure) }
 
   describe 'ancestors' do
@@ -28,7 +28,8 @@ RSpec.describe TypesDeChamp::PrefillCommuneTypeDeChamp do
   end
 
   describe '#to_assignable_attributes' do
-    let(:champ) { create(:champ_communes, type_de_champ: type_de_champ) }
+    let(:champ) { Champs::CommuneChamp.new() }
+    before { allow(champ).to receive(:type_de_champ).and_return(type_de_champ) }
     subject(:to_assignable_attributes) do
       described_class.build(type_de_champ, procedure.active_revision).to_assignable_attributes(champ, value)
     end

@@ -595,8 +595,8 @@ describe ProcedurePresentation do
 
       context 'with single value' do
         before do
-          kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'keep me')
-          discarded_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'discard me')
+          kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'keep me')
+          discarded_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'discard me')
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -613,9 +613,9 @@ describe ProcedurePresentation do
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'keep me')
-          discarded_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'discard me')
-          other_kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'and me too')
+          kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'keep me')
+          discarded_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'discard me')
+          other_kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'and me too')
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
@@ -628,8 +628,8 @@ describe ProcedurePresentation do
         let(:types_de_champ_public) { [{ type: :yes_no }] }
 
         before do
-          kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'true')
-          discarded_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(value: 'false')
+          kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'true')
+          discarded_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'false')
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -640,8 +640,8 @@ describe ProcedurePresentation do
         let(:types_de_champ_public) { [{ type: :departements }] }
 
         before do
-          kept_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(external_id: '13')
-          discarded_dossier.champs_public.find_by(type_de_champ: type_de_champ).update(external_id: '69')
+          kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(external_id: '13')
+          discarded_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(external_id: '69')
         end
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -656,8 +656,8 @@ describe ProcedurePresentation do
       let(:type_de_champ_private) { procedure.active_revision.types_de_champ_private.first }
 
       before do
-        kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'keep me')
-        discarded_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'discard me')
+        kept_dossier.champs.find_by(stable_id: type_de_champ_private.stable_id).update(value: 'keep me')
+        discarded_dossier.champs.find_by(stable_id: type_de_champ_private.stable_id).update(value: 'discard me')
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
@@ -673,7 +673,7 @@ describe ProcedurePresentation do
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          other_kept_dossier.champs_private.find_by(type_de_champ: type_de_champ_private).update(value: 'and me too')
+          other_kept_dossier.champs.find_by(stable_id: type_de_champ_private.stable_id).update(value: 'and me too')
         end
 
         it 'returns every dossier that matches any of the search criteria for a given column' do

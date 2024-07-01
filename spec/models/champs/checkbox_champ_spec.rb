@@ -1,12 +1,11 @@
 describe Champs::CheckboxChamp do
-  it_behaves_like "a boolean champ" do
-    let(:boolean_champ) { build(:champ_checkbox, value: value) }
-  end
+  let(:boolean_champ) { described_class.new(value: value) }
+  before { allow(boolean_champ).to receive(:type_de_champ).and_return(build(:type_de_champ_checkbox)) }
+  it_behaves_like "a boolean champ"
 
   # TODO remove when normalize_checkbox_values is over
   describe '#true?' do
-    let(:checkbox_champ) { build(:champ_checkbox, value: value) }
-    subject { checkbox_champ.true? }
+    subject { boolean_champ.true? }
 
     context "when the checkbox value is 'on'" do
       let(:value) { 'on' }

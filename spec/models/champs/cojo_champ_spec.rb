@@ -1,7 +1,5 @@
 describe Champs::COJOChamp, type: :model do
-  let(:champ) { build(:champ_cojo, accreditation_number:, accreditation_birthdate:) }
   let(:external_id) { nil }
-  let(:stub) { stub_request(:post, url).with(body: { accreditationNumber: accreditation_number.to_i, birthdate: accreditation_birthdate }).to_return(body:, status:) }
   let(:url) { COJOService.new.send(:url) }
   let(:body) { Rails.root.join('spec', 'fixtures', 'files', 'api_cojo', "accreditation_#{response_type}.json").read }
   let(:status) { 200 }
@@ -9,8 +7,17 @@ describe Champs::COJOChamp, type: :model do
   let(:accreditation_number) { '123456' }
   let(:accreditation_birthdate) { '21/12/1959' }
 
+  before { stub_request(:post, url).with(body: { accreditationNumber: accreditation_number.to_i, birthdate: accreditation_birthdate }).to_return(body:, status:) }
+
   describe 'fetch_external_data' do
-    subject { stub; champ.fetch_external_data }
+    let(:champ) do
+      described_class.new do |champ|
+        champ.accreditation_number = accreditation_number
+        champ.accreditation_birthdate = accreditation_birthdate
+      end
+    end
+
+    subject { champ.fetch_external_data }
 
     context 'success (yes)' do
       it { expect(subject.value!).to eq({ accreditation_success: true, accreditation_first_name: 'Florence', accreditation_last_name: 'Griffith-Joyner' }) }
@@ -49,9 +56,14 @@ describe Champs::COJOChamp, type: :model do
   end
 
   describe 'fill champ' do
-    let(:champ) { create(:champ_cojo, accreditation_number:, accreditation_birthdate:) }
-
-    subject { stub; champ.touch; perform_enqueued_jobs; champ.reload }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :cojo }]) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:champ) { dossier.champs.first }
+    before do
+      champ.update(accreditation_number:, accreditation_birthdate:, data: nil)
+      perform_enqueued_jobs;
+    end
+    subject { champ.reload }
 
     it 'success (yes)' do
       expect(subject.blank?).to be_falsey

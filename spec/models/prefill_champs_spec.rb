@@ -135,11 +135,12 @@ RSpec.describe PrefillChamps do
       let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
+      let(:child_champs) { dossier.champs.where(stable_id: type_de_champ_child.stable_id) }
 
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
-        expect(prefill_champs_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
+        expect(prefill_champs_array).to match([{ id: child_champs.first.id, value: type_de_champ_child_value }, { id: child_champs.second.id, value: type_de_champ_child_value2 }])
       end
     end
 
@@ -177,11 +178,12 @@ RSpec.describe PrefillChamps do
       let(:type_de_champ_child) { procedure.published_revision.children_of(type_de_champ).first }
       let(:type_de_champ_child_value) { "value" }
       let(:type_de_champ_child_value2) { "value2" }
+      let(:child_champs) { dossier.champs.where(stable_id: type_de_champ_child.stable_id) }
 
       let(:params) { { "champ_#{type_de_champ.to_typed_id_for_query}" => [{ "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value }, { "champ_#{type_de_champ_child.to_typed_id_for_query}" => type_de_champ_child_value2 }] } }
 
       it "builds an array of hash(id, value) matching the given params" do
-        expect(prefill_champs_array).to match([{ id: type_de_champ_child.champ.first.id, value: type_de_champ_child_value }, { id: type_de_champ_child.champ.second.id, value: type_de_champ_child_value2 }])
+        expect(prefill_champs_array).to match([{ id: child_champs.first.id, value: type_de_champ_child_value }, { id: child_champs.second.id, value: type_de_champ_child_value2 }])
       end
     end
 
@@ -237,7 +239,7 @@ RSpec.describe PrefillChamps do
   private
 
   def find_champ_by_stable_id(dossier, stable_id)
-    dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
+    dossier.champs.find_by(stable_id:)
   end
 
   def attributes(champ, value)

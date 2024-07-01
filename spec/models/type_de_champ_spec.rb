@@ -10,17 +10,12 @@ describe TypeDeChamp do
       it { is_expected.not_to allow_value(nil).for(:type_champ) }
       it { is_expected.not_to allow_value('').for(:type_champ) }
 
-      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:text)).for(:type_champ) }
-      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:textarea)).for(:type_champ) }
-      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:datetime)).for(:type_champ) }
-      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:number)).for(:type_champ) }
-      it { is_expected.to allow_value(TypeDeChamp.type_champs.fetch(:checkbox)).for(:type_champ) }
+      let(:procedure) { create(:procedure, :with_all_champs) }
+      let(:dossier) { create(:dossier, procedure:) }
 
       it do
-        TypeDeChamp.type_champs.each do |(type_champ, _)|
-          type_de_champ = create(:"type_de_champ_#{type_champ}")
-          champ = type_de_champ.champ.create
-
+        dossier.revision.types_de_champ_public.each do |type_de_champ|
+          champ = dossier.project_champ(type_de_champ, nil)
           expect(type_de_champ.dynamic_type.class.name).to match(/^TypesDeChamp::/)
           expect(champ.class.name).to match(/^Champs::/)
         end

@@ -1,5 +1,11 @@
 describe Champs::AddressChamp do
-  let(:champ) { build(:champ_address, value:, data:) }
+  let(:champ) do
+    described_class.new.tap do |champ|
+      champ.value = value
+      champ.data = data
+      champ.validate
+    end
+  end
   let(:value) { '' }
   let(:data) { nil }
 

@@ -1,7 +1,9 @@
 RSpec.describe GalleryHelper, type: :helper do
-  let(:procedure) { create(:procedure_with_dossiers) }
-  let(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile', procedure:) }
-  let(:champ_pj) { create(:champ_piece_justificative, type_de_champ: type_de_champ_pj) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile' }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ_pj) { dossier.champs.first }
+
   let(:blob_info) do
     {
       filename: file.original_filename,
