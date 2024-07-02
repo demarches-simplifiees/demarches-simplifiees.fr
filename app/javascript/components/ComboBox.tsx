@@ -22,6 +22,7 @@ import {
   useMultiList,
   useSingleList,
   useRemoteList,
+  useOnFormReset,
   createLoader,
   type ComboBoxProps
 } from './react-aria/hooks';
@@ -102,7 +103,7 @@ export function SingleComboBox({
   const labelledby = useLabelledBy(props.id, ariaLabelledby);
   const { ref, dispatch } = useDispatchChangeEvent();
 
-  const { selectedItem, ...comboBoxProps } = useSingleList({
+  const { selectedItem, onReset, ...comboBoxProps } = useSingleList({
     defaultItems,
     defaultSelectedKey,
     emptyFilterKey,
@@ -122,6 +123,7 @@ export function SingleComboBox({
                 field={formValue == 'text' ? 'label' : 'value'}
                 name={name}
                 form={form}
+                onReset={onReset}
                 data={data}
               />
             ) : null}
@@ -150,18 +152,24 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   const { ref, dispatch } = useDispatchChangeEvent();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { selectedItems, hiddenInputValues, onRemove, ...comboBoxProps } =
-    useMultiList({
-      defaultItems,
-      defaultSelectedKeys,
-      onChange: dispatch,
-      formValue,
-      allowsCustomValue,
-      valueSeparator,
-      focusInput: () => {
-        inputRef.current?.focus();
-      }
-    });
+  const {
+    selectedItems,
+    hiddenInputValues,
+    onRemove,
+    onReset,
+    ...comboBoxProps
+  } = useMultiList({
+    defaultItems,
+    defaultSelectedKeys,
+    onChange: dispatch,
+    formValue,
+    allowsCustomValue,
+    valueSeparator,
+    focusInput: () => {
+      inputRef.current?.focus();
+    }
+  });
+  const formResetRef = useOnFormReset(onReset);
 
   return (
     <div className="fr-ds-combobox__multiple">
@@ -193,12 +201,13 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
       </ComboBox>
       {name ? (
         <span ref={ref}>
-          {hiddenInputValues.map((value) => (
+          {hiddenInputValues.map((value, i) => (
             <input
               type="hidden"
               value={value}
               name={name}
               form={form}
+              ref={i == 0 ? formResetRef : undefined}
               key={value}
             />
           ))}
@@ -238,7 +247,7 @@ export function RemoteComboBox({
         : loader,
     [loader, minimumInputLength, limit]
   );
-  const { selectedItem, ...comboBoxProps } = useRemoteList({
+  const { selectedItem, onReset, ...comboBoxProps } = useRemoteList({
     allowsCustomValue,
     defaultItems,
     defaultSelectedKey,
@@ -270,6 +279,7 @@ export function RemoteComboBox({
                 }
                 name={name}
                 form={form}
+                onReset={onReset}
                 data={data}
               />
             ) : null}
@@ -285,11 +295,13 @@ export function ComboBoxValueSlot({
   field,
   name,
   form,
+  onReset,
   data
 }: {
   field: 'label' | 'value' | 'data';
   name: string;
   form?: string;
+  onReset?: () => void;
   data?: Record<string, string>;
 }) {
   const selectedItem = useContext(SelectedItemContext);
@@ -300,8 +312,16 @@ export function ComboBoxValueSlot({
       value
     ])
   );
+  const ref = useOnFormReset(onReset);
   return (
-    <input type="hidden" name={name} value={value} form={form} {...dataProps} />
+    <input
+      ref={onReset ? ref : undefined}
+      type="hidden"
+      name={name}
+      value={value}
+      form={form}
+      {...dataProps}
+    />
   );
 }
 

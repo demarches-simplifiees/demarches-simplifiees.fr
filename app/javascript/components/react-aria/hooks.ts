@@ -107,6 +107,10 @@ export function useSingleList({
       }
     }
   );
+  const onReset = useEvent(() => {
+    setSelectedKey(null);
+    setInputValue('');
+  });
 
   // reset default selected key when props change
   useEffect(() => {
@@ -122,7 +126,8 @@ export function useSingleList({
     onSelectionChange,
     inputValue,
     onInputChange,
-    items: filteredItems
+    items: filteredItems,
+    onReset
   };
 }
 
@@ -272,6 +277,11 @@ export function useMultiList({
     }
   );
 
+  const onReset = useEvent(() => {
+    setSelectedKeys(new Set());
+    setInputValue('');
+  });
+
   return {
     onRemove,
     onSelectionChange,
@@ -279,7 +289,8 @@ export function useMultiList({
     selectedItems,
     items: filteredItems,
     hiddenInputValues,
-    inputValue
+    inputValue,
+    onReset
   };
 }
 
@@ -357,6 +368,11 @@ export function useRemoteList({
     }
   );
 
+  const onReset = useEvent(() => {
+    setSelectedItem(null);
+    setInputValue('');
+  });
+
   // add to items list current selected item if it's not in the list
   const items =
     selectedItem && !list.getItem(selectedItem.value)
@@ -369,7 +385,8 @@ export function useRemoteList({
     onSelectionChange,
     inputValue,
     onInputChange,
-    items
+    items,
+    onReset
   };
 }
 
@@ -435,4 +452,23 @@ function findLabelledbyId(id?: string) {
     return;
   }
   return label.id;
+}
+
+export function useOnFormReset(onReset?: () => void) {
+  const ref = useRef<HTMLInputElement>(null);
+  const onResetListener = useEvent<EventListener>((event) => {
+    if (event.target == ref.current?.form) {
+      onReset?.();
+    }
+  });
+  useEffect(() => {
+    if (onReset) {
+      addEventListener('reset', onResetListener);
+      return () => {
+        removeEventListener('reset', onResetListener);
+      };
+    }
+  }, [onReset, onResetListener]);
+
+  return ref;
 }
