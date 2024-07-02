@@ -1,11 +1,16 @@
 describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :datetime }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:datetime_champ) { dossier.champs.first }
+
   before do
+    datetime_champ.update_column(:value, value)
     datetime_champ.save(validate: false)
   end
 
   context "when the value is a valid ISO8601 date" do
     let!(:value) { Time.zone.parse('10/01/2023 13:30').iso8601 }
-    let!(:datetime_champ) { build(:champ_datetime, value: value) }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
@@ -17,7 +22,6 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
 
   context "when the value is a date convertible to IS8061" do
     let!(:value) { "2023-01-10" }
-    let!(:datetime_champ) { build(:champ_datetime, value: value) }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
@@ -28,7 +32,7 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   end
 
   context "when the value is a date not convertible to IS8061" do
-    let!(:datetime_champ) { build(:champ_datetime, value: "blabla") }
+    let!(:value) { "blabla" }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
@@ -39,7 +43,7 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   end
 
   context "when the value is a date not convertible to IS8061 and the champ is required" do
-    let!(:datetime_champ) { build(:champ_datetime, value: "blabla") }
+    let!(:value) { "blabla" }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
@@ -53,7 +57,7 @@ describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   end
 
   context "when the value is nil" do
-    let!(:datetime_champ) { build(:champ_datetime, value: nil) }
+    let!(:value) { nil }
 
     subject { described_class.perform_now([datetime_champ.id]) }
 
