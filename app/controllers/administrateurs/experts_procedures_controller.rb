@@ -11,15 +11,14 @@ module Administrateurs
     def create
       emails = params['emails'].presence || [].to_json
       emails = JSON.parse(emails).map { EmailSanitizer.sanitize(_1) }
-      @maybe_typos, emails = emails
+      @maybe_typos, no_suggestions = emails
         .map { |email| [email, EmailChecker.check(email:)[:suggestions]&.first] }
         .partition { _1[1].present? }
-      errors = if !@maybe_typos.empty?
-        ["Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{@maybe_typos.map(&:first).join(', ')}. Veuillez, #{view_context.link_to(" verifier l'orthographe", "#maybe_typos_errors")} des invitations."]
-      else
-        []
-      end
-      emails += [EmailSanitizer.sanitize(params['final_email'])] if params['final_email'].present?
+
+      errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
+
+      emails = no_suggestions.map(&:first)
+      emails << EmailSanitizer.sanitize(params['final_email']) if params['final_email'].present?
 
       valid_users, invalid_users = emails
         .map { |email| User.create_or_promote_to_expert(email, SecureRandom.hex) }
@@ -78,6 +77,15 @@ module Administrateurs
 
     def expert_procedure_params
       params.require(:experts_procedure).permit(:allow_decision_access)
+    end
+
+    def generate_emails_suggestions_message(suggestions)
+      return if suggestions.empty?
+
+      typo_list = suggestions.map(&:first).join(', ')
+      verification_link = view_context.link_to("vérifier l’orthographe", "#maybe_typos_errors")
+
+      "Attention, nous pensons avoir identifié une faute de frappe dans les invitations : #{typo_list}. Veuillez #{verification_link} des invitations."
     end
   end
 end

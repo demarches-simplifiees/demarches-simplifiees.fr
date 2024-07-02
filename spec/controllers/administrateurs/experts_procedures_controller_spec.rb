@@ -24,14 +24,13 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
     let(:procedure) { create :procedure, administrateur: admin, experts_require_administrateur_invitation: true }
 
     subject { post :create, params: params }
-    before { subject }
 
     context 'when inviting multiple valid experts' do
-      let(:params) { { procedure_id: procedure.id, emails: [expert.email, expert2.email].to_json } }
+      let(:params) { { procedure_id: procedure.id, emails: [expert.email, "new@expert.fr"].to_json } }
 
       it 'creates experts' do
-        expect(procedure.experts.include?(expert)).to be_truthy
-        expect(procedure.experts.include?(expert2)).to be_truthy
+        subject
+        expect(procedure.experts.map(&:email)).to match_array([expert.email, "new@expert.fr"])
         expect(flash.notice).to be_present
         expect(assigns(:maybe_typos)).to eq([])
         expect(response).to have_http_status(:success)
@@ -42,6 +41,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
       let(:params) { { procedure_id: procedure.id, emails: ['martin@oraneg.fr'].to_json } }
       render_views
       it 'warns' do
+        subject
         expect(flash.alert).to be_present
         expect(assigns(:maybe_typos)).to eq([['martin@oraneg.fr', 'martin@orange.fr']])
         expect(response).to have_http_status(:success)
@@ -54,6 +54,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
       let(:params) { { procedure_id: procedure.id, final_email: } }
 
       it 'works' do
+        subject
         created_user = User.where(email: final_email).first
         expect(created_user).to be_an_instance_of(User)
         expect(created_user.expert).to be_an_instance_of(Expert)
