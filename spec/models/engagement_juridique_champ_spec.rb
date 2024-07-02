@@ -1,6 +1,10 @@
 describe Champs::EngagementJuridiqueChamp do
   describe 'validation' do
-    let(:champ) { build(:champ_engagement_juridique, value: value) }
+    let(:champ) do
+      described_class
+        .new(type_de_champ: build(:type_de_champ_engagement_juridique), dossier: build(:dossier))
+        .tap { _1.value = value }
+    end
     subject { champ.validate(:champs_public_value) }
 
     context 'with [A-Z]' do
