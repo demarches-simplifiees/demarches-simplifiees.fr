@@ -410,7 +410,7 @@ describe 'The user' do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: },
+            { type: :integer_number, libelle: 'age', mandatory: false, stable_id: },
             {
               type: :repetition, libelle: 'repetition', condition:, children: [
                 { type: :text, libelle: 'nom', mandatory: true }
@@ -439,7 +439,7 @@ describe 'The user' do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :checkbox, libelle: 'champ_a', stable_id: a_stable_id },
+            { type: :checkbox, libelle: 'champ_a', mandatory: false, stable_id: a_stable_id },
             {
               type: :repetition, libelle: 'repetition', mandatory: true, children: [
                 { type: :checkbox, libelle: 'champ_b', stable_id: b_stable_id },
@@ -476,7 +476,7 @@ describe 'The user' do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', stable_id: },
+            { type: :integer_number, libelle: 'age', mandatory: false, stable_id: },
             { type: :text, libelle: 'nom', mandatory: true, condition: }
           ])
       end
@@ -514,11 +514,11 @@ describe 'The user' do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age du candidat', stable_id: age_stable_id },
-            { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition },
-            { type: :header_section, libelle: 'info voiture', condition: permis_condition },
-            { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition },
-            { type: :text, libelle: 'parking', condition: parking_condition }
+            { type: :integer_number, libelle: 'age du candidat', stable_id: age_stable_id, mandatory: false },
+            { type: :yes_no, libelle: 'permis de conduire', stable_id: permis_stable_id, condition: permis_condition, mandatory: false },
+            { type: :header_section, libelle: 'info voiture', condition: permis_condition, mandatory: false },
+            { type: :integer_number, libelle: 'tonnage', stable_id: tonnage_stable_id, condition: tonnage_condition, mandatory: false },
+            { type: :text, libelle: 'parking', condition: parking_condition, mandatory: false }
           ])
       end
 

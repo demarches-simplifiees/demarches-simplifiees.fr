@@ -3,8 +3,8 @@ describe 'The routing with rules', js: true do
 
   let(:procedure) do
     create(:procedure, :with_service, :for_individual, :with_zone, types_de_champ_public: [
-      { type: :text, libelle: 'un premier champ text' },
-      { type: :drop_down_list, libelle: 'Spécialité', options: ["", "littéraire", "scientifique", "artistique"] }
+      { type: :text, libelle: 'un premier champ text', mandatory: false },
+      { type: :drop_down_list, libelle: 'Spécialité', options: ["", "littéraire", "scientifique", "artistique"], mandatory: false }
     ])
   end
   let(:administrateur) { create(:administrateur, procedures: [procedure]) }

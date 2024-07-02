@@ -399,7 +399,7 @@ describe Users::DossiersController, type: :controller do
   describe '#submit_brouillon' do
     before { sign_in(user) }
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
-    let(:types_de_champ_public) { [{ type: :text }] }
+    let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let!(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to first_champ.libelle, brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
@@ -516,7 +516,7 @@ describe Users::DossiersController, type: :controller do
   describe '#submit_en_construction' do
     before { sign_in(user) }
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
-    let(:types_de_champ_public) { [{ type: :text }] }
+    let(:types_de_champ_public) { [{ type: :text, mandatory: false }] }
     let(:dossier) { create(:dossier, :en_construction, procedure:, user:) }
     let(:first_champ) { dossier.owner_editing_fork.champs_public.first }
     let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), modifier_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
@@ -661,7 +661,7 @@ describe Users::DossiersController, type: :controller do
     before { sign_in(user) }
 
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
-    let(:types_de_champ_public) { [{}, { type: :piece_justificative }] }
+    let(:types_de_champ_public) { [{}, { type: :piece_justificative, mandatory: false }] }
     let(:dossier) { create(:dossier, user:, procedure:) }
     let(:first_champ) { dossier.champs_public.first }
     let(:piece_justificative_champ) { dossier.champs_public.last }
