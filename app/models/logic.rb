@@ -42,7 +42,7 @@ module Logic
       operator_class = EmptyOperator
     in [:enum, _]
       operator_class = Eq
-    in [:commune_enum, _] | [:epci_enum, _]
+    in [:commune_enum, _] | [:epci_enum, _] | [:address, _]
       operator_class = InDepartementOperator
     in [:departement_enum, _]
       operator_class = Eq
@@ -59,7 +59,7 @@ module Logic
         Constant.new(true)
       when :empty
         Empty.new
-      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum
+      when :enum, :enums, :commune_enum, :epci_enum, :departement_enum, :address
         Constant.new(left.options(type_de_champs).first.second)
       when :number
         Constant.new(0)
@@ -73,7 +73,7 @@ module Logic
     case [left.type(type_de_champs), right.type(type_de_champs)]
     in [a, ^a] # syntax for same type
       true
-    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string]
+    in [:enum, :string] | [:enums, :string] | [:commune_enum, :string] | [:epci_enum, :string] | [:departement_enum, :string] | [:address, :string]
       true
     else
       false
