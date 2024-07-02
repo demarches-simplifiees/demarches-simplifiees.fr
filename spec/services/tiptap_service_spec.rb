@@ -194,18 +194,29 @@ RSpec.describe TiptapService do
   end
 
   describe '.to_path' do
-    let(:substitutions) { { "dossier_number" => "42" } }
-    let(:json) do
-      {
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " .pdf", "type" => "text" }] }
-        ]
+    subject { described_class.new.to_path(json, substitutions) }
 
-      }.deep_symbolize_keys
+    context 'nominal' do
+      let(:substitutions) { { "dossier_number" => "42" } }
+      let(:json) do
+        {
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " .pdf", "type" => "text" }] }
+          ]
+
+        }.deep_symbolize_keys
+      end
+
+      it 'returns path' do
+        is_expected.to eq("export_42.pdf")
+      end
     end
 
-    it 'returns path' do
-      expect(described_class.new.to_path(json, substitutions)).to eq("export_42.pdf")
+    context 'empty paragraph' do
+      let(:json) { { content: [{ type: 'paragraph' }] } }
+      let(:substitutions) { {} }
+
+      it { is_expected.to eq('') }
     end
   end
 end

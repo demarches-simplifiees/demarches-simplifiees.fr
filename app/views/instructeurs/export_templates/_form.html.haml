@@ -10,56 +10,57 @@
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
     = form_with url: form_url, model: @export_template, local: true, data: { turbo: 'true', controller: 'autosubmit' } do |f|
+      - scope = 'activerecord.attributes.export_template'
 
       = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
 
       - if groupe_instructeurs.many?
         .fr-input-group
           = f.label :groupe_instructeur_id, class: 'fr-label' do
-            = f.object.class.human_attribute_name(:groupe_instructeur_id)
-            = render EditableChamp::AsteriskMandatoryComponent.new
-            %span.fr-hint-text
-              Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+            = "#{t('groupe_instructeur_id', scope:)} #{asterisk}"
+            %span.fr-hint-text Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+
           = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
       - else
         = f.hidden_field :groupe_instructeur_id
 
       = f.hidden_field :kind
 
-      .fr-input-group{ data: { controller: 'tiptap' } }
-        = f.label :tiptap_default_dossier_directory, class: "fr-label" do
-          = f.object.class.human_attribute_name(:tiptap_default_dossier_directory)
-          = render EditableChamp::AsteriskMandatoryComponent.new
-          %span.fr-hint-text
-            = t('activerecord.attributes.export_template.hints.tiptap_default_dossier_directory')
+      %div{ data: { controller: 'tiptap', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+        = f.label '[dossier_folder][template]', class: "fr-label" do
+          = "#{t('dossier_folder', scope:)} #{asterisk}"
+          %span.fr-hint-text= t('hints.dossier_folder', scope:)
 
-        .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :tiptap_default_dossier_directory, data: { tiptap_target: 'input' }
-        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
+        .tiptap-editor{ data: { tiptap_target: 'editor' } }
+          = f.hidden_field "[dossier_folder][template]", data: { tiptap_target: 'input' }, value: @export_template.dossier_folder.fetch('template').to_json
+        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
-      .fr-input-group{ data: { controller: 'tiptap' } }
-        = f.label :tiptap_pdf_name, class: "fr-label" do
-          = f.object.class.human_attribute_name(:tiptap_pdf_name)
-          = render EditableChamp::AsteriskMandatoryComponent.new
-          %span.fr-hint-text
-            = t('activerecord.attributes.export_template.hints.tiptap_pdf_name')
-        .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-        = f.hidden_field :tiptap_pdf_name, data: { tiptap_target: 'input' }
-        .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.specific_tags })
+      %div{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+        .fr-toggle.fr-toggle--label-left
+          = check_box_tag "export_template[export_pdf][enabled]", true, @export_template.export_pdf.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_export_pdf_enabled", data: { 'hide-target_target': 'source' }
+          = label_tag "export_template_export_pdf_enabled", f.object.class.human_attribute_name(:export_pdf), class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
 
-      - if @all_pj.any?
-        %h3 Pieces justificatives
+        %div{ class: class_names( 'fr-hidden': !@export_template.export_pdf.fetch('enabled') ), data: { hide_target_target: 'toHide' } }
+          .tiptap-editor{ data: { tiptap_target: 'editor' } }
+            = f.hidden_field "[export_pdf][template]", data: { tiptap_target: 'input' }, value: @export_template.export_pdf.fetch('template').to_json
+          .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags })
 
-        .fr-highlight
-          %p.fr-text--sm
-            N'incluez pas les extensions de fichier (.pdf, .jpg, …) dans les noms de pièces jointes.
+      - if @exportable_pjs.any?
+        .fr-h3.fr-mt-4w Pieces justificatives
 
-        - @all_pj.each do |pj|
-          .fr-input-group{ data: { controller: 'tiptap' } }
-            = label_tag pj.libelle, nil, name: field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), class: "fr-label"
-            .tiptap-editor.fr-mt-1w{ data: { tiptap_target: 'editor' } }
-              = hidden_field_tag field_name(:export_template, "tiptap_pj_#{pj.stable_id}"), "#{@export_template.content_for_pj(pj)}" , data: { tiptap_target: 'input' }
-            .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.tags_for_pj })
+        - @exportable_pjs.each do |pj|
+          - export_pj = @export_template.pj(pj.stable_id)
+          = hidden_field_tag "export_template[pjs][][stable_id]", pj.stable_id
+
+          %div{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
+            .fr-toggle.fr-toggle--label-left
+              = check_box_tag "export_template[pjs][][enabled]", true, export_pj&.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_pjs_#{pj.stable_id}_enabled", data: { 'hide-target_target': 'source' }
+              = label_tag "export_template_pjs_#{pj.stable_id}_enabled", pj.libelle, class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }
+
+            %div{ class: class_names( 'fr-hidden': !export_pj&.fetch('enabled') ), data: { hide_target_target: 'toHide' } }
+              .tiptap-editor{ data: { tiptap_target: 'editor' } }
+                = hidden_field_tag "export_template[pjs][][template]", "#{export_pj&.fetch('template')&.to_json}" , data: { tiptap_target: 'input' }
+              .fr-mt-2w= render TagsButtonListComponent.new(tags: { nil => @export_template.pj_tags })
 
       .fixed-footer
         .fr-container
@@ -73,6 +74,5 @@
               %li
                 = link_to "Supprimer", instructeur_export_template_path(@export_template, procedure_id: @procedure.id), method: :delete, data: { confirm: "Voulez-vous vraiment supprimer ce modèle ? Il sera supprimé pour tous les instructeurs du groupe"}, class: "fr-btn fr-btn--secondary"
   - sample_dossier = @procedure.dossier_for_preview(current_instructeur)
-  - if sample_dossier
-    .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
-      = render partial: 'preview', locals: { dossier: sample_dossier, export_template: @export_template, procedure: @procedure }
+  .fr-col-12.fr-col-md-4.fr-background-alt--blue-france
+    = render partial: 'preview', locals: { dossier: sample_dossier, export_template: @export_template, procedure: @procedure }

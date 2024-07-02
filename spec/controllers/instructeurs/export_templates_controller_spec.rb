@@ -1,40 +1,60 @@
 describe Instructeurs::ExportTemplatesController, type: :controller do
   before { sign_in(instructeur.user) }
-  let(:tiptap_pdf_name) {
+  let(:defaut_export_pdf) {
     {
-      "type" => "doc",
-      "content" => [
-        { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
-      ]
-    }.to_json
+      "enabled" => true,
+      "template" => {
+        "type" => "doc",
+        "content" => [
+          { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
+        ]
+      }.to_json
+    }
   }
+
+  let(:export_pdf) { defaut_export_pdf }
 
   let(:export_template_params) do
     {
       name: "coucou",
       kind: "zip",
       groupe_instructeur_id: groupe_instructeur.id,
-      tiptap_pdf_name: tiptap_pdf_name,
-      tiptap_default_dossier_directory: {
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
-        ]
-      }.to_json,
-      tiptap_pj_3: {
-        "type" => "doc",
-        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
-      }.to_json,
-      tiptap_pj_5: {
-
-        "type" => "doc",
-        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
-      }.to_json,
-      tiptap_pj_10: {
-
-        "type" => "doc",
-        "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
-      }.to_json
+      export_pdf:,
+      dossier_folder: {
+        "enabled" => true,
+        "template" => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
+          ]
+        }.to_json
+      },
+      pjs: [
+        {
+          "enabled" => true,
+          "stable_id" => "3",
+          "template" => {
+            "type" => "doc",
+            "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+          }.to_json
+        },
+        {
+          "enabled" => true,
+          "stable_id" => "5",
+          "template" => {
+            "type" => "doc",
+            "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+          }.to_json
+        },
+        {
+          "enabled" => true,
+          "stable_id" => 10,
+          "template" => {
+            "type" => "doc",
+            "content" => [{ "type" => "paragraph", "content" => [{ "type" => "text", "text" => "avis-commission-" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }]
+          }.to_json
+        }
+      ]
     }
   end
 
@@ -72,7 +92,12 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:tiptap_pdf_name) { { content: "invalid" }.to_json }
+      let(:export_pdf) do
+        h = defaut_export_pdf.clone
+        h["template"]["content"] = "invalid"
+        h
+      end
+
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present
@@ -109,14 +134,18 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
   describe '#update' do
     let(:export_template) { create(:export_template, groupe_instructeur:) }
-    let(:tiptap_pdf_name) {
-      {
+    let(:export_pdf) do
+      h = defaut_export_pdf.clone
+
+      h["template"] = {
         "type" => "doc",
         "content" => [
           { "type" => "paragraph", "content" => [{ "text" => "exPort_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
         ]
       }.to_json
-    }
+
+      h
+    end
 
     let(:subject) { put :update, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params } }
 
@@ -129,7 +158,12 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'with invalid params' do
-      let(:tiptap_pdf_name) { { content: "invalid" }.to_json }
+      let(:export_pdf) do
+        h = defaut_export_pdf.clone
+        h["template"]["content"] = "invalid"
+        h
+      end
+
       it 'display error notification' do
         subject
         expect(flash.alert).to be_present
@@ -155,7 +189,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
     let(:export_template) { create(:export_template, groupe_instructeur:) }
 
-    let(:subject) { get :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
+    subject { get :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
 
     it '' do
       dossier = create(:dossier, procedure: procedure, for_procedure_preview: true)
