@@ -52,17 +52,14 @@ RSpec.describe DossierPrefillableConcern do
           let(:types_de_champ_public) { [{ type: :text }, { type: :phone }] }
           let(:types_de_champ_private) { [{ type: :text }] }
 
-          let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
           let(:value_1) { "any value" }
-          let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
+          let(:champ_id_1) { dossier_get_writable_public_champ_at(dossier, 0).id }
 
-          let(:type_de_champ_2) { procedure.published_revision.types_de_champ_public.second }
           let(:value_2) { "33612345678" }
-          let(:champ_id_2) { find_champ_by_stable_id(dossier, type_de_champ_2.stable_id).id }
+          let(:champ_id_2) { dossier_get_writable_public_champ_at(dossier, 1).id }
 
-          let(:type_de_champ_3) { procedure.published_revision.types_de_champ_private.first }
           let(:value_3) { "some value" }
-          let(:champ_id_3) { find_champ_by_stable_id(dossier, type_de_champ_3.stable_id).id }
+          let(:champ_id_3) { dossier_get_writable_private_champ_at(dossier, 0).id }
 
           let(:values) { [{ id: champ_id_1, value: value_1 }, { id: champ_id_2, value: value_2 }, { id: champ_id_3, value: value_3 }] }
 
@@ -82,20 +79,19 @@ RSpec.describe DossierPrefillableConcern do
 
         context 'when a champ is invalid' do
           let(:types_de_champ_public) { [{ type: :phone }] }
-          let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
           let(:value) { "a non phone value" }
-          let(:champ_id) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
+          let(:champ_id) { dossier_get_writable_public_champ_at(dossier, 0).id }
 
           let(:values) { [{ id: champ_id, value: value }] }
 
           it_behaves_like 'a dossier marked as prefilled'
 
           it "still updates the champ" do
-            expect { fill }.to change { dossier.champs_public.first.value }.from(nil).to(value)
+            expect { fill }.to change { dossier_get_readable_public_champ_at(dossier, 0).value }.from(nil).to(value)
           end
 
           it "still marks it as prefilled" do
-            expect { fill }.to change { dossier.champs_public.first.prefilled }.from(nil).to(true)
+            expect { fill }.to change { dossier_get_readable_public_champ_at(dossier, 0).prefilled }.from(nil).to(true)
           end
         end
       end
@@ -108,26 +104,19 @@ RSpec.describe DossierPrefillableConcern do
       context 'when champs_attributes has values' do
         context 'when the champs are valid' do
           let(:types_de_champ_public) { [{ type: :text }] }
-          let(:type_de_champ_1) { procedure.published_revision.types_de_champ_public.first }
           let(:value_1) { "any value" }
-          let(:champ_id_1) { find_champ_by_stable_id(dossier, type_de_champ_1.stable_id).id }
+          let(:champ_id_1) { dossier_get_writable_public_champ_at(dossier, 0).id }
           let(:values) { [{ id: champ_id_1, value: value_1 }] }
 
           it "updates the champs with the new values and mark them as prefilled" do
             fill
-            expect(dossier.champs_public.first.value).to eq(value_1)
+            expect(dossier_get_readable_public_champ_at(dossier, 0).value).to eq(value_1)
             expect(dossier.individual).to be_nil # Fix #9486
           end
 
           it_behaves_like 'a dossier marked as prefilled'
         end
       end
-    end
-
-    private
-
-    def find_champ_by_stable_id(dossier, stable_id)
-      dossier.champs.joins(:type_de_champ).find_by(types_de_champ: { stable_id: stable_id })
     end
   end
 end

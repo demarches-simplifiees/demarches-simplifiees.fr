@@ -66,14 +66,9 @@ module DossierRebaseConcern
     # add champ
     changes_by_op[:add]
       .map { target_coordinates_by_stable_id[_1.stable_id] }
-      # add parent champs first so we can then add children
-      .sort_by { _1.child? ? 1 : 0 }
-      .each { add_new_champs_for_revision(_1) }
-
-    # remove champ
-    children_champ, root_champ = changes_by_op[:remove].partition(&:child?)
-    children_champ.each { champs_by_stable_id[_1.stable_id].destroy_all }
-    root_champ.each { champs_by_stable_id[_1.stable_id].destroy_all }
+      .map(&:type_de_champ)
+      .filter { _1.repetition? && (_1.mandatory? || _1.private?) }
+      .each { add_repetition_row_for_revision(_1) }
 
     # update champ
     changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
@@ -124,30 +119,11 @@ module DossierRebaseConcern
     end
   end
 
-  def add_new_champs_for_revision(target_coordinate)
-    if target_coordinate.child?
-      # If this type de champ is a child, we create a new champ for each row of the parent
-      parent_stable_id = target_coordinate.parent.stable_id
-
-      champs.filter { _1.stable_id == parent_stable_id }.each do |champ_repetition|
-        if champ_repetition.champs.present?
-          champ_repetition.champs.map(&:row_id).uniq.each do |row_id|
-            champs << create_champ(target_coordinate, champ_repetition, row_id:)
-          end
-        elsif champ_repetition.mandatory?
-          champs << create_champ(target_coordinate, champ_repetition, row_id: ULID.generate)
-        end
-      end
-    else
-      create_champ(target_coordinate, self)
-    end
-  end
-
-  def create_champ(target_coordinate, parent, row_id: nil)
-    target_coordinate
-      .type_de_champ
-      .build_champ(rebased_at: Time.zone.now, row_id:)
-      .tap { parent.champs << _1 }
+  def add_repetition_row_for_revision(type_de_champ)
+    champs.create!(rebased_at: Time.zone.now,
+      row_id: ULID.generate,
+      type_de_champ:,
+      **type_de_champ.params_for_champ)
   end
 
   def purge_piece_justificative_file(champ)

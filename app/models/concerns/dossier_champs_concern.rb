@@ -1,21 +1,13 @@
 module DossierChampsConcern
   extend ActiveSupport::Concern
 
-  def champs_for_revision(scope: nil, root: false)
+  def champs_for_revision(scope: nil)
     champs_index = champs.group_by(&:stable_id)
       # Due to some bad data we can have multiple copies of the same champ. Ignore extra copy.
-      .transform_values { _1.sort_by(&:id).uniq(&:row_id) }
+      .transform_values { |champs| champs.sort_by { _1.id || 0 }.uniq(&:row_id) }
 
-    if scope.is_a?(TypeDeChamp)
-      revision
-        .children_of(scope)
-        .flat_map { champs_index[_1.stable_id] || [] }
-        .filter(&:child?) # TODO: remove once bad data (child champ without a row id) is cleaned
-    else
-      revision
-        .types_de_champ_for(scope:, root:)
-        .flat_map { champs_index[_1.stable_id] || [] }
-    end
+    revision.types_de_champ_for(scope:)
+      .flat_map { champs_index[_1.stable_id] || [] }
   end
 
   # Get all the champs values for the types de champ in the final list.
@@ -33,7 +25,7 @@ module DossierChampsConcern
   def project_champ(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:)
+      type_de_champ.champ.build(dossier: self, row_id:)
     else
       champ
     end
@@ -72,6 +64,54 @@ module DossierChampsConcern
     assign_attributes(champs_attributes:)
   end
 
+  def project_champs_public
+    revision.types_de_champ_public.map { project_champ(_1, nil) }
+  end
+
+  def project_champs_private
+    revision.types_de_champ_private.map { project_champ(_1, nil) }
+  end
+
+  def repetition_row_ids(type_de_champ)
+    stable_ids = [type_de_champ.stable_id] + revision.children_of(type_de_champ).map(&:stable_id)
+    champs.filter { _1.stable_id.in?(stable_ids) && _1.row_id.present? && _1.row_deleted_at.blank? }
+      .map(&:row_id)
+      .uniq
+      .sort
+  end
+
+  def repetition_add_row(type_de_champ, updated_by:)
+    row_id = ULID.generate
+    champ_for_update(type_de_champ, row_id, updated_by:).save!
+    @champs_by_public_id = nil
+    row_id
+  end
+
+  def repetition_remove_row(type_de_champ, row_id, updated_by:)
+    row_champ = champ_for_update(type_de_champ, row_id, updated_by:)
+    row_champ.row_deleted_at = Time.zone.now
+
+    transaction do
+      champs.where(row_id:).where.not(stable_id: type_de_champ.stable_id).destroy_all
+      row_champ.save!
+    end
+    champs.reload
+    @champs_by_public_id = nil
+  end
+
+  def project_rows_for(type_de_champ)
+    types_de_champ = revision.children_of(type_de_champ)
+    repetition_row_ids(type_de_champ).map do |row_id|
+      types_de_champ.map { project_champ(_1, row_id) }
+    end
+  end
+
+  def reload
+    super.tap do
+      @champs_by_public_id = nil
+    end
+  end
+
   private
 
   def champs_by_public_id
@@ -94,6 +134,9 @@ module DossierChampsConcern
   end
 
   def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
+    if type_de_champ.repetition? && row_id.nil?
+      raise ArgumentError, "row_id is required for repetition champ"
+    end
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
@@ -109,13 +152,6 @@ module DossierChampsConcern
       attributes[:value_json] = nil
       attributes[:external_id] = nil
       attributes[:data] = nil
-    end
-
-    parent = revision.parent_of(type_de_champ)
-    if parent.present?
-      attributes[:parent] = champs.find { _1.type_de_champ_id == parent.id }
-    else
-      attributes[:parent] = nil
     end
 
     @champs_by_public_id = nil

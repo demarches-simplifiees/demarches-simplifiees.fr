@@ -124,6 +124,7 @@ RSpec.configure do |config|
   end
 
   config.include ActiveSupport::Testing::TimeHelpers
+  config.include DossierChampHelpers
   config.include Shoulda::Matchers::ActiveRecord, type: :model
   config.include Shoulda::Matchers::ActiveModel, type: :model
   config.include Devise::Test::ControllerHelpers, type: :controller

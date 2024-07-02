@@ -283,7 +283,6 @@ FactoryBot.define do
 
     trait :with_populated_champs do
       after(:create) do |dossier, _evaluator|
-        dossier.champs_to_destroy.where(private: false).destroy_all
         dossier.types_de_champ.each do |type_de_champ|
           if type_de_champ.simple_drop_down_list?
             create(:"champ_#{type_de_champ.type_champ}", dossier:, type_de_champ:, value: type_de_champ.drop_down_list_enabled_non_empty_options.first)
@@ -299,7 +298,6 @@ FactoryBot.define do
 
     trait :with_populated_annotations do
       after(:create) do |dossier, _evaluator|
-        dossier.champs_to_destroy.where(private: true).destroy_all
         dossier.types_de_champ_private.each do |type_de_champ|
           if type_de_champ.simple_drop_down_list?
             create(:"champ_#{type_de_champ.type_champ}", private: true, dossier:, type_de_champ:, value: type_de_champ.drop_down_list_enabled_non_empty_options.first)

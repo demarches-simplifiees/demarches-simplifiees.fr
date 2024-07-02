@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
+ActiveRecord::Schema[7.0].define(version: 2024_05_27_090608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1217,7 +1217,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_05_27_090508) do
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
-  add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "champs", "dossiers"
   add_foreign_key "champs", "etablissements"
   add_foreign_key "champs", "types_de_champ"
