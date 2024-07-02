@@ -119,6 +119,7 @@ describe Etablissement do
     let(:etablissement) { create(:etablissement, dossier: build(:dossier)) }
 
     it "schedule update search terms" do
+      etablissement
       assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
         etablissement.update(entreprise_nom: "nom")
       end
