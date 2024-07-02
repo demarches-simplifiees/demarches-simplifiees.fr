@@ -29,7 +29,8 @@ describe 'Inviting an expert:', js: true do
       within('.fr-sidemenu') { click_on 'Demander un avis' }
       expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
 
-      page.execute_script("document.querySelector('#avis_emails').value = '[\"#{expert.email}\",\"#{expert2.email}\"]'")
+      fill_in 'Emails', with: "#{expert.email},"
+      fill_in 'Emails', with: expert2.email
       fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
       check 'avis_invite_linked_dossiers'
       page.select 'confidentiel', from: 'avis_confidentiel'
@@ -109,7 +110,7 @@ describe 'Inviting an expert:', js: true do
         within('.fr-sidemenu') { click_on 'Demander un avis' }
         expect(page).to have_current_path(avis_new_instructeur_dossier_path(procedure, dossier))
 
-        fill_in 'Emails', with: "#{expert.email}; #{expert2.email}"
+        select_combobox 'Emails', expert.email
         fill_in 'avis_introduction', with: 'Bonjour, merci de me donner votre avis sur ce dossier.'
         check 'avis_invite_linked_dossiers'
         page.select 'confidentiel', from: 'avis_confidentiel'

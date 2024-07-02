@@ -9,8 +9,8 @@ module Administrateurs
     end
 
     def create
-      emails = params['emails'].presence || [].to_json
-      emails = JSON.parse(emails).map { EmailSanitizer.sanitize(_1) }
+      emails = params['emails'].presence || []
+      emails = emails.map { EmailSanitizer.sanitize(_1) }
       @maybe_typos, no_suggestions = emails
         .map { |email| [email, EmailChecker.check(email:)[:suggestions]&.first] }
         .partition { _1[1].present? }

@@ -61,11 +61,18 @@ class DataSources::CommuneController < ApplicationController
       else
         [item]
       end.map do |item|
-        {
-          label: "#{item[:name]} (#{item[:postal_code]})",
-          value: item[:code],
-          data: item[:postal_code]
-        }
+        if params[:with_combined_code].present?
+          {
+            label: "#{item[:name]} (#{item[:postal_code]})",
+            value: "#{item[:code]}-#{item[:postal_code]}"
+          }
+        else
+          {
+            label: "#{item[:name]} (#{item[:postal_code]})",
+            value: item[:code],
+            data: item[:postal_code]
+          }
+        end
       end
     end
   end

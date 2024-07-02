@@ -65,15 +65,13 @@
 
             .instructeur-wrapper
               %p#experts-emails Entrez les adresses emails des experts que vous souhaitez ajouter à la liste prédéfinie
-              = hidden_field_tag :emails, nil
-              = react_component("ComboMultiple",
-                options: [],
-                selected: [], disabled: [],
-                group: '.instructeur-wrapper',
-                name: 'emails',
-                label: 'Emails',
-                describedby: 'experts-emails',
-                acceptNewValues: true)
+              %react-fragment
+                = render ReactComponent.new "ComboBox/MultiComboBox",
+                  id: 'emails',
+                  name: 'emails[]',
+                  allows_custom_value: true,
+                  'aria-label': 'Emails',
+                  'aria-describedby': 'experts-emails'
 
               = f.submit 'Ajouter à la liste', class: 'fr-btn'
 

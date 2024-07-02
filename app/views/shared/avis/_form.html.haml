@@ -10,16 +10,9 @@
 
   = render NestedForms::FormOwnerComponent.new
   = form_for avis, url: url, html: { multipart: true, data: { controller: 'persisted-form', persisted_form_key_value: dom_id(@dossier, :avis_by_instructeur) } } do |f|
-    = hidden_field_tag  'avis[emails]', nil
     .fr-input-group
-      = react_component("ComboMultiple",
-          options: current_expert_not_instructeur? ? [] : @experts_emails,
-          selected: [], disabled: [],
-          label: 'Emails',
-          group: '.ask-avis',
-          name: 'emails',
-          describedby: 'avis-emails-description',
-          acceptNewValues: !@dossier.procedure.experts_require_administrateur_invitation)
+      %react-fragment
+        = render ReactComponent.new "ComboBox/MultiComboBox", items: current_expert_not_instructeur? ? [] : @experts_emails, name: f.field_name(:emails, multiple: true), id: 'avis_emails', 'aria-label': 'Emails', 'aria-describedby': 'avis-emails-description', allows_custom_value: !@dossier.procedure.experts_require_administrateur_invitation
 
     .fr-input-group
       = f.label :introduction, t('helpers.label.introduction'), class: 'fr-label'

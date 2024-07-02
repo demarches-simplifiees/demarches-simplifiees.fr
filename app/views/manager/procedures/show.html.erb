@@ -93,16 +93,15 @@ as well as a link to its edit page.
 
             <% elsif attribute.name == 'tags' %>
               <%= form_for procedure, url: add_tags_manager_procedure_path(procedure), html: { class: 'form procedure-form__column--form fr-background-alt--blue-france mt-1' }  do %>
-                <%=  hidden_field_tag 'procedure[tags]', nil %>
-                <%=  react_component("ComboMultiple",
-                      options: Procedure.tags,
-                      selected: procedure.tags,
-                      disabled: [],
-                      label: 'Tags',
-                      group: '.procedure-form__column--form',
-                      name: 'tags',
-                      describedby: 'procedure-tags',
-                      acceptNewValues: true) %>
+                <react-fragment>
+                  <%= render ReactComponent.new "ComboBox/MultiComboBox",
+                    items: Procedure.tags,
+                    selected_keys: procedure.tags,
+                    value_separator: ',|;',
+                    allows_custom_value: true,
+                    name: 'procedure[tags][]',
+                    'aria-label': 'Tags' %>
+                </react-fragment>
                 <button class="mt-1">Ajouter des tags</button>
               <% end %>
 

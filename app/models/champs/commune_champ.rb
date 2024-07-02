@@ -28,10 +28,6 @@ class Champs::CommuneChamp < Champs::TextChamp
     code_postal.present?
   end
 
-  def code_postal=(value)
-    super(value&.gsub(/[[:space:]]/, ''))
-  end
-
   alias postal_code code_postal
 
   def name
@@ -43,7 +39,36 @@ class Champs::CommuneChamp < Champs::TextChamp
   end
 
   def selected
-    code
+    code? ? "#{code}-#{code_postal}" : nil
+  end
+
+  def selected_items
+    if code?
+      [{ label: to_s, value: selected }]
+    else
+      []
+    end
+  end
+
+  def code=(code)
+    if code.blank?
+      self.code_departement = nil
+      self.code_postal = nil
+      self.external_id = nil
+      self.value = nil
+    elsif code.match?(/-/)
+      codes = code.split('-')
+      self.external_id = codes.first
+      self.code_postal = codes.second
+    else
+      self.external_id = code
+    end
+  end
+
+  private
+
+  def safe_to_s
+    value.present? ? value.to_s : ''
   end
 
   def communes
@@ -52,12 +77,6 @@ class Champs::CommuneChamp < Champs::TextChamp
     else
       []
     end
-  end
-
-  private
-
-  def safe_to_s
-    value.present? ? value.to_s : ''
   end
 
   def on_codes_change

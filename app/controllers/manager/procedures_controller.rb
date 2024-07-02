@@ -111,8 +111,7 @@ module Manager
     end
 
     def add_tags
-      tags_h = { tags: JSON.parse(tags_params[:tags]) }
-      if procedure.update(tags_h)
+      if procedure.update(tags: tags_params[:tags])
         flash.notice = "Le modèle est mis à jour."
       else
         flash.alert = procedure.errors.full_messages.join(', ')
@@ -181,7 +180,7 @@ module Manager
     end
 
     def tags_params
-      params.require(:procedure).permit(:tags)
+      params.require(:procedure).permit(tags: [])
     end
 
     def template_params
