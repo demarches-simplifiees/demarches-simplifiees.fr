@@ -1,5 +1,9 @@
 RSpec.describe Attachment::MultipleComponent, type: :component do
-  let(:champ) { create(:champ_titre_identite) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+  let(:types_de_champ_public) { [{ type: :titre_identite }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ) { dossier.champs.first }
+
   let(:attached_file) { champ.piece_justificative_file }
   let(:kwargs) { {} }
 
@@ -14,14 +18,11 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
   subject { render_inline(component).to_html }
 
   context 'when there is no attachment yet' do
-    let(:champ) { create(:champ_titre_identite, skip_default_attachment: true) }
+    let(:dossier) { create(:dossier, procedure:) }
 
-    it 'renders a form field for uploading a file' do
+    it 'renders a form field for uploading a file and max attachment size' do
       expect(subject).to have_no_selector('.hidden input[type=file]')
       expect(subject).to have_selector('input[type=file]:not(.hidden)')
-    end
-
-    it 'renders max size' do
       expect(subject).to have_content(/Taille maximale :\s+20 Mo/)
     end
   end
