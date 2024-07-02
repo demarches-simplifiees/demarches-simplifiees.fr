@@ -1,0 +1,11 @@
+.fr-container
+  %h1.text-center.mt-1
+    = t('.confirmation_sent_by_email')
+
+  %p
+    = t('.intro', email: email)
+
+  %p
+    = t('.click_the_link_in_the_email')
+
+  = link_to t('.continue'), france_connect_connect_france_connect_particulier_redirect_path(user_id: fci.user.id), class: 'fr-btn'
