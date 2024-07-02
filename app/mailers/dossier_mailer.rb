@@ -129,32 +129,32 @@ class DossierMailer < ApplicationMailer
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_deletion_to_administration(deleted_dossier, to_email)
+  def notify_deletion_to_administration(hidden_dossier, to_email)
     configure_defaults_for_email(to_email)
 
-    @subject = default_i18n_subject(dossier_id: deleted_dossier.dossier_id)
-    @deleted_dossier = deleted_dossier
+    @subject = default_i18n_subject(dossier_id: hidden_dossier.id)
+    @hidden_dossier = hidden_dossier
 
     mail(to: to_email, subject: @subject)
   end
 
-  def notify_automatic_deletion_to_user(deleted_dossiers, to_email)
+  def notify_automatic_deletion_to_user(hidden_dossiers, to_email)
     configure_defaults_for_email(to_email)
 
-    I18n.with_locale(deleted_dossiers.first.user_locale) do
-      @state = deleted_dossiers.first.state
-      @subject = default_i18n_subject(count: deleted_dossiers.size)
-      @deleted_dossiers = deleted_dossiers
+    I18n.with_locale(hidden_dossiers.first.user_locale) do
+      @state = hidden_dossiers.first.state
+      @subject = default_i18n_subject(count: hidden_dossiers.size)
+      @hidden_dossiers = hidden_dossiers
 
       mail(to: to_email, subject: @subject)
     end
   end
 
-  def notify_automatic_deletion_to_administration(deleted_dossiers, to_email)
+  def notify_automatic_deletion_to_administration(hidden_dossiers, to_email)
     configure_defaults_for_email(to_email)
 
-    @subject = default_i18n_subject(count: deleted_dossiers.size)
-    @deleted_dossiers = deleted_dossiers
+    @subject = default_i18n_subject(count: hidden_dossiers.size)
+    @hidden_dossiers = hidden_dossiers
 
     mail(to: to_email, subject: @subject)
   end

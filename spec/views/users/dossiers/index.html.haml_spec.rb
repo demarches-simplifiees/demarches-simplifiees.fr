@@ -147,7 +147,7 @@ describe 'users/dossiers/index', type: :view do
       expect(rendered).to have_text(/6\s+en cours/)
     end
 
-    it "cache key dpeends on dossier invites" do
+    it "cache key depends on dossier invites" do
       expect(user_dossiers).to receive(:present?).twice
       render
 
@@ -161,7 +161,7 @@ describe 'users/dossiers/index', type: :view do
       expect(user_dossiers).to receive(:present?).twice
       render
 
-      dossier_termine.expired_keep_track_and_destroy!
+      dossier_termine.hide_and_keep_track!(:automatic, :expired)
       user.reload
 
       render

@@ -251,6 +251,11 @@ module Users
 
     def extend_conservation
       dossier.extend_conservation(dossier.procedure.duree_conservation_dossiers_dans_ds.months)
+
+      if dossier.hidden_by_reason == 'expired'
+        dossier.update!(hidden_by_administration_at: nil, hidden_by_user_at: nil, hidden_by_reason: nil)
+      end
+
       flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
       redirect_back(fallback_location: dossier_path(@dossier))
     end
@@ -525,6 +530,8 @@ module Users
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
+      elsif action_name == 'extend_conservation'
+        Dossier.visible_by_user.or(Dossier.hidden_by_expired)
       else
         Dossier.visible_by_user
       end
