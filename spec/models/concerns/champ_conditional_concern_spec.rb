@@ -1,11 +1,10 @@
 describe ChampConditionalConcern do
   include Logic
 
-  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :decimal_number, stable_id: 99 }, { type: :decimal_number, condition: }]) }
-  let(:dossier) { create(:dossier, revision: procedure.active_revision) }
-  let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
-  let(:champ) { create(:champ_decimal_number, dossier:, type_de_champ: types_de_champ.first, value: '1.1234') }
-  let(:last_champ) { create(:champ_decimal_number, dossier:, type_de_champ: types_de_champ.last, value: '1.1234') }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :decimal_number, stable_id: 99 }, { type: :decimal_number, stable_id: 999, condition: }]) }
+  let(:dossier) { create(:dossier, :with_populated_champs, revision: procedure.active_revision) }
+  let(:champ) { dossier.champs.find { _1.stable_id == 99 }.tap { _1.update_column(:value, '1.1234') } }
+  let(:last_champ) { dossier.champs.find { _1.stable_id == 999 }.tap { _1.update_column(:value, '1.1234') } }
   let(:condition) { nil }
 
   describe '#dependent_conditions?' do
