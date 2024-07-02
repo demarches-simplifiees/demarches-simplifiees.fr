@@ -79,13 +79,13 @@ class ProcedurePresentation < ApplicationRecord
     end
 
     fields.concat(procedure.types_de_champ_for_procedure_presentation
-      .pluck(:type_champ, :libelle, :private, :stable_id)
+      .map { [_1.type_champ, _1.libelle, _1.private, _1.stable_id, _1.revision_type_de_champ.child?] }
       .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .map do |(type_champ, libelle, is_private, stable_id)|
+      .map do |(type_champ, libelle, is_private, stable_id, is_child)|
         if is_private
-          field_hash_for_type_de_champ_private(type_champ, libelle, stable_id)
+          field_hash_for_type_de_champ_private(type_champ, libelle, stable_id, is_child)
         else
-          field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
+          field_hash_for_type_de_champ_public(type_champ, libelle, stable_id, is_child)
         end
       end)
 
@@ -94,7 +94,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayable_fields_for_select
     [
-      fields.reject { |field| field['virtual'] }
+      fields.reject { |field| field['virtual'] || field['filter_only'] }
         .map { |field| [field['label'], field_id(field)] },
       displayed_fields.map { |field| field_id(field) }
     ]
@@ -465,7 +465,7 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true)
+  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true, filter_only: false)
     {
       'label' => label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table]),
       TABLE => table,
@@ -475,21 +475,24 @@ class ProcedurePresentation < ApplicationRecord
       'type' => type,
       'scope' => scope,
       'value_column' => value_column,
-      'filterable' => filterable
+      'filterable' => filterable,
+      'filter_only' => filter_only
     }
   end
 
-  def field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
+  def field_hash_for_type_de_champ_public(type_champ, libelle, stable_id, is_child)
     field_hash(TYPE_DE_CHAMP, stable_id.to_s,
       label: libelle,
       type: TypeDeChamp.filter_hash_type(type_champ),
+      filter_only: is_child,
       value_column: TypeDeChamp.filter_hash_value_column(type_champ))
   end
 
-  def field_hash_for_type_de_champ_private(type_champ, libelle, stable_id)
+  def field_hash_for_type_de_champ_private(type_champ, libelle, stable_id, is_child)
     field_hash(TYPE_DE_CHAMP_PRIVATE, stable_id.to_s,
       label: libelle,
       type: TypeDeChamp.filter_hash_type(type_champ),
+      filter_only: is_child,
       value_column: TypeDeChamp.filter_hash_value_column(type_champ))
   end
 

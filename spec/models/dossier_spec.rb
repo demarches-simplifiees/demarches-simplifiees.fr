@@ -1974,8 +1974,8 @@ describe Dossier, type: :model do
       let(:repetition_second_revision_champ) { dossier_second_revision.champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
-      let(:dossier_champs_for_export) { dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition) }
-      let(:dossier_second_revision_champs_for_export) { dossier_second_revision.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition) }
+      let(:dossier_champs_for_export) { dossier.champs_for_export(procedure.types_de_champ_for_procedure_export.not_repetition) }
+      let(:dossier_second_revision_champs_for_export) { dossier_second_revision.champs_for_export(procedure.types_de_champ_for_procedure_export.not_repetition) }
 
       context "when procedure published" do
         before do
@@ -2008,8 +2008,8 @@ describe Dossier, type: :model do
             draft.add_type_de_champ(type_champ: :communes, libelle: "communes", parent_stable_id: tdc_repetition.stable_id)
 
             dossier_test = create(:dossier, procedure: proc_test)
-            repetition = proc_test.types_de_champ_for_procedure_presentation.repetition.first
-            type_champs = proc_test.types_de_champ_for_procedure_presentation(repetition).to_a
+            repetition = proc_test.types_de_champ_for_procedure_export.repetition.first
+            type_champs = proc_test.types_de_champ_for_procedure_export(repetition).to_a
             expect(type_champs.size).to eq(1)
             expect(dossier.champs_for_export(type_champs).size).to eq(3)
           end
