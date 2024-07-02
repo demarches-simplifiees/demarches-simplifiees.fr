@@ -9,6 +9,8 @@ class ActiveStorage::DownloadableFile
       files += pj_service.generate_dossiers_export(loaded_dossiers) + pj_service.liste_documents(loaded_dossiers)
     end
 
+    files = files.filter { |_attachment, path| path.present? }
+
     files
   end
 

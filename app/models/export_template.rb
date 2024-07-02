@@ -62,7 +62,7 @@ class ExportTemplate < ApplicationRecord
 
     dir_path = case attachment.record_type
     when 'Champ'
-      [pj_path(dossier, champ.stable_id, attachment) + suffix(attachment, index, row_index)] if pj(champ.stable_id)
+      [pj_path(dossier, champ.stable_id, attachment) + suffix(attachment, index, row_index)] if pj(champ.stable_id)&.fetch('enabled', false)
     else
       nil
     end

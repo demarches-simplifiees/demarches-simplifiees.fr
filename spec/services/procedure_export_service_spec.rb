@@ -449,7 +449,10 @@ describe ProcedureExportService do
       context 'with export_template' do
         let!(:dossier) { create(:dossier, :accepte, :with_populated_champs, :with_individual, procedure: procedure) }
         let(:dossier_exports) { PiecesJustificativesService.new(user_profile: instructeur, export_template:).generate_dossiers_export(Dossier.where(id: dossier)) }
-        let(:export_template) { create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur) }
+        let(:export_template) do
+          create(:export_template, groupe_instructeur: procedure.defaut_groupe_instructeur)
+            .tap { _1.pjs.first['enabled'] = true }
+        end
         before do
           allow_any_instance_of(ActiveStorage::Attachment).to receive(:url).and_return("https://opengraph.githubassets.com/d0e7862b24d8026a3c03516d865b28151eb3859029c6c6c2e86605891fbdcd7a/socketry/async-io")
         end
@@ -467,7 +470,6 @@ describe ProcedureExportService do
                 "#{base_fn}/dossier-#{dossier.id}/piece_justificative-#{dossier.id}-1.txt",
                 "#{base_fn}/dossier-#{dossier.id}/export-#{dossier.id}.pdf"
               ]
-              expect(files.size).to eq(structure.size)
               expect(files.map(&:filename)).to match_array(structure)
             end
             FileUtils.remove_entry_secure('tmp.zip')
