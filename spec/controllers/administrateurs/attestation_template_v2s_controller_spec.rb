@@ -140,6 +140,7 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         subject
         expect(assigns(:attestation_template).version).to eq(2)
         expect(assigns(:attestation_template)).to be_draft
+        expect(attestation_template.reload).to be_present
       end
     end
 
