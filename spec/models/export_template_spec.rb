@@ -13,28 +13,46 @@ describe ExportTemplate do
   let(:content) do
     {
       "export_pdf" => {
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
-        ]
+        "enabled" => true,
+        "template" =>
+        {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
+          ]
+        }
       },
       "dossier_folder" => {
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
-        ]
+        "enabled" => true,
+        "template" => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
+          ]
+        }
       },
       "pjs" =>
       [
-        { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }] }, stable_id: "3" },
         {
-          path:
-                   { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "cni_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
-           stable_id: "5"
+          "template": {
+            "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }]
+          },
+          "stable_id": "3",
+          "enabled": true
         },
         {
-          path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "pj_repet_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
-         stable_id: "10"
+          "template": {
+            "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "cni_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }]
+          },
+          "stable_id": "5",
+          "enabled": true
+        },
+        {
+          "template": {
+            "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "pj_repet_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }]
+          },
+          "stable_id": "10",
+          "enabled": true
         }
       ]
     }
@@ -46,65 +64,52 @@ describe ExportTemplate do
       export_template.set_default_values
       expect(export_template.content).to eq({
         "export_pdf" => {
-          "type" => "doc",
-          "content" => [
-            { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
-          ]
+          "enabled" => true,
+          "template" => {
+            "type" => "doc",
+            "content" => [
+              { "type" => "paragraph", "content" => [{ "text" => "export-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
+            ]
+          }
         },
         "dossier_folder" => {
-          "type" => "doc",
-          "content" => [
-            { "type" => "paragraph", "content" => [{ "text" => "dossier-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
-          ]
+          "enabled" => true,
+          "template" => {
+            "type" => "doc",
+            "content" => [
+              { "type" => "paragraph", "content" => [{ "text" => "dossier-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }
+            ]
+          }
         },
         "pjs" =>
         [
-
           {
             "stable_id" => "3",
-            "path" =>  { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "justificatif-de-domicile-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }] }
+            "enabled" => false,
+            "template" =>  { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "justificatif-de-domicile-", "type" => "text" }, { "type" => "mention", "attrs" => ExportTemplate::DOSSIER_ID_TAG.slice(:id, :label).stringify_keys }] }] }
           }
         ]
       })
     end
   end
 
-  describe '#dossier_folder' do
-    it 'returns dossier_folder from content' do
-      expect(export_template.dossier_folder).to eq({
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "text" => "DOSSIER_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }
-        ]
-      })
-    end
-  end
-
-  describe '#export_pdf' do
-    it 'returns export_pdf from content' do
-      expect(export_template.export_pdf).to eq({
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "text" => "mon_export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }] }
-        ]
-      })
-    end
-  end
-
   describe '#pj' do
-    let(:type_de_champ_pj) { create(:type_de_champ_piece_justificative, stable_id: 3, libelle: 'Justificatif de domicile', procedure:) }
-    let(:champ_pj) { create(:champ_piece_justificative, type_de_champ: type_de_champ_pj) }
+    subject { export_template.pj(3) }
 
-    let(:attachment) { ActiveStorage::Attachment.new(name: 'pj', record: champ_pj, blob: ActiveStorage::Blob.new(filename: "superpj.png")) }
-
-    it 'returns content for pj' do
-      expect(export_template.pj(type_de_champ_pj.stable_id)).to eq({
-        "type" => "doc",
-        "content" => [
-          { "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }
-        ]
-      })
+    let(:expected) do
+      {
+        "enabled" => true,
+        "stable_id" => "3",
+        "template" => {
+          "type" => "doc",
+          "content" => [
+            { "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }
+          ]
+        }
+      }
     end
+
+    it { is_expected.to eq(expected) }
   end
 
   describe '#attachment_path' do
@@ -173,14 +178,14 @@ describe ExportTemplate do
     end
 
     it 'convert export_pdf' do
-      expect(export_template.dossier_pdf_path(procedure.dossiers.first)).to eq "mon_export_#{dossier.id}.pdf"
+      expect(export_template.export_pdf_path(procedure.dossiers.first)).to eq "mon_export_#{dossier.id}.pdf"
     end
 
     context 'for date' do
       let(:export_template) { create(:export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
       let(:dossier) { create(:dossier, :en_construction, procedure:, depose_at: Date.parse("2024/03/30")) }
       it 'convert date with dash' do
-        expect(export_template.dossier_pdf_path(dossier)).to eq "export_#{dossier.id}-2024-03-30.pdf"
+        expect(export_template.export_pdf_path(dossier)).to eq "export_#{dossier.id}-2024-03-30.pdf"
       end
     end
   end
@@ -206,26 +211,36 @@ describe ExportTemplate do
     let(:pj_mention) { mention }
     let(:content) do
       {
-        "export_pdf" => {
-          "type" => "doc",
-          "content" => [
-            { "type" => "paragraph", "content" => [{ "text" => pdf_text, "type" => "text" }, pdf_mention] }
-          ]
+        "export_pdf" =>  {
+          "enabled" => true,
+          "template" => {
+            "type" => "doc",
+            "content" => [
+              { "type" => "paragraph", "content" => [{ "text" => pdf_text, "type" => "text" }, pdf_mention] }
+            ]
+          }
         },
         "dossier_folder" => {
-          "type" => "doc",
-          "content" => [
-            { "type" => "paragraph", "content" => [{ "text" => ddd_text, "type" => "text" }, ddd_mention] }
-          ]
+          "enabled" => true,
+          "template" => {
+            "type" => "doc",
+            "content" => [
+              { "type" => "paragraph", "content" => [{ "text" => ddd_text, "type" => "text" }, ddd_mention] }
+            ]
+          }
         },
         "pjs" =>
         [
-          { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] }, stable_id: "3" }
+          {
+            template: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] },
+            enabled: true,
+            stable_id: "3"
+          }
         ]
       }
     end
 
-    context 'with valid default dossier directory' do
+    context 'with valid dossier folder' do
       it 'has no error for dossier_folder' do
         expect(subject.valid?).to be_truthy
       end

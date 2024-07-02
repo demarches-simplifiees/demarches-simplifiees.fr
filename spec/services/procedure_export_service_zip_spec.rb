@@ -49,7 +49,7 @@ describe ProcedureExportService do
               structure = [
                 "export/",
                 "export/dossier-#{dossier.id}/",
-                "export/dossier-#{dossier.id}/export_#{dossier.id}.pdf",
+                "export/dossier-#{dossier.id}/export-#{dossier.id}.pdf",
                 "export/dossier-#{dossier.id}/pj-#{dossier.id}-1.png",
                 "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-1-1.png",
                 "export/dossier-#{dossier.id}/repet_pj-#{dossier.id}-2-1.png",

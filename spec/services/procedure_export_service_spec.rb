@@ -465,7 +465,7 @@ describe ProcedureExportService do
                 "#{base_fn}/",
                 "#{base_fn}/dossier-#{dossier.id}/",
                 "#{base_fn}/dossier-#{dossier.id}/piece_justificative-#{dossier.id}-1.txt",
-                "#{base_fn}/dossier-#{dossier.id}/export_#{dossier.id}.pdf"
+                "#{base_fn}/dossier-#{dossier.id}/export-#{dossier.id}.pdf"
               ]
               expect(files.size).to eq(structure.size)
               expect(files.map(&:filename)).to match_array(structure)

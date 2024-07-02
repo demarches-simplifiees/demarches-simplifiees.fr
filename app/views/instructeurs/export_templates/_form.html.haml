@@ -49,11 +49,10 @@
         .fr-h3.fr-mt-4w Pieces justificatives
 
         - @exportable_pjs.each do |pj|
+          - export_pj = @export_template.pj(pj.stable_id)
+          = hidden_field_tag "export_template[pjs][][stable_id]", pj.stable_id
+
           %div{ data: { controller: 'tiptap hide-target', 'tiptap-attributes-value': { spellcheck: false }.to_json } }
-            - export_pj = @export_template.pj(pj.stable_id)
-
-            = hidden_field_tag "export_template[pjs][][stable_id]", pj.stable_id
-
             .fr-toggle.fr-toggle--label-left
               = check_box_tag "export_template[pjs][][enabled]", true, export_pj&.fetch('enabled'), class: 'fr-toggle__input', id: "export_template_pjs_#{pj.stable_id}_enabled", data: { 'hide-target_target': 'source' }
               = label_tag "export_template_pjs_#{pj.stable_id}_enabled", pj.libelle, class: 'fr-toggle__label flex align-center', data: { 'fr-checked-label': 'Exporté', 'fr-unchecked-label': 'Ignoré' }

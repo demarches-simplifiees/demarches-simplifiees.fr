@@ -4,28 +4,39 @@ FactoryBot.define do
     groupe_instructeur
     content {
   {
-    "export_pdf" =>
-   {
-     "type" => "doc",
-    "content" => [
-      { "type" => "paragraph", "content" => [{ "text" => "export_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_id", "label" => "id dossier" } }, { "text" => " .pdf", "type" => "text" }] }
-    ]
-   },
+    "export_pdf" => {
+      "template" => {
+        "type" => "doc",
+        "content" => [
+          {
+            "type" => "paragraph",
+            "content" => [
+              { "text" => "export_", "type" => "text" },
+              { "type" => "mention", "attrs" => { "id" => "dossier_id", "label" => "id dossier" } },
+              { "text" => " .pdf", "type" => "text" }
+            ]
+          }
+        ]
+      }
+    },
    "dossier_folder" => {
-     "type" => "doc",
-     "content" =>
-     [
-       {
-         "type" => "paragraph",
-         "content" =>
-         [
-           { "text" => "dossier_", "type" => "text" },
-           { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } },
-           { "text" => " ", "type" => "text" }
-         ]
-       }
-     ]
-   }
+     "template" => {
+       "type" => "doc",
+       "content" =>
+       [
+         {
+           "type" => "paragraph",
+           "content" =>
+           [
+             { "text" => "dossier_", "type" => "text" },
+             { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } },
+             { "text" => " ", "type" => "text" }
+           ]
+         }
+       ]
+     }
+   },
+   "pjs" => []
   }
 }
     kind { "zip" }
@@ -50,7 +61,7 @@ FactoryBot.define do
 
       to_create do |export_template, context|
         export_template.set_default_values
-        export_template.content["dossier_folder"]["content"] = [
+        export_template.content["dossier_folder"]["template"]["content"] = [
           {
             "type" => "paragraph",
             "content" =>
@@ -68,7 +79,7 @@ FactoryBot.define do
     trait :with_date_depot_for_export_pdf do
       to_create do |export_template, _|
         export_template.set_default_values
-        export_template.content["export_pdf"]["content"] = [
+        export_template.content["export_pdf"]["template"]["content"] = [
           {
             "type" => "paragraph",
             "content" =>

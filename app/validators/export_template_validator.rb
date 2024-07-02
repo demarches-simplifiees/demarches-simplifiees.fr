@@ -8,7 +8,7 @@ class ExportTemplateValidator < ActiveModel::Validator
   private
 
   def validate_dossier_folder(record)
-    content = record.dossier_folder['content']&.first&.fetch('content', nil)
+    content = record.dossier_folder['template']['content']&.first&.fetch('content', nil)
     mention = attribute_content_mention(content)
     if mention&.fetch("id", nil) != "dossier_number"
       record.errors.add :dossier_folder, :dossier_number_mandatory

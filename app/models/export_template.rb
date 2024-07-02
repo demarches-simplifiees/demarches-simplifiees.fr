@@ -22,7 +22,7 @@ class ExportTemplate < ApplicationRecord
 
     self.pjs = procedure.exportables_pieces_jointes.map do |pj|
       nice_libelle = transliterate(pj.libelle).downcase
-        .gsub(/[^0-9a-z]/, ' ').gsub(/[[:space:]]+/, ' ').strip
+        .gsub(/[^0-9a-z\-\_]/, ' ').gsub(/[[:space:]]+/, ' ').strip
         .then { truncate(_1, omission: '', separator: ' ') }.parameterize
 
       {

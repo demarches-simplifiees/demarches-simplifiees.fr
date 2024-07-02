@@ -468,7 +468,7 @@ describe PiecesJustificativesService do
       subject { PiecesJustificativesService.new(user_profile:, export_template:).generate_dossiers_export(dossiers) }
 
       it 'gives custom name to export pdf file' do
-        expect(subject.first.second).to eq "DOSSIER-#{dossier.id}/export_#{dossier.id}.pdf"
+        expect(subject.first.second).to eq "DOSSIER-#{dossier.id}/export-#{dossier.id}.pdf"
       end
     end
   end
