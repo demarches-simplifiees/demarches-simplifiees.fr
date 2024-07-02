@@ -4,7 +4,8 @@ describe Instructeurs::DossiersController, type: :controller do
   let(:instructeur) { create(:instructeur) }
   let(:administration) { create(:administration) }
   let(:instructeurs) { [instructeur] }
-  let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs) }
+  let(:types_de_champ_public) { [] }
+  let(:procedure) { create(:procedure, :published, :for_individual, instructeurs: instructeurs, types_de_champ_public:) }
   let(:procedure_accuse_lecture) { create(:procedure, :published, :for_individual, :accuse_lecture, :new_administrateur, instructeurs: instructeurs) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
   let(:dossier_accuse_lecture) { create(:dossier, :en_construction, :with_individual, procedure: procedure_accuse_lecture) }
@@ -854,7 +855,8 @@ describe Instructeurs::DossiersController, type: :controller do
       context 'with linked dossiers' do
         let(:asked_confidentiel) { false }
         let(:previous_avis_confidentiel) { false }
-        let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
+        let(:types_de_champ_public) { [{ type: :dossier_link }] }
+        let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
         before { subject }
         context 'when the expert doesn’t share linked dossiers' do
           let(:invite_linked_dossiers) { false }
@@ -873,7 +875,7 @@ describe Instructeurs::DossiersController, type: :controller do
           context 'and the expert can access the linked dossiers' do
             let(:saved_avis) { Avis.last(2).first }
             let(:linked_avis) { Avis.last }
-            let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs_public.filter(&:dossier_link?).filter_map(&:value)) }
+            let(:linked_dossier) { Dossier.find_by(id: dossier.champs.first.value) }
             let(:invite_linked_dossiers) do
               instructeur.assign_to_procedure(linked_dossier.procedure)
               true

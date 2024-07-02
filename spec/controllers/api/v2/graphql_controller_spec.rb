@@ -3,10 +3,11 @@ describe API::V2::GraphqlController do
   let(:generated_token) { APIToken.generate(admin) }
   let(:api_token) { generated_token.first }
   let(:token) { generated_token.second }
-  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin]) }
-  let(:dossier)  { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
-  let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure: procedure, en_construction_at: 1.day.ago) }
-  let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure: procedure, en_construction_at: 3.days.ago) }
+  let(:types_de_champ_public) { [] }
+  let(:procedure) { create(:procedure, :published, :for_individual, :with_service, administrateurs: [admin], types_de_champ_public:) }
+  let(:dossier)  { create(:dossier, :en_construction, :with_individual, :with_populated_champs, procedure:) }
+  let(:dossier1) { create(:dossier, :en_construction, :with_individual, procedure:, en_construction_at: 1.day.ago) }
+  let(:dossier2) { create(:dossier, :en_construction, :with_individual, :archived, procedure:, en_construction_at: 3.days.ago) }
   let(:dossiers) { [dossier] }
   let(:instructeur) { create(:instructeur, followed_dossiers: dossiers) }
 
@@ -806,7 +807,8 @@ describe API::V2::GraphqlController do
     end
 
     describe "champ piece_justificative" do
-      let(:champ) { create(:champ_piece_justificative, dossier: dossier) }
+      let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+      let(:champ) { dossier.champs.first }
       let(:byte_size) { 2712286911 }
 
       context "with deprecated file field" do

@@ -4,22 +4,23 @@ describe EditableChamp::DatetimeComponent, type: :component do
   }
 
   describe '#formatted_value_for_datetime_locale' do
+    # before { champ.validate(:prefill) }
     subject { component.formatted_value_for_datetime_locale }
 
     context 'when the value is nil' do
-      let(:champ) { create(:champ_datetime, dossier: create(:dossier), value: nil) }
+      let(:champ) { Champs::DatetimeChamp.new(value: nil, dossier: create(:dossier), type_de_champ: create(:type_de_champ_datetime)) }
 
       it { is_expected.to be_nil }
     end
 
     context 'when the value is not a valid datetime' do
-      let(:champ) { create(:champ_datetime, dossier: create(:dossier), value: 'invalid') }
+      let(:champ) { Champs::DatetimeChamp.new(value: 'invalid', dossier: create(:dossier), type_de_champ: create(:type_de_champ_datetime)) }
 
       it { is_expected.to be_nil }
     end
 
     context 'when the value is a valid datetime' do
-      let(:champ) { create(:champ_datetime, dossier: create(:dossier), value: '2020-01-01T00:00:00+01:00') }
+      let(:champ) { Champs::DatetimeChamp.new(value: '2020-01-01T00:00:00+01:00', dossier: create(:dossier), type_de_champ: create(:type_de_champ_datetime)) }
 
       it { is_expected.to eq('2020-01-01T00:00') }
     end

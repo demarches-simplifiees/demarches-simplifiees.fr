@@ -1532,12 +1532,12 @@ describe Dossier, type: :model do
     end
 
     context "when a SIRET champ has etablissement in degraded mode" do
-      let(:dossier_incomplete) { create(:dossier, :en_instruction) }
-      let(:dossier_ok) { create(:dossier, :en_instruction) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret }]) }
+      let(:dossier_incomplete) { create(:dossier, :en_instruction, :with_populated_champs, procedure:) }
+      let(:dossier_ok) { create(:dossier, :en_instruction, :with_populated_champs, procedure:) }
 
       before do
-        dossier_incomplete.champs_public << create(:champ_siret, dossier: dossier_incomplete, etablissement: Etablissement.new(siret: build(:etablissement).siret))
-        dossier_ok.champs_public << create(:champ_siret, dossier: dossier_ok)
+        dossier_incomplete.champs.first.update(etablissement: Etablissement.new(siret: build(:etablissement).siret))
       end
 
       it "can't accepter" do
@@ -1794,43 +1794,42 @@ describe Dossier, type: :model do
   end
 
   describe '#geo_data' do
-    let(:dossier) { create(:dossier) }
-    let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
-    let(:geo_area) { create(:geo_area) }
-    let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
+    let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
+    let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, procedure:) }
+    let(:types_de_champ_public) { [] }
+    let(:types_de_champ_private)  { [] }
 
     context "without data" do
       it { expect(dossier.geo_data?).to be_falsey }
     end
 
     context "with geo data in public champ" do
-      before do
-        dossier.champs_public << champ_carte
-      end
+      let(:types_de_champ_public) { [{ type: :carte }] }
 
       it { expect(dossier.geo_data?).to be_truthy }
     end
 
     context "with geo data in private champ" do
-      before do
-        dossier.champs_private << champ_carte
-      end
+      let(:types_de_champ_private) { [{ type: :carte }] }
 
       it { expect(dossier.geo_data?).to be_truthy }
     end
 
-    it "should solve N+1 problem" do
-      dossier.champs_public << create_list(:champ_carte, 3, type_de_champ: type_de_champ_carte, geo_areas: [create(:geo_area)])
-      dossier.champs_for_revision
+    context "should solve N+1 problem" do
+      let(:types_de_champ_public) { [{ type: :carte }, { type: :carte }, { type: :carte }] }
 
-      count = 0
+      it do
+        dossier.champs_for_revision
 
-      callback = lambda { |*_args| count += 1 }
-      ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
-        dossier.geo_data?
+        count = 0
+
+        callback = lambda { |*_args| count += 1 }
+        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+          dossier.geo_data?
+        end
+
+        expect(count).to eq(1)
       end
-
-      expect(count).to eq(1)
     end
   end
 
@@ -1887,13 +1886,13 @@ describe Dossier, type: :model do
   end
 
   describe "to_feature_collection" do
-    let(:dossier) { create(:dossier) }
-    let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
-    let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
-    let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :carte }]) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:champ_carte) { dossier.champs.first }
+    let(:geo_area) { build(:geo_area, :selection_utilisateur, :polygon) }
 
     before do
-      dossier.champs_public << champ_carte
+      champ_carte.update(geo_areas: [geo_area])
     end
 
     it 'should have all champs carto' do
@@ -2077,16 +2076,14 @@ describe Dossier, type: :model do
   end
 
   describe "remove_titres_identite!" do
-    let(:dossier) { create(:dossier, :en_instruction, :followed, :with_individual) }
-    let(:type_de_champ_titre_identite) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
-    let(:champ_titre_identite) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite) }
-    let(:type_de_champ_titre_identite_vide) { create(:type_de_champ_titre_identite, procedure: dossier.procedure) }
-    let(:champ_titre_identite_vide) { create(:champ_titre_identite, type_de_champ: type_de_champ_titre_identite_vide) }
+    let(:declarative_with_state) { nil }
+    let(:procedure) { create(:procedure, declarative_with_state:, types_de_champ_public: [{ type: :titre_identite }, { type: :titre_identite }]) }
+    let(:dossier) { create(:dossier, :en_instruction, :followed, :with_populated_champs, procedure:) }
+    let(:champ_titre_identite) { dossier.champs.first }
+    let(:champ_titre_identite_vide) { dossier.champs.second }
 
     before do
       champ_titre_identite_vide.piece_justificative_file.purge
-      dossier.champs_public << champ_titre_identite
-      dossier.champs_public << champ_titre_identite_vide
     end
 
     it "clean up titres identite on accepter" do
@@ -2111,7 +2108,8 @@ describe Dossier, type: :model do
     end
 
     context 'en_construction' do
-      let(:dossier) { create(:dossier, :en_construction, :followed, :with_individual, :with_declarative_accepte) }
+      let(:declarative_with_state) { 'accepte' }
+      let(:dossier) { create(:dossier, :en_construction, :followed, :with_populated_champs, procedure:) }
 
       it "clean up titres identite on accepter_automatiquement" do
         expect(champ_titre_identite.piece_justificative_file.attached?).to be_truthy

@@ -190,8 +190,8 @@ describe Users::CommencerController, type: :controller do
         subject { get :commencer, params: { path: path, prefill_token: "token", "champ_#{type_de_champ_text.to_typed_id}" => "blabla" } }
 
         context "when the associated dossier exists" do
-          let!(:dossier) { create(:dossier, :prefilled, prefill_token: "token") }
-          let!(:champ_text) { create(:champ_text, dossier: dossier, type_de_champ: type_de_champ_text) }
+          let(:procedure) { create(:procedure, types_de_champ_public: [{}]) }
+          let!(:dossier) { create(:dossier, :prefilled, procedure:, prefill_token: "token") }
 
           it "does not create a new dossier" do
             subject

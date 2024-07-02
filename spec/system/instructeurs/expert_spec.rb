@@ -6,9 +6,9 @@ describe 'Inviting an expert:', js: true do
   let(:expert) { create(:expert, password: expert_password) }
   let(:expert2) { create(:expert, password: expert_password) }
   let(:expert_password) { 'mot de passe d’expert' }
-  let(:procedure) { create(:procedure, :published, instructeurs: [instructeur]) }
-  let(:dossier) { create(:dossier, :en_construction, :with_dossier_link, procedure: procedure) }
-  let(:linked_dossier) { Dossier.find_by(id: dossier.reload.champs_public.filter(&:dossier_link?).filter_map(&:value)) }
+  let(:procedure) { create(:procedure, :published, instructeurs: [instructeur], types_de_champ_public: [{ type: :dossier_link }]) }
+  let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+  let(:linked_dossier) { Dossier.find_by(id: dossier.champs.first.value) }
 
   before do
     clear_emails

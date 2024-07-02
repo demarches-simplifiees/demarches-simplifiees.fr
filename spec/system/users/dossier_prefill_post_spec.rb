@@ -1,21 +1,38 @@
 describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:password) { SECURE_PASSWORD }
 
-  let(:procedure) { create(:procedure, :for_individual, :published) }
+  let(:types_de_champ_public) do
+    [
+      { type: :text },
+      { type: :phone },
+      { type: :rna },
+      { type: :siret },
+      { type: :datetime },
+      { type: :multiple_drop_down_list },
+      { type: :epci },
+      { type: :annuaire_education },
+      { type: :dossier_link },
+      { type: :communes },
+      { type: :address },
+      { type: :repetition, children: [{ type: :text }, { type: :decimal_number }] }
+    ]
+  end
+  let(:procedure) { create(:procedure, :for_individual, :published, types_de_champ_public:) }
   let(:dossier) { procedure.dossiers.last }
+  let(:types_de_champ) { procedure.active_revision.types_de_champ_public }
 
-  let(:type_de_champ_text) { create(:type_de_champ_text, procedure: procedure) }
-  let(:type_de_champ_phone) { create(:type_de_champ_phone, procedure: procedure) }
-  let(:type_de_champ_rna) { create(:type_de_champ_rna, procedure: procedure) }
-  let(:type_de_champ_siret) { create(:type_de_champ_siret, procedure: procedure) }
-  let(:type_de_champ_datetime) { create(:type_de_champ_datetime, procedure: procedure) }
-  let(:type_de_champ_multiple_drop_down_list) { create(:type_de_champ_multiple_drop_down_list, procedure: procedure) }
-  let(:type_de_champ_epci) { create(:type_de_champ_epci, procedure: procedure) }
-  let(:type_de_champ_annuaire_education) { create(:type_de_champ_annuaire_education, procedure: procedure) }
-  let(:type_de_champ_dossier_link) { create(:type_de_champ_dossier_link, procedure: procedure) }
-  let(:type_de_champ_commune) { create(:type_de_champ_communes, procedure: procedure) }
-  let(:type_de_champ_address) { create(:type_de_champ_address, procedure: procedure) }
-  let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
+  let(:type_de_champ_text) { types_de_champ[0] }
+  let(:type_de_champ_phone) { types_de_champ[1] }
+  let(:type_de_champ_rna) { types_de_champ[2] }
+  let(:type_de_champ_siret) { types_de_champ[3] }
+  let(:type_de_champ_datetime) { types_de_champ[4] }
+  let(:type_de_champ_multiple_drop_down_list) { types_de_champ[5] }
+  let(:type_de_champ_epci) { types_de_champ[6] }
+  let(:type_de_champ_annuaire_education) { types_de_champ[7] }
+  let(:type_de_champ_dossier_link) { types_de_champ[8] }
+  let(:type_de_champ_commune) { types_de_champ[9] }
+  let(:type_de_champ_address) { types_de_champ[10] }
+  let(:type_de_champ_repetition) { types_de_champ[11] }
 
   let(:text_value) { "My Neighbor Totoro is the best movie ever" }
   let(:phone_value) { "invalid phone value" }
