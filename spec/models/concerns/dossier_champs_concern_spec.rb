@@ -15,7 +15,7 @@ RSpec.describe DossierChampsConcern do
       { type: :text, libelle: "Une annotation", stable_id: 995 }
     ]
   end
-  let(:dossier) { create(:dossier, procedure:) }
+  let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, procedure:) }
 
   describe "#find_type_de_champ_by_stable_id(public)" do
     subject { dossier.find_type_de_champ_by_stable_id(992, :public) }
@@ -48,7 +48,6 @@ RSpec.describe DossierChampsConcern do
         it {
           expect(subject.persisted?).to be_truthy
           expect(subject.row_id).to eq(row_id)
-          expect(subject.parent_id).not_to be_nil
         }
       end
 
@@ -93,7 +92,7 @@ RSpec.describe DossierChampsConcern do
     subject { dossier.champs_for_export(dossier.revision.types_de_champ_public) }
 
     it { expect(subject.size).to eq(4) }
-    it { expect(subject.first).to eq(["Un champ text", nil]) }
+    it { expect(subject.first).to eq(["Un champ text", 'text']) }
   end
 
   describe "#champs_for_prefill" do
@@ -138,7 +137,6 @@ RSpec.describe DossierChampsConcern do
         it {
           expect(subject.persisted?).to be_truthy
           expect(subject.row_id).to eq(row_id)
-          expect(subject.parent_id).not_to be_nil
         }
       end
 
@@ -158,7 +156,6 @@ RSpec.describe DossierChampsConcern do
             expect(subject.persisted?).to be_truthy
             expect(subject.is_a?(Champs::TextChamp)).to be_truthy
             expect(subject.row_id).to eq(row_id)
-            expect(subject.parent_id).not_to be_nil
           }
         end
       end

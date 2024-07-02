@@ -227,28 +227,26 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has a type de champ repetition' do
       let(:template) { '--Répétition--' }
-      let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Répétition', mandatory: true, children: [{ libelle: 'Nom' }, { libelle: 'Prénom' }] }] }
+      let(:types_de_champ_public) { [{ type: :repetition, libelle: 'Répétition', mandatory: true, children: [{ libelle: 'Nom', stable_id: 991 }, { libelle: 'Prénom', stable_id: 992 }], stable_id: 99 }] }
       let(:dossier) { create(:dossier, procedure:) }
 
       before do
-        repetition = dossier.champs_public
-          .find { |champ| champ.libelle == 'Répétition' }
-        repetition.add_row(dossier.revision)
-        paul_champs, pierre_champs = repetition.rows
+        repetition = dossier_get_readable_champ(dossier, 99, nil)
+        paul_row_id = repetition.add_row(updated_by: dossier.user.email)
+        pierre_row_id = repetition.add_row(updated_by: dossier.user.email)
 
-        paul_champs.first.update(value: 'Paul')
-        paul_champs.last.update(value: 'Chavard')
+        dossier_get_writable_champ(dossier, 991, paul_row_id).update(value: 'Paul')
+        dossier_get_writable_champ(dossier, 992, paul_row_id).update(value: 'Chavard')
 
-        pierre_champs.first.update(value: 'Pierre')
-        pierre_champs.last.update(value: 'de La Morinerie')
+        dossier_get_writable_champ(dossier, 991, pierre_row_id).update(value: 'Pierre')
+        dossier_get_writable_champ(dossier, 992, pierre_row_id).update(value: 'de La Morinerie')
       end
 
       it { is_expected.to eq("Répétition\n\nNom : Paul\nPrénom : Chavard\n\nNom : Pierre\nPrénom : de La Morinerie") }
     end
 
     context 'when the procedure has a linked drop down menus type de champ' do
-      let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-      let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'libelle' }] }
+      let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'libelle', stable_id: 99 }] }
       let(:template) { 'tout : --libelle--, primaire : --libelle/primaire--, secondaire : --libelle/secondaire--' }
 
       context 'and the champ has no value' do
@@ -257,7 +255,7 @@ describe TagsSubstitutionConcern, type: :model do
 
       context 'and the champ has a primary value' do
         before do
-          dossier.champs_public.find_by(type_de_champ: type_de_champ).update(primary_value: 'primo')
+          dossier_get_writable_champ(dossier, 99, nil).update(primary_value: 'primo')
           dossier.reload
         end
 
@@ -265,7 +263,7 @@ describe TagsSubstitutionConcern, type: :model do
 
         context 'and the champ has a secondary value' do
           before do
-            dossier.champs_public.find_by(type_de_champ: type_de_champ).update(secondary_value: 'secundo')
+            dossier_get_writable_champ(dossier, 99, nil).update(secondary_value: 'secundo')
             dossier.reload
           end
 

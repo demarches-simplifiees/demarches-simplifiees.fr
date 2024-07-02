@@ -13,6 +13,7 @@ module ChampsValidateConcern
 
     def validate_champ_value?
       return false unless visible?
+      return false if !in_dossier_revision?
 
       case validation_context
       when :champs_public_value
@@ -26,6 +27,10 @@ module ChampsValidateConcern
 
     def validate_champ_value_or_prefill?
       validate_champ_value? || validation_context == :prefill
+    end
+
+    def in_dossier_revision?
+      dossier.revision.types_de_champ.map(&:stable_id).include?(stable_id)
     end
   end
 end

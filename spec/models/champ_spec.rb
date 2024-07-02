@@ -5,17 +5,6 @@ describe Champ do
 
   it_should_behave_like "champ_spec"
 
-  describe "associations" do
-    it { is_expected.to belong_to(:dossier) }
-
-    context 'when the parent dossier is discarded' do
-      let(:discarded_dossier) { create(:dossier, :discarded) }
-      subject(:champ) { discarded_dossier.champs_public.first }
-
-      it { expect(champ.reload.dossier).to eq discarded_dossier }
-    end
-  end
-
   describe "normalization" do
     it "should remove null bytes before save" do
       champ = create(:champ, value: "foo\u0000bar")
@@ -32,7 +21,7 @@ describe Champ do
   end
 
   describe '#public_only' do
-    let(:dossier) { create(:dossier) }
+    let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations) }
 
     it 'partition public and private' do
       expect(dossier.champs_public.count).to eq(1)
@@ -42,7 +31,7 @@ describe Champ do
 
   describe '#public_ordered' do
     let(:procedure) { create(:simple_procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
 
     context 'when a procedure has 2 revisions' do
       it 'does not duplicate the champs' do
@@ -54,7 +43,7 @@ describe Champ do
 
   describe '#private_ordered' do
     let(:procedure) { create(:procedure, :with_type_de_champ_private) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure: procedure) }
 
     context 'when a procedure has 2 revisions' do
       before { procedure.publish }
@@ -70,14 +59,14 @@ describe Champ do
     let(:procedure) do
       create(:procedure, types_de_champ_public: [{}, { type: :header_section }, { type: :repetition, mandatory: true, children: [{ type: :header_section }] }], types_de_champ_private: [{}, { type: :header_section }])
     end
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:dossier) { create(:dossier, :with_populated_champs, :with_populated_annotations, procedure: procedure) }
     let(:public_champ) { dossier.champs_public.first }
     let(:private_champ) { dossier.champs_private.first }
     let(:champ_in_repetition) { dossier.champs_public.find(&:repetition?).champs.first }
     let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: build(:dossier)) }
     let(:public_sections) { dossier.champs_public.filter(&:header_section?) }
     let(:private_sections) { dossier.champs_private.filter(&:header_section?) }
-    let(:sections_in_repetition) { champ_in_repetition.parent.champs.filter(&:header_section?) }
+    let(:sections_in_repetition) { dossier.champs.filter(&:child?).filter(&:header_section?) }
 
     it 'returns the sibling sections of a champ' do
       expect(public_sections).not_to be_empty
@@ -476,26 +465,6 @@ describe Champ do
     end
   end
 
-  describe 'repetition' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_private: [{}], types_de_champ_public: [{}, { type: :repetition, mandatory: true, children: [{}, { type: :integer_number }] }]) }
-    let(:tdc_repetition) { procedure.active_revision.types_de_champ_public.find(&:repetition?) }
-    let(:tdc_text) { procedure.active_revision.children_of(tdc_repetition).first }
-
-    let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:champ) { dossier.champs_public.find(&:repetition?) }
-    let(:champ_text) { champ.champs.find { |c| c.type_champ == 'text' } }
-    let(:champ_integer) { champ.champs.find { |c| c.type_champ == 'integer_number' } }
-    let(:champ_text_attrs) { attributes_for(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate) }
-
-    context 'when creating the model directly' do
-      let(:champ_text_row_1) { create(:champ_text, type_de_champ: tdc_text, row_id: ULID.generate, parent: champ, dossier: nil) }
-
-      it 'associates nested champs to the parent dossier' do
-        expect(champ_text_row_1.dossier_id).to eq(champ.dossier_id)
-      end
-    end
-  end
-
   describe '#log_fetch_external_data_exception' do
     let(:champ) { create(:champ_siret) }
 
@@ -539,16 +508,6 @@ describe Champ do
 
     context "when private" do
       let(:champ) { create(:champ_text, private: true) }
-      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
-    end
-
-    context "when has parent" do
-      let(:champ) { create(:champ_text, parent: create(:champ_text)) }
-      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }
-    end
-
-    context "when has private parent" do
-      let(:champ) { create(:champ_text, private: true, parent: create(:champ_text, private: true)) }
       it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
     end
   end

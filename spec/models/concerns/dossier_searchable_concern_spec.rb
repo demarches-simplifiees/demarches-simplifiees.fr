@@ -1,6 +1,6 @@
 describe DossierSearchableConcern do
-  let(:champ_public) { dossier.champs_public.first }
-  let(:champ_private) { dossier.champs_private.first }
+  let(:champ_public) { dossier_get_writable_champ(dossier, dossier.revision.types_de_champ_public.first.stable_id, nil) }
+  let(:champ_private) { dossier_get_writable_champ(dossier, dossier.revision.types_de_champ_private.first.stable_id, nil) }
 
   describe '#index_search_terms' do
     let(:etablissement) { dossier.etablissement }
@@ -37,8 +37,7 @@ describe DossierSearchableConcern do
 
       it "update columns en construction" do
         dossier.update(
-          champs_public_attributes: [{ id: champ_public.id, value: 'nouvelle valeur publique' }],
-          champs_private_attributes: [{ id: champ_private.id, value: 'nouvelle valeur privee' }]
+          champs_attributes: [{ id: champ_public.id, value: 'nouvelle valeur publique' }, { id: champ_private.id, value: 'nouvelle valeur privee' }]
         )
 
         assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do

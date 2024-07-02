@@ -256,10 +256,6 @@ class TypeDeChamp < ApplicationRecord
     }
   end
 
-  def build_champ(params = {})
-    champ.build(params)
-  end
-
   def check_mandatory
     if non_fillable?
       self.mandatory = false

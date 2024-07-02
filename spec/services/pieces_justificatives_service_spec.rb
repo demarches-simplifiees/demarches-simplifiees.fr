@@ -54,11 +54,11 @@ describe PiecesJustificativesService do
       let(:second_champ) { repetition(dossier).champs.second }
 
       before do
-        repetition(dossier).add_row(dossier.revision)
+        repetition(dossier).add_row(updated_by: dossier.user.email)
         attach_file_to_champ(first_champ)
         attach_file_to_champ(first_champ)
 
-        repetition(dossier).add_row(dossier.revision)
+        repetition(dossier).add_row(updated_by: dossier.user.email)
         attach_file_to_champ(second_champ)
       end
 
@@ -510,11 +510,11 @@ describe PiecesJustificativesService do
       repet_0 = repetition(dossier_1, index: 0)
       repet_1 = repetition(dossier_1, index: 1)
 
-      repet_0.add_row(dossier_1.revision)
-      repet_0.add_row(dossier_1.revision)
+      repet_0.add_row(updated_by: dossier_1.user.email)
+      repet_0.add_row(updated_by: dossier_1.user.email)
 
-      repet_1.add_row(dossier_1.revision)
-      repet_1.add_row(dossier_1.revision)
+      repet_1.add_row(updated_by: dossier_1.user.email)
+      repet_1.add_row(updated_by: dossier_1.user.email)
     end
 
     it do

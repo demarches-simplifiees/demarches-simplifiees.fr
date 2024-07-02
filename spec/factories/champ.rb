@@ -273,15 +273,9 @@ FactoryBot.define do
 
         evaluator.rows.times do
           row_id = ULID.generate
-          champ_repetition.champs << types_de_champ.map do |type_de_champ|
-            build(:"champ_#{type_de_champ.type_champ}", dossier: champ_repetition.dossier, row_id:, type_de_champ: type_de_champ, parent: champ_repetition, private: champ_repetition.private?)
+          champ_repetition.dossier.champs << types_de_champ.map do |type_de_champ|
+            build(:"champ_#{type_de_champ.type_champ}", dossier: champ_repetition.dossier, row_id:, type_de_champ: type_de_champ, private: champ_repetition.private?)
           end
-        end
-      end
-
-      trait :without_champs do
-        after(:build) do |champ_repetition, _evaluator|
-          champ_repetition.champs = []
         end
       end
     end

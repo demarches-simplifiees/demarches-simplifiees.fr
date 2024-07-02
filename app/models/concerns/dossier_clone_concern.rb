@@ -80,9 +80,7 @@ module DossierCloneConcern
     dossier_attributes += [:groupe_instructeur_id] if fork
     relationships = [:individual, :etablissement]
 
-    cloned_champs = champs_for_revision
-      .index_by(&:id)
-      .transform_values { [_1, _1.clone(fork)] }
+    cloned_champs = champs.map { [_1, _1.clone(fork)] }
 
     cloned_dossier = deep_clone(only: dossier_attributes, include: relationships) do |original, kopy|
       ClonePiecesJustificativesService.clone_attachments(original, kopy)
@@ -96,9 +94,8 @@ module DossierCloneConcern
 
         kopy.user = user || original.user
         kopy.state = Dossier.states.fetch(:brouillon)
-        kopy.champs = cloned_champs.values.map do |(_, champ)|
+        kopy.champs = cloned_champs.map do |(_, champ)|
           champ.dossier = kopy
-          champ.parent = cloned_champs[champ.parent_id].second if champ.child?
           champ
         end
       end
@@ -115,7 +112,7 @@ module DossierCloneConcern
     end
 
     if fork
-      cloned_champs.values.each do |(original, champ)|
+      cloned_champs.each do |(original, champ)|
         champ.update_columns(created_at: original.created_at, updated_at: original.updated_at)
       end
     end
@@ -147,35 +144,18 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_index = (champs_for_revision(scope: :public) + diff[:added]).index_by(&:public_id)
+    champs_index = champs.index_by(&:public_id)
 
     diff[:added].each do |champ|
-      if champ.child?
-        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.public_id).id)
-      else
-        champ.update_column(:dossier_id, id)
-      end
+      champ.update_column(:dossier_id, id)
     end
 
-    champs_to_remove = []
     diff[:updated].each do |champ|
       old_champ = champs_index.fetch(champ.public_id)
-      champs_to_remove << old_champ
-
-      if champ.child?
-        # we need to do that in order to avoid a foreign key constraint
-        old_champ.update(row_id: nil)
-        champ.update_columns(dossier_id: id, parent_id: champs_index.fetch(champ.parent.public_id).id)
-      else
-        champ.update_column(:dossier_id, id)
-      end
+      old_champ.destroy!
+      champ.update_column(:dossier_id, id)
     end
 
-    champs_to_remove += diff[:removed]
-    children_champs_to_remove, root_champs_to_remove = champs_to_remove.partition(&:child?)
-
-    children_champs_to_remove.each(&:destroy!)
-    Champ.where(parent_id: root_champs_to_remove.map(&:id)).destroy_all
-    root_champs_to_remove.each(&:destroy!)
+    diff[:removed].each(&:destroy!)
   end
 end
