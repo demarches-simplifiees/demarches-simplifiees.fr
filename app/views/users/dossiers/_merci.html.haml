@@ -20,7 +20,7 @@
         - if procedure.active_dossier_submitted_message
           %p.fr-m-2= procedure.active_dossier_submitted_message.message_on_submit_by_usager
     %p.justify-center.flex.fr-mb-5w.fr-mt-2w
-      = link_to "#{t('views.users.dossiers.merci.download_dossier')} (PDF)", dossier ? dossier_path(dossier, format: :pdf) : "#", download: "Mon dossier", target: "_blank", rel: "noopener", title: t('views.users.dossiers.show.header.print_dossier'), class: 'fr-btn fr-btn--secondary fr-mx-2w fr-btn--icon-left fr-icon-download-line'
+      = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
       = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'fr-btn fr-mx-2w'
 
     %hr.fr-hr
