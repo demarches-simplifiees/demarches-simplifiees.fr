@@ -150,104 +150,6 @@ describe PiecesJustificativesService do
           expect(subject).to be_empty
         end
       end
-
-      context 'with a pj on an commentaire' do
-        let(:dossier) { create(:dossier) }
-        let(:witness) { create(:dossier) }
-
-        let!(:commentaire) { create(:commentaire, dossier: dossier) }
-        let!(:witness_commentaire) { create(:commentaire, dossier: witness) }
-
-        before do
-          attach_file(commentaire.piece_jointe)
-          attach_file(witness_commentaire.piece_jointe)
-        end
-
-        it { expect(subject).to match_array(dossier.commentaires.first.piece_jointe.attachments) }
-
-        context 'with export_template' do
-          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
-          it 'uses specific name for dossier directory' do
-            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/messagerie")).to be true
-          end
-        end
-      end
-
-      context 'with a pj not safe on a commentaire' do
-        let(:dossier) { create(:dossier) }
-        let!(:commentaire) { create(:commentaire, dossier: dossier) }
-
-        before { attach_file(commentaire.piece_jointe, safe = false) }
-
-        it { expect(subject).to be_empty }
-      end
-
-      context 'with a motivation' do
-        let(:dossier) { create(:dossier, :with_justificatif) }
-        let!(:witness) { create(:dossier, :with_justificatif) }
-
-        it { expect(subject).to match_array(dossier.justificatif_motivation.attachment) }
-
-        context 'with export_template' do
-          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
-          it 'uses specific name for dossier directory' do
-            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/dossier")).to be true
-          end
-        end
-      end
-
-      context 'with a motivation not safe' do
-        let(:dossier) { create(:dossier) }
-
-        before { attach_file(dossier.justificatif_motivation, safe = false) }
-
-        it { expect(subject).to be_empty }
-      end
-
-      context 'with an attestation' do
-        let(:dossier) { create(:dossier, :with_attestation) }
-        let!(:witness) { create(:dossier, :with_attestation) }
-
-        it { expect(subject).to match_array(dossier.attestation.pdf.attachment) }
-        it 'uses default name for dossier directory' do
-          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
-        end
-
-        context 'with export_template' do
-          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
-          it 'uses specific name for dossier directory' do
-            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
-          end
-        end
-      end
-
-      context 'with an etablissement' do
-        let(:dossier) { create(:dossier, :with_entreprise) }
-        let(:attestation_sociale) { dossier.etablissement.entreprise_attestation_sociale }
-        let(:attestation_fiscale) { dossier.etablissement.entreprise_attestation_fiscale }
-
-        let!(:witness) { create(:dossier, :with_entreprise) }
-        let!(:witness_attestation_sociale) { witness.etablissement.entreprise_attestation_sociale }
-        let!(:witness_attestation_fiscale) { witness.etablissement.entreprise_attestation_fiscale }
-
-        before do
-          attach_file(attestation_sociale)
-          attach_file(attestation_fiscale)
-        end
-
-        it { expect(subject).to match_array([attestation_sociale.attachment, attestation_fiscale.attachment]) }
-
-        it 'uses default name for dossier directory' do
-          expect(PiecesJustificativesService.new(user_profile:, export_template: nil).liste_documents(dossiers).map(&:second)[0].starts_with?("dossier-#{dossier.id}/pieces_justificatives")).to be true
-        end
-
-        context 'with export_template' do
-          let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
-          it 'uses specific name for dossier directory' do
-            expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/pieces_justificatives")).to be true
-          end
-        end
-      end
     end
 
     context 'acl on private pj champ' do
@@ -414,13 +316,6 @@ describe PiecesJustificativesService do
           let(:user_profile) { create(:instructeur) }
           it "return confidentiel avis.piece_justificative_file" do
             expect(subject.size).to eq(2)
-          end
-
-          context 'with export_template' do
-            let(:export_template) { create(:export_template, :with_custom_ddd_prefix, ddd_prefix: "DOSSIER-", groupe_instructeur: procedure.defaut_groupe_instructeur) }
-            it 'uses specific name for dossier directory' do
-              expect(PiecesJustificativesService.new(user_profile:, export_template:).liste_documents(dossiers).map(&:second)[0].starts_with?("DOSSIER-#{dossier.id}/avis")).to be true
-            end
           end
         end
 
