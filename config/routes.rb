@@ -110,6 +110,10 @@ Rails.application.routes.draw do
       mount Sidekiq::Web => "/sidekiq"
     end
 
+    get 'data_exports' => 'administrateurs#data_exports'
+    get 'exports/administrateurs/last_month' => 'administrateurs#export_last_month'
+    get 'exports/instructeurs/last_month' => 'instructeurs#export_last_month'
+
     get 'import_procedure_tags' => 'procedures#import_data'
     post 'import_tags' => 'procedures#import_tags'
     root to: "administrateurs#index"
