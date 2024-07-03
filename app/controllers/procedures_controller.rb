@@ -3,7 +3,12 @@ class ProceduresController < ApplicationController
 
   def logo
     if @procedure.logo.attached?
-      redirect_to url_for(@procedure.logo.variant(:email))
+      logo_variant = logo.variant(resize_to_limit: [400, 400])
+      if logo_variant.key.present?
+        redirect_to logo_variant.processed.url
+      else
+        redirect_to url_for(@procedure.logo)
+      end
     else
       redirect_to ActionController::Base.helpers.image_url(PROCEDURE_DEFAULT_LOGO_SRC)
     end

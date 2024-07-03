@@ -8,14 +8,22 @@ module BlobImageProcessorConcern
   end
 
   def representation_required?
-    from_champ? || attachments.any? { _1.record.class == Commentaire }
+    from_champ? || from_messagerie? || is_a_logo?
   end
+
+  private
 
   def from_champ?
     attachments.any? { _1.record.class == Champs::TitreIdentiteChamp || _1.record.class == Champs::PieceJustificativeChamp }
   end
 
-  private
+  def from_messagerie?
+    attachments.any? { _1.record.class == Commentaire }
+  end
+
+  def is_a_logo?
+    attachments.any? { _1.name == 'logo' }
+  end
 
   def watermark_required?
     attachments.any? { _1.record.class == Champs::TitreIdentiteChamp }
