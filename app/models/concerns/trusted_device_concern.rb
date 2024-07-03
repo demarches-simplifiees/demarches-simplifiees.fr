@@ -8,7 +8,8 @@ module TrustedDeviceConcern
     cookies.encrypted[TRUSTED_DEVICE_COOKIE_NAME] = {
       value: JSON.generate({ created_at: start_at }),
       expires: start_at + TRUSTED_DEVICE_PERIOD,
-      httponly: true
+      httponly: true,
+      secure: Rails.env.production?
     }
   end
 
