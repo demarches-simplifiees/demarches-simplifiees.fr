@@ -61,6 +61,10 @@ class Champs::PieceJustificativeController < Champs::ChampController
       save_succeed = @champ.save
     end
 
+    if @champ.private?
+      ChampRevision.create_or_update_revision(@champ, current_instructeur.id)
+    end
+
     @champ.dossier.update(last_champ_updated_at: Time.zone.now.utc) if save_succeed
 
     save_succeed

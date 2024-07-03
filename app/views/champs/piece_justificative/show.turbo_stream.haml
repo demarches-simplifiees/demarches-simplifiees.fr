@@ -1,6 +1,6 @@
 = fields_for @champ.input_name, @champ do |form|
   = turbo_stream.replace @champ.input_group_id do
-    = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
+    = render EditableChamp::EditableChampComponent.new champ: @champ, form: form, turbo: true
 
   - last_attached_file = @champ.piece_justificative_file.attachments.last
   - if last_attached_file

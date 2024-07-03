@@ -17,8 +17,16 @@ class AttachmentsController < ApplicationController
   end
 
   def destroy
+    champ = @blob.attachments.first.record
+    champ = nil unless champ.is_a?(Champ) && champ.private?
+
     @attachment = @blob.attachments.find(params[:id])
     @attachment.purge_later
+
+    if champ
+      ChampRevision.create_or_update_revision(champ, current_instructeur.id)
+    end
+
     flash.notice = 'La pièce jointe a bien été supprimée.'
 
     @champ_id = params[:champ_id]

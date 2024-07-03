@@ -160,6 +160,24 @@ describe Champs::PieceJustificativeController, type: :controller do
       it 'updates dossier.last_champ_updated_at' do
         expect { subject }.to change { dossier.reload.last_champ_updated_at }
       end
+
+      it 'does not create a champ_revision' do
+        expect(ChampRevision.where(champ_id: champ.id).first).to eq(nil)
+      end
+
+      context 'when the champ is private' do
+        let(:champ) { dossier.champs_private.first }
+        let(:instructeur) { create(:instructeur) }
+        let(:procedure) { create(:procedure, :published, :with_instructeur, types_de_champ_public: [{ type: :piece_justificative }], types_de_champ_private: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
+
+        before { sign_in instructeur.user }
+
+        it 'create a champ_revision' do
+          subject
+
+          expect(ChampRevision.where(champ_id: champ.id).first.instructeur_id).to eq(instructeur.id)
+        end
+      end
     end
 
     context 'when the file is invalid' do

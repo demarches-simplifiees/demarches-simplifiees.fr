@@ -1,6 +1,6 @@
 class EditableChamp::EditableChampComponent < ApplicationComponent
-  def initialize(form:, champ:, seen_at: nil)
-    @form, @champ, @seen_at = form, champ, seen_at
+  def initialize(form:, champ:, seen_at: nil, turbo: false)
+    @form, @champ, @seen_at, @turbo = form, champ, seen_at, turbo
     @attribute = :value
   end
 
@@ -18,6 +18,10 @@ class EditableChamp::EditableChampComponent < ApplicationComponent
       TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
     ]
     !types_without_label.include?(@champ.type_champ)
+  end
+
+  def has_champ_revisions?
+    @champ.private? && !@champ.champ_revisions.order(id: :desc).load.empty?
   end
 
   def component_class

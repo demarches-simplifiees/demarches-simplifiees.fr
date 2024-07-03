@@ -1041,6 +1041,13 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(champ_drop_down_list.value).to eq('other value')
           expect(dossier.reload.last_champ_private_updated_at).to eq(now)
           expect(response).to have_http_status(200)
+
+          expect(ChampRevision.where(champ_id: champ_datetime.id).first.instructeur_id).to eq(instructeur.id)
+          expect(ChampRevision.where(champ_id: champ_datetime.id).first.updated_at).to eq(now)
+          expect(ChampRevision.where(champ_id: champ_linked_drop_down_list.id).first.instructeur_id).to eq(instructeur.id)
+          expect(ChampRevision.where(champ_id: champ_linked_drop_down_list.id).first.updated_at).to eq(now)
+          expect(ChampRevision.where(champ_id: champ_drop_down_list.id).first.instructeur_id).to eq(instructeur.id)
+          expect(ChampRevision.where(champ_id: champ_drop_down_list.id).first.updated_at).to eq(now)
         }
 
         it 'updates the annotations' do

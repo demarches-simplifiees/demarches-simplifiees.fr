@@ -283,6 +283,8 @@ module Instructeurs
 
       dossier.save(context: :champs_private_value)
 
+      ChampRevision.create_or_update_revision_if_needed(dossier, champs_private_attributes_params, current_instructeur.id)
+
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_private_attributes_params, dossier.champs.filter(&:private?))

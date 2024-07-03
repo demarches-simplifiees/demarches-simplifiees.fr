@@ -8,3 +8,17 @@
     = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, describedby_id: @champ.describedby_id, champ: @champ)
 
     = @form.hidden_field :id, value: @champ.id
+
+    - if has_champ_revisions?
+      %div{ class: 'dropdown revision-dropdown', data: { controller: 'menu-button' } }
+        %button{ class: 'fr-btn dropdown-button fr-btn--tertiary', id: "#{@champ.public_id || @champ.id}-revision-btn", "aria-expanded": "false", 'aria-haspopup': 'true', 'aria-controls': "#{@champ.public_id || @champ.id}-revision", data: { menu_button_target: "button" } }
+          Revisions
+
+        %div{ data: { menu_button_target: 'menu' }, id: "#{@champ.public_id || @champ.id}-revision", 'aria-labelledby': "#{@champ.public_id || @champ.id}-revision-btn", role: 'menu', 'tab-index': -1, class: 'dropdown-content fade-in-down' }
+          %ul.dropdown-items
+            - @champ.champ_revisions.order(id: :desc).each do |champ_revision|
+              %li.fr-text-mention--grey
+                = "#{champ_revision.instructeur ? champ_revision.instructeur.email.split('@')[0] : t('.instructeur_deleted')} #{l(champ_revision.updated_at, format: :short)}"
+                %br
+                %span
+                  = champ_revision.rebuild_champ.to_s

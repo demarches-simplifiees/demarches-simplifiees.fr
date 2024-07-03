@@ -6,7 +6,7 @@
   = fields_for champ.input_name, champ do |form|
     - if champ.refresh_after_update?
       = turbo_stream.replace champ.input_group_id do
-        = render EditableChamp::EditableChampComponent.new champ:, form:
+        = render EditableChamp::EditableChampComponent.new champ:, form:, turbo: true
     - else
       = turbo_stream.update champ.labelledby_id do
         = render EditableChamp::ChampLabelContentComponent.new champ:, form:

@@ -82,6 +82,8 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
         errors: nil
       })
       expect(annotation.reload.value).to eq('Hello world')
+      expect(annotation.champ_revisions.first.value).to eq('Hello world')
+      expect(annotation.champ_revisions.first.instructeur_id).to eq(instructeur.id)
     end
 
     context 'with invalid champ' do

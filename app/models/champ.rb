@@ -9,6 +9,7 @@ class Champ < ApplicationRecord
   belongs_to :type_de_champ, inverse_of: :champ, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
   has_many_attached :piece_justificative_file
+  has_many :champ_revisions, dependent: :destroy, inverse_of: :champ
 
   # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.

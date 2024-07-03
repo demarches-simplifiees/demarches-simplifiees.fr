@@ -1,0 +1,22 @@
+.dropdown-items li {
+  display: block;
+}
+
+.revision-dropdown {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.revision-dropdown button {
+  line-height: 0.5rem;
+  min-height: auto;
+}
+
+legend ~ .revision-dropdown {
+  top: -2.5rem;
+}
+
+.revision-dropdown .dropdown-items {
+  padding: 0;
+}

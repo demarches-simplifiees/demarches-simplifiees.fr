@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_06_24_133645) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_29_133656) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -246,9 +246,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_24_133645) do
   create_table "champ_revisions", force: :cascade do |t|
     t.bigint "champ_id", null: false
     t.datetime "created_at", null: false
+    t.jsonb "data"
+    t.bigint "etablissement_id"
+    t.string "external_id"
+    t.string "fetch_external_data_exceptions", array: true
     t.bigint "instructeur_id", null: false
     t.datetime "updated_at", null: false
+    t.string "value"
+    t.jsonb "value_json"
     t.index ["champ_id"], name: "index_champ_revisions_on_champ_id"
+    t.index ["etablissement_id"], name: "index_champ_revisions_on_etablissement_id"
     t.index ["instructeur_id"], name: "index_champ_revisions_on_instructeur_id"
   end
 
