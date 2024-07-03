@@ -1,0 +1,13 @@
+---
+fr:
+  title: Démarche en test
+  intro_procedure_brouillon_html: Cette démarche est actuellement en <b>test</b>
+  intro_revision_draft_html: Cette page permet de <b>tester</b> une nouvelle version de la démarche
+  body_general_html: |
+    et cette page est réservée à l’administration en charge de son déploiement.
+    Si vous commencez ou déposez un dossier, il pourra être <b>supprimé à tout moment</b> et sans préavis, même après avoir été accepté.
+  body_user: |
+    Si ce lien vous a été communiqué, contactez le service en charge de cette démarche
+    pour obtenir le lien public de la démarche afin de déposer votre dossier.
+  body_admin_procedure_brouillon: Ne communiquez pas ce lien à vos usagers. Lorsque vous publierez la démarche, vous accéderez au lien public de la démarche à communiquer.
+  body_admin_revision_draft: Ne communiquez pas ce lien à vos usagers, mais le lien public de la démarche affiché dans votre tableau de bord administrateur.
