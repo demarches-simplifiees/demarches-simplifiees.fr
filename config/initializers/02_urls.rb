@@ -20,6 +20,7 @@ WEASYPRINT_URL = ENV.fetch("WEASYPRINT_URL", nil)
 # Internal URLs
 FOG_OPENSTACK_URL = ENV.fetch("FOG_OPENSTACK_URL", "https://auth.cloud.ovh.net")
 DS_PROXY_URL = ENV.fetch("DS_PROXY_URL", "")
+S3_ENDPOINT_URL = ENV.fetch("S3_ENDPOINT", "")
 
 # External services URLs
 WEBINAIRE_URL = "https://app.livestorm.co/demarches-simplifiees"

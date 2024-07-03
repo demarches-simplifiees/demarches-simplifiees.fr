@@ -63,11 +63,16 @@ Rails.application.config.content_security_policy do |policy|
     policy.connect_src(:self)
     policy.frame_src(:self)
     policy.default_src(:self, :data, :blob)
-
   end
   # polynesian configurations
-  policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf", "oos.eu-west-2.outscale.com", "oos.cloudgouv-eu-west-1.outscale.com")
-  policy.default_src(*policy.default_src, "oos.eu-west-2.outscale.com", "oos.cloudgouv-eu-west-1.outscale.com")
+  policy.connect_src(*policy.connect_src, "www.tefenua.gov.pf")
+  if S3_ENDPOINT_URL.present?
+    domain = URI(S3_ENDPOINT_URL).host
+    policy.frame_src(*policy.frame_src, domain)
+    policy.connect_src(*policy.connect_src, domain)
+    policy.default_src(*policy.default_src, domain)
+    policy.img_src(*policy.img_src, domain)
+  end
 end
 
 # If you are using UJS then enable automatic nonce generation
