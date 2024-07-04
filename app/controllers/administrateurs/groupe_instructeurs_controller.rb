@@ -227,9 +227,11 @@ module Administrateurs
       instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
 
       if invalid_emails.present?
-        errors += [t('.wrong_address',
-          count: invalid_emails.size,
-          emails: invalid_emails.join(', '))]
+        errors += [
+          t('.wrong_address',
+                    count: invalid_emails.size,
+                    emails: invalid_emails.join(', '))
+        ]
       end
 
       if instructeurs.present?
