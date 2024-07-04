@@ -8,18 +8,48 @@ describe FranceConnectInformation, type: :model do
   end
 
   describe 'associate_user!' do
-    context 'when there is no user with same email' do
-      let(:email) { 'A@email.com' }
-      let(:fci) { build(:france_connect_information) }
+    let(:email) { 'A@email.com' }
+    let(:fci) { build(:france_connect_information) }
 
-      subject { fci.associate_user!(email) }
+    subject { fci.associate_user!(email) }
 
-      it { expect { subject }.to change(User, :count).by(1) }
+    context 'when there is no user with the same email' do
+      it 'creates a new user' do
+        expect { subject }.to change(User, :count).by(1)
+      end
 
-      it do
+      it 'sets the correct attributes on the user' do
         subject
-        expect(fci.user.email).to eq('a@email.com')
-        expect(fci.user.email_verified_at).to be_present
+        user = User.find_by(email: email.downcase)
+        expect(user).not_to be_nil
+        expect(user.confirmed_at).to be_present
+      end
+
+      it 'sends custom confirmation instructions' do
+        expect(UserMailer).to receive(:custom_confirmation_instructions).and_call_original
+        subject
+      end
+
+      it 'associates the user with the FranceConnectInformation' do
+        subject
+        expect(fci.reload.user.email).to eq(email.downcase)
+      end
+    end
+
+    context 'when a user with the same email already exists due to race condition' do
+      before do
+        allow(User).to receive(:create!).and_raise(ActiveRecord::RecordNotUnique)
+        create(:user, email: email.downcase)
+      end
+
+      it 'does not create a new user' do
+        expect { subject }.to_not change(User, :count)
+      end
+
+      it 'finds the existing user and associates with FranceConnectInformation' do
+        existing_user = User.find_by(email: email.downcase)
+        subject
+        expect(fci.reload.user).to eq(existing_user)
       end
     end
   end
