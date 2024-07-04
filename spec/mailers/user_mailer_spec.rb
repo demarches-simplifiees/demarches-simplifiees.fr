@@ -101,6 +101,31 @@ RSpec.describe UserMailer, type: :mailer do
     end
   end
 
+  describe '#custom_confirmation_instructions' do
+    let(:user) { create(:user, email: 'user@example.com') }
+    let(:token) { 'confirmation_token_123' }
+    let(:mail) { UserMailer.custom_confirmation_instructions(user, token) }
+
+    it 'renders the headers' do
+      expect(mail.subject).to eq('Confirmez votre email')
+      expect(mail.to).to eq([user.email])
+      expect(mail.from).to eq(['contact@demarches-simplifiees.fr'])
+    end
+
+    it 'renders the body' do
+      expect(mail.body.encoded).to match(user.email)
+      expect(mail.body.encoded).to match(token)
+    end
+
+    it 'assigns @user' do
+      expect(mail.body.encoded).to match(user.email)
+    end
+
+    it 'assigns @token' do
+      expect(mail.body.encoded).to include(token)
+    end
+  end
+
   describe '.send_archive' do
     let(:procedure) { create(:procedure) }
     let(:archive) { create(:archive) }
