@@ -90,7 +90,12 @@ class TiptapService
         text
       end
     in type: 'mention', attrs: { id: }, **rest
-      text = substitutions.fetch(id) { "--#{id}--" }
+      text_or_representation = substitutions.fetch(id) { "--#{id}--" }
+      text = if text_or_representation.respond_to?(:to_tiptap_node)
+        node_to_html(text_or_representation.to_tiptap_node, substitutions, level + 1)
+      else
+        text_or_representation
+      end
 
       if rest[:marks].present?
         apply_marks(text, rest[:marks])
