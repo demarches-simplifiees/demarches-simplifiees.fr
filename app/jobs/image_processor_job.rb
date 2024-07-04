@@ -22,6 +22,7 @@ class ImageProcessorJob < ApplicationJob
     return if ActiveStorage::Attachment.find_by(blob_id: blob.id)&.record_type == "ActiveStorage::VariantRecord"
 
     auto_rotate(blob) if ["image/jpeg", "image/jpg"].include?(blob.content_type)
+    uninterlace(blob) if blob.content_type == "image/png"
     create_representations(blob) if blob.representation_required?
     add_watermark(blob) if blob.watermark_pending?
   end
@@ -37,6 +38,16 @@ class ImageProcessorJob < ApplicationJob
         blob.upload(processed) # also update checksum & byte_size accordingly
         blob.save!
       end
+    end
+  end
+
+  def uninterlace(blob)
+    blob.open do |file|
+      processed = UninterlaceService.new.process(file)
+      return if processed.blank?
+
+      blob.upload(processed)
+      blob.save!
     end
   end
 
