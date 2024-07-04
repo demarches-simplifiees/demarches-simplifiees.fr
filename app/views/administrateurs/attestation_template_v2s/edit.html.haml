@@ -127,7 +127,9 @@
           %iframe.attestation-preview{ title: "Aperçu", src: admin_procedure_attestation_template_v2_path(@procedure, format: :pdf), data: { attestation_target: 'preview' } }
           %p.fr-hint-text
             L’aperçu est mis à jour automatiquement après chaque modification.
-            Pour générer un aperçu fidèle avec tous les champs et les dates, créez-vous un dossier et acceptez-le : l’aperçu l’utilisera.
+            Pour générer un aperçu fidèle avec champs et dates,
+            = link_to("créez-vous un dossier", new_dossier_path(procedure_id: @procedure, brouillon: true), **external_link_attributes)
+            et acceptez-le : l’aperçu l’utilisera.
 
   - if @procedure.feature_enabled?(:attestation_v2) && @attestation_template.draft?
     - content_for(:sticky_header) do
