@@ -1,4 +1,4 @@
-import React, { useState, useId } from 'react';
+import { useState, useId } from 'react';
 import { fire } from '@utils';
 import type { Feature, FeatureCollection } from 'geojson';
 import CoordinateInput from 'react-coordinate-input';

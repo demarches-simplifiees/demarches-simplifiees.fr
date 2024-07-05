@@ -26,7 +26,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
     subject { post :create, params: params }
 
     context 'when inviting multiple valid experts' do
-      let(:params) { { procedure_id: procedure.id, emails: [expert.email, "new@expert.fr"].to_json } }
+      let(:params) { { procedure_id: procedure.id, emails: [expert.email, "new@expert.fr"] } }
 
       it 'creates experts' do
         subject
@@ -38,7 +38,7 @@ describe Administrateurs::ExpertsProceduresController, type: :controller do
     end
 
     context 'when inviting expert using an email with typos' do
-      let(:params) { { procedure_id: procedure.id, emails: ['martin@oraneg.fr'].to_json } }
+      let(:params) { { procedure_id: procedure.id, emails: ['martin@oraneg.fr'] } }
       render_views
       it 'warns' do
         subject
