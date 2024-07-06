@@ -9,6 +9,7 @@ import { matchSorter } from 'match-sorter';
 import { useDebounceCallback } from 'usehooks-ts';
 import { useEvent } from 'react-use-event-hook';
 import isEqual from 'react-fast-compare';
+import * as s from 'superstruct';
 
 import { Item } from './props';
 
@@ -420,9 +421,9 @@ export const createLoader: (
       });
       if (response.ok) {
         const json = await response.json();
-        const result = Item.array().safeParse(json);
-        if (result.success) {
-          const items = matchSorter(result.data, filterText, {
+        const [err, result] = s.validate(json, s.array(Item), { coerce: true });
+        if (!err) {
+          const items = matchSorter(result, filterText, {
             keys: ['label']
           });
           return {

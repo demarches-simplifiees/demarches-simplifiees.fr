@@ -62,12 +62,12 @@
     "react-use-event-hook": "^0.9.6",
     "spectaql": "^2.3.1",
     "stimulus-use": "^0.52.2",
+    "superstruct": "^1.0.4",
     "terser": "^5.31.0",
     "tiny-invariant": "^1.3.3",
     "tippy.js": "^6.3.7",
     "trix": "^1.2.3",
-    "usehooks-ts": "^3.1.0",
-    "zod": "^3.20.2"
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@esbuild/darwin-arm64": "=0.19.9",
