@@ -55,4 +55,5 @@ fr:
           data_fetched: "Des données concernant %{sources} liées à l’INE %{ine} ont été reçues depuis le MESRI."
           data_fetched_title: "Données obtenues du MESRI"
       drop_down_list:
-        other: Autre
+        other: Entrer une autre option
+        other_label: Saisir votre option
