@@ -1,0 +1,101 @@
+#export_template-edit.fr-my-4w
+  .fr-mb-6w
+    = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur de modèle d'export", heading_level: 'h3') do |c|
+      - c.with_body do
+        Cette page permet d'éditer un modèle d'export tabulaire et ainsi sélectionner les champs que vous souhaitez exporter.
+        Essayez-le et donnez-nous votre avis
+        en nous envoyant un email à #{mail_to(CONTACT_EMAIL, subject: "Editeur de modèle d'export")}.
+.fr-grid-row.fr-grid-row--gutters
+  .fr-col-12.fr-col-md-8
+    = form_with model: [:instructeur, @procedure, export_template], local: true do |f|
+
+
+      = f.hidden_field "[dossier_folder][template]", value: export_template.dossier_folder.template_json
+      = f.hidden_field "[export_pdf][template]", value: export_template.export_pdf.template_json
+
+      = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field)
+
+      - if groupe_instructeurs.many?
+        .fr-input-group
+          = f.label :groupe_instructeur_id, class: 'fr-label' do
+            = f.object.class.human_attribute_name(:groupe_instructeur_id)
+            = render EditableChamp::AsteriskMandatoryComponent.new
+            %span.fr-hint-text
+              Avec quel groupe instructeur souhaitez-vous partager ce modèle d'export ?
+          = f.collection_select :groupe_instructeur_id, groupe_instructeurs, :id, :label, {}, class: 'fr-select'
+      - else
+        = f.hidden_field :groupe_instructeur_id
+
+      %fieldset.fr-fieldset.fr-fieldset--inline
+        %legend#radio-inline-legend.fr-fieldset__legend.fr-text--regular
+          Format export
+        .fr-fieldset__element.fr-fieldset__element--inline
+          .fr-radio-group
+            = f.radio_button :kind, "ods", id: "ods"
+            %label.fr-label{ for: "ods" } ods
+          .fr-radio-group
+            = f.radio_button :kind, "xlsx", id: "xlsx"
+            %label.fr-label{ for: "xlsx" } xlsx
+          .fr-radio-group
+            = f.radio_button :kind, "csv", id: "csv"
+            %label.fr-label{ for: "csv" } csv
+
+      %fieldset.fr-fieldset
+        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          Colonnes usager
+
+        - @export_template.all_usager_columns.each do |column|
+          .fr-fieldset__element
+            .fr-checkbox-group
+              - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
+              = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
+              = label_tag id, column[:libelle]
+
+
+      %fieldset.fr-fieldset
+        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          Colonnes Infos dossier
+
+        - @export_template.all_dossier_columns.each do |column|
+          .fr-fieldset__element
+            .fr-checkbox-group
+              - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
+              = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
+              = label_tag id, column[:libelle]
+
+      %fieldset.fr-fieldset
+        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+          Colonnes formulaire
+
+        - @export_template.all_tdc_columns.each do |columns_champ|
+          - columns_champ.each do |column|
+            .fr-fieldset__element
+              .fr-checkbox-group
+                - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
+                = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
+                = label_tag id, column[:libelle]
+
+      - @export_template.all_repetable_tdc_columns.each do |repet|
+        %fieldset.fr-fieldset
+          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+            = "Colonnes formulaire #{repet[:libelle]}"
+
+          - repet[:types_de_champ].each do |columns_champ|
+            - columns_champ.each do |column|
+              .fr-fieldset__element
+                .fr-checkbox-group
+                  - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
+                  = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
+                  = label_tag id, column[:libelle]
+
+
+      .fixed-footer
+        .fr-container
+          %ul.fr-btns-group.fr-btns-group--inline-md
+            %li
+              = f.submit "Enregistrer", class: "fr-btn"
+            %li
+              = link_to "Annuler", instructeur_procedure_path(@procedure), class: "fr-btn fr-btn--secondary"
+            - if @export_template.persisted?
+              %li
+                = link_to "Supprimer", [:instructeur, @procedure, @export_template], method: :delete, data: { confirm: "Voulez-vous vraiment supprimer ce modèle ? Il sera supprimé pour tous les instructeurs du groupe"}, class: "fr-btn fr-btn--secondary"

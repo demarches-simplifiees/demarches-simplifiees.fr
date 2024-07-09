@@ -6,41 +6,49 @@
                     [t('.title')]] }
 
 .fr-container
-  %h1= t('.title')
-  = render Dsfr::CalloutComponent.new(title: nil) do |c|
-    - c.with_body do
-      %p= t('.export_description', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i)
+  .fr-tabs.mb-3
+    %ul.fr-tabs__list{ role: 'tablist' }
+      %li{ role: 'presentation' }
+        %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-exports", tabindex: "0", role: "tab", "aria-selected": "true", "aria-controls": "tabpanel-exports-panel" } Liste des exports
 
-  - if @exports.present?
-    %div{ data: @exports.any?(&:pending?) ? { controller: "turbo-poll", turbo_poll_url_value: "", turbo_poll_interval_value: 10_000, turbo_poll_max_checks_value: 6 } : {} }
-      = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
+      - if @procedure.feature_enabled?(:export_template)
+        %li{ role: 'presentation' }
+          %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-export-templates", tabindex: "-1", role: "tab", "aria-selected": "false", "aria-controls": "tabpanel-export-templates-panel" } Modèles d'export
 
-    - if @exports.any?{_1.format == Export.formats.fetch(:zip)}
-      = render Dsfr::AlertComponent.new(title: t('.title_zip'), state: :info, extra_class_names: 'fr-mb-3w') do |c|
+    .fr-tabs__panel.fr-tabs__panel--selected{ id: "tabpanel-exports-panel", role: "tabpanel", "aria-labelledby": "tabpanel-exports", tabindex: "0" }
+      = render Dsfr::CalloutComponent.new(title: nil) do |c|
         - c.with_body do
-          %p= t('.export_description_zip_html')
+          %p= t('.export_description', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i)
 
-  - else
-    = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
+      - if @exports.present?
+        %div{ data: @exports.any?(&:pending?) ? { controller: "turbo-poll", turbo_poll_url_value: "", turbo_poll_interval_value: 10_000, turbo_poll_max_checks_value: 6 } : {} }
+          = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
 
-  - if @procedure.feature_enabled?(:export_template)
-    %h2.fr-mb-1w.fr-mt-8w
-      Liste des modèles d'export
-    %p.fr-hint-text
-      Un modèle d'export permet de personnaliser le nom des fichiers (pour un export au format Zip)
-    - if @export_templates.any?
-      .fr-table.fr-table--no-caption.fr-mt-5w
-        %table
-          %thead
-            %tr
-              %th{ scope: 'col' } Nom du modèle
-              %th{ scope: 'col' }= "Groupe instructeur" if @procedure.groupe_instructeurs.many?
-          %tbody
-            - @export_templates.each do |export_template|
+        - if @exports.any?{_1.format == Export.formats.fetch(:zip)}
+          = render Dsfr::AlertComponent.new(title: t('.title_zip'), state: :info, extra_class_names: 'fr-mb-3w') do |c|
+            - c.with_body do
+              %p= t('.export_description_zip_html')
+
+      - else
+        = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
+
+    - if @procedure.feature_enabled?(:export_template)
+      .fr-tabs__panel.fr-tabs__panel--selected{ id: "tabpanel-export-templates-panel", role: "tabpanel", "aria-labelledby": "tabpanel-export-templates", tabindex: "0" }
+        %p.fr-hint-text
+          Un modèle d'export permet de personnaliser le nom des fichiers (pour un export au format Zip)
+        .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-5w
+          %table
+            %thead
               %tr
-                %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
-                %td= export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
-
-    %p
-      = link_to [:new, :instructeur, @procedure, :export_template], class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line' do
-        Ajouter un modèle d'export
+                %th{ scope: 'col' } Nom du modèle
+                %th{ scope: 'col' }= "Groupe instructeur" if @procedure.groupe_instructeurs.many?
+                %th{ scope: "col" }
+                  %ul.fr-btns-group.fr-btns-group--inline
+                    %li= link_to "Nouveau modèle d'export zip", new_instructeur_procedure_export_template_path(@procedure), class: "fr-btn fr-btn--secondary"
+                    %li= link_to "Nouveau modèle d'export tabulaire", new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary"
+            %tbody
+              - @export_templates.each do |export_template|
+                %tr
+                  %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
+                  %td= export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
+                  %td
