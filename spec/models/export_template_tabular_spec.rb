@@ -31,6 +31,16 @@ describe ExportTemplate do
       ]
     end
 
+    it 'ignores paths when invalid stable_id' do
+      export_template.paths = ['tdc_987_value']
+      expect(export_template.columns).to match_array []
+    end
+
+    it 'ignores paths when invalid path' do
+      export_template.paths = ['blabla']
+      expect(export_template.columns).to match_array []
+    end
+
     it 'returns paths from columns' do
       expect(tabular_export_template.paths).to match_array ["dossier_email", "tdc_1_value", "tdc_2_code", "repet_3_tdc_4_value", "repet_3_tdc_5_value", "repet_6_tdc_7_value"]
     end

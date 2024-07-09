@@ -28,11 +28,6 @@ describe ExportTemplate do
       [
         { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }] }, stable_id: "3" },
         {
-          path:
-                   { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "cni_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
-           stable_id: "5"
-        },
-        {
           path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "pj_repet_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
          stable_id: "10"
         }
@@ -220,6 +215,7 @@ describe ExportTemplate do
     let(:pdf_mention) { mention }
     let(:pj_text) { "_pj" }
     let(:pj_mention) { mention }
+    let(:stable_id) { "3" }
     let(:content) do
       {
         "pdf_name" => {
@@ -236,7 +232,7 @@ describe ExportTemplate do
         },
         "pjs" =>
         [
-          { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] }, stable_id: "3" }
+          { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] }, stable_id: }
         ]
       }
     end
@@ -317,6 +313,20 @@ describe ExportTemplate do
           expect(subject.valid?).to be_falsey
           expect(subject.errors.full_messages).to include "Le champ « Justificatif de domicile » doit être rempli"
         end
+      end
+    end
+
+    context 'with invalid stable_id for pj path' do
+      let(:stable_id) { "20" }
+      it 'has error for pj' do
+        expect(subject.valid?).to be_falsey
+      end
+    end
+
+    context 'with valid stable_id for pj path' do
+      let(:stable_id) { "3" }
+      it 'has error for pj' do
+        expect(subject.valid?).to be_truthy
       end
     end
   end
