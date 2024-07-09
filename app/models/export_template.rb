@@ -30,44 +30,6 @@ class ExportTemplate < ApplicationRecord
     kind != 'zip'
   end
 
-
-  def all_usager_columns
-    columns = []
-    columns.push :id, :email, :france_connecte
-    if procedure.for_individual?
-      columns.push :civilite, :last_name, :first_name, :for_tiers, :mandataire_last_name, :mandataire_first_name
-      if procedure.ask_birthday
-        columns.push :date_de_naissance
-      end
-    else
-      columns.push(
-        :etablissement_siret, :etablissement_siege_social, :etablissement_naf, :etablissement_libelle_naf,
-        :etablissement_adresse, :etablissement_numero_voie, :etablissement_type_voie, :etablissement_nom_voie, :etablissement_complement_adresse, :etablissement_code_postal, :etablissement_localite, :etablissement_code_insee_localite,
-        :entreprise_siren, :entreprise_capital_social, :entreprise_numero_tva_intracommunautaire,
-        :entreprise_forme_juridique, :entreprise_forme_juridique_code,
-        :entreprise_nom_commercial, :entreprise_raison_sociale,
-        :entreprise_siret_siege_social,
-        :entreprise_code_effectif_entreprise
-      )
-      if procedure.chorusable? && procedure.chorus_configuration.complete?
-        columns.push(:domaine_fonctionnel, :referentiel_prog, :centre_de_coute)
-      end
-    end
-    columns
-  end
-
-  def all_dossier_columns
-    columns = []
-    columns.push(
-      :archived, :dossier_state, :updated_at, :last_champ_updated_at,
-      :depose_at, :en_instruction_at,
-      procedure.sva_svr_enabled? ? :sva_svr_decision_on : nil,
-      :processed_at,
-      :motivation,
-      :instructeurs
-    ).compact
-  end
-
   def paths=(paths)
     columns = []
     paths.compact_blank.each do |full_path|
@@ -163,10 +125,6 @@ class ExportTemplate < ApplicationRecord
   def repetable_columns
     columns.filter { _1['source'] == 'repet' }
       .group_by { _1['repetition_champ_stable_id'] }
-  end
-
-  def libelle_for_path(full_path, active_libelle)
-    columns&.find{ _1["path"] == full_path_hash(full_path)[:path] && _1["stable_id"] == full_path_hash(full_path)[:stable_id]}&.fetch("libelle", nil) || active_libelle
   end
 
   def tiptap_default_dossier_directory=(body)
@@ -297,6 +255,10 @@ class ExportTemplate < ApplicationRecord
 
   private
 
+  def libelle_for_path(full_path, active_libelle)
+    columns&.find { _1["path"] == full_path_hash(full_path)[:path] && _1["stable_id"] == full_path_hash(full_path)[:stable_id] }&.fetch("libelle", nil) || active_libelle
+  end
+
   def tiptap_content(key)
     content[key]&.to_json
   end
@@ -380,4 +342,43 @@ class ExportTemplate < ApplicationRecord
     end
   end
 
+  def all_usager_columns
+    columns = []
+    columns.push :id, :email, :france_connecte
+    if procedure.for_individual?
+      columns.push :civilite, :last_name, :first_name, :for_tiers, :mandataire_last_name, :mandataire_first_name
+      if procedure.ask_birthday
+        columns.push :date_de_naissance
+      end
+    else
+      columns.push(
+        :etablissement_siret, :etablissement_siege_social, :etablissement_naf, :etablissement_libelle_naf,
+        :etablissement_adresse, :etablissement_numero_voie, :etablissement_type_voie, :etablissement_nom_voie, :etablissement_complement_adresse, :etablissement_code_postal, :etablissement_localite, :etablissement_code_insee_localite,
+        :entreprise_siren, :entreprise_capital_social, :entreprise_numero_tva_intracommunautaire,
+        :entreprise_forme_juridique, :entreprise_forme_juridique_code,
+        :entreprise_nom_commercial, :entreprise_raison_sociale,
+        :entreprise_siret_siege_social,
+        :entreprise_code_effectif_entreprise
+      )
+    end
+
+    if procedure.chorusable? && procedure.chorus_configuration.complete?
+      columns.push(:domaine_fonctionnel, :referentiel_prog, :centre_de_cout)
+    end
+
+    columns
+  end
+
+  def all_dossier_columns
+    columns = []
+    columns.push(
+      :archived, :dossier_state, :updated_at, :last_champ_updated_at,
+      :depose_at, :en_instruction_at,
+      procedure.sva_svr_enabled? ? :sva_svr_decision_on : nil,
+      :processed_at,
+      :motivation,
+      :instructeurs,
+      procedure.routing_enabled? ? :groupe_instructeur : nil
+    ).compact
+  end
 end
