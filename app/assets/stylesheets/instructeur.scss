@@ -44,8 +44,12 @@
   position: relative;
 }
 
-.dropdown-export .dropdown-content {
+.dropdown-export.dropdown-content {
   width: 450px;
+
+  a {
+    text-decoration: underline;
+  }
 }
 
 .print-menu {

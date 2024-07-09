@@ -17,3 +17,5 @@ fr:
           dossier_number_required: doit contenir le numéro du dossier
           different_templates: Les fichiers doivent avoir des noms différents
           invalid_template: Un nom de fichier est invalide
+          base:
+            invalid: "est invalide"

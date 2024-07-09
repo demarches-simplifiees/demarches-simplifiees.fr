@@ -5,11 +5,17 @@ module Instructeurs
     before_action :ensure_legitimate_groupe_instructeur, only: [:create, :update]
 
     def new
-      @export_template = ExportTemplate.default(groupe_instructeur: @groupe_instructeurs.first)
+      kind = params[:kind] == 'zip' ? 'zip' : 'xlsx'
+
+      @export_template = ExportTemplate.default(
+        groupe_instructeur: @groupe_instructeurs.first,
+        kind:
+      )
     end
 
     def create
       @export_template = ExportTemplate.new(export_template_params)
+      assign_columns
 
       if @export_template.save
         redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été créé"
@@ -23,7 +29,10 @@ module Instructeurs
     end
 
     def update
-      if @export_template.update(export_template_params)
+      @export_template.assign_attributes(export_template_params)
+      assign_columns
+
+      if @export_template.save
         redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
       else
         flash[:alert] = @export_template.errors.full_messages
@@ -46,6 +55,11 @@ module Instructeurs
     end
 
     private
+
+    def assign_columns
+      columns = params.require(:export_template)[:columns]
+      @export_template.columns = columns.map { JSON.parse(_1).symbolize_keys } if columns
+    end
 
     def export_template_params
       params.require(:export_template)

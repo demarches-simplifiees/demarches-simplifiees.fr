@@ -974,19 +974,20 @@ class Dossier < ApplicationRecord
     log_dossier_operation(avis.claimant, :demander_un_avis, avis)
   end
 
-  def spreadsheet_columns_csv(types_de_champ:)
-    spreadsheet_columns(with_etablissement: true, types_de_champ: types_de_champ)
+  def spreadsheet_columns_csv(types_de_champ:, export_template:)
+    spreadsheet_columns(with_etablissement: true, types_de_champ: types_de_champ, export_template:)
   end
 
-  def spreadsheet_columns_xlsx(types_de_champ:)
-    spreadsheet_columns(types_de_champ: types_de_champ)
+  def spreadsheet_columns_xlsx(types_de_champ:, export_template:)
+    spreadsheet_columns(types_de_champ: types_de_champ, export_template:)
   end
 
-  def spreadsheet_columns_ods(types_de_champ:)
-    spreadsheet_columns(types_de_champ: types_de_champ)
+  def spreadsheet_columns_ods(types_de_champ:, export_template:)
+    spreadsheet_columns(types_de_champ: types_de_champ, export_template:)
   end
 
-  def spreadsheet_columns(with_etablissement: false, types_de_champ:)
+  def spreadsheet_columns(with_etablissement: false, types_de_champ:, export_template: nil)
+    return champs_for_export_template(export_template) if export_template.present?
     columns = [
       ['ID', id.to_s],
       ['Email', user_email_for(:display)],
@@ -1065,7 +1066,20 @@ class Dossier < ApplicationRecord
     if procedure.routing_enabled?
       columns << ['Groupe instructeur', groupe_instructeur.label]
     end
+
     columns + champs_for_export(types_de_champ)
+  end
+
+  # Get all the champs values for the types de champ in the final list.
+  # Dossier might not have corresponding champ – display nil.
+  # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
+  def champs_for_export(types_de_champ, row_id = nil)
+    types_de_champ.flat_map do |type_de_champ|
+      champ = champ_for_export(type_de_champ, row_id)
+      type_de_champ.libelles_for_export.map do |(libelle, path)|
+        [libelle, champ&.for_export(path)]
+      end
+    end
   end
 
   def linked_dossiers_for(instructeur_or_expert)
@@ -1307,5 +1321,25 @@ class Dossier < ApplicationRecord
         dossier_id: self.id
       }
     )
+  end
+
+  def champs_for_export_template(export_template)
+    export_template.columns_without_repet.map do |column|
+      case column[:source]
+      when 'tdc'
+        type_de_champ = TypeDeChamp.find_by(stable_id: column[:stable_id])
+        path = column[:path].to_sym
+        champ = champ_for_export(type_de_champ, nil)
+        [column[:libelle], champ&.for_export(path)]
+      when 'repet'
+        type_de_champ = TypeDeChamp.find_by(stable_id: column[:stable_id])
+        path = column[:path].to_sym
+        champ = champ_for_export(type_de_champ, nil)
+        [type_de_champ.libelle_for_path(path), champ&.for_export(path)]
+        [column[:libelle], champ&.for_export(path)]
+      when 'dossier'
+        [column[:libelle], export_template.columns_meta[column[:path].to_sym][:get_value].(self)]
+      end
+    end
   end
 end
