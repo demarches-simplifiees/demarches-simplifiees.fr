@@ -1,7 +1,7 @@
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-  let(:export_template) { create(:export_template, :with_custom_content, groupe_instructeur:, content:) }
   let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:) }
+  let!(:export_template) { create(:zip_export_template, :with_custom_content, groupe_instructeur:, content:) }
   let(:dossier) { procedure.dossiers.first }
   let(:for_individual) { false }
   let(:types_de_champ_public) do
@@ -41,7 +41,7 @@ describe ExportTemplate do
   end
 
   describe 'new' do
-    let(:export_template) { build(:export_template, groupe_instructeur: groupe_instructeur) }
+    let(:export_template) { build(:zip_export_template, groupe_instructeur: groupe_instructeur) }
     it 'set default values' do
       export_template.set_default_values_for_zip
       expect(export_template.content).to eq({
@@ -192,7 +192,7 @@ describe ExportTemplate do
     end
 
     context 'for date' do
-      let(:export_template) { create(:export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
+      let(:export_template) { create(:zip_export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
       let(:dossier) { create(:dossier, :en_construction, procedure:, depose_at: Date.parse("2024/03/30")) }
       it 'convert date with dash' do
         expect(export_template.tiptap_convert(dossier, "pdf_name")).to eq "export_#{dossier.id}-2024-03-30"
@@ -212,7 +212,7 @@ describe ExportTemplate do
   end
 
   describe '#valid?' do
-    let(:subject) { build(:export_template, groupe_instructeur:, content:) }
+    let(:subject) { build(:zip_export_template, groupe_instructeur:, content:) }
     let(:ddd_text) { "DoSSIER" }
     let(:mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
     let(:ddd_mention) { mention }
