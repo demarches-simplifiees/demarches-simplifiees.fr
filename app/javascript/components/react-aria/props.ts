@@ -46,7 +46,7 @@ export const SingleComboBoxProps = s.assign(
   s.partial(
     s.object({
       selectedKey: s.nullable(s.string()),
-      emptyFilterKey: s.string()
+      emptyFilterKey: s.nullable(s.string())
     })
   )
 );
