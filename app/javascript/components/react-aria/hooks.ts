@@ -52,7 +52,7 @@ export function useSingleList({
 }: {
   defaultItems?: Item[];
   defaultSelectedKey?: string | null;
-  emptyFilterKey?: string;
+  emptyFilterKey?: string | null;
   onChange?: (item: Item | null) => void;
 }) {
   const [selectedKey, setSelectedKey] = useState(defaultSelectedKey);
@@ -85,8 +85,8 @@ export function useSingleList({
   const initialSelectedKeyRef = useRef(defaultSelectedKey);
 
   const setSelection = useEvent((key?: string | null) => {
-    const inputValue = defaultSelectedKey
-      ? items.find((item) => item.value == defaultSelectedKey)?.label
+    const inputValue = key
+      ? items.find((item) => item.value == key)?.label
       : '';
     setSelectedKey(key);
     setInputValue(inputValue ?? '');
