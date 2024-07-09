@@ -29,6 +29,8 @@ class ExportItemType < ActiveRecord::Type::Value
 
   # ruby -> db
   def serialize(value)
+    return nil if value.nil?
+
     if value.is_a?(ExportItem)
       JSON.generate({
         template: value.template,

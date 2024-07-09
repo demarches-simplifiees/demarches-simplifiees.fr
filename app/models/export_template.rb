@@ -26,15 +26,16 @@ class ExportTemplate < ApplicationRecord
   end
 
   def self.default(name: nil, kind: 'zip', groupe_instructeur:)
-    if kind == 'zip'
-      dossier_folder = ExportItem.default(prefix: 'dossier')
-      export_pdf = ExportItem.default(prefix: 'export')
-      pjs = groupe_instructeur.procedure.exportables_pieces_jointes.map { |tdc| ExportItem.default_pj(tdc) }
-    else
-      dossier_folder, export_pdf, pjs = nil, nil, []
-    end
+    # TODO: remove default values for tabular export
+    dossier_folder = ExportItem.default(prefix: 'dossier')
+    export_pdf = ExportItem.default(prefix: 'export')
+    pjs = groupe_instructeur.procedure.exportables_pieces_jointes.map { |tdc| ExportItem.default_pj(tdc) }
 
     new(name:, kind:, groupe_instructeur:, dossier_folder:, export_pdf:, pjs:)
+  end
+
+  def tabular?
+    kind != 'zip'
   end
 
   def tags

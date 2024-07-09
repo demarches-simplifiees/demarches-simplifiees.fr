@@ -4,4 +4,7 @@
 .fr-container
   %h1 Mise à jour modèle d'export
 
-  = render partial: 'form', locals: { export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }
+  - if @export_template.tabular?
+    = render partial: 'form_tabular', locals: { export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }
+  - else
+    = render partial: 'form', locals: { export_template: @export_template, groupe_instructeurs: @groupe_instructeurs }
