@@ -115,10 +115,11 @@ class ProcedureExportService
           {
             sheet_name: type_de_champ_repetition.libelle_for_export,
             instances: rows,
-            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
+            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ, export_template: @export_template) }
           }
         end
       end
+    end
   end
 
   DEFAULT_STYLES = {
@@ -152,7 +153,7 @@ class ProcedureExportService
     types_de_champ = procedure.types_de_champ_for_procedure_export.to_a
 
     Proc.new do |instance|
-      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
+      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ, export_template: @export_template)
     end
   end
 end
