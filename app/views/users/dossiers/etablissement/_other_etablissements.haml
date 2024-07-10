@@ -1,0 +1,13 @@
+
+= form_for current_user, url: siret_dossier_path(@dossier), html: { class: 'form', method: 'post' } do |f|
+  %ul.etablissements
+    - other_etablissements.each do |etablissement|
+      %li.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+        %span
+          = "#{sprintf("%03d", etablissement[:num_entreprise])} - #{etablissement[:entreprise_nom_commercial].presence || etablissement[:entreprise_raison_sociale]} - #{etablissement[:localite]}"
+        = f.button "Sélectionner", name: "user[siret]", value:"#{etablissement[:siret]}-#{sprintf("%03d", etablissement[:num_entreprise])}", class: "fr-btn fr-btn--tertiary"
+
+%p
+  = link_to "➡ Autres informations sur le site de l\'ISPF",
+  annuaire_link(etablissement.siret),
+  target: "_blank"

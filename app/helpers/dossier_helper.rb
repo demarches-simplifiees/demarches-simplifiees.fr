@@ -141,7 +141,7 @@ module DossierHelper
   def annuaire_link(siren_or_siret = nil)
     base_url = "https://www.ispf.pf/rte"
     return base_url if siren_or_siret.blank?
-    if siren_or_siret.length == 6
+    if siren_or_siret.length == 6 || siren_or_siret.length == 9
       "#{base_url}/attestation/#{siren_or_siret}"
     else
       "#{base_url}/attestation/#{siren_or_siret.first(6)}/#{siren_or_siret.last(3)}"

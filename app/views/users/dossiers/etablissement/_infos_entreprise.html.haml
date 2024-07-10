@@ -12,13 +12,10 @@
     = etablissement.naf
 
   %li
-    Adresse :
+    Adresse : #{etablissement.entreprise_nom_commercial}
     %ul
       - etablissement.adresse.split(" | ").each do |line|
         %li= line
-
-    - etablissement.adresse.split("\n").each do |line|
-      = line
 
   %p
     Nous allons également récupérer la forme juridique, la date de création, les effectifs.

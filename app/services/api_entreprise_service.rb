@@ -10,25 +10,27 @@ class APIEntrepriseService
     # (timeout, 5XX HTTP error code, etc.)
     def create_etablissement(dossier_or_champ, siret, user_id = nil)
       procedure_id = dossier_or_champ.procedure.id
-      etablissement_params =
-        if siret.length == 6
+      etablissement_params, other_etablissements =
+        if siret.length == 6 || siret.length == 9
           APIEntreprise::PfEtablissementAdapter.new(siret, procedure_id).to_params
         else
           APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params
         end
       return nil if etablissement_params.blank?
 
-      if siret.length > 6
+      if siret.length > 9
         entreprise_params = APIEntreprise::EntrepriseAdapter.new(siret, procedure_id).to_params
         etablissement_params.merge!(entreprise_params) if entreprise_params.any?
+      elsif other_etablissements && other_etablissements.size > 1
+        return [dossier_or_champ.build_etablissement(etablissement_params), other_etablissements]
       end
 
       etablissement = dossier_or_champ.build_etablissement(etablissement_params)
       etablissement.save!
-      if siret.length > 6
+      if siret.length > 9
         perform_later_fetch_jobs(etablissement, procedure_id, user_id)
       end
-      etablissement
+      [etablissement, other_etablissements]
     end
 
     def create_etablissement_as_degraded_mode(dossier_or_champ, siret, user_id = nil)
@@ -44,7 +46,7 @@ class APIEntrepriseService
 
     def update_etablissement_from_degraded_mode(etablissement, procedure_id)
       siret = etablissement.siret
-      etablissement_params = if siret.length == 6
+      etablissement_params, _other_etablissements = if siret.length == 6 || siret.length == 9
         APIEntreprise::PfEtablissementAdapter.new(siret, procedure_id).to_params
       else
         APIEntreprise::EtablissementAdapter.new(siret, procedure_id).to_params

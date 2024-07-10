@@ -38,11 +38,11 @@ describe APIEntrepriseService do
 
     context 'when service is up' do
       it 'should fetch etablissement params' do
-        expect(subject[:siret]).to eq(siret)
+        expect(subject[0][:siret]).to eq(siret)
       end
 
       it 'should fetch entreprise params' do
-        expect(subject[:entreprise_raison_sociale]).to eq(raison_sociale)
+        expect(subject[0][:entreprise_raison_sociale]).to eq(raison_sociale)
       end
 
       it_behaves_like 'schedule fetch of all etablissement params'

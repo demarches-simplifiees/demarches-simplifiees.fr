@@ -29,15 +29,14 @@
 
     - else
       %p
-        Nous avons récupéré auprès de l'ISPF les informations suivantes concernant votre établissement.
+        Nous avons récupéré auprès de l'ISPF les informations suivantes concernant vos établissements.
 
       %p
-        Ces informations seront jointes à votre dossier.
+        Veuillez préciser parmi la liste ci-dessous.
 
       = render Dsfr::CalloutComponent.new(title: raison_sociale_or_name(etablissement)) do |c|
         - c.with_body do
-          = render partial: 'users/dossiers/etablissement/infos_entreprise', locals: { etablissement: etablissement }
+          = render partial: 'users/dossiers/etablissement/other_etablissements', locals: { etablissement: etablissement, other_etablissements: @other_etablissements }
 
     %ul.fr-mt-2w.fr-mb-5w.fr-btns-group.fr-btns-group--inline
-      %li= link_to 'Utiliser un autre numéro TAHITI', "javascript:window.location = document.referrer", class: 'fr-btn fr-btn--secondary'
-      %li= link_to 'Continuer avec ces informations', url_for_dossier(@dossier), class: 'fr-btn'
+      %li= link_to 'Utiliser un autre numéro TAHITI', siret_dossier_path(@dossier), class: 'fr-btn fr-btn--secondary'

@@ -19,8 +19,11 @@ class APIEntreprise::PfAPI
   def call(resource_name, no_tahiti)
     url = url(resource_name)
     params = params(no_tahiti)
+    @typhoeus_cache ||= Typhoeus::Cache::SuccessfulRequestsRailsCache.new
 
-    parse_response_body(Typhoeus.get(url, headers: headers, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: true))
+    parse_response_body(Typhoeus.get(url, headers: headers, params: params, timeout: TIMEOUT, ssl_verifypeer: false, verbose: true,
+    cache: @typhoeus_cache,
+    cache_ttl: 1.day))
   end
 
   def url(resource_name)

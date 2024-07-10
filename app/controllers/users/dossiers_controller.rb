@@ -205,19 +205,19 @@ module Users
       end
 
       sanitized_siret = siret_model.siret
-      etablissement = begin
-        APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
-                      rescue => error
-                        if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
-                          # TODO: notify ops
-                          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
-                        else
-                          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
+      etablissement, @other_etablissements = begin
+                        APIEntrepriseService.create_etablissement(@dossier, sanitized_siret, current_user.id)
+                                             rescue => error
+                                               if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
+                                                 # TODO: notify ops
+                                                 APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, sanitized_siret, current_user.id)
+                                               else
+                                                 Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: })
 
-                          # probably random error, invite user to retry
-                          return render_siret_error(t('errors.messages.siret_network_error'))
-                        end
-      end
+                                                 # probably random error, invite user to retry
+                                                 return render_siret_error(t('errors.messages.siret_network_error'))
+                                               end
+                      end
 
       if etablissement.nil?
         return render_siret_error(t('errors.messages.siret_unknown'))
@@ -226,7 +226,35 @@ module Users
       current_user.update!(siret: sanitized_siret)
       @dossier.update!(autorisation_donnees: true)
 
-      redirect_to etablissement_dossier_path
+      if @other_etablissements && @other_etablissements.size > 1
+        redirect_to etablissements_dossier_path
+      else
+        redirect_to etablissement_dossier_path
+      end
+    end
+
+    def etablissements
+      @dossier = dossier
+
+      # Redirect if the user attempts to access the page URL directly
+      if !@dossier.etablissement
+        flash.alert = t('users.dossiers.etablissement.no_establishment')
+        return redirect_to siret_dossier_path(@dossier)
+      end
+
+      @dossier.etablissement, @other_etablissements = begin
+                                                        APIEntrepriseService.create_etablissement(@dossier, @dossier.siret[0..5], current_user.id)
+                                                      rescue => error
+                                                        if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
+                                                          # TODO: notify ops
+                                                          APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, @dossier.siret[0..5], current_user.id)
+                                                        else
+                                                          Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: @dossier.siret[0..5] })
+
+                                                          # probably random error, invite user to retry
+                                                          return render_siret_error(t('errors.messages.siret_network_error'))
+                                                        end
+                                                      end
     end
 
     def etablissement
@@ -237,6 +265,22 @@ module Users
         flash.alert = t('.no_establishment')
         return redirect_to siret_dossier_path(@dossier)
       end
+
+      # if @dossier.siret.length == 6
+      #   @dossier.etablissement, @other_etablissements = begin
+      #                                                     APIEntrepriseService.create_etablissement(@dossier, @dossier.siret, current_user.id)
+      #                                                   rescue => error
+      #                                                     if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
+      #                                                       # TODO: notify ops
+      #                                                       APIEntrepriseService.create_etablissement_as_degraded_mode(@dossier, @dossier.siret, current_user.id)
+      #                                                     else
+      #                                                       Sentry.capture_exception(error, extra: { dossier_id: @dossier.id, siret: @dossier.siret })
+
+      #                                                       # probably random error, invite user to retry
+      #                                                       return render_siret_error(t('errors.messages.siret_network_error'))
+      #                                                     end
+      #                                                   end
+      # end
     end
 
     def brouillon

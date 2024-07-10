@@ -1,0 +1,19 @@
+ul.etablissements {
+  width: fit-content;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+
+    span {
+      padding-top: 0.3rem;
+    }
+
+    button,
+    a {
+      margin-top: 0 !important;
+      height: 1rem;
+    }
+  }
+}

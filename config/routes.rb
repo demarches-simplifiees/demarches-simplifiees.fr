@@ -381,6 +381,7 @@ Rails.application.routes.draw do
         get 'siret'
         post 'siret', to: 'dossiers#update_siret'
         get 'etablissement'
+        get 'etablissements'
         get 'brouillon'
         patch 'brouillon', to: 'dossiers#update'
         post 'brouillon', to: 'dossiers#submit_brouillon'

@@ -1,0 +1,27 @@
+- if @other_etablissements.size > 1
+  %span.fr-text--sm
+    = "#{t('.label')} :"
+  %ul.fr-text--sm.fr-text-mention--grey.etablissements
+    - @other_etablissements.each do |etablissement|
+      %li.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+        %span
+          = "#{sprintf("%03d", etablissement[:num_entreprise])} - #{etablissement[:entreprise_nom_commercial].presence || etablissement[:entreprise_raison_sociale]} - #{etablissement[:localite]}"
+        %a.fr-btn.fr-btn--tertiary{ href: "javascript:void(0)", onclick: "updateEtablissement('#{etablissement[:siret]}-#{sprintf("%03d", etablissement[:num_entreprise])}', '#{@input_id}', 1)" }
+          = "Sélectionner"
+%script{ type: "text/javascript", id: rand(1000) }
+  :plain
+    function updateEtablissement(tahitiIti, inputId, refresh) {
+      var input = document.getElementById(inputId);
+
+      if (input) {
+        input.value = tahitiIti;
+        if (refresh) {
+          const event = new Event('input', {
+            bubbles: true,
+            cancelable: true,
+          });
+          input.dispatchEvent(event);
+        }
+      }
+    };
+    #{@other_etablissements.size == 1 ? "updateEtablissement('#{@other_etablissements[0][:siret]}-#{sprintf("%03d", @other_etablissements[0][:num_entreprise])}', '#{@input_id}', 0)" : ''};

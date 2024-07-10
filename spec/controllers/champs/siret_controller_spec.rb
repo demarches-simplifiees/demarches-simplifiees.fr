@@ -165,14 +165,25 @@ describe Champs::SiretController, type: :controller do
       end
 
       context 'when the Numero Tahiti informations are retrieved successfully', vcr: { cassette_name: 'pf_api_entreprise' } do
-        let(:siret) { '075390' }
+        let(:siret) { '075390001' }
 
         subject! { get :show, params: params, format: :turbo_stream }
 
         it 'populates the etablissement and SIRET on the model' do
           champ.reload
           expect(champ.etablissement.siret).to eq(siret)
-          expect(champ.reload.etablissement.naf).to eq("6419Z | 5221Z")
+          expect(champ.reload.etablissement.naf).to eq("6419Z")
+          expect(dossier.reload.etablissement).to eq(nil)
+        end
+      end
+
+      context 'when the Numero Tahiti informations are retrieved successfully but without numero etablissement', vcr: { cassette_name: 'pf_api_entreprise' } do
+        let(:siret) { '075390' }
+
+        subject! { get :show, params: params, format: :turbo_stream }
+
+        it 'does not populates the etablissement and SIRET on the model' do
+          expect(champ.reload.etablissement).to eq(nil)
           expect(dossier.reload.etablissement).to eq(nil)
         end
       end

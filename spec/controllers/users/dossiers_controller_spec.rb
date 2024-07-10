@@ -358,7 +358,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'with an invalid SIRET' do
-      let(:params_siret) { '000 000 000' }
+      let(:params_siret) { '000 000 00' }
 
       it_behaves_like 'the request fails with an error', ["Le champ « Siret » " + I18n.t('activemodel.errors.models.siret.attributes.siret.length')]
     end

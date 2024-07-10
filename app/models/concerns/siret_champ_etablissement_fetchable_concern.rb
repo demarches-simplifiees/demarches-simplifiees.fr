@@ -1,15 +1,19 @@
 module SiretChampEtablissementFetchableConcern
   extend ActiveSupport::Concern
 
-  attr_reader :etablissement_fetch_error_key
+  attr_reader :etablissement_fetch_error_key, :other_etablissements
 
   def fetch_etablissement!(siret, user)
     return clear_etablissement!(:empty) if siret.empty?
     return clear_etablissement!(:invalid_length) if invalid_because?(siret, :length) # i18n-tasks-use t('errors.messages.invalid_siret_length')
     return clear_etablissement!(:invalid_checksum) if invalid_because?(siret, :checksum) # i18n-tasks-use t('errors.messages.invalid_siret_checksum')
-    return clear_etablissement!(:not_found) unless (etablissement = APIEntrepriseService.create_etablissement(self, siret, user&.id)) # i18n-tasks-use t('errors.messages.siret_not_found')
+    return clear_etablissement!(:not_found) unless (etablissement, @other_etablissements = APIEntrepriseService.create_etablissement(self, siret, user&.id)) # i18n-tasks-use t('errors.messages.siret_not_found')
 
-    update!(etablissement: etablissement)
+    if @other_etablissements && other_etablissements.size > 1
+      self.etablissement = etablissement
+    else
+      update!(etablissement: etablissement)
+    end
   rescue => error
     if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
       # TODO: notify ops

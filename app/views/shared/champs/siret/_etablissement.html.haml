@@ -22,5 +22,7 @@
   - if siret.present? # NOTE: probably always true because siret is a symbol or the string value
     - if siret == etablissement&.siret && raison_sociale_or_name(etablissement).present?
       = render EditableChamp::EtablissementTitreComponent.new(etablissement: etablissement)
+      - if other_etablissements
+        = render EditableChamp::OtherEtablissementsListComponent.new(other_etablissements: other_etablissements, input_id: @champ.input_id)
     - else
       %p.fr-info-text Ce numéro TAHITI existe, nous en récupérons les informations.

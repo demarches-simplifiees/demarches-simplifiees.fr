@@ -15,6 +15,8 @@ class SiretFormatValidator < ActiveModel::EachValidator
     case value&.length
     when 6
       value.match?(/^[0-9A-Z]\d{5}$/)
+    when 9
+      value.match?(/^[0-9A-Z]\d{8}$/)
     when 14
       value.match?(/^\d{14}$/)
     else
@@ -32,7 +34,7 @@ class SiretFormatValidator < ActiveModel::EachValidator
   end
 
   def siret_is_numero_tahiti(value)
-    return value.length == 6
+    return value.length == 6 || value.length == 9
   end
 
   def luhn_checksum(value)
