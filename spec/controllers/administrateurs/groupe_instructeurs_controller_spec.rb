@@ -359,7 +359,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'when the admin wants to assign an instructor who is already assigned on this procedure' do
       let(:instructeur) { create(:instructeur) }
       before { procedure_non_routee.groupe_instructeurs.first.add_instructeurs(emails: [instructeur.user.email]) }
-      let(:emails) { [instructeur.email].to_json }
+      let(:emails) { [instructeur.email] }
       it { expect(subject).to render_template(:index) }
     end
 

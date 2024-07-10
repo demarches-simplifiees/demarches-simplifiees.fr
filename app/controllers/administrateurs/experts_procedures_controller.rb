@@ -9,7 +9,7 @@ module Administrateurs
     end
 
     def create
-      emails = params['emails'].presence || [].to_json
+      emails = params['emails'].presence || []
 
       emails = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))

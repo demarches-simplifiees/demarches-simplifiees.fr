@@ -20,7 +20,7 @@ module Instructeurs
     end
 
     def add_instructeur
-      email = instructeur_email.present? ? [instructeur_email].to_json : [].to_json
+      email = instructeur_email.present? ? [instructeur_email] : []
       email = check_if_typo(email)&.first
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
 
