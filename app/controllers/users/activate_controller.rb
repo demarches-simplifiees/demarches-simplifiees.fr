@@ -30,6 +30,20 @@ class Users::ActivateController < ApplicationController
     end
   end
 
+  def confirm_email
+    user = User.find_by(confirmation_token: params[:token])
+    if user && user.email_verified_at
+      flash[:notice] = "Votre email est déjà vérifié"
+    elsif user && user.confirmation_sent_at > 2.days.ago
+      user.update!(email_verified_at: Time.zone.now)
+      flash[:notice] = 'Votre email a bien été vérifié'
+    else
+      flash[:alert] = "le lien est trop vieux"
+      #to do relancer un lien if user
+    end
+    redirect_to root_path(user)
+  end
+
   private
 
   def user_params
