@@ -165,8 +165,7 @@ class Attachment::EditComponent < ApplicationComponent
       # There is always a single input by champ, its id must match the label "for" attribute.
       return champ.input_id
     end
-
-    helpers.field_id(@form_object_name || @attached_file.record, attribute_name)
+    @form_object_name || dom_id(@attached_file.record, attribute_name)
   end
 
   def auto_attach_url
