@@ -20,7 +20,7 @@ class TypesDeChamp::DecimalNumberTypeDeChamp < TypesDeChamp::TypeDeChampBase
     private
 
     def champ_formatted_value(champ)
-      champ.valid_value&.to_f
+      champ.value&.to_f
     end
   end
 end

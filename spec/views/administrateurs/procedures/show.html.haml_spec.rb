@@ -16,17 +16,11 @@ describe 'administrateurs/procedures/show', type: :view do
         render
       end
 
-      describe 'publish button is visible' do
-        it { expect(rendered).to have_css('#publish-procedure-link') }
-        it { expect(rendered).not_to have_css('#close-procedure-link') }
-      end
-
-      describe 'procedure path is not customized' do
-        it { expect(rendered).to have_content('En test') }
-      end
-
-      describe 'archive button' do
-        it { expect(rendered).not_to have_css('#archive-procedure') }
+      it "render content" do
+        expect(rendered).to have_css('#publish-procedure-link')
+        expect(rendered).not_to have_css('#close-procedure-link')
+        expect(rendered).to have_content('En test')
+        expect(rendered).not_to have_css('#archive-procedure')
       end
     end
   end

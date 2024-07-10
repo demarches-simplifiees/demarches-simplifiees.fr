@@ -52,11 +52,14 @@ export function useSingleList({
 }: {
   defaultItems?: Item[];
   defaultSelectedKey?: string | null;
-  emptyFilterKey?: string;
+  emptyFilterKey?: string | null;
   onChange?: (item: Item | null) => void;
 }) {
   const [selectedKey, setSelectedKey] = useState(defaultSelectedKey);
-  const items = useMemo(() => defaultItems || [], [defaultItems]);
+  const items = useMemo(
+    () => (defaultItems ? distinctBy(defaultItems, 'value') : []),
+    [defaultItems]
+  );
   const selectedItem = useMemo(
     () => items.find((item) => item.value == selectedKey) ?? null,
     [items, selectedKey]
@@ -82,8 +85,8 @@ export function useSingleList({
   const initialSelectedKeyRef = useRef(defaultSelectedKey);
 
   const setSelection = useEvent((key?: string | null) => {
-    const inputValue = defaultSelectedKey
-      ? items.find((item) => item.value == defaultSelectedKey)?.label
+    const inputValue = key
+      ? items.find((item) => item.value == key)?.label
       : '';
     setSelectedKey(key);
     setInputValue(inputValue ?? '');
@@ -157,7 +160,10 @@ export function useMultiList({
     () => new Set(defaultSelectedKeys ?? [])
   );
   const [inputValue, setInputValue] = useState('');
-  const items = useMemo(() => defaultItems || [], [defaultItems]);
+  const items = useMemo(
+    () => (defaultItems ? distinctBy(defaultItems, 'value') : []),
+    [defaultItems]
+  );
   const itemsIndex = useMemo(() => {
     const index = new Map<string, Item>();
     for (const item of items) {
@@ -472,4 +478,9 @@ export function useOnFormReset(onReset?: () => void) {
   }, [onReset, onResetListener]);
 
   return ref;
+}
+
+function distinctBy<T>(array: T[], key: keyof T): T[] {
+  const keys = array.map((item) => item[key]);
+  return array.filter((item, index) => keys.indexOf(item[key]) == index);
 }

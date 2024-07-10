@@ -1,0 +1,13 @@
+---
+en:
+  title: Procedure in testing
+  intro_procedure_brouillon_html: This procedure is currently in <b>testing</b>
+  intro_revision_draft_html: This page allows you to <b>test</b> a new version of the procedure
+  body_general_html: |
+    and this page is reserved for the administration in charge of its deployment.
+    If you start or submit a file, it may be <b>deleted at any time</b> without notice, even if it is accepted later.
+  body_user: |
+    If this link was shared with you, please contact the service in charge of this procedure
+    to obtain the public link for the procedure in order to submit your application.
+  body_admin_procedure_brouillon: Do not share this link with your users. When you publish the procedure, you will access the public link for the procedure to be shared.
+  body_admin_revision_draft: Do not share this link with your users, but rather the public link for the procedure displayed in your administrator dashboard.

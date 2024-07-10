@@ -24,7 +24,8 @@ module ApplicationController::LongLivedAuthenticityToken
     cookies.signed[COOKIE_NAME] = {
       value: csrf_token,
       expires: 1.year.from_now,
-      httponly: true
+      httponly: true,
+      secure: Rails.env.production?
     }
     session[:_csrf_token] = csrf_token
 

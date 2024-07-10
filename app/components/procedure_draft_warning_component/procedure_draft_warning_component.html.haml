@@ -1,0 +1,10 @@
+= render Dsfr::AlertComponent.new(state: :warning, extra_class_names:, title: t(".title")) do |c|
+  - c.with_body do
+    %p
+      = revision.procedure.brouillon? ? t(".intro_procedure_brouillon_html") : t(".intro_revision_draft_html")
+      = t(".body_general_html")
+
+    - if admin?
+      %p= revision.procedure.brouillon? ? t(".body_admin_procedure_brouillon") : t(".body_admin_revision_draft")
+    - else
+      %p= t(".body_user")

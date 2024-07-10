@@ -30,10 +30,6 @@ class Attachment::MultipleComponent < ApplicationComponent
     @attachments.each_with_index(&block)
   end
 
-  def can_attach_next?
-    @attachments.count < @max
-  end
-
   def empty_component_id
     champ.present? ? "attachment-multiple-empty-#{champ.public_id}" : "attachment-multiple-empty-generic"
   end

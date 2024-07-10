@@ -12,8 +12,8 @@ class AgentConnect::AgentController < ApplicationController
   def login
     uri, state, nonce = AgentConnectService.authorization_uri
 
-    cookies.encrypted[STATE_COOKIE_NAME] = state
-    cookies.encrypted[NONCE_COOKIE_NAME] = nonce
+    cookies.encrypted[STATE_COOKIE_NAME] = { value: state, secure: Rails.env.production?, httponly: true }
+    cookies.encrypted[NONCE_COOKIE_NAME] = { value: nonce, secure: Rails.env.production?, httponly: true }
 
     redirect_to uri, allow_other_host: true
   end

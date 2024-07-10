@@ -247,7 +247,9 @@ module Instructeurs
       @export_templates = current_instructeur.export_templates_for(@procedure).includes(:groupe_instructeur)
       cookies.encrypted[cookies_export_key] = {
         value: DateTime.current,
-        expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT
+        expires: Export::MAX_DUREE_GENERATION + Export::MAX_DUREE_CONSERVATION_EXPORT,
+        httponly: true,
+        secure: Rails.env.production?
       }
 
       respond_to do |format|
