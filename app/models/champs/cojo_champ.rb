@@ -50,7 +50,7 @@ class Champs::COJOChamp < Champ
 
   def update_external_id
     if accreditation_number_changed? || accreditation_birthdate_changed?
-      if accreditation_number.present? && accreditation_birthdate.present? && /\A\d+\z/.match?(accreditation_number)
+      if accreditation_number.present? && accreditation_birthdate.present? && /\A[\d-]+\z/.match?(accreditation_number)
         self.external_id = { accreditation_number:, accreditation_birthdate: }.to_json
       else
         self.external_id = nil

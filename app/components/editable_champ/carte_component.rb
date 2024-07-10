@@ -4,10 +4,14 @@ class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
     :fieldset
   end
 
-  def initialize(**args)
-    super(**args)
-
-    @autocomplete_component = EditableChamp::ComboSearchComponent.new(**args)
+  def react_props
+    {
+      feature_collection: @champ.to_feature_collection,
+      champ_id: @champ.input_id,
+      url: update_path,
+      adresse_source: data_sources_data_source_adresse_path,
+      options: @champ.render_options
+    }
   end
 
   def update_path

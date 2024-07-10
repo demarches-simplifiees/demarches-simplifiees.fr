@@ -1,5 +1,5 @@
 import { Editor } from '@tiptap/core';
-import { z } from 'zod';
+import * as s from 'superstruct';
 
 type EditorAction = {
   run(): void;
@@ -11,7 +11,7 @@ export function getAction(
   editor: Editor,
   button: HTMLButtonElement
 ): EditorAction {
-  return tiptapActionSchema.parse(button.dataset)(editor);
+  return s.create(button.dataset, tiptapActionSchema)(editor);
 }
 
 const EDITOR_ACTIONS: Record<string, (editor: Editor) => EditorAction> = {
@@ -109,8 +109,15 @@ const EDITOR_ACTIONS: Record<string, (editor: Editor) => EditorAction> = {
   })
 };
 
-const tiptapActionSchema = z
-  .object({
-    tiptapAction: z.enum(Object.keys(EDITOR_ACTIONS) as [string, ...string[]])
-  })
-  .transform(({ tiptapAction }) => EDITOR_ACTIONS[tiptapAction]);
+const EditorActionFn = s.define<(editor: Editor) => EditorAction>(
+  'EditorActionFn',
+  (fn) => typeof fn == 'function'
+);
+
+const tiptapActionSchema = s.coerce(
+  EditorActionFn,
+  s.type({
+    tiptapAction: s.enums(Object.keys(EDITOR_ACTIONS) as [string, ...string[]])
+  }),
+  ({ tiptapAction }) => EDITOR_ACTIONS[tiptapAction]
+);
