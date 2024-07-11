@@ -303,7 +303,7 @@ fr:
     registrations:
       new:
         title: "Creation de compte sur %{name}"
-        subtitle: "Se créer un compte en choisissant un identifiant"
+        subtitle: "Se créer un compte avec une adresse email"
         email_label: 'Email'
         password_label: "Mot de passe (%{min_length} caractères minimum)"
         password_message: "Votre mot de passe doit contenir :"
