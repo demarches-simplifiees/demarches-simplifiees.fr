@@ -25,6 +25,9 @@ module Administrateurs
 
     def options
       @procedure = procedure
+      if params[:state] == 'choix' && @procedure.active_revision.simple_routable_types_de_champ.none?
+        configurate_routage_custom
+      end
     end
 
     def ajout
