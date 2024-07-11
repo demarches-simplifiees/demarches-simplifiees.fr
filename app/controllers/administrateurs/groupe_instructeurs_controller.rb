@@ -86,16 +86,20 @@ module Administrateurs
 
     def wizard
       if params[:choice][:state] == 'routage_custom'
-        new_label = procedure.defaut_groupe_instructeur.label + ' bis'
-        procedure.groupe_instructeurs
-          .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
-
-        procedure.toggle_routing
-
-        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+        configurate_routage_custom
       elsif params[:choice][:state] == 'routage_simple'
         redirect_to simple_routing_admin_procedure_groupe_instructeurs_path
       end
+    end
+
+    def configurate_routage_custom
+      new_label = procedure.defaut_groupe_instructeur.label + ' bis'
+      procedure.groupe_instructeurs
+        .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+
+      procedure.toggle_routing
+
+      redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
     def destroy_all_groups_but_defaut
