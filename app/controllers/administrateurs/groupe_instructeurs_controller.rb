@@ -41,7 +41,7 @@ module Administrateurs
       @procedure = procedure
       stable_id = params[:create_simple_routing][:stable_id].to_i
 
-      tdc = @procedure.active_revision.routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
+      tdc = @procedure.active_revision.simple_routable_types_de_champ.find { |tdc| tdc.stable_id == stable_id }
 
       case tdc.type_champ
       when TypeDeChamp.type_champs.fetch(:departements)

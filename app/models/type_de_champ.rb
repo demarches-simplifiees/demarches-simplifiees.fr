@@ -110,7 +110,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }
 
-  ROUTABLE_TYPES = [
+  SIMPLE_ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
     type_champs.fetch(:communes),
     type_champs.fetch(:departements),
@@ -652,8 +652,8 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def routable?
-    type_champ.in?(ROUTABLE_TYPES)
+  def simple_routable?
+    type_champ.in?(SIMPLE_ROUTABLE_TYPES)
   end
 
   def conditionable?

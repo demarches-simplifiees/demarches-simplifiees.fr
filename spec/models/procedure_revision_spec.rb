@@ -1144,7 +1144,7 @@ describe ProcedureRevision do
     }
   end
 
-  describe '#routable_types_de_champ' do
+  describe '#simple_routable_types_de_champ' do
     let(:procedure) do
       create(:procedure, types_de_champ_public: [
         { type: :text, libelle: 'l1' },
@@ -1156,6 +1156,6 @@ describe ProcedureRevision do
       ])
     end
 
-    it { expect(draft.routable_types_de_champ.pluck(:libelle)).to eq(['l2', 'l3', 'l4', 'l5', 'l6']) }
+    it { expect(draft.simple_routable_types_de_champ.pluck(:libelle)).to eq(['l2', 'l3', 'l4', 'l5', 'l6']) }
   end
 end
