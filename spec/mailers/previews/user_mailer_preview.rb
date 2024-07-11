@@ -25,7 +25,7 @@ class UserMailerPreview < ActionMailer::Preview
   end
 
   def invite_tiers
-    UserMailer.invite_tiers(user, 'aedfa0d0', Dossier.first )
+    UserMailer.invite_tiers(user, 'aedfa0d0', Dossier.first)
   end
 
   def invite_gestionnaire

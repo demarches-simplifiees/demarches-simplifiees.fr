@@ -147,7 +147,7 @@ module Users
     def update_identite
       @dossier = dossier
       @no_description = true
-      email = dossier_params[:individual_attributes][:email]
+      email = dossier_params.dig('individual_attributes', 'email')
 
       if @dossier.update(dossier_params) && @dossier.individual.valid?
         # verify for_tiers email

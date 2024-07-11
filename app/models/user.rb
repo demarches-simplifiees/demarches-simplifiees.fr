@@ -138,8 +138,8 @@ class User < ApplicationRecord
 
   def self.create_or_promote_to_tiers(email, password, dossier)
     user = User
-        .create_with(password: password, confirmed_at: Time.zone.now)
-        .find_or_create_by(email: email)
+      .create_with(password: password, confirmed_at: Time.zone.now)
+      .find_or_create_by(email: email)
 
     if user.valid? && user.unverified_email?
       user.invite_tiers!(dossier)
