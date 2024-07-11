@@ -793,6 +793,41 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     end
   end
 
+  describe '#options' do
+    context 'with a simple routable type de champ' do
+      let!(:procedure) do
+        create(:procedure,
+               types_de_champ_public: [
+                 { type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }
+               ],
+               administrateurs: [admin])
+      end
+      before { get :options, params: { procedure_id: procedure.id, state: 'choix' } }
+
+      it do
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('Choix du type de routage')
+        expect(procedure.reload.routing_enabled).to be_falsey
+      end
+    end
+
+    context 'with a conditionable but not simple routable type de champ' do
+      let!(:procedure) do
+        create(:procedure,
+               types_de_champ_public: [
+                 { type: :integer_number }
+               ],
+               administrateurs: [admin])
+      end
+      before { get :options, params: { procedure_id: procedure.id, state: 'choix' } }
+
+      it do
+        expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure))
+        expect(procedure.reload.routing_enabled).to be_truthy
+      end
+    end
+  end
+
   describe '#create_simple_routing' do
     context 'with a drop_down_list type de champ' do
       let!(:procedure3) do

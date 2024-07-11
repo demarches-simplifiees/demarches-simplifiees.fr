@@ -4,7 +4,7 @@ fr:
     Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs.
   routing_configuration_notice_2_html: |
     <p>Pour le configurer, votre formulaire doit comporter
-    au moins un champ de type « choix simple », « communes », « epci », « départements » ou « régions ».</p>
+    au moins un champ de type %{conditionable_types}.</p>
     <p>Ajoutez ce champ dans la page <a href="%{path}">« Configuration des champs »</a>.</p>
   delete_title: Aucun dossier ne sera supprimé. Les groupes d'instructeurs vont être supprimés. Seuls les instructeurs du groupe « %{defaut_label} » resteront affectés à la démarche.
   delete_confirmation: |
