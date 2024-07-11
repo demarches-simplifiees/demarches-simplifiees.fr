@@ -28,7 +28,6 @@ class Attachment::EditComponent < ApplicationComponent
 
     # Utilisation du premier attachement comme référence pour la rétrocompatibilité
     @attachment = @attachments.first
-
     # When parent form has nested attributes, pass the form builder object_name
     # to correctly infer the input attribute name.
     @form_object_name = kwargs.delete(:form_object_name)
@@ -55,7 +54,7 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def destroy_attachment_path
-    attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id)
+    attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id, auto_attach_url: @auto_attach_url, view_as: @view_as)
   end
 
   def attachment_input_class
@@ -66,7 +65,7 @@ class Attachment::EditComponent < ApplicationComponent
     track_issue_with_missing_validators if missing_validators?
 
     options = {
-      class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true, "hidden": persisted?),
+      class: class_names("fr-upload attachment-input": true, "#{attachment_input_class}": true),
       direct_upload: @direct_upload,
       id: input_id,
       aria: { describedby: champ&.describedby_id },
@@ -78,7 +77,7 @@ class Attachment::EditComponent < ApplicationComponent
 
     options.merge!(has_content_type_validator? ? { accept: accept_content_type } : {})
     options[:multiple] = true if as_multiple?
-    options[:disabled] = true if @max && @index >= @max
+    options[:disabled] = true if (@max && @index >= @max) || persisted?
 
     options
   end
