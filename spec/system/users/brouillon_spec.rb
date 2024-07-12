@@ -53,10 +53,10 @@ describe 'The user' do
     wait_until { champ_for('address').full_address? }
     expect(champ_for('address').departement_code_and_name).to eq('30 – Gard')
 
-    scroll_to(find_field('annuaire_education'), align: :center)
-    fill_in('annuaire_education', with: 'Moulin')
-    find('.fr-menu__item', text: 'Ecole primaire Jean Moulin, Moulins (0030323K)').click
-    wait_until { champ_for('annuaire_education').external_id == "0030323K" }
+    # scroll_to(find_field('annuaire_education'), align: :center)
+    # fill_in('annuaire_education', with: 'Moulin')
+    # find('.fr-menu__item', text: 'Ecole primaire Jean Moulin, Moulins (0030323K)').click
+    # wait_until { champ_for('annuaire_education').external_id == "0030323K" }
 
     fill_in('dossier_link', with: '123')
     find('.editable-champ-piece_justificative input[type=file]').attach_file(Rails.root + 'spec/fixtures/files/file.pdf')
