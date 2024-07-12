@@ -68,7 +68,8 @@ export const RemoteComboBoxProps = s.assign(
       minimumInputLength: s.number(),
       limit: s.number(),
       allowsCustomValue: s.boolean(),
-      debounce: s.number()
+      debounce: s.number(),
+      coerce: s.enums(['Default', 'AnnuaireEducation'])
     })
   )
 );
