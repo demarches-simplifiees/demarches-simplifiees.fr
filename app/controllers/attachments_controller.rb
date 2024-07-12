@@ -43,8 +43,9 @@ class AttachmentsController < ApplicationController
   def attachment_options
     {
       attached_file: @attachment.record.public_send(@attachment.name),
-      auto_attach_url: params[:auto_attach_url],
-      view_as: params[:view_as]&.to_sym
+      view_as: params[:view_as]&.to_sym,
+      direct_upload: params[:direct_upload] == "true",
+      auto_attach_url: params[:direct_upload] == "true" ? params[:auto_attach_url] : nil
     }
   end
 end
