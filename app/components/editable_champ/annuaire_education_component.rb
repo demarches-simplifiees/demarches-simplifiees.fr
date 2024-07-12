@@ -10,6 +10,7 @@ class EditableChamp::AnnuaireEducationComponent < EditableChamp::EditableChampBa
       selected_key: @champ.external_id,
       items: @champ.selected_items,
       loader: data_sources_data_source_education_path,
-      minimum_input_length: 3)
+      debounce: 500,
+      minimum_input_length: 5)
   end
 end

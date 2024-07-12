@@ -427,14 +427,15 @@ export const createLoader: (
       });
       if (response.ok) {
         const json = await response.json();
-        const [err, result] = s.validate(json, s.array(Item), { coerce: true });
+        const [err, items] = s.validate(json, s.array(Item), { coerce: true });
         if (!err) {
-          const items = matchSorter(result, filterText, {
-            keys: ['label']
-          });
-          return {
-            items: limit ? items.slice(0, limit) : items
-          };
+          if (items.length > limit) {
+            const filteredItems = matchSorter(items, filterText, {
+              keys: ['label']
+            });
+            return { items: filteredItems.slice(0, limit) };
+          }
+          return { items };
         }
       }
       return { items: [] };

@@ -231,6 +231,7 @@ export function RemoteComboBox({
     allowsCustomValue,
     minimumInputLength,
     limit,
+    debounce,
     formValue,
     name,
     form,
@@ -252,6 +253,7 @@ export function RemoteComboBox({
     allowsCustomValue,
     defaultItems,
     defaultSelectedKey,
+    debounce,
     load,
     onChange: (item) => {
       onChange?.(item);
