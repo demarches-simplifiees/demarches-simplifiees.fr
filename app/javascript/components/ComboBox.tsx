@@ -48,6 +48,7 @@ export function ComboBox({
     <AriaComboBox
       {...props}
       className={`fr-ds-combobox ${className ?? ''}`}
+      menuTrigger="focus"
       shouldFocusWrap={true}
     >
       {label ? <Label className="fr-label">{label}</Label> : null}
