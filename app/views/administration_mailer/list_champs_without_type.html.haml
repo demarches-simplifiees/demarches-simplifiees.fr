@@ -1,0 +1,15 @@
+- content_for(:title, "Champs orphelins")
+
+%p
+  Voici la liste des champs orphelins
+
+%table
+  - @champs.find_each do |champ|
+    %tr
+      %td= champ.type
+      %td= champ.value
+      %td= champ.dossier.id
+      %td= champ.procedure.id
+      %td= champ.procedure.libelle
+
+= render partial: "layouts/mailers/signature"

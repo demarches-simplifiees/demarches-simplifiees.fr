@@ -21,6 +21,12 @@ class AdministrationMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL)
   end
 
+  def list_champs_without_type
+    @champs = Champ.includes(dossier: :procedure).where(type_de_champ_id: nil).order("procedures.id")
+    subject = "Liste de champs sans type"
+    mail(to: CONTACT_EMAIL, subject:)
+  end
+
   def procedure_published(procedure)
     @procedure = procedure
     subject = "Une nouvelle démarche vient d'être publiée"
