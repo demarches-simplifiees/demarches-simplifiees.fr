@@ -21,14 +21,14 @@ class ExportItem
 
   def template_json = template.to_json
 
-  def template_string = TiptapService.new.to_path(template)
+  def template_string = TiptapService.new.to_texts_and_tags(template)
 
   def path(dossier, attachment: nil, row_index: nil, index: nil)
     used_tags = TiptapService.used_tags_and_libelle_for(template)
     substitutions = tags_substitutions(used_tags, dossier, escape: false, memoize: true)
     substitutions['original-filename'] = attachment.filename.base if attachment
 
-    TiptapService.new.to_path(template, substitutions) + suffix(attachment, row_index, index)
+    TiptapService.new.to_texts_and_tags(template, substitutions) + suffix(attachment, row_index, index)
   end
 
   def ==(other)
