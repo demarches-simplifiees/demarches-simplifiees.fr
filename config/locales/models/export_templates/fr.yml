@@ -15,3 +15,5 @@ fr:
       models:
         export_template:
           dossier_number_mandatory: doit contenir le numéro du dossier
+          different_templates: Les fichiers doivent avoir des noms différents
+          invalid_template: Un nom de fichier est invalide
