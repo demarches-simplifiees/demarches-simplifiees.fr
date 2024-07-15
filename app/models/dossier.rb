@@ -894,6 +894,7 @@ class Dossier < ApplicationRecord
 
     resolve_pending_correction!
     process_sva_svr!
+    remove_piece_justificative_file_not_visible!
   end
 
   def process_declarative!
@@ -932,6 +933,10 @@ class Dossier < ApplicationRecord
 
   def remove_titres_identite!
     champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+  end
+
+  def remove_piece_justificative_file_not_visible!
+    champs.filter { _1.piece_justificative_file.attached? && !_1.visible? && _1.piece_justificative_file.purge_later }
   end
 
   def check_mandatory_and_visible_champs
