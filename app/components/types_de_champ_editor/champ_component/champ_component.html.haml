@@ -132,7 +132,9 @@
               - if type_de_champ.titre_identite?
                 = render Dsfr::AlertComponent.new(state: :info, heading_level: 'p') do |c|
                   - c.with_body do
-                    Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation, du refus ou du classement sans suite du dossier. Aussi, pour des raisons de sécurité, un filigrane est automatiquement ajouté aux images.
+                    Dans le cadre de la RGPD, le titre d’identité sera supprimé lors de l’acceptation, du refus ou du classement sans suite du dossier.<br />
+                    Aussi, pour des raisons de sécurité, un filigrane est automatiquement ajouté aux images.<br />
+                    Finalement, le titre d’identité ne sera ni disponible dans les zip de dossiers, ni téléchargeable par API.
               - elsif procedure.piece_justificative_multiple?
                 %p Les usagers pourront envoyer plusieurs fichiers si nécessaire.
           - if type_de_champ.carte? || type_de_champ.te_fenua?
