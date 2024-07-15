@@ -82,12 +82,14 @@ fr:
               empty_repetition: 'doit comporter au moins un champ répétable'
               empty_drop_down: 'doit comporter au moins un choix sélectionnable'
               inconsistent_header_section: "%{custom_message}"
+              expression_reguliere_invalid: "est invalide, veuillez la corriger"
             draft_types_de_champ_private:
               format: 'L’annotation privée %{message}'
               invalid_condition: "a une logique conditionnelle invalide"
               empty_repetition: 'doit comporter au moins un champ répétable'
               empty_drop_down: 'doit comporter au moins un choix sélectionnable'
               inconsistent_header_section: "%{custom_message}"
+              expression_reguliere_invalid: "est invalide, veuillez la corriger"
             attestation_template:
               format: "%{attribute} %{message}"
             initiated_mail:
