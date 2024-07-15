@@ -18,7 +18,7 @@ module Instructeurs
     after_action :mark_annotations_privees_as_read, only: [:annotations_privees, :update_annotations]
 
     def extend_conservation
-      dossier.extend_conservation(1.month)
+      dossier.extend_conservation(1.month, current_instructeur)
       flash[:notice] = t('views.instructeurs.dossiers.archived_dossier')
       redirect_back(fallback_location: instructeur_dossier_path(@dossier.procedure, @dossier))
     end

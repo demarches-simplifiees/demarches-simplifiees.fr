@@ -12,7 +12,7 @@ describe 'user access to the list of their dossiers', js: true do
   let!(:dossier_for_tiers)          { create(:dossier, :en_instruction, :for_tiers_with_notification, user: user) }
   let!(:dossier_en_construction_with_accuse_lecture) { create(:dossier, :en_construction, user: user, procedure: procedure_accuse_lecture) }
   let!(:dossier_accepte_with_accuse_lecture) { create(:dossier, :accepte, user: user, procedure: procedure_accuse_lecture) }
-  let!(:dossier_en_construction_expire) { create(:dossier, :en_construction, :hidden_by_expired, user: user) }
+  let!(:dossier_en_construction_expire) { create(:dossier, :with_individual, :with_populated_champs, :en_construction, :hidden_by_expired, user: user) }
   let!(:dossier_traite_expire) { create(:dossier, :accepte, :hidden_by_expired, user: user) }
   let!(:dossier_en_construction_supprime) { create(:dossier, :with_individual, :with_populated_champs, :en_construction, :hidden_by_user, user: user) }
   let(:dossiers_per_page) { 25 }
@@ -222,7 +222,7 @@ describe 'user access to the list of their dossiers', js: true do
       click_on "3 supprimés récemment"
       expect(page).to have_link('Restaurer', href: restore_dossier_path(dossier_en_construction_supprime))
       expect(page).to have_button('Restaurer et étendre la conservation')
-      expect(page).to have_link('imprimer', href: dossier_path("#{dossier_traite_expire.id}.pdf"))
+      expect(page).to have_link('Télécharger mon dossier', href: dossier_path("#{dossier_traite_expire.id}.pdf"))
     end
 
     context 'when user clicks on restore button', js: true do

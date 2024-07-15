@@ -18,7 +18,7 @@
 
           - if dossier.hidden_by_reason == 'expired'
             %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_user_at.to_date))
+              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_expired_at.to_date))
           - elsif dossier.hidden_by_user?
             %p.fr-icon--sm.fr-icon-delete-line
               = t('views.users.dossiers.dossiers_list.deleted_by_user', date: l(dossier.hidden_by_user_at.to_date))
@@ -113,7 +113,7 @@
 
 
             - else
-              = render(partial: 'users/dossiers/show/print_dossier', locals: { dossier: dossier })
+              = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
 
   = paginate dossiers, views_prefix: 'shared'
 

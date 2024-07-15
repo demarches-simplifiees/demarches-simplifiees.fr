@@ -57,7 +57,7 @@ module Users
       @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
-      @dossiers_supprimes_recemment = current_user.dossiers.hidden_by_user.merge(ordered_dossiers)
+      @dossiers_supprimes_recemment = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
       @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
       @dossiers_supprimes_definitivement = deleted_dossiers
@@ -254,12 +254,7 @@ module Users
     end
 
     def extend_conservation
-      dossier.extend_conservation(dossier.procedure.duree_conservation_dossiers_dans_ds.months)
-
-      if dossier.hidden_by_reason == 'expired'
-        dossier.update!(hidden_by_administration_at: nil, hidden_by_user_at: nil, hidden_by_reason: nil)
-      end
-
+      dossier.extend_conservation(dossier.procedure.duree_conservation_dossiers_dans_ds.months, current_user)
       flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
       redirect_back(fallback_location: dossier_path(@dossier))
     end

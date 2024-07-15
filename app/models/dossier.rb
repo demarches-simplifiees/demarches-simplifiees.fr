@@ -222,10 +222,11 @@ class Dossier < ApplicationRecord
   scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
   scope :hidden_by_expired,         -> { where(hidden_by_reason: 'expired') }
-  scope :visible_by_user,           -> { where(for_procedure_preview: false).where(hidden_by_user_at: nil, editing_fork_origin_id: nil) }
+  scope :visible_by_user,           -> { where(for_procedure_preview: false).where(hidden_by_user_at: nil, editing_fork_origin_id: nil).where(hidden_by_expired_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
       .where(hidden_by_administration_at: nil)
+      .where(hidden_by_expired_at: nil)
       .merge(visible_by_user.or(state_not_en_construction))
   }
   scope :visible_by_user_or_administration, -> { visible_by_user.or(visible_by_administration) }
@@ -415,7 +416,7 @@ class Dossier < ApplicationRecord
     when 'tous'
       visible_by_administration.all_state
     when 'supprimes_recemment'
-      hidden_by_administration
+      hidden_by_administration.state_termine.or(hidden_by_expired)
     when 'archives'
       visible_by_administration.archived
     when 'expirant'
@@ -679,14 +680,15 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
-  def extend_conservation(conservation_extension)
+  def extend_conservation(conservation_extension, author)
     update(conservation_extension: self.conservation_extension + conservation_extension,
       brouillon_close_to_expiration_notice_sent_at: nil,
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
 
     if hidden_by_reason == 'expired'
-      update(hidden_by_administration_at: nil, hidden_by_user_at: nil, hidden_by_reason: nil)
+      update(hidden_by_expired_at: nil, hidden_by_reason: nil)
+      restore(author)
     end
   end
 
@@ -854,7 +856,7 @@ class Dossier < ApplicationRecord
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
       elsif author_is_automatic(author) && can_be_deleted_by_automatic?(reason)
-        update(hidden_by_administration_at: Time.zone.now, hidden_by_user_at: Time.zone.now, hidden_by_reason: reason)
+        update(hidden_by_expired_at: Time.zone.now, hidden_by_reason: reason)
         log_automatic_dossier_operation(:supprimer, self)
       else
         raise "Unauthorized dossier hide attempt Dossier##{id} by #{author} for reason #{reason}"
@@ -879,6 +881,10 @@ class Dossier < ApplicationRecord
 
       if !hidden_by_user? && !hidden_by_administration?
         update(hidden_by_reason: nil)
+      elsif hidden_by_user?
+        update(hidden_by_reason: :user_request)
+      elsif hidden_by_administration?
+        update(hidden_by_reason: :instructeur_request)
       end
 
       log_dossier_operation(author, :restaurer, self)

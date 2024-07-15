@@ -92,7 +92,7 @@ class BatchOperation < ApplicationRecord
     when BatchOperation.operations.fetch(:follow)
       instructeur.follow(dossier)
     when BatchOperation.operations.fetch(:repousser_expiration)
-      dossier.extend_conservation(1.month)
+      dossier.extend_conservation(1.month, instructeur)
     when BatchOperation.operations.fetch(:repasser_en_construction)
       dossier.repasser_en_construction!(instructeur: instructeur)
     when BatchOperation.operations.fetch(:unfollow)
