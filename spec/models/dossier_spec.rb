@@ -476,18 +476,22 @@ describe Dossier, type: :model do
 
     context 'when dossier is en_construction' do
       context 'when the procedure.routing_enabled? is false' do
-        before do
+        subject do
           dossier.passer_en_construction!
           dossier.reload
         end
 
-        it { expect(dossier.state).to eq(Dossier.states.fetch(:en_construction)) }
-        it { expect(dossier.en_construction_at).to eq(beginning_of_day) }
-        it { expect(dossier.depose_at).to eq(beginning_of_day) }
-        it { expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction)) }
-        it { expect(dossier.traitement.processed_at).to eq(beginning_of_day) }
+        it do
+          subject
+          expect(dossier.state).to eq(Dossier.states.fetch(:en_construction))
+          expect(dossier.en_construction_at).to eq(beginning_of_day)
+          expect(dossier.depose_at).to eq(beginning_of_day)
+          expect(dossier.traitement.state).to eq(Dossier.states.fetch(:en_construction))
+          expect(dossier.traitement.processed_at).to eq(beginning_of_day)
+        end
 
         it 'should keep first en_construction_at date' do
+          subject
           Timecop.return
           dossier.passer_en_instruction!(instructeur: instructeur)
           dossier.repasser_en_construction!(instructeur: instructeur)
@@ -497,6 +501,45 @@ describe Dossier, type: :model do
           expect(dossier.traitement.processed_at.round).to eq(dossier.en_construction_at.round)
           expect(dossier.depose_at).to eq(beginning_of_day)
           expect(dossier.en_construction_at).to be > beginning_of_day
+        end
+
+        context 'when dossier have piece_justificative or titre_identite' do
+          include Logic
+
+          let(:procedure) { create(:procedure, types_de_champ_public:) }
+          let(:dossier) { create(:dossier, :brouillon, :with_populated_champs, procedure:) }
+
+          before { expect(champ).to receive(:visible?).and_return(visible) }
+
+          context 'when piece_justificative' do
+            let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+            let(:champ) { dossier.champs_for_revision(scope: :public).find(&:piece_justificative?) }
+
+            context 'when not visible' do
+              let(:visible) { false }
+              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+            end
+
+            context 'when visible' do
+              let(:visible) { true }
+              it { expect { subject }.not_to change { champ.reload.piece_justificative_file.attached? } }
+            end
+          end
+
+          context 'when titre identite' do
+            let(:types_de_champ_public) { [{ type: :titre_identite }] }
+            let(:champ) { dossier.champs_for_revision(scope: :public).find(&:piece_justificative?) }
+
+            context 'when not visible' do
+              let(:visible) { false }
+              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+            end
+
+            context 'when visible' do
+              let(:visible) { true }
+              it { expect { subject }.not_to change { champ.reload.piece_justificative_file.attached? } }
+            end
+          end
         end
       end
 
