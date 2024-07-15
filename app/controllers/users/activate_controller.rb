@@ -38,8 +38,12 @@ class Users::ActivateController < ApplicationController
       user.update!(email_verified_at: Time.zone.now)
       flash[:notice] = 'Votre email a bien été vérifié'
     else
-      flash[:alert] = "le lien est trop vieux"
-      # to do relancer un lien if user
+      if user.present?
+        flash[:alert] = "Ce lien n'est plus valable, un nouveau lien a été envoyé à l'adresse #{user.email}"
+        User.create_or_promote_to_tiers(user.email, SecureRandom.hex)
+      else
+        flash[:alert] = "Un problème est survenu, vous pouvez nous contacter sur #{Current.contact_email}"
+      end
     end
     redirect_to root_path(user)
   end

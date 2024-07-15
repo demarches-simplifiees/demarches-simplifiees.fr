@@ -61,7 +61,7 @@ describe Users::ActivateController, type: :controller do
       end
     end
 
-    context 'when the confirmation token is not valid but already used' do
+    context 'when the confirmation token is valid but already used' do
       before do
         get :confirm_email, params: { token: user.confirmation_token }
         get :confirm_email, params: { token: user.confirmation_token }
@@ -74,15 +74,16 @@ describe Users::ActivateController, type: :controller do
     end
 
     context 'when the confirmation token is too old or not valid' do
+      subject { get :confirm_email, params: { token: user.confirmation_token } }
+
       before do
         user.update!(confirmation_sent_at: 3.days.ago)
-        get :confirm_email, params: { token: user.confirmation_token }
-        user.reload
       end
 
-      it 'redirects to root path with an explanation notice' do
+      it 'redirects to root path with an explanation notice and it send a new link if user present' do
+        expect { subject }.to have_enqueued_mail(UserMailer, :invite_tiers)
         expect(response).to redirect_to(root_path(user))
-        expect(flash[:alert]).to eq('le lien est trop vieux')
+        expect(flash[:alert]).to eq("Ce lien n'est plus valable, un nouveau lien a été envoyé à l'adresse #{user.email}")
       end
     end
   end
