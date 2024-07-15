@@ -1,7 +1,7 @@
 = form_with(url: admin_procedure_groupe_instructeurs_path(@procedure),
   method: :get) do
   #header-search.fr-search-bar.fr-mb-2w{ role: "search" }
-    = label_tag :q, 'Rechercher par nom', class: 'fr-label'
+    = label_tag :q, 'Rechercher par nom', class: 'sr-only'
     = text_field_tag :q, @query, class: 'fr-input', type: 'search', autocomplete: 'off', placeholder: 'Rechercher par nom'
     %button.fr-btn{ title: "Rechercher" } Rechercher
   - if @query.present?

@@ -164,3 +164,18 @@ button.fr-tag-bug {
     border: 2px solid var(--border-action-high-grey);
   }
 }
+
+// On restaure la visibilité des éléments .fr-search-bar .fr-label (en appliquant les valeurs par défaut des différentes propriétés)
+// Et on utilise la classe .sr-only pour masquer les éléments souhaités au cas par cas
+.fr-search-bar .fr-label {
+  position: initial;
+  width: initial;
+  height: initial;
+  padding: initial;
+  margin: initial;
+  overflow: initial;
+  clip: initial;
+  white-space: initial;
+  border: initial;
+  display: block; // Pour cette valeur spécifique, on récupère celle de .fr-label
+}
