@@ -38,9 +38,9 @@
           %tbody
             - @export_templates.each do |export_template|
               %tr
-                %td= link_to export_template.name, edit_instructeur_export_template_path(export_template, procedure_id: @procedure.id)
+                %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
                 %td= export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
 
     %p
-      = link_to new_instructeur_export_template_path(procedure_id: params[:procedure_id]), class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line' do
+      = link_to [:new, :instructeur, @procedure, :export_template], class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line' do
         Ajouter un modèle d'export
