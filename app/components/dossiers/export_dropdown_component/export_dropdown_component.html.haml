@@ -31,8 +31,9 @@
           %li{ role: 'presentation' }
             %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-standard#{@count}", tabindex: "0", role: "tab", "aria-selected": "true", "aria-controls": "tabpanel-standard#{@count}-panel" } Standard
 
-          %li{ role: 'presentation' }
-            %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-template#{@count}", tabindex: "-1", role: "tab", "aria-selected": "false", "aria-controls": "tabpanel-template#{@count}-panel" } A partir d'un modèle
+          - if @show_export_template_tab
+            %li{ role: 'presentation' }
+              %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-template#{@count}", tabindex: "-1", role: "tab", "aria-selected": "false", "aria-controls": "tabpanel-template#{@count}-panel" } A partir d'un modèle
 
         .fr-tabs__panel.fr-pb-8w.fr-tabs__panel--selected{ id: "tabpanel-standard#{@count}-panel", role: "tabpanel", "aria-labelledby": "tabpanel-standard#{@count}", tabindex: "0" }
           = form_with url: download_export_path, namespace: "export#{@count}", data: { turbo_method: :post, turbo: true } do |f|
@@ -68,21 +69,22 @@
                     = f.submit "Demander l'export", "data-action": "click->menu-button#close", class: 'fr-btn'
 
 
-        .fr-tabs__panel.fr-pr-3w.fr-pb-8w{ id: "tabpanel-template#{@count}-panel", role: "tabpanel", "aria-labelledby": "tabpanel-template", tabindex: "0" }
-          = form_with url: download_export_path, namespace: "export_template_#{@count}", data: { turbo_method: :post, turbo: true }  do |f|
-            = f.hidden_field :statut, value: @statut
-            .fr-select-group
-              - if export_templates.present?
-                %label.fr-label{ for: 'select' }
-                  Sélectionner le modèle d'export
-                  = f.collection_select :export_template_id, export_templates, :id, :name, {}, { class: "fr-select fr-mb-2w" }
-              - else
+        - if @show_export_template_tab
+          .fr-tabs__panel.fr-pr-3w.fr-pb-8w{ id: "tabpanel-template#{@count}-panel", role: "tabpanel", "aria-labelledby": "tabpanel-template", tabindex: "0" }
+            = form_with url: download_export_path, namespace: "export_template_#{@count}", data: { turbo_method: :post, turbo: true }  do |f|
+              = f.hidden_field :statut, value: @statut
+              .fr-select-group
+                - if export_templates.present?
+                  %label.fr-label{ for: 'select' }
+                    Sélectionner le modèle d'export
+                    = f.collection_select :export_template_id, export_templates, :id, :name, {}, { class: "fr-select fr-mb-2w" }
+                - else
+                  %p
+                    %i Aucun modèle configuré
                 %p
-                  %i Aucun modèle configuré
-              %p
-                = link_to "Configurer les modèles d'export", exports_instructeur_procedure_path(procedure_id: params[:procedure_id]), class: 'fr-link'
-              %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
-                %li
-                  %button.fr-btn.fr-btn--secondary{ type: 'button', "data-action": "click->menu-button#close" } Annuler
-                %li
-                  = f.submit "Demander l'export", "data-action": "click->menu-button#close", class: 'fr-btn'
+                  = link_to "Configurer les modèles d'export", exports_instructeur_procedure_path(procedure_id: params[:procedure_id]), class: 'fr-link'
+                %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
+                  %li
+                    %button.fr-btn.fr-btn--secondary{ type: 'button', "data-action": "click->menu-button#close" } Annuler
+                  %li
+                    = f.submit "Demander l'export", "data-action": "click->menu-button#close", class: 'fr-btn'
