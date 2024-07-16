@@ -33,8 +33,10 @@ module EtablissementHelper
   end
 
   def pretty_siret(siret)
-    if siret.length > 6
+    if siret.length > 9
       "#{siret[0..2]} #{siret[3..5]} #{siret[6..8]} #{siret[9..]}"
+    elsif siret.length > 6
+      "#{siret[0..5]}-#{siret[6..]}"
     else
       siret
     end
