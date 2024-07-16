@@ -23,6 +23,7 @@ export interface ComboBoxProps
 }
 
 const inputMap = new WeakMap<HTMLInputElement, string>();
+const inputCountMap = new WeakMap<HTMLSpanElement, number>();
 export function useDispatchChangeEvent() {
   const ref = useRef<HTMLSpanElement>(null);
 
@@ -30,18 +31,38 @@ export function useDispatchChangeEvent() {
     ref,
     dispatch: () => {
       requestAnimationFrame(() => {
-        const input = ref.current?.querySelector('input');
-        if (input) {
-          const value = input.value;
-          const prevValue = inputMap.get(input) || '';
-          if (value != prevValue) {
-            inputMap.set(input, value);
+        if (ref.current) {
+          const container = ref.current;
+          const inputs = Array.from(container.querySelectorAll('input'));
+          const input = inputs.at(0);
+          if (input && inputChanged(container, inputs)) {
+            inputCountMap.set(container, inputs.length);
+            for (const input of inputs) {
+              inputMap.set(input, input.value.trim());
+            }
             input.dispatchEvent(new Event('change', { bubbles: true }));
           }
         }
       });
     }
   };
+}
+
+// I am not proude of this code. We have to tack values and number of values to deal with multi select combobox.
+// I have a plan to remove this code. Soon.
+function inputChanged(container: HTMLSpanElement, inputs: HTMLInputElement[]) {
+  const prevCount = inputCountMap.get(container) ?? 0;
+  if (prevCount != inputs.length) {
+    return true;
+  }
+  for (const input of inputs) {
+    const value = input.value.trim();
+    const prevValue = inputMap.get(input);
+    if (prevValue == null || prevValue != value) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function useSingleList({
@@ -174,9 +195,13 @@ export function useMultiList({
   const filteredItems = useMemo(
     () =>
       inputValue.length == 0
-        ? items
-        : matchSorter(items, inputValue, { keys: ['label'] }),
-    [items, inputValue]
+        ? items.filter((item) => !selectedKeys.has(item.value))
+        : matchSorter(
+            items.filter((item) => !selectedKeys.has(item.value)),
+            inputValue,
+            { keys: ['label'] }
+          ),
+    [items, inputValue, selectedKeys]
   );
   const selectedItems = useMemo(() => {
     const selectedItems: Item[] = [];

@@ -9,11 +9,5 @@
               = b.text
 
   - else
-    %div{ 'data-turbo-focus-group': true }
-      - if @champ.selected_options.present?
-        .fr-mb-2w.fr-mt-2w{ "data-turbo": "true" }
-          - @champ.selected_options.each do |option|
-            = render NestedForms::OwnedButtonComponent.new(formaction: update_path(option), http_method: :delete, opt: { aria: {pressed: true }, class: 'fr-tag fr-tag-bug fr-mb-1w fr-mr-1w', id: @champ.checkbox_id(option) }) do
-              = option
-      - if @champ.unselected_options.present?
-        = @form.select :value, @champ.unselected_options, { selected: '', include_blank: false, prompt: t('.prompt') }, id: @champ.input_id, aria: { describedby: @champ.describedby_id }, class: 'fr-select fr-mt-2v'
+    %react-fragment
+      = render ReactComponent.new "ComboBox/MultiComboBox", **react_props
