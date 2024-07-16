@@ -20,6 +20,7 @@ class Attachment::EditComponent < ApplicationComponent
     @user_can_replace = user_can_replace
     @as_multiple = as_multiple
     @auto_attach_url = auto_attach_url
+
     # Adaptation pour la gestion des pièces jointes multiples
     @attachments = attachments.presence || (kwargs.key?(:attachment) ? [kwargs.delete(:attachment)] : [])
     @attachments << attached_file.attachment if attached_file.respond_to?(:attachment) && @attachments.empty?
@@ -28,6 +29,7 @@ class Attachment::EditComponent < ApplicationComponent
 
     # Utilisation du premier attachement comme référence pour la rétrocompatibilité
     @attachment = @attachments.first
+
     # When parent form has nested attributes, pass the form builder object_name
     # to correctly infer the input attribute name.
     @form_object_name = kwargs.delete(:form_object_name)
@@ -54,7 +56,11 @@ class Attachment::EditComponent < ApplicationComponent
   end
 
   def destroy_attachment_path
-    attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id, auto_attach_url: @auto_attach_url, view_as: @view_as, direct_upload: @direct_upload)
+    if champ.present?
+      attachment_path(dossier_id: champ&.dossier_id, stable_id: champ&.stable_id, row_id: champ&.row_id)
+    else
+      attachment_path(auto_attach_url: @auto_attach_url, view_as: @view_as, direct_upload: @direct_upload)
+    end
   end
 
   def attachment_input_class

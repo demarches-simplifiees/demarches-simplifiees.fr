@@ -20,6 +20,7 @@ class AttachmentsController < ApplicationController
     @attachment = @blob.attachments.find(params[:id])
     @attachment.purge_later
     flash.notice = 'La pièce jointe a bien été supprimée.'
+
     if params[:dossier_id]
       @champ = find_champ
     else
