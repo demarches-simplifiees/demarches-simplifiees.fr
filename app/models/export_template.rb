@@ -30,29 +30,23 @@ class ExportTemplate < ApplicationRecord
     kind != 'zip'
   end
 
-  def paths=(paths)
-    columns = []
-    paths.compact_blank.each do |full_path|
-      current_column = full_path_hash(full_path)
-      case current_column[:source]
-      when 'tdc'
-        active_type_de_champ = procedure.active_revision.types_de_champ.find_by(stable_id: full_path_hash(full_path)[:stable_id])
-        if active_type_de_champ
-          active_libelle = active_type_de_champ.libelle_for_path(full_path_hash(full_path)[:path])
-          libelle = libelle_for_path(full_path, active_libelle)
+  def paths=(full_paths)
+    content["columns"] = full_paths.compact_blank
+      .map { [_1, full_path_hash(_1)] }
+      .filter { |_, current_column| current_column.present? }.map do |full_path, current_column|
+        libelle = case current_column[:source]
+        when 'tdc', 'repet'
+          active_type_de_champ = procedure.active_revision.types_de_champ.find_by(stable_id: current_column[:stable_id])
+          if active_type_de_champ
+            active_libelle = active_type_de_champ.libelle_for_path(current_column[:path])
+            libelle_for_path(full_path, active_libelle)
+          end
+        when 'dossier'
+          columns_meta[current_column[:path].to_sym][:libelle]
         end
-      when 'repet'
-        active_type_de_champ = procedure.active_revision.types_de_champ.find_by(stable_id: full_path_hash(full_path)[:stable_id])
-        if active_type_de_champ
-          active_libelle = active_type_de_champ.libelle_for_path(full_path_hash(full_path)[:path])
-          libelle = libelle_for_path(full_path, active_libelle)
-        end
-      when 'dossier'
-        libelle = columns_meta[current_column[:path].to_sym][:libelle]
-      end if current_column
-      columns << current_column.merge(libelle:) if libelle && current_column
-    end
-    content["columns"] = columns
+
+        current_column.merge(libelle:) if libelle
+      end.compact
   end
 
   def paths
