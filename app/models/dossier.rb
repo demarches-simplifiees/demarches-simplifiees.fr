@@ -367,9 +367,10 @@ class Dossier < ApplicationRecord
   scope :without_termine_expiration_notice_sent, -> { where(termine_close_to_expiration_notice_sent_at: nil) }
   scope :deleted_by_user_expired, -> { where('dossiers.hidden_by_user_at < ?', 1.week.ago) }
   scope :deleted_by_administration_expired, -> { where('dossiers.hidden_by_administration_at < ?', 1.week.ago) }
-  scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired }
-  scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired }
-  scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired }
+  scope :deleted_by_automatic_expired, -> { where('dossiers.hidden_by_expired_at < ?', 1.week.ago) }
+  scope :en_brouillon_expired_to_delete, -> { state_brouillon.deleted_by_user_expired.or(state_brouillon.deleted_by_automatic_expired) }
+  scope :en_construction_expired_to_delete, -> { state_en_construction.deleted_by_user_expired.or(state_en_construction.deleted_by_automatic_expired) }
+  scope :termine_expired_to_delete, -> { state_termine.deleted_by_user_expired.deleted_by_administration_expired.or(state_termine.deleted_by_automatic_expired) }
 
   scope :brouillon_near_procedure_closing_date, -> do
     # select users who have submitted dossier for the given 'procedures.id'
