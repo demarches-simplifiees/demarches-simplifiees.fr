@@ -36,6 +36,15 @@ class TypesDeChamp::DepartementTypeDeChamp < TypesDeChamp::TextTypeDeChamp
     end
   end
 
+  def search_paths
+    [
+      {
+        libelle: libelle,
+        path: :external_id
+      }
+    ]
+  end
+
   private
 
   def paths

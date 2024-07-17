@@ -96,6 +96,15 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
+  def search_paths
+    [
+      {
+        libelle:,
+        path: :value
+      }
+    ]
+  end
+
   private
 
   def paths
