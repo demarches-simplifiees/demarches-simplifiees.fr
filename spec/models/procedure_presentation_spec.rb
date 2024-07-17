@@ -96,16 +96,25 @@ describe ProcedurePresentation do
         ]
       }
 
-      before do
-        procedure.active_revision.types_de_champ_public[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.active_revision.types_de_champ_public[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
-        procedure.active_revision.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
-        procedure.active_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
-      end
-
       subject { create(:procedure_presentation, assign_to: assign_to) }
 
-      it { expect(subject.fields).to eq(expected) }
+      context 'with explication/header_sections' do
+        let(:types_de_champ_public) { Array.new(4) { { type: :text } } }
+        let(:types_de_champ_private) { Array.new(4) { { type: :text } } }
+        before do
+          procedure.active_revision.types_de_champ_public[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+          procedure.active_revision.types_de_champ_public[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+          procedure.active_revision.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+          procedure.active_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        end
+        it { expect(subject.fields).to eq(expected) }
+      end
+
+      context 'with rna' do
+        let(:types_de_champ_public) { [{ type: :rna, libelle: 'rna' }] }
+        let(:types_de_champ_private) { [] }
+        it { expect(subject.fields.map { _1['label'] }).to include('rna – commune') }
+      end
     end
 
     context 'when the procedure is for individuals' do
@@ -159,20 +168,28 @@ describe ProcedurePresentation do
 
     it { expect(subject.displayable_fields_for_select).to eq([[["label1", "table1/column1"]], ["user/email"]]) }
   end
+
   describe "#filterable_fields_options" do
     subject { create(:procedure_presentation, assign_to: assign_to) }
-    let(:included_displayable_field) do
-      [
-        { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false },
-        { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true }
-      ]
-    end
 
-    before do
-      allow(subject).to receive(:fields).and_return(included_displayable_field)
-    end
+    context 'filders' do
+      let(:included_displayable_field) do
+        [
+          { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false },
+          { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true }
+        ]
+      end
 
-    it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
+      before do
+        allow(subject).to receive(:fields).and_return(included_displayable_field)
+      end
+
+      it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
+    end
+    context 'with rna' do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :rna, libelle: 'rna' }]) }
+      it { expect(subject.filterable_fields_options.map { _1[0] }).to include('rna – commune') }
+    end
   end
 
   describe '#sorted_ids' do
