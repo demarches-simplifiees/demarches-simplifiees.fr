@@ -129,6 +129,14 @@ module Experts
       procedure_id = params[:procedure_id]
       avis_id = params[:id]
       email = params[:email]
+
+      avis = Avis.joins(:procedure, expert: :user)
+        .find_by(id: avis_id, procedure: { id: procedure_id }, user: { email: })
+
+      if avis.nil?
+        return redirect_to root_path, alert: "Vous n’avez pas accès à cet avis."
+      end
+
       password = params[:user][:password]
 
       user = User.create_or_promote_to_expert(email, password)

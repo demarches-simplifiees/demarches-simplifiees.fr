@@ -560,13 +560,17 @@ describe Experts::AvisController, type: :controller do
     end
 
     describe '#update_expert' do
+      let(:avis_id) { avis.id }
+      let(:email) { avis.expert.email }
+      let(:password) { SECURE_PASSWORD }
+
       subject do
         post :update_expert, params: {
-          id: avis.id,
+          id: avis_id,
           procedure_id:,
-          email: avis.expert.email,
+          email:,
           user: {
-            password: SECURE_PASSWORD
+            password:
           }
         }
       end
@@ -586,6 +590,34 @@ describe Experts::AvisController, type: :controller do
         end
 
         it { is_expected.to redirect_to expert_all_avis_path }
+      end
+
+      context 'with a random avis, procedure and user' do
+        let(:avis_id) { create(:avis).id }
+        let(:random_user) { create(:user, password: '{$3cure-p4ssWord}') }
+        let(:email) { random_user.email }
+
+        it 'doesn’t change the random user password' do
+          expect(random_user.reload.valid_password?(password)).to be false
+          subject
+          expect(random_user.reload.valid_password?(password)).to be false
+          expect(flash[:alert]).to eq("Vous n’avez pas accès à cet avis.")
+        end
+      end
+
+      context 'with a matching avis procedure, and a random user' do
+        let(:avis) { create(:avis) }
+        let(:avis_id) { avis.id }
+        let(:procedure_id) { avis.procedure.id }
+        let(:random_user) { create(:user, password: '{$3cure-p4ssWord}') }
+        let(:email) { random_user.email }
+
+        it 'doesn’t change the random user password' do
+          expect(random_user.reload.valid_password?(password)).to be false
+          subject
+          expect(random_user.reload.valid_password?(password)).to be false
+          expect(flash[:alert]).to eq("Vous n’avez pas accès à cet avis.")
+        end
       end
 
       context 'when the expert has already signed up' do
