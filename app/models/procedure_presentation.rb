@@ -81,11 +81,12 @@ class ProcedurePresentation < ApplicationRecord
     fields.concat(procedure.types_de_champ_for_procedure_presentation
       .pluck(:type_champ, :libelle, :private, :stable_id)
       .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .map do |(type_champ, libelle, is_private, stable_id)|
+      .flat_map do |(type_champ, libelle, is_private, stable_id)|
+        tdc = TypeDeChamp.new(type_champ:, libelle:, private: is_private, stable_id:)
         if is_private
-          field_hash_for_type_de_champ_private(type_champ, libelle, stable_id)
+          field_hash_for_type_de_champ_private(tdc)
         else
-          field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
+          field_hash_for_type_de_champ_public(tdc)
         end
       end)
 
@@ -479,18 +480,28 @@ class ProcedurePresentation < ApplicationRecord
     }
   end
 
-  def field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
-    field_hash(TYPE_DE_CHAMP, stable_id.to_s,
-      label: libelle,
-      type: TypeDeChamp.filter_hash_type(type_champ),
-      value_column: TypeDeChamp.filter_hash_value_column(type_champ))
+  def field_hash_for_type_de_champ_public(tdc)
+    tdc.dynamic_type.search_paths.map do |path_struct|
+      field_hash(
+        TYPE_DE_CHAMP,
+        tdc.stable_id.to_s,
+        label: path_struct[:libelle],
+        type: TypeDeChamp.filter_hash_type(tdc.type_champ),
+        value_column: path_struct[:path]
+      )
+    end
   end
 
-  def field_hash_for_type_de_champ_private(type_champ, libelle, stable_id)
-    field_hash(TYPE_DE_CHAMP_PRIVATE, stable_id.to_s,
-      label: libelle,
-      type: TypeDeChamp.filter_hash_type(type_champ),
-      value_column: TypeDeChamp.filter_hash_value_column(type_champ))
+  def field_hash_for_type_de_champ_private(tdc)
+    tdc.dynamic_type.search_paths.map do |path_struct|
+      field_hash(
+        TYPE_DE_CHAMP_PRIVATE,
+        tdc.stable_id.to_s,
+        label: path_struct[:libelle],
+        type: TypeDeChamp.filter_hash_type(tdc.type_champ),
+        value_column: path_struct[:path]
+      )
+    end
   end
 
   def valid_column?(table, column, extra_columns = {})
