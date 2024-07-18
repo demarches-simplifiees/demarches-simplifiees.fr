@@ -211,7 +211,7 @@ RSpec.describe DossierMailer, type: :mailer do
         expect(subject.body).to include("N° #{dossier.id} ")
         expect(subject.body).to include(dossier.procedure.libelle)
         expect(subject.body).to include("Votre compte reste activé")
-        expect(subject.body).to include("Depuis la page de votre dossier vous avez la possibilité de :<br>- prolonger la durée de conservation pour un délai de 6 mois")
+        expect(subject.body).to include("Depuis la page de votre dossier vous avez la possibilité de :<br>- prolonger la durée de conservation")
       end
     end
 

@@ -651,12 +651,12 @@ class Dossier < ApplicationRecord
 
   def close_to_expiration?
     return false if en_instruction?
-    expiration_notification_date < Time.zone.now && expiration_notification_date > Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
+    expiration_notification_date < Time.zone.now && Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago < expiration_notification_date
   end
 
   def has_expired?
     return false if en_instruction?
-    expiration_notification_date < Time.zone.now && expiration_notification_date < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
+    expiration_notification_date < Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks.ago
   end
 
   def after_notification_expiration_date
@@ -836,27 +836,27 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def author_is_user(author)
+  def is_user?(author)
     author.is_a?(User)
   end
 
-  def author_is_administration(author)
+  def is_administration?(author)
     author.is_a?(Instructeur) || author.is_a?(Administrateur) || author.is_a?(SuperAdmin)
   end
 
-  def author_is_automatic(author)
+  def is_automatic?(author)
     author == :automatic
   end
 
   def hide_and_keep_track!(author, reason)
     transaction do
-      if author_is_administration(author) && can_be_deleted_by_administration?(reason)
+      if is_administration?(author) && can_be_deleted_by_administration?(reason)
         update(hidden_by_administration_at: Time.zone.now, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
-      elsif author_is_user(author) && can_be_deleted_by_user?
+      elsif is_user?(author) && can_be_deleted_by_user?
         update(hidden_by_user_at: Time.zone.now, dossier_transfer_id: nil, hidden_by_reason: reason)
         log_dossier_operation(author, :supprimer, self)
-      elsif author_is_automatic(author) && can_be_deleted_by_automatic?(reason)
+      elsif is_automatic?(author) && can_be_deleted_by_automatic?(reason)
         update(hidden_by_expired_at: Time.zone.now, hidden_by_reason: reason)
         log_automatic_dossier_operation(:supprimer, self)
       else
@@ -874,9 +874,9 @@ class Dossier < ApplicationRecord
 
   def restore(author)
     transaction do
-      if author_is_administration(author)
+      if is_administration?(author)
         update(hidden_by_administration_at: nil)
-      elsif author_is_user(author)
+      elsif is_user?(author)
         update(hidden_by_user_at: nil)
       end
 
