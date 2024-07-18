@@ -57,12 +57,12 @@ module Users
       @user_dossiers = current_user.dossiers.state_not_termine.merge(@dossiers_visibles)
       @dossiers_traites = current_user.dossiers.state_termine.merge(@dossiers_visibles)
       @dossiers_invites = current_user.dossiers_invites.merge(@dossiers_visibles)
-      @dossiers_supprimes_recemment = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
+      @dossiers_supprimes = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
       @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
-      @dossiers_supprimes_definitivement = deleted_dossiers
+      @dossiers_historique = deleted_dossiers
 
-      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes_recemment, @dossiers_supprimes_definitivement, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
+      @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 
       @dossiers = case @statut
       when 'en-cours'
@@ -71,10 +71,8 @@ module Users
         @dossiers_traites
       when 'dossiers-invites'
         @dossiers_invites
-      when 'dossiers-supprimes-recemment'
-        @dossiers_supprimes_recemment
-      when 'dossiers-supprimes-definitivement'
-        @dossiers_supprimes_definitivement
+      when 'dossiers-supprimes'
+        @dossiers_supprimes
       when 'dossiers-transferes'
         @dossier_transferes
       when 'dossiers-expirant'
@@ -436,13 +434,12 @@ module Users
     # if the status tab is filled, then this tab
     # else first filled tab
     # else en-cours
-    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes_recemment, dossiers_supprimes_definitivement, dossier_transferes, dossiers_close_to_expiration, params_statut)
+    def statut(mes_dossiers, dossiers_traites, dossiers_invites, dossiers_supprimes, dossier_transferes, dossiers_close_to_expiration, params_statut)
       tabs = {
         'en-cours' => mes_dossiers,
         'traites' => dossiers_traites,
         'dossiers-invites' => dossiers_invites,
-        'dossiers-supprimes-recemment' => dossiers_supprimes_recemment,
-        'dossiers-supprimes-definitivement' => dossiers_supprimes_definitivement,
+        'dossiers-supprimes' => dossiers_supprimes,
         'dossiers-transferes' => dossier_transferes,
         'dossiers-expirant' => dossiers_close_to_expiration
       }
