@@ -19,7 +19,7 @@
         suivis_count: @counts[:suivis],
         traites_count: @counts[:traites],
         tous_count: @counts[:tous],
-        supprimes_recemment_count: @counts[:supprimes_recemment],
+        supprimes_count: @counts[:supprimes],
         archives_count: @counts[:archives],
         expirant_count: @counts[:expirant],
         has_en_cours_notifications: @has_en_cours_notifications,
@@ -41,9 +41,9 @@
           = t('views.instructeurs.dossiers.tab_explainations.tous_with_routing')
         - else
           = t('views.instructeurs.dossiers.tab_explainations.tous')
-    - if @statut == 'supprimes_recemment'
+    - if @statut == 'supprimes'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.supprimes_recemment').html_safe
+        = t('views.instructeurs.dossiers.tab_explainations.supprimes').html_safe
     - if @statut == 'archives'
       %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
@@ -167,7 +167,7 @@
                                   archived: p.archived,
                                   dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
                                   close_to_expiration: @statut == 'expirant',
-                                  hidden_by_administration: @statut == 'supprimes_recemment',
+                                  hidden_by_administration: @statut == 'supprimes',
                                   hidden_by_expired: p.hidden_by_reason == 'expired',
                                   sva_svr: @procedure.sva_svr_enabled?,
                                   has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,

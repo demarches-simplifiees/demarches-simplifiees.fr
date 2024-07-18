@@ -22,7 +22,7 @@ class Export < ApplicationRecord
     suivis: 'suivis',
     traites: 'traites',
     tous: 'tous',
-    supprimes_recemment: 'supprimes_recemment',
+    supprimes: 'supprimes',
     archives: 'archives',
     expirant: 'expirant'
   }

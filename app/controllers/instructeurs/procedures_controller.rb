@@ -36,7 +36,7 @@ module Instructeurs
       @dossiers_archived_count_per_procedure = dossiers.by_statut('archives').group('groupe_instructeurs.procedure_id').count
       @dossiers_termines_count_per_procedure = dossiers.by_statut('traites').group('groupe_instructeurs.procedure_id').reorder(nil).count
       @dossiers_expirant_count_per_procedure = dossiers.by_statut('expirant').group('groupe_instructeurs.procedure_id').count
-      @dossiers_supprimes_recemment_count_per_procedure = dossiers.by_statut('supprimes_recemment').group('groupe_instructeurs.procedure_id').reorder(nil).count
+      @dossiers_supprimes_count_per_procedure = dossiers.by_statut('supprimes').group('groupe_instructeurs.procedure_id').reorder(nil).count
 
       groupe_ids = current_instructeur.groupe_instructeurs.pluck(:id)
       @followed_dossiers_count_per_procedure = current_instructeur
@@ -56,7 +56,7 @@ module Instructeurs
         t('.all') => @dossiers_count_per_procedure.sum { |_, v| v },
         t('.dossiers_close_to_expiration') => @dossiers_expirant_count_per_procedure.sum { |_, v| v },
         t('.archived') => @dossiers_archived_count_per_procedure.sum { |_, v| v },
-        t('.dossiers_supprimes_recemment') => @dossiers_supprimes_recemment_count_per_procedure.sum { |_, v| v }
+        t('.dossiers_supprimes') => @dossiers_supprimes_count_per_procedure.sum { |_, v| v }
       }
 
       @procedure_ids_en_cours_with_notifications = current_instructeur.procedure_ids_with_notifications(:en_cours)
@@ -120,9 +120,9 @@ module Instructeurs
         .order(:dossier_id)
         .page params[:page]
 
-      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count, @supprimes_recemment_count, @expirant_count = current_instructeur
+      @a_suivre_count, @suivis_count, @traites_count, @tous_count, @archives_count, @supprimes_count, @expirant_count = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
-        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'supprimes_recemment', 'expirant')
+        .fetch_values('a_suivre', 'suivis', 'traites', 'tous', 'archives', 'supprimes', 'expirant')
       @can_download_dossiers = (@tous_count + @archives_count) > 0 && !instructeur_as_manager?
 
       notifications = current_instructeur.notifications_for_groupe_instructeurs(groupe_instructeur_ids)
