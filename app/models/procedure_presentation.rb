@@ -41,9 +41,9 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayed_fields_for_headers
     [
-      field_hash('self', 'id', classname: 'number-col'),
+      Facet.new(table: 'self', column: 'id', classname: 'number-col'),
       *displayed_fields.map { Facet.new(**_1.deep_symbolize_keys) },
-      field_hash('self', 'state', classname: 'state-col'),
+      Facet.new(table: 'self', column: 'state', classname: 'state-col'),
       *Facet.sva_svr_facets(procedure:)
     ]
   end
@@ -366,10 +366,6 @@ class ProcedurePresentation < ApplicationRecord
 
       errors.add(:base, "Le filtre #{filter['label']} est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)")
     end
-  end
-
-  def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true)
-    Facet.new(table:, column:, label:, classname:, virtual:, type:, scope:, value_column:, filterable:)
   end
 
   def valid_column?(table, column, extra_columns = {})
