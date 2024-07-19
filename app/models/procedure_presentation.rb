@@ -94,17 +94,16 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayable_fields_for_select
     [
-      fields.reject(&:virtual)
-        .map { |field| [field.label, field_id(field)] },
-      displayed_fields.map { field_id(Facet.new(**_1.deep_symbolize_keys)) }
+      fields.reject(&:virtual).map { |facet| [facet.label, facet.id] },
+      displayed_fields.map { Facet.new(**_1.deep_symbolize_keys).id }
     ]
   end
 
   def filterable_fields_options
-    fields.filter_map do |field|
-      next if field.filterable == false
+    fields.filter_map do |facet|
+      next if facet.filterable == false
 
-      [field.label, field_id(field)]
+      [facet.label, facet.id]
     end
   end
 
@@ -282,9 +281,9 @@ class ProcedurePresentation < ApplicationRecord
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
     else
-      field = find_field(filter[TABLE], filter[COLUMN])
+      facet = fields.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
 
-      if field.type == :date
+      if facet.type == :date
         parsed_date = safe_parse_date(filter['value'])
 
         return parsed_date.present? ? I18n.l(parsed_date) : nil
@@ -300,11 +299,13 @@ class ProcedurePresentation < ApplicationRecord
     nil
   end
 
-  def add_filter(statut, field, value)
+  def add_filter(statut, facet_id, value)
     if value.present?
-      table, column = field.split(SLASH)
-      label = find_field(table, column).label
-      value_column = find_field(table, column).value_column
+      facet = find_facet(facet_id)
+      label = facet.label
+      column = facet.column
+      table = facet.table
+      value_column = facet.value_column
 
       case table
       when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
@@ -324,8 +325,9 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def remove_filter(statut, field, value)
-    table, column = field.split(SLASH)
+  def remove_filter(statut, facet_id, value)
+    facet = find_facet(facet_id)
+    table, column = facet.table, facet.column
 
     updated_filters = filters.dup
     updated_filters[statut] = filters[statut].reject do |filter|
@@ -335,16 +337,16 @@ class ProcedurePresentation < ApplicationRecord
     update!(filters: updated_filters)
   end
 
-  def update_displayed_fields(values)
-    if values.nil?
-      values = []
+  def update_displayed_fields(facet_ids)
+    if facet_ids.nil?
+      facet_ids = []
     end
 
-    fields = values.map { |value| find_field(*value.split(SLASH)) }
+    facets = facet_ids.map { |id| find_facet(id) }
 
-    update!(displayed_fields: fields)
+    update!(displayed_fields: facets)
 
-    if !values.include?(field_id(sort))
+    if !sort_to_facet_id(sort).in?(facet_ids)
       update!(sort: Procedure.default_sort)
     end
   end
@@ -371,22 +373,22 @@ class ProcedurePresentation < ApplicationRecord
     slice(:filters, :sort, :displayed_fields)
   end
 
-  def field_type(field_id)
-    find_field(*field_id.split(SLASH)).type
+  def field_type(facet_id)
+    find_facet(facet_id).type
   end
 
-  def field_enum(field_id)
-    field = find_field(*field_id.split(SLASH))
-    if field.scope.present?
-      I18n.t(field.scope).map(&:to_a).map(&:reverse)
-    elsif field.table == 'groupe_instructeur'
+  def field_enum(facet_id)
+    facet = find_facet(facet_id)
+    if facet.scope.present?
+      I18n.t(facet.scope).map(&:to_a).map(&:reverse)
+    elsif facet.table == 'groupe_instructeur'
       instructeur.groupe_instructeurs.filter_map do
         if _1.procedure_id == procedure.id
           [_1.label, _1.id]
         end
       end
     else
-      find_type_de_champ(field.column).options_for_select
+      find_type_de_champ(facet.column).options_for_select
     end
   end
 
@@ -410,22 +412,12 @@ class ProcedurePresentation < ApplicationRecord
   private
 
   # type_de_champ/4373429
-  def field_id(field_or_sort)
-    if field_or_sort.is_a?(Hash)
-      sort = field_or_sort
-      [sort[TABLE], sort[COLUMN]].join(SLASH)
-    else
-      field = field_or_sort
-      if field.label == 'rna – commune'
-        "#{[field.table, field.column].join(SLASH)}->#{field.value_column}"
-      else
-        [field.table, field.column].join(SLASH)
-      end
-    end
+  def sort_to_facet_id(sort)
+    [sort[TABLE], sort[COLUMN]].join(SLASH)
   end
 
-  def find_field(table, column)
-    fields.find { [_1.table, _1.column] == [table, column] }
+  def find_facet(facet_id)
+    fields.find { _1.id == facet_id }
   end
 
   def find_type_de_champ(column)
