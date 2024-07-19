@@ -373,7 +373,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def field_type(field_id)
-    find_field(*field_id.split(SLASH))['type']
+    find_field(*field_id.split(SLASH)).type
   end
 
   def field_enum(field_id)
