@@ -199,7 +199,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def add_filter(statut, facet_id, value)
     if value.present?
-      facet = find_facet(facet_id)
+      facet = Facet.find(procedure:, id: facet_id)
       label = facet.label
       column = facet.column
       table = facet.table
@@ -224,7 +224,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def remove_filter(statut, facet_id, value)
-    facet = find_facet(facet_id)
+    facet = Facet.find(procedure:, id: facet_id)
     table, column = facet.table, facet.column
 
     updated_filters = filters.dup
@@ -240,7 +240,7 @@ class ProcedurePresentation < ApplicationRecord
       facet_ids = []
     end
 
-    facets = facet_ids.map { |id| find_facet(id) }
+    facets = facet_ids.map { |id| Facet.find(procedure:, id:) }
 
     update!(displayed_fields: facets)
 
@@ -272,11 +272,11 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def field_type(facet_id)
-    find_facet(facet_id).type
+    Facet.find(procedure:, id: facet_id).type
   end
 
   def field_enum(facet_id)
-    facet = find_facet(facet_id)
+    facet = Facet.find(procedure:, id: facet_id)
     if facet.scope.present?
       I18n.t(facet.scope).map(&:to_a).map(&:reverse)
     elsif facet.table == 'groupe_instructeur'
@@ -312,10 +312,6 @@ class ProcedurePresentation < ApplicationRecord
   # type_de_champ/4373429
   def sort_to_facet_id(sort)
     [sort[TABLE], sort[COLUMN]].join(SLASH)
-  end
-
-  def find_facet(facet_id)
-    Facet.facets(procedure:).find { _1.id == facet_id }
   end
 
   def find_type_de_champ(column)

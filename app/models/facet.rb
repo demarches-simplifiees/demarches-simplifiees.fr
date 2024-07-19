@@ -38,6 +38,10 @@ class Facet
     }
   end
 
+  def self.find(procedure:, id:)
+    facets(procedure:).find { _1.id == id }
+  end
+
   def self.dossier_facets(procedure:)
     [
       new(table: 'self', column: 'created_at', type: :date),
