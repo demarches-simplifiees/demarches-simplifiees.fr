@@ -97,7 +97,7 @@ describe ProcedurePresentation do
     let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, sort: sort) }
 
-    subject { procedure_presentation.sorted_ids(procedure.dossiers, procedure.dossiers.count) }
+    subject { procedure_presentation.send(:sorted_ids, procedure.dossiers, procedure.dossiers.count) }
 
     context 'for notifications table' do
       let(:table) { 'notifications' }
@@ -361,7 +361,7 @@ describe ProcedurePresentation do
   describe '#filtered_ids' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, filters: { "suivis" => filter }) }
 
-    subject { procedure_presentation.filtered_ids(procedure.dossiers.joins(:user), 'suivis') }
+    subject { procedure_presentation.send(:filtered_ids, procedure.dossiers.joins(:user), 'suivis') }
 
     context 'for self table' do
       context 'for created_at column' do
