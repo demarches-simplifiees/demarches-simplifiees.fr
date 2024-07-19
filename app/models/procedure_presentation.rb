@@ -112,7 +112,7 @@ class ProcedurePresentation < ApplicationRecord
   def displayed_fields_for_headers
     [
       field_hash('self', 'id', classname: 'number-col'),
-      *displayed_fields.map { field_id(Facet.new(**_1.deep_symbolize_keys)) },
+      *displayed_fields.map { Facet.new(**_1.deep_symbolize_keys) },
       field_hash('self', 'state', classname: 'state-col'),
       *sva_svr_fields
     ]
