@@ -10,7 +10,6 @@ class ProcedurePresentation < ApplicationRecord
 
   SLASH = '/'
   TYPE_DE_CHAMP = 'type_de_champ'
-  TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
 
   FILTERS_VALUE_MAX_LENGTH = 100
 
@@ -24,7 +23,6 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
-
 
   def displayable_fields_for_select
     [
@@ -64,17 +62,6 @@ class ProcedurePresentation < ApplicationRecord
             dossiers_id_with_notification
       end
     when TYPE_DE_CHAMP
-      ids = dossiers
-        .with_type_de_champ(column)
-        .order("champs.value #{order}")
-        .pluck(:id)
-      if ids.size != count
-        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
-        order == 'asc' ? ids + rest : rest + ids
-      else
-        ids
-      end
-    when TYPE_DE_CHAMP_PRIVATE
       ids = dossiers
         .with_type_de_champ(column)
         .order("champs.value #{order}")
@@ -130,9 +117,6 @@ class ProcedurePresentation < ApplicationRecord
       when TYPE_DE_CHAMP
         dossiers.with_type_de_champ(column)
           .filter_ilike(:champs, value_column, values)
-      when TYPE_DE_CHAMP_PRIVATE
-        dossiers.with_type_de_champ(column)
-          .filter_ilike(:champs, value_column, values)
       when 'etablissement'
         if column == 'entreprise_date_creation'
           dates = values
@@ -183,7 +167,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def human_value_for_filter(filter)
-    if [TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE].include?(filter[TABLE])
+    if filter[TABLE] == TYPE_DE_CHAMP
       find_type_de_champ(filter[COLUMN]).dynamic_type.filter_to_human(filter['value'])
     elsif filter['column'] == 'state'
       if filter['value'] == 'pending_correction'
@@ -222,7 +206,7 @@ class ProcedurePresentation < ApplicationRecord
       value_column = facet.value_column
 
       case table
-      when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
+      when TYPE_DE_CHAMP
         value = find_type_de_champ(column).dynamic_type.human_to_filter(value)
       end
 
