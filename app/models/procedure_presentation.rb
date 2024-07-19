@@ -271,10 +271,6 @@ class ProcedurePresentation < ApplicationRecord
     slice(:filters, :sort, :displayed_fields)
   end
 
-  def field_type(facet_id)
-    Facet.find(procedure:, id: facet_id).type
-  end
-
   def field_enum(facet_id)
     facet = Facet.find(procedure:, id: facet_id)
     if facet.scope.present?

@@ -1,17 +1,14 @@
 class Dossiers::InstructeurFilterComponent < ApplicationComponent
-  def initialize(procedure:, procedure_presentation:, statut:, field_id: nil)
+  def initialize(procedure:, procedure_presentation:, statut:, facet: nil)
     @procedure = procedure
     @procedure_presentation = procedure_presentation
     @statut = statut
-    @field_id = field_id
+    @facet = facet
   end
 
-  attr_reader :procedure, :procedure_presentation, :statut, :field_id
+  attr_reader :procedure, :procedure_presentation, :statut, :facet
 
-  def field_type
-    return :text if field_id.nil?
-    procedure_presentation.field_type(field_id)
-  end
+  def facet_type = facet.present? ? facet.type : :text
 
   def options_for_select_of_field
     procedure_presentation.field_enum(field_id)
@@ -19,7 +16,7 @@ class Dossiers::InstructeurFilterComponent < ApplicationComponent
 
   def filter_react_props
     {
-      selected_key: @field_id || '',
+      selected_key: facet.present? ? facet.id : '',
       items: procedure_presentation.filterable_fields_options,
       name: :field,
       id: 'search-filter',
