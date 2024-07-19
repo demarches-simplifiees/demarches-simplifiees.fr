@@ -43,10 +43,10 @@ class ProcedurePresentation < ApplicationRecord
     ].compact_blank
   end
 
-  def fields
-    fields = self_fields
+  def facets
+    facets = self_fields
 
-    fields.push(
+    facets.push(
       field_hash('user', 'email', type: :text),
       field_hash('followers_instructeurs', 'email', type: :text),
       field_hash('groupe_instructeur', 'id', type: :enum),
@@ -54,7 +54,7 @@ class ProcedurePresentation < ApplicationRecord
     )
 
     if procedure.for_individual
-      fields.push(
+      facets.push(
         field_hash("individual", "prenom", type: :text),
         field_hash("individual", "nom", type: :text),
         field_hash("individual", "gender", type: :text)
@@ -62,7 +62,7 @@ class ProcedurePresentation < ApplicationRecord
     end
 
     if !procedure.for_individual
-      fields.push(
+      facets.push(
         field_hash('etablissement', 'entreprise_siren', type: :text),
         field_hash('etablissement', 'entreprise_forme_juridique', type: :text),
         field_hash('etablissement', 'entreprise_nom_commercial', type: :text),
@@ -71,14 +71,14 @@ class ProcedurePresentation < ApplicationRecord
         field_hash('etablissement', 'entreprise_date_creation', type: :date)
       )
 
-      fields.push(
+      facets.push(
         field_hash('etablissement', 'siret', type: :text),
         field_hash('etablissement', 'libelle_naf', type: :text),
         field_hash('etablissement', 'code_postal', type: :text)
       )
     end
 
-    fields.concat(procedure.types_de_champ_for_procedure_presentation
+    facets.concat(procedure.types_de_champ_for_procedure_presentation
       .pluck(:type_champ, :libelle, :private, :stable_id)
       .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
       .map do |(type_champ, libelle, is_private, stable_id)|
@@ -89,18 +89,18 @@ class ProcedurePresentation < ApplicationRecord
         end
       end)
 
-    fields
+    facets
   end
 
   def displayable_fields_for_select
     [
-      fields.reject(&:virtual).map { |facet| [facet.label, facet.id] },
+      facets.reject(&:virtual).map { |facet| [facet.label, facet.id] },
       displayed_fields.map { Facet.new(**_1.deep_symbolize_keys).id }
     ]
   end
 
   def filterable_fields_options
-    fields.filter_map do |facet|
+    facets.filter_map do |facet|
       next if facet.filterable == false
 
       [facet.label, facet.id]
@@ -281,7 +281,7 @@ class ProcedurePresentation < ApplicationRecord
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
     else
-      facet = fields.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
+      facet = facets.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
 
       if facet.type == :date
         parsed_date = safe_parse_date(filter['value'])
@@ -417,7 +417,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def find_facet(facet_id)
-    fields.find { _1.id == facet_id }
+    facets.find { _1.id == facet_id }
   end
 
   def find_type_de_champ(column)
@@ -494,7 +494,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def valid_columns_for_table(table)
-    @column_whitelist ||= fields
+    @column_whitelist ||= facets
       .group_by(&:table)
       .transform_values { |facets| Set.new(facets.map(&:column)) }
 
