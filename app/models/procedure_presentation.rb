@@ -25,83 +25,16 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
 
-  def self_fields
-    [
-      field_hash('self', 'created_at', type: :date),
-      field_hash('self', 'updated_at', type: :date),
-      field_hash('self', 'depose_at', type: :date),
-      field_hash('self', 'en_construction_at', type: :date),
-      field_hash('self', 'en_instruction_at', type: :date),
-      field_hash('self', 'processed_at', type: :date),
-      *sva_svr_fields(for_filters: true),
-      field_hash('self', 'updated_since', type: :date, virtual: true),
-      field_hash('self', 'depose_since', type: :date, virtual: true),
-      field_hash('self', 'en_construction_since', type: :date, virtual: true),
-      field_hash('self', 'en_instruction_since', type: :date, virtual: true),
-      field_hash('self', 'processed_since', type: :date, virtual: true),
-      field_hash('self', 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)
-    ].compact_blank
-  end
-
-  def facets
-    facets = self_fields
-
-    facets.push(
-      field_hash('user', 'email', type: :text),
-      field_hash('followers_instructeurs', 'email', type: :text),
-      field_hash('groupe_instructeur', 'id', type: :enum),
-      field_hash('avis', 'question_answer', filterable: false)
-    )
-
-    if procedure.for_individual
-      facets.push(
-        field_hash("individual", "prenom", type: :text),
-        field_hash("individual", "nom", type: :text),
-        field_hash("individual", "gender", type: :text)
-      )
-    end
-
-    if !procedure.for_individual
-      facets.push(
-        field_hash('etablissement', 'entreprise_siren', type: :text),
-        field_hash('etablissement', 'entreprise_forme_juridique', type: :text),
-        field_hash('etablissement', 'entreprise_nom_commercial', type: :text),
-        field_hash('etablissement', 'entreprise_raison_sociale', type: :text),
-        field_hash('etablissement', 'entreprise_siret_siege_social', type: :text),
-        field_hash('etablissement', 'entreprise_date_creation', type: :date)
-      )
-
-      facets.push(
-        field_hash('etablissement', 'siret', type: :text),
-        field_hash('etablissement', 'libelle_naf', type: :text),
-        field_hash('etablissement', 'code_postal', type: :text)
-      )
-    end
-
-    facets.concat(procedure.types_de_champ_for_procedure_presentation
-      .pluck(:type_champ, :libelle, :private, :stable_id)
-      .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .flat_map do |(type_champ, libelle, is_private, stable_id)|
-        tdc = TypeDeChamp.new(type_champ:, libelle:, private: is_private, stable_id:)
-        if is_private
-          field_hash_for_type_de_champ_private(tdc)
-        else
-          field_hash_for_type_de_champ_public(tdc)
-        end
-      end)
-
-    facets
-  end
 
   def displayable_fields_for_select
     [
-      facets.reject(&:virtual).map { |facet| [facet.label, facet.id] },
+      Facet.facets(procedure:).reject(&:virtual).map { |facet| [facet.label, facet.id] },
       displayed_fields.map { Facet.new(**_1.deep_symbolize_keys).id }
     ]
   end
 
   def filterable_fields_options
-    facets.filter_map do |facet|
+    Facet.facets(procedure:).filter_map do |facet|
       next if facet.filterable == false
 
       [facet.label, facet.id]
@@ -113,28 +46,8 @@ class ProcedurePresentation < ApplicationRecord
       field_hash('self', 'id', classname: 'number-col'),
       *displayed_fields.map { Facet.new(**_1.deep_symbolize_keys) },
       field_hash('self', 'state', classname: 'state-col'),
-      *sva_svr_fields
+      *Facet.sva_svr_facets(procedure:)
     ]
-  end
-
-  def sva_svr_fields(for_filters: false)
-    return if !procedure.sva_svr_enabled?
-
-    i18n_scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
-
-    fields = []
-    fields << field_hash('self', 'sva_svr_decision_on',
-                        type: :date,
-                        label: I18n.t("#{procedure.sva_svr_decision}_decision_on", scope: i18n_scope),
-                        classname: for_filters ? '' : 'sva-col')
-
-    if for_filters
-      fields << field_hash('self', 'sva_svr_decision_before',
-                        label: I18n.t("#{procedure.sva_svr_decision}_decision_before", scope: i18n_scope),
-                        type: :date, virtual: true)
-    end
-
-    fields
   end
 
   def sorted_ids(dossiers, count)
@@ -201,7 +114,7 @@ class ProcedurePresentation < ApplicationRecord
       value_column = filters.pluck('value_column').compact.first || :value
       case table
       when 'self'
-        field = self_fields.find { |h| h.column == column }
+        field = Facet.dossier_facets(procedure:).find { |h| h.column == column }
         if field.type == :date
           dates = values
             .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
@@ -282,7 +195,7 @@ class ProcedurePresentation < ApplicationRecord
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
     else
-      facet = facets.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
+      facet = Facet.facets(procedure:).find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
 
       if facet.type == :date
         parsed_date = safe_parse_date(filter['value'])
@@ -418,7 +331,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def find_facet(facet_id)
-    facets.find { _1.id == facet_id }
+    Facet.facets(procedure:).find { _1.id == facet_id }
   end
 
   def find_type_de_champ(column)
@@ -475,37 +388,13 @@ class ProcedurePresentation < ApplicationRecord
     Facet.new(table:, column:, label:, classname:, virtual:, type:, scope:, value_column:, filterable:)
   end
 
-  def field_hash_for_type_de_champ_public(tdc)
-    tdc.dynamic_type.search_paths.map do |path_struct|
-      field_hash(
-        TYPE_DE_CHAMP,
-        tdc.stable_id.to_s,
-        label: path_struct[:libelle],
-        type: TypeDeChamp.filter_hash_type(tdc.type_champ),
-        value_column: path_struct[:path]
-      )
-    end
-  end
-
-  def field_hash_for_type_de_champ_private(tdc)
-    tdc.dynamic_type.search_paths.map do |path_struct|
-      field_hash(
-        TYPE_DE_CHAMP_PRIVATE,
-        tdc.stable_id.to_s,
-        label: path_struct[:libelle],
-        type: TypeDeChamp.filter_hash_type(tdc.type_champ),
-        value_column: path_struct[:path]
-      )
-    end
-  end
-
   def valid_column?(table, column, extra_columns = {})
     valid_columns_for_table(table).include?(column) ||
       extra_columns[table]&.include?(column)
   end
 
   def valid_columns_for_table(table)
-    @column_whitelist ||= facets
+    @column_whitelist ||= Facet.facets(procedure:)
       .group_by(&:table)
       .transform_values { |fields| Set.new(facets.map(&:column)) }
 
