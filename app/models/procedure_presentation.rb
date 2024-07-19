@@ -411,11 +411,17 @@ class ProcedurePresentation < ApplicationRecord
   private
 
   # type_de_champ/4373429
-  def field_id(field)
-    if field.label == 'rna – commune'
-      "#{[field.table, field.column].join(SLASH)}->#{field.value_column}"
+  def field_id(field_or_sort)
+    if field_or_sort.is_a?(Hash)
+      sort = field_or_sort
+      [sort[TABLE], sort[COLUMN]].join(SLASH)
     else
-      [field.table, field.column].join(SLASH)
+      field = field_or_sort
+      if field.label == 'rna – commune'
+        "#{[field.table, field.column].join(SLASH)}->#{field.value_column}"
+      else
+        [field.table, field.column].join(SLASH)
+      end
     end
   end
 
