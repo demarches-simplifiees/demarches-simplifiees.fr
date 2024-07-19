@@ -236,10 +236,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def update_displayed_fields(facet_ids)
-    if facet_ids.nil?
-      facet_ids = []
-    end
-
+    facet_ids = Array.wrap(facet_ids)
     facets = facet_ids.map { |id| Facet.find(procedure:, id:) }
 
     update!(displayed_fields: facets)
