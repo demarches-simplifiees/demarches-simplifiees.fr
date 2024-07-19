@@ -10,10 +10,10 @@ describe ProcedurePresentation do
     create(:procedure_presentation,
       assign_to: assign_to,
       displayed_fields: [
-        { "label" => "test1", "table" => "user", "column" => "email" },
-        { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }
+        { label: "test1", table: "user", column: "email" },
+        { label: "test2", table: "type_de_champ", column: first_type_de_champ_id }
       ],
-      sort: { "table" => "user", "column" => "email", "order" => "asc" },
+      sort: { table: "user", column: "email", "order" => "asc" },
       filters: filters)
   }
   let(:procedure_presentation_id) { procedure_presentation.id }
@@ -35,19 +35,19 @@ describe ProcedurePresentation do
     it { expect(build(:procedure_presentation)).to be_valid }
 
     context 'of displayed fields' do
-      it { expect(build(:procedure_presentation, displayed_fields: [{ "table" => "user", "column" => "reset_password_token", "order" => "asc" }])).to be_invalid }
+      it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
     end
 
     context 'of sort' do
-      it { expect(build(:procedure_presentation, sort: { "table" => "notifications", "column" => "notifications", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { "table" => "self", "column" => "id", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { "table" => "self", "column" => "state", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { "table" => "user", "column" => "reset_password_token", "order" => "asc" })).to be_invalid }
+      it { expect(build(:procedure_presentation, sort: { table: "notifications", column: "notifications", "order" => "asc" })).to be_valid }
+      it { expect(build(:procedure_presentation, sort: { table: "self", column: "id", "order" => "asc" })).to be_valid }
+      it { expect(build(:procedure_presentation, sort: { table: "self", column: "state", "order" => "asc" })).to be_valid }
+      it { expect(build(:procedure_presentation, sort: { table: "user", column: "reset_password_token", "order" => "asc" })).to be_invalid }
     end
 
     context 'of filters' do
-      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "reset_password_token", "order" => "asc" }] })).to be_invalid }
-      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ "table" => "user", "column" => "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
+      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "reset_password_token", "order" => "asc" }] })).to be_invalid }
+      it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
     end
   end
 
@@ -64,36 +64,36 @@ describe ProcedurePresentation do
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
-          { "label" => 'Créé le', "table" => 'self', "column" => 'created_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Mis à jour le', "table" => 'self', "column" => 'updated_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Déposé le', "table" => 'self', "column" => 'depose_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'En construction le', "table" => 'self', "column" => 'en_construction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'En instruction le', "table" => 'self', "column" => 'en_instruction_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Terminé le', "table" => 'self', "column" => 'processed_at', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Mis à jour depuis", "table" => "self", "column" => "updated_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Déposé depuis", "table" => "self", "column" => "depose_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "En construction depuis", "table" => "self", "column" => "en_construction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "En instruction depuis", "table" => "self", "column" => "en_instruction_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Terminé depuis", "table" => "self", "column" => "processed_since", "classname" => "", 'virtual' => true, 'type' => :date, 'scope' => '', "value_column" => :value, 'filterable' => true },
-          { "label" => "Statut", "table" => "self", "column" => "state", "classname" => "", 'virtual' => true, 'scope' => 'instructeurs.dossiers.filterable_state', 'type' => :enum, "value_column" => :value, 'filterable' => true },
-          { "label" => 'Demandeur', "table" => 'user', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Email instructeur', "table" => 'followers_instructeurs', "column" => 'email', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Groupe instructeur', "table" => 'groupe_instructeur', "column" => 'id', 'classname' => '', 'virtual' => false, 'type' => :enum, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Avis oui/non', "table" => 'avis', "column" => 'question_answer', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => false },
-          { "label" => 'SIREN', "table" => 'etablissement', "column" => 'entreprise_siren', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Forme juridique', "table" => 'etablissement', "column" => 'entreprise_forme_juridique', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Nom commercial', "table" => 'etablissement', "column" => 'entreprise_nom_commercial', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Raison sociale', "table" => 'etablissement', "column" => 'entreprise_raison_sociale', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'SIRET siège social', "table" => 'etablissement', "column" => 'entreprise_siret_siege_social', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Date de création', "table" => 'etablissement', "column" => 'entreprise_date_creation', 'classname' => '', 'virtual' => false, 'type' => :date, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'SIRET', "table" => 'etablissement', "column" => 'siret', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Libellé NAF', "table" => 'etablissement', "column" => 'libelle_naf', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => 'Code postal', "table" => 'etablissement', "column" => 'code_postal', 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_1.libelle, "table" => 'type_de_champ', "column" => tdc_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_2.libelle, "table" => 'type_de_champ', "column" => tdc_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_private_1.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_1.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true },
-          { "label" => tdc_private_2.libelle, "table" => 'type_de_champ_private', "column" => tdc_private_2.stable_id.to_s, 'classname' => '', 'virtual' => false, 'type' => :text, "scope" => '', "value_column" => :value, 'filterable' => true }
-        ]
+          { label: 'Créé le', table: 'self', column: 'created_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'Mis à jour le', table: 'self', column: 'updated_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'Déposé le', table: 'self', column: 'depose_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'En construction le', table: 'self', column: 'en_construction_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'En instruction le', table: 'self', column: 'en_instruction_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'Terminé le', table: 'self', column: 'processed_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Mis à jour depuis", table: "self", column: "updated_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Déposé depuis", table: "self", column: "depose_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "En construction depuis", table: "self", column: "en_construction_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "En instruction depuis", table: "self", column: "en_instruction_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Terminé depuis", table: "self", column: "processed_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Statut", table: "self", column: "state", classname: "", virtual: true, scope: 'instructeurs.dossiers.filterable_state', type: :enum, value_column: :value, filterable: true },
+          { label: 'Demandeur', table: 'user', column: 'email', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', classname: '', virtual: false, type: :enum, scope: '', value_column: :value, filterable: true },
+          { label: 'Avis oui/non', table: 'avis', column: 'question_answer', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: false },
+          { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Raison sociale', table: 'etablissement', column: 'entreprise_raison_sociale', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'SIRET siège social', table: 'etablissement', column: 'entreprise_siret_siege_social', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Date de création', table: 'etablissement', column: 'entreprise_date_creation', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'SIRET', table: 'etablissement', column: 'siret', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Libellé NAF', table: 'etablissement', column: 'libelle_naf', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Code postal', table: 'etablissement', column: 'code_postal', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_1.libelle, table: 'type_de_champ', column: tdc_1.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_2.libelle, table: 'type_de_champ', column: tdc_2.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_private_1.libelle, table: 'type_de_champ_private', column: tdc_private_1.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_private_2.libelle, table: 'type_de_champ_private', column: tdc_private_2.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true }
+        ].map { Facet.new(**_1) }
       }
 
       before do
@@ -105,13 +105,29 @@ describe ProcedurePresentation do
 
       subject { create(:procedure_presentation, assign_to: assign_to) }
 
-      it { expect(subject.fields).to eq(expected) }
+      context 'with explication/header_sections' do
+        let(:types_de_champ_public) { Array.new(4) { { type: :text } } }
+        let(:types_de_champ_private) { Array.new(4) { { type: :text } } }
+        before do
+          procedure.active_revision.types_de_champ_public[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+          procedure.active_revision.types_de_champ_public[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+          procedure.active_revision.types_de_champ_private[2].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:header_section))
+          procedure.active_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
+        end
+        it { expect(subject.fields).to eq(expected) }
+      end
+
+      context 'with rna' do
+        let(:types_de_champ_public) { [{ type: :rna, libelle: 'rna' }] }
+        let(:types_de_champ_private) { [] }
+        xit { expect(subject.fields.map(&:label)).to include('rna – commune') }
+      end
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { { "label" => "Prénom", "table" => "individual", "column" => "prenom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:surname_field) { { "label" => "Nom", "table" => "individual", "column" => "nom", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:gender_field) { { "label" => "Civilité", "table" => "individual", "column" => "gender", 'classname' => '', 'virtual' => false, "type" => :text, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:name_field) { Facet.new(label: "Prénom", table: "individual", column: "prenom", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:surname_field) { Facet.new(label: "Nom", table: "individual", column: "nom", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:gender_field) { Facet.new(label: "Civilité", table: "individual", column: "gender", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -124,8 +140,8 @@ describe ProcedurePresentation do
       let(:procedure) { create(:procedure, :for_individual, :sva) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { { "label" => "Date décision SVA", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:decision_before_field) { { "label" => "Date décision SVA avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:decision_on) { Facet.new(label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_before_field) { Facet.new(label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
 
       subject { procedure_presentation.fields }
 
@@ -136,8 +152,8 @@ describe ProcedurePresentation do
       let(:procedure) { create(:procedure, :for_individual, :svr) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { { "label" => "Date décision SVR", "table" => "self", "column" => "sva_svr_decision_on", 'classname' => '', 'virtual' => false, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
-      let(:decision_before_field) { { "label" => "Date décision SVR avant", "table" => "self", "column" => "sva_svr_decision_before", 'classname' => '', 'virtual' => true, "type" => :date, "scope" => '', "value_column" => :value, 'filterable' => true } }
+      let(:decision_on) { Facet.new(label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_before_field) { Facet.new(label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
 
       subject { procedure_presentation.fields }
 
@@ -147,8 +163,8 @@ describe ProcedurePresentation do
 
   describe "#displayable_fields_for_select" do
     subject { create(:procedure_presentation, assign_to: assign_to) }
-    let(:excluded_displayable_field) { { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true } }
-    let(:included_displayable_field) { { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false } }
+    let(:excluded_displayable_field) { Facet.new(label: "depose_since", table: "self", column: "depose_since", virtual: true) }
+    let(:included_displayable_field) { Facet.new(label: "label1", table: "table1", column: "column1", virtual: false) }
 
     before do
       allow(subject).to receive(:fields).and_return([
@@ -161,15 +177,25 @@ describe ProcedurePresentation do
   end
   describe "#filterable_fields_options" do
     subject { create(:procedure_presentation, assign_to: assign_to) }
-    let(:included_displayable_field) do
-      [
-        { "label" => "label1", "table" => "table1", "column" => "column1", 'virtual' => false },
-        { "label" => "depose_since", "table" => "self", "column" => "depose_since", 'virtual' => true }
-      ]
-    end
 
-    before do
-      allow(subject).to receive(:fields).and_return(included_displayable_field)
+    context 'filders' do
+      let(:included_displayable_field) do
+        [
+          Facet.new(label: "label1", table: "table1", column: "column1", virtual: false),
+          Facet.new(label: "depose_since", table: "self", column: "depose_since", virtual: true)
+        ]
+      end
+
+      before do
+        allow(subject).to receive(:fields).and_return(included_displayable_field)
+      end
+
+      it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
+    end
+    context 'with rna' do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :rna, libelle: 'rna', stable_id: 1 }]) }
+      it { expect(subject.filterable_fields_options.map { _1[0] }).to include('rna – commune') }
+      it { expect(subject.filterable_fields_options.map { _1[1] }).to include('type_de_champ/1->data.commune') }
     end
 
     it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
@@ -859,7 +885,7 @@ describe ProcedurePresentation do
   end
 
   describe "#human_value_for_filter" do
-    let(:filters) { { "suivis" => [{ "label" => "label1", "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true" }] } }
+    let(:filters) { { "suivis" => [{ label: "label1", table: "type_de_champ", column: first_type_de_champ_id, "value" => "true" }] } }
 
     subject { procedure_presentation.human_value_for_filter(procedure_presentation.filters["suivis"].first) }
 
@@ -878,7 +904,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is state' do
-      let(:filters) { { "suivis" => [{ "table" => "self", "column" => "state", "value" => "en_construction" }] } }
+      let(:filters) { { "suivis" => [{ table: "self", column: "state", "value" => "en_construction" }] } }
 
       it 'should get i18n value' do
         expect(subject).to eq("En construction")
@@ -886,7 +912,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is a date' do
-      let(:filters) { { "suivis" => [{ "table" => "self", "column" => "en_instruction_at", "value" => "15/06/2023" }] } }
+      let(:filters) { { "suivis" => [{ table: "self", column: "en_instruction_at", "value" => "15/06/2023" }] } }
 
       it 'should get formatted value' do
         expect(subject).to eq("15/06/2023")

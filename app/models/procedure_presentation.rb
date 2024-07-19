@@ -94,24 +94,24 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayable_fields_for_select
     [
-      fields.reject { |field| field['virtual'] }
-        .map { |field| [field['label'], field_id(field)] },
-      displayed_fields.map { |field| field_id(field) }
+      fields.reject(&:virtual)
+        .map { |field| [field.label, field_id(field)] },
+      displayed_fields.map { field_id(Facet.new(**_1.deep_symbolize_keys)) }
     ]
   end
 
   def filterable_fields_options
     fields.filter_map do |field|
-      next if field['filterable'] == false
+      next if field.filterable == false
 
-      [field['label'], field_id(field)]
+      [field.label, field_id(field)]
     end
   end
 
   def displayed_fields_for_headers
     [
       field_hash('self', 'id', classname: 'number-col'),
-      *displayed_fields,
+      *displayed_fields.map { Facet.new(**_1.deep_symbolize_keys) },
       field_hash('self', 'state', classname: 'state-col'),
       *sva_svr_fields
     ]
@@ -201,15 +201,15 @@ class ProcedurePresentation < ApplicationRecord
       value_column = filters.pluck('value_column').compact.first || :value
       case table
       when 'self'
-        field = self_fields.find { |h| h['column'] == column }
-        if field['type'] == :date
+        field = self_fields.find { |h| h.column == column }
+        if field.type == :date
           dates = values
             .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
           dossiers.filter_by_datetimes(column, dates)
-        elsif field['column'] == "state" && values.include?("pending_correction")
+        elsif field.column == "state" && values.include?("pending_correction")
           dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-        elsif field['column'] == "state" && values.include?("en_construction")
+        elsif field.column == "state" && values.include?("en_construction")
           dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
         else
           dossiers.where("dossiers.#{column} IN (?)", values)
@@ -284,7 +284,7 @@ class ProcedurePresentation < ApplicationRecord
     else
       field = find_field(filter[TABLE], filter[COLUMN])
 
-      if field["type"] == :date
+      if field.type == :date
         parsed_date = safe_parse_date(filter['value'])
 
         return parsed_date.present? ? I18n.l(parsed_date) : nil
@@ -303,7 +303,8 @@ class ProcedurePresentation < ApplicationRecord
   def add_filter(statut, field, value)
     if value.present?
       table, column = field.split(SLASH)
-      label, value_column = find_field(table, column).values_at('label', 'value_column')
+      label = find_field(table, column).label
+      value_column = find_field(table, column).value_column
 
       case table
       when TYPE_DE_CHAMP, TYPE_DE_CHAMP_PRIVATE
@@ -371,26 +372,27 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def field_type(field_id)
-    find_field(*field_id.split(SLASH))['type']
+    find_field(*field_id.split(SLASH)).type
   end
 
   def field_enum(field_id)
     field = find_field(*field_id.split(SLASH))
-    if field['scope'].present?
-      I18n.t(field['scope']).map(&:to_a).map(&:reverse)
-    elsif field['table'] == 'groupe_instructeur'
+    if field.scope.present?
+      I18n.t(field.scope).map(&:to_a).map(&:reverse)
+    elsif field.table == 'groupe_instructeur'
       instructeur.groupe_instructeurs.filter_map do
         if _1.procedure_id == procedure.id
           [_1.label, _1.id]
         end
       end
     else
-      find_type_de_champ(field['column']).options_for_select
+      find_type_de_champ(field.column).options_for_select
     end
   end
 
   def sortable?(field)
-    sort['table'] == field['table'] && sort['column'] == field['column']
+    sort['table'] == field.table &&
+    sort['column'] == field.column
   end
 
   def aria_sort(order, field)
@@ -407,12 +409,23 @@ class ProcedurePresentation < ApplicationRecord
 
   private
 
-  def field_id(field)
-    field.values_at(TABLE, COLUMN).join(SLASH)
+  # type_de_champ/4373429
+  def field_id(field_or_sort)
+    if field_or_sort.is_a?(Hash)
+      sort = field_or_sort
+      [sort[TABLE], sort[COLUMN]].join(SLASH)
+    else
+      field = field_or_sort
+      if field.label == 'rna – commune'
+        "#{[field.table, field.column].join(SLASH)}->#{field.value_column}"
+      else
+        [field.table, field.column].join(SLASH)
+      end
+    end
   end
 
   def find_field(table, column)
-    fields.find { |field| field.values_at(TABLE, COLUMN) == [table, column] }
+    fields.find { [_1.table, _1.column] == [table, column] }
   end
 
   def find_type_de_champ(column)
@@ -466,17 +479,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def field_hash(table, column, label: nil, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true)
-    {
-      'label' => label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table]),
-      TABLE => table,
-      COLUMN => column,
-      'classname' => classname,
-      'virtual' => virtual,
-      'type' => type,
-      'scope' => scope,
-      'value_column' => value_column,
-      'filterable' => filterable
-    }
+    Facet.new(table:, column:, label:, classname:, virtual:, type:, scope:, value_column:, filterable:)
   end
 
   def field_hash_for_type_de_champ_public(type_champ, libelle, stable_id)
@@ -500,8 +503,8 @@ class ProcedurePresentation < ApplicationRecord
 
   def valid_columns_for_table(table)
     @column_whitelist ||= fields
-      .group_by { |field| field[TABLE] }
-      .transform_values { |fields| Set.new(fields.pluck(COLUMN)) }
+      .group_by(&:table)
+      .transform_values { |facets| Set.new(facets.map(&:column)) }
 
     @column_whitelist[table] || []
   end
