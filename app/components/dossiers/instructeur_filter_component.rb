@@ -35,4 +35,14 @@ class Dossiers::InstructeurFilterComponent < ApplicationComponent
       data: { no_autosubmit: 'input blur', no_autosubmit_on_empty: 'true', autosubmit_target: 'input' }
     }
   end
+
+  private
+
+  def find_type_de_champ(column)
+    TypeDeChamp
+      .joins(:revision_types_de_champ)
+      .where(revision_types_de_champ: { revision_id: procedure.revisions })
+      .order(created_at: :desc)
+      .find_by(stable_id: column)
+  end
 end
