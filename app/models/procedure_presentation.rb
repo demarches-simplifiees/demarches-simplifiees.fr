@@ -396,7 +396,7 @@ class ProcedurePresentation < ApplicationRecord
   def valid_columns_for_table(table)
     @column_whitelist ||= Facet.facets(procedure:)
       .group_by(&:table)
-      .transform_values { |fields| Set.new(facets.map(&:column)) }
+      .transform_values { |facets| Set.new(facets.map(&:column)) }
 
     @column_whitelist[table] || []
   end
