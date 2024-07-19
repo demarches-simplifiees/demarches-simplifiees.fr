@@ -1,4 +1,6 @@
 class Facet
+  attr_reader :table, :column, :label, :classname, :virtual, :type, :scope, :value_column, :filterable
+
   TYPE_DE_CHAMP = 'type_de_champ'
 
   def initialize(table:, column:, label: nil, virtual: false, type: :text, value_column: :value, filterable: true, classname: '', scope: '')
@@ -13,7 +15,9 @@ class Facet
     @filterable = filterable
   end
 
-  attr_reader :table, :column, :label, :classname, :virtual, :type, :scope, :value_column, :filterable
+  def id
+    "#{table}/#{column}"
+  end
 
   def ==(other)
     other.to_json == to_json
