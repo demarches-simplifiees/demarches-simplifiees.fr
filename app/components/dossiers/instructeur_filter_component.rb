@@ -1,4 +1,6 @@
 class Dossiers::InstructeurFilterComponent < ApplicationComponent
+  attr_reader :procedure, :procedure_presentation, :statut, :facet
+
   def initialize(procedure:, procedure_presentation:, statut:, facet: nil)
     @procedure = procedure
     @procedure_presentation = procedure_presentation
@@ -6,12 +8,20 @@ class Dossiers::InstructeurFilterComponent < ApplicationComponent
     @facet = facet
   end
 
-  attr_reader :procedure, :procedure_presentation, :statut, :facet
-
   def facet_type = facet.present? ? facet.type : :text
 
   def options_for_select_of_field
-    procedure_presentation.field_enum(field_id)
+    if facet.scope.present?
+      I18n.t(facet.scope).map(&:to_a).map(&:reverse)
+    elsif facet.table == 'groupe_instructeur'
+      current_instructeur.groupe_instructeurs.filter_map do
+        if _1.procedure_id == procedure.id
+          [_1.label, _1.id]
+        end
+      end
+    else
+      find_type_de_champ(facet.column).options_for_select
+    end
   end
 
   def filter_react_props
