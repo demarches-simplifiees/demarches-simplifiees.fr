@@ -48,113 +48,6 @@ class ProcedurePresentation < ApplicationRecord
     ]
   end
 
-  def sorted_ids(dossiers, count)
-    table, column, order = sort.values_at(TABLE, COLUMN, 'order')
-
-    case table
-    when 'notifications'
-      dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
-      if order == 'desc'
-        dossiers_id_with_notification +
-            (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
-      else
-        (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
-            dossiers_id_with_notification
-      end
-    when TYPE_DE_CHAMP
-      ids = dossiers
-        .with_type_de_champ(column)
-        .order("champs.value #{order}")
-        .pluck(:id)
-      if ids.size != count
-        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
-        order == 'asc' ? ids + rest : rest + ids
-      else
-        ids
-      end
-    when 'followers_instructeurs'
-      assert_supported_column(table, column)
-      # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
-      dossiers
-        .includes(:followers_instructeurs)
-        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-        .order("instructeurs_users.email #{order}")
-        .pluck(:id)
-        .uniq
-    when 'avis'
-      dossiers.includes(table)
-        .order("#{self.class.sanitized_column(table, column)} #{order}")
-        .pluck(:id)
-        .uniq
-    when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
-      (table == 'self' ? dossiers : dossiers.includes(table))
-        .order("#{self.class.sanitized_column(table, column)} #{order}")
-        .pluck(:id)
-    end
-  end
-
-  def filtered_ids(dossiers, statut)
-    filters.fetch(statut)
-      .group_by { |filter| filter.values_at(TABLE, COLUMN) }
-      .map do |(table, column), filters|
-      values = filters.pluck('value')
-      value_column = filters.pluck('value_column').compact.first || :value
-      case table
-      when 'self'
-        field = Facet.dossier_facets(procedure:).find { |h| h.column == column }
-        if field.type == :date
-          dates = values
-            .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
-
-          dossiers.filter_by_datetimes(column, dates)
-        elsif field.column == "state" && values.include?("pending_correction")
-          dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-        elsif field.column == "state" && values.include?("en_construction")
-          dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
-        else
-          dossiers.where("dossiers.#{column} IN (?)", values)
-        end
-      when TYPE_DE_CHAMP
-        dossiers.with_type_de_champ(column)
-          .filter_ilike(:champs, value_column, values)
-      when 'etablissement'
-        if column == 'entreprise_date_creation'
-          dates = values
-            .filter_map { |v| v.to_date rescue nil }
-
-          dossiers
-            .includes(table)
-            .where(table.pluralize => { column => dates })
-        else
-          dossiers
-            .includes(table)
-            .filter_ilike(table, column, values)
-        end
-      when 'followers_instructeurs'
-        assert_supported_column(table, column)
-        dossiers
-          .includes(:followers_instructeurs)
-          .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-          .filter_ilike('instructeurs_users', :email, values)
-      when 'user', 'individual', 'avis'
-        dossiers
-          .includes(table)
-          .filter_ilike(table, column, values)
-      when 'groupe_instructeur'
-        assert_supported_column(table, column)
-        if column == 'label'
-          dossiers
-            .joins(:groupe_instructeur)
-            .filter_ilike(table, column, values)
-        else
-          dossiers
-            .joins(:groupe_instructeur)
-            .where(groupe_instructeur_id: values)
-        end
-      end.pluck(:id)
-    end.reduce(:&)
-  end
-
   def filtered_sorted_ids(dossiers, statut, count: nil)
     dossiers_by_statut = dossiers.by_statut(statut, instructeur)
     dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count || dossiers_by_statut.size)
@@ -286,6 +179,113 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   private
+
+  def sorted_ids(dossiers, count)
+    table, column, order = sort.values_at(TABLE, COLUMN, 'order')
+
+    case table
+    when 'notifications'
+      dossiers_id_with_notification = dossiers.merge(instructeur.followed_dossiers).with_notifications.ids
+      if order == 'desc'
+        dossiers_id_with_notification +
+            (dossiers.order('dossiers.updated_at desc').ids - dossiers_id_with_notification)
+      else
+        (dossiers.order('dossiers.updated_at asc').ids - dossiers_id_with_notification) +
+            dossiers_id_with_notification
+      end
+    when TYPE_DE_CHAMP
+      ids = dossiers
+        .with_type_de_champ(column)
+        .order("champs.value #{order}")
+        .pluck(:id)
+      if ids.size != count
+        rest = dossiers.where.not(id: ids).order(id: order).pluck(:id)
+        order == 'asc' ? ids + rest : rest + ids
+      else
+        ids
+      end
+    when 'followers_instructeurs'
+      assert_supported_column(table, column)
+      # LEFT OUTER JOIN allows to keep dossiers without assigned instructeurs yet
+      dossiers
+        .includes(:followers_instructeurs)
+        .joins('LEFT OUTER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
+        .order("instructeurs_users.email #{order}")
+        .pluck(:id)
+        .uniq
+    when 'avis'
+      dossiers.includes(table)
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+        .uniq
+    when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
+      (table == 'self' ? dossiers : dossiers.includes(table))
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+    end
+  end
+
+  def filtered_ids(dossiers, statut)
+    filters.fetch(statut)
+      .group_by { |filter| filter.values_at(TABLE, COLUMN) }
+      .map do |(table, column), filters|
+      values = filters.pluck('value')
+      value_column = filters.pluck('value_column').compact.first || :value
+      case table
+      when 'self'
+        field = Facet.dossier_facets(procedure:).find { |h| h.column == column }
+        if field.type == :date
+          dates = values
+            .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+
+          dossiers.filter_by_datetimes(column, dates)
+        elsif field.column == "state" && values.include?("pending_correction")
+          dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
+        elsif field.column == "state" && values.include?("en_construction")
+          dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+        else
+          dossiers.where("dossiers.#{column} IN (?)", values)
+        end
+      when TYPE_DE_CHAMP
+        dossiers.with_type_de_champ(column)
+          .filter_ilike(:champs, value_column, values)
+      when 'etablissement'
+        if column == 'entreprise_date_creation'
+          dates = values
+            .filter_map { |v| v.to_date rescue nil }
+
+          dossiers
+            .includes(table)
+            .where(table.pluralize => { column => dates })
+        else
+          dossiers
+            .includes(table)
+            .filter_ilike(table, column, values)
+        end
+      when 'followers_instructeurs'
+        assert_supported_column(table, column)
+        dossiers
+          .includes(:followers_instructeurs)
+          .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
+          .filter_ilike('instructeurs_users', :email, values)
+      when 'user', 'individual', 'avis'
+        dossiers
+          .includes(table)
+          .filter_ilike(table, column, values)
+      when 'groupe_instructeur'
+        assert_supported_column(table, column)
+        if column == 'label'
+          dossiers
+            .joins(:groupe_instructeur)
+            .filter_ilike(table, column, values)
+        else
+          dossiers
+            .joins(:groupe_instructeur)
+            .where(groupe_instructeur_id: values)
+        end
+      end.pluck(:id)
+    end.reduce(:&)
+  end
 
   # type_de_champ/4373429
   def sort_to_facet_id(sort)
