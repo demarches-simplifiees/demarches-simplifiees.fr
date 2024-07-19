@@ -271,21 +271,6 @@ class ProcedurePresentation < ApplicationRecord
     slice(:filters, :sort, :displayed_fields)
   end
 
-  def field_enum(facet_id)
-    facet = Facet.find(procedure:, id: facet_id)
-    if facet.scope.present?
-      I18n.t(facet.scope).map(&:to_a).map(&:reverse)
-    elsif facet.table == 'groupe_instructeur'
-      instructeur.groupe_instructeurs.filter_map do
-        if _1.procedure_id == procedure.id
-          [_1.label, _1.id]
-        end
-      end
-    else
-      find_type_de_champ(facet.column).options_for_select
-    end
-  end
-
   def sortable?(field)
     sort['table'] == field.table &&
     sort['column'] == field.column
