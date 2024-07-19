@@ -1,6 +1,5 @@
 class Facet
   TYPE_DE_CHAMP = 'type_de_champ'
-  TYPE_DE_CHAMP_PRIVATE = 'type_de_champ_private'
 
   def initialize(table:, column:, label: nil, virtual: false, type: :text, value_column: :value, filterable: true, classname: '', scope: '')
     @table = table
@@ -82,56 +81,37 @@ class Facet
         new(table: 'etablissement', column: 'entreprise_nom_commercial', type: :text),
         new(table: 'etablissement', column: 'entreprise_raison_sociale', type: :text),
         new(table: 'etablissement', column: 'entreprise_siret_siege_social', type: :text),
-        new(table: 'etablissement', column: 'entreprise_date_creation', type: :date)
-      )
-
-      facets.push(
+        new(table: 'etablissement', column: 'entreprise_date_creation', type: :date),
         new(table: 'etablissement', column: 'siret', type: :text),
         new(table: 'etablissement', column: 'libelle_naf', type: :text),
         new(table: 'etablissement', column: 'code_postal', type: :text)
       )
     end
 
-    facets.concat(procedure.types_de_champ_for_procedure_presentation
-      .pluck(:type_champ, :libelle, :private, :stable_id)
-      .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
-      .flat_map do |(type_champ, libelle, is_private, stable_id)|
-        tdc = TypeDeChamp.new(type_champ:, libelle:, private: is_private, stable_id:)
-        if is_private
-          facets_for_type_de_champ_private(tdc)
-        else
-          facets_for_type_de_champ_public(tdc)
-        end
-      end)
+    facets.concat(types_de_champ_facets(procedure))
 
     facets
   end
 
-  def self.facets_for_type_de_champ_public(tdc)
-    tdc.dynamic_type.search_paths.map do |path_struct|
-      new(
-        table: TYPE_DE_CHAMP,
-        column: tdc.stable_id.to_s,
-        label: path_struct[:libelle],
-        type: TypeDeChamp.filter_hash_type(tdc.type_champ),
-        value_column: path_struct[:path]
-      )
-    end
+  def self.types_de_champ_facets(procedure)
+    procedure
+      .types_de_champ_for_procedure_presentation
+      .pluck(:type_champ, :libelle, :stable_id)
+      .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
+      .flat_map do |(type_champ, libelle, stable_id)|
+        tdc = TypeDeChamp.new(type_champ:, libelle:, stable_id:)
+
+        tdc.dynamic_type.search_paths.map do |path_struct|
+          new(
+            table: TYPE_DE_CHAMP,
+            column: tdc.stable_id.to_s,
+            label: path_struct[:libelle],
+            type: TypeDeChamp.filter_hash_type(tdc.type_champ),
+            value_column: path_struct[:path]
+          )
+        end
+      end
   end
-
-  def self.facets_for_type_de_champ_private(tdc)
-    tdc.dynamic_type.search_paths.map do |path_struct|
-      new(
-        table: TYPE_DE_CHAMP_PRIVATE,
-        column: tdc.stable_id.to_s,
-        label: path_struct[:libelle],
-        type: TypeDeChamp.filter_hash_type(tdc.type_champ),
-        value_column: path_struct[:path]
-      )
-    end
-  end
-
-
 
   def self.sva_svr_facets(procedure:, for_filters: false)
     return if !procedure.sva_svr_enabled?
