@@ -99,7 +99,7 @@
                     %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
 
                 - @procedure_presentation.displayed_fields_for_headers.each do |field|
-                  = render partial: "header_field", locals: { field: field, classname: field['classname'] }
+                  = render partial: "header_field", locals: { field: field }
 
                 %th.follow-col
                   Actions
