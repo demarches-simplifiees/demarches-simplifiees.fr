@@ -161,13 +161,13 @@ class ProcedurePresentation < ApplicationRecord
     slice(:filters, :sort, :displayed_fields)
   end
 
-  def sortable?(field)
-    sort['table'] == field.table &&
-    sort['column'] == field.column
+  def sorted_by?(facet)
+    sort['table'] == facet.table &&
+    sort['column'] == facet.column
   end
 
   def aria_sort(order, field)
-    if sortable?(field)
+    if sorted_by?(field)
       if order == 'asc'
         { "aria-sort": "ascending" }
       elsif order == 'desc'
