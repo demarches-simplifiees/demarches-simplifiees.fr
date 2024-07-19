@@ -39,6 +39,7 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, fields)
+    fields = fields.deep_dup
     state_field = { TABLE => 'self', COLUMN => 'state' }
     archived_field = { TABLE => 'self', COLUMN => 'archived' }
     batch_operation_field = { TABLE => 'self', COLUMN => 'batch_operation_id' }
