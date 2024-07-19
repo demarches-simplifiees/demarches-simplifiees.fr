@@ -13,6 +13,10 @@ class Facet
 
   attr_reader :table, :column, :label, :classname, :virtual, :type, :scope, :value_column, :filterable
 
+  def id
+    "#{table}/#{column}"
+  end
+
   # ??? p-e que le filtre peut avoir
   # -> .serialize (field_id)
   # -> .type
