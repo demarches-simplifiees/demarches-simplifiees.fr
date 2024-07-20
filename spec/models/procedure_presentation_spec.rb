@@ -66,30 +66,6 @@ describe ProcedurePresentation do
 
     it { expect(subject.displayable_fields_for_select).to eq([[["email", "user/email"]], ["user/email"]]) }
   end
-  describe "#filterable_fields_options" do
-    subject { create(:procedure_presentation, assign_to: assign_to) }
-
-    context 'filders' do
-      let(:included_displayable_field) do
-        [
-          Facet.new(label: 'email', table: 'user', column: 'email'),
-          Facet.new(label: "depose_since", table: "self", column: "depose_since", virtual: true)
-        ]
-      end
-
-      before do
-        allow(procedure).to receive(:facets).and_return(included_displayable_field)
-      end
-
-      it { expect(subject.filterable_fields_options).to eq([["label1", "table1/column1"], ["depose_since", "self/depose_since"]]) }
-    end
-    context 'with rna' do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :rna, libelle: 'rna', stable_id: 1 }]) }
-      it { expect(subject.filterable_fields_options.map { _1[0] }).to include('rna – commune') }
-      it { expect(subject.filterable_fields_options.map { _1[1] }).to include('type_de_champ/1->data.commune') }
-      it { expect(subject.filterable_fields_options).to eq([["email", "user/email"], ["depose_since", "self/depose_since"]]) }
-    end
-  end
 
   describe '#sorted_ids' do
     let(:instructeur) { create(:instructeur) }

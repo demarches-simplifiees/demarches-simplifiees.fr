@@ -31,14 +31,6 @@ class ProcedurePresentation < ApplicationRecord
     ]
   end
 
-  def filterable_fields_options
-    procedure.facets.filter_map do |facet|
-      next if facet.filterable == false
-
-      [facet.label, facet.id]
-    end
-  end
-
   def displayed_fields_for_headers
     [
       Facet.new(table: 'self', column: 'id', classname: 'number-col'),
