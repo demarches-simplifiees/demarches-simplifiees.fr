@@ -58,7 +58,7 @@ describe ProcedurePresentation do
     let(:excluded_displayable_field) { Facet.new(label: "label1", table: "table1", column: "column1", virtual: true) }
 
     before do
-      allow(Facet).to receive(:facets).and_return([
+      allow(procedure).to receive(:facets).and_return([
         default_user_email,
         excluded_displayable_field
       ])
@@ -79,7 +79,7 @@ describe ProcedurePresentation do
       end
 
       before do
-        allow(Facet).to receive(:facets).and_return(included_displayable_field)
+        allow(procedure).to receive(:facets).and_return(included_displayable_field)
       end
 
       it { expect(subject.filterable_fields_options).to eq([["email", "user/email"], ["depose_since", "self/depose_since"]]) }

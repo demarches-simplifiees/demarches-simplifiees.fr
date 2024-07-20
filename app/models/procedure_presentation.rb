@@ -26,13 +26,13 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayable_fields_for_select
     [
-      Facet.facets(procedure:).reject(&:virtual).map { |facet| [facet.label, facet.id] },
+      procedure.facets.reject(&:virtual).map { |facet| [facet.label, facet.id] },
       displayed_fields.map { Facet.new(**_1.deep_symbolize_keys).id }
     ]
   end
 
   def filterable_fields_options
-    Facet.facets(procedure:).filter_map do |facet|
+    procedure.facets.filter_map do |facet|
       next if facet.filterable == false
 
       [facet.label, facet.id]
@@ -44,7 +44,7 @@ class ProcedurePresentation < ApplicationRecord
       Facet.new(table: 'self', column: 'id', classname: 'number-col'),
       *displayed_fields.map { Facet.new(**_1.deep_symbolize_keys) },
       Facet.new(table: 'self', column: 'state', classname: 'state-col'),
-      *Facet.sva_svr_facets(procedure:)
+      *procedure.sva_svr_facets
     ]
   end
 
@@ -72,7 +72,7 @@ class ProcedurePresentation < ApplicationRecord
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
     else
-      facet = Facet.facets(procedure:).find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
+      facet = procedure.facets.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
 
       if facet.type == :date
         parsed_date = safe_parse_date(filter['value'])
@@ -92,7 +92,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def add_filter(statut, facet_id, value)
     if value.present?
-      facet = Facet.find(procedure:, id: facet_id)
+      facet = procedure.find_facet(id: facet_id)
       label = facet.label
       column = facet.column
       table = facet.table
@@ -117,7 +117,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def remove_filter(statut, facet_id, value)
-    facet = Facet.find(procedure:, id: facet_id)
+    facet = procedure.find_facet(id: facet_id)
     table, column = facet.table, facet.column
 
     updated_filters = filters.dup
@@ -130,7 +130,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def update_displayed_fields(facet_ids)
     facet_ids = Array.wrap(facet_ids)
-    facets = facet_ids.map { |id| Facet.find(procedure:, id:) }
+    facets = facet_ids.map { |id| procedure.find_facet(id:) }
 
     update!(displayed_fields: facets)
 
@@ -233,7 +233,7 @@ class ProcedurePresentation < ApplicationRecord
       value_column = filters.pluck('value_column').compact.first || :value
       case table
       when 'self'
-        field = Facet.dossier_facets(procedure:).find { |h| h.column == column }
+        field = procedure.dossier_facets.find { |h| h.column == column }
         if field.type == :date
           dates = values
             .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
@@ -348,7 +348,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def valid_columns_for_table(table)
-    @column_whitelist ||= Facet.facets(procedure:)
+    @column_whitelist ||= procedure.facets
       .group_by(&:table)
       .transform_values { |facets| Set.new(facets.map(&:column)) }
 
