@@ -24,13 +24,6 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
 
-  def displayable_fields_for_select
-    [
-      procedure.facets.reject(&:virtual).map { |facet| [facet.label, facet.id] },
-      displayed_fields.map { Facet.new(**_1.deep_symbolize_keys).id }
-    ]
-  end
-
   def displayed_fields_for_headers
     [
       Facet.new(table: 'self', column: 'id', classname: 'number-col'),

@@ -72,7 +72,6 @@ module Instructeurs
       @procedure_presentation = procedure_presentation
 
       @current_filters = current_filters
-      @displayable_fields_for_select, @displayable_fields_selected = procedure_presentation.displayable_fields_for_select
       @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .symbolize_keys
