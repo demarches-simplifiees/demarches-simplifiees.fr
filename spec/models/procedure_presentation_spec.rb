@@ -51,22 +51,6 @@ describe ProcedurePresentation do
     end
   end
 
-  describe "#displayable_fields_for_select" do
-    subject { create(:procedure_presentation, assign_to: assign_to) }
-
-    let(:default_user_email) { Facet.new(label: 'email', table: 'user', column: 'email') }
-    let(:excluded_displayable_field) { Facet.new(label: "label1", table: "table1", column: "column1", virtual: true) }
-
-    before do
-      allow(procedure).to receive(:facets).and_return([
-        default_user_email,
-        excluded_displayable_field
-      ])
-    end
-
-    it { expect(subject.displayable_fields_for_select).to eq([[["email", "user/email"]], ["user/email"]]) }
-  end
-
   describe '#sorted_ids' do
     let(:instructeur) { create(:instructeur) }
     let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
