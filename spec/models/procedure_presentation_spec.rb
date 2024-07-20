@@ -67,25 +67,6 @@ describe ProcedurePresentation do
     it { expect(subject.displayable_fields_for_select).to eq([[["email", "user/email"]], ["user/email"]]) }
   end
 
-  describe "#filterable_fields_options" do
-    subject { create(:procedure_presentation, assign_to: assign_to) }
-
-    context 'filders' do
-      let(:included_displayable_field) do
-        [
-          Facet.new(label: 'email', table: 'user', column: 'email'),
-          Facet.new(label: "depose_since", table: "self", column: "depose_since", virtual: true)
-        ]
-      end
-
-      before do
-        allow(procedure).to receive(:facets).and_return(included_displayable_field)
-      end
-
-      it { expect(subject.filterable_fields_options).to eq([["email", "user/email"], ["depose_since", "self/depose_since"]]) }
-    end
-  end
-
   describe '#sorted_ids' do
     let(:instructeur) { create(:instructeur) }
     let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
