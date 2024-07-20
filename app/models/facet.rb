@@ -17,15 +17,6 @@ class Facet
     "#{table}/#{column}"
   end
 
-  # ??? p-e que le filtre peut avoir
-  # -> .serialize (field_id)
-  # -> .type
-  # -> .to_enum ? (field_enum(field_id))
-  # -> .to_sql? ou .to_filter? (filtered_ids)
-  # -> .humanize_value (human_value_for_filter)
-  # -> .sorted_on_me(ProcedurePresentation.sort)
-  # -> .aria_sort # p-e a extraire en vue
-  #
   def ==(other)
     other.to_json == to_json
   end
