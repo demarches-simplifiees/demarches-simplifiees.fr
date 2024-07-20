@@ -159,7 +159,7 @@ module Instructeurs
       @statut = statut
       @procedure = procedure
       @procedure_presentation = procedure_presentation
-      @facet = Facet.find(procedure:, id: params[:field])
+      @facet = procedure.find_facet(id: params[:field])
     end
 
     def remove_filter
