@@ -27,13 +27,21 @@ class Dossiers::InstructeurFilterComponent < ApplicationComponent
   def filter_react_props
     {
       selected_key: facet.present? ? facet.id : '',
-      items: procedure_presentation.filterable_fields_options,
+      items: filterable_fields_options,
       name: :field,
       id: 'search-filter',
       'aria-describedby': 'instructeur-filter-combo-label',
       form: 'filter-component',
       data: { no_autosubmit: 'input blur', no_autosubmit_on_empty: 'true', autosubmit_target: 'input' }
     }
+  end
+
+  def filterable_fields_options
+    procedure.facets.filter_map do |facet|
+      next if facet.filterable == false
+
+      [facet.label, facet.id]
+    end
   end
 
   private

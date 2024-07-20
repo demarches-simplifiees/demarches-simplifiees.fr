@@ -10,6 +10,25 @@ describe Dossiers::InstructeurFilterComponent, type: :component do
     allow(component).to receive(:current_instructeur).and_return(instructeur)
   end
 
+  describe ".filterable_fields_options" do
+    context 'filders' do
+      let(:facet) { nil }
+      let(:included_displayable_field) do
+        [
+          Facet.new(label: 'email', table: 'user', column: 'email'),
+          Facet.new(label: "depose_since", table: "self", column: "depose_since", virtual: true)
+        ]
+      end
+
+      before do
+        allow(Facet).to receive(:facets).and_return(included_displayable_field)
+      end
+      subject { component.filterable_fields_options }
+
+      it { is_expected.to eq([["email", "user/email"], ["depose_since", "self/depose_since"]]) }
+    end
+  end
+
   describe '.options_for_select_of_field' do
     subject { component.options_for_select_of_field }
 
