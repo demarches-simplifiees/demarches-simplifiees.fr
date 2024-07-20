@@ -1,5 +1,7 @@
-describe Facet do
+describe FacetsConcern do
   describe "#facets" do
+    subject { procedure.facets }
+
     context 'when the procedure can have a SIRET number' do
       let(:procedure) do
         create(:procedure,
@@ -44,8 +46,6 @@ describe Facet do
         ].map { Facet.new(**_1) }
       }
 
-      subject { Facet.facets(procedure:) }
-
       context 'with explication/header_sections' do
         let(:types_de_champ_public) { Array.new(4) { { type: :text } } }
         let(:types_de_champ_private) { Array.new(4) { { type: :text } } }
@@ -73,8 +73,6 @@ describe Facet do
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      subject { Facet.facets(procedure:) }
-
       it { is_expected.to include(name_field, surname_field, gender_field) }
     end
 
@@ -85,8 +83,6 @@ describe Facet do
       let(:decision_on) { Facet.new(label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
       let(:decision_before_field) { Facet.new(label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
 
-      subject { Facet.facets(procedure:) }
-
       it { is_expected.to include(decision_on, decision_before_field) }
     end
 
@@ -96,8 +92,6 @@ describe Facet do
 
       let(:decision_on) { Facet.new(label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
       let(:decision_before_field) { Facet.new(label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
-
-      subject { Facet.facets(procedure:) }
 
       it { is_expected.to include(decision_on, decision_before_field) }
     end
