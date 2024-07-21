@@ -20,9 +20,8 @@ describe Dossiers::InstructeurFilterComponent, type: :component do
         ]
       end
 
-      before do
-        allow(Facet).to receive(:facets).and_return(included_displayable_field)
-      end
+      before { allow(procedure).to receive(:facets).and_return(included_displayable_field) }
+
       subject { component.filterable_fields_options }
 
       it { is_expected.to eq([["email", "user/email"], ["depose_since", "self/depose_since"]]) }
