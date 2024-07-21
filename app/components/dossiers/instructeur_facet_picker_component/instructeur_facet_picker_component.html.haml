@@ -2,4 +2,4 @@
   %react-fragment
     = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_fields_for_select, selected_keys: @displayable_fields_selected, name: 'values[]', 'aria-label': 'Colonne à afficher'
 
-  = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
+  = submit_tag t('.save'), class: 'fr-btn fr-btn--secondary'

@@ -421,7 +421,6 @@ fr:
         repasser_en_construction: Repasser en construction
         follow_file: Suivre le dossier
         stop_follow: Ne plus suivre
-        save: Enregistrer
         no_file: Aucun dossier
         dossier_synthesis: Synthèse des dossiers
         passer_en_instruction_blocked_by_pending_correction: |
