@@ -83,7 +83,7 @@ module FacetsConcern
               column: tdc.stable_id.to_s,
               label: path_struct[:libelle],
               type: TypeDeChamp.filter_hash_type(tdc.type_champ),
-              value_column: path_struct[:path]
+              value_column: TypeDeChamp.filter_hash_value_column(type_champ)
             )
           end
         end
