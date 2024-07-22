@@ -26,15 +26,13 @@ module Users
 
     def index
       ordered_dossiers = Dossier.includes(:procedure).order_by_updated_at
-      deleted_dossiers = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
+      @dossiers_supprimes_historique = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
 
       user_revisions = ProcedureRevision.where(dossiers: current_user.dossiers.visible_by_user)
       invite_revisions = ProcedureRevision.where(dossiers: current_user.dossiers_invites.visible_by_user)
-      deleted_dossier_procedures = Procedure.where(id: deleted_dossiers.pluck(:procedure_id))
       all_dossier_procedures = Procedure.where(revisions: user_revisions.or(invite_revisions))
 
       @procedures_for_select = all_dossier_procedures
-        .or(deleted_dossier_procedures)
         .distinct(:procedure_id)
         .order(:libelle)
         .pluck(:libelle, :id)
@@ -42,14 +40,12 @@ module Users
       @procedure_id = params[:procedure_id]
       if @procedure_id.present?
         ordered_dossiers = ordered_dossiers.where(procedures: { id: @procedure_id })
-        deleted_dossiers = deleted_dossiers.where(procedures: { id: @procedure_id })
       end
 
       @search_terms = params[:q]
       if @search_terms.present?
         dossiers_filter_by_search = DossierSearchService.matching_dossiers_for_user(@search_terms, current_user).page
         ordered_dossiers = ordered_dossiers.merge(dossiers_filter_by_search)
-        deleted_dossiers = nil
       end
 
       @dossiers_visibles = ordered_dossiers.visible_by_user.preload(:etablissement, :individual, :invites)
