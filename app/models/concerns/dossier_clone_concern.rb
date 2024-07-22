@@ -92,10 +92,10 @@ module DossierCloneConcern
     dossier_attributes += [:groupe_instructeur_id] if fork
     relationships = [:individual, :etablissement]
 
-    discarded_row_ids = champs_in_revision
+    discarded_row_ids = champs_on_main_stream
       .filter { _1.row? && _1.discarded? }
       .to_set(&:row_id)
-    cloned_champs = champs_in_revision
+    cloned_champs = champs_on_main_stream
       .reject { discarded_row_ids.member?(_1.row_id) }
       .index_by(&:id)
       .transform_values { [_1, _1.clone(fork)] }
