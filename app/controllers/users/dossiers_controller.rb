@@ -6,7 +6,7 @@ module Users
 
     layout 'procedure_context', only: [:identite, :update_identite, :siret, :update_siret]
 
-    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new, :transferer_all]
+    ACTIONS_ALLOWED_TO_ANY_USER = [:index, :new, :transferer_all, :deleted_dossiers]
     ACTIONS_ALLOWED_TO_OWNER_OR_INVITE = [:show, :destroy, :demande, :messagerie, :brouillon, :submit_brouillon, :submit_en_construction, :modifier, :modifier_legacy, :update, :create_commentaire, :papertrail, :restore, :champ]
 
     before_action :ensure_ownership!, except: ACTIONS_ALLOWED_TO_ANY_USER + ACTIONS_ALLOWED_TO_OWNER_OR_INVITE
@@ -60,7 +60,7 @@ module Users
       @dossiers_supprimes = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
       @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
-      @dossiers_historique = deleted_dossiers
+      @dossiers_supprimes_historique = deleted_dossiers
 
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 
@@ -427,6 +427,10 @@ module Users
     rescue ActiveRecord::RecordInvalid => e
       flash.alert = e.record.errors.full_messages
       redirect_to dossier_path(@dossier)
+    end
+
+    def deleted_dossiers
+      @deleted_dossiers = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at.page(page)
     end
 
     private

@@ -5,7 +5,11 @@
 
 .dossiers-headers.sub-header
   .fr-container
-    %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
+    .flex.align-center
+      %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
+      - if @dossiers_supprimes_historique.present?
+        %p.ml-auto
+          = link_to('Historique des dossiers supprimés', deleted_dossiers_path(), class: 'fr-link')
 
     .fr-grid-row.fr-grid-row--gutters
       - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
@@ -82,9 +86,4 @@
 
       - else
         = render Dossiers::UserFilterComponent.new(statut: @statut, filter: @filter, procedure_id: @procedure_id )
-
-        - if @statut == "dossiers-supprimes-definitivement"
-          -# /!\ in this context, @dossiers is a collection of DeletedDossier not Dossier
-          = render partial: "deleted_dossiers_list", locals: { deleted_dossiers: @dossiers }
-        - else
-          = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut, search: false }
+        = render partial: "dossiers_list", locals: { dossiers: @dossiers, filter: @filter, statut: @statut, search: false }
