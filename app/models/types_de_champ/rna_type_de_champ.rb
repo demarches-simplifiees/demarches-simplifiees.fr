@@ -3,12 +3,15 @@ class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
     FILL_DURATION_MEDIUM
   end
 
-  def search_paths
+  def facets(table:)
     super.concat([
-      {
-        libelle: "#{libelle} – commune",
-        path: :"data.commune"
-      }
+      Facets::RNAFacet.new(
+        table:,
+        column: stable_id,
+        label: "#{libelle} – commune",
+        type: TypeDeChamp.filter_hash_type(type_champ),
+        value_column: TypeDeChamp.filter_hash_value_column(type_champ)
+      )
     ])
   end
 
