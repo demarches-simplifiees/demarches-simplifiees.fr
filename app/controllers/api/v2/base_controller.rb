@@ -10,6 +10,7 @@ class API::V2::BaseController < ApplicationController
   before_action :authenticate_from_token
   before_action :ensure_authorized_network, if: -> { @api_token.present? }
   before_action :ensure_token_is_not_expired, if: -> { @api_token.present? }
+  before_action :allow_only_persisted_queries, if: -> { @api_token.blank? }
 
   before_action do
     Current.browser = 'api'
@@ -52,6 +53,12 @@ class API::V2::BaseController < ApplicationController
       @api_token.store_new_ip(request.remote_ip)
       @current_user = @api_token.administrateur.user
       Current.user = @current_user
+    end
+  end
+
+  def allow_only_persisted_queries
+    if params[:queryId].blank?
+      render json: graphql_error('Without a token, only persisted queries are allowed', :forbidden), status: :forbidden
     end
   end
 

@@ -131,7 +131,7 @@ describe API::V2::GraphqlController do
         end
 
         it {
-          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          expect(gql_errors.first[:message]).to eq("Without a token, only persisted queries are allowed")
         }
       end
 
@@ -158,7 +158,7 @@ describe API::V2::GraphqlController do
 
         it {
           expect(token).not_to be_nil
-          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          expect(gql_errors.first[:message]).to eq("Without a token, only persisted queries are allowed")
         }
       end
 
