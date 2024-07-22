@@ -791,9 +791,6 @@ en:
     dossiers_supprimes:
       one: recently deleted file
       other: recently deleted files
-    dossiers_supprimes_definitivement:
-      one: permanently deleted file
-      other: permanently deleted files
     dossiers_transferes:
       one: transfer request
       other: transfer requests
