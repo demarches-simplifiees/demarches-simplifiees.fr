@@ -13,8 +13,12 @@ class Facet
     @filterable = filterable
   end
 
+  def self.make_id(table, column)
+    [table, column].join('/')
+  end
+
   def id
-    "#{table}/#{column}"
+    Facet.make_id(table, column)
   end
 
   def ==(other)

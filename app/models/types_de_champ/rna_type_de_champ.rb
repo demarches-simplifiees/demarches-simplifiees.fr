@@ -10,7 +10,7 @@ class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
         column: stable_id,
         label: "#{libelle} – commune",
         type: TypeDeChamp.filter_hash_type(type_champ),
-        value_column: TypeDeChamp.filter_hash_value_column(type_champ)
+        value_column: "data->'adresse'->>'commune'"
       )
     ])
   end

@@ -1,7 +1,9 @@
 describe ProcedurePresentation do
   include ActiveSupport::Testing::TimeHelpers
 
-  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}], types_de_champ_private: [{}]) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
+  let(:types_de_champ_private) { [{}] }
+  let(:types_de_champ_public) { [{}] }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:first_type_de_champ) { assign_to.procedure.active_revision.types_de_champ_public.first }
@@ -556,6 +558,22 @@ describe ProcedurePresentation do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
         end
       end
+    end
+
+    context 'for type_de_champ table having rna' do
+      let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
+      let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
+      let(:value) { "Paris" }
+      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => "1->rna", 'value' => value }] }
+
+      let(:kept_dossier) { create(:dossier, procedure: procedure) }
+      let(:discarded_dossier) { create(:dossier, procedure: procedure) }
+
+      before do
+        kept_dossier.champs_public.find_by(stable_id: 1).update(data: { "adresse" => { "commune" => value } })
+        discarded_dossier.champs_public.find_by(stable_id: 1).update(data: { "adresse" => { "commune" => "unknown" } })
+      end
+      it { is_expected.to contain_exactly(kept_dossier.id) }
     end
 
     context 'for etablissement table' do
