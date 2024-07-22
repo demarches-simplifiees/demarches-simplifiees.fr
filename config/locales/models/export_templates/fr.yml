@@ -14,4 +14,6 @@ fr:
     errors:
       models:
         export_template:
+          base:
+            invalid: "est invalide"
           dossier_number_mandatory: doit contenir le numéro du dossier

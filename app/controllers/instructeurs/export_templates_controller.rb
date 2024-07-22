@@ -7,12 +7,15 @@ module Instructeurs
     before_action :set_all_pj
 
     def new
-      @export_template = ExportTemplate.new(kind: 'zip', groupe_instructeur: @groupe_instructeurs.first)
-      @export_template.set_default_values
+      @export_template = ExportTemplate.new(groupe_instructeur: @groupe_instructeurs.first)
+      if params[:kind] != 'tabular'
+        @export_template.set_default_values_for_zip
+      end
     end
 
     def create
-      @export_template = @groupe_instructeur.export_templates.build(export_template_params)
+      @export_template = @groupe_instructeur.export_templates.build
+      @export_template.assign_attributes(export_template_params)
       @export_template.assign_pj_names(pj_params)
       if @export_template.save
         redirect_to exports_instructeur_procedure_path(procedure: @procedure), notice: "Le modèle d'export #{@export_template.name} a bien été créé"
@@ -85,7 +88,7 @@ module Instructeurs
     end
 
     def export_params
-      [:name, :kind, :tiptap_default_dossier_directory, :tiptap_pdf_name]
+      [:name, :kind, :tiptap_default_dossier_directory, :tiptap_pdf_name, paths: []]
     end
 
     def pj_params

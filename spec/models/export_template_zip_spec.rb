@@ -1,7 +1,7 @@
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-  let(:export_template) { create(:export_template, :with_custom_content, groupe_instructeur:, content:) }
   let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:) }
+  let!(:export_template) { create(:zip_export_template, :with_custom_content, groupe_instructeur:, content:) }
   let(:dossier) { procedure.dossiers.first }
   let(:for_individual) { false }
   let(:types_de_champ_public) do
@@ -28,11 +28,6 @@ describe ExportTemplate do
       [
         { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "type" => "mention", "attrs" => { "id" => "original-filename", "label" => "nom original du fichier" } }, { "text" => " _justif", "type" => "text" }] }] }, stable_id: "3" },
         {
-          path:
-                   { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "cni_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
-           stable_id: "5"
-        },
-        {
           path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [{ "text" => "pj_repet_", "type" => "text" }, { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } }, { "text" => " ", "type" => "text" }] }] },
          stable_id: "10"
         }
@@ -41,9 +36,9 @@ describe ExportTemplate do
   end
 
   describe 'new' do
-    let(:export_template) { build(:export_template, groupe_instructeur: groupe_instructeur) }
+    let(:export_template) { build(:zip_export_template, groupe_instructeur: groupe_instructeur) }
     it 'set default values' do
-      export_template.set_default_values
+      export_template.set_default_values_for_zip
       expect(export_template.content).to eq({
         "pdf_name" => {
           "type" => "doc",
@@ -192,7 +187,7 @@ describe ExportTemplate do
     end
 
     context 'for date' do
-      let(:export_template) { create(:export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
+      let(:export_template) { create(:zip_export_template, :with_date_depot_for_export_pdf, groupe_instructeur:) }
       let(:dossier) { create(:dossier, :en_construction, procedure:, depose_at: Date.parse("2024/03/30")) }
       it 'convert date with dash' do
         expect(export_template.tiptap_convert(dossier, "pdf_name")).to eq "export_#{dossier.id}-2024-03-30"
@@ -212,7 +207,7 @@ describe ExportTemplate do
   end
 
   describe '#valid?' do
-    let(:subject) { build(:export_template, groupe_instructeur:, content:) }
+    let(:subject) { build(:zip_export_template, groupe_instructeur:, content:) }
     let(:ddd_text) { "DoSSIER" }
     let(:mention) { { "type" => "mention", "attrs" => { "id" => "dossier_number", "label" => "numéro du dossier" } } }
     let(:ddd_mention) { mention }
@@ -220,6 +215,7 @@ describe ExportTemplate do
     let(:pdf_mention) { mention }
     let(:pj_text) { "_pj" }
     let(:pj_mention) { mention }
+    let(:stable_id) { "3" }
     let(:content) do
       {
         "pdf_name" => {
@@ -236,7 +232,7 @@ describe ExportTemplate do
         },
         "pjs" =>
         [
-          { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] }, stable_id: "3" }
+          { path: { "type" => "doc", "content" => [{ "type" => "paragraph", "content" => [pj_mention, { "text" => pj_text, "type" => "text" }] }] }, stable_id: }
         ]
       }
     end
@@ -317,6 +313,20 @@ describe ExportTemplate do
           expect(subject.valid?).to be_falsey
           expect(subject.errors.full_messages).to include "Le champ « Justificatif de domicile » doit être rempli"
         end
+      end
+    end
+
+    context 'with invalid stable_id for pj path' do
+      let(:stable_id) { "20" }
+      it 'has error for pj' do
+        expect(subject.valid?).to be_falsey
+      end
+    end
+
+    context 'with valid stable_id for pj path' do
+      let(:stable_id) { "3" }
+      it 'has error for pj' do
+        expect(subject.valid?).to be_truthy
       end
     end
   end

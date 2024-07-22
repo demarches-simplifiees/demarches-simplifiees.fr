@@ -1,8 +1,10 @@
 class ExportTemplateValidator < ActiveModel::Validator
   def validate(record)
-    validate_default_dossier_directory(record)
-    validate_pdf_name(record)
-    validate_pjs(record)
+    if record.zip?
+      validate_default_dossier_directory(record)
+      validate_pdf_name(record)
+      validate_pjs(record)
+    end
   end
 
   private
@@ -38,8 +40,13 @@ class ExportTemplateValidator < ActiveModel::Validator
   def validate_pjs(record)
     record.content["pjs"]&.each do |pj|
       pj_sym = pj.symbolize_keys
-      libelle = record.groupe_instructeur.procedure.exportables_pieces_jointes.find { _1.stable_id.to_s == pj_sym[:stable_id] }&.libelle&.to_sym
-      validate_content(record, pj_sym[:path], libelle)
+      pj_record = record.groupe_instructeur.procedure.exportables_pieces_jointes.find { _1.stable_id.to_s == pj_sym[:stable_id] }
+      if pj_record.nil?
+        record.errors.add :base, I18n.t(:invalid, scope: 'activerecord.errors.models.export_template.base')
+      else
+        libelle = pj_record.libelle&.to_sym
+        validate_content(record, pj_sym[:path], libelle)
+      end
     end
   end
 
