@@ -58,13 +58,25 @@ class API::V2::BaseController < ApplicationController
   def ensure_authorized_network
     if @api_token.forbidden_network?(request.remote_ip)
       address = IPAddr.new(request.remote_ip)
-      render json: { errors: ["request issued from a forbidden network. Add #{address.to_string}/#{address.prefix} to your allowed adresses in your /profil"] }, status: :forbidden
+      render json: graphql_error("Request issued from a forbidden network. Add #{address.to_string}/#{address.prefix} to your allowed adresses in your /profil", :forbidden), status: :forbidden
     end
   end
 
   def ensure_token_is_not_expired
     if @api_token.expired?
-      render json: { errors: ['token expired'] }, status: :unauthorized
+      render json: graphql_error('Token expired', :unauthorized), status: :unauthorized
     end
+  end
+
+  def graphql_error(message, code, exception_id: nil, backtrace: nil)
+    {
+      errors: [
+        {
+          message:,
+          extensions: { code:, exception_id:, backtrace: }.compact
+        }
+      ],
+      data: nil
+    }
   end
 end
