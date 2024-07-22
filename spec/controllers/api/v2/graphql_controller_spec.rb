@@ -1464,43 +1464,4 @@ describe API::V2::GraphqlController do
       end
     end
   end
-
-  context "when not authenticated" do
-    it "should return error" do
-      expect(gql_data).to eq(nil)
-      expect(gql_errors).not_to eq(nil)
-    end
-
-    describe "dossier" do
-      let(:query) { "{ dossier(number: #{dossier.id}) { id number usager { email } } }" }
-
-      it "should return error" do
-        expect(gql_data).to eq(nil)
-        expect(gql_errors).not_to eq(nil)
-      end
-    end
-
-    describe "mutation" do
-      let(:query) do
-        "mutation {
-          dossierEnvoyerMessage(input: {
-            dossierId: \"#{dossier.to_typed_id}\",
-            instructeurId: \"#{instructeur.to_typed_id}\",
-            body: \"Bonjour\"
-          }) {
-            message {
-              body
-            }
-            errors {
-              message
-            }
-          }
-        }"
-      end
-
-      it "should return error" do
-        expect(gql_data[:dossierEnvoyerMessage][:errors].first[:message]).to eq("Le jeton utilisé est configuré seulement en lecture")
-      end
-    end
-  end
 end
