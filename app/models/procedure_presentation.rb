@@ -196,12 +196,16 @@ class ProcedurePresentation < ApplicationRecord
       .map do |(table, column), filters|
       values = filters.pluck('value')
       value_column = filters.pluck('value_column').compact.first || :value
-      case table
-      when 'self'
-        field = procedure.dossier_columns.find { |h| h.column == column }
-        if field.type == :date
-          dates = values
-            .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
+      column = procedure.find_column(id: Column.make_id(table, column)) # hack to find json path facets
+      if column.is_a?(Column::JSONPathFacet)
+        column.filtered_ids(dossiers, values)
+      else
+        case table
+        when 'self'
+          field = procedure.dossier_columns.find { |h| h.column == column }
+          if field.type == :date
+            dates = values
+              .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
           dossiers.filter_by_datetimes(column, dates)
         elsif field.column == "state" && values.include?("pending_correction")

@@ -558,6 +558,22 @@ describe ProcedurePresentation do
       end
     end
 
+    context 'for type_de_champ table having rna' do
+      let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
+      let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
+      let(:value) { "Paris" }
+      let(:filter) { [type_de_champ.dynamic_type.facets(table: 'type_de_champ').last.to_json.merge({ "value" => value })] }
+
+      let(:kept_dossier) { create(:dossier, procedure: procedure) }
+      let(:discarded_dossier) { create(:dossier, procedure: procedure) }
+
+      before do
+        kept_dossier.champs_public.find_by(stable_id: 1).update(data: { "adresse" => { "commune" => value } })
+        discarded_dossier.champs_public.find_by(stable_id: 1).update(data: { "adresse" => { "commune" => "unknown" } })
+      end
+      it { is_expected.to contain_exactly(kept_dossier.id) }
+    end
+
     context 'for etablissement table' do
       context 'for entreprise_date_creation column' do
         let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }

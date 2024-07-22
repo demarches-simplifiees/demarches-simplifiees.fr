@@ -3,11 +3,7 @@ describe ColumnsConcern do
     subject { procedure.columns }
 
     context 'when the procedure can have a SIRET number' do
-      let(:procedure) do
-        create(:procedure,
-               types_de_champ_public: Array.new(4) { { type: :text } },
-               types_de_champ_private: Array.new(4) { { type: :text } })
-      end
+      let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
       let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
       let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
       let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
@@ -61,10 +57,10 @@ describe ColumnsConcern do
         it { expect(subject).to eq(expected) }
       end
 
-      xcontext 'with rna' do
+      context 'with rna' do
         let(:types_de_champ_public) { [{ type: :rna, libelle: 'rna' }] }
         let(:types_de_champ_private) { [] }
-        xit { expect(subject.map(&:label)).to include('rna – commune') }
+        it { expect(subject.map(&:label)).to include('rna – commune') }
       end
     end
 
