@@ -1,4 +1,4 @@
-class Dossiers::InstructeurFilterComponent < ApplicationComponent
+class Instructeurs::FacetFilterComponent < ApplicationComponent
   attr_reader :procedure, :procedure_presentation, :statut, :facet
 
   def initialize(procedure:, procedure_presentation:, statut:, facet: nil)
