@@ -1,0 +1,9 @@
+%th{ aria_sort, scope: "col", class: facet.classname }
+  = link_to update_sort_instructeur_procedure_path(@procedure_presentation.procedure, table: facet.table, column: facet.column, order: @procedure_presentation.opposite_order_for(facet.table, facet.column)) do
+    - if sorted_by_current_facet?
+      - if sorted_ascending?
+        #{facet.label} ↑
+      - else
+        #{facet.label} ↓
+    - else
+      #{facet.label}
