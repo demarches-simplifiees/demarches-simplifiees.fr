@@ -96,7 +96,7 @@ describe 'users/dossiers/index', type: :view do
 
     it 'affiche la barre d’onglets' do
       expect(rendered).to have_selector('nav.fr-tabs')
-      expect(rendered).to have_selector('nav.fr-tabs li', count: 5)
+      expect(rendered).to have_selector('nav.fr-tabs li', count: 4)
       expect(rendered).to have_selector('nav.fr-tabs li.active', count: 1)
     end
   end
