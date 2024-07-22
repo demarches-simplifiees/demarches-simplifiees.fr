@@ -1,4 +1,4 @@
-describe Dossiers::InstructeurFilterComponent, type: :component do
+describe Instructeurs::ColumnFilterComponent, type: :component do
   let(:component) { described_class.new(procedure:, procedure_presentation:, statut:, facet:) }
 
   let(:instructeur) { create(:instructeur) }

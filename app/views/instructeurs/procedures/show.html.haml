@@ -109,7 +109,7 @@
                     - menu.with_button_inner_html do
                       = t('views.instructeurs.dossiers.personalize')
                     - menu.with_form do
-                      = render Dossiers::InstructeurFacetPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
+                      = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
             %tbody
               = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)

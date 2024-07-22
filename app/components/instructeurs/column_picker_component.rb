@@ -1,4 +1,4 @@
-class Dossiers::InstructeurFacetPickerComponent < ApplicationComponent
+class Instructeurs::ColumnPickerComponent < ApplicationComponent
   attr_reader :procedure, :procedure_presentation
 
   def initialize(procedure:, procedure_presentation:)
