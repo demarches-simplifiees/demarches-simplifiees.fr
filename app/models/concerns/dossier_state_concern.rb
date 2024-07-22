@@ -56,6 +56,7 @@ module DossierStateConcern
       .processed_at
     save!
 
+    reset_stream(Champ::USER_DRAFT_STREAM)
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_instruction))
     resolve_pending_correction!
 
