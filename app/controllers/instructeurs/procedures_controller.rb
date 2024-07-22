@@ -141,7 +141,7 @@ module Instructeurs
     end
 
     def update_sort
-      procedure_presentation.update_sort(params[:table], params[:column], params[:order])
+      procedure_presentation.update_sort(params[:facet_id], params[:order])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end

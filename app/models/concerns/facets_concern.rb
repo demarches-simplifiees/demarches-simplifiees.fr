@@ -15,6 +15,8 @@ module FacetsConcern
     end
 
     def dossier_facets
+      common = [Facet.new(table: 'self', column: 'id', classname: 'number-col'), Facet.new(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)]
+
       dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
         .map { |column| Facet.new(table: 'self', column:, type: :date) }
 
@@ -23,7 +25,7 @@ module FacetsConcern
 
       states = [Facet.new(table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', virtual: true)]
 
-      [dates, sva_svr_facets(for_filters: true), virtual_dates, states].flatten.compact
+      [common, dates, sva_svr_facets(for_filters: true), virtual_dates, states].flatten.compact
     end
 
     def sva_svr_facets(for_filters: false)
