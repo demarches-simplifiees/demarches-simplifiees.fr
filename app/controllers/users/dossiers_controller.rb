@@ -26,7 +26,6 @@ module Users
 
     def index
       ordered_dossiers = Dossier.includes(:procedure).order_by_updated_at
-      @dossiers_supprimes_historique = current_user.deleted_dossiers.includes(:procedure).order_by_updated_at
 
       user_revisions = ProcedureRevision.where(dossiers: current_user.dossiers.visible_by_user)
       invite_revisions = ProcedureRevision.where(dossiers: current_user.dossiers_invites.visible_by_user)
@@ -56,7 +55,6 @@ module Users
       @dossiers_supprimes = (current_user.dossiers.hidden_by_user.or(current_user.dossiers.hidden_by_expired)).merge(ordered_dossiers)
       @dossier_transferes = @dossiers_visibles.where(dossier_transfer_id: DossierTransfer.for_email(current_user.email))
       @dossiers_close_to_expiration = current_user.dossiers.close_to_expiration.merge(@dossiers_visibles)
-      @dossiers_supprimes_historique = deleted_dossiers
 
       @statut = statut(@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_supprimes, @dossier_transferes, @dossiers_close_to_expiration, params[:statut])
 

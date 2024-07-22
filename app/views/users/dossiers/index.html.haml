@@ -5,11 +5,7 @@
 
 .dossiers-headers.sub-header
   .fr-container
-    .flex.align-center
-      %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
-      - if @dossiers_supprimes_historique.present?
-        %p.ml-auto
-          = link_to('Historique des dossiers supprimés', deleted_dossiers_path(), class: 'fr-link')
+    %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
 
     .fr-grid-row.fr-grid-row--gutters
       - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
