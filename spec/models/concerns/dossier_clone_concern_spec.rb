@@ -17,7 +17,7 @@ RSpec.describe DossierCloneConcern do
   describe '#clone' do
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
     let(:types_de_champ_public) { [{}] }
-    let(:types_de_champ_private) { [{}] }
+    let(:types_de_champ_private) { [] }
     let(:fork) { false }
     subject(:new_dossier) { dossier.clone(fork:) }
 
@@ -131,67 +131,65 @@ RSpec.describe DossierCloneConcern do
         end
 
         context 'for Champs::Repetition with rows, original_champ.repetition and rows are duped' do
-          let(:dossier) { create(:dossier) }
-          let(:type_de_champ_repetition) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: dossier.procedure) }
-          let(:champ_repetition) { create(:champ_repetition, type_de_champ: type_de_champ_repetition, dossier: dossier) }
-          before { dossier.champs_public << champ_repetition }
+          let(:types_de_champ_public) { [{ type: :repetition, children: [{}, {}] }] }
+          let(:champ_repetition) { dossier.champs.first }
+          let(:cloned_champ_repetition) { new_dossier.champs.first }
 
           it do
-            expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.count).to eq(4)
-            expect(Champs::RepetitionChamp.where(dossier: new_dossier).first.champs.ids).not_to eq(champ_repetition.champs.ids)
+            expect(cloned_champ_repetition.champs.count).to eq(4)
+            expect(cloned_champ_repetition.champs.ids).not_to eq(champ_repetition.champs.ids)
           end
         end
 
         context 'for Champs::CarteChamp with geo areas, original_champ.geo_areas are duped' do
-          let(:dossier) { create(:dossier) }
-          let(:type_de_champ_carte) { create(:type_de_champ_carte, procedure: dossier.procedure) }
-          let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon) }
-          let(:champ_carte) { create(:champ_carte, type_de_champ: type_de_champ_carte, geo_areas: [geo_area]) }
-          before { dossier.champs_public << champ_carte }
+          let(:types_de_champ_public) { [{ type: :carte }] }
+          let(:champ_carte) { dossier.champs.first }
+          let(:cloned_champ_carte) { new_dossier.champs.first }
 
           it do
-            expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.count).to eq(1)
-            expect(Champs::CarteChamp.where(dossier: new_dossier).first.geo_areas.ids).not_to eq(champ_carte.geo_areas.ids)
+            expect(cloned_champ_carte.geo_areas.count).to eq(2)
+            expect(cloned_champ_carte.geo_areas.ids).not_to eq(champ_carte.geo_areas.ids)
           end
         end
 
         context 'for Champs::SiretChamp, original_champ.etablissement is duped' do
-         let(:dossier) { create(:dossier) }
-         let(:type_de_champs_siret) { create(:type_de_champ_siret, procedure: dossier.procedure) }
-         let(:etablissement) { create(:etablissement) }
-         let(:champ_siret) { create(:champ_siret, type_de_champ: type_de_champs_siret, etablissement: create(:etablissement)) }
-         before { dossier.champs_public << champ_siret }
+          let(:types_de_champ_public) { [{ type: :siret }] }
+          let(:champ_siret) { dossier.champs.first }
+          let(:cloned_champ_siret) { new_dossier.champs.first }
 
-         it do
-          expect(Champs::SiretChamp.where(dossier: dossier).first.etablissement).not_to be_nil
-          expect(Champs::SiretChamp.where(dossier: new_dossier).first.etablissement.id).not_to eq(champ_siret.etablissement.id)
+          it do
+            expect(champ_siret.etablissement).not_to be_nil
+            expect(cloned_champ_siret.etablissement.id).not_to eq(champ_siret.etablissement.id)
+          end
         end
-       end
 
         context 'for Champs::PieceJustificative, original_champ.piece_justificative_file is duped' do
           let(:types_de_champ_public) { [{ type: :piece_justificative }] }
-          let(:champ_piece_justificative) { dossier.champs_public.first }
+          let(:champ_piece_justificative) { dossier.champs.first }
+          let(:cloned_champ_piece_justificative) { new_dossier.champs.first }
 
-          it { expect(Champs::PieceJustificativeChamp.where(dossier: new_dossier).first.piece_justificative_file.first.blob).to eq(champ_piece_justificative.piece_justificative_file.first.blob) }
+          it { expect(cloned_champ_piece_justificative.piece_justificative_file.first.blob).to eq(champ_piece_justificative.piece_justificative_file.first.blob) }
         end
 
         context 'for Champs::AddressChamp, original_champ.data is duped' do
-          let(:dossier) { create(:dossier) }
-          let(:type_de_champs_adress) { create(:type_de_champ_address, procedure: dossier.procedure) }
-          let(:etablissement) { create(:etablissement) }
-          let(:champ_address) { create(:champ_address, type_de_champ: type_de_champs_adress, external_id: 'Address', data: { city_code: '75019' }) }
-          before { dossier.champs_public << champ_address }
+          let(:types_de_champ_public) { [{ type: :address }] }
+          let(:champ_address) { dossier.champs.first }
+          let(:cloned_champ_address) { new_dossier.champs.first }
+
+          before { champ_address.update(external_id: 'Address', data: { city_code: '75019' }) }
 
           it do
-            expect(Champs::AddressChamp.where(dossier: dossier).first.data).not_to be_nil
-            expect(Champs::AddressChamp.where(dossier: dossier).first.external_id).not_to be_nil
-            expect(Champs::AddressChamp.where(dossier: new_dossier).first.external_id).to eq(champ_address.external_id)
-            expect(Champs::AddressChamp.where(dossier: new_dossier).first.data).to eq(champ_address.data)
+            expect(champ_address.data).not_to be_nil
+            expect(champ_address.external_id).not_to be_nil
+            expect(cloned_champ_address.external_id).to eq(champ_address.external_id)
+            expect(cloned_champ_address.data).to eq(champ_address.data)
           end
         end
       end
 
       context 'private are renewd' do
+        let(:types_de_champ_private) { [{}] }
+
         it 'reset champs private values' do
           expect(new_dossier.champs_private.count).to eq(dossier.champs_private.count)
           expect(new_dossier.champs_private.ids).not_to eq(dossier.champs_private.ids)
@@ -217,13 +215,13 @@ RSpec.describe DossierCloneConcern do
 
       context "piece justificative champ" do
         let(:types_de_champ_public) { [{ type: :piece_justificative }] }
-        let(:champ_pj) { dossier.champs_public.first }
+        let(:champ_pj) { dossier.champs.first }
+        let(:cloned_champ_pj) { new_dossier.champs.first }
 
         it {
-          champ_pj_fork = Champs::PieceJustificativeChamp.where(dossier: new_dossier).first
-          expect(champ_pj_fork.piece_justificative_file.first.blob).to eq(champ_pj.piece_justificative_file.first.blob)
-          expect(champ_pj_fork.created_at).to eq(champ_pj.created_at)
-          expect(champ_pj_fork.updated_at).to eq(champ_pj.updated_at)
+          expect(cloned_champ_pj.piece_justificative_file.first.blob).to eq(champ_pj.piece_justificative_file.first.blob)
+          expect(cloned_champ_pj.created_at).to eq(champ_pj.created_at)
+          expect(cloned_champ_pj.updated_at).to eq(champ_pj.updated_at)
         }
       end
 
@@ -258,7 +256,8 @@ RSpec.describe DossierCloneConcern do
 
           before do
             champ = dossier.champs.find { _1.stable_id == 992 }
-            geo_area = build(:geo_area, champ:, geometry: { "i'm" => "invalid" })
+            geo_area = champ.geo_areas.first
+            geo_area.geometry = { "i'm" => "invalid" }
             geo_area.save!(validate: false)
           end
 

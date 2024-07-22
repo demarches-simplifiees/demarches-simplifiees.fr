@@ -1,47 +1,49 @@
 describe Champs::DateChamp do
-  let(:date_champ) { create(:champ_date) }
+  let(:type_de_champ) { create(:type_de_champ_date) }
+  let(:date_champ) { described_class.new }
+  before { allow(date_champ).to receive(:type_de_champ).and_return(type_de_champ) }
 
   describe '#convert_to_iso8601' do
     it 'preserves nil' do
       champ = champ_with_value(nil)
-      champ.save
-      expect(champ.reload.value).to be_nil
+      champ.validate
+      expect(champ.value).to be_nil
     end
 
     it 'converts to nil if empty string' do
       champ = champ_with_value("")
-      champ.save
-      expect(champ.reload.value).to be_nil
+      champ.validate
+      expect(champ.value).to be_nil
     end
 
     it 'converts to nil if not ISO8601' do
       champ = champ_with_value("12-21-2023")
-      champ.save
-      expect(champ.reload.value).to be_nil
+      champ.validate
+      expect(champ.value).to be_nil
     end
 
     it 'converts to nil if not date' do
       champ = champ_with_value("value")
-      champ.save
-      expect(champ.reload.value).to be_nil
+      champ.validate
+      expect(champ.value).to be_nil
     end
 
     it "converts %d/%m/%Y format to ISO" do
       champ = champ_with_value("31/12/2017")
-      champ.save
-      expect(champ.reload.value).to eq("2017-12-31")
+      champ.validate
+      expect(champ.value).to eq("2017-12-31")
     end
 
     it 'preserves if ISO8601' do
       champ = champ_with_value("2023-12-21")
-      champ.save
-      expect(champ.reload.value).to eq("2023-12-21")
+      champ.validate
+      expect(champ.value).to eq("2023-12-21")
     end
 
     it 'converts to nil if false iso' do
       champ = champ_with_value("2023-27-02")
-      champ.save
-      expect(champ.reload.value).to eq(nil)
+      champ.validate
+      expect(champ.value).to eq(nil)
     end
   end
 

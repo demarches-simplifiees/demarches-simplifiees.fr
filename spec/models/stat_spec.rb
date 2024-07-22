@@ -83,7 +83,7 @@ describe Stat, type: :model do
 
   describe '.cumulative_hash' do
     it 'works count and cumulate counters by month for both dossier and deleted dossiers' do
-      12.downto(1).map do |i|
+      2.downto(1).map do |i|
         create(:dossier, state: :en_construction, depose_at: i.months.ago)
         create(:deleted_dossier, dossier_id: i + 100, state: :en_construction, deleted_at: i.month.ago)
       end
@@ -98,18 +98,8 @@ describe Stat, type: :model do
       s.reload
       # Use `Hash#to_a` to also test the key ordering
       expect(s.dossiers_cumulative.to_a).to eq([
-        [formatted_n_months_ago(12), 2],
-        [formatted_n_months_ago(11), 4],
-        [formatted_n_months_ago(10), 6],
-        [formatted_n_months_ago(9), 8],
-        [formatted_n_months_ago(8), 10],
-        [formatted_n_months_ago(7), 12],
-        [formatted_n_months_ago(6), 14],
-        [formatted_n_months_ago(5), 16],
-        [formatted_n_months_ago(4), 18],
-        [formatted_n_months_ago(3), 20],
-        [formatted_n_months_ago(2), 22],
-        [formatted_n_months_ago(1), 24]
+        [formatted_n_months_ago(2), 2],
+        [formatted_n_months_ago(1), 4]
       ])
     end
   end

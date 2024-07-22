@@ -3,9 +3,9 @@ describe "procedure filters" do
   let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text }, { type: :departements }, { type: :regions }, { type: :drop_down_list }], instructeurs: [instructeur]) }
   let!(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
-  let!(:champ) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier.id) }
+  let!(:champ) { Champ.find_by(stable_id: type_de_champ.stable_id, dossier_id: new_unfollow_dossier.id) }
   let!(:new_unfollow_dossier_2) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
-  let!(:champ_2) { Champ.find_by(type_de_champ_id: type_de_champ.id, dossier_id: new_unfollow_dossier_2.id) }
+  let!(:champ_2) { Champ.find_by(stable_id: type_de_champ.stable_id, dossier_id: new_unfollow_dossier_2.id) }
 
   before do
     champ.update(value: "Mon champ rempli")

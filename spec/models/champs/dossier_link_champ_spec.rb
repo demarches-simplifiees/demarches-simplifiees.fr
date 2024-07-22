@@ -1,7 +1,7 @@
 describe Champs::DossierLinkChamp, type: :model do
   describe 'prefilling validations' do
     describe 'value' do
-      subject { build(:champ_dossier_link, value: value).valid?(:prefill) }
+      subject { described_class.new(value:, dossier: build(:dossier)).valid?(:prefill) }
 
       context 'when nil' do
         let(:value) { nil }

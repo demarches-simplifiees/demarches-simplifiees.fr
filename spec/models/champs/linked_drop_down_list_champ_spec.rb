@@ -1,21 +1,19 @@
 describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
-    let(:champ) { build(:champ_linked_drop_down_list, value: '["tata", "tutu"]') }
+    let(:champ) { Champs::LinkedDropDownListChamp.new(value: '["tata", "tutu"]') }
 
     it { expect(champ.primary_value).to eq('tata') }
     it { expect(champ.secondary_value).to eq('tutu') }
   end
 
   describe '#pack_value' do
-    let(:champ) { build(:champ_linked_drop_down_list, primary_value: 'tata', secondary_value: 'tutu') }
-
-    before { champ.save }
+    let(:champ) { Champs::LinkedDropDownListChamp.new(primary_value: 'tata', secondary_value: 'tutu') }
 
     it { expect(champ.value).to eq('["tata","tutu"]') }
   end
 
   describe '#primary_value=' do
-    let!(:champ) { build(:champ_linked_drop_down_list, primary_value: 'tata', secondary_value: 'tutu') }
+    let(:champ) { Champs::LinkedDropDownListChamp.new(primary_value: 'tata', secondary_value: 'tutu') }
 
     before { champ.primary_value = '' }
 
@@ -23,7 +21,8 @@ describe Champs::LinkedDropDownListChamp do
   end
 
   describe '#to_s' do
-    let(:champ) { build(:champ_linked_drop_down_list, value: [primary_value, secondary_value].to_json) }
+    let(:champ) { Champs::LinkedDropDownListChamp.new(value: [primary_value, secondary_value].to_json) }
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_linked_drop_down_list)) }
     let(:primary_value) { nil }
     let(:secondary_value) { nil }
 
@@ -48,11 +47,12 @@ describe Champs::LinkedDropDownListChamp do
   end
 
   describe 'for_export' do
-    let(:champ) { build(:champ_linked_drop_down_list, value:) }
+    let(:champ) { Champs::LinkedDropDownListChamp.new(value:) }
     let(:value) { [primary_value, secondary_value].to_json }
     let(:primary_value) { nil }
     let(:secondary_value) { nil }
 
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_linked_drop_down_list)) }
     subject { champ.for_export }
 
     context 'with no value' do
@@ -78,7 +78,8 @@ describe Champs::LinkedDropDownListChamp do
   describe '#mandatory_and_blank' do
     let(:value) { "--Primary--\nSecondary" }
 
-    subject { described_class.new(type_de_champ: type_de_champ) }
+    subject { described_class.new }
+    before { allow(subject).to receive(:type_de_champ).and_return(type_de_champ) }
 
     context 'when the champ is not mandatory' do
       let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, mandatory: false, drop_down_list_value: value) }

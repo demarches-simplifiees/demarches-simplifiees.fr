@@ -1,8 +1,9 @@
 describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
   let(:attachment) { champ.piece_justificative_file.attachments.first }
-  let(:dossier) { create(:dossier, user: user) }
-  let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
+  let(:dossier) { create(:dossier, :with_populated_champs, user:, procedure:) }
+  let(:champ) { dossier.champs.first }
   let(:signed_id) { attachment.blob.signed_id }
 
   describe '#show' do
@@ -46,8 +47,6 @@ describe AttachmentsController, type: :controller do
     render_views
 
     let(:attachment) { champ.piece_justificative_file.attachments.first }
-    let(:dossier) { create(:dossier, user: user) }
-    let(:champ) { create(:champ_piece_justificative, dossier_id: dossier.id) }
     let(:signed_id) { attachment.blob.signed_id }
 
     subject do

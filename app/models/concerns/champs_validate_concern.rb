@@ -12,13 +12,11 @@ module ChampsValidateConcern
     private
 
     def validate_champ_value?
-      return false unless visible?
-
       case validation_context
       when :champs_public_value
-        public?
+        public? && visible?
       when :champs_private_value
-        private?
+        private? && visible?
       else
         false
       end

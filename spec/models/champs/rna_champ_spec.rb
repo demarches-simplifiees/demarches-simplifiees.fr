@@ -1,12 +1,15 @@
 describe Champs::RNAChamp do
-  let(:champ) { create(:champ_rna, value: "W182736273") }
-
+  let(:champ) { Champs::RNAChamp.new(value: "W182736273", dossier: build(:dossier)) }
+  before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rna)) }
+  def with_value(value)
+    champ.tap { _1.value = value }
+  end
   describe '#valid?' do
-    it { expect(build(:champ_rna, value: nil).valid?(:champs_public_value)).to be_truthy }
-    it { expect(build(:champ_rna, value: "2736251627").valid?(:champs_public_value)).to be_falsey }
-    it { expect(build(:champ_rna, value: "A172736283").valid?(:champs_public_value)).to be_falsey }
-    it { expect(build(:champ_rna, value: "W1827362718").valid?(:champs_public_value)).to be_falsey }
-    it { expect(build(:champ_rna, value: "W182736273").valid?(:champs_public_value)).to be_truthy }
+    it { expect(with_value(nil).validate(:champs_public_value)).to be_truthy }
+    it { expect(with_value("2736251627").validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("A172736283").validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("W1827362718").validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("W182736273").validate(:champs_public_value)).to be_truthy }
   end
 
   describe "#export" do

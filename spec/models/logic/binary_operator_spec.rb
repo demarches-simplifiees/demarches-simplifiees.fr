@@ -20,8 +20,8 @@ describe Logic::BinaryOperator do
   end
 
   describe '#sources' do
-    let(:champ) { create(:champ_integer_number, value: nil) }
-    let(:champ2) { create(:champ_integer_number, value: nil) }
+    let(:champ) { Champs::IntegerNumberChamp.new(value: nil, stable_id: 1) }
+    let(:champ2) { Champs::IntegerNumberChamp.new(value: nil, stable_id: 2) }
 
     it { expect(two_greater_than_one.sources).to eq([]) }
     it { expect(greater_than(champ_value(champ.stable_id), constant(2)).sources).to eq([champ.stable_id]) }
@@ -32,7 +32,10 @@ end
 
 describe Logic::GreaterThan do
   include Logic
-  let(:champ) { create(:champ_integer_number, value: nil) }
+  let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :integer_number }]) }
+  let(:tdc) { procedure.active_revision.types_de_champ.first }
+  let(:dossier) { create(:dossier, procedure:) }
+  let(:champ) { Champs::IntegerNumberChamp.new(value: nil, stable_id: tdc.stable_id, dossier:) }
 
   it 'computes' do
     expect(greater_than(constant(1), constant(1)).compute).to be(false)
@@ -43,8 +46,6 @@ end
 
 describe Logic::GreaterThanEq do
   include Logic
-  let(:champ) { create(:champ_integer_number, value: nil) }
-
   it 'computes' do
     expect(greater_than_eq(constant(0), constant(1)).compute).to be(false)
     expect(greater_than_eq(constant(1), constant(1)).compute).to be(true)

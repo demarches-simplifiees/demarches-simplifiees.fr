@@ -1,11 +1,15 @@
 RSpec.describe DossierIndexSearchTermsJob, type: :job do
-  let(:dossier) { create(:dossier) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
+  let(:types_de_champ_public) { [{ type: :text }] }
+  let(:types_de_champ_private) { [{ type: :text }] }
+  let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:champ_siret) { dossier.champs.first }
 
   subject(:perform_job) { described_class.perform_now(dossier.reload) }
 
   before do
-    create(:champ_text, dossier:, value: "un nouveau champ")
-    create(:champ_text, dossier:, value: "private champ", private: true)
+    dossier.champs_public.first.update_column(:value, "un nouveau champ")
+    dossier.champs_private.first.update_column(:value, "private champ")
   end
 
   it "update search terms columns" do

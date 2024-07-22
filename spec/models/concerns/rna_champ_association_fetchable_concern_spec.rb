@@ -1,6 +1,12 @@
 RSpec.describe RNAChampAssociationFetchableConcern do
   describe '.fetch_association!' do
-    let!(:champ) { create(:champ_rna, data: "not nil data", value: 'W173847273') }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rna }]) }
+    let(:dossier) do
+      create(:dossier, :with_populated_champs, procedure:).tap do
+        _1.champs.first.update(data: "not nil data", value: 'W173847273')
+      end
+    end
+    let!(:champ) { dossier.champs.first }
 
     before do
       stub_request(:get, /https:\/\/entreprise.api.gouv.fr\/v4\/djepva\/api-association\/associations\/open_data\/#{rna}/)
