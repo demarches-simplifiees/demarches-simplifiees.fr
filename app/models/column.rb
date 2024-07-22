@@ -17,6 +17,10 @@ class Column
     "#{table}/#{column}"
   end
 
+  def self.make_id(table, column)
+    "#{table}/#{column}"
+  end
+
   def ==(other)
     other.to_json == to_json
   end

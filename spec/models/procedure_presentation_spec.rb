@@ -1,7 +1,8 @@
 describe ProcedurePresentation do
   include ActiveSupport::Testing::TimeHelpers
 
-  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}], types_de_champ_private: [{}]) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private: [{}]) }
+  let(:types_de_champ_public) { [{}] }
   let(:instructeur) { create(:instructeur) }
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:first_type_de_champ) { assign_to.procedure.active_revision.types_de_champ_public.first }
@@ -554,6 +555,60 @@ describe ProcedurePresentation do
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
+        end
+      end
+    end
+
+    context 'for type_de_champ using AddressableColumnConcern' do
+      let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
+      let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
+      let(:available_columns) { type_de_champ.dynamic_type.columns(table: 'type_de_champ') }
+      let(:column) { available_columns.find { _1.value_column == value_column_searched } }
+      let(:filter) { [column.to_json.merge({ "value" => value })] }
+      let(:kept_dossier) { create(:dossier, procedure: procedure) }
+
+      context "when searching by postal_code (text)" do
+        let(:value) { "60580" }
+        let(:value_column_searched) { ['postal_code'] }
+
+        before do
+          kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "postal_code" => value })
+          create(:dossier, procedure: procedure).champs_public.find_by(stable_id: 1).update(value_json: { "postal_code" => "unknown" })
+        end
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+        it 'describes column' do
+          expect(column.type).to eq(:text)
+          expect(column.options_for_select).to eq([])
+        end
+      end
+
+      context "when searching by departement_code (enum)" do
+        let(:value) { "99" }
+        let(:value_column_searched) { ['departement_code'] }
+
+        before do
+          kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "departement_code" => value })
+          create(:dossier, procedure: procedure).champs_public.find_by(stable_id: 1).update(value_json: { "departement_code" => "unknown" })
+        end
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+        it 'describes column' do
+          expect(column.type).to eq(:enum)
+          expect(column.options_for_select.first).to eq(["99 – Etranger", "99"])
+        end
+      end
+
+      context "when searching by region_name" do
+        let(:value) { "60" }
+        let(:value_column_searched) { ['region_name'] }
+
+        before do
+          kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "region_name" => value })
+          create(:dossier, procedure: procedure).champs_public.find_by(stable_id: 1).update(value_json: { "region_name" => "unknown" })
+        end
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+        it 'describes column' do
+          expect(column.type).to eq(:enum)
+          expect(column.options_for_select.first).to eq(["Auvergne-Rhône-Alpes", "Auvergne-Rhône-Alpes"])
         end
       end
     end
