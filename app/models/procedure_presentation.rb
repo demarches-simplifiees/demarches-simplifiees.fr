@@ -146,23 +146,6 @@ class ProcedurePresentation < ApplicationRecord
     slice(:filters, :sort, :displayed_fields)
   end
 
-  def sorted_by?(facet)
-    sort['table'] == facet.table &&
-    sort['column'] == facet.column
-  end
-
-  def aria_sort(order, field)
-    if sorted_by?(field)
-      if order == 'asc'
-        { "aria-sort": "ascending" }
-      elsif order == 'desc'
-        { "aria-sort": "descending" }
-      end
-    else
-      {}
-    end
-  end
-
   private
 
   def sorted_ids(dossiers, count)
