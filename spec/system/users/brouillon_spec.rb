@@ -674,7 +674,8 @@ describe 'The user' do
 
   def champ_for(libelle)
     champs = user_dossier.reload.champs_public
-    champs.find { |c| c.libelle == libelle }
+    champ = champs.find { |c| c.libelle == libelle }
+    champ.reload
   end
 
   def fill_individual
