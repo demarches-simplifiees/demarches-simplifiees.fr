@@ -27,10 +27,11 @@ class TypesDeChamp::TypeDeChampBase
     paths.map { [_1[:libelle], _1[:path]] }
   end
 
-  def paths_for_export(repetition_champ: nil)
-    prefix = "repet_#{repetition_champ}_" if repetition_champ
+  def paths_for_export(repetition_champ_stable_id: nil)
     paths.map do
-      { full_path: "#{prefix}tdc_#{stable_id}_#{_1[:path]}", libelle: _1[:libelle] }
+      { source: 'tdc', stable_id:, path: _1[:path].to_s, libelle: _1[:libelle] }.tap do |p|
+        p.merge!({ source: 'repet', repetition_champ_stable_id: }) if repetition_champ_stable_id
+      end
     end
   end
 

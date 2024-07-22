@@ -15,7 +15,19 @@ describe ExportTemplate do
   let(:dossier) { procedure.dossiers.first }
 
   describe '#paths=' do
-    let(:paths) { ["dossier_id", "dossier_email", "dossier_archived", "dossier_dossier_state", "tdc_1_value", "tdc_17_value", "tdc_17_code", "repet_7_tdc_8_value"] }
+    # let(:paths) { ["dossier_id", "dossier_email", "dossier_archived", "dossier_dossier_state", "tdc_1_value", "tdc_17_value", "tdc_17_code", "repet_7_tdc_8_value"] }
+    let(:paths) {
+  [
+    { :path => "id", :source => "dossier" }.to_json,
+    { :path => "email", :source => "dossier" }.to_json,
+    { :path => "archived", :source => "dossier" }.to_json,
+    { :path => "dossier_state", :source => "dossier" }.to_json,
+    { :path => "value", :source => "tdc", :stable_id => 1 }.to_json,
+    { :path => "value", :source => "tdc", :stable_id => 17 }.to_json,
+    { :path => "code", :source => "tdc", :stable_id => 17 }.to_json,
+    { :path => "value", :repetition_champ_stable_id => 7, :source => "repet", :stable_id => 8 }.to_json
+  ]
+}
 
     it 'update columns when assiging paths' do
       export_template.paths = paths
@@ -32,36 +44,58 @@ describe ExportTemplate do
     end
 
     it 'ignores paths when invalid stable_id' do
-      export_template.paths = ['tdc_987_value']
+      export_template.paths = [{ :path => "value", :source => "tdc", :stable_id => 987 }.to_json]
       expect(export_template.columns).to match_array []
     end
 
-    it 'ignores paths when invalid path' do
-      export_template.paths = ['blabla']
-      expect(export_template.columns).to match_array []
+    it 'raises when invalid path' do
+      expect { export_template.paths = ['blabla'] }.to raise_exception(ArgumentError)
     end
 
     it 'returns paths from columns' do
-      expect(tabular_export_template.paths).to match_array ["dossier_email", "tdc_1_value", "tdc_2_code", "repet_3_tdc_4_value", "repet_3_tdc_5_value", "repet_6_tdc_7_value"]
+      expect(tabular_export_template.paths).to match_array [
+        { :path => "email", :source => "dossier", :libelle => "Email" },
+        { :path => "value", :source => "tdc", :libelle => "Ca va ?", :stable_id => 1 },
+        { :path => "code", :source => "tdc", :libelle => "Commune", :stable_id => 2 },
+        { :path => "value", :source => "repet", :libelle => "PJ répétable", :stable_id => 4, :repetition_champ_stable_id => 3 },
+        { :path => "value", :source => "repet", :libelle => "Champ repetable", :stable_id => 5, :repetition_champ_stable_id => 3 },
+        { :path => "value", :source => "repet", :libelle => "PJ", :stable_id => 7, :repetition_champ_stable_id => 6 }
+      ]
     end
   end
 
   describe '#all_tdc_paths' do
     it "returns all tdc paths (without repetition) based upon procedure's type de champs" do
-      expect(export_template.all_tdc_paths.flatten.find { _1.full_path == "tdc_1_value" }.libelle).to eq "Ca va ?"
-      expect(export_template.all_tdc_paths.flatten.find { _1.full_path == "tdc_17_code" }.libelle).to eq "Commune (Code INSEE)"
-      expect(export_template.all_tdc_paths.flatten.find { _1.full_path == "tdc_20_value" }.libelle).to eq "siret"
-      expect(export_template.all_tdc_paths.flatten.any? { _1.full_path.starts_with?("repet") }).to be false
+      expect(export_template.all_tdc_paths).to match_array [
+        [{ :source => "tdc", :stable_id => 1, :path => "value", :libelle => "Ca va ?" }],
+        [
+          { :source => "tdc", :stable_id => 17, :path => "value", :libelle => "Commune" },
+          { :source => "tdc", :stable_id => 17, :path => "code", :libelle => "Commune (Code INSEE)" },
+          { :source => "tdc", :stable_id => 17, :path => "departement", :libelle => "Commune (Département)" }
+        ],
+        [{ :source => "tdc", :stable_id => 20, :path => "value", :libelle => "siret" }]
+      ]
     end
   end
 
   describe '#all_repetable_tdc_paths' do
     it "returns all repetable paths based upon procedure's type de champs" do
-      rtdc_path = export_template.all_repetable_tdc_paths[0]
-      tdc_path = rtdc_path[:types_de_champ][0]
-      expect(rtdc_path[:libelle]).to eq "Champ répétable"
-      expect(tdc_path[0].full_path).to eq "repet_7_tdc_8_value"
-      expect(tdc_path[0].libelle).to eq "Qqchose à rajouter?"
+      expect(export_template.all_repetable_tdc_paths).to match_array [
+        {
+          :libelle => "Champ répétable",
+         :types_de_champ =>  [
+           [
+             {
+               :source => "repet",
+              :repetition_champ_stable_id => 7,
+              :path => "value",
+              :stable_id => 8,
+              :libelle => "Qqchose à rajouter?"
+             }
+           ]
+         ]
+        }
+      ]
     end
   end
 
@@ -70,10 +104,19 @@ describe ExportTemplate do
       let(:for_individual) { true }
 
       it "returns all usager paths" do
-        all_usager_paths = export_template.all_usager_paths
-        expect(all_usager_paths.find { _1.full_path == "dossier_first_name" }.libelle).to eq 'Prénom'
-        expect(all_usager_paths.find { _1.full_path == "dossier_last_name" }.libelle).to eq 'Nom'
-        expect(all_usager_paths.any? { _1.full_path == "dossier_etablissement_siret" }).to eq false
+        expect(export_template.all_usager_paths).to match_array [
+          { :path => "id", :source => "dossier", :libelle => "ID" },
+          { :path => "email", :source => "dossier", :libelle => "Email" },
+          { :path => "france_connecte", :source => "dossier", :libelle => "FranceConnect ?" },
+          { :path => "civilite", :source => "dossier", :libelle => "Civilité" },
+          { :path => "last_name", :source => "dossier", :libelle => "Nom" },
+          { :path => "first_name", :source => "dossier", :libelle => "Prénom" },
+          { :path => "for_tiers", :source => "dossier", :libelle => "Dépôt pour un tiers" },
+          { :path => "mandataire_last_name", :source => "dossier", :libelle => "Nom du mandataire" },
+          { :path => "mandataire_first_name", :source => "dossier", :libelle => "Prénom du mandataire" }
+        ]
+
+        expect(export_template.all_usager_paths.any? { _1[:path] == "etablissement_siret" }).to eq false
       end
     end
 
@@ -81,17 +124,41 @@ describe ExportTemplate do
       let(:for_individual) { false }
 
       it "returns all usager paths" do
-        all_usager_paths = export_template.all_usager_paths
-        expect(all_usager_paths.find { _1.full_path == "dossier_etablissement_siret" }.libelle).to eq 'Établissement SIRET'
-        expect(all_usager_paths.find { _1.full_path == "dossier_entreprise_raison_sociale" }.libelle).to eq 'Entreprise raison sociale'
-        expect(all_usager_paths.any? { _1.full_path == "dossier_first_name" }).to eq false
+        expect(export_template.all_usager_paths).to match_array [
+          { :path => "id", :source => "dossier", :libelle => "ID" },
+          { :path => "email", :source => "dossier", :libelle => "Email" },
+          { :path => "france_connecte", :source => "dossier", :libelle => "FranceConnect ?" },
+          { :path => "etablissement_siret", :source => "dossier", :libelle => "Établissement SIRET" },
+          { :path => "etablissement_siege_social", :source => "dossier", :libelle => "Établissement siège social" },
+          { :path => "etablissement_naf", :source => "dossier", :libelle => "Établissement NAF" },
+          { :path => "etablissement_libelle_naf", :source => "dossier", :libelle => "Établissement libellé NAF" },
+          { :path => "etablissement_adresse", :source => "dossier", :libelle => "Établissement Adresse" },
+          { :path => "etablissement_numero_voie", :source => "dossier", :libelle => "Établissement numero voie" },
+          { :path => "etablissement_type_voie", :source => "dossier", :libelle => "Établissement type voie" },
+          { :path => "etablissement_nom_voie", :source => "dossier", :libelle => "Établissement nom voie" },
+          { :path => "etablissement_complement_adresse", :source => "dossier", :libelle => "Établissement complément adresse" },
+          { :path => "etablissement_code_postal", :source => "dossier", :libelle => "Établissement code postal" },
+          { :path => "etablissement_localite", :source => "dossier", :libelle => "Établissement localité" },
+          { :path => "etablissement_code_insee_localite", :source => "dossier", :libelle => "Établissement code INSEE localité" },
+          { :path => "entreprise_siren", :source => "dossier", :libelle => "Entreprise SIREN" },
+          { :path => "entreprise_capital_social", :source => "dossier", :libelle => "Entreprise capital social" },
+          { :path => "entreprise_numero_tva_intracommunautaire", :source => "dossier", :libelle => "Entreprise numero TVA intracommunautaire" },
+          { :path => "entreprise_forme_juridique", :source => "dossier", :libelle => "Entreprise forme juridique" },
+          { :path => "entreprise_forme_juridique_code", :source => "dossier", :libelle => "Entreprise forme juridique code" },
+          { :path => "entreprise_nom_commercial", :source => "dossier", :libelle => "Entreprise nom commercial" },
+          { :path => "entreprise_raison_sociale", :source => "dossier", :libelle => "Entreprise raison sociale" },
+          { :path => "entreprise_siret_siege_social", :source => "dossier", :libelle => "Entreprise SIRET siège social" },
+          { :path => "entreprise_code_effectif_entreprise", :source => "dossier", :libelle => "Entreprise code effectif entreprise" }
+        ]
+
+        expect(export_template.all_usager_paths.any? { _1[:path] == "first_name" }).to eq false
       end
     end
 
     context 'when ask birthday' do
       let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:, ask_birthday: true) }
       it 'returns date de naissance column' do
-        expect(export_template.all_usager_paths.find { _1.full_path == "dossier_date_de_naissance" }.libelle).to eq "Date de naissance"
+        expect(export_template.all_usager_paths.include?({ :path => "date_de_naissance", :source => "dossier", :libelle => "Date de naissance" })).to be true
       end
     end
 
@@ -100,16 +167,25 @@ describe ExportTemplate do
       let(:procedure) { create(:procedure_with_dossiers, :filled_chorus, types_de_champ_public:) }
       it 'returns specific chorus columns' do
         allow(Procedure).to receive(:chorusable?).and_return(true)
-        expect(export_template.all_usager_paths.find { _1.full_path == "dossier_domaine_fonctionnel" }.libelle).to eq "Domaine Fonctionnel"
+        expect(export_template.all_usager_paths.include?({ :path => "domaine_fonctionnel", :source => "dossier", :libelle => "Domaine Fonctionnel" })).to be true
       end
     end
   end
 
   describe '#all_dossier_paths' do
     it "returns all dossier paths" do
-      all_dossier_paths = export_template.all_dossier_paths
-      # expect(all_dossier_paths).to eq 'coucou'
-      expect(all_dossier_paths.find { _1.full_path == "dossier_updated_at" }.libelle).to eq 'Dernière mise à jour le'
+      expect(export_template.all_dossier_paths).to match_array [
+        { :path => "archived", :source => "dossier", :libelle => "Archivé" },
+        { :path => "dossier_state", :source => "dossier", :libelle => "État du dossier" },
+        { :path => "updated_at", :source => "dossier", :libelle => "Dernière mise à jour le" },
+        { :path => "last_champ_updated_at", :source => "dossier", :libelle => "Dernière mise à jour du dossier le" },
+        { :path => "depose_at", :source => "dossier", :libelle => "Déposé le" },
+        { :path => "en_instruction_at", :source => "dossier", :libelle => "Passé en instruction le" },
+        { :path => "processed_at", :source => "dossier", :libelle => "Traité le" },
+        { :path => "motivation", :source => "dossier", :libelle => "Motivation de la décision" },
+        { :path => "instructeurs", :source => "dossier", :libelle => "Instructeurs" },
+        { :path => "groupe_instructeur", :source => "dossier", :libelle => "Groupe instructeur" }
+      ]
     end
   end
 

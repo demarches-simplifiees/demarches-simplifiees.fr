@@ -43,8 +43,9 @@
         - @export_template.all_usager_paths.each do |path|
           .fr-fieldset__element
             .fr-checkbox-group
-              = check_box_tag field_name('export_template', 'paths', ''), path.full_path, @export_template.paths&.include?(path.full_path), class: 'fr-checkbox', id: field_id('export_template', 'paths', path.full_path)
-              = label_tag field_name('export_template', 'paths', path.full_path), path.libelle
+              - id = sanitize_to_id(field_id('export_template', 'paths', path.to_json))
+              = check_box_tag field_name('export_template', 'paths', ''), path.to_json, @export_template.paths&.include?(path), class: 'fr-checkbox', id: id
+              = label_tag id, path[:libelle]
 
 
       %fieldset.fr-fieldset
@@ -54,31 +55,21 @@
         - @export_template.all_dossier_paths.each do |path|
           .fr-fieldset__element
             .fr-checkbox-group
-              = check_box_tag field_name('export_template', 'paths', ''), path.full_path, @export_template.paths&.include?(path.full_path), class: 'fr-checkbox', id: field_id('export_template', 'paths', path.full_path)
-              = label_tag field_name('export_template', 'paths', path.full_path), path.libelle
-
-
-
-
+              - id = sanitize_to_id(field_id('export_template', 'paths', path.to_json))
+              = check_box_tag field_name('export_template', 'paths', ''), path.to_json, @export_template.paths&.include?(path), class: 'fr-checkbox', id: id
+              = label_tag id, path[:libelle]
 
       %fieldset.fr-fieldset
         %legend.fr-fieldset__legend--regular.fr-fieldset__legend
           Colonnes formulaire
 
         - @export_template.all_tdc_paths.each do |paths_champ|
-          - if paths_champ.length > 1
-            - paths_champ.each do |path|
-              .fr-fieldset__element
-                .fr-checkbox-group
-                  = check_box_tag field_name('export_template', 'paths', ''), path.full_path, @export_template.paths&.include?(path.full_path), class: 'fr-checkbox', id: field_id('export_template', 'paths', path.full_path)
-                  = label_tag field_name('export_template', 'paths', path.full_path), path.libelle
-          - else
-            - paths_champ.each do |path|
-              .fr-fieldset__element
-                .fr-checkbox-group
-                  = check_box_tag field_name('export_template', 'paths', ''), path.full_path, @export_template.paths&.include?(path.full_path), class: 'fr-checkbox', id: field_id('export_template', 'paths', path.full_path)
-                  = label_tag field_name('export_template', 'paths', path.full_path), path.libelle
-
+          - paths_champ.each do |path|
+            .fr-fieldset__element
+              .fr-checkbox-group
+                - id = sanitize_to_id(field_id('export_template', 'paths', path.to_json))
+                = check_box_tag field_name('export_template', 'paths', ''), path.to_json, @export_template.paths&.include?(path), class: 'fr-checkbox', id: id
+                = label_tag id, path[:libelle]
 
       - @export_template.all_repetable_tdc_paths.each do |repet|
         %fieldset.fr-fieldset
@@ -90,15 +81,17 @@
               - paths_champ.each do |path|
                 .fr-fieldset__element
                   .fr-checkbox-group
-                    = check_box_tag field_name('export_template', 'paths', ''), path.full_path, @export_template.paths&.include?(path.full_path), class: 'fr-checkbox', id: field_id('export_template', 'paths', path.full_path)
-                    = label_tag field_name('export_template', 'paths', path.full_path), path.libelle
+                    - id = sanitize_to_id(field_id('export_template', 'paths', path.to_json))
+                    = check_box_tag field_name('export_template', 'paths', ''), path.to_json, @export_template.paths&.include?(path), class: 'fr-checkbox', id: id
+                    = label_tag id, path[:libelle]
+
             - else
               - paths_champ.each do |path|
                 .fr-fieldset__element
                   .fr-checkbox-group
-                    = check_box_tag field_name('export_template', 'paths', ''), path.full_path, @export_template.paths&.include?(path.full_path), class: 'fr-checkbox', id: field_id('export_template', 'paths', path.full_path)
-                    = label_tag field_name('export_template', 'paths', path.full_path), path.libelle
-
+                    - id = sanitize_to_id(field_id('export_template', 'paths', path.to_json))
+                    = check_box_tag field_name('export_template', 'paths', ''), path.to_json, @export_template.paths&.include?(path), class: 'fr-checkbox', id: id
+                    = label_tag id, path[:libelle]
 
       .fixed-footer
         .fr-container

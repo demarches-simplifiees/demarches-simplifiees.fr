@@ -9,8 +9,6 @@ class ExportTemplate < ApplicationRecord
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)
   FORMAT_DATE = "%Y-%m-%d"
 
-  Path = Struct.new(:full_path, :libelle)
-
   def set_default_values_for_zip
     self.kind = 'zip'
     content["default_dossier_directory"] = tiptap_json("dossier-")
@@ -50,23 +48,13 @@ class ExportTemplate < ApplicationRecord
   end
 
   def paths
-    columns&.map do |path|
-      case path['source']
-      when 'tdc'
-        "tdc_#{path['stable_id']}_#{path['path']}"
-      when 'repet'
-        "repet_#{path['repetition_champ_stable_id']}_tdc_#{path['stable_id']}_#{path['path']}"
-      when 'dossier'
-        "dossier_#{path['path']}"
-      end
-    end
+    columns.map(&:symbolize_keys)
   end
 
   def all_tdc_paths
     procedure.types_de_champ_for_procedure_presentation.not_repetition.map do |tdc|
       tdc.paths_for_export.map do
-        libelle = libelle_for_path(_1[:full_path], _1[:libelle])
-        Path.new(full_path: _1[:full_path], libelle:)
+        _1.merge({ libelle: libelle_for_path(_1, _1[:libelle]) })
       end
     end
   end
@@ -82,9 +70,8 @@ class ExportTemplate < ApplicationRecord
           h = {}
           h[:libelle] = type_de_champ_repetition.libelle
           h[:types_de_champ] = types_de_champ.map do |tdc|
-            tdc.paths_for_export(repetition_champ: type_de_champ_repetition.stable_id).map do
-              libelle = libelle_for_path(_1[:full_path], _1[:libelle])
-              Path.new(full_path: _1[:full_path], libelle:)
+            tdc.paths_for_export(repetition_champ_stable_id: type_de_champ_repetition.stable_id).map do
+              _1.merge({ libelle: libelle_for_path(_1[:full_path], _1[:libelle]) })
             end
           end
           h
@@ -93,15 +80,11 @@ class ExportTemplate < ApplicationRecord
   end
 
   def all_usager_paths
-    all_usager_columns.map do
-      Path.new(full_path: "dossier_#{_1}", libelle: columns_meta[_1][:libelle])
-    end
+    dossier_columns_to_path(all_usager_columns)
   end
 
   def all_dossier_paths
-    all_dossier_columns.map do
-      Path.new(full_path: "dossier_#{_1}", libelle: columns_meta[_1][:libelle])
-    end
+    dossier_columns_to_path(all_dossier_columns)
   end
 
   def columns
@@ -250,7 +233,11 @@ class ExportTemplate < ApplicationRecord
   private
 
   def libelle_for_path(full_path, active_libelle)
-    columns&.find { _1["path"] == full_path_hash(full_path)[:path] && _1["stable_id"] == full_path_hash(full_path)[:stable_id] }&.fetch("libelle", nil) || active_libelle
+    columns&.find { _1["path"] == full_path && _1["stable_id"] == full_path[:stable_id] }&.fetch("libelle", nil) || active_libelle
+  end
+
+  def dossier_columns_to_path(columns)
+    columns.map { { path: _1.to_s, source: 'dossier', libelle: columns_meta[_1][:libelle] } }
   end
 
   def tiptap_content(key)
@@ -323,16 +310,10 @@ class ExportTemplate < ApplicationRecord
   end
 
   def full_path_hash(full_path)
-    source, path = full_path.split('_', 2)
-    case source
-    when 'tdc'
-      stable_id_s, path = path.split('_', 2)
-      { source:, stable_id: stable_id_s.to_i, path: }
-    when 'repet'
-      repetition_champ_stable_id_s, _, stable_id_s, path = path.split('_', 4)
-      { source:, repetition_champ_stable_id: repetition_champ_stable_id_s.to_i, stable_id: stable_id_s.to_i, path: }
-    when 'dossier'
-      { source:, path: }
+    begin
+      return JSON.parse(full_path).symbolize_keys
+    rescue
+      raise ArgumentError
     end
   end
 

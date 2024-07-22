@@ -6,9 +6,9 @@ describe TypesDeChamp::CommuneTypeDeChamp do
   it "returns paths for export" do
     stable_id = tdc_commune.stable_id
     expect(tdc_commune.paths_for_export).to match_array([
-      { :full_path => "tdc_#{stable_id}_value", :libelle => "Ma commune" },
-      { :full_path => "tdc_#{stable_id}_code", :libelle => "Ma commune (Code INSEE)" },
-      { :full_path => "tdc_#{stable_id}_departement", :libelle => "Ma commune (Département)" }
+      { source: 'tdc', stable_id:, path: 'value', libelle: "Ma commune" },
+      { source: 'tdc', stable_id:, path: 'code', libelle: "Ma commune (Code INSEE)" },
+      { source: 'tdc', stable_id:, path: 'departement', libelle: "Ma commune (Département)" }
     ])
   end
 

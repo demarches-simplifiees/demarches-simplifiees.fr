@@ -38,7 +38,14 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     }
   end
 
-  let(:paths) { ["dossier_id", "dossier_email", "dossier_updated_at", "tdc_1_value"] }
+  let(:paths) {
+  [
+    { :path => "id", :source => "dossier" }.to_json,
+    { :path => "email", :source => "dossier" }.to_json,
+    { :path => "updated_at", :source => "dossier" }.to_json,
+    { :path => "value", :source => "tdc", :stable_id => 1 }.to_json
+  ]
+}
   let(:export_template_tabular_params) do
     {
       name: "ExportODS",
@@ -164,7 +171,14 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
     context 'for tabular' do
       let(:export_template) { create(:tabular_export_template, groupe_instructeur:) }
-      let(:paths) { ["dossier_id", "dossier_email", "dossier_updated_at"] }
+      let(:paths) {
+  [
+    { :path => "id", :source => "dossier", :stable_id => 1 }.to_json,
+    { :path => "email", :source => "dossier", :stable_id => 2 }.to_json,
+    { :path => "updated_at", :source => "dossier", :stable_id => 2 }.to_json
+  ]
+}
+
       let(:subject) { put :update, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_tabular_params } }
 
       context 'with valid params' do
