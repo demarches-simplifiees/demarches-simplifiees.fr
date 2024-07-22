@@ -14,6 +14,8 @@ describe FacetsConcern do
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
+          { label: 'Nº dossier', table: 'self', column: 'id', classname: 'number-col', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'notifications', table: 'notifications', column: 'notifications', virtual: false, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'Créé le', table: 'self', column: 'created_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
           { label: 'Mis à jour le', table: 'self', column: 'updated_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
           { label: 'Déposé le', table: 'self', column: 'depose_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
