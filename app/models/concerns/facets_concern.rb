@@ -78,16 +78,7 @@ module FacetsConcern
         .reject { |(type_champ)| type_champ == TypeDeChamp.type_champs.fetch(:repetition) }
         .flat_map do |(type_champ, libelle, stable_id)|
           tdc = TypeDeChamp.new(type_champ:, libelle:, stable_id:)
-
-          tdc.dynamic_type.search_paths.map do |path_struct|
-            Facet.new(
-              table: TYPE_DE_CHAMP,
-              column: tdc.stable_id.to_s,
-              label: path_struct[:libelle],
-              type: TypeDeChamp.filter_hash_type(tdc.type_champ),
-              value_column: TypeDeChamp.filter_hash_value_column(type_champ)
-            )
-          end
+          tdc.dynamic_type.facets(table: TYPE_DE_CHAMP)
         end
     end
   end
