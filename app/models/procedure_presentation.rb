@@ -124,11 +124,13 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def update_sort(table, column, order)
+  def update_sort(facet_id, order)
+    facet = procedure.find_facet(id: facet_id)
+
     update!(sort: {
-      TABLE => table,
-      COLUMN => column,
-      ORDER => order.presence || opposite_order_for(table, column)
+      TABLE => facet.table,
+      COLUMN => facet.column,
+      ORDER => order.presence || opposite_order_for(facet.table, facet.column)
     })
   end
 

@@ -1,10 +1,15 @@
 class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
   attr_reader :procedure_presentation, :facet
   # maybe extract a FacetSorter class?
+  #
 
   def initialize(procedure_presentation:, facet:)
     @procedure_presentation = procedure_presentation
     @facet = facet
+  end
+
+  def facet_id
+    facet.id
   end
 
   def sorted_by_current_facet?
