@@ -13,7 +13,7 @@ describe Instructeurs::ColumnPickerComponent, type: :component do
     subject { component.displayable_fields_for_select }
 
     before do
-      allow(Facet).to receive(:facets).and_return([
+      allow(procedure).to receive(:facets).and_return([
         default_user_email,
         excluded_displayable_field
       ])
