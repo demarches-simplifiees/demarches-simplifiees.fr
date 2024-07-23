@@ -312,6 +312,12 @@ describe PiecesJustificativesService do
           expect(subject).to match_array([dossier_bs.serialized.attachment, dossier_bs.signature.attachment])
         end
 
+        context 'with export_template' do
+          let(:export_template) { default_export_template }
+
+          it { expect(subject).to be_empty }
+        end
+
         context 'with a dol' do
           let(:dol) { create(:dossier_operation_log, dossier: dossier) }
           let(:witness_dol) { create(:dossier_operation_log, dossier: witness) }
@@ -322,6 +328,12 @@ describe PiecesJustificativesService do
           end
 
           it { expect(subject).to include(dol.serialized.attachment) }
+
+          context 'with export_template' do
+            let(:export_template) { default_export_template }
+
+            it { expect(subject).to be_empty }
+          end
         end
       end
 

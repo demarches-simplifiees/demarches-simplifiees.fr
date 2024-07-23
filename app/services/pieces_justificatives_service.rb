@@ -5,25 +5,23 @@ class PiecesJustificativesService
   end
 
   def liste_documents(dossiers)
-    bill_ids = []
-
     docs = pjs_for_champs(dossiers) +
       pjs_for_commentaires(dossiers) +
       pjs_for_dossier(dossiers) +
       pjs_for_avis(dossiers)
 
-    if liste_documents_allows?(:with_bills)
+    # we do not export bills no more with the new export system
+    # the bills have never been properly understood by the users
+    # their export is now deprecated
+    if liste_documents_allows?(:with_bills) && @export_template.nil?
       # some bills are shared among operations
       # so first, all the bill_ids are fetched
       operation_logs, some_bill_ids = operation_logs_and_signature_ids(dossiers)
 
       docs += operation_logs
-      bill_ids += some_bill_ids
-    end
 
-    if liste_documents_allows?(:with_bills)
       # then the bills are retrieved without duplication
-      docs += signatures(bill_ids.uniq)
+      docs += signatures(some_bill_ids.uniq)
     end
 
     docs.filter { |_attachment, path| path.present? }
