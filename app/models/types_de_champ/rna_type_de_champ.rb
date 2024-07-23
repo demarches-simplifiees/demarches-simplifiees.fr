@@ -7,6 +7,7 @@ class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
     super.concat([
       Facets::RNAFacet.new(
         table:,
+        virtual: true,
         column: stable_id,
         label: "#{libelle} – commune",
         type: TypeDeChamp.filter_hash_type(type_champ),
