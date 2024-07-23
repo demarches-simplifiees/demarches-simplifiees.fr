@@ -254,9 +254,13 @@ module Users
     end
 
     def extend_conservation
-      dossier.extend_conservation(dossier.procedure.duree_conservation_dossiers_dans_ds.months, current_user)
+      dossier.extend_conservation(dossier.procedure.duree_conservation_dossiers_dans_ds.months)
       flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
       redirect_back(fallback_location: dossier_path(@dossier))
+    end
+
+    def extend_conservation_and_restore
+      dossier.extend_conservation_and_restore(conservation_extension, author)
     end
 
     def modifier

@@ -107,8 +107,8 @@ describe Dossier, type: :model do
 
     context 'does not include an expiring dossier that has been postponed' do
       before do
-        expiring_dossier.extend_conservation(1.month, user)
-        expiring_dossier_with_notification.extend_conservation(1.month, user)
+        expiring_dossier.extend_conservation(1.month)
+        expiring_dossier_with_notification.extend_conservation(1.month)
         expiring_dossier.reload
         expiring_dossier_with_notification.reload
       end
@@ -158,8 +158,8 @@ describe Dossier, type: :model do
 
     context 'does not include an expiring dossier that has been postponed' do
       before do
-        expiring_dossier.extend_conservation(1.month, user)
-        expiring_dossier_with_notification.extend_conservation(1.month, user)
+        expiring_dossier.extend_conservation(1.month)
+        expiring_dossier_with_notification.extend_conservation(1.month)
         expiring_dossier.reload
         expiring_dossier_with_notification.reload
       end
@@ -218,8 +218,8 @@ describe Dossier, type: :model do
 
     context 'does not include an expiring dossier that has been postponed' do
       before do
-        expiring_dossier.extend_conservation(1.month, user)
-        expiring_dossier_with_notification.extend_conservation(1.month, user)
+        expiring_dossier.extend_conservation(1.month)
+        expiring_dossier_with_notification.extend_conservation(1.month)
         expiring_dossier.reload
         expiring_dossier_with_notification.reload
       end

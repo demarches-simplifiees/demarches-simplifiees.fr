@@ -681,16 +681,17 @@ class Dossier < ApplicationRecord
     brouillon? || en_construction?
   end
 
-  def extend_conservation(conservation_extension, author)
+  def extend_conservation(conservation_extension)
     update(conservation_extension: self.conservation_extension + conservation_extension,
       brouillon_close_to_expiration_notice_sent_at: nil,
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
+  end
 
-    if hidden_by_expired?
-      update(hidden_by_expired_at: nil, hidden_by_reason: nil)
-      restore(author)
-    end
+  def extend_conservation_and_restore(conservation_extension, author)
+    extend_conservation(conservation_extension)
+    update(hidden_by_expired_at: nil, hidden_by_reason: nil)
+    restore(current_user)
   end
 
   def show_procedure_state_warning?
