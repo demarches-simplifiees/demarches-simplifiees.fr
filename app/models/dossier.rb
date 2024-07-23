@@ -221,7 +221,7 @@ class Dossier < ApplicationRecord
   scope :prefilled,                 -> { where(prefilled: true) }
   scope :hidden_by_user,            -> { where.not(hidden_by_user_at: nil) }
   scope :hidden_by_administration,  -> { where.not(hidden_by_administration_at: nil) }
-  scope :hidden_by_expired,         -> { where(hidden_by_reason: 'expired') }
+  scope :hidden_by_expired,         -> { where.not(hidden_by_expired_at: nil) }
   scope :visible_by_user,           -> { where(for_procedure_preview: false).where(hidden_by_user_at: nil, editing_fork_origin_id: nil).where(hidden_by_expired_at: nil) }
   scope :visible_by_administration, -> {
     state_not_brouillon
