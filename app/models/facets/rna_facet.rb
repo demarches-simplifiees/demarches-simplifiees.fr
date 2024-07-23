@@ -5,7 +5,7 @@ class Facets::RNAFacet < Facet
 
   def filtered_ids(dossiers, value)
     dossiers.with_type_de_champ(column)
-      .where("champs.#{value_column} = ?", value)
+      .where("champs.data->'adresse'->>'commune' = ?", value)
       .pluck(:id)
   end
 end
