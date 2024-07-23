@@ -201,8 +201,8 @@ class ProcedurePresentation < ApplicationRecord
       .map do |(table, column), filters|
       values = filters.pluck('value')
       value_column = filters.pluck('value_column').compact.first || :value
-      facet = procedure.find_facet(id: Facet.make_id(table, column))
-      if facet.is_a?(Facets::RNAFacet)
+      facet = procedure.find_facet(id: Facet.make_id(table, column)) # hack to find json path facets
+      if facet.is_a?(Facets::JSONPathFacet)
         facet.filtered_ids(dossiers, values)
       else
         case table
@@ -296,6 +296,7 @@ class ProcedurePresentation < ApplicationRecord
     filters.each do |key, columns|
       return true if key == 'migrated'
       columns.each do |column|
+        # binding.irb
         check_allowed_field(:filters, column)
       end
     end
