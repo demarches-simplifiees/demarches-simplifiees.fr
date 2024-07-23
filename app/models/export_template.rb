@@ -48,13 +48,13 @@ class ExportTemplate < ApplicationRecord
   end
 
   def paths
-    columns.map(&:symbolize_keys)
+    columns&.map(&:symbolize_keys)
   end
 
   def all_tdc_paths
     procedure.types_de_champ_for_procedure_presentation.not_repetition.map do |tdc|
       tdc.paths_for_export.map do
-        _1.merge({ libelle: libelle_for_path(_1, _1[:libelle]) })
+        _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
       end
     end
   end
@@ -71,7 +71,7 @@ class ExportTemplate < ApplicationRecord
           h[:libelle] = type_de_champ_repetition.libelle
           h[:types_de_champ] = types_de_champ.map do |tdc|
             tdc.paths_for_export(repetition_champ_stable_id: type_de_champ_repetition.stable_id).map do
-              _1.merge({ libelle: libelle_for_path(_1[:full_path], _1[:libelle]) })
+              _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
             end
           end
           h
@@ -232,8 +232,8 @@ class ExportTemplate < ApplicationRecord
 
   private
 
-  def libelle_for_path(full_path, active_libelle)
-    columns&.find { _1["path"] == full_path && _1["stable_id"] == full_path[:stable_id] }&.fetch("libelle", nil) || active_libelle
+  def saved_libelle(path_h)
+    paths&.find { _1.slice(:path, :stable_id) == path_h.slice(:path, :stable_id) }&.dig(:libelle)
   end
 
   def dossier_columns_to_path(columns)

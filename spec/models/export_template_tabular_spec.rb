@@ -1,8 +1,8 @@
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-  let(:export_template) { build(:export_template, groupe_instructeur:) }
+  let(:export_template) { build(:export_template, kind: 'csv', groupe_instructeur:) }
   let(:tabular_export_template) { build(:tabular_export_template, groupe_instructeur:) }
-  let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:) }
+  let(:procedure) { create(:procedure_with_dossiers, :published, types_de_champ_public:, for_individual:) }
   let(:for_individual) { true }
   let(:types_de_champ_public) do
     [
@@ -43,6 +43,38 @@ describe ExportTemplate do
       ]
     end
 
+    context 'when there is a previous revision with a renamed tdc' do
+
+      let(:previous_tdc) { procedure.published_revision.types_de_champ_public.find_by(stable_id: 1) }
+      let(:changed_tdc) { { libelle: "Ca roule ?" } }
+
+      context 'with already column in export template' do
+        before do
+          export_template.paths = paths
+          type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
+          type_de_champ.update(changed_tdc)
+          procedure.publish_revision!
+          export_template.paths = paths
+        end
+
+        it 'update columns with original libelle for champs with new revision' do
+          expect(export_template.columns.find { _1[:stable_id] == 1 }).to eq({ :libelle => "Ca va ?", :path => "value", :source => "tdc", :stable_id => 1 })
+        end
+      end
+
+      context 'without  columns in export template' do
+        before do
+          type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
+          type_de_champ.update(changed_tdc)
+          procedure.publish_revision!
+          export_template.paths = paths
+        end
+
+        it 'update columns with original libelle for champs with new revision' do
+          expect(export_template.columns.find { _1[:stable_id] == 1 }).to eq({ :libelle => "Ca roule ?", :path => "value", :source => "tdc", :stable_id => 1 })
+        end
+      end
+    end
     it 'ignores paths when invalid stable_id' do
       export_template.paths = [{ :path => "value", :source => "tdc", :stable_id => 987 }.to_json]
       expect(export_template.columns).to match_array []
