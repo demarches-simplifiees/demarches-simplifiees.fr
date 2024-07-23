@@ -16,7 +16,7 @@
           %p.fr-icon--sm.fr-icon-user-line
             = demandeur_dossier(dossier)
 
-          - if dossier.hidden_by_reason == 'expired'
+          - if dossier.hidden_by_expired?
             %p.fr-icon--sm.fr-icon-delete-line
               = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_expired_at.to_date))
           - elsif dossier.hidden_by_user?

@@ -687,7 +687,7 @@ class Dossier < ApplicationRecord
       en_construction_close_to_expiration_notice_sent_at: nil,
       termine_close_to_expiration_notice_sent_at: nil)
 
-    if hidden_by_reason == 'expired'
+    if hidden_by_expired?
       update(hidden_by_expired_at: nil, hidden_by_reason: nil)
       restore(author)
     end
@@ -780,6 +780,10 @@ class Dossier < ApplicationRecord
 
   def log_operations?
     !procedure.brouillon? && !brouillon?
+  end
+
+  def hidden_by_expired?
+    hidden_by_expired_at.present?
   end
 
   def hidden_by_user?
