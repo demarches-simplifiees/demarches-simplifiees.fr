@@ -564,7 +564,7 @@ describe ProcedurePresentation do
       let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
       let(:value) { "Paris" }
-      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => "1->rna", 'value' => value }] }
+      let(:filter) { [type_de_champ.dynamic_type.facets(table: 'type_de_champ').last.to_json.merge({ "value" => value })] }
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
