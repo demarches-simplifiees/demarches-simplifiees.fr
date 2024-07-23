@@ -3,8 +3,8 @@ import Rails from '@rails/ujs';
 import * as ActiveStorage from '@rails/activestorage';
 import * as Turbo from '@hotwired/turbo';
 import { Application } from '@hotwired/stimulus';
-import '@gouvfr/dsfr/dist/dsfr.module.js';
 
+import '../shared/dsfr';
 import '../shared/activestorage/ujs';
 import '../shared/safari-11-empty-file-workaround';
 import '../shared/toggle-target';
