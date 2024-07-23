@@ -48,7 +48,6 @@ export function ComboBox({
     <AriaComboBox
       {...props}
       className={`fr-ds-combobox ${className ?? ''}`}
-      menuTrigger="focus"
       shouldFocusWrap={true}
     >
       {label ? <Label className="fr-label">{label}</Label> : null}
@@ -114,7 +113,12 @@ export function SingleComboBox({
 
   return (
     <>
-      <ComboBox aria-labelledby={labelledby} {...comboBoxProps} {...props}>
+      <ComboBox
+        aria-labelledby={labelledby}
+        menuTrigger="focus"
+        {...comboBoxProps}
+        {...props}
+      >
         {(item) => <ComboBoxItem id={item.value}>{item.label}</ComboBoxItem>}
       </ComboBox>
       {children || name ? (
@@ -184,7 +188,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
                 key={item.value}
                 id={item.value}
                 textValue={`Retirer ${item.label}`}
-                className="fr-tag fr-tag--sm"
+                className="fr-tag fr-tag--sm fr-tag--dismiss"
               >
                 {item.label}
                 <Button slot="remove" className="fr-tag--dismiss"></Button>
@@ -197,6 +201,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
         aria-labelledby={labelledby}
         allowsCustomValue={allowsCustomValue}
         inputRef={inputRef}
+        menuTrigger="focus"
         {...comboBoxProps}
         {...props}
       >
