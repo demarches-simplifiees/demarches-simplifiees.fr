@@ -30,7 +30,7 @@ class ExportTemplate < ApplicationRecord
 
   def paths=(full_paths)
     content["columns"] = full_paths.compact_blank
-      .map { [_1, full_path_hash(_1)] }
+      .map { [_1, JSON.parse(_1).symbolize_keys ] }
       .filter { |_, current_column| current_column.present? }.map do |full_path, current_column|
         libelle = case current_column[:source]
         when 'tdc', 'repet'
@@ -307,14 +307,6 @@ class ExportTemplate < ApplicationRecord
     suffix += "-#{row_index + 1}" if row_index.present?
 
     suffix + attachment.filename.extension_with_delimiter
-  end
-
-  def full_path_hash(full_path)
-    begin
-      return JSON.parse(full_path).symbolize_keys
-    rescue
-      raise ArgumentError
-    end
   end
 
   def all_usager_columns

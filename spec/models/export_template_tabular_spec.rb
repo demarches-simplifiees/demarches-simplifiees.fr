@@ -49,7 +49,7 @@ describe ExportTemplate do
     end
 
     it 'raises when invalid path' do
-      expect { export_template.paths = ['blabla'] }.to raise_exception(ArgumentError)
+      expect { export_template.paths = ['blabla'] }.to raise_exception(JSON::ParserError)
     end
 
     it 'returns paths from columns' do
