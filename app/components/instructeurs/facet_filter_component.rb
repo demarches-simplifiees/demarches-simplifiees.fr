@@ -20,7 +20,7 @@ class Instructeurs::FacetFilterComponent < ApplicationComponent
         end
       end
     else
-      find_type_de_champ(facet.column).options_for_select
+      find_type_de_champ(facet.column).options_for_select(facet)
     end
   end
 
