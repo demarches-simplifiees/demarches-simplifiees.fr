@@ -210,7 +210,7 @@ fr:
           label: "Contacter le délégué du Défenseur des droits dans votre région"
           url: "https://www.defenseurdesdroits.fr/fr/saisir/delegues"
           title: "Contacter le délégué du Défenseur des droits dans votre région - nouvel onglet"
-        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :  
+        remedies_three_html: "Envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) à l'adresse suivante :
           <p class=\"fr-mb-2w\">Défenseur des droits
           <br >Libre réponse 71120
           <br>75342 Paris CEDEX 07</p>"
@@ -539,7 +539,7 @@ fr:
           deleted_badge: Supprimé
         dossier_action:
           edit_dossier: "Modifier le dossier"
-          start_other_dossier: "Commencer un autre dossier vide"
+          start_other_dossier: "Commencer un nouveau dossier"
           clone: "Dupliquer ce dossier"
           delete_dossier: "Supprimer le dossier"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
