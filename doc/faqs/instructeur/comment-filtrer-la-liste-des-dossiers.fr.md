@@ -21,7 +21,7 @@ Pour appliquer un filtre à une liste de dossiers :
 4. Sélectionnez ensuite la valeur à filtrer.
 5. Cliquez enfin sur **« Ajouter le filtre »**.
 
-![Capture d’écran de l’interface de saisie d’un filtre](faq/instructeur-filtres-dropdown.png)
+![Capture d’écran de l’interface de saisie d’un filtre {aria-hidden="true"}](faq/instructeur-filtres-dropdown.png)
 
 ![Capture d’écran de toutes les colonnes filtres](faq/instructeur-filtres-list.png)
 

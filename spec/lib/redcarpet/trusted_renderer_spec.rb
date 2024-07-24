@@ -19,6 +19,11 @@ RSpec.describe Redcarpet::TrustedRenderer do
       markdown = "![A cute cat](http://example.com/cat.jpg)"
       expect(renderer.render(markdown)).to include('<img alt="A cute cat" loading="lazy" src="http://example.com/cat.jpg" />')
     end
+
+    it 'renders additional attribute' do
+      markdown = "![A cute cat { aria-hidden=\"true\" }](http://example.com/cat.jpg)"
+      expect(renderer.render(markdown)).to include('<img alt="A cute cat" loading="lazy" aria-hidden="true" src="http://example.com/cat.jpg" />')
+    end
   end
 
   context 'when autolinking' do
