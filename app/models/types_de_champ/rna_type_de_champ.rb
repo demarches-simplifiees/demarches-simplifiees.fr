@@ -1,19 +1,8 @@
 class TypesDeChamp::RNATypeDeChamp < TypesDeChamp::TypeDeChampBase
+  include AddressableFacetConcern
+
   def estimated_fill_duration(revision)
     FILL_DURATION_MEDIUM
-  end
-
-  def facets(table:)
-    super.concat([
-      Facets::JSONPathFacet.new(
-        table:,
-        virtual: true,
-        column: stable_id,
-        label: "#{libelle} – commune",
-        type: TypeDeChamp.filter_hash_type(type_champ),
-        value_column: ['data', 'adresse', 'commune']
-      )
-    ])
   end
 
   class << self
