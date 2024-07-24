@@ -37,6 +37,9 @@ fr:
   utils:
     'yes': Oui
     'no': Non
+    email_suggest:
+      wanna_say: 'Voulez-vous dire ?'
+
     i_dont_know: Je ne sais pas
     deconnexion: "Déconnexion"
     pj: "Pièces jointes"
@@ -938,12 +941,12 @@ fr:
       choose_email:
         intro_html: "Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme email de contact."
         use_email_for_notifications: Souhaitez-vous l'utiliser pour recevoir les notifications concernant l'avancement de vos dossiers ?
-        'yes': Oui
-        'no': Non
         confirm: Confirmer
         choose_email_contact: Choisissez votre e-mail de contact
         alternative_email: Veuillez nous fournir l'email à utiliser pour vous contacter.
         greetings: Bonjour,
+        email_suggest:
+          wanna_say: 'Voulez-vous dire ?'
       confirmation_sent:
         confirmation_sent_by_email: Confirmation envoyée par mail
         intro: Un mail de confirmation a été envoyé à votre adresse %{email}

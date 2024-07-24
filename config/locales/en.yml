@@ -47,6 +47,9 @@ en:
   utils:
     'yes': 'Yes'
     'no': 'No'
+    email_suggest:
+      wanna_say: 'Do you mean to say ?'
+
     deconnexion: "Log out"
     pj: "Attachments"
     asterisk_html: "Fields marked by an asterisk ( <svg aria-label='required' class='icon mandatory' height='10' role='img' viewBox='0 0 1200 1200' width='10' xml:space='preserve' xmlns='http://www.w3.org/2000/svg'><desc>required</desc><path d='M489.838 29.354v443.603L68.032 335.894 0 545.285l421.829 137.086-260.743 358.876 178.219 129.398L600.048 811.84l260.673 358.806 178.146-129.398-260.766-358.783L1200 545.379l-68.032-209.403-421.899 137.07V29.443H489.84l-.002-.089z'></path></svg> ) are mandatory."
@@ -884,8 +887,6 @@ en:
       choose_email:
         intro_html: "Your FranceConnect account uses <b class='bold'>%{email}</b>r as the contact email."
         use_email_for_notifications: "Would you like to use it to receive notifications regarding the progress of your cases?"
-        'yes': "Yes"
-        'no': "No"
         confirm: "Confirm"
         choose_email_contact: "Choose your contact email"
         alternative_email: "Please provide the email to use for contacting you."
