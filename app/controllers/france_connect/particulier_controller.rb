@@ -58,6 +58,12 @@ class FranceConnect::ParticulierController < ApplicationController
 
     destination_path = destination_path(user)
     render :confirmation_sent, locals: { email:, destination_path: }
+  rescue ActiveRecord::RecordInvalid => e
+    if e.record.errors.where(:email, :taken)
+      redirect_to new_user_session_path, alert: t('errors.messages.france_connect.email_taken', reset_link: new_user_password_path)
+    else
+      redirect_to new_user_session_path, alert: t('errors.messages.france_connect.unknown_error')
+    end
   end
 
   def merge

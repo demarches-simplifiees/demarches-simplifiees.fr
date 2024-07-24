@@ -751,6 +751,9 @@ en:
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'
       france_connect:
         connexion: "Error trying to connect to France Connect."
+        forbidden_html: "Only citizen can use FranceConnect. As an instructor or administrator, you should <a href='%{reset_link}'>reset your password</a>."
+        email_taken: "This email is already in use. You should <a href='%{reset_link}'>reset your password</a>."
+        unknown_error: "An error occured, please retry."
       evil_regexp: The regular expression you have entered is potentially dangerous and could lead to performance issues.
       mismatch_regexp: The provided example must match the regular expression
       syntax_error_regexp: The syntax of the regular expression is invalid

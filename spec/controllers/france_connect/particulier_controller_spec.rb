@@ -253,6 +253,27 @@ describe FranceConnect::ParticulierController, type: :controller do
         subject
       end
     end
+
+    context 'when associating the user conflict with existing one' do
+      let(:fci) { instance_double('FranceConnectInformation') }
+      let(:email) { 'user@example.com' }
+      let(:user) { instance_double('User', id: 1) }
+      let(:destination_path) { '/' }
+
+      before do
+        create(:user, email:)
+        invalid_user = build(:user, email:)
+        allow(FranceConnectInformation).to receive(:find_by).with(merge_token: merge_token).and_return(fci)
+        allow(fci).to receive(:valid_for_merge?).and_return(true)
+        allow(fci).to receive(:email_france_connect).and_return(email)
+        invalid_user.valid?
+        allow(fci).to receive(:associate_user!).and_raise(ActiveRecord::RecordInvalid.new(invalid_user))
+      end
+
+      it 'fails' do
+        subject
+      end
+    end
   end
 
   describe '#confirm_email' do
