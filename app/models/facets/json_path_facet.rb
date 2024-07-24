@@ -4,7 +4,7 @@ class Facets::JSONPathFacet < Facet
   end
 
   def filtered_ids(dossiers, communes)
-    queries = Array.new(communes.count, "(#{query} LIKE ?)").join(' OR ')
+    queries = Array.new(communes.count, "(#{query} ILIKE ?)").join(' OR ')
 
     dossiers.with_type_de_champ(stable_id)
       .where(queries, *(communes.map { |value| "%#{value}%" }))
