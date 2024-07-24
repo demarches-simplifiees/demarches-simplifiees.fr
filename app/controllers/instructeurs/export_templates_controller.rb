@@ -16,6 +16,7 @@ module Instructeurs
     def create
       @export_template = @groupe_instructeur.export_templates.build
       @export_template.assign_attributes(export_template_params)
+      assign_paths
       @export_template.assign_pj_names(pj_params)
       if @export_template.save
         redirect_to exports_instructeur_procedure_path(procedure: @procedure), notice: "Le modèle d'export #{@export_template.name} a bien été créé"
@@ -30,6 +31,7 @@ module Instructeurs
 
     def update
       @export_template.assign_attributes(export_template_params)
+      assign_paths
       @export_template.groupe_instructeur = @groupe_instructeur
       @export_template.assign_pj_names(pj_params)
       if @export_template.save
@@ -60,6 +62,11 @@ module Instructeurs
 
     private
 
+    def assign_paths
+      paths = params.require(:export_template)[:paths]
+      @export_template.paths = paths.map { JSON.parse(_1).symbolize_keys } if paths
+    end
+
     def export_template_params
       params.require(:export_template).permit(*export_params)
     end
@@ -88,7 +95,7 @@ module Instructeurs
     end
 
     def export_params
-      [:name, :kind, :tiptap_default_dossier_directory, :tiptap_pdf_name, paths: []]
+      [:name, :kind, :tiptap_default_dossier_directory, :tiptap_pdf_name]
     end
 
     def pj_params

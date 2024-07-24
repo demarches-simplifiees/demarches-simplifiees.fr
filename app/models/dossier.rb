@@ -1288,20 +1288,20 @@ class Dossier < ApplicationRecord
 
   def champs_for_export_template(export_template)
     export_template.columns_without_repet.map do |column|
-      case column['source']
+      case column[:source]
       when 'tdc'
-        type_de_champ = TypeDeChamp.find_by(stable_id: column["stable_id"])
-        path = column["path"].to_sym
+        type_de_champ = TypeDeChamp.find_by(stable_id: column[:stable_id])
+        path = column[:path].to_sym
         champ = champ_for_export(type_de_champ, nil)
-        [column["libelle"], champ&.for_export(path)]
+        [column[:libelle], champ&.for_export(path)]
       when 'repet'
-        type_de_champ = TypeDeChamp.find_by(stable_id: column["stable_id"])
-        path = column["path"].to_sym
+        type_de_champ = TypeDeChamp.find_by(stable_id: column[:stable_id])
+        path = column[:path].to_sym
         champ = champ_for_export(type_de_champ, nil)
         [type_de_champ.libelle_for_path(path), champ&.for_export(path)]
-        [column["libelle"], champ&.for_export(path)]
+        [column[:libelle], champ&.for_export(path)]
       when 'dossier'
-        [column["libelle"], export_template.columns_meta[column["path"].to_sym][:get_value].(self)]
+        [column[:libelle], export_template.columns_meta[column[:path].to_sym][:get_value].(self)]
       end
     end
   end

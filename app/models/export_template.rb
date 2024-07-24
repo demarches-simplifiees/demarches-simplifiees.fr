@@ -28,10 +28,9 @@ class ExportTemplate < ApplicationRecord
     kind != 'zip'
   end
 
-  def paths=(json_paths)
-    content["columns"] = json_paths.compact_blank
-      .map { JSON.parse(_1).symbolize_keys }
-      .map { |p| p.tap { _1[:libelle] = libelle_for_path_hash(_1) } }
+  def paths=(paths)
+    content["columns"] = paths.compact_blank
+      .each { _1[:libelle] = libelle_for_path_hash(_1) }
       .filter { _1[:libelle].present? }
   end
 

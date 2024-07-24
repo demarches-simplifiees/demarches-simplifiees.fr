@@ -18,14 +18,14 @@ describe ExportTemplate do
     # let(:paths) { ["dossier_id", "dossier_email", "dossier_archived", "dossier_dossier_state", "tdc_1_value", "tdc_17_value", "tdc_17_code", "repet_7_tdc_8_value"] }
     let(:paths) {
   [
-    { :path => "id", :source => "dossier" }.to_json,
-    { :path => "email", :source => "dossier" }.to_json,
-    { :path => "archived", :source => "dossier" }.to_json,
-    { :path => "dossier_state", :source => "dossier" }.to_json,
-    { :path => "value", :source => "tdc", :stable_id => 1 }.to_json,
-    { :path => "value", :source => "tdc", :stable_id => 17 }.to_json,
-    { :path => "code", :source => "tdc", :stable_id => 17 }.to_json,
-    { :path => "value", :repetition_champ_stable_id => 7, :source => "repet", :stable_id => 8 }.to_json
+    { :path => "id", :source => "dossier" },
+    { :path => "email", :source => "dossier" },
+    { :path => "archived", :source => "dossier" },
+    { :path => "dossier_state", :source => "dossier" },
+    { :path => "value", :source => "tdc", :stable_id => 1 },
+    { :path => "value", :source => "tdc", :stable_id => 17 },
+    { :path => "code", :source => "tdc", :stable_id => 17 },
+    { :path => "value", :repetition_champ_stable_id => 7, :source => "repet", :stable_id => 8 }
   ]
 }
 
@@ -76,12 +76,12 @@ describe ExportTemplate do
       end
     end
     it 'ignores paths when invalid stable_id' do
-      export_template.paths = [{ :path => "value", :source => "tdc", :stable_id => 987 }.to_json]
+      export_template.paths = [{ :path => "value", :source => "tdc", :stable_id => 987 }]
       expect(export_template.columns).to match_array []
     end
 
     it 'raises when invalid path' do
-      expect { export_template.paths = ['blabla'] }.to raise_exception(JSON::ParserError)
+      expect { export_template.paths = ['blabla'] }.to raise_exception
     end
 
     it 'returns paths from columns' do

@@ -107,7 +107,7 @@ class ProcedureExportService
           .flat_map { _1.champs.filter(&:repetition?) }
           .group_by(&:stable_id)
 
-        types_de_champ = tuple[1].map { TypeDeChamp.find_by(stable_id: _1['stable_id']) }
+        types_de_champ = tuple[1].map { TypeDeChamp.find_by(stable_id: _1[:stable_id]) }
         rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
 
         if types_de_champ.present? && rows.present?
