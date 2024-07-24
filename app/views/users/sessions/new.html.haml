@@ -30,11 +30,9 @@
             = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
 
       .fr-fieldset__element
-        %ul.fr-btns-group
-          %li= f.submit t('views.users.sessions.new.connection'), class: "fr-btn fr-btn--lg"
+        .fr-btns-group= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
 
   - if AgentConnectService.enabled?
     %p.fr-hr-or= t('views.shared.france_connect_login.separator')
     %h2.important-header.mb-1= t('views.users.sessions.new.state_civil_servant')
-    %ul.fr-btns-group
-      %li= link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
+    .fr-btns-group= link_to t('views.users.sessions.new.connect_with_agent_connect'), agent_connect_path, class: "fr-btn fr-btn--secondary"
