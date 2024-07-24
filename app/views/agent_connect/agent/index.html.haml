@@ -55,14 +55,12 @@
                     = f.check_box :remember_me
                     = f.label :remember_me, t('views.users.sessions.new.remember_me'), class: 'remember-me'
 
-            %ul.fr-btns-group
-              %li= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
+                .fr-btns-group= f.submit t('views.users.sessions.new.connection'), class: "fr-btn"
 
           %hr
 
           %h2.fr-h6= t('.you_are_a_citizen')
-          %ul.fr-btns-group
-            %li= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary width-100"
+          .fr-btns-group= link_to t('.citizen_page'), new_user_session_path, class: "fr-btn fr-btn--secondary"
 
       .fr-col-lg.fr-p-6w
         = render Dsfr::CalloutComponent.new(title: t('.full_deploy_title'), icon: 'fr-icon-information-line') do |c|
