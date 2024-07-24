@@ -2,11 +2,11 @@ class SupportController < ApplicationController
   invisible_captcha only: [:create], on_spam: :redirect_to_root
 
   def index
-    setup_context
+    @form = Helpscout::Form.new(tags: tags_from_query_params, dossier_id: dossier&.id, current_user:)
   end
 
   def admin
-    setup_context_admin
+    @form = Helpscout::Form.new(tags: tags_from_query_params, current_user:, for_admin: true)
   end
 
   def create
@@ -17,64 +17,49 @@ class SupportController < ApplicationController
       return
     end
 
-    create_conversation_later
-    flash.notice = "Votre message a été envoyé."
+    @form = Helpscout::Form.new(support_form_params.except(:piece_jointe).merge(current_user:))
 
-    if params[:admin]
-      redirect_to root_path(formulaire_contact_admin_submitted: true)
+    if @form.valid?
+      create_conversation_later(@form)
+      flash.notice = "Votre message a été envoyé."
+
+      redirect_to root_path
     else
-      redirect_to root_path(formulaire_contact_general_submitted: true)
+      flash.alert = @form.errors.full_messages
+      render @form.for_admin ? :admin : :index
     end
   end
 
   private
 
-  def setup_context
-    @dossier_id = dossier&.id
-    @tags = tags
-    @options = Helpscout::FormAdapter.options
-  end
-
-  def setup_context_admin
-    @tags = tags
-    @options = Helpscout::FormAdapter.admin_options
-  end
-
-  def create_conversation_later
-    if params[:piece_jointe]
+  def create_conversation_later(form)
+    if support_form_params[:piece_jointe].present?
       blob = ActiveStorage::Blob.create_and_upload!(
-        io: params[:piece_jointe].tempfile,
-        filename: params[:piece_jointe].original_filename,
-        content_type: params[:piece_jointe].content_type,
+        io: support_form_params[:piece_jointe].tempfile,
+        filename: support_form_params[:piece_jointe].original_filename,
+        content_type: support_form_params[:piece_jointe].content_type,
         identify: false
       ).tap(&:scan_for_virus_later)
     end
 
     HelpscoutCreateConversationJob.perform_later(
       blob_id: blob&.id,
-      subject: params[:subject],
-      email: email,
-      phone: params[:phone],
-      text: params[:text],
-      dossier_id: dossier&.id,
+      subject: form.subject,
+      email: current_user&.email || form.email,
+      phone: form.phone,
+      text: form.text,
+      dossier_id: form.dossier_id,
       browser: browser_name,
-      tags: tags
+      tags: form.tags_array
     )
   end
 
   def create_commentaire
     attributes = {
-      piece_jointe: params[:piece_jointe],
-      body: "[#{params[:subject]}]<br><br>#{params[:text]}"
+      piece_jointe: support_form_params[:piece_jointe],
+      body: "[#{support_form_params[:subject]}]<br><br>#{support_form_params[:text]}"
     }
     CommentaireService.create!(current_user, dossier, attributes)
-  end
-
-  def tags
-    [params[:tags], params[:type]].flatten.compact
-      .map { |tag| tag.split(',') }
-      .flatten
-      .compact_blank.uniq
   end
 
   def browser_name
@@ -83,19 +68,28 @@ class SupportController < ApplicationController
     end
   end
 
+  def tags_from_query_params
+    support_form_params[:tags]&.join(",") || ""
+  end
+
   def direct_message?
-    user_signed_in? && params[:type] == Helpscout::FormAdapter::TYPE_INSTRUCTION && dossier.present? && dossier.messagerie_available?
+    user_signed_in? && support_form_params[:type] == Helpscout::Form::TYPE_INSTRUCTION && dossier.present? && dossier.messagerie_available?
   end
 
   def dossier
-    @dossier ||= current_user&.dossiers&.find_by(id: params[:dossier_id])
-  end
-
-  def email
-    current_user&.email || params[:email]
+    @dossier ||= current_user&.dossiers&.find_by(id: support_form_params[:dossier_id])
   end
 
   def redirect_to_root
     redirect_to root_path, alert: t('invisible_captcha.sentence_for_humans')
+  end
+
+  def support_form_params
+    keys = [:email, :subject, :text, :type, :dossier_id, :piece_jointe, :phone, :tags, :for_admin]
+    if params.key?(:helpscout_form) # submitting form
+      params.require(:helpscout_form).permit(*keys)
+    else
+      params.permit(:dossier_id, tags: []) # prefilling form
+    end
   end
 end

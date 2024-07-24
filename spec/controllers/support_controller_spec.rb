@@ -12,7 +12,7 @@ describe SupportController, type: :controller do
       get :index
 
       expect(response.status).to eq(200)
-      expect(response.body).not_to have_content("Email *")
+      expect(response.body).not_to have_content("Votre adresse email")
     end
 
     describe "with dossier" do
@@ -51,29 +51,29 @@ describe SupportController, type: :controller do
 
     describe "send form" do
       subject do
-        post :create, params: params
+        post :create, params: { helpscout_form: params }
       end
 
       context "when invisible captcha is ignored" do
-        let(:params) { { subject: 'bonjour', text: 'un message' } }
+        let(:params) { { subject: 'bonjour', text: 'un message', type: 'procedure_info' } }
 
         it 'creates a conversation on HelpScout' do
           expect { subject }.to \
             change(Commentaire, :count).by(0).and \
-            have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params))
+            have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:type)))
 
           expect(flash[:notice]).to match('Votre message a été envoyé.')
-          expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
+          expect(response).to redirect_to root_path
         end
 
         context 'when a drafted dossier is mentionned' do
           let(:dossier) { create(:dossier) }
           let(:user) { dossier.user }
 
-          subject do
-            post :create, params: {
+          let(:params) do
+            {
               dossier_id: dossier.id,
-              type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+              type: Helpscout::Form::TYPE_INSTRUCTION,
               subject: 'bonjour',
               text: 'un message'
             }
@@ -85,7 +85,7 @@ describe SupportController, type: :controller do
               have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(subject: 'bonjour', dossier_id: dossier.id))
 
             expect(flash[:notice]).to match('Votre message a été envoyé.')
-            expect(response).to redirect_to root_path(formulaire_contact_general_submitted: true)
+            expect(response).to redirect_to root_path
           end
         end
 
@@ -93,10 +93,10 @@ describe SupportController, type: :controller do
           let(:dossier) { create(:dossier, :en_construction) }
           let(:user) { dossier.user }
 
-          subject do
-            post :create, params: {
+          let(:params) do
+            {
               dossier_id: dossier.id,
-              type: Helpscout::FormAdapter::TYPE_INSTRUCTION,
+              type: Helpscout::Form::TYPE_INSTRUCTION,
               subject: 'bonjour',
               text: 'un message'
             }
@@ -118,7 +118,13 @@ describe SupportController, type: :controller do
       end
 
       context "when invisible captcha is filled" do
-        let(:params) { { subject: 'bonjour', text: 'un message', InvisibleCaptcha.honeypots.sample => 'boom' } }
+        subject do
+          post :create, params: {
+            helpscout_form: { subject: 'bonjour', text: 'un message', type: 'procedure_info' },
+            InvisibleCaptcha.honeypots.sample => 'boom'
+          }
+        end
+
         it 'does not create a conversation on HelpScout' do
           expect { subject }.not_to change(Commentaire, :count)
           expect(flash[:alert]).to eq(I18n.t('invisible_captcha.sentence_for_humans'))
@@ -133,7 +139,7 @@ describe SupportController, type: :controller do
         get :index
 
         expect(response.status).to eq(200)
-        expect(response.body).to have_text("Email")
+        expect(response.body).to have_text("Votre adresse email")
       end
     end
 
@@ -147,18 +153,46 @@ describe SupportController, type: :controller do
         expect(response.body).to include(tag)
       end
     end
+
+    describe 'send form' do
+      subject do
+        post :create, params: { helpscout_form: params }
+      end
+
+      let(:params) { { subject: 'bonjour', email: "me@rspec.net", text: 'un message', type: 'procedure_info' } }
+
+      it 'creates a conversation on HelpScout' do
+        expect { subject }.to \
+          change(Commentaire, :count).by(0).and \
+          have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:type)))
+
+        expect(flash[:notice]).to match('Votre message a été envoyé.')
+        expect(response).to redirect_to root_path
+      end
+
+      context "when email is invalid" do
+        let(:params) { super().merge(email: "me@rspec") }
+
+        it 'creates a conversation on HelpScout' do
+          expect { subject }.not_to have_enqueued_job(HelpscoutCreateConversationJob)
+          expect(response.body).to include("Le champ « Votre adresse email » est invalide")
+          expect(response.body).to include("bonjour")
+          expect(response.body).to include("un message")
+        end
+      end
+    end
   end
 
   context 'contact admin' do
     subject do
-      post :create, params: params
+      post :create, params: { helpscout_form: params }
     end
 
-    let(:params) { { admin: "true", email: "email@pro.fr", subject: 'bonjour', text: 'un message' } }
+    let(:params) { { for_admin: "true", email: "email@pro.fr", subject: 'bonjour', text: 'un message', type: 'admin question', phone: '06' } }
 
     describe "when form is filled" do
       it "creates a conversation on HelpScout" do
-        expect { subject }.to have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:admin)))
+        expect { subject }.to have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:for_admin, :type)))
         expect(flash[:notice]).to match('Votre message a été envoyé.')
       end
 
@@ -176,7 +210,9 @@ describe SupportController, type: :controller do
     end
 
     describe "when invisible captcha is filled" do
-      let(:params) { super().merge(InvisibleCaptcha.honeypots.sample => 'boom') }
+      subject do
+        post :create, params: { helpscout_form: params, InvisibleCaptcha.honeypots.sample => 'boom' }
+      end
 
       it 'does not create a conversation on HelpScout' do
         subject
