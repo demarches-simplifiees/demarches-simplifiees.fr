@@ -1476,6 +1476,17 @@ describe API::V2::GraphqlController do
               })
             end
           end
+          context "failure" do
+            let(:value) { drop_down_list_options.first.reverse }
+            it 'should be a success' do
+              expect(gql_errors).to eq(nil)
+
+              expect(gql_data).to eq(dossierModifierAnnotationDropDownList: {
+                annotation: nil,
+                errors: [{ message: "doit être dans les options proposées" }]
+              })
+            end
+          end
         end
 
         describe 'integer_number' do
