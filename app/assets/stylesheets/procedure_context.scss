@@ -4,15 +4,6 @@
 $procedure-context-breakpoint: $two-columns-breakpoint;
 
 .procedure-preview {
-  .paperless-logo {
-    width: 100%;
-    margin-bottom: 60px;
-
-    @media (max-width: $procedure-context-breakpoint) {
-      display: none;
-    }
-  }
-
   .simple {
     margin-bottom: 0.2rem;
     font-size: 1.5rem;
