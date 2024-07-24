@@ -5,8 +5,8 @@
 
   %p= t('.subtitle_html', email: @fci.email_france_connect, application_name: Current.application_name)
 
-  %fieldset.fr-fieldset
-    %legend.fr-fieldset__legend= t('.label_select_merge_flow', email: @fci.email_france_connect)
+  %fieldset.fr-fieldset{ aria: { labelledby: 'merge-account' } }
+    %legend.fr-fieldset__legend#merge-account= t('.label_select_merge_flow', email: @fci.email_france_connect)
     .fr-fieldset__element.fr-fieldset__element--inline
       .fr-radio-group
         %input{ type: 'radio', id: 'it-is-mine', name: 'value', value: 'true', autocomplete: "off", onclick: "DS.showFusion(event);" }
