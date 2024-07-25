@@ -7,4 +7,4 @@
     = turbo_stream.remove(dom_id(@dossier, :ineligibilite_rules_broken))
 
 - if @update_contact_information
-  = turbo_stream.update "contact_information", partial: 'shared/dossiers/update_contact_information', locals: { dossier: @dossier, procedure: @procedure }
+  = turbo_stream.update "contact_information", partial: 'shared/dossiers/update_contact_information', locals: { dossier: @dossier, procedure: @dossier.procedure }
