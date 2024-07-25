@@ -12,12 +12,6 @@
     margin: 3 * $default-padding auto;
   }
 
-  p,
-  ol {
-    margin-top: $default-padding;
-    margin-bottom: $default-padding;
-  }
-
   .link-sent-info {
     color: #000000;
     background-color: $yellow;
@@ -29,14 +23,5 @@
     border-top: 1px solid $grey;
     padding-top: $default-padding;
     margin-bottom: $default-padding;
-  }
-
-  .link-sent-help-title {
-    font-weight: bold;
-  }
-
-  .link-sent-help-list {
-    list-style-position: outside;
-    padding-left: $default-padding;
   }
 }
