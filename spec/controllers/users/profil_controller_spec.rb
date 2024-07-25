@@ -83,7 +83,7 @@ describe Users::ProfilController, type: :controller do
       end
 
       it { expect(response).to redirect_to(profil_path) }
-      it { expect(flash.alert).to eq(["Le champ « Adresse électronique » est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr"]) }
+      it { expect(flash.alert).to eq(["Le champ « Adresse électronique » est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com"]) }
     end
 
     context 'when the user has an instructeur role' do

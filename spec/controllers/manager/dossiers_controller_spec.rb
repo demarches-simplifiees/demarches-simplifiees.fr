@@ -54,7 +54,7 @@ describe Manager::DossiersController, type: :controller do
 
       it do
         expect { subject }.not_to have_enqueued_mail
-        expect(flash[:alert]).to eq("L’adresse email est invalide. Saisir une adresse électronique valide, exemple : john.doe@exemple.fr")
+        expect(flash[:alert]).to eq("L’adresse email est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com")
       end
     end
   end
