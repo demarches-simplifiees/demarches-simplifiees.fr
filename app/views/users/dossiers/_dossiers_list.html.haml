@@ -16,9 +16,12 @@
           %p.fr-icon--sm.fr-icon-user-line
             = demandeur_dossier(dossier)
 
-          - if dossier.hidden_by_user?
+          - if dossier.hidden_by_expired?
             %p.fr-icon--sm.fr-icon-delete-line
-              = t('views.users.dossiers.dossiers_list.deleted', date: l(dossier.hidden_by_user_at.to_date))
+              = t('views.users.dossiers.dossiers_list.deleted_by_automatic', date: l(dossier.hidden_by_expired_at.to_date))
+          - elsif dossier.hidden_by_user?
+            %p.fr-icon--sm.fr-icon-delete-line
+              = t('views.users.dossiers.dossiers_list.deleted_by_user', date: l(dossier.hidden_by_user_at.to_date))
           - else
             %p.fr-icon--sm.fr-icon-edit-box-line
               - if dossier.depose_at.present?
@@ -40,11 +43,7 @@
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = number_with_html_delimiter(dossier.id)
 
-          - if @statut == "dossiers-supprimes-recemment"
-            %span.fr-badge.fr-badge--sm.fr-badge--warning
-              = t('views.users.dossiers.dossiers_list.deleted_badge')
-          - else
-            = status_badge_user(dossier, 'fr-mb-1w')
+          = status_badge_user(dossier, 'fr-mb-1w')
 
           - if dossier.pending_correction?
             %br
@@ -103,8 +102,18 @@
 
       - if @statut == "dossiers-supprimes-recemment"
         .flex.justify-end
-          = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
-            Restaurer
+          - if dossier.hidden_by_reason != 'expired'
+            = link_to restore_dossier_path(dossier.id), method: :patch, class: "fr-btn fr-btn--sm" do
+              Restaurer
+
+          - else
+            - if dossier.expiration_can_be_extended?
+              = button_to users_dossier_repousser_expiration_and_restore_path(dossier), class: 'fr-btn fr-btn--sm' do
+                Restaurer et étendre la conservation
+
+
+            - else
+              = render(partial: 'users/dossiers/show/download_dossier', locals: { dossier: dossier })
 
   = paginate dossiers, views_prefix: 'shared'
 

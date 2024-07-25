@@ -3,15 +3,14 @@
 %p= t(:hello, scope: [:views, :shared, :greetings])
 
 %p
-  = t('.header', count: @deleted_dossiers.size)
+  = t('.header', count: @hidden_dossiers.size)
   %ul
-    - @deleted_dossiers.each do |d|
-      %li N° #{d.dossier_id} (#{d.procedure.libelle})
+    - @hidden_dossiers.each do |d|
+      %li N° #{d.id} (#{d.procedure.libelle})
 
 %p
-  %strong= t('.account_active', count: @deleted_dossiers.size)
-
-- if @state == Dossier.states.fetch(:en_construction)
-  %p= t('.footer_en_construction', count: @deleted_dossiers.size, remaining_weeks_before_expiration: distance_of_time_in_words(Expired::REMAINING_WEEKS_BEFORE_EXPIRATION.weeks))
+  = t('.footer', count: @hidden_dossiers.size)
+  = link_to("mes dossiers", dossiers_url)
+  \.
 
 = render partial: "layouts/mailers/signature"

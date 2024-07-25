@@ -1,7 +1,13 @@
-- if hidden_by_administration
+- if hidden_by_administration && hidden_by_expired
+  %li
+    = button_to repousser_expiration_and_restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
+      = t('views.instructeurs.dossiers.restore_and_extend')
+
+- elsif hidden_by_administration
   %li
     = button_to restore_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: "fr-btn fr-icon-refresh-line" do
       = t('views.instructeurs.dossiers.restore')
+
 - elsif close_to_expiration || Dossier::TERMINE.include?(state)
   %li
     - if close_to_expiration

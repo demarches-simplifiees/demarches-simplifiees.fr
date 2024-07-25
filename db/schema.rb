@@ -469,6 +469,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_16_091043) do
     t.datetime "groupe_instructeur_updated_at", precision: nil
     t.datetime "hidden_at", precision: nil
     t.datetime "hidden_by_administration_at", precision: nil
+    t.datetime "hidden_by_expired_at"
     t.string "hidden_by_reason"
     t.datetime "hidden_by_user_at", precision: nil
     t.datetime "identity_updated_at", precision: nil
