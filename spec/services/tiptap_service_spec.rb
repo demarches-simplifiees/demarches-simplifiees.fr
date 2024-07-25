@@ -201,6 +201,40 @@ RSpec.describe TiptapService do
         expect(described_class.new.to_html(json, substitutions)).to eq("<h1>The Title</h1><p class=\"body-start\">First paragraph</p>")
       end
     end
+
+    context 'ordered list with custom classes' do
+      let(:json) do
+        {
+          type: 'doc',
+          content: [
+            {
+              type: 'orderedList',
+              attrs: { class: "my-class" },
+              content: [
+                {
+                  type: 'listItem',
+                  content: [
+                    {
+                      type: 'paragraph',
+                      content: [
+                        {
+                          type: 'text',
+                          text: 'Item 1'
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      it "set class attribute" do
+        expect(described_class.new.to_html(json, substitutions)).to eq('<ol class="my-class"><li><p>Item 1</p></li></ol>')
+      end
+    end
   end
 
   describe '#used_tags' do

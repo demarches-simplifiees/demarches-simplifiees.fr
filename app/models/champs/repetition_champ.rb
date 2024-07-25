@@ -44,14 +44,6 @@ class Champs::RepetitionChamp < Champ
     # The user cannot enter any information here so it doesn’t make much sense to search
   end
 
-  def for_tag(path = :value)
-    ([libelle] + rows.map do |champs|
-      champs.map do |champ|
-        "#{champ.libelle} : #{champ}"
-      end.join("\n")
-    end).join("\n\n")
-  end
-
   def rows_for_export
     row_ids.map.with_index(1) do |row_id, index|
       Champs::RepetitionChamp::Row.new(index:, row_id:, dossier:)

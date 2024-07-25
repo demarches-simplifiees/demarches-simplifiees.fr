@@ -79,10 +79,16 @@ class TiptapService
       "<h#{hlevel}#{body_start_mark}#{text_align(attrs)}>#{children(content, substitutions, level + 1)}</h#{hlevel}>"
     in type: 'bulletList', content:
       "<ul>#{children(content, substitutions, level + 1)}</ul>"
-    in type: 'orderedList', content:
-      "<ol>#{children(content, substitutions, level + 1)}</ol>"
+    in type: 'orderedList', content:, **rest
+      "<ol#{class_list(rest[:attrs])}>#{children(content, substitutions, level + 1)}</ol>"
     in type: 'listItem', content:
       "<li>#{children(content, substitutions, level + 1)}</li>"
+    in type: 'descriptionList', content:
+      "<dl>#{children(content, substitutions, level + 1)}</dl>"
+    in type: 'descriptionTerm', content:
+      "<dt>#{children(content, substitutions, level + 1)}</dt>"
+    in type: 'descriptionDetails', content:
+      "<dd>#{children(content, substitutions, level + 1)}</dd>"
     in type: 'text', text:, **rest
       if rest[:marks].present?
         apply_marks(text, rest[:marks])
@@ -112,6 +118,12 @@ class TiptapService
       " style=\"text-align: #{attrs[:textAlign]}\""
     else
       ""
+    end
+  end
+
+  def class_list(attrs)
+    if attrs.present? && attrs[:class].present?
+      " class=\"#{attrs[:class]}\""
     end
   end
 
