@@ -1308,7 +1308,7 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe '#extend_conservation and restore' do
-    subject { post :extend_conservation, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
+    subject { post :extend_conservation_and_restore, params: { procedure_id: procedure.id, dossier_id: dossier.id } }
 
     before do
       dossier.update(hidden_by_expired_at: 1.hour.ago, hidden_by_reason: 'expired')

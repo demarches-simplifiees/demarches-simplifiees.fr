@@ -260,7 +260,9 @@ module Users
     end
 
     def extend_conservation_and_restore
-      dossier.extend_conservation_and_restore(conservation_extension, author)
+      dossier.extend_conservation_and_restore(dossier.procedure.duree_conservation_dossiers_dans_ds.months, current_user)
+      flash[:notice] = t('views.users.dossiers.archived_dossier', duree_conservation_dossiers_dans_ds: dossier.procedure.duree_conservation_dossiers_dans_ds)
+      redirect_back(fallback_location: dossier_path(@dossier))
     end
 
     def modifier
@@ -534,7 +536,7 @@ module Users
         Dossier.visible_by_user.or(Dossier.for_procedure_preview).or(Dossier.for_editing_fork)
       elsif action_name == 'restore'
         Dossier.hidden_by_user
-      elsif action_name == 'extend_conservation'
+      elsif action_name == 'extend_conservation_and_restore'
         Dossier.visible_by_user.or(Dossier.hidden_by_expired)
       else
         Dossier.visible_by_user

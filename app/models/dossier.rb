@@ -691,7 +691,7 @@ class Dossier < ApplicationRecord
   def extend_conservation_and_restore(conservation_extension, author)
     extend_conservation(conservation_extension)
     update(hidden_by_expired_at: nil, hidden_by_reason: nil)
-    restore(current_user)
+    restore(author)
   end
 
   def show_procedure_state_warning?
