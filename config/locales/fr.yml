@@ -969,7 +969,12 @@ fr:
         link_confirm_by_email: Confirmer mon compte par email
       flash:
         confirmation_mail_sent: "Nous venons de vous envoyer le mail de confirmation, veuillez cliquer sur le lien contenu dans ce mail pour fusionner vos comptes"
-        invalid_password: "Mauvais mot de passe"
+        confirmation_mail_resent: "Le lien de confirmation a expiré. Un nouveau lien de confirmation vous a été envoyé par email."
+        confirmation_mail_resent_error: "Une erreur inattendue est survenue. Veuillez contacter le support si le problème persiste."
+        redirect_new_user_session: "Vous avez été déconnecté de votre précédent compte. Veuillez cliquer à nouveau sur le lien de confirmation."
+        email_confirmed: 'Votre email est bien vérifié'
+        user_not_found: 'Utilisateur non trouvé'
+        invalid_password: "Mot de passe incorrect"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
         connection_done_verify_email: "Les comptes FranceConnect et %{application_name} sont maintenant fusionnés. Veuillez confirmer votre e-mail en cliquant sur le lien que vous avez reçu par mail"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes."

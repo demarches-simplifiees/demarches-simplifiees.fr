@@ -27,11 +27,6 @@ describe FranceConnectInformation, type: :model do
         expect(user.confirmed_at).to be_present
       end
 
-      it 'sends custom confirmation instructions' do
-        expect(UserMailer).to receive(:custom_confirmation_instructions).and_call_original
-        subject
-      end
-
       it 'associates the user with the FranceConnectInformation' do
         subject
         expect(fci.reload.user.email).to eq(email.downcase)

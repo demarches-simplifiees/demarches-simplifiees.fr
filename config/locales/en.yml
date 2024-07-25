@@ -914,6 +914,11 @@ en:
         link_confirm_by_email: Confirm by receiving an email
       flash:
           confirmation_mail_sent: "An email with the confirmation link has been sent, please click on the link."
+          confirmation_mail_resent: "Confirmation link expired. A new link has been sent by email."
+          confirmation_mail_resent_error: "An unexpected error has occurred. Please contact support if the problem persists."
+          redirect_new_user_session: "You have been disconnected from your previous account. Please click on the confirmation link again."
+          email_confirmed: "Your email is confirmed"
+          user_not_found: "User not found"
           invalid_password: "The password is not correct."
           connection_done: "The accounts for FranceConnect and %{application_name} are now merged."
           connection_done_verify_email: "The FranceConnect and %{application_name} accounts are now merged. Please confirm your email by clicking on the link you received in your email."
