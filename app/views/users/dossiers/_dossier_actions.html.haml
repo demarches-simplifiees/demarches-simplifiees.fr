@@ -9,10 +9,14 @@
 - if has_actions
   - if has_edit_action
     - if dossier.brouillon?
-      = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w'
+      = link_to t('views.users.dossiers.dossier_action.edit_draft'), (url_for_dossier(dossier)), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
 
     - else
-      = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w'
+      = link_to t('views.users.dossiers.dossier_action.edit_dossier'), modifier_dossier_path(dossier), class: 'fr-btn fr-btn--sm fr-mr-1w fr-icon-draft-line fr-btn--icon-left'
+
+  - if has_new_dossier_action
+    = link_to (commencer_url(dossier.procedure.path)), class: 'fr-btn fr-btn--sm fr-btn--tertiary fr-mr-1w fr-icon-file-fill fr-btn--icon-left' do
+      = t('views.users.dossiers.dossier_action.start_other_dossier')
 
   = render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-actions'}, menu_options: {id: dom_id(dossier, :actions_menu)}, button_options: {class: 'fr-btn--sm fr-btn--tertiary'}) do |menu|
     - menu.with_button_inner_html do
@@ -29,12 +33,6 @@
             = t('views.users.dossiers.dossier_action.transfer_dossier')
 
     - if has_new_dossier_action
-      - menu.with_item do
-        = link_to(commencer_url(dossier.procedure.path), role: 'menuitem') do
-          = dsfr_icon('fr-icon-file-fill', :sm)
-          .dropdown-description
-            = t('views.users.dossiers.dossier_action.start_other_dossier')
-
       - menu.with_item do
         = link_to(clone_dossier_path(dossier), method: :post, role: 'menuitem') do
           = dsfr_icon('fr-icon-file-copy-line', :sm)

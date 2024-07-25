@@ -5,7 +5,7 @@ describe 'users/dossiers/dossier_actions', type: :view do
 
   subject { render 'users/dossiers/dossier_actions', dossier: dossier, current_user: user }
 
-  it { is_expected.to have_link('Commencer un autre dossier', href: commencer_url(path: procedure.path)) }
+  it { is_expected.to have_link('Commencer un nouveau dossier', href: commencer_url(path: procedure.path)) }
   it { is_expected.to have_link('Supprimer le dossier', href: dossier_path(dossier)) }
   it { is_expected.to have_link('Transférer le dossier', href: transferer_dossier_path(dossier)) }
 
@@ -16,11 +16,11 @@ describe 'users/dossiers/dossier_actions', type: :view do
 
   context 'when the procedure is closed' do
     let(:procedure) { create(:procedure, :closed) }
-    it { is_expected.not_to have_link('Commencer un autre dossier') }
+    it { is_expected.not_to have_link('Commencer un nouveau dossier') }
   end
 
   context 'when the procedure is closed and replaced' do
     let(:procedure) { create(:procedure, :closed, replaced_by_procedure: create(:procedure)) }
-    it { is_expected.to have_link('Commencer un autre dossier') }
+    it { is_expected.to have_link('Commencer un nouveau dossier') }
   end
 end
