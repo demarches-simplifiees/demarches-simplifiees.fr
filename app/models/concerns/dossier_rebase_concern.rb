@@ -62,13 +62,6 @@ module DossierRebaseConcern
       .transform_values { Champ.where(id: _1) }
       .tap { _1.default = Champ.none }
 
-    # add champ
-    changes_by_op[:add]
-      .map { target_coordinates_by_stable_id[_1.stable_id] }
-      # add parent champs first so we can then add children
-      .sort_by { _1.child? ? 1 : 0 }
-      .each { add_new_champs_for_revision(_1) }
-
     # remove champ
     children_champ, root_champ = changes_by_op[:remove].partition(&:child?)
     children_champ.each { champs_by_stable_id[_1.stable_id].destroy_all }
@@ -79,6 +72,13 @@ module DossierRebaseConcern
 
     # update dossier revision
     update_column(:revision_id, target_revision.id)
+
+    # add champ (after changing dossier revision to avoid errors)
+    changes_by_op[:add]
+      .map { target_coordinates_by_stable_id[_1.stable_id] }
+      # add parent champs first so we can then add children
+      .sort_by { _1.child? ? 1 : 0 }
+      .each { add_new_champs_for_revision(_1) }
   end
 
   def apply(change, champs)
