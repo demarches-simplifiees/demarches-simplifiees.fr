@@ -556,18 +556,22 @@ module Users
 
     def update_dossier_and_compute_errors
       @dossier.update_champs_attributes(champs_public_attributes_params, :public, updated_by: current_user.email)
-      if @dossier.champs.any?(&:changed_for_autosave?)
+      updated_champs = @dossier.champs.filter(&:changed_for_autosave?)
+      if updated_champs.present?
         @dossier.last_champ_updated_at = Time.zone.now
-
-        if @dossier.champs_public.any? { _1.changed_for_autosave? && _1.used_by_routing_rules? }
-          RoutingEngine.compute(@dossier)
-        end
       end
 
       # We save the dossier without validating fields, and if it is successful and the client
       # requests it, we ask for field validation errors.
-      if @dossier.save && params[:validate].present?
-        @dossier.valid?(:champs_public_value)
+      if @dossier.save
+        if updated_champs.any?(&:used_by_routing_rules?)
+          @update_contact_information = true
+          RoutingEngine.compute(@dossier)
+        end
+
+        if params[:validate].present?
+          @dossier.valid?(:champs_public_value)
+        end
       end
 
       @dossier.errors
