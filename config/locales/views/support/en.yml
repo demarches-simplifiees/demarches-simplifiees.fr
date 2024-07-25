@@ -5,7 +5,7 @@ en:
       intro_html:
         '<p>Contact us via this form and we will answer you as quickly as possible.</p>
         <p>Make sure you provide all the required information so we can help you in the best way.</p>'
-      notice_email: '(example: address@mail.com)'
+      notice_email: 'Expected format:  address@mail.com'
       your_question: Your question
       our_answer: Our answer
       notice_pj_product: A screenshot can help us identify the element to improve.
