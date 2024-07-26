@@ -33,12 +33,12 @@ Pour cela, utilisez les balises HTML, identifiées par les caractères `<` et `>
   - Exemple : « `Mon texte en <em>italique</em>` » affiche « Mon texte en *italique* »
 
 - **Souligner un texte**
-  - Balise ouvrante : `<u>` 
+  - Balise ouvrante : `<u>`
   - Balise fermante : `</u>`
   - Exemple : `« Mon texte <u>souligné</u> »` affiche « Mon texte <u>souligné</u> »
 
 - **Mettre un texte en gras**
-  - Balise ouvrante : `<strong>` 
+  - Balise ouvrante : `<strong>`
   - Balise fermante : `</strong>`
   - Exemple : `« Mon texte en <strong>gras</strong> »` donne « Mon texte en **gras** »
 
@@ -53,8 +53,8 @@ Pour cela, utilisez les balises HTML, identifiées par les caractères `<` et `>
 
 Exemple dans la description de la démarche :
 
-![Démonstration de texte qui contient des balises HTML de mises en forme](faq/administrateur-example-markup.png)
+![Saisie de texte utilisant les balises b, i et u](faq/administrateur-example-markup.png)
 
 Rendu côté usager :
 
-![Aperçu du même texte dans la description de la démarche lisible par l’usager](faq/administrateur-example-markup-preview.png)
+![Aperçu de ce même texte faisant état d'une mise en gras, d'une mise en italique et d'un soulignement](faq/administrateur-example-markup-preview.png)

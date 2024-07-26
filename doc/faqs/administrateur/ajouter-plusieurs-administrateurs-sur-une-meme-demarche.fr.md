@@ -13,7 +13,7 @@ Il est possible d’avoir plusieurs administrateurs sur une même démarche. Cel
 
 **Nous conseillons vivement à chaque administrateur de nommer un co-administrateur pour assurer une gestion continue de la démarche.**
 
-![Capture d’écran de la page gérant la liste des administrateurs](faq/administrateur-add-administrateur.png)
+![Capture d’écran de la page gérant la liste des administrateurs {aria-hidden="true"}](faq/administrateur-add-administrateur.png)
 
 ## Comment ajouter un autre administrateur sur votre démarche ?
 
