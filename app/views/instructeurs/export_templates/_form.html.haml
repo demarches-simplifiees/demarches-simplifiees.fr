@@ -45,13 +45,33 @@
             libelle: ExportTemplate.human_attribute_name(:export_pdf),
             prefix: 'export_template[export_pdf]' }
 
-        %h3 Pièces justificatives
-        - procedure.exportables_pieces_jointes.each do |tdc|
-          - item = export_template.pj(tdc)
-          = render partial: 'export_item',
-            locals: { item:,
-              libelle: tdc.libelle,
-              prefix: 'export_template[pjs][]'}
+        - if procedure.exportables_pieces_jointes_for_all_versions.any?
+          %h3 Pièces justificatives
+
+          - procedure.exportables_pieces_jointes.each do |tdc|
+            - item = export_template.pj(tdc)
+            = render partial: 'export_item',
+              locals: { item:,
+                libelle: tdc.libelle,
+                prefix: 'export_template[pjs][]'}
+
+          - outdated_tdcs = procedure.outdated_exportables_pieces_jointes
+          - outdated_stable_ids = outdated_tdcs.map(&:stable_id)
+          - expanded = export_template.pjs.filter(&:enabled?).any? { _1.stable_id.in?(outdated_stable_ids) }
+
+          - if outdated_tdcs.any?
+            %section.fr-accordion.fr-mb-3w
+              %h3.fr-accordion__title
+                %button.fr-accordion__btn{ "aria-controls" => "accordion-106", "aria-expanded" => expanded.to_s, "type" => "button" }
+                  pièces justificatives uniquement présentes dans les versions précédentes
+              .fr-collapse#accordion-106
+
+                - outdated_tdcs.each do |tdc|
+                  - item = export_template.pj(tdc)
+                  = render partial: 'export_item',
+                    locals: { item:,
+                      libelle: tdc.libelle,
+                      prefix: 'export_template[pjs][]'}
 
         .fixed-footer
           .fr-container
