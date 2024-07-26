@@ -187,19 +187,6 @@ describe FranceConnect::ParticulierController, type: :controller do
         end
       end
 
-      context 'when association fails due to taken email' do
-        before do
-          allow(fci).to receive(:associate_user!).and_raise(ActiveRecord::RecordInvalid.new(User.new))
-          allow_any_instance_of(User).to receive_message_chain(:errors, :where).and_return(['Some error'])
-        end
-
-        it 'redirects to new user session path with taken email alert' do
-          subject
-          expect(response).to redirect_to(new_user_session_path)
-          expect(flash[:alert]).to eq(I18n.t('errors.messages.france_connect.email_taken', reset_link: new_user_password_path))
-        end
-      end
-
       context 'when association fails due to unknown error' do
         let(:user) { User.new }
         let(:error) { ActiveRecord::RecordInvalid.new(user) }
@@ -297,14 +284,13 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
     end
 
-    context 'when associating the user conflict with existing one' do
+    context 'when associate_user uses an email of an existing user' do
       let(:fci) { instance_double('FranceConnectInformation') }
       let(:email) { 'user@example.com' }
       let(:user) { instance_double('User', id: 1) }
       let(:destination_path) { '/' }
-
+      let(:existing_user) { create(:user, email:) }
       before do
-        create(:user, email:)
         invalid_user = build(:user, email:)
         allow(FranceConnectInformation).to receive(:find_by).with(merge_token: merge_token).and_return(fci)
         allow(fci).to receive(:valid_for_merge?).and_return(true)
@@ -313,7 +299,13 @@ describe FranceConnect::ParticulierController, type: :controller do
         allow(fci).to receive(:associate_user!).and_raise(ActiveRecord::RecordInvalid.new(invalid_user))
       end
 
-      it 'fails' do
+      it 'sends confirmation to existing user' do
+        expect(controller).to receive(:render).with(
+          :confirmation_sent,
+          locals: { email: email, destination_path: destination_path }
+        )
+        expect(fci).to receive(:send_custom_confirmation_instructions).with(existing_user)
+        expect(fci).to receive(:delete_merge_token!)
         subject
       end
     end

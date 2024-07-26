@@ -757,7 +757,6 @@ fr:
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
-        email_taken: "Cet email est déjà utilisé. Nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
         unknown_error: "Une erreure est survenue. Veuillez réessayer."
       evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
       mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie

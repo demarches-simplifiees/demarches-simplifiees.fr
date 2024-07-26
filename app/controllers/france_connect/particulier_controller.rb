@@ -61,7 +61,10 @@ class FranceConnect::ParticulierController < ApplicationController
     render :confirmation_sent, locals: { email:, destination_path: destination_path(user) }
   rescue ActiveRecord::RecordInvalid => e
     if e.record.errors.where(:email, :taken)
-      redirect_to new_user_session_path, alert: t('errors.messages.france_connect.email_taken', reset_link: new_user_password_path)
+      user = User.find_by(email: e.record.email)
+      @fci.send_custom_confirmation_instructions(user)
+      @fci.delete_merge_token!
+      render :confirmation_sent, locals: { email: user.email, destination_path: destination_path(user) }
     else
       redirect_to new_user_session_path, alert: t('errors.messages.france_connect.unknown_error')
     end
