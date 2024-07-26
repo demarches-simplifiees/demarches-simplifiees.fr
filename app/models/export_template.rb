@@ -28,17 +28,17 @@ class ExportTemplate < ApplicationRecord
     kind != 'zip'
   end
 
-  def paths=(paths)
-    content["columns"] = paths.compact_blank
-      .each { _1[:libelle] = libelle_for_path_hash(_1) }
+  def columns=(columns)
+    content["columns"] = columns.compact_blank
+      .each { _1[:libelle] = libelle_for_column_hash(_1) }
       .filter { _1[:libelle].present? }
   end
 
-  def paths
-    columns&.map(&:symbolize_keys)
+  def columns
+    content["columns"]&.map(&:symbolize_keys)
   end
 
-  def all_tdc_paths
+  def all_tdc_columns
     procedure.types_de_champ_for_procedure_presentation.not_repetition.map do |tdc|
       tdc.paths_for_export.map do
         _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
@@ -46,7 +46,7 @@ class ExportTemplate < ApplicationRecord
     end
   end
 
-  def all_repetable_tdc_paths
+  def all_repetable_tdc_columns
     procedure
       .types_de_champ_for_procedure_presentation
       .repetition
@@ -66,29 +66,21 @@ class ExportTemplate < ApplicationRecord
       end
   end
 
-  def all_usager_paths
-    dossier_columns_to_path(all_usager_columns)
+  def all_usager_columns
+    dossier_columns_for(all_usager_column_keys)
   end
 
-  def all_dossier_paths
-    dossier_columns_to_path(all_dossier_columns)
-  end
-
-  def columns
-    content["columns"]
-  end
-
-  def tdc_columns
-    columns.filter { _1['source'] == 'tdc' }
+  def all_dossier_columns
+    dossier_columns_for(all_dossier_column_keys)
   end
 
   def columns_without_repet
-    columns.filter { _1['source'] != 'repet' }
+    columns.filter { _1[:source] != 'repet' }
   end
 
   def repetable_columns
-    columns.filter { _1['source'] == 'repet' }
-      .group_by { _1['repetition_champ_stable_id'] }
+    columns.filter { _1[:source] == 'repet' }
+      .group_by { _1[:repetition_champ_stable_id] }
   end
 
   def tiptap_default_dossier_directory=(body)
@@ -219,7 +211,7 @@ class ExportTemplate < ApplicationRecord
 
   private
 
-  def libelle_for_path_hash(current_column)
+  def libelle_for_column_hash(current_column)
     case current_column[:source]
     when 'tdc', 'repet'
       active_type_de_champ = procedure.active_revision.types_de_champ.find_by(stable_id: current_column[:stable_id])
@@ -233,10 +225,10 @@ class ExportTemplate < ApplicationRecord
   end
 
   def saved_libelle(path_h)
-    paths&.find { _1.slice(:path, :stable_id) == path_h.slice(:path, :stable_id) }&.dig(:libelle)
+    columns&.find { _1.slice(:path, :stable_id) == path_h.slice(:path, :stable_id) }&.dig(:libelle)
   end
 
-  def dossier_columns_to_path(columns)
+  def dossier_columns_for(columns)
     columns.map { { path: _1.to_s, source: 'dossier', libelle: columns_meta[_1][:libelle] } }
   end
 
@@ -309,16 +301,16 @@ class ExportTemplate < ApplicationRecord
     suffix + attachment.filename.extension_with_delimiter
   end
 
-  def all_usager_columns
-    columns = []
-    columns.push :id, :email, :france_connecte
+  def all_usager_column_keys
+    column_keys = []
+    column_keys.push :id, :email, :france_connecte
     if procedure.for_individual?
-      columns.push :civilite, :last_name, :first_name, :for_tiers, :mandataire_last_name, :mandataire_first_name
+      column_keys.push :civilite, :last_name, :first_name, :for_tiers, :mandataire_last_name, :mandataire_first_name
       if procedure.ask_birthday
-        columns.push :date_de_naissance
+        column_keys.push :date_de_naissance
       end
     else
-      columns.push(
+      column_keys.push(
         :etablissement_siret, :etablissement_siege_social, :etablissement_naf, :etablissement_libelle_naf,
         :etablissement_adresse, :etablissement_numero_voie, :etablissement_type_voie, :etablissement_nom_voie, :etablissement_complement_adresse, :etablissement_code_postal, :etablissement_localite, :etablissement_code_insee_localite,
         :entreprise_siren, :entreprise_capital_social, :entreprise_numero_tva_intracommunautaire,
@@ -330,15 +322,15 @@ class ExportTemplate < ApplicationRecord
     end
 
     if procedure.chorusable? && procedure.chorus_configuration.complete?
-      columns.push(:domaine_fonctionnel, :referentiel_prog, :centre_de_cout)
+      column_keys.push(:domaine_fonctionnel, :referentiel_prog, :centre_de_cout)
     end
 
-    columns
+    column_keys
   end
 
-  def all_dossier_columns
-    columns = []
-    columns.push(
+  def all_dossier_column_keys
+    column_keys = []
+    column_keys.push(
       :archived, :dossier_state, :updated_at, :last_champ_updated_at,
       :depose_at, :en_instruction_at,
       procedure.sva_svr_enabled? ? :sva_svr_decision_on : nil,

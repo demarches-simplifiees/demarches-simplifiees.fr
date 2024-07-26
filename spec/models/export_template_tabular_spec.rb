@@ -14,9 +14,8 @@ describe ExportTemplate do
   end
   let(:dossier) { procedure.dossiers.first }
 
-  describe '#paths=' do
-    # let(:paths) { ["dossier_id", "dossier_email", "dossier_archived", "dossier_dossier_state", "tdc_1_value", "tdc_17_value", "tdc_17_code", "repet_7_tdc_8_value"] }
-    let(:paths) {
+  describe '#columns=' do
+    let(:columns) {
   [
     { :path => "id", :source => "dossier" },
     { :path => "email", :source => "dossier" },
@@ -29,8 +28,8 @@ describe ExportTemplate do
   ]
 }
 
-    it 'update columns when assiging paths' do
-      export_template.paths = paths
+    it 'update columns when assiging columns' do
+      export_template.columns = columns
       expect(export_template.columns).to match_array [
         { :libelle => "ID", :path => "id", :source => "dossier" },
         { :libelle => "Email", :path => "email", :source => "dossier" },
@@ -50,11 +49,11 @@ describe ExportTemplate do
 
       context 'with already column in export template' do
         before do
-          export_template.paths = paths
+          export_template.columns = columns
           type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
           type_de_champ.update(changed_tdc)
           procedure.publish_revision!
-          export_template.paths = paths
+          export_template.columns = columns
         end
 
         it 'update columns with original libelle for champs with new revision' do
@@ -67,7 +66,7 @@ describe ExportTemplate do
           type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
           type_de_champ.update(changed_tdc)
           procedure.publish_revision!
-          export_template.paths = paths
+          export_template.columns = columns
         end
 
         it 'update columns with original libelle for champs with new revision' do
@@ -75,17 +74,17 @@ describe ExportTemplate do
         end
       end
     end
-    it 'ignores paths when invalid stable_id' do
-      export_template.paths = [{ :path => "value", :source => "tdc", :stable_id => 987 }]
+    it 'ignores columns when invalid stable_id' do
+      export_template.columns = [{ :path => "value", :source => "tdc", :stable_id => 987 }]
       expect(export_template.columns).to match_array []
     end
 
     it 'raises when invalid path' do
-      expect { export_template.paths = ['blabla'] }.to raise_exception
+      expect { export_template.columns = ['blabla'] }.to raise_exception
     end
 
-    it 'returns paths from columns' do
-      expect(tabular_export_template.paths).to match_array [
+    it 'returns columns from columns' do
+      expect(tabular_export_template.columns).to match_array [
         { :path => "email", :source => "dossier", :libelle => "Email" },
         { :path => "value", :source => "tdc", :libelle => "Ca va ?", :stable_id => 1 },
         { :path => "code", :source => "tdc", :libelle => "Commune", :stable_id => 2 },
@@ -96,9 +95,9 @@ describe ExportTemplate do
     end
   end
 
-  describe '#all_tdc_paths' do
-    it "returns all tdc paths (without repetition) based upon procedure's type de champs" do
-      expect(export_template.all_tdc_paths).to match_array [
+  describe '#all_tdc_columns' do
+    it "returns all tdc columns (without repetition) based upon procedure's type de champs" do
+      expect(export_template.all_tdc_columns).to match_array [
         [{ :source => "tdc", :stable_id => 1, :path => "value", :libelle => "Ca va ?" }],
         [
           { :source => "tdc", :stable_id => 17, :path => "value", :libelle => "Commune" },
@@ -110,9 +109,9 @@ describe ExportTemplate do
     end
   end
 
-  describe '#all_repetable_tdc_paths' do
-    it "returns all repetable paths based upon procedure's type de champs" do
-      expect(export_template.all_repetable_tdc_paths).to match_array [
+  describe '#all_repetable_tdc_columns' do
+    it "returns all repetable columns based upon procedure's type de champs" do
+      expect(export_template.all_repetable_tdc_columns).to match_array [
         {
           :libelle => "Champ répétable",
          :types_de_champ =>  [
@@ -131,12 +130,12 @@ describe ExportTemplate do
     end
   end
 
-  describe '#all_usager_paths' do
+  describe '#all_usager_columns' do
     context 'for individual procedure' do
       let(:for_individual) { true }
 
-      it "returns all usager paths" do
-        expect(export_template.all_usager_paths).to match_array [
+      it "returns all usager columns" do
+        expect(export_template.all_usager_columns).to match_array [
           { :path => "id", :source => "dossier", :libelle => "ID" },
           { :path => "email", :source => "dossier", :libelle => "Email" },
           { :path => "france_connecte", :source => "dossier", :libelle => "FranceConnect ?" },
@@ -148,15 +147,15 @@ describe ExportTemplate do
           { :path => "mandataire_first_name", :source => "dossier", :libelle => "Prénom du mandataire" }
         ]
 
-        expect(export_template.all_usager_paths.any? { _1[:path] == "etablissement_siret" }).to eq false
+        expect(export_template.all_usager_columns.any? { _1[:path] == "etablissement_siret" }).to eq false
       end
     end
 
     context 'for entreprise procedure' do
       let(:for_individual) { false }
 
-      it "returns all usager paths" do
-        expect(export_template.all_usager_paths).to match_array [
+      it "returns all usager columns" do
+        expect(export_template.all_usager_columns).to match_array [
           { :path => "id", :source => "dossier", :libelle => "ID" },
           { :path => "email", :source => "dossier", :libelle => "Email" },
           { :path => "france_connecte", :source => "dossier", :libelle => "FranceConnect ?" },
@@ -183,14 +182,14 @@ describe ExportTemplate do
           { :path => "entreprise_code_effectif_entreprise", :source => "dossier", :libelle => "Entreprise code effectif entreprise" }
         ]
 
-        expect(export_template.all_usager_paths.any? { _1[:path] == "first_name" }).to eq false
+        expect(export_template.all_usager_columns.any? { _1[:path] == "first_name" }).to eq false
       end
     end
 
     context 'when ask birthday' do
       let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:, ask_birthday: true) }
       it 'returns date de naissance column' do
-        expect(export_template.all_usager_paths.include?({ :path => "date_de_naissance", :source => "dossier", :libelle => "Date de naissance" })).to be true
+        expect(export_template.all_usager_columns.include?({ :path => "date_de_naissance", :source => "dossier", :libelle => "Date de naissance" })).to be true
       end
     end
 
@@ -199,14 +198,14 @@ describe ExportTemplate do
       let(:procedure) { create(:procedure_with_dossiers, :filled_chorus, types_de_champ_public:) }
       it 'returns specific chorus columns' do
         allow(Procedure).to receive(:chorusable?).and_return(true)
-        expect(export_template.all_usager_paths.include?({ :path => "domaine_fonctionnel", :source => "dossier", :libelle => "Domaine Fonctionnel" })).to be true
+        expect(export_template.all_usager_columns.include?({ :path => "domaine_fonctionnel", :source => "dossier", :libelle => "Domaine Fonctionnel" })).to be true
       end
     end
   end
 
-  describe '#all_dossier_paths' do
-    it "returns all dossier paths" do
-      expect(export_template.all_dossier_paths).to match_array [
+  describe '#all_dossier_columns' do
+    it "returns all dossier columns" do
+      expect(export_template.all_dossier_columns).to match_array [
         { :path => "archived", :source => "dossier", :libelle => "Archivé" },
         { :path => "dossier_state", :source => "dossier", :libelle => "État du dossier" },
         { :path => "updated_at", :source => "dossier", :libelle => "Dernière mise à jour le" },
@@ -224,12 +223,12 @@ describe ExportTemplate do
   describe '#columns' do
     it 'returns all columns stored in export template' do
       expect(tabular_export_template.columns).to match_array [
-        { "path" => "email", "source" => "dossier", "libelle" => "Email" },
-        { "path" => "value", "source" => "tdc", "libelle" => "Ca va ?", "stable_id" => 1 },
-        { "path" => "code", "source" => "tdc", "libelle" => "Commune", "stable_id" => 2 },
-        { "path" => "value", "source" => "repet", "libelle" => "PJ répétable", "stable_id" => 4, "repetition_champ_stable_id" => 3 },
-        { "path" => "value", "source" => "repet", "libelle" => "Champ repetable", "stable_id" => 5, "repetition_champ_stable_id" => 3 },
-        { "path" => "value", "source" => "repet", "libelle" => "PJ", "stable_id" => 7, "repetition_champ_stable_id" => 6 }
+        { :path => "email", :source => "dossier", :libelle => "Email" },
+        { :path => "value", :source => "tdc", :libelle => "Ca va ?", :stable_id => 1 },
+        { :path => "code", :source => "tdc", :libelle => "Commune", :stable_id => 2 },
+        { :path => "value", :source => "repet", :libelle => "PJ répétable", :stable_id => 4, :repetition_champ_stable_id => 3 },
+        { :path => "value", :source => "repet", :libelle => "Champ repetable", :stable_id => 5, :repetition_champ_stable_id => 3 },
+        { :path => "value", :source => "repet", :libelle => "PJ", :stable_id => 7, :repetition_champ_stable_id => 6 }
       ]
     end
   end
@@ -239,11 +238,11 @@ describe ExportTemplate do
       expect(tabular_export_template.repetable_columns).to eq(
         {
           3 => [
-            { "path" => "value", "source" => "repet", "libelle" => "PJ répétable", "stable_id" => 4, "repetition_champ_stable_id" => 3 },
-            { "path" => "value", "source" => "repet", "libelle" => "Champ repetable", "stable_id" => 5, "repetition_champ_stable_id" => 3 }
+            { :path => "value", :source => "repet", :libelle => "PJ répétable", :stable_id => 4, :repetition_champ_stable_id => 3 },
+            { :path => "value", :source => "repet", :libelle => "Champ repetable", :stable_id => 5, :repetition_champ_stable_id => 3 }
           ],
           6 => [
-            { "path" => "value", "source" => "repet", "libelle" => "PJ", "stable_id" => 7, "repetition_champ_stable_id" => 6 }
+            { :path => "value", :source => "repet", :libelle => "PJ", :stable_id => 7, :repetition_champ_stable_id => 6 }
           ]
         }
       )
