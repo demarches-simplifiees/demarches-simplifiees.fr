@@ -40,7 +40,7 @@ class ExportTemplate < ApplicationRecord
 
   def all_tdc_columns
     procedure.types_de_champ_for_procedure_presentation.not_repetition.map do |tdc|
-      tdc.paths_for_export.map do
+      tdc.columns_for_export.map do
         _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
       end
     end
@@ -57,7 +57,7 @@ class ExportTemplate < ApplicationRecord
           h = {}
           h[:libelle] = type_de_champ_repetition.libelle
           h[:types_de_champ] = types_de_champ.map do |tdc|
-            tdc.paths_for_export(repetition_champ_stable_id: type_de_champ_repetition.stable_id).map do
+            tdc.columns_for_export(repetition_champ_stable_id: type_de_champ_repetition.stable_id).map do
               _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
             end
           end

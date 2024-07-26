@@ -27,7 +27,7 @@ class TypesDeChamp::TypeDeChampBase
     paths.map { [_1[:libelle], _1[:path]] }
   end
 
-  def paths_for_export(repetition_champ_stable_id: nil)
+  def columns_for_export(repetition_champ_stable_id: nil)
     paths.map do
       { source: 'tdc', stable_id:, path: _1[:path].to_s, libelle: _1[:libelle] }.tap do |p|
         p.merge!({ source: 'repet', repetition_champ_stable_id: }) if repetition_champ_stable_id

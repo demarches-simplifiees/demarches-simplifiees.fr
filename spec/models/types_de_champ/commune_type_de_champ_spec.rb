@@ -3,9 +3,9 @@ describe TypesDeChamp::CommuneTypeDeChamp do
 
   it { expect(tdc_commune.libelles_for_export).to match_array([['Ma commune', :value], ['Ma commune (Code INSEE)', :code], ['Ma commune (Département)', :departement]]) }
 
-  it "returns paths for export" do
+  it "returns columns for export" do
     stable_id = tdc_commune.stable_id
-    expect(tdc_commune.paths_for_export).to match_array([
+    expect(tdc_commune.columns_for_export).to match_array([
       { source: 'tdc', stable_id:, path: 'value', libelle: "Ma commune" },
       { source: 'tdc', stable_id:, path: 'code', libelle: "Ma commune (Code INSEE)" },
       { source: 'tdc', stable_id:, path: 'departement', libelle: "Ma commune (Département)" }
