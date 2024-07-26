@@ -1,6 +1,6 @@
 class AddDossierFolderColumnToExportTemplate < ActiveRecord::Migration[7.0]
   def up
-    execute "DELETE FROM export_templates;"
+    safety_assured { execute "DELETE FROM export_templates;" }
 
     add_column :export_templates, :dossier_folder, :jsonb, default: nil, null: false
     add_column :export_templates, :export_pdf, :jsonb, default: nil, null: false
