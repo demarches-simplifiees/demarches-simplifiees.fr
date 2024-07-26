@@ -77,9 +77,7 @@ en:
   layouts:
     commencer:
       no_procedure:
-        line1: A simple tool
-        line2: to manage dematerialized
-        line3: administrative forms.
+        text: A simple tool to manage dematerialized administrative forms.
         are_you_new: First time on %{app_name}?
     my_account: My account
     header:
@@ -281,7 +279,7 @@ en:
           textarea: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
           decimal_number: 49.3
           integer_number: 42
-          email: personne@fournisseur.fr
+          email: address@mail.com
           phone: 0612345678
           iban: FR7611315000011234567890138
           yes_no: "true"
@@ -611,7 +609,7 @@ en:
         password: 'Password'
         requested_merge_into: 'new email address'
         hints:
-          email: "Expected format : john.doe@example.com"
+          email: 'Expected format : address@mail.com'
       user:
         siret: 'SIRET number'
         << : *default_attributes
@@ -644,7 +642,7 @@ en:
         not_a_phone: 'Invalid phone number'
         not_a_rna: 'Invalid RNA number'
         url: 'is not a valid link'
-        invalid_email_format: "is invalid. Please fill in a valid email ex: john.doe@exemple.fr"
+        invalid_email_format: 'is invalid. Please fill in a valid email ex: address@mail.com'
       models:
         attestation_template:
           attributes:
@@ -661,9 +659,9 @@ en:
             reset_password_token:
               invalid: ": is expired. Ask a new one"
             email:
-              blank: "is empty. Fill in the email"
-              invalid: "is invalid. Fill in a valid email address, example: john.doe@example.fr"
-              taken: "already in use. Fill in another email"
+              blank: 'is empty. Fill in the email'
+              invalid: 'is invalid. Fill in a valid email address, example: address@mail.com'
+              taken: 'already in use. Fill in another email'
             password:
               too_short: "is too short. Fill in a password with at least 8 characters"
               not_strong: "not strong enough. Fill in a stronger password"

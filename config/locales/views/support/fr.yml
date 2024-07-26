@@ -2,9 +2,10 @@ fr:
   support:
     index:
       contact: Contact
-      intro_html: "<p>Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.</p>
-        <p>Pensez bien à nous donner le plus d’informations possible pour que nous puissions vous aider au mieux.</p>"
-      notice_email: "(exemple : monadresse@monmail.com)"
+      intro_html:
+        '<p>Contactez-nous via ce formulaire et nous vous répondrons dans les plus brefs délais.</p>
+        <p>Pensez bien à nous donner le plus d’informations possible pour que nous puissions vous aider au mieux.</p>'
+      notice_email: 'Format attendu : adresse@mail.com'
       your_question: Votre question
       our_answer: Notre réponse
       notice_pj_product: Une capture d’écran peut nous aider à identifier plus facilement l’endroit à améliorer.
