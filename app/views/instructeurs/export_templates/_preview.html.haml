@@ -1,17 +1,33 @@
+- procedure = export_template.procedure
+- dossier = procedure.dossier_for_preview(current_instructeur)
+
 #preview.export-template-preview.fr-p-2w.sticky--top
   %h2.fr-h4 Aperçu
-  %ul.tree.fr-text--sm
-    %li #{DownloadableFileService::EXPORT_DIRNAME}/
-    %li
-      %ul
-        %li
-          %span#preview_default_dossier_directory #{export_template.tiptap_convert(dossier, "default_dossier_directory")}/
-          %ul
-            %li#preview_pdf_name #{export_template.tiptap_convert(dossier, "pdf_name")}.pdf
-            - procedure.exportables_pieces_jointes.each do |pj|
-              %li{ id: "preview_pj_#{pj.stable_id}" } #{export_template.tiptap_convert_pj(dossier, pj.stable_id)}-1.jpg
-          %ul
-            %li
-              %span messagerie/
-              %ul
-                %li un-autre-fichier.png
+  - if dossier.nil?
+    %p.fr-text--sm
+      Pour générer un aperçu fidèle avec tous les champs et les dates,
+      = link_to 'créez-vous un dossier', commencer_url(procedure.path), target: '_blank'
+      et acceptez-le : l’aperçu l’utilisera.
+
+  - else
+    %ul.tree.fr-text--sm
+      %li
+        %span.fr-icon-folder-zip-line
+        #{DownloadableFileService::EXPORT_DIRNAME}/
+      %li
+        %ul
+          %li
+            %span.fr-icon-folder-line
+            #{export_template.dossier_folder.path(dossier)}/
+            %ul
+              - if export_template.export_pdf.enabled?
+                %li
+                  %span.fr-icon-pdf-2-line
+                  #{export_template.export_pdf.path(dossier)}.pdf
+
+              - procedure.exportables_pieces_jointes.each do |tdc|
+                - export_pj = export_template.pj(tdc)
+                - if export_pj.enabled?
+                  %li
+                    %span.fr-icon-file-image-line
+                    #{export_pj.path(dossier)}-1.jpg

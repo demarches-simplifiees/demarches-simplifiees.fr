@@ -676,6 +676,12 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def libelle_as_filename
+    libelle.gsub(/[[:space:]]+/, ' ')
+      .truncate(30, omission: '', separator: ' ')
+      .parameterize
+  end
+
   class << self
     def champ_value(type_champ, champ)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
