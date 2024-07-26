@@ -11,6 +11,11 @@ body {
   min-height: 100%;
 }
 
+// Wrap text in pre tag
+pre {
+  white-space: pre-wrap;
+}
+
 // Mobile Safari doesn't bubble mouse events by default, unless:
 //
 // - the target element of the event is a link or a form field.
