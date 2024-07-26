@@ -12,8 +12,15 @@ class GenerateOpenDataCsvService
   end
 
   def self.generate_csv(file_name, data)
-    headers = ["mois", file_name]
-    data = [[date_last_month, data]]
+    case file_name
+    when "nb_champs_remplis_par_mois"
+      headers = ["mois", "procedure_id", "type_de_champ_id", "type_champ", "libelle", "nb_champs_remplis"]
+      data.map! { |d| d.unshift(date_last_month) }
+    else
+      headers = ["mois", file_name]
+      data = [[date_last_month, data]]
+    end
+
     SpreadsheetArchitect.to_csv(headers: headers, data: data)
   end
 end
