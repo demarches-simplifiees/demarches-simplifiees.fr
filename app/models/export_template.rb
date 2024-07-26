@@ -306,9 +306,6 @@ class ExportTemplate < ApplicationRecord
     column_keys.push :id, :email, :france_connecte
     if procedure.for_individual?
       column_keys.push :civilite, :last_name, :first_name, :for_tiers, :mandataire_last_name, :mandataire_first_name
-      if procedure.ask_birthday
-        column_keys.push :date_de_naissance
-      end
     else
       column_keys.push(
         :etablissement_siret, :etablissement_siege_social, :etablissement_naf, :etablissement_libelle_naf,

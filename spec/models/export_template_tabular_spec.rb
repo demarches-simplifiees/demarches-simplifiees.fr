@@ -186,13 +186,6 @@ describe ExportTemplate do
       end
     end
 
-    context 'when ask birthday' do
-      let(:procedure) { create(:procedure_with_dossiers, types_de_champ_public:, for_individual:, ask_birthday: true) }
-      it 'returns date de naissance column' do
-        expect(export_template.all_usager_columns.include?({ :path => "date_de_naissance", :source => "dossier", :libelle => "Date de naissance" })).to be true
-      end
-    end
-
     context 'when procedure chorusable' do
       before { expect_any_instance_of(Procedure).to receive(:chorusable?).and_return(true) }
       let(:procedure) { create(:procedure_with_dossiers, :filled_chorus, types_de_champ_public:) }
