@@ -11,14 +11,26 @@ module PiecesJointesListConcern
       pieces_jointes(exclude_titre_identite: true)
     end
 
+    def exportables_pieces_jointes_for_all_versions
+      pieces_jointes(
+        exclude_titre_identite: true,
+        revision: revisions
+      ).sort_by { - _1.id }.uniq(&:stable_id)
+    end
+
+    def outdated_exportables_pieces_jointes
+      exportables_pieces_jointes_for_all_versions - exportables_pieces_jointes
+    end
+
     private
 
     def pieces_jointes(
       exclude_titre_identite: false,
       public_only: false,
-      wrap_with_parent: false
+      wrap_with_parent: false,
+      revision: active_revision
     )
-      coordinates = active_revision.revision_types_de_champ
+      coordinates = ProcedureRevisionTypeDeChamp.where(revision:)
         .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
 
       coordinates = coordinates.public_only if public_only
