@@ -134,7 +134,8 @@ module Instructeurs
     end
 
     def update_displayed_fields
-      values = params['values'].presence || []
+      values = (params['values'].presence || []).reject(&:empty?)
+
       procedure_presentation.update_displayed_fields(values)
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
