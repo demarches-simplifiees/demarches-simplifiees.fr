@@ -6,6 +6,11 @@ body {
   scroll-behavior: smooth;
 }
 
+// Forces line breaks to prevent buttons from overflowing their container
+input[type="submit"] {
+  white-space: normal;
+}
+
 .page-wrapper {
   position: relative;
   min-height: 100%;
