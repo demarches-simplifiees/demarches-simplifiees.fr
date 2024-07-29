@@ -24,7 +24,7 @@ Le test d’une démarche se déroule en trois étapes :
 2. le test de la partie instructeur (instruction du dossier)
 3. le test des fonctionnalités secondaires
 
-Vous pouvez faire tester la partie usager (étape 1) et instructeur (étape 2) par des collaborateurs. Cependant, nous vous recommandons fortement de les tester vous-même une première fois. 
+Vous pouvez faire tester la partie usager (étape 1) et instructeur (étape 2) par des collaborateurs. Cependant, nous vous recommandons fortement de les tester vous-même une première fois.
 
 **Vous pouvez effectuer toutes les modifications que vous souhaitez sur votre démarche pendant cette phase de test.**
 
@@ -32,21 +32,21 @@ Bien évidemment, avant de tester la démarche, il faut l’avoir créé. Pour c
 
 ## Étape 1 : Déposer un dossier de test côté usager
 
-Vous devez commencer par cette étape afin de tester le parcours d’un usager pour déposer un dossier. De plus, sans dossier déposé, vous ne pourrez pas tester les fonctionnalités relatives à l’instruction. 
+Vous devez commencer par cette étape afin de tester le parcours d’un usager pour déposer un dossier. De plus, sans dossier déposé, vous ne pourrez pas tester les fonctionnalités relatives à l’instruction.
 
 1. Utilisez le bouton **« Tester la démarche »** (ou suivez le lien de la démarche), accessibles depuis votre interface administrateur. Toute personne ayant connaissance du lien pourra remplir des dossiers test sur votre démarche qui seront supprimés plus tard.
-  ![Bouton Tester la démarche depuis la tableau de bord de la démarche](faq/administrateur-procedure-test-button.png)
-  ![Affichage du lien de test de la démarche](faq/administrateur-procedure-test-link.png)
+  ![Bouton Tester la démarche depuis la tableau de bord de la démarche {aria-hidden="true"}](faq/administrateur-procedure-test-button.png)
+  ![Affichage du lien de test de la démarche {aria-hidden="true"}](faq/administrateur-procedure-test-link.png)
 
 2. Commencez à remplir votre dossier en suivant le bouton **« Commencer la démarche »**.
-  ![Page d’accueil usager de la démarche](faq/administrateur-procedure-test-commencer.png)
+  ![Page d’accueil usager de la démarche {aria-hidden="true"}](faq/administrateur-procedure-test-commencer.png)
 
 3. Après avoir complété le dossier et éventuellement testé les fonctionnalités dédiées à l'interface usagers (invitation à compléter un dossier…), cliquez sur **« Déposer le dossier »** pour finaliser le dépôt et voir le message de confirmation de dépôt.
-  ![Test de la démarche par l’usager](faq/administrateur-procedure-test-usager.png)
+  ![Test de la démarche par l’usager {aria-hidden="true"}](faq/administrateur-procedure-test-usager.png)
 
 Une fois votre dossier de test déposé, un message de confirmation de dépôt sera affiché :
 
-![Message de confirmation de dépôt d’un dossier](faq/administrateur-procedure-test-thanks.png)
+![Message de confirmation de dépôt d’un dossier {aria-hidden="true"}](faq/administrateur-procedure-test-thanks.png)
 
 N’hésitez pas à [transmettre le lien vers la démarche test à vos collègues](/faq/administrateur/faire-tester-une-demarche-par-un-collegue) afin qu’ils puissent la tester et vous transmettre leur retour. Gardez à l’esprit que **tous les dossiers déposés pendant le test seront supprimés** lorsque la démarche sera modifiée ou publiée.
 
@@ -56,23 +56,23 @@ Vous avez déposé à l’étape précédente un premier dossier. Rendez-vous d�
 
 Passez à l’interface instructeur via le lien [%{application_base_url}/procedures](/procedures) ou en changeant de profil depuis le menu en haut à droite en cliquant sur votre adresse email.
 
-![Menu pour passer instructeur](faq/administrateur-profile-switch.png)
+![Menu pour passer instructeur {aria-hidden="true"}](faq/administrateur-profile-switch.png)
 
 ⚠️ **Vous devez être instructeur de la démarche pour accéder aux dossiers déposés**. Par défaut, en tant que créateur de la démarche (administrateur), vous êtes instructeur de celle-ci. Si vous ne testez pas vous-même cette partie, ajoutez votre collaborateur en tant qu’instructeur.
 
-Vous arrivez alors sur l’interface instructeur. Il vous suffit de cliquer sur l’onglet **« En test »** puis suivez le lien de votre démarche avec un dossier **« à suivre »** . 
+Vous arrivez alors sur l’interface instructeur. Il vous suffit de cliquer sur l’onglet **« En test »** puis suivez le lien de votre démarche avec un dossier **« à suivre »** .
 
-![Page d’accueil instructeur de la démarche](faq/administrateur-procedures-list.png)
+![Page d’accueil instructeur de la démarche {aria-hidden="true"}](faq/administrateur-procedures-list.png)
 
 Trouvez le dossier à suivre, puis testez l’instruction du dossier.
 
-![Dossier à suivre](faq/administrateur-test-instruction-dossiers-list.png)
+![Dossier à suivre {aria-hidden="true"}](faq/administrateur-test-instruction-dossiers-list.png)
 
 Voici le tutoriel pour instruire un dossier en tant qu’instructeur : [Tutoriel Instructeur](https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-instructeur)
 
 ## Étape 3 : Tester les fonctionnalités secondaires
 
-Vous pourrez ici tester différents éléments secondaires : 
+Vous pourrez ici tester différents éléments secondaires :
 
 - Demande d’**avis externe** (partie instruction) . Pour plus d’information, vous pouvez consulter [notre tutoriel expert invité](https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-expert-invite)
 - **Vérifiez les e-mails** d’accusé de réception, de passage en instruction, d’acceptation, de refus et de classement sans suite (partie usager)
@@ -89,7 +89,7 @@ En cas d’erreur et/ou en fonction des retours de vos collègues suite à la ph
 Après avoir minutieusement testé votre démarche, il est temps de la rendre accessible à tous en la publiant.
 
 1. **Accédez au tableau de bord administrateur** de votre démarche et cliquez sur le bouton **« Publier »** situé en haut à droite.
-  ![Bouton Publier](faq/administrateur-procedure-test-publish.png)
+  ![Bouton Publier {aria-hidden="true"}](faq/administrateur-procedure-test-publish.png)
 
 2. **Personnalisez le lien** du formulaire pour le diffuser plus facilement à vos usagers. Cette étape vous permet de simplifier l’accès à votre démarche.
 

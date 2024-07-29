@@ -14,8 +14,8 @@ Vous devez **contacter la personne qui a déposé le dossier** et lui demander d
 
 Pour cela, la personne doit cliquer sur le bouton **« Action »** (ou _« Autres actions »_), situé à droite du dossier depuis son interface :
 
-![Image illustration le bouton Autres actions avec le menu de transfert de dossier](faq/usager-dossier-actions-menu-transfer.png)
+![Image illustration le bouton Autres actions avec le menu de transfert de dossier {aria-hidden="true"}](faq/usager-dossier-actions-menu-transfer.png)
 
 Et ensuite cliquer sur **« Transférer le dossier »** en indiquant votre adresse mail.
 
-![Image illustration l’interface de transfert de dossier vers un autre compte](faq/usager-transfer-dossier.png)
+![Image illustration l’interface de transfert de dossier vers un autre compte {aria-hidden="true"}](faq/usager-transfer-dossier.png)
