@@ -1,6 +1,6 @@
 describe ProcedurePresentation do
-  describe "#types_de_champ_for_procedure_presentation" do
-    subject { procedure.types_de_champ_for_procedure_presentation.not_repetition.pluck(:libelle) }
+  describe "#types_de_champ_for_procedure_export" do
+    subject { procedure.types_de_champ_for_procedure_export.not_repetition.pluck(:libelle) }
 
     context 'for a draft procedure' do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :number, libelle: 'libelle 1' }]) }
