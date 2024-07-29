@@ -5,3 +5,11 @@ User-agent: *
 Disallow: /commencer*
 Disallow: /rails/
 Disallow: /super_admins/
+Disallow: /manager/
+Disallow: /users/
+Allow: /users/sign_in
+Allow: /users/sign_up
+Disallow: /connexion-par-jeton/
+Disallow: */reset-link-sent*
+Disallow: /lien-envoye
+Disallow: /france_connect/
