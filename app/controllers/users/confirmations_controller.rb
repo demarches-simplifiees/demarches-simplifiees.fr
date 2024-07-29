@@ -13,9 +13,19 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # end
 
   # GET /resource/confirmation?confirmation_token=abcdef
-  # def show
-  #   super
-  # end
+  def show
+    super do
+      # When email was already confirmed, default is to render :new with a specific error.
+      # Because our :new is customized with the email and a form to resend a confirmation,
+      # we redirect to after confirmation page instead.
+      if resource.errors.of_kind?(:email, :already_confirmed)
+        respond_with_navigational(resource) do
+          flash.notice = t('.email_already_confirmed')
+          redirect_to after_confirmation_path_for(resource_name, resource) and return
+        end
+      end
+    end
+  end
 
   # protected
 
