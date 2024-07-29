@@ -290,6 +290,40 @@ class Champ < ApplicationRecord
     write_attribute(:value, value.delete("\u0000"))
   end
 
+  MAIN_STREAM = 'main'
+  USER_DRAFT_STREAM = 'draft:user'
+  HISTORY_STREAM = 'history:'
+
+  def main_stream?
+    stream == MAIN_STREAM
+  end
+
+  def user_draft_stream?
+    main_stream? || stream == USER_DRAFT_STREAM
+  end
+
+  def history_stream?
+    stream.start_with?(HISTORY_STREAM)
+  end
+
+  def clone_value_from(champ)
+    self.value = champ.value
+    self.external_id = champ.external_id
+    self.value_json = champ.value_json
+    self.data = champ.data
+
+    self.geo_areas = champ.geo_areas.dup
+
+    ClonePiecesJustificativesService.clone_attachments(champ, self)
+
+    if champ.etablissement.present?
+      self.etablissement = champ.etablissement.dup
+      ClonePiecesJustificativesService.clone_attachments(champ.etablissement, self.etablissement)
+    end
+
+    save!
+  end
+
   class NotImplemented < ::StandardError
     def initialize(method)
       super(":#{method} not implemented")
