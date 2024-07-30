@@ -62,6 +62,8 @@ module Types
           Types::Champs::IntegerNumberChampType
         when ::Champs::DecimalNumberChamp
           Types::Champs::DecimalNumberChampType
+        when ::Champs::NumbersIdChamp
+          Types::Champs::NumbersIdChampType
         when ::Champs::SiretChamp
           Types::Champs::SiretChampType
         when ::Champs::RepetitionChamp
