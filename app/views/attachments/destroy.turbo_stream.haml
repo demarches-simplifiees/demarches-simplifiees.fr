@@ -1,9 +1,9 @@
-= turbo_stream.remove dom_id(@attachment, :persisted_row)
-
-= turbo_stream.show_all ".attachment-input-#{@attachment.id}"
-
 - if @champ
   = fields_for @champ.input_name, @champ do |form|
     = turbo_stream.replace @champ.input_group_id do
       = render EditableChamp::EditableChampComponent.new champ: @champ, form: form
   = turbo_stream.focus_all "#attachment-multiple-empty-#{@champ.public_id} input"
+- else
+  = turbo_stream.replace dom_id(@attachment, :edit) do
+    = render Attachment::EditComponent.new(**@attachment_options)
+  = turbo_stream.focus_all "##{dom_id(@attachment.record, @attachment.name)}"

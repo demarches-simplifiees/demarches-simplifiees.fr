@@ -23,7 +23,7 @@ RSpec.describe Attachment::EditComponent, type: :component do
     let(:attachment) { nil }
 
     it 'renders a form field for uploading a file' do
-      expect(subject).to have_selector('input[type=file]:not(.hidden)')
+      expect(subject).to have_selector('input[type=file]:not([disabled])')
     end
 
     it 'renders max size' do
@@ -40,8 +40,8 @@ RSpec.describe Attachment::EditComponent, type: :component do
       expect(subject).to have_content(attachment.filename.to_s)
     end
 
-    it 'hides the file field by default' do
-      expect(subject).to have_selector('input[type=file].hidden')
+    it 'disabled the file field by default' do
+      expect(subject).to have_selector('input[type=file][disabled]')
     end
 
     it 'shows the Delete button by default' do
