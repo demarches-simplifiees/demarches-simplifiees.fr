@@ -171,9 +171,10 @@ class Attachment::EditComponent < ApplicationComponent
   def input_id
     if champ.present?
       # There is always a single input by champ, its id must match the label "for" attribute.
-      return champ.input_id
+      champ.input_id
+    else
+      dom_id(@attached_file.record, attribute_name)
     end
-    @form_object_name || dom_id(@attached_file.record, attribute_name)
   end
 
   def auto_attach_url
