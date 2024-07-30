@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_29_160650) do
+ActiveRecord::Schema[7.0].define(version: 2024_07_30_130933) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -712,6 +712,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_29_160650) do
     t.string "given_name"
     t.string "merge_token"
     t.datetime "merge_token_created_at", precision: nil
+    t.string "requested_email"
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
     t.index ["email_merge_token"], name: "index_france_connect_informations_on_email_merge_token"
