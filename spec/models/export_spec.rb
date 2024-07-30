@@ -177,17 +177,17 @@ RSpec.describe Export, type: :model do
       end
     end
 
-    context 'with procedure_presentation and statut supprimes_recemment' do
-      let(:statut) { 'supprimes_recemment' }
+    context 'with procedure_presentation and statut supprimes' do
+      let(:statut) { 'supprimes' }
       let(:procedure_presentation) do
         create(:procedure_presentation,
                procedure: procedure,
                assign_to: procedure.groupe_instructeurs.first.assign_tos.first)
       end
-      let!(:dossier_recemment_supprime) { create(:dossier, :accepte, procedure: procedure, hidden_by_administration_at: 2.days.ago) }
+      let!(:dossier_supprime) { create(:dossier, :accepte, procedure: procedure, hidden_by_administration_at: 2.days.ago) }
 
-      it 'includes supprimes_recemment' do
-        expect(export.send(:dossiers_for_export)).to include(dossier_recemment_supprime)
+      it 'includes supprimes' do
+        expect(export.send(:dossiers_for_export)).to include(dossier_supprime)
       end
     end
   end

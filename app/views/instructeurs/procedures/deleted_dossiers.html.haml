@@ -1,55 +1,11 @@
 - content_for(:title, "#{@procedure.libelle}")
 
-#procedure-show
-  .sub-header
-    .fr-container.flex
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                    ['Historique des dossiers supprimés']] }
 
-      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
-        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
+.fr-container
+  .fr-mb-3w
+    = link_to "Retour à la démarche", instructeur_procedure_path(@procedure), class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
 
-      = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
-
-      .procedure-actions
-        - if @can_download_dossiers
-          = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), export_url: method(:download_export_instructeur_procedure_path))
-
-    .fr-container.flex= render partial: "tabs", locals: { procedure: @procedure,
-        statut: @statut,
-        a_suivre_count: @a_suivre_count,
-        suivis_count: @suivis_count,
-        traites_count: @traites_count,
-        tous_count: @tous_count,
-        supprimes_recemment_count: @supprimes_recemment_count,
-        archives_count: @archives_count,
-        expirant_count: @expirant_count,
-        has_en_cours_notifications: @has_en_cours_notifications,
-        has_termine_notifications: @has_termine_notifications }
-
-  .fr-container
-    %h1.titre-dossiers Dossiers supprimés
-    %details
-      %summary Les dossiers ont été supprimés. Vous ne pouvez plus les récupérer depuis Démarches Simplifiées.
-      Ceci s'explique pour les raisons suivantes :
-      %ul
-        %li L’utilisateur a intentionnellement supprimé son dossier.
-        %li Le délai de conservation maximal de #{@procedure.duree_conservation_dossiers_dans_ds} mois a expiré. Conformément au règlement RGPD, DS ne peut continuer à les héberger.
-    - if @deleted_dossiers.any?
-      = paginate @deleted_dossiers, views_prefix: 'shared'
-      %table.table.dossiers-table.hoverable
-        %thead
-          %tr
-            %th.number-col N° dossier
-            %th Raison de suppression
-            %th Date de suppression
-        %tbody
-          - @deleted_dossiers.each do |deleted_dossier|
-            %tr
-              %td.number-col
-                = deleted_dossier.dossier_id
-              %td
-                = deletion_reason_badge(deleted_dossier.reason)
-              %td.deleted-cell
-                = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
-      = paginate @deleted_dossiers, views_prefix: 'shared'
-    - else
-      Aucun dossier supprimé
+= render Dossiers::DeletedDossiersComponent.new(deleted_dossiers: @deleted_dossiers)

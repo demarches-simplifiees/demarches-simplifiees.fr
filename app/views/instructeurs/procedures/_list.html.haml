@@ -50,12 +50,12 @@
 
         %li
           %object
-            = link_to(instructeur_procedure_path(p, statut: 'supprimes_recemment')) do
-              - dossier_count = dossiers_supprimes_recemment_count_per_procedure[p.id] || 0
+            = link_to(instructeur_procedure_path(p, statut: 'supprimes')) do
+              - dossier_count = dossiers_supprimes_count_per_procedure[p.id] || 0
               .stats-number
                 = number_with_html_delimiter(dossier_count)
               .stats-legend
-                = t('pluralize.dossiers_supprimes_recemment', count: dossier_count)
+                = t('pluralize.dossiers_supprimes', count: dossier_count)
 
         - if p.procedure_expires_when_termine_enabled
           %li

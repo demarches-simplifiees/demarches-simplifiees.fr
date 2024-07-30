@@ -22,10 +22,10 @@
       active: statut == 'tous',
       badge: number_with_html_delimiter(tous_count))
 
-    = tab_item(t(tab_i18n_key_from_status('supprimes_recemment'), count: supprimes_recemment_count),
-      instructeur_procedure_path(procedure, statut: 'supprimes_recemment'),
-      active: statut == 'supprimes_recemment',
-      badge: number_with_html_delimiter(supprimes_recemment_count))
+    = tab_item(t(tab_i18n_key_from_status('supprimes'), count: supprimes_count),
+      instructeur_procedure_path(procedure, statut: 'supprimes'),
+      active: statut == 'supprimes',
+      badge: number_with_html_delimiter(supprimes_count))
 
     - if procedure.procedure_expires_when_termine_enabled
       = tab_item(t(tab_i18n_key_from_status('expirant'), count: expirant_count),

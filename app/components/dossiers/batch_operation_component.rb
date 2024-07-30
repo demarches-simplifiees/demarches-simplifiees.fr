@@ -7,7 +7,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
   end
 
   def render?
-    ['a-suivre', 'traites', 'suivis', 'archives', 'supprimes_recemment', 'expirant'].include?(@statut)
+    ['a-suivre', 'traites', 'suivis', 'archives', 'supprimes', 'expirant'].include?(@statut)
   end
 
   def operations_for_dossier(dossier)
@@ -81,7 +81,7 @@ class Dossiers::BatchOperationComponent < ApplicationComponent
             }
           ]
       }
-    when 'supprimes_recemment' then
+    when 'supprimes' then
       {
         options:
           [

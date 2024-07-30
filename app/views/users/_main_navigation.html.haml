@@ -5,4 +5,8 @@
         = link_to t('back', scope: [:layouts, :header]), url_for(:back), title: t('back_title', scope: [:layouts, :header]), class: 'fr-nav__link', "aria-controls" => "modal-header__menu"
 
     %li.fr-nav__item
-      = link_to t('files', scope: [:layouts, :header]), dossiers_path, class: 'fr-nav__link', aria: { current: controller_name == 'dossiers' ? 'true' : nil, controls: "modal-header__menu" }
+      = link_to t('files', scope: [:layouts, :header]), dossiers_path, class: 'fr-nav__link', aria: { current: (controller_name == 'dossiers' && action_name != 'deleted_dossiers') ? 'true' : nil, controls: "modal-header__menu" }
+
+    - if current_user.deleted_dossiers.present?
+      %li.fr-nav__item
+        = link_to 'Historique des dossiers supprimés', deleted_dossiers_path(), class: 'fr-nav__link', aria: { current: action_name == 'deleted_dossiers' ? 'true' : nil, controls: "modal-header__menu" }
