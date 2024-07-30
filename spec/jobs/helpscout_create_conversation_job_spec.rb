@@ -6,16 +6,9 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
   let(:subject_text) { 'Bonjour' }
   let(:text) { "J'ai un pb" }
   let(:tags) { ["first tag"] }
+  let(:question_type) { "lost" }
   let(:phone) { nil }
-  let(:params) {
-            {
-              email:,
-              subject: subject_text,
-              text:,
-              tags:,
-              phone:
-            }
-          }
+  let(:contact_form) { create(:contact_form, email:, subject: subject_text, text:, tags:, phone:, question_type:) }
 
   describe '#perform' do
     before do
@@ -26,56 +19,55 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
               headers: { 'Resource-ID' => 'new-conversation-id' }
             ))
       allow(api).to receive(:add_tags)
-      allow(api).to receive(:add_phone_number) if params[:phone].present?
+      allow(api).to receive(:add_phone_number) if phone.present?
     end
 
     subject {
-      described_class.perform_now(**params)
+      described_class.perform_now(contact_form)
     }
 
-    context 'when blob_id is not present' do
+    context 'when no file is attached' do
       it 'sends the form without a file' do
         subject
         expect(api).to have_received(:create_conversation).with(email, subject_text, text, nil)
-        expect(api).to have_received(:add_tags).with("new-conversation-id", tags)
+        expect(api).to have_received(:add_tags).with("new-conversation-id", match_array(tags.concat(["contact form", question_type])))
+        expect(contact_form).to be_destroyed
       end
     end
 
-    context 'when blob_id is present' do
-      let(:blob) {
-        ActiveStorage::Blob.create_and_upload!(io: StringIO.new("toto"), filename: "toto.png")
-      }
-      let(:params) { super().merge(blob_id: blob.id) }
-
+    context 'when a file is attached' do
       before do
-        allow(blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: pending, safe?: safe))
-        allow(ActiveStorage::Blob).to receive(:find).with(blob.id).and_return(blob)
+        file = fixture_file_upload('spec/fixtures/files/white.png', 'image/png')
+        contact_form.piece_jointe.attach(file)
       end
 
       context 'when the file has not been scanned yet' do
-        let(:pending) { true }
-        let(:safe) { false }
+        before do
+          allow_any_instance_of(ActiveStorage::Blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: true, safe?: false))
+        end
 
-        it 'reenqueue job' do
-          expect { subject }.to have_enqueued_job(described_class).with(params)
+        it 'reenqueues job' do
+          expect { subject }.to have_enqueued_job(described_class).with(contact_form)
         end
       end
 
       context 'when the file is safe' do
-        let(:pending) { false }
-        let(:safe) { true }
+        before do
+          allow_any_instance_of(ActiveStorage::Blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: false, safe?: true))
+        end
 
-        it 'downloads the file and sends the form' do
+        it 'sends the form with the file' do
           subject
-          expect(api).to have_received(:create_conversation).with(email, subject_text, text, blob)
+          expect(api).to have_received(:create_conversation).with(email, subject_text, text, contact_form.piece_jointe)
         end
       end
 
       context 'when the file is not safe' do
-        let(:pending) { false }
-        let(:safe) { false }
+        before do
+          allow_any_instance_of(ActiveStorage::Blob).to receive(:virus_scanner).and_return(double('VirusScanner', pending?: false, safe?: false))
+        end
 
-        it 'ignore the file' do
+        it 'ignores the file' do
           subject
           expect(api).to have_received(:create_conversation).with(email, subject_text, text, nil)
         end
@@ -84,6 +76,7 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
 
     context 'with a phone' do
       let(:phone) { "06" }
+
       it 'associates the phone number' do
         subject
         expect(api).to have_received(:add_phone_number).with(email, phone)

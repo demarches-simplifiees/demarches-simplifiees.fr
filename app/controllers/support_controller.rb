@@ -2,25 +2,31 @@ class SupportController < ApplicationController
   invisible_captcha only: [:create], on_spam: :redirect_to_root
 
   def index
-    @form = Helpscout::Form.new(tags: tags_from_query_params, dossier_id: dossier&.id, current_user:)
+    @form = ContactForm.new(tags: support_form_params.fetch(:tags, []), dossier_id: dossier&.id)
+    @form.user = current_user
   end
 
   def admin
-    @form = Helpscout::Form.new(tags: tags_from_query_params, current_user:, for_admin: true)
+    @form = ContactForm.new(tags: support_form_params.fetch(:tags, []), for_admin: true)
+    @form.user = current_user
   end
 
   def create
-    if direct_message? && create_commentaire
+    if direct_message?
+      create_commentaire!
       flash.notice = "Votre message a été envoyé sur la messagerie de votre dossier."
 
       redirect_to messagerie_dossier_path(dossier)
       return
     end
 
-    @form = Helpscout::Form.new(support_form_params.except(:piece_jointe).merge(current_user:))
+    form_params = support_form_params
+    @form = ContactForm.new(form_params.except(:piece_jointe))
+    @form.piece_jointe.attach(form_params[:piece_jointe]) if form_params[:piece_jointe].present?
+    @form.user = current_user
 
-    if @form.valid?
-      create_conversation_later(@form)
+    if @form.save
+      @form.create_conversation_later
       flash.notice = "Votre message a été envoyé."
 
       redirect_to root_path
@@ -32,29 +38,7 @@ class SupportController < ApplicationController
 
   private
 
-  def create_conversation_later(form)
-    if support_form_params[:piece_jointe].present?
-      blob = ActiveStorage::Blob.create_and_upload!(
-        io: support_form_params[:piece_jointe].tempfile,
-        filename: support_form_params[:piece_jointe].original_filename,
-        content_type: support_form_params[:piece_jointe].content_type,
-        identify: false
-      ).tap(&:scan_for_virus_later)
-    end
-
-    HelpscoutCreateConversationJob.perform_later(
-      blob_id: blob&.id,
-      subject: form.subject,
-      email: current_user&.email || form.email,
-      phone: form.phone,
-      text: form.text,
-      dossier_id: form.dossier_id,
-      browser: browser_name,
-      tags: form.tags_array
-    )
-  end
-
-  def create_commentaire
+  def create_commentaire!
     attributes = {
       piece_jointe: support_form_params[:piece_jointe],
       body: "[#{support_form_params[:subject]}]<br><br>#{support_form_params[:text]}"
@@ -68,12 +52,11 @@ class SupportController < ApplicationController
     end
   end
 
-  def tags_from_query_params
-    support_form_params[:tags]&.join(",") || ""
-  end
-
   def direct_message?
-    user_signed_in? && support_form_params[:type] == Helpscout::Form::TYPE_INSTRUCTION && dossier.present? && dossier.messagerie_available?
+    return false unless user_signed_in?
+    return false unless support_form_params[:question_type] == ContactForm::TYPE_INSTRUCTION
+
+    dossier&.messagerie_available?
   end
 
   def dossier
@@ -85,9 +68,9 @@ class SupportController < ApplicationController
   end
 
   def support_form_params
-    keys = [:email, :subject, :text, :type, :dossier_id, :piece_jointe, :phone, :tags, :for_admin]
-    if params.key?(:helpscout_form) # submitting form
-      params.require(:helpscout_form).permit(*keys)
+    keys = [:email, :subject, :text, :question_type, :dossier_id, :piece_jointe, :phone, :for_admin, tags: []]
+    if params.key?(:contact_form) # submitting form
+      params.require(:contact_form).permit(*keys)
     else
       params.permit(:dossier_id, tags: []) # prefilling form
     end

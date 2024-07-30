@@ -8,41 +8,49 @@ class HelpscoutCreateConversationJob < ApplicationJob
 
   retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
 
+  attr_reader :contact_form
   attr_reader :api
 
-  def perform(blob_id: nil, **params)
-    if blob_id.present?
-      blob = ActiveStorage::Blob.find(blob_id)
-      raise FileNotScannedYetError if blob.virus_scanner.pending?
+  def perform(contact_form)
+    @contact_form = contact_form
 
-      blob = nil unless blob.virus_scanner.safe?
+    if contact_form.piece_jointe.attached?
+      raise FileNotScannedYetError if contact_form.piece_jointe.virus_scanner.pending?
     end
 
     @api = Helpscout::API.new
 
-    create_conversation(params, blob)
+    create_conversation
+
+    contact_form.destroy
   end
 
   private
 
-  def create_conversation(params, blob)
+  def create_conversation
     response = api.create_conversation(
-      params[:email],
-      params[:subject],
-      params[:text],
-      blob
+      contact_form.email,
+      contact_form.subject,
+      contact_form.text,
+      safe_blob
     )
 
     if response.success?
       conversation_id = response.headers['Resource-ID']
 
-      if params[:phone].present?
-        api.add_phone_number(params[:email], params[:phone])
+      if contact_form.phone.present?
+        api.add_phone_number(contact_form.email, contact_form.phone)
       end
 
-      api.add_tags(conversation_id, params[:tags])
+      api.add_tags(conversation_id, contact_form.tags)
     else
       fail "Error while creating conversation: #{response.response_code} '#{response.body}'"
     end
+  end
+
+  def safe_blob
+    return if !contact_form.piece_jointe.virus_scanner&.safe?
+
+    contact_form.piece_jointe
   end
 end

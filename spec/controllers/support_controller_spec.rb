@@ -1,4 +1,4 @@
-describe SupportController, type: :controller do
+describe SupportController, question_type: :controller do
   render_views
 
   context 'signed in' do
@@ -45,22 +45,30 @@ describe SupportController, type: :controller do
         get :index, params: { tags: tags }
 
         expect(response.status).to eq(200)
-        expect(response.body).to include(tags.join(','))
+        expect(response.body).to include("value=\"yolo\"")
+        expect(response.body).to include("value=\"toto\"")
       end
     end
 
     describe "send form" do
       subject do
-        post :create, params: { helpscout_form: params }
+        post :create, params: { contact_form: params }
       end
 
       context "when invisible captcha is ignored" do
-        let(:params) { { subject: 'bonjour', text: 'un message', type: 'procedure_info' } }
+        let(:params) { { subject: 'bonjour', text: 'un message', question_type: 'procedure_info' } }
 
         it 'creates a conversation on HelpScout' do
           expect { subject }.to \
             change(Commentaire, :count).by(0).and \
-            have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:type)))
+            change(ContactForm, :count).by(1)
+
+          contact_form = ContactForm.last
+          expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+
+          expect(contact_form.subject).to eq("bonjour")
+          expect(contact_form.text).to eq("un message")
+          expect(contact_form.tags).to include("procedure_info")
 
           expect(flash[:notice]).to match('Votre message a été envoyé.')
           expect(response).to redirect_to root_path
@@ -73,7 +81,7 @@ describe SupportController, type: :controller do
           let(:params) do
             {
               dossier_id: dossier.id,
-              type: Helpscout::Form::TYPE_INSTRUCTION,
+              question_type: ContactForm::TYPE_INSTRUCTION,
               subject: 'bonjour',
               text: 'un message'
             }
@@ -82,7 +90,11 @@ describe SupportController, type: :controller do
           it 'creates a conversation on HelpScout' do
             expect { subject }.to \
               change(Commentaire, :count).by(0).and \
-              have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(subject: 'bonjour', dossier_id: dossier.id))
+              change(ContactForm, :count).by(1)
+
+            contact_form = ContactForm.last
+            expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+            expect(contact_form.dossier_id).to eq(dossier.id)
 
             expect(flash[:notice]).to match('Votre message a été envoyé.')
             expect(response).to redirect_to root_path
@@ -96,7 +108,7 @@ describe SupportController, type: :controller do
           let(:params) do
             {
               dossier_id: dossier.id,
-              type: Helpscout::Form::TYPE_INSTRUCTION,
+              question_type: ContactForm::TYPE_INSTRUCTION,
               subject: 'bonjour',
               text: 'un message'
             }
@@ -120,7 +132,7 @@ describe SupportController, type: :controller do
       context "when invisible captcha is filled" do
         subject do
           post :create, params: {
-            helpscout_form: { subject: 'bonjour', text: 'un message', type: 'procedure_info' },
+            contact_form: { subject: 'bonjour', text: 'un message', question_type: 'procedure_info' },
             InvisibleCaptcha.honeypots.sample => 'boom'
           }
         end
@@ -156,15 +168,19 @@ describe SupportController, type: :controller do
 
     describe 'send form' do
       subject do
-        post :create, params: { helpscout_form: params }
+        post :create, params: { contact_form: params }
       end
 
-      let(:params) { { subject: 'bonjour', email: "me@rspec.net", text: 'un message', type: 'procedure_info' } }
+      let(:params) { { subject: 'bonjour', email: "me@rspec.net", text: 'un message', question_type: 'procedure_info' } }
 
       it 'creates a conversation on HelpScout' do
         expect { subject }.to \
           change(Commentaire, :count).by(0).and \
-          have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:type)))
+        change(ContactForm, :count).by(1)
+
+        contact_form = ContactForm.last
+        expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+        expect(contact_form.email).to eq("me@rspec.net")
 
         expect(flash[:notice]).to match('Votre message a été envoyé.')
         expect(response).to redirect_to root_path
@@ -184,39 +200,57 @@ describe SupportController, type: :controller do
   end
 
   context 'contact admin' do
-    subject do
-      post :create, params: { helpscout_form: params }
+    context 'index' do
+      it 'should have professionnal email field' do
+        get :admin
+        expect(response.body).to have_text('Votre adresse email professionnelle')
+        expect(response.body).to have_text('téléphone')
+        expect(response.body).to include('for_admin')
+      end
     end
 
-    let(:params) { { for_admin: "true", email: "email@pro.fr", subject: 'bonjour', text: 'un message', type: 'admin question', phone: '06' } }
-
-    describe "when form is filled" do
-      it "creates a conversation on HelpScout" do
-        expect { subject }.to have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(params.except(:for_admin, :type)))
-        expect(flash[:notice]).to match('Votre message a été envoyé.')
+    context 'create' do
+      subject do
+        post :create, params: { contact_form: params }
       end
 
-      context "with a piece justificative" do
-        let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
-        let(:params) { super().merge(piece_jointe: logo) }
+      let(:params) { { for_admin: "true", email: "email@pro.fr", subject: 'bonjour', text: 'un message', question_type: 'admin question', phone: '06' } }
 
-        it "create blob and pass it to conversation job" do
-          expect { subject }.to \
-            change(ActiveStorage::Blob, :count).by(1).and \
-              have_enqueued_job(HelpscoutCreateConversationJob).with(hash_including(blob_id: Integer)).and \
-              have_enqueued_job(VirusScannerJob)
+      describe "when form is filled" do
+        it "creates a conversation on HelpScout" do
+          expect { subject }.to change(ContactForm, :count).by(1)
+
+          contact_form = ContactForm.last
+          expect(HelpscoutCreateConversationJob).to have_been_enqueued.with(contact_form)
+          expect(contact_form.email).to eq(params[:email])
+          expect(contact_form.phone).to eq("06")
+          expect(contact_form.tags).to match_array(["admin question", "contact form"])
+
+          expect(flash[:notice]).to match('Votre message a été envoyé.')
+        end
+
+        context "with a piece justificative" do
+          let(:logo) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
+          let(:params) { super().merge(piece_jointe: logo) }
+
+          it "create blob and pass it to conversation job" do
+            expect { subject }.to change(ContactForm, :count).by(1)
+
+            contact_form = ContactForm.last
+            expect(contact_form.piece_jointe).to be_attached
+          end
         end
       end
-    end
 
-    describe "when invisible captcha is filled" do
-      subject do
-        post :create, params: { helpscout_form: params, InvisibleCaptcha.honeypots.sample => 'boom' }
-      end
+      describe "when invisible captcha is filled" do
+        subject do
+          post :create, params: { contact_form: params, InvisibleCaptcha.honeypots.sample => 'boom' }
+        end
 
-      it 'does not create a conversation on HelpScout' do
-        subject
-        expect(flash[:alert]).to eq(I18n.t('invisible_captcha.sentence_for_humans'))
+        it 'does not create a conversation on HelpScout' do
+          subject
+          expect(flash[:alert]).to eq(I18n.t('invisible_captcha.sentence_for_humans'))
+        end
       end
     end
   end
