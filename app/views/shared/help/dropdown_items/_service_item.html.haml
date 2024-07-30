@@ -4,11 +4,11 @@
   .help-dropdown-service-action
     %p.fr-text--sm= t('help_dropdown.contact_administration')
     %p.fr-text--sm.help-dropdown-service-item
-      %span.fr-icon-mail-fill.fr-icon--sm{ "aria-hidden": "true" }
+      %span.fr-icon-mail-fill.fr-icon--sm{ "aria-label": t('layouts.mailers.service_footer.by_email') }
       = link_to service.email, "mailto:#{service.email}", role: 'menuitem'
     %p.fr-text--sm
-      %span.fr-icon-phone-fill.fr-icon--sm{ "aria-hidden": "true" }
+      %span.fr-icon-phone-fill.fr-icon--sm{ "aria-label": t('layouts.mailers.service_footer.by_phone') }
       = link_to service.telephone, service.telephone_url, role: 'menuitem'
     %p.fr-text--sm
-      %span.fr-icon-time-fill.fr-icon--sm{ "aria-hidden": "true" }
+      %span.fr-icon-time-fill.fr-icon--sm{ "aria-label": t('layouts.mailers.service_footer.schedule') }
       = service.horaires
