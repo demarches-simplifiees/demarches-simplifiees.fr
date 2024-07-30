@@ -26,6 +26,7 @@ en:
           departements: 'County'
           regions: 'Region'
           pays: 'Country'
+          numbers_id: 'Identification (numbers only)'
           iban: 'Iban'
           siret: 'Siret'
           text: 'Text'
