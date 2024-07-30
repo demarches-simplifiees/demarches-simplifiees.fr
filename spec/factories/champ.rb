@@ -31,6 +31,10 @@ FactoryBot.define do
       value { '42' }
     end
 
+    factory :champ_do_not_use_numbers_id, class: 'Champs::NumbersIdChamp' do
+      value { '042' }
+    end
+
     factory :champ_do_not_use_checkbox, class: 'Champs::CheckboxChamp' do
       value { 'true' }
     end

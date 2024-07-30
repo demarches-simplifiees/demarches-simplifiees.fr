@@ -761,6 +761,7 @@ en:
       not_a_float: "must have maximum 3 digits after the decimal point"
       not_a_date: "must be a correct date"
       not_a_datetime: "must be a correct datetime"
+      not_a_numbers_id: "can only contain numbers"
       blank: "can't be blank"
   time:
     formats:

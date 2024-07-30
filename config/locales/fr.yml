@@ -769,6 +769,7 @@ fr:
       not_a_float: "doit comprendre maximum 3 chiffres après la virgule"
       not_a_date: "doit être une date correctement formatée"
       not_a_datetime: "doit être une date et heure correctement formatée"
+      not_a_numbers_id: "doit contenir uniquement des chiffres"
       blank: "doit être rempli"
   time:
     formats:

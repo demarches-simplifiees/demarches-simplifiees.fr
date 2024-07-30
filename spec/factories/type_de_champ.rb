@@ -49,6 +49,9 @@ FactoryBot.define do
     factory :type_de_champ_integer_number do
       type_champ { TypeDeChamp.type_champs.fetch(:integer_number) }
     end
+    factory :type_de_champ_numbers_id do
+      type_champ { TypeDeChamp.type_champs.fetch(:numbers_id) }
+    end
     factory :type_de_champ_checkbox do
       type_champ { TypeDeChamp.type_champs.fetch(:checkbox) }
     end
