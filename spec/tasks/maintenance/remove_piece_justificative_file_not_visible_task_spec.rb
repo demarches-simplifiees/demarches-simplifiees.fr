@@ -13,7 +13,7 @@ module Maintenance
       before { expect(champ).to receive(:visible?).and_return(visible) }
 
       context 'when piece_justificative' do
-        let(:champ) { dossier.champs_for_revision(scope: :public).find(&:piece_justificative?) }
+        let(:champ) { dossier.project_champs_public.find(&:piece_justificative?) }
 
         context 'when not visible' do
           let(:visible) { false }

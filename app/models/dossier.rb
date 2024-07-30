@@ -45,13 +45,9 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs
-  # We have to remove champs in a particular order - champs with a reference to a parent have to be
-  # removed first, otherwise we get a foreign key constraint error.
-  has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
+  has_many :champs, inverse_of: :dossier, dependent: :destroy
   has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
-  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
@@ -143,8 +139,6 @@ class Dossier < ApplicationRecord
   after_destroy_commit :log_destroy
 
   accepts_nested_attributes_for :champs
-  accepts_nested_attributes_for :champs_public
-  accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :individual
 
   include AASM
@@ -270,33 +264,16 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
-  scope :with_champs, -> {
-    includes(champs_public: [
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [piece_justificative_file_attachments: :blob]
-    ])
-  }
-
   scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
-  scope :with_annotations, -> {
-    includes(champs_private: [
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [piece_justificative_file_attachments: :blob]
-    ])
-  }
   scope :for_api, -> {
-    with_champs
-      .with_annotations
-      .includes(commentaires: { piece_jointe_attachments: :blob },
-        justificatif_motivation_attachment: :blob,
-        attestation: [],
-        avis: { piece_justificative_file_attachment: :blob },
-        traitement: [],
-        etablissement: [],
-        individual: [],
-        user: [])
+    includes(commentaires: { piece_jointe_attachments: :blob },
+      justificatif_motivation_attachment: :blob,
+      attestation: [],
+      avis: { piece_justificative_file_attachment: :blob },
+      traitement: [],
+      etablissement: [],
+      individual: [],
+      user: [])
   }
 
   scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
@@ -431,7 +408,6 @@ class Dossier < ApplicationRecord
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connected_with_one_identity?, to: :user, allow_nil: true
-  before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? && editing_fork_origin_id.nil? }
 
   after_save :send_web_hook
 
@@ -440,8 +416,6 @@ class Dossier < ApplicationRecord
   validates :mandataire_first_name, presence: true, if: :for_tiers?
   validates :mandataire_last_name, presence: true, if: :for_tiers?
   validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
-
-  validates_associated :prefilled_champs_public, on: :champs_public_value
 
   def types_de_champ_public
     types_de_champ
@@ -491,29 +465,9 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def build_default_champs_for_new_dossier
-    revision.build_champs_public(self).each do |champ|
-      champs_public << champ
-    end
-    revision.build_champs_private(self).each do |champ|
-      champs_private << champ
-    end
-    champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|
-      champ.add_row(revision)
-    end
-    champs_private.filter(&:repetition?).each do |champ|
-      champ.add_row(revision)
-    end
-  end
-
-  def build_default_individual
-    if procedure.for_individual? && individual.blank?
-      self.individual = if france_connected_with_one_identity?
-        Individual.from_france_connect(user.france_connect_informations.first)
-      else
-        Individual.new
-      end
-    end
+  def build_default_values
+    build_default_individual
+    build_default_champs
   end
 
   def en_construction_ou_instruction?
@@ -564,7 +518,7 @@ class Dossier < ApplicationRecord
   def can_passer_en_construction?
     return true if !revision.ineligibilite_enabled || !revision.ineligibilite_rules
 
-    !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
+    !revision.ineligibilite_rules.compute(project_champs_public)
   end
 
   def can_passer_en_instruction?
@@ -949,7 +903,7 @@ class Dossier < ApplicationRecord
   end
 
   def remove_titres_identite!
-    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def remove_piece_justificative_file_not_visible!
@@ -962,14 +916,21 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_and_visible_champs
-    champs_for_revision(scope: :public)
-      .filter { _1.child? ? _1.parent.visible? : true }
-      .filter(&:visible?)
-      .filter(&:mandatory_blank?)
-      .map do |champ|
-        champ.errors.add(:value, :missing)
+    project_champs_public.filter(&:visible?).each do |champ|
+      if champ.mandatory_blank?
+        error = champ.errors.add(:value, :missing)
+        errors.import(error)
       end
-      .each { errors.import(_1) }
+      if champ.repetition?
+        champ.rows.each do |row|
+          row.filter(&:visible?).filter(&:mandatory_blank?).each do |champ|
+            error = champ.errors.add(:value, :missing)
+            errors.import(error)
+          end
+        end
+      end
+    end
+    errors
   end
 
   def demander_un_avis!(avis)
@@ -1164,7 +1125,7 @@ class Dossier < ApplicationRecord
   end
 
   def has_annotations?
-    revision.revision_types_de_champ_private.present?
+    revision.types_de_champ_private.present?
   end
 
   def hide_info_with_accuse_lecture?
@@ -1188,6 +1149,45 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def build_default_champs
+    build_default_champs_public
+    build_default_champs_private
+  end
+
+  def build_default_champs_public
+    return if champs.any?(&:public?)
+
+    self.champs += revision.types_de_champ_public.filter_map do |type_de_champ|
+      if type_de_champ.repetition? && type_de_champ.mandatory?
+        type_de_champ.build_champ(dossier: self, row_id: ULID.generate)
+      elsif !type_de_champ.non_fillable?
+        type_de_champ.build_champ(dossier: self)
+      end
+    end
+  end
+
+  def build_default_champs_private
+    return if champs.any?(&:private?)
+
+    self.champs += revision.types_de_champ_private.filter_map do |type_de_champ|
+      if type_de_champ.repetition?
+        type_de_champ.build_champ(dossier: self, row_id: ULID.generate)
+      elsif !type_de_champ.non_fillable?
+        type_de_champ.build_champ(dossier: self)
+      end
+    end
+  end
+
+  def build_default_individual
+    if procedure.for_individual? && individual.blank?
+      self.individual = if france_connected_with_one_identity?
+        Individual.from_france_connect(user.france_connect_informations.first)
+      else
+        Individual.new
+      end
+    end
+  end
 
   def create_missing_traitemets
     if en_construction_at.present? && traitements.en_construction.empty?

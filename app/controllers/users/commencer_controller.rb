@@ -118,7 +118,7 @@ module Users
         state: Dossier.states.fetch(:brouillon),
         prefilled: true
       )
-      @prefilled_dossier.build_default_individual
+      @prefilled_dossier.build_default_values
       if @prefilled_dossier.save
         @prefilled_dossier.prefill!(PrefillChamps.new(@prefilled_dossier, params.to_unsafe_h).to_a, PrefillIdentity.new(@prefilled_dossier, params.to_unsafe_h).to_h)
       end

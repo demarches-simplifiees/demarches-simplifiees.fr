@@ -49,9 +49,7 @@ class ChampSerializer < ActiveModel::Serializer
 
   def rows
     object.dossier
-      .champs_for_revision(scope: object.type_de_champ)
-      .group_by(&:row_id)
-      .values
+      .project_rows_for(object.type_de_champ)
       .map.with_index(1) { |champs, index| Row.new(index:, champs:) }
   end
 

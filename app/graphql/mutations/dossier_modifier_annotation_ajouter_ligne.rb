@@ -16,7 +16,7 @@ module Mutations
         return { errors: ["L’annotation \"#{annotation_id}\" n’existe pas"] }
       end
 
-      annotation.add_row(dossier.revision)
+      annotation.add_row(updated_by: instructeur.email)
 
       { annotation:, errors: nil }
     end

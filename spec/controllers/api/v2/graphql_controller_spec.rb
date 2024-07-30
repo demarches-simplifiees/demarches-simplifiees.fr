@@ -515,7 +515,7 @@ describe API::V2::GraphqlController do
             avis: []
           )
 
-          expected_champs = dossier.champs_public.map do |champ|
+          expected_champs = dossier.project_champs_public.map do |champ|
             {
               id: champ.to_typed_id,
               label: champ.libelle,
@@ -767,44 +767,6 @@ describe API::V2::GraphqlController do
             })
           end
         end
-      end
-    end
-
-    describe "deletedDossiers" do
-      let(:query) do
-        "{
-          demarche(number: #{procedure.id}) {
-            deletedDossiers {
-              nodes {
-                id
-                number
-                state
-                reason
-                dateSupression
-              }
-            }
-          }
-        }"
-      end
-      let(:deleted_dossier) { create(:deleted_dossier, procedure: procedure) }
-
-      before { deleted_dossier }
-
-      it "should be returned" do
-        expect(gql_errors).to eq(nil)
-        expect(gql_data).to eq(demarche: {
-          deletedDossiers: {
-            nodes: [
-              {
-                id: deleted_dossier.to_typed_id,
-                number: deleted_dossier.dossier_id,
-                state: deleted_dossier.state,
-                reason: deleted_dossier.reason,
-                dateSupression: deleted_dossier.deleted_at.iso8601
-              }
-            ]
-          }
-        })
       end
     end
 

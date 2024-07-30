@@ -385,7 +385,7 @@ module Users
         user: current_user,
         state: Dossier.states.fetch(:brouillon)
       )
-      dossier.build_default_individual
+      dossier.build_default_values
       dossier.save!
       DossierMailer.with(dossier:).notify_new_draft.deliver_later
 

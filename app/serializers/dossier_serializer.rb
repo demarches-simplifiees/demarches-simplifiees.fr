@@ -32,7 +32,7 @@ class DossierSerializer < ActiveModel::Serializer
   has_many :champs, serializer: ChampSerializer
 
   def champs
-    champs = object.champs_public.reject { |c| c.type_de_champ.old_pj.present? }
+    champs = object.project_champs_public.reject { |c| c.type_de_champ.old_pj.present? }
 
     if object.expose_legacy_carto_api?
       champ_carte = champs.find do |champ|
@@ -52,12 +52,16 @@ class DossierSerializer < ActiveModel::Serializer
     champs
   end
 
+  def champs_private
+    object.project_champs_private
+  end
+
   def cerfa
     []
   end
 
   def pieces_justificatives
-    object.champs_public.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
+    object.project_champs_public.filter { |champ| champ.type_de_champ.old_pj }.map do |champ|
       {
         created_at: champ.created_at&.in_time_zone('UTC'),
         type_de_piece_justificative_id: champ.type_de_champ.old_pj[:stable_id],

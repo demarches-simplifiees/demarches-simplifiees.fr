@@ -293,19 +293,20 @@ describe DossierRebaseConcern do
     let(:datetime_type_de_champ) { types_de_champ.find { _1.stable_id == 103 } }
     let(:yes_no_type_de_champ) { types_de_champ.find { _1.stable_id == 104 } }
 
-    let(:text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
-    let(:repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
-    let(:datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
+    let(:text_champ) { dossier.champs.find { _1.stable_id == 1 } }
+    let(:repetition_champ) { dossier.champs.find { _1.stable_id == 101 } }
+    let(:datetime_champ) { dossier.champs.find { _1.stable_id == 103 } }
 
-    let(:rebased_text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
-    let(:rebased_repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
-    let(:rebased_datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
-    let(:rebased_number_champ) { dossier.champs_public.find { _1.stable_id == 105 } }
+    let(:rebased_text_champ) { dossier.champs.find { _1.stable_id == 1 } }
+    let(:rebased_repetition_champ) { dossier.champs.find { _1.stable_id == 101 } }
+    let(:rebased_datetime_champ) { dossier.champs.find { _1.stable_id == 103 } }
+    let(:rebased_number_champ) { dossier.champs.find { _1.stable_id == 105 } }
 
-    let(:rebased_new_repetition_champ) { dossier.champs_public.find { _1.libelle == "une autre repetition" } }
+    let(:new_repetition_type_de_champ) { dossier.revision.types_de_champ.find { _1.libelle == "une autre repetition" } }
+    let(:rebased_new_repetition_champ) { dossier.project_champ(new_repetition_type_de_champ, nil) }
 
     let(:private_text_type_de_champ) { types_de_champ.find { _1.stable_id == 11 } }
-    let(:rebased_private_text_champ) { dossier.champs_private.find { _1.stable_id == 11 } }
+    let(:rebased_private_text_champ) { dossier.champs.find { _1.stable_id == 11 } }
 
     context "when revision is published" do
       before do
@@ -346,15 +347,14 @@ describe DossierRebaseConcern do
         datetime_champ.update(value: Time.zone.now.to_s)
         text_champ.update(value: 'bonjour')
         # Add two rows then remove previous to last row in order to create a "hole" in the sequence
-        repetition_champ.add_row(repetition_champ.dossier.revision)
-        repetition_champ.add_row(repetition_champ.dossier.revision)
-        repetition_champ.champs.where(row_id: repetition_champ.rows[-2].first.row_id).destroy_all
-        repetition_champ.reload
+        repetition_champ.add_row(updated_by: "test")
+        repetition_champ.add_row(updated_by: "test")
+        repetition_champ.remove_row(repetition_champ.row_ids[-2], updated_by: "test")
       end
 
       it "updates the brouillon champs with the latest revision changes" do
         expect(dossier.revision).to eq(procedure.published_revision)
-        expect(dossier.champs_public.size).to eq(5)
+        expect(dossier.project_champs_public.size).to eq(5)
         expect(dossier.champs.count(&:public?)).to eq(7)
         expect(repetition_champ.rows.size).to eq(2)
         expect(repetition_champ.rows[0].size).to eq(1)
@@ -367,10 +367,10 @@ describe DossierRebaseConcern do
 
         expect(procedure.revisions.size).to eq(3)
         expect(dossier.revision).to eq(procedure.published_revision)
-        expect(dossier.champs_public.size).to eq(7)
-        expect(dossier.champs.count(&:public?)).to eq(13)
+        expect(dossier.project_champs_public.size).to eq(7)
+        expect(dossier.champs.count(&:public?)).to eq(8)
         expect(rebased_text_champ.value).to eq(text_champ.value)
-        expect(rebased_text_champ.type_de_champ).not_to eq(text_champ.type_de_champ)
+        expect(rebased_text_champ.type_de_champ).not_to eq(text_type_de_champ)
         expect(rebased_datetime_champ.type_champ).to eq(TypeDeChamp.type_champs.fetch(:date))
         expect(rebased_datetime_champ.value).to be_nil
         expect(rebased_repetition_champ.rows.size).to eq(2)
@@ -380,7 +380,6 @@ describe DossierRebaseConcern do
         expect(rebased_datetime_champ.rebased_at).not_to be_nil
         expect(rebased_number_champ.rebased_at).to be_nil
         expect(rebased_new_repetition_champ).not_to be_nil
-        expect(rebased_new_repetition_champ.rebased_at).not_to be_nil
         expect(rebased_new_repetition_champ.rows.size).to eq(1)
         expect(rebased_new_repetition_champ.rows[0].size).to eq(2)
 
@@ -727,8 +726,8 @@ describe DossierRebaseConcern do
           parent.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.champs.count }.from(2).to(0) }
-        it { expect { subject }.to change { Champ.count }.from(3).to(1) }
+        it { expect { subject }.not_to change { dossier.project_champs_public.count } }
+        it { expect { subject }.not_to change { Champ.count } }
       end
     end
   end

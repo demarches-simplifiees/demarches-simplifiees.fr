@@ -188,16 +188,20 @@ FactoryBot.define do
         rows { 2 }
       end
 
-      after(:build) do |champ_repetition, evaluator|
-        revision = champ_repetition.type_de_champ.procedure.active_revision
-        parent = revision.revision_types_de_champ.find { _1.type_de_champ == champ_repetition.type_de_champ }
-        types_de_champ = revision.revision_types_de_champ.filter { _1.parent == parent }.map(&:type_de_champ)
+      after(:create) do |champ_repetition, evaluator|
+        revision = champ_repetition.dossier.revision
+        type_de_champ = champ_repetition.type_de_champ
+        types_de_champ = revision.children_of(type_de_champ)
 
-        evaluator.rows.times do
-          row_id = ULID.generate
-          champ_repetition.champs << types_de_champ.map do |type_de_champ|
-            attrs = { dossier: champ_repetition.dossier, parent: champ_repetition, private: champ_repetition.private?, stable_id: type_de_champ.stable_id, row_id: }
-            build(:"champ_do_not_use_#{type_de_champ.type_champ}", **attrs)
+        evaluator.rows.times do |n|
+          attrs = { dossier: champ_repetition.dossier, private: type_de_champ.private?, row_id: ULID.generate }
+          if n == 0
+            champ_repetition.update_column(:row_id, attrs[:row_id])
+          else
+            create(:champ_do_not_use_repetition, rows: 0, stable_id: type_de_champ.stable_id, **attrs)
+          end
+          types_de_champ.each do |type_de_champ|
+            create(:"champ_do_not_use_#{type_de_champ.type_champ}", stable_id: type_de_champ.stable_id, **attrs)
           end
         end
       end
