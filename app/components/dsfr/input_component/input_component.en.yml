@@ -4,4 +4,5 @@ en:
     aria_label: "Show password"
     label: "Show"
   email_suggest:
-    wanna_say: 'Do you mean to say ?'
+    mistake: "The address seems wrong"
+    wanna_say: "Do you mean to say:"
