@@ -20,7 +20,7 @@
           tout en respectant la charte de l’état. Essayez-la et donnez-nous votre avis
           en nous envoyant un email à #{mail_to(Current.contact_email, subject: "Feedback attestation v2")}.
           %br
-          - if !@procedure.feature_enabled?(:attestation_v2)
+          - if !@procedure.feature_enabled?(:attestation_v2) || @procedure.attestation_templates.v1.published.any?
             %strong Les attestations délivrées suivent encore l’ancien format :
             l’activation des attestations basées sur ce format sera bientôt disponible.
             %br
