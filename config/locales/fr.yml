@@ -770,6 +770,7 @@ fr:
       not_a_date: "doit être une date correctement formatée"
       not_a_datetime: "doit être une date et heure correctement formatée"
       not_a_numbers_id: "doit contenir uniquement des chiffres"
+      not_a_numbers_and_letters_id: "doit contenir uniquement des chiffres et des lettres"
       blank: "doit être rempli"
   time:
     formats:
