@@ -9,7 +9,8 @@ class Logic::ChampValue < Logic::Term
     :communes,
     :epci,
     :departements,
-    :regions
+    :regions,
+    :address
   )
 
   CHAMP_VALUE_TYPE = {
@@ -19,6 +20,7 @@ class Logic::ChampValue < Logic::Term
     commune_enum: :commune_enum,
     epci_enum: :epci_enum,
     departement_enum: :departement_enum,
+    address: :address,
     enums: :enums, # multiple choice from a dropdownlist (multipledropdownlist)
     empty: :empty,
     unmanaged: :unmanaged
@@ -58,7 +60,7 @@ class Logic::ChampValue < Logic::Term
         value: targeted_champ.code,
         code_region: targeted_champ.code_region
       }
-    when "Champs::CommuneChamp", "Champs::EpciChamp"
+    when "Champs::CommuneChamp", "Champs::EpciChamp", "Champs::AddressChamp"
       {
         code_departement: targeted_champ.code_departement,
         code_region: targeted_champ.code_region
@@ -84,6 +86,8 @@ class Logic::ChampValue < Logic::Term
       CHAMP_VALUE_TYPE.fetch(:epci_enum)
     when MANAGED_TYPE_DE_CHAMP.fetch(:departements)
       CHAMP_VALUE_TYPE.fetch(:departement_enum)
+    when MANAGED_TYPE_DE_CHAMP.fetch(:address)
+      CHAMP_VALUE_TYPE.fetch(:address)
     when MANAGED_TYPE_DE_CHAMP.fetch(:multiple_drop_down_list)
       CHAMP_VALUE_TYPE.fetch(:enums)
     else
@@ -119,7 +123,7 @@ class Logic::ChampValue < Logic::Term
 
     if operator_name.in?([Logic::InRegionOperator.name, Logic::NotInRegionOperator.name]) || tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:regions)
       APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
-    elsif operator_name.in?([Logic::InDepartementOperator.name, Logic::NotInDepartementOperator.name]) || tdc.type_champ.in?([MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci), MANAGED_TYPE_DE_CHAMP.fetch(:departements)])
+    elsif operator_name.in?([Logic::InDepartementOperator.name, Logic::NotInDepartementOperator.name]) || tdc.type_champ.in?([MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci), MANAGED_TYPE_DE_CHAMP.fetch(:departements), MANAGED_TYPE_DE_CHAMP.fetch(:address)])
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     else
       tdc.drop_down_list_enabled_non_empty_options(other: true).map { _1.is_a?(Array) ? _1 : [_1, _1] }

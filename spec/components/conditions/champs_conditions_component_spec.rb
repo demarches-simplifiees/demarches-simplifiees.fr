@@ -13,7 +13,7 @@ describe Conditions::ChampsConditionsComponent, type: :component do
     end
 
     context 'when there are upper tdcs but not managed' do
-      let(:upper_tdcs) { [build(:type_de_champ_address)] }
+      let(:upper_tdcs) { [build(:type_de_champ_email)] }
 
       it { expect(page).not_to have_text('Logique conditionnelle') }
     end
@@ -126,6 +126,18 @@ describe Conditions::ChampsConditionsComponent, type: :component do
           it do
             expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
             expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + region_options))
+          end
+        end
+
+        context 'address' do
+          let(:address) { create(:type_de_champ_address) }
+          let(:upper_tdcs) { [address] }
+          let(:condition) { empty_operator(champ_value(address.stable_id), constant(true)) }
+          let(:departement_options) { APIGeoService.departements.map { "#{_1[:code]} – #{_1[:name]}" } }
+
+          it do
+            expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + departement_options))
           end
         end
       end
