@@ -27,6 +27,7 @@ fr:
           regions: 'Régions'
           pays: 'Pays'
           numbers_id: 'Numéro (chiffres uniquement)'
+          numbers_and_letters_id: 'Numéro (chiffres et lettres uniquement)'
           iban: 'Numéro Iban'
           siret: 'Numéro Siret'
           text: 'Texte court'

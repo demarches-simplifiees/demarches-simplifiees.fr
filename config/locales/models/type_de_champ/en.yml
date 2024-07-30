@@ -27,6 +27,7 @@ en:
           regions: 'Region'
           pays: 'Country'
           numbers_id: 'Identification (numbers only)'
+          numbers_and_letters_id: 'Identification (numbers and letters only)'
           iban: 'Iban'
           siret: 'Siret'
           text: 'Text'
