@@ -84,6 +84,10 @@ module Types
           Types::Champs::RNFChampType
         when ::Champs::EngagementJuridiqueChamp
           Types::Champs::EngagementJuridiqueChampType
+        when ::Champs::NumbersIdChamp
+          Types::Champs::NumbersIdChampType
+        when ::Champs::NumbersAndLettersIdChamp
+          Types::Champs::NumbersAndLettersIdChampType
         else
           Types::Champs::TextChampType
         end
