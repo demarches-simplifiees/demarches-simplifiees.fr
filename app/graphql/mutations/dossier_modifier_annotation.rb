@@ -20,7 +20,7 @@ module Mutations
         annotation.value = value
       end
 
-      if annotation.save
+      if annotation.validate(:champs_private_value) && annotation.save
         { annotation: }
       else
         { errors: annotation.errors.full_messages }
@@ -65,6 +65,8 @@ module Mutations
         TypeDeChamp.type_champs.fetch(:datetime)
       when :integer_number
         TypeDeChamp.type_champs.fetch(:integer_number)
+      when :drop_down_list
+        TypeDeChamp.type_champs.fetch(:drop_down_list)
       end
     end
   end
