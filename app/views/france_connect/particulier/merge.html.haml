@@ -20,24 +20,25 @@
   .fusion.hidden
     %p= t('.title_fill_in_password')
 
-    = form_tag france_connect_particulier_merge_with_existing_account_path, data: { turbo: true }, class: 'mt-2 form fconnect-form' do
+    = form_tag france_connect_particulier_merge_using_password_path, data: { turbo: true }, class: 'mt-2 form fconnect-form' do
       = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :fusion_merge_token)
-      = hidden_field_tag :email, @fci.email_france_connect, id: dom_id(@fci, :fusion_email)
       .fr-input-group
         = label_tag :password, t('views.registrations.new.password_label', min_length: 8), class: 'fr-label'
         = password_field_tag :password, nil, autocomplete: 'current-password', class: 'mb-1 fr-input'
-      .mb-2
-        = t('views.users.sessions.new.reset_password')
-        = link_to france_connect_particulier_resend_and_renew_merge_confirmation_path(merge_token: @fci.merge_token), method: :post do
-          = t('.link_confirm_by_email')
 
       = submit_tag t('.button_merge'), class: 'fr-btn'
+
+    .mt-2
+      = button_to t('.link_confirm_by_email'),
+        france_connect_particulier_send_email_merge_request_path,
+        params: { email: @fci.email_france_connect, merge_token: @fci.merge_token },
+        class: 'fr-btn fr-btn--secondary'
 
 
   .new-account.hidden
     %p= t('.title_fill_in_email', application_name: Current.application_name)
 
-    = form_tag france_connect_particulier_merge_with_new_account_path, data: { turbo: true }, class: 'mt-2 form' do
+    = form_tag france_connect_particulier_send_email_merge_request_path, class: 'mt-2 form' do
       = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :new_account_merge_token)
       = label_tag :email, t('views.registrations.new.email_label'), for: dom_id(@fci, :new_account_email), class: 'fr-label'
       = email_field_tag :email, "", required: true, id: dom_id(@fci, :new_account_email), class: 'mb-1 fr-input'
