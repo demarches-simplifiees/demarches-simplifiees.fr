@@ -20,9 +20,7 @@ class ContactController < ApplicationController
       return
     end
 
-    form_params = contact_form_params
-    @form = ContactForm.new(form_params.except(:piece_jointe))
-    @form.piece_jointe.attach(form_params[:piece_jointe]) if form_params[:piece_jointe].present?
+    @form = ContactForm.new(contact_form_params)
     @form.user = current_user
 
     if @form.save
