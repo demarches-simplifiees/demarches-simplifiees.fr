@@ -1,4 +1,4 @@
-= form_for form, url: contact_path, method: :post, multipart: true, class: 'fr-form-group', data: {controller: :support } do |f|
+= form_for form, url: contact_path, method: :post, multipart: true, class: 'fr-form-group', data: {controller: :contact } do |f|
   %p.fr-hint-text= t('asterisk_html', scope: [:utils])
 
   - if form.require_email?
@@ -12,7 +12,7 @@
     .fr-fieldset__content
       - form.options.each do |(question, question_type, link)|
         .fr-radio-group
-          = f.radio_button :question_type, question_type, required: true, data: {"support-target": "inputRadio" }, checked: question_type == form.question_type
+          = f.radio_button :question_type, question_type, required: true, data: {"contact-target": "inputRadio" }, checked: question_type == form.question_type
           = f.label "question_type_#{question_type}", { 'aria-controls': link ? "card-#{question_type}" : nil, class: 'fr-label' } do
             = question
 
@@ -20,11 +20,11 @@
             .fr-ml-3w{ id: "card-#{question_type}",
                        class: class_names('hidden' => question_type != form.question_type),
                        "aria-hidden": question_type != form.question_type,
-                       data: { "support-target": "content" } }
+                       data: { "contact-target": "content" } }
               = render Dsfr::CalloutComponent.new(title: t('.our_answer')) do |c|
                 - c.with_html_body do
-                  -# i18n-tasks-use t("support.index.#{question_type}.answer_html")
-                  = t('answer_html', scope: [:support, :index, question_type], base_url: Current.application_base_url, "link_#{question_type}": link)
+                  -# i18n-tasks-use t("contact.index.#{question_type}.answer_html")
+                  = t('answer_html', scope: [:contact, :index, question_type], base_url: Current.application_base_url, "link_#{question_type}": link)
 
 
   - if form.for_admin?

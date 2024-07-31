@@ -1,4 +1,4 @@
-describe SupportController, question_type: :controller do
+describe ContactController, question_type: :controller do
   render_views
 
   context 'signed in' do

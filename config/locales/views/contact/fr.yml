@@ -14,7 +14,7 @@ fr:
       models:
         contact_form:
           invalid_email_format: 'est invalide'
-  support:
+  contact:
     form:
       your_question: Votre question
       our_answer: Notre réponse

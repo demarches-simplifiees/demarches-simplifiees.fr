@@ -30,22 +30,22 @@ class ContactForm < ApplicationRecord
 
   def self.default_options
     [
-      [I18n.t(:question, scope: [:support, :index, TYPE_INFO]), TYPE_INFO, I18n.t("links.common.faq.contacter_service_en_charge_url")],
-      [I18n.t(:question, scope: [:support, :index, TYPE_PERDU]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
-      [I18n.t(:question, scope: [:support, :index, TYPE_INSTRUCTION]), TYPE_INSTRUCTION, I18n.t("links.common.faq.ou_en_est_mon_dossier_url")],
-      [I18n.t(:question, scope: [:support, :index, TYPE_AMELIORATION]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
-      [I18n.t(:question, scope: [:support, :index, TYPE_AUTRE]), TYPE_AUTRE]
+      [I18n.t(:question, scope: [:contact, :index, TYPE_INFO]), TYPE_INFO, I18n.t("links.common.faq.contacter_service_en_charge_url")],
+      [I18n.t(:question, scope: [:contact, :index, TYPE_PERDU]), TYPE_PERDU, LISTE_DES_DEMARCHES_URL],
+      [I18n.t(:question, scope: [:contact, :index, TYPE_INSTRUCTION]), TYPE_INSTRUCTION, I18n.t("links.common.faq.ou_en_est_mon_dossier_url")],
+      [I18n.t(:question, scope: [:contact, :index, TYPE_AMELIORATION]), TYPE_AMELIORATION, FEATURE_UPVOTE_URL],
+      [I18n.t(:question, scope: [:contact, :index, TYPE_AUTRE]), TYPE_AUTRE]
     ]
   end
 
   def self.admin_options
     [
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_QUESTION], app_name: Current.application_name), ADMIN_TYPE_QUESTION],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_RDV], app_name: Current.application_name), ADMIN_TYPE_RDV],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_SOUCIS], app_name: Current.application_name), ADMIN_TYPE_SOUCIS],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_PRODUIT]), ADMIN_TYPE_PRODUIT],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_DEMANDE_COMPTE]), ADMIN_TYPE_DEMANDE_COMPTE],
-      [I18n.t(:question, scope: [:support, :admin, ADMIN_TYPE_AUTRE]), ADMIN_TYPE_AUTRE]
+      [I18n.t(:question, scope: [:contact, :admin, ADMIN_TYPE_QUESTION], app_name: Current.application_name), ADMIN_TYPE_QUESTION],
+      [I18n.t(:question, scope: [:contact, :admin, ADMIN_TYPE_RDV], app_name: Current.application_name), ADMIN_TYPE_RDV],
+      [I18n.t(:question, scope: [:contact, :admin, ADMIN_TYPE_SOUCIS], app_name: Current.application_name), ADMIN_TYPE_SOUCIS],
+      [I18n.t(:question, scope: [:contact, :admin, ADMIN_TYPE_PRODUIT]), ADMIN_TYPE_PRODUIT],
+      [I18n.t(:question, scope: [:contact, :admin, ADMIN_TYPE_DEMANDE_COMPTE]), ADMIN_TYPE_DEMANDE_COMPTE],
+      [I18n.t(:question, scope: [:contact, :admin, ADMIN_TYPE_AUTRE]), ADMIN_TYPE_AUTRE]
     ]
   end
 
