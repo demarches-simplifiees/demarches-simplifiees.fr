@@ -897,10 +897,6 @@ en:
         intro: "A confirmation email has been sent to your address %{email}"
         click_the_link_in_the_email: "Please click the link in the email to confirm your account and connect with France Connect in the future."
         continue: "Continue"
-      password_confirmation:
-        back: 'back to previous step'
-        already_exists: An account with %{email} already existis on %{application_name}
-        fill_in_password: fill in your password to merge your accounts
       merge:
         title: "Merge your account FranceConnect and %{application_name}"
         subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."
