@@ -69,3 +69,6 @@ fr:
         question: Je souhaite ouvrir un compte administrateur avec un email Orange, Wanadoo, etc.
       admin_autre:
         question: Autre sujet
+    create:
+      direct_message_sent: Votre message a été envoyé sur la messagerie de votre dossier.
+      message_sent: Votre message a été envoyé.

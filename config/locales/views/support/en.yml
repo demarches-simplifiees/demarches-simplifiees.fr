@@ -68,3 +68,6 @@ en:
         question: I want to open an admin account with an Orange, Wanadoo, etc. email
       admin_autre:
         question: Other topic
+    create:
+      direct_message_sent: Your message has been sent to the mailbox in your file.
+      message_sent: Your message has been sent.

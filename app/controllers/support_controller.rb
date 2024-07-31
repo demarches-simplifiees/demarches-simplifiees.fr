@@ -14,7 +14,7 @@ class SupportController < ApplicationController
   def create
     if direct_message?
       create_commentaire!
-      flash.notice = "Votre message a été envoyé sur la messagerie de votre dossier."
+      flash.notice = t('.direct_message_sent')
 
       redirect_to messagerie_dossier_path(dossier)
       return
@@ -27,7 +27,7 @@ class SupportController < ApplicationController
 
     if @form.save
       @form.create_conversation_later
-      flash.notice = "Votre message a été envoyé."
+      flash.notice = t('.message_sent')
 
       redirect_to root_path
     else
