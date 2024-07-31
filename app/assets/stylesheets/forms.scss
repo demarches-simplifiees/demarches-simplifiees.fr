@@ -546,3 +546,21 @@ textarea::placeholder {
 .resize-y {
   resize: vertical;
 }
+
+.checkbox-group-bordered {
+  border: 1px solid var(--border-default-grey);
+  flex: 1 1 100%;  // copied from fr-fieldset-element
+  max-width: 100%; // copied from fr-fieldset-element
+}
+
+.fieldset-bordered {
+  position: relative;
+}
+.fieldset-bordered::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid var(--border-default-blue-france);
+}

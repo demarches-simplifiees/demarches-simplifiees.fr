@@ -40,53 +40,15 @@
             = f.radio_button :kind, "csv", id: "csv"
             %label.fr-label{ for: "csv" } csv
 
-      %fieldset.fr-fieldset
-        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-          Colonnes usager
-
-        - @export_template.all_usager_columns.each do |column|
-          .fr-fieldset__element
-            .fr-checkbox-group
-              - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
-              = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
-              = label_tag id, column[:libelle]
+      = render partial: 'checkbox_group', locals: { title: 'Colonnes Usager', all_columns: @export_template.all_usager_columns, checked_columns: @export_template.columns }
 
 
-      %fieldset.fr-fieldset
-        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-          Colonnes Infos dossier
+      = render partial: 'checkbox_group', locals: { title: 'Colonnes Infos dossier', all_columns: @export_template.all_dossier_columns, checked_columns: @export_template.columns }
 
-        - @export_template.all_dossier_columns.each do |column|
-          .fr-fieldset__element
-            .fr-checkbox-group
-              - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
-              = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
-              = label_tag id, column[:libelle]
-
-      %fieldset.fr-fieldset
-        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-          Colonnes formulaire
-
-        - @export_template.all_tdc_columns.each do |columns_champ|
-          - columns_champ.each do |column|
-            .fr-fieldset__element
-              .fr-checkbox-group
-                - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
-                = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
-                = label_tag id, column[:libelle]
+      = render partial: 'checkbox_group', locals: { title: 'Colonnes Formulaire', all_columns: @export_template.all_tdc_columns, checked_columns: @export_template.columns }
 
       - @export_template.all_repetable_tdc_columns.each do |repet|
-        %fieldset.fr-fieldset
-          %legend.fr-fieldset__legend--regular.fr-fieldset__legend
-            = "Colonnes formulaire #{repet[:libelle]}"
-
-          - repet[:types_de_champ].each do |columns_champ|
-            - columns_champ.each do |column|
-              .fr-fieldset__element
-                .fr-checkbox-group
-                  - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
-                  = check_box_tag field_name('export_template', 'columns', ''), column.to_json, @export_template.columns&.include?(column), class: 'fr-checkbox', id: id
-                  = label_tag id, column[:libelle]
+        = render partial: 'checkbox_group', locals: { title: "Colonnes Formulaire #{repet[:libelle]}", all_columns: repet[:types_de_champ], checked_columns: @export_template.columns }
 
 
       .fixed-footer
