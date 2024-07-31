@@ -6,7 +6,7 @@ require 'flipper/adapters/active_record'
 require 'flipper/adapters/active_support_cache_store'
 
 def setup_features(features)
-  existing = Flipper.preload(features).map { _1.name.to_sym }
+  existing = Flipper.preload_all.map { _1.name.to_sym }
   missing = features - existing
 
   missing.each do |feature|
@@ -41,12 +41,6 @@ rescue ActiveRecord::ConnectionNotEstablished, ActiveRecord::NoDatabaseError, PG
   false
 end
 
-ActiveSupport.on_load(:active_record) do
-  if database_exists? && ActiveRecord::Base.connection.data_source_exists?('flipper_features')
-    setup_features(features)
-  end
-end
-
 Flipper.configure do |config|
   config.adapter do
     Flipper::Adapters::ActiveSupportCacheStore.new(
@@ -54,6 +48,12 @@ Flipper.configure do |config|
       ActiveSupport::Cache::MemoryStore.new,
       10.seconds
     )
+  end
+end
+
+ActiveSupport.on_load(:active_record) do
+  if database_exists? && ActiveRecord::Base.connection.data_source_exists?('flipper_features')
+    setup_features(features)
   end
 end
 
