@@ -98,16 +98,16 @@ describe FranceConnect::ParticulierController, type: :controller do
           context 'and an user with the same email exists' do
             let!(:preexisting_user) { create(:user, email: email) }
 
-            it 'redirects to the merge process' do
+            it 'renders the merge page' do
               expect { subject }.not_to change { User.count }
 
-              expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
+              expect(response).to render_template(:merge)
             end
           end
           context 'and an instructeur with the same email exists' do
             let!(:preexisting_user) { create(:instructeur, email: email) }
 
-            it 'redirects to the merge process' do
+            it 'redirects to the login path' do
               expect { subject }.not_to change { User.count }
 
               expect(response).to redirect_to(new_user_session_path)
@@ -136,81 +136,34 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
   end
 
-  describe '#associate_user' do
-    subject { post :associate_user, params: { use_france_connect_email: use_france_connect_email, alternative_email: alternative_email, merge_token: merge_token } }
+  describe '#merge_using_fc_email' do
+    subject { post :merge_using_fc_email, params: { merge_token: merge_token } }
 
-    let(:fci) { FranceConnectInformation.new(user_info) }
-    let(:use_france_connect_email) { true }
-    let(:alternative_email) { 'alt@example.com' }
-    let(:merge_token) { 'valid_merge_token' }
+    let!(:fci) { FranceConnectInformation.create!(user_info) }
+    let(:merge_token) { fci.create_merge_token! }
 
     before do
-      allow_any_instance_of(ApplicationController).to receive(:session).and_return({ merge_token: merge_token })
+      allow(UserMailer).to receive_message_chain(:custom_confirmation_instructions, :deliver_later)
     end
 
-    context 'when we are using france connect email' do
-      let(:fci) { instance_double('FranceConnectInformation') }
-      let(:email) { 'fc_email@example.com' }
-      let(:user) { instance_double('User') }
-      let(:destination_path) { '/some_path' }
-      let(:merge_token) { 'some_token' }
+    context 'when the merge token is valid' do
+      it do
+        expect(User.last.email).not_to eq(email.downcase)
 
-      before do
-        allow(controller).to receive(:securely_retrieve_fci).and_return(fci)
-        controller.instance_variable_set(:@fci, fci)
-        allow(fci).to receive(:email_france_connect).and_return(email)
-        allow(fci).to receive(:associate_user!)
-        allow(fci).to receive(:user).and_return(user)
-        allow(fci).to receive(:delete_merge_token!)
-        allow(fci).to receive(:send_custom_confirmation_instructions)
-        allow(controller).to receive(:use_fc_email?).and_return(true)
-        allow(controller).to receive(:sign_only)
-        allow(controller).to receive(:destination_path).and_return(destination_path)
-      end
+        subject
 
-      subject { post :associate_user, params: { merge_token: merge_token, use_france_connect_email: true } }
+        user = User.last
 
-      context 'when association is successful' do
-        it 'renders the confirmation_sent template' do
-          subject
-          expect(response).to render_template(:confirmation_sent)
-        end
-
-        it 'performs all expected steps' do
-          expect(fci).to receive(:associate_user!).with(email)
-          expect(fci).to receive(:send_custom_confirmation_instructions).with(user)
-          expect(fci).to receive(:delete_merge_token!)
-          expect(controller).to receive(:sign_only).with(user)
-          expect(controller).to receive(:render).with(:confirmation_sent, locals: { email: email, destination_path: destination_path })
-
-          subject
-        end
-      end
-
-      context 'when association fails due to unknown error' do
-        let(:user) { User.new }
-        let(:error) { ActiveRecord::RecordInvalid.new(user) }
-
-        before do
-          allow(fci).to receive(:associate_user!).and_raise(error)
-          allow(user.errors).to receive(:where).with(:email, :taken).and_return(nil)
-        end
-
-        it 'redirects to new user session path with unknown error alert' do
-          subject
-          expect(response).to redirect_to(new_user_session_path)
-          expect(flash[:alert]).to eq(I18n.t('errors.messages.france_connect.unknown_error'))
-        end
+        expect(user.email).to eq(email.downcase)
+        expect(UserMailer).to have_received(:custom_confirmation_instructions).with(user, user.confirmation_token)
+        expect(user.email_verified_at).to be_nil
+        expect(fci.reload.merge_token).to be_nil
+        expect(response).to render_template(:confirmation_sent)
       end
     end
 
-    context 'when france connect information is missing or invalid' do
+    context 'when the merge token is invalid' do
       let(:merge_token) { 'invalid_token' }
-
-      before do
-        allow(FranceConnectInformation).to receive(:find_by).with(merge_token: merge_token).and_return(nil)
-        allow(controller).to receive(:merge_token_params).and_return(merge_token)
-      end
 
       it 'redirects to root_path with an alert' do
         subject
@@ -221,92 +174,15 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when @fci is not valid for merge' do
       before do
-        allow(FranceConnectInformation).to receive(:find_by).with(merge_token: merge_token).and_return(fci)
-        allow(fci).to receive(:valid_for_merge?).and_return(false)
+        merge_token
+        fci.update!(merge_token_created_at: 2.years.ago)
       end
 
       it 'redirects to root_path with an alert' do
         subject
+
         expect(response).to redirect_to(root_path)
         expect(flash[:alert]).to eq('Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.')
-      end
-    end
-
-    context 'when associating the user succeeds' do
-      let(:fci) { instance_double('FranceConnectInformation') }
-      let(:email) { 'user@example.com' }
-      let(:user) { instance_double('User', id: 1) }
-      let(:destination_path) { '/' }
-      let(:merge_token) { 'sample_merge_token' }
-
-      before do
-        allow(controller).to receive(:securely_retrieve_fci) do
-          controller.instance_variable_set(:@fci, fci)
-        end
-        allow(fci).to receive(:email_france_connect).and_return(email)
-        allow(fci).to receive(:associate_user!)
-        allow(fci).to receive(:user).and_return(user)
-        allow(fci).to receive(:delete_merge_token!)
-        allow(fci).to receive(:send_custom_confirmation_instructions)
-        allow(controller).to receive(:use_fc_email?).and_return(true)
-        allow(controller).to receive(:sign_only)
-        allow(controller).to receive(:destination_path).and_return(destination_path)
-      end
-
-      subject { post :associate_user, params: { merge_token: merge_token, use_france_connect_email: true } }
-
-      it 'calls associate_user! with the correct email' do
-        expect(fci).to receive(:associate_user!).with(email)
-        subject
-      end
-
-      it 'sends custom confirmation instructions' do
-        expect(fci).to receive(:send_custom_confirmation_instructions).with(user)
-        subject
-      end
-
-      it 'deletes the merge token' do
-        expect(fci).to receive(:delete_merge_token!)
-        subject
-      end
-
-      it 'signs in the user' do
-        expect(controller).to receive(:sign_only).with(user)
-        subject
-      end
-
-      it 'renders the confirmation sent template with correct locals' do
-        expect(controller).to receive(:render).with(
-          :confirmation_sent,
-          locals: { email: email, destination_path: destination_path }
-        )
-        subject
-      end
-    end
-
-    context 'when associate_user uses an email of an existing user' do
-      let(:fci) { instance_double('FranceConnectInformation') }
-      let(:email) { 'user@example.com' }
-      let(:user) { instance_double('User', id: 1) }
-      let(:destination_path) { '/' }
-      let(:existing_user) { create(:user, email:) }
-      before do
-        invalid_user = build(:user, email:)
-        allow(FranceConnectInformation).to receive(:find_by).with(merge_token: merge_token).and_return(fci)
-        allow(fci).to receive(:valid_for_merge?).and_return(true)
-        allow(fci).to receive(:email_france_connect).and_return(email)
-        invalid_user.valid?
-        allow(fci).to receive(:associate_user!).and_raise(ActiveRecord::RecordInvalid.new(invalid_user))
-      end
-
-      it 'sends confirmation to existing user' do
-        expect(controller).to receive(:render).with(
-          :confirmation_sent,
-          locals: { email: email, destination_path: destination_path }
-        )
-        expect(fci).to receive(:send_custom_confirmation_instructions).with(existing_user)
-        expect(fci).to receive(:delete_merge_token!)
-        subject
       end
     end
   end
@@ -315,19 +191,7 @@ describe FranceConnect::ParticulierController, type: :controller do
     let!(:user) { create(:user) }
     let!(:fci) { create(:france_connect_information, user: user) }
 
-    before do
-      sign_in(user)
-      fci.send_custom_confirmation_instructions(user)
-      user.reload
-    end
-
-    let!(:expired_user_confirmation) do
-      user = create(:user)
-      fci = create(:france_connect_information, user: user)
-      token = SecureRandom.hex(10)
-      user.update!(confirmation_token: token, confirmation_sent_at: 3.days.ago)
-      user
-    end
+    before { fci.send_custom_confirmation_instructions }
 
     context 'when the confirmation token is valid' do
       before do
@@ -335,19 +199,12 @@ describe FranceConnect::ParticulierController, type: :controller do
         user.reload
       end
 
-      it 'updates the email_verified_at and confirmation_token of the user' do
+      it do
         expect(user.email_verified_at).to be_present
         expect(user.confirmation_token).to be_nil
-      end
 
-      it 'redirects to the stored location or root path with a success notice' do
         expect(response).to redirect_to(root_path(user))
         expect(flash[:notice]).to eq('Votre email est bien vérifié')
-      end
-
-      it 'calls after_confirmation on the user' do
-        expect(user).to receive(:after_confirmation).and_call_original
-        user.after_confirmation
       end
     end
 
@@ -362,14 +219,8 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
 
     context 'when the confirmation token is expired' do
-      let(:expired_user_confirmation) do
+      let!(:expired_user_confirmation) do
         create(:user, confirmation_token: 'expired_token', confirmation_sent_at: 3.days.ago)
-      end
-
-      before do
-        allow(User).to receive(:find_by).with(confirmation_token: 'expired_token').and_return(expired_user_confirmation)
-        allow(controller).to receive(:user_signed_in?).and_return(false)
-        allow(FranceConnectInformation).to receive(:find_by).with(user: expired_user_confirmation).and_return(nil)
       end
 
       it 'redirects to root path with an alert when FranceConnectInformation is not found' do
@@ -380,17 +231,19 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'when FranceConnectInformation exists' do
-        let(:france_connect_information) { instance_double(FranceConnectInformation) }
+        let!(:france_connect_information) do
+          create(:france_connect_information, user: expired_user_confirmation)
+        end
 
         before do
-          allow(FranceConnectInformation).to receive(:find_by).with(user: expired_user_confirmation).and_return(france_connect_information)
-          allow(france_connect_information).to receive(:send_custom_confirmation_instructions)
+          allow(UserMailer).to receive_message_chain(:custom_confirmation_instructions, :deliver_later)
         end
 
         it 'resends the confirmation email and redirects to root path with a notice' do
-          expect(france_connect_information).to receive(:send_custom_confirmation_instructions).with(expired_user_confirmation)
-
           get :confirm_email, params: { token: 'expired_token' }
+
+          expect(UserMailer).to have_received(:custom_confirmation_instructions)
+            .with(expired_user_confirmation, expired_user_confirmation.reload.confirmation_token)
 
           expect(response).to redirect_to(root_path)
           expect(flash[:notice]).to eq(I18n.t('france_connect.particulier.flash.confirmation_mail_resent'))
@@ -399,46 +252,34 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
 
     context 'when a different user is signed in' do
-      let(:expired_user_confirmation) do
+      let!(:expired_user_confirmation) do
         create(:user, confirmation_token: 'expired_token', confirmation_sent_at: 3.days.ago)
       end
-      let(:current_user) { create(:user) }
 
-      before do
-        allow(User).to receive(:find_by).with(confirmation_token: 'expired_token').and_return(expired_user_confirmation)
-        allow(controller).to receive(:user_signed_in?).and_return(true)
-        allow(controller).to receive(:current_user).and_return(current_user)
-      end
+      let(:another_user) { create(:user) }
+
+      before { sign_in(another_user) }
 
       it 'signs out the current user and redirects to sign in path' do
-        expect(controller).to receive(:sign_out).with(current_user)
+        expect_any_instance_of(FranceConnectInformation).not_to receive(:send_custom_confirmation_instructions)
+        expect(controller).to receive(:sign_out).with(:user)
 
         get :confirm_email, params: { token: 'expired_token' }
 
         expect(response).to redirect_to(new_user_session_path)
         expect(flash[:alert]).to eq(I18n.t('france_connect.particulier.flash.redirect_new_user_session'))
       end
-
-      it 'does not process the confirmation' do
-        expect(FranceConnectInformation).not_to receive(:find_by)
-        expect_any_instance_of(FranceConnectInformation).not_to receive(:send_custom_confirmation_instructions)
-
-        get :confirm_email, params: { token: 'expired_token' }
-      end
     end
   end
 
   describe '#set_user_by_confirmation_token' do
     let(:current_user) { create(:user) }
-    let(:confirmation_user) { create(:user, confirmation_token: 'valid_token') }
+    let!(:confirmation_user) { create(:user, confirmation_token: 'valid_token') }
 
-    before do
-      sign_in current_user
-      allow(User).to receive(:find_by).with(confirmation_token: 'valid_token').and_return(confirmation_user)
-    end
+    before { sign_in current_user }
 
     it 'signs out current user and redirects to new session path when users do not match' do
-      expect(controller).to receive(:sign_out).with(current_user)
+      expect(controller).to receive(:sign_out).with(:user)
 
       get :confirm_email, params: { token: 'valid_token' }
 
@@ -448,8 +289,6 @@ describe FranceConnect::ParticulierController, type: :controller do
 
     context 'when user is not found' do
       it 'redirects to root path with user not found alert' do
-        allow(User).to receive(:find_by).with(confirmation_token: 'invalid_token').and_return(nil)
-
         get :confirm_email, params: { token: 'invalid_token' }
 
         expect(response).to redirect_to(root_path)
@@ -478,41 +317,14 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
   end
 
-  describe '#merge' do
-    let(:fci) { FranceConnectInformation.create!(user_info) }
-    let(:merge_token) { fci.create_merge_token! }
-    let(:format) { :html }
-
-    subject { get :merge, params: { merge_token: merge_token } }
-
-    context 'when the merge token is valid' do
-      it { expect(subject).to have_http_status(:ok) }
-    end
-
-    it_behaves_like "a method that needs a valid merge token"
-
-    context 'when the merge token does not exist' do
-      let(:merge_token) { 'i do not exist' }
-
-      before do
-        allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
-      end
-
-      it do
-        expect(subject).to redirect_to root_path
-        expect(flash.alert).to eq("Le délai pour fusionner les comptes FranceConnect et demarches-simplifiees.fr est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes.")
-      end
-    end
-  end
-
-  describe '#merge_with_existing_account' do
+  describe '#merge_using_password' do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let(:merge_token) { fci.create_merge_token! }
     let(:email) { 'EXISTING_account@a.com ' }
     let(:password) { SECURE_PASSWORD }
     let(:format) { :turbo_stream }
 
-    subject { post :merge_with_existing_account, params: { merge_token: merge_token, email: email, password: password }, format: format }
+    subject { post :merge_using_password, params: { merge_token: merge_token, password: password }, format: format }
 
     it_behaves_like "a method that needs a valid merge token"
 
@@ -544,9 +356,9 @@ describe FranceConnect::ParticulierController, type: :controller do
 
         it 'redirects to the root page' do
           subject
-          fci.reload
 
-          expect(fci.user).to be_nil
+          expect { fci.reload }.to raise_error(ActiveRecord::RecordNotFound)
+
           expect(fci.merge_token).not_to be_nil
           expect(controller.current_user).to be_nil
         end
@@ -568,18 +380,21 @@ describe FranceConnect::ParticulierController, type: :controller do
     end
   end
 
-  describe '#mail_merge_with_existing_account' do
+  describe '#merge_using_email_link' do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let!(:email_merge_token) { fci.create_email_merge_token! }
 
     context 'when the merge_token is ok and the user is found' do
-      subject { post :mail_merge_with_existing_account, params: { email_merge_token: } }
+      subject do
+        post :merge_using_email_link, params: { email_merge_token: }
+      end
 
       before do
         allow(Current).to receive(:application_name).and_return('demarches-simplifiees.fr')
+        fci.update!(requested_email: email.downcase)
       end
 
-      let!(:user) { create(:user, email: email, password: 'abcdefgh') }
+      let!(:user) { create(:user, email:, password: 'abcdefgh') }
 
       it 'merges the account, signs in, and delete the merge token' do
         subject
@@ -604,82 +419,26 @@ describe FranceConnect::ParticulierController, type: :controller do
         end
       end
     end
-
-    context 'when the email_merge_token is not ok' do
-      subject { post :mail_merge_with_existing_account, params: { email_merge_token: 'ko' } }
-
-      let!(:user) { create(:user, email: email) }
-
-      it 'increases the failed attempts counter' do
-        subject
-        fci.reload
-
-        expect(fci.user).to be_nil
-        expect(fci.email_merge_token).not_to be_nil
-        expect(controller.current_user).to be_nil
-        expect(response).to redirect_to(root_path)
-      end
-    end
   end
 
-  describe '#merge_with_new_account' do
+  describe '#send_email_merge_request' do
     let(:fci) { FranceConnectInformation.create!(user_info) }
     let(:merge_token) { fci.create_merge_token! }
-    let(:email) { ' Account@a.com ' }
-    let(:format) { :turbo_stream }
+    let(:email) { 'requested_email@.a.com' }
 
-    subject { post :merge_with_new_account, params: { merge_token: merge_token, email: email }, format: format }
+    subject { post :send_email_merge_request, params: { merge_token: merge_token, email: } }
 
-    it_behaves_like "a method that needs a valid merge token"
-
-    context 'when the email does not belong to any user' do
-      it 'creates the account, signs in, and delete the merge token' do
-        subject
-        fci.reload
-
-        expect(fci.user.email).to eq(email.downcase.strip)
-        expect(fci.merge_token).to be_nil
-        expect(controller.current_user).to eq(fci.user)
-        expect(response).to redirect_to(root_path)
-      end
-    end
-
-    context 'when an account with the same email exists' do
-      let!(:user) { create(:user, email: email) }
-
-      before { allow(controller).to receive(:sign_in).and_call_original }
-
-      render_views
-
-      it 'asks for the corresponding password' do
-        subject
-        fci.reload
-
-        expect(fci.user).to be_nil
-        expect(fci.merge_token).not_to be_nil
-        expect(controller.current_user).to be_nil
-
-        expect(response.body).to include('entrez votre mot de passe')
-      end
-
-      it 'cannot use the merge token in the email confirmation route' do
-        subject
-        fci.reload
-
-        get :mail_merge_with_existing_account, params: { email_merge_token: fci.merge_token }
-        expect(controller).not_to have_received(:sign_in)
-        expect(flash[:alert]).to be_present
-      end
-    end
-  end
-
-  describe '#resend_and_renew_merge_confirmation' do
-    let(:fci) { FranceConnectInformation.create!(user_info) }
-    let(:merge_token) { fci.create_merge_token! }
     it 'renew token' do
-      expect { post :resend_and_renew_merge_confirmation, params: { merge_token: merge_token } }.to change { fci.reload.merge_token }
+      allow(UserMailer).to receive_message_chain(:france_connect_merge_confirmation, :deliver_later)
+      subject
+
+      fci.reload
+      expect(fci.requested_email).to eq(email)
       expect(fci.email_merge_token).to be_present
-      expect(response).to redirect_to(france_connect_particulier_merge_path(fci.reload.merge_token))
+
+      expect(UserMailer).to have_received(:france_connect_merge_confirmation).with(email, fci.email_merge_token, fci.email_merge_token_created_at)
+
+      expect(response).to redirect_to(root_path)
     end
   end
 end

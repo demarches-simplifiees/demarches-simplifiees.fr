@@ -9,11 +9,11 @@ describe FranceConnectInformation, type: :model do
     end
   end
 
-  describe 'associate_user!' do
+  describe 'safely_associate_user!' do
     let(:email) { 'A@email.com' }
     let(:fci) { build(:france_connect_information) }
 
-    subject { fci.associate_user!(email) }
+    subject { fci.safely_associate_user!(email) }
 
     context 'when there is no user with the same email' do
       it 'creates a new user' do
@@ -51,13 +51,13 @@ describe FranceConnectInformation, type: :model do
       end
 
       it 'raises an error' do
-        expect { fci.associate_user!(email) }.to raise_error(NoMethodError)
+        expect { fci.safely_associate_user!(email) }.to raise_error(NoMethodError)
       end
 
       it 'does not create a new user' do
         expect {
           begin
-            fci.associate_user!(email)
+            fci.safely_associate_user!(email)
           rescue NoMethodError
           end
         }.to_not change(User, :count)
@@ -66,7 +66,7 @@ describe FranceConnectInformation, type: :model do
       it 'does not associate with any user' do
         expect(fci.user).to be_nil
         begin
-          fci.associate_user!(email)
+          fci.safely_associate_user!(email)
         rescue NoMethodError
         end
         expect(fci.reload.user).to be_nil

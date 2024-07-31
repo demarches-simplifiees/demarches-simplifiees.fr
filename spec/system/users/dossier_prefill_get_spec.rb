@@ -192,11 +192,11 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
           page.find('.fr-connect').click
 
           expect(page).to have_content("Choisissez votre e-mail de contact")
-          expect(page).to have_selector("#use_france_connect_email_yes", visible: false, wait: 10)
-          page.execute_script('document.getElementById("use_france_connect_email_yes").click()')
+          expect(page).to have_selector("#use_fc_email", visible: false, wait: 10)
+          page.execute_script('document.getElementById("use_fc_email").click()')
 
-          click_on 'Confirmer'
           expect(page).to have_content("Confirmation envoyée")
+
           click_on 'Continuer'
           expect(page).to have_content('Vous avez un dossier prérempli')
           find('.fr-btn.fr-mb-2w', text: 'Poursuivre mon dossier prérempli', wait: 10).click

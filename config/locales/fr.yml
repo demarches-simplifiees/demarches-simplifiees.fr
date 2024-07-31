@@ -757,7 +757,6 @@ fr:
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
-        unknown_error: "Une erreure est survenue. Veuillez réessayer."
       evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
       mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie
       syntax_error_regexp: La syntaxe de l'expression régulière n'est pas valide
@@ -975,7 +974,6 @@ fr:
         user_not_found: 'Utilisateur non trouvé'
         invalid_password: "Mot de passe incorrect"
         connection_done: "Les comptes FranceConnect et %{application_name} sont à présent fusionnés"
-        connection_done_verify_email: "Les comptes FranceConnect et %{application_name} sont maintenant fusionnés. Veuillez confirmer votre e-mail en cliquant sur le lien que vous avez reçu par mail"
         merger_token_expired: "Le délai pour fusionner les comptes FranceConnect et %{application_name} est expiré. Veuillez recommencer la procédure pour vous fusionner les comptes."
   groupe_gestionnaires:
     flash:

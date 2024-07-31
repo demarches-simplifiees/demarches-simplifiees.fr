@@ -44,9 +44,7 @@ describe 'France Connect Particulier Connexion' do
 
             scenario 'he is redirected to user dossiers page' do
               expect(page).to have_content("Choisissez votre e-mail de contact")
-              expect(page).to have_selector("#use_france_connect_email_yes", visible: false, wait: 10)
-              find('#use_france_connect_email_yes').click
-              click_on 'Confirmer'
+              find('#use_fc_email').click
               expect(page).to have_content("Confirmation envoyée")
               click_on 'Continuer'
               expect(User.find_by(email: email)).not_to be nil
@@ -54,16 +52,13 @@ describe 'France Connect Particulier Connexion' do
 
             scenario 'he can choose not to use FranceConnect email and input an alternative email' do
               expect(page).to have_content("Choisissez votre e-mail de contact")
-              expect(page).to have_selector("#use_france_connect_email_no", visible: false, wait: 10)
 
-              find('#use_france_connect_email_no').click
-              expect(page).to have_selector("input[name='alternative_email']", visible: true, wait: 10)
+              expect(page).to have_selector("input[name='email']", visible: true, wait: 10)
 
-              fill_in 'alternative_email', with: 'alternative@example.com'
+              fill_in 'email', with: 'alternative@example.com'
               click_on 'Confirmer'
-              expect(page).to have_content("Confirmation envoyée")
-              click_on 'Continuer'
-              expect(User.find_by(email: 'alternative@example.com')).not_to be nil
+
+              expect(page).to have_content("Nous venons de vous envoyer le mail de confirmation")
             end
           end
 
@@ -91,7 +86,7 @@ describe 'France Connect Particulier Connexion' do
               fill_in 'email', with: 'new_email@a.com'
               click_on 'Utiliser ce mail'
 
-              expect(page).to have_content('Dossiers')
+              expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')
             end
 
             context 'and the user wants an email that belongs to another account', js: true do
@@ -107,10 +102,7 @@ describe 'France Connect Particulier Connexion' do
                   click_on 'Utiliser ce mail'
                 end
 
-                fill_in 'password-for-another-account', with: SECURE_PASSWORD
-                last_button = all('input[type="submit"][value="Fusionner les comptes"]').last.click
-                puts last_button.click
-                expect(page).to have_content('Dossiers')
+                expect(page).to have_content('Nous venons de vous envoyer le mail de confirmation')
               end
             end
           end
