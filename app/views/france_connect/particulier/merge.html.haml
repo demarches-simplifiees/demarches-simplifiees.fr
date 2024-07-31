@@ -20,13 +20,7 @@
   .fusion.hidden
     %p= t('.title_fill_in_password')
 
-    = form_tag france_connect_particulier_merge_using_password_path, data: { turbo: true }, class: 'mt-2 form fconnect-form' do
-      = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :fusion_merge_token)
-      .fr-input-group
-        = label_tag :password, t('views.registrations.new.password_label', min_length: 8), class: 'fr-label'
-        = password_field_tag :password, nil, autocomplete: 'current-password', class: 'mb-1 fr-input'
-
-      = submit_tag t('.button_merge'), class: 'fr-btn'
+    = render partial: 'password_confirmation', locals: { fci: @fci, wrong_password: @wrong_password }
 
     .mt-2
       = button_to t('.link_confirm_by_email'),
