@@ -22,7 +22,7 @@ class HelpscoutCreateConversationJob < ApplicationJob
 
     create_conversation
 
-    contact_form.destroy
+    contact_form.delete
   end
 
   private

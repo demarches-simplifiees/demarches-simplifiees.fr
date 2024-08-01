@@ -91,6 +91,21 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
       it 'associates the email from user' do
         subject
         expect(api).to have_received(:create_conversation).with(user.email, subject_text, text, nil)
+        expect(contact_form).to be_destroyed
+        expect(user.reload).to be_truthy
+      end
+
+      context 'having dossiers' do
+        before do
+          create(:dossier, user:)
+        end
+
+        it 'associates the email from user' do
+          subject
+          expect(api).to have_received(:create_conversation).with(user.email, subject_text, text, nil)
+          expect(contact_form).to be_destroyed
+          expect(user.reload).to be_truthy
+        end
       end
     end
   end
