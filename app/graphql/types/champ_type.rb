@@ -62,6 +62,8 @@ module Types
           Types::Champs::IntegerNumberChampType
         when ::Champs::DecimalNumberChamp
           Types::Champs::DecimalNumberChampType
+        when ::Champs::NumbersIdChamp
+          Types::Champs::NumbersIdChampType
         when ::Champs::SiretChamp
           Types::Champs::SiretChampType
         when ::Champs::RepetitionChamp
@@ -82,6 +84,10 @@ module Types
           Types::Champs::RNFChampType
         when ::Champs::EngagementJuridiqueChamp
           Types::Champs::EngagementJuridiqueChampType
+        when ::Champs::NumbersIdChamp
+          Types::Champs::NumbersIdChampType
+        when ::Champs::NumbersAndLettersIdChamp
+          Types::Champs::NumbersAndLettersIdChampType
         else
           Types::Champs::TextChampType
         end

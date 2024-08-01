@@ -103,6 +103,10 @@ module Types
           Types::Champs::Descriptor::COJOChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:expression_reguliere)
           Types::Champs::Descriptor::ExpressionReguliereChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:numbers_id)
+          Types::Champs::Descriptor::NumbersIdChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:numbers_and_letters_id)
+          Types::Champs::Descriptor::NumbersAndLettersIdChampDescriptorType
         end
       end
     end

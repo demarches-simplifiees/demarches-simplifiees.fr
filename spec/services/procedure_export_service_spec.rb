@@ -65,6 +65,8 @@ describe ProcedureExportService do
             "number",
             "decimal_number",
             "integer_number",
+            "numbers_id",
+            "numbers_and_letters_id",
             "checkbox",
             "civilite",
             "email",
