@@ -889,6 +889,35 @@ describe API::V2::GraphqlController do
       end
     end
 
+    context 'dossierDesarchiver' do
+      let(:dossier) { create(:dossier, :refuse, :with_individual, :archived, procedure:) }
+      let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id } } }
+      let(:operation_name) { 'dossierDesarchiver' }
+
+      it {
+        expect(gql_errors).to be_nil
+        expect(gql_data[:dossierDesarchiver][:errors]).to be_nil
+        expect(gql_data[:dossierDesarchiver][:dossier][:id]).to eq(dossier.to_typed_id)
+        expect(gql_data[:dossierDesarchiver][:dossier][:archived]).to be_falsey
+      }
+
+      context 'read only token' do
+        before { api_token.update(write_access: false) }
+
+        it {
+          expect(gql_data[:dossierDesarchiver][:errors].first[:message]).to eq('Le jeton utilisé est configuré seulement en lecture')
+        }
+      end
+
+      context 'when not processed' do
+        let(:dossier) { create(:dossier, :refuse, :with_individual, procedure:) }
+
+        it {
+          expect(gql_data[:dossierDesarchiver][:errors].first[:message]).to eq('Un dossier non archivé ne peut pas être désarchivé')
+        }
+      end
+    end
+
     context 'dossierPasserEnInstruction' do
       let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure: procedure) }
       let(:variables) { { input: { dossierId: dossier.to_typed_id, instructeurId: instructeur.to_typed_id, disableNotification: } } }
