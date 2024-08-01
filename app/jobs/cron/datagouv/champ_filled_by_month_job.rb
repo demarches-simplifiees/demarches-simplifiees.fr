@@ -2,9 +2,10 @@ class Cron::Datagouv::ChampFilledByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
   self.schedule_expression = "every month at 3:10"
   FILE_NAME = "nb_champs_remplis_par_mois"
+  HEADERS = ["mois", "procedure_id", "type_de_champ_id", "type_champ", "libelle", "nb_champs_remplis"]
 
   def perform(*args)
-    GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, data) do |file|
+    GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, HEADERS, data) do |file|
       begin
         APIDatagouv::API.upload(file, :statistics_dataset)
       ensure
