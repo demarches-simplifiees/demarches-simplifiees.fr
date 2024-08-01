@@ -48,6 +48,26 @@ describe Champs::RNFChamp, type: :model do
       end
     end
 
+    context 'success (with space)' do
+      let(:external_id) { '075-FDD- 00003-01 ' }
+      it {
+        expect(subject.value!).to include({
+          id: 3,
+          rnfId: '075-FDD-00003-01'
+        })
+      }
+    end
+
+    context 'success (with tab)' do
+      let(:external_id) { '075-FDD-0	0003-01	' }
+      it {
+        expect(subject.value!).to include({
+          id: 3,
+          rnfId: '075-FDD-00003-01'
+        })
+      }
+    end
+
     context 'failure (schema)' do
       let(:response_type) { 'invalid' }
       it {
