@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: set_default_for_procedure_preview_on_dossiers'
   task set_default_for_procedure_preview_on_dossiers: :environment do

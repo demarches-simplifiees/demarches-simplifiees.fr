@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EmailCheckerController, type: :controller do
   describe '#show' do
     render_views

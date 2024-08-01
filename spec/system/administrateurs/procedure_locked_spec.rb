@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'procedure locked' do
   let(:administrateur) { administrateurs(:default_admin) }
 

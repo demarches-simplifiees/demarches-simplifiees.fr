@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AssignTo, type: :model do
   describe '#procedure_presentation_or_default_and_errors' do
     let(:procedure) { create(:procedure) }

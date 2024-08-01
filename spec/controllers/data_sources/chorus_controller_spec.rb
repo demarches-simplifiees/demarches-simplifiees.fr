@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DataSources::ChorusController do
   let(:administrateur) { administrateurs(:default_admin) }
 

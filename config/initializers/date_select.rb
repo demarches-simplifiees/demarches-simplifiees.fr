@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # We monkey patch the DateTimeSelector in order to add accessibility labels
 # https://stackoverflow.com/a/47836699
 module ActionView

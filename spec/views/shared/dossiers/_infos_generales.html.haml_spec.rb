@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'shared/dossiers/_infos_generales', type: :view do
   let(:dossier) { create(:dossier, :en_construction) }
   subject { render 'shared/dossiers/infos_generales', dossier: dossier, profile: 'instructeur' }

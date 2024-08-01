@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'system/administrateurs/procedure_spec_helper'
 
 describe 'Administrateurs can edit procedures', js: true do

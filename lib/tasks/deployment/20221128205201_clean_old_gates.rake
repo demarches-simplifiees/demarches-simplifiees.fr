@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: clean_old_gates'
   task clean_old_gates: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/statistiques/show', type: :view do
   let(:procedure) { create(:procedure) }
 

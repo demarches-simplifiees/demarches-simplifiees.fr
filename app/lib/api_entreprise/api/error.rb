@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::API::Error < ::StandardError
   def initialize(response)
     # use uri to avoid sending token

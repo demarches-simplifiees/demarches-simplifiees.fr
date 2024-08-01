@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TabsHelper
   def tab_i18n_key_from_status(status)
     case status

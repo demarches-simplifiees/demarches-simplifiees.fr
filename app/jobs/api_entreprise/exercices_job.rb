@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::ExercicesJob < APIEntreprise::Job
   rescue_from(APIEntreprise::API::Error::BadFormatRequest) do |exception|
   end

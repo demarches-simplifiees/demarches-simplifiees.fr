@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTeamAccountToUsers < ActiveRecord::Migration[6.1]
   def change
     add_column :users, :team_account, :boolean

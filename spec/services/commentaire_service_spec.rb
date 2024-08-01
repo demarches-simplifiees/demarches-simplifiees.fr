@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CommentaireService do
   include ActiveJob::TestHelper
 

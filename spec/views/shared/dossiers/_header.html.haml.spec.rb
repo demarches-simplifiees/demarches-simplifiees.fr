@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'dossiers/show/header', type: :view do
   let(:procedure) { create(:procedure, :discarded) }
   let(:dossier) { create(:dossier, state: "brouillon", procedure: procedure) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureOverview
   attr_accessor :procedure,
     :created_dossiers_count,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Logic
   def self.from_h(h)
     class_from_name(h['term']).from_h(h)

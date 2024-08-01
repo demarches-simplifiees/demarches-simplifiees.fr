@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ProcedureContextConcern, type: :controller do
   class TestController < ActionController::Base
     include ProcedureContextConcern

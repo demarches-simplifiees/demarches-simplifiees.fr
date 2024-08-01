@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: purge_motivation_dossiers_not_termine'
   task purge_motivation_dossiers_not_termine: :environment do

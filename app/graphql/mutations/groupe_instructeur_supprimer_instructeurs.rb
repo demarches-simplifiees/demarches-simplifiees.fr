@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class GroupeInstructeurSupprimerInstructeurs < Mutations::BaseMutation
     description "Supprimer des instructeurs d’un groupe instructeur."

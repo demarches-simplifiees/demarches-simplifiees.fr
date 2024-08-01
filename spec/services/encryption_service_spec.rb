@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe EncryptionService do
   describe "#encrypt" do
     subject { EncryptionService.new.encrypt(value) }

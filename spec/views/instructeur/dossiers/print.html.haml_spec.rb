@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeurs/dossiers/print', type: :view do
   before { view.extend DossierHelper }
 

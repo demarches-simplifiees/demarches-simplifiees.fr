@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Gestionnaires::GestionnaireController, type: :controller do
   describe 'before actions: authenticate_gestionnaire!' do
     it 'is present' do

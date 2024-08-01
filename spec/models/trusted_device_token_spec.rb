@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TrustedDeviceToken, type: :model do
   describe '#token_valid?' do
     let(:token) { create(:trusted_device_token) }

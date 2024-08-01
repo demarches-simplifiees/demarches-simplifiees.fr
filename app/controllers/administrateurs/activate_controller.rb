@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Administrateurs::ActivateController < ApplicationController
   include TrustedDeviceConcern
 

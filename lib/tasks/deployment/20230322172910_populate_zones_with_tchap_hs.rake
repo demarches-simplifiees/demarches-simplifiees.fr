@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: populate_zones_with_tchap_hs'
   task populate_zones_with_tchap_hs: :environment do

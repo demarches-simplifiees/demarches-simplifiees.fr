@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_champ_etablissement'
   task fix_champ_etablissement: :environment do

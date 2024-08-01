@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_procedure_revision_publiee_without_published_at'
   task fix_procedure_revision_publiee_without_published_at: :environment do

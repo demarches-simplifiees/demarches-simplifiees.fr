@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DataFixer::ChampsPhoneInvalid do
   describe '#fix' do
     subject { described_class.fix(phone_str) }

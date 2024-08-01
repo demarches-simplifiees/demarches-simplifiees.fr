@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'experts/avis/index', type: :view do
   let(:expert) { create(:expert) }
   let(:claimant) { create(:instructeur) }

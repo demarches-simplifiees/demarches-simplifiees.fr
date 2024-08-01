@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recovery
   class Importer
     attr_reader :dossiers

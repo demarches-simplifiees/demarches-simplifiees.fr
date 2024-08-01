@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ValidateAlterDossiersForProcedurePreviewNotNullable < ActiveRecord::Migration[7.0]
   def change
     validate_check_constraint :dossiers, name: "dossiers_for_procedure_preview_null"

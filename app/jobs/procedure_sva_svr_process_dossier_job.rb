@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureSVASVRProcessDossierJob < ApplicationJob
   queue_as :sva
 

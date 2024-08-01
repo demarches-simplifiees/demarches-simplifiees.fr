@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::AutoArchiveProcedureJob < Cron::CronJob
   self.schedule_expression = "every 1 minute"
 

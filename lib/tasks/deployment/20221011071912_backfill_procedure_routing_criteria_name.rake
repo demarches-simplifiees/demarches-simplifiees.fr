@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_procedure_routing_criteria_name'
   task backfill_procedure_routing_criteria_name: :environment do

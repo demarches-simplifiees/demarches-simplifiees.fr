@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::BatchOperationComponent < ApplicationComponent
   attr_reader :statut, :procedure
 

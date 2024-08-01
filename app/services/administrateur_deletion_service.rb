@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AdministrateurDeletionService
   include Dry::Monads[:result]
 

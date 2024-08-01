@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddForeignKeysToRoleTables < ActiveRecord::Migration[6.1]
   def change
     # Add foreign keys constraints to role tables.

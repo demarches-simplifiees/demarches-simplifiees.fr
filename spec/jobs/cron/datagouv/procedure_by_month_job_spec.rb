@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::ProcedureByMonthJob, type: :job do
   let!(:procedure) { create(:procedure, created_at: 1.month.ago) }
   let(:status) { 200 }

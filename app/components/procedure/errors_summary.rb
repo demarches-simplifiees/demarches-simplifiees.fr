@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::ErrorsSummary < ApplicationComponent
   ErrorDescriptor = Data.define(:anchor, :label, :error_message)
 

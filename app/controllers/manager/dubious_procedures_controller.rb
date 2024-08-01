@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class DubiousProceduresController < Manager::ApplicationController
     def index

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedurePresentation do
   include ActiveSupport::Testing::TimeHelpers
 
@@ -901,7 +903,7 @@ describe ProcedurePresentation do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
 
       it 'should downcase and transform value' do
-        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
+        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", +"Oui")
 
         expect(procedure_presentation.filters).to eq({
           "suivis" =>

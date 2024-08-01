@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ContactController, question_type: :controller do
   render_views
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DossierRebaseConcern
   extend ActiveSupport::Concern
 

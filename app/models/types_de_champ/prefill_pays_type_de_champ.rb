@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PrefillPaysTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   def all_possible_values
     countries.map { |country| "#{country[:code]} (#{country[:name]})" }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: remove_toplevel_communes'
   task remove_toplevel_communes: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::PasswordsController, type: :controller do
   before do
     @request.env["devise.mapping"] = Devise.mappings[:user]

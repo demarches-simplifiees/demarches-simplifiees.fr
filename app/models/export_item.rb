@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExportItem
   include TagsSubstitutionConcern
   DOSSIER_STATE = Dossier.states.fetch(:en_construction)

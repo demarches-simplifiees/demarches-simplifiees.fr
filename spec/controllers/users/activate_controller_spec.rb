@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::ActivateController, type: :controller do
   describe '#new' do
     let(:user) { create(:user) }

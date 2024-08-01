@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::IneligibiliteRulesController, type: :controller do
   include Logic
   let(:user) { create(:user) }

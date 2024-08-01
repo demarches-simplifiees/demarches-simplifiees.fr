@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Outdated browsers support:' do
   context 'when the user browser is outdated' do
     before(:each) do

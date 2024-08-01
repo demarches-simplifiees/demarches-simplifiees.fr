@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Request a watermark on files attached to a `Champs::TitreIdentiteChamp`.
 #
 # We're using a class extension here, but we could as well have a periodic

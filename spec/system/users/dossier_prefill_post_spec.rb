@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Prefilling a dossier (with a POST request):', js: true do
   let(:password) { SECURE_PASSWORD }
 

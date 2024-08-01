@@ -1,3 +1,8 @@
+# frozen_string_literal: false
+
+# The 'siret' variables are literal here and mutated (normalized), so we cannot use frozen siret strings.
+# For simplicity, frozen strings are disabled in this entire file.
+
 RSpec.describe SiretChampEtablissementFetchableConcern do
   describe '.fetch_etablissement!' do
     let(:api_etablissement_status) { 200 }

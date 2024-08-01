@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AttachmentsController < ApplicationController
   before_action :authenticate_logged_user!
   include ActiveStorage::SetBlob

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::ChampComponent < ApplicationComponent
   attr_reader :coordinate, :upper_coordinates
 

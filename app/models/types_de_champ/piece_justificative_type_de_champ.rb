@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def estimated_fill_duration(revision)
     FILL_DURATION_LONG

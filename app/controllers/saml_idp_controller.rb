@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SamlIdpController < ActionController::Base
   include SamlIdp::Controller
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module HtmlToStringHelper
   def html_to_string(html)
     if html.blank?

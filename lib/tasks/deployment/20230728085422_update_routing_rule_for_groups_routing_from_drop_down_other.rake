@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: update_routing_rule_for_groups_routing_from_drop_down_other'
   task update_routing_rule_for_groups_routing_from_drop_down_other: :environment do

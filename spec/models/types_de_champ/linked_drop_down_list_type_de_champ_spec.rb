@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TypesDeChamp::LinkedDropDownListTypeDeChamp do
   let(:type_de_champ) { build(:type_de_champ_linked_drop_down_list, drop_down_list_value: menu_options) }
 

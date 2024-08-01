@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Managing password:', js: true do
   context 'for simple users' do
     let(:user) { create(:user) }

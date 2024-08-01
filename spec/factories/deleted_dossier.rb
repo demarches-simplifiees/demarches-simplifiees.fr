@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :deleted_dossier do
     dossier_id  { 1111 }

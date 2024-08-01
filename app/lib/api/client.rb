@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::Client
   include Dry::Monads[:result]
 

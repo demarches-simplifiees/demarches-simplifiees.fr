@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'The user' do
   let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }

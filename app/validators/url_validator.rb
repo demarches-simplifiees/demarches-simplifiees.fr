@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_model'
 require 'active_support/i18n'
 require 'public_suffix'

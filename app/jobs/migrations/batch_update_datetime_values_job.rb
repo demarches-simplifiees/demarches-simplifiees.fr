@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Migrations::BatchUpdateDatetimeValuesJob < ApplicationJob
   def perform(ids)
     Champs::DatetimeChamp.where(id: ids).find_each do |datetime_champ|

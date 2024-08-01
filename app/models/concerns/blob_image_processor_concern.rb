@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module BlobImageProcessorConcern
   def watermark_pending?
     watermark_required? && !watermark_done?

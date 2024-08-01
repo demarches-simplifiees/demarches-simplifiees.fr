@@ -1,4 +1,6 @@
-ProcedureDetail = Struct.new(:id, :libelle, :published_at, :aasm_state, :estimated_dossiers_count, :admin_count, :template, :latest_zone_labels, keyword_init: true) do
+# frozen_string_literal: true
+
+ProcedureDetail = Struct.new(:id, :libelle, :published_at, :aasm_state, :estimated_dossiers_count, :admin_count, :template, keyword_init: true) do
   include SpreadsheetArchitect
 
   def spreadsheet_columns

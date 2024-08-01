@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Procedure::PendingRepublishComponent, type: :component do
   subject { render_inline(described_class.new(render_if:, procedure: build(:procedure, id: 1))) }
   let(:page) { subject }

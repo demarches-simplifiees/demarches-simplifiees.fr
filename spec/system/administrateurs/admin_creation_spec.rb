@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'As an administrateur', js: true do
   let(:super_admin) { create(:super_admin) }
   let(:admin_email) { 'new_admin@gouv.fr' }

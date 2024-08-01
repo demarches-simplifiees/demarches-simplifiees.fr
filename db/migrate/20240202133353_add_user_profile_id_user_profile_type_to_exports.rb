@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUserProfileIdUserProfileTypeToExports < ActiveRecord::Migration[7.0]
   def change
     add_column :exports, :user_profile_id, :bigint

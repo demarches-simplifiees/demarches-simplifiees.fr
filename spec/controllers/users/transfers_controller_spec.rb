@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::TransfersController, type: :controller do
   let(:sender_user) { create(:user) }
   let(:recipient_user) { create(:user) }

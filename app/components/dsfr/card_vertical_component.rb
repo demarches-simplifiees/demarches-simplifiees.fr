@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dsfr::CardVerticalComponent < ApplicationComponent
   renders_many :footer_buttons
 

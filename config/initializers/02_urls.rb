@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable DS/ApplicationName
 # API URLs
 API_ADRESSE_URL = ENV.fetch("API_ADRESSE_URL", "https://api-adresse.data.gouv.fr")

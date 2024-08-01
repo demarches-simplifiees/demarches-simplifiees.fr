@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveConstraintOnAgentConnectInformation < ActiveRecord::Migration[7.0]
   def change
     # make given_name, usual_name nullable

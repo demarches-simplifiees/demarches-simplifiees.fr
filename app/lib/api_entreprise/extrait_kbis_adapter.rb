@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::ExtraitKbisAdapter < APIEntreprise::Adapter
   # Doc métier : https://entreprise.api.gouv.fr/catalogue/infogreffe/rcs/extrait
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-generales/paths/~1v3~1infogreffe~1rcs~1unites_legales~1%7Bsiren%7D~1extrait_kbis/get

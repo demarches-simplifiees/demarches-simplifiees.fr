@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PiecesJustificativesService do
   describe 'pjs_for_champs' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, mandatory: false }, { type: :repetition, mandatory: false, children: [{ type: :piece_justificative, mandatory: false }] }]) }

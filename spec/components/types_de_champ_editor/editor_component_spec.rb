@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TypesDeChampEditor::EditorComponent, type: :component do
   let(:revision) { procedure.draft_revision }
   let(:procedure) { create(:procedure, id: 1, types_de_champ_private:, types_de_champ_public:) }

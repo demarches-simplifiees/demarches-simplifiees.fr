@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RoutingEngine
   def self.compute(dossier, assignment_mode: DossierAssignment.modes.fetch(:auto))
     return if dossier.forced_groupe_instructeur

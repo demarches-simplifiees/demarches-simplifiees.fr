@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe BillSignatureService do
   describe ".sign_operations" do
     let(:date) { Date.today }

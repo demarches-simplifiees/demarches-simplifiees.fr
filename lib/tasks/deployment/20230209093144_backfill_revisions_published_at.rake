@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_revisions_published_at'
   task backfill_revisions_published_at: :environment do

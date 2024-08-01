@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Devise
   # Useful helpers additions to Devise::Controllers::StoreLocation
   module StoreLocationExtension

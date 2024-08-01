@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::NotInDepartementOperator < Logic::InDepartementOperator
   def operation
     :n_est_pas_dans_le_departement

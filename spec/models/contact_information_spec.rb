@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ContactInformation, type: :model do
   describe 'validation' do
     let(:gi) { create(:groupe_instructeur) }

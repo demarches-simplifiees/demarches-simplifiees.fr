@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureRevision do
   let(:draft) { procedure.draft_revision }
   let(:type_de_champ_public) { draft.types_de_champ_public.first }

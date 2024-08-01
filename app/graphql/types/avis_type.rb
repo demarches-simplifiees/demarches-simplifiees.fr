@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class AvisType < Types::BaseObject
     global_id_field :id

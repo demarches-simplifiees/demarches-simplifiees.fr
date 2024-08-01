@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe GroupeGestionnaireMailer, type: :mailer do
   describe '#notify_removed_gestionnaire' do
     let(:groupe_gestionnaire) { create(:groupe_gestionnaire) }

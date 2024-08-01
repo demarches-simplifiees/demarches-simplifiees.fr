@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Redcarpet
   class TrustedRenderer < Redcarpet::Render::HTML
     include ActionView::Helpers::TagHelper

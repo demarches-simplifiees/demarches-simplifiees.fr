@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIParticulier::DgfipAdapter
   class InvalidSchemaError < ::StandardError
     def initialize(errors)

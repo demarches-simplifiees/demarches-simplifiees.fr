@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::RNAAdapter do
   let(:rna) { 'W111111111' }
   let(:procedure) { create(:procedure) }

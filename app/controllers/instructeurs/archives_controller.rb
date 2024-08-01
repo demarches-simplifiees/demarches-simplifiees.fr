@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Instructeurs
   class ArchivesController < InstructeurController
     before_action :retrieve_procedure

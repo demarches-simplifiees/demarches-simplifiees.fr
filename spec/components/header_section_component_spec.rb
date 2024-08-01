@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe TypesDeChampEditor::HeaderSectionComponent, type: :component do
   include ActionView::Context
   include ActionView::Helpers::FormHelper

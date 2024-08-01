@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::ActivateController, type: :controller do
   describe '#new' do
     let(:admin) { administrateurs(:default_admin) }
