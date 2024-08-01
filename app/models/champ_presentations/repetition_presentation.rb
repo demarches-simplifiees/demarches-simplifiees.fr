@@ -1,0 +1,58 @@
+# frozen_string_literal: true
+
+class ChampPresentations::RepetitionPresentation
+  attr_reader :libelle
+  attr_reader :rows
+
+  def initialize(libelle, rows)
+    @libelle = libelle
+    @rows = rows
+  end
+
+  def to_s
+    ([libelle] + rows.map do |champs|
+      champs.map do |champ|
+        "#{champ.libelle} : #{champ}"
+      end.join("\n")
+    end).join("\n\n")
+  end
+
+  def to_tiptap_node
+    {
+      type: 'orderedList',
+      attrs: { class: 'tdc-repetition' },
+      content: rows.map do |champs|
+        {
+          type: 'listItem',
+          content: [
+            {
+              type: 'descriptionList',
+              content: champs.map do |champ|
+                [
+                  {
+                    type: 'descriptionTerm',
+                    content: [
+                      {
+                        type: 'text',
+                        text: champ.libelle
+                      }
+                    ]
+                  },
+                  {
+                    type: 'descriptionDetails',
+                    content: [
+                      {
+                        type: 'text',
+                        text: champ.to_s
+                      }
+                    ]
+                  }
+                ]
+              end.flatten
+            }
+          ]
+        }
+      end
+    }
+  end
+end

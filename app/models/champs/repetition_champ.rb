@@ -43,11 +43,7 @@ class Champs::RepetitionChamp < Champ
   end
 
   def for_tag(path = :value)
-    ([libelle] + rows.map do |champs|
-      champs.map do |champ|
-        "#{champ.libelle} : #{champ}"
-      end.join("\n")
-    end).join("\n\n")
+    ChampPresentations::RepetitionPresentation.new(libelle, rows)
   end
 
   def rows_for_export
