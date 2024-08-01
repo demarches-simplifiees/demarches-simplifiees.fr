@@ -8,7 +8,8 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
   let(:tags) { ["first tag"] }
   let(:question_type) { "lost" }
   let(:phone) { nil }
-  let(:contact_form) { create(:contact_form, email:, subject: subject_text, text:, tags:, phone:, question_type:) }
+  let(:user) { nil }
+  let(:contact_form) { create(:contact_form, email:, user:, subject: subject_text, text:, tags:, phone:, question_type:) }
 
   describe '#perform' do
     before do
@@ -80,6 +81,16 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
       it 'associates the phone number' do
         subject
         expect(api).to have_received(:add_phone_number).with(email, phone)
+      end
+    end
+
+    context 'attached to an user' do
+      let(:email) { nil }
+      let(:user) { users(:default_user) }
+
+      it 'associates the email from user' do
+        subject
+        expect(api).to have_received(:create_conversation).with(user.email, subject_text, text, nil)
       end
     end
   end

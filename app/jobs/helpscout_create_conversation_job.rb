@@ -29,7 +29,7 @@ class HelpscoutCreateConversationJob < ApplicationJob
 
   def create_conversation
     response = api.create_conversation(
-      contact_form.email,
+      contact_form.email.presence || contact_form.user.email,
       contact_form.subject,
       contact_form.text,
       safe_blob
