@@ -2,7 +2,7 @@ class Champs::RNFChamp < Champ
   store_accessor :data, :title, :email, :phone, :createdAt, :updatedAt, :dissolvedAt, :address, :status
 
   def rnf_id
-    external_id&.gsub(/[:space:]/, '')
+    external_id&.gsub(/[[:space:]]/, '')
   end
 
   def value
