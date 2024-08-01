@@ -27,10 +27,10 @@ class Cron::Datagouv::ChampFilledByMonthJob < Cron::CronJob
         Champ.joins(:dossier)
           .where(dossier_id: Dossier.where(revision_id: revision, depose_at: 1.month.ago.all_month))
 
-      revision.types_de_champ.map do |type_de_champ|
+      revision.types_de_champ.where(private: false).map do |type_de_champ|
         nb =
           champs
-            .where(stable_id: type_de_champ.stable_id, private: false)
+            .where(stable_id: type_de_champ.stable_id)
             .where.not(value: [nil, ''])
             .count
 
