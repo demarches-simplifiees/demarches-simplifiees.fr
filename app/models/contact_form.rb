@@ -1,7 +1,7 @@
 class ContactForm < ApplicationRecord
   attr_reader :options
 
-  belongs_to :user, optional: true, dependent: :destroy
+  belongs_to :user, optional: true
 
   after_initialize :set_options
   before_validation :normalize_strings
