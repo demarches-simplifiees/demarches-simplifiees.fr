@@ -34,6 +34,12 @@ class UserMailer < ApplicationMailer
     mail(to: email, subject: @subject)
   end
 
+  def custom_confirmation_instructions(user, token)
+    @user = user
+    @token = token
+    mail(to: @user.email, subject: 'Confirmez votre email')
+  end
+
   def invite_instructeur(user, reset_password_token)
     @reset_password_token = reset_password_token
     @user = user
@@ -123,7 +129,8 @@ class UserMailer < ApplicationMailer
       'france_connect_merge_confirmation',
       "new_account_warning",
       "ask_for_merge",
-      "invite_instructeur"
+      "invite_instructeur",
+      "custom_confirmation_instructions"
     ].include?(action_name)
   end
 end
