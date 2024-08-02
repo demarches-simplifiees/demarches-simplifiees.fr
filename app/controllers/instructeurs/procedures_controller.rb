@@ -72,7 +72,6 @@ module Instructeurs
       @procedure_presentation = procedure_presentation
 
       @current_filters = current_filters
-      @displayable_fields_for_select, @displayable_fields_selected = procedure_presentation.displayable_fields_for_select
       @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .symbolize_keys
@@ -142,7 +141,7 @@ module Instructeurs
     end
 
     def update_sort
-      procedure_presentation.update_sort(params[:table], params[:column], params[:order])
+      procedure_presentation.update_sort(params[:facet_id], params[:order])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
@@ -159,7 +158,7 @@ module Instructeurs
       @statut = statut
       @procedure = procedure
       @procedure_presentation = procedure_presentation
-      @field = params[:field]
+      @facet = procedure.find_facet(id: params[:field])
     end
 
     def remove_filter

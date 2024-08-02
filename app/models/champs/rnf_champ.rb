@@ -13,6 +13,10 @@ class Champs::RNFChamp < Champ
     RNFService.new.(rnf_id:)
   end
 
+  def update_with_external_data!(data)
+    update!(data: data, value_json: APIGeoService.parse_rnf_address(data[:data][:address]))
+  end
+
   def fetch_external_data?
     true
   end
