@@ -1,5 +1,5 @@
-= link_to messagerie_dossier_path(dossier), role: 'menuitem' do
+= link_to messagerie_dossier_path(dossier), class: 'flex' do
   %span.fr-icon-mail-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
   .fr-pl-1w
-    %h1.fr-text--sm= title
-    %p.fr-text--sm= t('help_dropdown.contact_instructeur')
+    %h1= title
+    %p= t('help_dropdown.contact_instructeur')

@@ -1,5 +1,5 @@
-= link_to t("links.common.faq.url"), title: new_tab_suffix(t('help_dropdown.general_title')), **external_link_attributes, role: 'menuitem' do
+= link_to t("links.common.faq.url"), class: 'flex', title: new_tab_suffix(t('help_dropdown.general_title')), **external_link_attributes do
   %span.fr-icon-question-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
   .fr-pl-1w
-    %h1.fr-text--sm= t('help_dropdown.problem_title')
-    %p.fr-text--sm= t('help_dropdown.problem_description')
+    %h1= t('help_dropdown.problem_title')
+    %p= t('help_dropdown.problem_description')
