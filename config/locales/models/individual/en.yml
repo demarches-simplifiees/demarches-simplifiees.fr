@@ -1,5 +1,11 @@
 en:
   activerecord:
+    errors:
+      models:
+        individual:
+          attributes:
+            email:
+              must_be_different_from_mandataire: "must be different from the agent's email"
     attributes:
       individual:
         gender: Gender
