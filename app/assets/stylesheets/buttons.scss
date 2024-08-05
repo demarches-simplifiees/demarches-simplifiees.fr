@@ -248,7 +248,7 @@ ul.dropdown-items {
   content: none;
 }
 
-.help__content.fr-menu ul.fr-menu__list {
+.help-content.fr-menu ul.fr-menu__list {
   text-align: left;
   font-size: 1rem;
 
@@ -259,7 +259,7 @@ ul.dropdown-items {
   }
 }
 
-.help__content.fr-menu ul.fr-menu__list li {
+.help-content.fr-menu ul.fr-menu__list li {
   padding: 0.75rem 1rem;
 
   @media (min-width: 62em) {
@@ -268,14 +268,15 @@ ul.dropdown-items {
   }
 }
 
-.help__content.fr-menu ul.fr-menu__list li:not(:last-child) {
+.help-content.fr-menu ul.fr-menu__list li:not(:last-child) {
   @media (min-width: 62em) {
     border-bottom: 1px solid $border-grey;
   }
 }
 
-.help__content.fr-menu ul.fr-menu__list {
-  h1, p {
+.help-content.fr-menu ul.fr-menu__list {
+  h1,
+  p {
     font-size: inherit;
     line-height: inherit;
   }
