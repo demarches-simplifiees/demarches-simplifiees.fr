@@ -32,8 +32,7 @@ class Cron::Datagouv::ChampFilledByMonthJob < Cron::CronJob
         nb =
           champs
             .where(stable_id: type_de_champ.stable_id)
-            .where.not(value: [nil, ''])
-            .count
+            .count { |champ| !champ.blank? }
 
         data << [revision.procedure_id, type_de_champ.stable_id, type_de_champ.type_champ, type_de_champ.libelle, nb]
       end
