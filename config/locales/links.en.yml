@@ -16,6 +16,7 @@ en:
     footer:
       top_labels:
         hidden_title: Useful links
+        hidden_title_procedure: Procedure information
         communication: Communication
         legals: Legal information
         resources: Resources
