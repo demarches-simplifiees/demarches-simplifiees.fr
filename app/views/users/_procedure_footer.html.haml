@@ -13,7 +13,7 @@
             %ul.fr-footer__top-list
               - politiques.each do |politique|
                 %li
-                  = link_to t("users.procedure_footer.legals.data_retention_url"), class: "fr-footer__top-link", title: new_tab_suffix(t("users.procedure_footer.legals.data_retention_title")), **external_link_attributes do
+                  = link_to t("users.procedure_footer.legals.data_retention_url"), class: "fr-footer__top-link", title: new_tab_suffix(t("users.procedure_footer.legals.data_retention_title", data_retention_title: politiques_conservation_de_donnees(procedure).join)), **external_link_attributes do
                     = politique
               - if procedure.deliberation.attached?
                 %li

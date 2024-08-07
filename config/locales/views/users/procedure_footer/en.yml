@@ -17,8 +17,7 @@ en:
           link: "See the procedure's stats"
       legals:
         header: "Legals"
-        data_retention: "%{application_name} : %{duree_conservation_dossiers_dans_ds} months"
-        data_retention_title: "Explanation of our data retention and archiving policy"
+        data_retention: "Data retention and archiving : %{duree_conservation_dossiers_dans_ds} months"
         terms: "Laws regarding this data collection"
         dpo: "Contact the Data Protection Officer"
       dematerialisation: 
