@@ -1,6 +1,7 @@
 %footer.fr-footer.footer-procedure#footer{ role: "contentinfo" }
   .fr-footer__top.fr-mb-0
     .fr-container
+      %h2.sr-only= t("links.footer.top_labels.hidden_title_procedure")
       .fr-grid-row.fr-grid-row--start.fr-grid-row--gutters
         .fr-col-12.fr-col-sm-4.fr-col-md-4
           = render partial: 'shared/dossiers/update_contact_information', locals: { dossier: dossier, procedure: procedure }
