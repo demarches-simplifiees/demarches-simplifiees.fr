@@ -24,7 +24,6 @@ fr:
     sentence_for_humans: 'Si vous êtes un humain, laissez ce champ vide'
   help: 'Aide'
   help_dropdown:
-    general_title: "Un problème avec le site ? Trouvez votre réponse dans l’aide en ligne."
     procedure_title: "Une question sur cette démarche ?"
     problem_title: Un problème avec le site ?
     problem_description: Trouvez votre réponse dans l’aide en ligne.

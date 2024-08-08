@@ -1,5 +1,4 @@
-= link_to t("links.common.faq.url"), class: 'flex', title: new_tab_suffix(t('help_dropdown.general_title')), **external_link_attributes do
-  %span.fr-icon-question-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
-  .fr-pl-1w
-    %h1= t('help_dropdown.problem_title')
-    %p= t('help_dropdown.problem_description')
+%span.fr-icon-question-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
+.fr-pl-1w
+  %h1= t('help_dropdown.problem_title')
+  = link_to t('help_dropdown.problem_description'), t("links.common.faq.url"), title: new_tab_suffix(t('help_dropdown.problem_description')), **external_link_attributes
