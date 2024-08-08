@@ -1,8 +1,11 @@
-= render Dropdown::MenuComponent.new(wrapper: :span, wrapper_options: { class: ['help-dropdown']}, menu_options: { id: "help-menu" }) do |menu|
-  - menu.with_button_inner_html do
-    = t('help')
+.fr-translate.fr-nav
+  .fr-nav__item
+    %button.help-btn.fr-translate__btn.fr-btn{ "aria-controls" => "help-menu", "aria-expanded" => "false" }
+      = t('help')
 
-  - menu.with_item do
-    = render partial: 'shared/help/dropdown_items/faq_item'
-  - menu.with_item do
-    = render partial: 'shared/help/dropdown_items/email_item'
+    #help-menu.help-content.fr-collapse.fr-menu
+      %ul.fr-menu__list
+        %li.flex
+          = render partial: 'shared/help/dropdown_items/faq_item'
+        %li
+          = render partial: 'shared/help/dropdown_items/email_item'
