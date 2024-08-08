@@ -8,9 +8,10 @@ fr:
         in_app_mail:
           link: "Directement par la messagerie"
         email:
-          link: "Directement par courriel :"
+          link: "Directement par courriel :"
         phone:
-          link: 'Par téléphone au %{service_telephone}'
+          label: 'Par téléphone au : '
+          link: '%{service_telephone}'
         schedule:
           prefix: "Horaires d’ouverture : "
         stats:
