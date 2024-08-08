@@ -4,23 +4,23 @@ en:
       managed_by:
         header: 'This procedure is managed by'
       contact:
-        header: 'Ask a question about the procedure :'
+        header: 'Ask a question about the procedure'
         in_app_mail:
           link: "Direclty via the chat"
         email:
-          link: "Directly by email:"
+          link: "Directly by email: "
         phone:
-          link: 'By phone: %{service_telephone}'
+          label: 'By phone: '
         schedule:
-          prefix: 'Hours : '
+          prefix: 'Hours: '
         stats:
           link: "See the procedure's stats"
       legals:
         header: "Legals"
-        data_retention: "Data retention and archiving : %{duree_conservation_dossiers_dans_ds} months"
+        data_retention: "Data retention and archiving: %{duree_conservation_dossiers_dans_ds} months"
         terms: "Laws regarding this data collection"
         dpo: "Contact the Data Protection Officer"
-      dematerialisation: 
+      dematerialisation:
         header: Paperless
         title_1: Download the PDF form
         link: "https://www.transformation.gouv.fr/france-services"
