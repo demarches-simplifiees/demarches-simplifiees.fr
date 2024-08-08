@@ -249,6 +249,7 @@ ul.dropdown-items {
 }
 
 .help-content.fr-menu ul.fr-menu__list {
+  --text-decoration: underline;
   text-align: left;
   font-size: 1rem;
 
@@ -279,6 +280,17 @@ ul.dropdown-items {
   p {
     font-size: inherit;
     line-height: inherit;
+  }
+
+  dd {
+    word-break: break-all;
+  }
+}
+
+.help-content a[href]:hover,
+.help-content a[href]:active {
+  @media (hover: hover) and (pointer: fine) {
+    --text-decoration: none;
   }
 }
 
