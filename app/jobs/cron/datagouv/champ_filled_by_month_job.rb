@@ -26,15 +26,15 @@ class Cron::Datagouv::ChampFilledByMonthJob < Cron::CronJob
     revisions.map do |revision|
       champs =
         Champ.joins(:dossier)
-          .where(dossier_id: Dossier.where(revision_id: revision, depose_at: 1.month.ago.all_month))
+          .where(dossier_id: Dossier.visible_by_user_or_administration.where(revision_id: revision, depose_at: 1.month.ago.all_month))
 
-      revision.types_de_champ.where(private: false).map do |type_de_champ|
+      revision.types_de_champ.public_only.map do |type_de_champ|
         nb =
           champs
             .where(stable_id: type_de_champ.stable_id)
-            .count { |champ| !champ.blank? }
+            .count { |champ| !champ.blank? } # rubocop:disable Rails/Present
 
-        data << [revision.procedure_id, type_de_champ.stable_id, type_de_champ.type_champ, type_de_champ.libelle, nb]
+        data << [revision.procedure_id, type_de_champ.to_typed_id, type_de_champ.type_champ, type_de_champ.libelle, nb]
       end
     end
 

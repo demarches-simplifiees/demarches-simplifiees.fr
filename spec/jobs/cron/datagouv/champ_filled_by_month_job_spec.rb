@@ -32,7 +32,7 @@ RSpec.describe Cron::Datagouv::ChampFilledByMonthJob, type: :job do
 
       it 'returns the correct data and structure' do
         expect(subject).to match_array(
-          [[procedure.id, type_de_champ.stable_id, "text", "libelle", 1]]
+          [[procedure.id, type_de_champ.to_typed_id, "text", "libelle", 1]]
         )
       end
     end
@@ -74,7 +74,7 @@ RSpec.describe Cron::Datagouv::ChampFilledByMonthJob, type: :job do
 
       it 'does not count champ' do
         expect(subject).to match_array(
-          [[procedure.id, type_de_champ.stable_id, "text", "libelle", 0]]
+          [[procedure.id, type_de_champ.to_typed_id, "text", "libelle", 0]]
         )
       end
     end
