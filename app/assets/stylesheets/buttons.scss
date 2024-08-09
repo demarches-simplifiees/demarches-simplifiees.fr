@@ -281,6 +281,9 @@ ul.dropdown-items {
     font-size: inherit;
     line-height: inherit;
   }
+  dd {
+    word-break: break-all;
+  }
 }
 
 .help-content a[href]:hover,
