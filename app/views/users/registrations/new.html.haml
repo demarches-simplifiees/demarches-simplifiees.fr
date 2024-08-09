@@ -23,5 +23,5 @@
           - c.with_describedby do
             = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
-    %ul.fr-btns-group
-      %li= f.submit t('views.shared.account.create'), class: "fr-btn"
+    .fr-btns-group
+      = f.submit t('views.shared.account.create'), class: "fr-btn"
