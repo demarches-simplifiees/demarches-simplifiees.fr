@@ -1,4 +1,5 @@
 = content_for(:page_id, 'auth')
+= content_for(:title, t('metas.signup.title'))
 
 .auth-form
   = devise_error_messages!
@@ -13,14 +14,14 @@
         %h2.fr-h6= I18n.t('views.registrations.new.subtitle')
 
       .fr-fieldset__element
-        %p.fr-text--sm= t('utils.mandatory_champs')
+        %p.fr-text--sm= t('utils.asterisk_html')
 
       .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
       .fr-fieldset__element
-        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH }) do |c|
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH, 'data-email-input-target': 'next' }) do |c|
           - c.with_describedby do
             = render partial: "devise/password_rules", locals: { id: c.describedby_id }
 
-    %ul.fr-btns-group
-      %li= f.submit t('views.shared.account.create'), class: "fr-btn"
+    .fr-btns-group
+      = f.submit t('views.shared.account.create'), class: "fr-btn"

@@ -1,7 +1,9 @@
 en:
   metas:
     signin:
-      title: "Sign-in"
+      title: "Sign in"
+    signup:
+      title: "Create an account"
     users:
       dossiers:
         index:
