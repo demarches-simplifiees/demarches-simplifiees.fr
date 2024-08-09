@@ -34,7 +34,7 @@ class Cron::Datagouv::ChampFilledByMonthJob < Cron::CronJob
             .where(stable_id: type_de_champ.stable_id)
             .count { |champ| !champ.blank? } # rubocop:disable Rails/Present
 
-        data << [revision.procedure_id, type_de_champ.to_typed_id, type_de_champ.type_champ, type_de_champ.libelle, nb]
+        data << [revision.procedure_id, type_de_champ.to_typed_id, type_de_champ.type_champ, type_de_champ.libelle, type_de_champ.mandatory, nb]
       end
     end
 
