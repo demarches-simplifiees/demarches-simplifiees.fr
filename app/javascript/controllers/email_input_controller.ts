@@ -1,6 +1,7 @@
-import { httpRequest } from '@utils';
-import { show, hide } from '@utils';
+import { hide, show } from '@utils';
+
 import { ApplicationController } from './application_controller';
+import { httpRequest } from '@utils';
 
 type checkEmailResponse = {
   success: boolean;
@@ -44,15 +45,25 @@ export class EmailInputController extends ApplicationController {
   }
 
   accept() {
-    this.ariaRegionTarget.setAttribute('aria-live', 'off');
     hide(this.ariaRegionTarget);
     this.inputTarget.value = this.suggestionTarget.innerHTML;
     this.suggestionTarget.innerHTML = '';
+    const nextTarget = document.querySelector<HTMLElement>(
+      '[data-email-input-target="next"]'
+    );
+    if (nextTarget) {
+      nextTarget.focus();
+    }
   }
 
   discard() {
-    this.ariaRegionTarget.setAttribute('aria-live', 'off');
     hide(this.ariaRegionTarget);
     this.suggestionTarget.innerHTML = '';
+    const nextTarget = document.querySelector<HTMLElement>(
+      '[data-email-input-target="next"]'
+    );
+    if (nextTarget) {
+      nextTarget.focus();
+    }
   }
 }

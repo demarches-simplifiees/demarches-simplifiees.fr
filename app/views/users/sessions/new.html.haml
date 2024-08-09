@@ -18,7 +18,7 @@
       .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
       .fr-fieldset__element
-        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password' })
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'current-password', 'data-email-input-target': 'next' })
 
         %p= link_to t('views.users.sessions.new.reset_password'), new_user_password_path, class: "fr-link"
 
