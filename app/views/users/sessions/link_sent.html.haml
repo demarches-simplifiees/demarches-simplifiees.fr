@@ -8,7 +8,7 @@
     %h1.fr-mt-6w.fr-h2.center
       = t('views.confirmation.new.title')
 
-    %p.center{ aria: { hidden: true } }= image_tag("user/confirmation-email.svg", alt: t('views.confirmation.new.image_alt'))
+    %p.center= image_tag("user/confirmation-email.svg", alt: '')
 
     = render Dsfr::AlertComponent.new(title: '', state: :info, heading_level: 'h2', extra_class_names: 'fr-mt-6w fr-mb-3w') do |c|
       - c.with_body do
