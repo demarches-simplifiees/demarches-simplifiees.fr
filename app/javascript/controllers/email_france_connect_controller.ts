@@ -3,7 +3,7 @@ import { ApplicationController } from './application_controller';
 export class EmailFranceConnectController extends ApplicationController {
   static targets = ['useFranceConnectEmail', 'emailField'];
 
-  emailFieldTarget!: HTMLInputElement;
+  emailFieldTarget!: HTMLElement;
   useFranceConnectEmailTargets!: HTMLInputElement[];
 
   connect() {
@@ -16,13 +16,12 @@ export class EmailFranceConnectController extends ApplicationController {
     );
 
     const inputElement = this.emailFieldTarget.querySelector(
-      'input'
+      'input[type="email"]'
     ) as HTMLInputElement;
 
     if (checkedTarget && checkedTarget.value === 'false') {
       this.emailFieldTarget.classList.remove('fr-hidden');
       inputElement.setAttribute('required', '');
-      this.emailFieldTarget.required = true;
     } else {
       this.emailFieldTarget.classList.add('fr-hidden');
       inputElement.removeAttribute('required');

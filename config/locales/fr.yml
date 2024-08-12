@@ -939,17 +939,18 @@ fr:
   france_connect:
     particulier:
       choose_email:
-        intro_html: "Votre compte FranceConnect utilise <b class='bold'>%{email}</b> comme email de contact."
+        intro_html: "Votre compte FranceConnect utilise <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span> comme email de contact."
         use_email_for_notifications: Souhaitez-vous l'utiliser pour recevoir les notifications concernant l'avancement de vos dossiers ?
         confirm: Confirmer
-        choose_email_contact: Choisissez votre e-mail de contact
+        choose_email_contact: Choisissez votre email de contact pour finaliser votre connexion
         alternative_email: Veuillez nous fournir l'email à utiliser pour vous contacter.
-        greetings: Bonjour,
+        keep_fc_email_html: "Oui, utiliser %{email} comme email de contact."
+        use_another_email: Non, utiliser une autre adresse.
         email_suggest:
           wanna_say: 'Voulez-vous dire ?'
       confirmation_sent:
-        confirmation_sent_by_email: Confirmation envoyée par mail
-        intro: Un mail de confirmation a été envoyé à votre adresse %{email}
+        confirmation_sent_by_email: Confirmez votre email
+        intro_html: Un mail de confirmation a été envoyé à votre adresse <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span>
         click_the_link_in_the_email: Vous devez impérativement cliquer sur le lien du mail pour activer votre adresse et recevoir les notifications sur l'avancement de vos dossiers.
         continue: Continuer
       merge:

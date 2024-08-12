@@ -1,26 +1,31 @@
 .fr-container
   %h1.text-center.mt-1= t('.choose_email_contact')
 
-  %p= t('.greetings')
-
   %p= t('.intro_html', email: @fci.email_france_connect)
 
   %p= t('.use_email_for_notifications')
 
-  = button_to t('utils.yes'),
-    france_connect_particulier_merge_using_fc_email_path,
-    params: { merge_token: @fci.merge_token },
-    class: 'fr-btn',
-    id: 'use_fc_email'
-
   .fr-fieldset.fr-w-30v.fr-mt-2w
-    = form_with url: france_connect_particulier_send_email_merge_request_path do |f|
+    = form_with url: france_connect_particulier_merge_using_fc_email_path(merge_token: @fci.merge_token), method: :post, data: { controller: 'email-france-connect' } do |f|
       = hidden_field_tag :merge_token, @fci.merge_token
 
-      .fr-fieldset__element.fr-fieldset__element--inline{ data: { email_france_connect_target: "emailField", controller: 'email-input', email_input_url_value: show_email_suggestions_path } }
+      %fieldset.fr-fieldset
+        %legend.fr-fieldset__legend
+        .fr-fieldset__element
+          .fr-radio-group
+            = f.radio_button :use_france_connect_email, true, id: 'use_france_connect_email_yes', class: 'fr-radio', required: true, data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
+            %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_yes' }
+              = t('.keep_fc_email_html', email: @fci.email_france_connect).html_safe
+        .fr-fieldset__element
+          .fr-radio-group
+            = f.radio_button :use_france_connect_email, false, id: 'use_france_connect_email_no', class: 'fr-radio', required: true, data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
+            %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_no' }
+              = t('.use_another_email')
+
+      .fr-fieldset__element.fr-fieldset__element--inline.fr-hidden{ data: { email_france_connect_target: "emailField", controller: 'email-input', email_input_url_value: show_email_suggestions_path } }
         = f.label :email, t('.alternative_email'), class: "fr-label"
         %span.fr-hint-text.mb-1= t('activerecord.attributes.user.hints.email')
-        = f.email_field :email, class: "fr-input", data: { action: "blur->email-input#checkEmail", 'email-input-target': 'input' }
+        = f.email_field :email, class: "fr-input"
 
         .suspect-email.hidden{ data: { "email-input-target": 'ariaRegion'}, aria: { live: 'off' } }
           = render Dsfr::AlertComponent.new(title: t('utils.email_suggest.wanna_say'), state: :info, heading_level: :div) do |c|
