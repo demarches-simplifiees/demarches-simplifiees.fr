@@ -25,10 +25,10 @@ class Cron::Datagouv::InstructionTimeByMonthJob < Cron::CronJob
     data.map! do |procedure_id, created_at, depose_at, en_instruction_at, processed_at|
       [
         procedure_id,
-        created_at.to_date,
-        depose_at&.to_date,
-        en_instruction_at&.to_date,
-        processed_at&.to_date
+        created_at.to_date.iso8601,
+        depose_at&.to_date&.iso8601,
+        en_instruction_at&.to_date&.iso8601,
+        processed_at&.to_date&.iso8601
       ]
     end
   end
