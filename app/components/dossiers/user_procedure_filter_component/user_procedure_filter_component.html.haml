@@ -1,4 +1,4 @@
-= form_with(url: dossiers_path, method: :get ) do |f|
+= form_with(url: dossiers_path, method: :get, class: "fr-mb-5w") do |f|
   = f.hidden_field :q, value: params[:q], id: nil
   = f.label :procedure_id, t('.procedures.label'), class: 'fr-label fr-mb-1w', for: 'procedure_select'
   .flex
