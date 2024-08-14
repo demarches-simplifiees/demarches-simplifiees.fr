@@ -113,12 +113,12 @@ describe 'users/dossiers/index', type: :view do
 
   context 'caching', caching: true do
     it "works" do
-      expect(user_dossiers).to receive(:present?).once
+      expect(user_dossiers).to receive(:present?).thrice
       2.times { render; user.reload }
     end
 
     it "cache key depends on statut" do
-      expect(user_dossiers).to receive(:present?).twice
+      expect(user_dossiers).to receive(:present?).exactly(4).times
       render
 
       assign(:statut, "termines")
@@ -128,7 +128,7 @@ describe 'users/dossiers/index', type: :view do
     end
 
     it "cache key depends on dossier updated_at" do
-      expect(user_dossiers).to receive(:present?).twice
+      expect(user_dossiers).to receive(:present?).exactly(4).times
       render
 
       dossier_termine.touch
@@ -149,7 +149,7 @@ describe 'users/dossiers/index', type: :view do
     end
 
     it "cache key depends on dossier invites" do
-      expect(user_dossiers).to receive(:present?).twice
+      expect(user_dossiers).to receive(:present?).exactly(4).times
       render
 
       create(:invite, user:)
@@ -159,7 +159,7 @@ describe 'users/dossiers/index', type: :view do
     end
 
     it "cache key depends on dossier deletion" do
-      expect(user_dossiers).to receive(:present?).twice
+      expect(user_dossiers).to receive(:present?).exactly(4).times
       render
 
       dossier_termine.hide_and_keep_track!(:automatic, :expired)

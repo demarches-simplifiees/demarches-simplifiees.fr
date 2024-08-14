@@ -23,8 +23,8 @@
             = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
 
     - if @search_terms.blank?
-      - cache([I18n.locale, current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
-        - if @user_dossiers.present? || @dossiers_traites.present? || @dossiers_invites.present? || @dossiers_close_to_expiration.present? || @dossiers_supprimes_recemment.present? || @dossiers_supprimes_definitivement.present? || @dossier_transferes.present?
+      - if @user_dossiers.present? || @dossiers_traites.present? || @dossiers_invites.present? || @dossiers_close_to_expiration.present? || @dossiers_supprimes_recemment.present? || @dossiers_supprimes_definitivement.present? || @dossier_transferes.present?
+        - cache([I18n.locale, current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
           %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
             %ul.fr-tabs__list{ role: 'tablist' }
 
