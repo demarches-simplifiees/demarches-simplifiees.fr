@@ -884,7 +884,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     it 'can change order' do
-      expect { get :update_sort, params: { procedure_id: procedure.id, facet_id: "individual/nom", order: 'asc' } }
+      expect { get :update_sort, params: { procedure_id: procedure.id, column_id: "individual/nom", order: 'asc' } }
         .to change { procedure_presentation.sort }
         .from({ "column" => "notifications", "order" => "desc", "table" => "notifications" })
         .to({ "column" => "nom", "order" => "asc", "table" => "individual" })
@@ -901,7 +901,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     subject do
-      post :add_filter, params: { procedure_id: procedure.id, field: "individual/nom", value: "n" * 110, statut: "a-suivre" }
+      post :add_filter, params: { procedure_id: procedure.id, column: "individual/nom", value: "n" * 110, statut: "a-suivre" }
     end
 
     it 'should render the error' do

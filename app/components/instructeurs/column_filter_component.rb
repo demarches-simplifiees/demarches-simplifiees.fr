@@ -1,34 +1,34 @@
 class Instructeurs::ColumnFilterComponent < ApplicationComponent
-  attr_reader :procedure, :procedure_presentation, :statut, :facet
+  attr_reader :procedure, :procedure_presentation, :statut, :column
 
-  def initialize(procedure:, procedure_presentation:, statut:, facet: nil)
+  def initialize(procedure:, procedure_presentation:, statut:, column: nil)
     @procedure = procedure
     @procedure_presentation = procedure_presentation
     @statut = statut
-    @facet = facet
+    @column = column
   end
 
-  def facet_type = facet.present? ? facet.type : :text
+  def column_type = column.present? ? column.type : :text
 
-  def options_for_select_of_field
-    if facet.scope.present?
-      I18n.t(facet.scope).map(&:to_a).map(&:reverse)
-    elsif facet.table == 'groupe_instructeur'
+  def options_for_select_of_column
+    if column.scope.present?
+      I18n.t(column.scope).map(&:to_a).map(&:reverse)
+    elsif column.table == 'groupe_instructeur'
       current_instructeur.groupe_instructeurs.filter_map do
         if _1.procedure_id == procedure.id
           [_1.label, _1.id]
         end
       end
     else
-      find_type_de_champ(facet.column).options_for_select
+      find_type_de_champ(column.column).options_for_select
     end
   end
 
   def filter_react_props
     {
-      selected_key: facet.present? ? facet.id : '',
-      items: filterable_fields_options,
-      name: :field,
+      selected_key: column.present? ? column.id : '',
+      items: filterable_columns_options,
+      name: :column,
       id: 'search-filter',
       'aria-describedby': 'instructeur-filter-combo-label',
       form: 'filter-component',
@@ -36,11 +36,11 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
     }
   end
 
-  def filterable_fields_options
-    procedure.facets.filter_map do |facet|
-      next if facet.filterable == false
+  def filterable_columns_options
+    procedure.columns.filter_map do |column|
+      next if column.filterable == false
 
-      [facet.label, facet.id]
+      [column.label, column.id]
     end
   end
 

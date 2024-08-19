@@ -141,13 +141,13 @@ module Instructeurs
     end
 
     def update_sort
-      procedure_presentation.update_sort(params[:facet_id], params[:order])
+      procedure_presentation.update_sort(params[:column_id], params[:order])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
     def add_filter
-      if !procedure_presentation.add_filter(statut, params[:field], params[:value])
+      if !procedure_presentation.add_filter(statut, params[:column], params[:value])
         flash.alert = procedure_presentation.errors.full_messages
       end
 
@@ -158,11 +158,11 @@ module Instructeurs
       @statut = statut
       @procedure = procedure
       @procedure_presentation = procedure_presentation
-      @facet = procedure.find_facet(id: params[:field])
+      @column = procedure.find_column(id: params[:column])
     end
 
     def remove_filter
-      procedure_presentation.remove_filter(statut, params[:field], params[:value])
+      procedure_presentation.remove_filter(statut, params[:column], params[:value])
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end

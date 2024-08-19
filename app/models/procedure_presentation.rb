@@ -26,10 +26,10 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayed_fields_for_headers
     [
-      Facet.new(table: 'self', column: 'id', classname: 'number-col'),
-      *displayed_fields.map { Facet.new(**_1.deep_symbolize_keys) },
-      Facet.new(table: 'self', column: 'state', classname: 'state-col'),
-      *procedure.sva_svr_facets
+      Column.new(table: 'self', column: 'id', classname: 'number-col'),
+      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys) },
+      Column.new(table: 'self', column: 'state', classname: 'state-col'),
+      *procedure.sva_svr_columns
     ]
   end
 
@@ -57,9 +57,9 @@ class ProcedurePresentation < ApplicationRecord
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
     else
-      facet = procedure.facets.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
+      column = procedure.columns.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
 
-      if facet.type == :date
+      if column.type == :date
         parsed_date = safe_parse_date(filter['value'])
 
         return parsed_date.present? ? I18n.l(parsed_date) : nil
@@ -75,25 +75,21 @@ class ProcedurePresentation < ApplicationRecord
     nil
   end
 
-  def add_filter(statut, facet_id, value)
+  def add_filter(statut, column_id, value)
     if value.present?
-      facet = procedure.find_facet(id: facet_id)
-      label = facet.label
-      column = facet.column
-      table = facet.table
-      value_column = facet.value_column
+      column = procedure.find_column(id: column_id)
 
-      case table
+      case column.table
       when TYPE_DE_CHAMP
-        value = find_type_de_champ(column).dynamic_type.human_to_filter(value)
+        value = find_type_de_champ(column.column).dynamic_type.human_to_filter(value)
       end
 
       updated_filters = filters.dup
       updated_filters[statut] << {
-        'label' => label,
-        TABLE => table,
-        COLUMN => column,
-        'value_column' => value_column,
+        'label' => column.label,
+        TABLE => column.table,
+        COLUMN => column.column,
+        'value_column' => column.value_column,
         'value' => value
       }
 
@@ -101,36 +97,35 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def remove_filter(statut, facet_id, value)
-    facet = procedure.find_facet(id: facet_id)
-    table, column = facet.table, facet.column
-
+  def remove_filter(statut, column_id, value)
+    column = procedure.find_column(id: column_id)
     updated_filters = filters.dup
+
     updated_filters[statut] = filters[statut].reject do |filter|
-      filter.values_at(TABLE, COLUMN, 'value') == [table, column, value]
+      filter.values_at(TABLE, COLUMN, 'value') == [column.table, column.column, value]
     end
 
     update!(filters: updated_filters)
   end
 
-  def update_displayed_fields(facet_ids)
-    facet_ids = Array.wrap(facet_ids)
-    facets = facet_ids.map { |id| procedure.find_facet(id:) }
+  def update_displayed_fields(column_ids)
+    column_ids = Array.wrap(column_ids)
+    columns = column_ids.map { |id| procedure.find_column(id:) }
 
-    update!(displayed_fields: facets)
+    update!(displayed_fields: columns)
 
-    if !sort_to_facet_id(sort).in?(facet_ids)
+    if !sort_to_column_id(sort).in?(column_ids)
       update!(sort: Procedure.default_sort)
     end
   end
 
-  def update_sort(facet_id, order)
-    facet = procedure.find_facet(id: facet_id)
+  def update_sort(column_id, order)
+    column = procedure.find_column(id: column_id)
 
     update!(sort: {
-      TABLE => facet.table,
-      COLUMN => facet.column,
-      ORDER => order.presence || opposite_order_for(facet.table, facet.column)
+      TABLE => column.table,
+      COLUMN => column.column,
+      ORDER => order.presence || opposite_order_for(column.table, column.column)
     })
   end
 
@@ -203,7 +198,7 @@ class ProcedurePresentation < ApplicationRecord
       value_column = filters.pluck('value_column').compact.first || :value
       case table
       when 'self'
-        field = procedure.dossier_facets.find { |h| h.column == column }
+        field = procedure.dossier_columns.find { |h| h.column == column }
         if field.type == :date
           dates = values
             .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
@@ -258,7 +253,7 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   # type_de_champ/4373429
-  def sort_to_facet_id(sort)
+  def sort_to_column_id(sort)
     [sort[TABLE], sort[COLUMN]].join(SLASH)
   end
 
@@ -318,9 +313,9 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def valid_columns_for_table(table)
-    @column_whitelist ||= procedure.facets
+    @column_whitelist ||= procedure.columns
       .group_by(&:table)
-      .transform_values { |facets| Set.new(facets.map(&:column)) }
+      .transform_values { |columns| Set.new(columns.map(&:column)) }
 
     @column_whitelist[table] || []
   end

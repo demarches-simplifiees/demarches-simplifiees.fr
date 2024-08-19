@@ -1,4 +1,4 @@
-class Facet
+class Column
   attr_reader :table, :column, :label, :classname, :virtual, :type, :scope, :value_column, :filterable
 
   def initialize(table:, column:, label: nil, virtual: false, type: :text, value_column: :value, filterable: true, classname: '', scope: '')

@@ -6,7 +6,7 @@ class Procedure < ApplicationRecord
   include ProcedureSVASVRConcern
   include ProcedureChorusConcern
   include PiecesJointesListConcern
-  include FacetsConcern
+  include ColumnsConcern
 
   include Discard::Model
   self.discard_column = :hidden_at

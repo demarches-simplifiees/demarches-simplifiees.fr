@@ -6,14 +6,14 @@ describe Instructeurs::ColumnPickerComponent, type: :component do
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-  describe "#displayable_fields_for_select" do
-    let(:default_user_email) { Facet.new(label: 'email', table: 'user', column: 'email') }
-    let(:excluded_displayable_field) { Facet.new(label: "label1", table: "table1", column: "column1", virtual: true) }
+  describe "#displayable_columns_for_select" do
+    let(:default_user_email) { Column.new(label: 'email', table: 'user', column: 'email') }
+    let(:excluded_displayable_field) { Column.new(label: "label1", table: "table1", column: "column1", virtual: true) }
 
-    subject { component.displayable_fields_for_select }
+    subject { component.displayable_columns_for_select }
 
     before do
-      allow(procedure).to receive(:facets).and_return([
+      allow(procedure).to receive(:columns).and_return([
         default_user_email,
         excluded_displayable_field
       ])

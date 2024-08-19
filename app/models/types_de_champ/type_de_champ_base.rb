@@ -96,9 +96,9 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
-  def facets(table:)
+  def columns(table:)
     [
-      Facet.new(
+      Column.new(
         table:,
         column: stable_id.to_s,
         label: libelle,
