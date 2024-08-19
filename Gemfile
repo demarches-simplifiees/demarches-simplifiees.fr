@@ -105,7 +105,6 @@ gem 'view_component'
 gem 'vite_rails'
 gem 'warden'
 gem 'webrick', require: false
-gem 'yabeda-graphql'
 gem 'yabeda-prometheus'
 gem 'yabeda-sidekiq'
 gem 'zipline'

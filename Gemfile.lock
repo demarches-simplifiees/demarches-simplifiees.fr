@@ -859,9 +859,6 @@ GEM
       anyway_config (>= 1.0, < 3)
       concurrent-ruby
       dry-initializer
-    yabeda-graphql (0.2.3)
-      graphql (>= 1.9, < 3)
-      yabeda (~> 0.2)
     yabeda-prometheus (0.9.1)
       prometheus-client (>= 3.0, < 5.0)
       rack
@@ -1026,7 +1023,6 @@ DEPENDENCIES
   web-console
   webmock
   webrick
-  yabeda-graphql
   yabeda-prometheus
   yabeda-sidekiq
   zipline
