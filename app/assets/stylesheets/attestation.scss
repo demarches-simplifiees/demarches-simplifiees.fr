@@ -27,6 +27,7 @@
     font-size: 8pt;
     content: counter(page) " / " counter(pages);
     margin-top: 17mm;
+    white-space: nowrap;
   }
 
   @bottom-left {
@@ -169,5 +170,6 @@
     position: running(footer);
     font-size: 7pt;
     font-weight: 100;
+    white-space: nowrap;
   }
 }
