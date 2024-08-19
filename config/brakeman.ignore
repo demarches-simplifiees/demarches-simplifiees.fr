@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 323,
+          "line": 329,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -66,29 +66,6 @@
         89
       ],
       "note": ""
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "8cd7b7581b0d05fb6e2694bb540860dbc58700ecd95a713648cd65c03d66a78e",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/facets/json_path_facet.rb",
-      "line": 10,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.with_type_de_champ(stable_id).where(\"#{communes.count} OR #{\"(#{query} LIKE ?)\"}\", *communes.map do\n \"%#{value}%\"\n end)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Facets::JSONPathFacet",
-        "method": "filtered_ids"
-      },
-      "user_input": "communes.count",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "query had been sanitized. LIKE ? is also sanitized"
     },
     {
       "warning_type": "Cross-Site Scripting",
@@ -146,6 +123,29 @@
         89
       ],
       "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "b2a88e2f0728eca190f3d65e6fa195d51fa547583ac19c1dcbd40fa5a6d027d2",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/facets/json_path_facet.rb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.with_type_de_champ(stable_id).where(\"#{communes.count} OR #{\"(#{query} ILIKE ?)\"}\", *communes.map do\n \"%#{value}%\"\n end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Facets::JSONPathFacet",
+        "method": "filtered_ids"
+      },
+      "user_input": "communes.count",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "already sanitized"
     },
     {
       "warning_type": "SQL Injection",
@@ -226,6 +226,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-07-24 10:26:22 +0200",
+  "updated": "2024-08-19 11:01:55 +0200",
   "brakeman_version": "6.1.2"
 }
