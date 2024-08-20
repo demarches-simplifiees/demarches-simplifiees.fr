@@ -30,12 +30,13 @@
         - if @attestation_template.label_direction.present?
           = simple_format @attestation_template.label_direction, class: "direction"
 
+    - if @attestation_template.footer.present?
+      %footer
+        = simple_format @attestation_template.footer
+
     .main
       = sanitize(@body, attributes: %w[class style], tags: Rails.configuration.action_view.sanitized_allowed_tags + %w[header])
 
       - if @attestation_template.signature.present?
         .signature
           = image_tag(@attestation_template.signature_url)
-
-  - if @attestation_template.footer.present?
-    = simple_format @attestation_template.footer, class: "footer"
