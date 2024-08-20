@@ -121,6 +121,33 @@ describe "procedure filters" do
       end
     end
 
+    describe 'rna' do
+      let(:types_de_champ_public) { [{ type: :rna }] }
+      scenario "should be able to find by rna addresse with custom enum lookup", js: true do
+        rna_champ = new_unfollow_dossier.champs.find(&:rna?)
+        rna_champ.update!(
+          value: 'W412005131',
+          value_json: {
+            "city_code" => "37261",
+            "city_name" => "Tours",
+            "postal_code" => "37000",
+            "region_code" => "24",
+            "region_name" => "Centre-Val de Loire",
+            "street_name" => "fake",
+            "street_number" => "fake",
+            "street_address" => "fake",
+            "departement_code" => "37",
+            "departement_name" => "Indre-et-Loire"
+          }
+        )
+        rna_champ.reload
+        champ_select_value = "37 – Indre-et-Loire"
+
+        add_filter("#{rna_champ.libelle} – département", champ_select_value, type: :enum)
+        expect(page).to have_link(new_unfollow_dossier.id.to_s)
+      end
+    end
+
     describe 'region' do
       let(:types_de_champ_public) { [{ type: :regions }] }
       scenario "should be able to find by region with custom enum lookup", js: true do
