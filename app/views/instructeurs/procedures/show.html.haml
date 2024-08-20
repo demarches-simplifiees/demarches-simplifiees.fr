@@ -98,8 +98,8 @@
                   %th.text-center
                     %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
 
-                - @procedure_presentation.displayed_fields_for_headers.each do |field|
-                  = render partial: "header_field", locals: { field: field, classname: field['classname'] }
+                - @procedure_presentation.displayed_fields_for_headers.each do |column|
+                  = render Instructeurs::ColumnTableHeaderComponent.new(procedure_presentation: @procedure_presentation, column:)
 
                 %th.follow-col
                   Actions
@@ -109,12 +109,7 @@
                     - menu.with_button_inner_html do
                       = t('views.instructeurs.dossiers.personalize')
                     - menu.with_form do
-                      = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
-                        %react-fragment
-                          = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_fields_for_select, selected_keys: @displayable_fields_selected, name: 'values[]', 'aria-label': 'Colonne à afficher'
-
-                        = submit_tag t('views.instructeurs.dossiers.save'), class: 'fr-btn fr-btn--secondary'
-
+                      = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
             %tbody
               = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)

@@ -414,7 +414,6 @@ en:
         repasser_en_construction: Revert to submitted
         show_deleted_dossiers: Show deleted files
         follow_file: Follow-up the file
-        save: Save
         stop_follow: No longer follow
         no_file: No file
         dossier_synthesis: Summary of files

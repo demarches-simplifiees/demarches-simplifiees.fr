@@ -8,6 +8,10 @@ class ApplicationComponent < ViewComponent::Base
     controller.current_user
   end
 
+  def current_instructeur
+    controller.current_instructeur
+  end
+
   def current_administrateur
     controller.current_administrateur
   end
