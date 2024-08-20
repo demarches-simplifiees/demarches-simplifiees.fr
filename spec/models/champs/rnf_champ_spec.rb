@@ -96,6 +96,25 @@ describe Champs::RNFChamp, type: :model do
         expect(subject.failure.reason).to be_a(API::Client::HTTPError)
       }
     end
+
+    describe 'update_with_external_data!' do
+      it 'works' do
+        value_json = {
+          :street_number => "16",
+          :street_name => "Rue du Général de Boissieu",
+          :street_address => "16 Rue du Général de Boissieu",
+          :postal_code => "75015",
+          :city_name => "Paris 15e Arrondissement",
+          :city_code => "75115",
+          :departement_code => "75",
+          :departement_name => "Paris",
+          :region_code => "11",
+          :region_name => "Île-de-France"
+        }
+        expect(champ).to receive(:update!).with(data: anything, value_json:)
+        champ.update_with_external_data!(data: subject.value!)
+      end
+    end
   end
 
   describe 'for_export' do
