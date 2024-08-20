@@ -144,7 +144,7 @@
                       - else
                         %a.cell-link{ href: path }
                           = column
-                          = "- #{t('views.instructeurs.dossiers.deleted_reason', reason: p.hidden_by_reason)}" if p.hidden_by_user_at.present?
+                          = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
 
                   %td.status-col
                     - status = [status_badge(p.state)]
