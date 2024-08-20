@@ -43,11 +43,7 @@
             = t('views.users.dossiers.dossiers_list.n_dossier')
             = number_with_html_delimiter(dossier.id)
 
-          - if @statut == "dossiers-supprimes"
-            %span.fr-badge.fr-badge--sm.fr-badge--warning
-              = t('views.users.dossiers.dossiers_list.deleted_badge')
-          - else
-            = status_badge_user(dossier, 'fr-mb-1w')
+          = status_badge_user(dossier, 'fr-mb-1w')
 
           - if dossier.pending_correction?
             %br

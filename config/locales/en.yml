@@ -513,7 +513,8 @@ en:
           created_at: Created at %{date}
           updated_at: updated at %{date}
           shared_with: File shared by %{owner} with
-          deleted: Deleted at %{date}
+          deleted_by_user: Deleted on %{date} by user
+          deleted_by_automatic: Deleted on %{date} automatically due to expiration date
           procedure_closed:
             brouillon:
               internal_procedure_html: This procedure is closed. You cannot submit this file. We invite you to submit a new one on the %{link} which replaces it.
