@@ -27,17 +27,7 @@ class API::V2::GraphqlController < API::V2::BaseController
   def process_action(*args)
     super
   rescue ActionDispatch::Http::Parameters::ParseError => exception
-    render json: {
-      errors: [
-        {
-          message: exception.cause.message,
-          extensions: {
-            code: :bad_request
-          }
-        }
-      ],
-      data: nil
-    }, status: 400
+    render json: graphql_error(exception.cause.message, :bad_request), status: :bad_request
   end
 
   def query
@@ -77,33 +67,14 @@ class API::V2::GraphqlController < API::V2::BaseController
   end
 
   def handle_parse_error(exception, code)
-    render json: {
-      errors: [
-        {
-          message: exception.message,
-          extensions: { code: }
-        }
-      ],
-      data: nil
-    }, status: 400
+    render json: graphql_error(exception.message, code), status: :bad_request
   end
 
   def handle_error_in_development(exception)
     logger.error exception.message
     logger.error exception.backtrace.join("\n")
 
-    render json: {
-      errors: [
-        {
-          message: exception.message,
-          extensions: {
-            code: :internal_server_error,
-            backtrace: exception.backtrace
-          }
-        }
-      ],
-      data: nil
-    }, status: 500
+    render json: graphql_error(exception.message, :internal_server_error, backtrace: exception.backtrace), status: :internal_server_error
   end
 
   def handle_error_in_production(exception)
@@ -113,17 +84,6 @@ class API::V2::GraphqlController < API::V2::BaseController
       Sentry.capture_exception(exception)
     end
 
-    render json: {
-      errors: [
-        {
-          message: "Internal Server Error",
-          extensions: {
-            code: :internal_server_error,
-            exception_id:
-          }
-        }
-      ],
-      data: nil
-    }, status: 500
+    render json: graphql_error("Internal Server Error", :internal_server_error, exception_id:), status: :internal_server_error
   end
 end

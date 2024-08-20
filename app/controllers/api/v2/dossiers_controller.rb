@@ -1,5 +1,7 @@
 class API::V2::DossiersController < API::V2::BaseController
   before_action :ensure_dossier_present
+  skip_before_action :authenticate_from_token
+  skip_before_action :allow_only_persisted_queries
 
   def pdf
     @acls = PiecesJustificativesService.new(user_profile: Administrateur.new, export_template: nil).acl_for_dossier_export(dossier.procedure)
