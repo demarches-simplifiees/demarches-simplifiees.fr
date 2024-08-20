@@ -16,7 +16,7 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
       let(:included_displayable_field) do
         [
           Column.new(label: 'email', table: 'user', column: 'email'),
-          Column.new(label: "depose_since", table: "self", column: "depose_since", virtual: true)
+          Column.new(label: "depose_since", table: "self", column: "depose_since", displayable: false)
         ]
       end
 
