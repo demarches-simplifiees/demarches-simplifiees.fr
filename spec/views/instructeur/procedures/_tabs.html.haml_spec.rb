@@ -11,7 +11,7 @@ describe 'instructeurs/procedures/_tabs', type: :view do
             suivis_count: 0,
             traites_count: 0,
             tous_count: 0,
-            supprimes_recemment_count: 0,
+            supprimes_count: 0,
             archives_count: 0,
             expirant_count: 0,
             has_en_cours_notifications: false,
