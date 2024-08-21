@@ -14,37 +14,37 @@ describe ColumnsConcern do
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
-          { label: 'Nº dossier', table: 'self', column: 'id', classname: 'number-col', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'notifications', table: 'notifications', column: 'notifications', virtual: false, type: :text, scope: '', value_column: :value, filterable: false },
-          { label: 'Créé le', table: 'self', column: 'created_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: 'Mis à jour le', table: 'self', column: 'updated_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: 'Déposé le', table: 'self', column: 'depose_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: 'En construction le', table: 'self', column: 'en_construction_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: 'En instruction le', table: 'self', column: 'en_instruction_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: 'Terminé le', table: 'self', column: 'processed_at', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: "Mis à jour depuis", table: "self", column: "updated_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: "Déposé depuis", table: "self", column: "depose_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: "En construction depuis", table: "self", column: "en_construction_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: "En instruction depuis", table: "self", column: "en_instruction_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: "Terminé depuis", table: "self", column: "processed_since", classname: "", virtual: true, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: "Statut", table: "self", column: "state", classname: "", virtual: true, scope: 'instructeurs.dossiers.filterable_state', type: :enum, value_column: :value, filterable: true },
-          { label: 'Demandeur', table: 'user', column: 'email', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', classname: '', virtual: false, type: :enum, scope: '', value_column: :value, filterable: true },
-          { label: 'Avis oui/non', table: 'avis', column: 'question_answer', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: false },
-          { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Raison sociale', table: 'etablissement', column: 'entreprise_raison_sociale', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'SIRET siège social', table: 'etablissement', column: 'entreprise_siret_siege_social', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Date de création', table: 'etablissement', column: 'entreprise_date_creation', classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true },
-          { label: 'SIRET', table: 'etablissement', column: 'siret', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Libellé NAF', table: 'etablissement', column: 'libelle_naf', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: 'Code postal', table: 'etablissement', column: 'code_postal', classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: tdc_1.libelle, table: 'type_de_champ', column: tdc_1.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: tdc_2.libelle, table: 'type_de_champ', column: tdc_2.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: tdc_private_1.libelle, table: 'type_de_champ', column: tdc_private_1.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true },
-          { label: tdc_private_2.libelle, table: 'type_de_champ', column: tdc_private_2.stable_id.to_s, classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true }
+          { label: 'Nº dossier', table: 'self', column: 'id', classname: 'number-col', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'notifications', table: 'notifications', column: 'notifications', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
+          { label: 'Créé le', table: 'self', column: 'created_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'Mis à jour le', table: 'self', column: 'updated_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'Déposé le', table: 'self', column: 'depose_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'En construction le', table: 'self', column: 'en_construction_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'En instruction le', table: 'self', column: 'en_instruction_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'Terminé le', table: 'self', column: 'processed_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Mis à jour depuis", table: "self", column: "updated_since", classname: "", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Déposé depuis", table: "self", column: "depose_since", classname: "", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "En construction depuis", table: "self", column: "en_construction_since", classname: "", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "En instruction depuis", table: "self", column: "en_instruction_since", classname: "", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Terminé depuis", table: "self", column: "processed_since", classname: "", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: "Statut", table: "self", column: "state", classname: "", displayable: false, scope: 'instructeurs.dossiers.filterable_state', type: :enum, value_column: :value, filterable: true },
+          { label: 'Demandeur', table: 'user', column: 'email', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', classname: '', displayable: true, type: :enum, scope: '', value_column: :value, filterable: true },
+          { label: 'Avis oui/non', table: 'avis', column: 'question_answer', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
+          { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Raison sociale', table: 'etablissement', column: 'entreprise_raison_sociale', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'SIRET siège social', table: 'etablissement', column: 'entreprise_siret_siege_social', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Date de création', table: 'etablissement', column: 'entreprise_date_creation', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
+          { label: 'SIRET', table: 'etablissement', column: 'siret', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Libellé NAF', table: 'etablissement', column: 'libelle_naf', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Code postal', table: 'etablissement', column: 'code_postal', classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_1.libelle, table: 'type_de_champ', column: tdc_1.stable_id.to_s, classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_2.libelle, table: 'type_de_champ', column: tdc_2.stable_id.to_s, classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_private_1.libelle, table: 'type_de_champ', column: tdc_private_1.stable_id.to_s, classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: tdc_private_2.libelle, table: 'type_de_champ', column: tdc_private_2.stable_id.to_s, classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true }
         ].map { Column.new(**_1) }
       }
 
@@ -69,9 +69,9 @@ describe ColumnsConcern do
     end
 
     context 'when the procedure is for individuals' do
-      let(:name_field) { Column.new(label: "Prénom", table: "individual", column: "prenom", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
-      let(:surname_field) { Column.new(label: "Nom", table: "individual", column: "nom", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
-      let(:gender_field) { Column.new(label: "Civilité", table: "individual", column: "gender", classname: '', virtual: false, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:name_field) { Column.new(label: "Prénom", table: "individual", column: "prenom", classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:surname_field) { Column.new(label: "Nom", table: "individual", column: "nom", classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true) }
+      let(:gender_field) { Column.new(label: "Civilité", table: "individual", column: "gender", classname: '', displayable: true, type: :text, scope: '', value_column: :value, filterable: true) }
       let(:procedure) { create(:procedure, :for_individual) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
@@ -82,8 +82,8 @@ describe ColumnsConcern do
       let(:procedure) { create(:procedure, :for_individual, :sva) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { Column.new(label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
-      let(:decision_before_field) { Column.new(label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_on) { Column.new(label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_before_field) { Column.new(label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", classname: '', displayable: false, type: :date, scope: '', value_column: :value, filterable: true) }
 
       it { is_expected.to include(decision_on, decision_before_field) }
     end
@@ -92,8 +92,8 @@ describe ColumnsConcern do
       let(:procedure) { create(:procedure, :for_individual, :svr) }
       let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
-      let(:decision_on) { Column.new(label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", classname: '', virtual: false, type: :date, scope: '', value_column: :value, filterable: true) }
-      let(:decision_before_field) { Column.new(label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", classname: '', virtual: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_on) { Column.new(label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true) }
+      let(:decision_before_field) { Column.new(label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", classname: '', displayable: false, type: :date, scope: '', value_column: :value, filterable: true) }
 
       it { is_expected.to include(decision_on, decision_before_field) }
     end
