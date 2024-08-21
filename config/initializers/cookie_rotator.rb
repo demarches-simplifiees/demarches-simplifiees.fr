@@ -1,20 +1,24 @@
 # frozen_string_literal: true
 
-# TODO: Enable cookies rotation when new SHA256 will be enforced
-# See new_framework_defaults_7.0.rb
-# key_generator_hash_digest_class = OpenSSL::Digest::SHA256 will be
-#
-# Rails.application.config.after_initialize do
-#   Rails.application.config.action_dispatch.cookies_rotations.tap do |cookies|
-#     salt = Rails.application.config.action_dispatch.authenticated_encrypted_cookie_salt
-#     secret_key_base = Rails.application.secret_key_base
+# This cookie rotator converts cookies from the old SHA1 hash (Rails 6) to SHA256 hash (Rails 7 default).
+# It should be kept enabled for approximately 1 month to ensure most users have their cookies rotated.
+# After this period, it can be safely removed.
+# Without this rotator, all users would have been signed out.
+Rails.application.config.after_initialize do
+  Rails.application.config.action_dispatch.cookies_rotations.tap do |cookies|
+    authenticated_encrypted_cookie_salt = Rails.application.config.action_dispatch.authenticated_encrypted_cookie_salt
+    signed_cookie_salt = Rails.application.config.action_dispatch.signed_cookie_salt
+    secret_key_base = Rails.application.secret_key_base
 
-#     key_generator = ActiveSupport::KeyGenerator.new(
-#       secret_key_base, iterations: 1000, hash_digest_class: OpenSSL::Digest::SHA1
-#     )
-#     key_len = ActiveSupport::MessageEncryptor.key_len
-#     secret = key_generator.generate_key(salt, key_len)
+    key_generator = ActiveSupport::KeyGenerator.new(
+      secret_key_base, iterations: 1000, hash_digest_class: OpenSSL::Digest::SHA1 # Rails 6 hash
+    )
+    key_len = ActiveSupport::MessageEncryptor.key_len
 
-#     cookies.rotate :encrypted, secret
-#   end
-# end
+    old_encrypted_secret = key_generator.generate_key(authenticated_encrypted_cookie_salt, key_len)
+    old_signed_secret = key_generator.generate_key(signed_cookie_salt)
+
+    cookies.rotate :encrypted, old_encrypted_secret
+    cookies.rotate :signed, old_signed_secret
+  end
+end
