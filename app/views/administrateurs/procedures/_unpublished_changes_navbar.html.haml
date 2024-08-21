@@ -1,0 +1,9 @@
+.sticky-header.sticky-header-warning
+  .fr-container
+    %p.flex.justify-between.align-center.fr-text-default--warning
+      %span
+        = dsfr_icon("fr-icon-warning-fill fr-mr-1v")
+        = t('.intro_html').html_safe
+      %span.no-wrap
+        = link_to t('.see_changes'), admin_procedure_path(procedure), class: 'fr-btn fr-btn--secondary fr-mr-2w'
+        = link_to t('.publish_changes'), admin_procedure_publish_revision_path(procedure), class: 'fr-btn', method: :post,  data: { disable_with: "Publication...", confirm: 'Êtes-vous sûr de vouloir publier les modifications ?' }
