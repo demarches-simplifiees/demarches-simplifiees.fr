@@ -15,6 +15,8 @@ module Maintenance
       data = APIEntreprise::RNAAdapter.new(champ.value, champ&.dossier&.procedure&.id).to_params
       return if data.blank?
       champ.update(value_json: APIGeoService.parse_rna_address(data['adresse']))
+    rescue URI::InvalidURIError
+      # some data raise this error
     end
 
     def count
