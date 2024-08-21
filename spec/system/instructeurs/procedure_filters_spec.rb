@@ -1,6 +1,7 @@
 describe "procedure filters" do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :text }, { type: :departements }, { type: :regions }, { type: :drop_down_list }], instructeurs: [instructeur]) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public:, instructeurs: [instructeur]) }
+  let(:types_de_champ_public) { [{ type: :text }] }
   let!(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
   let!(:champ) { Champ.find_by(stable_id: type_de_champ.stable_id, dossier_id: new_unfollow_dossier.id) }
@@ -91,36 +92,72 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end
+  describe 'with dropdown' do
+    let(:types_de_champ_public) { [{ type: :drop_down_list }] }
 
-  scenario "should be able to user custom fiters", js: true do
-    # use date filter
-    add_filter("En construction le", "10/10/2010", type: :date)
+    scenario "should be able to user custom fiters", js: true do
+      # use date filter
+      add_filter("En construction le", "10/10/2010", type: :date)
 
-    # use statut dropdown filter
-    add_filter('Statut', 'En construction', type: :enum)
+      # use statut dropdown filter
+      add_filter('Statut', 'En construction', type: :enum)
 
-    # use choice dropdown filter
-    add_filter('Choix unique', 'val1', type: :enum)
+      # use choice dropdown filter
+      add_filter('Choix unique', 'val1', type: :enum)
+    end
   end
 
   describe 'with a vcr cached cassette' do
-    scenario "should be able to find by departements with custom enum lookup", js: true do
-      departement_champ = new_unfollow_dossier.champs.find(&:departement?)
-      departement_champ.update!(value: 'Oise', external_id: '60')
-      departement_champ.reload
-      champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
+    describe 'departements' do
+      let(:types_de_champ_public) { [{ type: :departements }] }
+      scenario "should be able to find by departements with custom enum lookup", js: true do
+        departement_champ = new_unfollow_dossier.champs.find(&:departement?)
+        departement_champ.update!(value: 'Oise', external_id: '60')
+        departement_champ.reload
+        champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
 
-      add_filter(departement_champ.libelle, champ_select_value, type: :enum)
-      expect(page).to have_link(new_unfollow_dossier.id.to_s)
+        add_filter(departement_champ.libelle, champ_select_value, type: :enum)
+        expect(page).to have_link(new_unfollow_dossier.id.to_s)
+      end
     end
 
-    scenario "should be able to find by region with custom enum lookup", js: true do
-      region_champ = new_unfollow_dossier.champs.find(&:region?)
-      region_champ.update!(value: 'Bretagne', external_id: '53')
-      region_champ.reload
+    describe 'rna' do
+      let(:types_de_champ_public) { [{ type: :rna }] }
+      scenario "should be able to find by rna addresse with custom enum lookup", js: true do
+        rna_champ = new_unfollow_dossier.champs.find(&:rna?)
+        rna_champ.update!(
+          value: 'W412005131',
+          value_json: {
+            "city_code" => "37261",
+            "city_name" => "Tours",
+            "postal_code" => "37000",
+            "region_code" => "24",
+            "region_name" => "Centre-Val de Loire",
+            "street_name" => "fake",
+            "street_number" => "fake",
+            "street_address" => "fake",
+            "departement_code" => "37",
+            "departement_name" => "Indre-et-Loire"
+          }
+        )
+        rna_champ.reload
+        champ_select_value = "37 – Indre-et-Loire"
 
-      add_filter(region_champ.libelle, region_champ.value, type: :enum)
-      expect(page).to have_link(new_unfollow_dossier.id.to_s)
+        add_filter("#{rna_champ.libelle} – département", champ_select_value, type: :enum)
+        expect(page).to have_link(new_unfollow_dossier.id.to_s)
+      end
+    end
+
+    describe 'region' do
+      let(:types_de_champ_public) { [{ type: :regions }] }
+      scenario "should be able to find by region with custom enum lookup", js: true do
+        region_champ = new_unfollow_dossier.champs.find(&:region?)
+        region_champ.update!(value: 'Bretagne', external_id: '53')
+        region_champ.reload
+
+        add_filter(region_champ.libelle, region_champ.value, type: :enum)
+        expect(page).to have_link(new_unfollow_dossier.id.to_s)
+      end
     end
   end
 
