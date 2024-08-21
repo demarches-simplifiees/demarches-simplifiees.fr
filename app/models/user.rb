@@ -95,6 +95,12 @@ class User < ApplicationRecord
     AvisMailer.avis_invitation_and_confirm_email(self, token, avis).deliver_later
   end
 
+  def resend_confirmation_email!
+    token = SecureRandom.hex(10)
+    self.update!(confirmation_token: token, confirmation_sent_at: Time.zone.now)
+    UserMailer.resend_confirmation_email(self, token).deliver_later
+  end
+
   def invite_gestionnaire!(groupe_gestionnaire)
     UserMailer.invite_gestionnaire(self, set_reset_password_token, groupe_gestionnaire).deliver_later
   end
