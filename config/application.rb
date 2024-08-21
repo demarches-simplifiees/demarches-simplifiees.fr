@@ -62,6 +62,8 @@ module TPS
     config.active_storage.queues.analysis = :active_storage_analysis
     config.active_storage.queues.purge = :purge
 
+    config.active_support.cache_format_version = 7.0
+
     config.to_prepare do
       # Make main application helpers available in administrate
       Administrate::ApplicationController.helper(TPS::Application.helpers)
