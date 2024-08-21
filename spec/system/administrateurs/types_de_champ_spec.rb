@@ -368,6 +368,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
       fill_in 'Libellé du champ', with: 'Premier champ'
       expect(page).to have_selector('.sticky-header.sticky-header-warning')
       expect(page).to have_content("Les modifications effectuées ne seront visibles qu'à la prochaine publication")
+      expect(page).to have_link('Publier les modifications')
 
       expect(page).to have_field('Libellé du champ', with: 'Premier champ')
 
@@ -386,19 +387,15 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_selector('.sticky-header.sticky-header-warning')
       expect(page).to have_content("Les modifications effectuées ne seront visibles qu'à la prochaine publication")
 
-      # Supprimer les champs
+      # Supprime dernier champ
+      all('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').last.click
+      page.driver.browser.switch_to.alert.accept rescue nil
 
-      2.times do
-        initial_count = page.all('.type-de-champ').count
+      expect(page).to have_selector('.type-de-champ', count: 1, wait: 5)
+      click_on "Publier les modifications"
 
-        first('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').click
-
-        page.driver.browser.switch_to.alert.accept rescue nil
-
-        expect(page).to have_selector('.type-de-champ', count: initial_count - 1, wait: 5)
-      end
-
-      expect(page).not_to have_selector('.sticky-header.sticky-header-warning')
+      page.driver.browser.switch_to.alert.accept
+      expect(page).to have_content("démarche publiée")
 
       unpublished_procedure = create(:procedure)
       visit champs_admin_procedure_path(unpublished_procedure)
