@@ -52,7 +52,7 @@
 
 - if @procedure.draft_changed?
   = turbo_stream.update "sticky-header" do
-    = render partial: "administrateurs/procedures/unpublished_changes_navbar", locals: { procedure: @procedure }
+    = render partial: "administrateurs/procedures/unpublished_changes_sticky_header", locals: { procedure: @procedure }
 
 - else
   = turbo_stream.update "sticky-header", ""
