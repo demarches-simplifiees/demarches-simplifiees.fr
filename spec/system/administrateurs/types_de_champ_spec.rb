@@ -379,6 +379,8 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       within all('.type-de-champ').last do
         fill_in 'Libellé du champ', with: 'Deuxième champ'
+        select 'Choix simple', from: 'Type de champ'
+        fill_in "Options de la liste", with: "" # make tdc invalid
       end
 
       expect(page).to have_field('Libellé du champ', with: 'Premier champ')
@@ -386,6 +388,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
       expect(page).to have_selector('.sticky-header.sticky-header-warning')
       expect(page).to have_content("Les modifications effectuées ne seront visibles qu'à la prochaine publication")
+      expect(page).to have_button('Publier les modifications', disabled: true)
 
       # Supprime dernier champ
       all('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').last.click
