@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Instructeurs::ColumnPickerComponent < ApplicationComponent
   attr_reader :procedure, :procedure_presentation
 

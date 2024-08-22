@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ColumnsConcern do
   describe "#columns" do
     subject { procedure.columns }

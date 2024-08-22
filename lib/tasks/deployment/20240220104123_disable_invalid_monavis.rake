@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: disable_invalid_monavis'
   task disable_invalid_monavis: :environment do

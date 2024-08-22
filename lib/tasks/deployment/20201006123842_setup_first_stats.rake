@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: setup_first_stats'
   task setup_first_stats: :environment do

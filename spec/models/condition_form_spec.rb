@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ConditionForm, type: :model do
   include Logic
 

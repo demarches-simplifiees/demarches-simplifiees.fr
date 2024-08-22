@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe FAQController, type: :controller do
   describe "GET #index" do
     render_views

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Experts
   class ExpertController < ApplicationController
     before_action :authenticate_expert!

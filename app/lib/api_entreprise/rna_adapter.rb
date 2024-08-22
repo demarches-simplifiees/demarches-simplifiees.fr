@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::RNAAdapter < APIEntreprise::Adapter
   # Doc métier : https://entreprise.api.gouv.fr/catalogue/djepva/associations_open_data
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-generales/paths/~1v4~1djepva~1api-association~1associations~1open_data~1%7Bsiren_or_rna%7D/get

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::GroupeInstructeursController, type: :controller do
   render_views
   include Logic

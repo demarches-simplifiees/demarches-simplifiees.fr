@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DeletedDossier < ApplicationRecord
   belongs_to :procedure, -> { with_discarded }, inverse_of: :deleted_dossiers, optional: false
   belongs_to :groupe_instructeur, inverse_of: :deleted_dossiers, optional: true

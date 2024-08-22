@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::DossiersController, type: :controller do
   render_views
 

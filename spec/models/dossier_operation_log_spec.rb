@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierOperationLog, type: :model do
   describe '.purge_discarded' do
     let(:dossier) { create(:dossier) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeGestionnaire::Card::CommentairesComponent < ApplicationComponent
   def initialize(groupe_gestionnaire:, administrateur:, path:, unread_commentaires: nil)
     @groupe_gestionnaire = groupe_gestionnaire

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ReleaseNotesHelper
   def announce_category_badge(category)
     color_class = color_by_role(category)

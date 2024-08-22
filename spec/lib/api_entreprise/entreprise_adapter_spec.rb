@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntreprise::EntrepriseAdapter do
   let(:siren) { '130025265' }
   let(:procedure) { create(:procedure) }

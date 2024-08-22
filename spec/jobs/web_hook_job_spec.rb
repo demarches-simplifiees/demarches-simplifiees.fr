@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe WebHookJob, type: :job do
   describe 'perform' do
     let(:procedure) { create(:procedure, web_hook_url:) }

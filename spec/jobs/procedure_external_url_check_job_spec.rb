@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureExternalURLCheckJob do
   subject(:perform) { described_class.new(procedure).perform_now; procedure.reload }
   let(:lien_dpo) { "https://example.com/dpo" }

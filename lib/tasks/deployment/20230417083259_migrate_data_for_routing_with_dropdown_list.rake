@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: migrate_data_for_routing_with_dropdown_list'
   task migrate_data_for_routing_with_dropdown_list: :environment do

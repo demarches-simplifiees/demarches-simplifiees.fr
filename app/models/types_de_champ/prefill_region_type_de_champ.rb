@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::PrefillRegionTypeDeChamp < TypesDeChamp::PrefillTypeDeChamp
   def all_possible_values
     regions.map { |region| "#{region[:code]} (#{region[:name]})" }

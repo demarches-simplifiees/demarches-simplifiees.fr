@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::HeaderSectionComponent < ApplicationComponent
   MAX_LEVEL = 3
 

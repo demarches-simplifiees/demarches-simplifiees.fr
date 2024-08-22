@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAvisEmailNotification < ActiveRecord::Migration[6.1]
   def up
     add_column :assign_tos, :instant_expert_avis_email_notifications_enabled, :boolean

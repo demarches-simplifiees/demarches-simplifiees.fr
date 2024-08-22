@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InitiationProcedureConcern
   extend ActiveSupport::Concern
 

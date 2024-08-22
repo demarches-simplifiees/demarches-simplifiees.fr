@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIParticulier::CnafAdapter do
   let(:adapter) { described_class.new(api_particulier_token, numero_allocataire, code_postal, requested_sources) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReactComponent < ApplicationComponent
   erb_template <<-ERB
     <% if content? %>

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Manager::AdministrateursController, type: :controller do
   let(:super_admin) { create(:super_admin) }
   let(:administrateur) { administrateurs(:default_admin) }

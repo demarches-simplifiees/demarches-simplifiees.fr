@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # some race condition (regarding double submit of dossier.passer_en_construction!) might remove champs
 #   until now we haven't decided to push a stronger fix than an UI change
 #   so we might have to recreate some deleted champs and notify administration

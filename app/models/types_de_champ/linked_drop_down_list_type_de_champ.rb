@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   PRIMARY_PATTERN = /^--(.*)--$/
 

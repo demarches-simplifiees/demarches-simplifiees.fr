@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 're_routing_dossiers' do
   describe 'run' do
     include Logic

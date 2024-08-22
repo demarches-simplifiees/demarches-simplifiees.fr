@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::IbanChamp do
   describe '#valid?' do
     let(:champ) { Champs::IbanChamp.new(dossier: build(:dossier)) }

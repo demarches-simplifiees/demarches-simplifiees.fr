@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::ServiceAdapter < APIEntreprise::EtablissementAdapter
   def initialize(siret, service_id)
     @siret = siret

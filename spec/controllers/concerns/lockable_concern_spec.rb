@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe LockableConcern, type: :controller do
   controller(ApplicationController) do
     include LockableConcern

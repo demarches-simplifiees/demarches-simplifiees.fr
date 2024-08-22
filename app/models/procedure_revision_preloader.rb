@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureRevisionPreloader
   def initialize(revisions)
     @revisions = revisions

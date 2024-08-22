@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierProjectionService
   class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :hidden_by_reason, :for_tiers, :prenom, :nom, :batch_operation_id, :sva_svr_decision_on, :corrections, :columns) do
       def pending_correction?

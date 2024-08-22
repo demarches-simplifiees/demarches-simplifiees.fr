@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Recovery
   class RevisionExporter
     FILE_PATH = Rails.root.join('lib', 'data', 'revision', 'export.dump')

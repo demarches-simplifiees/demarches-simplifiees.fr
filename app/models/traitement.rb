@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Traitement < ApplicationRecord
   belongs_to :dossier, optional: false
 

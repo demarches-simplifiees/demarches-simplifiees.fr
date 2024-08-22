@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: fix_procedure_presentation_with_depose_since'
   task fix_procedure_presentation_with_depose_since: :environment do

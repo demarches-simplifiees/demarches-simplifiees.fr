@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TargetedUserLink < ApplicationRecord
   belongs_to :user, optional: true
   belongs_to :target_model, polymorphic: true, optional: false

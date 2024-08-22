@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ASN1::Timestamp
   ## Poor man’s rfc3161 timestamp decoding
   # This works, as of 2019-05, for timestamps delivered by the universign POST api.

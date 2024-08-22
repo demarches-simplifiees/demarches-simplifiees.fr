@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BackfillProcedureMaxDureeConservationDossiersDansDs < ActiveRecord::Migration[6.1]
   def change
     Procedure.where(duree_conservation_etendue_par_ds: true).in_batches do |batch|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddGroupeInstructeurColumnToAssignTos < ActiveRecord::Migration[5.2]
   def change
     add_reference :assign_tos, :groupe_instructeur, foreign_key: true

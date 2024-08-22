@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::DeletedDossiersComponent < ApplicationComponent
   include DossierHelper
 

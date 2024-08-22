@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # We need to ensure the embed code is not any random string in order to avoid injections
 class MonAvisEmbedValidator < ActiveModel::Validator
   class MonAvisEmbedError < StandardError; end

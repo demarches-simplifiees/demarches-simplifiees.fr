@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SafeMailer < ApplicationRecord
   before_create do
     raise if SafeMailer.count == 1

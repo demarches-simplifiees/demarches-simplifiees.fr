@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 task :lint do
   sh "bundle exec rubocop --parallel"
   sh "bundle exec haml-lint app/views/ app/components/"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierDesarchiver < Mutations::BaseMutation
     description "Désarchiver le dossier."

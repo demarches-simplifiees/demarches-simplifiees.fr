@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'BatchOperation a dossier:', js: true do
   include ActionView::RecordIdentifier
   include ActiveJob::TestHelper

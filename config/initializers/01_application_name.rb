@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # This file is named '01-application-name.rb' to load it before the other
 # initializers, and thus make the APPLICATION_ constants available in
 # the other initializers.

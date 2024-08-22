@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe WatermarkService do
   let(:image) { file_fixture("logo_test_procedure.png") }
   let(:watermark_service) { WatermarkService.new }

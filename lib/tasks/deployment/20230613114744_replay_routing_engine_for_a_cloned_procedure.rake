@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: replay_routing_engine_for_a_cloned_procedure'
   task replay_routing_engine_for_a_cloned_procedure: :environment do

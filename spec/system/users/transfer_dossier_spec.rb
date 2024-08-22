@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Transfer dossier:' do
   let(:user) { create(:user) }
   let(:other_user) { create(:user) }

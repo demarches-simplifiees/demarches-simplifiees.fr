@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe AutoRotateService do
   let(:image) { file_fixture("image-rotated.jpg") }
   let(:image_no_exif) { file_fixture("image-no-exif.jpg") }

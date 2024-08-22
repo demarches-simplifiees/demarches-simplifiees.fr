@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IPService
   class << self
     def ip_trusted?(ip)

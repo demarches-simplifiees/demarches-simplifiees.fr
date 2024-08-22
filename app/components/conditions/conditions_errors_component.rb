@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Conditions::ConditionsErrorsComponent < ApplicationComponent
   def initialize(conditions:, source_tdcs:)
     @conditions, @source_tdcs = conditions, source_tdcs

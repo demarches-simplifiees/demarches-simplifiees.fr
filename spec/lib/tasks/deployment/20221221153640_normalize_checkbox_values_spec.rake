@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20221221153640_normalize_checkbox_values' do
   shared_examples "a checkbox value normalizer" do |value, expected_value|
     let(:rake_task) { Rake::Task['after_party:normalize_checkbox_values'] }

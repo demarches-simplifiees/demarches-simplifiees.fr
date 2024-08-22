@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DepartementChamp, type: :model do
   describe 'validations' do
     describe 'external link' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEducation::API
   class ResourceNotFound < StandardError
   end

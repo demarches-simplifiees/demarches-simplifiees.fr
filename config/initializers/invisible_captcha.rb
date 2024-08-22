@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 InvisibleCaptcha.setup do |config|
   # config.honeypots           << ['more', 'fake', 'attribute', 'names']
   # config.visual_honeypots      = false

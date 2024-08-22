@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::CommuneChamp do
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :communes, stable_id: 99 }]) }
   let(:dossier) { create(:dossier, procedure:) }

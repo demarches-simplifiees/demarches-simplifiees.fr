@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FranceConnectParticulierClient < OpenIDConnect::Client
   def initialize(code = nil)
     config = FRANCE_CONNECT[:particulier].deep_dup

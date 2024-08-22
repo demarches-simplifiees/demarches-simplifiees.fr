@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class DemarcheType < Types::BaseObject
     class DemarcheState < Types::BaseEnum

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::ExpiredUsersDeletionJob < Cron::CronJob
   self.schedule_expression = Expired.schedule_at(self)
   discard_on StandardError

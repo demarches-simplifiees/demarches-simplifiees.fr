@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierRebaseConcern do
   describe '#can_rebase?' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :yes_no, mandatory: false }], types_de_champ_private: [{}]) }

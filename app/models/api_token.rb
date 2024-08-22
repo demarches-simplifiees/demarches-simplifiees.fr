@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIToken < ApplicationRecord
   include ActiveRecord::SecureToken
 

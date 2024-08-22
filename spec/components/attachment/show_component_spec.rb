@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Attachment::ShowComponent, type: :component do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :piece_justificative }] }

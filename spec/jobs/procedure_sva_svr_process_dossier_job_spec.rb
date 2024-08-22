@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ProcedureSVASVRProcessDossierJob, type: :job do
   include ActiveJob::TestHelper
   include ActiveSupport::Testing::TimeHelpers

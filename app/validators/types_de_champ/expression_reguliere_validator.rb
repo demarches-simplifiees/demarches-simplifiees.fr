@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::ExpressionReguliereValidator < ActiveModel::EachValidator
   def validate_each(procedure, attribute, types_de_champ)
     types_de_champ.to_a

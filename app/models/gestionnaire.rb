@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Gestionnaire < ApplicationRecord
   include UserFindByConcern
   has_and_belongs_to_many :groupe_gestionnaires

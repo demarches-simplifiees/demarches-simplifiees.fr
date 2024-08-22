@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateProcedureRevisionTypesDeChamp < ActiveRecord::Migration[5.2]
   def change
     create_table :procedure_revision_types_de_champ do |t|

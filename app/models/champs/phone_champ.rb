@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::PhoneChamp < Champs::TextChamp
   validates :value,
     phone: {

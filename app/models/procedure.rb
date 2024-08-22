@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern

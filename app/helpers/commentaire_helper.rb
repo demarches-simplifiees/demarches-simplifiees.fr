@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CommentaireHelper
   def commentaire_is_from_me_class(commentaire, connected_user)
     if commentaire.sent_by?(connected_user)

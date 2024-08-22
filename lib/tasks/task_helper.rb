@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Write the given objects to the standard output – except if Rake is configured
 # to be quiet.
 #

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Archive and Export models are generated in background
 #   those models being are destroy after an expiration period
 #   but, it might take more time to process than the expiration period

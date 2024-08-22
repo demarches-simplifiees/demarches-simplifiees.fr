@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::Empty < Logic::Term
   def sources
     []

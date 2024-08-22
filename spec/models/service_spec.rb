@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Service, type: :model do
   describe 'validation' do
     let(:administrateur) { administrateurs(:default_admin) }

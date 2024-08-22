@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Migrations::BatchUpdateDatetimeValuesJob, type: :job do
   let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
   let(:types_de_champ_public) { [{ type: :datetime, mandatory: }] }

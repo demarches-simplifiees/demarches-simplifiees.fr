@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SuperAdmins::PasswordsController < Devise::PasswordsController
   include DevisePopulatedResource
 

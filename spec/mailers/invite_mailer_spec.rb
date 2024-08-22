@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe InviteMailer, type: :mailer do
   let(:deliver) { subject.deliver_now }
   subject { InviteMailer.invite_user(invite) }

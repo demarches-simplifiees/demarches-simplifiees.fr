@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: update_procedure_with_active_group_and_routing_nil'
   task update_procedure_with_active_group_and_routing_nil: :environment do

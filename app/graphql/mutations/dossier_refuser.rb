@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierRefuser < Mutations::BaseMutation
     include DossierHelper

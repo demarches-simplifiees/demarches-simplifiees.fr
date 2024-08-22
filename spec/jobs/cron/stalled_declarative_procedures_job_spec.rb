@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::StalledDeclarativeProceduresJob, type: :job do
   describe "perform" do
     let(:state) { nil }

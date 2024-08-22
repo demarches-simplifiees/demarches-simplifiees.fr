@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe "Dossier en_construction" do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :for_individual, types_de_champ_public: [{ type: :piece_justificative }, { type: :titre_identite }]) }

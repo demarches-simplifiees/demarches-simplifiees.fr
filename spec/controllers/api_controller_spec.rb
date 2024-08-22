@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIController, type: :controller do
   describe 'authenticate_from_token' do
     let(:procedure) { create(:procedure) }

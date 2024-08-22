@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::COJOTypeDeChamp < TypesDeChamp::TextTypeDeChamp
   class << self
     def champ_value(champ)

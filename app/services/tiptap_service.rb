@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TiptapService
   # NOTE: node must be deep symbolized keys
   def self.used_tags_and_libelle_for(node, tags = Set.new)

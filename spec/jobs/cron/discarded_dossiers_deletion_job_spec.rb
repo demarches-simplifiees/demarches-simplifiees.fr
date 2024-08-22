@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::DiscardedDossiersDeletionJob, type: :job do
   describe '#perform' do
     let(:instructeur) { create(:instructeur) }

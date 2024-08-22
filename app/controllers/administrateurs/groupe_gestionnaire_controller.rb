@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class GroupeGestionnaireController < AdministrateurController
     before_action :retrieve_groupe_gestionnaire, only: [:show, :administrateurs, :gestionnaires, :commentaires, :create_commentaire]

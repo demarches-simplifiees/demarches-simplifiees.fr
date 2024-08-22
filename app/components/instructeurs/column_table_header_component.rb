@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
   attr_reader :procedure_presentation, :column
   # maybe extract a ColumnSorter class?

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: delete_optional_champ_feature_flag'
   task delete_optional_champ_feature_flag: :environment do

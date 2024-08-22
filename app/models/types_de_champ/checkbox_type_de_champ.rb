@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::CheckboxTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def filter_to_human(filter_value)
     if filter_value == "true"

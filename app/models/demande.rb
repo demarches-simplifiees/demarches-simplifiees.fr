@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Demande
   def self.model_name
     self

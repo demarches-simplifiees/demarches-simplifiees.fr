@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module EtablissementHelper
   def value_for_bilan_key(bilan, key)
     if bilan_v3?(bilan)

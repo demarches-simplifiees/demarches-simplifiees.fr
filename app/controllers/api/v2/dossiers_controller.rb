@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V2::DossiersController < API::V2::BaseController
   before_action :ensure_dossier_present
   skip_before_action :authenticate_from_token

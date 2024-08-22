@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::NotInRegionOperator < Logic::InRegionOperator
   def operation
     :n_est_pas_dans_la_region

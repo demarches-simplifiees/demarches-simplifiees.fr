@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Preview all emails at http://localhost:3000/rails/mailers/administrateur_mailer
 class AdministrateurMailer < ApplicationMailer
   layout 'mailers/layout'

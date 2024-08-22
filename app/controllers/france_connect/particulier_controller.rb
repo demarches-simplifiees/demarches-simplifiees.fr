@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FranceConnect::ParticulierController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :securely_retrieve_fci, only: [:merge, :merge_with_existing_account, :merge_with_new_account, :resend_and_renew_merge_confirmation]

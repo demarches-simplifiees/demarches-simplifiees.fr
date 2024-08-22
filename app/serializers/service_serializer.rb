@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ServiceSerializer < ActiveModel::Serializer
   attributes :id, :email
   attribute :nom, key: :name

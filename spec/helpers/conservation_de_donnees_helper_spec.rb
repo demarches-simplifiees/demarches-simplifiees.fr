@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ConservationDeDonneesHelper, type: :helper do
   let(:procedure) { build(:procedure, duree_conservation_dossiers_dans_ds: dans_ds) }
 

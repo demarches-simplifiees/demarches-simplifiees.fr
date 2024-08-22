@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Maintenance::HelpscoutDeleteOldConversationsTask do
   before do
     mock_helpscout_secrets

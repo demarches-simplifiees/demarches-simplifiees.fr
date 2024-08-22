@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierWithReferenceDate
   def self.assign(dossier, state: nil, reference_date: nil)
     created_at = reference_date.presence || default_created_at(dossier)

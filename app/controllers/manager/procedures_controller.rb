@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class ProceduresController < Manager::ApplicationController
     CSV_MAX_SIZE = 1.megabytes

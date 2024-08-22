@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UserMailerPreview < ActionMailer::Preview
   def new_account_warning
     UserMailer.new_account_warning(user)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EmailEvent < ApplicationRecord
   RETENTION_DURATION = 1.month
 

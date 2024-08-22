@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: remove_migration_status_on_filters'
   task remove_migration_status_on_filters: :environment do

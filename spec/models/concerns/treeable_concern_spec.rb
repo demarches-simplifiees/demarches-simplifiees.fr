@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TreeableConcern do
   class ChampsToTree
     include TreeableConcern
