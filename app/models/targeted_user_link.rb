@@ -33,9 +33,11 @@ class TargetedUserLink < ApplicationRecord
         url_helper.invite_path(invite, params: { email: invite.email })
     when "avis"
       avis = target_model
-      avis.expert.user.active? ?
-        url_helper.expert_avis_path(avis.procedure, avis) :
+      if avis.expert.user.active?
+        url_helper.expert_avis_path(avis.procedure, avis)
+      else
         url_helper.sign_up_expert_avis_path(avis.procedure, avis, email: avis.expert.email)
+      end
     end
   end
 
