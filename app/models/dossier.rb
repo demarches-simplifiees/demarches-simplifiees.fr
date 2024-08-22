@@ -51,7 +51,6 @@ class Dossier < ApplicationRecord
   has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
-  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
@@ -423,8 +422,6 @@ class Dossier < ApplicationRecord
   validates :mandataire_first_name, presence: true, if: :for_tiers?
   validates :mandataire_last_name, presence: true, if: :for_tiers?
   validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
-
-  validates_associated :prefilled_champs_public, on: :champs_public_value
 
   def types_de_champ_public
     types_de_champ
