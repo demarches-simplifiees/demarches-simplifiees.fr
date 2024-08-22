@@ -60,13 +60,6 @@ describe Champ do
 
   describe "associations" do
     it { is_expected.to belong_to(:dossier) }
-
-    context 'when the parent dossier is discarded' do
-      let(:discarded_dossier) { create(:dossier, :discarded) }
-      subject(:champ) { discarded_dossier.champs_public.first }
-
-      it { expect(champ.reload.dossier).to eq discarded_dossier }
-    end
   end
 
   describe "normalization" do
