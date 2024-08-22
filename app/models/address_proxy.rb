@@ -41,7 +41,7 @@ class AddressProxy
 
   delegate(*ADDRESS_PARTS, to: :@presenter)
 
-  def initialize(champs_or_etablissement)
+  def initialize(champ_or_etablissement)
     @presenter = make(champ_or_etablissement)
   end
 
