@@ -123,7 +123,7 @@ describe ProcedureRevision do
         draft.reload
         expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2, 3])
         expect(draft.types_de_champ_public.index(type_de_champ_public)).to eq(2)
-        expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(type_de_champ_public)).to eq(2)
+        expect(draft.procedure.types_de_champ_for_procedure_export.index(type_de_champ_public)).to eq(2)
       end
 
       it 'move up' do
@@ -132,7 +132,7 @@ describe ProcedureRevision do
         draft.reload
         expect(draft.revision_types_de_champ_public.map(&:position)).to eq([0, 1, 2, 3])
         expect(draft.types_de_champ_public.index(last_type_de_champ)).to eq(0)
-        expect(draft.procedure.types_de_champ_for_procedure_presentation.not_repetition.index(last_type_de_champ)).to eq(0)
+        expect(draft.procedure.types_de_champ_for_procedure_export.index(last_type_de_champ)).to eq(0)
       end
     end
 
