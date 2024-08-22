@@ -6,7 +6,7 @@
 
     = render Dsfr::AlertComponent.new(title: '', state: :info, heading_level: 'h2', extra_class_names: 'fr-mt-6w fr-mb-3w') do |c|
       - c.with_body do
-        %p= t('.intro_html', email: email).html_safe
+        %p= t('.intro_html', email: h(email)).html_safe
         %p= t('.click_the_link_in_the_email')
 
     %p.center= link_to t('.continue'), destination_path, class: 'fr-btn'

@@ -950,7 +950,7 @@ fr:
           wanna_say: 'Voulez-vous dire ?'
       confirmation_sent:
         confirmation_sent_by_email: Confirmez votre email
-        intro_html: Un mail de confirmation a été envoyé à votre adresse <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span>
+        intro_html: "Un mail de confirmation a été envoyé à votre adresse <span class='fr-badge fr-badge--info fr-badge--sm'>%{email}</span>"
         click_the_link_in_the_email: Vous devez impérativement cliquer sur le lien du mail pour activer votre adresse et recevoir les notifications sur l'avancement de vos dossiers.
         continue: Continuer
       merge:
