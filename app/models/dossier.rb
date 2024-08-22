@@ -932,7 +932,7 @@ class Dossier < ApplicationRecord
   end
 
   def remove_titres_identite!
-    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def remove_piece_justificative_file_not_visible!
@@ -1147,7 +1147,7 @@ class Dossier < ApplicationRecord
   end
 
   def has_annotations?
-    revision.revision_types_de_champ_private.present?
+    revision.types_de_champ_private.present?
   end
 
   def hide_info_with_accuse_lecture?
