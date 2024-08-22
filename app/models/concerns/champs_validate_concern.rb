@@ -16,9 +16,9 @@ module ChampsValidateConcern
     def validate_champ_value?
       case validation_context
       when :champs_public_value
-        public? && visible?
+        public? && in_dossier_revision? && visible?
       when :champs_private_value
-        private? && visible?
+        private? && in_dossier_revision? && visible?
       else
         false
       end
@@ -26,6 +26,10 @@ module ChampsValidateConcern
 
     def validate_champ_value_or_prefill?
       validate_champ_value? || validation_context == :prefill
+    end
+
+    def in_dossier_revision?
+      dossier.revision.types_de_champ.any? { _1.stable_id = stable_id }
     end
   end
 end

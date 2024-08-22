@@ -3,7 +3,10 @@
 describe Champs::IbanChamp do
   describe '#valid?' do
     let(:champ) { Champs::IbanChamp.new(dossier: build(:dossier)) }
-    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_iban)) }
+    before do
+      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_iban))
+      allow(champ).to receive(:in_dossier_revision?).and_return(true)
+    end
     def with_value(value)
       champ.tap { _1.value = value }
     end
