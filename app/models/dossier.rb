@@ -270,33 +270,16 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
-  scope :with_champs, -> {
-    includes(champs_public: [
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [piece_justificative_file_attachments: :blob]
-    ])
-  }
-
   scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
-  scope :with_annotations, -> {
-    includes(champs_private: [
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [piece_justificative_file_attachments: :blob]
-    ])
-  }
   scope :for_api, -> {
-    with_champs
-      .with_annotations
-      .includes(commentaires: { piece_jointe_attachments: :blob },
-        justificatif_motivation_attachment: :blob,
-        attestation: [],
-        avis: { piece_justificative_file_attachment: :blob },
-        traitement: [],
-        etablissement: [],
-        individual: [],
-        user: [])
+    includes(commentaires: { piece_jointe_attachments: :blob },
+      justificatif_motivation_attachment: :blob,
+      attestation: [],
+      avis: { piece_justificative_file_attachment: :blob },
+      traitement: [],
+      etablissement: [],
+      individual: [],
+      user: [])
   }
 
   scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
