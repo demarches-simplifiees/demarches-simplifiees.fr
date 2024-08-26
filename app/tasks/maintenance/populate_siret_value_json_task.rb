@@ -13,6 +13,8 @@ module Maintenance
     def process(champ)
       return if champ.etablissement.blank?
       champ.update!(value_json: APIGeoService.parse_etablissement_address(champ.etablissement))
+    rescue ActiveRecord::RecordInvalid
+      # noop, just a champ without dossier
     end
 
     def count
