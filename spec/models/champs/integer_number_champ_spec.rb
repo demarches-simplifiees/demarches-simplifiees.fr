@@ -2,7 +2,10 @@
 
 describe Champs::IntegerNumberChamp do
   let(:champ) { Champs::IntegerNumberChamp.new(value:, dossier: build(:dossier)) }
-  before { allow(champ).to receive(:visible?).and_return(true) }
+  before do
+    allow(champ).to receive(:visible?).and_return(true)
+    allow(champ).to receive(:in_dossier_revision?).and_return(true)
+  end
   subject { champ.validate(:champs_public_value) }
 
   describe '#valid?' do

@@ -94,7 +94,7 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    parent_id.present?
+    row_id.present?
   end
 
   # used for the `required` html attribute

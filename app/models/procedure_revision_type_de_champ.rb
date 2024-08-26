@@ -32,8 +32,8 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   end
 
   def siblings
-    if parent_id.present?
-      revision.revision_types_de_champ.where(parent_id: parent_id).ordered
+    if child?
+      revision.revision_types_de_champ.where(parent_id:).ordered
     elsif private?
       revision.revision_types_de_champ_private
     else

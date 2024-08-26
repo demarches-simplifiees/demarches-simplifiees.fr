@@ -51,7 +51,6 @@ class Dossier < ApplicationRecord
   has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
   has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
   has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
-  has_many :prefilled_champs_public, -> { root.public_only.prefilled }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
@@ -270,33 +269,16 @@ class Dossier < ApplicationRecord
   scope :en_cours,                    -> { not_archived.state_en_construction_ou_instruction }
   scope :without_followers,           -> { where.missing(:follows) }
   scope :with_followers,              -> { left_outer_joins(:follows).where.not(follows: { id: nil }) }
-  scope :with_champs, -> {
-    includes(champs_public: [
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [piece_justificative_file_attachments: :blob]
-    ])
-  }
-
   scope :brouillons_recently_updated, -> { updated_since(2.days.ago).state_brouillon.order_by_updated_at }
-  scope :with_annotations, -> {
-    includes(champs_private: [
-      :geo_areas,
-      piece_justificative_file_attachments: :blob,
-      champs: [piece_justificative_file_attachments: :blob]
-    ])
-  }
   scope :for_api, -> {
-    with_champs
-      .with_annotations
-      .includes(commentaires: { piece_jointe_attachments: :blob },
-        justificatif_motivation_attachment: :blob,
-        attestation: [],
-        avis: { piece_justificative_file_attachment: :blob },
-        traitement: [],
-        etablissement: [],
-        individual: [],
-        user: [])
+    includes(commentaires: { piece_jointe_attachments: :blob },
+      justificatif_motivation_attachment: :blob,
+      attestation: [],
+      avis: { piece_justificative_file_attachment: :blob },
+      traitement: [],
+      etablissement: [],
+      individual: [],
+      user: [])
   }
 
   scope :with_notifiable_procedure, -> (opts = { notify_on_closed: false }) do
@@ -440,8 +422,6 @@ class Dossier < ApplicationRecord
   validates :mandataire_first_name, presence: true, if: :for_tiers?
   validates :mandataire_last_name, presence: true, if: :for_tiers?
   validates :for_tiers, inclusion: { in: [true, false] }, if: -> { revision&.procedure&.for_individual? }
-
-  validates_associated :prefilled_champs_public, on: :champs_public_value
 
   def types_de_champ_public
     types_de_champ
@@ -949,7 +929,7 @@ class Dossier < ApplicationRecord
   end
 
   def remove_titres_identite!
-    champs_public.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
+    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
   end
 
   def remove_piece_justificative_file_not_visible!
@@ -1164,7 +1144,7 @@ class Dossier < ApplicationRecord
   end
 
   def has_annotations?
-    revision.revision_types_de_champ_private.present?
+    revision.types_de_champ_private.present?
   end
 
   def hide_info_with_accuse_lecture?
