@@ -11,13 +11,13 @@ describe ProcedurePresentation do
   let(:first_type_de_champ_id) { first_type_de_champ.stable_id.to_s }
   let(:procedure_presentation) {
     create(:procedure_presentation,
-      assign_to: assign_to,
+      assign_to:,
       displayed_fields: [
         { label: "test1", table: "user", column: "email" },
         { label: "test2", table: "type_de_champ", column: first_type_de_champ_id, virtual: false }
       ],
       sort: { table: "user", column: "email", "order" => "asc" },
-      filters: filters)
+      filters:)
   }
   let(:procedure_presentation_id) { procedure_presentation.id }
   let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
