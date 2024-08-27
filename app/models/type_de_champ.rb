@@ -210,12 +210,16 @@ class TypeDeChamp < ApplicationRecord
   before_validation :check_mandatory
   before_validation :normalize_libelle
 
-  before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
+  before_save :remove_attachment, if: -> { type_champ_changed? }
   before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
   before_save :remove_block, if: -> { type_champ_changed? }
 
   after_save if: -> { @remove_piece_justificative_template } do
     piece_justificative_template.purge_later
+  end
+
+  after_save if: -> { @remove_notice_explicative } do
+    notice_explicative.purge_later
   end
 
   def valid?(context = nil)
@@ -767,9 +771,11 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def remove_piece_justificative_template
+  def remove_attachment
     if !piece_justificative? && piece_justificative_template.attached?
       @remove_piece_justificative_template = true
+    elsif !explication? && notice_explicative.attached?
+      @remove_notice_explicative = true
     end
   end
 
