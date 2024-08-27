@@ -56,8 +56,7 @@ class TypesDeChamp::PrefillRepetitionTypeDeChamp < TypesDeChamp::PrefillTypeDeCh
     def to_assignable_attributes
       return unless repetition.is_a?(Hash)
 
-      row = champ.rows[index] || champ.add_row(revision)
-      row_id = row.first.row_id
+      row_id = champ.row_ids[index] || champ.add_row(updated_by: nil)
 
       repetition.map do |key, value|
         next unless key.is_a?(String) && key.starts_with?("champ_")

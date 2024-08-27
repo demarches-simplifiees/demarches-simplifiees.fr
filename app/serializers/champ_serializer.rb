@@ -48,11 +48,7 @@ class ChampSerializer < ActiveModel::Serializer
   end
 
   def rows
-    object.dossier
-      .champs_for_revision(scope: object.type_de_champ)
-      .group_by(&:row_id)
-      .values
-      .map.with_index(1) { |champs, index| Row.new(index:, champs:) }
+    object.rows.map.with_index(1) { |champs, index| Row.new(index:, champs:) }
   end
 
   def include_etablissement?

@@ -15,16 +15,21 @@ describe ChampPresentations::RepetitionPresentation do
   }
 
   let(:dossier) { create(:dossier, procedure:) }
+  let(:champ_repetition) { dossier.champs.find(&:repetition?) }
 
   before do
-    nom, stars = dossier.champs[0].rows.first
+    champ_repetition.add_row(updated_by: 'test')
+    champ_repetition.add_row(updated_by: 'test')
+    row1, row2, row3 = champ_repetition.rows
+
+    nom, stars = row1
     nom.update(value: "ruby")
     stars.update(value: 5)
 
-    nom, stars = dossier.champs[0].add_row(dossier.procedure.active_revision)
+    nom = row2.first
     nom.update(value: "js")
 
-    nom, stars = dossier.champs[0].add_row(dossier.procedure.active_revision)
+    nom, stars = row3
     nom.update(value: "rust")
     stars.update(value: 4)
   end
