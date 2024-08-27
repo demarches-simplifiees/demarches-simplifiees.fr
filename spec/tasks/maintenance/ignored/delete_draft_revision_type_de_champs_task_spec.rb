@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-module Maintenance
+module Maintenance::Ignored
   RSpec.describe DeleteDraftRevisionTypeDeChampsTask do
     let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
     let(:types_de_champ_public) {

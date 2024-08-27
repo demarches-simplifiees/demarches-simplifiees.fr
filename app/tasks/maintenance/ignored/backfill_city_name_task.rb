@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Maintenance
+module Maintenance::Ignored
   class BackfillCityNameTask < MaintenanceTasks::Task
     attribute :champ_ids, :string
     validates :champ_ids, presence: true

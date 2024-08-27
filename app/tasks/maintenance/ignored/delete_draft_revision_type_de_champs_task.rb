@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Maintenance
+module Maintenance::Ignored
   class DeleteDraftRevisionTypeDeChampsTask < MaintenanceTasks::Task
     csv_collection
 
