@@ -43,6 +43,11 @@ describe ProcedurePresentation do
 
     context 'of displayed fields' do
       it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
+      context 'rna' do
+        let(:types_de_champ_public) { [{ type: :rna }] }
+        let(:procedure_presentation) { build(:procedure_presentation, assign_to:) }
+        it { expect(build(:procedure_presentation, displayed_fields: first_type_de_champ.dynamic_type.columns(table: 'types_de_champ'))).to be_valid }
+      end
     end
 
     context 'of sort' do
