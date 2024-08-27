@@ -13,7 +13,7 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
 
       champ.piece_justificative_file.each_with_index.filter_map do |attachment, i|
         if attachment.virus_scanner.safe? || attachment.virus_scanner.pending?
-          url = Rails.application.routes.url_helpers.champs_piece_justificative_download_url({ champ_id: champ.id, h: champ.encoded_date(:created_at), i: })
+          url = download_url(champ, i)
           display = attachment.filename
           if attachment.image?
             tag.img '', src: url, width: '100', id: attachment.id, display: display
@@ -22,6 +22,18 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
           end
         end
       end.flat_map { |e| [e, ",", tag.br] }[0..-3].reduce(&:+)
+    end
+
+    def download_url(champ, index)
+      if Champ.update_by_stable_id?
+        Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
+          { dossier_id: champ.dossier_id, stable_id: champ.stable_id, h: champ.encoded_date(:created_at), i: index, row_id: champ.row_id }
+        )
+      else
+        Rails.application.routes.url_helpers.champs_legacy_piece_justificative_download_url(
+          { champ_id: champ.id, h: champ.encoded_date(:created_at), i: index }
+        )
+      end
     end
 
     def champ_value_for_export(champ, path = :value)

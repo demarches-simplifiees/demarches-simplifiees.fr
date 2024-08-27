@@ -3,8 +3,25 @@
                     ["#{@procedure.libelle.truncate_words(10)}", admin_procedure_path(@procedure)],
                     ["Configuration des emails"]] }
 
-.container
-  .fr-grid-row.fr-grid-row--gutters.fr-py-5w
+.fr-container
+  .fr-grid-row.fr-grid-row--gutters
+    .fr-col-12
+      %h1 Configuration des emails
+      - if @procedure.accuse_lecture?
+        = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
+          - c.with_body do
+            %p
+              L'accusé de lecture est activé sur cette démarche. Dans ce contexte, les emails « d’acceptation », « de rejet » et de « classement sans suite », ne sont pas modifiables afin de s'assurer que la décision finale reste masquée pour l'usager.
+
     - @mail_templates.each do |mail_template|
       .fr-col-md-6.fr-col-12
         = render Procedure::EmailTemplateCardComponent.new(email_template: mail_template)
+
+
+.padded-fixed-footer
+  .fixed-footer
+    .fr-container
+      .fr-grid-row
+        .fr-col-12.fr-pb-2w
+          = link_to admin_procedure_path(id: @procedure), class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mb-2w' do
+            Revenir à la démarche

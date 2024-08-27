@@ -1,4 +1,4 @@
-= @form.text_field(:value, input_opts( id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: { controller: 'turbo-input', turbo_input_load_on_connect_value: @champ.prefilled? && @champ.value.present? && @champ.data.blank?, turbo_input_url_value: champs_rna_path(@champ.id) }, required: @champ.required?, pattern: "W[0-9]{9}", class: "width-33-desktop", maxlength: 10))
+= @form.text_field(:value, input_opts( id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: { controller: 'turbo-input', turbo_input_load_on_connect_value: @champ.prefilled? && @champ.value.present? && @champ.data.blank?, turbo_input_url_value: update_path }, required: @champ.required?, pattern: "W[0-9]{9}", class: "width-33-desktop", maxlength: 10))
 
 .rna-info{ id: dom_id(@champ, :rna_info) }
   = render 'shared/champs/rna/association', champ: @champ, error: nil

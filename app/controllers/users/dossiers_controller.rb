@@ -156,7 +156,7 @@ module Users
       respond_to do |format|
         format.html
         format.turbo_stream do
-          @dossier.update_columns(params.require(:dossier).permit(:for_tiers).to_h)
+          @dossier.for_tiers = params[:dossier][:for_tiers]
         end
       end
     end
@@ -380,11 +380,12 @@ module Users
 
     def champ
       @dossier = dossier_with_champs(pj_template: false)
+      champ_id_or_stable_id = params[:stable_id]
       champ = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:champ_id], :public)
+        type_de_champ = @dossier.find_type_de_champ_by_stable_id(champ_id_or_stable_id, :public)
         @dossier.project_champ(type_de_champ, params[:row_id])
       else
-        @dossier.champs_public_all.find(params[:champ_id])
+        @dossier.champs_public_all.find(champ_id_or_stable_id)
       end
 
       respond_to do |format|

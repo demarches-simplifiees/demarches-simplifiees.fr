@@ -1,3 +1,7 @@
 = render Dsfr::CardVerticalComponent.new(title: title, desc: desc, error: error, tags: [tag]) do |c|
   - c.with_footer_button do
-    = link_to 'Modifier', edit_path, class: 'fr-btn'
+    - if not_editable?
+      %a{ role: "link", "aria-disabled" => "true", class: 'fr-link fr-icon-arrow-right-line fr-link--icon-right' }
+        Modifier
+    - else
+      = link_to 'Modifier', edit_path, class: 'fr-link fr-icon-arrow-right-line fr-link--icon-right'

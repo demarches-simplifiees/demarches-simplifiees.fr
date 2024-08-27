@@ -1,4 +1,5 @@
 = form_for @dossier, url: update_identite_dossier_path(@dossier), html: { id: 'identite-form', class: "form",  "data-controller" => "for-tiers" } do |f|
+  = f.hidden_field :for_tiers
   - if for_tiers?
     .fr-alert.fr-alert--info.fr-mb-2w
       %p.fr-notice__text

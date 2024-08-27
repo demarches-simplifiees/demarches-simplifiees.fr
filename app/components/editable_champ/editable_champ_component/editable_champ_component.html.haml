@@ -7,7 +7,10 @@
 
     = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, describedby_id: @champ.describedby_id, champ: @champ)
 
-    = @form.hidden_field :id, value: @champ.id
+    - if Champ.update_by_stable_id?
+      = @form.hidden_field :with_public_id, value: 'true'
+    - else
+      = @form.hidden_field :id, value: @champ.id
 
     - if has_champ_revisions?
       %div{ class: 'dropdown revision-dropdown', data: { controller: 'menu-button' } }

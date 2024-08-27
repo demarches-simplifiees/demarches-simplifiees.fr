@@ -15,6 +15,7 @@ development:
   port: <%= ENV["DB_PORT"]&.presence&.to_i || 5432 %>
   username: <%= ENV["DB_USERNAME"] %>
   password: <%= ENV["DB_PASSWORD"] %>
+  port: <%= ENV["DB_PORT"] || 5432 %>
   # Workaround for https://github.com/ged/ruby-pg/issues/311
   gssencmode: disable
 
@@ -24,6 +25,7 @@ test:
   host: localhost
   username: tps_test
   password: tps_test
+  port: <%= ENV["DB_PORT"] || 5432 %>
   # Workaround for https://github.com/ged/ruby-pg/issues/311
   gssencmode: disable
 

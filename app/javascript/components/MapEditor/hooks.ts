@@ -137,7 +137,7 @@ export function useFeatureCollection(
         for (const feature of features) {
           const id = feature.properties?.id;
           if (id) {
-            await httpRequest(`${url}/${id}`, {
+            await httpRequest(endpointWithId(url, id), {
               method: 'patch',
               json: { feature }
             }).json();
@@ -174,7 +174,9 @@ export function useFeatureCollection(
         const deletedFeatures = [];
         for (const feature of features) {
           const id = feature.properties?.id;
-          await httpRequest(`${url}/${id}`, { method: 'delete' }).json();
+          await httpRequest(endpointWithId(url, id), {
+            method: 'delete'
+          }).json();
           deletedFeatures.push(feature);
         }
         removeFeatures(deletedFeatures, external);
@@ -211,4 +213,12 @@ function useError(): [string | undefined, (message: string) => void] {
   }, [error]);
 
   return [error, onError];
+}
+
+// We need this because endoint can have query params. For example with /champs/123?row_id=abc we can't juste concatanate id.
+// We want /champs/123/456?row_id=abc not /champs/123?row_id=abc/456
+function endpointWithId(endpoint: string, id: string) {
+  const url = new URL(endpoint, document.baseURI);
+  url.pathname = `${url.pathname}/${id}`;
+  return url.toString();
 }

@@ -54,77 +54,87 @@ describe Champs::PieceJustificativeController, type: :controller do
       end
     end
 
-    context 'when user wants to download pdf piece_justificative,' do
-      let(:current_user) { user }
-      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
-
-      context 'when procedure qrcoding is not activated,' do
-        before { Flipper.disable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can download original pdf"
-      end
-
-      context 'when procedure qrcoding is activated,' do
-        before { Flipper.enable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can download qrcoded pdf"
-
-        context 'when created_date is wrong' do
-          let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
-          it_behaves_like "he can't download pdf"
+    [false, true].each do |value|
+      before do
+        if value
+          Flipper.enable(:champ_update_by_stable_id)
+        else
+          Flipper.disable(:champ_update_by_stable_id)
         end
       end
 
-      context 'using legacy link' do
-        subject do
-          params.delete(:i)
-          get :show, params: params
+      context 'when user wants to download pdf piece_justificative,' do
+        let(:current_user) { user }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+        context 'when procedure qrcoding is not activated,' do
+          before { Flipper.disable(:qrcoded_pdf, procedure) }
+          it_behaves_like "he can download original pdf"
         end
 
-        it 'is redirected to download url' do
-          subject
-          expect(response.status).to eq(302)
-          expect(response.location).to include("#{params[:champ_id]}/piece_justificative/download/#{params[:h]}")
+        context 'when procedure qrcoding is activated,' do
+          before { Flipper.enable(:qrcoded_pdf, procedure) }
+          it_behaves_like "he can download qrcoded pdf"
+
+          context 'when created_date is wrong' do
+            let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
+            it_behaves_like "he can't download pdf"
+          end
+        end
+
+        context 'using legacy link' do
+          subject do
+            params.delete(:i)
+            get :show, params: params
+          end
+
+          it 'is redirected to download url' do
+            subject
+            expect(response.status).to eq(302)
+            expect(response.location).to include("#{params[:champ_id]}/piece_justificative/download/#{params[:h]}")
+          end
         end
       end
-    end
 
-    context 'when instructeur wants to download pdf piece_justificative,' do
-      let(:current_user) { instructeur.user }
-      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+      context 'when instructeur wants to download pdf piece_justificative,' do
+        let(:current_user) { instructeur.user }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
 
-      context 'when procedure qrcoding is not activated,' do
-        before { Flipper.disable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can download original pdf"
+        context 'when procedure qrcoding is not activated,' do
+          before { Flipper.disable(:qrcoded_pdf, procedure) }
+          it_behaves_like "he can download original pdf"
+        end
+
+        context 'when procedure qrcoding is activated,' do
+          before { Flipper.enable(:qrcoded_pdf, procedure) }
+          it_behaves_like "he can download qrcoded pdf"
+
+          context 'when created_date is wrong,' do
+            let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
+            it_behaves_like "he can't download pdf"
+          end
+        end
       end
 
-      context 'when procedure qrcoding is activated,' do
-        before { Flipper.enable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can download qrcoded pdf"
+      context 'when Another User wants to download pdf piece_justificative,' do
+        let(:current_user) { create(:user) }
+        let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+
+        context 'when procedure qrcoding is not activated,' do
+          before { Flipper.disable(:qrcoded_pdf, procedure) }
+          it_behaves_like "he can download original pdf"
+        end
+
+        context 'when procedure qrcoding is activated,' do
+          before { Flipper.enable(:qrcoded_pdf, procedure) }
+          it_behaves_like "he can download qrcoded pdf"
+        end
 
         context 'when created_date is wrong,' do
           let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
+          before { Flipper.enable(:qrcoded_pdf, procedure) }
           it_behaves_like "he can't download pdf"
         end
-      end
-    end
-
-    context 'when Another User wants to download pdf piece_justificative,' do
-      let(:current_user) { create(:user) }
-      let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
-
-      context 'when procedure qrcoding is not activated,' do
-        before { Flipper.disable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can download original pdf"
-      end
-
-      context 'when procedure qrcoding is activated,' do
-        before { Flipper.enable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can download qrcoded pdf"
-      end
-
-      context 'when created_date is wrong,' do
-        let(:params) { { champ_id: annotation.id.to_s, h: 'x' } }
-        before { Flipper.enable(:qrcoded_pdf, procedure) }
-        it_behaves_like "he can't download pdf"
       end
     end
   end
@@ -136,7 +146,8 @@ describe Champs::PieceJustificativeController, type: :controller do
     subject do
       put :update, params: {
         position: '1',
-        champ_id: champ.id,
+        dossier_id: champ.dossier_id,
+        stable_id: champ.stable_id,
         blob_signed_id: file
       }.compact, format: :turbo_stream
     end
@@ -216,7 +227,8 @@ describe Champs::PieceJustificativeController, type: :controller do
 
     subject do
       get :template, params: {
-        champ_id: champ.id
+        dossier_id: champ.dossier_id,
+        stable_id: champ.stable_id
       }
     end
 

@@ -1,8 +1,5 @@
-class Champs::NumeroDnController < ApplicationController
-  before_action :authenticate_logged_user!
-
+class Champs::NumeroDnController < Champs::ChampController
   def show
-    @champ = policy_scope(Champ).find(params[:champ_id])
     @dn = params[:dn]
     @ddn = params[:ddn]
 
