@@ -15,6 +15,7 @@ class Column
     @value_column = value_column
     @filterable = filterable
     @displayable = displayable
+    @id_value_h = {}
   end
 
   def id
@@ -33,5 +34,17 @@ class Column
     {
       table:, column:, label:, classname:, type:, scope:, value_column:, filterable:, displayable:
     }
+  end
+
+  def add_value(id, val)
+    @id_value_h[id] = val
+  end
+
+  def set_id_value_h(id_value_h)
+    @id_value_h = id_value_h
+  end
+
+  def id_value_h
+    @id_value_h
   end
 end

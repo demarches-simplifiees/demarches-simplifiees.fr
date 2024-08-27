@@ -117,7 +117,7 @@ class ProcedurePresentation < ApplicationRecord
     column_ids = Array.wrap(column_ids)
     columns = column_ids.map do |id|
       maybe_column = procedure.find_column(id:)
-      maybe_column ||= begin
+      maybe_column || begin
         table, column = id.split("/")
         Column.new(table:, column:)
       end

@@ -4,9 +4,9 @@ class RechercheController < ApplicationController
   before_action :authenticate_logged_user!
   ITEMS_PER_PAGE = 25
   PROJECTIONS = [
-    { "table" => 'procedure', "column" => 'libelle' },
-    { "table" => 'user', "column" => 'email' },
-    { "table" => 'procedure', "column" => 'procedure_id' }
+    Column.new(table: 'procedure', column: 'libelle'),
+    Column.new(table: 'user', column: 'email'),
+    Column.new(table: 'procedure', column: 'procedure_id')
   ]
 
   def nav_bar_profile

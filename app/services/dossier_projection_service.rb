@@ -5,13 +5,13 @@ class DossierProjectionService
       def pending_correction?
         return false if corrections.blank?
 
-        corrections.any? { _1[:resolved_at].nil? }
+        corrections.any? { _1['resolved_at'].nil? }
       end
 
       def resolved_corrections?
         return false if corrections.blank?
 
-        corrections.all? { _1[:resolved_at].present? }
+        corrections.all? { _1['resolved_at'].present? }
       end
     end
   end
@@ -25,9 +25,6 @@ class DossierProjectionService
     end
   end
 
-  TABLE = 'table'
-  COLUMN = 'column'
-
   # Returns [DossierProjection(dossier, columns)] ordered by dossiers_ids
   # and the columns orderd by fields.
   #
@@ -40,110 +37,108 @@ class DossierProjectionService
   # Those hashes are needed because:
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
-  def self.project(dossiers_ids, fields)
-    fields = fields.deep_dup
-    state_field = { TABLE => 'self', COLUMN => 'state' }
-    archived_field = { TABLE => 'self', COLUMN => 'archived' }
-    batch_operation_field = { TABLE => 'self', COLUMN => 'batch_operation_id' }
-    hidden_by_user_at_field = { TABLE => 'self', COLUMN => 'hidden_by_user_at' }
-    hidden_by_administration_at_field = { TABLE => 'self', COLUMN => 'hidden_by_administration_at' }
-    hidden_by_reason_field = { TABLE => 'self', COLUMN => 'hidden_by_reason' }
-    for_tiers_field = { TABLE => 'self', COLUMN => 'for_tiers' }
-    individual_first_name = { TABLE => 'individual', COLUMN => 'prenom' }
-    individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
-    sva_svr_decision_on_field = { TABLE => 'self', COLUMN => 'sva_svr_decision_on' }
-    dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
-    champ_value = champ_value_formatter(dossiers_ids, fields)
-    ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, hidden_by_reason_field, for_tiers_field, individual_first_name, individual_last_name, batch_operation_field, dossier_corrections] + fields)
-      .each { |f| f[:id_value_h] = {} }
-      .group_by { |f| f[TABLE] } # one query per table
-      .each do |table, fields|
+  def self.project(dossiers_ids, columns)
+    columns = columns.deep_dup
+    state_field = Column.new(table: 'self', column: 'state')
+    archived_field = Column.new(table: 'self', column: 'archived')
+    batch_operation_field = Column.new(table: 'self', column: 'batch_operation_id')
+    hidden_by_user_at_field = Column.new(table: 'self', column: 'hidden_by_user_at')
+    hidden_by_administration_at_field = Column.new(table: 'self', column: 'hidden_by_administration_at')
+    hidden_by_reason_field = Column.new(table: 'self', column: 'hidden_by_reason')
+    for_tiers_field = Column.new(table: 'self', column: 'for_tiers')
+    individual_first_name = Column.new(table: 'individual', column: 'prenom')
+    individual_last_name = Column.new(table: 'individual', column: 'nom')
+    sva_svr_decision_on_field = Column.new(table: 'self', column: 'sva_svr_decision_on')
+    dossier_corrections = Column.new(table: 'dossier_corrections', column: 'resolved_at')
+    champ_value = champ_value_formatter(dossiers_ids, columns)
+    ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, hidden_by_reason_field, for_tiers_field, individual_first_name, individual_last_name, batch_operation_field, dossier_corrections] + columns)
+      .group_by(&:table) # one query per table
+      .each do |table, columns|
       case table
       when 'type_de_champ'
         Champ
           .where(
-            stable_id: fields.map { |f| f[COLUMN] },
+            stable_id: columns.map(&:column),
             dossier_id: dossiers_ids
           )
           .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
           .map do |stable_id, champs|
-            field = fields.find { |f| f[COLUMN] == stable_id.to_s }
-            field[:id_value_h] = champs.to_h { |c| [c.dossier_id, champ_value.(c)] }
+            todo_identify_complex_column_id = false
+            column = columns.find { |column| column.column.to_s == stable_id.to_s || todo_identify_complex_column_id }
+            column.set_id_value_h(champs.to_h { |c| [c.dossier_id, champ_value.(c)] })
           end
       when 'self'
         Dossier
           .where(id: dossiers_ids)
-          .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
-          .each do |id, *columns|
-            fields.zip(columns).each do |field, value|
+          .pluck(:id, *columns.map(&:column))
+          .each do |id, *cols|
+            columns.zip(cols).each do |column, value|
               # SVA must remain a date: in other column we compute remaining delay with it
-              field[:id_value_h][id] = if value.respond_to?(:strftime) && field != sva_svr_decision_on_field
+              column.add_value(id, if value.respond_to?(:strftime) && column != sva_svr_decision_on_field
                 I18n.l(value.to_date)
               else
                 value
-              end
+              end)
             end
           end
       when 'individual'
         Individual
           .where(dossier_id: dossiers_ids)
-          .pluck(:dossier_id, *fields.map { |f| f[COLUMN].to_sym })
-          .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
+          .pluck(:dossier_id, *columns.map(&:column))
+          .each { |id, *cols| columns.zip(cols).each { |column, value| column.add_value(id, value) } }
       when 'etablissement'
         Etablissement
           .where(dossier_id: dossiers_ids)
-          .pluck(:dossier_id, *fields.map { |f| f[COLUMN].to_sym })
-          .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
+          .pluck(:dossier_id, *columns.map(&:column))
+          .each { |id, *cols| columns.zip(cols).each { |column, value| column.add_value(id, value) } }
       when 'user'
-
-        fields[0][:id_value_h] = Dossier # there is only one field available for user table
+        columns[0].set_id_value_h(Dossier # there is only one field available for user table
           .joins(:user)
           .includes(:individual)
           .where(id: dossiers_ids)
           .pluck('dossiers.id, dossiers.for_tiers, users.email, individuals.prenom, individuals.nom')
-          .to_h { |dossier_id, *array| [dossier_id, for_tiers_translation(array)] }
+          .to_h { |dossier_id, *array| [dossier_id, for_tiers_translation(array)] })
       when 'groupe_instructeur'
-        fields[0][:id_value_h] = Dossier
+        columns[0].set_id_value_h(Dossier
           .joins(:groupe_instructeur)
           .where(id: dossiers_ids)
           .pluck('dossiers.id, groupe_instructeurs.label')
-          .to_h
+          .to_h)
       when 'dossier_corrections'
-        columns = fields.map { _1[COLUMN].to_sym }
+        plucked_columns = columns.map(&:column)
 
         id_value_h = DossierCorrection.where(dossier_id: dossiers_ids)
-          .pluck(:dossier_id, *columns)
+          .pluck(:dossier_id, *plucked_columns)
           .group_by(&:first) # group corrections by dossier_id
           .transform_values do |values| # build each correction has an hash column => value
-            values.map { Hash[columns.zip(_1[1..-1])] }
+            values.map { Hash[plucked_columns.zip(_1[1..-1])] }
           end
-
-        fields[0][:id_value_h] = id_value_h
+        columns[0].set_id_value_h(id_value_h)
 
       when 'procedure'
         Dossier
           .joins(:procedure)
           .where(id: dossiers_ids)
-          .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
-          .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
+          .pluck(:id, *columns.map(&:column))
+          .each { |id, *cols| columns.zip(cols).each { |col, value| col.add_value(id, value) } }
       when 'followers_instructeurs'
         # rubocop:disable Style/HashTransformValues
-        fields[0][:id_value_h] = Follow
+        columns[0].set_id_value_h(Follow
           .active
           .joins(instructeur: :user)
           .where(dossier_id: dossiers_ids)
           .pluck('dossier_id, users.email')
           .group_by { |dossier_id, _| dossier_id }
-          .to_h { |dossier_id, dossier_id_emails| [dossier_id, dossier_id_emails.sort.map { |_, email| email }&.join(', ')] }
+          .to_h { |dossier_id, dossier_id_emails| [dossier_id, dossier_id_emails.sort.map { |_, email| email }&.join(', ')] })
         # rubocop:enable Style/HashTransformValues
       when 'avis'
         # rubocop:disable Style/HashTransformValues
-        fields[0][:id_value_h] = Avis
+        columns[0].set_id_value_h(Avis
           .where(dossier_id: dossiers_ids)
           .pluck('dossier_id', 'question_answer')
           .group_by { |dossier_id, _| dossier_id }
-          .to_h { |dossier_id, question_answer| [dossier_id, question_answer.map { |_, answer| answer }&.compact&.tally&.map { |k, v| I18n.t("helpers.label.question_answer_with_count.#{k}", count: v) }&.join(' / ')] }
+          .to_h { |dossier_id, question_answer| [dossier_id, question_answer.map { |_, answer| answer }&.compact&.tally&.map { |k, v| I18n.t("helpers.label.question_answer_with_count.#{k}", count: v) }&.join(' / ')] })
         # rubocop:enable Style/HashTransformValues
       end
     end
@@ -151,18 +146,18 @@ class DossierProjectionService
     dossiers_ids.map do |dossier_id|
       DossierProjection.new(
         dossier_id,
-        state_field[:id_value_h][dossier_id],
-        archived_field[:id_value_h][dossier_id],
-        hidden_by_user_at_field[:id_value_h][dossier_id],
-        hidden_by_administration_at_field[:id_value_h][dossier_id],
-        hidden_by_reason_field[:id_value_h][dossier_id],
-        for_tiers_field[:id_value_h][dossier_id],
-        individual_first_name[:id_value_h][dossier_id],
-        individual_last_name[:id_value_h][dossier_id],
-        batch_operation_field[:id_value_h][dossier_id],
-        sva_svr_decision_on_field[:id_value_h][dossier_id],
-        dossier_corrections[:id_value_h][dossier_id],
-        fields.map { |f| f[:id_value_h][dossier_id] }
+        state_field.id_value_h[dossier_id],
+        archived_field.id_value_h[dossier_id],
+        hidden_by_user_at_field.id_value_h[dossier_id],
+        hidden_by_administration_at_field.id_value_h[dossier_id],
+        hidden_by_reason_field.id_value_h[dossier_id],
+        for_tiers_field.id_value_h[dossier_id],
+        individual_first_name.id_value_h[dossier_id],
+        individual_last_name.id_value_h[dossier_id],
+        batch_operation_field.id_value_h[dossier_id],
+        sva_svr_decision_on_field.id_value_h[dossier_id],
+        dossier_corrections.id_value_h[dossier_id],
+        columns.map { |column| column.id_value_h[dossier_id] }
       )
     end
   end
@@ -170,8 +165,8 @@ class DossierProjectionService
   class << self
     private
 
-    def champ_value_formatter(dossiers_ids, fields)
-      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ', 'type_de_champ_private']) }.map { _1[COLUMN] }
+    def champ_value_formatter(dossiers_ids, columns)
+      stable_ids = columns.filter { _1.table == 'type_de_champ' }.map(&:column)
       revision_ids_by_dossier_ids = Dossier.where(id: dossiers_ids).pluck(:id, :revision_id).to_h
       stable_ids_and_types_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
         .where(revision_id: revision_ids_by_dossier_ids.values.uniq, type_de_champ: { stable_id: stable_ids })

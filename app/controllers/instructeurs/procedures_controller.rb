@@ -104,7 +104,7 @@ module Instructeurs
         .page(page)
         .per(ITEMS_PER_PAGE)
 
-      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
+      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields.map { Column.new(**_1.transform_keys(&:to_sym)) })
       @disable_checkbox_all = @projected_dossiers.all? { _1.batch_operation_id.present? }
 
       @batch_operations = BatchOperation.joins(:groupe_instructeurs)
