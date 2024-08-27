@@ -9,25 +9,19 @@ describe ProcedurePresentation do
   let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
   let(:first_type_de_champ) { assign_to.procedure.active_revision.types_de_champ_public.first }
   let(:first_type_de_champ_id) { first_type_de_champ.stable_id.to_s }
-  let(:procedure_presentation) {
-    create(:procedure_presentation,
-      assign_to:,
-      displayed_fields: [
-        { label: "test1", table: "user", column: "email" },
-        { label: "test2", table: "type_de_champ", column: first_type_de_champ_id, virtual: false }
-      ],
-      sort: { table: "user", column: "email", "order" => "asc" },
-      filters:)
-  }
+  let(:displayed_column_ids) { ["user/email", "type_de_champ/#{first_type_de_champ_id}"] }
+  let(:procedure_presentation) do
+    create(:procedure_presentation, assign_to:, filters:, sort: { table: "user", column: "email", "order" => "asc" }) do |pp|
+      pp.update_displayed_fields(displayed_column_ids)
+    end
+  end
   let(:procedure_presentation_id) { procedure_presentation.id }
   let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
 
   describe "#displayed_fields" do
-    it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user", "column" => "email" }, { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id, "virtual" => false }]) }
-  end
-
-  describe "#displayed_fields_for_headers" do
-    it { expect(procedure_presentation.displayed_fields_for_headers.map(&:label)).to eq(["Nº dossier", "test1", "test2", "Statut"]) }
+    it 'works' do
+      expect(procedure_presentation.displayed_fields).to eq(displayed_column_ids.map { procedure.find_column(id: _1) }.as_json)
+    end
   end
 
   describe "#sort" do
@@ -42,11 +36,14 @@ describe ProcedurePresentation do
     it { expect(build(:procedure_presentation)).to be_valid }
 
     context 'of displayed fields' do
-      it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
-      context 'rna' do
+      context 'invalid' do
+        it { expect { build(:procedure_presentation).tap { _1.update_displayed_fields(["kthxbye/+"]) } }.to raise_error(ActiveRecord::RecordInvalid, "La validation a échoué : Le champ « Displayed fields » kthxbye. n’est pas une colonne permise") }
+      end
+
+      context 'now valid, ex rna' do
         let(:types_de_champ_public) { [{ type: :rna }] }
-        let(:procedure_presentation) { build(:procedure_presentation, assign_to:) }
-        it { expect(build(:procedure_presentation, displayed_fields: first_type_de_champ.dynamic_type.columns(table: 'types_de_champ'))).to be_valid }
+        let(:column_ids) { first_type_de_champ.dynamic_type.columns(table: 'types_de_champ').map(&:id) }
+        it { expect(procedure_presentation).to be_valid }
       end
     end
 

@@ -14,7 +14,6 @@ class Column
     @scope = scope
     @value_column = value_column
     @filterable = filterable
-    # We need this for backward compatibility
     @displayable = displayable
   end
 
