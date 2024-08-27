@@ -449,6 +449,7 @@ module Instructeurs
         .and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id, :position).order(:position)
 
       # auto-save send small sets of fields to update so for speed, we look for brothers containing visa or headers
+      Rails.logger.info("Changes to check against visa: #{params}")
       params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
         champ = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position).find(v[:id])
         # look for position of next visa in the same first level title.
@@ -456,7 +457,9 @@ module Instructeurs
           .where(row_id: champ.row_id, dossier: champ.dossier_id)
           .where('position > ?', champ[:position])
         following_champ = champs.find { |c| c.visa? || (c.header_section? && c.header_section_level_value == 1) }
-        following_champ.present? && following_champ.visa?
+        to_reject = following_champ.present? && following_champ.visa?
+        Rails.logger.warn("Annulation sauvegarde de l'annotation #{champ.label} sur dossier #{champ.dossier_id} car le visa #{following_champ.label} a la valeur #{following_champ.value}") if to_reject
+        to_reject
       end
       champs_private_attributes_params
     end
