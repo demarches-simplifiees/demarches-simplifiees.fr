@@ -59,7 +59,7 @@ class DossierProjectionService
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
       case table
-      when 'type_de_champ', 'type_de_champ_private'
+      when 'type_de_champ'
         Champ
           .where(
             stable_id: fields.map { |f| f[COLUMN] },

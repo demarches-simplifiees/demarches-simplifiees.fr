@@ -190,16 +190,6 @@ describe DossierProjectionService do
         it { is_expected.to eq('kale') }
       end
 
-      context 'for type_de_champ_private table' do
-        let(:table) { 'type_de_champ_private' }
-        let(:dossier) { create(:dossier) }
-        let(:column) { dossier.procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
-
-        before { dossier.champs_private.first.update(value: 'quinoa') }
-
-        it { is_expected.to eq('quinoa') }
-      end
-
       context 'for type_de_champ table and value to.s' do
         let(:table) { 'type_de_champ' }
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
