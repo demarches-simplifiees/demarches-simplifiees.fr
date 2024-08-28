@@ -537,6 +537,29 @@ describe ProcedureRevision do
         end
       end
 
+      context 'when a type de champ is transformed into a text_area with no character limit' do
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }]) }
+
+        before do
+          updated_tdc = new_draft.find_and_ensure_exclusive_use(first_tdc.stable_id)
+          updated_tdc.update(type_champ: :textarea, options: { "character_limit" => "" })
+        end
+
+        it do
+          is_expected.to eq([
+            {
+              op: :update,
+              attribute: :type_champ,
+              label: first_tdc.libelle,
+              private: false,
+              from: "text",
+              to: "textarea",
+              stable_id: first_tdc.stable_id
+            }
+          ])
+        end
+      end
+
       context 'when a type de champ is moved' do
         let(:procedure) { create(:procedure, types_de_champ_public: Array.new(3) { { type: :text } }) }
         let(:new_draft_second_tdc) { new_draft.types_de_champ_public.second }
