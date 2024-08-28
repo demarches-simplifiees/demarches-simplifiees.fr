@@ -942,6 +942,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_08_29_141049) do
     t.boolean "for_tiers_enabled", default: true, null: false
     t.datetime "hidden_at", precision: nil
     t.datetime "hidden_at_as_template", precision: nil
+    t.boolean "hide_instructeurs_email", default: false, null: false
     t.boolean "instructeurs_self_management_enabled", default: false
     t.boolean "juridique_required", default: true
     t.string "libelle"
