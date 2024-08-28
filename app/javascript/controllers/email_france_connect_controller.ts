@@ -20,10 +20,12 @@ export class EmailFranceConnectController extends ApplicationController {
     ) as HTMLInputElement;
 
     if (checkedTarget && checkedTarget.value === 'false') {
-      this.emailFieldTarget.classList.remove('fr-hidden');
+      this.emailFieldTarget.classList.remove('hidden');
+      this.emailFieldTarget.setAttribute('aria-hidden', 'false');
       inputElement.setAttribute('required', '');
     } else {
-      this.emailFieldTarget.classList.add('fr-hidden');
+      this.emailFieldTarget.classList.add('hidden');
+      this.emailFieldTarget.setAttribute('aria-hidden', 'true');
       inputElement.removeAttribute('required');
       inputElement.value = '';
     }

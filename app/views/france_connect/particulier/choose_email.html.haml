@@ -22,7 +22,7 @@
             %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_no' }
               = t('.use_another_email')
 
-      .fr-fieldset__element.fr-fieldset__element--inline.fr-hidden{ data: { email_france_connect_target: "emailField", controller: 'email-input', email_input_url_value: show_email_suggestions_path } }
+      .fr-fieldset__element.fr-fieldset__element--inline.hidden{ aria: { hidden: true }, data: { email_france_connect_target: "emailField", controller: 'email-input', email_input_url_value: show_email_suggestions_path } }
         = f.label :email, t('.alternative_email'), class: "fr-label"
         %span.fr-hint-text.mb-1= t('activerecord.attributes.user.hints.email')
         = f.email_field :email, class: "fr-input"
