@@ -10,7 +10,7 @@ module BlobImageProcessorConcern
   end
 
   def representation_required?
-    from_champ? || from_messagerie? || is_a_logo?
+    from_champ? || from_messagerie? || logo? || from_action_text?
   end
 
   private
@@ -25,6 +25,10 @@ module BlobImageProcessorConcern
 
   def logo?
     attachments.any? { _1.name == 'logo' }
+  end
+
+  def from_action_text?
+    attachments.any? { _1.record.class == ActionText::RichText }
   end
 
   def watermark_required?

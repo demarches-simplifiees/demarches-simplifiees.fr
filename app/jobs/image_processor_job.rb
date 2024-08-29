@@ -58,6 +58,9 @@ class ImageProcessorJob < ApplicationJob
       if attachment.blob.content_type.in?(RARE_IMAGE_TYPES)
         attachment.variant(resize_to_limit: [2000, 2000]).processed
       end
+      if attachment.record.class == ActionText::RichText
+        attachment.variant(resize_to_limit: [1024, 768]).processed
+      end
     end
   end
 
