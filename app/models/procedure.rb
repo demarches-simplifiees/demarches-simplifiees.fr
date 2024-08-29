@@ -325,6 +325,7 @@ class Procedure < ApplicationRecord
     Procedure.transaction do
       if brouillon?
         reset!
+        cleanup_types_de_champ_options!
       end
 
       other_procedure = other_procedure_with_path(path)
@@ -344,6 +345,12 @@ class Procedure < ApplicationRecord
         Rails.logger.info("Resetting #{dossier_ids_to_destroy.size} dossiers on procedure #{id}: #{dossier_ids_to_destroy}")
         draft_revision.dossiers.destroy_all
       end
+    end
+  end
+
+  def cleanup_types_de_champ_options!
+    draft_revision.types_de_champ.each do |type_de_champ|
+      type_de_champ.update!(options: type_de_champ.clean_options)
     end
   end
 
@@ -807,6 +814,7 @@ class Procedure < ApplicationRecord
 
   def publish_revision!
     reset!
+    cleanup_types_de_champ_options!
     transaction do
       self.published_revision = draft_revision
       self.draft_revision = create_new_revision

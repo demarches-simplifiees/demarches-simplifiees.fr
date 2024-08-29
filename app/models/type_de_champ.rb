@@ -677,6 +677,24 @@ class TypeDeChamp < ApplicationRecord
       .parameterize
   end
 
+  OPTS_BY_TYPE = {
+    type_champs.fetch(:header_section) => [:header_section_level],
+    type_champs.fetch(:explication) => [:collapsible_explanation_enabled, :collapsible_explanation_text],
+    type_champs.fetch(:textarea) => [:character_limit],
+    type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
+    type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options],
+    type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],
+    type_champs.fetch(:linked_drop_down_list) => [:drop_down_options, :drop_down_secondary_libelle, :drop_down_secondary_description],
+    type_champs.fetch(:piece_justificative) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
+    type_champs.fetch(:titre_identite) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
+    type_champs.fetch(:expression_reguliere) => [:expression_reguliere, :expression_reguliere_error_message, :expression_reguliere_exemple_text]
+  }
+
+  def clean_options
+    kept_keys = OPTS_BY_TYPE.fetch(type_champ.to_s) { [] }
+    options.slice(*kept_keys.map(&:to_s))
+  end
+
   class << self
     def champ_value(type_champ, champ)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
