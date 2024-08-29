@@ -685,6 +685,30 @@ class TypeDeChamp < ApplicationRecord
       .parameterize
   end
 
+  def clean_options
+    if header_section?
+      options.slice(:header_section_level.to_s)
+    elsif explication?
+      options.slice(:collapsible_explanation_enabled.to_s, :collapsible_explanation_text.to_s)
+    elsif textarea?
+      options.slice(:character_limit.to_s)
+    elsif carte?
+      options.slice(*TypesDeChamp::CarteTypeDeChamp::LAYERS.map(&:to_s))
+    elsif simple_drop_down_list?
+      options.slice(:drop_down_other.to_s, :drop_down_options.to_s)
+    elsif multiple_drop_down_list?
+      options.slice(:drop_down_options.to_s)
+    elsif linked_drop_down_list?
+      options.slice(:drop_down_options.to_s, :drop_down_secondary_libelle.to_s, :drop_down_secondary_description.to_s)
+    elsif piece_justificative?
+      options.slice(:old_pj.to_s, :skip_pj_validation.to_s, :skip_content_type_pj_validation.to_s)
+    elsif expression_reguliere?
+      options.slice(:expression_reguliere.to_s, :expression_reguliere_error_message.to_s, :expression_reguliere_exemple_text.to_s)
+    else
+      {}
+    end
+  end
+
   class << self
     def champ_value(type_champ, champ)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
