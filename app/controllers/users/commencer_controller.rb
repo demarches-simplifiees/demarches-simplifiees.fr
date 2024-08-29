@@ -4,6 +4,17 @@ module Users
   class CommencerController < ApplicationController
     layout 'procedure_context'
 
+    before_action :path_rewrite, only: [:commencer, :commencer_test, :dossier_vide_pdf, :dossier_vide_pdf_test, :sign_in, :sign_up, :france_connect, :procedure_for_help, :closing_details]
+
+    # TODO: REMOVE THIS
+    # this was only added because a administration needed new urls
+    # check from 07/2025 if this is still needed
+    def path_rewrite
+      path_rewrite = PathRewrite.find_by(from: params[:path])
+
+      params[:path] = path_rewrite.to if path_rewrite.present?
+    end
+
     def commencer
       @procedure = retrieve_procedure
 
