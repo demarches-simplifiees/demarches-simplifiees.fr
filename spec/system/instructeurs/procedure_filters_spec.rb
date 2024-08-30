@@ -51,7 +51,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add and remove custom type_de_champ column", chrome: true do
+  scenario "should be able to add and remove custom type_de_champ column", chrome: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
@@ -68,6 +68,31 @@ describe "procedure filters" do
     remove_column("Demandeur")
     within ".dossiers-table" do
       expect(page).not_to have_link("Demandeur")
+    end
+  end
+
+  context 'with rna' do
+    let(:types_de_champ_public) { [{ type: :rna, libelle: "rna" }] }
+    before do
+      new_unfollow_dossier.champs_public.first.update(value: '18 a la bonne rue', value_json: {
+        :street_number => "16",
+        :street_name => "Rue du Général de Boissieu",
+        :street_address => "16 Rue du Général de Boissieu",
+        :postal_code => "75015",
+        :city_name => "Paris 15e Arrondissement",
+        :city_code => "75115",
+        :departement_code => "75",
+        :departement_name => "Paris",
+        :region_code => "11",
+        :region_name => "Île-de-France"
+      })
+    end
+    scenario "should be able to add and remove rna type de champ column", js: true do
+      column = type_de_champ.dynamic_type.columns(table: "type_de_champ").find { _1.value_column == ['postal_code'] }
+      add_column(column.label)
+      within ".dossiers-table" do
+        expect(page).to have_link(new_unfollow_dossier.champs.first.value_json.dig(*column.value_column))
+      end
     end
   end
 
