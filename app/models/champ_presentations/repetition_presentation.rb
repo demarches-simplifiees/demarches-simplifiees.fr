@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ChampPresentations::RepetitionPresentation
+class ChampPresentations::RepetitionPresentation < ChampPresentations::BasePresentation
   attr_reader :libelle
   attr_reader :rows
 

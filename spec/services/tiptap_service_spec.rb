@@ -171,7 +171,7 @@ RSpec.describe TiptapService do
         '<p><s><em>Bonjour </em></s><u><strong>Paul</strong></u> <mark>!</mark></p>',
         '<ul><li><p>Item 1</p></li><li><p>Item 2</p></li></ul>',
         '<ol><li><p>Item 1</p></li><li><p>Item 2</p></li></ol>',
-        '<p>Langages de prédilection:<ul><li><p>ruby</p></li><li><p>rust</p></li></ul></p>', # TODO: fix this markup, <ul> should not be under <p>
+        '<p>Langages de prédilection:</p><ul><li><p>ruby</p></li><li><p>rust</p></li></ul><p></p>', # TODO: remove empty <p> ?
         '<footer>Footer</footer>'
       ].join
     end

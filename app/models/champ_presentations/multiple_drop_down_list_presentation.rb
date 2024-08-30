@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ChampPresentations::MultipleDropDownListPresentation
+class ChampPresentations::MultipleDropDownListPresentation < ChampPresentations::BasePresentation
   attr_reader :selected_options
 
   def initialize(selected_options)

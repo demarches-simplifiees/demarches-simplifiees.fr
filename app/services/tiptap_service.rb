@@ -96,11 +96,11 @@ class TiptapService
         text
       end
     in type: 'mention', attrs: { id: }, **rest
-      text_or_representation = substitutions.fetch(id) { "--#{id}--" }
-      text = if text_or_representation.respond_to?(:to_tiptap_node)
-        node_to_html(text_or_representation.to_tiptap_node, substitutions, level + 1)
+      text_or_presentation = substitutions.fetch(id) { "--#{id}--" }
+      text = if text_or_presentation.respond_to?(:to_tiptap_node)
+        handle_presentation_node(text_or_presentation, substitutions, level + 1)
       else
-        text_or_representation
+        text_or_presentation
       end
 
       if rest[:marks].present?
@@ -110,6 +110,16 @@ class TiptapService
       end
     in { type: type } if ["paragraph", "title", "heading"].include?(type) && !node.key?(:content)
       # noop
+    end
+  end
+
+  def handle_presentation_node(presentation, substitutions, level)
+    node = presentation.to_tiptap_node
+    content = node_to_html(node, substitutions, level)
+    if presentation.block_level?
+      "</p>#{content}<p>"
+    else
+      content
     end
   end
 
