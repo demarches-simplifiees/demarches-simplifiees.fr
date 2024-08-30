@@ -123,7 +123,7 @@ class ProcedurePresentation < ApplicationRecord
       end
     end
 
-    update!(displayed_fields: columns)
+    update!(displayed_fields: columns.map(&:to_json)) # prevent serialization of id_h_value
 
     if !sort_to_column_id(sort).in?(column_ids)
       update!(sort: Procedure.default_sort)

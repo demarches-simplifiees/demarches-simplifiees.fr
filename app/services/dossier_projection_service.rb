@@ -63,10 +63,18 @@ class DossierProjectionService
           )
           .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
-          .map do |stable_id, champs|
-            todo_identify_complex_column_id = false
-            column = columns.find { |column| column.column.to_s == stable_id.to_s || todo_identify_complex_column_id }
-            column.set_id_value_h(champs.to_h { |c| [c.dossier_id, champ_value.(c)] })
+          .each do |stable_id, champs|
+            columns
+              .filter do |column|
+                if column.is_a?(Columns::JSONPathColumn)
+                  column.send(:stable_id).to_s == stable_id.to_s
+                else
+                  column.column.to_s == stable_id.to_s
+                end
+              end
+              .each do |column|
+                column.set_id_value_h(champs.to_h { |champ| [champ.dossier_id, champ_value.(champ, column)] })
+              end
           end
       when 'self'
         Dossier
@@ -174,10 +182,14 @@ class DossierProjectionService
         .group_by(&:first)
         .transform_values { _1.map { |_, stable_id, type_champ| [stable_id, type_champ] }.to_h }
       stable_ids_and_types_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_champ_by_revision_ids[_1] }.compact
-      -> (champ) {
+      -> (champ, column) {
         type_champ = stable_ids_and_types_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
         if type_champ.present? && TypeDeChamp.type_champ_to_champ_class_name(type_champ) == champ.type
-          TypeDeChamp.champ_value(type_champ, champ)
+          if column.is_a?(Columns::JSONPathColumn)
+            column.champ_value(champ)
+          else
+            TypeDeChamp.champ_value(type_champ, champ)
+          end
         else
           ''
         end

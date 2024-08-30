@@ -226,6 +226,33 @@ describe DossierProjectionService do
         end
       end
 
+      context 'for type_de_champ table: type_de_champ rna' do
+        let(:table) { 'type_de_champ' }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rna }]) }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+        let(:fields) { dossier.procedure.active_revision.types_de_champ_public.first.dynamic_type.columns(table: 'type_de_champ') }
+        before do
+          dossier.champs_public.first.update(value: '18 a la bonne rue', value_json: {
+            :street_number => "16",
+            :street_name => "Rue du Général de Boissieu",
+            :street_address => "16 Rue du Général de Boissieu",
+            :postal_code => "75015",
+            :city_name => "Paris 15e Arrondissement",
+            :city_code => "75115",
+            :departement_code => "75",
+            :departement_name => "Paris",
+            :region_code => "11",
+            :region_name => "Île-de-France"
+          })
+        end
+        subject { described_class.project(dossiers_ids, fields) }
+        it 'includes data' do
+          expect(subject[0].columns.size).to eq(fields.size)
+          expect(subject[0].columns[0]).to eq(dossier.champs.first.value)
+          expect(subject[0].columns[1..]).to eq(["75015", "Paris 15e Arrondissement", "75", "Île-de-France"])
+        end
+      end
+
       context 'for dossier corrections table' do
         let(:table) { 'dossier_corrections' }
         let(:column) { 'resolved_at' }

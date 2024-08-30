@@ -20,7 +20,7 @@ describe ProcedurePresentation do
 
   describe "#displayed_fields" do
     it 'works' do
-      expect(procedure_presentation.displayed_fields).to eq(displayed_column_ids.map { procedure.find_column(id: _1) }.as_json)
+      expect(procedure_presentation.displayed_fields).to eq(displayed_column_ids.map { procedure.find_column(id: _1).to_json }.as_json)
     end
   end
 
