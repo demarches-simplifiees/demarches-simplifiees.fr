@@ -2,10 +2,7 @@
 
 describe Champs::CnafChamp, type: :model do
   let(:champ) { described_class.new(dossier: build(:dossier)) }
-  before do
-    allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_cnaf))
-    allow(champ).to receive(:in_dossier_revision?).and_return(true)
-  end
+  before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_cnaf)) }
   describe 'numero_allocataire and code_postal' do
     before do
       champ.numero_allocataire = '1234567'

@@ -2,10 +2,7 @@
 
 describe Champs::RNAChamp do
   let(:champ) { Champs::RNAChamp.new(value: "W182736273", dossier: build(:dossier)) }
-  before do
-    allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rna))
-    allow(champ).to receive(:in_dossier_revision?).and_return(true)
-  end
+  before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rna)) }
   def with_value(value)
     champ.tap { _1.value = value }
   end

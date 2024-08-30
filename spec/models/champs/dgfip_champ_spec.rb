@@ -40,10 +40,7 @@ describe Champs::DgfipChamp, type: :model do
     let(:numero_fiscal) { '1122299999092' }
     let(:reference_avis) { 'FC22299999092' }
     let(:champ) { described_class.new(dossier: build(:dossier)) }
-    before do
-      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_dgfip))
-      allow(champ).to receive(:in_dossier_revision?).and_return(true)
-    end
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_dgfip)) }
     let(:validation_context) { :champs_public_value }
 
     subject { champ.valid?(validation_context) }
