@@ -18,7 +18,6 @@ class API::V1::DossiersController < APIController
 
   def show
     dossier = @dossiers.for_api.find(params[:id])
-    DossierPreloader.load_one(dossier)
 
     render json: { dossier: DossierSerializer.new(dossier).as_json }
   rescue ActiveRecord::RecordNotFound

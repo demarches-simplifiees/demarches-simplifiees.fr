@@ -37,7 +37,7 @@ class Champs::RepetitionChamp < Champ
   end
 
   def blank?
-    row_ids.empty?
+    champs.empty?
   end
 
   def search_terms

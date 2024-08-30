@@ -57,7 +57,7 @@ module DossierChampsConcern
       .types_de_champ
       .filter { _1.stable_id.in?(stable_ids) }
       .filter { !revision.child?(_1) }
-      .map { _1.repetition? ? project_champ(_1, nil) : champ_for_update(_1, nil, updated_by: nil) }
+      .map { champ_for_update(_1, nil, updated_by: nil) }
   end
 
   def champ_for_update(type_de_champ, row_id, updated_by:)
