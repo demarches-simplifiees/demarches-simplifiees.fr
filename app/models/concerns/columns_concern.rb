@@ -22,12 +22,12 @@ module ColumnsConcern
       dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
         .map { |column| Column.new(table: 'self', column:, type: :date) }
 
-      virtual_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
+      non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| Column.new(table: 'self', column:, type: :date, displayable: false) }
 
       states = [Column.new(table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)]
 
-      [common, dates, sva_svr_columns(for_filters: true), virtual_dates, states].flatten.compact
+      [common, dates, sva_svr_columns(for_filters: true), non_displayable_dates, states].flatten.compact
     end
 
     def sva_svr_columns(for_filters: false)
