@@ -49,6 +49,10 @@ class APIGeoService
       departements.find { _1[:code] == code }&.dig(:name)
     end
 
+    def departement_name_by_postal_code(postal_code)
+      APIGeoService.departement_name(postal_code[0..2]) || APIGeoService.departement_name(postal_code[0..1])
+    end
+
     def departement_code(name)
       return if name.nil?
       departements.find { _1[:name] == name }&.dig(:code)
