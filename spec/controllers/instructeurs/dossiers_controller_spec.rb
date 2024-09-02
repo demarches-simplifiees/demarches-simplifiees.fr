@@ -1216,10 +1216,6 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
 
-      it 'does not discard the dossier' do
-        expect(dossier.reload.hidden_at).to eq(nil)
-      end
-
       it 'fill hidden by reason' do
         expect(dossier.reload.hidden_by_reason).not_to eq(nil)
         expect(dossier.reload.hidden_by_reason).to eq("instructeur_request")
@@ -1242,7 +1238,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context 'with dossier in batch_operation' do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
-      it { expect { subject }.not_to change { dossier.reload.hidden_at } }
+      it { expect { subject }.not_to change { dossier.reload.hidden_by_administration_at } }
       it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
       it 'flashes message' do
        subject

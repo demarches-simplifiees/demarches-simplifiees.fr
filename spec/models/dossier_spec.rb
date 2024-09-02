@@ -935,7 +935,6 @@ describe Dossier, type: :model do
 
     context 'en_construction' do
       it 'hide the dossier but does not discard' do
-        expect(dossier.hidden_at).to be_nil
         expect(dossier.hidden_by_user_at).to be_present
       end
 

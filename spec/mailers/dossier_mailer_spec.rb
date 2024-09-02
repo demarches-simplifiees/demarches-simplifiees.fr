@@ -129,12 +129,8 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_automatic_deletion_to_user' do
-    # let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
-    # let(:hidden_dossier) { build(:dossier, :en_construction, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
-
     describe 'en_construction' do
-      # let(:dossier) { create(:dossier, :en_construction) }
-      let(:hidden_dossier) { create(:dossier, :en_construction, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
+      let(:hidden_dossier) { create(:dossier, :en_construction, hidden_by_expired_at: Time.zone.now, hidden_by_reason: 'expired') }
 
       subject { described_class.notify_automatic_deletion_to_user([hidden_dossier], hidden_dossier.user.email) }
 
@@ -147,7 +143,7 @@ RSpec.describe DossierMailer, type: :mailer do
     end
 
     describe 'termine' do
-      let(:hidden_dossier) { create(:dossier, :accepte, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
+      let(:hidden_dossier) { create(:dossier, :accepte, hidden_by_expired_at: Time.zone.now, hidden_by_reason: 'expired') }
 
       subject { described_class.notify_automatic_deletion_to_user([hidden_dossier], hidden_dossier.user.email) }
 
@@ -161,9 +157,7 @@ RSpec.describe DossierMailer, type: :mailer do
   end
 
   describe '.notify_automatic_deletion_to_administration' do
-    # let(:dossier) { create(:dossier, :en_construction) }
-    let(:hidden_dossier) { create(:dossier, :accepte, hidden_at: Time.zone.now, hidden_by_reason: 'expired') }
-    # let(:deleted_dossier) { create(:deleted_dossier, dossier: dossier, reason: :expired) }
+    let(:hidden_dossier) { create(:dossier, :accepte, hidden_by_expired_at: Time.zone.now, hidden_by_reason: 'expired') }
 
     subject { described_class.notify_automatic_deletion_to_administration([hidden_dossier], hidden_dossier.user.email) }
 
