@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe 'The routing with rules', js: true do
-  let(:password) { 'a very complicated password' }
+  let(:password) { SECURE_PASSWORD }
 
   let(:procedure) do
     create(:procedure, :with_service, :for_individual, :with_zone, types_de_champ_public: [

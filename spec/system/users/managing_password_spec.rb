@@ -3,7 +3,7 @@
 describe 'Managing password:', js: true do
   context 'for simple users' do
     let(:user) { create(:user) }
-    let(:new_password) { 'a simple password' }
+    let(:new_password) { 'a new, long, and complicated password!' }
 
     scenario 'a simple user can reset their password' do
       visit root_path

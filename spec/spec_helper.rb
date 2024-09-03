@@ -24,7 +24,7 @@ require 'simplecov' if ENV["CI"] || ENV["COVERAGE"] # see config in .simplecov f
 
 require 'rspec/retry'
 
-SECURE_PASSWORD = 'my-s3cure-p4ssword'
+SECURE_PASSWORD = '{My-$3cure-p4ssWord}'
 
 RSpec.configure do |config|
   config.filter_run_excluding disable: true

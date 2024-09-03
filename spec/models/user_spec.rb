@@ -103,7 +103,7 @@ describe User, type: :model do
 
   describe '.create_or_promote_to_instructeur' do
     let(:email) { 'inst1@gmail.com' }
-    let(:password) { 'un super password !' }
+    let(:password) { SECURE_PASSWORD }
     let(:admins) { [] }
 
     subject { User.create_or_promote_to_instructeur(email, password, administrateurs: admins) }
@@ -437,10 +437,13 @@ describe User, type: :model do
 
       context 'when the password is long enough, but simple' do
         let(:password) { 'simple-password' }
+        it { expect(subject).to eq(["Le champ « Mot de passe » n’est pas assez complexe. Saisir un mot de passe plus complexe"]) }
+      end
 
-        it 'doesn’t enforce the password complexity' do
-          expect(subject).to be_empty
-        end
+      context 'when the password is long and complex' do
+        let(:password) { passwords[min_complexity] }
+
+        it { expect(subject).to be_empty }
       end
     end
   end
