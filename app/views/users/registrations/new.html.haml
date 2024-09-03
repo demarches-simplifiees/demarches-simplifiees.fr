@@ -18,9 +18,10 @@
       .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
       .fr-fieldset__element
-        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field, opts: { autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH }) do |c|
-          - c.with_describedby do
-            = render partial: "devise/password_rules", locals: { id: c.describedby_id }
+        = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
+          opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }})
 
-    %ul.fr-btns-group
-      %li= f.submit t('views.shared.account.create'), class: "fr-btn"
+        #password_complexity
+          = render PasswordComplexityComponent.new
+
+    = f.submit t('views.shared.account.create'), id: 'submit-password', class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
