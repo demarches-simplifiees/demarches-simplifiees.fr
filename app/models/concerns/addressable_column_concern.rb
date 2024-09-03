@@ -8,7 +8,7 @@ module AddressableColumnConcern
       super.concat([
         Columns::JSONPathColumn.new(
           table:,
-          virtual: true,
+          displayable: false,
           column: stable_id,
           label: "#{libelle} – code postal (5 chiffres)",
           type: :text,
@@ -16,7 +16,7 @@ module AddressableColumnConcern
         ),
         Columns::JSONPathColumn.new(
           table:,
-          virtual: true,
+          displayable: false,
           column: stable_id,
           label: "#{libelle} – commune",
           type: :text,
@@ -24,7 +24,7 @@ module AddressableColumnConcern
         ),
         Columns::JSONPathColumn.new(
           table:,
-          virtual: true,
+          displayable: false,
           column: stable_id,
           label: "#{libelle} – département",
           type: :enum,
@@ -32,7 +32,7 @@ module AddressableColumnConcern
         ),
         Columns::JSONPathColumn.new(
           table:,
-          virtual: true,
+          displayable: false,
           column: stable_id,
           label: "#{libelle} – region",
           type: :enum,
