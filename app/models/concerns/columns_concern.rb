@@ -6,6 +6,14 @@ module ColumnsConcern
   included do
     def find_column(id:) = columns.find { |f| f.id == id }
 
+    def find_or_build_column(id:)
+      maybe_column = find_column(id:)
+      maybe_column || begin
+        table, column = id.split("/")
+        Column.new(table:, column:)
+      end
+    end
+
     def columns
       columns = dossier_columns
       columns.concat(standard_columns)

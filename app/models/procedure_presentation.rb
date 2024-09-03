@@ -115,13 +115,7 @@ class ProcedurePresentation < ApplicationRecord
 
   def update_displayed_fields(column_ids)
     column_ids = Array.wrap(column_ids)
-    columns = column_ids.map do |id|
-      maybe_column = procedure.find_column(id:)
-      maybe_column || begin
-        table, column = id.split("/")
-        Column.new(table:, column:)
-      end
-    end
+    columns = column_ids.map { procedure.find_or_build_column(id: _1) }
 
     update!(displayed_fields: columns.map(&:to_json)) # prevent serialization of id_h_value
 
