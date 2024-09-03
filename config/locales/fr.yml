@@ -303,8 +303,6 @@ fr:
         subtitle: "Se créer un compte avec une adresse email"
         email_label: 'Email'
         password_label: "Mot de passe (%{min_length} caractères minimum)"
-        password_message: "Votre mot de passe doit contenir :"
-        password_placeholder: "%{min_length} caractères minimum"
     confirmation:
       new:
         title: 'Confirmez votre adresse email'

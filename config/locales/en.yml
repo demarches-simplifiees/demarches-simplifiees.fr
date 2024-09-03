@@ -311,8 +311,6 @@ en:
         subtitle: "Create an account using an email"
         email_label: 'Email (name@site.com)'
         password_label: "Password (%{min_length} characters minimum)"
-        password_message: "Your password must have :"
-        password_placeholder: "%{min_length} characters minimum"
     confirmation:
       new:
         title: 'Confirm your email address'
