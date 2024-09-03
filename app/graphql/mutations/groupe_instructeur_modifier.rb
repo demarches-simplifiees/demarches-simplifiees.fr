@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class GroupeInstructeurModifier < Mutations::BaseMutation
     description "Modifier un groupe instructeur."

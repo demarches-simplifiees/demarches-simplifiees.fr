@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::DossierOperationLogMoveToColdStorageJob < Cron::CronJob
   self.schedule_expression = "every day at 10:00"
 

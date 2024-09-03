@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_users_team_account'
   task backfill_users_team_account: :environment do

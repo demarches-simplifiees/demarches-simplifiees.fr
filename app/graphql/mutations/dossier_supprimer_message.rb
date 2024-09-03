@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierSupprimerMessage < Mutations::BaseMutation
     description "Supprimer un message."

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SuperAdmin, type: :model do
   describe '#invite_admin' do
     let(:super_admin) { create :super_admin }

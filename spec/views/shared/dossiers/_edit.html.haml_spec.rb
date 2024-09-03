@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'shared/dossiers/edit', type: :view do
   before do
     allow(controller).to receive(:current_user).and_return(dossier.user)

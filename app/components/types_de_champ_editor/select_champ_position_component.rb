@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::SelectChampPositionComponent < ApplicationComponent
   def initialize(revision:, coordinate:)
     @revision = revision

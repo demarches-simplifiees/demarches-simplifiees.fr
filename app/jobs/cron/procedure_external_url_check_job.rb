@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::ProcedureExternalURLCheckJob < Cron::CronJob
   self.schedule_expression = "every week on monday at 01:00"
 

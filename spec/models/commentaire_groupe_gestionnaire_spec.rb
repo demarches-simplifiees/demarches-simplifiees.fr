@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CommentaireGroupeGestionnaire, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:groupe_gestionnaire) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe InstructeurMailer, type: :mailer do
   describe '#send_dossier' do
     let(:sender) { create(:instructeur) }

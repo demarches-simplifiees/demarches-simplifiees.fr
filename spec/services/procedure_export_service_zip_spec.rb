@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative, libelle: 'pj' }, { type: :repetition, children: [{ type: :piece_justificative, libelle: 'repet_pj' }] }]) }

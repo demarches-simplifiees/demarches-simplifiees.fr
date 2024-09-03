@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Dossier, type: :model do
   let(:user) { create(:user) }
 
@@ -48,9 +50,9 @@ describe Dossier, type: :model do
         end
       end
 
-      context 'supprimes_recemment' do
+      context 'supprimes' do
         it do
-          expect(procedure.dossiers.by_statut('supprimes_recemment')).to match_array([dossier_accepte_deleted, dossier_accepte_archive_deleted])
+          expect(procedure.dossiers.by_statut('supprimes')).to match_array([dossier_accepte_deleted, dossier_accepte_archive_deleted])
         end
       end
 
@@ -933,7 +935,6 @@ describe Dossier, type: :model do
 
     context 'en_construction' do
       it 'hide the dossier but does not discard' do
-        expect(dossier.hidden_at).to be_nil
         expect(dossier.hidden_by_user_at).to be_present
       end
 
@@ -1298,6 +1299,7 @@ describe Dossier, type: :model do
     context "via procedure sva" do
       let(:procedure) { create(:procedure, :sva, :published, :for_individual) }
       let(:dossier) { create(:dossier, :en_construction, :with_individual, procedure:, sva_svr_decision_on: 10.days.from_now) }
+      let(:sva_svr_decision_on) { SVASVRDecisionDateCalculatorService.new(dossier, procedure).decision_date }
 
       subject do
         dossier.process_sva_svr!
@@ -1307,7 +1309,7 @@ describe Dossier, type: :model do
       it 'passes dossier en instruction' do
         expect(subject.state).to eq('en_instruction')
         expect(subject.followers_instructeurs).not_to include(instructeur)
-        expect(subject.sva_svr_decision_on >= 2.months.from_now.to_date + 1.day).to be_truthy
+        expect(subject.sva_svr_decision_on).to eq(sva_svr_decision_on)
         expect(last_operation.operation).to eq('passer_en_instruction')
         expect(last_operation.automatic_operation?).to be_truthy
         expect(operation_serialized['operation']).to eq('passer_en_instruction')

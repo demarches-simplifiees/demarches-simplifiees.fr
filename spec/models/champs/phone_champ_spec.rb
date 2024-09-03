@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::PhoneChamp do
   let(:champ) { Champs::PhoneChamp.new(dossier: build(:dossier)) }
   before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_phone)) }

@@ -20,7 +20,7 @@
           tout en respectant la charte de l’état. Essayez-la et donnez-nous votre avis
           en nous envoyant un email à #{mail_to(Current.contact_email, subject: "Feedback attestation v2")}.
           %br
-          - if !@procedure.feature_enabled?(:attestation_v2)
+          - if !@procedure.feature_enabled?(:attestation_v2) || @procedure.attestation_templates.v1.published.any?
             %strong Les attestations délivrées suivent encore l’ancien format :
             l’activation des attestations basées sur ce format sera bientôt disponible.
             %br
@@ -60,7 +60,7 @@
               - c.with_hint { "Exemple: Ministère de la Mer. 5 lignes maximum" }
 
           .fr-fieldset__element{ data: { attestation_target: 'logoAttachmentFieldset' } }
-            %label.fr-label{ for: field_id(@attestation_template, :logo) }
+            %label.fr-label{ for: dom_id(@attestation_template, :logo) }
               - if @attestation_template.official_layout?
                 = AttestationTemplate.human_attribute_name(:logo_additional)
               - else
@@ -108,7 +108,7 @@
             %h2.fr-h4 Pied de page
 
           .fr-fieldset__element
-            %label.fr-label{ for: field_id(@attestation_template, :signature) } Tampon ou signature
+            %label.fr-label{ for: dom_id(@attestation_template, :signature) } Tampon ou signature
             %span.fr-hint-text
               Dimensions conseillées : au minimum 500px de largeur ou de hauteur.
 

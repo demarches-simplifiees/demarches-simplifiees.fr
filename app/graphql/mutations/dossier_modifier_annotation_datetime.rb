@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierModifierAnnotationDatetime < Mutations::DossierModifierAnnotation
     description "Modifier l’annotation au format date et heure."

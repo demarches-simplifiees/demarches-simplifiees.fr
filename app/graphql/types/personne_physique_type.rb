@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class PersonnePhysiqueType < Types::BaseObject
     implements Types::DemandeurType

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::BooleanChamp < Champ
   TRUE_VALUE = 'true'
   FALSE_VALUE = 'false'

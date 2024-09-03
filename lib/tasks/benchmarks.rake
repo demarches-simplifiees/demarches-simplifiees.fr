@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :benchmarks do
   desc 'Benchmark exports'
   task exports: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Preview all emails at http://localhost:3000/rails/mailers/invite_mailer
 class InviteMailer < ApplicationMailer
   layout 'mailers/layout'

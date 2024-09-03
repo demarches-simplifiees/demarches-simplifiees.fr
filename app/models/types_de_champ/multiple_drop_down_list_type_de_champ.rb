@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   class << self
     def champ_value(champ)

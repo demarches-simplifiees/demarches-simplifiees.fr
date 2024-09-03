@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SamlIdpController do
   before do
     allow_any_instance_of(SamlIdpController).to receive(:validate_saml_request).and_return(valid_saml_request)

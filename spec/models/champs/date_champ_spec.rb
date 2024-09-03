@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DateChamp do
   let(:type_de_champ) { create(:type_de_champ_date) }
   let(:date_champ) { described_class.new }

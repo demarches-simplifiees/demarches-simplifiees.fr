@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: normalize_yes_no_values'
   task normalize_yes_no_values: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Current < ActiveSupport::CurrentAttributes
   attribute :application_base_url
   attribute :application_name

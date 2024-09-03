@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Users::ProfilController, type: :controller do
   include ActiveJob::TestHelper
 

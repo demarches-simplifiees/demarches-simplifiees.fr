@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class StrictEmailValidator < ActiveModel::EachValidator
   # default devise email is : /\A[^@\s]+@[^@\s]+\z/
   #   saying that it's quite permissive

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportTemplate do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
   let(:export_template) { build(:export_template, groupe_instructeur:) }

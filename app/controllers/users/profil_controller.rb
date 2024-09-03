@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   class ProfilController < UserController
     before_action :ensure_update_email_is_authorized, only: :update_email

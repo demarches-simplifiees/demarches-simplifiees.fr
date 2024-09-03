@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierSearchService
   def self.matching_dossiers(dossiers, search_terms, with_annotations = false)
     if dossiers.nil?

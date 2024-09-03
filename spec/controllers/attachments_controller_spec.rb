@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AttachmentsController, type: :controller do
   let(:user) { create(:user) }
   let(:attachment) { champ.piece_justificative_file.attachments.first }
@@ -50,7 +52,7 @@ describe AttachmentsController, type: :controller do
     let(:signed_id) { attachment.blob.signed_id }
 
     subject do
-      delete :destroy, params: { id: attachment.id, signed_id: signed_id }, format: :turbo_stream
+      delete :destroy, params: { id: attachment.id, signed_id: signed_id, dossier_id: dossier.id, stable_id: champ.stable_id }, format: :turbo_stream
     end
 
     context "when authenticated" do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureRevision < ApplicationRecord
   include Logic
   self.implicit_order_column = :created_at
@@ -265,8 +267,8 @@ class ProcedureRevision < ApplicationRecord
     [coordinate, coordinate&.type_de_champ]
   end
 
-  def routable_types_de_champ
-    types_de_champ_public.filter(&:routable?)
+  def simple_routable_types_de_champ
+    types_de_champ_public.filter(&:simple_routable?)
   end
 
   def conditionable_types_de_champ

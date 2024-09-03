@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ApplicationHelper do
   describe 'app_host_legacy?' do
     let(:request) { instance_double(ActionDispatch::Request, base_url: request_base_url) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChampPolicy < ApplicationPolicy
   # Scope for WRITING to a champ.
   #

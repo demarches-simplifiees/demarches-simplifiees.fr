@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateurs::AttestationTemplateV2sController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
   let(:attestation_template) { build(:attestation_template, :v2) }
@@ -141,6 +143,17 @@ describe Administrateurs::AttestationTemplateV2sController, type: :controller do
         expect(assigns(:attestation_template).version).to eq(2)
         expect(assigns(:attestation_template)).to be_draft
         expect(attestation_template.reload).to be_present
+      end
+
+      context 'on a draft procedure' do
+        let(:procedure) { create(:procedure, :draft, administrateur: admin, attestation_template:, libelle: "Ma démarche") }
+
+        it 'build v2 as draft' do
+          subject
+          expect(assigns(:attestation_template).version).to eq(2)
+          expect(assigns(:attestation_template)).to be_draft
+          expect(attestation_template.reload).to be_present
+        end
       end
     end
 

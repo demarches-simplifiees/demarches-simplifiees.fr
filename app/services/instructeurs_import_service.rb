@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class InstructeursImportService
   def self.import_groupes(procedure, groupes_emails)
     groupes_emails, error_groupe_emails = groupes_emails.partition { _1['groupe'].present? }

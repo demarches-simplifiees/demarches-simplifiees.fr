@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VirusScannerJob < ApplicationJob
   # If by the time the job runs the blob has been deleted, ignore the error
   discard_on ActiveRecord::RecordNotFound

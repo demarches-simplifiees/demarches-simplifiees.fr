@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe AvisMailer, type: :mailer do
   describe '.avis_invitation' do
     let(:claimant) { create(:instructeur) }

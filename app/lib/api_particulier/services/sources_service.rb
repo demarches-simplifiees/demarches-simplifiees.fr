@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module APIParticulier
   module Services
     class SourcesService

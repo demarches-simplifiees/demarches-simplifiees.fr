@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
@@ -6,6 +8,7 @@ class Procedure < ApplicationRecord
   include ProcedureSVASVRConcern
   include ProcedureChorusConcern
   include PiecesJointesListConcern
+  include ColumnsConcern
 
   include Discard::Model
   self.discard_column = :hidden_at

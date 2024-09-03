@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 
@@ -110,12 +112,13 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: 'expression_reguliere'
   }
 
-  ROUTABLE_TYPES = [
+  SIMPLE_ROUTABLE_TYPES = [
     type_champs.fetch(:drop_down_list),
     type_champs.fetch(:communes),
     type_champs.fetch(:departements),
     type_champs.fetch(:regions),
-    type_champs.fetch(:epci)
+    type_champs.fetch(:epci),
+    type_champs.fetch(:address)
   ]
 
   PRIVATE_ONLY_TYPES = [
@@ -539,7 +542,7 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def options_for_select
+  def options_for_select(column)
     if departement?
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
@@ -552,6 +555,8 @@ class TypeDeChamp < ApplicationRecord
       elsif checkbox?
         Champs::CheckboxChamp.options
       end
+    elsif siret? || rna? || rnf?
+      column.options_for_select
     end
   end
 
@@ -642,12 +647,18 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def routable?
-    type_champ.in?(ROUTABLE_TYPES)
+  def simple_routable?
+    type_champ.in?(SIMPLE_ROUTABLE_TYPES)
   end
 
   def conditionable?
     Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ)
+  end
+
+  def self.humanized_conditionable_types
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.map do
+      "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »"
+    end.to_sentence(last_word_connector: ' ou ')
   end
 
   def invalid_regexp?

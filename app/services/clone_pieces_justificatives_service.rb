@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ClonePiecesJustificativesService
   def self.clone_attachments(original, kopy)
     case original

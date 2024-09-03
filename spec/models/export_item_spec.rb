@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportItem do
   describe 'path' do
     let(:export_item) { ExportItem.default(prefix: 'custom') }

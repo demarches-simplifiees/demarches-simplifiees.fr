@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe VirusScannerJob, type: :job do
   let(:blob) do
     ActiveStorage::Blob.create_and_upload!(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")

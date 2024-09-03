@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::Datagouv::ProcedureByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
   self.schedule_expression = "every month at 4:15"

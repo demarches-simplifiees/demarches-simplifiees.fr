@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe DossierSearchableConcern do
   let(:champ_public) { dossier.champs_public.first }
   let(:champ_private) { dossier.champs_private.first }

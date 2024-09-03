@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::ProcedureDeletedByMonthJob, type: :job do
   let!(:procedure) { create(:procedure, hidden_at: 1.month.ago) }
   let(:status) { 200 }

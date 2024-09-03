@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Commentaire < ApplicationRecord
   include Discard::Model
   belongs_to :dossier, inverse_of: :commentaires, touch: true, optional: false

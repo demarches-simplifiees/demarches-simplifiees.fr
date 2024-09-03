@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :hotfix do
   desc 'Fix dossiers attestations'
   task dossiers_attestations: :environment do

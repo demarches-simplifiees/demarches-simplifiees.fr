@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::BatchAlertComponent < ApplicationComponent
   attr_reader :batch
 

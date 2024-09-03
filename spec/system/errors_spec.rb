@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Errors handling', js: false do
   let(:procedure) { create(:procedure) }
 

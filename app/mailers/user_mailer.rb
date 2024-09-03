@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Preview all emails at http://localhost:3000/rails/mailers/user_mailer
 class UserMailer < ApplicationMailer
   helper MailerHelper
@@ -52,6 +54,20 @@ class UserMailer < ApplicationMailer
     @token = token
     @user = user
     @dossier = dossier
+    subject = "Vérification de votre mail"
+
+    configure_defaults_for_user(user)
+
+    bypass_unverified_mail_protection!
+
+    mail(to: user.email,
+      subject: subject,
+      reply_to: Current.contact_email)
+  end
+
+  def resend_confirmation_email(user, token)
+    @token = token
+    @user = user
     subject = "Vérification de votre mail"
 
     configure_defaults_for_user(user)

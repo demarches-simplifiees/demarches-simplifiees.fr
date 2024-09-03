@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Gestionnaires::GroupeGestionnairesController, type: :controller do
   let(:gestionnaire) { create(:gestionnaire) }
 

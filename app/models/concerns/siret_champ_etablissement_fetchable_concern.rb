@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module SiretChampEtablissementFetchableConcern
   extend ActiveSupport::Concern
 
@@ -9,10 +11,9 @@ module SiretChampEtablissementFetchableConcern
     return clear_etablissement!(:invalid_checksum) if invalid_because?(siret, :checksum) # i18n-tasks-use t('errors.messages.invalid_siret_checksum')
     return clear_etablissement!(:not_found) unless (etablissement = APIEntrepriseService.create_etablissement(self, siret, user&.id)) # i18n-tasks-use t('errors.messages.siret_not_found')
 
-    update!(etablissement: etablissement)
+    update!(etablissement: etablissement, value_json: APIGeoService.parse_etablissement_address(etablissement))
   rescue => error
     if error.try(:network_error?) && !APIEntrepriseService.api_insee_up?
-      # TODO: notify ops
       update!(
         etablissement: APIEntrepriseService.create_etablissement_as_degraded_mode(self, siret, user.id)
       )

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Expired::UsersDeletionService do
   let(:last_signed_in_not_expired) { (Expired::INACTIVE_USER_RETATION_IN_YEAR - 1).years.ago }
   let(:last_signed_in_expired) { (Expired::INACTIVE_USER_RETATION_IN_YEAR + 1).years.ago }
@@ -72,7 +74,7 @@ describe Expired::UsersDeletionService do
 
         context 'when dossier termine' do
           let(:dossier) { create(:dossier, :accepte, user:, created_at: last_signed_in_expired) }
-          it 'marks dossier as hidden_at due to user_removal and remove user' do
+          it 'marks dossier as hidden by user due to user_removal and remove user' do
             expect { subject }.to change { dossier.reload.hidden_by_user_at }.from(nil).to(anything)
             expect { user.reload }.to raise_error(ActiveRecord::RecordNotFound)
           end

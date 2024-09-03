@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: move_new_children_to_new_parent_coordinate'
   task move_new_children_to_new_parent_coordinate: :environment do

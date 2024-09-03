@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rack::Attack
   throttle('/users/sign_in/ip', limit: 5, period: 20.seconds) do |req|
     if req.path == '/users/sign_in' && req.post? && rack_attack_enabled?

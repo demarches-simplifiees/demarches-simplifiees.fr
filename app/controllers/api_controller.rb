@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIController < ApplicationController
   before_action :default_format_json
   before_action :authenticate_from_token

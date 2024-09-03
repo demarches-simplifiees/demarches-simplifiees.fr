@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::DatetimeChamp < Champ
   before_validation :convert_to_iso8601, unless: -> { validation_context == :prefill }
   validate :iso_8601

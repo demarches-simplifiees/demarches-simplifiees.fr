@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateGroupeGestionnaires < ActiveRecord::Migration[7.0]
   def change
     create_table "groupe_gestionnaires" do |t|

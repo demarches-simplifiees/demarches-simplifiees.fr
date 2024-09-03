@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class WebhookController < ActionController::Base
   before_action :verify_helpscout_signature!, only: [:helpscout, :helpscout_support_dev]
   skip_before_action :verify_authenticity_token

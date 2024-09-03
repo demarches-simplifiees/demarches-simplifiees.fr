@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateTableBatchOperation < ActiveRecord::Migration[6.1]
   def change
     create_table :batch_operations do |t|

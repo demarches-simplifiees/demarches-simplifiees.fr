@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::MesriChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/mesri-input-validation.middleware.ts
   store_accessor :value_json, :ine

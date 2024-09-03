@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module WithoutDetailedExceptions
   RSpec.configure do |config|
     config.include self, type: :system

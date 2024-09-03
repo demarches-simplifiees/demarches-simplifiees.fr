@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class ConfirmationUrlsController < Manager::ApplicationController
     before_action :ensure_administrateur_exists

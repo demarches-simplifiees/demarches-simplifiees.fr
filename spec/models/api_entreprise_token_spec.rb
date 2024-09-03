@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEntrepriseToken, type: :model do
   let(:api_entreprise_token) { APIEntrepriseToken.new(token) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::DepartementChamp < Champs::TextChamp
   store_accessor :value_json,  :code_region
 

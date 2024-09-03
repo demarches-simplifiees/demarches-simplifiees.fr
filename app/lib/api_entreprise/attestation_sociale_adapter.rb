@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::AttestationSocialeAdapter < APIEntreprise::Adapter
   # Doc métier : https://entreprise.api.gouv.fr/catalogue/urssaf/attestation_vigilance
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Attestations-sociales-et-fiscales/paths/~1v4~1urssaf~1unites_legales~1%7Bsiren%7D~1attestation_vigilance/get

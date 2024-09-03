@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe.skip '20230512103830_fix_cloned_published_revisions' do
   let(:rake_task) { Rake::Task['after_party:fix_cloned_published_revisions'] }
 

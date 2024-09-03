@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_dossiers_repetitions'
   task backfill_dossiers_repetitions: :environment do

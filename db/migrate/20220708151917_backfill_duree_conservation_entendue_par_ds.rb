@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BackfillDureeConservationEntendueParDs < ActiveRecord::Migration[6.1]
   def change
     Procedure.in_batches do |relation|

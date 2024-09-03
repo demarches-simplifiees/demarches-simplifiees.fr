@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddForeignKeysToUserRelatedModels < ActiveRecord::Migration[6.1]
   def change
     # options = { type: :bigint, index: { unique: true }, foreign_key: true, null: true }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: rename_conservation_extension'
   task rename_conservation_extension: :environment do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if defined?(HamlLint)
   module HamlLint
     class Linter::ApplicationNameLinter < Linter

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe CarteController do
   describe '#show' do
     let(:service) { create(:service, departement: '63') }

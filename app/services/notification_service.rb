@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class NotificationService
   class << self
     SPREAD_DURATION = 2.hours

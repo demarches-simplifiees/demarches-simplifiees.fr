@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "support/jsv"
 
 module Dolist
@@ -59,61 +61,57 @@ module Dolist
     end
 
     def send_email(mail)
-      if mail.attachments.any? { !_1.inline? }
-        return send_email_with_attachment(mail)
-      end
-
       body = { "TransactionalSending": prepare_mail_body(mail) }
 
       url = format_url(EMAIL_SENDING_TRANSACTIONAL)
       post(url, body.to_json)
     end
 
-    def send_email_with_attachment(mail)
-      uri = URI(format_url(EMAIL_SENDING_TRANSACTIONAL_ATTACHMENT))
+    # def send_email_with_attachment(mail)
+    #   uri = URI(format_url(EMAIL_SENDING_TRANSACTIONAL_ATTACHMENT))
 
-      request = Net::HTTP::Post.new(uri)
+    #   request = Net::HTTP::Post.new(uri)
 
-      default_headers.each do |key, value|
-        next if key.to_s == "Content-Type"
-        request[key] = value
-      end
+    #   default_headers.each do |key, value|
+    #     next if key.to_s == "Content-Type"
+    #     request[key] = value
+    #   end
 
-      boundary = "---011000010111000001101001" # any random string not present in the body
-      request.content_type = "multipart/form-data; boundary=#{boundary}"
+    #   boundary = "---011000010111000001101001" # any random string not present in the body
+    #   request.content_type = "multipart/form-data; boundary=#{boundary}"
 
-      body = "--#{boundary}\r\n"
+    #   body = "--#{boundary}\r\n"
 
-      base64_files(mail.attachments).each do |file|
-        body << "Content-Disposition: form-data; name=\"#{file.field_name}\"; filename=\"#{file.filename}\"\r\n"
-        body << "Content-Type: #{file.mime_type}\r\n"
-        body << "\r\n"
-        body << file.content
-        body << "\r\n"
-      end
+    #   base64_files(mail.attachments).each do |file|
+    #     body << "Content-Disposition: form-data; name=\"#{file.field_name}\"; filename=\"#{file.filename}\"\r\n"
+    #     body << "Content-Type: #{file.mime_type}\r\n"
+    #     body << "\r\n"
+    #     body << file.content
+    #     body << "\r\n"
+    #   end
 
-      body << "\r\n--#{boundary}\r\n"
-      body << "Content-Disposition: form-data; name=\"TransactionalSending\"\r\n"
-      body << "Content-Type: text/plain; charset=utf-8\r\n"
-      body << "\r\n"
-      body << prepare_mail_body(mail).to_jsv
+    #   body << "\r\n--#{boundary}\r\n"
+    #   body << "Content-Disposition: form-data; name=\"TransactionalSending\"\r\n"
+    #   body << "Content-Type: text/plain; charset=utf-8\r\n"
+    #   body << "\r\n"
+    #   body << prepare_mail_body(mail).to_jsv
 
-      body << "\r\n--#{boundary}--\r\n"
-      body << "\r\n"
+    #   body << "\r\n--#{boundary}--\r\n"
+    #   body << "\r\n"
 
-      request.body = body
+    #   request.body = body
 
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
+    #   http = Net::HTTP.new(uri.host, uri.port)
+    #   http.use_ssl = true
 
-      response = http.request(request)
+    #   response = http.request(request)
 
-      if response.body.empty?
-        fail "Dolist API returned an empty response"
-      else
-        JSON.parse(response.body)
-      end
-    end
+    #   if response.body.empty?
+    #     fail "Dolist API returned an empty response"
+    #   else
+    #     JSON.parse(response.body)
+    #   end
+    # end
 
     def sent_mails(email_address)
       contact_id = fetch_contact_id(email_address)

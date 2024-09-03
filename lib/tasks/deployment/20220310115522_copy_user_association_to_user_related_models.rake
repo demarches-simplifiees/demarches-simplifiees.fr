@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: copy user id to administrateurs.user_id, instructeurs.user_id and experts.user_id'
   task copy_user_association_to_user_related_models: :environment do

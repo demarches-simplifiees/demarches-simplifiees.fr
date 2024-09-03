@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe GroupeInstructeur, type: :model do
   let(:admin) { create :administrateur }
   let(:procedure) { create :procedure, :published, administrateur: admin }

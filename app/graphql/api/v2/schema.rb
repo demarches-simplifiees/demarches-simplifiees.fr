@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class API::V2::Schema < GraphQL::Schema
   default_max_page_size 100
   default_page_size 100
@@ -147,7 +149,6 @@ class API::V2::Schema < GraphQL::Schema
   use Timeout, max_seconds: 30
   use GraphQL::Batch
   use GraphQL::Backtrace
-  use Yabeda::GraphQL
 
   if Rails.env.development?
     class LogQueryDepth < GraphQL::Analysis::AST::QueryDepth

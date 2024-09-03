@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Conditions::RoutingRulesComponent < Conditions::ConditionsComponent
   include Logic
 

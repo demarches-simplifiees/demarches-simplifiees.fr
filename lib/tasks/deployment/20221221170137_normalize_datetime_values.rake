@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: normalize_datetime_values'
   task normalize_datetime_values: :environment do

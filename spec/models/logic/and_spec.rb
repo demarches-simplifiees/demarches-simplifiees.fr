@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Logic::And do
   include Logic
 

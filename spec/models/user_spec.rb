@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe User, type: :model do
   describe '#after_confirmation' do
     let(:email) { 'mail@beta.gouv.fr' }
@@ -191,7 +193,7 @@ describe User, type: :model do
         user = subject
         expect(user.valid_password?(password)).to be true
         expect(user.confirmed_at).to be_present
-        expect(user.email_verified_at).to be_present
+        expect(user.email_verified_at).to be_nil
         expect(user.expert).to be_present
       end
     end

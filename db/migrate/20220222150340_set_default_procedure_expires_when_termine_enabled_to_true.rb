@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # usage DEFAULT_PROCEDURE_EXPIRES_WHEN_TERMINE_ENABLED=true|false rails db:migrate:up VERSION=20220222150340
 class SetDefaultProcedureExpiresWhenTermineEnabledToTrue < ActiveRecord::Migration[6.1]
   def up

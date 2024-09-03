@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe BillSignature, type: :model do
   describe 'validations' do
     subject(:bill_signature) { build(:bill_signature) }

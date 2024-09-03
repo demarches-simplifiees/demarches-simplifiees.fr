@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EtablissementSerializer < ActiveModel::Serializer
   attributes :siret,
     :siege_social,

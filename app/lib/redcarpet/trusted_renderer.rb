@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Redcarpet
   class TrustedRenderer < Redcarpet::Render::HTML
     include ActionView::Helpers::TagHelper
@@ -34,8 +36,26 @@ module Redcarpet
       end
     end
 
-    def image(link, title, alt)
-      view_context.image_tag(link, title:, alt:, loading: :lazy)
+    def image(link, title, alt_text)
+      # Extrait les attributs personnalisés s'ils existent sous la forme { aria-hidden=true } dans les []
+      custom_attributes = {}
+      if alt_text =~ /\s*\{(.+)\}$/
+        attr_string = Regexp.last_match(1)
+        alt_text = alt_text.sub(/\s*\{.+\}$/, '').strip
+        attr_string.split(' ').each do |attr|
+          key, value = attr.split('=')
+          custom_attributes[key.strip] = value.strip.delete('"')
+        end
+      end
+
+      # Combine les attributs standard et personnalisés
+      image_options = {
+        alt: alt_text,
+        title:,
+        loading: :lazy
+      }.merge(custom_attributes)
+
+      view_context.image_tag(link, image_options)
     end
 
     # rubocop:disable Rails/OutputSafety

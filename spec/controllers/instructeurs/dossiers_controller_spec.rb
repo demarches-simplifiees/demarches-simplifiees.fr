@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Instructeurs::DossiersController, type: :controller do
   render_views
 
@@ -1214,10 +1216,6 @@ describe Instructeurs::DossiersController, type: :controller do
         expect(DeletedDossier.where(dossier_id: dossier.id).count).to eq(0)
       end
 
-      it 'does not discard the dossier' do
-        expect(dossier.reload.hidden_at).to eq(nil)
-      end
-
       it 'fill hidden by reason' do
         expect(dossier.reload.hidden_by_reason).not_to eq(nil)
         expect(dossier.reload.hidden_by_reason).to eq("instructeur_request")
@@ -1240,7 +1238,7 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context 'with dossier in batch_operation' do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
-      it { expect { subject }.not_to change { dossier.reload.hidden_at } }
+      it { expect { subject }.not_to change { dossier.reload.hidden_by_administration_at } }
       it { is_expected.to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
       it 'flashes message' do
        subject
@@ -1466,25 +1464,37 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#pieces_jointes' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs:) }
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure: procedure) }
-    let(:path) { 'spec/fixtures/files/logo_test_procedure.png' }
+    let(:logo_path) { 'spec/fixtures/files/logo_test_procedure.png' }
+    let(:rib_path) { 'spec/fixtures/files/RIB.pdf' }
+    let(:commentaire) { create(:commentaire, dossier: dossier) }
 
     before do
       dossier.champs.first.piece_justificative_file.attach(
-        io: File.open(path),
+        io: File.open(logo_path),
         filename: "logo_test_procedure.png",
         content_type: "image/png",
         metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
       )
+
+      commentaire.piece_jointe.attach(
+        io: File.open(rib_path),
+        filename: "RIB.pdf",
+        content_type: "application/pdf",
+        metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE }
+      )
+
       get :pieces_jointes, params: {
         procedure_id: procedure.id,
         dossier_id: dossier.id
       }
     end
 
-    it do
+    it 'returns pieces jointes from champs and from messagerie' do
       expect(response.body).to include('Télécharger le fichier toto.txt')
       expect(response.body).to include('Télécharger le fichier logo_test_procedure.png')
+      expect(response.body).to include('Télécharger le fichier RIB.pdf')
       expect(response.body).to include('Visualiser')
+      expect(assigns(:attachments_and_libelles).count).to eq 3
     end
   end
 end

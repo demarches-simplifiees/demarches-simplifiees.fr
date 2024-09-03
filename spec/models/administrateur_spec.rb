@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Administrateur, type: :model do
   let(:administration) { create(:administration) }
 

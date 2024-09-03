@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::UserFilterComponent < ApplicationComponent
   include DossierHelper
 

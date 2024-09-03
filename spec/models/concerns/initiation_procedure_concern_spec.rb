@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe InitiationProcedureConcern do
   describe '.create_initiation_procedure' do
     let(:administrateur) { administrateurs(:default_admin) }

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe RNAChampAssociationFetchableConcern do
   describe '.fetch_association!' do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rna }]) }

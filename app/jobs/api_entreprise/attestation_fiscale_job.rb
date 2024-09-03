@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::AttestationFiscaleJob < APIEntreprise::Job
   def perform(etablissement_id, procedure_id, user_id)
     find_etablissement(etablissement_id)

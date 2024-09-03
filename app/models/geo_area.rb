@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeoArea < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   belongs_to :champ, optional: false

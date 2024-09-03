@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe MainNavigation::InstructeurExpertNavigationComponent, type: :component do
   let(:component) { described_class.new }
   let(:as_instructeur) { true }

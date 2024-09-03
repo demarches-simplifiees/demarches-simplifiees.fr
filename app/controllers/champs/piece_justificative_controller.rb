@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::PieceJustificativeController < Champs::ChampController
   def show
     respond_to do |format|

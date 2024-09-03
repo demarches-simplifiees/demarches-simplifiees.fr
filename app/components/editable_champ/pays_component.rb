@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::PaysComponent < EditableChamp::EditableChampBaseComponent
   include ApplicationHelper
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TargetedUserLinksController < ApplicationController
   def show
     erase_user_location!

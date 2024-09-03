@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
   include Logic
@@ -135,7 +137,7 @@ describe 'Instructing a dossier:', js: true do
 
     expect(page).to have_text('Nous générons cet export.')
 
-    click_on "voir les exports"
+    click_on "Voir les exports"
     expect(page).to have_text("Export .csv d’un dossier « à suivre » demandé il y a moins d'une minute")
     expect(page).to have_text("En préparation")
 

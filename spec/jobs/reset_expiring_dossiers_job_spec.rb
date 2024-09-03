@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ResetExpiringDossiersJob do
   subject { described_class.new(procedure).perform_now }
   let(:duree_conservation_dossiers_dans_ds) { 2 }

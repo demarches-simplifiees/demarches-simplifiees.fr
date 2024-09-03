@@ -39,7 +39,7 @@ export class EmailInputController extends ApplicationController {
     if (data && data.suggestions && data.suggestions.length > 0) {
       this.suggestionTarget.innerHTML = data.suggestions[0];
       show(this.ariaRegionTarget);
-      this.ariaRegionTarget.setAttribute('aria-live', 'assertive');
+      this.ariaRegionTarget.focus();
     }
   }
 

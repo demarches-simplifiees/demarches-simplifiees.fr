@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::EntrepriseAdapter < APIEntreprise::Adapter
   # Doc métier : https://entreprise.api.gouv.fr/catalogue/insee/unites_legales
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-generales/paths/~1v3~1insee~1sirene~1unites_legales~1%7Bsiren%7D/get

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class MutationType < Types::BaseObject
     field :create_direct_upload, mutation: Mutations::CreateDirectUpload
@@ -11,6 +13,7 @@ module Types
     field :dossier_repasser_en_instruction, mutation: Mutations::DossierRepasserEnInstruction
     field :dossier_repasser_en_construction, mutation: Mutations::DossierRepasserEnConstruction
     field :dossier_archiver, mutation: Mutations::DossierArchiver
+    field :dossier_desarchiver, mutation: Mutations::DossierDesarchiver
     field :dossier_changer_groupe_instructeur, mutation: Mutations::DossierChangerGroupeInstructeur
 
     field :dossier_modifier_annotation_text, mutation: Mutations::DossierModifierAnnotationText
@@ -19,6 +22,7 @@ module Types
     field :dossier_modifier_annotation_datetime, mutation: Mutations::DossierModifierAnnotationDatetime
     field :dossier_modifier_annotation_integer_number, mutation: Mutations::DossierModifierAnnotationIntegerNumber
     field :dossier_modifier_annotation_ajouter_ligne, mutation: Mutations::DossierModifierAnnotationAjouterLigne
+    field :dossier_modifier_annotation_drop_down_list, mutation: Mutations::DossierModifierAnnotationDropDownList
 
     field :groupe_instructeur_modifier, mutation: Mutations::GroupeInstructeurModifier
     field :groupe_instructeur_creer, mutation: Mutations::GroupeInstructeurCreer

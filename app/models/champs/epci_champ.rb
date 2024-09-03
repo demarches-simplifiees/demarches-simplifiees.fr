@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::EpciChamp < Champs::TextChamp
   store_accessor :value_json, :code_departement, :code_region
   before_validation :on_departement_change

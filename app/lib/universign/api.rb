@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Universign::API
   ## Universign Timestamp POST API
   # Official documentation is at https://help.universign.com/hc/fr/articles/360000898965-Guide-d-intégration-horodatage

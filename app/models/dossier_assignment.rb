@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DossierAssignment < ApplicationRecord
   belongs_to :dossier
 

@@ -1,0 +1,33 @@
+- content_for(:title, 'Invitation à donner votre avis')
+
+- content_for(:footer) do
+  Merci de ne pas répondre à cet email. Donnez votre avis
+  = link_to("sur #{Current.application_name}", @url)
+  ou
+  = succeed '.' do
+    = mail_to(@avis.claimant.email, "contactez la personne qui vous a invité")
+
+%p
+  Bonjour,
+
+%p
+  Vous avez été invité par
+  %strong= @avis.claimant.email
+  = "à donner votre avis sur le dossier nº #{@avis.dossier.id} de la démarche :"
+  %strong= @avis.procedure.libelle
+
+%p
+  = "#{@avis.claimant.email} vous a écrit :"
+  %br
+%p{ style: "padding: 8px; color: #333333; background-color: #EEEEEE; font-size: 14px;" }
+  = @avis.introduction
+
+- if @avis.expert.user.active?
+  %p
+    = round_button('Confirmez votre adresse email pour donner votre avis', users_confirm_email_url(token: @token), :primary)
+- else
+  %p
+    = round_button("Inscrivez-vous pour donner votre avis", @url, :primary)
+
+
+= render partial: "layouts/mailers/signature"

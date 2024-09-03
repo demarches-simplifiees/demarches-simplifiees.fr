@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 gem 'rails', '~> 7.0.8' # allows update to security fixes at any time
@@ -105,10 +107,7 @@ gem 'view_component'
 gem 'vite_rails'
 gem 'warden'
 gem 'webrick', require: false
-gem 'yabeda-graphql'
 gem 'yabeda-prometheus'
-gem 'yabeda-puma-plugin'
-gem 'yabeda-rails'
 gem 'yabeda-sidekiq'
 gem 'zipline'
 gem 'zxcvbn-ruby', require: 'zxcvbn'

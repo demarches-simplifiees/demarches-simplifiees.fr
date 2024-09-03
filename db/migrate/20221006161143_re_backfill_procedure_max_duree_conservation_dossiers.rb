@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReBackfillProcedureMaxDureeConservationDossiers < ActiveRecord::Migration[6.1]
   def change
     Procedure.with_discarded.where(duree_conservation_etendue_par_ds: true).in_batches do |batch|

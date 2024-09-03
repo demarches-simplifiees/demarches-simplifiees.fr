@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe PrefillDescriptionsController, type: :controller do
   describe '#edit' do
     subject(:edit_request) do

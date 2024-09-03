@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::ExercicesAdapter < APIEntreprise::Adapter
   # Doc métier : https://entreprise.api.gouv.fr/catalogue/dgfip/chiffres_affaires
   # Swagger : https://entreprise.api.gouv.fr/developpeurs/openapi#tag/Informations-financieres/paths/~1v3~1dgfip~1etablissements~1%7Bsiret%7D~1chiffres_affaires/get

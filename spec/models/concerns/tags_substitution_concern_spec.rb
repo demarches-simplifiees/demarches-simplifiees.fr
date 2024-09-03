@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe TagsSubstitutionConcern, type: :model do
   let(:types_de_champ_public) { [] }
   let(:types_de_champ_private) { [] }

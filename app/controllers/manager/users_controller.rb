@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Manager
   class UsersController < Manager::ApplicationController
     def update

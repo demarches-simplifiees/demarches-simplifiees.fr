@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddDossierFolderColumnToExportTemplate < ActiveRecord::Migration[7.0]
   def up
     safety_assured { execute "DELETE FROM export_templates;" }

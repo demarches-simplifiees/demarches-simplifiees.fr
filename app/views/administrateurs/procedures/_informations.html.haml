@@ -16,7 +16,7 @@
 
   .fr-fieldset__element
     .fr-input-group
-      = f.label :logo, 'Ajouter un logo de la démarche', class: 'fr-label'
+      = f.label :logo, 'Ajouter un logo de la démarche', class: 'fr-label', for: dom_id(@procedure, :logo)
       = render Attachment::EditComponent.new(attached_file: @procedure.logo, view_as: :link)
   .fr-fieldset__element
     .fr-input-group
@@ -55,7 +55,7 @@
 
   .fr-fieldset__element
     .fr-input-group
-      = f.label :deliberation, 'Cadre juridique - texte à importer', class: 'fr-label'
+      = f.label :deliberation, 'Cadre juridique - texte à importer', class: 'fr-label', for: dom_id(@procedure, :deliberation)
       = render Attachment::EditComponent.new(attached_file: @procedure.deliberation, view_as: :download)
 
 %fieldset.fr-fieldset
@@ -80,7 +80,7 @@
 
   .fr-fieldset__element
     .fr-input-group
-      = f.label :notice, 'Notice explicative de la démarche', class: 'fr-label'
+      = f.label :notice, 'Notice explicative de la démarche', class: 'fr-label', for: dom_id(@procedure, :notice)
       %p.fr-hint-text
         Une notice explicative est un document que vous avez élaboré, destiné à guider l’usager dans sa démarche. Le bouton pour télécharger cette notice apparaît en haut du formulaire pour l’usager.
         %br

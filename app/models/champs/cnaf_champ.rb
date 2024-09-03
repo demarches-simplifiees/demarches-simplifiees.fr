@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::CnafChamp < Champs::TextChamp
   # see https://github.com/betagouv/api-particulier/blob/master/src/presentation/middlewares/cnaf-input-validation.middleware.ts
 

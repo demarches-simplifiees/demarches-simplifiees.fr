@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::TitreIdentiteChamp < Champ
   FILE_MAX_SIZE = 20.megabytes
   ACCEPTED_FORMATS = ['image/png', 'image/jpeg']

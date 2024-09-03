@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ArchiveCreationJob, type: :job do
   describe 'perform' do
     let(:archive) { create(:archive, user_profile: instructeur, job_status: status, groupe_instructeurs: [procedure.groupe_instructeurs.first]) }

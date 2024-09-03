@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples 'the user can edit the submitted demande' do
   scenario js: true do
     visit dossier_path(dossier)

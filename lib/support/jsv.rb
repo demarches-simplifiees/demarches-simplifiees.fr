@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # spec by dolist https://api.dolist.com/ConvertJSON-to-JSV.html
 #
 require_relative "jsv/core_ext/array"

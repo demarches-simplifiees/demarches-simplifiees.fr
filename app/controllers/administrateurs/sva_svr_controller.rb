@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Administrateurs
   class SVASVRController < AdministrateurController
     before_action :retrieve_procedure

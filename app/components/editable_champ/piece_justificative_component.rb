@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::PieceJustificativeComponent < EditableChamp::EditableChampBaseComponent
   def dsfr_input_classname
     'fr-input'

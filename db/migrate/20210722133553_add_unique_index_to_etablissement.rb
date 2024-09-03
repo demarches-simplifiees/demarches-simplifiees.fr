@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddUniqueIndexToEtablissement < ActiveRecord::Migration[6.1]
   include Database::MigrationHelpers
 

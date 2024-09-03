@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::EpciChamp, type: :model do
   describe 'validations' do
     subject { champ.validate(:champs_public_value) }

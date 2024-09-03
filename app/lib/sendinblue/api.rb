@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Sendinblue::API
   def self.new_properly_configured!
     api = self.new
