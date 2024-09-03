@@ -148,6 +148,10 @@ class ProcedurePresentation < ApplicationRecord
     slice(:filters, :sort, :displayed_fields)
   end
 
+  def projected_columns
+    displayed_fields.map { procedure.find_column(id: Column.make_id(_1['table'], _1['column'])) }
+  end
+
   private
 
   def sorted_ids(dossiers, count)
