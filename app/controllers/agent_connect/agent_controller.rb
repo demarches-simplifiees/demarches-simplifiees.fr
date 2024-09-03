@@ -32,6 +32,7 @@ class AgentConnect::AgentController < ApplicationController
     end
 
     instructeur.update(agent_connect_id_token: id_token)
+    instructeur.user.update(email_verified_at: Time.zone.now)
 
     aci = AgentConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
     aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone'))

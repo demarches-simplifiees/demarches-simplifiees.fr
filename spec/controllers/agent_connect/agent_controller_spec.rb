@@ -33,7 +33,7 @@ describe AgentConnect::AgentController, type: :controller do
     context 'when the callback code is correct' do
       let(:code) { 'correct' }
       let(:state) { original_state }
-      let(:user_info) { { 'sub' => 'sub', 'email' => ' I@email.com', 'given_name' => 'given', 'usual_name' => 'usual' } }
+      let(:user_info) { { 'sub' => 'sub', 'email' => email, 'given_name' => 'given', 'usual_name' => 'usual' } }
 
       context 'and user_info returns some info' do
         before do
@@ -52,6 +52,7 @@ describe AgentConnect::AgentController, type: :controller do
 
             expect(last_user.email).to eq(email)
             expect(last_user.confirmed_at).to be_present
+            expect(last_user.email_verified_at).to be_present
             expect(last_user.instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
             expect(state_cookie).to be_nil
@@ -68,11 +69,16 @@ describe AgentConnect::AgentController, type: :controller do
 
           it 'reuses the account, signs in and redirects to procedure_path' do
             expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
-
             instructeur.reload
 
             expect(instructeur.agent_connect_id_token).to eq('id_token')
             expect(response).to redirect_to(instructeur_procedures_path)
+          end
+
+          it "sets email_verified_at" do
+            expect { subject }.to change { instructeur.user.reload.email_verified_at }.from(
+              nil
+            )
           end
         end
 
