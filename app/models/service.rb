@@ -6,6 +6,8 @@ class Service < ApplicationRecord
 
   scope :ordered, -> { order(nom: :asc) }
 
+  SIRET_TEST = '35600082800018'
+
   enum type_organisme: {
     administration_centrale: 'administration_centrale',
     association: 'association',

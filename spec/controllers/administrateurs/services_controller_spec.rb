@@ -21,7 +21,7 @@ describe Administrateurs::ServicesController, type: :controller do
             telephone: '1234',
             horaires: 'horaires',
             adresse: 'adresse',
-            siret: "35600082800018"
+            siret: "35600011719156"
           },
           procedure_id: procedure.id
         }
@@ -37,7 +37,7 @@ describe Administrateurs::ServicesController, type: :controller do
         expect(Service.last.telephone).to eq('1234')
         expect(Service.last.horaires).to eq('horaires')
         expect(Service.last.adresse).to eq('adresse')
-        expect(Service.last.siret).to eq('35600082800018')
+        expect(Service.last.siret).to eq('35600011719156')
         expect(APIEntreprise::ServiceJob).to have_been_enqueued.with(Service.last.id)
 
         expect(response).to redirect_to(admin_services_path(procedure_id: procedure.id))
