@@ -31,27 +31,27 @@ class DossierProjectionService
   # It tries to be fast by using `pluck` (or at least `select`)
   # to avoid deserializing entire records.
   #
-  # It stores its intermediary queries results in an hash in the corresponding field.
-  # ex: field_email[:id_value_h] = { dossier_id_1: email_1, dossier_id_3: email_3 }
+  # It stores its intermediary queries results in an hash in the corresponding column.
+  # ex: column_email[:id_value_h] = { dossier_id_1: email_1, dossier_id_3: email_3 }
   #
   # Those hashes are needed because:
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, columns)
     columns = columns.deep_dup
-    state_field = Column.new(table: 'self', column: 'state')
-    archived_field = Column.new(table: 'self', column: 'archived')
-    batch_operation_field = Column.new(table: 'self', column: 'batch_operation_id')
-    hidden_by_user_at_field = Column.new(table: 'self', column: 'hidden_by_user_at')
-    hidden_by_administration_at_field = Column.new(table: 'self', column: 'hidden_by_administration_at')
-    hidden_by_reason_field = Column.new(table: 'self', column: 'hidden_by_reason')
-    for_tiers_field = Column.new(table: 'self', column: 'for_tiers')
-    individual_first_name = Column.new(table: 'individual', column: 'prenom')
-    individual_last_name = Column.new(table: 'individual', column: 'nom')
-    sva_svr_decision_on_field = Column.new(table: 'self', column: 'sva_svr_decision_on')
-    dossier_corrections = Column.new(table: 'dossier_corrections', column: 'resolved_at')
+    state_column = Column.new(table: 'self', column: 'state')
+    archived_column = Column.new(table: 'self', column: 'archived')
+    batch_operation_column = Column.new(table: 'self', column: 'batch_operation_id')
+    hidden_by_user_at_column = Column.new(table: 'self', column: 'hidden_by_user_at')
+    hidden_by_administration_at_column = Column.new(table: 'self', column: 'hidden_by_administration_at')
+    hidden_by_reason_column = Column.new(table: 'self', column: 'hidden_by_reason')
+    for_tiers_column = Column.new(table: 'self', column: 'for_tiers')
+    individual_first_name_column = Column.new(table: 'individual', column: 'prenom')
+    individual_last_name_column = Column.new(table: 'individual', column: 'nom')
+    sva_svr_decision_on_column = Column.new(table: 'self', column: 'sva_svr_decision_on')
+    dossier_corrections_column = Column.new(table: 'dossier_corrections', column: 'resolved_at')
     champ_value = champ_value_formatter(dossiers_ids, columns)
-    ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, hidden_by_reason_field, for_tiers_field, individual_first_name, individual_last_name, batch_operation_field, dossier_corrections] + columns)
+    ([state_column, archived_column, sva_svr_decision_on_column, hidden_by_user_at_column, hidden_by_administration_at_column, hidden_by_reason_column, for_tiers_column, individual_first_name_column, individual_last_name_column, batch_operation_column, dossier_corrections_column] + columns)
       .group_by(&:table) # one query per table
       .each do |table, columns|
       case table
@@ -62,7 +62,7 @@ class DossierProjectionService
             dossier_id: dossiers_ids
           )
           .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
-          .group_by(&:stable_id) # the champs are redispatched to their respective fields
+          .group_by(&:stable_id) # the champs are redispatched to their respective columns
           .each do |stable_id, champs|
             columns
               .filter do |column|
@@ -83,7 +83,7 @@ class DossierProjectionService
           .each do |id, *cols|
             columns.zip(cols).each do |column, value|
               # SVA must remain a date: in other column we compute remaining delay with it
-              column.add_value(id, if value.respond_to?(:strftime) && column != sva_svr_decision_on_field
+              column.add_value(id, if value.respond_to?(:strftime) && column != sva_svr_decision_on_column
                 I18n.l(value.to_date)
               else
                 value
@@ -101,7 +101,7 @@ class DossierProjectionService
           .pluck(:dossier_id, *columns.map(&:column))
           .each { |id, *cols| columns.zip(cols).each { |column, value| column.add_value(id, value) } }
       when 'user'
-        columns[0].set_id_value_h(Dossier # there is only one field available for user table
+        columns[0].set_id_value_h(Dossier # there is only one column available for user table
           .joins(:user)
           .includes(:individual)
           .where(id: dossiers_ids)
@@ -154,17 +154,17 @@ class DossierProjectionService
     dossiers_ids.map do |dossier_id|
       DossierProjection.new(
         dossier_id,
-        state_field.id_value_h[dossier_id],
-        archived_field.id_value_h[dossier_id],
-        hidden_by_user_at_field.id_value_h[dossier_id],
-        hidden_by_administration_at_field.id_value_h[dossier_id],
-        hidden_by_reason_field.id_value_h[dossier_id],
-        for_tiers_field.id_value_h[dossier_id],
-        individual_first_name.id_value_h[dossier_id],
-        individual_last_name.id_value_h[dossier_id],
-        batch_operation_field.id_value_h[dossier_id],
-        sva_svr_decision_on_field.id_value_h[dossier_id],
-        dossier_corrections.id_value_h[dossier_id],
+        state_column.id_value_h[dossier_id],
+        archived_column.id_value_h[dossier_id],
+        hidden_by_user_at_column.id_value_h[dossier_id],
+        hidden_by_administration_at_column.id_value_h[dossier_id],
+        hidden_by_reason_column.id_value_h[dossier_id],
+        for_tiers_column.id_value_h[dossier_id],
+        individual_first_name_column.id_value_h[dossier_id],
+        individual_last_name_column.id_value_h[dossier_id],
+        batch_operation_column.id_value_h[dossier_id],
+        sva_svr_decision_on_column.id_value_h[dossier_id],
+        dossier_corrections_column.id_value_h[dossier_id],
         columns.map { |column| column.id_value_h[dossier_id] }
       )
     end
