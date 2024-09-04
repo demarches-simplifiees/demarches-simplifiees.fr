@@ -18,7 +18,7 @@ class TiptapService
   def to_html(node, substitutions = {})
     return '' if node.nil?
 
-    children(node[:content], substitutions, 0)
+    children(node[:content], substitutions, 0).gsub('<p></p>', '')
   end
 
   def to_texts_and_tags(node, substitutions = {})
