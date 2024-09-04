@@ -58,7 +58,7 @@ class DossierProjectionService
       when 'type_de_champ'
         Champ
           .where(
-            stable_id: columns.map(&:column),
+            stable_id: columns.map { _1.try(:stable_id)&.to_s || _1. column }.uniq,
             dossier_id: dossiers_ids
           )
           .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method

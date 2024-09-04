@@ -30,7 +30,11 @@ class Columns::JSONPathColumn < Column
   end
 
   def champ_value(champ)
-    Hash(champ.value_json).dig(*value_column)
+    Hash(champ.value_json).dig(*jsonpath_to_array)
+  end
+
+  def jsonpath_to_array
+    jsonpath.split('$.').second.split('.')
   end
 
   private

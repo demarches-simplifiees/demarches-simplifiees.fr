@@ -88,10 +88,10 @@ describe "procedure filters" do
       })
     end
     scenario "should be able to add and remove rna type de champ column", js: true do
-      column = type_de_champ.dynamic_type.columns(table: "type_de_champ").find { _1.value_column == ['postal_code'] }
+      column = type_de_champ.dynamic_type.columns(table: "type_de_champ").find { _1.try(:jsonpath) == '$.postal_code' }
       add_column(column.label)
       within ".dossiers-table" do
-        expect(page).to have_link(new_unfollow_dossier.champs.first.value_json.dig(*column.value_column))
+        expect(page).to have_link(new_unfollow_dossier.champs.first.value_json.dig(*column.jsonpath_to_array))
       end
     end
   end
