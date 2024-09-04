@@ -12,7 +12,6 @@ describe ExportTemplate do
       { type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children: [{ type: 'text', libelle: 'Qqchose à rajouter?', stable_id: 8 }] }
     ]
   end
-  let(:dossier) { procedure.dossiers.first }
 
   describe '#columns=' do
     let(:columns) {
@@ -43,7 +42,6 @@ describe ExportTemplate do
     end
 
     context 'when there is a previous revision with a renamed tdc' do
-
       let(:previous_tdc) { procedure.published_revision.types_de_champ_public.find_by(stable_id: 1) }
       let(:changed_tdc) { { libelle: "Ca roule ?" } }
 
@@ -203,7 +201,7 @@ describe ExportTemplate do
   end
 
   describe '#columns and #repetable columns' do
-    let(:tabular_export_template) { create(:export_template, kind: 'ods', content:, groupe_instructeur: ) }
+    let(:tabular_export_template) { create(:export_template, kind: 'ods', content:, groupe_instructeur:) }
     let(:content) {
       {
         "columns" => [
