@@ -31,13 +31,14 @@ class ChampPresentations::RepetitionPresentation < ChampPresentations::BasePrese
                 [
                   {
                     type: 'descriptionTerm',
+                    attrs: champ.blank? ? { class: 'invisible' } : nil, # still render libelle so width & alignment are preserved
                     content: [
                       {
                         type: 'text',
                         text: champ.libelle
                       }
                     ]
-                  },
+                  }.compact,
                   {
                     type: 'descriptionDetails',
                     content: [

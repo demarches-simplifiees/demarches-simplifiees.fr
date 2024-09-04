@@ -22,6 +22,9 @@ describe ChampPresentations::RepetitionPresentation do
     stars.update(value: 5)
 
     nom, stars = dossier.champs[0].add_row(dossier.procedure.active_revision)
+    nom.update(value: "js")
+
+    nom, stars = dossier.champs[0].add_row(dossier.procedure.active_revision)
     nom.update(value: "rust")
     stars.update(value: 4)
   end
@@ -36,6 +39,9 @@ describe ChampPresentations::RepetitionPresentation do
 
           nom : ruby
           stars : 5
+
+          nom : js
+          stars :#{' '}
 
           nom : rust
           stars : 4
@@ -63,7 +69,22 @@ describe ChampPresentations::RepetitionPresentation do
                 ]
               }
             ]
-          }, {
+          },
+          {
+            type: "listItem",
+            content: [
+              {
+                type: "descriptionList",
+                content: [
+                  { content: [{ text: "nom", type: "text" }], type: "descriptionTerm" },
+                  { content: [{ text: "js", type: "text" }], type: "descriptionDetails" },
+                  { content: [{ text: "stars", type: "text" }], type: "descriptionTerm", attrs: { class: "invisible" } },
+                  { content: [{ text: "", type: "text" }], type: "descriptionDetails" }
+                ]
+              }
+            ]
+          },
+          {
             type: "listItem",
             content: [
               {

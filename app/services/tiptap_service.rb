@@ -85,8 +85,8 @@ class TiptapService
       "<li>#{children(content, substitutions, level + 1)}</li>"
     in type: 'descriptionList', content:
       "<dl>#{children(content, substitutions, level + 1)}</dl>"
-    in type: 'descriptionTerm', content:
-      "<dt>#{children(content, substitutions, level + 1)}</dt>"
+    in type: 'descriptionTerm', content:, **rest
+      "<dt#{class_list(rest[:attrs])}>#{children(content, substitutions, level + 1)}</dt>"
     in type: 'descriptionDetails', content:
       "<dd>#{children(content, substitutions, level + 1)}</dd>"
     in type: 'text', text:, **rest
