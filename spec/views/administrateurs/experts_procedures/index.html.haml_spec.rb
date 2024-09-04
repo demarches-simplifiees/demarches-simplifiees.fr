@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'administrateurs/experts_procedures/index', type: :view do
   let!(:procedure) { create(:procedure, :published) }
 

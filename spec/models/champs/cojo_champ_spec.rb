@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::COJOChamp, type: :model do
   let(:external_id) { nil }
   let(:url) { COJOService.new.send(:url) }

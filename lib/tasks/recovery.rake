@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :recovery do
   desc <<~USAGE
     given a file path, read it as json data, preload dossier data and export to marshal.dump.

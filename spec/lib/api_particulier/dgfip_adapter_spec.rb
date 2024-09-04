@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIParticulier::DgfipAdapter do
   let(:adapter) { described_class.new(api_particulier_token, numero_fiscal, reference_avis, requested_sources) }
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_07_29_160650) do
+ActiveRecord::Schema[7.0].define(version: 2024_08_29_141049) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -858,11 +858,19 @@ ActiveRecord::Schema[7.0].define(version: 2024_07_29_160650) do
     t.index ["procedure_id"], name: "index_module_api_cartos_on_procedure_id", unique: true
   end
 
+  create_table "path_rewrites", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "from", null: false
+    t.string "to", null: false
+    t.datetime "updated_at", null: false
+    t.index ["from"], name: "index_path_rewrites_on_from", unique: true
+  end
+
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.datetime "created_at", precision: nil
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
-    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes_recemment"=>[]}, null: false
+    t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
     t.datetime "updated_at", precision: nil
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true

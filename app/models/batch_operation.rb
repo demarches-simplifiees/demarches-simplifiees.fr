@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BatchOperation < ApplicationRecord
   enum operation: {
     accepter: 'accepter',

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure < ApplicationRecord
   include ProcedureStatsConcern
   include EncryptableConcern
@@ -6,6 +8,7 @@ class Procedure < ApplicationRecord
   include ProcedureSVASVRConcern
   include ProcedureChorusConcern
   include PiecesJointesListConcern
+  include ColumnsConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -703,6 +706,10 @@ class Procedure < ApplicationRecord
       result << :service
     end
 
+    if service_test?
+      result << :service
+    end
+
     if missing_instructeurs?
       result << :instructeurs
     end
@@ -732,6 +739,10 @@ class Procedure < ApplicationRecord
     else
       false
     end
+  end
+
+  def service_test?
+    service&.siret == Service::SIRET_TEST
   end
 
   def revised?

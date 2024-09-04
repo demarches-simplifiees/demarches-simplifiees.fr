@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module TabsHelper
   def tab_i18n_key_from_status(status)
     case status
@@ -9,8 +11,8 @@ module TabsHelper
       'pluralize.processed'
     when 'tous'
       'views.instructeurs.dossiers.tab_steps.total' # i18n-tasks-use t('views.instructeurs.dossiers.tab_steps.total')
-    when 'supprimes_recemment'
-      'pluralize.dossiers_supprimes_recemment'
+    when 'supprimes'
+      'pluralize.dossiers_supprimes'
     when 'expirant'
       'pluralize.dossiers_close_to_expiration'
     when 'archives'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplicationComponent < ViewComponent::Base
   include ViewComponent::Translatable
   include FlipperHelper
@@ -6,6 +8,10 @@ class ApplicationComponent < ViewComponent::Base
 
   def current_user
     controller.current_user
+  end
+
+  def current_instructeur
+    controller.current_instructeur
   end
 
   def current_administrateur

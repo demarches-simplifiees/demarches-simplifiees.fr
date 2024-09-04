@@ -1,8 +1,12 @@
+# frozen_string_literal: true
+
 class Service < ApplicationRecord
   has_many :procedures
   belongs_to :administrateur, optional: false
 
   scope :ordered, -> { order(nom: :asc) }
+
+  SIRET_TEST = '35600082800018'
 
   enum type_organisme: {
     administration_centrale: 'administration_centrale',

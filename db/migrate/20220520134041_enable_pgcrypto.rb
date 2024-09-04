@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EnablePgcrypto < ActiveRecord::Migration[6.1]
   # see: https://pawelurbanek.com/uuid-order-rails -> use uuid for id
   def up

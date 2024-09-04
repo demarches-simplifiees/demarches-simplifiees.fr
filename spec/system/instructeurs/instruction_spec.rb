@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'Instructing a dossier:', js: true do
   include ActiveJob::TestHelper
   include Logic
@@ -135,7 +137,7 @@ describe 'Instructing a dossier:', js: true do
 
     expect(page).to have_text('Nous générons cet export.')
 
-    click_on "voir les exports"
+    click_on "Voir les exports"
     expect(page).to have_text("Export .csv d’un dossier « à suivre » demandé il y a moins d'une minute")
     expect(page).to have_text("En préparation")
 
@@ -229,9 +231,9 @@ describe 'Instructing a dossier:', js: true do
 
     scenario 'A instructeur can download an archive containing a single attachment' do
       find(:css, '[aria-controls=print-pj-menu]').click
-      click_on 'Télécharger le dossier et toutes ses pièces jointes'
-      # For some reason, clicking the download link does not trigger the download in the headless browser ;
-      # So we need to go to the download link directly
+      # click_on 'Télécharger le dossier et toutes ses pièces jointes'
+      # For some reason, clicking the download link does not trigger the download in the headless browser
+      # for some member of the team, so we need to go to the download link directly
       visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
 
       DownloadHelpers.wait_for_download

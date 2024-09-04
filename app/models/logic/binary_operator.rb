@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::BinaryOperator < Logic::Term
   attr_reader :left, :right
 

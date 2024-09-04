@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChampEditor::AddChampButtonComponent < ApplicationComponent
   def initialize(revision:, parent: nil, is_annotation: false, after_stable_id: nil)
     @revision = revision

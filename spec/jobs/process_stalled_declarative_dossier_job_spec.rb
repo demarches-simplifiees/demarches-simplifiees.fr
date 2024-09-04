@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe ProcessStalledDeclarativeDossierJob, type: :job do
   describe "perform" do
     let(:procedure) { create(:procedure, :published, :for_individual, :with_instructeur, declarative_with_state: state) }

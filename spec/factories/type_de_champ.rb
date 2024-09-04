@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :type_de_champ do
     sequence(:libelle) { |n| "Libelle du champ #{n}" }

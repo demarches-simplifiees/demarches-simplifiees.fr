@@ -12,10 +12,6 @@ fr:
           dissolvedAt: Dissoute le
           address: Adresse
           status: Statut
-          cityCode: Code INSEE
-          postalCode: Code postal
-          department: Département
-          label: Adresse
         paste: Copier le RNF dans le presse-papier
         paste_success: Le RNF a été copié dans le presse-papier
   activerecord:

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureRevisionChange
   class TypeDeChange
     attr_reader :type_de_champ

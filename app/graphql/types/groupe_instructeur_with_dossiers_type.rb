@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class GroupeInstructeurWithDossiersType < GroupeInstructeurType
     description "Un groupe instructeur avec ses dossiers"

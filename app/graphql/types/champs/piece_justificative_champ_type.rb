@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types::Champs
   class PieceJustificativeChampType < Types::BaseObject
     implements Types::ChampType

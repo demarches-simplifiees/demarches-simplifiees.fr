@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class SVASVRDecisionDateCalculatorService
   attr_reader :dossier, :procedure, :unit, :period, :resume_method
 

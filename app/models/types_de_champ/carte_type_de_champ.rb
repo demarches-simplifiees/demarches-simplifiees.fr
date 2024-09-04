@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
   LAYERS = [
     :unesco,

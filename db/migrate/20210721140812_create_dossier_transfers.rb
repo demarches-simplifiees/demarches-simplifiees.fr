@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDossierTransfers < ActiveRecord::Migration[6.1]
   def change
     create_table :dossier_transfers do |t|

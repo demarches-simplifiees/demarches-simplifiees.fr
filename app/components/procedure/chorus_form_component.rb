@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::ChorusFormComponent < ApplicationComponent
   attr_reader :procedure
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Cron::StalledDeclarativeProceduresJob < Cron::CronJob
   self.schedule_expression = "every 10 minutes"
 

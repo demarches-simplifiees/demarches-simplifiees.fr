@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Display a widget for uploading, editing and deleting a file attachment
 class Attachment::EditComponent < ApplicationComponent
   attr_reader :champ

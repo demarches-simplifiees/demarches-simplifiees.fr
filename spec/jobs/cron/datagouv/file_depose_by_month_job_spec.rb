@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::FileDeposeByMonthJob, type: :job do
   let!(:dossier) { create(:dossier, created_at: 1.month.ago) }
   let(:status) { 200 }

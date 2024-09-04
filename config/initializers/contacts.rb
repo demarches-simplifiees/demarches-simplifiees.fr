@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable DS/ApplicationName
 # todo: will be externally configurable
 if !defined?(CONTACT_EMAIL)

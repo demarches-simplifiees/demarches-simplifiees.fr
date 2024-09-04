@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module MailTemplateConcern
   extend ActiveSupport::Concern
 

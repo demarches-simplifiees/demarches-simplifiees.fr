@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Logic::ChampValue do
   include Logic
 

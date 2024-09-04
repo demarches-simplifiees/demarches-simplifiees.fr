@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EntrepriseSerializer < ActiveModel::Serializer
   attributes :siren,
     :capital_social,

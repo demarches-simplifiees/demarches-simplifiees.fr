@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe '20200708101123_add_default_skip_validation_to_piece_justificative.rake' do
   let(:rake_task) { Rake::Task['after_party:add_default_skip_validation_to_piece_justificative'] }
   let!(:pj_type_de_champ) { create(:type_de_champ_piece_justificative) }

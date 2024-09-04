@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: backfill_etablissement_as_degraded_mode'
   task backfill_etablissement_as_degraded_mode: :environment do

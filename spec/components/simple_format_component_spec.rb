@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe SimpleFormatComponent, type: :component do
   let(:allow_a) { false }
   let(:allow_autolink) { false }

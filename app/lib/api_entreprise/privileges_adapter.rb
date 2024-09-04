@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::PrivilegesAdapter < APIEntreprise::Adapter
   def initialize(token)
     @token = token

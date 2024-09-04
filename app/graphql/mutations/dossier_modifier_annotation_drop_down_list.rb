@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierModifierAnnotationDropDownList < Mutations::DossierModifierAnnotation
     description "Modifier l’annotation d'un champs de type dropdown list."

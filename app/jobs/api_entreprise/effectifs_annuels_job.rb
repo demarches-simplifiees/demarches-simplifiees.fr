@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIEntreprise::EffectifsAnnuelsJob < APIEntreprise::Job
   def perform(etablissement_id, procedure_id, year = default_year)
     find_etablissement(etablissement_id)

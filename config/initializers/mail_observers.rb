@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Must be registered *before* loading custom delivery methods
 # otherwise the observer won't be invoked.
 #

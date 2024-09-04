@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::EstimatedDelayComponent < ApplicationComponent
   delegate :distance_of_time_in_words, to: :helpers
 

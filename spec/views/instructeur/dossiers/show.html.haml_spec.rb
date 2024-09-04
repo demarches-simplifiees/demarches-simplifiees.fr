@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeurs/dossiers/show', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:dossier) { create(:dossier, :en_construction) }

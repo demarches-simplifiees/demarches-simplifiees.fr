@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: migrate_champs_engagement_to_checkbox'
   task migrate_champs_engagement_to_checkbox: :environment do

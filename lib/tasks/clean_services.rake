@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :service do
   desc 'remove service without procedure'
   task remove_orphans: :environment do

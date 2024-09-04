@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'mina/bundler'
 require 'mina/git'
 require 'mina/rails'

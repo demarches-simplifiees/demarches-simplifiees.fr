@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module CarteHelper
   def svg_path(map_filter, departement, d)
     tag.path(

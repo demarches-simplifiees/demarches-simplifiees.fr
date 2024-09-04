@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Service, type: :model do
   describe 'validation' do
     let(:administrateur) { administrateurs(:default_admin) }
@@ -11,7 +13,7 @@ describe Service, type: :model do
         horaires: 'du lundi au vendredi',
         adresse: '12 rue des schtroumpfs',
         administrateur_id: administrateur.id,
-        siret: "35600082800018"
+        siret: "35600011719156"
       }
     end
 

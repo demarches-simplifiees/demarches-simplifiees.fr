@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DataSources::ChorusController < ApplicationController
   before_action :authenticate_administrateur!
 

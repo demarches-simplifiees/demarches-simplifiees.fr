@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Entreprise < Hashie::Dash
   def read_attribute_for_serialization(attribute)
     self[attribute]

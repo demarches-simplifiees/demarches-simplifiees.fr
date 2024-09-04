@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GroupeInstructeur < ApplicationRecord
   include Logic
   DEFAUT_LABEL = 'défaut'

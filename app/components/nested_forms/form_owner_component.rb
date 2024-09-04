@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # context: https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues/8661
 #   a11y: a post/delete/patch/put action must be wrapped in a <button>, not in an <a>
 #   but we can't nest <forms>

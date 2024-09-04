@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RootController < ApplicationController
   before_action :authenticate_administrateur!, only: :patron
   include ApplicationHelper

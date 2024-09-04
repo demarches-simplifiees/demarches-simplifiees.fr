@@ -23,7 +23,7 @@
           - when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
             = render partial: "shared/champs/multiple_drop_down_list/show", locals: { champ: champ }
           - when TypeDeChamp.type_champs.fetch(:piece_justificative), TypeDeChamp.type_champs.fetch(:titre_identite)
-            = render partial: "shared/champs/piece_justificative/show", locals: { champ: champ }
+            = render partial: "shared/champs/piece_justificative/show", locals: { champ: champ, profile: @profile  }
           - when TypeDeChamp.type_champs.fetch(:siret)
             = render partial: "shared/champs/siret/show", locals: { champ: champ, profile: @profile }
           - when TypeDeChamp.type_champs.fetch(:iban)

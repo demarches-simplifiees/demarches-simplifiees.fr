@@ -1,5 +1,11 @@
 fr:
   activerecord:
+    errors:
+      models:
+        individual:
+          attributes:
+            email:
+              must_be_different_from_mandataire: "doit être différent de celui du mandataire"
     attributes:
       individual:
         gender: Civilité

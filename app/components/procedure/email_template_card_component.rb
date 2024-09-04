@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Procedure::EmailTemplateCardComponent < ApplicationComponent
   def initialize(email_template:)
     @email_template = email_template

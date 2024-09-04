@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Run a virus scan on all attachments after they are analyzed.
 #
 # We're using a class extension to ensure that all attachments get scanned,

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Dossiers::MessageComponentPreview < ViewComponent::Preview
   def with_default_commentaire
     render Dossiers::MessageComponent.new(commentaire: commentaire, connected_user: user)

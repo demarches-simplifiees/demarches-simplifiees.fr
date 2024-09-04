@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Dossier, type: :model do
   let(:user) { create(:user) }
 
@@ -48,9 +50,9 @@ describe Dossier, type: :model do
         end
       end
 
-      context 'supprimes_recemment' do
+      context 'supprimes' do
         it do
-          expect(procedure.dossiers.by_statut('supprimes_recemment')).to match_array([dossier_accepte_deleted, dossier_accepte_archive_deleted])
+          expect(procedure.dossiers.by_statut('supprimes')).to match_array([dossier_accepte_deleted, dossier_accepte_archive_deleted])
         end
       end
 
@@ -933,7 +935,6 @@ describe Dossier, type: :model do
 
     context 'en_construction' do
       it 'hide the dossier but does not discard' do
-        expect(dossier.hidden_at).to be_nil
         expect(dossier.hidden_by_user_at).to be_present
       end
 

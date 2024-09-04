@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :api_geo_data do
   PATH = Rails.root.join('lib', 'data', 'api_geo')
 

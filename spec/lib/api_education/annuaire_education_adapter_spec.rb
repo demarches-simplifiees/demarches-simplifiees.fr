@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIEducation::AnnuaireEducationAdapter do
   let(:search_term) { '0050009H' }
   let(:adapter) { described_class.new(search_term) }

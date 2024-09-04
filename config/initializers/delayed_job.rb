@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Set max_run_time at the highest job duration we want,
 # then at job level we'll decrease this value to a lower value
 # except for ExportJob.

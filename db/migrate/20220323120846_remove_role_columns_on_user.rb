@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveRoleColumnsOnUser < ActiveRecord::Migration[6.1]
   def change
     # (The safety_assured block validates that the columns to remove are ignored in the model, which is the case.)

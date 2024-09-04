@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Zone do
   let(:now) { Time.zone.parse("2022-08-11") }
   before do

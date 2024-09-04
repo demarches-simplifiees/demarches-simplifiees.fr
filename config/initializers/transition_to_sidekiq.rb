@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 if Rails.env.production? && SIDEKIQ_ENABLED
   ActiveSupport.on_load(:after_initialize) do
     [

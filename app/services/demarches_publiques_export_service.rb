@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DemarchesPubliquesExportService
   attr_reader :gzip_filename
 

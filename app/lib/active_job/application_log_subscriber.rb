@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'active_job/logging'
 require 'logstash-event'
 

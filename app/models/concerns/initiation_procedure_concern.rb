@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module InitiationProcedureConcern
   extend ActiveSupport::Concern
 
@@ -28,7 +30,7 @@ module InitiationProcedureConcern
         telephone: '1234',
         horaires: 'de 9 h à 18 h',
         adresse: 'adresse',
-        siret: '35600082800018',
+        siret: Service::SIRET_TEST,
         etablissement_infos: { adresse: "75 rue du Louvre\n75002\nPARIS\nFRANCE" },
         etablissement_lat: 48.87,
         etablissement_lng: 2.34,

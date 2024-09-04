@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe APIParticulier::MesriAdapter do
   let(:adapter) { described_class.new(api_particulier_token, ine, requested_sources) }
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::AddressChamp < Champs::TextChamp
   def full_address?
     data.present?

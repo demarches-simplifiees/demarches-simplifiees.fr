@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Class extensions to the Phonelib module, which allow parsing using several countries at once.
 module Phonelib
   # Variation of `.valid_for_country`, that can check several countries at once.

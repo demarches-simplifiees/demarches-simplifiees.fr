@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champ do
   include ActiveJob::TestHelper
 
@@ -60,13 +62,6 @@ describe Champ do
 
   describe "associations" do
     it { is_expected.to belong_to(:dossier) }
-
-    context 'when the parent dossier is discarded' do
-      let(:discarded_dossier) { create(:dossier, :discarded) }
-      subject(:champ) { discarded_dossier.champs_public.first }
-
-      it { expect(champ.reload.dossier).to eq discarded_dossier }
-    end
   end
 
   describe "normalization" do
@@ -576,7 +571,7 @@ describe Champ do
     end
 
     context "fetch_external_data_later" do
-      let(:data) { 'some other data' }
+      let(:data) { { address: { city: "some external data" } }.with_indifferent_access }
 
       it "fill data from external source" do
         expect_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data) { data }

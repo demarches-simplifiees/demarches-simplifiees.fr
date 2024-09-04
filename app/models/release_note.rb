@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ReleaseNote < ApplicationRecord
   has_rich_text :body
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseComponent
   def render?
     @champ.options?

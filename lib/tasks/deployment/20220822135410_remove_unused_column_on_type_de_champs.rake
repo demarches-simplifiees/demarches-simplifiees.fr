@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: remove_unused_column_on_type_de_champs'
   task remove_unused_column_on_type_de_champs: :environment do

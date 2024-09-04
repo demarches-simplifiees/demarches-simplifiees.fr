@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RepetitionChamp < Champ
   accepts_nested_attributes_for :champs
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeurs/procedures/_synthese', type: :view do
   let(:current_instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure) }

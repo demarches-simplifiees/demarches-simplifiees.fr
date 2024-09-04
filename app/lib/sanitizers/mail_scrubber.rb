@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Sanitizers
   class MailScrubber < Rails::Html::PermitScrubber
     def initialize

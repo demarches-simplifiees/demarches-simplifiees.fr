@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpertsProcedure < ApplicationRecord
   belongs_to :expert
   belongs_to :procedure

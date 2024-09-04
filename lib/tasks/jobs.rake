@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :jobs do
   desc 'Schedule all schedulable cron jobs'
   task schedule: :environment do

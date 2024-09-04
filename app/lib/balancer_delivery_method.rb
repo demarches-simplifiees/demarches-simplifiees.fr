@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # A Mail delivery method that randomly balances the actual delivery between different
 # methods.
 #

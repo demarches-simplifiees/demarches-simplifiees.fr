@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
   let!(:procedure) { create(:procedure, :published, :with_instructeur, auto_archive_on: nil) }
   let!(:procedure_hier) { create(:procedure, :published, :with_instructeur) }

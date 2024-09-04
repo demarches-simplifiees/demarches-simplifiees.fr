@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: update_brouillon_dossiers_with_forced_groupe_instructeur'
   task update_brouillon_dossiers_with_forced_groupe_instructeur: :environment do

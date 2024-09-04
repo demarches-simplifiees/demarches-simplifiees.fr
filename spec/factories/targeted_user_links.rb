@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :targeted_user_link do
     target_context { TargetedUserLink.target_contexts[:avis] }

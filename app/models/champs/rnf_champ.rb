@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RNFChamp < Champ
   store_accessor :data, :title, :email, :phone, :createdAt, :updatedAt, :dissolvedAt, :address, :status
 
@@ -11,6 +13,10 @@ class Champs::RNFChamp < Champ
 
   def fetch_external_data
     RNFService.new.(rnf_id:)
+  end
+
+  def update_with_external_data!(data:)
+    update!(data:, value_json: APIGeoService.parse_rnf_address(data[:address]))
   end
 
   def fetch_external_data?

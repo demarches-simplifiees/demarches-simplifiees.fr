@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APIParticulier::PoleEmploiAdapter
   class InvalidSchemaError < ::StandardError
     def initialize(errors)

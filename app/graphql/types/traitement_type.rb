@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Types
   class TraitementType < Types::BaseObject
     global_id_field :id

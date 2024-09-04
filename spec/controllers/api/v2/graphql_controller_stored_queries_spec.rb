@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe API::V2::GraphqlController do
   let(:admin) { administrateurs(:default_admin) }
   let(:generated_token) { APIToken.generate(admin) }
@@ -45,6 +47,24 @@ describe API::V2::GraphqlController do
       expect(champ_descriptor).not_to be_nil
       expect(champ_descriptor[:fields].find { _1[:name] == 'options' }).to be_nil
     }
+  end
+
+  describe 'when not authenticated' do
+    let(:variables) { { dossierNumber: dossier.id } }
+    let(:operation_name) { 'getDossier' }
+    let!(:authorization_header) { nil }
+
+    context 'with query' do
+      let(:query) { 'query getDossier($dossierNumber: Int!) { dossier(number: $dossierNumber) { id } }' }
+
+      it { expect(gql_errors.first[:message]).to eq('Without a token, only persisted queries are allowed') }
+    end
+
+    context 'with queryId' do
+      let(:query_id) { 'ds-query-v2' }
+
+      it { expect(gql_errors.first[:message]).to eq('An object of type Dossier was hidden due to permissions') }
+    end
   end
 
   describe 'ds-query-v2' do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :closed_mail, class: Mails::ClosedMail do
     subject { "Subject, voila voila" }

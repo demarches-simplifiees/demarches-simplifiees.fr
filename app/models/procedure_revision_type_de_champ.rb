@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProcedureRevisionTypeDeChamp < ApplicationRecord
   belongs_to :revision, class_name: 'ProcedureRevision'
   belongs_to :type_de_champ

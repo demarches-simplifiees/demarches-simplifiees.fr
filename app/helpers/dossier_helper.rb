@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DossierHelper
   include EtablissementHelper
 
@@ -105,7 +107,7 @@ module DossierHelper
       status_class = 'unknown'
     end
 
-    tag.span(status_text, class: "label #{status_class} ")
+    tag.span(status_text, class: "fr-badge #{status_class} ")
   end
 
   def pending_correction_badge(for_profile, html_class: nil)

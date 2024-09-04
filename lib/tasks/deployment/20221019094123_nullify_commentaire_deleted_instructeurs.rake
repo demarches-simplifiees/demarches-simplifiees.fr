@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: nullify_commentaire_deleted_instructeurs'
   task nullify_commentaire_deleted_instructeurs: :environment do

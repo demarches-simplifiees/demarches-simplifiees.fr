@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 AUTHORIZED_PDF_TYPES = [
   'application/pdf', # text x 4628654
   'application/x-pdf', # text x 30

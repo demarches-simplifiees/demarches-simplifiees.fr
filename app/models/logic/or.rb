@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Logic::Or < Logic::NAryOperator
   attr_reader :operands
 

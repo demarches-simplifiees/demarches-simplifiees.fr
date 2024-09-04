@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DataFixer::ChampsPhoneInvalid
   def self.fix(phones_string)
     phone_candidates = phones_string

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module RecoverySelectionHelper
   def recoverable_id_and_libelles(recoverables)
     recoverables

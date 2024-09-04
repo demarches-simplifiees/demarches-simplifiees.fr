@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportTemplateValidator do
   let(:validator) { ExportTemplateValidator.new }
 

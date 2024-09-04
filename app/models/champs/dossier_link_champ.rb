@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::DossierLinkChamp < Champ
   validate :value_integerable, if: -> { value.present? }, on: :prefill
 

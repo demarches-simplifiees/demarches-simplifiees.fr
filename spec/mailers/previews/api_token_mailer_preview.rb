@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class APITokenMailerPreview < ActionMailer::Preview
   def expiration
     APITokenMailer.expiration(api_token)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 namespace :after_party do
   desc 'Deployment task: moving Attestations from Procedure to ProcedureRevision'
   task revise_attestation_templates: :environment do

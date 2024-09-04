@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'instructeurs/dossiers/envoyer_dossier_block', type: :view do
   let(:dossier) { create(:dossier) }
 

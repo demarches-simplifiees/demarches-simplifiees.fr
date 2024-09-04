@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DownloadManager
   class ProcedureAttachmentsExport
     delegate :destination, to: :@queue

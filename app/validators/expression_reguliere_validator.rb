@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExpressionReguliereValidator < ActiveModel::Validator
   TIMEOUT = 1.second.freeze
 

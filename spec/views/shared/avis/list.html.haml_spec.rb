@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'shared/avis/_list', type: :view do
   before { view.extend DossierHelper }
 

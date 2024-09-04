@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PiecesJustificativesService
   def initialize(user_profile:, export_template:)
     @user_profile = user_profile

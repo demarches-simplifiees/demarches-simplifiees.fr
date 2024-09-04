@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'sidekiq/web'
 require 'sidekiq/cron/web'
 
@@ -389,6 +391,7 @@ Rails.application.routes.draw do
 
     resource :feedback, only: [:create]
     get 'demarches' => 'demarches#index'
+    get 'deleted_dossiers' => 'dossiers#deleted_dossiers'
 
     get 'profil' => 'profil#show'
     patch 'update_email' => 'profil#update_email'
@@ -473,7 +476,7 @@ Rails.application.routes.draw do
         end
 
         patch 'update_displayed_fields'
-        get 'update_sort/:table/:column' => 'procedures#update_sort', as: 'update_sort'
+        get 'update_sort/:column_id' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
         post 'update_filter'
         get 'remove_filter'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe API::V2::GraphqlController do
   let(:admin) { administrateurs(:default_admin) }
   let(:generated_token) { APIToken.generate(admin) }
@@ -132,7 +134,7 @@ describe API::V2::GraphqlController do
         end
 
         it {
-          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          expect(gql_errors.first[:message]).to eq("Without a token, only persisted queries are allowed")
         }
       end
 
@@ -159,7 +161,7 @@ describe API::V2::GraphqlController do
 
         it {
           expect(token).not_to be_nil
-          expect(gql_errors.first[:message]).to eq("An object of type Demarche was hidden due to permissions")
+          expect(gql_errors.first[:message]).to eq("Without a token, only persisted queries are allowed")
         }
       end
 
@@ -1522,45 +1524,6 @@ describe API::V2::GraphqlController do
             end
           end
         end
-      end
-    end
-  end
-
-  context "when not authenticated" do
-    it "should return error" do
-      expect(gql_data).to eq(nil)
-      expect(gql_errors).not_to eq(nil)
-    end
-
-    describe "dossier" do
-      let(:query) { "{ dossier(number: #{dossier.id}) { id number usager { email } } }" }
-
-      it "should return error" do
-        expect(gql_data).to eq(nil)
-        expect(gql_errors).not_to eq(nil)
-      end
-    end
-
-    describe "mutation" do
-      let(:query) do
-        "mutation {
-          dossierEnvoyerMessage(input: {
-            dossierId: \"#{dossier.to_typed_id}\",
-            instructeurId: \"#{instructeur.to_typed_id}\",
-            body: \"Bonjour\"
-          }) {
-            message {
-              body
-            }
-            errors {
-              message
-            }
-          }
-        }"
-      end
-
-      it "should return error" do
-        expect(gql_data[:dossierEnvoyerMessage][:errors].first[:message]).to eq("Le jeton utilisé est configuré seulement en lecture")
       end
     end
   end

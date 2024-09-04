@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Champs::RegionChamp < Champs::TextChamp
   validate :value_in_region_names, if: -> { !value.nil? && validate_champ_value_or_prefill? }
   validate :external_id_in_region_codes, if: -> { !external_id.nil? && validate_champ_value_or_prefill? }

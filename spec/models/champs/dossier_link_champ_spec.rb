@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::DossierLinkChamp, type: :model do
   describe 'prefilling validations' do
     describe 'value' do

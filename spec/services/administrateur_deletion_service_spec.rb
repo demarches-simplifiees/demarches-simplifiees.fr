@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe AdministrateurDeletionService do
   let(:super_admin) { create(:super_admin) }
   let(:admin) { administrateurs(:default_admin) }

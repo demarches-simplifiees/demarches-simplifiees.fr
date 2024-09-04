@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class TypeDeChamp < ApplicationRecord
   self.ignored_columns += [:migrated_parent, :revision_id, :parent_id, :order_place]
 
@@ -115,7 +117,8 @@ class TypeDeChamp < ApplicationRecord
     type_champs.fetch(:communes),
     type_champs.fetch(:departements),
     type_champs.fetch(:regions),
-    type_champs.fetch(:epci)
+    type_champs.fetch(:epci),
+    type_champs.fetch(:address)
   ]
 
   PRIVATE_ONLY_TYPES = [
@@ -539,7 +542,7 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def options_for_select
+  def options_for_select(column)
     if departement?
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
@@ -552,6 +555,8 @@ class TypeDeChamp < ApplicationRecord
       elsif checkbox?
         Champs::CheckboxChamp.options
       end
+    elsif siret? || rna? || rnf?
+      column.options_for_select
     end
   end
 

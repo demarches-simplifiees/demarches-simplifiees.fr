@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Mutations
   class DossierModifierAnnotationCheckbox < Mutations::DossierModifierAnnotation
     description "Modifier l’annotation au format oui/non."

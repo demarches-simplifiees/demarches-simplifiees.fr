@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Champs::IntegerNumberChamp do
   let(:champ) { Champs::IntegerNumberChamp.new(value:, dossier: build(:dossier)) }
   before { allow(champ).to receive(:visible?).and_return(true) }

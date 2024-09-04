@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class EditableChamp::LinkedDropDownListComponent < EditableChamp::EditableChampBaseComponent
   def dsfr_champ_container
     :fieldset

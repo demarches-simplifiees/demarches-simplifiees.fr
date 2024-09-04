@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 FactoryBot.define do
   factory :dossier do
     autorisation_donnees { true }
@@ -108,10 +110,6 @@ FactoryBot.define do
 
     trait :not_archived do
       archived { false }
-    end
-
-    trait :discarded do
-      hidden_at { Time.zone.now }
     end
 
     trait :hidden_by_expired do

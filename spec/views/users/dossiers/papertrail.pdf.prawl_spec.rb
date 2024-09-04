@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe 'users/dossiers/papertrail', type: :view do
   before do
     assign(:dossier, dossier)

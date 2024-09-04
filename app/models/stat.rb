@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Stat < ApplicationRecord
   class << self
     def update_stats

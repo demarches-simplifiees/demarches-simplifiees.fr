@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class LogicSerializer
   def self.load(logic)
     if logic.present?

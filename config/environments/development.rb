@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "active_support/core_ext/integer/time"
 require Rails.root.join("app/lib/balancer_delivery_method")
 

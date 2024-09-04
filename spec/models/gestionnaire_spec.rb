@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Gestionnaire, type: :model do
   describe 'associations' do
     it { is_expected.to have_many(:commentaire_groupe_gestionnaires) }
