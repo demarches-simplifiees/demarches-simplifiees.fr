@@ -1,5 +1,6 @@
+# frozen_string_literal: true
+
 RSpec.describe Cron::Datagouv::ChampFilledByMonthJob, type: :job do
-  let!(:user) { create(:user, created_at: 1.month.ago) }
   let(:status) { 200 }
   let(:body) { "ok" }
   let(:stub) { stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/.*\/upload\//) }
