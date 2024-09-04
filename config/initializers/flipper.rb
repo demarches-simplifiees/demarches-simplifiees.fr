@@ -31,7 +31,6 @@ features = [
   :expression_reguliere_type_de_champ,
   :gallery_demande,
   :groupe_instructeur_api_hack,
-  :hide_instructeur_email,
   :sva,
   :switch_domain
 ]

@@ -42,13 +42,11 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
     context 'with an instructeur message' do
       let(:instructeur) { create(:instructeur) }
-      let(:procedure) { create(:procedure) }
+      let(:procedure) { create(:procedure, hide_instructeurs_email: true) }
       let(:commentaire) { create(:commentaire, instructeur: instructeur, body: 'Second message') }
       let(:dossier) { create(:dossier, :en_construction, commentaires: [commentaire], procedure: procedure) }
 
       context 'on a procedure with anonymous instructeurs' do
-        before { Flipper.enable(:hide_instructeur_email, procedure) }
-
         context 'redacts the instructeur email' do
           it { is_expected.to have_text(commentaire.body) }
           it { is_expected.to have_text("Instructeur n° #{instructeur.id}") }
@@ -57,7 +55,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       end
 
       context 'on a procedure where instructeurs names are not redacted' do
-        before { Flipper.disable(:hide_instructeur_email, procedure) }
+        let(:procedure) { create(:procedure, hide_instructeurs_email: false) }
 
         context 'redacts the instructeur email but keeps the name' do
           it { is_expected.to have_text(commentaire.body) }

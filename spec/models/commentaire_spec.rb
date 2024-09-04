@@ -51,7 +51,7 @@ describe Commentaire do
   describe "#redacted_email" do
     subject { commentaire.redacted_email }
 
-    let(:procedure) { create(:procedure) }
+    let(:procedure) { create(:procedure, hide_instructeurs_email: false) }
     let(:dossier) { create(:dossier, procedure: procedure) }
 
     context 'with a commentaire created by a instructeur' do
@@ -59,12 +59,11 @@ describe Commentaire do
       let(:commentaire) { build :commentaire, instructeur: instructeur, dossier: dossier }
 
       context 'when the procedure shows instructeurs email' do
-        before { Flipper.disable(:hide_instructeur_email, procedure) }
         it { is_expected.to eq 'some_user' }
       end
 
       context 'when the procedure hides instructeurs email' do
-        before { Flipper.enable(:hide_instructeur_email, procedure) }
+        let(:procedure) { create(:procedure, hide_instructeurs_email: true) }
         it { is_expected.to eq "Instructeur n° #{instructeur.id}" }
       end
     end
