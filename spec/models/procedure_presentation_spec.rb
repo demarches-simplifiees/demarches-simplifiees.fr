@@ -575,14 +575,15 @@ describe ProcedurePresentation do
     context 'for type_de_champ using AddressableColumnConcern' do
       let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
-      let(:available_columns) { type_de_champ.columns }
-      let(:column) { available_columns.find { _1.value_column == value_column_searched } }
+
+      let(:available_columns) { type_de_champ.dynamic_type.columns }
+      let(:column) { available_columns.find { _1.try(:jsonpath) == jsonpath } }
       let(:filter) { [column.to_json.merge({ "value" => value })] }
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
 
       context "when searching by postal_code (text)" do
         let(:value) { "60580" }
-        let(:value_column_searched) { ['postal_code'] }
+        let(:jsonpath) { '$.postal_code' }
 
         before do
           kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "postal_code" => value })
@@ -597,7 +598,7 @@ describe ProcedurePresentation do
 
       context "when searching by departement_code (enum)" do
         let(:value) { "99" }
-        let(:value_column_searched) { ['departement_code'] }
+        let(:jsonpath) { '$.departement_code' }
 
         before do
           kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "departement_code" => value })
@@ -612,7 +613,7 @@ describe ProcedurePresentation do
 
       context "when searching by region_name" do
         let(:value) { "60" }
-        let(:value_column_searched) { ['region_name'] }
+        let(:jsonpath) { '$.region_name' }
 
         before do
           kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "region_name" => value })
