@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 class Columns::JSONPathColumn < Column
-  attr_reader :stable_id, :jsonpath
+  attr_reader :stable_id, :jsonpath, :options_for_select
 
-  def initialize(label:, stable_id:, jsonpath:, type: :text)
+  def initialize(label:, stable_id:, jsonpath:, options_for_select: [])
     @stable_id = stable_id
     @jsonpath = jsonpath
+    @options_for_select = options_for_select
 
     # currently, the column are searched by id = "#{table}/#{column}"
     # so we have add jsonpath to the column to make it unique
@@ -13,7 +14,7 @@ class Columns::JSONPathColumn < Column
       table: 'type_de_champ',
       column: "#{stable_id}-#{jsonpath}",
       label:,
-      type:
+      type: options_for_select.any? ? :enum : :text,
     )
   end
 
@@ -26,17 +27,6 @@ class Columns::JSONPathColumn < Column
     dossiers.with_type_de_champ(stable_id)
       .where(condition)
       .ids
-  end
-
-  def options_for_select
-    case jsonpath.split('.').last
-    when 'departement_code'
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
-    when 'region_name'
-      APIGeoService.regions.map { [_1[:name], _1[:name]] }
-    else
-      []
-    end
   end
 
   def champ_value(champ)
