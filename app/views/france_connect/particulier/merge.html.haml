@@ -1,46 +1,42 @@
 = content_for :title, "Fusion des comptes FC et #{Current.application_name}"
 
-.container
+.fr-container
   %h1.page-title= t('.title', application_name: Current.application_name)
 
   %p= t('.subtitle_html', email: @fci.email_france_connect, application_name: Current.application_name)
 
-  .form.mt-2
-    %label= t('.label_select_merge_flow', email: @fci.email_france_connect)
-    %fieldset.radios
-      %label{ onclick: "DS.showFusion(event);" }
-        = radio_button_tag :value, true, false, autocomplete: "off", id: 'it-is-mine'
-        = t('utils.yes')
+  %fieldset.fr-fieldset{ aria: { labelledby: 'merge-account' } }
+    %legend.fr-fieldset__legend#merge-account= t('.label_select_merge_flow', email: @fci.email_france_connect)
+    .fr-fieldset__element.fr-fieldset__element--inline
+      .fr-radio-group
+        %input{ type: 'radio', id: 'it-is-mine', name: 'value', value: 'true', autocomplete: "off", onclick: "DS.showFusion(event);" }
+        %label{ for: 'it-is-mine' }= t('utils.yes')
+    .fr-fieldset__element.fr-fieldset__element--inline
+      .fr-radio-group
+        %input{ type: 'radio', id: 'it-is-not-mine', name: 'value', value: 'false', autocomplete: "off", onclick: "DS.showNewAccount(event);" }
+        %label{ for: 'it-is-not-mine' }= t('utils.no')
 
-      %label{ onclick: "DS.showNewAccount(event);" }
-        = radio_button_tag :value, false, false, autocomplete: "off", id: 'it-is-not-mine'
-        = t('utils.no')
 
   .fusion.hidden
     %p= t('.title_fill_in_password')
 
-    = form_tag france_connect_particulier_merge_with_existing_account_path, data: { turbo: true }, class: 'mt-2 form fconnect-form' do
-      = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :fusion_merge_token)
-      = hidden_field_tag :email, @fci.email_france_connect, id: dom_id(@fci, :fusion_email)
-      .fr-input-group
-        = label_tag :password, t('views.registrations.new.password_label', min_length: 8), class: 'fr-label'
-        = password_field_tag :password, nil, autocomplete: 'current-password', class: 'mb-1 fr-input'
-      .mb-2
-        = t('views.users.sessions.new.reset_password')
-        = link_to france_connect_particulier_resend_and_renew_merge_confirmation_path(merge_token: @fci.merge_token), method: :post do
-          = t('.link_confirm_by_email')
+    = render partial: 'password_confirmation', locals: { fci: @fci, wrong_password: @wrong_password }
 
-      = submit_tag t('.button_merge'), class: 'fr-btn'
+    .mt-2
+      = button_to t('.link_confirm_by_email'),
+        france_connect_particulier_send_email_merge_request_path,
+        params: { email: @fci.email_france_connect, merge_token: @fci.merge_token },
+        class: 'fr-btn fr-btn--secondary'
 
 
   .new-account.hidden
     %p= t('.title_fill_in_email', application_name: Current.application_name)
 
-    = form_tag france_connect_particulier_merge_with_new_account_path, data: { turbo: true }, class: 'mt-2 form' do
+    = form_tag france_connect_particulier_send_email_merge_request_path, class: 'mt-2 form' do
       = hidden_field_tag :merge_token, @fci.merge_token, id: dom_id(@fci, :new_account_merge_token)
-      = label_tag :email, t('views.registrations.new.email_label'), for: dom_id(@fci, :new_account_email)
-      = email_field_tag :email, "", required: true, id: dom_id(@fci, :new_account_email)
-      = submit_tag t('.button_use_this_email'), class: 'button primary'
+      = label_tag :email, t('views.registrations.new.email_label'), for: dom_id(@fci, :new_account_email), class: 'fr-label'
+      = email_field_tag :email, "", required: true, id: dom_id(@fci, :new_account_email), class: 'mb-1 fr-input'
+      = submit_tag t('.button_use_this_email'), class: 'fr-btn'
 
 
   #new-account-password-confirmation.hidden

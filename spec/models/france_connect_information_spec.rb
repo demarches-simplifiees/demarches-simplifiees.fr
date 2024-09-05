@@ -9,19 +9,67 @@ describe FranceConnectInformation, type: :model do
     end
   end
 
-  describe 'associate_user!' do
-    context 'when there is no user with same email' do
-      let(:email) { 'A@email.com' }
-      let(:fci) { build(:france_connect_information) }
+  describe 'safely_associate_user!' do
+    let(:email) { 'A@email.com' }
+    let(:fci) { build(:france_connect_information) }
 
-      subject { fci.associate_user!(email) }
+    subject { fci.safely_associate_user!(email) }
 
-      it { expect { subject }.to change(User, :count).by(1) }
+    context 'when there is no user with the same email' do
+      it 'creates a new user' do
+        expect { subject }.to change(User, :count).by(1)
+      end
 
-      it do
+      it 'sets the correct attributes on the user' do
         subject
-        expect(fci.user.email).to eq('a@email.com')
-        expect(fci.user.email_verified_at).to be_present
+        user = User.find_by(email: email.downcase)
+        expect(user).not_to be_nil
+        expect(user.confirmed_at).to be_present
+      end
+
+      it 'associates the user with the FranceConnectInformation' do
+        subject
+        expect(fci.reload.user.email).to eq(email.downcase)
+      end
+    end
+
+    context 'when a user with the same email already exists due to race condition' do
+      let!(:existing_user) { create(:user, email: email.downcase) }
+      let!(:fci) { create(:france_connect_information) } # Assurez-vous que fci est créé et sauvegardé
+
+      before do
+        call_count = 0
+        allow(User).to receive(:create!).and_wrap_original do
+          call_count += 1
+          if call_count == 1
+            raise ActiveRecord::RecordNotUnique
+          else
+            existing_user
+          end
+        end
+        allow(fci).to receive(:send_custom_confirmation_instructions)
+      end
+
+      it 'raises an error' do
+        expect { fci.safely_associate_user!(email) }.to raise_error(NoMethodError)
+      end
+
+      it 'does not create a new user' do
+        expect {
+          begin
+            fci.safely_associate_user!(email)
+          rescue NoMethodError
+          end
+        }.to_not change(User, :count)
+      end
+
+      it 'does not associate with any user' do
+        expect(fci.user).to be_nil
+        begin
+          fci.safely_associate_user!(email)
+        rescue NoMethodError
+        end
+        expect(fci.reload.user).to be_nil
       end
     end
   end

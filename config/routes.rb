@@ -188,11 +188,14 @@ Rails.application.routes.draw do
   namespace :france_connect do
     get 'particulier' => 'particulier#login'
     get 'particulier/callback' => 'particulier#callback'
-    get 'particulier/merge/:merge_token' => 'particulier#merge', as: :particulier_merge
-    get 'particulier/mail_merge_with_existing_account/:email_merge_token' => 'particulier#mail_merge_with_existing_account', as: :particulier_mail_merge_with_existing_account
-    post 'particulier/resend_and_renew_merge_confirmation' => 'particulier#resend_and_renew_merge_confirmation', as: :particulier_resend_and_renew_merge_confirmation
-    post 'particulier/merge_with_existing_account' => 'particulier#merge_with_existing_account'
-    post 'particulier/merge_with_new_account' => 'particulier#merge_with_new_account'
+
+    post 'particulier/send_email_merge_request'
+
+    post 'particulier/merge_using_fc_email'
+    post 'particulier/merge_using_password'
+    get 'particulier/merge_using_email_link/:email_merge_token' => 'particulier#merge_using_email_link', as: :particulier_merge_using_email_link
+
+    get 'confirm_email/:token', to: 'particulier#confirm_email', as: :confirm_email
   end
 
   namespace :agent_connect do
