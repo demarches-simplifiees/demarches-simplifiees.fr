@@ -65,15 +65,10 @@ class DossierProjectionService
           .group_by(&:stable_id) # the champs are redispatched to their respective columns
           .each do |stable_id, champs|
             columns
-              .filter do |column|
-                if column.is_a?(Columns::JSONPathColumn)
-                  column.send(:stable_id).to_s == stable_id.to_s
-                else
-                  column.column.to_s == stable_id.to_s
-                end
-              end
               .each do |column|
-                column.set_id_value_h(champs.to_h { |champ| [champ.dossier_id, champ_value.(champ, column)] })
+                if column.same_stable_id?(stable_id:)
+                  column.set_id_value_h(champs.to_h { |champ| [champ.dossier_id, champ_value.(champ, column)] })
+                end
               end
           end
       when 'self'

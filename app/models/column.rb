@@ -22,6 +22,10 @@ class Column
     "#{table}/#{column}"
   end
 
+  def same_stable_id?(stable_id:)
+    column.to_s == stable_id.to_s
+  end
+
   def self.make_id(table, column)
     "#{table}/#{column}"
   end

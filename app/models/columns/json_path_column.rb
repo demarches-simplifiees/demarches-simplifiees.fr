@@ -29,6 +29,10 @@ class Columns::JSONPathColumn < Column
       .ids
   end
 
+  def same_stable_id?(stable_id:)
+    @stable_id.to_s == stable_id.to_s
+  end
+
   def champ_value(champ)
     Hash(champ.value_json).dig(*jsonpath_to_array)
   end
