@@ -1,0 +1,29 @@
+- component_prefix = title.parameterize
+%fieldset.fr-fieldset{ id: "#{component_prefix}-fieldset", data: { controller: 'checkbox-select-all' } }
+  %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+    = title
+  .checkbox-group-bordered.fr-mx-1w.fr-mb-2w
+    .fr-fieldset__element.fr-background-contrast--grey.fr-py-2w.fr-px-4w
+      .fr-checkbox-group
+        = check_box_tag "#{component_prefix}-select-all", "select-all", false, data: { "checkbox-select-all-target": 'checkboxAll' }
+        = label_tag "#{component_prefix}-select-all", "Tout sélectionner"
+    - sections.each do |section|
+      .fr-fieldset__element.fr-px-4w= section[:libelle]
+      - section[:columns].map { Array.wrap(_1) }.each do |grouped_columns|
+        - if grouped_columns.many?
+          .fr-fieldset__element
+            .fieldset-bordered.fr-ml-3v
+              - grouped_columns.each do |column|
+                .fr-fieldset__element.fr-px-3v
+                  .fr-checkbox-group
+                    - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
+                    = check_box_tag field_name('export_template', 'columns', ''), column.to_json, export_template.columns&.include?(column), class: 'fr-checkbox', id: id, data: { "checkbox-select-all-target": 'checkbox' }
+                    = label_tag id, pretty_libelle(column)
+        - else
+          - grouped_columns.each do |column|
+            .fr-fieldset__element.fr-px-4w
+              .fr-checkbox-group
+                - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
+                = check_box_tag field_name('export_template', 'columns', ''), column.to_json, export_template.columns&.include?(column), class: 'fr-checkbox', id: id, data: { "checkbox-select-all-target": 'checkbox' }
+                = label_tag id, pretty_libelle(column)
+      .fr-pb-1w &nbsp;

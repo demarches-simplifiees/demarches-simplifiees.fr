@@ -45,11 +45,12 @@
 
       = render partial: 'checkbox_group', locals: { title: 'Colonnes Infos dossier', all_columns: @export_template.all_dossier_columns, checked_columns: @export_template.columns }
 
-      = render partial: 'checkbox_group', locals: { title: 'Colonnes Formulaire', all_columns: @export_template.all_tdc_columns, checked_columns: @export_template.columns }
+      - types_de_champ_public = @procedure.types_de_champ_for_procedure_presentation(with_header_section: true).public_only
+      - types_de_champ_private = @procedure.types_de_champ_for_procedure_presentation(with_header_section: true).private_only
 
-      - @export_template.all_repetable_tdc_columns.each do |repet|
-        = render partial: 'checkbox_group', locals: { title: "Colonnes Formulaire #{repet[:libelle]}", all_columns: repet[:types_de_champ], checked_columns: @export_template.columns }
+      = render ExportTemplate::ChampsComponent.new("Informations formulaire", @export_template, types_de_champ_public)
 
+      = render ExportTemplate::ChampsComponent.new("Informations annotations", @export_template, types_de_champ_private) if types_de_champ_private.any?
 
       .fixed-footer
         .fr-container
