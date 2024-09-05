@@ -75,39 +75,6 @@ class ExportTemplate < ApplicationRecord
     columns.filter { _1[:source] != 'repet' }
   end
 
-  def all_tdc_columns
-    procedure.types_de_champ_for_procedure_presentation.not_repetition.map do |tdc|
-      tdc.columns_for_export.map do
-        _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
-      end
-    end
-  end
-
-  def repetable_columns
-    columns.filter { _1[:source] == 'repet' }
-      .group_by { _1[:repetition_champ_stable_id] }
-  end
-
-  def all_repetable_tdc_columns
-    procedure
-      .types_de_champ_for_procedure_presentation
-      .repetition
-      .filter_map do |type_de_champ_repetition|
-        types_de_champ = procedure.types_de_champ_for_procedure_presentation(type_de_champ_repetition)
-
-        if types_de_champ.present?
-          h = {}
-          h[:libelle] = type_de_champ_repetition.libelle
-          h[:types_de_champ] = types_de_champ.map do |tdc|
-            tdc.columns_for_export(repetition_champ_stable_id: type_de_champ_repetition.stable_id).map do
-              _1.merge({ libelle: saved_libelle(_1) || _1[:libelle] })
-            end
-          end
-          h
-        end
-      end
-  end
-
   def all_usager_columns
     dossier_columns_for(all_usager_column_keys)
   end
@@ -176,6 +143,15 @@ class ExportTemplate < ApplicationRecord
     }
   end
 
+  def saved_libelle(path_h)
+    columns&.find { _1.slice(:path, :stable_id) == path_h.slice(:path, :stable_id) }&.dig(:libelle)
+  end
+
+  def repetable_columns
+    columns.filter { _1[:source] == 'repet' }
+      .group_by { _1[:repetition_champ_stable_id] }
+  end
+
   private
 
   def ensure_pjs_are_legit
@@ -195,10 +171,6 @@ class ExportTemplate < ApplicationRecord
     when 'dossier'
       columns_meta[current_column[:path].to_sym][:libelle]
     end
-  end
-
-  def saved_libelle(path_h)
-    columns&.find { _1.slice(:path, :stable_id) == path_h.slice(:path, :stable_id) }&.dig(:libelle)
   end
 
   def dossier_columns_for(columns)
