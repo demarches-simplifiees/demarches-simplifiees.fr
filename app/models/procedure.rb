@@ -74,10 +74,11 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_revision : published_revision
   end
 
-  def types_de_champ_for_procedure_presentation(parent = nil)
+  def types_de_champ_for_procedure_presentation(parent = nil, with_header_section: false)
+    types_de_champ_scope = with_header_section ? TypeDeChamp.all : TypeDeChamp.fillable
     if brouillon?
       if parent.nil?
-        TypeDeChamp.fillable
+        types_de_champ_scope
           .joins(:revision_types_de_champ)
           .where(revision_types_de_champ: { revision_id: draft_revision_id, parent_id: nil })
           .order(:private, :position)
@@ -98,8 +99,7 @@ class Procedure < ApplicationRecord
 
       # fetch all type_de_champ.stable_id for all the revisions expect draft
       # and for each stable_id take the bigger (more recent) type_de_champ.id
-      recent_ids = TypeDeChamp
-        .fillable
+      recent_ids = types_de_champ_scope
         .joins(:revision_types_de_champ)
         .where(revision_types_de_champ: { revision_id: revision_ids, parent_id: parent_ids })
         .group(:stable_id).select('MAX(types_de_champ.id)')
