@@ -2003,8 +2003,8 @@ describe Dossier, type: :model do
       it 'give me back my decimal number' do
         procedure.publish!
         dossier
-        # integer_number_type_de_champ.update(type_champ: :decimal_number)
-        # procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+        integer_number_type_de_champ.update(type_champ: :decimal_number)
+        procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
         dossier.reload
 
         expect(dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a)).to eq([['c1', 42]])
