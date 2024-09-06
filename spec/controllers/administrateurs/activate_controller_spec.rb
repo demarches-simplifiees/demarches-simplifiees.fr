@@ -28,8 +28,12 @@ describe Administrateurs::ActivateController, type: :controller do
     before { post :create, params: { administrateur: { reset_password_token: token, password: password } } }
 
     context 'when the token is ok' do
-      it { expect(administrateur.user.reload.valid_password?(password)).to be true }
-      it { expect(response).to redirect_to(admin_procedures_path) }
+      it do
+        admin_user = administrateur.user.reload
+        expect(admin_user.valid_password?(password)).to be true
+        expect(admin_user.email_verified_at).to be_present
+        expect(response).to redirect_to(admin_procedures_path)
+      end
     end
 
     context 'when the password is not strong' do
