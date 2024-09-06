@@ -9,7 +9,7 @@
   .fr-col-12.fr-col-md-8
     = form_with model: [:instructeur, @procedure, export_template], local: true do |f|
 
-
+      %h2 Paramètres de l'export
       = f.hidden_field "[dossier_folder][template]", value: export_template.dossier_folder.template_json
       = f.hidden_field "[export_pdf][template]", value: export_template.export_pdf.template_json
 
@@ -40,6 +40,7 @@
             = f.radio_button :kind, "csv", id: "csv"
             %label.fr-label{ for: "csv" } csv
 
+      %h2 Contenu de l'export
       = render partial: 'checkbox_group', locals: { title: 'Colonnes Usager', all_columns: @export_template.all_usager_columns, checked_columns: @export_template.columns }
 
 
