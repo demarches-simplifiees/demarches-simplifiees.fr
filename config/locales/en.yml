@@ -174,12 +174,12 @@ en:
         page_six: "Home page - User search results"
         page_seven:
           label: "FAQ"
-          url: "https://faq.demarches-simplifiees.fr/"
+          url: "/faq"
           title: "FAQ - new tab"
         page_eight:
           label: "FAQ - User (submission of a file)"
-          url: "https://faq.demarches-simplifiees.fr/collection/17-usager-depot-dun-dossier"
-          title: "FAQ - User (submission of a file) - new tab"
+          url: "/faq#accordion-usager-0"
+          title: "FAQ - User (submission of a file)"
         page_nine: "Documentation - Presentation"
         page_ten: "Documentation - Start-up"
         page_eleven: "Documentation - General"

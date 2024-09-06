@@ -1,0 +1,20 @@
+%nav.fr-sidemenu.fr-sidemenu--sticky{ role: "navigation", 'aria-labelledby': "fr-sidemenu-title" }
+  .fr-sidemenu__inner
+    %button.fr-sidemenu__btn{ 'aria-controls': "fr-sidemenu-wrapper", 'aria-expanded': "false" }
+      = t(:sidebar_button, scope: [:faq])
+    .fr-collapse#fr-sidemenu-wrapper
+      .fr-sidemenu__title#fr-sidemenu-title
+        = t(:name, scope: [:faq, :categories, current[:category]])
+      %ul.fr-sidemenu__list
+        - faqs.each_with_index do |(subcategory, faqs), index|
+          %li{ class: class_names("fr-sidemenu__item", "fr-sidemenu__item--active" => subcategory == current[:subcategory]) }
+            %button.fr-sidemenu__btn{ aria: { 'expanded': subcategory == current[:subcategory] ? "true" : "false",
+                                              'controls': "fr-sidemenu-item-#{index}",
+                                              'current' => subcategory == current[:subcategory] ? "true" : nil } }
+              = t(:name, scope: [:faq, :subcategories, subcategory])
+            .fr-collapse{ id: "fr-sidemenu-item-#{index}" }
+              %ul.fr-sidemenu__list
+                - faqs.each do |faq|
+                  %li{ class: class_names("fr-sidemenu__item", "fr-sidemenu__item--active" => faq[:slug] == current[:slug]) }
+                    = link_to faq[:title], faq_path(category: faq[:category], slug: faq[:slug]),
+                      class: 'fr-sidemenu__link', target: "_self", "aria-current" => current[:slug] == faq[:slug] ? "page" : nil

@@ -6,14 +6,13 @@ en:
       faq:
         label: "FAQ"
         title: "Frequently Asked Questions"
-        url: "https://faq.demarches-simplifiees.fr"
-        autosave_url: "https://faq.demarches-simplifiees.fr/article/77-enregistrer-mon-formulaire-pour-le-reprendre-plus-tard?preview=5ec28ca1042863474d1aee00"
-        comment_trouver_ma_demarche_url: "https://www.service-public.pf/demarches-en-ligne"
-        confirmer_compte_chaque_connexion_url: "https://faq.demarches-simplifiees.fr/article/34-je-dois-confirmer-mon-compte-a-chaque-connexion"
-        contacter_service_en_charge_url: "https://faq.demarches-simplifiees.fr/article/12-contacter-le-service-en-charge-de-ma-demarche"
-        email_non_recu_url: "https://faq.demarches-simplifiees.fr/article/79-je-ne-recois-pas-demail"
-        erreur_siret_url: "https://doc.projet.gov.pf/pages/viewpage.action?pageId=19764340"
-        ou_en_est_mon_dossier_url: "https://faq.demarches-simplifiees.fr/article/11-je-veux-savoir-ou-en-est-linstruction-de-ma-demarche"
+        url: "/faq"
+        autosave_url: "/faq/usager/je-veux-enregistrer-mon-formulaire-pour-le-reprendre-plus-tard"
+        comment_trouver_ma_demarche_url: "/faq/usager/comment-trouver-ma-demarche"
+        confirmer_compte_chaque_connexion_url: "/faq/instructeur/je-dois-confirmer-mon-compte-a-chaque-connexion"
+        contacter_service_en_charge_url: "/faq/usager/je-veux-contacter-le-service-en-charge-de-ma-demarche"
+        erreur_siret_url: "/faq/usager/erreur-siret-lors-d-un-depot-de-dossier"
+        ou_en_est_mon_dossier_url: "/faq/usager/je-veux-savoir-ou-en-est-l-instruction-de-ma-demarche"
     footer:
       top_labels:
         hidden_title: Useful links

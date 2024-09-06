@@ -58,7 +58,7 @@ en:
       publication_form:
         faq_test_alert: Have you thought about testing your procedure before publishing it? To help you in this test phase, you can
         faq_test_alert_link: consult our best practices guide.
-        faq_test_alert_link_url: "https://faq.demarches-simplifiees.fr/category/49-comment-tester-ma-demarche"
+        faq_test_alert_link_url: "/faq#accordion-administrateur-2"
         draft_changed_procedure_alert: "Publish a new version of your procedure. The following changes will be applied:"
         dpd_title: Before publishing
         dpd_part_1: Have you thought about informing your Personal Data Protection Officer (DPO).

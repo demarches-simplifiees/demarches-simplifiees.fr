@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 302,
+          "line": 309,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -66,6 +66,40 @@
         89
       ],
       "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "a7d18cc3434b4428a884f1217791f9a9db67839e73fb499f1ccd0f686f08eccc",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped parameter value",
+      "file": "app/views/faq/show.html.haml",
+      "line": 12,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Redcarpet::Markdown.new(Redcarpet::TrustedRenderer.new(view_context), :autolink => true).render(loader_service.find(\"#{params[:category]}/#{params[:slug]}\").content)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "FAQController",
+          "method": "show",
+          "line": 14,
+          "file": "app/controllers/faq_controller.rb",
+          "rendered": {
+            "name": "faq/show",
+            "file": "app/views/faq/show.html.haml"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "faq/show"
+      },
+      "user_input": "params[:category]",
+      "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
+      "note": "Theses params are not rendered"
     },
     {
       "warning_type": "SQL Injection",
@@ -187,7 +221,7 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/notification_mailer/send_notification_for_tiers.html.haml",
-      "line": 29,
+      "line": 31,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Current.application_name.gsub(\".\", \"&#8288;.\")",
       "render_path": null,
@@ -203,6 +237,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-03-27 17:15:54 +0100",
+  "updated": "2024-04-23 18:27:12 +0200",
   "brakeman_version": "6.1.2"
 }

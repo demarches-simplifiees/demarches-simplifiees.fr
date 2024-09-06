@@ -15,4 +15,5 @@ fr:
       draft: "En test"
       more_info_on_test: "Pour plus d’information sur la phase de test"
       go_to_FAQ: "consulter la FAQ"
-      url_FAQ: "https://faq.demarches-simplifiees.fr/category/49-comment-tester-ma-demarche"
+      url_FAQ: "/faq#accordion-administrateur-2"
+      faq: Foire aux Questions

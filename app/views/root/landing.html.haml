@@ -23,7 +23,7 @@
           %h2= t(".have_a_procedure")
           %p.fr-h5= t(".fill_procedure")
 
-          = link_to t(".how_to_find_procedure"), t("links.common.faq.comment_trouver_ma_demarche_url"), class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure")), **external_link_attributes
+          = link_to t(".how_to_find_procedure"), t("links.common.faq.comment_trouver_ma_demarche_url"), class: "fr-btn fr-btn--lg fr-mr-1w fr-mb-2w", title: new_tab_suffix(t(".how_to_find_procedure"))
           = link_to t("views.users.sessions.new.connection"), new_user_session_path, class: "fr-btn fr-btn--secondary fr-btn--lg"
 
   .fr-py-6w
@@ -51,7 +51,7 @@
           %h2= t(".question")
           %p.fr-h5= t(".answer_in_faq")
         %div
-          = link_to t(".online_help"), t("links.common.faq.url"), class: "fr-btn fr-btn--lg", title: new_tab_suffix(t(".online_help")), **external_link_attributes
+          = link_to t(".online_help"), t("links.common.faq.url"), class: "fr-btn fr-btn--lg", title: t(".online_help")
 
   .fr-py-6w
     .container

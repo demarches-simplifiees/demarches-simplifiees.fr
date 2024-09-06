@@ -39,6 +39,7 @@ gem 'flipper'
 gem 'flipper-active_record'
 gem 'flipper-active_support_cache_store'
 gem 'flipper-ui'
+gem 'front_matter_parser'
 gem 'fugit'
 gem 'geocoder'
 gem 'geo_coord', require: "geo/coord"
