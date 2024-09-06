@@ -1995,6 +1995,21 @@ describe Dossier, type: :model do
   end
 
   describe "champs_for_export" do
+    context 'with integer_number' do
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :integer_number, libelle: 'c1' }]) }
+      let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+      let(:integer_number_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:integer_number) } }
+
+      it 'give me back my decimal number' do
+        procedure.publish!
+        dossier
+        # integer_number_type_de_champ.update(type_champ: :decimal_number)
+        # procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
+        dossier.reload
+
+        expect(dossier.champs_for_export(procedure.types_de_champ_for_procedure_presentation.not_repetition.to_a)).to eq([['c1', 42]])
+      end
+    end
     context 'with a unconditionnal procedure' do
       let(:procedure) { create(:procedure, types_de_champ_public:, zones: [create(:zone)]) }
       let(:types_de_champ_public) do
