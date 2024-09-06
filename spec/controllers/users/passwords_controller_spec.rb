@@ -38,6 +38,19 @@ describe Users::PasswordsController, type: :controller do
         expect(subject.current_user).to eq(user)
         expect(subject.current_administrateur).to eq(administrateur)
       end
+
+      it "marks user's email as verified" do
+        expect do
+          put :update, params: {
+            user: {
+              reset_password_token: @token,
+              password: "mot de passe super secret",
+              password_confirmation: "mot de passe super secret"
+            }
+          }
+        end.to change { user.reload.email_verified_at }
+          .from(nil).to(anything)
+      end
     end
   end
 
