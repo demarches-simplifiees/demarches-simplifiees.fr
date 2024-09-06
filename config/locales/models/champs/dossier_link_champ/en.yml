@@ -4,3 +4,10 @@ en:
       champs/dossier_link_champ:
         hints:
           value: "File number"
+
+    errors:
+      models:
+        champs/dossier_link_champ:
+          attributes:
+            value:
+              not_found: "File not found"
