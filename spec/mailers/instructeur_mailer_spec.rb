@@ -24,6 +24,8 @@ RSpec.describe InstructeurMailer, type: :mailer do
     let(:token) { SecureRandom.hex }
     subject { described_class.send_login_token(user, token) }
 
+    it { expect(subject[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION]).to be_present }
+
     context 'without SafeMailer configured' do
       it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
     end

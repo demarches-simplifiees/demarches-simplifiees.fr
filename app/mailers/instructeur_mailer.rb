@@ -36,6 +36,8 @@ class InstructeurMailer < ApplicationMailer
     @login_token = login_token
     subject = "Connexion sécurisée à #{Current.application_name}"
 
+    bypass_unverified_mail_protection!
+
     mail(to: instructeur.email, subject: subject)
   end
 
