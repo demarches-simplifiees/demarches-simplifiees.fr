@@ -1,0 +1,41 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://geo.api.gouv.fr/communes?boost=population&limit=100&nom=Coye-la-For%C3%AAt&type=commune-actuelle,arrondissement-municipal
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.10.3 (Ubuntu)
+      Date:
+      - Fri, 06 Sep 2024 07:25:28 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '197'
+      Vary:
+      - Accept-Encoding
+      - Origin
+      X-Powered-By:
+      - Express
+      Etag:
+      - W/"c5-7Mng3tlbwfBH/m/FGIzzGMvfw/8"
+      Strict-Transport-Security:
+      - max-age=15552000
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        W3sibm9tIjoiQ295ZS1sYS1Gb3LDqnQiLCJjb2RlIjoiNjAxNzIiLCJjb2RlRGVwYXJ0ZW1lbnQiOiI2MCIsInNpcmVuIjoiMjE2MDAxNzE5IiwiY29kZUVwY2kiOiIyNDYwMDA3NjQiLCJjb2RlUmVnaW9uIjoiMzIiLCJjb2Rlc1Bvc3RhdXgiOlsiNjA1ODAiXSwicG9wdWxhdGlvbiI6Mzk1MCwiX3Njb3JlIjowLjA3MTQ1MzgwNDc4MTQ5OTQ2fV0=
+  recorded_at: Fri, 06 Sep 2024 07:25:28 GMT
+recorded_with: VCR 6.2.0
