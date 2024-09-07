@@ -7,7 +7,7 @@
 
 - when :not_found
   %p.fr-error-text
-    Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI
+    = t('errors.messages.siret_unknown')
     = link_to('Plus d’informations', t("links.common.faq.erreur_siret_url"))
 
 - when :network_error

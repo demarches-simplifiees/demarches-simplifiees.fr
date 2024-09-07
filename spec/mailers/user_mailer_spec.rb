@@ -156,7 +156,7 @@ RSpec.describe UserMailer, type: :mailer do
 
     it 'notifies user about procedure closing with detailed message' do
       expect(subject.to).to eq([user.email])
-      expect(subject.body).to include("Clôture d&#39;une démarche sur Démarches simplifiées")
+      expect(subject.body).to include("Clôture d&#39;une démarche sur #{APPLICATION_NAME}")
       expect(subject.body).to include("Bonjour,\r\n<br />saut de ligne")
     end
 

@@ -749,7 +749,7 @@ en:
       invalid_siret_length: "The TAHITI number must contain exactly 6 characters."
       invalid_siret_checksum: "The TAHITI number is invalid."
       procedure_not_found: "The procedure does not exist"
-      siret_unknown: 'Sorry, we did not find any establishment registered under this TAHITI number.'
+      siret_unknown: 'We did not find any establishment registered under this TAHITI number.'
       siret_network_error: 'Sorry, TAHITI number retrieval is temporarily unavailable. Please try again shortly.'
       siret_not_found: "We haven't found an establishment corresponding to this TAHITI number."
       # # etablissement_fail: 'Désolé, nous n’avons pas réussi à enregistrer l’établissement correspondant à ce numéro SIRET'

@@ -130,7 +130,7 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'displays a “SIRET not found” error message' do
-          expect(response.body).to include('Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.')
+          expect(response.body).to include('Nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro TAHITI.')
         end
       end
 
@@ -145,7 +145,7 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'displays a “SIRET not found” error message' do
-          expect(response.body).to include('Nous n’avons pas trouvé d’établissement correspondant à ce numéro TAHITI.')
+          expect(response.body).to include('Nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro TAHITI.')
         end
       end
 
