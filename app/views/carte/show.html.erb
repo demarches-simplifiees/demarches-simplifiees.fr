@@ -249,7 +249,7 @@
           <% end %>
           <div class="fr-select-group">
             <%= map_form.label :year, class: 'fr-label' %>
-            <%= map_form.select(:year, (2018..Date.current.year).to_a.reverse, { include_blank: t(:from_beginning, scope: 'activemodel.attributes.map_filter') }, { class: "fr-select" }) %>
+            <%= map_form.select(:year, MapFilter::YEARS_INTERVAL.to_a.reverse, { include_blank: t(:from_beginning, scope: 'activemodel.attributes.map_filter') }, { class: "fr-select" }) %>
           </div>
           <%= map_form.submit(name: nil, class: 'hidden', data: { autosubmit_target: 'submitter' } ) %>
         <% end %>

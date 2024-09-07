@@ -281,6 +281,7 @@ module Instructeurs
       end
 
       dossier.save(context: :champs_private_value)
+      dossier.index_search_terms_later
 
       ChampRevision.create_or_update_revision_if_needed(dossier, champs_private_attributes_params, current_instructeur.id)
 

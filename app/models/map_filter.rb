@@ -1,34 +1,21 @@
 class MapFilter
-  # https://api.rubyonrails.org/v7.1.1/classes/ActiveModel/Errors.html
-
-  include ActiveModel::Conversion
-  extend ActiveModel::Translation
-  extend ActiveModel::Naming
+  include ActiveModel::Model
+  include ActiveModel::Attributes
 
   LEGEND = {
-    nb_demarches: { 'nothing': -1, 'small': 20, 'medium': 50, 'large': 100, 'xlarge': 500 },
-    nb_dossiers: { 'nothing': -1, 'small': 500, 'medium': 2000, 'large': 10000, 'xlarge': 50000 }
-  }
+    "nb_demarches" => { 'nothing': -1, 'small': 20, 'medium': 50, 'large': 100, 'xlarge': 500 },
+    "nb_dossiers" => { 'nothing': -1, 'small': 500, 'medium': 2000, 'large': 10000, 'xlarge': 50000 }
+  }.freeze
+
+  YEARS_INTERVAL = 2018..Date.current.year
 
   attr_accessor :stats
-  attr_reader :errors
 
-  def initialize(params)
-    @params = params[:map_filter]&.permit(:kind, :year) || {}
-    @errors = ActiveModel::Errors.new(self)
-  end
+  attribute :year, :integer
+  validates :year, numericality: { only_integer: true, greater_than_or_equal_to: YEARS_INTERVAL.begin, less_than_or_equal_to: YEARS_INTERVAL.end }
 
-  def persisted?
-    false
-  end
-
-  def kind
-    @params[:kind]&.to_sym || :nb_demarches
-  end
-
-  def year
-    @params[:year].presence
-  end
+  attribute :kind, default: "nb_demarches"
+  validates :kind, inclusion: { in: LEGEND.keys }
 
   def kind_buttons
     LEGEND.keys.map do
@@ -41,7 +28,7 @@ class MapFilter
   end
 
   def css_class_for_departement(departement)
-    if kind == :nb_demarches
+    if kind == "nb_demarches"
       kind_legend_keys.reverse.find do
         nb_demarches_for_departement(departement) > LEGEND[kind][_1]
       end

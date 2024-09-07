@@ -834,6 +834,16 @@ describe Users::DossiersController, type: :controller do
         end
       end
     end
+
+    it "debounce search terms indexation" do
+      # dossier creation trigger a first indexation and flag,
+      # so we we have to remove this flag
+      dossier.debounce_index_search_terms_flag.remove
+
+      assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob) do
+        3.times { patch :update, params: payload, format: :turbo_stream }
+      end
+    end
   end
 
   describe '#update en_construction' do

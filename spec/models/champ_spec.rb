@@ -650,4 +650,44 @@ describe Champ do
     it { expect(ActionView::RecordIdentifier.dom_id(champ.type_de_champ)).to eq("type_de_champ_#{champ.type_de_champ.id}") }
     it { expect(ActionView::RecordIdentifier.dom_class(champ)).to eq("champ") }
   end
+
+  describe 'clone' do
+    subject { champ.clone(fork) }
+
+    context 'when champ public' do
+      let(:champ) { create(:champ_piece_justificative, private: false) }
+
+      context 'when fork' do
+        let(:fork) { true }
+        it do
+          expect(subject.piece_justificative_file).to be_attached
+        end
+      end
+
+      context 'when not fork' do
+        let(:fork) { false }
+        it do
+          expect(subject.piece_justificative_file).to be_attached
+        end
+      end
+    end
+
+    context 'champ private' do
+      let(:champ) { create(:champ_piece_justificative, private: true) }
+
+      context 'when fork' do
+        let(:fork) { true }
+        it do
+          expect(subject.piece_justificative_file).to be_attached
+        end
+      end
+
+      context 'when not fork' do
+        let(:fork) { false }
+        it do
+          expect(subject.piece_justificative_file).not_to be_attached
+        end
+      end
+    end
+  end
 end

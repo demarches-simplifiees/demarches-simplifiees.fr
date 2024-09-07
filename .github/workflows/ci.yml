@@ -59,6 +59,7 @@ jobs:
   unit_tests:
     name: Unit tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
     services:
@@ -120,6 +121,7 @@ jobs:
   system_tests:
     name: System tests
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
     services:

@@ -366,6 +366,8 @@ module Users
       @dossier = dossier_with_champs(pj_template: false)
       @errors = update_dossier_and_compute_errors
 
+      @dossier.index_search_terms_later if @errors.empty?
+
       respond_to do |format|
         format.turbo_stream do
           @to_show, @to_hide, @to_update = champs_to_turbo_update(champs_public_attributes_params, dossier.champs.filter(&:public?))

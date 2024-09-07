@@ -18,5 +18,13 @@ describe CarteController do
       get :show, params: { map_filter: { year: 2020 } }
       expect(subject.stats['75']).to eq({ nb_demarches: 1, nb_dossiers: 20 })
     end
+
+    it 'gracefully ignore invalid params' do
+      get :show, params: { map_filter: { year: "not!" } }
+      expect(subject.stats['75']).to eq({ nb_demarches: 2, nb_dossiers: 50 })
+
+      get :show, params: { map_filter: { kind: "nimp" } }
+      expect(subject.stats['75']).to eq({ nb_demarches: 2, nb_dossiers: 50 })
+    end
   end
 end

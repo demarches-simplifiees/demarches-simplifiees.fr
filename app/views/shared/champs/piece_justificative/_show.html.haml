@@ -5,7 +5,7 @@
         %li= render Attachment::ShowComponent.new(attachment:, new_tab: true)
   - else
     .gallery-items-list
-      - champ.piece_justificative_file.attachments.each do |attachment|
+      - champ.piece_justificative_file.attachments.with_all_variant_records.each do |attachment|
         .gallery-item
           - blob = attachment.blob
           - if blob.content_type.in?(AUTHORIZED_PDF_TYPES)
@@ -18,7 +18,7 @@
           - elsif blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
             = link_to image_url(blob.url), title: "#{champ.libelle} -- #{blob.filename}", data: { src: blob.url }, class: 'gallery-link' do
               .thumbnail
-                = image_tag(attachment.variant(:medium), loading: :lazy)
+                = image_tag(attachment.variant(resize_to_limit: [400, 400]).processed.url, loading: :lazy)
                 .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
                   = 'Visualiser'
           - else

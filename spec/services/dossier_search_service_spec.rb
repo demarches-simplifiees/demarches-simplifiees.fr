@@ -15,23 +15,33 @@ describe DossierSearchService do
     before do
       instructeur_1.assign_to_procedure(procedure_1)
       instructeur_2.assign_to_procedure(procedure_2)
+
+      # create dossier before performing jobs
+      # because let!() syntax is executed after "before" callback
+      dossier_0
+      dossier_1
+      dossier_2
+      dossier_3
+      dossier_archived
+
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
     end
 
     let(:procedure_1) { create(:procedure, :published, administrateur: administrateur_1) }
     let(:procedure_2) { create(:procedure, :published, administrateur: administrateur_2) }
 
-    let!(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
+    let(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: create(:user, email: 'brouillon@clap.fr')) }
 
-    let!(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
-    let!(:dossier_1) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'contact@test.com'), etablissement: etablissement_1) }
+    let(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
+    let(:dossier_1) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'contact@test.com'), etablissement: etablissement_1) }
 
-    let!(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
-    let!(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'plop@gmail.com'), etablissement: etablissement_2) }
+    let(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
+    let(:dossier_2) { create(:dossier, :en_construction, procedure: procedure_1, user: create(:user, email: 'plop@gmail.com'), etablissement: etablissement_2) }
 
-    let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
-    let!(:dossier_3) { create(:dossier, :en_construction, procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
+    let(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
+    let(:dossier_3) { create(:dossier, :en_construction, procedure: procedure_2, user: create(:user, email: 'peace@clap.fr'), etablissement: etablissement_3) }
 
-    let!(:dossier_archived) { create(:dossier, :en_construction, procedure: procedure_1, archived: true, user: create(:user, email: 'archived@clap.fr')) }
+    let(:dossier_archived) { create(:dossier, :en_construction, procedure: procedure_1, archived: true, user: create(:user, email: 'archived@clap.fr')) }
 
     describe 'search is empty' do
       let(:terms) { '' }
@@ -99,6 +109,16 @@ describe DossierSearchService do
   describe '#matching_dossiers_for_user' do
     subject { liste_dossiers }
 
+    before do
+      dossier_0
+      dossier_0b
+      dossier_1
+      dossier_2
+      dossier_3
+      dossier_archived
+      perform_enqueued_jobs(only: DossierIndexSearchTermsJob)
+    end
+
     let(:liste_dossiers) do
       described_class.matching_dossiers_for_user(terms, user_1)
     end
@@ -109,19 +129,19 @@ describe DossierSearchService do
     let(:procedure_1) { create(:procedure, :published) }
     let(:procedure_2) { create(:procedure, :published) }
 
-    let!(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: user_1) }
-    let!(:dossier_0b) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: user_2) }
+    let(:dossier_0) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: user_1) }
+    let(:dossier_0b) { create(:dossier, state: Dossier.states.fetch(:brouillon), procedure: procedure_1, user: user_2) }
 
-    let!(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
-    let!(:dossier_1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: user_1, etablissement: etablissement_1) }
+    let(:etablissement_1) { create(:etablissement, entreprise_raison_sociale: 'OCTO Academy', siret: '41636169600051') }
+    let(:dossier_1) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: user_1, etablissement: etablissement_1) }
 
-    let!(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
-    let!(:dossier_2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: user_1, etablissement: etablissement_2) }
+    let(:etablissement_2) { create(:etablissement, entreprise_raison_sociale: 'Plop octo', siret: '41816602300012') }
+    let(:dossier_2) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, user: user_1, etablissement: etablissement_2) }
 
-    let!(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
-    let!(:dossier_3) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_2, user: user_1, etablissement: etablissement_3) }
+    let(:etablissement_3) { create(:etablissement, entreprise_raison_sociale: 'OCTO Technology', siret: '41816609600051') }
+    let(:dossier_3) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_2, user: user_1, etablissement: etablissement_3) }
 
-    let!(:dossier_archived) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, archived: true, user: user_1) }
+    let(:dossier_archived) { create(:dossier, state: Dossier.states.fetch(:en_construction), procedure: procedure_1, archived: true, user: user_1) }
 
     describe 'search is empty' do
       let(:terms) { '' }
