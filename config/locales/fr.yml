@@ -115,14 +115,14 @@ fr:
       line_two: "Cette déclaration d’accessibilité s’applique à %{app_name} (%{host})."
       compliance:
         title: "État de conformité"
-        line_one_html: "Le site Démarches simplifiées est <strong>partiellement conforme</strong> avec le référentiel général d’amélioration de l’accessibilité (RGAA) version 4."
+        line_one_html: "Le site Mes-Démarches est <strong>partiellement conforme</strong> avec le référentiel général d’amélioration de l’accessibilité (RGAA) version 4."
       results:
         title: "Résultats des tests"
         line_one: "En date du 13 juin 2023, le taux moyen de conformité du site est de 80%."
         line_three: "Les usagers peuvent suivre les mesures engagées par le service pour améliorer l’accessibilité du site à l’adresse suivante :"
         programme:
           label: "Suivez le programme d'amélioration continue de DS en matière d'accessibilité"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
+          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+" #DS
           title: "Suivez le programme d'amélioration continue de DS en matière d'accessibilité - nouvel onglet"
       no_accessible:
         title: "Contenus non accessibles"

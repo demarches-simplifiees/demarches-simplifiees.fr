@@ -126,7 +126,7 @@ en:
         line_three: "Users can follow the measures taken by the service to improve the accessibility of the site at the following address:"
         programme:
           label: "Follow the DS accessibility continuous improvement programme"
-          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+"
+          url: "https://github.com/demarches-simplifiees/demarches-simplifiees.fr/issues?q=accessibilit%C3%A9+" #DS
           title: "Follow the DS accessibility continuous improvement programme - new tab"
       no_accessible:
         title: "Non-accessible content"
