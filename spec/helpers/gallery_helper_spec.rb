@@ -74,4 +74,20 @@ RSpec.describe GalleryHelper, type: :helper do
       it { is_expected.to eq("pdf-placeholder.png") }
     end
   end
+
+  describe ".representation_url_for" do
+    subject { representation_url_for(attachment) }
+
+    context "when attachment is an image with no variant" do
+      let(:file) { fixture_file_upload('spec/fixtures/files/logo_test_procedure.png', 'image/png') }
+
+      it { is_expected.to eq("apercu-indisponible.png") }
+    end
+
+    context "when attachment is a pdf with no preview" do
+      let(:file) { fixture_file_upload('spec/fixtures/files/RIB.pdf', 'application/pdf') }
+
+      it { is_expected.to eq("pdf-placeholder.png") }
+    end
+  end
 end
