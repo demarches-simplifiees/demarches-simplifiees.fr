@@ -14,7 +14,7 @@ describe ProcedurePresentation do
       assign_to: assign_to,
       displayed_fields: [
         { label: "test1", table: "user", column: "email" },
-        { label: "test2", table: "type_de_champ", column: first_type_de_champ_id }
+        { label: "test2", table: "type_de_champ", column: first_type_de_champ_id, virtual: false }
       ],
       sort: { table: "user", column: "email", "order" => "asc" },
       filters: filters)
@@ -23,7 +23,11 @@ describe ProcedurePresentation do
   let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
 
   describe "#displayed_fields" do
-    it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user", "column" => "email" }, { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }]) }
+    it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user", "column" => "email" }, { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id, "virtual" => false }]) }
+  end
+
+  describe "#displayed_fields_for_headers" do
+    it { expect(procedure_presentation.displayed_fields_for_headers.map(&:label)).to eq(["Nº dossier", "test1", "test2", "Statut"]) }
   end
 
   describe "#sort" do

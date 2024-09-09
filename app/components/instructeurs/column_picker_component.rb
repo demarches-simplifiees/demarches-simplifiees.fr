@@ -12,7 +12,7 @@ class Instructeurs::ColumnPickerComponent < ApplicationComponent
   def displayable_columns_for_select
     [
       procedure.columns.filter(&:displayable).map { |column| [column.label, column.id] },
-      procedure_presentation.displayed_fields.map { Column.new(**_1.deep_symbolize_keys).id }
+      procedure_presentation.displayed_fields.map { Column.new(**_1.deep_symbolize_keys.except(:virtual)).id } # TODO: remove virtual after migration
     ]
   end
 end
