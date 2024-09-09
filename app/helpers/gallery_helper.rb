@@ -9,6 +9,12 @@ module GalleryHelper
     blob.variable? && blob.content_type.in?(AUTHORIZED_IMAGE_TYPES)
   end
 
+  def representation_url_for(attachment)
+    return variant_url_for(attachment) if displayable_image?(attachment.blob)
+
+    preview_url_for(attachment) if displayable_pdf?(attachment.blob)
+  end
+
   def preview_url_for(attachment)
     preview = attachment.preview(resize_to_limit: [400, 400])
     preview.image.attached? ? preview.processed.url : 'pdf-placeholder.png'
