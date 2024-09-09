@@ -19,6 +19,8 @@ title: "Comment trouver ma démarche ?"
 
 > Pour effectuer un dépôt sur %{application_name} vous devez notamment disposer d’un lien qui vous a été communiqué par l’administration.
 
+> Par exemple s‘il s‘agit d'une démarche relative à un titre de séjour, vous trouverez l‘information sur le site de la préfécture dont vous dépendez. S‘il s'agit d‘une demande de Pass Culture, vous trouverez les liens utiles sur le site du Pass Culture, etc…
+
 ## 1. Trouver le lien de votre démarche
 
 Pour déposer un dossier sur %{application_name}, il est nécessaire de disposer du lien de la démarche qui vous intéresse. Il ressemble à un lien de cette forme :
@@ -39,6 +41,21 @@ Vous trouverez ci-dessous la liste des démarches les plus courantes dématéria
 - [Démarches relatives aux étrangers résidant en France](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-aux-titres-de-sejour-pour-les-etrangers)
 - [Démarches relatives aux médailles d’honneur](https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-aux-medailles-dhonneur)
 - [Démarche relative à la consultation du domaine](%{application_base_url}/commencer/consultation-du-domaine)
+
+**Pour être guidé dans vos démarches essentielles les plus courantes**, vous pouvez également consulter 11 tutoriels vidéo :
+
+*   [Saisir le Défenseur des droits](https://dai.ly/x902hs6)
+*   [Signaler une utilisation frauduleuse de carte bancaire en ligne](https://dai.ly/x902ha4)
+*   [Consulter ses points permis de conduire](https://dai.ly/x902ie0)
+*   [Demander l’aide au logement (APL)](https://dai.ly/x902i16)
+*   [Formuler ses choix d'orientation en fin de collège (post 3e)](https://dai.ly/x902jm8)
+*   [Formuler ses choix d'orientation au lycée (post 2de GT)](https://dai.ly/x902jfg)
+*   [Faire son recensement citoyen obligatoire](https://dai.ly/x902jsa)
+*   [Participer à la journée défense et citoyenneté](https://dai.ly/x902k20)
+*   [Demander un extrait de casier judiciaire (bulletin n°3)](https://dai.ly/x902hh0)
+*   [Demander l'aide juridictionnelle](https://dai.ly/x902j5m)
+*   [Demander un logement en cité universitaire](https://dai.ly/x902iva)
+
 
 ## 3. Je ne trouve pas le lien pour ma démarche
 
