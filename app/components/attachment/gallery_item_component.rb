@@ -4,13 +4,16 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   include GalleryHelper
   attr_reader :attachment
 
-  def initialize(attachment:)
+  def initialize(attachment:, gallery_demande: false)
     @attachment = attachment
+    @gallery_demande = gallery_demande
   end
 
   def blob
     attachment.blob
   end
+
+  def gallery_demande? = @gallery_demande
 
   def libelle
     attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) ? attachment.record.libelle : 'Pièce jointe au message'
