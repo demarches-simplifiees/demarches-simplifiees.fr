@@ -36,4 +36,34 @@ describe Champs::DossierLinkChamp, type: :model do
       end
     end
   end
+
+  describe 'validation' do
+    let(:champ) { Champs::DossierLinkChamp.new(value:, dossier: build(:dossier)) }
+
+    before do
+      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_dossier_link, mandatory:))
+      champ.run_callbacks(:validation)
+    end
+
+    subject { champ.validate(:champs_public_value) }
+
+    context 'when not mandatory' do
+      let(:mandatory) { false }
+      let(:value) { nil }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when mandatory' do
+      let(:mandatory) { true }
+      context 'when valid id' do
+        let(:value) { create(:dossier).id }
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when invalid id' do
+        let(:value) { 'kthxbye' }
+        it { is_expected.to be_falsey }
+      end
+    end
+  end
 end
