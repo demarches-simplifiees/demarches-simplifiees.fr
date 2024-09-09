@@ -38,7 +38,7 @@ describe 'layouts/_header', type: :view do
       end
 
       it 'displays the Help dropdown menu' do
-        expect(subject).to have_css(".help-dropdown")
+        expect(subject).to have_selector("#help-menu")
       end
     end
   end
@@ -67,7 +67,7 @@ describe 'layouts/_header', type: :view do
     it { is_expected.to have_selector(:button, user.email, class: "account-btn") }
 
     it 'displays the Help dropdown menu' do
-      expect(subject).to have_css(".help-dropdown")
+      expect(subject).to have_selector("#help-menu")
     end
   end
 end

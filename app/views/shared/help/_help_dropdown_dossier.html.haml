@@ -1,17 +1,20 @@
-= render Dropdown::MenuComponent.new(wrapper: :span, wrapper_options: { class: ['help-dropdown']}, menu_options: { id: "help-menu" }) do |menu|
-  - menu.with_button_inner_html do
-    = t('help')
+.fr-translate.fr-nav
+  .fr-nav__item
+    %button.help-btn.fr-translate__btn.fr-btn{ "aria-controls" => "help-menu", "aria-expanded" => "false" }
+      = t('help')
 
-  - title = dossier.brouillon? ? t("help_dropdown.help_brouillon_title") : t("help_dropdown.help_filled_dossier")
+    #help-menu.help-content.fr-collapse.fr-menu
+      - title = dossier.brouillon? ? t("help_dropdown.help_brouillon_title") : t("help_dropdown.help_filled_dossier")
+      %ul.fr-menu__list
 
-  - if dossier.messagerie_available?
-    - menu.with_item do
-      = render partial: 'shared/help/dropdown_items/messagerie_item', locals: { dossier: dossier, title: title }
+        - if dossier.messagerie_available?
+          %li.flex
+            = render partial: 'shared/help/dropdown_items/messagerie_item', locals: { dossier: dossier, title: title }
 
-  - elsif dossier.procedure.service.present?
-    - menu.with_item do
-      = render partial: 'shared/help/dropdown_items/service_item',
-        locals: { service: dossier.procedure.service, title: title }
+        - elsif dossier.procedure.service.present?
+          %li.flex
+            = render partial: 'shared/help/dropdown_items/service_item',
+              locals: { service: dossier.procedure.service, title: title }
 
-  - menu.with_item do
-    = render partial: 'shared/help/dropdown_items/faq_item'
+        %li.flex
+          = render partial: 'shared/help/dropdown_items/faq_item'

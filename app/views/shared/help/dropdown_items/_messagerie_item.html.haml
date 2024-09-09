@@ -1,5 +1,4 @@
-= link_to messagerie_dossier_path(dossier), role: 'menuitem' do
-  %span.fr-icon-mail-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
-  .dropdown-description.fr-text--sm
-    %span.help-dropdown-title= title
-    %p.fr-text--sm= t('help_dropdown.contact_instructeur')
+%span.fr-icon-mail-fill.fr-text-action-high--blue-france{ "aria-hidden": "true" }
+.fr-pl-1w
+  %h1= title
+  = link_to t('help_dropdown.contact_instructeur'), messagerie_dossier_path(dossier)

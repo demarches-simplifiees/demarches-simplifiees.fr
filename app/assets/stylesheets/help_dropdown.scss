@@ -7,10 +7,6 @@
   }
 }
 
-.help-dropdown-title {
-  font-weight: bold;
-}
-
 .dropdown-items li.help-dropdown-service {
   cursor: default;
 
@@ -23,14 +19,3 @@
     color: $blue-france-500;
   }
 }
-
-.help-dropdown-service-action {
-  margin-top: $default-padding;
-  margin-bottom: $default-spacer;
-}
-
-.help-dropdown-service-item {
-  margin-top: $default-spacer;
-  line-height: 18px;
-}
-
