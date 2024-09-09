@@ -15,17 +15,6 @@
           hint: "L’autogestion des instructeurs permet aux instructeurs de gérer eux-mêmes la liste des instructeurs de la démarche.#{ 'Nous recommandons de laisser l’autogestion des instructeurs activée.' if @procedure.routing_enabled? }",
           disabled: false)
 
-    %li
-      = form_for @procedure,
-        method: :patch,
-        url: update_hide_instructeurs_email_admin_procedure_groupe_instructeurs_path(@procedure),
-        data: { controller: 'autosubmit', turbo: 'true' } do |f|
-
-        = render Dsfr::ToggleComponent.new(form: f,
-          target: :hide_instructeurs_email,
-          title: "Anonymat des instructeurs",
-          hint: "Permet de cacher l'adresse mail des instructeurs aux usagers lors de leurs interactions par le biais de la messagerie. Cette option est à activer pour les démarches sensibles.",
-          disabled: false)
   %hr
   %p.fr-mt-2w Routage
   %p.fr-mt-2w= t('.routing_configuration_notice_1')
