@@ -11,21 +11,8 @@ class ZxcvbnService
     # to cache it between threads.
     def tester
       @tester_mutex.synchronize do
-        @tester ||= build_tester
+        @tester ||= Zxcvbn::Tester.new
       end
-    end
-
-    private
-
-    # Returns a fully initializer tester from the on-disk dictionary.
-    #
-    # This is slow: loading and parsing the dictionary may take around 1s.
-    def build_tester
-      dictionaries = YAML.safe_load(Rails.root.join("config", "initializers", "zxcvbn_dictionnaries.yaml").read)
-
-      tester = Zxcvbn::Tester.new
-      tester.add_word_lists(dictionaries)
-      tester
     end
   end
 
@@ -37,8 +24,7 @@ class ZxcvbnService
     wxcvbn = compute_zxcvbn
     score = wxcvbn.score
     length = @password.blank? ? 0 : @password.length
-    vulnerabilities = wxcvbn.match_sequence.map { |m| m.matched_word.nil? ? m.token : m.matched_word }.filter { |s| s.length > 2 }.join(', ')
-    [score, vulnerabilities, length]
+    [score, length]
   end
 
   def score

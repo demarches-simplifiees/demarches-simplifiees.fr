@@ -6,13 +6,13 @@ describe ZxcvbnService do
 
   describe '#score' do
     it 'returns the password complexity score' do
-      expect(service.score).to eq 3
+      expect(service.score).to eq 4
     end
   end
 
   describe '#complexity' do
     it 'returns the password score, vulnerability and length' do
-      expect(service.complexity).to eq [3, 'medium, strength, password', 24]
+      expect(service.complexity).to eq [4, 24]
     end
   end
 
@@ -42,7 +42,7 @@ describe ZxcvbnService do
       end.map(&:join)
 
       scores = threads.map(&:value)
-      expect(scores).to eq([3, 3, 3, 3])
+      expect(scores).to eq([4, 4, 4, 4])
       expect(Zxcvbn::Tester).to have_received(:new).at_most(:once)
     end
   end

@@ -880,7 +880,7 @@ GEM
       actionpack (>= 6.0, < 8.0)
       content_disposition (~> 1.0)
       zip_tricks (>= 4.2.1, < 6.0)
-    zxcvbn-ruby (1.2.0)
+    zxcvbn (0.1.11)
 
 PLATFORMS
   ruby
@@ -1034,7 +1034,7 @@ DEPENDENCIES
   yabeda-prometheus
   yabeda-sidekiq
   zipline
-  zxcvbn-ruby
+  zxcvbn
 
 BUNDLED WITH
    2.5.9
