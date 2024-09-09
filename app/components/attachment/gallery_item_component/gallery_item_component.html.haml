@@ -5,12 +5,14 @@
         = image_tag(representation_url_for(attachment), loading: :lazy)
         .fr-btn.fr-btn--tertiary.fr-btn--icon-left.fr-icon-eye{ role: :button }
           Visualiser
-    .champ-libelle
-      = libelle.truncate(25)
-    = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)
+    - if !gallery_demande?
+      .champ-libelle
+        = libelle.truncate(25)
+    = render Attachment::ShowComponent.new(attachment:, truncate: true, new_tab: gallery_demande?)
   - else
     .thumbnail
       = image_tag('apercu-indisponible.png')
-    .champ-libelle
-      = libelle.truncate(25)
-    = render Attachment::ShowComponent.new(attachment: attachment, truncate: true)
+    - if !gallery_demande?
+      .champ-libelle
+        = libelle.truncate(25)
+    = render Attachment::ShowComponent.new(attachment:, truncate: true, new_tab: gallery_demande?)
