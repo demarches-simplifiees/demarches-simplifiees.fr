@@ -34,4 +34,23 @@ class Attachment::GalleryItemComponent < ApplicationComponent
       end
     end
   end
+
+  def created_at
+    attachment.record.created_at
+  end
+
+  def updated?
+    attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) && updated_at > attachment.record.dossier.depose_at
+  end
+
+  def updated_at
+    blob.created_at
+  end
+
+  def badge_updated_class
+    class_names(
+      "fr-badge fr-badge--sm" => true,
+      "fr-badge--new" => updated?
+    )
+  end
 end

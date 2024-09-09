@@ -25,6 +25,10 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       expect(component.title).to eq("#{libelle} -- #{filename}")
     end
 
+    it "displays when gallery item has been added" do
+      expect(subject).to have_text(component.helpers.try_format_datetime(attachment.record.created_at, format: :veryshort))
+    end
+
     context "when gallery item is in page Demande" do
       let(:gallery_demande) { true }
 
