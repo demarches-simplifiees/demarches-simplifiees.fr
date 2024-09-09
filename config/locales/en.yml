@@ -659,7 +659,7 @@ en:
               invalid: 'is invalid. Fill in a valid email address, example: address@mail.com'
               taken: 'already in use. Fill in another email'
             password:
-              too_short: "is too short. Fill in a password with at least 8 characters"
+              too_short: "is too short. Fill in a password with at least 12 characters"
               not_strong: "not strong enough. Fill in a stronger password"
             password_confirmation:
               confirmation: ": The two passwords do not match"

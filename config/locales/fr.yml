@@ -660,7 +660,7 @@ fr:
               invalid: 'est invalide. Saisir une adresse électronique valide, exemple : adresse@mail.com'
               taken: 'déjà utilisé. Saisir une autre adresse électronique.'
             password:
-              too_short: "est trop court. Saisir un mot de passe avec au moins 8 caractères"
+              too_short: "est trop court. Saisir un mot de passe avec au moins 12 caractères"
               not_strong: "n’est pas assez complexe. Saisir un mot de passe plus complexe"
             password_confirmation:
               confirmation: ': Les deux mots de passe ne correspondent pas'

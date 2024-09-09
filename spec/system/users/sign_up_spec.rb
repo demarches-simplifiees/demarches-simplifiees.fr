@@ -56,7 +56,7 @@ describe 'Signing up:' do
     expect(page).to have_current_path new_user_registration_path
     sign_up_with user_email, '1234567'
     expect(page).to have_current_path user_registration_path
-    expect(page).to have_content "Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 8 caractères"
+    expect(page).to have_content "Le champ « Mot de passe » est trop court. Saisir un mot de passe avec au moins 12 caractères"
 
     # Then with a good password
     sign_up_with user_email, user_password
