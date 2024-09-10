@@ -179,3 +179,10 @@ button.fr-tag-bug {
   border: initial;
   display: block; // Pour cette valeur spécifique, on récupère celle de .fr-label
 }
+
+// Fix toggles having labels on 2 lines
+// From upstream https://github.com/GouvernementFR/dsfr/pull/928
+// Remove it when PR is merged (v1.12 ?)
+.fr-toggle label[data-fr-unchecked-label][data-fr-checked-label]::before {
+  word-wrap: normal;
+}

@@ -1,4 +1,6 @@
 class DossierIndexSearchTermsJob < ApplicationJob
+  queue_as :low_priority
+
   discard_on ActiveRecord::RecordNotFound
 
   def perform(dossier)
