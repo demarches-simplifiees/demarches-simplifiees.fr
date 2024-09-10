@@ -342,6 +342,9 @@ module Users
 
       if @commentaire.errors.empty?
         @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        if @commentaire.piece_jointe.attached?
+          @commentaire.dossier.update!(last_commentaire_piece_jointe_updated_at: Time.zone.now)
+        end
 
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)
