@@ -174,6 +174,10 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
+    capybara-playwright-driver (0.5.2)
+      addressable
+      capybara
+      playwright-ruby-client (>= 1.16.0)
     capybara-screenshot (1.0.26)
       capybara (>= 1.0, < 4)
       launchy
@@ -508,6 +512,9 @@ GEM
     pdf-core (0.9.0)
     pg (1.5.6)
     phonelib (0.8.8)
+    playwright-ruby-client (1.46.0)
+      concurrent-ruby (>= 1.1.6)
+      mime-types (>= 3.0)
     prawn (2.4.0)
       pdf-core (~> 0.9.0)
       ttfunk (~> 1.7)
@@ -941,6 +948,7 @@ DEPENDENCIES
   browser
   capybara
   capybara-email
+  capybara-playwright-driver
   capybara-screenshot
   charlock_holmes
   chartkick

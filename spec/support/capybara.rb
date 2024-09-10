@@ -22,6 +22,14 @@ def setup_driver(app, download_path, options)
   end
 end
 
+Capybara.register_driver :playwright do |app|
+  Capybara::Playwright::Driver.new(app,
+    browser_type: (ENV['PLAYWRIGHT_BROWSER'] || 'chromium').to_sym, # :chromium (default) or :firefox, :webkit
+    headless: ENV['NO_HEADLESS'].blank?,
+    locale: Rails.application.config.i18n.default_locale,
+    downloadsPath: Capybara.save_path)
+end
+
 Capybara.register_driver :chrome do |app|
   options = Selenium::WebDriver::Chrome::Options.new
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
@@ -71,6 +79,10 @@ Capybara::Screenshot.prune_strategy = :keep_last_run
 Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
   driver.browser.save_screenshot(path)
 end
+# Tell Capybara::Screenshot how to take screenshots when using the playwright driver
+Capybara::Screenshot.register_driver :playwright do |driver, path|
+  driver.save_screenshot(path)
+end
 
 RSpec.configure do |config|
   config.before(:each, type: :system) do
@@ -78,21 +90,11 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, js: true) do
-    driven_by ENV['NO_HEADLESS'] ? :chrome : :headless_chrome
+    driven_by :playwright
   end
 
-  # Set the user preferred language before Javascript system specs.
-  #
-  # System specs without Javascript run in a Rack stack, and respect the Accept-Language value.
-  # However specs using Javascript are run into a Headless Chrome, which doesn't support setting
-  # the default Accept-Language value reliably.
-  # So instead we set the locale cookie explicitly before each Javascript test.
-  config.before(:each, type: :system, js: true) do
-    visit '/' # Webdriver needs visiting a page before setting the cookie
-    Capybara.current_session.driver.browser.manage.add_cookie(
-      name: :locale,
-      value: Rails.application.config.i18n.default_locale
-    )
+  config.before(:each, type: :system, chrome: true) do
+    driven_by :chrome
   end
 
   # Examples tagged with :capybara_ignore_server_errors will allow Capybara

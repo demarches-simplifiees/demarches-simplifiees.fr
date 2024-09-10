@@ -150,6 +150,9 @@ jobs:
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails
 
+      - name: Setup playwright
+        run: bunx playwright install chromium
+
       - name: Pre-compile assets
         uses: ./.github/actions/ci-setup-assets
 
