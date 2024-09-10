@@ -162,10 +162,6 @@ describe 'Inviting an expert:' do
         click_on avis.dossier.user.email
 
         click_on 'Télécharger le dossier et toutes ses pièces jointes'
-        # pf: disable next line as headless browser seems to do the job now
-        # For some reason, clicking the download link does not trigger the download in the headless browser ;
-        # So we need to go to the download link directly
-        # visit telecharger_pjs_expert_avis_path(avis.dossier.procedure, avis)
 
         DownloadHelpers.wait_for_download
         files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
