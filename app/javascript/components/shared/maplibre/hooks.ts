@@ -9,7 +9,8 @@ import type {
   LngLatBoundsLike,
   LngLat,
   MapLayerEventType,
-  Style
+  Style,
+  LngLatLike
 } from 'maplibre-gl';
 import type { Feature, Geometry } from 'geojson';
 
@@ -39,17 +40,20 @@ export function useFitBoundsNoFly() {
 export function useFlyTo() {
   const map = useMapLibre();
   return useCallback(
-    (zoom: number, center: [number, number]) => {
+    (zoom: number, center: LngLatLike) => {
       map.flyTo({ zoom, center });
     },
     [map]
   );
 }
 
-export function useEvent(eventName: string, callback: EventListener) {
+export function useEvent<T>(
+  eventName: string,
+  callback: (event: CustomEvent<T>) => void
+) {
   return useEffect(() => {
-    addEventListener(eventName, callback);
-    return () => removeEventListener(eventName, callback);
+    addEventListener(eventName, callback as EventListener);
+    return () => removeEventListener(eventName, callback as EventListener);
   }, [eventName, callback]);
 }
 

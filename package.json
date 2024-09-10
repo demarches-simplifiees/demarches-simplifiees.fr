@@ -122,7 +122,8 @@
     "graphql:doc:build": "RAILS_ENV=production bin/rake graphql:schema:idl && spectaql spectaql_config.yml",
     "postinstall": "patch-package",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "up": "bunx npm-check-updates --root --format group -i"
   },
   "resolutions": {
     "string-width": "4.2.2",
