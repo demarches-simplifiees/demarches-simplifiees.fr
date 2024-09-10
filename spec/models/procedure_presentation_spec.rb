@@ -331,6 +331,11 @@ describe ProcedurePresentation do
     subject { procedure_presentation.send(:filtered_ids, procedure.dossiers.joins(:user), 'suivis') }
 
     context 'for self table' do
+      context 'for id column' do
+        let(:filter) { [{ 'table' => 'self', 'column' => 'id', 'value' => '88116030300015' }] }
+
+        it { is_expected.not_to raise_error(PG::NumericValueOutOfRange) }
+      end
       context 'for created_at column' do
         let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
 
