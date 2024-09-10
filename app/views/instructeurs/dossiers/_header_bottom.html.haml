@@ -9,7 +9,8 @@
 
       - if dossier.champs.map(&:piece_justificative_file).flatten.any?
         = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.attachments'),
-          pieces_jointes_instructeur_dossier_path(dossier.procedure, dossier))
+          pieces_jointes_instructeur_dossier_path(dossier.procedure, dossier),
+          notification: notifications_summary[:pieces_jointes])
 
       = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.private_annotations'),
         annotations_privees_instructeur_dossier_path(dossier.procedure, dossier),
