@@ -14,6 +14,7 @@ class Instructeur < ApplicationRecord
   has_many :batch_operations, dependent: :nullify
   has_many :assign_to_with_email_notifications, -> { with_email_notifications }, class_name: 'AssignTo', inverse_of: :instructeur
   has_many :groupe_instructeur_with_email_notifications, through: :assign_to_with_email_notifications, source: :groupe_instructeur
+  has_many :export_templates, through: :groupe_instructeurs
 
   has_many :commentaires, inverse_of: :instructeur, dependent: :nullify
   has_many :dossiers, -> { state_not_brouillon }, through: :unordered_groupe_instructeurs
@@ -300,6 +301,10 @@ class Instructeur < ApplicationRecord
 
   def last_agent_connect_information
     agent_connect_information.order(updated_at: :desc).first
+  end
+
+  def export_templates_for(procedure)
+    procedure.export_templates.where(groupe_instructeur: groupe_instructeurs).order(:name)
   end
 
   private

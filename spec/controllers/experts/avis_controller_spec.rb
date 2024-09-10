@@ -121,7 +121,7 @@ describe Experts::AvisController, type: :controller do
       context 'with a valid avis' do
         it do
           service = instance_double(PiecesJustificativesService)
-          expect(PiecesJustificativesService).to receive(:new).with(user_profile: expert).and_return(service)
+          expect(PiecesJustificativesService).to receive(:new).with(user_profile: expert, export_template: nil).and_return(service)
           expect(service).to receive(:generate_dossiers_export).with(Dossier.where(id: dossier)).and_return([])
           expect(service).to receive(:liste_documents).with(Dossier.where(id: dossier)).and_return([])
           is_expected.to have_http_status(:success)

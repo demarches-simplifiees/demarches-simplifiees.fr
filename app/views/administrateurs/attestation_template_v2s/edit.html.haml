@@ -77,7 +77,7 @@
                       %button.fr-btn.fr-btn--secondary.fr-btn--sm{ type: 'button', title: label, class: icon == :hidden ? "hidden" : "fr-icon-#{icon}", data: { action: 'click->tiptap#menuButton', tiptap_target: 'button', tiptap_action: action } }
                         = label
 
-              #editor.editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
+              #editor.tiptap-editor{ data: { tiptap_target: 'editor' }, aria: { describedby: dom_id(f.object, "json-body-messages")} }
               = f.hidden_field :tiptap_body, data: { tiptap_target: 'input' }
 
               .fr-error-text{ id: dom_id(f.object, "json-body-messages"), class: class_names("hidden" => !f.object.errors.include?(:json_body)) }

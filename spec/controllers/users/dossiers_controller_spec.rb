@@ -1206,7 +1206,7 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'when the dossier has been submitted' do
-        it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: user).acl_for_dossier_export(dossier.procedure)) }
+        it { expect(assigns(:acls)).to eq(PiecesJustificativesService.new(user_profile: user, export_template: nil).acl_for_dossier_export(dossier.procedure)) }
         it { expect(response).to render_template('dossiers/show') }
       end
     end

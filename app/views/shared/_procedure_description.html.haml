@@ -48,21 +48,23 @@
           #accordion-116.fr-collapse
             = h render SimpleFormatComponent.new(procedure.description_pj, allow_a: true)
 
-      - elsif procedure.pieces_jointes_list?
-        %section.fr-accordion.pieces_jointes
-          %h2.fr-accordion__title
-            %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
-              = t('shared.procedure_description.pieces_jointes')
-          #accordion-116.fr-collapse
-            - if procedure.pieces_jointes_list_without_conditionnal.present?
-              %ul
-                = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_without_conditionnal, as: :pj
+      - else
+        - pj_without_condition, pj_with_condition = procedure.public_wrapped_partionned_pjs
+        - if pj_without_condition.present? || pj_with_condition.present?
+          %section.fr-accordion.pieces_jointes
+            %h2.fr-accordion__title
+              %button.fr-accordion__btn{ "aria-controls" => "accordion-116", "aria-expanded" => "false" }
+                = t('shared.procedure_description.pieces_jointes')
+            #accordion-116.fr-collapse
+              - if pj_without_condition.present?
+                %ul
+                  = render partial: "shared/procedure_pieces_jointes_list", collection: pj_without_condition, as: :pj
 
-            - if procedure.pieces_jointes_list_with_conditionnal.present?
-              %h3.fr-text--sm.fr-mb-0.fr-mt-2w
-                = t('shared.procedure_description.pieces_jointes_conditionnal_list_title')
-              %ul
-                = render partial: "shared/procedure_pieces_jointes_list", collection: procedure.pieces_jointes_list_with_conditionnal, as: :pj
+              - if pj_with_condition.present?
+                %h3.fr-text--sm.fr-mb-0.fr-mt-2w
+                  = t('shared.procedure_description.pieces_jointes_conditionnal_list_title')
+                %ul
+                  = render partial: "shared/procedure_pieces_jointes_list", collection: pj_with_condition, as: :pj
 
     - estimated_delay_component = Procedure::EstimatedDelayComponent.new(procedure: procedure)
     - if estimated_delay_component.render?

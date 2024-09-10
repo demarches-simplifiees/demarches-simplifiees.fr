@@ -5,6 +5,7 @@ class Procedure < ApplicationRecord
   include ProcedureGroupeInstructeurAPIHackConcern
   include ProcedureSVASVRConcern
   include ProcedureChorusConcern
+  include PiecesJointesListConcern
 
   include Discard::Model
   self.discard_column = :hidden_at
@@ -153,6 +154,7 @@ class Procedure < ApplicationRecord
   has_many :administrateurs, through: :administrateurs_procedures, after_remove: -> (procedure, _admin) { procedure.validate! }
   has_many :groupe_instructeurs, -> { order(:label) }, inverse_of: :procedure, dependent: :destroy
   has_many :instructeurs, through: :groupe_instructeurs
+  has_many :export_templates, through: :groupe_instructeurs
 
   has_many :active_groupe_instructeurs, -> { active }, class_name: 'GroupeInstructeur', inverse_of: false
   has_many :closed_groupe_instructeurs, -> { closed }, class_name: 'GroupeInstructeur', inverse_of: false
@@ -1056,22 +1058,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def pieces_jointes_list?
-    pieces_jointes_list_without_conditionnal.present? || pieces_jointes_list_with_conditionnal.present?
-  end
-
-  def pieces_jointes_list_without_conditionnal
-    pieces_jointes_list do |base_scope|
-      base_scope.where(types_de_champ: { condition: nil })
-    end
-  end
-
-  def pieces_jointes_list_with_conditionnal
-    pieces_jointes_list do |base_scope|
-      base_scope.where.not(types_de_champ: { condition: nil })
-    end
-  end
-
   def toggle_routing
     update!(routing_enabled: self.groupe_instructeurs.active.many?)
   end
@@ -1098,22 +1084,6 @@ class Procedure < ApplicationRecord
   end
 
   private
-
-  def pieces_jointes_list
-    scope = yield active_revision.revision_types_de_champ_public
-      .includes(:type_de_champ, revision_types_de_champ: :type_de_champ)
-      .where(types_de_champ: { type_champ: ['repetition', 'piece_justificative', 'titre_identite'] })
-
-    scope.each_with_object([]) do |rtdc, list|
-      if rtdc.type_de_champ.repetition?
-        rtdc.revision_types_de_champ.each do |rtdc_in_repetition|
-          list << [rtdc_in_repetition.type_de_champ, rtdc.type_de_champ] if rtdc_in_repetition.type_de_champ.piece_justificative?
-        end
-      else
-        list << [rtdc.type_de_champ]
-      end
-    end
-  end
 
   def validate_auto_archive_on_in_the_future
     return if auto_archive_on.nil?
