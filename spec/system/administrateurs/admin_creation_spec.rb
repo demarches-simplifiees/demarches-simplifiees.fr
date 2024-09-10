@@ -15,7 +15,7 @@ describe 'As an administrateur', js: true do
     end
   end
 
-  scenario 'I can register', js: true do
+  scenario 'I can register' do
     expect(new_admin.reload.user.active?).to be(false)
 
     confirmation_email = open_email(admin_email)

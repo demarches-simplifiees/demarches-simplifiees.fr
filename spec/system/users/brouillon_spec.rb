@@ -1,4 +1,6 @@
-describe 'The user' do
+# frozen_string_literal: true
+
+describe 'The user', js: true do
   let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
@@ -6,7 +8,7 @@ describe 'The user' do
   let(:user_dossier) { user.dossiers.first }
   let!(:dossier_to_link) { create(:dossier) }
 
-  scenario 'fill a dossier', js: true, vcr: true do
+  scenario 'fill a dossier', vcr: true do
     log_in(user, procedure)
 
     fill_individual
@@ -14,9 +16,9 @@ describe 'The user' do
     # fill data
     fill_in('text', with: 'super texte', match: :first)
     fill_in('textarea', with: 'super textarea')
-    fill_in('date', with: '12-12-2012', match: :first)
+    fill_in('date', with: Date.parse('2012-12-12'), match: :first)
     fill_in('datetime', with: Time.zone.parse('2023-01-06T07:05'))
-    find("input[type=datetime-local]").send_keys(:arrow_up).send_keys(:arrow_down) # triggers onChange
+    find("input[type=datetime-local]").send_keys('ArrowUp').send_keys('ArrowDown') # triggers onChange
     # fill_in('number', with: '42'), deadchamp, should be migrated to textchamp
     fill_in('decimal_number', with: '17')
     fill_in('integer_number', with: '12')
@@ -125,7 +127,7 @@ describe 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
-  scenario 'fill nothing and every error anchor links points to an existing element', js: true do
+  scenario 'fill nothing and every error anchor links points to an existing element' do
     log_in(user, procedure)
     fill_individual
     click_on 'Déposer le dossier'
@@ -141,7 +143,7 @@ describe 'The user' do
     create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :repetition, mandatory: true, children: [{ libelle: 'sub type de champ' }] }])
   end
 
-  scenario 'fill a dossier with repetition', js: true do
+  scenario 'fill a dossier with repetition' do
     log_in(user, procedure_with_repetition)
 
     fill_individual
@@ -184,7 +186,7 @@ describe 'The user' do
     ])
   }
 
-  scenario 'save an incomplete dossier as draft but cannot not submit it', js: true do
+  scenario 'save an incomplete dossier as draft but cannot not submit it' do
     log_in(user, simple_procedure)
     fill_individual
 
@@ -219,7 +221,7 @@ describe 'The user' do
     expect(page).to have_current_path(merci_dossier_path(user_dossier))
   end
 
-  scenario 'fill address not in BAN', js: true do
+  scenario 'fill address not in BAN' do
     log_in(user, simple_procedure)
     fill_individual
 
@@ -230,7 +232,7 @@ describe 'The user' do
     expect(champ_for('address').full_address?).to be_falsey
   end
 
-  scenario 'numbers champs formatting', js: true do
+  scenario 'numbers champs formatting' do
     log_in(user, simple_procedure)
     fill_individual
 
@@ -287,7 +289,7 @@ describe 'The user' do
     }
   end
 
-  scenario 'extends dossier experation date more than one time, ', js: true do
+  scenario 'extends dossier experation date more than one time, ' do
     simple_procedure.update(procedure_expires_when_termine_enabled: true)
     user_old_dossier = create(:dossier,
                               procedure: simple_procedure,
@@ -312,7 +314,7 @@ describe 'The user' do
   let(:procedure_with_pjs) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative 1' }, { type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative 2' }]) }
   let(:old_procedure_with_disabled_pj_validation) { create(:procedure, :published, :for_individual, types_de_champ_public: [{ type: :piece_justificative, mandatory: true, libelle: 'Pièce justificative 1', skip_pj_validation: true }]) }
 
-  scenario 'add an attachment', js: true do
+  scenario 'add an attachment' do
     log_in(user, procedure_with_pjs)
     fill_individual
 
@@ -336,7 +338,7 @@ describe 'The user' do
     expect(page).to have_text('RIB.pdf')
   end
 
-  scenario 'add an invalid attachment on an old procedure where pj validation is disabled', js: true do
+  scenario 'add an invalid attachment on an old procedure where pj validation is disabled' do
     log_in(user, old_procedure_with_disabled_pj_validation)
     fill_individual
 
@@ -345,7 +347,7 @@ describe 'The user' do
     expect(page).to have_no_text('La pièce justificative n’est pas d’un type accepté')
   end
 
-  scenario 'retry on transcient upload error', js: true do
+  scenario 'retry on transcient upload error' do
     log_in(user, procedure_with_pjs)
     fill_individual
 
@@ -374,7 +376,7 @@ describe 'The user' do
     expect(page).to have_text('file.pdf')
   end
 
-  scenario "upload multiple pieces justificatives on same champ", js: true do
+  scenario "upload multiple pieces justificatives on same champ" do
     log_in(user, procedure_with_pjs)
     fill_individual
 
@@ -437,7 +439,7 @@ describe 'The user' do
           ])
       end
 
-      scenario 'submit a dossier with an hidden mandatory champ within a repetition', js: true do
+      scenario 'submit a dossier with an hidden mandatory champ within a repetition' do
         log_in(user, procedure)
 
         fill_individual
@@ -467,7 +469,7 @@ describe 'The user' do
           ])
       end
 
-      scenario 'fill a dossier', js: true do
+      scenario 'fill a dossier' do
         log_in(user, procedure)
 
         fill_individual
@@ -499,7 +501,7 @@ describe 'The user' do
           ])
       end
 
-      scenario 'submit a dossier with an hidden mandatory champ ', js: true do
+      scenario 'submit a dossier with an hidden mandatory champ ' do
         log_in(user, procedure)
 
         fill_individual
@@ -508,7 +510,7 @@ describe 'The user' do
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
 
-      scenario 'cannot submit a reveal dossier with a revealed mandatory champ ', js: true do
+      scenario 'cannot submit a reveal dossier with a revealed mandatory champ ' do
         log_in(user, procedure)
 
         fill_individual
@@ -540,7 +542,7 @@ describe 'The user' do
           ])
       end
 
-      scenario 'fill a dossier', js: true do
+      scenario 'fill a dossier' do
         log_in(user, procedure)
 
         fill_individual
@@ -589,7 +591,7 @@ describe 'The user' do
   end
 
   context 'draft autosave' do
-    scenario 'autosave a draft', js: true do
+    scenario 'autosave a draft' do
       log_in(user, simple_procedure)
       fill_individual
 
@@ -604,7 +606,7 @@ describe 'The user' do
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
     end
 
-    scenario 'retry on autosave error', :capybara_ignore_server_errors, js: true do
+    scenario 'retry on autosave error', :capybara_ignore_server_errors do
       log_in(user, simple_procedure)
       fill_individual
 
@@ -624,7 +626,7 @@ describe 'The user' do
       expect(page).to have_field('texte obligatoire', with: 'a valid user input')
     end
 
-    scenario 'autosave redirects to sign-in after being disconnected', js: true do
+    scenario 'autosave redirects to sign-in after being disconnected' do
       log_in(user, simple_procedure)
       fill_individual
 
@@ -632,7 +634,6 @@ describe 'The user' do
       # (either because signing-out in another tab, or because the session cookie expired)
       logout(:user)
       fill_in('texte obligatoire', with: 'a valid user input')
-      blur
 
       # … they are redirected to the sign-in page.
       expect(page).to have_current_path(new_user_session_path)
