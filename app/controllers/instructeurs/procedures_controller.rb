@@ -95,9 +95,7 @@ module Instructeurs
 
       @has_export_notification = notify_exports?
       @last_export = last_export_for(statut)
-
       @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
-
       page = params[:page].presence || 1
 
       @dossiers_count = @filtered_sorted_ids.size
