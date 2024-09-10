@@ -34,7 +34,7 @@ module AddressableColumnConcern
           table:,
           displayable: false,
           column: stable_id,
-          label: "#{libelle} – region",
+          label: "#{libelle} – région",
           type: :enum,
           value_column: ['region_name']
         )

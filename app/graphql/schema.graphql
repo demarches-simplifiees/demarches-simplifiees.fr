@@ -40,7 +40,7 @@ type Address {
   postalCode: String!
 
   """
-  n° de region
+  n° de région
   """
   regionCode: String
 
