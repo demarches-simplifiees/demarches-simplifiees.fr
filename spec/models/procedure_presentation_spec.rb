@@ -55,6 +55,11 @@ describe ProcedurePresentation do
     context 'of filters' do
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "reset_password_token", "order" => "asc" }] })).to be_invalid }
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
+
+      describe 'check_filters_max_integer' do
+        it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "self", column: "id", "value" => 2147483647.to_s }] })).to be_invalid }
+        it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "self", column: "id", "value" => (2147483647 - 1).to_s }] })).to be_valid }
+      end
     end
   end
 
@@ -331,11 +336,6 @@ describe ProcedurePresentation do
     subject { procedure_presentation.send(:filtered_ids, procedure.dossiers.joins(:user), 'suivis') }
 
     context 'for self table' do
-      context 'for id column' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'id', 'value' => '88116030300015' }] }
-
-        it { is_expected.not_to raise_error(PG::NumericValueOutOfRange) }
-      end
       context 'for created_at column' do
         let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
 
