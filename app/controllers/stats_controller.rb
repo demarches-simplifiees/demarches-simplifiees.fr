@@ -6,6 +6,8 @@ class StatsController < ApplicationController
   MEAN_NUMBER_OF_CHAMPS_IN_A_FORM = 24.0
 
   def index
+    expires_in(1.hour, public: true)
+
     stat = Stat.first
 
     procedures = Procedure.publiees_ou_closes
