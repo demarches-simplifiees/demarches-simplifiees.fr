@@ -55,7 +55,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
     # Champs can be deleted
     within '.type-de-champ:nth-child(3)' do
-      page.accept_alert do
+      accept_alert do
         click_on 'Supprimer'
       end
     end
@@ -80,7 +80,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
 
     page.refresh
 
-    page.accept_alert do
+    accept_alert do
       click_on 'Supprimer'
     end
     expect(page).to have_content('Formulaire enregistré')
@@ -186,7 +186,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_content('Durée de remplissage estimée : 2 min')
 
       # It updates the estimate when removing the champ
-      page.accept_alert do
+      accept_alert do
         click_on 'Supprimer'
       end
       expect(page).not_to have_content('Durée de remplissage estimée')
@@ -226,7 +226,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
       select('Titre de niveau 2', from: dom_id(second_header, :header_section_level))
 
       within(".types-de-champ-block li:first-child") do
-        page.accept_alert do
+        accept_alert do
           click_on 'Supprimer'
         end
       end
@@ -393,13 +393,16 @@ describe 'As an administrateur I can edit types de champ', js: true do
       expect(page).to have_button('Publier les modifications', disabled: true)
 
       # Supprime dernier champ
-      all('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').last.click
-      page.driver.browser.switch_to.alert.accept rescue nil
+      accept_alert do
+        all('.fr-btn--tertiary-no-outline[title="Supprimer le champ"]').last.click
+      end
 
       expect(page).to have_selector('.type-de-champ', count: 1, wait: 5)
-      click_on "Publier les modifications"
 
-      page.driver.browser.switch_to.alert.accept
+      accept_alert do
+        click_on "Publier les modifications"
+      end
+
       expect(page).to have_content("démarche publiée")
 
       unpublished_procedure = create(:procedure)

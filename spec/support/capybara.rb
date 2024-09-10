@@ -29,30 +29,19 @@ Capybara.register_driver :chrome do |app|
   options.add_argument('--no-sandbox') unless ENV['SANDBOX']
   options.add_argument('--mute-audio')
   options.add_argument('--window-size=1440,900')
+  options.add_argument('--disable-search-engine-choice-screen')
+  if ENV['NO_HEADLESS'].blank?
+    options.add_argument('--headless')
+    options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-software-rasterizer')
+  end
 
   download_path = Capybara.save_path
   # Chromedriver 77 requires setting this for headless mode on linux
   # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
   options.add_preference('download.default_directory', download_path)
   options.add_preference(:download, default_directory: download_path)
-
-  setup_driver(app, download_path, options)
-end
-
-Capybara.register_driver :headless_chrome do |app|
-  options = Selenium::WebDriver::Chrome::Options.new
-  options.add_argument('--no-sandbox') unless ENV['SANDBOX']
-  options.add_argument('--headless')
-  options.add_argument('--window-size=1440,900')
-  options.add_argument('--disable-dev-shm-usage')
-  options.add_argument('--disable-software-rasterizer')
-  options.add_argument('--mute-audio')
-
-  download_path = Capybara.save_path
-  # Chromedriver 77 requires setting this for headless mode on linux
-  # Different versions of Chrome/selenium-webdriver require setting differently - just set them all
-  options.add_preference('download.default_directory', download_path)
-  options.add_preference(:download, default_directory: download_path)
+  options.add_preference('intl.accept_languages', 'fr')
 
   setup_driver(app, download_path, options)
 end
@@ -69,9 +58,9 @@ Capybara.disable_animation = true
 Capybara::Screenshot.autosave_on_failure = true
 # Keep only the screenshots generated from the last failing test suite
 Capybara::Screenshot.prune_strategy = :keep_last_run
-# Tell Capybara::Screenshot how to take screenshots when using the headless_chrome driver
-Capybara::Screenshot.register_driver :headless_chrome do |driver, path|
-  driver.browser.save_screenshot(path)
+# Tell Capybara::Screenshot how to take screenshots when using the chrome driver
+Capybara::Screenshot.register_driver :chrome do |driver, path|
+  driver.save_screenshot(path)
 end
 
 RSpec.configure do |config|
@@ -80,21 +69,7 @@ RSpec.configure do |config|
   end
 
   config.before(:each, type: :system, js: true) do
-    driven_by ENV['NO_HEADLESS'] ? :chrome : :headless_chrome
-  end
-
-  # Set the user preferred language before Javascript system specs.
-  #
-  # System specs without Javascript run in a Rack stack, and respect the Accept-Language value.
-  # However specs using Javascript are run into a Headless Chrome, which doesn't support setting
-  # the default Accept-Language value reliably.
-  # So instead we set the locale cookie explicitly before each Javascript test.
-  config.before(:each, type: :system, js: true) do
-    visit '/' # Webdriver needs visiting a page before setting the cookie
-    Capybara.current_session.driver.browser.manage.add_cookie(
-      name: :locale,
-      value: Rails.application.config.i18n.default_locale
-    )
+    driven_by :chrome
   end
 
   # Examples tagged with :capybara_ignore_server_errors will allow Capybara

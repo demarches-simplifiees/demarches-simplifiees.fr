@@ -34,7 +34,7 @@ describe 'BatchOperation a dossier:', js: true do
 
       # ensure batch is created
 
-      page.accept_alert do
+      accept_alert do
         click_on "Archiver les dossiers"
       end
 
@@ -76,7 +76,7 @@ describe 'BatchOperation a dossier:', js: true do
       end
 
       # submit checkall
-      page.accept_alert do
+      accept_alert do
         click_on "Archiver les dossiers"
       end
 
