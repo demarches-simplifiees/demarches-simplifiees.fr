@@ -1,5 +1,8 @@
 .gallery-item
   - if !gallery_demande?
+    .fr-mb-1v
+      .fr-tag
+        = origin
     .fr-mb-2v.champ-updated{ class: badge_updated_class }
       = t(updated? ? '.updated_at' : '.created_at', datetime: helpers.try_format_datetime(updated_at, format: :veryshort))
   - if displayable_pdf?(blob) || displayable_image?(blob)
