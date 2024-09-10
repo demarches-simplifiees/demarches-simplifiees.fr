@@ -488,8 +488,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.datetime "hidden_by_user_at", precision: nil
     t.datetime "identity_updated_at", precision: nil
     t.datetime "last_avis_updated_at", precision: nil
+    t.datetime "last_champ_piece_jointe_updated_at"
     t.datetime "last_champ_private_updated_at", precision: nil
     t.datetime "last_champ_updated_at", precision: nil
+    t.datetime "last_commentaire_piece_jointe_updated_at"
     t.datetime "last_commentaire_updated_at", precision: nil
     t.string "mandataire_first_name"
     t.string "mandataire_last_name"
