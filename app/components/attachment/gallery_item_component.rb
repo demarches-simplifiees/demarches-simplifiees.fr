@@ -16,7 +16,34 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def gallery_demande? = @gallery_demande
 
   def libelle
-    attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) ? attachment.record.libelle : 'Pièce jointe au message'
+    from_dossier? ? attachment.record.libelle : 'Pièce jointe au message'
+  end
+
+  def from_dossier?
+    attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp])
+  end
+
+  def from_messagerie?
+    attachment.record.is_a?(Commentaire)
+  end
+
+  def from_messagerie_instructeur?
+    from_messagerie? && attachment.record.instructeur.present?
+  end
+
+  def from_messagerie_usager?
+    from_messagerie? && attachment.record.instructeur.nil?
+  end
+
+  def origin
+    case
+    when from_dossier?
+      'Dossier usager'
+    when from_messagerie_instructeur?
+      'Messagerie (instructeur)'
+    when from_messagerie_usager?
+      'Messagerie (usager)'
+    end
   end
 
   def title
@@ -40,7 +67,7 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   end
 
   def updated?
-    attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) && updated_at > attachment.record.dossier.depose_at
+    from_dossier? && updated_at > attachment.record.dossier.depose_at
   end
 
   def updated_at
