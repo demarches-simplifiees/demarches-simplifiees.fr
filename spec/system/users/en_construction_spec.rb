@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Dossier en_construction" do
+describe "Dossier en_construction", js: true do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :for_individual, types_de_champ_public: [{ type: :piece_justificative }, { type: :titre_identite }]) }
   let(:dossier) { create(:dossier, :en_construction, :with_individual, :with_populated_champs, user:, procedure:) }
@@ -13,7 +13,7 @@ describe "Dossier en_construction" do
     dossier.find_editing_fork(dossier.user).champs_public.find { _1.stable_id == tdc.stable_id }
   }
 
-  scenario 'delete a non mandatory piece justificative', js: true do
+  scenario 'delete a non mandatory piece justificative' do
     visit_dossier(dossier)
 
     expect(page).not_to have_button("Remplacer")
@@ -28,7 +28,7 @@ describe "Dossier en_construction" do
       tdc.update_attribute(:mandatory, true)
     end
 
-    scenario 'remplace a mandatory piece justificative', js: true do
+    scenario 'remplace a mandatory piece justificative' do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.txt"
@@ -52,7 +52,7 @@ describe "Dossier en_construction" do
       tdc.update_attribute(:mandatory, true)
     end
 
-    scenario 'remplace a mandatory titre identite', js: true do
+    scenario 'remplace a mandatory titre identite' do
       visit_dossier(dossier)
 
       click_on "Supprimer le fichier toto.png"

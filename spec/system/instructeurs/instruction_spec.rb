@@ -210,7 +210,7 @@ describe 'Instructing a dossier:', js: true do
       expect(Archive.first.month).not_to be_nil
     end
   end
-  context 'with dossiers having attached files', js: true do
+  context 'with dossiers having attached files' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
     let(:champ) { dossier.champs_public.first }
@@ -231,10 +231,7 @@ describe 'Instructing a dossier:', js: true do
 
     scenario 'A instructeur can download an archive containing a single attachment' do
       find(:css, '[aria-controls=print-pj-menu]').click
-      # click_on 'Télécharger le dossier et toutes ses pièces jointes'
-      # For some reason, clicking the download link does not trigger the download in the headless browser
-      # for some member of the team, so we need to go to the download link directly
-      visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
+      click_on 'Télécharger le dossier et toutes ses pièces jointes'
 
       DownloadHelpers.wait_for_download
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
@@ -254,7 +251,9 @@ describe 'Instructing a dossier:', js: true do
                 content_type: "application/pdf",
                 metadata: { virus_scan_result: ActiveStorage::VirusScanner::SAFE })
 
-      visit telecharger_pjs_instructeur_dossier_path(procedure, dossier)
+      find(:css, '[aria-controls=print-pj-menu]').click
+      click_on 'Télécharger le dossier et toutes ses pièces jointes'
+
       DownloadHelpers.wait_for_download
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe 'linked dropdown lists' do
+describe 'linked dropdown lists', js: true do
   let(:password) { SECURE_PASSWORD }
   let!(:user) { create(:user, password: password) }
 
@@ -21,7 +21,7 @@ describe 'linked dropdown lists' do
   let(:user_dossier) { user.dossiers.first }
   context 'not mandatory' do
     let(:mandatory) { false }
-    scenario 'change primary value, secondary options are updated', js: true do
+    scenario 'change primary value, secondary options are updated' do
       log_in(user.email, password, procedure)
 
       fill_individual
@@ -44,7 +44,7 @@ describe 'linked dropdown lists' do
   context 'mandatory' do
     let(:mandatory) { true }
 
-    scenario 'change primary value, secondary options are updated', js: true do
+    scenario 'change primary value, secondary options are updated' do
       log_in(user.email, password, procedure)
 
       fill_individual
