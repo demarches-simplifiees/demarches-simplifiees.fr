@@ -10,7 +10,7 @@ module AddressableColumnConcern
           table:,
           displayable: false,
           column: stable_id,
-          label: "#{libelle} – code postal (5 chiffres)",
+          label: "#{libelle} – code postal (5 chiffres)",
           type: :text,
           value_column: ['postal_code']
         ),
