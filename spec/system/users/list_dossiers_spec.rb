@@ -53,7 +53,7 @@ describe 'user access to the list of their dossiers', js: true do
   context 'when there is more than one page' do
     let(:dossiers_per_page) { 2 }
 
-    scenario 'the user can navigate through the other pages' do
+    scenario 'the user can navigate through the other pages', chrome: true do
       expect(page).not_to have_link(dossier_en_instruction.procedure.libelle)
       page.click_link("Suivant")
       page.click_link("Suivant")
