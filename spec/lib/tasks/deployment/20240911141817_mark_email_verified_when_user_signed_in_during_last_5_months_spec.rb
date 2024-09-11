@@ -23,6 +23,6 @@ describe 'after_party:mark_email_verified_when_user_signed_in_during_last_5_mont
     expect(user.reload.email_verified_at).to be_present
     expect(user2.reload.email_verified_at).to be_present
     expect(user3.reload.email_verified_at).to be_nil
-    expect(user4.reload.email_verified_at).to eq(old_date)
+    expect(user4.reload.email_verified_at.to_i).to eq(old_date.to_i)
   end
 end
