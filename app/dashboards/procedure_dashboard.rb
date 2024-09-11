@@ -51,7 +51,8 @@ class ProcedureDashboard < Administrate::BaseDashboard
     for_tiers_enabled: Field::Boolean,
     replaced_by_procedure_id: Field::String,
     tags: Field::Text,
-    template: Field::Boolean
+    template: Field::Boolean,
+    hide_instructeurs_email: Field::Boolean
   }.freeze
 
   # COLLECTION_ATTRIBUTES
@@ -113,6 +114,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :estimated_duration_visible,
     :piece_justificative_multiple,
     :for_tiers_enabled,
+    :hide_instructeurs_email,
     :replaced_by_procedure_id
   ].freeze
 
@@ -126,6 +128,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :estimated_duration_visible,
     :piece_justificative_multiple,
     :for_tiers_enabled,
+    :hide_instructeurs_email,
     :replaced_by_procedure_id
   ].freeze
 

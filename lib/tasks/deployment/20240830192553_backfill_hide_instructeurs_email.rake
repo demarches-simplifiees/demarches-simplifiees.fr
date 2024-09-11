@@ -14,30 +14,28 @@ namespace :after_party do
     total_gates = gates.count
     progress = ProgressReport.new(total_gates)
 
-    puts 'Collecte des démarches avec le feature flag'
+    rake_puts 'Collecte des démarches avec le feature flag'
 
-    procedure_ids = gates.ids
-    puts procedure_ids
+    procedure_ids = gates.pluck(:value).map { _1.split(";").last.to_i }
+    rake_puts procedure_ids.inspect
 
     progress.finish
-
-    puts progress
 
     puts "Mise à jour des #{procedure_ids.size} démarches"
     update_progress = ProgressReport.new(procedure_ids.size)
 
-    Procedure.where(id: procedure_ids).in_batches(of: 500) do |batch|
+    # rubocop:disable DS/Unscoped
+    Procedure.unscoped.where(id: procedure_ids).in_batches(of: 500) do |batch|
       batch.update_all(hide_instructeurs_email: true)
       update_progress.inc(batch.size)
-      puts update_progress
     end
+    # rubocop:enable DS/Unscoped
 
     update_progress.finish
-    puts update_progress
 
-    puts "Suppression du feature flag '#{feature_name}'"
+    rake_puts "Suppression du feature flag '#{feature_name}'"
     Flipper.remove(feature_name)
-    puts "Feature flag '#{feature_name}' supprimé avec succès"
+    rake_puts "Feature flag '#{feature_name}' supprimé avec succès"
 
     AfterParty::TaskRecord
       .create version: AfterParty::TaskRecorder.new(__FILE__).timestamp
