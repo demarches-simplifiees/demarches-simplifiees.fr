@@ -386,6 +386,7 @@ module Instructeurs
         .flatten
 
       @gallery_attachments = champs_attachments + commentaires_attachments
+      @pieces_jointes_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.pieces_jointes_seen_at
     end
 
     private
