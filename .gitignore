@@ -22,6 +22,7 @@ uploads/*
 *.swp
 .envrc
 .env
+.tool-versions
 storage/
 /node_modules
 /yarn-error.log
