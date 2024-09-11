@@ -1,5 +1,5 @@
--# We can't use &. because the controller may not implement #nav_bar_profile
-- nav_bar_profile = controller.try(:nav_bar_profile) || :guest
+-# We can't use &. or as helper methods because the controllers from view specs does not implement these methods
+- nav_bar_profile = controller.try(:nav_bar_profile) || controller.try(:fallback_nav_bar_profile) || :guest
 - dossier = controller.try(:dossier_for_help)
 - procedure = controller.try(:procedure_for_help)
 - is_instructeur_context = nav_bar_profile == :instructeur && instructeur_signed_in?

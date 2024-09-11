@@ -2,6 +2,7 @@
 
 class ApplicationController < ActionController::Base
   include TrustedDeviceConcern
+  include NavBarProfileConcern
   include Pundit::Authorization
   include Devise::StoreLocationExtension
   include ApplicationController::LongLivedAuthenticityToken
@@ -420,17 +421,6 @@ class ApplicationController < ActionController::Base
 
   def set_customizable_view_path
     prepend_view_path "app/custom_views"
-  end
-
-  def try_nav_bar_profile_from_referrer
-    # detect context from referer, simple (no detection when refreshing the page)
-    params = Rails.application.routes.recognize_path(request&.referer)
-
-    controller_class = "#{params[:controller].camelize}Controller".safe_constantize
-    return if controller_class.nil?
-
-    controller_instance = controller_class.new
-    controller_instance.try(:nav_bar_profile)
   end
 
   def cast_bool(value)
