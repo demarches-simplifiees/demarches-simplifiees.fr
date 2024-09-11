@@ -3,6 +3,8 @@
 class SuperAdminsController < ApplicationController
   before_action :authenticate_super_admin!
 
+  def nav_bar_profile = :superadmin
+
   def edit_otp
   end
 
