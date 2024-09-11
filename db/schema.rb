@@ -691,6 +691,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.integer "dossier_id", null: false
     t.integer "instructeur_id", null: false
     t.datetime "messagerie_seen_at", precision: nil, null: false
+    t.datetime "pieces_jointes_seen_at"
     t.datetime "unfollowed_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.index ["dossier_id"], name: "index_follows_on_dossier_id"
