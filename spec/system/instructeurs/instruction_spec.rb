@@ -50,7 +50,8 @@ describe 'Instructing a dossier:', js: true do
     click_on 'Instruire le dossier'
 
     within('.instruction-button') do
-      click_on 'Accepter'
+      # FIXME click_on 'Accepter' is not working for some reason
+      find_link('Accepter').click
     end
 
     within('.accept.motivation') do
