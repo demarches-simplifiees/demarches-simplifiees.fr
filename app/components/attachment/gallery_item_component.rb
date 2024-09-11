@@ -2,11 +2,12 @@
 
 class Attachment::GalleryItemComponent < ApplicationComponent
   include GalleryHelper
-  attr_reader :attachment
+  attr_reader :attachment, :seen_at
 
-  def initialize(attachment:, gallery_demande: false)
+  def initialize(attachment:, gallery_demande: false, seen_at: nil)
     @attachment = attachment
     @gallery_demande = gallery_demande
+    @seen_at = seen_at
   end
 
   def blob
@@ -77,7 +78,7 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def badge_updated_class
     class_names(
       "fr-badge fr-badge--sm" => true,
-      "fr-badge--new" => updated?
+      "fr-badge--new" => seen_at.present? && updated_at&.>(seen_at)
     )
   end
 end
