@@ -3,6 +3,7 @@
 class User < ApplicationRecord
   include DomainMigratableConcern
   include EmailSanitizableConcern
+  include EmailVerifiableConcern
   include PasswordComplexityConcern
 
   enum loged_in_with_france_connect: {
