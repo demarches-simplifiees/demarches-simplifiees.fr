@@ -61,13 +61,13 @@
                   %li= render partial: 'layouts/locale_dropdown'
 
 
-            - if params[:controller] == 'recherche'
-              = render partial: 'layouts/search_dossiers_form'
-
             - if is_instructeur_context
-              = render partial: 'layouts/search_dossiers_form'
+              = render partial: 'layouts/search_dossiers_form', locals: { context: :instructeur }
 
-            - if is_expert_context
+            - elsif is_expert_context
+              = render partial: 'layouts/search_dossiers_form', locals: { context: :expert }
+
+            - elsif params[:controller] == 'recherche'
               = render partial: 'layouts/search_dossiers_form'
 
     = render SwitchDomainBannerComponent.new(user: current_user)

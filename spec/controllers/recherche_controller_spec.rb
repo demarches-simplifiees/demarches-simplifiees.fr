@@ -201,11 +201,42 @@ describe RechercheController, type: :controller do
     context 'with no query param it does not crash' do
       subject { get :index, params: {} }
 
-      it { is_expected.to have_http_status(200) }
-
       it 'returns 0 dossier' do
-        subject
+        expect(subject).to have_http_status(200)
         expect(assigns(:projected_dossiers).count).to eq(0)
+      end
+    end
+
+    context 'nav bar profile in user context' do
+      subject { get(:index, params: {}).body }
+      render_views
+
+      it 'define user nav' do
+        expect(subject).to include "Mes dossiers"
+        expect(subject).to include "usager"
+      end
+    end
+
+    context 'nav bar profile in instructeur context' do
+      subject { get(:index, params: { context: :instructeur }).body }
+      render_views
+
+      it 'define instructeur nav' do
+        expect(subject).to include "Démarches"
+        expect(subject).to include "instructeur"
+        expect(subject).not_to include "Mes dossiers"
+      end
+    end
+
+    context 'nav bar profile in expert context' do
+      before { user.create_expert }
+      subject { get(:index, params: { context: :expert }).body }
+      render_views
+
+      it 'define expert nav' do
+        expect(subject).to include "Avis"
+        expect(subject).to include "expert"
+        expect(subject).not_to include "Mes dossiers"
       end
     end
   end
