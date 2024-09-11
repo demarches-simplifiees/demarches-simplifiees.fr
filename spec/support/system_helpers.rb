@@ -94,6 +94,13 @@ module SystemHelpers
     end
   end
 
+  def playwright_debug
+    page.driver.with_playwright_page do |page|
+      page.context.enable_debug_console!
+      page.pause
+    end
+  end
+
   def pause
     $stderr.write 'Spec paused. Press enter to continue:'
     $stdin.gets
