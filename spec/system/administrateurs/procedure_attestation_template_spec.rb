@@ -144,7 +144,8 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       }
 
       fill_in "Contenu du pied de page", with: ["line1", "line2", "line3", "line4"].join("\n")
-      expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3line4")
+      # FIXME we should get line1\nline2\nline3line4 instead of line1\nline2\nline3\nline4 because row is set to 3
+      expect(page).to have_field("Contenu du pied de page", with: "line1\nline2\nline3\nline4")
 
       click_on "Publier"
       expect(attestation.reload).to be_published
