@@ -120,6 +120,21 @@ describe Instructeurs::GroupeInstructeursController, type: :controller do
       end
     end
 
+    context 'of an instructeur already known that has received a invitation email long time ago' do
+      let(:known_instructeur) { create(:instructeur, user: create(:user, { reset_password_sent_at: 10.days.ago })) }
+      let(:new_instructeur_email) { known_instructeur.email }
+
+      before { subject }
+
+      it "works" do
+        expect(gi_1_2.instructeurs.map(&:email)).to include(new_instructeur_email)
+        expect(flash.notice).to be_present
+        expect(response).to redirect_to(instructeur_groupe_path(procedure, gi_1_2))
+        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur)
+        expect(GroupeInstructeurMailer).not_to have_received(:notify_added_instructeurs)
+      end
+    end
+
     context 'of an instructeur already in the group' do
       let(:new_instructeur_email) { instructeur.email }
       before { subject }

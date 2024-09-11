@@ -387,8 +387,9 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'of news instructeurs' do
       let!(:user_email_verified) { create(:user, :with_email_verified) }
       let!(:instructeur_email_verified) { create(:instructeur, user: user_email_verified) }
-      let!(:instructeur_email_not_verified) { create(:instructeur, user: create(:user)) }
-      let(:new_instructeur_emails) { ['new_i1@gmail.com', 'new_i2@gmail.com', instructeur_email_verified.email, instructeur_email_not_verified.email] }
+      let!(:instructeur_email_not_verified) { create(:instructeur, user: create(:user, { reset_password_sent_at: 1.day.ago })) }
+      let!(:instructeur_email_not_verified_but_received_invitation_long_time_ago) { create(:instructeur, user: create(:user, { reset_password_sent_at: 10.days.ago })) }
+      let(:new_instructeur_emails) { ['new_i1@gmail.com', 'new_i2@gmail.com', instructeur_email_verified.email, instructeur_email_not_verified.email, instructeur_email_not_verified_but_received_invitation_long_time_ago.email] }
 
       before do
         allow(GroupeInstructeurMailer).to receive(:notify_added_instructeurs)
@@ -426,6 +427,12 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
         expect(InstructeurMailer).not_to have_received(:confirm_and_notify_added_instructeur).with(
           instructeur_email_not_verified,
+          gi_1_2,
+          admin.email
+        )
+
+        expect(InstructeurMailer).to have_received(:confirm_and_notify_added_instructeur).with(
+          instructeur_email_not_verified_but_received_invitation_long_time_ago,
           gi_1_2,
           admin.email
         )

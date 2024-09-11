@@ -50,7 +50,7 @@ module Instructeurs
           GroupeInstructeurMailer
             .notify_added_instructeurs(groupe_instructeur, [instructeur], current_user.email)
             .deliver_later
-        elsif instructeur.previously_new_record?
+        elsif instructeur.should_receive_email_activation?
           InstructeurMailer.confirm_and_notify_added_instructeur(instructeur, groupe_instructeur, current_user.email).deliver_later
         end
         # else instructeur already exists and email is not verified, so do not spam them

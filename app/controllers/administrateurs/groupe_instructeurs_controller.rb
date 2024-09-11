@@ -254,7 +254,7 @@ module Administrateurs
 
         known_instructeurs, not_verified_instructeurs = instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
 
-        not_verified_instructeurs.filter(&:previously_new_record?).each do
+        not_verified_instructeurs.filter(&:should_receive_email_activation?).each do
           InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe_instructeur, current_administrateur.email).deliver_later
         end
 
