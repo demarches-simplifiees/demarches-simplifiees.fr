@@ -178,4 +178,20 @@
       bottom: 0;
     }
   }
+
+  .tdc-repetition li {
+    margin-bottom: 5mm;
+    padding-left: 3mm;
+
+    dl {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1mm 10mm;
+    }
+
+    .invisible {
+      visibility: hidden;
+      height: 0;
+    }
+  }
 }

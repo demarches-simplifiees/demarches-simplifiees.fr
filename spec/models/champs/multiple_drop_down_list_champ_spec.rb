@@ -84,4 +84,9 @@ describe Champs::MultipleDropDownListChamp do
       it { expect(champ.next_checkbox_id("val1")).to eq(nil) }
     end
   end
+
+  describe "#for_tag" do
+    let(:value) { ["val1", "val2"] }
+    it { expect(champ.for_tag.to_s).to eq("val1, val2") }
+  end
 end

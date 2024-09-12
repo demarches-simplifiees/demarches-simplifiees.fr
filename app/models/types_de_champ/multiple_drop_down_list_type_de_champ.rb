@@ -7,7 +7,7 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
     end
 
     def champ_value_for_tag(champ, path = :value)
-      champ.selected_options.join(', ')
+      ChampPresentations::MultipleDropDownListPresentation.new(champ.selected_options)
     end
 
     def champ_value_for_export(champ, path = :value)

@@ -18,7 +18,7 @@ class TiptapService
   def to_html(node, substitutions = {})
     return '' if node.nil?
 
-    children(node[:content], substitutions, 0)
+    children(node[:content], substitutions, 0).gsub('<p></p>', '')
   end
 
   def to_texts_and_tags(node, substitutions = {})
@@ -79,10 +79,16 @@ class TiptapService
       "<h#{hlevel}#{body_start_mark}#{text_align(attrs)}>#{children(content, substitutions, level + 1)}</h#{hlevel}>"
     in type: 'bulletList', content:
       "<ul>#{children(content, substitutions, level + 1)}</ul>"
-    in type: 'orderedList', content:
-      "<ol>#{children(content, substitutions, level + 1)}</ol>"
+    in type: 'orderedList', content:, **rest
+      "<ol#{class_list(rest[:attrs])}>#{children(content, substitutions, level + 1)}</ol>"
     in type: 'listItem', content:
       "<li>#{children(content, substitutions, level + 1)}</li>"
+    in type: 'descriptionList', content:
+      "<dl>#{children(content, substitutions, level + 1)}</dl>"
+    in type: 'descriptionTerm', content:, **rest
+      "<dt#{class_list(rest[:attrs])}>#{children(content, substitutions, level + 1)}</dt>"
+    in type: 'descriptionDetails', content:
+      "<dd>#{children(content, substitutions, level + 1)}</dd>"
     in type: 'text', text:, **rest
       if rest[:marks].present?
         apply_marks(text, rest[:marks])
@@ -90,7 +96,12 @@ class TiptapService
         text
       end
     in type: 'mention', attrs: { id: }, **rest
-      text = substitutions.fetch(id) { "--#{id}--" }
+      text_or_presentation = substitutions.fetch(id) { "--#{id}--" }
+      text = if text_or_presentation.respond_to?(:to_tiptap_node)
+        handle_presentation_node(text_or_presentation, substitutions, level + 1)
+      else
+        text_or_presentation
+      end
 
       if rest[:marks].present?
         apply_marks(text, rest[:marks])
@@ -102,11 +113,27 @@ class TiptapService
     end
   end
 
+  def handle_presentation_node(presentation, substitutions, level)
+    node = presentation.to_tiptap_node
+    content = node_to_html(node, substitutions, level)
+    if presentation.block_level?
+      "</p>#{content}<p>"
+    else
+      content
+    end
+  end
+
   def text_align(attrs)
     if attrs.present? && attrs[:textAlign].present?
       " style=\"text-align: #{attrs[:textAlign]}\""
     else
       ""
+    end
+  end
+
+  def class_list(attrs)
+    if attrs.present? && attrs[:class].present?
+      " class=\"#{attrs[:class]}\""
     end
   end
 
