@@ -102,7 +102,7 @@ jobs:
 
       - name: Upload screenshots if previous test failed
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: tmp/screenshots
@@ -162,7 +162,7 @@ jobs:
 
       - name: Upload screenshots if previous tests failed
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots-${{ strategy.job-index }}
           path: tmp/screenshots
