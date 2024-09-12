@@ -20,22 +20,6 @@ class Attachment::GalleryItemComponent < ApplicationComponent
     from_dossier? ? attachment.record.libelle : 'Pièce jointe au message'
   end
 
-  def from_dossier?
-    attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp])
-  end
-
-  def from_messagerie?
-    attachment.record.is_a?(Commentaire)
-  end
-
-  def from_messagerie_instructeur?
-    from_messagerie? && attachment.record.instructeur.present?
-  end
-
-  def from_messagerie_usager?
-    from_messagerie? && attachment.record.instructeur.nil?
-  end
-
   def origin
     case
     when from_dossier?
@@ -80,5 +64,23 @@ class Attachment::GalleryItemComponent < ApplicationComponent
       "fr-badge fr-badge--sm" => true,
       "fr-badge--new" => seen_at.present? && updated_at&.>(seen_at)
     )
+  end
+
+  private
+
+  def from_dossier?
+    attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp])
+  end
+
+  def from_messagerie?
+    attachment.record.is_a?(Commentaire)
+  end
+
+  def from_messagerie_instructeur?
+    from_messagerie? && attachment.record.instructeur.present?
+  end
+
+  def from_messagerie_usager?
+    from_messagerie? && attachment.record.instructeur.nil?
   end
 end
