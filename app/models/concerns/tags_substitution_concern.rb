@@ -103,6 +103,13 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::TERMINE
     },
     {
+      id: 'dossier_last_champ_updated_at',
+      libelle: 'date de mise à jour',
+      description: 'Date de dernière mise à jour d’un champ du dossier',
+      lambda: -> (d) { format_date(d.last_champ_updated_at) },
+      available_for_states: Dossier::SOUMIS
+    },
+    {
       id: 'dossier_procedure_libelle',
       libelle: 'libellé démarche',
       description: '',

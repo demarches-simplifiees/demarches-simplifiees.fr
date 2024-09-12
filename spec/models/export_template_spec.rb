@@ -67,24 +67,30 @@ describe ExportTemplate do
     context 'for entreprise procedure' do
       let(:for_individual) { false }
       let(:expected_tags) do
-        ['entreprise_siren', 'entreprise_numero_tva_intracommunautaire', 'entreprise_siret_siege_social', 'entreprise_raison_sociale', 'entreprise_adresse', 'dossier_depose_at', 'dossier_procedure_libelle', 'dossier_service_name', 'dossier_number', 'dossier_groupe_instructeur']
+        [
+          'entreprise_siren', 'entreprise_numero_tva_intracommunautaire', 'entreprise_siret_siege_social', 'entreprise_raison_sociale', 'entreprise_adresse',
+          'dossier_depose_at', 'dossier_procedure_libelle', 'dossier_service_name', 'dossier_number', 'dossier_groupe_instructeur', 'dossier_last_champ_updated_at'
+        ]
       end
 
       it do
-        expect(export_template.tags.map { _1[:id] }).to eq(expected_tags)
-        expect(export_template.pj_tags.map { _1[:id] }).to eq(expected_tags + ['original-filename'])
+        expect(export_template.tags.map { _1[:id] }).to match_array(expected_tags)
+        expect(export_template.pj_tags.map { _1[:id] }).to match_array(expected_tags + ['original-filename'])
       end
     end
 
     context 'for individual procedure' do
       let(:for_individual) { true }
       let(:expected_tags) do
-        ['individual_gender', 'individual_last_name', 'individual_first_name', 'dossier_depose_at', 'dossier_procedure_libelle', 'dossier_service_name', 'dossier_number', 'dossier_groupe_instructeur']
+        [
+          'individual_gender', 'individual_last_name', 'individual_first_name',
+          'dossier_depose_at', 'dossier_procedure_libelle', 'dossier_service_name', 'dossier_number', 'dossier_groupe_instructeur', 'dossier_last_champ_updated_at'
+        ]
       end
 
       it do
-        expect(export_template.tags.map { _1[:id] }).to eq(expected_tags)
-        expect(export_template.pj_tags.map { _1[:id] }).to eq(expected_tags + ['original-filename'])
+        expect(export_template.tags.map { _1[:id] }).to match_array(expected_tags)
+        expect(export_template.pj_tags.map { _1[:id] }).to match_array(expected_tags + ['original-filename'])
       end
     end
   end

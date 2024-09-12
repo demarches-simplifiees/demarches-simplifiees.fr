@@ -375,13 +375,17 @@ describe TagsSubstitutionConcern, type: :model do
 
     context "when using a date tag" do
       before do
-        Timecop.freeze(Time.zone.local(2001, 2, 3))
+        travel_to Time.zone.local(2001, 2, 3)
         dossier.passer_en_construction!
-        Timecop.freeze(Time.zone.local(2004, 5, 6))
+
+        travel_to Time.zone.local(2003, 1, 3)
+        dossier.touch(:last_champ_updated_at)
+
+        travel_to Time.zone.local(2004, 5, 6)
         dossier.passer_en_instruction!(instructeur: instructeur)
-        Timecop.freeze(Time.zone.local(2007, 8, 9))
+
+        travel_to Time.zone.local(2007, 8, 9)
         dossier.accepter!(instructeur: instructeur)
-        Timecop.return
       end
 
       context "with date de dépôt" do
@@ -400,6 +404,12 @@ describe TagsSubstitutionConcern, type: :model do
         let(:template) { '--date de décision--' }
 
         it { is_expected.to eq('09/08/2007') }
+      end
+
+      context "with date last ,champ updated at" do
+        let(:template) { '--date de mise à jour--' }
+
+        it { is_expected.to eq('03/01/2003') }
       end
     end
 
