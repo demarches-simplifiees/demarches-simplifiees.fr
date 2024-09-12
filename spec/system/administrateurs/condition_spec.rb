@@ -39,8 +39,9 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
 
   scenario "the first type de champ is removed" do
     within '.type-de-champ:nth-child(1)' do
-      click_on 'Supprimer'
-      page.accept_alert
+      accept_alert do
+        click_on 'Supprimer'
+      end
     end
 
     # the condition table is deleted
@@ -56,8 +57,9 @@ describe 'As an administrateur I can edit types de champ condition', js: true do
 
     scenario "removing all conditions" do
       within '.type-de-champ:nth-child(2)' do
-        click_on 'cliquer pour désactiver'
-        page.accept_alert
+        accept_alert do
+          click_on 'cliquer pour désactiver'
+        end
 
         # the condition table is deleted
         expect(page).to have_no_table

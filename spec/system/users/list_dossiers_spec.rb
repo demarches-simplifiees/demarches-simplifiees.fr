@@ -189,7 +189,7 @@ describe 'user access to the list of their dossiers', js: true do
         expect(page).to have_content(dossier_en_construction.procedure.libelle)
         within(:css, ".card", match: :first) do
           click_on 'Autres actions'
-          page.accept_alert('Confirmer la suppression ?') do
+          accept_alert('Confirmer la suppression ?') do
             click_on 'Supprimer le dossier'
           end
         end
