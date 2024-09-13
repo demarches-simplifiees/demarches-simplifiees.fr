@@ -572,12 +572,8 @@ class TypeDeChamp < ApplicationRecord
     drop_down_options.presence || []
   end
 
-  def drop_down_list_disabled_options
-    drop_down_list_options.filter { |v| (v =~ /^--.*--$/).present? }
-  end
-
   def drop_down_list_enabled_non_empty_options(other: false)
-    list_options = (drop_down_list_options - drop_down_list_disabled_options).reject(&:empty?)
+    list_options = drop_down_list_options.reject(&:empty?)
 
     if other && drop_down_other?
       list_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]

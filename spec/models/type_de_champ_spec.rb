@@ -218,20 +218,6 @@ describe TypeDeChamp do
     end
   end
 
-  describe 'disabled_options' do
-    let(:value) do
-      <<~EOS
-        tip
-        --top--
-        --troupt--
-        ouaich
-      EOS
-    end
-    let(:type_de_champ) { create(:type_de_champ_drop_down_list, drop_down_list_value: value) }
-
-    it { expect(type_de_champ.drop_down_list_disabled_options).to match(['--top--', '--troupt--']) }
-  end
-
   describe '#public_only' do
     let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
 
