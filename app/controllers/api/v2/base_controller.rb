@@ -12,7 +12,7 @@ class API::V2::BaseController < ApplicationController
   before_action :authenticate_from_token
   before_action :ensure_authorized_network, if: -> { @api_token.present? }
   before_action :ensure_token_is_not_expired, if: -> { @api_token.present? }
-  before_action :allow_only_persisted_queries, if: -> { @api_token.blank? }
+  before_action :allow_only_persisted_queries, if: -> { @api_token.blank? && current_administrateur.blank? }
 
   before_action do
     Current.browser = 'api'
