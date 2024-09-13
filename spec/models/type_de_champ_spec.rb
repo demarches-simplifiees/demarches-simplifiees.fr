@@ -107,7 +107,7 @@ describe TypeDeChamp do
       context 'when the target type_champ is not drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
-        it { expect(tdc.drop_down_options).to be_nil }
+        it { expect(tdc.drop_down_options).to be_empty }
       end
 
       context 'when the target type_champ is linked_drop_down_list' do
@@ -192,7 +192,7 @@ describe TypeDeChamp do
     end
   end
 
-  describe '#drop_down_list_options' do
+  describe '#drop_down_options' do
     let(:value) do
       <<~EOS
         Cohésion sociale
@@ -203,7 +203,7 @@ describe TypeDeChamp do
     end
     let(:type_de_champ) { create(:type_de_champ_drop_down_list, drop_down_list_value: value) }
 
-    it { expect(type_de_champ.drop_down_list_options).to eq ['', 'Cohésion sociale', 'Dév.Eco / Emploi', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
+    it { expect(type_de_champ.drop_down_options).to eq ['', 'Cohésion sociale', 'Dév.Eco / Emploi', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
 
     context 'when one value is empty' do
       let(:value) do
@@ -214,7 +214,7 @@ describe TypeDeChamp do
         EOS
       end
 
-      it { expect(type_de_champ.drop_down_list_options).to eq ['', 'Cohésion sociale', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
+      it { expect(type_de_champ.drop_down_options).to eq ['', 'Cohésion sociale', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
     end
   end
 

@@ -4,7 +4,7 @@ class Champs::LinkedDropDownListChamp < Champ
   delegate :primary_options, :secondary_options, to: :type_de_champ
 
   def options?
-    drop_down_list_options?
+    drop_down_options?
   end
 
   def primary_value

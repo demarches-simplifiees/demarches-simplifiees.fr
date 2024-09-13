@@ -17,7 +17,7 @@ class Champs::DropDownListChamp < Champ
   end
 
   def options?
-    drop_down_list_options?
+    drop_down_options?
   end
 
   def html_label?
