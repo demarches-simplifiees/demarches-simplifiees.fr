@@ -16,9 +16,10 @@ module Types
     field :street_number, String, "numéro avec indice de répétition éventuel (bis, ter, A, B)", null: true
     field :street_name, String, "nom de voie ou lieu dit", null: true
 
-    field :postal_code, String, "code postal", null: false
     field :city_name, String, "nom de la commune", null: false
-    field :city_code, String, "code INSEE de la commune", null: false
+    field :city_code, String, "code INSEE de la commune (hors france sera null)", null: true
+
+    field :postal_code, String, "code postal (hors france peut être null)", null: true
 
     field :department_name, String, "nom de département", null: true
     field :department_code, String, "n° de département", null: true
