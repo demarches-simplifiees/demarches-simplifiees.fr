@@ -72,10 +72,10 @@
       "distribution_speciale": "string",
       "code_cedex": "75590",
       "libelle_cedex": "PARIS CEDEX 12",
-      "libelle_commune": "PARIS 12",
-      "libelle_commune_etranger": null,
+      "libelle_commune": null,
+      "libelle_commune_etranger": "LONDRES",
       "code_pays_etranger": "99132",
-      "libelle_pays_etranger": null,
+      "libelle_pays_etranger": "ROYAUME-UNI",
       "status_diffusion": "diffusible",
       "acheminement_postal": {
         "l1": "DIRECTION INTERMINISTERIELLE DU NUMERIQUE",

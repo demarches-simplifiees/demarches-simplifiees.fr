@@ -25,7 +25,12 @@ class APIEntreprise::EtablissementAdapter < APIEntreprise::Adapter
         params.merge!(params[:adresse].slice(*address_attr_to_fetch))
         params[:nom_voie] = raw_data[:adresse][:libelle_voie]
         params[:code_insee_localite] = raw_data[:adresse][:code_commune]
-        params[:localite] = raw_data[:adresse][:libelle_commune]
+        if raw_data[:adresse][:libelle_pays_etranger].present?
+          params[:localite] = raw_data[:adresse][:libelle_commune_etranger]
+          params[:nom_pays] = raw_data[:adresse][:libelle_pays_etranger]
+        else
+          params[:localite] = raw_data[:adresse][:libelle_commune]
+        end
         params[:adresse] = adresse_line
         params
       else
