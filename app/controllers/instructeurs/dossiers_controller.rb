@@ -13,6 +13,7 @@ module Instructeurs
 
     before_action :redirect_on_dossier_not_found, only: :show
     before_action :redirect_on_dossier_in_batch_operation, only: [:archive, :unarchive, :follow, :unfollow, :passer_en_instruction, :repasser_en_construction, :repasser_en_instruction, :terminer, :restore, :destroy, :extend_conservation]
+    before_action :set_gallery_attachments, only: [:show, :pieces_jointes, :annotations_privees, :avis, :messagerie, :personnes_impliquees, :reaffectation]
     after_action :mark_demande_as_read, only: :show
 
     after_action :mark_messagerie_as_read, only: [:messagerie, :create_commentaire, :pending_correction]
@@ -373,19 +374,6 @@ module Instructeurs
 
     def pieces_jointes
       @dossier = current_instructeur.dossiers.find(params[:dossier_id])
-
-      champs_attachments = @dossier
-        .champs
-        .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
-        .flat_map(&:piece_justificative_file)
-
-      commentaires_attachments = @dossier
-        .commentaires
-        .map(&:piece_jointe)
-        .map(&:attachments)
-        .flatten
-
-      @gallery_attachments = champs_attachments + commentaires_attachments
       @pieces_jointes_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.pieces_jointes_seen_at
     end
 
@@ -498,6 +486,23 @@ module Instructeurs
         flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
         redirect_back(fallback_location: instructeur_dossier_path(procedure, dossier_in_batch))
       end
+    end
+
+    def set_gallery_attachments
+      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+
+      champs_attachments = @dossier
+        .champs
+        .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
+        .flat_map(&:piece_justificative_file)
+
+      commentaires_attachments = @dossier
+        .commentaires
+        .map(&:piece_jointe)
+        .map(&:attachments)
+        .flatten
+
+      @gallery_attachments = champs_attachments + commentaires_attachments
     end
   end
 end
