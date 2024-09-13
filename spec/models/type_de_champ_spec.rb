@@ -193,28 +193,17 @@ describe TypeDeChamp do
   end
 
   describe '#drop_down_options' do
-    let(:value) do
-      <<~EOS
-        Cohésion sociale
-        Dév.Eco / Emploi
-        Cadre de vie / Urb.
-        Pilotage / Ingénierie
-      EOS
-    end
-    let(:type_de_champ) { create(:type_de_champ_drop_down_list, drop_down_list_value: value) }
+    let(:type_de_champ) { create(:type_de_champ_drop_down_list) }
 
-    it { expect(type_de_champ.drop_down_options).to eq ['', 'Cohésion sociale', 'Dév.Eco / Emploi', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
+    it "splits input" do
+      type_de_champ.drop_down_list_value = nil
+      expect(type_de_champ.drop_down_options).to eq([])
 
-    context 'when one value is empty' do
-      let(:value) do
-        <<~EOS
-          Cohésion sociale
-          Cadre de vie / Urb.
-          Pilotage / Ingénierie
-        EOS
-      end
+      type_de_champ.drop_down_list_value = "\n\r"
+      expect(type_de_champ.drop_down_options).to eq([])
 
-      it { expect(type_de_champ.drop_down_options).to eq ['', 'Cohésion sociale', 'Cadre de vie / Urb.', 'Pilotage / Ingénierie'] }
+      type_de_champ.drop_down_list_value = " 1 / 2 \r\n 3"
+      expect(type_de_champ.drop_down_options).to eq(['', '1 / 2', '3'])
     end
   end
 

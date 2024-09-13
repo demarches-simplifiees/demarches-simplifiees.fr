@@ -482,8 +482,10 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  DEFAULT_EMPTY = ['']
   def drop_down_list_value=(value)
-    self.drop_down_options = parse_drop_down_list_value(value)
+    split = value.to_s.lines.map(&:strip).reject(&:empty?)
+    self.drop_down_options = split.blank? ? [] : DEFAULT_EMPTY + split
   end
 
   def header_section_level_value
@@ -768,13 +770,6 @@ class TypeDeChamp < ApplicationRecord
   end
 
   private
-
-  DEFAULT_EMPTY = ['']
-  def parse_drop_down_list_value(value)
-    value = value ? value.split("\r\n").map(&:strip).join("\r\n") : ''
-    result = value.split(/[\r\n]|[\r]|[\n]|[\n\r]/).reject(&:empty?)
-    result.blank? ? [] : DEFAULT_EMPTY + result
-  end
 
   def populate_stable_id
     if !stable_id
