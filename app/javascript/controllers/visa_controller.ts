@@ -61,7 +61,9 @@ export class VisaController extends ApplicationController {
   private updateVisibility(champ: Element, checked: boolean) {
     const visibility = checked ? 'hidden' : 'visible';
     champ
-      .querySelectorAll<HTMLInputElement>('input, select, button, textarea')
+      .querySelectorAll<HTMLInputElement>(
+        'input, select, button:not(.revisions-button), textarea'
+      )
       .forEach((node) => (node.disabled = checked));
     champ
       .querySelectorAll<HTMLInputElement>('a.fr-btn')

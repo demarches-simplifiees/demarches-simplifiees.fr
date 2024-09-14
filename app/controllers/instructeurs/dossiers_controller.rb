@@ -25,8 +25,8 @@ module Instructeurs
 
     def geo_data
       send_data dossier.to_feature_collection.to_json,
-        type: 'application/json',
-        filename: "dossier-#{dossier.id}-features.json"
+                type: 'application/json',
+                filename: "dossier-#{dossier.id}-features.json"
     end
 
     def apercu_attestation
@@ -447,20 +447,35 @@ module Instructeurs
 
       header_type = TypeDeChamp.type_champs.fetch(:header_section)
       header_champ = Champ.where(type_de_champ: { type_champ: header_type })
-      champs_base = Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ)
+      Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ)
         .and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id, :position).order(:position)
 
-      # auto-save send small sets of fields to update so for speed, we look for brothers containing visa or headers
-      Rails.logger.info("Changes to check against visa: #{params}")
-      params[:dossier][:champs_private_attributes]&.reject! do |_k, v|
-        champ = Champ.joins(type_de_champ: :revision_types_de_champ).select(:dossier_id, :row_id, :position).find(v[:id])
-        # look for position of next visa in the same first level title.
-        champs = champs_base
-          .where(row_id: champ.row_id, dossier: champ.dossier_id)
-          .where('position > ?', champ[:position])
-        following_champ = champs.find { |c| c.visa? || (c.header_section? && c.header_section_level_value == 1) }
+      # retrieve champ ordered like display (position of parent, line, position)
+      ordered_champs = Champ.private_only.where(dossier:)
+        .joins(type_de_champ: :revision_types_de_champ)
+        .left_joins(parent: { type_de_champ: :revision_types_de_champ })
+        .includes(:type_de_champ)
+        .order(Arel.sql("coalesce(revision_types_de_champ_types_de_champ.position, procedure_revision_types_de_champ.position)," +
+                          " COALESCE(champs.row_id,' '), procedure_revision_types_de_champ.position"))
+
+      params[:dossier][:champs_private_attributes]&.reject! do |k, v|
+        # find modified champ
+        champ_index = if v[:with_public_id]
+          ordered_champs.index { _1.public_id == k }
+        else
+          ordered_champs.index { _1.id == v[:id]&.to_i }
+        end
+        return unless champ_index
+
+        # check following chedked visa or header section level 1
+        row_id = ordered_champs[champ_index].row_id
+        following_champ = ordered_champs[champ_index + 1..-1].find do |c|
+          next if c.row_id.present? && c.row_id != row_id # ignore champs from a different row
+
+          (c.visa? && c.value.present?) || (c.header_section? && c.header_section_level_value == 1)
+        end
         to_reject = following_champ.present? && following_champ.visa?
-        Rails.logger.warn("Annulation sauvegarde de l'annotation #{champ.label} sur dossier #{champ.dossier_id} car le visa #{following_champ.label} a la valeur #{following_champ.value}") if to_reject
+        Rails.logger.warn("Annulation sauvegarde de l'annotation '#{dossier_with_champs.champs[champ_index].libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
         to_reject
       end
       champs_private_attributes_params

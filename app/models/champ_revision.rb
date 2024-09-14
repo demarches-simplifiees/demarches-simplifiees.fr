@@ -28,12 +28,12 @@ class ChampRevision < ApplicationRecord
   end
 
   def self.create_or_update_revision_if_needed(dossier, champs_private_attributes_params, instructeur_id)
-    revised_champs = if champs_private_attributes_params.values.filter { _1.key?(:with_public_id) }.empty?
-                       champ_ids = champs_private_attributes_params.values.map { _1[:id] }.compact.map(&:to_i)
-                       dossier.champs.filter(&:private?).filter { _1.id.in?(champ_ids) }
-                     else
+    revised_champs = if champs_private_attributes_params.values.any? { _1.key?(:with_public_id) }
                        champ_public_ids = champs_private_attributes_params.keys
                        dossier.champs.filter(&:private?).filter { _1.public_id.in?(champ_public_ids) }
+                     else
+                       champ_ids = champs_private_attributes_params.values.map { _1[:id] }.compact.map(&:to_i)
+                       dossier.champs.filter(&:private?).filter { _1.id.in?(champ_ids) }
                      end.filter { _1.previous_changes.present? }
 
     revised_champs.each do |champ|

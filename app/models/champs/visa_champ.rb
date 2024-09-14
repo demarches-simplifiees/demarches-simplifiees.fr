@@ -1,7 +1,7 @@
 class Champs::VisaChamp < Champ
   def search_terms
     if value.present?
-      [libelle]
+      [value]
     end
   end
 

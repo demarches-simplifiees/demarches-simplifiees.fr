@@ -14,7 +14,7 @@
 
     - if has_champ_revisions?
       %div{ class: 'dropdown revision-dropdown', data: { controller: 'menu-button' } }
-        %button{ class: 'fr-btn dropdown-button fr-btn--tertiary', id: "#{@champ.public_id || @champ.id}-revision-btn", "aria-expanded": "false", 'aria-haspopup': 'true', 'aria-controls': "#{@champ.public_id || @champ.id}-revision", data: { menu_button_target: "button" } }
+        %button{ class: 'fr-btn dropdown-button fr-btn--tertiary revisions-button', id: "#{@champ.public_id || @champ.id}-revision-btn", "aria-expanded": "false", 'aria-haspopup': 'true', 'aria-controls': "#{@champ.public_id || @champ.id}-revision", data: { menu_button_target: "button" } }
           Revisions
 
         %div{ data: { menu_button_target: 'menu' }, id: "#{@champ.public_id || @champ.id}-revision", 'aria-labelledby': "#{@champ.public_id || @champ.id}-revision-btn", role: 'menu', 'tab-index': -1, class: 'dropdown-content fade-in-down' }
