@@ -88,6 +88,10 @@ class Champs::MultipleDropDownListChamp < Champ
     end
   end
 
+  def render?
+    @champ.drop_down_options.any?
+  end
+
   private
 
   def values_are_in_options
