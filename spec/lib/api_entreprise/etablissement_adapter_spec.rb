@@ -74,8 +74,24 @@ describe APIEntreprise::EtablissementAdapter do
           expect(subject[:localite]).to eq('PARIS 12')
         end
 
+        it 'L\'entreprise ne contient pas de nom de pays' do
+          expect(subject[:nom_pays]).to be_nil
+        end
+
         it 'L\'entreprise contient bien un code_insee_localite' do
           expect(subject[:code_insee_localite]).to eq('75112')
+        end
+      end
+
+      context 'Détails adresse étranger' do
+        let(:fixture) { 'spec/fixtures/files/api_entreprise/etablissements-uk.json' }
+
+        it 'L\'entreprise contient bien une localite' do
+          expect(subject[:localite]).to eq('LONDRES')
+        end
+
+        it 'L\'entreprise contient bien un nom de pays' do
+          expect(subject[:nom_pays]).to eq('ROYAUME-UNI')
         end
       end
     end
