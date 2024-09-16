@@ -573,7 +573,7 @@ describe ProcedurePresentation do
     context 'for type_de_champ using AddressableColumnConcern' do
       let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
-      let(:available_columns) { type_de_champ.dynamic_type.columns(table: 'type_de_champ') }
+      let(:available_columns) { type_de_champ.columns }
       let(:column) { available_columns.find { _1.value_column == value_column_searched } }
       let(:filter) { [column.to_json.merge({ "value" => value })] }
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
