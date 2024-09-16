@@ -235,7 +235,7 @@ RSpec.describe DossierCloneConcern do
         end
 
         before do
-          champ = dossier.champs.find { _1.stable_id == 992 }
+          champ = dossier.champs_public.find { _1.stable_id == 992 }
           champ.value = "Je ne sais pas"
           champ.save!(validate: false)
         end
@@ -243,7 +243,7 @@ RSpec.describe DossierCloneConcern do
         it 'can still fork' do
           expect(dossier.validate(:champs_public_value)).to be_falsey
 
-          new_dossier.champs.load # load relation so champs are validated below
+          new_dossier.champs_public.load # load relation so champs are validated below
 
           expect(new_dossier.validate(:champs_public_value)).to be_falsey
           expect(new_dossier.champs.find { _1.stable_id == 992 }.value).to eq("Je ne sais pas")
