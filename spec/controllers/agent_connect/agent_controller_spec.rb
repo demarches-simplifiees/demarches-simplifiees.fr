@@ -38,24 +38,24 @@ describe AgentConnect::AgentController, type: :controller do
 
       context 'and user_info returns some info' do
         before do
-          ENV['MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL'] = 'https://moncomptepro.fr/not_configured'
           expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
         end
 
-        context 'and the instructeur use mon_compte_pro without 2FA' do
+        context 'and the instructeur use mon_compte_pro' do
           before do
             user_info['idp_id'] = AgentConnect::AgentController::MON_COMPTE_PRO_IDP_ID
             allow(controller).to receive(:sign_in)
           end
 
           context 'without 2FA' do
-            it 'redirects to MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL' do
+            it 'redirects to agent_connect_explanation_2fa_path' do
               subject
 
               expect(controller).not_to have_received(:sign_in)
-              expect(response).to redirect_to(ENV['MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL'])
+              expect(response).to redirect_to(agent_connect_explanation_2fa_path)
               expect(state_cookie).to be_nil
               expect(nonce_cookie).to be_nil
+              expect(cookies.encrypted[controller.class::AC_ID_TOKEN_COOKIE_NAME]).to eq(id_token)
             end
           end
 
@@ -194,6 +194,37 @@ describe AgentConnect::AgentController, type: :controller do
         expect { subject }.to change { User.count }.by(0).and change { Instructeur.count }.by(0)
 
         expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+  end
+
+  describe '#logout_from_mcp' do
+    let(:id_token) { 'id_token' }
+    subject { get :logout_from_mcp }
+
+    before do
+      cookies.encrypted[controller.class::AC_ID_TOKEN_COOKIE_NAME] = id_token
+    end
+
+    it 'clears the id token cookie and redirects to the agent connect logout url' do
+      expect(AgentConnectService).to receive(:logout_url).with(id_token, host_with_port: 'test.host')
+        .and_return("https://agent-connect.fr/logout/#{id_token}")
+
+      subject
+
+      expect(cookies.encrypted[controller.class::AC_ID_TOKEN_COOKIE_NAME]).to be_nil
+      expect(cookies.encrypted[controller.class::REDIRECT_TO_AC_LOGIN_COOKIE_NAME]).to eq(true)
+      expect(response).to redirect_to("https://agent-connect.fr/logout/#{id_token}")
+    end
+
+    context 'when the id_token is blank' do
+      let(:id_token) { nil }
+
+      it 'clears the cookies and redirects to the root path' do
+        subject
+
+        expect(cookies.encrypted[controller.class::REDIRECT_TO_AC_LOGIN_COOKIE_NAME]).to be_nil
+        expect(response).to redirect_to(root_path)
       end
     end
   end

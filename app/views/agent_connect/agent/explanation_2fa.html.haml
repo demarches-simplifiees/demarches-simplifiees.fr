@@ -1,0 +1,14 @@
+.fr-container
+  %h1.fr-h2.fr-mt-4w Une validation en 2 étapes est désormais nécessaire.
+
+  %p.fr-mb-2w
+    La sécurité de votre compte augmente. Nous vous demandons à présent une validation en 2 étapes pour vous connecter.
+
+  %p.fr-mb-2w
+    Vous allez devoir <b>configurer votre mode d'authentification</b> sur le site <b>MonComptePro</b> :
+
+  %img{ src: image_url("instructions_moncomptepro.png"), alt: "MonComptePro", loading: 'lazy' }
+
+
+  %button.fr-btn.fr-btn--primary.fr-mb-2w
+    = link_to "Configurer mon appli d'authentification sur MonComptePro", ENV['MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL']
