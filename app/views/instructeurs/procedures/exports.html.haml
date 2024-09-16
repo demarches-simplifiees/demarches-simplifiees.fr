@@ -38,6 +38,11 @@
           - c.with_body do
             %p= t('.export_template_list_description_html')
 
+
+        .fr-mt-5w
+          = link_to t('.new_zip_export_template'), new_instructeur_procedure_export_template_path(@procedure), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mr-1w"
+          = link_to t('.new_tabular_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
+
         .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-5w
           %table
             %thead
@@ -45,9 +50,6 @@
                 %th{ scope: 'col' } Nom du modèle
                 %th{ scope: 'col' }= "Groupe instructeur" if @procedure.groupe_instructeurs.many?
                 %th{ scope: "col" }
-                  %ul.fr-btns-group.fr-btns-group--inline
-                    %li= link_to "Nouveau modèle d'export zip", new_instructeur_procedure_export_template_path(@procedure), class: "fr-btn fr-btn--secondary"
-                    %li= link_to "Nouveau modèle d'export tabulaire", new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary"
             %tbody
               - @export_templates.each do |export_template|
                 %tr

@@ -22,3 +22,5 @@ en:
         export_template_list_description_html: |
           Each instructor can <b>configure an export template</b> to customize exports (attachments name for a zip export, columns selection for a tabular export). It will be made <b>available to all instructors</b> assigned to the procedure.</br>
           <a href="https://doc.demarches-simplifiees.fr" target="_blank" rel="noopener noreferrer">Find out more about export template configuration</a>
+        new_zip_export_template: Create zip export template
+        new_tabular_export_template: Create tabular export template
