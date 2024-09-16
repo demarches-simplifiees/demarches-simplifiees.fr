@@ -34,10 +34,40 @@ describe AgentConnect::AgentController, type: :controller do
       let(:code) { 'correct' }
       let(:state) { original_state }
       let(:user_info) { { 'sub' => 'sub', 'email' => email, 'given_name' => 'given', 'usual_name' => 'usual' } }
+      let(:amr) { [] }
 
       context 'and user_info returns some info' do
         before do
-          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token])
+          ENV['MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL'] = 'https://moncomptepro.fr/not_configured'
+          expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
+        end
+
+        context 'and the instructeur use mon_compte_pro without 2FA' do
+          before do
+            user_info['idp_id'] = AgentConnect::AgentController::MON_COMPTE_PRO_IDP_ID
+            allow(controller).to receive(:sign_in)
+          end
+
+          context 'without 2FA' do
+            it 'redirects to MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL' do
+              subject
+
+              expect(controller).not_to have_received(:sign_in)
+              expect(response).to redirect_to(ENV['MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL'])
+              expect(state_cookie).to be_nil
+              expect(nonce_cookie).to be_nil
+            end
+          end
+
+          context 'with 2FA' do
+            let(:amr) { ['mfa'] }
+
+            it 'creates the user, signs in and redirects to procedure_path' do
+              expect { subject }.to change { User.count }.by(1).and change { Instructeur.count }.by(1)
+
+              expect(controller).to have_received(:sign_in)
+            end
+          end
         end
 
         context 'and the instructeur does not have an account yet' do

@@ -23,11 +23,11 @@ class AgentConnect::AgentController < ApplicationController
   end
 
   def callback
-    user_info, id_token = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
+    user_info, id_token, amr = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.delete NONCE_COOKIE_NAME
 
-    if user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID
-      # MON COMPTE PRO !
+    if user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID && !amr.include?('mfa')
+      return redirect_to ENV['MON_COMPTE_PRO_2FA_NOT_CONFIGURED_URL'], allow_other_host: true
     end
 
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
