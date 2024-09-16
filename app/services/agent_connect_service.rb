@@ -39,6 +39,12 @@ class AgentConnectService
     [access_token.userinfo!.raw_attributes, access_token.id_token, amr]
   end
 
+  def self.logout_url(id_token, host_with_port:)
+    app_logout = Rails.application.routes.url_helpers.logout_url(host: host_with_port)
+    h = { id_token_hint: id_token, post_logout_redirect_uri: app_logout }
+    "#{AGENT_CONNECT[:end_session_endpoint]}?#{h.to_query}"
+  end
+
   private
 
   # TODO: remove this block when migration to new domain is done
