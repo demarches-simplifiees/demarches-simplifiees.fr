@@ -67,6 +67,7 @@ describe AgentConnect::AgentController, type: :controller do
               expect { subject }.to change { User.count }.by(1).and change { Instructeur.count }.by(1)
 
               expect(controller).to have_received(:sign_in)
+              expect(User.last.instructeur.agent_connect_information.last.amr).to eq(amr)
             end
           end
         end
