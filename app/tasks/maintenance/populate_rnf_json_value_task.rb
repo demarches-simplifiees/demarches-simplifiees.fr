@@ -9,7 +9,7 @@ module Maintenance
     include Dry::Monads[:result]
 
     def collection
-      Champs::RNFChamp.where(value_json: nil)
+      Champs::RNFChamp.where("external_id != null and data != null") # had been found
       # Collection to be iterated over
       # Must be Active Record Relation or Array
     end
@@ -23,8 +23,9 @@ module Maintenance
         rescue ActiveRecord::RecordInvalid
           # some champ might have dossier nil
         end
-      else
-        # not found
+      else # fondation was removed, but we kept API data in data:, use it to restore stuff
+
+        champ.update_with_external_data!(data: champ.data.with_indifferent_access)
       end
     end
 
