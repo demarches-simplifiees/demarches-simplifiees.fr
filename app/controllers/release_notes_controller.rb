@@ -23,8 +23,6 @@ class ReleaseNotesController < ApplicationController
     render "scrollable_list" if params[:page].present?
   end
 
-  def nav_bar_profile = try_nav_bar_profile_from_referrer
-
   private
 
   def touch_default_categories_seen_at
