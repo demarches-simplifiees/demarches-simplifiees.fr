@@ -29,7 +29,9 @@ class AgentConnect::AgentController < ApplicationController
     user_info, id_token, amr = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.delete NONCE_COOKIE_NAME
 
-    if user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID && !amr.include?('mfa')
+    if user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID &&
+        !amr.include?('mfa') &&
+        Flipper.enabled?(:agent_connect_2fa, Struct.new(:flipper_id).new(flipper_id: user_info['email']))
       # we need the id_token to disconnect the agent connect session later.
       # we cannot store it in the instructeur model because the user is not yet created
       # so we store it in a encrypted cookie

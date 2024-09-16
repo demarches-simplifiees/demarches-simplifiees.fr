@@ -39,6 +39,7 @@ describe AgentConnect::AgentController, type: :controller do
       context 'and user_info returns some info' do
         before do
           expect(AgentConnectService).to receive(:user_info).with(code, nonce).and_return([user_info, id_token, amr])
+          Flipper.enable(:agent_connect_2fa)
         end
 
         context 'and the instructeur use mon_compte_pro' do
