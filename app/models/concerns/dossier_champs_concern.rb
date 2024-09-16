@@ -33,6 +33,7 @@ module DossierChampsConcern
   end
 
   def project_champ(type_de_champ, row_id)
+    check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil?
       type_de_champ.build_champ(dossier: self, row_id:)
@@ -81,6 +82,7 @@ module DossierChampsConcern
   end
 
   def champ_for_export(type_de_champ, row_id)
+    check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.blank? || !champ.visible?
       nil
@@ -96,6 +98,7 @@ module DossierChampsConcern
   end
 
   def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
+    check_valid_row_id?(type_de_champ, row_id)
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
@@ -123,5 +126,15 @@ module DossierChampsConcern
     @champs_by_public_id = nil
 
     [champ, attributes]
+  end
+
+  def check_valid_row_id?(type_de_champ, row_id)
+    if revision.child?(type_de_champ)
+      if row_id.blank?
+        raise "type_de_champ #{type_de_champ.stable_id} must have a row_id because it is part of a repetition"
+      end
+    elsif row_id.present?
+      raise "type_de_champ #{type_de_champ.stable_id} can not have a row_id because it is not part of a repetition"
+    end
   end
 end

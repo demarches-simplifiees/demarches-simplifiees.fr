@@ -221,7 +221,7 @@ class ProcedureRevision < ApplicationRecord
 
   def child?(tdc)
     revision_types_de_champ
-      .find { _1.type_de_champ_id == tdc.id }.child?
+      .find { _1.type_de_champ_id == tdc.id }&.child?
   end
 
   def remove_children_of(tdc)
