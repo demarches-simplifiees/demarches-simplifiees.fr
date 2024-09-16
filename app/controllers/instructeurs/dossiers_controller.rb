@@ -489,20 +489,24 @@ module Instructeurs
     end
 
     def set_gallery_attachments
-      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      gallery_attachments_ids = Rails.cache.fetch([dossier, "gallery_attachments"], expires_in: 10.minutes) do
+        champs_attachments_ids = dossier
+          .champs
+          .where(type: [Champs::PieceJustificativeChamp.name, Champs::TitreIdentiteChamp.name])
+          .flat_map(&:piece_justificative_file)
+          .map(&:id)
 
-      champs_attachments = @dossier
-        .champs
-        .filter { _1.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp]) }
-        .flat_map(&:piece_justificative_file)
+        commentaires_attachments_ids = dossier
+          .commentaires
+          .includes(piece_jointe_attachments: :blob)
+          .map(&:piece_jointe)
+          .map(&:attachments)
+          .flatten
+          .map(&:id)
 
-      commentaires_attachments = @dossier
-        .commentaires
-        .map(&:piece_jointe)
-        .map(&:attachments)
-        .flatten
-
-      @gallery_attachments = champs_attachments + commentaires_attachments
+        champs_attachments_ids + commentaires_attachments_ids
+      end
+      @gallery_attachments = ActiveStorage::Attachment.where(id: gallery_attachments_ids)
     end
   end
 end
