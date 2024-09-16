@@ -566,10 +566,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def drop_down_options?
-    drop_down_options.any?
-  end
-
   def drop_down_options
     Array.wrap(super)
   end

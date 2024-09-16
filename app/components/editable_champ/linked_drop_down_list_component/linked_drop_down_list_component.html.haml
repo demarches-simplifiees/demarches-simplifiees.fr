@@ -1,4 +1,4 @@
-- if @champ.options?
+- if @champ.drop_down_options.any?
   .fr-fieldset__element.fr-mb-0
     .fr-select-group
       = render EditableChamp::ChampLabelComponent.new form: @form, champ: @champ, seen_at: @seen_at

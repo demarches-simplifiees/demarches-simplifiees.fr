@@ -3,10 +3,6 @@
 class Champs::MultipleDropDownListChamp < Champ
   validate :values_are_in_options, if: -> { value.present? && validate_champ_value_or_prefill? }
 
-  def options?
-    drop_down_options?
-  end
-
   def enabled_non_empty_options
     drop_down_list_enabled_non_empty_options
   end

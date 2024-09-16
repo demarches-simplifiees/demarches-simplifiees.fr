@@ -1,4 +1,4 @@
-- if @champ.options?
+- if @champ.drop_down_options.any?
   - if @champ.render_as_checkboxes?
     = @form.collection_check_boxes :value, @champ.enabled_non_empty_options, :to_s, :to_s do |b|
       - capture do
