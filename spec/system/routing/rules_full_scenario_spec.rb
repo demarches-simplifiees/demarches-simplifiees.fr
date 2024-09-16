@@ -204,7 +204,7 @@ describe 'The routing with rules', js: true do
     ## on the dossiers list
     click_on procedure.libelle
     expect(page).to have_current_path(instructeur_procedure_path(procedure))
-    expect(find('.fr-tabs')).to have_css('span.notifications')
+    expect(find('nav.fr-tabs')).to have_css('span.notifications')
 
     ## on the dossier itself
     click_on 'suivi'

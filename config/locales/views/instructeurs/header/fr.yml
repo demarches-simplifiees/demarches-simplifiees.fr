@@ -13,7 +13,7 @@ fr:
           button_delay_expiration: "Conserver un mois de plus"
           notification_management: Gestion des notifications
           administrators_list: Voir les administrateurs
-          exports_list: Voir les exports
+          exports_list: Voir les exports et modèles d'export
           exports_notification_label: Un nouvel export est prêt à être téléchargé
           statistics: Statistiques
           instructeurs: instructeurs
