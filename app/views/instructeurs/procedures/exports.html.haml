@@ -43,16 +43,27 @@
           = link_to t('.new_zip_export_template'), new_instructeur_procedure_export_template_path(@procedure), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mr-1w"
           = link_to t('.new_tabular_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
 
-        .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-5w
-          %table
-            %thead
-              %tr
-                %th{ scope: 'col' } Nom du modèle
-                %th{ scope: 'col' }= "Groupe instructeur" if @procedure.groupe_instructeurs.many?
-                %th{ scope: "col" }
-            %tbody
-              - @export_templates.each do |export_template|
-                %tr
-                  %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
-                  %td= export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
-                  %td
+        -#.fr-table.fr-table--bordered.fr-table--no-caption.fr-table--layout-fixed.fr-mt-5w
+        .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-5w
+          .fr-table__wrapper
+            .fr-table__container
+              .fr-table__content
+                %table
+                  %thead
+                    %tr
+                      = tag.th "Nom du modèle", scope: 'col'
+                      = tag.th "Format", scope: 'col'
+                      = tag.th "Date de création", scope: 'col'
+                      = tag.th "Partagé avec (groupe instructeurs)", scope: 'col' if @procedure.groupe_instructeurs.many?
+                      = tag.th "Actions", scope: 'col'
+                  %tbody
+                    - @export_templates.each do |export_template|
+                      %tr
+                        %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
+                        %td= pretty_kind(export_template.kind)
+                        %td= l(export_template.created_at)
+                        = tag.td export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
+                        %td
+                          .coucou
+                            = link_to 'Modifier', new_instructeur_procedure_export_template_path(@procedure), class: "fr-btn fr-btn--icon-left fr-icon-edit-line fr-mr-1w"
+                            = link_to 'Supprimer', new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line"
