@@ -2,9 +2,11 @@
   .fr-mb-6w
     = render Dsfr::AlertComponent.new(state: :info, title: "Nouvel éditeur de modèle d'export", heading_level: 'h3') do |c|
       - c.with_body do
-        Cette page permet d'éditer un modèle d'export tabulaire et ainsi sélectionner les champs que vous souhaitez exporter.
-        Essayez-le et donnez-nous votre avis
-        en nous envoyant un email à #{mail_to(CONTACT_EMAIL, subject: "Editeur de modèle d'export")}.
+        = t('.info_html', mailto: mail_to(CONTACT_EMAIL, subject: 'Editeur de modèle d\'export'))
+    = render Dsfr::AlertComponent.new(state: :warning, heading_level: 'h3') do |c|
+      - c.with_body do
+        = t('.warning')
+
 .fr-grid-row.fr-grid-row--gutters
   .fr-col-12.fr-col-md-8
     = form_with model: [:instructeur, @procedure, export_template], local: true do |f|
