@@ -46,25 +46,51 @@ module Maintenance
 
       subject(:process) { described_class.process(element) }
 
-      before do
-        allow_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data).and_return(Success(data))
+      context 'when api respond ok' do
+        before do
+          allow_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data).and_return(Success(data))
+        end
+
+        it 'updates value_json' do
+          expect { subject }.to change { element.reload.value_json }
+            .from(nil)
+            .to({
+              "street_number" => "16",
+              "street_name" => "Rue du Général de Boissieu",
+              "street_address" => "16 Rue du Général de Boissieu",
+              "postal_code" => "75015",
+              "city_name" => "Paris 15e Arrondissement",
+              "city_code" => "75115",
+              "departement_code" => "75",
+              "departement_name" => "Paris",
+              "region_code" => "11",
+              "region_name" => "Île-de-France"
+            })
+        end
       end
 
-      it 'updates value_json' do
-        expect { subject }.to change { element.reload.value_json }
-          .from(nil)
-          .to({
-            "street_number" => "16",
-            "street_name" => "Rue du Général de Boissieu",
-            "street_address" => "16 Rue du Général de Boissieu",
-            "postal_code" => "75015",
-            "city_name" => "Paris 15e Arrondissement",
-            "city_code" => "75115",
-            "departement_code" => "75",
-            "departement_name" => "Paris",
-            "region_code" => "11",
-            "region_name" => "Île-de-France"
-          })
+      context 'when api respond KO' do
+        before do
+          element.update(data:)
+          allow_any_instance_of(Champs::RNFChamp).to receive(:fetch_external_data).and_return(Failure(code: 404, reason: :removed))
+        end
+
+        it 'updates value_json' do
+          expect { subject }.to change { element.reload.value_json }
+            .from(nil)
+            .to({
+              "street_number" => "16",
+              "street_name" => "Rue du Général de Boissieu",
+              "street_address" => "16 Rue du Général de Boissieu",
+              "postal_code" => "75015",
+              "city_name" => "Paris 15e Arrondissement",
+              "city_code" => "75115",
+              "departement_code" => "75",
+              "departement_name" => "Paris",
+              "region_code" => "11",
+              "region_name" => "Île-de-France"
+            })
+        end
       end
     end
   end
