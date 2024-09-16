@@ -5,6 +5,8 @@ class AgentConnect::AgentController < ApplicationController
   before_action :redirect_to_login_if_fc_aborted, only: [:callback]
   before_action :check_state, only: [:callback]
 
+  MON_COMPTE_PRO_IDP_ID = "71144ab3-ee1a-4401-b7b3-79b44f7daeeb"
+
   STATE_COOKIE_NAME = :agentConnect_state
   NONCE_COOKIE_NAME = :agentConnect_nonce
 
@@ -23,6 +25,10 @@ class AgentConnect::AgentController < ApplicationController
   def callback
     user_info, id_token = AgentConnectService.user_info(params[:code], cookies.encrypted[NONCE_COOKIE_NAME])
     cookies.delete NONCE_COOKIE_NAME
+
+    if user_info['idp_id'] == MON_COMPTE_PRO_IDP_ID
+      # MON COMPTE PRO !
+    end
 
     instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
 

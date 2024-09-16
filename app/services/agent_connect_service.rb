@@ -14,7 +14,7 @@ class AgentConnectService
     nonce = SecureRandom.hex(16)
 
     uri = client.authorization_uri(
-      scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret],
+      scope: [:openid, :email, :given_name, :usual_name, :organizational_unit, :belonging_population, :siret, :idp_id],
       state:,
       nonce:,
       acr_values: 'eidas1'
