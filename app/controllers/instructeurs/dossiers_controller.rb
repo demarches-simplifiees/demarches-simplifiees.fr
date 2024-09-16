@@ -373,7 +373,7 @@ module Instructeurs
     end
 
     def pieces_jointes
-      @dossier = current_instructeur.dossiers.find(params[:dossier_id])
+      @dossier = dossier
       @pieces_jointes_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.pieces_jointes_seen_at
     end
 
