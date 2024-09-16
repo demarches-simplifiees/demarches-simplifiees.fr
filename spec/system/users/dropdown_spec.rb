@@ -25,15 +25,15 @@ describe 'dropdown list with other option activated', js: true do
     scenario 'Select other option and the other input hidden must appear' do
       fill_individual
 
-      choose "Autre"
+      choose I18n.t('shared.champs.drop_down_list.other')
       expect(page).to have_selector('.drop_down_other', visible: true)
     end
 
     scenario "Getting back from other save the new option" do
       fill_individual
 
-      choose "Autre"
-      fill_in("Veuillez saisir votre autre choix", with: "My choice")
+      choose I18n.t('shared.champs.drop_down_list.other')
+      fill_in(I18n.t('shared.champs.drop_down_list.other_label'), with: "My choice")
 
       wait_until { user_dossier.champs_public.first.value == "My choice" }
       expect(user_dossier.champs_public.first.value).to eq("My choice")
@@ -62,7 +62,7 @@ describe 'dropdown list with other option activated', js: true do
       fill_individual
 
       expect(page).not_to have_selector(".drop_down_other input")
-      select("Autre")
+      select(I18n.t('shared.champs.drop_down_list.other'))
       find(".drop_down_other input", visible: true)
 
       select("Secondary 1.2")
