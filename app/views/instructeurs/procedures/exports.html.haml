@@ -34,8 +34,10 @@
 
     - if @procedure.feature_enabled?(:export_template)
       .fr-tabs__panel.fr-tabs__panel--selected{ id: "tabpanel-export-templates-panel", role: "tabpanel", "aria-labelledby": "tabpanel-export-templates", tabindex: "0" }
-        %p.fr-hint-text
-          Un modèle d'export permet de personnaliser le nom des fichiers (pour un export au format Zip)
+        = render Dsfr::AlertComponent.new(state: :info) do |c|
+          - c.with_body do
+            %p= t('.export_template_list_description_html')
+
         .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-5w
           %table
             %thead
