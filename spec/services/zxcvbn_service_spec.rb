@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe ZxcvbnService do
-  let(:password) { 'medium-strength-password' }
+  let(:password) { SECURE_PASSWORD }
   subject(:service) { ZxcvbnService.new(password) }
 
   describe '#score' do
@@ -10,9 +10,16 @@ describe ZxcvbnService do
     end
   end
 
-  describe '#complexity' do
-    it 'returns the password score, vulnerability and length' do
-      expect(service.complexity).to eq [4, 24]
+  describe '#complexity for strong password' do
+    it 'returns the password score and length' do
+      expect(service.complexity).to eq [4, 20]
+    end
+  end
+
+  describe '#complexity for not strong password' do
+    let(:password) { 'motdepassefrançais' }
+    it 'returns the password score and length' do
+      expect(service.complexity).to eq [1, 18]
     end
   end
 

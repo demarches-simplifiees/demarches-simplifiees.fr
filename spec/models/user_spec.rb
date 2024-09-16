@@ -390,7 +390,7 @@ describe User, type: :model do
     # 2 - somewhat guessable: protection from unthrottled online attacks. (guesses < 10^8)
     # 3 - safely unguessable: moderate protection from offline slow-hash scenario. (guesses < 10^10)
     # 4 - very unguessable: strong protection from offline slow-hash scenario. (guesses >= 10^10)
-    passwords = ['000000000000', '123456789123', 'megapass2024', 'lesdémarches', '{My-$3cure-p4ssWord}']
+    passwords = ['000000000000', '123456789123', '123456789 123', 'lesdémarches', '{My-$3cure-p4ssWord}']
     min_complexity = PASSWORD_COMPLEXITY_FOR_ADMIN
 
     subject do
