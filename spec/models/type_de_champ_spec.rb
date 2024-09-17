@@ -203,7 +203,7 @@ describe TypeDeChamp do
       expect(type_de_champ.drop_down_options).to eq([])
 
       type_de_champ.drop_down_list_value = " 1 / 2 \r\n 3"
-      expect(type_de_champ.drop_down_options).to eq(['', '1 / 2', '3'])
+      expect(type_de_champ.drop_down_options).to eq(['1 / 2', '3'])
     end
   end
 

@@ -496,10 +496,8 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  DEFAULT_EMPTY = ['']
   def drop_down_list_value=(value)
-    split = value.to_s.lines.map(&:strip).reject(&:empty?)
-    self.drop_down_options = split.blank? ? [] : DEFAULT_EMPTY + split
+    self.drop_down_options = value.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
   def header_section_level_value
