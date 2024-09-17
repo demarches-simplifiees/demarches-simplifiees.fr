@@ -16,6 +16,12 @@ module NavBarProfileConcern
 
     private
 
+    def nav_bar_user_or_guest
+      # when instanciating manually the controller (see below),
+      # we don't have request and current_user would fail
+      request && current_user ? :user : :guest
+    end
+
     # Shared controllers (search, errors, release notes…) don't have specific context
     # Simple attempt to try to re-use the profile from the previous page
     # so user does'not feel lost.
