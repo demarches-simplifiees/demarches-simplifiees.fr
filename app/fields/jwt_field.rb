@@ -7,7 +7,8 @@ class JwtField < Administrate::Field::Base
     if data.present?
       begin
         decoded_token = JWT.decode(data, nil, false)
-        expiration = Time.zone.at(decoded_token[0]['exp'])
+
+        return "Token présent, sans expiration" unless decoded_token[0].key?('exp')
 
         if expiration < Time.zone.now
           "Token présent, expiré le #{expiration.strftime('%d/%m/%Y à %H:%M')}"
