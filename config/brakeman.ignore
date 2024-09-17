@@ -1,29 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "011d30a644932f68de2f7b0cfd7ccec5d65082af62e8793d103537b5693d49c8",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/columns/json_path_column.rb",
-      "line": 28,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath.split(\".\").map do\n quote_string(_1)\n end.join(\".\")} ? (@ like_regex \\\"(#{search_occurences.map do\n quote_string(_1)\n end.join(\"|\")})\\\")'\")",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Columns::JSONPathColumn",
-        "method": "filtered_ids"
-      },
-      "user_input": "jsonpath.split(\".\").map do\n quote_string(_1)\n end.join(\".\")",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "jsonpath is static so its a false positive, search_occurences are user inputs but are escaped by quote_string so it should be safe"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "26f504696b074d18ef3f5568dc8f6a46d1283a67fe37822498fa25d0409664ab",
@@ -66,6 +43,29 @@
         79
       ],
       "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "70df8c1f0a5c3ebb7c9d04ebaa268ae6a841b40e5f4a0296f3280d532e5bc591",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/columns/json_path_column.rb",
+      "line": 28,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath.split(\".\").map do\n quote_string(_1)\n end.join(\".\")} ? (@ like_regex \\\"(#{search_occurences.map do\n quote_string(_1)\n end.join(\"|\")})\\\" flag \\\"i\\\")'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Columns::JSONPathColumn",
+        "method": "filtered_ids"
+      },
+      "user_input": "jsonpath.split(\".\").map do\n quote_string(_1)\n end.join(\".\")",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "escaped by hand"
     },
     {
       "warning_type": "SQL Injection",
@@ -226,6 +226,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-09-04 17:10:13 +0200",
+  "updated": "2024-09-17 15:52:13 +0200",
   "brakeman_version": "6.1.2"
 }
