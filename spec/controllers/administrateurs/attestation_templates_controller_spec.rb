@@ -8,8 +8,6 @@ describe Administrateurs::AttestationTemplatesController, type: :controller do
   let(:logo2) { fixture_file_upload('spec/fixtures/files/white.png', 'image/png') }
   let(:signature) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
   let(:signature2) { fixture_file_upload('spec/fixtures/files/black.png', 'image/png') }
-  let(:interlaced_logo) { fixture_file_upload('spec/fixtures/files/interlaced-black.png', 'image/png') }
-  let(:uninterlaced_logo) { fixture_file_upload('spec/fixtures/files/uninterlaced-black.png', 'image/png') }
   let(:invalid_logo) { fixture_file_upload('spec/fixtures/files/invalid_file_format.json', 'application/json') }
 
   before do
