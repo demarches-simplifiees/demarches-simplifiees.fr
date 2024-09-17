@@ -50,6 +50,6 @@ module MailTemplateConcern
   end
 
   def dossier_tags
-    TagsSubstitutionConcern::DOSSIER_TAGS + TagsSubstitutionConcern::DOSSIER_TAGS_FOR_MAIL
+    super + TagsSubstitutionConcern::DOSSIER_TAGS_FOR_MAIL
   end
 end

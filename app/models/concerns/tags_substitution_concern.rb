@@ -158,6 +158,14 @@ module TagsSubstitutionConcern
     }
   ]
 
+  DOSSIER_SVA_SVR_DECISION_DATE_TAG = {
+    id: 'dossier_sva_svr_decision_on',
+    libelle: 'date prévisionnelle SVA/SVR',
+    description: 'Date prévisionnelle de décision automatique par le SVA/SVR',
+    lambda: -> (d) { format_date(d.sva_svr_decision_on) },
+    available_for_states: Dossier.states.fetch(:en_instruction)
+  }
+
   INDIVIDUAL_TAGS = [
     {
       id: 'individual_gender',
@@ -335,7 +343,13 @@ module TagsSubstitutionConcern
 
   def dossier_tags
     # Overridden by MailTemplateConcern
-    DOSSIER_TAGS
+    DOSSIER_TAGS + contextual_dossier_tags
+  end
+
+  def contextual_dossier_tags
+    tags = []
+    tags << DOSSIER_SVA_SVR_DECISION_DATE_TAG if respond_to?(:procedure) && procedure.sva_svr_enabled?
+    tags
   end
 
   def tags_for_dossier_state(tags)

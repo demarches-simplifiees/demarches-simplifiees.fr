@@ -413,6 +413,20 @@ describe TagsSubstitutionConcern, type: :model do
       end
     end
 
+    context "with date decision sva/svr" do
+      let(:template) { '--date prévisionnelle SVA/SVR--' }
+      let(:procedure) { create(:procedure, :published, :sva) }
+      let(:state) { dossier.state }
+
+      before do
+        dossier.passer_en_construction!
+        dossier.process_sva_svr!
+        dossier.update(sva_svr_decision_on: Date.parse("2024-09-20"))
+      end
+
+      it { is_expected.to eq('20/09/2024') }
+    end
+
     context "when the template has a libellé démarche tag" do
       let(:template) { 'body --libellé démarche--' }
 
