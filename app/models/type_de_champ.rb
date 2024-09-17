@@ -474,6 +474,20 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def drop_down_options
+    Array.wrap(super)
+  end
+
+  def drop_down_list_enabled_non_empty_options(other: false)
+    list_options = drop_down_options.reject(&:empty?)
+
+    if other && drop_down_other?
+      list_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
+    else
+      list_options
+    end
+  end
+
   def drop_down_list_value
     if drop_down_options.present?
       drop_down_options.reject(&:empty?).join("\r\n")
@@ -563,20 +577,6 @@ class TypeDeChamp < ApplicationRecord
       end
     elsif siret? || rna? || rnf?
       column.options_for_select
-    end
-  end
-
-  def drop_down_options
-    Array.wrap(super)
-  end
-
-  def drop_down_list_enabled_non_empty_options(other: false)
-    list_options = drop_down_options.reject(&:empty?)
-
-    if other && drop_down_other?
-      list_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
-    else
-      list_options
     end
   end
 
