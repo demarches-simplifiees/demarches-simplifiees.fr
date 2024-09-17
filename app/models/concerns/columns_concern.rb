@@ -15,7 +15,7 @@ module ColumnsConcern
     end
 
     def dossier_columns
-      common = [Column.new(table: 'self', column: 'id', classname: 'number-col'), Column.new(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)]
+      common = [Column.new(table: 'self', column: 'id', classname: 'number-col', type: :number), Column.new(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)]
 
       dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
         .map { |column| Column.new(table: 'self', column:, type: :date) }

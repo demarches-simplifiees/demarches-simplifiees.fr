@@ -12,7 +12,7 @@ describe ColumnsConcern do
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
-          { label: 'Nº dossier', table: 'self', column: 'id', classname: 'number-col', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
+          { label: 'Nº dossier', table: 'self', column: 'id', classname: 'number-col', displayable: true, type: :number, scope: '', value_column: :value, filterable: true },
           { label: 'notifications', table: 'notifications', column: 'notifications', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'Créé le', table: 'self', column: 'created_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
           { label: 'Mis à jour le', table: 'self', column: 'updated_at', classname: '', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
