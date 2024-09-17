@@ -7,7 +7,10 @@ describe Champs::EngagementJuridiqueChamp do
         .new(dossier: build(:dossier))
         .tap { _1.value = value }
     end
-    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_engagement_juridique)) }
+    before {
+      allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_engagement_juridique))
+      allow(champ).to receive(:in_dossier_revision?).and_return(true)
+    }
     subject { champ.validate(:champs_public_value) }
 
     context 'with [A-Z]' do

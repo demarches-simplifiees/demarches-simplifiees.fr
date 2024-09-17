@@ -4,7 +4,10 @@ describe Champs::MultipleDropDownListChamp do
   let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, drop_down_list_value: "val1\r\nval2\r\nval3\r\n[brackets] val4") }
   let(:value) { nil }
   let(:champ) { Champs::MultipleDropDownListChamp.new(value:, dossier: build(:dossier)) }
-  before { allow(champ).to receive(:type_de_champ).and_return(type_de_champ) }
+  before do
+    allow(champ).to receive(:type_de_champ).and_return(type_de_champ)
+    allow(champ).to receive(:in_dossier_revision?).and_return(true)
+  end
 
   describe 'validations' do
     subject { champ.validate(:champs_public_value) }

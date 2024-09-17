@@ -2,8 +2,10 @@
 
 describe Champs::EmailChamp do
   describe 'validation' do
-    let(:champ) { described_class.new(value:, dossier: build(:dossier)) }
-    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_email)) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{}, { type: :email }, {}]) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:champ) { dossier.champs.second }
+    before { champ.value = value }
     subject { champ.validate(:champs_public_value) }
 
     context 'when nil' do
@@ -78,6 +80,12 @@ describe Champs::EmailChamp do
       it 'normalize value' do
         expect { subject }.to change { champ.value }.from(value).to('username@mailserver.domain')
       end
+    end
+
+    context 'when type_de_champ is not in dossier revision anymore' do
+      before { dossier.revision.remove_type_de_champ(champ.stable_id) }
+      let(:value) { 'username' }
+      it { is_expected.to be_truthy }
     end
   end
 end
