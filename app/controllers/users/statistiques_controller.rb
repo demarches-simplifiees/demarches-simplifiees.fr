@@ -2,6 +2,8 @@
 
 module Users
   class StatistiquesController < ApplicationController
+    def nav_bar_profile = nav_bar_user_or_guest
+
     def statistiques
       @procedure = procedure
       return procedure_not_found if @procedure.blank? || @procedure.brouillon?
