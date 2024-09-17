@@ -42,7 +42,7 @@ describe ProcedurePresentation do
 
       context 'now valid, ex rna' do
         let(:types_de_champ_public) { [{ type: :rna }] }
-        let(:column_ids) { first_type_de_champ.dynamic_type.columns(table: 'types_de_champ').map(&:id) }
+        let(:column_ids) { first_type_de_champ.columns.map(&:id) }
         it { expect(procedure_presentation).to be_valid }
       end
     end
@@ -576,7 +576,7 @@ describe ProcedurePresentation do
       let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
 
-      let(:available_columns) { type_de_champ.dynamic_type.columns }
+      let(:available_columns) { type_de_champ.columns }
       let(:column) { available_columns.find { _1.try(:jsonpath) == jsonpath } }
       let(:filter) { [column.to_json.merge({ "value" => value })] }
       let(:kept_dossier) { create(:dossier, procedure: procedure) }

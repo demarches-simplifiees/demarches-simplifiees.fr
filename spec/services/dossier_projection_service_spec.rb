@@ -230,7 +230,7 @@ describe DossierProjectionService do
         let(:table) { 'type_de_champ' }
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rna }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
-        let(:fields) { dossier.procedure.active_revision.types_de_champ_public.first.dynamic_type.columns(table: 'type_de_champ') }
+        let(:fields) { dossier.procedure.active_revision.types_de_champ_public.first.columns }
         before do
           dossier.champs_public.first.update(value: '18 a la bonne rue', value_json: {
             :street_number => "16",
