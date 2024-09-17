@@ -256,3 +256,9 @@ button.fr-tag-bug {
 .fr-toggle label[data-fr-unchecked-label][data-fr-checked-label]::before {
   word-wrap: normal;
 }
+
+// We use the DSFR badge design to highlight the email in France Connect page
+// but we don't want it to be uppercase
+.fr-badge--lowercase {
+  text-transform: lowercase;
+}
