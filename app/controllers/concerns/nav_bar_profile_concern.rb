@@ -34,6 +34,10 @@ module NavBarProfileConcern
 
       controller_instance = controller_class.new
       controller_instance.try(:nav_bar_profile)
+    rescue StandardError => e # we don't want broken logic in nav bar profile to fail the request
+      Sentry.capture_exception(e)
+
+      nil
     end
 
     # Fallback for shared controllers from user account
