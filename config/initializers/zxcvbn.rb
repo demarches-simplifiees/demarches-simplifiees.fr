@@ -8,5 +8,4 @@ new_ranked_dictionary = new_frequency_lists.transform_values do |lst|
   Zxcvbn::Matching.build_ranked_dict(lst)
 end
 
-# Zxcvbn::Matching::RANKED_DICTIONARIES.merge! new_ranked_dictionary
-Zxcvbn::Matching::RANKED_DICTIONARIES = new_ranked_dictionary
+Zxcvbn::Matching::RANKED_DICTIONARIES.merge! new_ranked_dictionary

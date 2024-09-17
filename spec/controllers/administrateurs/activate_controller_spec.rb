@@ -37,7 +37,7 @@ describe Administrateurs::ActivateController, type: :controller do
     end
 
     context 'when the password is not strong' do
-      let(:password) { 'another-password-ok?' }
+      let(:password) { 'password-ok?' }
 
       it { expect(administrateur.user.reload.valid_password?(password)).to be false }
       it { expect(response).to redirect_to(admin_activate_path(token: token)) }
