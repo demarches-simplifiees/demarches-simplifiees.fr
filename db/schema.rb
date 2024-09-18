@@ -483,7 +483,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_145757) do
     t.boolean "forced_groupe_instructeur", default: false, null: false
     t.bigint "groupe_instructeur_id"
     t.datetime "groupe_instructeur_updated_at", precision: nil
-    t.datetime "hidden_at", precision: nil
     t.datetime "hidden_by_administration_at", precision: nil
     t.datetime "hidden_by_expired_at"
     t.string "hidden_by_reason"
