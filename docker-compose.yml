@@ -126,6 +126,8 @@ services:
       - OTP_SECRET_KEY
       - PROCEDURE_DEFAULT_LOGO_SRC
       - REDIS_URL=redis://redis:6379/0
+      - REDIS_CACHE_URL=redis://cache:6379/0
+      - REDIS_CACHE_SSL=
       - RUBY_YJIT_ENABLE
       - S3_ACCESS_KEY
       - S3_BUCKET
@@ -216,6 +218,8 @@ services:
       - MAILCATCHER_PORT
       - PROCEDURE_DEFAULT_LOGO_SRC
       - REDIS_URL=redis://redis:6379/0
+      - REDIS_CACHE_URL=redis://cache:6379/0
+      - REDIS_CACHE_SSL=
       - RUBY_YJIT_ENABLE
       - S3_ACCESS_KEY
       - S3_BUCKET
@@ -257,6 +261,13 @@ services:
     command: redis-server --save 3600 1 --appendonly yes
     volumes:
       - md-redis:/data
+    networks:
+      - md-network
+
+  cache:
+    image: redis:7-alpine
+    container_name: cache
+    command: redis-server --maxmemory 200mb --maxmemory-policy allkeys-lru --save "" --appendonly no
     networks:
       - md-network
 
