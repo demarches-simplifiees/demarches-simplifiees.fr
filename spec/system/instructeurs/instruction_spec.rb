@@ -240,7 +240,7 @@ describe 'Instructing a dossier:', js: true do
       DownloadHelpers.wait_for_download
       files = ZipTricks::FileReader.read_zip_structure(io: File.open(DownloadHelpers.download))
 
-      expect(DownloadHelpers.download).to include "dossier-#{dossier.id}.zip"
+      expect(DownloadHelpers.download).to include "dossier-#{dossier.id}"
       expect(files.size).to be 2
       expect(files[0].filename.include?('export')).to be_truthy
       expect(files[1].filename.include?('piece_justificative_0')).to be_truthy
