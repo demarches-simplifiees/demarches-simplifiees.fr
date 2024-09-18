@@ -475,7 +475,7 @@ module Instructeurs
           (c.visa? && c.value.present?) || (c.header_section? && c.header_section_level_value == 1)
         end
         to_reject = following_champ.present? && following_champ.visa?
-        Rails.logger.warn("Annulation sauvegarde de l'annotation '#{dossier_with_champs.champs[champ_index].libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
+        Rails.logger.warn("Annulation sauvegarde de l'annotation '#{ordered_champs[champ_index].libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
         to_reject
       end
       champs_private_attributes_params
