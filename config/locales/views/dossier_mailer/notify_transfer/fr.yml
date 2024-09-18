@@ -4,5 +4,7 @@ fr:
       subject: Vous avez une demande de transfert en attente.
       transfer_text: "Accéder à la demande de transfert en cliquant sur le lien suivant :"
       transfer_link: demande de transfert
+      no_user_transfer_text: "Afin de pouvoir accepter ou refuser la demande vous devez avoir un compte :"
+      no_user_transfer_link: se créer un compte sur %{app_name}
       transfert_multiple: "%{sender} vous adresse une demande de transfert pour %{count} dossiers."
       transfert_simple: "%{sender} vous adresse une demande de transfert pour le dossier n° %{dossier_id} sur la démarche"
