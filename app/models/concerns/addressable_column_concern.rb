@@ -6,18 +6,16 @@ module AddressableColumnConcern
   included do
     def columns(displayable: true, prefix: nil)
       super.concat([
-        ["code postal (5 chiffres)", ['postal_code'], :text],
-        ["commune", ['city_name'], :text],
-        ["département", ['departement_code'], :enum],
-        ["region", ['region_name'], :enum]
-      ].map do |(label, value_column, type)|
+        ["code postal (5 chiffres)", '$.postal_code', []],
+        ["commune", '$.city_name', []],
+        ["département", '$.departement_code', APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }],
+        ["region", '$.region_name', APIGeoService.regions.map { [_1[:name], _1[:name]] }]
+      ].map do |(label, jsonpath, options_for_select)|
         Columns::JSONPathColumn.new(
-          table: Column::TYPE_DE_CHAMP_TABLE,
-          column: stable_id,
-          label: "#{libelle_with_prefix(prefix)} – #{label}",
-          displayable: false,
-          type:,
-          value_column:
+          stable_id:,
+          options_for_select:,
+          jsonpath:,
+          label: "#{libelle_with_prefix(prefix)} – #{label}"
         )
       end)
     end

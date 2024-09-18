@@ -11,14 +11,7 @@ describe DossierProjectionService do
       let!(:dossier_3) { create(:dossier, :en_instruction, procedure: procedure) }
 
       let(:dossiers_ids) { [dossier_3.id, dossier_1.id, dossier_2.id] }
-      let(:fields) do
-        procedure.active_revision.types_de_champ_public.map do |type_de_champ|
-          {
-            "table" => "type_de_champ",
-            "column" => type_de_champ.stable_id.to_s
-          }
-        end
-      end
+      let(:fields) { procedure.send(:types_de_champ_columns) }
 
       before do
         dossier_1.champs_public.first.update(value: 'champ_1')
@@ -53,16 +46,8 @@ describe DossierProjectionService do
     context 'with commune champ' do
       let!(:procedure) { create(:procedure, types_de_champ_public: [{ type: :communes }]) }
       let!(:dossier) { create(:dossier, procedure:) }
-
       let(:dossiers_ids) { [dossier.id] }
-      let(:fields) do
-        [
-          {
-            "table" => "type_de_champ",
-            "column" => procedure.active_revision.types_de_champ_public[0].stable_id.to_s
-          }
-        ]
-      end
+      let(:fields) { procedure.send(:types_de_champ_columns) }
 
       before do
         dossier.champs_public.first.update(code_postal: '63290', external_id: '63102')
@@ -78,7 +63,7 @@ describe DossierProjectionService do
     end
 
     context 'attributes by attributes' do
-      let(:fields) { [{ "table" => table, "column" => column }] }
+      let(:fields) { [dossier.procedure.find_column(id: "#{table}/#{column}")] }
       let(:dossiers_ids) { [dossier.id] }
 
       subject { super()[0].columns[0] }
@@ -161,7 +146,7 @@ describe DossierProjectionService do
 
       context 'for groupe_instructeur table' do
         let(:table) { 'groupe_instructeur' }
-        let(:column) { 'label' }
+        let(:column) { 'id' }
 
         let!(:dossier) { create(:dossier) }
 
@@ -188,16 +173,6 @@ describe DossierProjectionService do
         before { dossier.champs_public.first.update(value: 'kale') }
 
         it { is_expected.to eq('kale') }
-      end
-
-      context 'for type_de_champ_private table' do
-        let(:table) { 'type_de_champ_private' }
-        let(:dossier) { create(:dossier) }
-        let(:column) { dossier.procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
-
-        before { dossier.champs_private.first.update(value: 'quinoa') }
-
-        it { is_expected.to eq('quinoa') }
       end
 
       context 'for type_de_champ table and value to.s' do
@@ -251,11 +226,38 @@ describe DossierProjectionService do
         end
       end
 
+      context 'for type_de_champ table: type_de_champ rna' do
+        let(:table) { 'type_de_champ' }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :rna }]) }
+        let(:dossier) { create(:dossier, procedure: procedure) }
+        let(:fields) { dossier.procedure.active_revision.types_de_champ_public.first.columns }
+        before do
+          dossier.champs_public.first.update(value: '18 a la bonne rue', value_json: {
+            :street_number => "16",
+            :street_name => "Rue du Général de Boissieu",
+            :street_address => "16 Rue du Général de Boissieu",
+            :postal_code => "75015",
+            :city_name => "Paris 15e Arrondissement",
+            :city_code => "75115",
+            :departement_code => "75",
+            :departement_name => "Paris",
+            :region_code => "11",
+            :region_name => "Île-de-France"
+          })
+        end
+        subject { described_class.project(dossiers_ids, fields) }
+        it 'includes data' do
+          expect(subject[0].columns.size).to eq(fields.size)
+          expect(subject[0].columns[0]).to eq(dossier.champs.first.value)
+          expect(subject[0].columns[1..]).to eq(["75015", "Paris 15e Arrondissement", "75", "Île-de-France"])
+        end
+      end
+
       context 'for dossier corrections table' do
         let(:table) { 'dossier_corrections' }
         let(:column) { 'resolved_at' }
         let(:dossier) { create(:dossier, :en_construction) }
-        subject { described_class.project(dossiers_ids, fields)[0] }
+        subject { described_class.project(dossiers_ids, [])[0] }
 
         context "when dossier has pending correction" do
           before { create(:dossier_correction, dossier:) }

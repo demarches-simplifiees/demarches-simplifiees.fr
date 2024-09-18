@@ -115,9 +115,9 @@ class ProcedurePresentation < ApplicationRecord
 
   def update_displayed_fields(column_ids)
     column_ids = Array.wrap(column_ids)
-    columns = column_ids.map { |id| procedure.find_column(id:) }
+    columns = column_ids.map { procedure.find_or_build_column(id: _1) }
 
-    update!(displayed_fields: columns)
+    update!(displayed_fields: columns.map(&:to_json)) # prevent serialization of id_h_value
 
     if !sort_to_column_id(sort).in?(column_ids)
       update!(sort: Procedure.default_sort)
@@ -146,6 +146,10 @@ class ProcedurePresentation < ApplicationRecord
 
   def snapshot
     slice(:filters, :sort, :displayed_fields)
+  end
+
+  def projected_columns
+    displayed_fields.map { procedure.find_column(id: Column.make_id(_1['table'], _1['column'])) }
   end
 
   private
@@ -302,7 +306,8 @@ class ProcedurePresentation < ApplicationRecord
 
   def check_allowed_field(kind, field, extra_columns = {})
     table, column = field.values_at(TABLE, COLUMN)
-    if !valid_column?(table, column, extra_columns)
+    column = procedure.find_column(id: "#{table}/#{column}")
+    if column.blank? || !valid_column?(column, extra_columns)
       errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
     end
   end
@@ -326,15 +331,15 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def valid_column?(table, column, extra_columns = {})
-    valid_columns_for_table(table).include?(column) ||
-      extra_columns[table]&.include?(column)
+  def valid_column?(column, extra_columns = {})
+    valid_columns_for_table(column.table).include?(column.id) ||
+      extra_columns[column.table]&.include?(column.id)
   end
 
   def valid_columns_for_table(table)
     @column_whitelist ||= procedure.columns
       .group_by(&:table)
-      .transform_values { |columns| Set.new(columns.map(&:column)) }
+      .transform_values { |columns| Set.new(columns.map(&:id)) }
 
     @column_whitelist[table] || []
   end

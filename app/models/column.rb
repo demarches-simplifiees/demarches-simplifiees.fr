@@ -14,12 +14,16 @@ class Column
     @scope = scope
     @value_column = value_column
     @filterable = filterable
-    # We need this for backward compatibility
     @displayable = displayable
+    @id_value_h = {}
   end
 
   def id
     "#{table}/#{column}"
+  end
+
+  def same_stable_id?(stable_id:)
+    column.to_s == stable_id.to_s
   end
 
   def self.make_id(table, column)
@@ -34,5 +38,17 @@ class Column
     {
       table:, column:, label:, classname:, type:, scope:, value_column:, filterable:, displayable:
     }
+  end
+
+  def add_value(id, val)
+    @id_value_h[id] = val
+  end
+
+  def set_id_value_h(id_value_h)
+    @id_value_h = id_value_h
+  end
+
+  def id_value_h
+    @id_value_h
   end
 end
