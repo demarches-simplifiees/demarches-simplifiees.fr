@@ -230,6 +230,7 @@ module Administrateurs
         :collapsible_explanation_text,
         :header_section_level,
         :character_limit,
+        :formatted_mode,
         :expression_reguliere,
         :expression_reguliere_exemple_text,
         :expression_reguliere_error_message,

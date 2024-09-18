@@ -137,6 +137,7 @@ class TypeDeChamp < ApplicationRecord
                  :drop_down_secondary_description,
                  :drop_down_other,
                  :character_limit,
+                 :formatted_mode,
                  :expression_reguliere,
                  :expression_reguliere_exemple_text,
                  :expression_reguliere_error_message,

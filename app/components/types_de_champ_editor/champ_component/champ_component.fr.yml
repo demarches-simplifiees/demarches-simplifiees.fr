@@ -15,8 +15,11 @@ fr:
     limit: Limité à %{limit} caractères
   expression_reguliere:
     labels:
-      regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com. 
-      hint: "Pensez aux ancres de début (^) et fin ($) : `12 km serait accepté par /[[:digit:]]+/ mais rejeté par /^[[:digit:]]+$/"
+      regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com.
+      hint_html: |
+        Pensez aux ancres de début (^) et fin ($) :<br>
+        `12 km` serait accepté par /[[:digit:]]+/ mais rejeté par /^[[:digit:]]+$/ <br>
+        <a href="https://rubular.com" target="_blank" rel="noreferrer">En savoir plus sur la syntaxe des expressions régulières</a>
       valid_exemple: Exemple valide qui passe l'expression régulière
       error_message: Message d'erreur à afficher à l'usager en cas de saisie invalide
   drop_down_list:
@@ -25,3 +28,7 @@ fr:
       advanced: Import référentiel
     referentiel:
       hint_html: Utilisez le modèle de fichier CSV fourni ci-dessous pour construire votre référentiel (le nombre de colonnes n'est pas limité).<br>L’usager ne verra que les valeurs présentes <strong> dans la première colonne [A] </strong> du fichier.<br> En examinant le dossier, l’instructeur visualisera également les valeurs associées <strong> aux autre colonnes, [B] à […].</strong>
+  kind:
+    labels:
+      simple: "Mode simple"
+      advanced: "Mode avancé"
