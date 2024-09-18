@@ -1,0 +1,12 @@
+.fr-container
+  %h1.fr-h2.fr-mt-4w Poursuivez votre connexion à #{APPLICATION_NAME}
+
+  = render Dsfr::AlertComponent.new(state: :success, extra_class_names: 'fr-mb-4w') do |c|
+    - c.with_body do
+      %p Votre application d'authentification a bien été configurée.
+
+  %p.fr-mb-4w
+    Vous allez maintenant pouvoir <b>vous connecter</b> à nouveau à #{APPLICATION_NAME} en effectuant la validation en 2 étapes avec votre <b>application d'authentification</b>.
+
+  %button.fr-btn.fr-btn--primary.fr-mb-2w
+    = link_to "Se connecter à #{APPLICATION_NAME} avec #{AgentConnect}", agent_connect_login_path
