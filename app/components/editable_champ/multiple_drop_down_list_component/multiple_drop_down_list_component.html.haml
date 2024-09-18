@@ -1,13 +1,12 @@
-- if @champ.options?
-  - if @champ.render_as_checkboxes?
-    = @form.collection_check_boxes :value, @champ.enabled_non_empty_options, :to_s, :to_s do |b|
-      - capture do
-        .fr-fieldset__element
-          .fr-checkbox-group
-            = b.check_box(checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
-            %label.fr-label{ for: @champ.checkbox_id(b.value) }
-              = b.text
+- if @champ.render_as_checkboxes?
+  = @form.collection_check_boxes :value, @champ.enabled_non_empty_options, :to_s, :to_s do |b|
+    - capture do
+      .fr-fieldset__element
+        .fr-checkbox-group
+          = b.check_box(checked: @champ.selected_options.include?(b.value), aria: { describedby: @champ.describedby_id }, id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
+          %label.fr-label{ for: @champ.checkbox_id(b.value) }
+            = b.text
 
-  - else
-    %react-fragment
-      = render ReactComponent.new "ComboBox/MultiComboBox", **react_props
+- else
+  %react-fragment
+    = render ReactComponent.new "ComboBox/MultiComboBox", **react_props

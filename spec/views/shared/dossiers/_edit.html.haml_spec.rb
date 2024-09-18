@@ -85,7 +85,7 @@ describe 'shared/dossiers/edit', type: :view do
     let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, options: }] }
     let(:champ) { dossier.champs.first }
     let(:type_de_champ) { champ.type_de_champ }
-    let(:options) { type_de_champ.drop_down_list_options }
+    let(:options) { type_de_champ.drop_down_options }
     let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
 
     context 'when the list is short' do

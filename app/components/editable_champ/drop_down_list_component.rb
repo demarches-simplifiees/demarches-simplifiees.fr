@@ -2,7 +2,7 @@
 
 class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseComponent
   def render?
-    @champ.options?
+    @champ.drop_down_options.any?
   end
 
   def select_class_names

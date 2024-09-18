@@ -16,10 +16,6 @@ class Champs::DropDownListChamp < Champ
     enabled_non_empty_options.size >= THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE
   end
 
-  def options?
-    drop_down_list_options?
-  end
-
   def html_label?
     !render_as_radios?
   end
