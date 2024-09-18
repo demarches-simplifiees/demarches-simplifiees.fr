@@ -44,10 +44,6 @@ class User < ApplicationRecord
   # plug our custom validation a la devise (same options) https://github.com/heartcombo/devise/blob/main/lib/devise/models/validatable.rb#L30
   validates :email, strict_email: true, allow_blank: true, if: :devise_will_save_change_to_email?
 
-  def validate_password_complexity?
-    administrateur?
-  end
-
   # Override of Devise::Models::Confirmable#send_confirmation_instructions
   def send_confirmation_instructions
     unless @raw_confirmation_token

@@ -311,8 +311,6 @@ en:
         subtitle: "Create an account using an email"
         email_label: 'Email (name@site.com)'
         password_label: "Password (%{min_length} characters minimum)"
-        password_message: "Your password must have :"
-        password_placeholder: "%{min_length} characters minimum"
     confirmation:
       new:
         title: 'Confirm your email address'
@@ -661,7 +659,7 @@ en:
               invalid: 'is invalid. Fill in a valid email address, example: address@mail.com'
               taken: 'already in use. Fill in another email'
             password:
-              too_short: "is too short. Fill in a password with at least 8 characters"
+              too_short: "is too short. Fill in a password with at least 12 characters"
               not_strong: "not strong enough. Fill in a stronger password"
             password_confirmation:
               confirmation: ": The two passwords do not match"

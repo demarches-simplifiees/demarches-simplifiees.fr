@@ -23,7 +23,7 @@ describe Gestionnaires::ActivateController, type: :controller do
   describe '#create' do
     let!(:gestionnaire) { create(:gestionnaire) }
     let(:token) { gestionnaire.user.send(:set_reset_password_token) }
-    let(:password) { 'another-password-ok?' }
+    let(:password) { '{another-password-ok?}' }
 
     before { post :create, params: { gestionnaire: { reset_password_token: token, password: password } } }
 

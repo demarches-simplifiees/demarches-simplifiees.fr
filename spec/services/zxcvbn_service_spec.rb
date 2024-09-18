@@ -1,18 +1,11 @@
 # frozen_string_literal: true
 
 describe ZxcvbnService do
-  let(:password) { 'medium-strength-password' }
-  subject(:service) { ZxcvbnService.new(password) }
-
-  describe '#score' do
+  describe '.complexity' do
     it 'returns the password complexity score' do
-      expect(service.score).to eq 3
-    end
-  end
-
-  describe '#complexity' do
-    it 'returns the password score, vulnerability and length' do
-      expect(service.complexity).to eq [3, 'medium, strength, password', 24]
+      expect(ZxcvbnService.complexity(nil)).to eq 0
+      expect(ZxcvbnService.complexity('motdepassefrançais')).to eq 1
+      expect(ZxcvbnService.complexity(SECURE_PASSWORD)).to eq 4
     end
   end
 
@@ -21,12 +14,8 @@ describe ZxcvbnService do
       allow(Zxcvbn::Tester).to receive(:new).and_call_original
       allow(YAML).to receive(:safe_load).and_call_original
 
-      first_service = ZxcvbnService.new('some-password')
-      first_service.score
-      first_service.complexity
-      other_service = ZxcvbnService.new('other-password')
-      other_service.score
-      other_service.complexity
+      _first_call = ZxcvbnService.complexity('some-password')
+      _other_call = ZxcvbnService.complexity('other-password')
 
       expect(Zxcvbn::Tester).to have_received(:new).at_most(:once)
       expect(YAML).to have_received(:safe_load).at_most(:once)
@@ -37,12 +26,12 @@ describe ZxcvbnService do
 
       threads = 1.upto(4).map do
         Thread.new do
-          ZxcvbnService.new(password).score
+          ZxcvbnService.complexity(SECURE_PASSWORD)
         end
       end.map(&:join)
 
-      scores = threads.map(&:value)
-      expect(scores).to eq([3, 3, 3, 3])
+      complexities = threads.map(&:value)
+      expect(complexities).to eq([4, 4, 4, 4])
       expect(Zxcvbn::Tester).to have_received(:new).at_most(:once)
     end
   end

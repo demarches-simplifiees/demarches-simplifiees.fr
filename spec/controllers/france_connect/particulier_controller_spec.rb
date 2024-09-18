@@ -394,7 +394,7 @@ describe FranceConnect::ParticulierController, type: :controller do
         fci.update!(requested_email: email.downcase)
       end
 
-      let!(:user) { create(:user, email:, password: 'abcdefgh') }
+      let!(:user) { create(:user, email:, password: SECURE_PASSWORD) }
 
       it 'merges the account, signs in, and delete the merge token' do
         subject
@@ -408,7 +408,7 @@ describe FranceConnect::ParticulierController, type: :controller do
       end
 
       context 'but the targeted user is an instructeur' do
-        let!(:user) { create(:instructeur, email: email, password: 'abcdefgh').user }
+        let!(:user) { create(:instructeur, email: email, password: SECURE_PASSWORD).user }
 
         it 'redirects to the new session' do
           subject

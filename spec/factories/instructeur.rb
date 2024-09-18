@@ -10,7 +10,7 @@ FactoryBot.define do
 
     transient do
       email { generate(:instructeur_email) }
-      password { '{my-%s3cure[]-p4$$w0rd' }
+      password { '{My-$3cure-p4ssWord}' }
     end
 
     trait :email_verified do
