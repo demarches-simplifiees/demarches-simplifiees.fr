@@ -181,7 +181,7 @@ FactoryBot.define do
     factory :champ_do_not_use_rnf, class: 'Champs::RNFChamp' do
     end
 
-    factory :champ_do_not_use_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do
+    factory :champ_do_not_use_formatted, class: 'Champs::FormattedChamp' do
     end
 
     factory :champ_do_not_use_repetition, class: 'Champs::RepetitionChamp' do

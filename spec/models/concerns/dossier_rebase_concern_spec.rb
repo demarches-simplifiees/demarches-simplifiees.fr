@@ -128,7 +128,7 @@ describe DossierRebaseConcern do
       end
 
       context 'with type de champ regexp and regexp change' do
-        let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :expression_reguliere, mandatory: false }], types_de_champ_private: [{}]) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :formatted, mandatory: false }], types_de_champ_private: [{}]) }
 
         before do
           procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(expression_reguliere: /\d+/)
