@@ -89,9 +89,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
   end
 
   def unpack_options
-    chunked = drop_down_options
-      .reject(&:empty?) # TODO: remove after removing empty options
-      .slice_before(PRIMARY_PATTERN)
+    chunked = drop_down_options.slice_before(PRIMARY_PATTERN)
 
     chunked.map do |chunk|
       primary, *secondary = chunk
@@ -101,8 +99,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
   end
 
   def check_presence_of_primary_options
-    # TODO: replace by `drop_down_options.first` when the empty options are removed
-    if !PRIMARY_PATTERN.match?(drop_down_options.find(&:present?))
+    if !PRIMARY_PATTERN.match?(drop_down_options.first)
       errors.add(libelle.presence || "La liste", "doit commencer par une entrée de menu primaire de la forme <code style='white-space: pre-wrap;'>--texte--</code>")
     end
   end
