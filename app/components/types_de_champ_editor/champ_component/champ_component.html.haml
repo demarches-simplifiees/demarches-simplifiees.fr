@@ -32,26 +32,6 @@
               %p
                 %small Nous numérotons automatiquement les titres lorsqu’aucun de vos titres ne commence par un chiffre.
 
-            - if type_de_champ.formatted?
-              .cell.fr-mt-1w
-                = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere) do
-                  = t('.expression_reguliere.labels.regex')
-
-                .type-de-champ-expression-reguliere
-                  = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
-                %p.fr-hint-text= t('.expression_reguliere.labels.hint')
-
-              .cell.fr-mt-1w
-                = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do
-                  = t('.expression_reguliere.labels.valid_exemple')
-                = form.text_field :expression_reguliere_exemple_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_exemple_text)
-                - if type_de_champ.invalid_regexp?
-                  %p.fr-message.fr-message--error
-                    = type_de_champ.errors[:expression_reguliere_exemple_text].join(", ")
-              .cell.fr-mt-1w
-                = form.label :expression_reguliere_error_message, for: dom_id(type_de_champ, :expression_reguliere_error_message) do
-                  = t('.expression_reguliere.labels.error_message')
-                = form.text_field :expression_reguliere_error_message, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_error_message)
             - if !type_de_champ.header_section? && !type_de_champ.titre_identite?
               .cell.fr-mt-1w
                 = form.label :description, "Description du champ (optionnel)", for: dom_id(type_de_champ, :description)
@@ -178,6 +158,40 @@
               = form.label :character_limit, for: dom_id(type_de_champ, :character_limit) do
                 Spécifier un nombre maximal conseillé de caractères :
               = form.select :character_limit, options_for_character_limit, {}, { id: dom_id(type_de_champ, :character_limit), class: 'fr-select' }
+          - if type_de_champ.formatted?
+            .flex.justify-start.column.width-33
+              %fieldset.fr-segmented.fr-segmented
+                %legend.fr-segmented__legend
+                  Spécifier le format requis
+                .fr-segmented__elements
+                  .fr-segmented__element
+                    = form.radio_button :formatted_mode, 'simple'
+                    = form.label :formatted_mode_simple, t('.kind.labels.simple'), class: 'fr-label'
+                  .fr-segmented__element
+                    = form.radio_button :formatted_mode, 'advanced'
+                    = form.label :formatted_mode_advanced, t('.kind.labels.advanced'), class: 'fr-label'
+
+            .flex.column.justify-start.flex-grow
+              .cell.fr-mt-1w
+                = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere) do
+                  = t('.expression_reguliere.labels.regex')
+
+                .type-de-champ-expression-reguliere
+                  = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
+                %p.fr-hint-text= t('.expression_reguliere.labels.hint_html')
+
+              .cell.fr-mt-1w
+                = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do
+                  = t('.expression_reguliere.labels.valid_exemple')
+                = form.text_field :expression_reguliere_exemple_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_exemple_text)
+                - if type_de_champ.invalid_regexp?
+                  %p.fr-message.fr-message--error
+                    = type_de_champ.errors[:expression_reguliere_exemple_text].join(", ")
+              .cell.fr-mt-1w
+                = form.label :expression_reguliere_error_message, for: dom_id(type_de_champ, :expression_reguliere_error_message) do
+                  = t('.expression_reguliere.labels.error_message')
+                = form.text_field :expression_reguliere_error_message, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_error_message)
+
 
     - if type_de_champ.repetition?
       .flex.justify-start.section.fr-ml-1w
