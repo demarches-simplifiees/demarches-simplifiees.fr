@@ -490,14 +490,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def drop_down_list_value
-    if drop_down_options.present?
-      drop_down_options.reject(&:empty?).join("\r\n")
-    else
-      ''
-    end
-  end
-
   def drop_down_list_value=(value)
     self.drop_down_options = value.to_s.lines.map(&:strip).reject(&:empty?)
   end

@@ -27,8 +27,8 @@ describe '20240912091625_clean_drop_down_options.rake' do
   after { rake_task.reenable }
 
   it 'removes the hidden options' do
-    expect(dashed_drop_down_list.drop_down_list_value).to eq(['1', '2'].join("\r\n"))
-    expect(witness_drop_down_list.drop_down_list_value).to eq(['1', 'hi', '2'].join("\r\n"))
-    expect(multiple_drop_down_list.drop_down_list_value).to eq(['1', '2'].join("\r\n"))
+    expect(dashed_drop_down_list.drop_down_options).to eq(['1', '2'])
+    expect(witness_drop_down_list.drop_down_options).to eq(['1', 'hi', '2'])
+    expect(multiple_drop_down_list.drop_down_options).to eq(['1', '2'])
   end
 end
