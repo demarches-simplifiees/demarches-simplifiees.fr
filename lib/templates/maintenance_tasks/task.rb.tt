@@ -5,6 +5,8 @@ module <%= tasks_module %>
   class <%= class_name %>Task < MaintenanceTasks::Task
     # Documentation: cette tâche modifie les données pour…
 
+    include StatementsHelpersConcern
+
     def collection
       # Collection to be iterated over
       # Must be Active Record Relation or Array
