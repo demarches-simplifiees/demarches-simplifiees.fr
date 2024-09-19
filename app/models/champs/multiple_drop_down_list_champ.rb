@@ -14,7 +14,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def render_as_checkboxes?
-    drop_down_list_enabled_non_empty_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
+    drop_down_options.size <= THRESHOLD_NB_OPTIONS_AS_CHECKBOX
   end
 
   def html_label?
@@ -47,7 +47,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def focusable_input_id
-    render_as_checkboxes? ? checkbox_id(drop_down_list_enabled_non_empty_options.first) : input_id
+    render_as_checkboxes? ? checkbox_id(drop_down_options.first) : input_id
   end
 
   def checkbox_id(value)
@@ -63,7 +63,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def unselected_options
-    drop_down_list_enabled_non_empty_options - selected_options
+    drop_down_options - selected_options
   end
 
   def value=(value)
@@ -93,7 +93,7 @@ class Champs::MultipleDropDownListChamp < Champ
   def values_are_in_options
     json = selected_options.compact_blank
     return if json.empty?
-    return if (json - drop_down_list_enabled_non_empty_options).empty?
+    return if (json - drop_down_options).empty?
 
     errors.add(:value, :not_in_options)
   end

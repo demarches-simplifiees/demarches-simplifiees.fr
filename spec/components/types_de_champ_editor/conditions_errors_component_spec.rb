@@ -77,7 +77,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
     context 'when an eq operator applies to a multiple_drop_down' do
       let(:tdc) { create(:type_de_champ_multiple_drop_down_list) }
       let(:source_tdcs) { [tdc] }
-      let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(tdc.drop_down_list_enabled_non_empty_options.first))] }
+      let(:conditions) { [ds_eq(champ_value(tdc.stable_id), constant(tdc.drop_down_options.first))] }
 
       it { expect(page).to have_content("« est » ne s'applique pas au choix multiple.") }
     end
@@ -85,7 +85,7 @@ describe Conditions::ConditionsErrorsComponent, type: :component do
     context 'when an not_eq operator applies to a multiple_drop_down' do
       let(:tdc) { create(:type_de_champ_multiple_drop_down_list) }
       let(:source_tdcs) { [tdc] }
-      let(:conditions) { [ds_not_eq(champ_value(tdc.stable_id), constant(tdc.drop_down_list_enabled_non_empty_options.first))] }
+      let(:conditions) { [ds_not_eq(champ_value(tdc.stable_id), constant(tdc.drop_down_options.first))] }
 
       it { expect(page).to have_content("« n’est pas » ne s'applique pas au choix multiple.") }
     end

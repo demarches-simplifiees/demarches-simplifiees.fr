@@ -23,7 +23,7 @@ class EditableChamp::DropDownListComponent < EditableChamp::EditableChampBaseCom
 
   def contains_long_option?
     max_length = 100
-    @champ.drop_down_list_enabled_non_empty_options.any? { _1.size > max_length }
+    @champ.drop_down_options.any? { _1.size > max_length }
   end
 
   def react_props

@@ -12,7 +12,7 @@ RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
 
       it {
         expect(possible_values).to match(
-          ([I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other_html")] + type_de_champ.drop_down_list_enabled_non_empty_options).to_sentence
+          ([I18n.t("views.prefill_descriptions.edit.possible_values.drop_down_list_other_html")] + type_de_champ.drop_down_options).to_sentence
         )
       }
     end
@@ -20,7 +20,7 @@ RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
     context "when the drop down list does not accept 'other'" do
       let(:type_de_champ) { build(:type_de_champ_drop_down_list, procedure:) }
 
-      it { expect(possible_values).to match(type_de_champ.drop_down_list_enabled_non_empty_options.to_sentence) }
+      it { expect(possible_values).to match(type_de_champ.drop_down_options.to_sentence) }
     end
   end
 
@@ -29,6 +29,6 @@ RSpec.describe TypesDeChamp::PrefillDropDownListTypeDeChamp do
     let(:type_de_champ) { build(:type_de_champ_drop_down_list, procedure: procedure) }
     subject(:example_value) { described_class.new(type_de_champ, procedure.active_revision).example_value }
 
-    it { expect(example_value).to eq(type_de_champ.drop_down_list_enabled_non_empty_options.first) }
+    it { expect(example_value).to eq(type_de_champ.drop_down_options.first) }
   end
 end

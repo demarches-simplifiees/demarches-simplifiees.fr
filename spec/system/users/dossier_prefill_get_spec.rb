@@ -43,8 +43,8 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
   let(:datetime_value) { "2023-02-01T10:32" }
   let(:multiple_drop_down_list_values) {
     [
-      type_de_champ_multiple_drop_down_list.drop_down_list_enabled_non_empty_options.first,
-      type_de_champ_multiple_drop_down_list.drop_down_list_enabled_non_empty_options.last
+      type_de_champ_multiple_drop_down_list.drop_down_options.first,
+      type_de_champ_multiple_drop_down_list.drop_down_options.last
     ]
   }
   let(:epci_value) { ['01', '200029999'] }

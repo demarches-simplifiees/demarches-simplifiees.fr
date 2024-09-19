@@ -1,6 +1,6 @@
 - if @champ.render_as_radios?
   .fr-fieldset__content
-    - @champ.drop_down_list_enabled_non_empty_options.each_with_index do |option, index|
+    - @champ.drop_down_options.each_with_index do |option, index|
       .fr-radio-group
         = @form.radio_button :value, option, id: dom_id(@champ, "radio_option_#{index}")
         %label.fr-label{ for: dom_id(@champ, "radio_option_#{index}") }
