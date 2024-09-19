@@ -6,6 +6,7 @@ Rails.application.config.after_initialize do
 
     class MaintenanceTasks::TaskGenerator
       alias_method :original_assign_names!, :assign_names!
+      source_paths << Rails.root.join("lib/templates/maintenance_tasks")
 
       private
 
