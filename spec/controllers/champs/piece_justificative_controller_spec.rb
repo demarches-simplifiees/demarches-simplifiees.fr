@@ -11,7 +11,8 @@ describe Champs::PieceJustificativeController, type: :controller do
       sign_in instructeur.user
       put :update, params: {
         position: '1',
-        champ_id: annotation.id,
+        dossier_id: dossier.id,
+        stable_id: annotation.stable_id,
         blob_signed_id: file
       }, format: 'turbo_stream'
       sign_out instructeur.user
@@ -21,7 +22,8 @@ describe Champs::PieceJustificativeController, type: :controller do
     let(:params) do
       annotation.reload
       {
-        champ_id: annotation.id.to_s,
+        dossier_id: dossier.id,
+        stable_id: annotation.stable_id,
         h: annotation.encoded_date(:created_at),
         i: 0
       }

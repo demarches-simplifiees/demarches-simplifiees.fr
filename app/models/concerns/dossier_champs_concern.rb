@@ -72,12 +72,6 @@ module DossierChampsConcern
     assign_attributes(champs_attributes:)
   end
 
-  private
-
-  def champs_by_public_id
-    @champs_by_public_id ||= champs.sort_by(&:id).index_by(&:public_id)
-  end
-
   def champ_for_export(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.blank? || !champ.visible?
@@ -85,6 +79,12 @@ module DossierChampsConcern
     else
       champ
     end
+  end
+
+  private
+
+  def champs_by_public_id
+    @champs_by_public_id ||= champs.sort_by(&:id).index_by(&:public_id)
   end
 
   def champ_attributes_by_public_id(public_id, attributes, scope)

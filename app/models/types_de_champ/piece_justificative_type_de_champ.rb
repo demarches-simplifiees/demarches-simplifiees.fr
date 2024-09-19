@@ -1,5 +1,6 @@
 class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBase
   extend ActionView::Helpers::TagHelper
+
   def estimated_fill_duration(revision)
     FILL_DURATION_LONG
   end
@@ -25,15 +26,9 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
     end
 
     def download_url(champ, index)
-      if Champ.update_by_stable_id?
-        Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
-          { dossier_id: champ.dossier_id, stable_id: champ.stable_id, h: champ.encoded_date(:created_at), i: index, row_id: champ.row_id }
-        )
-      else
-        Rails.application.routes.url_helpers.champs_legacy_piece_justificative_download_url(
-          { champ_id: champ.id, h: champ.encoded_date(:created_at), i: index }
-        )
-      end
+      Rails.application.routes.url_helpers.champs_piece_justificative_download_url(
+        { dossier_id: champ.dossier_id, stable_id: champ.stable_id, h: champ.encoded_date(:created_at), i: index, row_id: champ.row_id }
+      )
     end
 
     def champ_value_for_export(champ, path = :value)

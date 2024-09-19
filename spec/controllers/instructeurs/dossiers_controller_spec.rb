@@ -1044,7 +1044,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(ChampRevision.where(champ_id: champ_drop_down_list.id).first.instructeur_id).to eq(instructeur.id)
           expect(ChampRevision.where(champ_id: champ_drop_down_list.id).first.updated_at).to eq(now)
 
-          assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
+          assert_enqueued_jobs(2, only: DossierIndexSearchTermsJob) # pf : job created at dossier creation & with update_annotations
         }
 
         it 'updates the annotations' do

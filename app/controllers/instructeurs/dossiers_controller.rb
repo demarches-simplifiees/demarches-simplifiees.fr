@@ -452,7 +452,7 @@ module Instructeurs
         .order(Arel.sql("coalesce(revision_types_de_champ_types_de_champ.position, procedure_revision_types_de_champ.position)," +
                           " COALESCE(champs.row_id,' '), procedure_revision_types_de_champ.position"))
 
-      params[:dossier][:champs_private_attributes]&.reject! do |k, v|
+      params[:dossier][:champs_private_attributes]&.reject! do |k, _v|
         # find modified champ
         champ_index = ordered_champs.index { _1.public_id == k }
         return unless champ_index
