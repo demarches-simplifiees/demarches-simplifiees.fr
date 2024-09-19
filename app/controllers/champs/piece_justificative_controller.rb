@@ -72,7 +72,7 @@ class Champs::PieceJustificativeController < Champs::ChampController
     h = params[:h]
     return super if h.blank?
 
-    champ = if params[:champ_id].present?
+    champ = if params[:champ_id].present? # pf : after 01/09/2025, keep only access with dossier_id
       Champ.find(params[:champ_id])
     else
       dossier = Dossier.includes(:champs, revision: [:types_de_champ]).find(params[:dossier_id])
