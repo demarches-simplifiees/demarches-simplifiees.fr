@@ -6,8 +6,6 @@ class Champ < ApplicationRecord
 
   self.ignored_columns += [:type_de_champ_id]
 
-  attr_readonly :stable_id
-
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
   belongs_to :parent, class_name: 'Champ', optional: true
   has_many_attached :piece_justificative_file
@@ -95,7 +93,7 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    row_id.present?
+    parent_id.present?
   end
 
   # used for the `required` html attribute

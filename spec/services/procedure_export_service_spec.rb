@@ -390,11 +390,11 @@ describe ProcedureExportService do
 
       context 'with long libelle composed of utf8 characteres' do
         before do
-          procedure.active_revision.types_de_champ_public.each do |type_de_champ|
-            type_de_champ.update!(libelle: "#{type_de_champ.id} - ?/[] ééé ééé ééééééé ééééééé éééééééé. ééé éé éééééééé éé ééé. ééééé éééééééé ééé ééé.")
+          procedure.active_revision.types_de_champ_public.each do |c|
+            c.update!(libelle: "#{c.id} - ?/[] ééé ééé ééééééé ééééééé éééééééé. ééé éé éééééééé éé ééé. ééééé éééééééé ééé ééé.")
           end
-          procedure.active_revision.children_of(champ_repetition.type_de_champ).each do |type_de_champ|
-            type_de_champ.update!(libelle: "#{type_de_champ.id} - Quam rem nam maiores numquam dolorem nesciunt. Cum et possimus et aut. Fugit voluptas qui qui.")
+          champ_repetition.champs.each do |c|
+            c.type_de_champ.update!(libelle: "#{c.id} - Quam rem nam maiores numquam dolorem nesciunt. Cum et possimus et aut. Fugit voluptas qui qui.")
           end
         end
 
@@ -417,7 +417,7 @@ describe ProcedureExportService do
       context 'with empty repetition' do
         before do
           dossiers.flat_map { |dossier| dossier.champs_public.filter(&:repetition?) }.each do |champ|
-            Champ.where(row_id: champ.row_ids).destroy_all
+            champ.champs.destroy_all
           end
         end
 
