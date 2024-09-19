@@ -19,7 +19,7 @@ module DossierSectionsConcern
     end
 
     def auto_numbering_section_headers_for?(type_de_champ)
-      return false if type_de_champ.child?(revision)
+      return false if revision.child?(type_de_champ)
 
       sections_for(type_de_champ)&.none? { _1.libelle =~ /^\d/ }
     end
