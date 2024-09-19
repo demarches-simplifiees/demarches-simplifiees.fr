@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_16_114050) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_19_130351) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -382,6 +382,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_16_114050) do
     t.index ["deleted_at"], name: "index_deleted_dossiers_on_deleted_at"
     t.index ["dossier_id"], name: "index_deleted_dossiers_on_dossier_id", unique: true
     t.index ["procedure_id"], name: "index_deleted_dossiers_on_procedure_id"
+    t.index ["user_id"], name: "index_deleted_dossiers_on_user_id"
   end
 
   create_table "dossier_assignments", force: :cascade do |t|
@@ -718,6 +719,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_16_114050) do
     t.datetime "updated_at", precision: nil, null: false
     t.integer "user_id"
     t.index ["email_merge_token"], name: "index_france_connect_informations_on_email_merge_token"
+    t.index ["france_connect_particulier_id"], name: "idx_france_connect_particulier_id"
     t.index ["merge_token"], name: "index_france_connect_informations_on_merge_token"
     t.index ["user_id"], name: "index_france_connect_informations_on_user_id"
   end
