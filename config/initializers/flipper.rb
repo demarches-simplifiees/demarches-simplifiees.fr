@@ -30,7 +30,6 @@ features = [
   :sva,
   :switch_domain,
   :visa,
-  :champ_update_by_stable_id
 ]
 
 def database_exists?

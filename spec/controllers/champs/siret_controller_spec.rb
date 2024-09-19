@@ -190,7 +190,7 @@ describe Champs::SiretController, type: :controller do
     end
 
     context 'when user is not signed in' do
-      subject! { get :show, params: { champ_id: champ.id }, format: :turbo_stream }
+      subject! { get :show, params: { dossier_id: champ.dossier_id, stable_id: champ.stable_id }, format: :turbo_stream }
 
       it { expect(response).to redirect_to(new_user_session_path) }
     end

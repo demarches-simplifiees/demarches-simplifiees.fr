@@ -7,11 +7,6 @@
 
     = render Dsfr::InputStatusMessageComponent.new(errors_on_attribute: champ_component.errors_on_attribute?, error_full_messages: champ_component.error_full_messages, describedby_id: @champ.describedby_id, champ: @champ)
 
-    - if Champ.update_by_stable_id?
-      = @form.hidden_field :with_public_id, value: 'true'
-    - else
-      = @form.hidden_field :id, value: @champ.id
-
     - if has_champ_revisions?
       %div{ class: 'dropdown revision-dropdown', data: { controller: 'menu-button' } }
         %button{ class: 'fr-btn dropdown-button fr-btn--tertiary revisions-button', id: "#{@champ.public_id || @champ.id}-revision-btn", "aria-expanded": "false", 'aria-haspopup': 'true', 'aria-controls': "#{@champ.public_id || @champ.id}-revision", data: { menu_button_target: "button" } }

@@ -217,22 +217,9 @@ Rails.application.routes.draw do
     get ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#show', as: :piece_justificative
     put ':dossier_id/:stable_id/piece_justificative', to: 'piece_justificative#update'
     get ':dossier_id/:stable_id/piece_justificative/template', to: 'piece_justificative#template', as: :piece_justificative_template
-    get ':dossier_id/:stable_id/piece_justificative/download/:h/(:i)', to: 'piece_justificative#download', as: :piece_justificative_download
+    get ':dossier_id/:stable_id/piece_justificative/download/:h/:i', to: 'piece_justificative#download', as: :piece_justificative_download
 
-    # TODO: remove after migration is ower
-    get ':champ_id/siret', to: 'siret#show', as: :legacy_siret
-    get ':champ_id/rna', to: 'rna#show', as: :legacy_rna
-    delete ':champ_id/options', to: 'options#remove', as: :legacy_options
-    get ':champ_id/dn', to: 'numero_dn#show', as: :legacy_dn
-
-    get ':champ_id/carte/features', to: 'carte#index', as: :legacy_carte_features
-    post ':champ_id/carte/features', to: 'carte#create'
-    patch ':champ_id/carte/features/:id', to: 'carte#update'
-    delete ':champ_id/carte/features/:id', to: 'carte#destroy'
-
-    get ':champ_id/piece_justificative(/:h)', to: 'piece_justificative#show', as: :legacy_piece_justificative
-    put ':champ_id/piece_justificative', to: 'piece_justificative#update'
-    get ':champ_id/piece_justificative/template', to: 'piece_justificative#template'
+    # TODO remove this route after august 2025
     get ':champ_id/piece_justificative/download/:h/(:i)', to: 'piece_justificative#download', as: :legacy_piece_justificative_download
   end
 

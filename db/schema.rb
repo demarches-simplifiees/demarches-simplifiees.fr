@@ -767,6 +767,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
     t.datetime "created_at"
     t.integer "dossier_id"
     t.string "email"
+    t.datetime "email_verified_at"
     t.string "gender"
     t.string "nom"
     t.string "notification_method"
@@ -1162,6 +1163,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
     t.datetime "current_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "email", default: "", null: false
+    t.datetime "email_verified_at"
     t.string "encrypted_password", default: "", null: false
     t.integer "failed_attempts", default: 0, null: false
     t.datetime "inactive_close_to_expiration_notice_sent_at"

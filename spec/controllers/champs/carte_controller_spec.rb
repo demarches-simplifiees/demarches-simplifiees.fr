@@ -1,30 +1,28 @@
 describe Champs::CarteController, type: :controller do
   let(:user) { create(:user) }
-  let(:procedure) { create(:procedure, :published) }
+  let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :carte, options: { cadastres: true } }]) }
   let(:dossier) { create(:dossier, user: user, procedure: procedure) }
   let(:params) do
     {
       dossier: {
         champs_public_attributes: {
-          '1' => { value: value }
+          champ.public_id => { value: value }
         }
       },
       position: '1',
-      champ_id: champ.id
+      dossier_id: champ.dossier_id,
+      stable_id: champ.stable_id
     }
   end
-  let(:champ) do
-    create(:type_de_champ_carte, options: {
-      cadastres: true
-    }).champ.create(dossier: dossier)
-  end
+  let(:champ) { dossier.champs.first }
 
   describe 'features' do
     let(:feature) { attributes_for(:geo_area, :polygon) }
     let(:geo_area) { create(:geo_area, :selection_utilisateur, :polygon, champ: champ) }
     let(:params) do
       {
-        champ_id: champ.id,
+        dossier_id: champ.dossier_id,
+        stable_id: champ.stable_id,
         feature: feature,
         source: GeoArea.sources.fetch(:selection_utilisateur)
       }
@@ -49,7 +47,8 @@ describe Champs::CarteController, type: :controller do
         let(:feature) { attributes_for(:geo_area, :invalid_point) }
         let(:params) do
           {
-            champ_id: champ.id,
+            dossier_id: champ.dossier_id,
+            stable_id: champ.stable_id,
             feature: feature,
             source: GeoArea.sources.fetch(:selection_utilisateur)
           }
@@ -62,7 +61,8 @@ describe Champs::CarteController, type: :controller do
     describe 'PATCH #update' do
       let(:params) do
         {
-          champ_id: champ.id,
+          dossier_id: champ.dossier_id,
+          stable_id: champ.stable_id,
           id: geo_area.id,
           feature: feature
         }
@@ -101,7 +101,8 @@ describe Champs::CarteController, type: :controller do
     describe 'DELETE #destroy' do
       let(:params) do
         {
-          champ_id: champ.id,
+          dossier_id: champ.dossier_id,
+          stable_id: champ.stable_id,
           id: geo_area.id
         }
       end
@@ -122,7 +123,10 @@ describe Champs::CarteController, type: :controller do
 
       context 'without focus' do
         let(:params) do
-          { champ_id: champ.id }
+          {
+            dossier_id: champ.dossier_id,
+            stable_id: champ.stable_id
+          }
         end
 
         it 'updates the list' do
@@ -134,7 +138,8 @@ describe Champs::CarteController, type: :controller do
       context "update list and focus" do
         let(:params) do
           {
-            champ_id: champ.id,
+            dossier_id: champ.dossier_id,
+            stable_id: champ.stable_id,
             focus: true
           }
         end

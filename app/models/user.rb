@@ -79,6 +79,7 @@ class User < ApplicationRecord
 
   # Callback provided by Devise
   def after_confirmation
+    update!(email_verified_at: Time.zone.now)
     link_invites!
   end
 
@@ -114,7 +115,7 @@ class User < ApplicationRecord
 
   def self.create_or_promote_to_instructeur(email, password, administrateurs: [])
     user = User
-      .create_with(password: password, confirmed_at: Time.zone.now)
+      .create_with(password: password, confirmed_at: Time.zone.now, email_verified_at: Time.zone.now)
       .find_or_create_by(email: email)
 
     if user.valid?
@@ -153,7 +154,7 @@ class User < ApplicationRecord
 
   def self.create_or_promote_to_expert(email, password)
     user = User
-      .create_with(password: password, confirmed_at: Time.zone.now)
+      .create_with(password: password, confirmed_at: Time.zone.now, email_verified_at: Time.zone.now)
       .find_or_create_by(email: email)
 
     if user.valid?

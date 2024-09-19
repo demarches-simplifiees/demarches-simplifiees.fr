@@ -1006,24 +1006,19 @@ describe Instructeurs::DossiersController, type: :controller do
             dossier: {
               champs_private_attributes: {
                 champ_multiple_drop_down_list.public_id => {
-                  with_public_id: true,
                   value: ['', 'val1', 'val2']
                 },
                 champ_datetime.public_id => {
-                  with_public_id: true,
                   value: '2019-12-21T13:17'
                 },
                 champ_linked_drop_down_list.public_id => {
-                  with_public_id: true,
                   primary_value: 'primary',
                   secondary_value: 'secondary'
                 },
                 champ_repetition.champs.first.public_id => {
-                  with_public_id: true,
                   value: 'text'
                 },
                 champ_drop_down_list.public_id => {
-                  with_public_id: true,
                   value: '__other__',
                   value_other: 'other value'
                 }
@@ -1087,29 +1082,6 @@ describe Instructeurs::DossiersController, type: :controller do
       Timecop.return
     end
 
-    context "with new values for champs_private (legacy)" do
-      let(:params) do
-        {
-          procedure_id: procedure.id,
-          dossier_id: dossier.id,
-          dossier: {
-            champs_private_attributes: {
-              '0': {
-                id: champ_datetime.id,
-                value: '2024-03-30T07:03'
-              }
-            }
-          }
-        }
-      end
-
-      it 'update champs_private' do
-        patch :update_annotations, params: params, format: :turbo_stream
-        champ_datetime.reload
-        expect(champ_datetime.value).to eq(Time.zone.parse('2024-03-30T07:03:00').iso8601)
-      end
-    end
-
     context "without new values for champs_private" do
       let(:params) do
         {
@@ -1119,7 +1091,6 @@ describe Instructeurs::DossiersController, type: :controller do
             champs_private_attributes: {},
             champs_public_attributes: {
               champ_multiple_drop_down_list.public_id => {
-                with_public_id: true,
                 value: ['', 'val1', 'val2']
               }
             }
@@ -1149,7 +1120,6 @@ describe Instructeurs::DossiersController, type: :controller do
           dossier: {
             champs_private_attributes: {
               champ_datetime.public_id => {
-                with_public_id: true,
                 value: '2024-03-30T07:03'
               }
             }

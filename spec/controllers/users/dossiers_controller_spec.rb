@@ -266,6 +266,7 @@ describe Users::DossiersController, type: :controller do
         expect(individual.errors.full_messages).to be_empty
         expect(individual.notification_method).to eq('email')
         expect(individual.email).to eq('mickey@gmail.com')
+        expect(individual.email_verified_at).to be_present
         expect(response).to redirect_to(brouillon_dossier_path(dossier))
       end
 
@@ -739,11 +740,9 @@ describe Users::DossiersController, type: :controller do
           groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_public_attributes: {
             first_champ.public_id => {
-              with_public_id: true,
               value: value
             },
             piece_justificative_champ.public_id => {
-              with_public_id: true,
               piece_justificative_file: file
             }
           }
@@ -777,22 +776,6 @@ describe Users::DossiersController, type: :controller do
         expect(dossier.reload.updated_at.year).to eq(2100)
         expect(dossier.reload.state).to eq(Dossier.states.fetch(:brouillon))
       end
-
-      context 'without new values for champs' do
-        let(:submit_payload) do
-          {
-            id: dossier.id,
-            dossier: {
-              champs_public_attributes: { first_champ.public_id => { with_public_id: true } }
-            }
-          }
-        end
-
-        it "doesn't set last_champ_updated_at" do
-          subject
-          expect(dossier.reload.last_champ_updated_at).to eq(nil)
-        end
-      end
     end
 
     context 'when the user has an invitation but is not the owner' do
@@ -811,7 +794,7 @@ describe Users::DossiersController, type: :controller do
         {
           id: dossier.id,
           dossier: {
-            champs_public_attributes: { first_champ.public_id => { with_public_id: true, value: value } }
+            champs_public_attributes: { first_champ.public_id => { value: value } }
           }
         }
       end
@@ -865,11 +848,9 @@ describe Users::DossiersController, type: :controller do
           groupe_instructeur_id: dossier.groupe_instructeur_id,
           champs_public_attributes: {
             first_champ.public_id => {
-              with_public_id: true,
               value: value
             },
             piece_justificative_champ.public_id => {
-              with_public_id: true,
               piece_justificative_file: file
             }
           }
@@ -930,7 +911,6 @@ describe Users::DossiersController, type: :controller do
             dossier: {
               champs_public_attributes: {
                 piece_justificative_champ.public_id => {
-                  with_public_id: true,
                   piece_justificative_file: file
                 }
               }
@@ -1026,7 +1006,6 @@ describe Users::DossiersController, type: :controller do
           dossier: {
             champs_public_attributes: {
               first_champ.public_id => {
-                with_public_id: true,
                 value: value
               }
             }

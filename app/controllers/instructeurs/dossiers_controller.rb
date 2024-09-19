@@ -276,7 +276,7 @@ module Instructeurs
 
     def update_annotations
       dossier_with_champs.update_champs_attributes(remove_changes_forbidden_by_visa, :private)
-      if dossier.champs.any?(&:changed_for_autosave?) || dossier.champs_private_all.any?(&:changed_for_autosave?) # TODO remove second condition after one deploy
+      if dossier.champs.any?(&:changed_for_autosave?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
 
@@ -299,13 +299,8 @@ module Instructeurs
 
     def annotation
       @dossier = dossier_with_champs(pj_template: false)
-      annotation_id_or_stable_id = params[:stable_id]
-      annotation = if params[:with_public_id].present?
-        type_de_champ = @dossier.find_type_de_champ_by_stable_id(annotation_id_or_stable_id, :private)
-        @dossier.project_champ(type_de_champ, params[:row_id])
-      else
-        @dossier.champs_private_all.find(annotation_id_or_stable_id)
-      end
+      type_de_champ = @dossier.find_type_de_champ_by_stable_id(params[:stable_id], :private)
+      annotation = @dossier.project_champ(type_de_champ, params[:row_id])
 
       respond_to do |format|
         format.turbo_stream do
@@ -425,7 +420,6 @@ module Instructeurs
         :accreditation_number,
         :accreditation_birthdate,
         :feature,
-        :with_public_id,
         value: []
       ] + TypeDeChamp::INSTANCE_CHAMPS_PARAMS
       # Strong attributes do not support records (indexed hash); they only support hashes with
@@ -460,14 +454,10 @@ module Instructeurs
 
       params[:dossier][:champs_private_attributes]&.reject! do |k, v|
         # find modified champ
-        champ_index = if v[:with_public_id]
-          ordered_champs.index { _1.public_id == k }
-        else
-          ordered_champs.index { _1.id == v[:id]&.to_i }
-        end
+        champ_index = ordered_champs.index { _1.public_id == k }
         return unless champ_index
 
-        # check following chedked visa or header section level 1
+        # check following checked visa or header section level 1
         row_id = ordered_champs[champ_index].row_id
         following_champ = ordered_champs[champ_index + 1..-1].find do |c|
           next if c.row_id.present? && c.row_id != row_id # ignore champs from a different row
