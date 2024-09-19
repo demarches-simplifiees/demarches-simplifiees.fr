@@ -15,7 +15,7 @@ namespace :after_party do
       progress = ProgressReport.new(types_de_champ.count)
 
       types_de_champ.find_each do |type_de_champ|
-        type_de_champ.drop_down_list_value = type_de_champ.drop_down_list_value
+        type_de_champ.drop_down_options_from_text = type_de_champ.drop_down_list_value
 
         if type_de_champ.save
           type_de_champ.drop_down_list.destroy

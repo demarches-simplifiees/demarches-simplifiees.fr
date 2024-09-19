@@ -196,13 +196,13 @@ describe TypeDeChamp do
     let(:type_de_champ) { create(:type_de_champ_drop_down_list) }
 
     it "splits input" do
-      type_de_champ.drop_down_list_value = nil
+      type_de_champ.drop_down_options_from_text = nil
       expect(type_de_champ.drop_down_options).to eq([])
 
-      type_de_champ.drop_down_list_value = "\n\r"
+      type_de_champ.drop_down_options_from_text = "\n\r"
       expect(type_de_champ.drop_down_options).to eq([])
 
-      type_de_champ.drop_down_list_value = " 1 / 2 \r\n 3"
+      type_de_champ.drop_down_options_from_text = " 1 / 2 \r\n 3"
       expect(type_de_champ.drop_down_options).to eq(['1 / 2', '3'])
     end
   end
