@@ -20,7 +20,7 @@ class AddressProxy
     end
 
     def initialize(champ)
-      @data = champ.value_json.with_indifferent_access
+      @data = champ.value_json&.with_indifferent_access || {}
     end
   end
 
