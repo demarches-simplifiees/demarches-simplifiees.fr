@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_19_145757) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1136,7 +1136,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_145757) do
     t.datetime "processed_at", precision: nil
     t.string "state"
     t.index ["dossier_id"], name: "index_traitements_on_dossier_id"
-    t.index ["process_expired"], name: "index_traitements_on_process_expired"
   end
 
   create_table "trusted_device_tokens", force: :cascade do |t|
