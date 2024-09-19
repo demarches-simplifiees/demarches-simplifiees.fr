@@ -22,7 +22,7 @@
     = render ReactComponent.new "ComboBox/SingleComboBox", **react_props
 - else
   = @form.select :value,
-    @champ.drop_down_list_enabled_non_empty_options(other: true),
+    @champ.drop_down_options_with_other,
     { selected: @champ.selected, include_blank: true },
     required: @champ.required?,
     id: @champ.input_id,

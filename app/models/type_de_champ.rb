@@ -480,8 +480,8 @@ class TypeDeChamp < ApplicationRecord
     Array.wrap(super)
   end
 
-  def drop_down_list_enabled_non_empty_options(other: false)
-    if other && drop_down_other?
+  def drop_down_options_with_other
+    if drop_down_other?
       drop_down_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
     else
       drop_down_options
