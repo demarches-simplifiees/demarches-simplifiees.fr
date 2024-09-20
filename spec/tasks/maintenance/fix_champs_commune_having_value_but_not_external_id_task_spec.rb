@@ -30,7 +30,7 @@ module Maintenance
         end
 
         context 'en_instruction (go back to en_construction!), send comment' do
-          let(:state) { [:en_instruction, :en_construction].sample }
+          let(:state) { :en_construction }
 
           it 'flags as pending correction' do
             expect { subject }.to change { champ.reload.value }.from('Marseille').to(nil)

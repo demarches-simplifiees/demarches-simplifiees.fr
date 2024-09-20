@@ -6,7 +6,7 @@ module Maintenance
   RSpec.describe ResolvePendingCorrectionForDossierWithInvalidCommuneExternalIdTask do
     describe "#process" do
       subject(:process) { described_class.process }
-      let(:instructeur) { create(:instructeur, email: ENV.fetch('DEFAULT_INSTRUCTEUR_EMAIL') { CONTACT_EMAIL }) }
+      let!(:instructeur) { create(:instructeur, email: ENV.fetch('DEFAULT_INSTRUCTEUR_EMAIL') { CONTACT_EMAIL }) }
       let(:commentaire) { create(:commentaire, instructeur:) }
       let(:dossier_correction) { create(:dossier_correction, commentaire:, dossier:, resolved_at: nil) }
 
@@ -22,7 +22,7 @@ module Maintenance
 
       context 'when dossier didnt transitioned' do
         let(:dossier) { create(:dossier, :en_construction) }
-
+        before { create(:traitement, dossier:) }
         it 'noop' do
           expect { subject }.not_to change { dossier.reload.state }
         end
