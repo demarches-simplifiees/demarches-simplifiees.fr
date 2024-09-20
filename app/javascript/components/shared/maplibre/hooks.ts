@@ -9,7 +9,7 @@ import type {
   LngLatBoundsLike,
   LngLat,
   MapLayerEventType,
-  Style,
+  StyleSpecification,
   LngLatLike
 } from 'maplibre-gl';
 import type { Feature, Geometry } from 'geojson';
@@ -104,7 +104,7 @@ function optionalLayersMap(optionalLayers: string[]): LayersMap {
 
 export function useStyle(
   optionalLayers: string[],
-  onStyleChange: (style: Style) => void
+  onStyleChange: (style: StyleSpecification) => void
 ) {
   const [styleId, setStyle] = useState('ortho');
   const [layers, setLayers] = useState(() => optionalLayersMap(optionalLayers));

@@ -1,4 +1,3 @@
-import 'maplibre-gl/dist/maplibre-gl.css';
 import type { FeatureCollection } from 'geojson';
 
 import { MapLibre } from '../shared/maplibre/MapLibre';

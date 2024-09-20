@@ -1,7 +1,9 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import type { Feature, FeatureCollection } from 'geojson';
+import { CursorClickIcon } from '@heroicons/react/outline';
 
-import { useMapLibre } from '../../shared/maplibre/MapLibre';
+import { useMapLibre, ReactControl } from '../../shared/maplibre/MapLibre';
 import {
   useEvent,
   useMapEvent,
@@ -18,15 +20,31 @@ export function CadastreLayer({
   featureCollection,
   createFeatures,
   deleteFeatures,
+  toggle,
   enabled
 }: {
   featureCollection: FeatureCollection;
   createFeatures: CreateFeatures;
   deleteFeatures: DeleteFeatures;
+  toggle: () => void;
   enabled: boolean;
 }) {
   const map = useMapLibre();
   const selectedCadastresRef = useRef(new Set<string>());
+  const [controlElement, setControlElement] = useState<HTMLElement | null>(
+    null
+  );
+
+  useEffect(() => {
+    const control = new ReactControl();
+    map.addControl(control, 'top-left');
+    setControlElement(control.container);
+
+    return () => {
+      map.removeControl(control);
+      setControlElement(null);
+    };
+  }, [map, enabled]);
 
   const highlightFeature = useCallback(
     (cid: string, highlight: boolean) => {
@@ -95,7 +113,35 @@ export function CadastreLayer({
 
   useEvent('map:internal:cadastre:highlight', onHighlight);
 
-  return null;
+  return (
+    <>
+      {controlElement != null
+        ? createPortal(
+            <CadastreSwitch enabled={enabled} toggle={toggle} />,
+            controlElement
+          )
+        : null}
+    </>
+  );
+}
+
+function CadastreSwitch({
+  enabled,
+  toggle
+}: {
+  enabled: boolean;
+  toggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      title="Sélectionner les parcelles cadastrales"
+      className={enabled ? 'on' : 'off'}
+    >
+      <CursorClickIcon className="icon-size" />
+    </button>
+  );
 }
 
 function useCadastres(

@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { CursorClickIcon } from '@heroicons/react/outline';
-import 'maplibre-gl/dist/maplibre-gl.css';
 import '@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css';
 import type { FeatureCollection } from 'geojson';
 
@@ -51,25 +49,12 @@ export default function MapEditor({
           enabled={!cadastreEnabled}
         />
         {options.layers.includes('cadastres') ? (
-          <>
-            <CadastreLayer
-              featureCollection={featureCollection}
-              {...actions}
-              enabled={cadastreEnabled}
-            />
-            <div className="cadastres-selection-control mapboxgl-ctrl-group">
-              <button
-                type="button"
-                onClick={() =>
-                  setCadastreEnabled((cadastreEnabled) => !cadastreEnabled)
-                }
-                title="Sélectionner les parcelles cadastrales"
-                className={cadastreEnabled ? 'on' : ''}
-              >
-                <CursorClickIcon className="icon-size" />
-              </button>
-            </div>
-          </>
+          <CadastreLayer
+            featureCollection={featureCollection}
+            {...actions}
+            toggle={() => setCadastreEnabled((enabled) => !enabled)}
+            enabled={cadastreEnabled}
+          />
         ) : null}
       </MapLibre>
       <PointInput featureCollection={featureCollection} />

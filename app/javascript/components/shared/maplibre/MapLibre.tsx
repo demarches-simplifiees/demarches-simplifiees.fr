@@ -8,13 +8,15 @@ import {
   createContext,
   useCallback
 } from 'react';
-import maplibre, { Map, NavigationControl } from 'maplibre-gl';
-import type { Style } from 'maplibre-gl';
+import { createPortal } from 'react-dom';
+import { Map, NavigationControl } from 'maplibre-gl';
+import type { StyleSpecification, IControl } from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 
 import invariant from 'tiny-invariant';
 
 import { useStyle, useElementVisible } from './hooks';
-import { StyleControl } from './StyleControl';
+import { StyleSwitch } from './StyleControl';
 
 const Context = createContext<{ map?: Map | null }>({});
 
@@ -30,16 +32,15 @@ export function useMapLibre() {
 }
 
 export function MapLibre({ children, layers }: MapLibreProps) {
-  const isSupported = useMemo(
-    () => maplibre.supported({ failIfMajorPerformanceCaveat: true }) && !isIE(),
-    []
-  );
+  const isSupported = useMemo(() => isWebglSupported(), []);
   const containerRef = useRef<HTMLDivElement>(null);
   const visible = useElementVisible(containerRef);
   const [map, setMap] = useState<Map | null>();
+  const [styleControlElement, setStyleControlElement] =
+    useState<HTMLElement | null>(null);
 
   const onStyleChange = useCallback(
-    (style: Style) => {
+    (style: StyleSpecification) => {
       if (map) {
         map.setStyle(style);
       }
@@ -56,8 +57,11 @@ export function MapLibre({ children, layers }: MapLibreProps) {
         style
       });
       map.addControl(new NavigationControl({}), 'top-right');
+      const styleControl = new ReactControl();
+      map.addControl(styleControl, 'bottom-left');
       map.on('load', () => {
         setMap(map);
+        setStyleControlElement(styleControl.container);
       });
     }
   }, [map, style, visible, isSupported]);
@@ -91,16 +95,54 @@ export function MapLibre({ children, layers }: MapLibreProps) {
   return (
     <Context.Provider value={{ map }}>
       <div ref={containerRef} style={{ height: '500px' }}>
-        <StyleControl styleId={style.id} {...mapStyleProps} />
+        {styleControlElement != null
+          ? createPortal(
+              <StyleSwitch styleId={style.id} {...mapStyleProps} />,
+              styleControlElement
+            )
+          : null}
         {map ? children : null}
       </div>
     </Context.Provider>
   );
 }
 
-function isIE() {
-  const ua = window.navigator.userAgent;
-  const msie = ua.indexOf('MSIE ');
-  const trident = ua.indexOf('Trident/');
-  return msie > 0 || trident > 0;
+function isWebglSupported() {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement('canvas');
+    try {
+      // Note that { failIfMajorPerformanceCaveat: true } can be passed as a second argument
+      // to canvas.getContext(), causing the check to fail if hardware rendering is not available. See
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+      // for more details.
+      const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      if (context && typeof context.getParameter == 'function') {
+        return true;
+      }
+    } catch (e) {
+      // WebGL is supported, but disabled
+    }
+    return false;
+  }
+  // WebGL not supported
+  return false;
+}
+
+export class ReactControl implements IControl {
+  #container: HTMLElement | null = null;
+
+  get container(): HTMLElement | null {
+    return this.#container;
+  }
+
+  onAdd(): HTMLElement {
+    this.#container = document.createElement('div');
+    this.#container.className = 'maplibregl-ctrl maplibregl-ctrl-group ds-ctrl';
+    return this.#container;
+  }
+
+  onRemove(): void {
+    this.#container?.remove();
+    this.#container = null;
+  }
 }

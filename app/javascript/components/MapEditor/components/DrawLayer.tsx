@@ -1,5 +1,5 @@
 import { useCallback, useRef, useEffect } from 'react';
-import type { LngLatBoundsLike, LngLatLike } from 'maplibre-gl';
+import type { LngLatBoundsLike, LngLatLike, IControl } from 'maplibre-gl';
 import DrawControl from '@mapbox/mapbox-gl-draw';
 import type { FeatureCollection, Feature, Point } from 'geojson';
 
@@ -52,18 +52,14 @@ export function DrawLayer({
       });
       // We use mapbox-draw plugin with maplibre. They are compatible but types are not.
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      map.addControl(draw as any, 'top-left');
+      const control = draw as any as IControl;
+      map.addControl(control, 'top-left');
       draw.set(
         filterFeatureCollection(featureCollection, SOURCE_SELECTION_UTILISATEUR)
       );
       drawRef.current = draw;
 
-      for (const [selector, translation] of translations) {
-        const element = document.querySelector(selector);
-        if (element) {
-          element.setAttribute('title', translation);
-        }
-      }
+      patchDrawControl();
     }
 
     return () => {
@@ -228,3 +224,15 @@ const translations = [
   ['.mapbox-gl-draw_point', 'Ajouter un point'],
   ['.mapbox-gl-draw_trash', 'Supprimer']
 ];
+
+function patchDrawControl() {
+  document.querySelectorAll('.mapboxgl-ctrl').forEach((control) => {
+    control.classList.add('maplibregl-ctrl', 'maplibregl-ctrl-group');
+
+    for (const [selector, translation] of translations) {
+      for (const button of control.querySelectorAll(selector)) {
+        button.setAttribute('title', translation);
+      }
+    }
+  });
+}
