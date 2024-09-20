@@ -1,5 +1,5 @@
-- content_for(:title, 'Instructeurs')
-%h1.fr-h2 Instructeurs
+- content_for(:title, t('.title'))
+%h1.fr-h2=t('.title')
 
 = render partial: 'administrateurs/groupe_instructeurs/import_export',
     locals: { procedure: @procedure }

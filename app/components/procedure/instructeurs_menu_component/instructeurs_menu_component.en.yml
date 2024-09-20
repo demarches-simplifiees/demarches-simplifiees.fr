@@ -1,0 +1,5 @@
+---
+en:
+  instructeurs:
+    one: "%{count} instructor"
+    other: "%{count} instructors"
