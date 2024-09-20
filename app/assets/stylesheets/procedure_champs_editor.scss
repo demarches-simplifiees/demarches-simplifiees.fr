@@ -73,10 +73,24 @@
     }
 
     .cell {
-      label {
+      .checkboxes-fieldset {
+        padding: 0;
+        margin: 0;
+      }
+      label:not(.small-label), legend {
         margin-bottom: 8px;
         text-transform: uppercase;
+        padding: 0;
+        margin: 0;
         font-size: 12px;
+        font-weight: bold;
+      }
+      label.small-label {
+        font-size: 14px;
+        font-weight: normal;
+      }
+      .input-group {
+        width: 45%;
       }
     }
 
