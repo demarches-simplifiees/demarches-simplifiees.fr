@@ -1,14 +1,14 @@
 ---
 category: "usager"
 subcategory: "find_dossier"
-slug: "mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder"
+slug: "Transfert de dossier - mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder"
 locale: "fr"
 keywords: "dossier, tiers, accès dossier, transfert dossier, action dossier"
-title: "Mon dossier a été déposé par un tiers et je souhaite y accéder"
+title: "Transfert de dossier - cas d'ysage : mon dossier a été déposé par un tiers et je souhaite y accéder"
 
 ---
 
-# Mon dossier a été déposé par un tiers et je souhaite y accéder
+# Transfert de dossier - Mon dossier a été déposé par un tiers et je souhaite y accéder
 
 Vous devez **contacter la personne qui a déposé le dossier** et lui demander de vous le transférer.
 
