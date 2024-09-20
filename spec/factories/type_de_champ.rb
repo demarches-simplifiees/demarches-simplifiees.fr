@@ -79,9 +79,9 @@ FactoryBot.define do
     factory :type_de_champ_drop_down_list do
       libelle { 'Choix unique' }
       type_champ { TypeDeChamp.type_champs.fetch(:drop_down_list) }
-      drop_down_list_value { "val1\r\nval2\r\nval3" }
+      drop_down_options { ["val1", "val2", "val3"] }
       trait :long do
-        drop_down_list_value { "alpha\r\nbravo\r\ncharly\r\ndelta\r\necho\r\nfox-trot\r\ngolf" }
+        drop_down_options { ["alpha", "bravo", "charly", "delta", "echo", "fox-trot", "golf"] }
       end
       trait :with_other do
         drop_down_other { true }
@@ -89,14 +89,14 @@ FactoryBot.define do
     end
     factory :type_de_champ_multiple_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
-      drop_down_list_value { "val1\r\nval2\r\nval3" }
+      drop_down_options { ["val1", "val2", "val3"] }
       trait :long do
-        drop_down_list_value { "alpha\r\nbravo\r\ncharly\r\ndelta\r\necho\r\nfox-trot\r\ngolf" }
+        drop_down_options { ["alpha", "bravo", "charly", "delta", "echo", "fox-trot", "golf"] }
       end
     end
     factory :type_de_champ_linked_drop_down_list do
       type_champ { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
-      drop_down_list_value { "--primary--\r\nsecondary\n" }
+      drop_down_options { ["--primary--", "secondary"] }
     end
     factory :type_de_champ_expression_reguliere do
       type_champ { TypeDeChamp.type_champs.fetch(:expression_reguliere) }

@@ -149,7 +149,7 @@ describe TypeDeChamp do
     let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list) }
 
     it 'should validate without label' do
-      type_de_champ.drop_down_list_value = 'toto'
+      type_de_champ.drop_down_options = ['toto']
       expect(type_de_champ.validate).to be_falsey
       messages = type_de_champ.errors.full_messages
       expect(messages.size).to eq(1)

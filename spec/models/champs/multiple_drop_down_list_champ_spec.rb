@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Champs::MultipleDropDownListChamp do
-  let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, drop_down_list_value: "val1\r\nval2\r\nval3\r\n[brackets] val4") }
+  let(:type_de_champ) { build(:type_de_champ_multiple_drop_down_list, drop_down_options: ["val1", "val2", "val3", "[brackets] val4"]) }
   let(:value) { nil }
   let(:champ) { Champs::MultipleDropDownListChamp.new(value:, dossier: build(:dossier)) }
   before do

@@ -15,7 +15,7 @@ class TypesDeChampEditor::ConditionsComponentPreview < ViewComponent::Preview
   def with_conditions
     surface = TypeDeChamp.create(type_champ: :integer_number, libelle: 'surface')
     appartement = TypeDeChamp.create(type_champ: :yes_no, libelle: 'appartement')
-    type_appartement = TypeDeChamp.create(type_champ: :drop_down_list, libelle: 'type', drop_down_list_value: "T1\r\nT2\r\nT3")
+    type_appartement = TypeDeChamp.create(type_champ: :drop_down_list, libelle: 'type', drop_down_options: ["T1", "T2", "T3"])
     upper_tdcs = [surface, appartement, type_appartement]
 
     condition = ds_and([

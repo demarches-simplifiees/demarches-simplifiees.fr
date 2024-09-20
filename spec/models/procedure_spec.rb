@@ -397,7 +397,7 @@ describe Procedure do
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
 
           drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
-          drop_down.update!(drop_down_list_value: "--title--\r\nsome value")
+          drop_down.update!(drop_down_options: ["--title--", "some value"])
           procedure.reload.validate(:publication)
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
         end

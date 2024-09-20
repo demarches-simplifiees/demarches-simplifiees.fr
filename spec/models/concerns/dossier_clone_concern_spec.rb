@@ -229,7 +229,7 @@ RSpec.describe DossierCloneConcern do
       context 'invalid origin' do
         let(:procedure) do
           create(:procedure, types_de_champ_public: [
-            { type: :drop_down_list, libelle: "Le savez-vous?", stable_id: 992, drop_down_list_value: ["Oui", "Non", "Peut-être"].join("\r\n"), mandatory: true }
+            { type: :drop_down_list, libelle: "Le savez-vous?", stable_id: 992, drop_down_options: ["Oui", "Non", "Peut-être"], mandatory: true }
           ])
         end
 

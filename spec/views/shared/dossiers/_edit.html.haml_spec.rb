@@ -71,7 +71,7 @@ describe 'shared/dossiers/edit', type: :view do
 
     context 'when the list is long' do
       let(:value) { 'alpha' }
-      let(:options) { [:long] }
+      let(:options) { ['1', '2', '3', '4', '5', '6'] }
 
       before { champ.update(value:) }
 
