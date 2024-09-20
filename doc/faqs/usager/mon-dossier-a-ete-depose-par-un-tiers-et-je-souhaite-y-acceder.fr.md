@@ -19,3 +19,6 @@ Pour cela, la personne doit cliquer sur le bouton **« Action »** (ou _« Au
 Et ensuite cliquer sur **« Transférer le dossier »** en indiquant votre adresse mail.
 
 ![Image illustration l’interface de transfert de dossier vers un autre compte {aria-hidden="true"}](faq/usager-transfer-dossier.png)
+
+Vous recevrez alors un mail de transfert de dossier que vous pourrez accepter ou rejeter depuis votre interface usager. 
+> **Une fois la demande de transfert acceptée, vous serez propriétaire du dossier.** 
