@@ -42,6 +42,7 @@ describe Champs::DossierLinkChamp, type: :model do
 
     before do
       allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_dossier_link, mandatory:))
+      allow(champ).to receive(:in_dossier_revision?).and_return(true)
       champ.run_callbacks(:validation)
     end
 
