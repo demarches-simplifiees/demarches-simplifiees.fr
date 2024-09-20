@@ -674,7 +674,7 @@ class Procedure < ApplicationRecord
       result << :service
     end
 
-    if service_test?
+    if service_siret_test?
       result << :service
     end
 
@@ -710,7 +710,7 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def service_test?
+  def service_siret_test?
     service&.siret == Service::SIRET_TEST
   end
 

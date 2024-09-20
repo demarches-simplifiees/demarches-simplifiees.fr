@@ -89,6 +89,15 @@ describe Service, type: :model do
     end
   end
 
+  describe 'validation on update' do
+    subject { create(:service) }
+
+    it 'should not allow to have a test siret' do
+      subject.siret = Service::SIRET_TEST
+      expect(subject).not_to be_valid
+    end
+  end
+
   describe "etablissement adresse & geo coordinates" do
     subject { create(:service, etablissement_lat: latitude, etablissement_lng: longitude, etablissement_infos: etablissement_infos) }
 
