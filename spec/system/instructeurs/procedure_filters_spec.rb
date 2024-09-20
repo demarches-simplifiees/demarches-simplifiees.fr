@@ -43,7 +43,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add created_at column", chrome: true do
+  scenario "should add be able to add created_at column", js: true do
     add_column("Créé le")
     within ".dossiers-table" do
       expect(page).to have_link("Créé le")
@@ -51,7 +51,7 @@ describe "procedure filters" do
     end
   end
 
-  scenario "should add be able to add and remove custom type_de_champ column", chrome: true do
+  scenario "should add be able to add and remove custom type_de_champ column", js: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
       expect(page).to have_link(type_de_champ.libelle)
@@ -229,6 +229,7 @@ describe "procedure filters" do
 
   def add_column(column_name)
     click_on 'Personnaliser'
+    scroll_to(find('input[aria-label="Colonne à afficher"]'), align: :center)
     select_combobox('Colonne à afficher', column_name)
     click_button "Enregistrer"
   end
