@@ -41,4 +41,4 @@ Dans ce cas, revenez sur la page _« Profil »_, et choisissez une autre adres
 Pour savoir comment transférer des dossiers, nous vous invitons à consulter la page suivante : https://www.demarches-simplifiees.fr/faq/usager/mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder
 
 
-Une fois le transfert opéré , nous pourrons procéder à la suppression de votre ancien compte en nous contactant à l'adresse contact@demarches-simplifiees.fr . 
+Une fois le transfert opéré, nous pourrons procéder à la suppression de votre ancien compte en nous contactant à l'adresse contact@demarches-simplifiees.fr . 
