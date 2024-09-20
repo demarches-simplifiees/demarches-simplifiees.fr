@@ -1,7 +1,7 @@
 ---
 category: "usager"
 subcategory: "find_dossier"
-slug: "Transfert de dossier - mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder"
+slug: "mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder"
 locale: "fr"
 keywords: "dossier, tiers, accès dossier, transfert dossier, action dossier"
 title: "Transfert de dossier - cas d'usage : mon dossier a été déposé par un tiers et je souhaite y accéder"
