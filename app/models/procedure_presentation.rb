@@ -29,6 +29,17 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_filters_max_length
   validate :check_filters_max_integer
 
+  attribute :sorted_column, :jsonb
+
+  attribute :a_suivre_filters, :jsonb, array: true
+  attribute :suivis_filters, :jsonb, array: true
+  attribute :traites_filters, :jsonb, array: true
+  attribute :tous_filters, :jsonb, array: true
+  attribute :supprimes_filters, :jsonb, array: true
+  attribute :supprimes_recemment_filters, :jsonb, array: true
+  attribute :expirant_filters, :jsonb, array: true
+  attribute :archives_filters, :jsonb, array: true
+
   def displayed_fields_for_headers
     [
       Column.new(procedure_id: procedure.id, table: 'self', column: 'id', classname: 'number-col'),
