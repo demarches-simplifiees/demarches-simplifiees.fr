@@ -20,22 +20,27 @@ en:
           one: "%{count} group exist"
           other: "%{count} groups exist"
       instructeurs:
+        title: Instructors
         assigned_instructeur:
           one: "%{count} instructor is assigned"
           other: "%{count} instructors are assigned"
+        instructeur_assignation: Instructors assignment
+        assign: Assign
+        remove: Remove
+        instructeur_emails: Email addresses of the instructors you want to assign to this procedure
       import_export:
         csv_import:
-          import_file: Importer le fichier
-          import_file_alert: Tous les instructeurs ajoutés à la procédure vont être notifiés par email. Voulez-vous continuer ?
-          import_file_procedure_not_published: L’import par fichier CSV est disponible une fois la démarche publiée
+          import_file: Import file
+          import_file_alert: All instructors added to the procedure will be notified by email. Do you want to continue?
+          import_file_procedure_not_published: CSV file import is available once the procedure is published
           groupes:
-            title: Import / Export en masse
-            notice_1_html: Pour l'import, votre fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (<a href=/csv/fr/import-groupe-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur %{csv_max_size}.
-            notice_2: L’import n’écrase pas les groupes existants. Il permet uniquement d'en ajouter. Pour supprimer un groupe, allez dans la page dédiée et cliquez sur le bouton « Supprimer ».
+            title: Bulk Import / Export
+            notice_1_html: For the import, your csv file must have 2 columns (Group, Email) and be comma separated (<a href=/csv/en/import-groupe-test.csv>example file</a>). The file size must be less than %{csv_max_size}.
+            notice_2: The import does not overwrite existing groups and instructors. It only allows you to add them.
           instructeurs:
-            title: Import en masse
-            notice_1_html: Pour l'import, le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d'instructeur par ligne (<a href=/csv/import-instructeurs-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur %{csv_max_size}.
-            notice_2: L’import n’écrase pas les instructeurs existants. Il permet uniquement d'en ajouter. Pour supprimer un instructeur, cliquez sur le bouton « Retirer ».
+            title: Adding instructors with file import
+            notice_1_html: For the import, the csv file must have only 1 column (Email) with one instructor email address per line (<a href=/csv/import-instructeurs-test.csv>example file</a>). The file size must be less than %{csv_max_size}.
+            notice_2: The import does not overwrite existing instructors. It only allows you to add them.
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
