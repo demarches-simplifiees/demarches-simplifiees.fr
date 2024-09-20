@@ -1,0 +1,30 @@
+en:
+  layers:
+    cadastres: Cadastres
+    unesco: UNESCO
+    arretes_protection: Arrêtés de protection
+    conservatoire_littoral: Conservatoire du Littoral
+    reserves_chasse_faune_sauvage: Réserves nationales de chasse et de faune sauvage
+    reserves_biologiques: Réserves biologiques
+    reserves_naturelles: Réserves naturelles
+    natura_2000: Natura 2000
+    zones_humides: Zones humides d’importance internationale
+    znieff: ZNIEFF
+  character_limit:
+    unlimited: No character limitation
+    limit: 3-character limit
+  expression_reguliere:
+    labels:
+      regex: Enter your regular expression, try it on https://rubular.com.
+      hint_html: |
+        Remember start (^) and end ($) anchors :<br>
+        `12 miles` would be accepted by /[[:digit:]]+/ but rejected by /^[[:digit:]]+$/ <br>
+        <a href="https://rubular.com" target="_blank" rel="noreferrer">Find out more about regular expression syntax</a>
+      valid_exemple: Valid example passing the regular expression
+      error_message: Error message to be displayed to user in case of invalid entry
+  kind:
+    labels:
+      simple: Simple mode
+      advanced: Advanced mode
+
+
