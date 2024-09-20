@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :hidden_by_reason, :for_tiers, :prenom, :nom, :batch_operation_id, :sva_svr_decision_on, :corrections, :columns) do
+  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :hidden_by_reason, :for_tiers, :batch_operation_id, :sva_svr_decision_on, :corrections, :columns) do
       def pending_correction?
         return false if corrections.blank?
 
@@ -46,12 +46,10 @@ class DossierProjectionService
     hidden_by_administration_at_column = Column.new(table: 'self', column: 'hidden_by_administration_at')
     hidden_by_reason_column = Column.new(table: 'self', column: 'hidden_by_reason')
     for_tiers_column = Column.new(table: 'self', column: 'for_tiers')
-    individual_first_name_column = Column.new(table: 'individual', column: 'prenom')
-    individual_last_name_column = Column.new(table: 'individual', column: 'nom')
     sva_svr_decision_on_column = Column.new(table: 'self', column: 'sva_svr_decision_on')
     dossier_corrections_column = Column.new(table: 'dossier_corrections', column: 'resolved_at')
     champ_value = champ_value_formatter(dossiers_ids, columns)
-    ([state_column, archived_column, sva_svr_decision_on_column, hidden_by_user_at_column, hidden_by_administration_at_column, hidden_by_reason_column, for_tiers_column, individual_first_name_column, individual_last_name_column, batch_operation_column, dossier_corrections_column] + columns)
+    ([state_column, archived_column, sva_svr_decision_on_column, hidden_by_user_at_column, hidden_by_administration_at_column, hidden_by_reason_column, for_tiers_column, batch_operation_column, dossier_corrections_column] + columns)
       .group_by(&:table) # one query per table
       .each do |table, columns|
       case table
@@ -155,8 +153,6 @@ class DossierProjectionService
         hidden_by_administration_at_column.id_value_h[dossier_id],
         hidden_by_reason_column.id_value_h[dossier_id],
         for_tiers_column.id_value_h[dossier_id],
-        individual_first_name_column.id_value_h[dossier_id],
-        individual_last_name_column.id_value_h[dossier_id],
         batch_operation_column.id_value_h[dossier_id],
         sva_svr_decision_on_column.id_value_h[dossier_id],
         dossier_corrections_column.id_value_h[dossier_id],
