@@ -13,6 +13,14 @@ en:
   character_limit:
     unlimited: No character limitation
     limit: 3-character limit
+  simple_mode:
+    labels:
+      accepted_format: supported input format
+      numbers: 'Numbers'
+      letters: 'Letters'
+      special_characters: "Special characters (-_\/:* ...)"
+      min_character_length: Minimum character length
+      max_character_length: Maximum character_length
   expression_reguliere:
     labels:
       regex: Enter your regular expression, try it on https://rubular.com.
