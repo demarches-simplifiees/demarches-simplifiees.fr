@@ -18,11 +18,10 @@
 
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-              opts: { autofocus: 'true', autocomplete: 'new-password', minlength: PASSWORD_MIN_LENGTH, data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }}) do |c|
-              - c.with_describedby do
-                %div{ id: c.describedby_id }
-                  #password_complexity
-                    = render PasswordComplexityComponent.new
+              opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }, aria: {describedby: 'password_hint'}})
+
+            #password_complexity
+              = render PasswordComplexityComponent.new
 
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :password_confirmation, input_type: :password_field, opts: { autocomplete: 'new-password' })
