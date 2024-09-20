@@ -7,15 +7,16 @@ class ViewableChamp::HeaderSectionsSummaryComponent < ApplicationComponent
     @dossier = dossier
     @is_private = is_private
 
-    @header_sections = @dossier.revision
-      .types_de_champ_for(scope: @is_private ? :private : :public)
-      .filter(&:header_section?)
-      .map { @dossier.project_champ(_1, nil) } # row_id not needed, do not link to repetiion header_sections
+    @header_sections = if is_private
+      dossier.revision.types_de_champ_private
+    else
+      dossier.revision.types_de_champ_public
+    end.filter(&:header_section?)
   end
 
   def render? = header_sections.any?
 
   def href(header_section) # used by viewable champs to anchor elements
-    "##{header_section.input_group_id}"
+    "##{header_section.html_id}"
   end
 end

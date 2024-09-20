@@ -262,7 +262,7 @@ class Champ < ApplicationRecord
   end
 
   def html_id
-    "champ-#{public_id}"
+    type_de_champ.html_id(row_id)
   end
 
   def needs_dossier_id?

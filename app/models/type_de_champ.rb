@@ -763,6 +763,10 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
+  def html_id(row_id = nil)
+    "champ-#{public_id(row_id)}"
+  end
+
   private
 
   def populate_stable_id
