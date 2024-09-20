@@ -37,4 +37,8 @@ La nouvelle adresse email ne doit pas être déjà utilisée par un compte exist
 
 Dans ce cas, revenez sur la page _« Profil »_, et choisissez une autre adresse email disponible.
 
-Par ailleurs, vous pouvez également transférer plusieurs dossiers depuis votre profil, cela vous permet tout de même de conserver votre compte.
+## Par ailleurs, si le changement d'adresse mail depuis votre profil ne fonctionne pas, vous avez également la possibilité de transférer vos dossiers vers votre nouvelle adresse mail. 
+Pour savoir comment transférer des dossiers, nous vous invitons à consulter la page suivante : https://www.demarches-simplifiees.fr/faq/usager/mon-dossier-a-ete-depose-par-un-tiers-et-je-souhaite-y-acceder
+
+
+Une fois le transfert opéré , nous pourrons procéder à la suppression de votre ancien compte en nous contactant à l'adresse contact@demarches-simplifiees.fr . 
