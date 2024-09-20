@@ -164,14 +164,43 @@
                   Spécifier le format requis
                 .fr-segmented__elements
                   .fr-segmented__element
-                    = form.radio_button :formatted_mode, 'simple'
-                    = form.label :formatted_mode_simple, t('.kind.labels.simple'), class: 'fr-label'
+                    = form.radio_button :formatted_mode, 'simple', id: dom_id(type_de_champ, :simple), data: { action: 'formatted-mode#toggle', 'mode-to-show': 'simple' }
+                    = form.label :formatted_mode_simple, t('.kind.labels.simple'), for: dom_id(type_de_champ, :simple), class: 'fr-label'
                   .fr-segmented__element
-                    = form.radio_button :formatted_mode, 'advanced'
-                    = form.label :formatted_mode_advanced, t('.kind.labels.advanced'), class: 'fr-label'
+                    = form.radio_button :formatted_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'formatted-mode#toggle', "mode-to-show": "advanced" }
+                    = form.label :formatted_mode_advanced, t('.kind.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
-            .flex.column.justify-start.flex-grow
+            %div{class: class_names("flex column", "justify-start", "flex-grow", "formatted_mode_simple", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'advanced' : nil), data: { 'formatted-mode-target': 'simple'  } }
               .cell.fr-mt-1w
+                %fieldset.checkboxes-fieldset.fr-fieldset{aria_labelledby: 'checkboxes-inline-legend'}
+                  %legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
+                  .fr-fieldset__element.fr-fieldset__element--inline
+                    .fr-checkbox-group
+                      = form.check_box :numbers_accepted, id: dom_id(type_de_champ, :numbers_accepted)
+                      = form.label :numbers_accepted, class: 'small-label', for: dom_id(type_de_champ, :numbers_accepted) do
+                        = t('.simple_mode.labels.numbers')
+                  .fr-fieldset__element.fr-fieldset__element--inline
+                    .fr-checkbox-group
+                      = form.check_box :letters_accepted, id: dom_id(type_de_champ, :letters_accepted)
+                      = form.label :letters_accepted, class: 'small-label', for: dom_id(type_de_champ, :letters_accepted) do
+                        = t('.simple_mode.labels.letters')
+                  .fr-fieldset__element.fr-fieldset__element--inline
+                    .fr-checkbox-group
+                      = form.check_box :special_characters_accepted, id: dom_id(type_de_champ, :special_characters_accepted)
+                      = form.label :special_characters_accepted, class: 'small-label', for: dom_id(type_de_champ, :special_characters_accepted) do
+                        = t('.simple_mode.labels.special_characters')
+              .cell.fr-mt-1w
+                .nb-characters.flex.justify-between
+                  .input-group
+                    = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
+                      = t('.simple_mode.labels.min_character_length')
+                    = form.text_field :min_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :min_character_length)
+                  .input-group
+                    = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
+                      = t('.simple_mode.labels.max_character_length')
+                    = form.text_field :max_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :max_character_length)
+            %div{class: class_names("flex column", "justify-start", "flex-grow", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'formatted-mode-target': 'advanced' } }
+              .cell.fr-mt-1w.formatted_mode_advanced
                 = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere) do
                   = t('.expression_reguliere.labels.regex')
 

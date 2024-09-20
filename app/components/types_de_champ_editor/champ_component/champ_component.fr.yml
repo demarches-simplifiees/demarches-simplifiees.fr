@@ -13,6 +13,14 @@ fr:
   character_limit:
     unlimited: Pas de limite de caractères
     limit: Limité à %{limit} caractères
+  simple_mode:
+    labels:
+      accepted_format: Format de saisie accepté
+      numbers: 'Chiffres'
+      letters: 'Lettres'
+      special_characters: "Caractères spéciaux (-_\/:* ...)"
+      min_character_length: Nombre de caractères minimum
+      max_character_length: Nombre de caractères maximum
   expression_reguliere:
     labels:
       regex: Saisissez votre expression régulière, essayez-la sur https://rubular.com.
