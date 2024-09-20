@@ -9,9 +9,9 @@ title: "Je souhaite obtenir un duplicata CERFA 02 - NEPH"
 
 # Je souhaite obtenir un duplicata CERFA 02 - NEPH
 
-Pour obtenir un duplicata du CERFA 02, rendez-vous sur la page dédiée où vous trouverez les départements qui permettent d’utiliser %{application_name} pour réactiver son numéro NEPH.
+Pour obtenir un duplicata du CERFA 02, rendez-vous sur la page dédiée où vous trouverez les départements qui permettent d’utiliser %{application_name} pour réactiver son numéro NEPH :  https://doc.demarches-simplifiees.fr/listes-des-demarches/demarches-relatives-au-permis-de-conduire 
 
-Pour savoir comment remplir votre démarche, vous pouvez consulter le tutoriel usager.
+Pour savoir comment remplir votre démarche, vous pouvez consulter le tutoriel usager en cliquant sur le lien suivant : https://doc.demarches-simplifiees.fr/tutoriels/tutoriel-usager
 
 Comme chaque administration choisit d’utiliser cette plateforme ou non, **il n’est pas obligatoire que la démarche recherchée soit dématérialisée sur %{application_name}**.
 En ce sens, nous vous invitons à contacter votre préfecture ou à consulter leur site internet.
