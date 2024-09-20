@@ -53,6 +53,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     replaced_by_procedure_id: Field::String,
     tags: Field::Text,
     template: Field::Boolean,
+    opendata: Field::Boolean,
     hide_instructeurs_email: Field::Boolean
   }.freeze
 
@@ -117,6 +118,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     :piece_justificative_multiple,
     :for_tiers_enabled,
     :hide_instructeurs_email,
+    :opendata,
     :replaced_by_procedure_id
   ].freeze
 
