@@ -445,11 +445,6 @@ module Instructeurs
       checked_visa_champ = Champ.where(type_de_champ: { type_champ: visa_type }).where.not(value: "")
       return champs_private_attributes_params unless Champ.private_only.joins(:type_de_champ).where(dossier: params[:dossier_id]).and(checked_visa_champ).any?
 
-      header_type = TypeDeChamp.type_champs.fetch(:header_section)
-      header_champ = Champ.where(type_de_champ: { type_champ: header_type })
-      Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ)
-        .and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id, :position).order(:position)
-
       # retrieve champ ordered like display (position of parent, line, position)
       ordered_champs = Champ.private_only.where(dossier:)
         .joins(type_de_champ: :revision_types_de_champ)
@@ -475,6 +470,8 @@ module Instructeurs
           (c.visa? && c.value.present?) || (c.header_section? && c.header_section_level_value == 1)
         end
         to_reject = following_champ.present? && following_champ.visa?
+        Rails.logger.warn(ordered_champs.map(&:type_de_champ).map(&:revision_type_de_champ).map(&:revision).map(&:id).uniq) if to_reject
+        Rails.logger.warn(ordered_champs.each_with_object({}) { _2["#{_1.type_de_champ.revision.id}:#{_1.id}:#{_1.parent ? _1.parent.libelle + '.' : ''}#{_1.libelle}"] = _1.value }) if to_reject
         Rails.logger.warn("Annulation sauvegarde de l'annotation '#{ordered_champs[champ_index].libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
         to_reject
       end
