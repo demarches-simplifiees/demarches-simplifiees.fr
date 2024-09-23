@@ -405,10 +405,6 @@ module Users
       @transfer = DossierTransfer.new(dossiers: [dossier])
     end
 
-    def transferer_all
-      @transfer = DossierTransfer.new(dossiers: current_user.dossiers)
-    end
-
     def restore
       dossier.restore(current_user)
       flash.notice = t('users.dossiers.restore')
