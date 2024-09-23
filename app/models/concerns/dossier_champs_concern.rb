@@ -82,7 +82,6 @@ module DossierChampsConcern
   end
 
   def champ_for_export(type_de_champ, row_id)
-    check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.blank? || !champ.visible?
       nil
@@ -131,10 +130,10 @@ module DossierChampsConcern
   def check_valid_row_id?(type_de_champ, row_id)
     if type_de_champ.child?(revision)
       if row_id.blank?
-        raise "type_de_champ #{type_de_champ.stable_id} must have a row_id because it is part of a repetition"
+        raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it is part of a repetition"
       end
-    elsif row_id.present?
-      raise "type_de_champ #{type_de_champ.stable_id} can not have a row_id because it is not part of a repetition"
+    elsif row_id.present? && type_de_champ.in_revision?(revision)
+      raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} can not have a row_id because it is not part of a repetition"
     end
   end
 end

@@ -55,7 +55,7 @@ RSpec.describe DossierChampsConcern do
         context "invalid row_id" do
           let(:type_de_champ_public) { dossier.find_type_de_champ_by_stable_id(99) }
           it {
-            expect { subject }.to raise_error("type_de_champ #{type_de_champ_public.stable_id} can not have a row_id because it is not part of a repetition")
+            expect { subject }.to raise_error("type_de_champ #{type_de_champ_public.stable_id} in revision #{dossier.revision_id} can not have a row_id because it is not part of a repetition")
           }
         end
       end
@@ -81,7 +81,7 @@ RSpec.describe DossierChampsConcern do
           context "invalid row_id" do
             let(:type_de_champ_public) { dossier.find_type_de_champ_by_stable_id(99) }
             it {
-              expect { subject }.to raise_error("type_de_champ #{type_de_champ_public.stable_id} can not have a row_id because it is not part of a repetition")
+              expect { subject }.to raise_error("type_de_champ #{type_de_champ_public.stable_id} in revision #{dossier.revision_id} can not have a row_id because it is not part of a repetition")
             }
           end
         end

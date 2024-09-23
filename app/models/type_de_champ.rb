@@ -456,8 +456,12 @@ class TypeDeChamp < ApplicationRecord
     !private?
   end
 
+  def in_revision?(revision)
+    revision.types_de_champ.any? { _1.stable_id == stable_id }
+  end
+
   def child?(revision)
-    revision.revision_types_de_champ.find { _1.type_de_champ_id == id }&.child?
+    revision.revision_types_de_champ.find { _1.stable_id == stable_id }&.child?
   end
 
   def filename_for_attachement(attachment_sym)
