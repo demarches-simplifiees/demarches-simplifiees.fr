@@ -315,7 +315,7 @@ en:
       new:
         title: 'Confirm your email address'
         image_alt: "Email sent"
-        email_cta_html: "Before filling your file, we have to validate your email address <strong>%{email}</strong>."
+        email_cta_html: "Before proceeding, we have to validate your email address <strong>%{email}</strong>."
         email_guidelines_html: "Open your mailbox and <strong>click on the activation link</strong> within the mail we just sent you."
         email_missing: "If you have not received our email (have you checked your spam ?), we can resend it."
         resent: 'Resend the confirmation email'
