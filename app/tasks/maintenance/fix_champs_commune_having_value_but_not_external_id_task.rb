@@ -26,13 +26,15 @@ module Maintenance
           champ.code = formated_results.first[:value]
           champ.save!
         else # otherwise, we can't find the expected departement
-          champ.code_departement = nil
-          champ.code_postal = nil
-          champ.external_id = nil
-          champ.value = nil
-          champ.save(validate: false)
+          if champ.dossier.en_construction?
+            champ.code_departement = nil
+            champ.code_postal = nil
+            champ.external_id = nil
+            champ.value = nil
+            champ.save(validate: false)
 
-          ask_user_correction(champ)
+            ask_user_correction(champ)
+          end
         end
       end
     end
