@@ -1,7 +1,12 @@
-import type { AnyLayer, Style, RasterLayer, RasterSource } from 'maplibre-gl';
+import type {
+  LayerSpecification,
+  RasterLayerSpecification,
+  RasterSourceSpecification,
+  StyleSpecification
+} from 'maplibre-gl';
 import invariant from 'tiny-invariant';
 
-import cadastreLayers from './layers/cadastre';
+import cadastreLayers from './layers/cadastre.json';
 
 function ignServiceURL(layer: string, style: string, format = 'image/png') {
   const url = `https://data.geopf.fr/wmts`;
@@ -163,7 +168,10 @@ function buildSources() {
   );
 }
 
-function rasterSource(tiles: string[], attribution: string): RasterSource {
+function rasterSource(
+  tiles: string[],
+  attribution: string
+): RasterSourceSpecification {
   return {
     type: 'raster',
     tiles,
@@ -174,7 +182,10 @@ function rasterSource(tiles: string[], attribution: string): RasterSource {
   };
 }
 
-function rasterLayer(source: string, opacity: number): RasterLayer {
+function rasterLayer(
+  source: string,
+  opacity: number
+): RasterLayerSpecification {
   return {
     id: source,
     source,
@@ -186,14 +197,14 @@ function rasterLayer(source: string, opacity: number): RasterLayer {
 export function buildOptionalLayers(
   ids: string[],
   opacity: Record<string, number>
-): AnyLayer[] {
+): LayerSpecification[] {
   return OPTIONAL_LAYERS.filter(({ id }) => ids.includes(id))
     .flatMap(({ layers, id }) =>
       layers.map(([, code]) => [code, opacity[id] / 100] as const)
     )
     .flatMap(([code, opacity]) =>
       code === 'CADASTRE'
-        ? cadastreLayers
+        ? (cadastreLayers as LayerSpecification[])
         : [rasterLayer(getLayerCode(code), opacity)]
     );
 }
@@ -210,9 +221,9 @@ function getLayerCode(code: string) {
   return code.toLowerCase().replace(/\./g, '-');
 }
 
-export default {
+export const style: StyleSpecification = {
   version: 8,
-  metadat: {
+  metadata: {
     'mapbox:autocomposite': false,
     'mapbox:groups': {
       1444849242106.713: { collapsed: false, name: 'Places' },
@@ -257,5 +268,6 @@ export default {
     ...buildSources()
   },
   sprite: 'https://openmaptiles.github.io/osm-bright-gl-style/sprite',
-  glyphs: 'https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf'
-} as Style;
+  glyphs: 'https://openmaptiles.geo.data.gouv.fr/fonts/{fontstack}/{range}.pbf',
+  layers: []
+};

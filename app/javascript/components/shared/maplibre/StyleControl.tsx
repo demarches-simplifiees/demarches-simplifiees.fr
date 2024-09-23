@@ -1,6 +1,5 @@
-import { useState, useId } from 'react';
-import { Popover, RadioGroup } from '@headlessui/react';
-import { usePopper } from 'react-popper';
+import { useId, useRef, useEffect } from 'react';
+import { Button, Dialog, DialogTrigger, Popover } from 'react-aria-components';
 import { MapIcon } from '@heroicons/react/outline';
 import { Slider } from '@reach/slider';
 import '@reach/slider/styles.css';
@@ -13,7 +12,7 @@ const STYLES = {
   ign: 'Carte IGN'
 };
 
-export function StyleControl({
+export function StyleSwitch({
   styleId,
   layers,
   setStyle,
@@ -26,107 +25,97 @@ export function StyleControl({
   setLayerEnabled: (layer: string, enabled: boolean) => void;
   setLayerOpacity: (layer: string, opacity: number) => void;
 }) {
-  const [buttonElement, setButtonElement] =
-    useState<HTMLButtonElement | null>();
-  const [panelElement, setPanelElement] = useState<HTMLDivElement | null>();
-  const { styles, attributes } = usePopper(buttonElement, panelElement, {
-    placement: 'bottom-end'
-  });
   const configurableLayers = Object.entries(layers).filter(
     ([, { configurable }]) => configurable
   );
   const mapId = useId();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (buttonRef.current) {
+      buttonRef.current.title = 'Sélectionner les couches cartographiques';
+    }
+  }, []);
 
   return (
-    <div
-      className="form map-style-control mapboxgl-ctrl-group"
-      style={{ zIndex: 10 }}
-    >
-      <Popover>
-        <Popover.Button
-          ref={setButtonElement}
-          className="map-style-button"
-          title="Sélectionner les couches cartographiques"
-        >
-          <MapIcon className="icon-size" />
-        </Popover.Button>
-        <Popover.Panel
-          className="flex map-style-panel mapboxgl-ctrl-group"
-          ref={setPanelElement}
-          style={styles.popper}
-          {...attributes.popper}
-        >
-          <RadioGroup
-            value={styleId}
-            onChange={setStyle}
-            className="styles-list"
-            as="ul"
+    <DialogTrigger>
+      <Button ref={buttonRef}>
+        <MapIcon className="icon-size" />
+      </Button>
+      <Popover className="react-aria-popover">
+        <Dialog className="fr-modal__body">
+          <form
+            className="fr-modal__content flex m-2"
+            onSubmit={(event) => event.preventDefault()}
           >
-            {Object.entries(STYLES).map(([style, title]) => (
-              <RadioGroup.Option
-                key={style}
-                value={style}
-                as="li"
-                className="flex"
-              >
-                {({ checked }) => (
-                  <>
+            <div className="fr-fieldset">
+              {Object.entries(STYLES).map(([style, title]) => (
+                <div className="fr-fieldset__element" key={style}>
+                  <div className="fr-radio-group">
                     <input
+                      id={`${mapId}-${style}`}
+                      value={style}
                       type="radio"
-                      key={`${style}-${checked}`}
-                      defaultChecked={checked}
                       name="map-style"
-                      className="m-0 p-0 mr-1"
-                    />
-                    <RadioGroup.Label>
-                      {title.replace(/\s/g, ' ')}
-                    </RadioGroup.Label>
-                  </>
-                )}
-              </RadioGroup.Option>
-            ))}
-          </RadioGroup>
-          {configurableLayers.length ? (
-            <ul className="layers-list">
-              {configurableLayers.map(([layer, { enabled, opacity, name }]) => (
-                <li key={layer}>
-                  <div className="flex mb-1">
-                    <input
-                      id={`${mapId}-${layer}`}
-                      className="m-0 p-0 mr-1"
-                      type="checkbox"
-                      checked={enabled}
+                      defaultValue={style}
+                      checked={styleId == style}
                       onChange={(event) => {
-                        setLayerEnabled(layer, event.target.checked);
+                        setStyle(event.target.value);
                       }}
                     />
-                    <label className="m-0" htmlFor={`${mapId}-${layer}`}>
-                      {name}
+                    <label htmlFor={`${mapId}-${style}`} className="fr-label">
+                      {title.replace(/\s/g, ' ')}
                     </label>
                   </div>
-                  <Slider
-                    min={10}
-                    max={100}
-                    step={5}
-                    value={opacity}
-                    onChange={(value) => {
-                      setLayerOpacity(layer, value);
-                    }}
-                    className="mb-1"
-                    title={`Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`}
-                    getAriaLabel={() =>
-                      `Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`
-                    }
-                    getAriaValueText={(value) =>
-                      `L’opacité de la couche «${NBS}${name}${NBS}» est à ${value}${NBS}%`
-                    }
-                  />
-                </li>
+                </div>
               ))}
-            </ul>
-          ) : null}
-        </Popover.Panel>
+            </div>
+            {configurableLayers.length ? (
+              <div className="fr-fieldset__element">
+                {configurableLayers.map(
+                  ([layer, { enabled, opacity, name }]) => (
+                    <div key={layer} className="fr-fieldset__element">
+                      <div className="fr-checkbox-group">
+                        <input
+                          id={`${mapId}-${layer}`}
+                          type="checkbox"
+                          checked={enabled}
+                          onChange={(event) => {
+                            setLayerEnabled(layer, event.target.checked);
+                          }}
+                        />
+                        <label
+                          className="fr-label"
+                          htmlFor={`${mapId}-${layer}`}
+                        >
+                          {name}
+                        </label>
+                      </div>
+                      <Slider
+                        min={10}
+                        max={100}
+                        step={5}
+                        value={opacity}
+                        onChange={(value) => {
+                          setLayerOpacity(layer, value);
+                        }}
+                        className="fr-range fr-range--sm mt-1"
+                        title={`Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`}
+                        getAriaLabel={() =>
+                          `Réglage de l’opacité de la couche «${NBS}${name}${NBS}»`
+                        }
+                        getAriaValueText={(value) =>
+                          `L’opacité de la couche «${NBS}${name}${NBS}» est à ${value}${NBS}%`
+                        }
+                      />
+                    </div>
+                  )
+                )}
+              </div>
+            ) : null}
+          </form>
+        </Dialog>
       </Popover>
-    </div>
+    </DialogTrigger>
   );
 }

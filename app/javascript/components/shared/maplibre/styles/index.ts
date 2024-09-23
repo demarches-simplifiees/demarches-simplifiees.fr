@@ -1,9 +1,14 @@
-import type { Style } from 'maplibre-gl';
+import type { LayerSpecification, StyleSpecification } from 'maplibre-gl';
 
-import baseStyle, { buildOptionalLayers, getLayerName, NBS } from './base';
-import orthoStyle from './layers/ortho';
-import vectorStyle from './layers/vector';
-import ignLayers from './layers/ign';
+import {
+  style as baseStyle,
+  buildOptionalLayers,
+  getLayerName,
+  NBS
+} from './base';
+import ignLayers from './layers/ign.json';
+import orthoLayers from './layers/ortho.json';
+import vectorLayers from './layers/vector.json';
 
 export { getLayerName, NBS };
 
@@ -21,20 +26,20 @@ export function getMapStyle(
   id: string,
   layers: string[],
   opacity: Record<string, number>
-): Style & { id: string } {
+): StyleSpecification & { id: string } {
   const style = { ...baseStyle, id };
 
   switch (id) {
     case 'ortho':
-      style.layers = orthoStyle;
+      style.layers = orthoLayers as LayerSpecification[];
       style.name = 'Photographies aériennes';
       break;
     case 'vector':
-      style.layers = vectorStyle;
+      style.layers = vectorLayers as LayerSpecification[];
       style.name = 'Carte OSM';
       break;
     case 'ign':
-      style.layers = ignLayers;
+      style.layers = ignLayers as LayerSpecification[];
       style.name = 'Carte IGN';
       break;
   }

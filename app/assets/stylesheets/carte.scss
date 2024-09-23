@@ -1,6 +1,4 @@
 @import "colors";
-@import "constants";
-
 
 .areas {
   margin-bottom: 10px;
@@ -10,56 +8,49 @@
   }
 }
 
-.map-style-control {
-  position: absolute;
-  bottom: 4px;
-  left: 10px;
+.ds-ctrl button {
+  color: $dark-grey;
 
-  img {
-    width: 100%;
-  }
-
-  button {
-    padding: 0;
-    border: none;
-    cursor: pointer;
-
-    > div {
-      position: absolute;
-      bottom: 5px;
-      left: 5px;
-    }
-  }
-
-  .map-style-panel {
-    z-index: 1;
-    padding: $default-spacer;
-    margin-bottom: $default-spacer;
-
-    ul {
-      list-style: none;
-      padding: $default-spacer;
-      padding-bottom: 0;
-      margin-bottom: -$default-spacer;
-
-      label {
-        font-size: 12px;
-        font-weight: normal;
-      }
-    }
+  &.on,
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
   }
 }
 
-.cadastres-selection-control {
-  z-index: 1;
-  position: absolute;
-  top: 135px;
-  left: 10px;
+.react-aria-popover {
+  &[data-placement='top'] {
+    --origin: translateY(8px);
+  }
 
-  button {
-    &.on,
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.05);
-    }
+  &[data-placement='bottom'] {
+    --origin: translateY(-8px);
+  }
+
+  &[data-placement='right'] {
+    --origin: translateX(-8px);
+  }
+
+  &[data-placement='left'] {
+    --origin: translateX(8px);
+  }
+
+  &[data-entering] {
+    animation: popover-slide 200ms;
+  }
+
+  &[data-exiting] {
+    animation: popover-slide 200ms reverse ease-in;
+  }
+}
+
+@keyframes popover-slide {
+  from {
+    transform: var(--origin);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
   }
 }
