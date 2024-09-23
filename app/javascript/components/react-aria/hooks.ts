@@ -168,13 +168,18 @@ export function useMultiList({
   defaultItems?: Item[];
   defaultSelectedKeys?: string[];
   allowsCustomValue?: boolean;
-  valueSeparator?: string;
+  valueSeparator?: string | false;
   onChange?: () => void;
   focusInput?: () => void;
   formValue?: 'text' | 'key';
 }) {
   const valueSeparatorRegExp = useMemo(
-    () => (valueSeparator ? new RegExp(valueSeparator) : /\s|,|;/),
+    () =>
+      valueSeparator === false
+        ? false
+        : valueSeparator
+          ? new RegExp(valueSeparator)
+          : /\s|,|;/,
     [valueSeparator]
   );
   const [selectedKeys, setSelectedKeys] = useState(
@@ -219,7 +224,7 @@ export function useMultiList({
     const values = selectedItems.map((item) =>
       formValue == 'text' || allowsCustomValue ? item.label : item.value
     );
-    if (!allowsCustomValue || inputValue == '') {
+    if (!valueSeparatorRegExp || !allowsCustomValue || inputValue == '') {
       return values;
     }
     return [
@@ -269,26 +274,34 @@ export function useMultiList({
         setInputValue('');
         return;
       }
-      if (allowsCustomValue) {
-        const values = value.split(valueSeparatorRegExp);
-        // if input contains a separator, add all values
-        if (values.length > 1) {
-          const addedKeys = values.filter(Boolean);
-          setSelectedKeys((keys) => {
-            const selectedKeys = new Set(keys.values());
-            for (const key of addedKeys) {
-              selectedKeys.add(key);
-            }
-            return selectedKeys;
-          });
-          setInputValue('');
-        } else {
-          setInputValue(value);
-        }
-        onChange?.();
-      } else {
+
+      if (!valueSeparatorRegExp) {
         setInputValue(value);
+        return;
       }
+
+      const values = value.split(valueSeparatorRegExp);
+      if (values.length < 2) {
+        setInputValue(value);
+        return;
+      }
+
+      // if input contains a separator, add all values
+      const addedKeys = allowsCustomValue
+        ? values.filter(Boolean)
+        : values
+            .filter(Boolean)
+            .map((value) => items.find((item) => item.label == value)?.value)
+            .filter((key) => key != null);
+      setSelectedKeys((keys) => {
+        const selectedKeys = new Set(keys.values());
+        for (const key of addedKeys) {
+          selectedKeys.add(key);
+        }
+        return selectedKeys;
+      });
+      onChange?.();
+      setInputValue('');
     }
   );
 

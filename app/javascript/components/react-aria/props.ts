@@ -56,7 +56,7 @@ export const MultiComboBoxProps = s.assign(
     s.object({
       selectedKeys: s.array(s.string()),
       allowsCustomValue: s.boolean(),
-      valueSeparator: s.string()
+      valueSeparator: s.union([s.string(), s.literal(false)])
     })
   )
 );
