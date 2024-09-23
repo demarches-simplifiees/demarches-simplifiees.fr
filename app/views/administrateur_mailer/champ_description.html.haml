@@ -1,0 +1,22 @@
+- content_for(:title, @subject)
+
+%p
+  Bonjour,
+  Voici la description du dossier.
+
+%table.table
+  %thead
+    %tr
+      %th= 'dossier'
+      %th= 'libelle'
+      %th= 'Value'
+      %th= 'Revision'
+      %th= 'Champ Revision'
+  %tbody
+    - @champs.each do |champ|
+      %tr
+        %td= champ.dossier_id
+        %td= (champ.parent_id ? champ.parent.libelle + '.' : '') + champ.libelle
+        %td= champ.value
+        %td= champ.type_de_champ.revision_type_de_champ.revision_id
+        %td= champ.type_de_champ.revision_type_de_champ.id

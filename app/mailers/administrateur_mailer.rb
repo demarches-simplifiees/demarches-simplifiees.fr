@@ -39,6 +39,12 @@ class AdministrateurMailer < ApplicationMailer
       reply_to: CONTACT_EMAIL)
   end
 
+  def champ_description(user, champs)
+    @subject = "Visa description"
+    @champs = champs
+    mail(to: user.email, subject: @subject, reply_to: CONTACT_EMAIL)
+  end
+
   def self.critical_email?(action_name)
     action_name == "activate_before_expiration"
   end
