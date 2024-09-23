@@ -456,6 +456,10 @@ class TypeDeChamp < ApplicationRecord
     !private?
   end
 
+  def child?(revision)
+    revision.revision_types_de_champ.find { _1.type_de_champ_id == id }&.child?
+  end
+
   def filename_for_attachement(attachment_sym)
     attachment = send(attachment_sym)
     if attachment.attached?
@@ -757,6 +761,10 @@ class TypeDeChamp < ApplicationRecord
         false
       end
     end
+  end
+
+  def html_id(row_id = nil)
+    "champ-#{public_id(row_id)}"
   end
 
   private
