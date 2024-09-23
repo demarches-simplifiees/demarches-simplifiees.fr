@@ -124,4 +124,18 @@ describe Manager::ProceduresController, type: :controller do
       end
     end
   end
+
+  describe '#add_administrateur_and_instructeur' do
+    let(:procedure) { create(:procedure, administrateurs: [autre_administrateur]) }
+    subject { post :add_administrateur_and_instructeur, params: { id: procedure.id } }
+
+    context "when the current super admin is not an administrateur and not an instructeur of the procedure" do
+      before { administrateur }
+      it "adds the current super admin as administrateur and instructeur to the procedure" do
+        subject
+        expect(procedure.administrateurs).to include(administrateur)
+        expect(procedure.instructeurs).to include(administrateur.instructeur)
+      end
+    end
+  end
 end
