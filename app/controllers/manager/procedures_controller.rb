@@ -68,18 +68,35 @@ module Manager
     def add_administrateur_and_instructeur
       administrateur = Administrateur.by_email(current_super_admin.email)
       instructeur = Instructeur.by_email(current_super_admin.email)
-      if administrateur && instructeur
-        ActiveRecord::Base.transaction do
+      notices, alerts = [], []
+
+      if administrateur
+        if !AdministrateursProcedure.exists?(procedure: procedure, administrateur: administrateur)
           AdministrateursProcedure.create!(procedure: procedure, administrateur: administrateur, manager: true)
-          procedure.groupe_instructeurs.map do |groupe_instructeur|
+        end
+        notices.push "L’administrateur #{administrateur.email} a été ajouté à la démarche."
+      else
+        alerts.push "L’administrateur #{administrateur.email} est introuvable."
+      end
+
+      if instructeur
+        procedure.groupe_instructeurs.map do |groupe_instructeur|
+          if !instructeur.assign_to.exists?(groupe_instructeur: groupe_instructeur)
             instructeur.assign_to.create(groupe_instructeur: groupe_instructeur, manager: true)
           end
         end
-
-        flash[:notice] = "L’administrateur \"#{administrateur.email}\" a été ajouté à la démarche. L'instructeur \"#{instructeur.email}\" a été ajouté aux #{procedure.groupe_instructeurs.count} groupes d'instructeurs"
+        if procedure.groupe_instructeurs.many?
+          notices.push "L'instructeur #{instructeur.email} a été ajouté aux #{procedure.groupe_instructeurs.count} groupes d'instructeurs."
+        else
+          notices.push "L'instructeur #{instructeur.email} a été ajouté à la démarche."
+        end
       else
-        flash[:alert] = "L’administrateur \"#{administrateur.email}\" est introuvable."
+        alerts.push "L'instructeur #{instructeur.email} est introuvable."
       end
+
+      flash[:notice] = notices.join(" ") if notices.present?
+      flash[:alert] = alerts.join(" ") if alerts.present?
+
       redirect_to manager_procedure_path(procedure)
     end
 

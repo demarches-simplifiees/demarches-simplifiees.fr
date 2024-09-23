@@ -135,6 +135,39 @@ describe Manager::ProceduresController, type: :controller do
         subject
         expect(procedure.administrateurs).to include(administrateur)
         expect(procedure.instructeurs).to include(administrateur.instructeur)
+        expect(flash[:alert]).to be_nil
+        expect(flash[:notice]).to eq("L’administrateur #{administrateur.email} a été ajouté à la démarche. L'instructeur #{administrateur.instructeur.email} a été ajouté à la démarche.")
+      end
+    end
+
+    context "when the current super admin is an instructor of the procedure but not an administrator" do
+      let!(:administrateur) { create(:administrateur, email: super_admin.email, instructeur: instructeur) }
+      let(:instructeur) { create(:instructeur) }
+
+      before do
+        procedure.groupe_instructeurs.map do |groupe_instructeur|
+          groupe_instructeur.add_instructeurs(emails: [instructeur.email])
+        end
+      end
+
+      it "adds the current super admin as administrateur to the procedure" do
+        subject
+        expect(procedure.administrateurs).to include(administrateur)
+        expect(procedure.instructeurs).to include(administrateur.instructeur)
+        expect(flash[:alert]).to be_nil
+        expect(flash[:notice]).to eq("L’administrateur #{administrateur.email} a été ajouté à la démarche. L'instructeur #{instructeur.email} a été ajouté à la démarche.")
+      end
+    end
+
+    context "when the current super admin is an administrator of the procedure but not an instructor" do
+      let(:procedure) { create(:procedure, administrateurs: [administrateur, autre_administrateur]) }
+
+      it "adds the current super admin as instructor to the procedure" do
+        subject
+        expect(procedure.administrateurs).to include(administrateur)
+        expect(procedure.instructeurs).to include(administrateur.instructeur)
+        expect(flash[:alert]).to be_nil
+        expect(flash[:notice]).to eq("L’administrateur #{administrateur.email} a été ajouté à la démarche. L'instructeur #{administrateur.instructeur.email} a été ajouté à la démarche.")
       end
     end
   end
