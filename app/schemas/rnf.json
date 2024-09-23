@@ -30,7 +30,6 @@
       "regionName":{ "type": "string" },
       "regionCode":{ "type": "string" }
     },
-    "status": { "type": ["string", "null"] },
     "persons": { "type": "array" }
   }
 }
