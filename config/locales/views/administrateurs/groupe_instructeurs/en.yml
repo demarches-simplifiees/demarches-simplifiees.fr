@@ -32,7 +32,6 @@ en:
         csv_import:
           import_file: Import file
           import_file_alert: All instructors added to the procedure will be notified by email. Do you want to continue?
-          import_file_procedure_not_published: CSV file import is available once the procedure is published
           groupes:
             title: Bulk Import / Export
             notice_1_html: For the import, your csv file must have 2 columns (Group, Email) and be comma separated (<a href=/csv/en/import-groupe-test.csv>example file</a>). The file size must be less than %{csv_max_size}.

@@ -39,7 +39,6 @@ fr:
         csv_import:
           import_file: Importer le fichier
           import_file_alert: Tous les instructeurs ajoutés à la procédure vont être notifiés par email. Voulez-vous continuer ?
-          import_file_procedure_not_published: L’import par fichier CSV est disponible une fois la démarche publiée
           groupes:
             title: Import / Export en masse
             notice_1_html: Pour l’import, votre fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (<a href=/csv/fr/import-groupe-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur à %{csv_max_size}.
