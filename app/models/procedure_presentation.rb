@@ -241,7 +241,7 @@ class ProcedurePresentation < ApplicationRecord
             .includes(:followers_instructeurs)
             .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
             .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
-        when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
+        when 'user', 'individual'
           dossiers
             .includes(table)
             .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
