@@ -530,6 +530,19 @@ describe ProcedurePresentation do
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
+
+      context 'with enum type_de_champ' do
+        let(:filter_value) { 'Favorable' }
+        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value_column' => :value, 'value' => filter_value }] }
+        let(:types_de_champ_public) { [{ type: :drop_down_list, options: ['Favorable', 'Defavorable'] }] }
+
+        before do
+          kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'Favorable')
+          discarded_dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(external_id: 'Defavorable')
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
     end
 
     context 'for type_de_champ_private table' do
