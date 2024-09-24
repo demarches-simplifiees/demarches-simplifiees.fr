@@ -171,16 +171,6 @@ class ProcedurePresentation < ApplicationRecord
     )
   end
 
-  def opposite_order_for(table, column)
-    if sort.values_at(TABLE, COLUMN) == [table, column]
-      sort['order'] == 'asc' ? 'desc' : 'asc'
-    elsif [table, column] == ["notifications", "notifications"]
-      'desc' # default order for notifications
-    else
-      'asc'
-    end
-  end
-
   def snapshot
     slice(:filters, :sort, :displayed_fields)
   end
