@@ -6,6 +6,8 @@
   - if @dossier.procedure.for_tiers_enabled?
     = form_for @dossier, url: identite_dossier_path(@dossier), method: :patch, html: { class: "form" }, data: {turbo: true, controller: :autosubmit} do |f|
 
+      %p.fr-text--sm= t('utils.asterisk_html')
+
       %fieldset#radio-rich-hint.fr-fieldset{ "aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages" }
         %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
           = t('views.users.dossiers.identite.legend')
