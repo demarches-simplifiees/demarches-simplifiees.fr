@@ -2,8 +2,8 @@ en:
   dossier_mailer:
     notify_transfer:
       subject: You have a pending transfer request.
-      transfer_text: "Access the transfer request by clicking on the following link:"
-      transfer_link: transfer request
+      transfer_text: "In order to accept or refuse the request you must log in on %{app_name}:"
+      transfer_link: Acces transfer request
       no_user_transfer_text: "In order to accept or refuse the request you must have an account:"
       no_user_transfer_link: Create an account on %{app_name}
       transfert_multiple: "%{sender} sends you a transfer request for %{count} files."

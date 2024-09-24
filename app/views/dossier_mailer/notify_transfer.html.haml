@@ -11,7 +11,7 @@
 
 %p
   - if @user.present?
-    = t('.transfer_text')
+    = t('.transfer_text', app_name: Current.application_name)
     %br
     = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
   - else

@@ -333,7 +333,7 @@ RSpec.describe DossierMailer, type: :mailer do
         dossier_transfer.update!(email: user_2.email)
       end
       it 'includes a direct URL to transfers' do
-        expect(subject.body).to include('Accéder à la demande de transfert en cliquant sur le lien suivant :')
+        expect(subject.body).to include('Afin de pouvoir accepter ou refuser la demande vous devez vous connectez sur')
         expect(subject.body).to include(dossiers_url(statut: 'dossiers-transferes', host: ENV.fetch("APP_HOST_LEGACY")))
       end
     end
