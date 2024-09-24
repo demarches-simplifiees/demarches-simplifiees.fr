@@ -17,6 +17,10 @@ class APIEntrepriseToken
     decoded_token.key?("exp") && decoded_token["exp"] <= Time.zone.now.to_i
   end
 
+  def expiration
+    Time.zone.at(decoded_token["exp"])
+  end
+
   def role?(role)
     roles.include?(role)
   end

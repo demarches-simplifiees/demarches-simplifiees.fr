@@ -138,4 +138,34 @@ describe APIEntrepriseToken, type: :model do
       end
     end
   end
+
+  describe "#expiration" do
+    subject { api_entreprise_token.expiration }
+
+    context "without token" do
+      let(:token) { nil }
+
+      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+    end
+
+    context "with a blank token" do
+      let(:token) { "" }
+
+      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+    end
+
+    context "with an invalid token" do
+      let(:token) { "NOT-A-VALID-TOKEN" }
+
+      it { expect { subject }.to raise_exception(APIEntrepriseToken::TokenError) }
+    end
+
+    context "with a valid token" do
+      let(:token) { "eyJhbGciOiJIUzI1NiJ9.eyJ1aWQiOiI2NjRkZWEyMS02YWFlLTQwZmYtYWM0Mi1kZmQ3ZGE4YjQ3NmUiLCJqdGkiOiJhcGktZW50cmVwcmlzZS1zdGFnaW5nIiwicm9sZXMiOlsiY2VydGlmaWNhdF9jbmV0cCIsInByb2J0cCIsImV0YWJsaXNzZW1lbnRzIiwicHJpdmlsZWdlcyIsInVwdGltZSIsImF0dGVzdGF0aW9uc19hZ2VmaXBoIiwiYWN0ZXNfaW5waSIsImJpbGFuc19pbnBpIiwiYWlkZXNfY292aWRfZWZmZWN0aWZzIiwiY2VydGlmaWNhdF9yZ2VfYWRlbWUiLCJhdHRlc3RhdGlvbnNfc29jaWFsZXMiLCJlbnRyZXByaXNlX2FydGlzYW5hbGUiLCJmbnRwX2NhcnRlX3BybyIsImNvbnZlbnRpb25zX2NvbGxlY3RpdmVzIiwiZXh0cmFpdHNfcmNzIiwiZXh0cmFpdF9jb3VydF9pbnBpIiwiY2VydGlmaWNhdF9hZ2VuY2VfYmlvIiwibXNhX2NvdGlzYXRpb25zIiwiZG9jdW1lbnRzX2Fzc29jaWF0aW9uIiwiZW9yaV9kb3VhbmVzIiwiYXNzb2NpYXRpb25zIiwiYmlsYW5zX2VudHJlcHJpc2VfYmRmIiwiZW50cmVwcmlzZXMiLCJxdWFsaWJhdCIsImNlcnRpZmljYXRfb3BxaWJpIiwiZW50cmVwcmlzZSIsImV0YWJsaXNzZW1lbnQiXSwic3ViIjoic3RhZ2luZyBkZXZlbG9wbWVudCIsImlhdCI6MTY0MTMwNDcxNCwidmVyc2lvbiI6IjEuMCIsImV4cCI6MTY4ODQ3NTUxNH0.xID66pIlMnBR5_6nG-GidFBzK4Tuuy5ZsWfkMEVB_Ek" }
+
+      it "returns the correct expiration time" do
+        expect(subject).to eq(Time.zone.at(1688475514))
+      end
+    end
+  end
 end
