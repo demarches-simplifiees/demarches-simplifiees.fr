@@ -5,7 +5,7 @@
         %p
           Votre jeton API Entreprise est expiré.
           Merci de le renouveler.
-  - else
+  - elsif procedure.api_entreprise_token_expires_soon?
     = render Dsfr::AlertComponent.new(state: :warning, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
       - c.with_body do
         %p
