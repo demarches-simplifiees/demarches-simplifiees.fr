@@ -220,8 +220,13 @@ class ProcedurePresentation < ApplicationRecord
             dossiers.where("dossiers.#{column} IN (?)", values)
           end
         when TYPE_DE_CHAMP
-          dossiers.with_type_de_champ(column)
-            .filter_ilike(:champs, value_column, values)
+          if dossier_column.type == :enum
+            dossiers.with_type_de_champ(column)
+              .filter_enum(:champs, value_column, values)
+          else
+            dossiers.with_type_de_champ(column)
+              .filter_ilike(:champs, value_column, values)
+          end
         when 'etablissement'
           if column == 'entreprise_date_creation'
             dates = values
