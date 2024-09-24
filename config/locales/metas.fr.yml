@@ -7,6 +7,8 @@ fr:
         index:
           title: Dossiers
           title_search: "Recherche : %{terms}"
+        identite:
+          title: "Nouveau dossier (%{procedure_label}) - Étape 1 : Identité"
         show:
           title: "Résumé · Dossier nº %{number} (%{procedure_label})"
         demande:

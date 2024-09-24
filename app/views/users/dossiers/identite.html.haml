@@ -1,4 +1,4 @@
-- content_for(:title, "Nouveau dossier (#{@dossier.procedure.libelle})")
+- content_for(:title, t(".title", scope: :metas, procedure_label: @dossier.procedure.libelle))
 
 = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
 

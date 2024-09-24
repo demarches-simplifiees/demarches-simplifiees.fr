@@ -7,6 +7,8 @@ en:
         index:
           title: Files
           title_search: "Search: %{terms}"
+        identite:
+          title: "New file (%{procedure_label}) - Step 1: Identity"
         show:
           title: "Summary · File nº %{number} (%{procedure_label})"
         demande:
