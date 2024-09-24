@@ -92,9 +92,6 @@ describe 'As an administrateur, I want to manage the procedure’s attestation',
       find_attestation_card(with_nested_selector: ".fr-badge")
 
       find_attestation_card.click
-      within(".fr-alert", text: /Nouvel éditeur/) do
-        find("a").click
-      end
 
       expect(procedure.reload.attestation_templates.v2).to be_empty
 
