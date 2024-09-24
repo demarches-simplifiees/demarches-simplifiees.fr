@@ -288,6 +288,7 @@ class Procedure < ApplicationRecord
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
   validate :validate_auto_archive_on_in_the_future, if: :will_save_change_to_auto_archive_on?
 
+  before_save :set_api_entreprise_token_expires_at, if: :will_save_change_to_api_entreprise_token?
   before_save :update_juridique_required
   after_save :extend_conservation_for_dossiers
 
@@ -971,6 +972,10 @@ class Procedure < ApplicationRecord
 
   def monavis_embed_html_source(source)
     monavis_embed.gsub('nd_source=button', "nd_source=#{source}").gsub('<a ', '<a target="_blank" rel="noopener noreferrer" ')
+  end
+
+  def set_api_entreprise_token_expires_at
+    self.api_entreprise_token_expires_at = APIEntrepriseToken.new(api_entreprise_token).expiration
   end
 
   private
