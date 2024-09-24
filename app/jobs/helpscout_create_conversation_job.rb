@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class HelpscoutCreateConversationJob < ApplicationJob
+  queue_as :critical # user feedback is critical
   class FileNotScannedYetError < StandardError
   end
 

@@ -12,7 +12,7 @@ class PriorizedMailDeliveryJob < ActionMailer::MailDeliveryJob
     end
   end
 
-  def custom_queue
+  def custom_queue # should be low
     ENV.fetch('BULK_EMAIL_QUEUE') { Rails.application.config.action_mailer.deliver_later_queue_name.to_s }
   end
 end
