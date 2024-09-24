@@ -37,6 +37,9 @@ FileUtils.chdir APP_ROOT do
   puts "\n== Running after_party tasks =="
   system! 'bin/rails after_party:run'
 
+  puts "\n== Running on deploy maintenance tasks =="
+  system! 'bin/rails deploy:maintenance_tasks'
+
   puts "\n== Removing old logs =="
   system! 'bin/rails log:clear'
 
