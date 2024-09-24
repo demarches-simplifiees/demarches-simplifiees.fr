@@ -390,7 +390,6 @@ Rails.application.routes.draw do
       end
 
       collection do
-        get 'transferer', to: 'dossiers#transferer_all'
         resources :transfers, only: [:create, :update, :destroy]
       end
     end

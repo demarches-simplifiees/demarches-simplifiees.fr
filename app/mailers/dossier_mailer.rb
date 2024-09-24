@@ -206,6 +206,8 @@ class DossierMailer < ApplicationMailer
   def notify_transfer
     @transfer = params[:dossier_transfer]
 
+    @user = User.find_by(email: @transfer.email)
+
     configure_defaults_for_email(@transfer.email)
 
     I18n.with_locale(@transfer.user_locale) do

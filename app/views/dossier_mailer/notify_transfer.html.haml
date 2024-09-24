@@ -10,7 +10,13 @@
       = dossier.procedure.libelle
 
 %p
-  = t('.transfer_text')
-  = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
+  - if @user.present?
+    = t('.transfer_text', app_name: Current.application_name)
+    %br
+    = link_to t('.transfer_link'), dossiers_url(statut: 'dossiers-transferes')
+  - else
+    = t('.no_user_transfer_text')
+    %br
+    = link_to t('.no_user_transfer_link', app_name: Current.application_name), new_user_registration_url
 
 = render partial: "layouts/mailers/signature"
