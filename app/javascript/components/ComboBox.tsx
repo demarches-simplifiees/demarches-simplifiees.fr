@@ -179,7 +179,7 @@ export function MultiComboBox(maybeProps: MultiComboBoxProps) {
   const formResetRef = useOnFormReset(onReset);
 
   return (
-    <div className={`fr-ds-combobox__multiple ${className}`}>
+    <div className={`fr-ds-combobox__multiple ${className ? className : ''}`}>
       {selectedItems.length > 0 ? (
         <TagGroup onRemove={onRemove} aria-label={props['aria-label']}>
           <TagList items={selectedItems} className="fr-tag-list">

@@ -1,5 +1,5 @@
 = form_tag update_displayed_fields_instructeur_procedure_path(@procedure), method: :patch, class: 'dropdown-form large columns-form' do
   %react-fragment
-    = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_columns_for_select, selected_keys: @displayable_columns_selected, name: 'values[]', 'aria-label': 'Colonne à afficher'
+    = render ReactComponent.new "ComboBox/MultiComboBox", items: @displayable_columns_for_select, selected_keys: @displayable_columns_selected, name: 'values[]', 'aria-label': 'Colonne à afficher', value_separator: false
 
   = submit_tag t('.save'), class: 'fr-btn fr-btn--secondary'
