@@ -77,7 +77,7 @@ as well as a link to its edit page.
                 <button>Ajouter un administrateur (pour toujours)</button>
                 <p>J'utilise cette option ETQ support quand un usager a besoin de devenir administrateur sur une démarche</p>
               <% end %>
-              <% if procedure.administrateurs.any? { |admin| admin.email == current_super_admin.email } %>
+              <% if procedure.administrateurs.any? { |admin| admin.email == current_super_admin.email } && procedure.instructeurs.any? { |instructeur| instructeur.email == current_super_admin.email } %>
                 <p style="margin-top: 20px;">Vous êtes administrateur de cette démarche. Aller à la démarche
                   <%= link_to("ETQ admin", admin_procedure_path(procedure), **external_link_attributes) %>
                   ou
