@@ -17,6 +17,10 @@ module APIEntrepriseTokenConcern
       self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
     end
 
+    def has_custom_api_entreprise_token?
+      self[:api_entreprise_token].present?
+    end
+
     def api_entreprise_token_expired?
       APIEntrepriseToken.new(api_entreprise_token).expired?
     end
@@ -26,7 +30,7 @@ module APIEntrepriseTokenConcern
     end
 
     def set_api_entreprise_token_expires_at
-      self.api_entreprise_token_expires_at = APIEntrepriseToken.new(api_entreprise_token).expiration
+      self.api_entreprise_token_expires_at = has_custom_api_entreprise_token? ? APIEntrepriseToken.new(api_entreprise_token).expiration : nil
     end
   end
 end
