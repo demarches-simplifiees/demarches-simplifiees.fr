@@ -5,7 +5,7 @@ module Administrateurs
     include ActionView::RecordIdentifier
 
     before_action :authenticate_administrateur!
-    before_action :set_api_token, only: [:edit, :update, :destroy]
+    before_action :set_api_token, only: [:edit, :update, :destroy, :remove_procedure]
 
     def nom
       @name = name
@@ -13,11 +13,7 @@ module Administrateurs
 
     def autorisations
       @name = name
-      @libelle_id_procedures = current_administrateur
-        .procedures
-        .order(:libelle)
-        .pluck(:libelle, :id)
-        .map { |libelle, id| ["#{id} - #{libelle}", id] }
+      @libelle_id_procedures = libelle_id_procedures
     end
 
     def securite
@@ -37,23 +33,54 @@ module Administrateurs
     end
 
     def edit
+      @libelle_id_procedures = libelle_id_procedures
     end
 
     def update
-      if invalid_network?
-        @invalid_network = true
-        return render :edit
+      @libelle_id_procedures = libelle_id_procedures
+
+      h = {}
+
+      if !params[:networks].nil?
+        if invalid_network?
+          @invalid_network_message = "vous devez entrer des adresses ipv4 ou ipv6 valides"
+          return render :edit
+        end
+
+        if @api_token.eternal? && networks.empty?
+          @invalid_network_message = "Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent."
+          @api_token.reload
+          return render :edit
+        end
+
+        h[:authorized_networks] = networks
       end
 
-      if @api_token.eternal? && networks.empty?
-        flash[:alert] = "Vous ne pouvez pas supprimer les restrictions d'accès à l'API d'un jeton permanent."
-        return render :edit
+      if procedure_to_add.present?
+        to_add = current_administrateur
+          .procedure_ids
+          .intersection([procedure_to_add])
+
+        h[:allowed_procedure_ids] =
+          (Array.wrap(@api_token.allowed_procedure_ids) + to_add).uniq
       end
 
-      @api_token.update!(name:, authorized_networks: networks)
+      if params[:name].present?
+        h[:name] = name
+      end
 
-      flash[:notice] = "Le jeton d'API a été mis à jour."
-      redirect_to profil_path
+      @api_token.update!(h)
+
+      render :edit
+    end
+
+    def remove_procedure
+      procedure_id = params[:procedure_id].to_i
+      @api_token.allowed_procedure_ids =
+        @api_token.allowed_procedure_ids - [procedure_id]
+      @api_token.save!
+
+      render turbo_stream: turbo_stream.remove("authorized_procedure_#{procedure_id}")
     end
 
     def destroy
@@ -72,6 +99,14 @@ module Administrateurs
         --data '{ "query": "{ demarche(number: #{procedure_id}) { title } }" }' \\
         '#{api_v2_graphql_url}'
       EOF
+    end
+
+    def libelle_id_procedures
+      current_administrateur
+        .procedures
+        .order(:libelle)
+        .pluck(:libelle, :id)
+        .map { |libelle, id| ["#{id} - #{libelle}", id] }
     end
 
     def all_params
@@ -113,6 +148,10 @@ module Administrateurs
 
     def name
       params[:name]
+    end
+
+    def procedure_to_add
+      params[:procedure_to_add]&.to_i
     end
 
     def write_access
