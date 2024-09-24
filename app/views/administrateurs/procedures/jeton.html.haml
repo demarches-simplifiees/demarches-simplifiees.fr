@@ -18,6 +18,8 @@
           = link_to 'API Entreprise', "https://api.gouv.fr/les-api/api-entreprise/demande-acces"
           propre à votre démarche.
 
+    = render partial: 'administrateurs/procedures/api_entreprise_token_expiration_alert', locals: { procedure: @procedure }
+        
     .fr-input-group
       = f.label :api_entreprise_token, "Jeton", class: 'fr-label'
       = f.password_field :api_entreprise_token, value: @procedure.read_attribute(:api_entreprise_token), class: 'fr-input'
