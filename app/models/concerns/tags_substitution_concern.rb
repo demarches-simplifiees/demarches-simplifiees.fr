@@ -103,6 +103,13 @@ module TagsSubstitutionConcern
       available_for_states: Dossier::TERMINE
     },
     {
+      id: 'dossier_last_champ_updated_at',
+      libelle: 'date de mise à jour',
+      description: 'Date de dernière mise à jour d’un champ du dossier',
+      lambda: -> (d) { format_date(d.last_champ_updated_at) },
+      available_for_states: Dossier::SOUMIS
+    },
+    {
       id: 'dossier_procedure_libelle',
       libelle: 'libellé démarche',
       description: '',
@@ -150,6 +157,14 @@ module TagsSubstitutionConcern
       escapable: false
     }
   ]
+
+  DOSSIER_SVA_SVR_DECISION_DATE_TAG = {
+    id: 'dossier_sva_svr_decision_on',
+    libelle: 'date prévisionnelle SVA/SVR',
+    description: 'Date prévisionnelle de décision automatique par le SVA/SVR',
+    lambda: -> (d) { format_date(d.sva_svr_decision_on) },
+    available_for_states: Dossier.states.fetch(:en_instruction)
+  }
 
   INDIVIDUAL_TAGS = [
     {
@@ -328,7 +343,13 @@ module TagsSubstitutionConcern
 
   def dossier_tags
     # Overridden by MailTemplateConcern
-    DOSSIER_TAGS
+    DOSSIER_TAGS + contextual_dossier_tags
+  end
+
+  def contextual_dossier_tags
+    tags = []
+    tags << DOSSIER_SVA_SVR_DECISION_DATE_TAG if respond_to?(:procedure) && procedure.sva_svr_enabled?
+    tags
   end
 
   def tags_for_dossier_state(tags)

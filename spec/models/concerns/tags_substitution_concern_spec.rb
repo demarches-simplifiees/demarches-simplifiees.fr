@@ -375,13 +375,17 @@ describe TagsSubstitutionConcern, type: :model do
 
     context "when using a date tag" do
       before do
-        Timecop.freeze(Time.zone.local(2001, 2, 3))
+        travel_to Time.zone.local(2001, 2, 3)
         dossier.passer_en_construction!
-        Timecop.freeze(Time.zone.local(2004, 5, 6))
+
+        travel_to Time.zone.local(2003, 1, 3)
+        dossier.touch(:last_champ_updated_at)
+
+        travel_to Time.zone.local(2004, 5, 6)
         dossier.passer_en_instruction!(instructeur: instructeur)
-        Timecop.freeze(Time.zone.local(2007, 8, 9))
+
+        travel_to Time.zone.local(2007, 8, 9)
         dossier.accepter!(instructeur: instructeur)
-        Timecop.return
       end
 
       context "with date de dépôt" do
@@ -401,6 +405,26 @@ describe TagsSubstitutionConcern, type: :model do
 
         it { is_expected.to eq('09/08/2007') }
       end
+
+      context "with date last ,champ updated at" do
+        let(:template) { '--date de mise à jour--' }
+
+        it { is_expected.to eq('03/01/2003') }
+      end
+    end
+
+    context "with date decision sva/svr" do
+      let(:template) { '--date prévisionnelle SVA/SVR--' }
+      let(:procedure) { create(:procedure, :published, :sva) }
+      let(:state) { dossier.state }
+
+      before do
+        dossier.passer_en_construction!
+        dossier.process_sva_svr!
+        dossier.update(sva_svr_decision_on: Date.parse("2024-09-20"))
+      end
+
+      it { is_expected.to eq('20/09/2024') }
     end
 
     context "when the template has a libellé démarche tag" do
