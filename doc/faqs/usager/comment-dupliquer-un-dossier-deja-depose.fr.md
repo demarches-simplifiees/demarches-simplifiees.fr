@@ -27,7 +27,8 @@ Vous avez la possibilité de :
 
 Après avoir vérifié et/ou complété le dossier, vous pouvez cliquer sur le bouton **« Déposer le dossier »**.
 
-### Si le bouton "Dupliquer ce dossier" n’est pas affiché cela signifie que la démarche a été clôturée.
+> [!INFO]
+> Si le bouton *Dupliquer ce dossier* n’est pas affiché cela signifie que la démarche a été clôturée.
 
 Pour connaitre le nouveau lien vers la démarche en ligne, nous vous invitons à contacter le service en charge de la démarche. Vous trouverez les informations de contact en bas du formulaire dans la partie **« Poser une question sur la démarche »** (en cliquant sur le numéro de dossier).
 
