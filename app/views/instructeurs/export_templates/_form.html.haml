@@ -11,7 +11,7 @@
 
   .fr-grid-row.fr-grid-row--gutters
     .fr-col-12.fr-col-md-8.fr-pr-4w
-      = form_with model: [:instructeur, procedure, export_template], data: { turbo: 'true', controller: 'autosubmit' } do |f|
+      = form_with model: [:instructeur, procedure, export_template], data: { turbo: 'true', controller: 'autosubmit', method: :put } do |f|
         %input.hidden{ type: 'submit', formaction: preview_instructeur_procedure_export_templates_path, data: { autosubmit_target: 'submitter' }, formnovalidate: 'true', formmethod: 'get' }
 
         = f.hidden_field :kind, value: 'zip'

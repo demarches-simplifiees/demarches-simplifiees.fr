@@ -166,13 +166,15 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
 
     let(:export_template) { create(:export_template, groupe_instructeur:) }
 
-    subject { get :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
+    context 'with put request' do
+      subject { put :preview, params: { procedure_id: procedure.id, id: export_template.id, export_template: export_template_params }, format: :turbo_stream }
 
-    it '' do
-      dossier = create(:dossier, procedure: procedure, for_procedure_preview: true)
-      subject
-      expect(response.body).to include "DOSSIER_#{dossier.id}"
-      expect(response.body).to include "mon_export_#{dossier.id}.pdf"
+      it 'works with bigbig procedure' do
+        dossier = create(:dossier, procedure: procedure, for_procedure_preview: true)
+        subject
+        expect(response.body).to include "DOSSIER_#{dossier.id}"
+        expect(response.body).to include "mon_export_#{dossier.id}.pdf"
+      end
     end
   end
 
