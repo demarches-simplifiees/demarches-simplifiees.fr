@@ -10,6 +10,8 @@ class SortedColumn
 
   def ascending? = @order == 'asc'
 
+  def opposite_order = ascending? ? 'desc' : 'asc'
+
   def ==(other)
     other&.column == column && other.order == order
   end
