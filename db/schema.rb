@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -47,7 +47,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.datetime "created_at", precision: nil, null: false
     t.string "filename", null: false
     t.string "key", null: false
-    t.integer "lock_version"
     t.text "metadata"
     t.string "service_name", null: false
     t.string "virus_scan_result"
@@ -500,7 +499,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.boolean "prefilled"
     t.string "private_search_terms"
     t.datetime "processed_at", precision: nil
-    t.datetime "re_instructed_at"
     t.bigint "revision_id"
     t.string "search_terms"
     t.string "state"
@@ -796,7 +794,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
   end
 
   create_table "instructeurs", id: :serial, force: :cascade do |t|
-    t.string "agent_connect_id"
     t.string "agent_connect_id_token"
     t.boolean "bypass_email_login_token", default: false, null: false
     t.datetime "created_at", precision: nil
@@ -804,7 +801,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.datetime "login_token_created_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.bigint "user_id", null: false
-    t.index ["agent_connect_id"], name: "index_instructeurs_on_agent_connect_id", unique: true
     t.index ["user_id"], name: "index_instructeurs_on_user_id"
   end
 
@@ -916,7 +912,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.date "auto_archive_on"
     t.string "cadre_juridique"
     t.bigint "canonical_procedure_id"
-    t.boolean "cerfa_flag", default: false
     t.jsonb "chorus", default: {}, null: false
     t.boolean "cloned_from_library", default: false
     t.datetime "closed_at", precision: nil
@@ -930,12 +925,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.string "description"
     t.string "description_pj"
     t.string "description_target_audience"
-    t.string "direction"
     t.datetime "dossiers_count_computed_at", precision: nil
     t.bigint "draft_revision_id"
     t.integer "duree_conservation_dossiers_dans_ds"
     t.boolean "duree_conservation_etendue_par_ds", default: false, null: false
-    t.boolean "durees_conservation_required", default: true
     t.string "encrypted_api_particulier_token"
     t.integer "estimated_dossiers_count"
     t.boolean "estimated_duration_visible", default: true, null: false
@@ -949,7 +942,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.boolean "instructeurs_self_management_enabled", default: false
     t.boolean "juridique_required", default: true
     t.string "libelle"
-    t.string "lien_demarche"
     t.string "lien_dpo"
     t.text "lien_dpo_error"
     t.string "lien_notice"
@@ -971,7 +963,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.jsonb "sva_svr", default: {}, null: false
     t.text "tags", default: [], array: true
     t.boolean "template", default: false, null: false
-    t.datetime "test_started_at", precision: nil
     t.datetime "unpublished_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false
     t.string "web_hook_url"
@@ -1131,8 +1122,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_19_151603) do
     t.bigint "dossier_id"
     t.string "instructeur_email"
     t.string "motivation"
-    t.boolean "process_expired"
-    t.boolean "process_expired_migrated", default: false
     t.datetime "processed_at", precision: nil
     t.string "state"
     t.index ["dossier_id"], name: "index_traitements_on_dossier_id"
