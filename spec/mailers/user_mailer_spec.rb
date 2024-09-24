@@ -151,8 +151,7 @@ RSpec.describe UserMailer, type: :mailer do
 
     context 'when perform_later is called' do
       let(:role) { administrateurs(:default_admin) }
-      let(:custom_queue) { 'low_priority' }
-      before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
+      let(:custom_queue) { 'low' }
       it 'enqueues email is custom queue for low priority delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
       end
@@ -168,8 +167,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     context 'when perform_later is called' do
-      let(:custom_queue) { 'low_priority' }
-      before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
+      let(:custom_queue) { 'low' }
       it 'enqueues email is custom queue for low priority delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
       end
@@ -188,8 +186,7 @@ RSpec.describe UserMailer, type: :mailer do
     end
 
     context 'when perform_later is called' do
-      let(:custom_queue) { 'low_priority' }
-      before { ENV['BULK_EMAIL_QUEUE'] = custom_queue }
+      let(:custom_queue) { 'low' }
       it 'enqueues email is custom queue for low priority delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
       end
