@@ -455,7 +455,7 @@ Rails.application.routes.draw do
     resources :procedures, only: [] do
       resources :export_templates, only: [:new, :create, :edit, :update, :destroy] do
         collection do
-          get 'preview'
+          put 'preview'
         end
       end
     end
