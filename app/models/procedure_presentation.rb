@@ -240,22 +240,17 @@ class ProcedurePresentation < ApplicationRecord
           dossiers
             .includes(:followers_instructeurs)
             .joins('INNER JOIN users instructeurs_users ON instructeurs_users.id = instructeurs.user_id')
-            .filter_ilike('instructeurs_users', :email, values)
-        when 'user', 'individual', 'avis'
+            .filter_ilike('instructeurs_users', :email, values) # ilike OK, user may want to search by *@domain
+        when 'user', 'individual' # user_columns: [email], individual_columns: ['nom', 'prenom', 'gender']
           dossiers
             .includes(table)
-            .filter_ilike(table, column, values)
+            .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
         when 'groupe_instructeur'
           assert_supported_column(table, column)
-          if column == 'label'
-            dossiers
-              .joins(:groupe_instructeur)
-              .filter_ilike(table, column, values)
-          else
-            dossiers
-              .joins(:groupe_instructeur)
-              .where(groupe_instructeur_id: values)
-          end
+
+          dossiers
+            .joins(:groupe_instructeur)
+            .where(groupe_instructeur_id: values)
         end.pluck(:id)
       end
     end.reduce(:&)
