@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class HelpscoutCreateConversationJob < ApplicationJob
-  queue_as :default
-
   class FileNotScannedYetError < StandardError
   end
 

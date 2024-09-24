@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class DossierOperationLogMoveToColdStorageBatchJob < ApplicationJob
-  queue_as :low_priority
+  queue_as :low
 
   def perform(ids)
     DossierOperationLog.where(id: ids)

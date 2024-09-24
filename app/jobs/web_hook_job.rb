@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class WebHookJob < ApplicationJob
-  queue_as :webhooks_v1
+  queue_as :default
 
   TIMEOUT = 10
 

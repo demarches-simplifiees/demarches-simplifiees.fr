@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class BatchOperationProcessOneJob < ApplicationJob
-  queue_as :mailers # hotfix
+  queue_as :critical
   retry_on StandardError, attempts: 1 # default 5, for now no retryable behavior
 
   def perform(batch_operation, dossier)
