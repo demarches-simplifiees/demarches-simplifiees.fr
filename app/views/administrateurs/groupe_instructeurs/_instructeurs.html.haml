@@ -14,12 +14,19 @@
         %react-fragment
           = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
 
-      = f.submit t('.assign'), class: 'fr-btn', disabled: disabled_as_super_admin
+      = f.submit t('.assign'), class: 'fr-btn fr-btn--tertiary', disabled: disabled_as_super_admin
 
-  %table.fr-table.fr-mt-2w.width-100
+  %hr.fr-mt-4w
+
+  .flex.justify-between.align-baseline
+    .card-title= t('.assigned_instructeur', count: instructeurs.count)
+    = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
+      Exporter la liste (.CSV)
+
+  %table.fr-table.width-100
     %thead
       %tr
-        %th{ colspan: 2 }= t('.assigned_instructeur', count: instructeurs.count)
+        %th{ colspan: 2 }= t('.instructeurs_title')
     %tbody
       - instructeurs.each do |instructeur|
         %tr
