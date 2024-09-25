@@ -2,8 +2,8 @@
 %h1.fr-h2= t('.title')
 .fr-icon-mail-line.fr-alert.fr-mb-3w
   %p= t('.notification_alert')
-= render partial: 'administrateurs/groupe_instructeurs/import',
-    locals: { procedure: @procedure, template_url:, template_detail: }
+
+= render Procedure::ImportComponent.new(procedure: @procedure)
 
 = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
