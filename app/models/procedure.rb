@@ -295,6 +295,7 @@ class Procedure < ApplicationRecord
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
   after_create :ensure_defaut_groupe_instructeur
+  after_create :create_generic_procedure_labels
 
   include AASM
 
@@ -933,6 +934,12 @@ class Procedure < ApplicationRecord
     if self.groupe_instructeurs.empty?
       gi = groupe_instructeurs.create(label: GroupeInstructeur::DEFAUT_LABEL)
       self.update(defaut_groupe_instructeur_id: gi.id)
+    end
+  end
+
+  def create_generic_procedure_labels
+    ProcedureLabel::GENERIC_LABELS.each do |label|
+      ProcedureLabel.create(name: label[:name], color: label[:color], procedure_id: self.id)
     end
   end
 
