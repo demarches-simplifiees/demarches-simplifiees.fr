@@ -504,8 +504,8 @@ module Instructeurs
     def redirect_on_dossier_in_batch_operation
       dossier_in_batch = begin
         dossier
-      rescue ActiveRecord::RecordNotFound
-        current_instructeur.dossiers.find(params[:dossier_id])
+                         rescue ActiveRecord::RecordNotFound
+                           current_instructeur.dossiers.find(params[:dossier_id])
       end
       if dossier_in_batch.batch_operation.present?
         flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
