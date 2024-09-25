@@ -10,11 +10,15 @@ module ColumnsConcern
     end
 
     def columns
-      columns = dossier_columns
-      columns.concat(standard_columns)
-      columns.concat(individual_columns) if for_individual
-      columns.concat(moral_columns) if !for_individual
-      columns.concat(types_de_champ_columns)
+      Current.procedure_columns ||= {}
+
+      Current.procedure_columns[id] ||= begin
+        columns = dossier_columns
+        columns.concat(standard_columns)
+        columns.concat(individual_columns) if for_individual
+        columns.concat(moral_columns) if !for_individual
+        columns.concat(types_de_champ_columns)
+      end
     end
 
     def dossier_id_column
