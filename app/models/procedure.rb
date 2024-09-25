@@ -60,6 +60,7 @@ class Procedure < ApplicationRecord
   has_and_belongs_to_many :procedure_tags
 
   has_many :bulk_messages, dependent: :destroy
+  has_many :procedure_labels, dependent: :destroy
 
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message
