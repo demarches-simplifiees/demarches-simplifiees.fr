@@ -46,7 +46,7 @@
               %label.fr-label{ for: "identite_champ_radio_#{Individual::GENDER_MALE}" }
                 = Individual.human_attribute_name('gender.male')
       .fr-fieldset__element.fr-mb-0
-        %fieldset.fr-fieldset.width-100
+        .fr-fieldset.width-100
           .fr-fieldset__element.fr-fieldset__element--short-text
             = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: (for_tiers? ? false : 'given-name') })
           .fr-fieldset__element.fr-fieldset__element--short-text
