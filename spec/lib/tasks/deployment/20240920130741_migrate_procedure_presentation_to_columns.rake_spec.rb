@@ -45,10 +45,10 @@ describe '20240920130741_migrate_procedure_presentation_to_columns.rake' do
 
     order, column_id = procedure_presentation
       .sorted_column
-      .then { |sorted| [sorted['order'], sorted['id']] }
+      .then { |sorted| [sorted.order, sorted.column.h_id] }
 
     expect(order).to eq('desc')
-    expect(column_id).to eq("procedure_id" => procedure_id, "column_id" => "self/en_construction_at")
+    expect(column_id).to eq(procedure_id: procedure_id, column_id: "self/en_construction_at")
 
     expect(procedure_presentation.tous_filters).to eq([])
 
