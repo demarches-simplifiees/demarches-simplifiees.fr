@@ -1,9 +1,6 @@
 - content_for(:title, 'Ajout de groupes')
 %h1 Ajout de groupes d'instructeurs
 
-= render partial: 'administrateurs/groupe_instructeurs/import',
-    locals: { procedure: @procedure }
-
 %section
   = form_for :groupe_instructeur,
     method: :post do |f|
