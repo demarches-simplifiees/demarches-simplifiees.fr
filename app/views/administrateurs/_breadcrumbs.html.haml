@@ -22,21 +22,21 @@
         - if @procedure.close?
           .flex
             %span.fr-badge.fr-badge--warning.fr-mr-1w
-              = t('closed', scope: [:layouts, :breadcrumb])
-            = t('since', scope: [:layouts, :breadcrumb], date: l(@procedure.closed_at.to_date))
+              = t('closed', scope: [:layouts, :breadcrumb, :administrateur])
+            = t('since', scope: [:layouts, :breadcrumb, :administrateur], date: l(@procedure.closed_at.to_date))
 
         - elsif @procedure.locked?
           = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), class: "fr-link"
           .flex.fr-mt-1w
             %span.fr-badge.fr-badge--success.fr-mr-1w
-              = t('published', scope: [:layouts, :breadcrumb])
-            = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.published_at.to_date))
+              = t('published', scope: [:layouts, :breadcrumb, :administrateur])
+            = t('since', scope: [:layouts, :breadcrumb, :administrateur], number: @procedure.id, date: l(@procedure.published_at.to_date))
 
         - else
           %p.fr-mb-1w
-            = t('more_info_on_test', scope: [:layouts, :breadcrumb])
-            = link_to t('go_to_FAQ', scope: [:layouts, :breadcrumb]), t("url_FAQ", scope: [:layouts, :breadcrumb]), title: new_tab_suffix(t('go_to_FAQ', scope: [:layouts, :breadcrumb]))
+            = t('more_info_on_test', scope: [:layouts, :breadcrumb, :administrateur])
+            = link_to t('go_to_FAQ', scope: [:layouts, :breadcrumb, :administrateur]), t("url_FAQ", scope: [:layouts, :breadcrumb, :administrateur]), title: new_tab_suffix(t('go_to_FAQ', scope: [:layouts, :breadcrumb, :administrateur]))
           .flex
             %span.fr-badge.fr-badge--new.fr-mr-1w
-              = t('draft', scope: [:layouts, :breadcrumb])
-            = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.created_at.to_date))
+              = t('draft', scope: [:layouts, :breadcrumb, :administrateur])
+            = t('since', scope: [:layouts, :breadcrumb, :administrateur], number: @procedure.id, date: l(@procedure.created_at.to_date))

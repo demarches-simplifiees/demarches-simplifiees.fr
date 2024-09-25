@@ -56,15 +56,15 @@
         %p.fr-mb-0.width-max-content N° #{number_with_html_delimiter(procedure.id)}
         - if procedure.close? || procedure.depubliee?
           %span.fr-badge.fr-badge--sm.fr-badge--warning
-            = t('closed', scope: [:layouts, :breadcrumb])
+            = t('closed', scope: [:layouts, :breadcrumb, :administrateur])
 
         - elsif procedure.publiee?
           %span.fr-badge.fr-badge--sm.fr-badge--success
-            = t('published', scope: [:layouts, :breadcrumb])
+            = t('published', scope: [:layouts, :breadcrumb, :administrateur])
 
         - else
           %span.fr-badge.fr-badge--sm.fr-badge--new
-            = t('draft', scope: [:layouts, :breadcrumb])
+            = t('draft', scope: [:layouts, :breadcrumb, :administrateur])
 
     .flex.justify-end
       %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right

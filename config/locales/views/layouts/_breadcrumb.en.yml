@@ -1,17 +1,18 @@
 en:
   layouts:
     breadcrumb:
-      root: "Home"
+      root: "Home - list of procedure"
       you_are_here: "You are here"
       show: Show breadcrumb
-      preview: "Preview the form"
-      preview_annotations: "Preview annotations"
-      continue_annotations: "Validate annotations"
-      since: "since %{date}"
-      closed: "Closed"
-      published: "Published"
-      draft: "Draft"
-      more_info_on_test: "For more information on test stage"
-      go_to_FAQ: "read FAQ"
-      url_FAQ: "/faq#accordion-administrateur-2"
       faq: Frequently Asked Questions
+      administrateur:
+        preview: "Preview the form"
+        preview_annotations: "Preview annotations"
+        continue_annotations: "Validate annotations"
+        since: "since %{date}"
+        closed: "Closed"
+        published: "Published"
+        draft: "Draft"
+        more_info_on_test: "For more information on test stage"
+        go_to_FAQ: "read FAQ"
+        url_FAQ: "/faq#accordion-administrateur-2"
