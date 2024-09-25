@@ -2,8 +2,8 @@
   method: :get, data: { controller: 'autosubmit' } do
   .fr-fieldset__element.fr-m-0
     .fr-checkbox-group.fr-checkbox-group--sm
-      = hidden_field_tag 'column_id', @procedure.notifications_column.id
-      = hidden_field_tag 'order', 'asc', id: nil
-      = check_box_tag 'order', 'desc', @sorted_column.sort_by_notifications?
-      = label_tag 'order', t('.show_notified_first'), class: 'fr-label'
+      = hidden_field_tag 'sorted_column[id]', @procedure.notifications_column.id
+      = hidden_field_tag 'sorted_column[order]', 'asc', id: nil
+      = check_box_tag 'sorted_column[order]', 'desc', @sorted_column.sort_by_notifications?
+      = label_tag 'sorted_column[order]', t('.show_notified_first'), class: 'fr-label'
       = submit_tag t('.show_notified_first'), data: {"checkbox-target": 'submit' }, class: 'visually-hidden'

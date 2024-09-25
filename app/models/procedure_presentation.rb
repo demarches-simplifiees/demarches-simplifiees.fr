@@ -153,24 +153,6 @@ class ProcedurePresentation < ApplicationRecord
     end
   end
 
-  def update_sort(column_id, order)
-    h_id = JSON.parse(column_id, symbolize_names: true)
-    column = procedure.find_column(h_id:)
-    order = order.presence || opposite_order_for(column.table, column.column)
-
-    update!(
-      sort: {
-        TABLE => column.table,
-        COLUMN => column.column,
-        ORDER => order
-      },
-      sorted_column: {
-        order:,
-        id: h_id
-      }
-    )
-  end
-
   def snapshot
     slice(:filters, :sort, :displayed_fields)
   end

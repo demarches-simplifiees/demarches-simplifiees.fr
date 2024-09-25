@@ -10,10 +10,10 @@ class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
   private
 
   def update_sort_path(column)
-    column_id = column.id
+    id = column.id
     order = opposite_order_for(column)
 
-    update_sort_instructeur_procedure_path(@procedure, column_id:, order:)
+    update_sort_instructeur_procedure_path(@procedure, sorted_column: { id:, order: })
   end
 
   def opposite_order_for(column)
