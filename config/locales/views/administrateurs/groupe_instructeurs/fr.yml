@@ -35,6 +35,7 @@ fr:
         assign: Affecter
         remove: Retirer
         instructeur_emails: Adresse électronique des instructeurs que vous souhaitez affecter à cette démarche
+        copy_paste_hint: "Vous pouvez saisir les adresses individuellement, ou bien copier-coller dans le champ ci-dessous une liste d’adresses séparées par des points-virgules (exemple : adresse1@mail.com; adresse2@mail.com; adresse3@mail.com)."
       import_export:
         csv_import:
           import_file: Importer le fichier
