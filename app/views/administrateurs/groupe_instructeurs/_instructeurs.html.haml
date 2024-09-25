@@ -23,15 +23,16 @@
     = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
       Exporter la liste (.CSV)
 
-  %table.fr-table.width-100
+  %table.fr-table.fr-table--bordered.width-100
     %thead
       %tr
-        %th{ colspan: 2 }= t('.instructeurs_title')
+        %th= t('.title')
+        %th.text-right= t('.actions')
     %tbody
       - instructeurs.each do |instructeur|
         %tr
           %td
-            = dsfr_icon('fr-icon-user-fill')
+            = dsfr_icon('fr-icon-user-line')
             #{instructeur.email}
 
           - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
@@ -40,6 +41,6 @@
             { method: :delete,
               data: { confirm: confirmation_message },
               params: { instructeur: { id: instructeur.id }},
-              class: 'fr-btn fr-btn--secondary' }
+              class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-subtract-line' }
 
   = paginate instructeurs, views_prefix: 'shared'
