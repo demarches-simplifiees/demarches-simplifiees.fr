@@ -5,13 +5,23 @@
       = t(".csv_import.#{key}.title")
   .fr-collapse#accordion-106
     - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
-    %p.notice
+    .notice.fr-mb-1w
       = t(".csv_import.#{key}.notice_1_html", csv_max_size: number_to_human_size(csv_max_size))
-    %p.notice
-      = t(".csv_import.#{key}.notice_2")
-    = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 form flex justify-between align-center" do
-      = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1"
-      = submit_tag t('.csv_import.import_file'), class: 'fr-btn fr-btn--secondary', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
+    .notice
+      = t(".csv_import.#{key}.notice_2_html")
+
+    = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 column" do
+      %label.fr-label.font-weight-bold
+        = t('.csv_import.file_to_import')
+      .fr-download
+        = link_to template_url, {class: "fr-download__link", download: ''} do
+          = t('.csv_import.download_template')
+          %span.fr-download__detail
+            = template_detail
+      .flex.column
+        = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w'
+        = submit_tag t('.csv_import.import_file'), class: 'fr-btn fr-btn--secondary', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
+
     - if procedure.groupe_instructeurs.many?
       .flex.justify-between.align-center.mt-4
         %div

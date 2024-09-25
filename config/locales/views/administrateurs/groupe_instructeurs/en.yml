@@ -32,14 +32,15 @@ en:
         csv_import:
           import_file: Import file
           import_file_alert: All instructors added to the procedure will be notified by email. Do you want to continue?
+          file_to_import: File to import
           groupes:
             title: Bulk Import / Export
-            notice_1_html: For the import, your csv file must have 2 columns (Group, Email) and be comma separated (<a href=/csv/en/import-groupe-test.csv>example file</a>). The file size must be less than %{csv_max_size}.
-            notice_2: The import does not overwrite existing groups and instructors. It only allows you to add them.
+            notice_1_html: For the import, your csv file must have <strong>2 columns (Group, Email)</strong> (see file model below). The file size must be less than %{csv_max_size}.
+            notice_2_html: The import does not overwrite existing groups and instructors. It only allows you to <strong>add them</strong>.
           instructeurs:
             title: Adding instructors with file import
-            notice_1_html: For the import, the csv file must have only 1 column (Email) with one instructor email address per line (<a href=/csv/import-instructeurs-test.csv>example file</a>). The file size must be less than %{csv_max_size}.
-            notice_2: The import does not overwrite existing instructors. It only allows you to add them.
+            notice_1_html: For the import, your csv file must have <strong>1 column (Email)</strong> listing the email addresses of the instructors (see file model below). The file size must be less than %{csv_max_size}.
+            notice_2_html: The import does not overwrite existing instructors. It only allows you to <strong>add them</strong>.
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"

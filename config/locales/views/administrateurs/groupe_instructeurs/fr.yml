@@ -39,14 +39,16 @@ fr:
         csv_import:
           import_file: Importer le fichier
           import_file_alert: Tous les instructeurs ajoutés à la procédure vont être notifiés par email. Voulez-vous continuer ?
+          file_to_import: Fichier à importer
+          download_template: Modèle à télécharger
           groupes:
             title: Import / Export en masse
-            notice_1_html: Pour l’import, votre fichier csv doit comporter 2 colonnes (Groupe, Email) et être séparé par des virgules (<a href=/csv/fr/import-groupe-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur à %{csv_max_size}.
-            notice_2: L’import n’écrase pas les groupes et instructeurs existants. Il permet uniquement d'en ajouter.
+            notice_1_html: Pour l’import, votre fichier csv doit comporter <strong>2 colonnes (Groupe, Email)</strong> (voir modèle de fichier ci-dessous). Le poids du fichier doit être inférieur à %{csv_max_size}.
+            notice_2_html: L’import n’écrase pas les groupes et instructeurs existants. Il permet uniquement <strong>d’en ajouter</strong>.
           instructeurs:
             title: Ajout d’instructeurs avec import de fichier
-            notice_1_html: Pour l’import, le fichier csv doit comporter 1 seule colonne (Email) avec une adresse email d’instructeur par ligne (<a href=/csv/import-instructeurs-test.csv>exemple de fichier</a>). Le poids du fichier doit être inférieur à %{csv_max_size}.
-            notice_2: L’import n’écrase pas les instructeurs existants. Il permet uniquement d'en ajouter.
+            notice_1_html: Pour l’import, votre fichier csv doit comporter <strong>1 seule colonne (Email)</strong> listant les adresses emails des instructeurs (voir modèle de fichier ci-dessous). Le poids du fichier doit être inférieur à %{csv_max_size}.
+            notice_2_html: L’import n’écrase pas les instructeurs existants. Il permet uniquement <strong>d’en ajouter</strong>.
         existing_groupe:
           one: "%{count} groupe existe"
           other: "%{count} groupes existent"
