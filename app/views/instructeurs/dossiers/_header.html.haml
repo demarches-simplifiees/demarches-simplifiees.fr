@@ -6,6 +6,9 @@
       pour voir si l'opération est finie.
 
 .sub-header
+  = render partial: 'instructeurs/breadcrumbs',
+    locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb, :instructeur], libelle: dossier.procedure.libelle.truncate(22)), instructeur_procedure_path(dossier.procedure)],
+                      [t('show_dossier', scope: [:layouts, :breadcrumb, :instructeur], dossier_id: dossier.id, owner_name: dossier.owner_name)]] }
   = render partial: 'instructeurs/dossiers/header_top', locals: { dossier: }
   = render partial: 'instructeurs/dossiers/header_bottom', locals: { dossier: }
 

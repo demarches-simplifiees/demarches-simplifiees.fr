@@ -7,6 +7,7 @@ en:
       faq: Frequently Asked Questions
       instructeur:
         show_procedure: '%{libelle} – Files'
+        show_dossier: "File nº %{dossier_id} – %{owner_name}"
       administrateur:
         preview: "Preview the form"
         preview_annotations: "Preview annotations"

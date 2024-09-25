@@ -7,6 +7,7 @@ fr:
       faq: Foire aux Questions
       instructeur:
         show_procedure: '%{libelle} – Suivi des dossiers'
+        show_dossier: "Dossier nº %{dossier_id} – %{owner_name}"
       administrateur:
         preview: "Prévisualiser le formulaire"
         preview_annotations: "Prévisualiser les annotations"

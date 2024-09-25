@@ -14,6 +14,10 @@ describe 'instructeurs/dossiers/show', type: :view do
 
   it 'renders the header' do
     expect(subject).to have_text("Dossier nº #{dossier.id}")
+    expect(subject).to have_selector(".fr-breadcrumb__link", count: 3)
+    expect(subject).to have_selector('a.fr-breadcrumb__link', text: "Accueil – liste des démarches")
+    expect(subject).to have_selector('a.fr-breadcrumb__link', text: "#{dossier.procedure.libelle} – Suivi des dossiers")
+    expect(subject).to have_selector('a.fr-breadcrumb__link', text: "Dossier nº #{dossier.id} – #{dossier.owner_name}")
   end
 
   it 'renders the dossier infos' do
