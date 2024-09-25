@@ -57,6 +57,10 @@ module ColumnsConcern
       columns
     end
 
+    def default_sorted_column
+      SortedColumn.new(column: notifications_column, order: 'desc')
+    end
+
     private
 
     def standard_columns
