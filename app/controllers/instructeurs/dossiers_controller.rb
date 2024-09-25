@@ -434,28 +434,26 @@ module Instructeurs
     end
 
     def remove_changes_forbidden_by_visa
-      # return if there's no checked visa in the dossier
+      # shortcut : returns if there's no checked visa in the dossier
       visa_type = TypeDeChamp.type_champs.fetch(:visa)
-      checked_visa_champ = Champ.where(type_de_champ: { type_champ: visa_type }).where.not(value: "")
-      return champs_private_attributes_params unless Champ.private_only.joins(:type_de_champ).where(dossier: params[:dossier_id]).and(checked_visa_champ).any?
+      private_champs = dossier.champs_private.joins(:type_de_champ)
+      return champs_private_attributes_params unless private_champs.where(type_de_champ: { type_champ: visa_type }).where.not(value: ["", nil]).any?
 
-      header_type = TypeDeChamp.type_champs.fetch(:header_section)
-      header_champ = Champ.where(type_de_champ: { type_champ: header_type })
-      Champ.private_only.includes(:type_de_champ).joins(type_de_champ: :revision_type_de_champ)
-        .and(checked_visa_champ.or(header_champ)).select(:id, :type_de_champ_id, :position).order(:position)
-
-      # retrieve champ ordered like display (position of parent, line, position)
+      # retrieve champ ordered like display (position of (parent | self), line, position)
+      order = Arel.sql("COALESCE(revision_types_de_champ_types_de_champ.position, procedure_revision_types_de_champ.position), \
+                       COALESCE(champs.row_id,' '), procedure_revision_types_de_champ.position")
       ordered_champs = Champ.private_only.where(dossier:)
         .joins(type_de_champ: :revision_types_de_champ)
-        .left_joins(parent: { type_de_champ: :revision_types_de_champ })
         .includes(:type_de_champ)
-        .order(Arel.sql("coalesce(revision_types_de_champ_types_de_champ.position, procedure_revision_types_de_champ.position)," +
-                          " COALESCE(champs.row_id,' '), procedure_revision_types_de_champ.position"))
+        .where(procedure_revision_types_de_champ: { revision_id: dossier.revision_id })
+        .left_joins(parent: { type_de_champ: :revision_types_de_champ })
+        .where(revision_types_de_champ_types_de_champ: { revision_id: [dossier.revision_id, nil] })
+        .order(order)
 
       params[:dossier][:champs_private_attributes]&.reject! do |k, _v|
         # find modified champ
         champ_index = ordered_champs.index { _1.public_id == k }
-        return unless champ_index
+        next unless champ_index
 
         # check following checked visa or header section level 1
         row_id = ordered_champs[champ_index].row_id
@@ -506,8 +504,8 @@ module Instructeurs
     def redirect_on_dossier_in_batch_operation
       dossier_in_batch = begin
         dossier
-                         rescue ActiveRecord::RecordNotFound
-                           current_instructeur.dossiers.find(params[:dossier_id])
+      rescue ActiveRecord::RecordNotFound
+        current_instructeur.dossiers.find(params[:dossier_id])
       end
       if dossier_in_batch.batch_operation.present?
         flash.alert = "Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse."
