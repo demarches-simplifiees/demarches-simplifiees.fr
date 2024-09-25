@@ -5,6 +5,8 @@ fr:
       you_are_here: "Vous êtes ici"
       show: "Voir le fil d’Ariane"
       faq: Foire aux Questions
+      instructeur:
+        show_procedure: '%{libelle} – Suivi des dossiers'
       administrateur:
         preview: "Prévisualiser le formulaire"
         preview_annotations: "Prévisualiser les annotations"

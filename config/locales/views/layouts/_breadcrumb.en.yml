@@ -5,6 +5,8 @@ en:
       you_are_here: "You are here"
       show: Show breadcrumb
       faq: Frequently Asked Questions
+      instructeur:
+        show_procedure: '%{libelle} – Files'
       administrateur:
         preview: "Preview the form"
         preview_annotations: "Preview annotations"
