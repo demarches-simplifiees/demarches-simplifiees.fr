@@ -1,16 +1,14 @@
-- key = procedure.groupe_instructeurs.one? ? 'instructeurs' : 'groupes'
 %section.fr-accordion.fr-mb-3w
   %h3.fr-accordion__title
     %button.fr-accordion__btn{ "aria-controls" => "accordion-106", "aria-expanded" => "false" }
-      = t(".csv_import.#{key}.title")
+      = t(".csv_import.#{scope}.title")
   .fr-collapse#accordion-106
-    - csv_max_size = Administrateurs::GroupeInstructeursController::CSV_MAX_SIZE
     .notice.fr-mb-1w
-      = t(".csv_import.#{key}.notice_1_html", csv_max_size: number_to_human_size(csv_max_size))
+      = t(".csv_import.#{scope}.notice_1_html", csv_max_size: number_to_human_size(csv_max_size))
     .notice
-      = t(".csv_import.#{key}.notice_2_html")
+      = t(".csv_import.#{scope}.notice_2_html")
 
-    = form_tag import_admin_procedure_groupe_instructeurs_path(procedure), method: :post, multipart: true, class: "mt-4 column" do
+    = form_tag import_admin_procedure_groupe_instructeurs_path(@procedure), method: :post, multipart: true, class: "mt-4 column" do
       %label.fr-label.font-weight-bold
         = t('.csv_import.file_to_import')
       .fr-download
@@ -18,6 +16,8 @@
           = t('.csv_import.download_template')
           %span.fr-download__detail
             = template_detail
+      .fr-hint-text.fr-mb-1w
+        = t('.csv_import.file_size_limit', max_file_size: number_to_human_size(csv_max_size))
       .flex.column
         = file_field_tag :csv_file, required: true, accept: 'text/csv', size: "1", class: 'fr-mb-2w'
         = submit_tag t('.csv_import.import_file'), class: 'fr-btn fr-btn--tertiary', data: { disable_with: "Envoi...", confirm: t('.csv_import.import_file_alert') }
