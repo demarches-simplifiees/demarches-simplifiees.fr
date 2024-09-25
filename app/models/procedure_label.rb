@@ -2,6 +2,7 @@
 
 class ProcedureLabel < ApplicationRecord
   belongs_to :procedure
+  has_many :dossier_labels, dependent: :destroy
 
   GENERIC_LABELS = [
     { name: 'à relancer', color: 'brown-caramel' },

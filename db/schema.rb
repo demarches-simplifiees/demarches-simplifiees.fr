@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_24_151336) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_25_133719) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -415,6 +415,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_24_151336) do
     t.index ["commentaire_id"], name: "index_dossier_corrections_on_commentaire_id"
     t.index ["dossier_id"], name: "index_dossier_corrections_on_dossier_id"
     t.index ["resolved_at"], name: "index_dossier_corrections_on_resolved_at", where: "((resolved_at IS NULL) OR (resolved_at IS NOT NULL))"
+  end
+
+  create_table "dossier_labels", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "dossier_id", null: false
+    t.bigint "procedure_label_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["dossier_id"], name: "index_dossier_labels_on_dossier_id"
+    t.index ["procedure_label_id"], name: "index_dossier_labels_on_procedure_label_id"
   end
 
   create_table "dossier_operation_logs", force: :cascade do |t|
@@ -1270,6 +1279,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_24_151336) do
   add_foreign_key "dossier_batch_operations", "dossiers"
   add_foreign_key "dossier_corrections", "commentaires"
   add_foreign_key "dossier_corrections", "dossiers"
+  add_foreign_key "dossier_labels", "dossiers"
+  add_foreign_key "dossier_labels", "procedure_labels"
   add_foreign_key "dossier_operation_logs", "bill_signatures"
   add_foreign_key "dossier_transfer_logs", "dossiers"
   add_foreign_key "dossiers", "batch_operations"
