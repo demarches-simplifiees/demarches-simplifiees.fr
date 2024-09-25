@@ -2,7 +2,7 @@
 %h1.fr-h2=t('.title')
 
 = render partial: 'administrateurs/groupe_instructeurs/import_export',
-    locals: { procedure: @procedure }
+    locals: { procedure: @procedure, template_url:, template_detail: }
 
 = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
