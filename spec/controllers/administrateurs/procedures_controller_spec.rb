@@ -513,6 +513,11 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(response).to redirect_to(champs_admin_procedure_path(Procedure.last))
           expect(flash[:notice]).to be_present
         end
+
+        it "create generic labels" do
+          expect(subject.procedure_labels.size).to eq(3)
+          expect(subject.procedure_labels.first.name).to eq('à relancer')
+        end
       end
 
       describe "procedure is saved with custom retention period" do
