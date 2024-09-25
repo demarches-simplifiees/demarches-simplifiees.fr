@@ -12,13 +12,13 @@ class TypesDeChamp::YesNoTypeDeChamp < TypesDeChamp::CheckboxTypeDeChamp
   end
 
   def human_to_filter(human_value)
-    human_value.downcase!
-    if human_value == "oui"
+    downcased = human_value.downcase
+    if downcased == "oui"
       "true"
-    elsif human_value == "non"
+    elsif downcased == "non"
       "false"
     else
-      human_value
+      downcased
     end
   end
 
