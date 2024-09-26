@@ -11,6 +11,7 @@ fr:
       closed: "Close"
       published: "Publiée"
       draft: "En test"
+      to_modify: "À modifier"
       more_info_on_test: "Pour plus d’information sur la phase de test"
       go_to_FAQ: "consulter la FAQ"
       url_FAQ: "/faq#accordion-administrateur-2"
