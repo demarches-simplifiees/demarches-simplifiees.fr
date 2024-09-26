@@ -11,6 +11,7 @@ en:
       closed: "Closed"
       published: "Published"
       draft: "Draft"
+      to_modify: "To modify"
       more_info_on_test: "For more information on test stage"
       go_to_FAQ: "read FAQ"
       url_FAQ: "/faq#accordion-administrateur-2"
