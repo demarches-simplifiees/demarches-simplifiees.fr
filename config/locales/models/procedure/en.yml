@@ -48,6 +48,7 @@ en:
           personne_morale: 'Legal entity'
         declarative_with_state/en_instruction: Instruction
         declarative_with_state/accepte: Accepted
+        api_entreprise_token: Token API Entreprise
         api_particulier_token: Token API Particulier
         initiated_mail: File sorted for processing notification email
         received_mail: File submitted notification email

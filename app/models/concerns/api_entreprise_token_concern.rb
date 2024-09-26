@@ -7,6 +7,7 @@ module APIEntrepriseTokenConcern
 
   included do
     validates :api_entreprise_token, jwt_token: true, allow_blank: true
+    validate :api_entreprise_token_expiration_valid?, on: [:publication]
 
     before_save :set_api_entreprise_token_expires_at, if: :will_save_change_to_api_entreprise_token?
 
@@ -16,6 +17,12 @@ module APIEntrepriseTokenConcern
 
     def api_entreprise_token
       self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
+    end
+
+    def api_entreprise_token_expiration_valid?
+      if api_entreprise_token_expired_or_expires_soon?
+        errors.add(:api_entreprise_token, "expiré ou expirant bientôt")
+      end
     end
 
     def api_entreprise_token_expired?
