@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class SortedColumn
-  attr_reader :column
+  attr_reader :column, :order
 
   def initialize(column:, order:)
     @column = column

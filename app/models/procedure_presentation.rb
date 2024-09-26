@@ -153,7 +153,9 @@ class ProcedurePresentation < ApplicationRecord
   private
 
   def sorted_ids(dossiers, count)
-    table, column, order = sort.values_at(TABLE, COLUMN, 'order')
+    table = sorted_column.column.table
+    column = sorted_column.column.column
+    order = sorted_column.order
 
     case table
     when 'notifications'
