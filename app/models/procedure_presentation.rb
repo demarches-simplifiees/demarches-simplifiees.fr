@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class ProcedurePresentation < ApplicationRecord
-  EXTRA_SORT_COLUMNS = {
-    'notifications' => ['notifications'],
-    'self' => ['id', 'state']
-  }
-
   TABLE = 'table'
   COLUMN = 'column'
   ORDER = 'order'
@@ -23,8 +18,6 @@ class ProcedurePresentation < ApplicationRecord
   delegate :procedure, :instructeur, to: :assign_to
 
   validate :check_allowed_displayed_fields
-  validate :check_allowed_sort_column
-  validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
   validate :check_filters_max_integer
@@ -286,17 +279,6 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
       check_allowed_field(:displayed_fields, field)
-    end
-  end
-
-  def check_allowed_sort_column
-    check_allowed_field(:sort, sort, EXTRA_SORT_COLUMNS)
-  end
-
-  def check_allowed_sort_order
-    order = sort['order']
-    if !["asc", "desc"].include?(order)
-      errors.add(:sort, "#{order} n’est pas une ordre permis")
     end
   end
 

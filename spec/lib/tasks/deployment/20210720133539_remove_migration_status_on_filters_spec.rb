@@ -47,24 +47,4 @@ describe '20201001161931_migrate_filters_to_use_stable_id' do
       expect(procedure_presentation_without_migration.filters['suivis']).to be_present
     end
   end
-
-  context 'when the procedure presentation is invalid' do
-    before do
-      procedure_presentation_with_migration.update_column(
-        :sort,
-       { table: 'invalid-table', column: 'invalid-column', order: 'invalid-order' }
-      )
-    end
-
-    it 'removes the "migrated" key properly' do
-      run_task
-      expect(procedure_presentation_with_migration).not_to be_valid
-      expect(procedure_presentation_with_migration.filters).not_to have_key('migrated')
-    end
-
-    it 'leaves the other keys unchanged' do
-      run_task
-      expect(procedure_presentation_without_migration.filters['suivis']).to be_present
-    end
-  end
 end

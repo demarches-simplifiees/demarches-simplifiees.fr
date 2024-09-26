@@ -41,13 +41,6 @@ describe ProcedurePresentation do
       it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
     end
 
-    context 'of sort' do
-      it { expect(build(:procedure_presentation, sort: { table: "notifications", column: "notifications", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { table: "self", column: "id", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { table: "self", column: "state", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { table: "user", column: "reset_password_token", "order" => "asc" })).to be_invalid }
-    end
-
     context 'of filters' do
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "reset_password_token", "order" => "asc" }] })).to be_invalid }
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
