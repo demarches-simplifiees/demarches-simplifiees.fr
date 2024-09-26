@@ -54,6 +54,7 @@ fr:
           personne_morale: 'Personne morale'
         declarative_with_state/en_instruction: En instruction
         declarative_with_state/accepte: Accepté
+        api_entreprise_token: Jeton API Entreprise
         api_particulier_token: Jeton API Particulier
         initiated_mail: L’email de notification de passage de dossier en instruction
         received_mail: L’email de notification de dépôt de dossier
