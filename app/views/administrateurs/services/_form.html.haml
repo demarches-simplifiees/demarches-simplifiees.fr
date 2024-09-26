@@ -1,5 +1,12 @@
 = form_with model: [ :admin, service], local: true do |f|
 
+  = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field, opts: { placeholder: "14 chiffres, sans espace" }) do |c|
+    - c.with_hint do
+      = "Indiquez le numéro de SIRET de l’organisme dont ce service dépend. Rechercher le SIRET sur "
+      = link_to("annuaire-entreprises.data.gouv.fr", annuaire_link, **external_link_attributes)
+      %br
+      = "Nous préremplirons les informations de contact à partir de l’Annuaire Service Public correspondant."
+
   = render Dsfr::InputComponent.new(form: f, attribute: :nom, input_type: :text_field)
 
   = render Dsfr::InputComponent.new(form: f, attribute: :organisme, input_type: :text_field)
@@ -9,11 +16,6 @@
       Type d’organisme
 
     = f.select :type_organisme, Service.type_organismes.keys.map { |key| [ I18n.t("type_organisme.#{key}"), key] }, {}, class: 'fr-select'
-
-  = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field, opts: { placeholder: "14 chiffres, sans espace" }) do |c|
-    - c.with_hint do
-      = "Indiquez le numéro de SIRET de l’organisme dont ce service dépend. Rechercher le SIRET sur "
-      = link_to("annuaire-entreprises.data.gouv.fr", annuaire_link, **external_link_attributes)
 
   = render Dsfr::CalloutComponent.new(title: "Informations de contact") do |c|
     - c.with_body do
