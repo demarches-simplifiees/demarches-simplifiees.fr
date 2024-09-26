@@ -54,11 +54,15 @@
 
       .text-right
         %p.fr-mb-0.width-max-content N° #{number_with_html_delimiter(procedure.id)}
+
         - if procedure.close? || procedure.depubliee?
           %span.fr-badge.fr-badge--sm.fr-badge--warning
             = t('closed', scope: [:layouts, :breadcrumb])
 
         - elsif procedure.publiee?
+          - if procedure.api_entreprise_token_expired_or_expires_soon?
+            %span.fr-badge.fr-badge--sm.fr-badge--warning
+              = t('to_modify', scope: [:layouts, :breadcrumb])
           %span.fr-badge.fr-badge--sm.fr-badge--success
             = t('published', scope: [:layouts, :breadcrumb])
 
