@@ -1,11 +1,11 @@
 - if current_filters.count > 0
   .fr-mb-2w
-    - current_filters.group_by { |filter| filter['table'] }.each_with_index do |(table, filters), i|
+    - current_filters.group_by { |filter| filter.column.table }.each_with_index do |(table, filters), i|
       - if i > 0
         = " et "
       - filters.each_with_index do |filter, i|
         - if i > 0
           = " ou "
-        = link_to remove_filter_instructeur_procedure_path(procedure, { statut: statut, column: { procedure_id: procedure.id, column_id: filter['table'] + "/" + filter['column'] }.to_json, value: filter['value'] }),
-          class: "fr-tag fr-tag--dismiss fr-my-1w", aria: { label: "Retirer le filtre #{filter['column']}" } do
-          = "#{filter['label'].truncate(50)} : #{procedure_presentation.human_value_for_filter(filter)}"
+        = link_to remove_filter_instructeur_procedure_path(procedure, { statut: statut, column: filter.column.id, value: filter.filter }),
+          class: "fr-tag fr-tag--dismiss fr-my-1w", aria: { label: "Retirer le filtre #{filter.column.label}" } do
+          = "#{filter.column.label.truncate(50)} : #{procedure_presentation.human_value_for_filter(filter)}"

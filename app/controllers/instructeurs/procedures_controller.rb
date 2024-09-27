@@ -73,7 +73,7 @@ module Instructeurs
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
 
-      @current_filters = current_filters
+      @current_filters = procedure_presentation.filters_for(statut)
       @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .symbolize_keys
