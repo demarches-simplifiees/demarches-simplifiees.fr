@@ -52,9 +52,8 @@ describe '20240920130741_migrate_procedure_presentation_to_columns.rake' do
 
     expect(procedure_presentation.tous_filters).to eq([])
 
-    traites = procedure_presentation.traites_filters
-      .map { [_1['id'], _1['filter']] }
+    traites = procedure_presentation.traites_filters.map { [_1.label, _1.filter] }
 
-    expect(traites).to eq([[{ "column_id" => "etablissement/libelle_naf", "procedure_id" => procedure_id }, "Administration publique générale"]])
+    expect(traites).to eq([["Libellé NAF", "Administration publique générale"]])
   end
 end

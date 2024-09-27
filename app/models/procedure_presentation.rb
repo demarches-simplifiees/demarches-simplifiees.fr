@@ -52,7 +52,7 @@ class ProcedurePresentation < ApplicationRecord
     dossiers_by_statut = dossiers.by_statut(statut, instructeur)
     dossiers_sorted_ids = self.sorted_ids(dossiers_by_statut, count || dossiers_by_statut.size)
 
-    if filters[statut].present?
+    if filters_for(statut).present?
       dossiers_sorted_ids.intersection(filtered_ids(dossiers_by_statut, statut))
     else
       dossiers_sorted_ids
@@ -158,31 +158,32 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def filtered_ids(dossiers, statut)
-    filters.fetch(statut)
-      .group_by { |filter| filter.values_at(TABLE, COLUMN) }
-      .map do |(table, column), filters|
-      values = filters.pluck('value')
-      value_column = filters.pluck('value_column').compact.first || :value
-      dossier_column = procedure.find_column(h_id: { procedure_id: procedure.id, column_id: "#{table}/#{column}" }) # hack to find json path columns
-      if dossier_column.is_a?(Columns::JSONPathColumn)
-        dossier_column.filtered_ids(dossiers, values)
+    filters_for(statut)
+      .group_by { |filter| filter.column.then { [_1.table, _1.column] } }
+      .map do |(table, column), filters_for_column|
+      values = filters_for_column.map(&:filter)
+      filtered_column = filters_for_column.first.column
+      value_column = filtered_column.value_column
+
+      if filtered_column.is_a?(Columns::JSONPathColumn)
+        filtered_column.filtered_ids(dossiers, values)
       else
         case table
         when 'self'
-          if dossier_column.type == :date
+          if filtered_column.type == :date
             dates = values
               .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 
             dossiers.filter_by_datetimes(column, dates)
-          elsif dossier_column.column == "state" && values.include?("pending_correction")
+          elsif filtered_column.column == "state" && values.include?("pending_correction")
             dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
-          elsif dossier_column.column == "state" && values.include?("en_construction")
+          elsif filtered_column.column == "state" && values.include?("en_construction")
             dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
           else
             dossiers.where("dossiers.#{column} IN (?)", values)
           end
         when TYPE_DE_CHAMP
-          if dossier_column.type == :enum
+          if filtered_column.type == :enum
             dossiers.with_type_de_champ(column)
               .filter_enum(:champs, value_column, values)
           else
