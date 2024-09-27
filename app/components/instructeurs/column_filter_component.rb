@@ -30,7 +30,7 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
     {
       selected_key: column.present? ? column.id : '',
       items: filterable_columns_options,
-      name: :column,
+      name: "#{prefix}[id]",
       id: 'search-filter',
       'aria-describedby': 'instructeur-filter-combo-label',
       form: 'filter-component',
@@ -41,6 +41,17 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
   def filterable_columns_options
     @procedure.columns.filter(&:filterable).map { [_1.label, _1.id] }
   end
+
+  def current_filter_tags
+    @procedure_presentation.filters_for(@statut).flat_map do
+      [
+        hidden_field_tag("#{prefix}[id]", _1.column.id, id: nil),
+        hidden_field_tag("#{prefix}[filter]", _1.filter, id: nil)
+      ]
+    end.reduce(&:concat)
+  end
+
+  def prefix = "#{procedure_presentation.filters_name_for(@statut)}[]"
 
   private
 

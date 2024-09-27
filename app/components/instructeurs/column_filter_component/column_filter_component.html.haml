@@ -1,4 +1,6 @@
 = form_tag add_filter_instructeur_procedure_path(procedure), method: :post, class: 'dropdown-form large', id: 'filter-component', data: { turbo: true, controller: 'autosubmit' } do
+  = current_filter_tags
+
   .fr-select-group
     = label_tag :column,  t('.column'), class: 'fr-label fr-m-0', id: 'instructeur-filter-combo-label', for: 'search-filter'
     %react-fragment
@@ -8,9 +10,9 @@
 
   = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
   - if column_type == :enum
-    = select_tag :value, options_for_select(options_for_select_of_column), id: 'value', name: 'value', class: 'fr-select', data: { no_autosubmit: true }
+    = select_tag :filter, options_for_select(options_for_select_of_column), id: 'value', name: "#{prefix}[filter]", class: 'fr-select', data: { no_autosubmit: true }
   - else
-    %input#value.fr-input{ type: column_type, name: :value, maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH, disabled: column.nil? ? true : false, data: { no_autosubmit: true } }
+    %input#value.fr-input{ type: column_type, name: "#{prefix}[filter]", maxlength: ProcedurePresentation::FILTERS_VALUE_MAX_LENGTH, disabled: column.nil? ? true : false, data: { no_autosubmit: true } }
 
   = hidden_field_tag :statut, statut
   = submit_tag t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'
