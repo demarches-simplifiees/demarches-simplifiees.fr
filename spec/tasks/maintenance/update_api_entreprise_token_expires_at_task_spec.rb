@@ -2,6 +2,19 @@
 
 module Maintenance
   RSpec.describe UpdateAPIEntrepriseTokenExpiresAtTask do
+    describe '#collection' do
+      subject(:collection) { described_class.collection }
+
+      let!(:procedures_with_token) { create_list(:procedure, 3, api_entreprise_token: JWT.encode({}, nil, 'none')) }
+      let!(:procedure_without_token) { create(:procedure, api_entreprise_token: nil) }
+
+      it 'returns procedures with api_entreprise_token present' do
+        expect(collection).to match_array(procedures_with_token)
+
+        expect(collection).not_to include(procedure_without_token)
+      end
+    end
+
     describe "#process" do
       subject(:process) { described_class.process(procedure) }
 
