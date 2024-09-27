@@ -47,8 +47,6 @@ class Procedure::ErrorsSummary < ApplicationComponent
     when :initiated_mail, :received_mail, :closed_mail, :refused_mail, :without_continuation_mail, :re_instructed_mail
       klass = "Mails::#{error.attribute.to_s.classify}".constantize
       edit_admin_procedure_mail_template_path(@procedure, klass.const_get(:SLUG))
-    when :api_entreprise_token
-      jeton_admin_procedure_path(@procedure)
     end
   end
 

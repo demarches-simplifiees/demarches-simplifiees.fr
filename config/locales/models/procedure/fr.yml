@@ -7,6 +7,7 @@ fr:
     attributes:
       procedure:
         hints:
+          api_entreprise_token: 'Exemple : eyJhbGciOiJIUzI1NiJ9.eyJ1...'
           description: Décrivez en quelques lignes le contexte, la finalité, etc.
           description_target_audience: Décrivez en quelques lignes les destinataires finaux de la démarche, les conditions d’éligibilité s’il y en a, les pré-requis, etc.
           description_pj: Décrivez la liste des pièces jointes à fournir s’il y en a

@@ -7,6 +7,7 @@ en:
     attributes:
       procedure:
         hints:
+          api_entreprise_token: 'For example: eyJhbGciOiJIUzI1NiJ9.eyJ1...'
           description: Describe in a few lines the context, the aim etc.
           description_target_audience: Describe in a few lines the final recipients of the process, the eligibility criteria if there are any, the prerequisites, etc.
           description_pj: Describe the required attachments list if there is any

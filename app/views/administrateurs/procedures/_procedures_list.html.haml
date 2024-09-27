@@ -61,7 +61,7 @@
 
         - elsif procedure.publiee?
           - if procedure.api_entreprise_token_expired_or_expires_soon?
-            %span.fr-badge.fr-badge--sm.fr-badge--warning
+            %span.fr-badge.fr-badge--sm.fr-badge--error
               = t('to_modify', scope: [:layouts, :breadcrumb])
           %span.fr-badge.fr-badge--sm.fr-badge--success
             = t('published', scope: [:layouts, :breadcrumb])
