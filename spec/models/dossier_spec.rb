@@ -304,22 +304,12 @@ describe Dossier, type: :model do
 
     subject { dossier }
 
-    describe '#create' do
-      let(:procedure) { create(:procedure, :with_type_de_champ, :with_type_de_champ_private) }
-      let(:dossier) { create(:dossier, procedure: procedure, user: user) }
-
-      it 'builds public and private champs' do
-        expect(dossier.champs_public.count).to eq(1)
-        expect(dossier.champs_private.count).to eq(1)
-      end
-    end
-
-    describe '#build_default_individual' do
+    describe '#build_default_values' do
       let(:dossier) { build(:dossier, procedure: procedure, user: user) }
 
       subject do
         dossier.individual = nil
-        dossier.build_default_individual
+        dossier.build_default_values
       end
 
       context 'when the dossier belongs to a procedure for individuals' do
@@ -867,7 +857,7 @@ describe Dossier, type: :model do
     it { is_expected.not_to eq(modif_date) }
 
     context 'when a champ is modified' do
-      before { dossier.champs_public.first.update_attribute('value', 'yop') }
+      before { dossier.project_champs_public.first.update_attribute('value', 'yop') }
 
       it { is_expected.to eq(modif_date) }
     end
@@ -1709,14 +1699,14 @@ describe Dossier, type: :model do
       let(:expression_reguliere_error_message) { "Le champ doit être composé de lettres majuscules" }
 
       before do
-        champ = dossier.champs_public.first
+        champ = dossier.project_champs_public.first
         champ.value = expression_reguliere_exemple_text
         dossier.save(context: :champs_public_value)
       end
 
       it 'should have errors' do
         expect(dossier.errors).not_to be_empty
-        expect(dossier.errors.full_messages.join(',')).to include(dossier.champs_public.first.expression_reguliere_error_message)
+        expect(dossier.errors.full_messages.join(',')).to include(dossier.project_champs_public.first.expression_reguliere_error_message)
       end
     end
 
@@ -1726,7 +1716,7 @@ describe Dossier, type: :model do
       let(:expression_reguliere_error_message) { "Le champ doit être composé de lettres majuscules" }
 
       before do
-        champ = dossier.champs_public.first
+        champ = dossier.project_champs_public.first
         champ.value = expression_reguliere_exemple_text
         dossier.save
       end
@@ -2026,8 +2016,8 @@ describe Dossier, type: :model do
       let(:explication_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:explication) } }
       let(:commune_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:communes) } }
       let(:repetition_type_de_champ) { procedure.active_revision.types_de_champ_public.find { |type_de_champ| type_de_champ.type_champ == TypeDeChamp.type_champs.fetch(:repetition) } }
-      let(:repetition_champ) { dossier.champs_public.find(&:repetition?) }
-      let(:repetition_second_revision_champ) { dossier_second_revision.champs_public.find(&:repetition?) }
+      let(:repetition_champ) { dossier.project_champs_public.find(&:repetition?) }
+      let(:repetition_second_revision_champ) { dossier_second_revision.project_champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
       let(:dossier_champs_for_export) { dossier.champs_for_export(procedure.types_de_champ_for_procedure_export) }
@@ -2087,14 +2077,14 @@ describe Dossier, type: :model do
       let(:dossier) { create(:dossier, procedure:) }
       let(:yes_no_tdc) { procedure.active_revision.types_de_champ_public.first }
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
-      let(:tdcs) { dossier.champs_public.map(&:type_de_champ) }
+      let(:tdcs) { dossier.project_champs_public.map(&:type_de_champ) }
 
       subject { dossier.champs_for_export(tdcs) }
 
       before do
         text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))
 
-        yes_no, text = dossier.champs_public
+        yes_no, text = dossier.project_champs_public
         yes_no.update(value: yes_no_value)
         text.update(value: 'text')
       end
@@ -2113,7 +2103,7 @@ describe Dossier, type: :model do
 
       context 'with another revision' do
         let(:tdc_from_another_revision) { create(:type_de_champ_communes, libelle: 'commune', condition: ds_eq(constant(true), constant(true))) }
-        let(:tdcs) { dossier.champs_public.map(&:type_de_champ) << tdc_from_another_revision }
+        let(:tdcs) { dossier.project_champs_public.map(&:type_de_champ) << tdc_from_another_revision }
         let(:yes_no_value) { 'true' }
 
         let(:expected) do

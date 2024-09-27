@@ -21,12 +21,12 @@ describe 'shared/dossiers/champs', type: :view do
 
   context "there are some champs" do
     let(:types_de_champ_public) { [{ type: :checkbox }, { type: :header_section }, { type: :explication }, { type: :dossier_link }, { type: :textarea }, { type: :rna }] }
-    let(:champ1) { dossier.champs[0] }
-    let(:champ2) { dossier.champs[1] }
-    let(:champ3) { dossier.champs[2] }
-    let(:champ4) { dossier.champs[3] }
-    let(:champ5) { dossier.champs[4] }
-    let(:champ6) { dossier.champs[5] }
+    let(:champ1) { dossier.project_champs_public[0] }
+    let(:champ2) { dossier.project_champs_public[1] }
+    let(:champ3) { dossier.project_champs_public[2] }
+    let(:champ4) { dossier.project_champs_public[3] }
+    let(:champ5) { dossier.project_champs_public[4] }
+    let(:champ6) { dossier.project_champs_public[5] }
 
     before do
       champ1.update(value: 'true')
@@ -57,8 +57,8 @@ describe 'shared/dossiers/champs', type: :view do
 
   context "with auto-link" do
     let(:types_de_champ_public) { [{ type: :text }, { type: :textarea }] }
-    let(:champ1) { dossier.champs[0] }
-    let(:champ2) { dossier.champs[1] }
+    let(:champ1) { dossier.project_champs_public.first }
+    let(:champ2) { dossier.project_champs_public.second }
 
     before do
       champ1.update(value: 'https://github.com/tchak')
@@ -118,8 +118,8 @@ describe 'shared/dossiers/champs', type: :view do
 
   context "with seen_at" do
     let(:types_de_champ_public) { [{ type: :checkbox }] }
-    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, depose_at: 1.day.ago) }
-    let(:champ1) { dossier.champs[0] }
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, depose_at: 1.day.ago.change(usec: 0)) }
+    let(:champ1) { dossier.champs.first }
 
     context "with a demande_seen_at after champ updated_at" do
       let(:demande_seen_at) { champ1.updated_at + 1.hour }
@@ -127,21 +127,20 @@ describe 'shared/dossiers/champs', type: :view do
       it { is_expected.not_to have_css(".fr-badge--new") }
     end
 
-    context "with champ updated_at at depose_at" do
-      let(:champ1) { dossier.champs[0] }
-      let(:demande_seen_at) { champ1.updated_at - 1.hour }
-
-      before do
-        champ1.update(value: 'false', updated_at: dossier.depose_at)
-      end
-
-      it { is_expected.not_to have_css(".fr-badge--new") }
-    end
-
-    context "with a demande_seen_at after champ updated_at" do
+    context "with a demande_seen_at before champ updated_at" do
       let(:demande_seen_at) { champ1.updated_at - 1.hour }
 
       it { is_expected.to have_css(".fr-badge--new") }
+    end
+
+    context "with champ updated_at at depose_at" do
+      let(:demande_seen_at) { champ1.updated_at - 1.hour }
+
+      before do
+        champ1.update_columns(value: 'false', updated_at: dossier.depose_at)
+      end
+
+      it { is_expected.not_to have_css(".fr-badge--new") }
     end
   end
 end

@@ -282,7 +282,7 @@ describe 'fetch API Particulier Data', js: true do
         fill_in 'Le code postal', with: 'wrong_code'
 
         dossier = Dossier.last
-        cnaf_champ = dossier.champs_public.find(&:cnaf?)
+        cnaf_champ = dossier.project_champs_public.find(&:cnaf?)
 
         wait_until { cnaf_champ.reload.code_postal == 'wrong_code' }
 
@@ -342,7 +342,7 @@ describe 'fetch API Particulier Data', js: true do
         fill_in "Identifiant", with: 'wrong code'
 
         dossier = Dossier.last
-        pole_emploi_champ = dossier.champs_public.find(&:pole_emploi?)
+        pole_emploi_champ = dossier.project_champs_public.find(&:pole_emploi?)
 
         wait_until { pole_emploi_champ.reload.identifiant == 'wrong code' }
 
@@ -418,7 +418,7 @@ describe 'fetch API Particulier Data', js: true do
         fill_in "INE", with: 'wrong code'
 
         dossier = Dossier.last
-        mesri_champ = dossier.champs_public.find(&:mesri?)
+        mesri_champ = dossier.project_champs_public.find(&:mesri?)
 
         wait_until { mesri_champ.reload.ine == 'wrong code' }
         clear_enqueued_jobs
@@ -485,7 +485,7 @@ describe 'fetch API Particulier Data', js: true do
         fill_in "La référence d’avis d’imposition", with: 'wrong_code'
 
         dossier = Dossier.last
-        dgfip_champ = dossier.champs_public.find(&:dgfip?)
+        dgfip_champ = dossier.project_champs_public.find(&:dgfip?)
 
         wait_until { dgfip_champ.reload.reference_avis == 'wrong_code' }
 

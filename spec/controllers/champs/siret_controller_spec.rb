@@ -6,7 +6,7 @@ describe Champs::SiretController, type: :controller do
 
   describe '#show' do
     let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-    let(:champ) { dossier.champs_public.first }
+    let(:champ) { dossier.project_champs_public.first }
 
     let(:champs_public_attributes) do
       champ_attributes = {}

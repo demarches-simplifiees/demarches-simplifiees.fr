@@ -293,19 +293,19 @@ describe DossierRebaseConcern do
     let(:datetime_type_de_champ) { types_de_champ.find { _1.stable_id == 103 } }
     let(:yes_no_type_de_champ) { types_de_champ.find { _1.stable_id == 104 } }
 
-    let(:text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
-    let(:repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
-    let(:datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
+    let(:text_champ) { dossier.project_champs_public.find { _1.stable_id == 1 } }
+    let(:repetition_champ) { dossier.project_champs_public.find { _1.stable_id == 101 } }
+    let(:datetime_champ) { dossier.project_champs_public.find { _1.stable_id == 103 } }
 
-    let(:rebased_text_champ) { dossier.champs_public.find { _1.stable_id == 1 } }
-    let(:rebased_repetition_champ) { dossier.champs_public.find { _1.stable_id == 101 } }
-    let(:rebased_datetime_champ) { dossier.champs_public.find { _1.stable_id == 103 } }
-    let(:rebased_number_champ) { dossier.champs_public.find { _1.stable_id == 105 } }
+    let(:rebased_text_champ) { dossier.project_champs_public.find { _1.stable_id == 1 } }
+    let(:rebased_repetition_champ) { dossier.project_champs_public.find { _1.stable_id == 101 } }
+    let(:rebased_datetime_champ) { dossier.project_champs_public.find { _1.stable_id == 103 } }
+    let(:rebased_number_champ) { dossier.project_champs_public.find { _1.stable_id == 105 } }
 
-    let(:rebased_new_repetition_champ) { dossier.champs_public.find { _1.libelle == "une autre repetition" } }
+    let(:rebased_new_repetition_champ) { dossier.project_champs_public.find { _1.libelle == "une autre repetition" } }
 
     let(:private_text_type_de_champ) { types_de_champ.find { _1.stable_id == 11 } }
-    let(:rebased_private_text_champ) { dossier.champs_private.find { _1.stable_id == 11 } }
+    let(:rebased_private_text_champ) { dossier.project_champs_private.find { _1.stable_id == 11 } }
 
     context "when revision is published" do
       before do
@@ -345,16 +345,17 @@ describe DossierRebaseConcern do
 
         datetime_champ.update(value: Time.zone.now.to_s)
         text_champ.update(value: 'bonjour')
+        text_champ.type_de_champ
         # Add two rows then remove previous to last row in order to create a "hole" in the sequence
         repetition_champ.add_row(updated_by: 'test')
         repetition_champ.add_row(updated_by: 'test')
-        repetition_champ.champs.where(row_id: repetition_champ.rows[-2].first.row_id).destroy_all
-        repetition_champ.reload
+        repetition_champ.champs.where(row_id: repetition_champ.row_ids[-2]).destroy_all
+        dossier.reload
       end
 
       it "updates the brouillon champs with the latest revision changes" do
         expect(dossier.revision).to eq(procedure.published_revision)
-        expect(dossier.champs_public.size).to eq(5)
+        expect(dossier.project_champs_public.size).to eq(5)
         expect(dossier.champs.count(&:public?)).to eq(7)
         expect(repetition_champ.rows.size).to eq(2)
         expect(repetition_champ.rows[0].size).to eq(1)
@@ -367,7 +368,7 @@ describe DossierRebaseConcern do
 
         expect(procedure.revisions.size).to eq(3)
         expect(dossier.revision).to eq(procedure.published_revision)
-        expect(dossier.champs_public.size).to eq(7)
+        expect(dossier.project_champs_public.size).to eq(7)
         expect(dossier.champs.count(&:public?)).to eq(13)
         expect(rebased_text_champ.value).to eq(text_champ.value)
         expect(rebased_text_champ.type_de_champ).not_to eq(text_champ.type_de_champ)
@@ -404,7 +405,7 @@ describe DossierRebaseConcern do
         let(:dossier) { create(:dossier, :en_construction, procedure:) }
 
         it 'is noop' do
-          expect { subject }.not_to change { dossier.reload.champs_public[0].rebased_at }
+          expect { subject }.not_to change { dossier.reload.project_champs_public[0].rebased_at }
           expect { subject }.not_to change { dossier.updated_at }
         end
       end
@@ -430,38 +431,38 @@ describe DossierRebaseConcern do
 
       context 'when a dropdown option is added' do
         before do
-          dossier.champs_public.first.update(value: 'v1')
+          dossier.project_champs_public.first.update(value: 'v1')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["option", "updated", "v1"])
         end
 
-        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.value } }
       end
 
       context 'when a dropdown option is removed' do
         before do
-          dossier.champs_public.first.update(value: 'v1')
+          dossier.project_champs_public.first.update(value: 'v1')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["option", "updated"])
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.value }.from('v1').to(nil) }
+        it { expect { subject }.to change { dossier.project_champs_public.first.value }.from('v1').to(nil) }
       end
 
       context 'when a dropdown unused option is removed' do
         before do
-          dossier.champs_public.first.update(value: 'v1')
+          dossier.project_champs_public.first.update(value: 'v1')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["v1", "updated"])
         end
 
-        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.value } }
       end
     end
 
@@ -476,38 +477,38 @@ describe DossierRebaseConcern do
 
       context 'when a dropdown option is added' do
         before do
-          dossier.champs_public.first.update(value: '["v1"]')
+          dossier.project_champs_public.first.update(value: '["v1"]')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["option", "updated", "v1"])
         end
 
-        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.value } }
       end
 
       context 'when a dropdown option is removed' do
         before do
-          dossier.champs_public.first.update(value: '["v1", "option"]')
+          dossier.project_champs_public.first.update(value: '["v1", "option"]')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["option", "updated"])
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1","option"]').to('["option"]') }
+        it { expect { subject }.to change { dossier.project_champs_public.first.value }.from('["v1","option"]').to('["option"]') }
       end
 
       context 'when a dropdown unused option is removed' do
         before do
-          dossier.champs_public.first.update(value: '["v1"]')
+          dossier.project_champs_public.first.update(value: '["v1"]')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["v1", "updated"])
         end
 
-        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.value } }
       end
     end
 
@@ -522,38 +523,38 @@ describe DossierRebaseConcern do
 
       context 'when a dropdown option is added' do
         before do
-          dossier.champs_public.first.update(value: '["v1",""]')
+          dossier.project_champs_public.first.update(value: '["v1",""]')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["--titre1--", "option", "v1", "updated", "--titre2--", "option2", "v2"])
         end
 
-        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.value } }
       end
 
       context 'when a dropdown option is removed' do
         before do
-          dossier.champs_public.first.update(value: '["v1","option2"]')
+          dossier.project_champs_public.first.update(value: '["v1","option2"]')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["--titre1--", "option", "updated", "--titre2--", "option2", "v2"])
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1","option2"]').to(nil) }
+        it { expect { subject }.to change { dossier.project_champs_public.first.value }.from('["v1","option2"]').to(nil) }
       end
 
       context 'when a dropdown unused option is removed' do
         before do
-          dossier.champs_public.first.update(value: '["v1",""]')
+          dossier.project_champs_public.first.update(value: '["v1",""]')
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(drop_down_options: ["--titre1--", "v1", "updated", "--titre2--", "option2", "v2"])
         end
 
-        it { expect { subject }.not_to change { dossier.champs_public.first.value } }
+        it { expect { subject }.not_to change { dossier.project_champs_public.first.value } }
       end
     end
 
@@ -568,14 +569,14 @@ describe DossierRebaseConcern do
 
       context 'and the cadastre are removed' do
         before do
-          dossier.champs_public.first.update(value: 'v1', geo_areas: [build(:geo_area, :cadastre)])
+          dossier.project_champs_public.first.update(value: 'v1', geo_areas: [build(:geo_area, :cadastre)])
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
           tdc_to_update.update(cadastres: false)
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.cadastres.count }.from(1).to(0) }
+        it { expect { subject }.to change { dossier.project_champs_public.first.cadastres.count }.from(1).to(0) }
       end
     end
 
@@ -626,7 +627,7 @@ describe DossierRebaseConcern do
       end
 
       context 'when the first tdc type is updated' do
-        def first_champ = dossier.champs_public.first
+        def first_champ = dossier.project_champs_public.first
 
         before do
           first_champ.update(value: 'v1', external_id: '123', geo_areas: [build(:geo_area)])
@@ -727,7 +728,7 @@ describe DossierRebaseConcern do
           parent.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.champs_public.first.champs.count }.from(2).to(0) }
+        it { expect { subject }.to change { dossier.project_champs_public.first.champs.count }.from(2).to(0) }
         it { expect { subject }.to change { Champ.count }.from(3).to(1) }
       end
     end

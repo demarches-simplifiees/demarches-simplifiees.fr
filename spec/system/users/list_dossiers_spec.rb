@@ -306,7 +306,7 @@ describe 'user access to the list of their dossiers', js: true do
 
     context "when user search for something inside the dossier" do
       before do
-        page.find_by_id('q').set(dossier_en_construction.champs_public.first.value)
+        page.find_by_id('q').set(dossier_en_construction.project_champs_public.first.value)
       end
 
       context 'when it matches multiple dossiers' do
@@ -336,7 +336,7 @@ describe 'user access to the list of their dossiers', js: true do
           click_on 'Afficher'
           expect(page).not_to have_link(String(dossier_en_construction.id))
           expect(page).not_to have_link(String(dossier_with_champs.id))
-          expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.champs_public.first.value} » et pour la procédure « #{dossier_brouillon.procedure.libelle} » ")
+          expect(page).to have_content("Résultat de la recherche pour « #{dossier_en_construction.project_champs_public.first.value} » et pour la procédure « #{dossier_brouillon.procedure.libelle} » ")
           expect(page).to have_text("Aucun dossier")
         end
       end

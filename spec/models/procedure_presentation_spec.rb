@@ -146,8 +146,8 @@ describe ProcedurePresentation do
         let(:tartine_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          beurre_dossier.champs_public.first.update(value: 'beurre')
-          tartine_dossier.champs_public.first.update(value: 'tartine')
+          beurre_dossier.project_champs_public.first.update(value: 'beurre')
+          tartine_dossier.project_champs_public.first.update(value: 'tartine')
         end
 
         context 'asc' do
@@ -176,8 +176,8 @@ describe ProcedurePresentation do
           nothing_dossier
           procedure.draft_revision.add_type_de_champ(tdc)
           procedure.publish_revision!
-          beurre_dossier.champs_public.last.update(value: 'beurre')
-          tartine_dossier.champs_public.last.update(value: 'tartine')
+          beurre_dossier.project_champs_public.last.update(value: 'beurre')
+          tartine_dossier.project_champs_public.last.update(value: 'tartine')
         end
 
         context 'asc' do
@@ -201,8 +201,8 @@ describe ProcedurePresentation do
         let(:vin_dossier) { create(:dossier, procedure: procedure) }
 
         before do
-          biere_dossier.champs_private.first.update(value: 'biere')
-          vin_dossier.champs_private.first.update(value: 'vin')
+          biere_dossier.project_champs_private.first.update(value: 'biere')
+          vin_dossier.project_champs_private.first.update(value: 'vin')
         end
 
         context 'asc' do
@@ -231,8 +231,8 @@ describe ProcedurePresentation do
           nothing_dossier
           procedure.draft_revision.add_type_de_champ(tdc)
           procedure.publish_revision!
-          biere_dossier.champs_private.last.update(value: 'biere')
-          vin_dossier.champs_private.last.update(value: 'vin')
+          biere_dossier.project_champs_private.last.update(value: 'biere')
+          vin_dossier.project_champs_private.last.update(value: 'vin')
         end
 
         context 'asc' do
@@ -592,8 +592,8 @@ describe ProcedurePresentation do
         let(:value_column_searched) { ['postal_code'] }
 
         before do
-          kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "postal_code" => value })
-          create(:dossier, procedure: procedure).champs_public.find_by(stable_id: 1).update(value_json: { "postal_code" => "unknown" })
+          kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => value })
+          create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => "unknown" })
         end
         it { is_expected.to contain_exactly(kept_dossier.id) }
         it 'describes column' do
@@ -607,8 +607,8 @@ describe ProcedurePresentation do
         let(:value_column_searched) { ['departement_code'] }
 
         before do
-          kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "departement_code" => value })
-          create(:dossier, procedure: procedure).champs_public.find_by(stable_id: 1).update(value_json: { "departement_code" => "unknown" })
+          kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => value })
+          create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => "unknown" })
         end
         it { is_expected.to contain_exactly(kept_dossier.id) }
         it 'describes column' do
@@ -622,8 +622,8 @@ describe ProcedurePresentation do
         let(:value_column_searched) { ['region_name'] }
 
         before do
-          kept_dossier.champs_public.find_by(stable_id: 1).update(value_json: { "region_name" => value })
-          create(:dossier, procedure: procedure).champs_public.find_by(stable_id: 1).update(value_json: { "region_name" => "unknown" })
+          kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "region_name" => value })
+          create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "region_name" => "unknown" })
         end
         it { is_expected.to contain_exactly(kept_dossier.id) }
         it 'describes column' do

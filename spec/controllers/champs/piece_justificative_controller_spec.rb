@@ -4,7 +4,7 @@ describe Champs::PieceJustificativeController, type: :controller do
   let(:user) { create(:user) }
   let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }]) }
   let(:dossier) { create(:dossier, user: user, procedure: procedure) }
-  let(:champ) { dossier.champs_public.first }
+  let(:champ) { dossier.project_champs_public.first }
 
   describe '#update' do
     render_views

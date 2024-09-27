@@ -978,11 +978,11 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:another_instructeur) { create(:instructeur) }
     let(:now) { Time.zone.parse('01/01/2100') }
 
-    let(:champ_multiple_drop_down_list) { dossier.champs_private.first }
-    let(:champ_linked_drop_down_list) { dossier.champs_private.second }
-    let(:champ_datetime) { dossier.champs_private.third }
-    let(:champ_repetition) { dossier.champs_private.fourth }
-    let(:champ_drop_down_list) { dossier.champs_private.fifth }
+    let(:champ_multiple_drop_down_list) { dossier.project_champs_private.first }
+    let(:champ_linked_drop_down_list) { dossier.project_champs_private.second }
+    let(:champ_datetime) { dossier.project_champs_private.third }
+    let(:champ_repetition) { dossier.project_champs_private.fourth }
+    let(:champ_drop_down_list) { dossier.project_champs_private.fifth }
 
     context 'when no invalid champs_public' do
       context "with new values for champs_private" do
@@ -1106,7 +1106,7 @@ describe Instructeurs::DossiersController, type: :controller do
         ]
       end
 
-      let(:champ_decimal_number) { dossier.champs_public.first }
+      let(:champ_decimal_number) { dossier.project_champs_public.first }
 
       let(:params) do
         {

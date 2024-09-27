@@ -155,7 +155,7 @@ describe ProcedureExportService do
         let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
         let!(:dossier_2) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
         before do
-          dossier_2.champs_public
+          dossier_2.project_champs_public
             .find { _1.is_a? Champs::PieceJustificativeChamp }
             .piece_justificative_file
             .attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
@@ -351,7 +351,7 @@ describe ProcedureExportService do
           create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure)
         ]
       end
-      let(:champ_repetition) { dossiers.first.champs_public.find { |champ| champ.type_champ == 'repetition' } }
+      let(:champ_repetition) { dossiers.first.project_champs_public.find { |champ| champ.type_champ == 'repetition' } }
 
       it 'should have sheets' do
         expect(subject.sheets.map(&:name)).to eq(['Dossiers', 'Etablissements', 'Avis', champ_repetition.type_de_champ.libelle_for_export])
@@ -416,7 +416,7 @@ describe ProcedureExportService do
 
       context 'with empty repetition' do
         before do
-          dossiers.flat_map { |dossier| dossier.champs_public.filter(&:repetition?) }.each do |champ|
+          dossiers.flat_map { |dossier| dossier.project_champs_public.filter(&:repetition?) }.each do |champ|
             Champ.where(row_id: champ.row_ids).destroy_all
           end
         end
@@ -520,7 +520,7 @@ describe ProcedureExportService do
     end
 
     let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-    let(:champ_carte) { dossier.champs_public.find(&:carte?) }
+    let(:champ_carte) { dossier.project_champs_public.find(&:carte?) }
     let(:properties) { subject['features'].first['properties'] }
 
     before do
