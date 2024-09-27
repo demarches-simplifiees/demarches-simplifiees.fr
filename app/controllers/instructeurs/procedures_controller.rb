@@ -147,8 +147,10 @@ module Instructeurs
     end
 
     def add_filter
-      if !procedure_presentation.add_filter(statut, params[:column], params[:value])
-        flash.alert = procedure_presentation.errors.full_messages
+      if !procedure_presentation.update(filter_params)
+        # complicated way to display inner error messages
+        flash.alert = procedure_presentation.errors
+          .flat_map { _1.detail[:value].errors.full_messages }
       end
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
@@ -158,7 +160,10 @@ module Instructeurs
       @statut = statut
       @procedure = procedure
       @procedure_presentation = procedure_presentation
-      @column = procedure.find_column(h_id: JSON.parse(params[:column], symbolize_names: true))
+      current_filter = procedure_presentation.filters_name_for(@statut)
+      # According to the html, the selected column is the last one
+      h_id = JSON.parse(params[current_filter].last[:id], symbolize_names: true)
+      @column = procedure.find_column(h_id:)
     end
 
     def remove_filter
@@ -414,6 +419,12 @@ module Instructeurs
 
     def sorted_column_params
       params.permit(sorted_column: [:order, :id])
+    end
+
+    def filter_params
+      keys = [:tous_filters, :a_suivre_filters, :suivis_filters, :traites_filters, :expirant_filters, :archives_filters, :supprimes_filters]
+      h = keys.index_with { [:id, :filter] }
+      params.permit(h)
     end
   end
 end
