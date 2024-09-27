@@ -18,10 +18,6 @@ module APIEntrepriseTokenConcern
       self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
     end
 
-    def api_entreprise_token_expired?
-      APIEntrepriseToken.new(api_entreprise_token).expired?
-    end
-
     def api_entreprise_token_expired_or_expires_soon?
       api_entreprise_token_expires_at && api_entreprise_token_expires_at <= SOON_TO_EXPIRE_DELAY.from_now
     end
