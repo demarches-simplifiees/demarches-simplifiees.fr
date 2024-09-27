@@ -52,8 +52,8 @@ describe PiecesJustificativesService do
     end
 
     context 'with a repetition' do
-      let(:first_champ) { repetition(dossier).champs.first }
-      let(:second_champ) { repetition(dossier).champs.second }
+      let(:first_champ) { repetition(dossier).rows.first.first }
+      let(:second_champ) { repetition(dossier).rows.second.first }
 
       before do
         repetition(dossier).add_row(updated_by: 'test')
@@ -65,8 +65,8 @@ describe PiecesJustificativesService do
       end
 
       it do
-        first_child_attachments = attachments(repetition(dossier).champs.first)
-        second_child_attachments = attachments(repetition(dossier).champs.second)
+        first_child_attachments = attachments(repetition(dossier).rows.first.first)
+        second_child_attachments = attachments(repetition(dossier).rows.second.first)
 
         expect(export_template).to receive(:attachment_path)
           .with(dossier, first_child_attachments.first, index: 0, row_index: 0, champ: first_champ)
