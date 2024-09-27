@@ -94,7 +94,9 @@ RSpec.describe Export, type: :model do
     let(:instructeur) { create(:instructeur) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [instructeur]) }
     let!(:pp) { gi_1.instructeurs.first.procedure_presentation_and_errors_for_procedure_id(procedure.id).first }
-    before { pp.add_filter('tous', procedure.find_column(label: 'Créé le').id, '10/12/2021') }
+    let(:created_at_column) { FilteredColumn.new(column: procedure.find_column(label: 'Créé le'), filter: '10/12/2021') }
+
+    before { pp.update(tous_filters: [created_at_column]) }
 
     context 'with procedure_presentation having different filters' do
       it 'works once' do
@@ -105,7 +107,10 @@ RSpec.describe Export, type: :model do
       it 'works once, changes procedure_presentation, recreate a new' do
         expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
-        pp.add_filter('tous', procedure.find_column(label: 'Mis à jour le').id, '10/12/2021')
+
+        update_at_column = FilteredColumn.new(column: procedure.find_column(label: 'Mis à jour le'), filter: '10/12/2021')
+        pp.update(tous_filters: [created_at_column, update_at_column])
+
         expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end

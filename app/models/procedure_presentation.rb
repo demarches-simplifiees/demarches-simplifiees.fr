@@ -25,14 +25,14 @@ class ProcedurePresentation < ApplicationRecord
   attribute :sorted_column, :sorted_column
   def sorted_column = super || procedure.default_sorted_column # Dummy override to set default value
 
-  attribute :a_suivre_filters, :jsonb, array: true
-  attribute :suivis_filters, :jsonb, array: true
-  attribute :traites_filters, :jsonb, array: true
-  attribute :tous_filters, :jsonb, array: true
-  attribute :supprimes_filters, :jsonb, array: true
-  attribute :supprimes_recemment_filters, :jsonb, array: true
-  attribute :expirant_filters, :jsonb, array: true
-  attribute :archives_filters, :jsonb, array: true
+  attribute :a_suivre_filters, :filtered_column, array: true
+  attribute :suivis_filters, :filtered_column, array: true
+  attribute :traites_filters, :filtered_column, array: true
+  attribute :tous_filters, :filtered_column, array: true
+  attribute :supprimes_filters, :filtered_column, array: true
+  attribute :supprimes_recemment_filters, :filtered_column, array: true
+  attribute :expirant_filters, :filtered_column, array: true
+  attribute :archives_filters, :filtered_column, array: true
 
   def filters_for(statut)
     send(filters_name_for(statut))
