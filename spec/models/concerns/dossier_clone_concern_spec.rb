@@ -135,12 +135,13 @@ RSpec.describe DossierCloneConcern do
 
         context 'for Champs::Repetition with rows, original_champ.repetition and rows are duped' do
           let(:types_de_champ_public) { [{ type: :repetition, children: [{}, {}] }] }
-          let(:champ_repetition) { dossier.champs.first }
-          let(:cloned_champ_repetition) { new_dossier.champs.first }
+          let(:champ_repetition) { dossier.champs.find(&:repetition?) }
+          let(:cloned_champ_repetition) { new_dossier.champs.find(&:repetition?) }
 
           it do
-            expect(cloned_champ_repetition.champs.count).to eq(4)
-            expect(cloned_champ_repetition.champs.ids).not_to eq(champ_repetition.champs.ids)
+            expect(cloned_champ_repetition.rows.flatten.count).to eq(4)
+            expect(cloned_champ_repetition.rows.flatten.map(&:id)).not_to eq(champ_repetition.rows.flatten.map(&:id))
+            expect(cloned_champ_repetition.row_ids).to eq(champ_repetition.row_ids)
           end
         end
 
@@ -407,9 +408,7 @@ RSpec.describe DossierCloneConcern do
     end
 
     context 'with old revision having repetition' do
-      let(:added_champ) { nil }
       let(:removed_champ) { dossier.champs.find(&:repetition?) }
-      let(:updated_champ) { nil }
 
       before do
         dossier.champs.each do |champ|

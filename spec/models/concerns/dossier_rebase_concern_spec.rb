@@ -349,7 +349,7 @@ describe DossierRebaseConcern do
         # Add two rows then remove previous to last row in order to create a "hole" in the sequence
         repetition_champ.add_row(updated_by: 'test')
         repetition_champ.add_row(updated_by: 'test')
-        repetition_champ.champs.where(row_id: repetition_champ.row_ids[-2]).destroy_all
+        repetition_champ.dossier.champs.where(row_id: repetition_champ.row_ids[-2]).destroy_all
         dossier.reload
       end
 
@@ -728,7 +728,7 @@ describe DossierRebaseConcern do
           parent.update(type_champ: :integer_number)
         end
 
-        it { expect { subject }.to change { dossier.project_champs_public.first.champs.count }.from(2).to(0) }
+        it { expect { subject }.to change { dossier.champs.filter(&:child?).count }.from(2).to(0) }
         it { expect { subject }.to change { Champ.count }.from(3).to(1) }
       end
     end
