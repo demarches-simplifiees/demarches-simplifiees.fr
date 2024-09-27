@@ -224,7 +224,7 @@ describe "procedure filters" do
   end
 
   def remove_filter(filter_value)
-    click_link text: filter_value
+    click_button text: filter_value
   end
 
   def add_column(column_name)
