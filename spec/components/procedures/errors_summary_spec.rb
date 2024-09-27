@@ -87,8 +87,7 @@ describe Procedure::ErrorsSummary, type: :component do
     include Logic
 
     let(:validation_context) { :publication }
-    let(:expired_token) { JWT.encode({ exp: 2.days.ago.to_i }, nil, 'none') }
-    let(:procedure) { create(:procedure, attestation_template:, initiated_mail:, api_entreprise_token: expired_token) }
+    let(:procedure) { create(:procedure, attestation_template:, initiated_mail:) }
     let(:attestation_template) { build(:attestation_template) }
     let(:initiated_mail) { build(:initiated_mail) }
 
@@ -102,7 +101,6 @@ describe Procedure::ErrorsSummary, type: :component do
       expect(page).to have_selector("a", text: "Les règles d’inéligibilité")
       expect(page).to have_selector("a", text: "Le modèle d’attestation")
       expect(page).to have_selector("a", text: "L’email de notification de passage de dossier en instruction")
-      expect(page).to have_selector("a", text: "Jeton API Entreprise")
       expect(page).to have_text("n'est pas valide", count: 2)
     end
   end
