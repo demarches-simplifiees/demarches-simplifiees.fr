@@ -179,19 +179,14 @@ class ProcedureRevision < ApplicationRecord
     dossier
   end
 
-  def types_de_champ_for(scope: nil, root: false)
-    # We return an unordered collection
-    return types_de_champ if !root && scope.nil?
-    return types_de_champ.filter { scope == :public ? _1.public? : _1.private? } if !root
-
-    # We return an ordered collection
+  def types_de_champ_for(scope: nil)
     case scope
     when :public
-      types_de_champ_public
+      types_de_champ.filter(&:public?)
     when :private
-      types_de_champ_private
+      types_de_champ.filter(&:private?)
     else
-      types_de_champ_public + types_de_champ_private
+      types_de_champ
     end
   end
 

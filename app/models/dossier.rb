@@ -479,10 +479,10 @@ class Dossier < ApplicationRecord
       champs_private << champ
     end
     champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|
-      champ.add_row(revision)
+      champ.add_row(updated_by: nil)
     end
     champs_private.filter(&:repetition?).each do |champ|
-      champ.add_row(revision)
+      champ.add_row(updated_by: nil)
     end
   end
 
@@ -942,14 +942,21 @@ class Dossier < ApplicationRecord
   end
 
   def check_mandatory_and_visible_champs
-    champs_for_revision(scope: :public)
-      .filter { _1.child? ? _1.parent.visible? : true }
-      .filter(&:visible?)
-      .filter(&:mandatory_blank?)
-      .map do |champ|
-        champ.errors.add(:value, :missing)
+    project_champs_public.filter(&:visible?).each do |champ|
+      if champ.mandatory_blank?
+        error = champ.errors.add(:value, :missing)
+        errors.import(error)
       end
-      .each { errors.import(_1) }
+      if champ.repetition?
+        champ.rows.each do |champs|
+          champs.filter(&:visible?).filter(&:mandatory_blank?).each do |champ|
+            error = champ.errors.add(:value, :missing)
+            errors.import(error)
+          end
+        end
+      end
+    end
+    errors
   end
 
   def demander_un_avis!(avis)

@@ -17,7 +17,7 @@ describe 'Dossier::Recovery::LifeCycle' do
     let(:dossier) do
       d = create(:dossier, procedure:)
 
-      repetition(d).add_row(d.revision)
+      repetition(d).add_row(updated_by: 'test')
       pj_champ(d).piece_justificative_file.attach(some_file)
       carte(d).update(geo_areas: [geo_area])
       d.etablissement = create(:etablissement, :with_exercices)

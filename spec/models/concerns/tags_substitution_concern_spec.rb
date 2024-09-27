@@ -233,9 +233,8 @@ describe TagsSubstitutionConcern, type: :model do
       let(:dossier) { create(:dossier, procedure:) }
 
       before do
-        repetition = dossier.champs_public
-          .find { |champ| champ.libelle == 'Répétition' }
-        repetition.add_row(dossier.revision)
+        repetition = dossier.project_champs_public.find(&:repetition?)
+        repetition.add_row(updated_by: 'test')
         paul_champs, pierre_champs = repetition.rows
 
         paul_champs.first.update(value: 'Paul')

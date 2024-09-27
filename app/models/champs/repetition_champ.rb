@@ -1,35 +1,26 @@
 # frozen_string_literal: true
 
 class Champs::RepetitionChamp < Champ
-  accepts_nested_attributes_for :champs
+  delegate :libelle_for_export, to: :type_de_champ
 
   def rows
-    dossier
-      .champs_for_revision(scope: type_de_champ)
-      .group_by(&:row_id)
-      .sort
-      .map(&:second)
+    dossier.project_rows_for(type_de_champ)
   end
 
   def row_ids
-    rows.map { _1.first.row_id }
+    dossier.repetition_row_ids(type_de_champ)
   end
 
-  def add_row(revision)
-    added_champs = []
-    transaction do
-      row_id = ULID.generate
-      revision.children_of(type_de_champ).each do |type_de_champ|
-        added_champs << type_de_champ.build_champ(row_id:)
-      end
-      self.champs << added_champs
-    end
-    added_champs
+  def add_row(updated_by:)
+    # TODO: clean this up when parent_id is deprecated
+    row_id, added_champs = dossier.repetition_add_row(type_de_champ, updated_by:)
+    self.champs << added_champs
+    dossier.champs.reload if dossier.persisted?
+    row_id
   end
 
-  def remove_row(row_id)
-    dossier.champs.where(row_id:).destroy_all
-    dossier.champs.reload
+  def remove_row(row_id, updated_by:)
+    dossier.repetition_remove_row(type_de_champ, row_id, updated_by:)
   end
 
   def focusable_input_id

@@ -346,8 +346,8 @@ describe DossierRebaseConcern do
         datetime_champ.update(value: Time.zone.now.to_s)
         text_champ.update(value: 'bonjour')
         # Add two rows then remove previous to last row in order to create a "hole" in the sequence
-        repetition_champ.add_row(repetition_champ.dossier.revision)
-        repetition_champ.add_row(repetition_champ.dossier.revision)
+        repetition_champ.add_row(updated_by: 'test')
+        repetition_champ.add_row(updated_by: 'test')
         repetition_champ.champs.where(row_id: repetition_champ.rows[-2].first.row_id).destroy_all
         repetition_champ.reload
       end

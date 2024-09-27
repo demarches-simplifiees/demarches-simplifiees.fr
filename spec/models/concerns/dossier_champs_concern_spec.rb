@@ -104,6 +104,57 @@ RSpec.describe DossierChampsConcern do
     end
   end
 
+  describe '#project_champs_public' do
+    subject { dossier.project_champs_public }
+
+    it { expect(subject.size).to eq(4) }
+  end
+
+  describe '#project_champs_private' do
+    subject { dossier.project_champs_private }
+
+    it { expect(subject.size).to eq(1) }
+  end
+
+  describe '#repetition_row_ids' do
+    let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
+    subject { dossier.repetition_row_ids(type_de_champ_repetition) }
+
+    it { expect(subject.size).to eq(1) }
+  end
+
+  describe '#project_rows_for' do
+    let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
+    subject { dossier.project_rows_for(type_de_champ_repetition) }
+
+    it { expect(subject.size).to eq(1) }
+    it { expect(subject.first.size).to eq(1) }
+  end
+
+  describe '#repetition_add_row' do
+    let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
+    let(:row_ids) { dossier.repetition_row_ids(type_de_champ_repetition) }
+    subject do
+      # TODO: clean this up when parent_id is deprecated
+      row_id, added_champs = dossier.repetition_add_row(type_de_champ_repetition, updated_by: 'test')
+      dossier.champs << added_champs
+      row_id
+    end
+
+    it { expect { subject }.to change { dossier.repetition_row_ids(type_de_champ_repetition).size }.by(1) }
+    it { expect(subject).to be_in(row_ids) }
+  end
+
+  describe '#repetition_remove_row' do
+    let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
+    let(:row_id) { dossier.repetition_row_ids(type_de_champ_repetition).first }
+    let(:row_ids) { dossier.repetition_row_ids(type_de_champ_repetition) }
+    subject { dossier.repetition_remove_row(type_de_champ_repetition, row_id, updated_by: 'test') }
+
+    it { expect { subject }.to change { dossier.repetition_row_ids(type_de_champ_repetition).size }.by(-1) }
+    it { row_id; subject; expect(row_id).not_to be_in(row_ids) }
+  end
+
   describe "#champs_for_export" do
     subject { dossier.champs_for_export(dossier.revision.types_de_champ_public) }
 

@@ -3,21 +3,10 @@
 module DossierChampsConcern
   extend ActiveSupport::Concern
 
-  def champs_for_revision(scope: nil, root: false)
+  def champs_for_revision(scope: nil)
     champs_index = champs.group_by(&:stable_id)
-      # Due to some bad data we can have multiple copies of the same champ. Ignore extra copy.
-      .transform_values { _1.sort_by(&:id).uniq(&:row_id) }
-
-    if scope.is_a?(TypeDeChamp)
-      revision
-        .children_of(scope)
-        .flat_map { champs_index[_1.stable_id] || [] }
-        .filter(&:child?) # TODO: remove once bad data (child champ without a row id) is cleaned
-    else
-      revision
-        .types_de_champ_for(scope:, root:)
-        .flat_map { champs_index[_1.stable_id] || [] }
-    end
+    revision.types_de_champ_for(scope:)
+      .flat_map { champs_index[_1.stable_id] || [] }
   end
 
   # Get all the champs values for the types de champ in the final list.
@@ -39,6 +28,25 @@ module DossierChampsConcern
       type_de_champ.build_champ(dossier: self, row_id:)
     else
       champ
+    end
+  end
+
+  def project_champs_public
+    revision.types_de_champ_public.map { project_champ(_1, nil) }
+  end
+
+  def project_champs_private
+    revision.types_de_champ_private.map { project_champ(_1, nil) }
+  end
+
+  def project_rows_for(type_de_champ)
+    [] if !type_de_champ.repetition?
+
+    children = revision.children_of(type_de_champ)
+    row_ids = repetition_row_ids(type_de_champ)
+
+    row_ids.map do |row_id|
+      children.map { project_champ(_1, row_id) }
     end
   end
 
@@ -73,6 +81,41 @@ module DossierChampsConcern
     end
 
     assign_attributes(champs_attributes:)
+  end
+
+  def repetition_row_ids(type_de_champ)
+    [] if !type_de_champ.repetition?
+
+    stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
+    champs.filter { _1.stable_id.in?(stable_ids) && _1.row_id.present? }
+      .map(&:row_id)
+      .uniq
+      .sort
+  end
+
+  def repetition_add_row(type_de_champ, updated_by:)
+    raise "Can't add row to non-repetition type de champ" if !type_de_champ.repetition?
+
+    row_id = ULID.generate
+    types_de_champ = revision.children_of(type_de_champ)
+    # TODO: clean this up when parent_id is deprecated
+    added_champs = types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
+    @champs_by_public_id = nil
+    [row_id, added_champs]
+  end
+
+  def repetition_remove_row(type_de_champ, row_id, updated_by:)
+    raise "Can't remove row from non-repetition type de champ" if !type_de_champ.repetition?
+
+    champs.where(row_id:).destroy_all
+    champs.reload if persisted?
+    @champs_by_public_id = nil
+  end
+
+  def reload
+    super.tap do
+      @champs_by_public_id = nil
+    end
   end
 
   private

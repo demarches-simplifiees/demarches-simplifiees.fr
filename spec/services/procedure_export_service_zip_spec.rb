@@ -15,11 +15,11 @@ describe ProcedureExportService do
     dossiers.each do |dossier|
       attach_file_to_champ(pj_champ(dossier))
 
-      repetition(dossier).add_row(dossier.revision)
+      repetition(dossier).add_row(updated_by: 'test')
       attach_file_to_champ(repetition(dossier).champs.first)
       attach_file_to_champ(repetition(dossier).champs.first)
 
-      repetition(dossier).add_row(dossier.revision)
+      repetition(dossier).add_row(updated_by: 'test')
       attach_file_to_champ(repetition(dossier).champs.second)
     end
 

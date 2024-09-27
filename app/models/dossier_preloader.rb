@@ -80,8 +80,8 @@ class DossierPreloader
       dossier.association(:revision).target = revision
     end
     dossier.association(:champs).target = champs
-    dossier.association(:champs_public).target = dossier.champs_for_revision(scope: :public, root: true)
-    dossier.association(:champs_private).target = dossier.champs_for_revision(scope: :private, root: true)
+    dossier.association(:champs_public).target = dossier.project_champs_public
+    dossier.association(:champs_private).target = dossier.project_champs_private
 
     # remove once parent_id is deprecated
     champs_by_parent_id = champs.group_by(&:parent_id)
