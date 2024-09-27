@@ -39,11 +39,7 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
   end
 
   def filterable_columns_options
-    procedure.columns.filter_map do |column|
-      next if column.filterable == false
-
-      [column.label, column.id]
-    end
+    @procedure.columns.filter(&:filterable).map { [_1.label, _1.id] }
   end
 
   private
