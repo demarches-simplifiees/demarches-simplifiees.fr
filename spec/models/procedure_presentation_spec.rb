@@ -4,14 +4,15 @@ describe ProcedurePresentation do
   include ActiveSupport::Testing::TimeHelpers
 
   let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private: [{}]) }
+  let(:procedure_id) { procedure.id }
   let(:types_de_champ_public) { [{}] }
   let(:instructeur) { create(:instructeur) }
-  let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
+  let(:assign_to) { create(:assign_to, procedure:, instructeur:) }
   let(:first_type_de_champ) { assign_to.procedure.active_revision.types_de_champ_public.first }
   let(:first_type_de_champ_id) { first_type_de_champ.stable_id.to_s }
   let(:procedure_presentation) {
     create(:procedure_presentation,
-      assign_to: assign_to,
+      assign_to:,
       displayed_fields: [
         { label: "test1", table: "user", column: "email" },
         { label: "test2", table: "type_de_champ", column: first_type_de_champ_id }
@@ -21,6 +22,8 @@ describe ProcedurePresentation do
   }
   let(:procedure_presentation_id) { procedure_presentation.id }
   let(:filters) { { "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] } }
+
+  def to_filter((label, filter)) = FilteredColumn.new(column: procedure.find_column(label: label), filter: filter)
 
   describe "#displayed_fields" do
     it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user", "column" => "email" }, { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }]) }
@@ -134,7 +137,6 @@ describe ProcedurePresentation do
 
     context 'for type_de_champ table' do
       context 'with no revisions' do
-        let(:table) { 'type_de_champ' }
         let(:column) { procedure.find_column(label: first_type_de_champ.libelle) }
 
         let(:beurre_dossier) { create(:dossier, procedure:) }
@@ -288,13 +290,15 @@ describe ProcedurePresentation do
   end
 
   describe '#filtered_ids' do
-    let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, filters: { "suivis" => filter }) }
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:, suivis_filters: filtered_columns) }
+    let(:filtered_columns) { filters.map { to_filter(_1) } }
+    let(:filters) { [filter] }
 
     subject { procedure_presentation.send(:filtered_ids, procedure.dossiers.joins(:user), 'suivis') }
 
     context 'for self table' do
       context 'for created_at column' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'created_at', 'value' => '18/9/2018' }] }
+        let(:filter) { ['Créé le', '18/9/2018'] }
 
         let!(:kept_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
@@ -303,7 +307,7 @@ describe ProcedurePresentation do
       end
 
       context 'for en_construction_at column' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' }] }
+        let(:filter) { ['En construction le', '17/10/2018'] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
@@ -312,7 +316,7 @@ describe ProcedurePresentation do
       end
 
       context 'for updated_at column' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '18/9/2018' }] }
+        let(:filter) { ['Mis à jour le', '18/9/2018'] }
 
         let(:kept_dossier) { create(:dossier, procedure: procedure) }
         let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -326,7 +330,7 @@ describe ProcedurePresentation do
       end
 
       context 'for updated_since column' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'updated_since', 'value' => '18/9/2018' }] }
+        let(:filter) { ['Mis à jour depuis', '18/9/2018'] }
 
         let(:kept_dossier) { create(:dossier, procedure: procedure) }
         let(:later_dossier) { create(:dossier, procedure: procedure) }
@@ -347,7 +351,7 @@ describe ProcedurePresentation do
         end
 
         let(:procedure) { create(:procedure, :published, :sva, types_de_champ_public: [{}], types_de_champ_private: [{}]) }
-        let(:filter) { [{ 'table' => 'self', 'column' => 'sva_svr_decision_before', 'value' => '15/06/2023' }] }
+        let(:filter) { ['Date décision SVA avant', '15/06/2023'] }
 
         let!(:kept_dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: Date.current) }
         let!(:later_dossier) { create(:dossier, :en_instruction, procedure:, sva_svr_decision_on: Date.current + 2.days) }
@@ -359,7 +363,7 @@ describe ProcedurePresentation do
       end
 
       context 'ignore time of day' do
-        let(:filter) { [{ 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018 19:30' }] }
+        let(:filter) { ['En construction le', '17/10/2018 19:30'] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
@@ -369,29 +373,24 @@ describe ProcedurePresentation do
 
       context 'for a malformed date' do
         context 'when its a string' do
-          let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => 'malformed date' }] }
+          let(:filter) { ['Mis à jour le', 'malformed date'] }
 
           it { is_expected.to match([]) }
         end
 
         context 'when its a number' do
-          let(:filter) { [{ 'table' => 'self', 'column' => 'updated_at', 'value' => '177500' }] }
+          let(:filter) { ['Mis à jour le', '177500'] }
 
           it { is_expected.to match([]) }
         end
       end
 
       context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'self', 'column' => 'en_construction_at', 'value' => '17/10/2018' },
-            { 'table' => 'self', 'column' => 'en_construction_at', 'value' => '19/10/2018' }
-          ]
-        end
+        let(:filters) { [['En construction le', '17/10/2018'], ['En construction le', '19/10/2018']] }
 
-        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
-        let!(:other_kept_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 19)) }
-        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
+        let!(:other_kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 19)) }
+        let!(:discarded_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2013, 1, 1)) }
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
@@ -399,16 +398,11 @@ describe ProcedurePresentation do
       end
 
       context 'with multiple state filters' do
-        let(:filter) do
-          [
-            { 'table' => 'self', 'column' => 'state', 'value' => 'en_construction' },
-            { 'table' => 'self', 'column' => 'state', 'value' => 'en_instruction' }
-          ]
-        end
+        let(:filters) { [['Statut', 'en_construction'], ['Statut', 'en_instruction']] }
 
-        let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-        let!(:other_kept_dossier) { create(:dossier, :en_instruction, procedure: procedure) }
-        let!(:discarded_dossier) { create(:dossier, :accepte, procedure: procedure) }
+        let!(:kept_dossier) { create(:dossier, :en_construction, procedure:) }
+        let!(:other_kept_dossier) { create(:dossier, :en_instruction, procedure:) }
+        let!(:discarded_dossier) { create(:dossier, :accepte, procedure:) }
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
@@ -416,14 +410,10 @@ describe ProcedurePresentation do
       end
 
       context 'with en_construction state filters' do
-        let(:filter) do
-          [
-            { 'table' => 'self', 'column' => 'state', 'value' => 'en_construction' }
-          ]
-        end
+        let(:filter) { ['Statut', 'en_construction'] }
 
-        let!(:en_construction) { create(:dossier, :en_construction, procedure: procedure) }
-        let!(:en_construction_with_correction) { create(:dossier, :en_construction, procedure: procedure) }
+        let!(:en_construction) { create(:dossier, :en_construction, procedure:) }
+        let!(:en_construction_with_correction) { create(:dossier, :en_construction, procedure:) }
         let!(:correction) { create(:dossier_correction, dossier: en_construction_with_correction) }
         it 'excludes dossier en construction with pending correction' do
           is_expected.to contain_exactly(en_construction.id)
@@ -432,7 +422,7 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ table' do
-      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'keep' }] }
+      let(:filter) { [type_de_champ.libelle, 'keep'] }
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -448,13 +438,7 @@ describe ProcedurePresentation do
       end
 
       context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'keep' },
-            { 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'and' }
-          ]
-        end
-
+        let(:filters) { [[type_de_champ.libelle, 'keep'], [type_de_champ.libelle, 'and']] }
         let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
 
         before do
@@ -469,7 +453,7 @@ describe ProcedurePresentation do
       end
 
       context 'with yes_no type_de_champ' do
-        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value' => 'true' }] }
+        let(:filter) { [type_de_champ.libelle, 'true'] }
         let(:types_de_champ_public) { [{ type: :yes_no }] }
 
         before do
@@ -481,7 +465,7 @@ describe ProcedurePresentation do
       end
 
       context 'with departement type_de_champ' do
-        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value_column' => :external_id, 'value' => '13' }] }
+        let(:filter) { [type_de_champ.libelle, '13'] }
         let(:types_de_champ_public) { [{ type: :departements }] }
 
         before do
@@ -493,8 +477,7 @@ describe ProcedurePresentation do
       end
 
       context 'with enum type_de_champ' do
-        let(:filter_value) { 'Favorable' }
-        let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ.stable_id.to_s, 'value_column' => :value, 'value' => filter_value }] }
+        let(:filter) { [type_de_champ.libelle, 'Favorable'] }
         let(:types_de_champ_public) { [{ type: :drop_down_list, options: ['Favorable', 'Defavorable'] }] }
 
         before do
@@ -507,7 +490,7 @@ describe ProcedurePresentation do
     end
 
     context 'for type_de_champ_private table' do
-      let(:filter) { [{ 'table' => 'type_de_champ', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' }] }
+      let(:filter) { [type_de_champ_private.libelle, 'keep'] }
 
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
       let(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -519,44 +502,25 @@ describe ProcedurePresentation do
       end
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
-
-      context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'type_de_champ', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'keep' },
-            { 'table' => 'type_de_champ', 'column' => type_de_champ_private.stable_id.to_s, 'value' => 'and' }
-          ]
-        end
-
-        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
-
-        before do
-          other_kept_dossier.champs.find_by(stable_id: type_de_champ_private.stable_id).update(value: 'and me too')
-        end
-
-        it 'returns every dossier that matches any of the search criteria for a given column' do
-          is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
-        end
-      end
     end
 
     context 'for type_de_champ using AddressableColumnConcern' do
-      let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
+      let(:column) { filtered_columns.first.column }
+      let(:types_de_champ_public) { [{ type: :rna, stable_id: 1, libelle: 'rna' }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
-      let(:available_columns) { type_de_champ.columns(procedure_id: procedure.id) }
-      let(:column) { available_columns.find { _1.value_column == value_column_searched } }
-      let(:filter) { [column.to_json.merge({ "value" => value })] }
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
 
       context "when searching by postal_code (text)" do
         let(:value) { "60580" }
-        let(:value_column_searched) { ['postal_code'] }
+        let(:filter) { ["rna – code postal (5 chiffres)", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => value })
           create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => "unknown" })
         end
+
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
         it 'describes column' do
           expect(column.type).to eq(:text)
           expect(column.options_for_select).to eq([])
@@ -565,12 +529,13 @@ describe ProcedurePresentation do
 
       context "when searching by departement_code (enum)" do
         let(:value) { "99" }
-        let(:value_column_searched) { ['departement_code'] }
+        let(:filter) { ["rna – département", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => value })
           create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => "unknown" })
         end
+
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
         it 'describes column' do
@@ -581,13 +546,15 @@ describe ProcedurePresentation do
 
       context "when searching by region_name" do
         let(:value) { "60" }
-        let(:value_column_searched) { ['region_name'] }
+        let(:filter) { ["rna – region", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "region_name" => value })
           create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "region_name" => "unknown" })
         end
+
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
         it 'describes column' do
           expect(column.type).to eq(:enum)
           expect(column.options_for_select.first).to eq(["Auvergne-Rhône-Alpes", "Auvergne-Rhône-Alpes"])
@@ -597,7 +564,7 @@ describe ProcedurePresentation do
 
     context 'for etablissement table' do
       context 'for entreprise_date_creation column' do
-        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }] }
+        let(:filter) { ['Date de création', '21/6/2018'] }
 
         let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
@@ -605,12 +572,7 @@ describe ProcedurePresentation do
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
         context 'with multiple search values' do
-          let(:filter) do
-            [
-              { 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2016' },
-              { 'table' => 'etablissement', 'column' => 'entreprise_date_creation', 'value' => '21/6/2018' }
-            ]
-          end
+          let(:filters) { [['Date de création', '21/6/2016'], ['Date de création', '21/6/2018']] }
 
           let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2016, 6, 21))) }
 
@@ -623,7 +585,7 @@ describe ProcedurePresentation do
       context 'for code_postal column' do
         # All columns except entreprise_date_creation work exacly the same, just testing one
 
-        let(:filter) { [{ 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' }] }
+        let(:filter) { ['Code postal', '75017'] }
 
         let!(:kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75017')) }
         let!(:discarded_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '25000')) }
@@ -631,12 +593,7 @@ describe ProcedurePresentation do
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
         context 'with multiple search values' do
-          let(:filter) do
-            [
-              { 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '75017' },
-              { 'table' => 'etablissement', 'column' => 'code_postal', 'value' => '88100' }
-            ]
-          end
+          let(:filters) { [['Code postal', '75017'], ['Code postal', '88100']] }
 
           let!(:other_kept_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '88100')) }
 
@@ -648,7 +605,7 @@ describe ProcedurePresentation do
     end
 
     context 'for user table' do
-      let(:filter) { [{ 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' }] }
+      let(:filter) { ['Demandeur', 'keepmail'] }
 
       let!(:kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@keepmail.com')) }
       let!(:discarded_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'me@discard.com')) }
@@ -656,12 +613,7 @@ describe ProcedurePresentation do
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
       context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'user', 'column' => 'email', 'value' => 'keepmail' },
-            { 'table' => 'user', 'column' => 'email', 'value' => 'beta.gouv.fr' }
-          ]
-        end
+        let(:filters) { [['Demandeur', 'keepmail'], ['Demandeur', 'beta.gouv.fr']] }
 
         let!(:other_kept_dossier) { create(:dossier, procedure: procedure, user: create(:user, email: 'bazinga@beta.gouv.fr')) }
 
@@ -677,30 +629,25 @@ describe ProcedurePresentation do
       let!(:discarded_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'M', prenom: 'Jean', nom: 'Tremblay')) }
 
       context 'for gender column' do
-        let(:filter) { [{ 'table' => 'individual', 'column' => 'gender', 'value' => 'Mme' }] }
+        let(:filter) { ['Civilité', 'Mme'] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for prenom column' do
-        let(:filter) { [{ 'table' => 'individual', 'column' => 'prenom', 'value' => 'Josephine' }] }
+        let(:filter) { ['Prénom', 'Josephine'] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'for nom column' do
-        let(:filter) { [{ 'table' => 'individual', 'column' => 'nom', 'value' => 'Baker' }] }
+        let(:filter) { ['Nom', 'Baker'] }
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
 
       context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'individual', 'column' => 'prenom', 'value' => 'Josephine' },
-            { 'table' => 'individual', 'column' => 'prenom', 'value' => 'Romuald' }
-          ]
-        end
+        let(:filters) { [['Prénom', 'Josephine'], ['Prénom', 'Romuald']] }
 
         let!(:other_kept_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'M', prenom: 'Romuald', nom: 'Pistis')) }
 
@@ -711,7 +658,7 @@ describe ProcedurePresentation do
     end
 
     context 'for followers_instructeurs table' do
-      let(:filter) { [{ 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'keepmail' }] }
+      let(:filter) { ['Email instructeur', 'keepmail'] }
 
       let!(:kept_dossier) { create(:dossier, procedure: procedure) }
       let!(:discarded_dossier) { create(:dossier, procedure: procedure) }
@@ -724,14 +671,9 @@ describe ProcedurePresentation do
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
       context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'keepmail' },
-            { 'table' => 'followers_instructeurs', 'column' => 'email', 'value' => 'beta.gouv.fr' }
-          ]
-        end
+        let(:filters) { [['Email instructeur', 'keepmail'], ['Email instructeur', 'beta.gouv.fr']] }
 
-        let(:other_kept_dossier) { create(:dossier, procedure: procedure) }
+        let(:other_kept_dossier) { create(:dossier, procedure:) }
 
         before do
           create(:follow, dossier: other_kept_dossier, instructeur: create(:instructeur, email: 'bazinga@beta.gouv.fr'))
@@ -744,25 +686,20 @@ describe ProcedurePresentation do
     end
 
     context 'for groupe_instructeur table' do
-      let(:filter) { [{ 'table' => 'groupe_instructeur', 'column' => 'id', 'value' => procedure.defaut_groupe_instructeur.id.to_s }] }
+      let(:filter) { ['Groupe instructeur', procedure.defaut_groupe_instructeur.id.to_s] }
 
-      let!(:gi_2) { create(:groupe_instructeur, label: 'gi2', procedure: procedure) }
-      let!(:gi_3) { create(:groupe_instructeur, label: 'gi3', procedure: procedure) }
+      let!(:gi_2) { create(:groupe_instructeur, label: 'gi2', procedure:) }
+      let!(:gi_3) { create(:groupe_instructeur, label: 'gi3', procedure:) }
 
-      let!(:kept_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-      let!(:discarded_dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: gi_2) }
+      let!(:kept_dossier) { create(:dossier, :en_construction, procedure:) }
+      let!(:discarded_dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
 
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
       context 'with multiple search values' do
-        let(:filter) do
-          [
-            { 'table' => 'groupe_instructeur', 'column' => 'id', 'value' => procedure.defaut_groupe_instructeur.id.to_s },
-            { 'table' => 'groupe_instructeur', 'column' => 'id', 'value' => gi_3.id.to_s }
-          ]
-        end
+        let(:filters) { [['Groupe instructeur', procedure.defaut_groupe_instructeur.id.to_s], ['Groupe instructeur', gi_3.id.to_s]] }
 
-        let!(:other_kept_dossier) { create(:dossier, procedure: procedure, groupe_instructeur: gi_3) }
+        let!(:other_kept_dossier) { create(:dossier, procedure:, groupe_instructeur: gi_3) }
 
         it 'returns every dossier that matches any of the search criteria for a given column' do
           is_expected.to contain_exactly(kept_dossier.id, other_kept_dossier.id)
@@ -811,13 +748,6 @@ describe ProcedurePresentation do
 
   describe '#filtered_sorted_ids' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
-    let(:dossier_1) { create(:dossier) }
-    let(:dossier_2) { create(:dossier) }
-    let(:dossier_3) { create(:dossier) }
-    let(:dossiers) { Dossier.where(id: [dossier_1, dossier_2, dossier_3].map(&:id)) }
-
-    let(:sorted_ids) { [dossier_2, dossier_3, dossier_1].map(&:id) }
-    let(:statut) { 'tous' }
 
     subject { procedure_presentation.filtered_sorted_ids(dossiers, statut) }
 
@@ -837,6 +767,14 @@ describe ProcedurePresentation do
     end
 
     context 'with mocked sorted_ids' do
+      let(:dossier_1) { create(:dossier) }
+      let(:dossier_2) { create(:dossier) }
+      let(:dossier_3) { create(:dossier) }
+      let(:dossiers) { Dossier.where(id: [dossier_1, dossier_2, dossier_3].map(&:id)) }
+
+      let(:sorted_ids) { [dossier_2, dossier_3, dossier_1].map(&:id) }
+      let(:statut) { 'tous' }
+
       before do
         expect(procedure_presentation).to receive(:sorted_ids).and_return(sorted_ids)
       end
@@ -847,7 +785,7 @@ describe ProcedurePresentation do
         let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
 
         before do
-          procedure_presentation.filters['tous'] = 'some_filter'
+          procedure_presentation.tous_filters = [to_filter(['Statut', 'en_construction'])]
           expect(procedure_presentation).to receive(:filtered_ids).and_return(filtered_ids)
         end
 
