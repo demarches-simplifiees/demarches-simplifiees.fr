@@ -37,16 +37,6 @@ class ProcedureRevision < ApplicationRecord
 
   serialize :ineligibilite_rules, LogicSerializer
 
-  def build_champs_public(dossier)
-    # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_public.reload.map { _1.build_champ(dossier:) }
-  end
-
-  def build_champs_private(dossier)
-    # reload: it can be out of sync in test if some tdcs are added wihtout using add_tdc
-    types_de_champ_private.reload.map { _1.build_champ(dossier:) }
-  end
-
   def add_type_de_champ(params)
     parent_stable_id = params.delete(:parent_stable_id)
     parent_coordinate, _ = coordinate_and_tdc(parent_stable_id)
@@ -172,7 +162,7 @@ class ProcedureRevision < ApplicationRecord
       .find_or_initialize_by(revision: self, user: user, for_procedure_preview: true, state: Dossier.states.fetch(:brouillon))
 
     if dossier.new_record?
-      dossier.build_default_individual
+      dossier.build_default_values
       dossier.save!
     end
 
