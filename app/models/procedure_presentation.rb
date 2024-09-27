@@ -18,7 +18,6 @@ class ProcedurePresentation < ApplicationRecord
   delegate :procedure, :instructeur, to: :assign_to
 
   validate :check_allowed_displayed_fields
-  validate :check_allowed_filter_columns
   validate :check_filters_max_length
   validate :check_filters_max_integer
 
@@ -89,46 +88,6 @@ class ProcedurePresentation < ApplicationRecord
     Date.parse(string)
   rescue Date::Error
     nil
-  end
-
-  def add_filter(statut, column_id, value)
-    h_id = JSON.parse(column_id, symbolize_names: true)
-
-    if value.present?
-      column = procedure.find_column(h_id:)
-
-      case column.table
-      when TYPE_DE_CHAMP
-        value = find_type_de_champ(column.column).dynamic_type.human_to_filter(value)
-      end
-
-      updated_filters = filters.dup
-      updated_filters[statut] << {
-        'label' => column.label,
-        TABLE => column.table,
-        COLUMN => column.column,
-        'value_column' => column.value_column,
-        'value' => value
-      }
-
-      filters_for(statut) << { id: h_id, filter: value }
-      update(filters: updated_filters)
-    end
-  end
-
-  def remove_filter(statut, column_id, value)
-    h_id = JSON.parse(column_id, symbolize_names: true)
-    column = procedure.find_column(h_id:)
-    updated_filters = filters.dup
-
-    updated_filters[statut] = filters[statut].reject do |filter|
-      filter.values_at(TABLE, COLUMN, 'value') == [column.table, column.column, value]
-    end
-
-    collection = filters_for(statut)
-    collection.delete(collection.find { sym_h = _1.deep_symbolize_keys; sym_h[:id] == h_id && sym_h[:filter] == value })
-
-    update!(filters: updated_filters)
   end
 
   def update_displayed_fields(column_ids)
@@ -275,15 +234,6 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
       check_allowed_field(:displayed_fields, field)
-    end
-  end
-
-  def check_allowed_filter_columns
-    filters.each do |key, columns|
-      return true if key == 'migrated'
-      columns.each do |column|
-        check_allowed_field(:filters, column)
-      end
     end
   end
 
