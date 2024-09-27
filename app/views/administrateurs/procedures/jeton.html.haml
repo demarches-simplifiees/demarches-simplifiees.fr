@@ -18,8 +18,8 @@
           %strong le jeton API Entreprise
           propre à votre démarche.
         %p
-          Si besoin, vous pouvez demander une habilitation API Entreprise sur le site
-          = link_to 'api.gouv.fr.', "https://api.gouv.fr/les-api/api-entreprise/demande-acces"
+          Si besoin, vous pouvez demander une habilitation API Entreprise en cliquant sur le lien suivant :
+          = link_to "https://api.gouv.fr/les-api/api-entreprise/demande-acces.", "https://api.gouv.fr/les-api/api-entreprise/demande-acces"
 
 
     = render partial: 'administrateurs/procedures/api_entreprise_token_expiration_alert', locals: { procedure: @procedure }
