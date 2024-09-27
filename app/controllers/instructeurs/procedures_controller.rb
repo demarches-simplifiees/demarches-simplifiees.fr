@@ -166,12 +166,6 @@ module Instructeurs
       @column = procedure.find_column(h_id:)
     end
 
-    def remove_filter
-      procedure_presentation.remove_filter(statut, params[:column], params[:value])
-
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
-    end
-
     def download_export
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
