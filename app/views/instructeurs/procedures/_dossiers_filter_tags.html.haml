@@ -6,6 +6,12 @@
       - filters.each_with_index do |filter, i|
         - if i > 0
           = " ou "
-        = link_to remove_filter_instructeur_procedure_path(procedure, { statut: statut, column: filter.column.id, value: filter.filter }),
-          class: "fr-tag fr-tag--dismiss fr-my-1w", aria: { label: "Retirer le filtre #{filter.column.label}" } do
-          = "#{filter.column.label.truncate(50)} : #{procedure_presentation.human_value_for_filter(filter)}"
+        = form_tag(add_filter_instructeur_procedure_path(procedure), class: 'inline') do
+          - prefix = procedure_presentation.filters_name_for(statut)
+          = hidden_field_tag "#{prefix}[]", ''
+          - (current_filters - [filter]).each do |f|
+            = hidden_field_tag "#{prefix}[][id]", f.column.id
+            = hidden_field_tag "#{prefix}[][filter]", f.filter
+
+          = button_tag "#{filter.column.label.truncate(50)} : #{procedure_presentation.human_value_for_filter(filter)}",
+            class: 'fr-tag fr-tag--dismiss fr-my-1w'
