@@ -34,7 +34,7 @@ describe ChampPresentations::RepetitionPresentation do
     stars.update(value: 4)
   end
 
-  let(:representation) { described_class.new(libelle, dossier.champs[0].reload.rows) }
+  let(:representation) { described_class.new(libelle, champ_repetition.rows) }
 
   describe '#to_s' do
     it 'returns a key-value representation' do

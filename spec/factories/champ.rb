@@ -196,8 +196,8 @@ FactoryBot.define do
 
         evaluator.rows.times do
           row_id = ULID.generate
-          champ_repetition.champs << types_de_champ.map do |type_de_champ|
-            attrs = { dossier: champ_repetition.dossier, parent: champ_repetition, private: champ_repetition.private?, stable_id: type_de_champ.stable_id, row_id: }
+          champ_repetition.dossier.champs << types_de_champ.map do |type_de_champ|
+            attrs = { dossier: champ_repetition.dossier, private: champ_repetition.private?, stable_id: type_de_champ.stable_id, row_id: }
             build(:"champ_do_not_use_#{type_de_champ.type_champ}", **attrs)
           end
         end

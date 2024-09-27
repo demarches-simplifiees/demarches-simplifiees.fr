@@ -98,10 +98,10 @@ module DossierChampsConcern
 
     row_id = ULID.generate
     types_de_champ = revision.children_of(type_de_champ)
-    # TODO: clean this up when parent_id is deprecated
-    added_champs = types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
+    self.champs += types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
+    champs.reload if persisted?
     @champs_by_public_id = nil
-    [row_id, added_champs]
+    row_id
   end
 
   def repetition_remove_row(type_de_champ, row_id, updated_by:)
@@ -156,13 +156,6 @@ module DossierChampsConcern
       attributes[:value_json] = nil
       attributes[:external_id] = nil
       attributes[:data] = nil
-    end
-
-    parent = revision.parent_of(type_de_champ)
-    if parent.present?
-      attributes[:parent] = champs.find { _1.stable_id == parent.stable_id }
-    else
-      attributes[:parent] = nil
     end
 
     @champs_by_public_id = nil
