@@ -772,9 +772,11 @@ describe ProcedurePresentation do
   end
 
   describe "#human_value_for_filter" do
-    let(:filters) { { "suivis" => [{ label: "label1", table: "type_de_champ", column: first_type_de_champ_id, "value" => "true" }] } }
+    let(:filtered_column) { to_filter([first_type_de_champ.libelle, "true"]) }
 
-    subject { procedure_presentation.human_value_for_filter(procedure_presentation.filters["suivis"].first) }
+    subject do
+      procedure_presentation.human_value_for_filter(filtered_column)
+    end
 
     context 'when type_de_champ text' do
       it 'should passthrough value' do
@@ -791,7 +793,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is state' do
-      let(:filters) { { "suivis" => [{ table: "self", column: "state", "value" => "en_construction" }] } }
+      let(:filtered_column) { to_filter(['Statut', "en_construction"]) }
 
       it 'should get i18n value' do
         expect(subject).to eq("En construction")
@@ -799,7 +801,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is a date' do
-      let(:filters) { { "suivis" => [{ table: "self", column: "en_instruction_at", "value" => "15/06/2023" }] } }
+      let(:filtered_column) { to_filter(['Créé le', "15/06/2023"]) }
 
       it 'should get formatted value' do
         expect(subject).to eq("15/06/2023")
