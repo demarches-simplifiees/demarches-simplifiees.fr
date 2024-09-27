@@ -270,7 +270,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_29_141825) do
     t.index ["dossier_id", "stream", "stable_id", "row_id"], name: "index_champs_on_dossier_id_and_stream_and_stable_id_and_row_id", unique: true
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"
     t.index ["etablissement_id"], name: "index_champs_on_etablissement_id"
-    t.index ["parent_id"], name: "index_champs_on_parent_id"
     t.index ["row_id"], name: "index_champs_on_row_id"
     t.index ["stable_id"], name: "index_champs_on_stable_id"
     t.index ["type"], name: "index_champs_on_type"
@@ -1264,7 +1263,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_29_141825) do
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
-  add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "champs", "dossiers"
   add_foreign_key "champs", "etablissements"
   add_foreign_key "champs", "types_de_champ"

@@ -75,44 +75,27 @@ describe Champ do
     end
   end
 
-  describe '#public?' do
+  describe 'public and private' do
     let(:champ) { Champ.new }
-
-    it { expect(champ.public?).to be_truthy }
-    it { expect(champ.private?).to be_falsey }
-  end
-
-  describe '#public_only' do
     let(:dossier) { create(:dossier) }
 
     it 'partition public and private' do
       expect(dossier.project_champs_public.count).to eq(1)
       expect(dossier.project_champs_private.count).to eq(1)
     end
-  end
 
-  describe '#public_ordered' do
-    let(:procedure) { create(:simple_procedure) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
+    it { expect(champ.public?).to be_truthy }
+    it { expect(champ.private?).to be_falsey }
 
     context 'when a procedure has 2 revisions' do
-      it 'does not duplicate the champs' do
+      it { expect(dossier.procedure.revisions.count).to eq(2) }
+
+      it 'does not duplicate public champs' do
         expect(dossier.project_champs_public.count).to eq(1)
-        expect(procedure.revisions.count).to eq(2)
       end
-    end
-  end
 
-  describe '#private_ordered' do
-    let(:procedure) { create(:procedure, :with_type_de_champ_private) }
-    let(:dossier) { create(:dossier, procedure: procedure) }
-
-    context 'when a procedure has 2 revisions' do
-      before { procedure.publish }
-
-      it 'does not duplicate the champs private' do
+      it 'does not duplicate private champs' do
         expect(dossier.project_champs_private.count).to eq(1)
-        expect(procedure.revisions.count).to eq(2)
       end
     end
   end
@@ -596,16 +579,6 @@ describe Champ do
 
     context "when private" do
       let(:champ) { Champs::TextChamp.new(private: true) }
-      it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
-    end
-
-    context "when has parent" do
-      let(:champ) { Champs::TextChamp.new(parent: Champs::TextChamp.new) }
-      it { expect(champ.input_name).to eq "dossier[champs_public_attributes][#{champ.public_id}]" }
-    end
-
-    context "when has private parent" do
-      let(:champ) { Champs::TextChamp.new(private: true, parent: Champs::TextChamp.new(private: true)) }
       it { expect(champ.input_name).to eq "dossier[champs_private_attributes][#{champ.public_id}]" }
     end
   end

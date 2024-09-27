@@ -11,7 +11,7 @@ describe Champs::RepetitionChamp do
       ])
   }
   let(:dossier) { create(:dossier, procedure:) }
-  let(:champ) { dossier.champs.first }
+  let(:champ) { dossier.champs.find(&:repetition?) }
 
   describe "#for_tag" do
     before do

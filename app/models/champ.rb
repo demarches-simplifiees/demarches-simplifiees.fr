@@ -4,19 +4,17 @@ class Champ < ApplicationRecord
   include ChampConditionalConcern
   include ChampsValidateConcern
 
-  self.ignored_columns += [:type_de_champ_id]
+  self.ignored_columns += [:type_de_champ_id, :parent_id]
 
   attr_readonly :stable_id
 
   belongs_to :dossier, inverse_of: false, touch: true, optional: false
-  belongs_to :parent, class_name: 'Champ', optional: true
   has_many_attached :piece_justificative_file
 
   # We declare champ specific relationships (Champs::CarteChamp, Champs::SiretChamp and Champs::RepetitionChamp)
   # here because otherwise we can't easily use includes in our queries.
   has_many :geo_areas, -> { order(:created_at) }, dependent: :destroy, inverse_of: :champ
   belongs_to :etablissement, optional: true, dependent: :destroy
-  has_many :champs, foreign_key: :parent_id, inverse_of: :parent
 
   delegate :procedure, to: :dossier
 
@@ -79,13 +77,8 @@ class Champ < ApplicationRecord
   delegate :used_by_routing_rules?, to: :type_de_champ
 
   scope :updated_since?, -> (date) { where('champs.updated_at > ?', date) }
-  scope :public_only, -> { where(private: false) }
-  scope :private_only, -> { where(private: true) }
-  scope :root, -> { where(parent_id: nil) }
   scope :prefilled, -> { where(prefilled: true) }
 
-  before_create :set_dossier_id, if: :needs_dossier_id?
-  before_validation :set_dossier_id, if: :needs_dossier_id?
   before_save :cleanup_if_empty
   before_save :normalize
   after_update_commit :fetch_external_data_later
@@ -232,7 +225,7 @@ class Champ < ApplicationRecord
   end
 
   def clone(fork = false)
-    champ_attributes = [:parent_id, :private, :row_id, :type, :stable_id, :stream]
+    champ_attributes = [:private, :row_id, :type, :stable_id, :stream]
     value_attributes = fork || !private? ? [:value, :value_json, :data, :external_id] : []
     relationships = fork || !private? ? [:etablissement, :geo_areas] : []
 
@@ -263,14 +256,6 @@ class Champ < ApplicationRecord
 
   def html_id
     type_de_champ.html_id(row_id)
-  end
-
-  def needs_dossier_id?
-    !dossier_id && parent_id
-  end
-
-  def set_dossier_id
-    self.dossier_id = parent.dossier_id
   end
 
   def cleanup_if_empty

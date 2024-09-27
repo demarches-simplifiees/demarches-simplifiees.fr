@@ -45,11 +45,7 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs
-  # We have to remove champs in a particular order - champs with a reference to a parent have to be
-  # removed first, otherwise we get a foreign key constraint error.
-  has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
-
+  has_many :champs, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
 
@@ -1160,12 +1156,12 @@ class Dossier < ApplicationRecord
 
   def build_default_champs_for(types_de_champ)
     self.champs << types_de_champ.flat_map do |type_de_champ|
+      champ = type_de_champ.build_champ(dossier: self)
       if type_de_champ.repetition? && (type_de_champ.private? || type_de_champ.mandatory?)
         row_id = ULID.generate
-        parent = type_de_champ.build_champ(dossier: self)
-        [parent] + revision.children_of(type_de_champ).map { _1.build_champ(dossier: self, parent:, row_id:) }
+        [champ] + revision.children_of(type_de_champ).map { _1.build_champ(dossier: self, row_id:) }
       else
-        type_de_champ.build_champ(dossier: self)
+        champ
       end
     end
   end
