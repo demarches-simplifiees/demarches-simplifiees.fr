@@ -11,6 +11,7 @@
       %fieldset#radio-rich-hint.fr-fieldset
         %legend.fr-fieldset__legend--regular.fr-fieldset__legend
           = t('views.users.dossiers.identite.legend')
+          = render EditableChamp::AsteriskMandatoryComponent.new
 
         .fr-fieldset__element
           .fr-radio-group.fr-radio-rich
