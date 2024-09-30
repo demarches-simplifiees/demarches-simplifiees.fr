@@ -638,6 +638,17 @@ describe Instructeurs::ProceduresController, type: :controller do
         end
       end
     end
+
+    describe 'caches statut and page query param' do
+      let(:statut) { 'a-traiter' }
+      let(:page) { '3' }
+      before { sign_in(instructeur.user) }
+      subject { get :show, params: { procedure_id: procedure.id, statut:, page: } }
+      it 'changes cached value' do
+        expect { subject }.to change { Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:, session: request.session).fetch_last_state }
+          .from({}).to(statut:, page:)
+      end
+    end
   end
 
   describe '#deleted_dossiers' do

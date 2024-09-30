@@ -111,6 +111,8 @@ module Instructeurs
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
         .where(seen_at: nil)
         .distinct
+
+      Cache::ShowProcedureLastState.new(procedure:, current_instructeur:, session:).persist_last_state(params:)
     end
 
     def deleted_dossiers
