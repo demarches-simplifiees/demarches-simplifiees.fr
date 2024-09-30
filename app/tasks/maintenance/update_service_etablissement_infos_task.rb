@@ -2,6 +2,9 @@
 
 module Maintenance
   class UpdateServiceEtablissementInfosTask < MaintenanceTasks::Task
+    # Géocode les services à partir des établissements
+    # 2024-05-27-01 PR #10106
+
     # No more 20 geocoding by 10 seconds window
     THROTTLE_LIMIT = 20
     THROTTLE_PERIOD = 10.seconds

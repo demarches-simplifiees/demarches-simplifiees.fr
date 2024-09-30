@@ -2,6 +2,9 @@
 
 module Maintenance
   class CreateVariantsForPjOfLatestDossiersTask < MaintenanceTasks::Task
+    # Génère les vignettes de fichiers PDF pour les dossiers déposés entre 2 dates (facultatif)
+    # Elles sont affichées dans le nouvel onglet "Pièces jointes" des instructeurs.
+    # 2024-07-11-01
     attribute :start_text, :string
     validates :start_text, presence: true
 

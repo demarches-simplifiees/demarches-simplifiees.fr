@@ -2,6 +2,8 @@
 
 module Maintenance
   class UpdateDraftRevisionTypeDeChampsTask < MaintenanceTasks::Task
+    # Modifie le form d’une démarche à partir d’un CSV (dev pour les Fonds Verts)
+
     csv_collection
 
     # CSV structure:

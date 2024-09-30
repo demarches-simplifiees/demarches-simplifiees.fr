@@ -2,6 +2,9 @@
 
 module Maintenance
   class BackfillCityNameTask < MaintenanceTasks::Task
+    # corrige des données du champ adresse suite à un bug
+    # introduit pendant quelques jours début mars
+    # 2024-04-09-02 PR #10290
     attribute :champ_ids, :string
     validates :champ_ids, presence: true
 

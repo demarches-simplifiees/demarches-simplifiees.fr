@@ -2,6 +2,9 @@
 
 module Maintenance
   class FixDecimalNumberWithSpacesTask < MaintenanceTasks::Task
+    # normalise les champs nombres en y supprimant les éventuels espaces
+    # 2024-07-01-01 PR #10554
+
     ANY_SPACES = /[[:space:]]/
     def collection
       Champs::DecimalNumberChamp.where.not(value: nil)

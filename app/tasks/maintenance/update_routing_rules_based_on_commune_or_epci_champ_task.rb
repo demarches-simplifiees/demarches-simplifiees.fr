@@ -2,6 +2,10 @@
 
 module Maintenance
   class UpdateRoutingRulesBasedOnCommuneOrEpciChampTask < MaintenanceTasks::Task
+    # Ces 2 tâches mettent à jour les conditions et règles de routage
+    # pour les champs communes et ECPI suite à l'ajout de nouveaux opérateurs
+    # Voir aussi UpdateConditionsBasedOnCommuneOrEpciChampTask
+    # 2023-12-20-01 PR #9850
     include Logic
 
     def collection
