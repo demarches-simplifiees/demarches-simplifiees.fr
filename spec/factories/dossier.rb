@@ -263,9 +263,9 @@ FactoryBot.define do
         dossier.champs_to_destroy.where(private: false).destroy_all
         dossier.types_de_champ.each do |type_de_champ|
           value = if type_de_champ.simple_drop_down_list?
-            type_de_champ.drop_down_list_enabled_non_empty_options.first
+            type_de_champ.drop_down_options.first
           elsif type_de_champ.multiple_drop_down_list?
-            type_de_champ.drop_down_list_enabled_non_empty_options.first(2).to_json
+            type_de_champ.drop_down_options.first(2).to_json
           end
           attrs = { stable_id: type_de_champ.stable_id, dossier:, value: }.compact
           create(:"champ_do_not_use_#{type_de_champ.type_champ}", **attrs)
@@ -279,9 +279,9 @@ FactoryBot.define do
         dossier.champs_to_destroy.where(private: true).destroy_all
         dossier.types_de_champ_private.each do |type_de_champ|
           value = if type_de_champ.simple_drop_down_list?
-            type_de_champ.drop_down_list_enabled_non_empty_options.first
+            type_de_champ.drop_down_options.first
           elsif type_de_champ.multiple_drop_down_list?
-            type_de_champ.drop_down_list_enabled_non_empty_options.first(2).to_json
+            type_de_champ.drop_down_options.first(2).to_json
           end
           attrs = { stable_id: type_de_champ.stable_id, dossier:, private: true, value: }.compact
           create(:"champ_do_not_use_#{type_de_champ.type_champ}", **attrs)

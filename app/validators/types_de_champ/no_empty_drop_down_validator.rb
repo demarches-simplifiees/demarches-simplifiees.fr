@@ -10,7 +10,7 @@ class TypesDeChamp::NoEmptyDropDownValidator < ActiveModel::EachValidator
   private
 
   def validate_drop_down_not_empty(procedure, attribute, drop_down)
-    if drop_down.drop_down_list_enabled_non_empty_options.empty?
+    if drop_down.drop_down_options.empty?
       procedure.errors.add(
         attribute,
         procedure.errors.generate_message(attribute, :empty_drop_down, { value: drop_down.libelle }),

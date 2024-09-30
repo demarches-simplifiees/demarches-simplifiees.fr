@@ -46,7 +46,7 @@ describe 'shared/dossiers/edit', type: :view do
     let(:types_de_champ_public) { [{ type: :drop_down_list, options:, mandatory: }] }
     let(:champ) { dossier.champs_public.first }
     let(:type_de_champ) { champ.type_de_champ }
-    let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
+    let(:enabled_options) { type_de_champ.drop_down_options }
     let(:mandatory) { true }
     let(:options) { nil }
 
@@ -71,7 +71,7 @@ describe 'shared/dossiers/edit', type: :view do
 
     context 'when the list is long' do
       let(:value) { 'alpha' }
-      let(:options) { [:long] }
+      let(:options) { ['1', '2', '3', '4', '5', '6'] }
 
       before { champ.update(value:) }
 
@@ -86,7 +86,7 @@ describe 'shared/dossiers/edit', type: :view do
     let(:champ) { dossier.champs.first }
     let(:type_de_champ) { champ.type_de_champ }
     let(:options) { type_de_champ.drop_down_options }
-    let(:enabled_options) { type_de_champ.drop_down_list_enabled_non_empty_options }
+    let(:enabled_options) { type_de_champ.drop_down_options }
 
     context 'when the list is short' do
       let(:options) { ['valid', 'invalid', 'not sure yet'] }

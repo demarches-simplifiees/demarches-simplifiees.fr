@@ -1,6 +1,6 @@
 - if @champ.render_as_radios?
   .fr-fieldset__content
-    - @champ.enabled_non_empty_options.each_with_index do |option, index|
+    - @champ.drop_down_options.each_with_index do |option, index|
       .fr-radio-group
         = @form.radio_button :value, option, id: dom_id(@champ, "radio_option_#{index}")
         %label.fr-label{ for: dom_id(@champ, "radio_option_#{index}") }
@@ -22,7 +22,7 @@
     = render ReactComponent.new "ComboBox/SingleComboBox", **react_props
 - else
   = @form.select :value,
-    @champ.enabled_non_empty_options(other: true),
+    @champ.drop_down_options_with_other,
     { selected: @champ.selected, include_blank: true },
     required: @champ.required?,
     id: @champ.input_id,

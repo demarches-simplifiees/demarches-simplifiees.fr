@@ -422,7 +422,7 @@ describe DossierRebaseConcern do
     context 'with a procedure with a dropdown tdc' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l1', drop_down_list_value: "option\nv1\n")
+          p.draft_revision.add_type_de_champ(type_champ: :drop_down_list, libelle: 'l1', drop_down_options: ["option", "v1"])
           p.publish!
         end
       end
@@ -434,7 +434,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "option\nupdated\nv1")
+          tdc_to_update.update(drop_down_options: ["option", "updated", "v1"])
         end
 
         it { expect { subject }.not_to change { dossier.champs_public.first.value } }
@@ -446,7 +446,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "option\nupdated")
+          tdc_to_update.update(drop_down_options: ["option", "updated"])
         end
 
         it { expect { subject }.to change { dossier.champs_public.first.value }.from('v1').to(nil) }
@@ -458,7 +458,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "v1\nupdated")
+          tdc_to_update.update(drop_down_options: ["v1", "updated"])
         end
 
         it { expect { subject }.not_to change { dossier.champs_public.first.value } }
@@ -468,7 +468,7 @@ describe DossierRebaseConcern do
     context 'with a procedure with a multiple dropdown tdc' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          p.draft_revision.add_type_de_champ(type_champ: :multiple_drop_down_list, libelle: 'l1', drop_down_list_value: "option\nv1\n")
+          p.draft_revision.add_type_de_champ(type_champ: :multiple_drop_down_list, libelle: 'l1', drop_down_options: ["option", "v1"])
           p.publish!
         end
       end
@@ -480,7 +480,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "option\nupdated\nv1")
+          tdc_to_update.update(drop_down_options: ["option", "updated", "v1"])
         end
 
         it { expect { subject }.not_to change { dossier.champs_public.first.value } }
@@ -492,7 +492,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "option\nupdated")
+          tdc_to_update.update(drop_down_options: ["option", "updated"])
         end
 
         it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1","option"]').to('["option"]') }
@@ -504,7 +504,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "v1\nupdated")
+          tdc_to_update.update(drop_down_options: ["v1", "updated"])
         end
 
         it { expect { subject }.not_to change { dossier.champs_public.first.value } }
@@ -514,7 +514,7 @@ describe DossierRebaseConcern do
     context 'with a procedure with a linked dropdown tdc' do
       let!(:procedure) do
         create(:procedure).tap do |p|
-          p.draft_revision.add_type_de_champ(type_champ: :linked_drop_down_list, libelle: 'l1', drop_down_list_value: "--titre1--\noption\nv1\n--titre2--\noption2\nv2\n")
+          p.draft_revision.add_type_de_champ(type_champ: :linked_drop_down_list, libelle: 'l1', drop_down_options: ["--titre1--", "option", "v1", "--titre2--", "option2", "v2"])
           p.publish!
         end
       end
@@ -526,7 +526,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "--titre1--\noption\nv1\nupdated\n--titre2--\noption2\nv2\n")
+          tdc_to_update.update(drop_down_options: ["--titre1--", "option", "v1", "updated", "--titre2--", "option2", "v2"])
         end
 
         it { expect { subject }.not_to change { dossier.champs_public.first.value } }
@@ -538,7 +538,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "--titre1--\noption\nupdated\n--titre2--\noption2\nv2\n")
+          tdc_to_update.update(drop_down_options: ["--titre1--", "option", "updated", "--titre2--", "option2", "v2"])
         end
 
         it { expect { subject }.to change { dossier.champs_public.first.value }.from('["v1","option2"]').to(nil) }
@@ -550,7 +550,7 @@ describe DossierRebaseConcern do
 
           stable_id = procedure.draft_revision.types_de_champ.find_by(libelle: 'l1')
           tdc_to_update = procedure.draft_revision.find_and_ensure_exclusive_use(stable_id)
-          tdc_to_update.update(drop_down_list_value: "--titre1--\nv1\nupdated\n--titre2--\noption2\nv2\n")
+          tdc_to_update.update(drop_down_options: ["--titre1--", "v1", "updated", "--titre2--", "option2", "v2"])
         end
 
         it { expect { subject }.not_to change { dossier.champs_public.first.value } }

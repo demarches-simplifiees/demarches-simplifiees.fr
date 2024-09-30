@@ -153,7 +153,7 @@ module Administrateurs
         :libelle,
         :description,
         :mandatory,
-        :drop_down_list_value,
+        :drop_down_options_from_text,
         :drop_down_other,
         :drop_down_secondary_libelle,
         :drop_down_secondary_description,

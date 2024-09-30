@@ -22,7 +22,7 @@ describe Logic::NotEq do
 
     it do
       multiple_drop_down = create(:type_de_champ_multiple_drop_down_list)
-      first_option = multiple_drop_down.drop_down_list_enabled_non_empty_options.first
+      first_option = multiple_drop_down.drop_down_options.first
 
       expected = {
         operator_name: "Logic::NotEq",

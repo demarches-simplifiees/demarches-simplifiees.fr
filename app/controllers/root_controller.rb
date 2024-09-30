@@ -53,19 +53,23 @@ class RootController < ApplicationController
               repetition_after_stable_id = repetition_type_de_champ.stable_id
             end
           elsif type_de_champ.linked_drop_down_list?
-            type_de_champ.drop_down_list_value =
-              "-- section 1 --
-              option A
-              option B
-              -- section 2 --
-              option C"
+            type_de_champ.drop_down_options =
+              [
+                "-- section 1 --",
+                "option A",
+                "option B",
+                "-- section 2 --",
+                "option C"
+              ]
             type_de_champ.save
           elsif type_de_champ.drop_down_list?
-            type_de_champ.drop_down_list_value =
-              "option A
-              option B
-              -- avant l'option C --
-              option C"
+            type_de_champ.drop_down_options =
+              [
+                "option A",
+                "option B",
+                "-- avant l'option C --",
+                "option C"
+              ]
             type_de_champ.save
           end
         end

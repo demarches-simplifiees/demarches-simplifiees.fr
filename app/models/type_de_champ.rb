@@ -480,26 +480,16 @@ class TypeDeChamp < ApplicationRecord
     Array.wrap(super)
   end
 
-  def drop_down_list_enabled_non_empty_options(other: false)
-    list_options = drop_down_options.reject(&:empty?)
-
-    if other && drop_down_other?
-      list_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
-    else
-      list_options
-    end
+  def drop_down_options_from_text=(text)
+    self.drop_down_options = text.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
-  def drop_down_list_value
-    if drop_down_options.present?
-      drop_down_options.reject(&:empty?).join("\r\n")
+  def drop_down_options_with_other
+    if drop_down_other?
+      drop_down_options + [[I18n.t('shared.champs.drop_down_list.other'), Champs::DropDownListChamp::OTHER]]
     else
-      ''
+      drop_down_options
     end
-  end
-
-  def drop_down_list_value=(value)
-    self.drop_down_options = value.to_s.lines.map(&:strip).reject(&:empty?)
   end
 
   def header_section_level_value
@@ -569,7 +559,7 @@ class TypeDeChamp < ApplicationRecord
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
     elsif choice_type?
       if drop_down_list?
-        drop_down_list_enabled_non_empty_options
+        drop_down_options
       elsif yes_no?
         Champs::YesNoChamp.options
       elsif checkbox?
@@ -788,9 +778,9 @@ class TypeDeChamp < ApplicationRecord
       self.drop_down_options = nil
     elsif !drop_down_options_changed?
       self.drop_down_options = if linked_drop_down_list?
-        ['', '--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
+        ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
       else
-        ['', 'Premier choix', 'Deuxième choix']
+        ['Premier choix', 'Deuxième choix']
       end
     end
   end

@@ -48,7 +48,7 @@ describe Logic do
     context 'when dropdown empty operator true' do
       let(:drop_down) { create(:type_de_champ_drop_down_list) }
       let(:type_de_champs) { [drop_down] }
-      let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
+      let(:first_option) { drop_down.drop_down_options.first }
       let(:condition) { empty_operator(champ_value(drop_down.stable_id), constant(true)) }
 
       it { is_expected.to eq(ds_eq(champ_value(drop_down.stable_id), constant(first_option))) }
@@ -57,7 +57,7 @@ describe Logic do
     context 'when multiple dropdown empty operator true' do
       let(:multiple_drop_down) { create(:type_de_champ_multiple_drop_down_list) }
       let(:type_de_champs) { [multiple_drop_down] }
-      let(:first_option) { multiple_drop_down.drop_down_list_enabled_non_empty_options.first }
+      let(:first_option) { multiple_drop_down.drop_down_options.first }
       let(:condition) { empty_operator(champ_value(multiple_drop_down.stable_id), constant(true)) }
 
       it { is_expected.to eq(ds_include(champ_value(multiple_drop_down.stable_id), constant(first_option))) }
@@ -70,7 +70,7 @@ describe Logic do
 
     context 'with a dropdown' do
       let(:drop_down) { create(:type_de_champ_drop_down_list) }
-      let(:first_option) { drop_down.drop_down_list_enabled_non_empty_options.first }
+      let(:first_option) { drop_down.drop_down_options.first }
 
       it do
         expect(Logic.compatible_type?(champ_value(drop_down.stable_id), constant('a'), [drop_down])).to be true

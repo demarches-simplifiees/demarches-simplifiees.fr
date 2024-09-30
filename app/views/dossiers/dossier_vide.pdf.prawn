@@ -163,7 +163,7 @@ def render_single_champ(pdf, revision, type_de_champ)
     add_libelle(pdf, type_de_champ)
     add_optionnal_description(pdf, type_de_champ)
     add_explanation(pdf, 'Cochez la mention applicable, une seule valeur possible')
-    type_de_champ.drop_down_list_enabled_non_empty_options.each do |option|
+    type_de_champ.drop_down_options.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
@@ -171,7 +171,7 @@ def render_single_champ(pdf, revision, type_de_champ)
     add_libelle(pdf, type_de_champ)
     add_optionnal_description(pdf, type_de_champ)
     add_explanation(pdf, 'Cochez la mention applicable, plusieurs valeurs possibles')
-    type_de_champ.drop_down_list_enabled_non_empty_options.each do |option|
+    type_de_champ.drop_down_options.each do |option|
       format_with_checkbox(pdf, option)
     end
     pdf.text "\n"
