@@ -14,8 +14,16 @@ module ColumnsConcern
       columns.concat(types_de_champ_columns)
     end
 
+    def dossier_id_column
+      Column.new(table: 'self', column: 'id', classname: 'number-col', type: :number)
+    end
+
+    def notifications_column
+      Column.new(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
+    end
+
     def dossier_columns
-      common = [Column.new(table: 'self', column: 'id', classname: 'number-col', type: :number), Column.new(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)]
+      common = [dossier_id_column, notifications_column]
 
       dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
         .map { |column| Column.new(table: 'self', column:, type: :date) }
