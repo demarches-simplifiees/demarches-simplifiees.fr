@@ -778,9 +778,9 @@ class TypeDeChamp < ApplicationRecord
       self.drop_down_options = nil
     elsif !drop_down_options_changed?
       self.drop_down_options = if linked_drop_down_list?
-        ['', '--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
+        ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
       else
-        ['', 'Premier choix', 'Deuxième choix']
+        ['Premier choix', 'Deuxième choix']
       end
     end
   end
