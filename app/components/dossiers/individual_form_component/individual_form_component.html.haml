@@ -48,9 +48,15 @@
       .fr-fieldset__element.fr-mb-0
         .fr-fieldset.width-100
           .fr-fieldset__element.fr-fieldset__element--short-text
-            = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: (for_tiers? ? false : 'given-name') })
+            - if for_tiers?
+              = render Dsfr::InputComponent.new(form: individual, attribute: :prenom)
+            - else
+              = render Dsfr::InputComponent.new(form: individual, attribute: :prenom, opts: { autocomplete: 'given-name' })
           .fr-fieldset__element.fr-fieldset__element--short-text
-            = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: (for_tiers? ? false : 'family-name') })
+            - if for_tiers?
+              = render Dsfr::InputComponent.new(form: individual, attribute: :nom)
+            - else
+              = render Dsfr::InputComponent.new(form: individual, attribute: :nom, opts: { autocomplete: 'family-name' })
 
           - if @dossier.procedure.ask_birthday?
             .fr-fieldset__element
