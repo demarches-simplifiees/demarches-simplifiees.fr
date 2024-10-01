@@ -16,7 +16,6 @@
         = render Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: dossier, procedure: dossier.procedure, with_label: true)
 
 
-
     .header-actions.fr-ml-auto
       = render partial: 'instructeurs/dossiers/header_actions', locals: { dossier: }
       = render partial: 'instructeurs/dossiers/print_and_export_actions', locals: { dossier: }
@@ -26,3 +25,23 @@
   - if dossier.user_deleted?
     %p.fr-mb-1w
       %small L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
+
+  .fr-mb-3w
+    - if dossier.procedure_labels.present?
+      - dossier.procedure_labels.each do |label|
+        .fr-badge.fr-badge--sm{ class: "fr-badge--#{label.color}" }
+          = label.name
+
+    = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm fr-btn--tertiary-no-outline fr-pl-1v']}, menu_options: { class: ['dropdown-label left-aligned'] }) do |menu|
+      - if dossier.procedure_labels.empty?
+        - menu.with_button_inner_html do
+          Ajouter un label
+
+      - menu.with_form do
+        = form_with(url: dossier_labels_instructeur_dossier_path(dossier_id: dossier.id, procedure_id: dossier.procedure.id), method: :post, class: 'fr-p-3w', data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+          %fieldset.fr-fieldset.fr-mt-2w.fr-mb-0
+            = f.collection_check_boxes :procedure_label_id, dossier.procedure.procedure_labels, :id, :name, include_hidden: false do |b|
+              .fr-fieldset__element
+                .fr-checkbox-group.fr-checkbox-group--sm.fr-checkbox-custom-with-labels.fr-mb-1w
+                  = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, procedure_label_id: b.value).present?  )
+                  = b.label(class: "fr-label fr-badge fr-badge--sm fr-badge--#{b.object.color}") { b.text }

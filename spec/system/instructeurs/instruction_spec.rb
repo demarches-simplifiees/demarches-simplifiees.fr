@@ -272,6 +272,35 @@ describe 'Instructing a dossier:', js: true do
     after { DownloadHelpers.clear_downloads }
   end
 
+  scenario 'An instructeur can add labels to a dossier' do
+    log_in(instructeur.email, password)
+
+    visit instructeur_dossier_path(procedure, dossier)
+    click_on 'Ajouter un label'
+
+    check 'à relancer', allow_label_click: true
+    expect(page).to have_css('.fr-badge', text: "à relancer", count: 2)
+    expect(dossier.dossier_labels.count).to eq(1)
+
+    expect(page).not_to have_text('Ajouter un label')
+    find('span.dropdown button.dropdown-button').click
+
+    expect(page).to have_checked_field('à relancer')
+    check 'complet', allow_label_click: true
+
+    expect(page).to have_css('.fr-badge', text: "complet", count: 2)
+    expect(dossier.dossier_labels.count).to eq(2)
+
+    find('span.dropdown button.dropdown-button').click
+    uncheck 'à relancer', allow_label_click: true
+
+    expect(page).to have_unchecked_field('à relancer')
+    expect(page).to have_checked_field('complet')
+    expect(page).to have_css('.fr-badge', text: "à relancer", count: 1)
+    expect(page).to have_css('.fr-badge', text: "complet", count: 2)
+    expect(dossier.dossier_labels.count).to eq(1)
+  end
+
   def log_in(email, password, check_email: true)
     visit new_user_session_path
     expect(page).to have_current_path(new_user_session_path)

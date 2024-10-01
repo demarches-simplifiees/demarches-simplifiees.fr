@@ -262,3 +262,13 @@ button.fr-tag-bug {
 .fr-badge--lowercase {
   text-transform: lowercase;
 }
+
+// we use badge with small checkbox - to align them we need to reduce the margin
+.fr-checkbox-group--sm.fr-checkbox-custom-with-labels input[type="checkbox"] + label::before {
+  margin-top: 0.15rem;
+}
+
+// we use badge with checkbox so we need to add a background white to the uncheched checkbox
+.fr-checkbox-group input[type="checkbox"] + label::before {
+  background-color: #FFFFFF;
+}
