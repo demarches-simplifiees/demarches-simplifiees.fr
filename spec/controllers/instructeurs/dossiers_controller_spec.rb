@@ -1518,4 +1518,37 @@ describe Instructeurs::DossiersController, type: :controller do
       expect([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp, Commentaire]).to include(*assigns(:gallery_attachments).map { _1.record.class })
     end
   end
+
+  describe 'dossier_labels' do
+    context 'it create dossier labels' do
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, procedure_label_id: [ProcedureLabel.first.id] }, format: :turbo_stream }
+      it 'works' do
+        subject
+        dossier.reload
+
+        expect(dossier.dossier_labels.count).to eq(1)
+      end
+
+      it { expect(subject.body).to include('header-top') }
+    end
+
+    context 'it remove dossier labels' do
+      before do
+        DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.first.id)
+      end
+
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, procedure_label_id: [] }, format: :turbo_stream }
+
+      it 'works' do
+        expect(dossier.dossier_labels.count).to eq(1)
+
+        subject
+        dossier.reload
+
+        expect(dossier.dossier_labels.count).to eq(0)
+      end
+
+      it { expect(subject.body).to include('header-top') }
+    end
+  end
 end
