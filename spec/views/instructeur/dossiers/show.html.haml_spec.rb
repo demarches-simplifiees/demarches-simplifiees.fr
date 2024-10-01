@@ -217,4 +217,32 @@ describe 'instructeurs/dossiers/show', type: :view do
       expect(subject).to have_selector('a.fr-sidemenu__link', text: 'l1')
     end
   end
+
+  describe "Dossier labels" do
+    context "Dossier without labels" do
+      it 'displays button with text to add label' do
+        expect(subject).to have_text("Ajouter un label")
+        expect(subject).to have_selector("button.dropdown-button")
+        expect(subject).to have_text("à relancer", count: 1)
+        within('.dropdown') do
+          expect(subject).to have_text("à relancer", count: 1)
+        end
+      end
+    end
+
+    context "Dossier with labels" do
+      before do
+        DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.first.id)
+      end
+
+      it 'displays labels and button without text to add label' do
+        expect(subject).not_to have_text("Ajouter un label")
+        expect(subject).to have_selector("button.dropdown-button")
+        expect(subject).to have_text("à relancer", count: 2)
+        within('.dropdown') do
+          expect(subject).to have_text("à relancer", count: 1)
+        end
+      end
+    end
+  end
 end
