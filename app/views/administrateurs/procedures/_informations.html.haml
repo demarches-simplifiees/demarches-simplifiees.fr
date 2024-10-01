@@ -125,11 +125,11 @@
     %react-fragment
       = render ReactComponent.new "ComboBox/MultiComboBox",
         id: "procedure_tags_combo",
-        items: Procedure.tags,
-        selected_keys: @procedure.tags,
-        name: 'procedure[tags][]',
+        items: ProcedureTag.order(:name).pluck(:name),
+        selected_keys: @procedure.procedure_tags.pluck(:name),
+        name: 'procedure[procedure_tag_names][]',
         value_separator: ',|;',
-        allows_custom_value: true,
+        allows_custom_value: false,
         'aria-label': 'Tags',
         'aria-describedby': 'procedure-tags'
 

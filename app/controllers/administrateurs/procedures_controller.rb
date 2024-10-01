@@ -476,7 +476,16 @@ module Administrateurs
       procedures_result = procedures_result.where(procedures_zones: { zone_id: filter.zone_ids }) if filter.zone_ids.present?
       procedures_result = procedures_result.where(hidden_at_as_template: nil)
       procedures_result = procedures_result.where(aasm_state: filter.statuses) if filter.statuses.present?
-      procedures_result = procedures_result.where("tags @> ARRAY[?]::text[]", filter.tags) if filter.tags.present?
+      if filter.tags.present?
+        tag_ids = ProcedureTag.where(name: filter.tags).pluck(:id).flatten
+
+        if tag_ids.any?
+          procedures_result = procedures_result
+            .joins(:procedure_tags)
+            .where(procedure_tags: { id: tag_ids })
+            .distinct
+        end
+      end
       procedures_result = procedures_result.where(template: true) if filter.template?
       procedures_result = procedures_result.where(published_at: filter.from_publication_date..) if filter.from_publication_date.present?
       procedures_result = procedures_result.where(service: service) if filter.service_siret.present?
@@ -532,7 +541,7 @@ module Administrateurs
         :lien_dpo,
         :opendata,
         :procedure_expires_when_termine_enabled,
-        { zone_ids: [], tags: [] }
+        { zone_ids: [], procedure_tag_names: [] }
       ]
 
       editable_params << :piece_justificative_multiple if @procedure && !@procedure.piece_justificative_multiple?
@@ -544,6 +553,12 @@ module Administrateurs
       end
       if permited_params[:auto_archive_on].present?
         permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day
+      end
+
+      if permited_params[:procedure_tag_names].present?
+        tag_ids = ProcedureTag.where(name: permited_params[:procedure_tag_names]).pluck(:id)
+        permited_params[:procedure_tag_ids] = tag_ids
+        permited_params.delete(:procedure_tag_names)
       end
       permited_params
     end
