@@ -41,6 +41,18 @@ class WebhookController < ActionController::Base
       if instructeur
         url = manager_instructeur_url(instructeur)
         html << link_to_manager(instructeur, url)
+
+        disabled_notifications = instructeur.assign_to.filter do |assign_to|
+          !assign_to.instant_email_dossier_notifications_enabled ||
+          !assign_to.instant_email_message_notifications_enabled ||
+          !assign_to.instant_expert_avis_email_notifications_enabled
+        end
+
+        html << "Notifications activées" if disabled_notifications.empty?
+        disabled_notifications.each do |assign_to|
+          html << "Notifs désactivées Procedure##{assign_to.groupe_instructeur.procedure_id}"
+        end
+
       end
 
       if administrateur
