@@ -36,7 +36,7 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
 
     it "displays when gallery item has been added" do
       expect(subject).to have_text('Ajoutée le')
-      expect(subject).not_to have_css('.fr-badge--new')
+      expect(subject).not_to have_css('.highlighted')
       expect(subject).to have_text(component.helpers.try_format_datetime(attachment.record.created_at, format: :veryshort))
     end
 
@@ -78,7 +78,7 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         end
 
         it 'displays datetime in the right style' do
-          expect(subject).to have_css('.fr-badge--new')
+          expect(subject).to have_css('.highlighted')
         end
       end
 
@@ -90,7 +90,7 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         end
 
         it 'displays datetime in the right style' do
-          expect(subject).not_to have_css('.fr-badge--new')
+          expect(subject).not_to have_css('.highlighted')
         end
       end
     end

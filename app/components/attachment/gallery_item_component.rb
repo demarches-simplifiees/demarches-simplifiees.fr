@@ -62,7 +62,7 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def badge_updated_class
     class_names(
       "fr-badge fr-badge--sm" => true,
-      "fr-badge--new" => seen_at.present? && updated_at&.>(seen_at)
+      "highlighted" => seen_at.present? && updated_at&.>(seen_at)
     )
   end
 
