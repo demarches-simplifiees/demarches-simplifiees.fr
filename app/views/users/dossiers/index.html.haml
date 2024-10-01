@@ -7,60 +7,63 @@
   .fr-container
     %h1.page-title.fr-h2= t('views.users.dossiers.index.dossiers')
 
-    .fr-grid-row.fr-grid-row--gutters
-      - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
-        .fr-col
-          #search-2.fr-search-bar
-            = form_tag dossiers_path, method: :get, :role => "search", class: "width-100 fr-mb-5w" do
-              = hidden_field_tag :procedure_id, params[:procedure_id]
-              = label_tag "q", t('views.users.dossiers.search.label'), class: 'fr-label fr-mb-1w'
-              .flex
-                = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.prompt'), class: "fr-input"
-                %button.fr-btn.fr-btn--sm
-                  = t('views.users.dossiers.search.label')
-      - if @procedures_for_select.size > 1
-        .fr-col
-          = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
+    - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2  || @procedures_for_select.size > 1
+      .fr-grid-row.fr-grid-row--gutters
+        - if current_user.dossiers.count > 2 || current_user.dossiers_invites.count > 2
+          .fr-col.fr-mb-5w
+            #search-2.fr-search-bar
+              = form_tag dossiers_path, method: :get, :role => "search", class: "width-100" do
+                = hidden_field_tag :procedure_id, params[:procedure_id]
+                = label_tag "q", t('views.users.dossiers.search.label'), class: 'fr-label fr-mb-1w'
+                .flex
+                  = text_field_tag "q", "#{@search_terms if @search_terms.present?}", placeholder: t('views.users.dossiers.search.prompt'), class: "fr-input"
+                  %button.fr-btn.fr-btn--sm
+                    = t('views.users.dossiers.search.label')
+        - if @procedures_for_select.size > 1
+          .fr-col.fr-mb-5w
+            = render Dossiers::UserProcedureFilterComponent.new(procedures_for_select: @procedures_for_select)
 
     - if @search_terms.blank?
-      - cache([I18n.locale, current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
-        %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
-          %ul.fr-tabs__list{ role: 'tablist' }
-            - if @user_dossiers.present?
-              = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
-                dossiers_path(statut: 'en-cours', procedure_id: params[:procedure_id]),
-                active: @statut == 'en-cours',
-                badge: number_with_html_delimiter(@user_dossiers.count))
-            - if @dossiers_traites.present?
-              // TODO: when renaming this tab in "Terminé", update notify_near_deletion_to_user email wording accordingly.
-              = tab_item(t('pluralize.traites', count: @dossiers_traites.count),
-                dossiers_path(statut: 'traites', procedure_id: params[:procedure_id]),
-                active: @statut == 'traites',
-                badge: number_with_html_delimiter(@dossiers_traites.count))
+      - if [@user_dossiers, @dossiers_traites, @dossiers_invites, @dossiers_close_to_expiration, @dossiers_supprimes, @dossier_transferes].any?(&:present?)
+        - cache([I18n.locale, current_user.id, @statut, current_user.dossiers, current_user.dossiers_invites], expires_in: 1.hour) do
+          %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
+            %ul.fr-tabs__list{ role: 'tablist' }
+              - if @user_dossiers.present?
+                = tab_item(t('pluralize.en_cours', count: @user_dossiers.count),
+                  dossiers_path(statut: 'en-cours', procedure_id: params[:procedure_id]),
+                  active: @statut == 'en-cours',
+                  badge: number_with_html_delimiter(@user_dossiers.count))
 
-            - if @dossiers_invites.present?
-              = tab_item(t('pluralize.dossiers_invites', count: @dossiers_invites.count),
-                dossiers_path(statut: 'dossiers-invites', procedure_id: params[:procedure_id]),
-                active: @statut == 'dossiers-invites',
-                badge: number_with_html_delimiter(@dossiers_invites.count))
+              - if @dossiers_traites.present?
+                // TODO: when renaming this tab in "Terminé", update notify_near_deletion_to_user email wording accordingly.
+                = tab_item(t('pluralize.traites', count: @dossiers_traites.count),
+                  dossiers_path(statut: 'traites', procedure_id: params[:procedure_id]),
+                  active: @statut == 'traites',
+                  badge: number_with_html_delimiter(@dossiers_traites.count))
 
-            - if @dossiers_close_to_expiration.count > 0
-              = tab_item(t('pluralize.dossiers_close_to_expiration', count: @dossiers_close_to_expiration.count),
-                dossiers_path(statut: 'dossiers-expirant', procedure_id: params[:procedure_id]),
-                active: @statut == 'dossiers-expirant',
-                badge: number_with_html_delimiter(@dossiers_close_to_expiration.count))
+              - if @dossiers_invites.present?
+                = tab_item(t('pluralize.dossiers_invites', count: @dossiers_invites.count),
+                  dossiers_path(statut: 'dossiers-invites', procedure_id: params[:procedure_id]),
+                  active: @statut == 'dossiers-invites',
+                  badge: number_with_html_delimiter(@dossiers_invites.count))
 
-            - if @dossiers_supprimes.present?
-              = tab_item(t('pluralize.dossiers_supprimes', count: @dossiers_supprimes.count),
-              dossiers_path(statut: 'dossiers-supprimes', procedure_id: params[:procedure_id]),
-              active: @statut == 'dossiers-supprimes',
-              badge: number_with_html_delimiter(@dossiers_supprimes.count))
+              - if @dossiers_close_to_expiration.count > 0
+                = tab_item(t('pluralize.dossiers_close_to_expiration', count: @dossiers_close_to_expiration.count),
+                  dossiers_path(statut: 'dossiers-expirant', procedure_id: params[:procedure_id]),
+                  active: @statut == 'dossiers-expirant',
+                  badge: number_with_html_delimiter(@dossiers_close_to_expiration.count))
 
-            - if @dossier_transferes.present?
-              = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transferes.count),
-                dossiers_path(statut: 'dossiers-transferes', procedure_id: params[:procedure_id]),
-                active: @statut == 'dossiers-transferes',
-                badge: number_with_html_delimiter(@dossier_transferes.count))
+              - if @dossiers_supprimes.present?
+                = tab_item(t('pluralize.dossiers_supprimes', count: @dossiers_supprimes.count),
+                dossiers_path(statut: 'dossiers-supprimes', procedure_id: params[:procedure_id]),
+                active: @statut == 'dossiers-supprimes',
+                badge: number_with_html_delimiter(@dossiers_supprimes.count))
+
+              - if @dossier_transferes.present?
+                = tab_item(t('pluralize.dossiers_transferes', count: @dossier_transferes.count),
+                  dossiers_path(statut: 'dossiers-transferes', procedure_id: params[:procedure_id]),
+                  active: @statut == 'dossiers-transferes',
+                  badge: number_with_html_delimiter(@dossier_transferes.count))
 
 .fr-container
   .fr-grid-row.fr-grid-row--center

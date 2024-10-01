@@ -19,4 +19,4 @@
           .fr-fieldset__element
             = render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
-        = f.submit t('devise.passwords.new.request_new_password'), class: 'fr-btn fr-btn--lg fr-mt-4w'
+        = f.submit t('devise.passwords.new.request_new_password'), class: 'fr-btn fr-btn--lg fr-mt-4w', 'data-email-input-target': 'next'

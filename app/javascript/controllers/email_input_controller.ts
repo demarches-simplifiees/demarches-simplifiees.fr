@@ -44,15 +44,25 @@ export class EmailInputController extends ApplicationController {
   }
 
   accept() {
-    this.ariaRegionTarget.setAttribute('aria-live', 'off');
     hide(this.ariaRegionTarget);
     this.inputTarget.value = this.suggestionTarget.innerHTML;
     this.suggestionTarget.innerHTML = '';
+    const nextTarget = document.querySelector<HTMLElement>(
+      '[data-email-input-target="next"]'
+    );
+    if (nextTarget) {
+      nextTarget.focus();
+    }
   }
 
   discard() {
-    this.ariaRegionTarget.setAttribute('aria-live', 'off');
     hide(this.ariaRegionTarget);
     this.suggestionTarget.innerHTML = '';
+    const nextTarget = document.querySelector<HTMLElement>(
+      '[data-email-input-target="next"]'
+    );
+    if (nextTarget) {
+      nextTarget.focus();
+    }
   }
 }

@@ -52,7 +52,7 @@
                   - elsif nav_bar_profile == :instructeur
                     = render partial: 'shared/help/help_dropdown_instructeur'
                   - else
-                    // NB: on mobile in order to have links correctly aligned, we need a left icon
+                    -# NB: on mobile in order to have links correctly aligned, we need a left icon #
                     = link_to t('help'), t("links.common.faq.url"), class: 'fr-btn dropdown-button'
 
 

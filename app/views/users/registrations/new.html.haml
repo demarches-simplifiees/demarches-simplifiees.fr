@@ -1,4 +1,5 @@
 = content_for(:page_id, 'auth')
+= content_for(:title, t('metas.signup.title'))
 
 .auth-form
   = devise_error_messages!
@@ -13,15 +14,16 @@
         %h2.fr-h6= I18n.t('views.registrations.new.subtitle')
 
       .fr-fieldset__element
-        %p.fr-text--sm= t('utils.mandatory_champs')
+        %p.fr-text--sm= t('utils.asterisk_html')
 
       .fr-fieldset__element= render Dsfr::InputComponent.new(form: f, attribute: :email, input_type: :email_field, opts: { autocomplete: 'email', autofocus: true })
 
       .fr-fieldset__element
         = render Dsfr::InputComponent.new(form: f, attribute: :password, input_type: :password_field,
-          opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path }, aria: {describedby: 'password_hint'}})
+          opts: { autofocus: 'true', autocomplete: 'new-password', data: { controller: 'turbo-input', turbo_input_url_value: show_password_complexity_path, email_input_target: 'next'}, aria: {describedby: 'password_hint'}})
 
         #password_complexity
           = render PasswordComplexityComponent.new
 
-    = f.submit t('views.shared.account.create'), id: 'submit-password', disabled: :disabled, class: "fr-btn fr-btn--lg fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
+    .fr-btns-group
+      = f.submit t('views.shared.account.create'), id: 'submit-password', disabled: :disabled, class: "fr-btn fr-mt-2w", data: { disable_with: t('views.users.passwords.edit.submit_loading') }
