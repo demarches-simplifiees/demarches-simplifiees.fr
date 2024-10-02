@@ -29,7 +29,7 @@ as well as a link to its edit page.
       'Modifier',
       [:edit, namespace, page.resource],
       class: "button",
-    ) if accessible_action?(:edit, page.resource) && show_action?(:edit, page.resource) %>
+    ) if accessible_action?(page.resource, :edit) %>
 
     <%= link_to 'Réinviter', reinvite_manager_instructeur_path(instructeur), method: :post, class: 'button' %>
 
