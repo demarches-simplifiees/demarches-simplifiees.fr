@@ -225,10 +225,6 @@ class Instructeur < ApplicationRecord
   def features
   end
 
-  def flipper_id
-    "Instructeur:#{id}"
-  end
-
   def dossiers_count_summary(groupe_instructeur_ids)
     query = <<~EOF
       SELECT
