@@ -33,10 +33,11 @@ Vous souhaitez y apporter des changements ou des améliorations ? Lisez notre [
 </policymap>
 ```
 
-Nous sommes en cours de migration de `delayed_job` vers `sidekiq` pour le traitement des jobs asynchrones.
 Pour faire tourner sidekiq, vous aurez besoin de :
 
 - redis
+
+#### Crédits et licences
 
 - lightgallery : une license a été souscrite pour soutenir le projet, mais elle n'est pas obligatoire si la librairie est utilisée dans le cadre d'une application open source.
 

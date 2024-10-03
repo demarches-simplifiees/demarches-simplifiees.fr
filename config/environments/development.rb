@@ -111,8 +111,8 @@ Rails.application.configure do
   # Annotate rendered view with file names.
   # config.action_view.annotate_rendered_view_with_filenames = true
 
-  # We use the async adapter by default, but delayed_job can be set using
-  # RAILS_QUEUE_ADAPTER=delayed_job bin/rails server
+  # We use the async adapter by default, but sidekiq can be set using
+  # RAILS_QUEUE_ADAPTER=sidekiq bin/rails server
   config.active_job.queue_adapter = ENV.fetch('RAILS_QUEUE_ADAPTER', 'async').to_sym
 
   # Use an evented file watcher to asynchronously detect changes in source code,

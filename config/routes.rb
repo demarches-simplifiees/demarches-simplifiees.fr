@@ -107,7 +107,6 @@ Rails.application.routes.draw do
 
     authenticate :super_admin do
       mount Flipper::UI.app(-> { Flipper.instance }) => "/features", as: :flipper
-      match "/delayed_job" => DelayedJobWeb, :anchor => false, :via => [:get, :post]
       mount MaintenanceTasks::Engine => "/maintenance_tasks"
       mount Sidekiq::Web => "/sidekiq"
     end
