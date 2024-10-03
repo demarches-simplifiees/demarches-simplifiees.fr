@@ -53,7 +53,7 @@ module ColumnsConcern
         Column.new(table: 'user', column: 'email'),
         Column.new(table: 'followers_instructeurs', column: 'email'),
         Column.new(table: 'groupe_instructeur', column: 'id', type: :enum),
-        Column.new(table: 'avis', column: 'question_answer', filterable: false)
+        Column.new(table: 'avis', column: 'question_answer', filterable: false) # not filterable ?
       ]
     end
 

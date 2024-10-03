@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "Users::DossiersController",
           "method": "merci",
-          "line": 329,
+          "line": 323,
           "file": "app/controllers/users/dossiers_controller.rb",
           "rendered": {
             "name": "users/dossiers/merci",
@@ -47,11 +47,34 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "31693060072e27c02ca4f884f2a07f4f1c1247b7a6f5cc5c724e88e6ca9b4873",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/concerns/dossier_filtering_concern.rb",
+      "line": 40,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} = ?)\"}\", *values)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DossierFilteringConcern",
+        "method": null
+      },
+      "user_input": "values.count",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "filtered by rails query params where(something: ?, values)"
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "5ba3f5d525b15c710215829e0db49f58e8cca06d68eff5931ebfd7d0ca0e35de",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/columns/json_path_column.rb",
-      "line": 10,
+      "line": 11,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "dossiers.with_type_de_champ(stable_id).where(\"#{search_occurences.count} OR #{\"(#{json_path_query_part} ILIKE ?)\"}\", *search_occurences.map do\n \"%#{value}%\"\n end)",
       "render_path": null,
@@ -74,7 +97,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/graphql/connections/cursor_connection.rb",
-      "line": 150,
+      "line": 152,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "items.order(order_column => ((:desc or :asc)), :id => ((:desc or :asc))).limit(limit).where(\"(#{order_table}.#{order_column}, #{order_table}.id) < (?, ?)\", timestamp, id)",
       "render_path": null,
@@ -131,7 +154,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/graphql/connections/cursor_connection.rb",
-      "line": 153,
+      "line": 155,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "items.order(order_column => ((:desc or :asc)), :id => ((:desc or :asc))).limit(limit).where(\"(#{order_table}.#{order_column}, #{order_table}.id) > (?, ?)\", timestamp, id)",
       "render_path": null,
@@ -154,7 +177,7 @@
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 32,
+      "line": 34,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
       "render_path": null,
@@ -226,6 +249,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-08-20 14:34:27 +0200",
+  "updated": "2024-09-24 20:56:24 +0200",
   "brakeman_version": "6.1.2"
 }
