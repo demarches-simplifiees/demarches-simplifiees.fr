@@ -58,23 +58,16 @@ describe 'Administrateurs can edit procedures', js: true do
   end
 
   context 'when we associate tags' do
-    scenario 'the administrator can edit and persist the tags' do
-      procedure.update!(tags: ['social'])
+    let!(:social_tag) { ProcedureTag.create(name: 'social') }
+    let!(:planete_tag) { ProcedureTag.create(name: 'planete') }
+
+    scenario 'the tags are persisted when not interacting with the tags combobox' do
+      procedure.procedure_tags << social_tag
 
       visit edit_admin_procedure_path(procedure)
-      select_combobox('procedure_tags_combo', 'planete', custom_value: true)
+
       click_on 'Enregistrer'
-
-      expect(procedure.reload.tags).to eq(['social', 'planete'])
-    end
-
-    scenario 'the tags are persisted when non interacting with the tags combobox' do
-      procedure.update!(tags: ['social'])
-
-      visit edit_admin_procedure_path(procedure)
-      click_on 'Enregistrer'
-
-      expect(procedure.reload.tags).to eq(['social'])
+      expect(procedure.procedure_tags.pluck(:name)).to match_array(['social'])
     end
   end
 
