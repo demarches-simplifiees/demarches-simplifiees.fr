@@ -6,7 +6,6 @@
         %h1.fr-h3.fr-mb-0
           = "Dossier nº #{dossier.id}"
 
-      = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
       .fr-mt-2w.badge-group
         = procedure_badge(dossier.procedure)
 
