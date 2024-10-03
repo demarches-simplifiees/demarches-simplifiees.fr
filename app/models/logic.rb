@@ -25,6 +25,7 @@ module Logic
       ExcludeOperator,
       And,
       Or,
+      Group,
       InDepartementOperator,
       NotInDepartementOperator,
       InRegionOperator,
@@ -133,4 +134,6 @@ module Logic
   def ds_or(operands) = Logic::Or.new(operands)
 
   def ds_and(operands) = Logic::And.new(operands)
+
+  def ds_group(content) = Logic::Group.new(content)
 end
