@@ -63,6 +63,20 @@ describe WebhookController, type: :controller do
         it 'returns a link to the Administrateur profile in the Manager' do
           expect(payload).to have_key('html')
           expect(payload['html']).to have_selector("a[href='#{manager_administrateur_url(admin)}']")
+          expect(payload['html']).to have_text("Notifications activées")
+        end
+      end
+
+      context "when notifications are disabled" do
+        let(:instructeur) { create(:instructeur, user:) }
+        let(:procedure) { create(:procedure) }
+        before do
+          create(:assign_to, instructeur:, procedure:,
+            instant_email_dossier_notifications_enabled: false)
+        end
+
+        it 'returns a summary of disabled notifications' do
+          expect(payload['html']).to have_text("Notifs désactivées Procedure##{procedure.id}")
         end
       end
     end
