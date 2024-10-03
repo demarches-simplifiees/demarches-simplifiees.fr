@@ -61,40 +61,59 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe '#follow' do
     let(:batch_operation) {}
-    before do
+
+    subject do
       batch_operation
       patch :follow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
     end
 
-    it { expect(instructeur.followed_dossiers).to match([dossier]) }
-    it { expect(flash.notice).to eq('Dossier suivi') }
-    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+    it do
+      subject
+      expect(instructeur.followed_dossiers).to match([dossier])
+      expect(flash.notice).to eq('Dossier suivi')
+      expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+    end
+    it { expect { subject }.to change { dossier.reload.updated_at } }
 
     context 'with dossier in batch_operation' do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
-      it { expect(instructeur.followed_dossiers).to eq([]) }
-      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
+
+      it do
+        subject
+        expect(instructeur.followed_dossiers).to eq([])
+        expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier))
+        expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
+      end
     end
   end
 
   describe '#unfollow' do
     let(:batch_operation) {}
-    before do
+    before { instructeur.followed_dossiers << dossier }
+
+    subject do
       batch_operation
-      instructeur.followed_dossiers << dossier
       patch :unfollow, params: { procedure_id: procedure.id, dossier_id: dossier.id }
-      instructeur.reload
     end
 
-    it { expect(instructeur.followed_dossiers).to match([]) }
-    it { expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}") }
-    it { expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure)) }
+    it do
+      subject
+      expect(instructeur.followed_dossiers).to match([])
+      expect(flash.notice).to eq("Vous ne suivez plus le dossier nº #{dossier.id}")
+      expect(response).to redirect_to(instructeur_procedure_path(dossier.procedure))
+    end
+
+    it { expect { subject }.to change { dossier.reload.updated_at } }
+
     context 'with dossier in batch_operation' do
       let(:batch_operation) { create(:batch_operation, operation: :archiver, dossiers: [dossier], instructeur: instructeur) }
-      it { expect(instructeur.followed_dossiers).to eq([dossier]) }
-      it { expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier)) }
-      it { expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.") }
+
+      it do
+        subject
+        expect(instructeur.followed_dossiers).to eq([dossier])
+        expect(response).to redirect_to(instructeur_dossier_path(dossier.procedure, dossier))
+        expect(flash.alert).to eq("Votre action n'a pas été effectuée, ce dossier fait parti d'un traitement de masse.")
+      end
     end
   end
 
