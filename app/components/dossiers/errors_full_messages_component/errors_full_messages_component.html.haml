@@ -1,4 +1,5 @@
 .fr-alert.fr-alert--error.fr-mb-3w{ role: "alertdialog" }
   - if dedup_and_partitioned_errors.size > 0
-    %p#sumup-errors= t('.sumup_html', count: dedup_and_partitioned_errors.size, url: dedup_and_partitioned_errors.first.anchor)
+    %h3#sumup-errors.fr-alert__title= t('.sumup_html.title', count: dedup_and_partitioned_errors.size)
+    %p= t('.sumup_html.content', count: dedup_and_partitioned_errors.size)
     = render ExpandableErrorList.new(errors: dedup_and_partitioned_errors)
