@@ -1,4 +1,4 @@
-- content_for(:title, "Nouveau dossier (#{@dossier.procedure.libelle})")
+- content_for(:title, t(".title", scope: :metas, procedure_label: @dossier.procedure.libelle))
 
 = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }
 
@@ -6,9 +6,12 @@
   - if @dossier.procedure.for_tiers_enabled?
     = form_for @dossier, url: identite_dossier_path(@dossier), method: :patch, html: { class: "form" }, data: {turbo: true, controller: :autosubmit} do |f|
 
-      %fieldset#radio-rich-hint.fr-fieldset{ "aria-labelledby" => "radio-rich-hint-legend radio-rich-hint-messages" }
-        %legend#radio-rich-hint-legend.fr-fieldset__legend--regular.fr-fieldset__legend
+      %p.fr-text--sm= t('utils.asterisk_html')
+
+      %fieldset#radio-rich-hint.fr-fieldset
+        %legend.fr-fieldset__legend--regular.fr-fieldset__legend
           = t('views.users.dossiers.identite.legend')
+          = render EditableChamp::AsteriskMandatoryComponent.new
 
         .fr-fieldset__element
           .fr-radio-group.fr-radio-rich
@@ -25,6 +28,6 @@
             .fr-radio-rich__img
               %span.fr-icon-parent-fill
 
-        = f.submit t('views.users.dossiers.identite.continue'), class: 'visually-hidden'
+        = f.submit t('views.users.dossiers.identite.continue'), class: 'hidden'
 
   = render Dossiers::IndividualFormComponent.new(dossier: @dossier)
