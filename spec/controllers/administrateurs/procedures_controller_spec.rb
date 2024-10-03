@@ -15,7 +15,8 @@ describe Administrateurs::ProceduresController, type: :controller do
   let(:lien_site_web) { 'http://mon-site.gouv.fr' }
   let(:zone) { create(:zone) }
   let(:zone_ids) { [zone.id] }
-  let(:tags) { ["planete", "environnement"] }
+  let!(:tag1) { ProcedureTag.create(name: 'Aao') }
+  let!(:tag2) { ProcedureTag.create(name: 'Accompagnement') }
 
   describe '#apercu' do
     subject { get :apercu, params: { id: procedure.id } }
@@ -64,7 +65,7 @@ describe Administrateurs::ProceduresController, type: :controller do
       monavis_embed: monavis_embed,
       zone_ids: zone_ids,
       lien_site_web: lien_site_web,
-      tags: tags
+      procedure_tag_names: ['Aao', 'Accompagnement']
     }
   }
 
@@ -278,21 +279,29 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
 
     context 'with specific tag' do
-      let!(:tags_procedure) { create(:procedure, :published, tags: ['environnement', 'diplomatie']) }
+      let!(:tag_environnement) { ProcedureTag.create(name: 'environnement') }
+      let!(:tag_diplomatie) { ProcedureTag.create(name: 'diplomatie') }
+      let!(:tag_football) { ProcedureTag.create(name: 'football') }
+
+      let!(:procedure) do
+        procedure = create(:procedure, :published)
+        procedure.procedure_tags << [tag_environnement, tag_diplomatie]
+        procedure
+      end
 
       it 'returns procedure who contains at least one tag included in params' do
-        get :all, params: { tags: ['environnement'] }
-        expect(assigns(:procedures).any? { |p| p.id == tags_procedure.id }).to be_truthy
+        get :all, params: { procedure_tag_names: ['environnement'] }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
       end
 
       it 'returns procedures who contains all tags included in params' do
-        get :all, params: { tags: ['environnement', 'diplomatie'] }
-        expect(assigns(:procedures).any? { |p| p.id == tags_procedure.id }).to be_truthy
+        get :all, params: { procedure_tag_names: ['environnement', 'diplomatie'] }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
       end
 
-      it 'does not returns the procedure' do
-        get :all, params: { tags: ['environnement', 'diplomatie', 'football'] }
-        expect(assigns(:procedures).any? { |p| p.id == tags_procedure.id }).to be_falsey
+      it 'returns the procedure when at least one tag is include' do
+        get :all, params: { procedure_tag_names: ['environnement', 'diplomatie', 'football'] }
+        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
       end
     end
 
@@ -495,8 +504,7 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(subject.organisation).to eq(organisation)
           expect(subject.administrateurs).to eq([admin])
           expect(subject.duree_conservation_dossiers_dans_ds).to eq(duree_conservation_dossiers_dans_ds)
-          expect(subject.tags).to eq(["planete", "environnement"])
-
+          expect(subject.procedure_tags.pluck(:name)).to match_array(['Aao', 'Accompagnement'])
           expect(response).to redirect_to(champs_admin_procedure_path(Procedure.last))
           expect(flash[:notice]).to be_present
         end
