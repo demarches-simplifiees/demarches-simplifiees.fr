@@ -17,6 +17,44 @@ class Conditions::ConditionsComponent < ApplicationComponent
     end
   end
 
+  def condition_with_groups?
+    [And, Or].include?(@condition.class) && @condition.operands.map { |o| o.is_a?(Group) }.any?
+  end
+
+  def groups
+    @condition.operands
+  end
+
+  def group_rows(group)
+    if [And, Or].include?(group.content.class)
+      group.content.operands.map { |c| Logic.split_condition(c) }
+    else
+      [Logic.split_condition(group.content)]
+    end
+  end
+
+  def inter_group_n_ary_operator_tag(group_index)
+    if group_index == 0
+      select_tag(
+        "#{input_prefix}[top_operator_name]",
+        options_for_select(options_for_far_left_tag, @condition.class.name),
+        class: 'fr-select'
+      )
+    elsif group_index >= 1
+      nil
+    end
+  end
+
+  def intra_group_n_ary_operator_tag(group, row_number)
+    if row_number == 1
+      select_tag(
+        "#{input_prefix}[top_operator_name]",
+        options_for_select(options_for_far_left_tag, group.content.class.name),
+        class: 'fr-select'
+      )
+    end
+  end
+
   def far_left_tag(row_number)
     if row_number == 0
       t('.display_if')

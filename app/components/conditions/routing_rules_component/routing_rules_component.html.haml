@@ -21,11 +21,24 @@
             %th.value Valeur
             %th.delete-column
         %tbody
-          - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
-            %tr
-              %td.far-left= far_left_tag(row_index)
-              %td.target= left_operand_tag(targeted_champ, row_index)
-              %td.operator= operator_tag(operator_name, targeted_champ, row_index)
-              %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
-              %td.delete-column= delete_condition_tag(row_index)
+          - if condition_with_groups?
+            - groups.each.with_index do |group, group_index|
+              .group
+                - group_rows(group).each.with_index do |(targeted_champ, operator_name, value), row_index|
+                  %tr
+                    %td.far-left= intra_group_n_ary_operator_tag(group, row_index)
+                    %td.target= left_operand_tag(targeted_champ, row_index)
+                    %td.operator= operator_tag(operator_name, targeted_champ, row_index)
+                    %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
+                    %td.delete-column= delete_condition_tag(row_index)
+                %tr
+                  %td.very-far.fr-mt-6v.fr-mb-6v= inter_group_n_ary_operator_tag(group_index)
+          - else
+            - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
+              %tr
+                %td.far-left= far_left_tag(row_index)
+                %td.target= left_operand_tag(targeted_champ, row_index)
+                %td.operator= operator_tag(operator_name, targeted_champ, row_index)
+                %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
+                %td.delete-column= delete_condition_tag(row_index)
       .flex.justify-end.mt-2= add_condition_tag
