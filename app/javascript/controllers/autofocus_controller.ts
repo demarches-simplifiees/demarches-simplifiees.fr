@@ -2,8 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 
 export class AutofocusController extends Controller {
   connect() {
-    const element = this.element as HTMLInputElement;
+    const element = this.element as HTMLInputElement | HTMLElement;
     element.focus();
-    element.setSelectionRange(0, element.value.length);
+
+    if ('value' in element) {
+      element.setSelectionRange(0, element.value.length);
+    }
   }
 }

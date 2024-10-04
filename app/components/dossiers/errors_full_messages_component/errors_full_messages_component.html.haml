@@ -1,4 +1,4 @@
-.fr-alert.fr-alert--error.fr-mb-3w{ role: "alertdialog" }
+.fr-alert.fr-alert--error.fr-mb-3w{ role: "alertdialog", data: { controller: 'autofocus' }, tabindex: '-1' }
   - if dedup_and_partitioned_errors.size > 0
     %p#sumup-errors= t('.sumup_html', count: dedup_and_partitioned_errors.size, url: dedup_and_partitioned_errors.first.anchor)
     = render ExpandableErrorList.new(errors: dedup_and_partitioned_errors)
