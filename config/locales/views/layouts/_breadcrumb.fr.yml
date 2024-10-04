@@ -1,20 +1,21 @@
 fr:
   layouts:
     breadcrumb:
-      root: "Accueil - Liste des démarches"
-      you_are_here: "Vous êtes ici"
-      show: "Voir le fil d’Ariane"
-      preview: "Prévisualiser le formulaire"
-      preview_annotations: "Prévisualiser les annotations"
-      continue_annotations: "Valider les annotations"
-      since: "depuis le %{date}"
-      closed: "Close"
-      published: "Publiée"
-      draft: "En test"
-      to_modify: "À modifier"
-      more_info_on_test: "Pour plus d’information sur la phase de test"
-      go_to_FAQ: "consulter la FAQ"
-      url_FAQ: "/faq#accordion-administrateur-2"
+      root: 'Accueil - Liste des démarches'
+      you_are_here: 'Vous êtes ici'
+      show: 'Voir le fil d’Ariane'
+      preview: 'Prévisualiser le formulaire'
+      preview_annotations: 'Prévisualiser les annotations'
+      continue_annotations: 'Valider les annotations'
+      since: 'depuis le %{date}'
+      closed: 'Close'
+      published: 'Publiée'
+      draft: 'En test'
+      to_modify: 'À modifier'
+      more_info_on_test: 'Pour plus d’information sur la phase de test'
+      go_to_FAQ: 'consulter la FAQ'
+      url_FAQ: '/faq#accordion-administrateur-2'
       faq: Foire aux Questions
-      show_dossier: "Dossier nº %{dossier_id} – %{owner_name}"
+      show_dossier: 'Dossier nº %{dossier_id} – %{owner_name}'
       show_procedure: '%{libelle} – Suivi des dossiers'
+      edit_path: Modifier le lien de la démarche
