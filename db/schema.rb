@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_03_105247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -865,6 +865,15 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.index ["from"], name: "index_path_rewrites_on_from", unique: true
   end
 
+  create_table "procedure_paths", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "path"
+    t.bigint "procedure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["path"], name: "index_procedure_paths_on_path", unique: true
+    t.index ["procedure_id"], name: "index_procedure_paths_on_procedure_id"
+  end
+
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.integer "assign_to_id"
     t.datetime "created_at", precision: nil
@@ -1272,6 +1281,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "instructeurs", "users"
   add_foreign_key "merge_logs", "users"
+  add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
