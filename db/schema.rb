@@ -908,6 +908,15 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.index ["from"], name: "index_path_rewrites_on_from", unique: true
   end
 
+  create_table "procedure_paths", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "path"
+    t.bigint "procedure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["path"], name: "index_procedure_paths_on_path", unique: true
+    t.index ["procedure_id"], name: "index_procedure_paths_on_procedure_id"
+  end
+
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.jsonb "a_suivre_filters", default: [], null: false, array: true
     t.jsonb "archives_filters", default: [], null: false, array: true
@@ -1369,6 +1378,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
   add_foreign_key "instructeurs_procedures", "procedures"
   add_foreign_key "labels", "procedures"
   add_foreign_key "merge_logs", "users"
+  add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
