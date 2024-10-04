@@ -1928,6 +1928,57 @@ describe Procedure do
     end
   end
 
+  describe "#update_procedure_path" do
+    let(:procedure) { build(:procedure) }
+
+    subject { procedure.save! }
+
+    it 'sets the procedure path' do
+      expect { subject }.to change { procedure.procedure_paths.count }.from(0).to(1)
+    end
+
+    context "when the procedure path change" do
+      let(:procedure) { create(:procedure, path: "old-path") }
+
+      before do
+        procedure.path = "new-path"
+      end
+
+      it 'creates a new procedure path' do
+        expect { subject }.to change { procedure.procedure_paths.pluck(:path) }.from(["old-path"]).to(["new-path"])
+      end
+    end
+  end
+
+  describe "test if path has restriction" do
+    # create 2 procedures with 2 admins
+
+    let(:admin1) { create(:administrateur) }
+    let(:admin2) { create(:administrateur) }
+
+    let(:procedure1) { create(:procedure, administrateurs: [admin1], path: "proc-1") }
+    let(:procedure2) { create(:procedure, administrateurs: [admin2], path: "proc-2") }
+
+    it "should have 2 diff paths" do
+      expect(procedure1.path).not_to eq(procedure2.path)
+    end
+
+    it "should not let procedure1 change path to procedure2 path" do
+      expect { procedure1.update!(path: procedure2.path) }.to raise_error
+    end
+
+    context "when procedure2 is discarded" do
+      before do
+        procedure2.discard!
+      end
+
+      it "should let procedure1 change path to procedure2 path if discarded" do
+        expect(procedure2.path).to eq("coucou")
+        # expect { procedure1.update!(path: procedure2.path, canonical_procedure: procedure2) }.not_to raise_error
+      end
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
