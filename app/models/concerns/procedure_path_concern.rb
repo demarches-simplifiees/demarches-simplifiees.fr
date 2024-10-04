@@ -4,6 +4,8 @@ module ProcedurePathConcern
   extend ActiveSupport::Concern
 
   included do
+    has_many :procedure_paths, dependent: :destroy
+
     validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
 
     after_initialize :ensure_path_exists
