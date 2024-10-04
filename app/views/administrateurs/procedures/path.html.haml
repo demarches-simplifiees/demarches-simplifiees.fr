@@ -1,0 +1,30 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['Lien de la démarche']] }
+
+.fr-container
+  %h1.fr-h2 Lien de la démarche
+
+= form_with url: admin_procedure_update_path_url(@procedure), method: :patch do |f|
+  .fr-container
+    = render Dsfr::AlertComponent.new(state: :info, size: :sm, extra_class_names: 'fr-mb-2w') do |c|
+      - c.with_body do
+        %p
+          Si vous avez communiqué le lien de votre démarche à des usagers et que vous souhaitez le modifier, pensez à leur communiquer le nouveau lien.
+
+    .fr-input
+      .flex
+        %span.placeholder
+          = commencer_url(path: '')
+        = text_field_tag(:path, @procedure.path,
+                        id: 'procedure_path',
+                        placeholder: t('activerecord.attributes.procedure.procedure_path_placeholder'),
+                        required: true,
+                        class: 'unstyled flex-1',
+                        pattern: '[a-z0-9.\-_]{3,200}',
+                        autocomplete: 'off',
+                        data: { controller: 'turbo-input', turbo_input_url_value: admin_procedure_check_path_path })
+    #check_path
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

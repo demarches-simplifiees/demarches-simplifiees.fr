@@ -5,7 +5,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns, :path, :update_path]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -292,12 +292,37 @@ module Administrateurs
     end
 
     def check_path
-      @path_available = @procedure.path_available?(params[:path])
-      @other_procedure = @procedure.other_procedure_with_path(params[:path])
+      path = params.permit(:path)[:path]
+      @path_available = @procedure.path_available?(path)
+      @other_procedure = @procedure.other_procedure_with_path(path)
+
       respond_to do |format|
         format.turbo_stream do
           render :check_path
         end
+      end
+    end
+
+    def path
+    end
+
+    def update_path
+      new_path = params.permit(:path)[:path]
+      other_procedure = @procedure.other_procedure_with_path(new_path)
+
+      if other_procedure.present? && !current_administrateur.owns?(other_procedure)
+        flash.alert = "Cette URL de démarche n'est pas disponible"
+        return redirect_to admin_procedure_path_path(@procedure)
+      end
+
+      @procedure.claim_path(current_administrateur, new_path)
+
+      if @procedure.save
+        flash.notice = "L'URL de la démarche a bien été mise à jour"
+        redirect_to admin_procedure_path(@procedure)
+      else
+        flash.alert = @procedure.errors.full_messages
+        render :path
       end
     end
 
