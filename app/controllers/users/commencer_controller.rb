@@ -20,6 +20,8 @@ module Users
 
       return procedure_not_found if @procedure.blank?
 
+      return redirect_to commencer_path(@procedure.path, **extra_query_params), status: :moved_permanently if @procedure.path && @procedure.path != params[:path]
+
       @revision = params[:test] ? @procedure.draft_revision : @procedure.active_revision
 
       if params[:prefill_token].present? || commencer_page_is_reloaded?
