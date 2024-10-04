@@ -63,7 +63,7 @@ class TypeDeChamp < ApplicationRecord
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
     cojo: REFERENTIEL_EXTERNE,
-    expression_reguliere: STANDARD
+    formatted: STANDARD
   }
 
   enum type_champs: {
@@ -107,7 +107,7 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri',
     epci: 'epci',
     cojo: 'cojo',
-    expression_reguliere: 'expression_reguliere'
+    formatted: 'formatted'
   }
 
   SIMPLE_ROUTABLE_TYPES = [
@@ -446,8 +446,8 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:checkbox)
   end
 
-  def expression_reguliere?
-    type_champ == TypeDeChamp.type_champs.fetch(:expression_reguliere)
+  def formatted?
+    type_champ == TypeDeChamp.type_champs.fetch(:formatted)
   end
 
   def public?
