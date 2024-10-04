@@ -10,8 +10,10 @@ module ProcedurePublishConcern
       end
 
       other_procedure = other_procedure_with_path(path)
-      if other_procedure.present? && administrateur.owns?(other_procedure)
-        other_procedure.unpublish!
+      claim_path!(administrateur, path)
+      if other_procedure.present?
+        other_procedure.unpublish! if other_procedure.may_unpublish?
+
         publish!(other_procedure.canonical_procedure || other_procedure)
       else
         publish!
@@ -57,6 +59,7 @@ module ProcedurePublishConcern
 
   def after_publish(canonical_procedure = nil)
     self.canonical_procedure = canonical_procedure
+
     touch(:published_at)
     publish_new_revision
   end

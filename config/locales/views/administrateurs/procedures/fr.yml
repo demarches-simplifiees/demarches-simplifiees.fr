@@ -75,7 +75,7 @@ fr:
       technical_issues: Des problèmes impactent le bon fonctionnement de la démarche
       check_path:
         path_not_available:
-          owner: Cette url est identique à celle d’une autre de vos démarches publiées. Si vous publiez cette démarche, l’ancienne sera dépubliée et ne sera plus accessible au public.
+          owner: Cette url est identique à celle d’une autre de vos démarches publiées. Si vous publiez cette démarche, le lien ne pointera plus sur l'ancienne démarche.
           not_owner: Cette url est identique à celle d’une autre démarche, vous devez la modifier afin de pouvoir publier votre démarche.
       unpublished_changes_sticky_header:
         intro_html: Les modifications effectuées ne seront visibles <strong>qu'à la prochaine publication</strong>

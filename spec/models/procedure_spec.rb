@@ -1341,7 +1341,7 @@ describe Procedure do
     end
 
     context 'when the path has been changed' do
-      before { procedure.path = 'custom_path' }
+      before { procedure.claim_path(procedure.administrateurs.first, 'custom_path') }
 
       it { is_expected.to be_truthy }
     end
@@ -1367,7 +1367,7 @@ describe Procedure do
     subject { procedure.suggested_path }
 
     context 'when the path has been customized' do
-      before { procedure.path = 'custom_path' }
+      let(:path) { 'custom_path' }
 
       it { is_expected.to eq 'custom_path' }
     end

@@ -72,6 +72,8 @@ fr:
         aasm_state: 'Statut'
         admin_count: 'Nb administrateurs'
         template: 'Est un modèle'
+      procedure/procedure_paths:
+        path: 'Lien public'
     errors:
       models:
         procedure:
