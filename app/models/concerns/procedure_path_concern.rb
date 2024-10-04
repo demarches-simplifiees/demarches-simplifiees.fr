@@ -10,10 +10,21 @@ module ProcedurePathConcern
 
     after_initialize :ensure_path_exists
     before_save :ensure_path_exists
+    after_save :update_procedure_path
 
     def ensure_path_exists
       if self.path.blank?
         self.path = SecureRandom.uuid
+      end
+    end
+
+    def update_procedure_path
+      return if path_before_last_save == path
+
+      procedure_paths.where(path: path_before_last_save).destroy_all
+
+      if procedure_paths.where(path: path).empty?
+        procedure_paths.create!(path: path)
       end
     end
 
