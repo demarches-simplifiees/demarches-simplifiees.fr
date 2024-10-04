@@ -21,10 +21,10 @@ describe DossierProjectionService do
       end
 
       before do
-        dossier_1.champs_public.first.update(value: 'champ_1')
-        dossier_1.champs_public.second.update(value: '["test"]')
-        dossier_2.champs_public.first.update(value: 'champ_2')
-        dossier_3.champs_public.first.destroy
+        dossier_1.project_champs_public.first.update(value: 'champ_1')
+        dossier_1.project_champs_public.second.update(value: '["test"]')
+        dossier_2.project_champs_public.first.update(value: 'champ_2')
+        dossier_3.project_champs_public.first.destroy
       end
 
       let(:result) { subject }
@@ -65,7 +65,7 @@ describe DossierProjectionService do
       end
 
       before do
-        dossier.champs_public.first.update(code_postal: '63290', external_id: '63102')
+        dossier.project_champs_public.first.update(code_postal: '63290', external_id: '63102')
       end
 
       let(:result) { subject }
@@ -185,7 +185,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
-        before { dossier.champs_public.first.update(value: 'kale') }
+        before { dossier.project_champs_public.first.update(value: 'kale') }
 
         it { is_expected.to eq('kale') }
       end
@@ -195,7 +195,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
 
-        before { dossier.champs_private.first.update(value: 'quinoa') }
+        before { dossier.project_champs_private.first.update(value: 'quinoa') }
 
         it { is_expected.to eq('quinoa') }
       end
@@ -206,7 +206,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
-        before { dossier.champs_public.first.update(value: 'true') }
+        before { dossier.project_champs_public.first.update(value: 'true') }
 
         it { is_expected.to eq('Oui') }
       end
@@ -217,7 +217,7 @@ describe DossierProjectionService do
         let(:dossier) { create(:dossier, procedure: procedure) }
         let(:column) { dossier.procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
 
-        before { dossier.champs_public.first.update(value: '18 a la bonne rue', data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
+        before { dossier.project_champs_public.first.update(value: '18 a la bonne rue', data: { 'label' => '18 a la bonne rue', 'departement' => 'd' }) }
 
         it { is_expected.to eq('18 a la bonne rue') }
       end
@@ -236,7 +236,7 @@ describe DossierProjectionService do
 
         context 'when external id is set' do
           before do
-            dossier.champs_public.first.update(external_id: 'GB')
+            dossier.project_champs_public.first.update(external_id: 'GB')
           end
 
           it { is_expected.to eq('Royaume-Uni') }
@@ -244,7 +244,7 @@ describe DossierProjectionService do
 
         context 'when no external id is set' do
           before do
-            dossier.champs_public.first.update(value: "qu'il est beau mon pays")
+            dossier.project_champs_public.first.update(value: "qu'il est beau mon pays")
           end
 
           it { is_expected.to eq("") }

@@ -49,8 +49,6 @@ class Dossier < ApplicationRecord
   # We have to remove champs in a particular order - champs with a reference to a parent have to be
   # removed first, otherwise we get a foreign key constraint error.
   has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
-  has_many :champs_public, -> { root.public_only }, class_name: 'Champ', inverse_of: false
-  has_many :champs_private, -> { root.private_only }, class_name: 'Champ', inverse_of: false
 
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
@@ -142,8 +140,6 @@ class Dossier < ApplicationRecord
   after_destroy_commit :log_destroy
 
   accepts_nested_attributes_for :champs
-  accepts_nested_attributes_for :champs_public
-  accepts_nested_attributes_for :champs_private
   accepts_nested_attributes_for :individual
 
   include AASM
@@ -413,7 +409,6 @@ class Dossier < ApplicationRecord
 
   delegate :siret, :siren, to: :etablissement, allow_nil: true
   delegate :france_connected_with_one_identity?, to: :user, allow_nil: true
-  before_save :build_default_champs_for_new_dossier, if: Proc.new { revision_id_was.nil? && parent_dossier_id.nil? && editing_fork_origin_id.nil? }
 
   after_save :send_web_hook
 
@@ -471,29 +466,9 @@ class Dossier < ApplicationRecord
     end
   end
 
-  def build_default_champs_for_new_dossier
-    revision.build_champs_public(self).each do |champ|
-      champs_public << champ
-    end
-    revision.build_champs_private(self).each do |champ|
-      champs_private << champ
-    end
-    champs_public.filter { _1.repetition? && _1.mandatory? }.each do |champ|
-      champ.add_row(updated_by: nil)
-    end
-    champs_private.filter(&:repetition?).each do |champ|
-      champ.add_row(updated_by: nil)
-    end
-  end
-
-  def build_default_individual
-    if procedure.for_individual? && individual.blank?
-      self.individual = if france_connected_with_one_identity?
-        Individual.from_france_connect(user.france_connect_informations.first)
-      else
-        Individual.new
-      end
-    end
+  def build_default_values
+    build_default_individual
+    build_default_champs
   end
 
   def en_construction_ou_instruction?
@@ -1175,6 +1150,33 @@ class Dossier < ApplicationRecord
   end
 
   private
+
+  def build_default_champs
+    build_default_champs_for(revision.types_de_champ_public) if !champs.any?(&:public?)
+    build_default_champs_for(revision.types_de_champ_private) if !champs.any?(&:private?)
+  end
+
+  def build_default_champs_for(types_de_champ)
+    self.champs << types_de_champ.flat_map do |type_de_champ|
+      if type_de_champ.repetition? && (type_de_champ.private? || type_de_champ.mandatory?)
+        row_id = ULID.generate
+        parent = type_de_champ.build_champ(dossier: self)
+        [parent] + revision.children_of(type_de_champ).map { _1.build_champ(dossier: self, parent:, row_id:) }
+      else
+        type_de_champ.build_champ(dossier: self)
+      end
+    end
+  end
+
+  def build_default_individual
+    if procedure.for_individual? && individual.blank?
+      self.individual = if france_connected_with_one_identity?
+        Individual.from_france_connect(user.france_connect_informations.first)
+      else
+        Individual.new
+      end
+    end
+  end
 
   def create_missing_traitemets
     if en_construction_at.present? && traitements.en_construction.empty?

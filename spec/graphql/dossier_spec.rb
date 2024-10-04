@@ -71,8 +71,8 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     before do
-      dossier.champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:address) }.update(data: address)
-      dossier.champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:rna) }.update(data: rna)
+      dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:address) }.update(data: address)
+      dossier.project_champs_public.find { _1.type_champ == TypeDeChamp.type_champs.fetch(:rna) }.update(data: rna)
     end
 
     it do
@@ -82,7 +82,7 @@ RSpec.describe Types::DossierType, type: :graphql do
       expect(data[:dossier][:champs][1][:commune][:code]).to eq('75119')
       expect(data[:dossier][:champs][1][:commune][:postalCode]).to eq('75019')
       expect(data[:dossier][:champs][1][:departement][:code]).to eq('75')
-      expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.champs_public[2].etablissement.siret
+      expect(data[:dossier][:champs][2][:etablissement][:siret]).to eq dossier.project_champs_public[2].etablissement.siret
       expect(data[:dossier][:champs][0][:id]).to eq(data[:dossier][:revision][:champDescriptors][0][:id])
 
       expect(data[:dossier][:champs][1][:address][:cityName]).to eq('Paris 19e Arrondissement')
@@ -99,7 +99,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     end
 
     context 'when etablissement is in degraded mode' do
-      let(:etablissement) { dossier.champs_public.third.etablissement }
+      let(:etablissement) { dossier.project_champs_public.third.etablissement }
       before do
         etablissement.update(adresse: nil)
       end
@@ -128,7 +128,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
     let(:query) { DOSSIER_WITH_SELECTED_CHAMP_QUERY }
     let(:variables) { { number: dossier.id, id: champ.to_typed_id } }
-    let(:champ) { dossier.champs_public.last }
+    let(:champ) { dossier.project_champs_public.last }
 
     context 'when champ exists' do
       it {
@@ -155,7 +155,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:checkbox_value) { 'true' }
 
     before do
-      dossier.champs_public.first.update(value: checkbox_value)
+      dossier.project_champs_public.first.update(value: checkbox_value)
     end
 
     context 'when checkbox is true' do
@@ -204,7 +204,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:variables) { { number: dossier.id } }
 
     before do
-      dossier.champs_public.first.update(value: linked_dossier.id)
+      dossier.project_champs_public.first.update(value: linked_dossier.id)
     end
 
     context 'en_construction' do
@@ -233,7 +233,7 @@ RSpec.describe Types::DossierType, type: :graphql do
     let(:variables) { { number: dossier.id } }
 
     let(:rows) do
-      dossier.champs_public.first.rows.map do |champs|
+      dossier.project_champs_public.first.rows.map do |champs|
         { champs: champs.map { { id: _1.to_typed_id } } }
       end
     end

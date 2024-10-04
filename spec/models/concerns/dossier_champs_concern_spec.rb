@@ -61,7 +61,7 @@ RSpec.describe DossierChampsConcern do
       end
 
       context "missing champ" do
-        before { dossier; Champs::TextChamp.destroy_all }
+        before { dossier.champs.where(type: 'Champs::TextChamp').destroy_all; dossier.reload }
 
         it {
           expect(subject.new_record?).to be_truthy
@@ -94,7 +94,7 @@ RSpec.describe DossierChampsConcern do
       it { expect(subject.persisted?).to be_truthy }
 
       context "missing champ" do
-        before { dossier; Champs::TextChamp.destroy_all }
+        before { dossier.champs.where(type: 'Champs::TextChamp').destroy_all; dossier.reload }
 
         it {
           expect(subject.new_record?).to be_truthy

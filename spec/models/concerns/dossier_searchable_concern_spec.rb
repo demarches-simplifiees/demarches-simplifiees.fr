@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 describe DossierSearchableConcern do
-  let(:champ_public) { dossier.champs_public.first }
-  let(:champ_private) { dossier.champs_private.first }
+  let(:champ_public) { dossier.project_champs_public.first }
+  let(:champ_private) { dossier.project_champs_private.first }
 
   describe '#index_search_terms' do
     let(:etablissement) { dossier.etablissement }

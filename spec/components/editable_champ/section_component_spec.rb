@@ -113,7 +113,7 @@ describe EditableChamp::SectionComponent, type: :component do
     end
 
     it 'contains as many text champ as repetition.rows' do
-      expect(page).to have_selector("fieldset fieldset input[type=text]", count: dossier.champs_public.find(&:repetition?).rows.size)
+      expect(page).to have_selector("fieldset fieldset input[type=text]", count: dossier.project_champs_public.find(&:repetition?).rows.size)
     end
   end
 

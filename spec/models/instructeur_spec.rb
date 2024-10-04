@@ -201,7 +201,7 @@ describe Instructeur, type: :model do
 
     context 'when there is a modification on public champs' do
       before {
-        dossier.champs_public.first.update(value: 'toto')
+        dossier.project_champs_public.first.update(value: 'toto')
         dossier.update(last_champ_updated_at: Time.zone.now)
       }
 
@@ -223,7 +223,7 @@ describe Instructeur, type: :model do
 
     context 'when there is a modification on private champs' do
       before {
-        dossier.champs_private.first.update(value: 'toto')
+        dossier.project_champs_private.first.update(value: 'toto')
         dossier.update(last_champ_private_updated_at: Time.zone.now)
       }
 
@@ -302,7 +302,7 @@ describe Instructeur, type: :model do
       it { expect(instructeur_on_procedure_2.notifications_for_groupe_instructeurs(gi_p2)[:en_cours]).to match([]) }
 
       context 'and there is a modification on private champs' do
-        before { dossier.champs_private.first.update_attribute('value', 'toto') }
+        before { dossier.project_champs_private.first.update_attribute('value', 'toto') }
 
         it { is_expected.to match([dossier.id]) }
       end
@@ -317,7 +317,7 @@ describe Instructeur, type: :model do
     end
 
     context 'when there is a modification on public champs on a followed dossier from another procedure' do
-      before { dossier_on_procedure_2.champs_public.first.update_attribute('value', 'toto') }
+      before { dossier_on_procedure_2.project_champs_public.first.update_attribute('value', 'toto') }
 
       it { is_expected.to match([]) }
     end

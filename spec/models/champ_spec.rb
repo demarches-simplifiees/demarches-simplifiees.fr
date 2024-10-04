@@ -86,8 +86,8 @@ describe Champ do
     let(:dossier) { create(:dossier) }
 
     it 'partition public and private' do
-      expect(dossier.champs_public.count).to eq(1)
-      expect(dossier.champs_private.count).to eq(1)
+      expect(dossier.project_champs_public.count).to eq(1)
+      expect(dossier.project_champs_private.count).to eq(1)
     end
   end
 
@@ -97,7 +97,7 @@ describe Champ do
 
     context 'when a procedure has 2 revisions' do
       it 'does not duplicate the champs' do
-        expect(dossier.champs_public.count).to eq(1)
+        expect(dossier.project_champs_public.count).to eq(1)
         expect(procedure.revisions.count).to eq(2)
       end
     end
@@ -111,7 +111,7 @@ describe Champ do
       before { procedure.publish }
 
       it 'does not duplicate the champs private' do
-        expect(dossier.champs_private.count).to eq(1)
+        expect(dossier.project_champs_private.count).to eq(1)
         expect(procedure.revisions.count).to eq(2)
       end
     end
@@ -122,12 +122,12 @@ describe Champ do
       create(:procedure, types_de_champ_public: [{}, { type: :header_section }, { type: :repetition, mandatory: true, children: [{ type: :header_section }] }], types_de_champ_private: [{}, { type: :header_section }])
     end
     let(:dossier) { create(:dossier, procedure: procedure) }
-    let(:public_champ) { dossier.champs_public.first }
-    let(:private_champ) { dossier.champs_private.first }
-    let(:champ_in_repetition) { dossier.champs_public.find(&:repetition?).champs.first }
+    let(:public_champ) { dossier.project_champs_public.first }
+    let(:private_champ) { dossier.project_champs_private.first }
+    let(:champ_in_repetition) { dossier.project_champs_public.find(&:repetition?).champs.first }
     let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: build(:dossier)) }
-    let(:public_sections) { dossier.champs_public.filter(&:header_section?) }
-    let(:private_sections) { dossier.champs_private.filter(&:header_section?) }
+    let(:public_sections) { dossier.project_champs_public.filter(&:header_section?) }
+    let(:private_sections) { dossier.project_champs_private.filter(&:header_section?) }
     let(:sections_in_repetition) { dossier.champs.filter(&:child?).filter(&:header_section?) }
 
     it 'returns the sibling sections of a champ' do

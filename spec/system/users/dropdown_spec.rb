@@ -35,13 +35,13 @@ describe 'dropdown list with other option activated', js: true do
       choose I18n.t('shared.champs.drop_down_list.other')
       fill_in(I18n.t('shared.champs.drop_down_list.other_label'), with: "My choice")
 
-      wait_until { user_dossier.champs_public.first.value == "My choice" }
-      expect(user_dossier.champs_public.first.value).to eq("My choice")
+      wait_until { user_dossier.reload.project_champs_public.first.value == "My choice" }
+      expect(user_dossier.project_champs_public.first.value).to eq("My choice")
 
       choose "Secondary 1.1"
 
-      wait_until { user_dossier.champs_public.first.value == "Secondary 1.1" }
-      expect(user_dossier.champs_public.first.value).to eq("Secondary 1.1")
+      wait_until { user_dossier.reload.project_champs_public.first.value == "Secondary 1.1" }
+      expect(user_dossier.project_champs_public.first.value).to eq("Secondary 1.1")
     end
   end
 
@@ -68,8 +68,8 @@ describe 'dropdown list with other option activated', js: true do
       select("Secondary 1.2")
       expect(page).to have_selector(".autosave-status.succeeded", visible: true)
 
-      wait_until { user_dossier.champs_public.first.value == "Secondary 1.2" }
-      expect(user_dossier.champs_public.first.value).to eq("Secondary 1.2")
+      wait_until { user_dossier.reload.project_champs_public.first.value == "Secondary 1.2" }
+      expect(user_dossier.project_champs_public.first.value).to eq("Secondary 1.2")
     end
   end
 

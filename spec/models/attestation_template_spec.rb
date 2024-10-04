@@ -75,11 +75,11 @@ describe AttestationTemplate, type: :model do
     end
 
     before do
-      dossier.champs_public
+      dossier.project_champs_public
         .find { |champ| champ.libelle == 'libelleA' }
         .update(value: 'libelle1')
 
-      dossier.champs_public
+      dossier.project_champs_public
         .find { |champ| champ.libelle == 'libelleB' }
         .update(value: 'libelle2')
     end

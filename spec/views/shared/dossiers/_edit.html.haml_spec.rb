@@ -44,7 +44,7 @@ describe 'shared/dossiers/edit', type: :view do
 
   context 'with a single-value list' do
     let(:types_de_champ_public) { [{ type: :drop_down_list, options:, mandatory: }] }
-    let(:champ) { dossier.champs_public.first }
+    let(:champ) { dossier.project_champs_public.first }
     let(:type_de_champ) { champ.type_de_champ }
     let(:enabled_options) { type_de_champ.drop_down_options }
     let(:mandatory) { true }

@@ -120,15 +120,15 @@ RSpec.describe DossierCloneConcern do
 
       context 'public are duplicated' do
         it do
-          expect(new_dossier.champs_public.count).to eq(dossier.champs_public.count)
-          expect(new_dossier.champs_public.ids).not_to eq(dossier.champs_public.ids)
+          expect(new_dossier.project_champs_public.count).to eq(dossier.project_champs_public.count)
+          expect(new_dossier.project_champs_public.map(&:id)).not_to eq(dossier.project_champs_public.map(&:id))
         end
 
         it 'keeps champs.values' do
-          original_first_champ = dossier.champs_public.first
+          original_first_champ = dossier.project_champs_public.first
           original_first_champ.update!(value: 'kthxbye')
 
-          expect(new_dossier.champs_public.first.value).to eq(original_first_champ.value)
+          expect(new_dossier.project_champs_public.first.value).to eq(original_first_champ.value)
         end
 
         context 'for Champs::Repetition with rows, original_champ.repetition and rows are duped' do
@@ -192,26 +192,26 @@ RSpec.describe DossierCloneConcern do
         let(:types_de_champ_private) { [{}] }
 
         it 'reset champs private values' do
-          expect(new_dossier.champs_private.count).to eq(dossier.champs_private.count)
-          expect(new_dossier.champs_private.ids).not_to eq(dossier.champs_private.ids)
-          original_first_champs_private = dossier.champs_private.first
+          expect(new_dossier.project_champs_private.count).to eq(dossier.project_champs_private.count)
+          expect(new_dossier.project_champs_private.map(&:id)).not_to eq(dossier.project_champs_private.map(&:id))
+          original_first_champs_private = dossier.project_champs_private.first
           original_first_champs_private.update!(value: 'kthxbye')
 
-          expect(new_dossier.champs_private.first.value).not_to eq(original_first_champs_private.value)
-          expect(new_dossier.champs_private.first.value).to eq(nil)
+          expect(new_dossier.project_champs_private.first.value).not_to eq(original_first_champs_private.value)
+          expect(new_dossier.project_champs_private.first.value).to eq(nil)
         end
       end
     end
 
     context "as a fork" do
       let(:new_dossier) { dossier.clone(fork: true) }
-      before { dossier.champs_public.reload } # we compare timestamps so we have to get the precision limit from the db }
+      before { dossier.project_champs_public } # we compare timestamps so we have to get the precision limit from the db }
 
       it do
         expect(new_dossier.editing_fork_origin).to eq(dossier)
-        expect(new_dossier.champs_public[0].id).not_to eq(dossier.champs_public[0].id)
-        expect(new_dossier.champs_public[0].created_at).to eq(dossier.champs_public[0].created_at)
-        expect(new_dossier.champs_public[0].updated_at).to eq(dossier.champs_public[0].updated_at)
+        expect(new_dossier.project_champs_public[0].id).not_to eq(dossier.project_champs_public[0].id)
+        expect(new_dossier.project_champs_public[0].created_at).to eq(dossier.project_champs_public[0].created_at)
+        expect(new_dossier.project_champs_public[0].updated_at).to eq(dossier.project_champs_public[0].updated_at)
       end
 
       context "piece justificative champ" do
@@ -343,11 +343,11 @@ RSpec.describe DossierCloneConcern do
         dossier.debounce_index_search_terms_flag.remove
       end
 
-      it { expect { subject }.to change { dossier.reload.champs.size }.by(0) }
-      it { expect { subject }.not_to change { dossier.reload.champs.order(:created_at).reject { _1.stable_id.in?([99, 994]) }.map(&:value) } }
+      it { expect { subject }.to change { dossier.champs.size }.by(0) }
+      it { expect { subject }.not_to change { dossier.champs.order(:created_at).reject { _1.stable_id.in?([99, 994]) }.map(&:value) } }
       it { expect { subject }.to have_enqueued_job(DossierIndexSearchTermsJob).with(dossier) }
-      it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 99 }.value }.from('old value').to('new value') }
-      it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
+      it { expect { subject }.to change { dossier.champs.find { _1.stable_id == 99 }.value }.from('old value').to('new value') }
+      it { expect { subject }.to change { dossier.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
 
       it 'fork is hidden after merge' do
         subject
@@ -386,11 +386,10 @@ RSpec.describe DossierCloneConcern do
         added_repetition_champ.update(value: "new value in repetition champ")
         dossier.reload
         super()
-        dossier.reload
       }
 
-      it { expect { subject }.to change { dossier.reload.champs.size }.by(1) }
-      it { expect { subject }.to change { dossier.reload.champs.order(:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ', 'new value in repetition champ']) }
+      it { expect { subject }.to change { dossier.champs.size }.by(1) }
+      it { expect { subject }.to change { dossier.champs.order(:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ', 'new value in repetition champ']) }
 
       it "dossier after merge should be on last published revision" do
         expect(dossier.revision_id).to eq(procedure.revisions.first.id)

@@ -10,7 +10,7 @@ describe PiecesJustificativesService do
     let(:pj_service) { PiecesJustificativesService.new(user_profile:, export_template:) }
     let(:user_profile) { build(:administrateur) }
 
-    def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')
+    def pj_champ(d) = d.project_champs_public.find { _1.type == 'Champs::PieceJustificativeChamp' }
     def repetition(d) = d.champs.find_by(type: "Champs::RepetitionChamp")
     def attachments(champ) = champ.piece_justificative_file.attachments
 
@@ -102,7 +102,7 @@ describe PiecesJustificativesService do
       let(:user_profile) { build(:administrateur) }
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
       let(:witness) { create(:dossier, procedure: procedure) }
-      def pj_champ(d) = d.champs_public.find { |c| c.type == 'Champs::PieceJustificativeChamp' }
+      def pj_champ(d) = d.project_champs_public.find { |c| c.type == 'Champs::PieceJustificativeChamp' }
 
       context 'with a single attachment' do
         before do
@@ -143,7 +143,7 @@ describe PiecesJustificativesService do
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :titre_identite }]) }
         let(:dossier) { create(:dossier, procedure: procedure) }
 
-        let(:champ_identite) { dossier.champs_public.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
+        let(:champ_identite) { dossier.project_champs_public.find { |c| c.type == 'Champs::TitreIdentiteChamp' } }
 
         before { attach_file_to_champ(champ_identite) }
 
@@ -260,7 +260,7 @@ describe PiecesJustificativesService do
       let(:witness) { create(:dossier, procedure: procedure) }
 
       let!(:private_pj) { create(:type_de_champ_piece_justificative, procedure: procedure, private: true) }
-      def private_pj_champ(d) = d.champs_private.find { |c| c.type == 'Champs::PieceJustificativeChamp' }
+      def private_pj_champ(d) = d.project_champs_private.find { |c| c.type == 'Champs::PieceJustificativeChamp' }
 
       before do
         attach_file_to_champ(private_pj_champ(dossier))
@@ -503,8 +503,8 @@ describe PiecesJustificativesService do
     let(:dossier_1) { create(:dossier, procedure:) }
     let(:champs) { dossier_1.champs }
 
-    def pj_champ(d) = d.champs_public.find_by(type: 'Champs::PieceJustificativeChamp')
-    def repetition(d, index:) = d.champs_public.filter(&:repetition?)[index]
+    def pj_champ(d) = d.project_champs_public.find { _1.type == 'Champs::PieceJustificativeChamp' }
+    def repetition(d, index:) = d.project_champs_public.filter(&:repetition?)[index]
 
     subject { PiecesJustificativesService.new(user_profile:, export_template: nil).send(:compute_champ_id_row_index, champs) }
 
@@ -535,7 +535,7 @@ describe PiecesJustificativesService do
     end
 
     it do
-      champs = dossier_1.champs_public
+      champs = dossier_1.project_champs_public
       repet_0 = champs[0]
       pj_0 = repet_0.rows.first.first
       pj_1 = repet_0.rows.second.first

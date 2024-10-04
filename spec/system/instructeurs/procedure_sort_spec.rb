@@ -10,7 +10,7 @@ describe "procedure sort", js: true do
   before do
     instructeur.follow(followed_dossier)
     instructeur.follow(followed_dossier_2)
-    followed_dossier.champs_public.first.update(value: '123') # touch the dossier
+    followed_dossier.project_champs_public.first.update(value: '123') # touch the dossier
 
     login_as(instructeur.user, scope: :user)
     visit instructeur_procedure_path(procedure, statut: "suivis")

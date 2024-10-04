@@ -39,7 +39,7 @@ class DossierPreloader
 
   def revisions(pj_template: false)
     @revisions ||= ProcedureRevision.where(id: @dossiers.pluck(:revision_id).uniq)
-      .includes(types_de_champ: pj_template ? { piece_justificative_template_attachment: :blob } : [])
+      .includes(types_de_champ_public: [], types_de_champ_private: [], types_de_champ: pj_template ? { piece_justificative_template_attachment: :blob } : [])
       .index_by(&:id)
   end
 
@@ -80,8 +80,6 @@ class DossierPreloader
       dossier.association(:revision).target = revision
     end
     dossier.association(:champs).target = champs
-    dossier.association(:champs_public).target = dossier.project_champs_public
-    dossier.association(:champs_private).target = dossier.project_champs_private
 
     # remove once parent_id is deprecated
     champs_by_parent_id = champs.group_by(&:parent_id)

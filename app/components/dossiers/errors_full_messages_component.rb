@@ -10,7 +10,6 @@ class Dossiers::ErrorsFullMessagesComponent < ApplicationComponent
   def dedup_and_partitioned_errors
     @dossier.errors.to_enum # ActiveModel::Errors.to_a is an alias to full_messages, we don't want that
       .to_a # but enum.to_a gives back an array
-      .uniq { |error| [error.inner_error.base] } # dedup cumulated errors from dossier.champs, dossier.champs_public, dossier.champs_private which run the validator one time per association
       .map { |error| to_error_descriptor(error) }
   end
 
