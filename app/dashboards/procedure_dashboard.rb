@@ -13,6 +13,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
     published_types_de_champ_public: TypesDeChampCollectionField,
     published_types_de_champ_private: TypesDeChampCollectionField,
     path: ProcedureLinkField,
+    procedure_paths: Field::HasMany,
     aasm_state: ProcedureStateField,
     dossiers: Field::HasMany,
     administrateurs: Field::HasMany,
@@ -78,6 +79,7 @@ class ProcedureDashboard < Administrate::BaseDashboard
   SHOW_PAGE_ATTRIBUTES = [
     :id,
     :path,
+    :procedure_paths,
     :aasm_state,
     :administrateurs,
     :instructeurs,
