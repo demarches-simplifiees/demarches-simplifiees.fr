@@ -7,6 +7,7 @@ class Procedure < ApplicationRecord
   include ProcedureGroupeInstructeurAPIHackConcern
   include ProcedureSVASVRConcern
   include ProcedureChorusConcern
+  include ProcedurePathConcern
   include PiecesJointesListConcern
   include ColumnsConcern
 
@@ -227,7 +228,6 @@ class Procedure < ApplicationRecord
 
   validates :replaced_by_procedure_id, presence: true, if: :closing_reason_internal_procedure?
 
-  validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
   validates :duree_conservation_dossiers_dans_ds, allow_nil: false,
                                                   numericality: {
                                                     only_integer: true,
@@ -290,8 +290,6 @@ class Procedure < ApplicationRecord
   before_save :update_juridique_required
   after_save :extend_conservation_for_dossiers
 
-  after_initialize :ensure_path_exists
-  before_save :ensure_path_exists
   after_create :ensure_defaut_groupe_instructeur
 
   include AASM
@@ -345,30 +343,6 @@ class Procedure < ApplicationRecord
         draft_revision.dossiers.destroy_all
       end
     end
-  end
-
-  def suggested_path(administrateur)
-    if path_customized?
-      return path
-    end
-    slug = libelle&.parameterize&.first(50)
-    suggestion = slug
-    counter = 1
-    while !path_available?(suggestion)
-      counter = counter + 1
-      suggestion = "#{slug}-#{counter}"
-    end
-    suggestion
-  end
-
-  def other_procedure_with_path(path)
-    Procedure.publiees
-      .where.not(id: self.id)
-      .find_by(path: path)
-  end
-
-  def path_available?(path)
-    other_procedure_with_path(path).blank?
   end
 
   def canonical_procedure_child?(procedure)
@@ -439,10 +413,6 @@ class Procedure < ApplicationRecord
 
   def feature_enabled?(feature)
     Flipper.enabled?(feature, self)
-  end
-
-  def path_customized?
-    !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
   end
 
   def organisation_name
@@ -915,12 +885,6 @@ class Procedure < ApplicationRecord
   def check_juridique
     if juridique_required? && (cadre_juridique.blank? && !deliberation.attached?)
       errors.add(:cadre_juridique, " : veuillez remplir le texte de loi ou la délibération")
-    end
-  end
-
-  def ensure_path_exists
-    if self.path.blank?
-      self.path = SecureRandom.uuid
     end
   end
 
