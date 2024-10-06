@@ -44,10 +44,10 @@ module DossierCloneConcern
   end
 
   def make_diff(editing_fork)
-    origin_champs_index = champs_for_revision(scope: :public).index_by(&:public_id)
-    forked_champs_index = editing_fork.champs_for_revision(scope: :public).index_by(&:public_id)
+    origin_champs_index = project_champs_public_all.index_by(&:public_id)
+    forked_champs_index = editing_fork.project_champs_public_all.index_by(&:public_id)
     updated_champs_index = editing_fork
-      .champs_for_revision(scope: :public)
+      .project_champs_public_all
       .filter { _1.updated_at > editing_fork.created_at }
       .index_by(&:public_id)
 
@@ -83,7 +83,7 @@ module DossierCloneConcern
     dossier_attributes += [:groupe_instructeur_id] if fork
     relationships = [:individual, :etablissement]
 
-    cloned_champs = champs_for_revision
+    cloned_champs = champs
       .index_by(&:id)
       .transform_values { [_1, _1.clone(fork)] }
 
@@ -149,15 +149,34 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_index = (champs_for_revision(scope: :public) + diff[:added]).index_by(&:public_id)
+    champs_added = diff[:added].filter(&:persisted?)
+    champs_updated = diff[:updated].filter(&:persisted?)
+    champs_removed = diff[:removed].filter(&:persisted?)
 
-    diff[:added].each { _1.update_column(:dossier_id, id) }
+    champs_added.each { _1.update_column(:dossier_id, id) }
 
-    diff[:updated].each do |champ|
-      champs_index.fetch(champ.public_id)&.destroy!
-      champ.update_column(:dossier_id, id)
+    if champs_updated.present?
+      champs_index = filled_champs_public.index_by(&:public_id)
+      champs_updated.each do |champ|
+        champs_index[champ.public_id]&.destroy!
+        champ.update_column(:dossier_id, id)
+      end
     end
 
-    diff[:removed].each(&:destroy!)
+    champs_removed.each(&:destroy!)
+  end
+
+  protected
+
+  # This is a temporary method that is only used by diff/merge algorithm. Once it's gone, this method should be removed.
+  def project_champs_public_all
+    revision.types_de_champ_public.flat_map do |type_de_champ|
+      champ = project_champ(type_de_champ, nil)
+      if type_de_champ.repetition?
+        [champ] + project_rows_for(type_de_champ).flatten
+      else
+        champ
+      end
+    end
   end
 end
