@@ -142,10 +142,9 @@ module DossierChampsConcern
   def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
     check_valid_row_id?(type_de_champ, row_id)
     attributes = type_de_champ.params_for_champ
-    # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
       .create_with(**attributes)
-      .find_or_create_by!(stable_id: type_de_champ.stable_id, row_id:)
+      .create_or_find_by!(stable_id: type_de_champ.stable_id, row_id:, stream: 'main')
 
     attributes[:id] = champ.id
     attributes[:updated_by] = updated_by
