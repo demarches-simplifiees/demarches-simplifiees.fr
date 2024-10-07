@@ -944,6 +944,35 @@ describe ProcedurePresentation do
     end
   end
 
+  describe '#update_displayed_fields' do
+    let(:procedure_presentation) do
+      create(:procedure_presentation, assign_to:).tap do |pp|
+        pp.update_sort(procedure.find_column(label: 'Demandeur').id, 'desc')
+      end
+    end
+
+    subject do
+      procedure_presentation.update_displayed_fields([
+        procedure.find_column(label: 'En construction le').id,
+        procedure.find_column(label: 'Mis à jour le').id
+      ])
+    end
+
+    it 'should update displayed_fields' do
+      expect(procedure_presentation.displayed_columns).to eq([])
+
+      subject
+
+      expect(procedure_presentation.displayed_columns).to eq([
+        { "column_id" => "self/en_construction_at", "procedure_id" => procedure.id },
+        { "column_id" => "self/updated_at", "procedure_id" => procedure.id }
+      ])
+
+      expect(procedure_presentation.sorted_column['id']).to eq("column_id" => "self/id", "procedure_id" => procedure.id)
+      expect(procedure_presentation.sorted_column['order']).to eq('desc')
+    end
+  end
+
   describe '#update_sort' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
 

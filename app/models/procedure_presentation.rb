@@ -137,10 +137,14 @@ class ProcedurePresentation < ApplicationRecord
     h_ids = Array.wrap(column_ids).map { |id| JSON.parse(id, symbolize_names: true) }
     columns = h_ids.map { |h_id| procedure.find_column(h_id:) }
 
-    update!(displayed_fields: columns)
+    update!(
+      displayed_fields: columns,
+      displayed_columns: columns.map(&:h_id)
+    )
 
     if !sort_to_column_id(sort).in?(column_ids)
-      update!(sort: Procedure.default_sort)
+      default_column_id = procedure.dossier_id_column.id
+      update_sort(default_column_id, "desc")
     end
   end
 

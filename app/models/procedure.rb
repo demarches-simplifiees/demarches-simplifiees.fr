@@ -613,14 +613,6 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def self.default_sort
-    {
-      'table' => 'self',
-      'column' => 'id',
-      'order' => 'desc'
-    }
-  end
-
   def whitelist!
     touch(:whitelisted_at)
   end
