@@ -25,7 +25,7 @@ module DossierChampsConcern
     check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:)
+      type_de_champ.build_champ(dossier: self, row_id:, updated_at: depose_at || created_at)
     else
       champ
     end

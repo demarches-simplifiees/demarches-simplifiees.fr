@@ -66,6 +66,7 @@ RSpec.describe DossierChampsConcern do
         it {
           expect(subject.new_record?).to be_truthy
           expect(subject.is_a?(Champs::TextChamp)).to be_truthy
+          expect(subject.updated_at).not_to be_nil
         }
 
         context "in repetition" do
@@ -76,6 +77,7 @@ RSpec.describe DossierChampsConcern do
             expect(subject.new_record?).to be_truthy
             expect(subject.is_a?(Champs::TextChamp)).to be_truthy
             expect(subject.row_id).to eq(row_id)
+            expect(subject.updated_at).not_to be_nil
           }
 
           context "invalid row_id" do
@@ -99,6 +101,7 @@ RSpec.describe DossierChampsConcern do
         it {
           expect(subject.new_record?).to be_truthy
           expect(subject.is_a?(Champs::TextChamp)).to be_truthy
+          expect(subject.updated_at).not_to be_nil
         }
       end
     end
