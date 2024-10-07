@@ -66,8 +66,15 @@ describe 'Publishing a procedure', js: true do
                :with_zone,
                instructeurs: instructeurs,
                administrateur: administrateur,
-               types_de_champ_public: [{ type: :repetition, libelle: 'Enfants', children: [] }, { type: :drop_down_list, libelle: 'Civilité', options: [] }],
-               types_de_champ_private: [{ type: :drop_down_list, libelle: 'Civilité', options: [] }])
+               types_de_champ_public: [{ type: :repetition, libelle: 'Enfants', children: [] }, { type: :drop_down_list, libelle: 'Civilité' }],
+               types_de_champ_private: [{ type: :drop_down_list, libelle: 'Civilité' }])
+      end
+
+      before do
+        drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
+        drop_down.update!(drop_down_options: [])
+        drop_down = procedure.draft_revision.types_de_champ_private.find(&:drop_down_list?)
+        drop_down.update!(drop_down_options: [])
       end
 
       scenario 'an error message prevents the publication' do

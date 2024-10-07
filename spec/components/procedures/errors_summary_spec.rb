@@ -5,8 +5,8 @@ describe Procedure::ErrorsSummary, type: :component do
 
   describe 'validations context' do
     let(:procedure) { create(:procedure, types_de_champ_private:, types_de_champ_public:) }
-    let(:types_de_champ_private) { [{ type: :drop_down_list, options: [], libelle: 'private' }] }
-    let(:types_de_champ_public) { [{ type: :drop_down_list, options: [], libelle: 'public' }] }
+    let(:types_de_champ_private) { [{ type: :repetition, children: [], libelle: 'private' }] }
+    let(:types_de_champ_public) { [{ type: :repetition, children: [], libelle: 'public' }] }
 
     before { subject }
 
@@ -17,7 +17,7 @@ describe Procedure::ErrorsSummary, type: :component do
         expect(page).to have_content("Erreur : Des problèmes empêchent la publication de la démarche")
         expect(page).to have_selector("a", text: "public")
         expect(page).to have_selector("a", text: "private")
-        expect(page).to have_text("doit comporter au moins un choix sélectionnable", count: 2)
+        expect(page).to have_text("doit comporter au moins un champ répétable", count: 2)
       end
     end
 
@@ -27,7 +27,7 @@ describe Procedure::ErrorsSummary, type: :component do
       it 'shows errors and links for public only tdc' do
         expect(page).to have_text("Erreur : Les champs formulaire contiennent des erreurs")
         expect(page).to have_selector("a", text: "public")
-        expect(page).to have_text("doit comporter au moins un choix sélectionnable", count: 1)
+        expect(page).to have_text("doit comporter au moins un champ répétable", count: 1)
         expect(page).not_to have_selector("a", text: "private")
       end
     end
@@ -38,7 +38,7 @@ describe Procedure::ErrorsSummary, type: :component do
       it 'shows errors and links for private only tdc' do
         expect(page).to have_text("Erreur : Les annotations privées contiennent des erreurs")
         expect(page).to have_selector("a", text: "private")
-        expect(page).to have_text("doit comporter au moins un choix sélectionnable")
+        expect(page).to have_text("doit comporter au moins un champ répétable")
         expect(page).not_to have_selector("a", text: "public")
       end
     end
@@ -59,7 +59,11 @@ describe Procedure::ErrorsSummary, type: :component do
 
     let(:validation_context) { :types_de_champ_public_editor }
 
-    before { subject }
+    before do
+      drop_down_public = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
+      drop_down_public.update!(drop_down_options: [])
+      subject
+    end
 
     it 'renders all errors  and links on champ' do
       expect(page).to have_selector("a", text: "drop down list requires options")
