@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class ProcedurePresentation < ApplicationRecord
-  TABLE = 'table'
-  COLUMN = 'column'
-  ORDER = 'order'
-
-  SLASH = '/'
   TYPE_DE_CHAMP = 'type_de_champ'
 
   belongs_to :assign_to, optional: false
