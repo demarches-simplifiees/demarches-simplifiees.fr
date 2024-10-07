@@ -14,14 +14,14 @@ module Maintenance
       before { element.update_column(:filters, filters) }
 
       context 'when filter is valid' do
-        let(:filters) { { "suivis" => [{ 'table' => "self", 'column' => "id", "value" => (ProcedurePresentation::PG_INTEGER_MAX_VALUE - 1).to_s }] } }
+        let(:filters) { { "suivis" => [{ 'table' => "self", 'column' => "id", "value" => (FilteredColumn::PG_INTEGER_MAX_VALUE - 1).to_s }] } }
         it 'keeps it filters' do
           expect { subject }.not_to change { element.reload.filters }
         end
       end
 
       context 'when filter is invalid, drop it' do
-        let(:filters) { { "suivis" => [{ 'table' => "self", 'column' => "id", "value" => (ProcedurePresentation::PG_INTEGER_MAX_VALUE).to_s }] } }
+        let(:filters) { { "suivis" => [{ 'table' => "self", 'column' => "id", "value" => (FilteredColumn::PG_INTEGER_MAX_VALUE).to_s }] } }
         it 'drop invalid filters' do
           expect { subject }.to change { element.reload.filters }.to({ "suivis" => [] })
         end
