@@ -39,6 +39,34 @@ module DossierChampsConcern
     revision.types_de_champ_private.map { project_champ(_1, nil) }
   end
 
+  def filled_champs_public
+    project_champs_public.flat_map do |champ|
+      if champ.repetition?
+        champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
+      elsif champ.persisted? && champ.fillable?
+        champ
+      else
+        []
+      end
+    end
+  end
+
+  def filled_champs_private
+    project_champs_private.flat_map do |champ|
+      if champ.repetition?
+        champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
+      elsif champ.persisted? && champ.fillable?
+        champ
+      else
+        []
+      end
+    end
+  end
+
+  def filled_champs
+    filled_champs_public + filled_champs_private
+  end
+
   def project_rows_for(type_de_champ)
     return [] if !type_de_champ.repetition?
 

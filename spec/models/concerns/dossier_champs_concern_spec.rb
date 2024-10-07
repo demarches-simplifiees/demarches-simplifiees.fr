@@ -110,10 +110,41 @@ RSpec.describe DossierChampsConcern do
     subject { dossier.project_champs_public }
 
     it { expect(subject.size).to eq(4) }
+    it { expect(subject.find { _1.libelle == 'Nom' }).to be_falsey }
   end
 
   describe '#project_champs_private' do
     subject { dossier.project_champs_private }
+
+    it { expect(subject.size).to eq(1) }
+  end
+
+  describe '#filled_champs_public' do
+    let(:types_de_champ_public) do
+      [
+        { type: :header_section },
+        { type: :text, libelle: "Un champ text" },
+        { type: :text, libelle: "Un autre champ text" },
+        { type: :yes_no, libelle: "Un champ yes no" },
+        { type: :repetition, libelle: "Un champ répétable", mandatory: true, children: [{ type: :text, libelle: 'Nom' }] },
+        { type: :explication }
+      ]
+    end
+    subject { dossier.filled_champs_public }
+
+    it { expect(subject.size).to eq(4) }
+    it { expect(subject.find { _1.libelle == 'Nom' }).to be_truthy }
+  end
+
+  describe '#filled_champs_private' do
+    let(:types_de_champ_private) do
+      [
+        { type: :header_section },
+        { type: :text, libelle: "Une annotation" },
+        { type: :explication }
+      ]
+    end
+    subject { dossier.filled_champs_private }
 
     it { expect(subject.size).to eq(1) }
   end
