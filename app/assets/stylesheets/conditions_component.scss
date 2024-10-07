@@ -4,6 +4,7 @@
 form.form > .conditionnel {
   .condition-table {
     table-layout: fixed;
+    border-collapse: collapse;
 
     .far-left {
       width: 100px;
@@ -31,6 +32,39 @@ form.form > .conditionnel {
 
     .delete-column {
       width: 50px;
+    }
+
+    .group {
+      border: 1px solid black;
+      border-spacing: 2rem;
+
+      .group-far-left {
+        width: 20px;
+      }
+
+      .group-target {
+        width: 250px;
+
+        select {
+          width: 100%;
+        }
+      }
+
+      .group-operator {
+        width: 200px;
+
+        select {
+          width: 100%;
+        }
+      }
+
+      .value {
+        width: 150px;
+      }
+
+      .delete-column {
+        width: 50px;
+      }
     }
   }
 

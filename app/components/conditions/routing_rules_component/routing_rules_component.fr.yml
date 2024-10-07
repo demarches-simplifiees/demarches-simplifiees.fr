@@ -4,3 +4,4 @@ fr:
   select: Sélectionner
   add_condition: Ajouter une règle de routage
   remove_a_row: Supprimer la ligne
+  add_group: Ajouter un groupe de règles de routage

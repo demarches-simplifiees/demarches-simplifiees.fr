@@ -20,6 +20,14 @@ class Conditions::RoutingRulesComponent < Conditions::ConditionsComponent
     delete_row_admin_procedure_routing_rule_path(@procedure_id, @groupe_instructeur.id, row_index: row_index)
   end
 
+  def add_group_path
+    add_group_admin_procedure_routing_rule_path(@procedure_id, @groupe_instructeur.id)
+  end
+
+  def add_condition_to_group_path(group_index)
+    add_condition_to_group_admin_procedure_routing_rule_path(@procedure_id, @groupe_instructeur.id, group_index: group_index)
+  end
+
   def input_id_for(name, row_index)
     "#{@groupe_instructeur.id}-#{name}-#{row_index}"
   end

@@ -17,6 +17,14 @@ class Conditions::ConditionsComponent < ApplicationComponent
     end
   end
 
+  def rows_from(group)
+    if [And, Or].include?(group.class)
+      group.operands.map { |c| Logic.split_condition(c) }
+    else
+      [Logic.split_condition(group)]
+    end
+  end
+
   def far_left_tag(row_number)
     if row_number == 0
       t('.display_if')
@@ -26,6 +34,28 @@ class Conditions::ConditionsComponent < ApplicationComponent
         options_for_select(options_for_far_left_tag, @condition.class.name),
         class: 'fr-select'
       )
+    end
+  end
+
+  def intra_group_n_ary_operator_tag(condition, row_number)
+    if row_number == 1
+      select_tag(
+        "#{input_prefix}[top_operator_name]",
+        options_for_select(options_for_far_left_tag, condition.class.name),
+        class: 'fr-select'
+      )
+    end
+  end
+
+  def inter_group_n_ary_operator_tag(group_index)
+    if group_index == 0
+      select_tag(
+        "#{input_prefix}[top_operator_name]",
+        options_for_select(options_for_far_left_tag, @condition.class.name),
+        class: 'fr-select'
+      )
+    elsif group_index >= 1
+      nil
     end
   end
 
@@ -197,6 +227,24 @@ class Conditions::ConditionsComponent < ApplicationComponent
       formaction: delete_condition_path(row_index),
       formmethod: 'delete',
       formnovalidate: true
+    )
+  end
+
+  def add_group_tag
+    tag.button(
+      t('.add_group'),
+      formaction: add_group_path,
+      formnovalidate: true,
+      class: 'fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-circle-line fr-btn--icon-left'
+    )
+  end
+
+  def add_condition_to_group_tag(group_index)
+    tag.button(
+      t('.add_condition'),
+      formaction: add_condition_to_group_path(group_index),
+      formnovalidate: true,
+      class: 'fr-btn fr-btn--secondary fr-btn--sm fr-icon-add-circle-line fr-btn--icon-left'
     )
   end
 

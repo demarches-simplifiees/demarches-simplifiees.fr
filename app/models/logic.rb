@@ -94,8 +94,38 @@ module Logic
     end
   end
 
+  def self.add_empty_group_to(condition)
+    empty_condition = EmptyOperator.new(Empty.new, Empty.new)
+    if with_groups?(condition)
+      condition.tap { |c| c.operands << empty_condition }
+    else
+      Logic::And.new([condition, empty_condition])
+    end
+  end
+
+  def self.add_condition_to_group(condition, group_index)
+    empty_condition = EmptyOperator.new(Empty.new, Empty.new)
+
+    operands = condition.operands.map.with_index do |operand, operand_index|
+      if operand_index == group_index
+        if [And, Or].include?(condition.operands[group_index].class)
+          operand.tap { |c| c.operands << empty_condition }
+        else
+          Logic::And.new([operand, empty_condition])
+        end
+      else
+        operand
+      end
+    end
+    (condition.class).new(operands)
+  end
+
   def self.split_condition(condition)
     [condition.left, condition.class.name, condition.right]
+  end
+
+  def self.with_groups?(condition)
+    [And, Or].include?(condition.class) && condition.operands.any? { |operand| [And, Or].include?(operand.class) }
   end
 
   def ds_eq(left, right) = Logic::Eq.new(left, right)

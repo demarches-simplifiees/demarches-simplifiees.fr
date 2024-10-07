@@ -624,6 +624,8 @@ Rails.application.routes.draw do
 
       resources :routing_rules, only: [:update, :destroy], param: :groupe_instructeur_id do
         patch :add_row, on: :member
+        patch :add_group, on: :member
+        patch :add_condition_to_group, on: :member
         patch :change_targeted_champ, on: :member
         delete :delete_row, on: :member
       end

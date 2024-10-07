@@ -20,12 +20,28 @@
             %th.operator Opérateur
             %th.value Valeur
             %th.delete-column
-        %tbody
-          - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
-            %tr
-              %td.far-left= far_left_tag(row_index)
-              %td.target= left_operand_tag(targeted_champ, row_index)
-              %td.operator= operator_tag(operator_name, targeted_champ, row_index)
-              %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
-              %td.delete-column= delete_condition_tag(row_index)
-      .flex.justify-end.mt-2= add_condition_tag
+          - if Logic.with_groups?(@condition)
+            - @condition.operands.each.with_index do |group, group_index|
+              %tbody.group
+                - rows_from(group).each.with_index do |(targeted_champ, operator_name, value), row_index|
+                  %tr
+                    %td.group-far-left= intra_group_n_ary_operator_tag(group, row_index)
+                    %td.group-target= left_operand_tag(targeted_champ, row_index)
+                    %td.group-operator= operator_tag(operator_name, targeted_champ, row_index)
+                    %td.group-value= right_operand_tag(targeted_champ, value, row_index, operator_name)
+                    %td.group-delete-column= delete_condition_tag(row_index)
+                %tr
+                  %td.flex.justify-end.mt-2= add_condition_to_group_tag(group_index)
+              %tr
+                %td.very-far.fr-mt-6v.fr-mb-6v= inter_group_n_ary_operator_tag(group_index)
+          - else
+            %tbody
+              - rows.each.with_index do |(targeted_champ, operator_name, value), row_index|
+                %tr
+                  %td.far-left= far_left_tag(row_index)
+                  %td.target= left_operand_tag(targeted_champ, row_index)
+                  %td.operator= operator_tag(operator_name, targeted_champ, row_index)
+                  %td.value= right_operand_tag(targeted_champ, value, row_index, operator_name)
+                  %td.delete-column= delete_condition_tag(row_index)
+        .flex.justify-end.mt-2= add_condition_tag
+      .flex.justify-end.mt-2= add_group_tag

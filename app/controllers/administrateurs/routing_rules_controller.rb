@@ -27,6 +27,20 @@ module Administrateurs
       @routing_rule_component = build_routing_rule_component
     end
 
+    def add_group
+      condition = Logic.add_empty_group_to(@groupe_instructeur.routing_rule)
+      @groupe_instructeur.update!(routing_rule: condition)
+
+      @routing_rule_component = build_routing_rule_component
+    end
+
+    def add_condition_to_group
+      condition = Logic.add_condition_to_group(@groupe_instructeur.routing_rule, group_index)
+      @groupe_instructeur.update!(routing_rule: condition)
+
+      @routing_rule_component = build_routing_rule_component
+    end
+
     def change_targeted_champ
       condition = condition_form.change_champ(row_index).to_condition
       @groupe_instructeur.update!(routing_rule: condition)
@@ -76,6 +90,10 @@ module Administrateurs
 
     def row_index
       params[:row_index].to_i
+    end
+
+    def group_index
+      params[:group_index].to_i
     end
   end
 end
