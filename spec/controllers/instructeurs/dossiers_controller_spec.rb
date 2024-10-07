@@ -971,7 +971,6 @@ describe Instructeurs::DossiersController, type: :controller do
       cache.persist_last_state(params: { statut:, page: 1 }, filtered_sorted_paginated_ids: cached_ids)
     end
 
-
     context 'when nexting' do
       subject { get :next, params: { procedure_id: procedure.id, dossier_id: from_id, statut: } }
 

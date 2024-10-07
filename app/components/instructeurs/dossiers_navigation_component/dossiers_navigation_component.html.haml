@@ -1,0 +1,17 @@
+.flex.fr-mb-1w
+  = render Instructeurs::BackButtonComponent.new(to: instructeur_procedure_path(dossier.procedure, last_state_opts))
+
+  %h1.fr-h3.fr-mb-0
+    = "Dossier nº #{dossier.id}"
+
+  - if has_next? || has_previous?
+    .fr.ml-auto.align-center
+      - if has_previous?
+        = link_to previous_instructeur_dossier_path(last_state_opts.merge(dossier_id: dossier)), class: 'fr-link' do
+          = dsfr_icon("fr-icon-arrow-left-line")
+          = "Dossier précédent"
+
+      - if has_next?
+        = link_to next_instructeur_dossier_path(last_state_opts.merge(dossier_id: dossier)), class: 'fr-link fr-ml-3w' do
+          = "Dossier suivant"
+          = dsfr_icon("fr-icon-arrow-right-line")
