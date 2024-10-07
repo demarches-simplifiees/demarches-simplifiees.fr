@@ -263,6 +263,21 @@ class APIGeoService
       end
     end
 
+    def inline_service_public_address(address_data)
+      return nil if address_data.blank?
+
+      components = [
+        address_data['numero_voie'],
+        address_data['complement1'],
+        address_data['complement2'],
+        address_data['service_distribution'],
+        address_data['code_postal'],
+        address_data['nom_commune']
+      ].compact_blank
+
+      components.join(' ')
+    end
+
     private
 
     def code_metropole?(result)
