@@ -26,6 +26,11 @@ class Cache::ShowProcedureLastState
     cache[:filtered_sorted_paginated_ids][index + 1]
   end
 
+  def previous_dossier_id(from_id:)
+    index = cache[:filtered_sorted_paginated_ids].index(from_id)
+    cache[:filtered_sorted_paginated_ids][index - 1]
+  end
+
   private
 
   def cache # reader, don't want to override things without directly acceding the session

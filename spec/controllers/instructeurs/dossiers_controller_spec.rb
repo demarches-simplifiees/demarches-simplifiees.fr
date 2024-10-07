@@ -960,7 +960,7 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
-  describe 'next' do
+  describe 'navigation accross filtered_sorted_paginated_ids' do
     let(:dossier_id) { dossier.id }
     let(:next_dossier_id) { nil }
     let(:previous_dossier_id) { nil }
@@ -971,20 +971,41 @@ describe Instructeurs::DossiersController, type: :controller do
       cache.persist_last_state(params: { statut:, page: 1 }, filtered_sorted_paginated_ids: [previous_dossier_id, dossier.id, next_dossier_id])
     end
 
-    subject { get :next, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: } }
+    context 'when nexting' do
+      subject { get :next, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: } }
 
-    context 'when their is a next id' do
-      let(:next_dossier_id) { 1 }
-      it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier_id)) }
+      context 'when their is a next id' do
+        let(:next_dossier_id) { 1 }
+        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier_id)) }
+      end
+      context 'when their is not next id' do
+        let(:next_dossier_id) { nil }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier_id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
     end
-    context 'when their is not next id' do
-      let(:next_dossier_id) { nil }
-      it 'flashes error on current page' do
-        expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier_id))
-        expect(flash.alert).to eq("Une erreur est survenue")
+
+    context 'when previousing' do
+      subject { get :previous, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: } }
+
+      context 'when their is a previous id' do
+        let(:previous_dossier_id) { 1 }
+        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: previous_dossier_id)) }
+      end
+
+      context 'when their is not previous id' do
+        let(:previous_dossier_id) { nil }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier_id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
       end
     end
   end
+
+
 
   describe "#update_annotations" do
     let(:procedure) do

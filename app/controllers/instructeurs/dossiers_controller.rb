@@ -394,15 +394,25 @@ module Instructeurs
 
     def next
       cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:, session: request.session)
-      next_dossier_id = cache.next_dossier_id(from_id: dossier.id)
-      if next_dossier_id
-        redirect_to instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier_id)
+
+      navigate_throw_dossier_list(cache.next_dossier_id(from_id: dossier.id))
+    end
+
+    def previous
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:, session: request.session)
+
+      navigate_throw_dossier_list(cache.previous_dossier_id(from_id: dossier.id))
+    end
+
+    private
+
+    def navigate_throw_dossier_list(next_or_previous_dossier_id)
+      if next_or_previous_dossier_id
+        redirect_to instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_or_previous_dossier_id)
       else
         redirect_back fallback_location: instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier.id), alert: "Une erreur est survenue"
       end
     end
-
-    private
 
     def dossier_scope
       if action_name == 'update_annotations'

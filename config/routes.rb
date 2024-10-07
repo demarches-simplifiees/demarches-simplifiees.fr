@@ -501,6 +501,7 @@ Rails.application.routes.draw do
           member do
             resources :commentaires, only: [:destroy]
             get 'next'
+            get 'previous'
             post 'repousser-expiration' => 'dossiers#extend_conservation'
             post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
             get 'geo_data'
