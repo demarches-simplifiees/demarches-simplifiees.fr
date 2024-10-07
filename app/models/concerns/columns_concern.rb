@@ -4,7 +4,10 @@ module ColumnsConcern
   extend ActiveSupport::Concern
 
   included do
-    def find_column(id:) = columns.find { |f| f.id == id }
+    def find_column(h_id: nil, label: nil)
+      return columns.find { _1.h_id == h_id } if h_id.present?
+      return columns.find { _1.label == label } if label.present?
+    end
 
     def columns
       columns = dossier_columns

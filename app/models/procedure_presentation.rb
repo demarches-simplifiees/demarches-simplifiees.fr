@@ -81,8 +81,10 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def add_filter(statut, column_id, value)
+    h_id = JSON.parse(column_id, symbolize_names: true)
+
     if value.present?
-      column = procedure.find_column(id: column_id)
+      column = procedure.find_column(h_id:)
 
       case column.table
       when TYPE_DE_CHAMP
@@ -103,7 +105,8 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def remove_filter(statut, column_id, value)
-    column = procedure.find_column(id: column_id)
+    h_id = JSON.parse(column_id, symbolize_names: true)
+    column = procedure.find_column(h_id:)
     updated_filters = filters.dup
 
     updated_filters[statut] = filters[statut].reject do |filter|
@@ -114,8 +117,8 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def update_displayed_fields(column_ids)
-    column_ids = Array.wrap(column_ids)
-    columns = column_ids.map { |id| procedure.find_column(id:) }
+    h_ids = Array.wrap(column_ids).map { |id| JSON.parse(id, symbolize_names: true) }
+    columns = h_ids.map { |h_id| procedure.find_column(h_id:) }
 
     update!(displayed_fields: columns)
 
@@ -125,7 +128,8 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def update_sort(column_id, order)
-    column = procedure.find_column(id: column_id)
+    h_id = JSON.parse(column_id, symbolize_names: true)
+    column = procedure.find_column(h_id:)
 
     update!(sort: {
       TABLE => column.table,

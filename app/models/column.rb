@@ -18,13 +18,9 @@ class Column
     @displayable = displayable
   end
 
-  def id
-    "#{table}/#{column}"
-  end
-
-  def ==(other)
-    other.to_json == to_json
-  end
+  def id = h_id.to_json
+  def h_id = { procedure_id: @procedure_id, column_id: "#{table}/#{column}" }
+  def ==(other) = h_id == other.h_id # using h_id instead of id to avoid inversion of keys
 
   def to_json
     {
