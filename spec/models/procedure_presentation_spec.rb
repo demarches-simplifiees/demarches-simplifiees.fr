@@ -40,8 +40,11 @@ describe ProcedurePresentation do
   describe 'validation' do
     it { expect(build(:procedure_presentation)).to be_valid }
 
-    context 'of displayed fields' do
-      it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
+    context 'of displayed columns' do
+      it do
+        pp = build(:procedure_presentation, displayed_columns: [{ table: "user", column: "reset_password_token", procedure_id: }])
+        expect { pp.displayed_columns }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
     context 'of filters' do
@@ -795,6 +798,9 @@ describe ProcedurePresentation do
   end
 
   describe '#update_displayed_fields' do
+    let(:en_construction_column) { procedure.find_column(label: 'En construction le') }
+    let(:mise_a_jour_column) { procedure.find_column(label: 'Mis à jour le') }
+
     let(:procedure_presentation) do
       create(:procedure_presentation, assign_to:).tap do |pp|
         pp.update(sorted_column: SortedColumn.new(column: procedure.find_column(label: 'Demandeur'), order: 'desc'))
@@ -802,24 +808,19 @@ describe ProcedurePresentation do
     end
 
     subject do
-      procedure_presentation.update_displayed_fields([
-        procedure.find_column(label: 'En construction le').id,
-        procedure.find_column(label: 'Mis à jour le').id
+      procedure_presentation.update(displayed_columns: [
+        en_construction_column.id, mise_a_jour_column.id
       ])
     end
 
     it 'should update displayed_fields' do
-      expect(procedure_presentation.displayed_columns).to eq([])
+      expect(procedure_presentation.displayed_columns).to eq(procedure.default_displayed_columns)
 
       subject
 
       expect(procedure_presentation.displayed_columns).to eq([
-        { "column_id" => "self/en_construction_at", "procedure_id" => procedure.id },
-        { "column_id" => "self/updated_at", "procedure_id" => procedure.id }
+        en_construction_column, mise_a_jour_column
       ])
-
-      expect(procedure_presentation.sorted_column).to eq(procedure.default_sorted_column)
-      expect(procedure_presentation.sorted_column.order).to eq('desc')
     end
   end
 end

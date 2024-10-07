@@ -21,6 +21,8 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_filters_max_length
   validate :check_filters_max_integer
 
+  attribute :displayed_columns, :column, array: true
+
   attribute :sorted_column, :sorted_column
   def sorted_column = super || procedure.default_sorted_column # Dummy override to set default value
 
@@ -42,7 +44,7 @@ class ProcedurePresentation < ApplicationRecord
   def displayed_fields_for_headers
     [
       Column.new(procedure_id: procedure.id, table: 'self', column: 'id', classname: 'number-col'),
-      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys.merge(procedure_id: procedure.id)) },
+      *displayed_columns,
       Column.new(procedure_id: procedure.id, table: 'self', column: 'state', classname: 'state-col'),
       *procedure.sva_svr_columns
     ]
