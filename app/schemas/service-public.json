@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "http://demarches-simplifiees.fr/service-public.schema.json",
+  "title": "Service Public",
+  "type": "object",
+  "properties": {
+    "total_count": {
+      "type": "integer"
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "plage_ouverture": { "type": ["string", "null"] },
+          "site_internet": { "type": ["string", "null"] },
+          "copyright": { "type": ["string", "null"] },
+          "siren": { "type": ["string", "null"] },
+          "ancien_code_pivot": { "type": ["string", "null"] },
+          "reseau_social": { "type": ["string", "null"] },
+          "texte_reference": { "type": ["string", "null"] },
+          "partenaire": { "type": ["string", "null"] },
+          "telecopie": { "type": ["string", "null"] },
+          "nom": { "type": "string" },
+          "siret": { "type": ["string", "null"] },
+          "itm_identifiant": { "type": ["string", "null"] },
+          "sigle": { "type": ["string", "null"] },
+          "affectation_personne": { "type": ["string", "null"] },
+          "date_modification": { "type": "string" },
+          "adresse_courriel": { "type": ["string", "null"] },
+          "service_disponible": { "type": ["string", "null"] },
+          "organigramme": { "type": ["string", "null"] },
+          "pivot": { "type": ["string", "null"] },
+          "partenaire_identifiant": { "type": ["string", "null"] },
+          "ancien_identifiant": { "type": ["string", "null"] },
+          "id": { "type": "string" },
+          "ancien_nom": { "type": ["string", "null"] },
+          "commentaire_plage_ouverture": { "type": ["string", "null"] },
+          "annuaire": { "type": ["string", "null"] },
+          "tchat": { "type": ["string", "null"] },
+          "hierarchie": { "type": ["string", "null"] },
+          "categorie": { "type": "string" },
+          "sve": { "type": ["string", "null"] },
+          "telephone_accessible": { "type": ["string", "null"] },
+          "application_mobile": { "type": ["string", "null"] },
+          "version_type": { "type": "string" },
+          "type_repertoire": { "type": ["string", "null"] },
+          "telephone": { "type": ["string", "null"] },
+          "version_etat_modification": { "type": ["string", "null"] },
+          "date_creation": { "type": "string" },
+          "partenaire_date_modification": { "type": ["string", "null"] },
+          "mission": { "type": ["string", "null"] },
+          "formulaire_contact": { "type": ["string", "null"] },
+          "version_source": { "type": ["string", "null"] },
+          "type_organisme": { "type": ["string", "null"] },
+          "code_insee_commune": { "type": ["string", "null"] },
+          "statut_de_diffusion": { "type": ["string", "null"] },
+          "adresse": { "type": ["string", "null"] },
+          "url_service_public": { "type": ["string", "null"] },
+          "information_complementaire": { "type": ["string", "null"] },
+          "date_diffusion": { "type": ["string", "null"] }
+        },
+        "required": [
+          "id",
+          "nom",
+          "categorie",
+          "adresse",
+          "adresse_courriel",
+          "telephone",
+          "plage_ouverture"
+        ]
+      }
+    }
+  },
+  "required": ["total_count", "results"]
+}
