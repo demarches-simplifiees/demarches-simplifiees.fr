@@ -31,9 +31,9 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayed_fields_for_headers
     [
-      Column.new(table: 'self', column: 'id', classname: 'number-col'),
-      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys) },
-      Column.new(table: 'self', column: 'state', classname: 'state-col'),
+      Column.new(procedure_id: procedure.id, table: 'self', column: 'id', classname: 'number-col'),
+      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys.merge(procedure_id: procedure.id)) },
+      Column.new(procedure_id: procedure.id, table: 'self', column: 'state', classname: 'state-col'),
       *procedure.sva_svr_columns
     ]
   end
@@ -201,7 +201,7 @@ class ProcedurePresentation < ApplicationRecord
       .map do |(table, column), filters|
       values = filters.pluck('value')
       value_column = filters.pluck('value_column').compact.first || :value
-      dossier_column = procedure.find_column(id: Column.make_id(table, column)) # hack to find json path columns
+      dossier_column = procedure.find_column(id: Column.make_id(procedure.id, table, column)) # hack to find json path columns
       if dossier_column.is_a?(Columns::JSONPathColumn)
         dossier_column.filtered_ids(dossiers, values)
       else

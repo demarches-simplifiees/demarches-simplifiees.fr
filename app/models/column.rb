@@ -5,7 +5,8 @@ class Column
 
   attr_reader :table, :column, :label, :classname, :type, :scope, :value_column, :filterable, :displayable
 
-  def initialize(table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, classname: '', scope: '')
+  def initialize(procedure_id:, table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, classname: '', scope: '')
+    @procedure_id = procedure_id
     @table = table
     @column = column
     @label = label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table])

@@ -582,7 +582,7 @@ describe ProcedurePresentation do
     context 'for type_de_champ using AddressableColumnConcern' do
       let(:types_de_champ_public) { [{ type: :rna, stable_id: 1 }] }
       let(:type_de_champ) { procedure.active_revision.types_de_champ.first }
-      let(:available_columns) { type_de_champ.columns }
+      let(:available_columns) { type_de_champ.columns(procedure_id: procedure.id) }
       let(:column) { available_columns.find { _1.value_column == value_column_searched } }
       let(:filter) { [column.to_json.merge({ "value" => value })] }
       let(:kept_dossier) { create(:dossier, procedure: procedure) }
@@ -611,6 +611,7 @@ describe ProcedurePresentation do
           create(:dossier, procedure: procedure).project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "departement_code" => "unknown" })
         end
         it { is_expected.to contain_exactly(kept_dossier.id) }
+
         it 'describes column' do
           expect(column.type).to eq(:enum)
           expect(column.options_for_select.first).to eq(["99 – Etranger", "99"])
@@ -865,9 +866,10 @@ describe ProcedurePresentation do
 
     context 'when type_de_champ text' do
       let(:filters) { { "suivis" => [] } }
+      let(:column_id) { Column.make_id(procedure.id, 'type_de_champ', first_type_de_champ_id) }
 
       it 'should passthrough value' do
-        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "Oui")
+        procedure_presentation.add_filter("suivis", column_id, "Oui")
 
         expect(procedure_presentation.filters).to eq({
           "suivis" => [
@@ -879,10 +881,11 @@ describe ProcedurePresentation do
 
     context 'when type_de_champ departements' do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :departements }]) }
+      let(:column_id) { Column.make_id(procedure.id, 'type_de_champ', first_type_de_champ_id) }
       let(:filters) { { "suivis" => [] } }
 
       it 'should set value_column' do
-        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", "13")
+        procedure_presentation.add_filter("suivis", column_id, "13")
 
         expect(procedure_presentation.filters).to eq({
           "suivis" => [
