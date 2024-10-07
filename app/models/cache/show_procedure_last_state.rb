@@ -18,7 +18,12 @@ class Cache::ShowProcedureLastState
   end
 
   def persist_last_state(params:, filtered_sorted_paginated_ids:)
-    session[cache_key(procedure:, current_instructeur:)] = params.permit(:statut, :page).slice(:statut, :page).to_h.merge(filtered_sorted_paginated_ids:)
+    session[cache_key(procedure:, current_instructeur:)] = params.merge(filtered_sorted_paginated_ids:)
+  end
+
+  def next_dossier_id(from_id:)
+    index = cache[:filtered_sorted_paginated_ids].index(from_id)
+    cache[:filtered_sorted_paginated_ids][index + 1]
   end
 
   private

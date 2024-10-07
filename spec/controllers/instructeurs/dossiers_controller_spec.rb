@@ -960,6 +960,32 @@ describe Instructeurs::DossiersController, type: :controller do
     end
   end
 
+  describe 'next' do
+    let(:dossier_id) { dossier.id }
+    let(:next_dossier_id) { nil }
+    let(:previous_dossier_id) { nil }
+    let(:statut) { 'a-suivre' }
+
+    before do
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:, session: request.session)
+      cache.persist_last_state(params: { statut:, page: 1 }, filtered_sorted_paginated_ids: [previous_dossier_id, dossier.id, next_dossier_id])
+    end
+
+    subject { get :next, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: } }
+
+    context 'when their is a next id' do
+      let(:next_dossier_id) { 1 }
+      it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier_id)) }
+    end
+    context 'when their is not next id' do
+      let(:next_dossier_id) { nil }
+      it 'flashes error on current page' do
+        expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier_id))
+        expect(flash.alert).to eq("Une erreur est survenue")
+      end
+    end
+  end
+
   describe "#update_annotations" do
     let(:procedure) do
       create(:procedure, :published, types_de_champ_public:, types_de_champ_private:, instructeurs: instructeurs)

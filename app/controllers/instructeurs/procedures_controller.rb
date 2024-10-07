@@ -416,7 +416,8 @@ module Instructeurs
 
     def cache_show_procedure_state
       cache = Cache::ShowProcedureLastState.new(procedure:, current_instructeur:, session:)
-      cache.persist_last_state(params:, filtered_sorted_paginated_ids: @filtered_sorted_paginated_ids)
+      safe_params = params.permit(:statut, :page).slice(:statut, :page).to_h
+      cache.persist_last_state(params: safe_params, filtered_sorted_paginated_ids: @filtered_sorted_paginated_ids)
     end
   end
 end
