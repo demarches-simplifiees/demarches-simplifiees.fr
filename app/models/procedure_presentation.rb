@@ -8,17 +8,10 @@ class ProcedurePresentation < ApplicationRecord
   SLASH = '/'
   TYPE_DE_CHAMP = 'type_de_champ'
 
-  FILTERS_VALUE_MAX_LENGTH = 4048
-  # https://www.postgresql.org/docs/current/datatype-numeric.html
-  PG_INTEGER_MAX_VALUE = 2147483647
-
   belongs_to :assign_to, optional: false
   has_many :exports, dependent: :destroy
 
   delegate :procedure, :instructeur, to: :assign_to
-
-  validate :check_filters_max_length
-  validate :check_filters_max_integer
 
   attribute :displayed_columns, :column, array: true
 
@@ -33,6 +26,9 @@ class ProcedurePresentation < ApplicationRecord
   attribute :supprimes_recemment_filters, :filtered_column, array: true
   attribute :expirant_filters, :filtered_column, array: true
   attribute :archives_filters, :filtered_column, array: true
+
+  validates_associated :a_suivre_filters, :suivis_filters, :traites_filters,
+    :tous_filters, :supprimes_filters, :expirant_filters, :archives_filters
 
   def filters_for(statut)
     send(filters_name_for(statut))
@@ -217,25 +213,6 @@ class ProcedurePresentation < ApplicationRecord
       .where(revision_types_de_champ: { revision_id: procedure.revisions })
       .order(created_at: :desc)
       .find_by(stable_id: column)
-  end
-
-  def check_filters_max_length
-    filters.values.flatten.each do |filter|
-      next if !filter.is_a?(Hash)
-      next if filter['value']&.length.to_i <= FILTERS_VALUE_MAX_LENGTH
-
-      errors.add(:base, "Le filtre #{filter['label']} est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)")
-    end
-  end
-
-  def check_filters_max_integer
-    filters.values.flatten.each do |filter|
-      next if !filter.is_a?(Hash)
-      next if filter['column'] != 'id'
-      next if filter['value']&.to_i&. < PG_INTEGER_MAX_VALUE
-
-      errors.add(:base, "Le filtre #{filter['label']} n'est pas un numéro de dossier possible")
-    end
   end
 
   def self.sanitized_column(association, column)
