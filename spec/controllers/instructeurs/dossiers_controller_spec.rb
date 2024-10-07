@@ -962,43 +962,62 @@ describe Instructeurs::DossiersController, type: :controller do
 
   describe 'navigation accross filtered_sorted_paginated_ids' do
     let(:dossier_id) { dossier.id }
-    let(:next_dossier_id) { nil }
-    let(:previous_dossier_id) { nil }
     let(:statut) { 'a-suivre' }
-
+    let(:previous_dossier) { create(:dossier, :en_construction, procedure: )}
+    let(:next_dossier) { create(:dossier, :en_construction, procedure: )}
+    let(:cached_ids) { [previous_dossier, dossier, next_dossier].map(&:id) }
     before do
       cache = Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:, session: request.session)
-      cache.persist_last_state(params: { statut:, page: 1 }, filtered_sorted_paginated_ids: [previous_dossier_id, dossier.id, next_dossier_id])
+      cache.persist_last_state(params: { statut:, page: 1 }, filtered_sorted_paginated_ids: cached_ids)
     end
 
+
     context 'when nexting' do
-      subject { get :next, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: } }
+      subject { get :next, params: { procedure_id: procedure.id, dossier_id: from_id, statut: } }
 
       context 'when their is a next id' do
-        let(:next_dossier_id) { 1 }
-        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier_id)) }
+        let(:from_id) { dossier.id }
+        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_dossier.id)) }
       end
-      context 'when their is not next id' do
-        let(:next_dossier_id) { nil }
+
+      context 'when their is not next id (en of list)' do
+        let(:from_id) { cached_ids.last }
         it 'redirect on fallback location being current dossier and flashes an error' do
-          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier_id))
+          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: from_id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
+
+      context 'when id does not exists' do
+        let(:from_id) { 'kthxbye' }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_procedure_path(procedure_id: procedure.id))
           expect(flash.alert).to eq("Une erreur est survenue")
         end
       end
     end
 
     context 'when previousing' do
-      subject { get :previous, params: { procedure_id: procedure.id, dossier_id: dossier.id, statut: } }
+      subject { get :previous, params: { procedure_id: procedure.id, dossier_id: from_id, statut: } }
 
       context 'when their is a previous id' do
-        let(:previous_dossier_id) { 1 }
-        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: previous_dossier_id)) }
+        let(:from_id) { dossier.id }
+        it { is_expected.to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: previous_dossier.id)) }
       end
 
-      context 'when their is not previous id' do
-        let(:previous_dossier_id) { nil }
+      context 'when their is not previous id (before list)' do
+        let(:from_id) { cached_ids.first }
         it 'redirect on fallback location being current dossier and flashes an error' do
-          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier_id))
+          expect(subject).to redirect_to(instructeur_dossier_path(procedure_id: procedure.id, dossier_id: from_id))
+          expect(flash.alert).to eq("Une erreur est survenue")
+        end
+      end
+
+
+      context 'when id does not exists' do
+        let(:from_id) { 'kthxbye' }
+        it 'redirect on fallback location being current dossier and flashes an error' do
+          expect(subject).to redirect_to(instructeur_procedure_path(procedure_id: procedure.id))
           expect(flash.alert).to eq("Une erreur est survenue")
         end
       end
