@@ -1,0 +1,100 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret:20004021000060
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches.gouv.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - openresty
+      Date:
+      - Mon, 07 Oct 2024 14:41:57 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '2573'
+      X-Ratelimit-Remaining:
+      - '999979'
+      X-Ratelimit-Limit:
+      - '1000000'
+      X-Ratelimit-Reset:
+      - '2024-10-08 00:00:00+00:00'
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Vary:
+      - Accept-Language, Cookie, Host
+      Content-Language:
+      - fr-fr
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, GET, OPTIONS
+      Access-Control-Max-Age:
+      - '1000'
+      Access-Control-Allow-Headers:
+      - Authorization, X-Requested-With, Origin, ODS-API-Analytics-App, ODS-API-Analytics-Embed-Type,
+        ODS-API-Analytics-Embed-Referrer, ODS-Widgets-Version, Accept
+      Access-Control-Expose-Headers:
+      - ODS-Explore-API-Deprecation, Link, X-RateLimit-Remaining, X-RateLimit-Limit,
+        X-RateLimit-Reset, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Limit,
+        X-RateLimit-dataset-Reset
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - midi=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Content-Security-Policy:
+      - upgrade-insecure-requests;
+      X-Ua-Compatible:
+      - IE=edge
+    body:
+      encoding: ASCII-8BIT
+      string: '{"total_count": 1, "results": [{"plage_ouverture": "[{\"nom_jour_debut\":
+        \"Lundi\", \"nom_jour_fin\": \"Jeudi\", \"valeur_heure_debut_1\": \"08:00:00\",
+        \"valeur_heure_fin_1\": \"12:00:00\", \"valeur_heure_debut_2\": \"13:30:00\",
+        \"valeur_heure_fin_2\": \"17:30:00\", \"commentaire\": \"\"}, {\"nom_jour_debut\":
+        \"Vendredi\", \"nom_jour_fin\": \"Vendredi\", \"valeur_heure_debut_1\": \"08:00:00\",
+        \"valeur_heure_fin_1\": \"12:00:00\", \"valeur_heure_debut_2\": \"\", \"valeur_heure_fin_2\":
+        \"\", \"commentaire\": \"\"}]", "site_internet": "[{\"libelle\": \"\", \"valeur\":
+        \"https://www.cc-lacsgorgesverdon.fr/\"}]", "copyright": "Direction de l''information
+        l\u00e9gale et administrative (Premier ministre)", "siren": "200040210", "ancien_code_pivot":
+        "epci-83007-01", "reseau_social": null, "texte_reference": null, "partenaire":
+        null, "telecopie": null, "nom": "Communaut\u00e9 de communes - Lacs et Gorges
+        du Verdon", "siret": "20004021000060", "itm_identifiant": "999974", "sigle":
+        null, "affectation_personne": null, "date_modification": "31/01/2024 14:25:10",
+        "adresse_courriel": "redacted@email.fr", "service_disponible": null, "organigramme":
+        null, "pivot": "[{\"type_service_local\": \"epci\", \"code_insee_commune\":
+        [\"83007\"]}]", "partenaire_identifiant": null, "ancien_identifiant": null,
+        "id": "3b9ce22d-f7bd-46d9-82d1-8b44c8d08e39", "ancien_nom": null, "commentaire_plage_ouverture":
+        null, "annuaire": null, "tchat": null, "hierarchie": null, "categorie": "SL",
+        "sve": null, "telephone_accessible": null, "application_mobile": null, "version_type":
+        "Publiable", "type_repertoire": null, "telephone": "[{\"valeur\": \"04 94
+        70 00 00\", \"description\": \"\"}]", "version_etat_modification": null, "date_creation":
+        "11/05/2017 11:28:41", "partenaire_date_modification": null, "mission": null,
+        "formulaire_contact": "https://www.cc-lacsgorgesverdon.fr/contacts-comcom",
+        "version_source": null, "type_organisme": null, "code_insee_commune": "83007",
+        "statut_de_diffusion": "true", "adresse": "[{\"type_adresse\": \"Adresse\",
+        \"complement1\": \"\", \"complement2\": \"\", \"numero_voie\": \"242 avenue
+        Albert-1er\", \"service_distribution\": \"\", \"code_postal\": \"83630\",
+        \"nom_commune\": \"Aups\", \"pays\": \"\", \"continent\": \"\", \"longitude\":
+        \"6.22516\", \"latitude\": \"43.627448\", \"accessibilite\": \"ACC\", \"note_accessibilite\":
+        \"ascenseur\"}]", "url_service_public": "https://lannuaire.service-public.fr/provence-alpes-cote-d-azur/var/3b9ce22d-f7bd-46d9-82d1-8b44c8d08e39",
+        "information_complementaire": null, "date_diffusion": null}]}'
+  recorded_at: Mon, 07 Oct 2024 14:41:57 GMT
+recorded_with: VCR 6.2.0
