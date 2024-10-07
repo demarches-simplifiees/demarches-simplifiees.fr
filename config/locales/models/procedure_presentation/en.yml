@@ -81,3 +81,5 @@ en:
             association_date_creation: 'Association date de création'
             association_date_declaration: 'Association date de déclaration'
             association_date_publication: 'Association date de publication'
+          dossier_labels:
+            label_id: Labels

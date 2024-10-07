@@ -123,6 +123,18 @@ class DossierProjectionService
 
         fields[0][:id_value_h] = id_value_h
 
+      when 'dossier_labels'
+        columns = fields.map { _1[COLUMN].to_sym }
+
+        id_value_h =
+          DossierLabel
+            .includes(:procedure_label)
+            .where(dossier_id: dossiers_ids)
+            .pluck('dossier_id, procedure_labels.name, procedure_labels.color')
+            .group_by { |dossier_id, _| dossier_id }
+
+        fields[0][:id_value_h] = id_value_h.transform_values { |v| { value: v, type: :label } }
+
       when 'procedure'
         Dossier
           .joins(:procedure)

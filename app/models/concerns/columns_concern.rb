@@ -91,6 +91,8 @@ module ColumnsConcern
 
     def user_france_connected_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
 
+    def dossier_labels_column = Columns::DossierColumn.new(procedure_id: id, table: 'dossier_labels', column: 'label_id', type: :enum)
+
     def procedure_chorus_columns
       ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
         .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
@@ -127,7 +129,8 @@ module ColumnsConcern
         followers_instructeurs_email_column,
         groupe_instructeurs_id_column,
         Columns::DossierColumn.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
-        user_france_connected_column
+        user_france_connected_column,
+        dossier_labels_column
       ]
     end
 
