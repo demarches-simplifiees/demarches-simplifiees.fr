@@ -382,10 +382,6 @@ module Instructeurs
       end
     end
 
-    def current_filters
-      @current_filters ||= procedure_presentation.filters.fetch(statut, [])
-    end
-
     def bulk_message_params
       params.require(:bulk_message).permit(:body)
     end
