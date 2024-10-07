@@ -201,7 +201,7 @@ class ProcedurePresentation < ApplicationRecord
       .map do |(table, column), filters|
       values = filters.pluck('value')
       value_column = filters.pluck('value_column').compact.first || :value
-      dossier_column = procedure.find_column(id: Column.make_id(procedure.id, table, column)) # hack to find json path columns
+      dossier_column = procedure.find_column(h_id: { procedure_id: procedure.id, column_id: "#{table}/#{column}" }) # hack to find json path columns
       if dossier_column.is_a?(Columns::JSONPathColumn)
         dossier_column.filtered_ids(dossiers, values)
       else

@@ -850,10 +850,11 @@ describe ProcedurePresentation do
     let(:filters) { { "suivis" => [] } }
 
     context 'when type_de_champ yes_no' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
+      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no, libelle: 'oui ou non' }]) }
 
       it 'should downcase and transform value' do
-        procedure_presentation.add_filter("suivis", "type_de_champ/#{first_type_de_champ_id}", +"Oui")
+        column_id = procedure.find_column(label: 'oui ou non').id
+        procedure_presentation.add_filter("suivis", column_id, "Oui")
 
         expect(procedure_presentation.filters).to eq({
           "suivis" =>
@@ -866,7 +867,7 @@ describe ProcedurePresentation do
 
     context 'when type_de_champ text' do
       let(:filters) { { "suivis" => [] } }
-      let(:column_id) { Column.make_id(procedure.id, 'type_de_champ', first_type_de_champ_id) }
+      let(:column_id) { procedure.find_column(label: first_type_de_champ.libelle).id }
 
       it 'should passthrough value' do
         procedure_presentation.add_filter("suivis", column_id, "Oui")
@@ -881,7 +882,7 @@ describe ProcedurePresentation do
 
     context 'when type_de_champ departements' do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :departements }]) }
-      let(:column_id) { Column.make_id(procedure.id, 'type_de_champ', first_type_de_champ_id) }
+      let(:column_id) { procedure.find_column(label: first_type_de_champ.libelle).id }
       let(:filters) { { "suivis" => [] } }
 
       it 'should set value_column' do

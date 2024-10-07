@@ -27,7 +27,7 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
 
       subject { component.filterable_columns_options }
 
-      it { is_expected.to eq([["email", Column.make_id(procedure_id, "user", "email")], ["depose_since", Column.make_id(procedure_id, "self", "depose_since")]]) }
+      it { is_expected.to eq([["email", included_displayable_field.first.id], ["depose_since", included_displayable_field.second.id]]) }
     end
   end
 

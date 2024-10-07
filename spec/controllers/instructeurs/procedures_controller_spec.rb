@@ -886,7 +886,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     it 'can change order' do
-      column_id = Column.make_id(procedure.id, "individual", "nom")
+      column_id = procedure.find_column(label: "Nom").id
       expect { get :update_sort, params: { procedure_id: procedure.id, column_id:, order: 'asc' } }
         .to change { procedure_presentation.sort }
         .from({ "column" => "notifications", "order" => "desc", "table" => "notifications" })
@@ -905,7 +905,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     subject do
-      column = Column.make_id(procedure.id, "individual", "nom")
+      column = procedure.find_column(label: "Nom").id
       post :add_filter, params: { procedure_id: procedure.id, column:, value: "n" * 110, statut: "a-suivre" }
     end
 

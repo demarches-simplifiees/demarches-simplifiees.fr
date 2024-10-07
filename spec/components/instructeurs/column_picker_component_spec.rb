@@ -12,7 +12,7 @@ describe Instructeurs::ColumnPickerComponent, type: :component do
   describe "#displayable_columns_for_select" do
     let(:default_user_email) { Column.new(procedure_id:, label: 'email', table: 'user', column: 'email') }
     let(:excluded_displayable_field) { Column.new(procedure_id:, label: "label1", table: "table1", column: "column1", displayable: false) }
-    let(:email_column_id) { Column.make_id(procedure_id, 'user', 'email') }
+    let(:email_column_id) { default_user_email.id }
 
     subject { component.displayable_columns_for_select }
 
