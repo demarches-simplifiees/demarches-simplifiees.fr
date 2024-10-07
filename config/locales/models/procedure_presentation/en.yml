@@ -45,3 +45,5 @@ en:
             siret: SIRET
             libelle_naf: Libellé NAF
             code_postal: Postal code
+          dossier_labels:
+            procedure_label_id: Labels

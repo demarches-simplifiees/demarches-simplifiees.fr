@@ -191,6 +191,11 @@ class ProcedurePresentation < ApplicationRecord
         .order("#{self.class.sanitized_column(table, column)} #{order}")
         .pluck(:id)
         .uniq
+    when 'dossier_labels'
+      dossiers.includes(table)
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+        .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       (table == 'self' ? dossiers : dossiers.includes(table))
         .order("#{self.class.sanitized_column(table, column)} #{order}")
