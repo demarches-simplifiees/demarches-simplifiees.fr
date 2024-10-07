@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe Cache::ShowProcedureLastState do
   let(:procedure) { create(:procedure) }
   let(:current_instructeur) { create(:instructeur) }

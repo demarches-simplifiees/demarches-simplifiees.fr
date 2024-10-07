@@ -963,8 +963,8 @@ describe Instructeurs::DossiersController, type: :controller do
   describe 'navigation accross filtered_sorted_paginated_ids' do
     let(:dossier_id) { dossier.id }
     let(:statut) { 'a-suivre' }
-    let(:previous_dossier) { create(:dossier, :en_construction, procedure: )}
-    let(:next_dossier) { create(:dossier, :en_construction, procedure: )}
+    let(:previous_dossier) { create(:dossier, :en_construction, procedure:) }
+    let(:next_dossier) { create(:dossier, :en_construction, procedure:) }
     let(:cached_ids) { [previous_dossier, dossier, next_dossier].map(&:id) }
     before do
       cache = Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:)
@@ -1012,7 +1012,6 @@ describe Instructeurs::DossiersController, type: :controller do
         end
       end
 
-
       context 'when id does not exists' do
         let(:from_id) { 'kthxbye' }
         it 'redirect on fallback location being current dossier and flashes an error' do
@@ -1022,8 +1021,6 @@ describe Instructeurs::DossiersController, type: :controller do
       end
     end
   end
-
-
 
   describe "#update_annotations" do
     let(:procedure) do

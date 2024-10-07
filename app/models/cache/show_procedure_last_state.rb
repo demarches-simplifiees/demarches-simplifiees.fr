@@ -27,7 +27,7 @@ class Cache::ShowProcedureLastState
   end
 
   def next_dossier_id(from_id:)
-    index = paginated_ids.index(from_id.to_i)
+    index = paginated_ids&.index(from_id.to_i)
 
     return nil if index.nil? # not found
 
@@ -42,7 +42,7 @@ class Cache::ShowProcedureLastState
   end
 
   def previous_dossier_id(from_id:)
-    index = paginated_ids.index(from_id.to_i)
+    index = paginated_ids&.index(from_id.to_i)
 
     return nil if index.nil? # not found
 
@@ -96,6 +96,9 @@ class Cache::ShowProcedureLastState
 
   def extract_page(from_id:, all_ids:)
     index_at = all_ids.index(from_id)
+
+    return [] if index_at.nil?
+
     start_at = [0, index_at - (PAGE_SIZE - TRESHOLD_BEFORE_REFRECH) / 2].max
     end_at = [all_ids.size, index_at + (PAGE_SIZE - TRESHOLD_BEFORE_REFRECH) / 2].min
 
