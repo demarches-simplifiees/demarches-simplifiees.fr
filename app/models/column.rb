@@ -27,4 +27,8 @@ class Column
       table:, column:, label:, classname:, type:, scope:, value_column:, filterable:, displayable:
     }
   end
+
+  def self.find(h_id)
+    Procedure.with_discarded.find(h_id[:procedure_id]).find_column(h_id:)
+  end
 end
