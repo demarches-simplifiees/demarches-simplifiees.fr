@@ -40,6 +40,12 @@ class ProcedurePresentation < ApplicationRecord
   attribute :expirant_filters, :jsonb, array: true
   attribute :archives_filters, :jsonb, array: true
 
+  def filters_for(statut)
+    send(filters_name_for(statut))
+  end
+
+  def filters_name_for(statut) = statut.tr('-', '_').then { "#{_1}_filters" }
+
   def displayed_fields_for_headers
     [
       Column.new(procedure_id: procedure.id, table: 'self', column: 'id', classname: 'number-col'),
