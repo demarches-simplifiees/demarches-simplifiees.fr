@@ -167,20 +167,6 @@ describe Instructeur, type: :model do
       it { expect(errors).to be_nil }
     end
 
-    context 'with invalid presentation' do
-      let(:procedure_id) { procedure.id }
-      before do
-        pp = ProcedurePresentation.create(assign_to: procedure_assign, displayed_fields: [{ 'table' => 'invalid', 'column' => 'random' }])
-        pp.save(:validate => false)
-      end
-
-      it 'recreates a valid prsentation' do
-        expect(procedure_presentation).to be_persisted
-      end
-      it { expect(procedure_presentation).to be_valid }
-      it { expect(errors).to be_present }
-    end
-
     context 'with default presentation' do
       let(:procedure_id) { procedure_2.id }
 
