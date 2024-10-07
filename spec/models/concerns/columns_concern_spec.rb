@@ -47,6 +47,7 @@ describe ColumnsConcern do
           { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', displayable: true, type: :enum, scope: '', value_column: :value, filterable: true },
           { label: 'Avis oui/non', table: 'avis', column: 'question_answer', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
+          { label: "Labels", table: "dossier_labels", column: "procedure_label_id", displayable: true, scope: '', value_column: :value, filterable: true },
           { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
