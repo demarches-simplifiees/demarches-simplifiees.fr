@@ -4,6 +4,8 @@ class EditableChamp::ChampLabelContentComponent < ApplicationComponent
   include ApplicationHelper
   include Dsfr::InputErrorable
 
+  attr_reader :attribute
+
   def initialize(form:, champ:, seen_at: nil)
     @form, @champ, @seen_at = form, champ, seen_at
     @attribute = :value

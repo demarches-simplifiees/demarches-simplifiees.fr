@@ -23,7 +23,7 @@ module Dsfr
 
         {
           "#{dsfr_group_classname}--error" => errors_on_attribute?,
-          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute?
+          "#{dsfr_group_classname}--valid" => !errors_on_attribute? && errors_on_another_attribute? && object.public_send(attribute).present?
         }
       end
 
@@ -51,9 +51,9 @@ module Dsfr
       def attribute_or_rich_body
         case @input_type
         when :rich_text_area
-          @attribute.to_s.sub(/\Arich_/, '').to_sym
+          attribute.to_s.sub(/\Arich_/, '').to_sym
         else
-          @attribute
+          attribute
         end
       end
 
