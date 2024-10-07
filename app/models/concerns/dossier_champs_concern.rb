@@ -3,24 +3,6 @@
 module DossierChampsConcern
   extend ActiveSupport::Concern
 
-  def champs_for_revision(scope: nil)
-    champs_index = champs.group_by(&:stable_id)
-    revision.types_de_champ_for(scope:)
-      .flat_map { champs_index[_1.stable_id] || [] }
-  end
-
-  # Get all the champs values for the types de champ in the final list.
-  # Dossier might not have corresponding champ – display nil.
-  # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
-  def champs_for_export(types_de_champ, row_id = nil)
-    types_de_champ.flat_map do |type_de_champ|
-      champ = champ_for_export(type_de_champ, row_id)
-      type_de_champ.libelles_for_export.map do |(libelle, path)|
-        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
-      end
-    end
-  end
-
   def project_champ(type_de_champ, row_id)
     check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
@@ -95,6 +77,15 @@ module DossierChampsConcern
       .filter { _1.stable_id.in?(stable_ids) }
       .filter { !_1.child?(revision) }
       .map { _1.repetition? ? project_champ(_1, nil) : champ_for_update(_1, nil, updated_by: nil) }
+  end
+
+  def champs_for_export(types_de_champ, row_id = nil)
+    types_de_champ.flat_map do |type_de_champ|
+      champ = champ_for_export(type_de_champ, row_id)
+      type_de_champ.libelles_for_export.map do |(libelle, path)|
+        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
+      end
+    end
   end
 
   def champ_for_update(type_de_champ, row_id, updated_by:)
