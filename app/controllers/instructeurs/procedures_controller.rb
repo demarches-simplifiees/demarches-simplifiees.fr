@@ -150,7 +150,7 @@ module Instructeurs
       if !procedure_presentation.update(filter_params)
         # complicated way to display inner error messages
         flash.alert = procedure_presentation.errors
-          .flat_map { _1.detail[:value].errors.full_messages }
+          .flat_map { _1.detail[:value].flat_map { |c| c.errors.full_messages } }
       end
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
