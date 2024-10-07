@@ -943,4 +943,22 @@ describe ProcedurePresentation do
       end
     end
   end
+
+  describe '#update_sort' do
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
+
+    subject do
+      column_id = procedure.find_column(label: 'En construction le').id
+      procedure_presentation.update_sort(column_id, 'asc')
+    end
+
+    it 'should update sort and order' do
+      expect(procedure_presentation.sorted_column).to be_nil
+
+      subject
+
+      expect(procedure_presentation.sorted_column['id']).to eq("column_id" => "self/en_construction_at", "procedure_id" => procedure.id)
+      expect(procedure_presentation.sorted_column['order']).to eq('asc')
+    end
+  end
 end
