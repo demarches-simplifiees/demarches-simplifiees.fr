@@ -393,13 +393,13 @@ module Instructeurs
     end
 
     def next
-      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:, session: request.session)
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:)
 
       navigate_throw_dossier_list(cache.next_dossier_id(from_id: params[:dossier_id]))
     end
 
     def previous
-      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:, session: request.session)
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:)
 
       navigate_throw_dossier_list(cache.previous_dossier_id(from_id: params[:dossier_id]))
     end

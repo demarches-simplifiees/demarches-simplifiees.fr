@@ -1,8 +1,7 @@
 describe Cache::ShowProcedureLastState do
   let(:procedure) { create(:procedure) }
   let(:current_instructeur) { create(:instructeur) }
-  let(:session) { {} }
-  let(:instance) { described_class.new(procedure:, current_instructeur:, session:) }
+  let(:instance) { described_class.new(procedure:, current_instructeur:) }
 
   before do
     instance.persist_last_state(params: { status: 10 }, filtered_sorted_paginated_ids: paginated_ids)

@@ -4,24 +4,26 @@ class Cache::ShowProcedureLastState
   PAGE_SIZE = 100
   TRESHOLD_BEFORE_REFRECH = 5
 
-  attr_reader :procedure, :current_instructeur, :session
+  attr_reader :procedure, :current_instructeur
 
-  def initialize(procedure:, current_instructeur:, session:)
+  def initialize(procedure:, current_instructeur:)
     @procedure = procedure
     @current_instructeur = current_instructeur
-    @session = session
+    @cache = Kredis.json(cache_key(procedure:, current_instructeur:))
   end
 
   def fetch_last_state
-    cache.slice(:page, :statut)
+    read_cache.slice(:statut, :page)
   end
 
   def raw
-    cache
+    read_cache
   end
 
   def persist_last_state(params:, filtered_sorted_paginated_ids:)
-    session[cache_key(procedure:, current_instructeur:)] = params.merge(filtered_sorted_paginated_ids:)
+    value = params.dup
+    value[:filtered_sorted_paginated_ids] = filtered_sorted_paginated_ids
+    @cache.value = value
   end
 
   def next_dossier_id(from_id:)
@@ -56,6 +58,10 @@ class Cache::ShowProcedureLastState
 
   private
 
+  def read_cache
+    Hash(@cache.value).with_indifferent_access
+  end
+
   def refresh_cache_after?(from_id:)
     from_id.in?(paginated_ids.last(TRESHOLD_BEFORE_REFRECH))
   end
@@ -67,9 +73,10 @@ class Cache::ShowProcedureLastState
   def renew_paginated_ids(from_id:)
     all_ids = fetch_all_paginated_ids
     new_page = extract_page(from_id:, all_ids:)
+    new_cache_value = read_cache
+    new_cache_value[:filtered_sorted_paginated_ids] = new_page
 
-    session[cache_key(procedure:, current_instructeur:)][:filtered_sorted_paginated_ids] = new_page
-    @cache = session[cache_key(procedure:, current_instructeur:)]
+    @cache.value = new_cache_value
   end
 
   def fetch_all_paginated_ids
@@ -99,16 +106,8 @@ class Cache::ShowProcedureLastState
     fetch_last_state[:statut]
   end
 
-  def cache # reader, don't want to override things without directly acceding the session
-    @cache ||= begin
-      h = session[cache_key(procedure:, current_instructeur:)]
-      h ||= {}
-      h.with_indifferent_access
-    end
-  end
-
   def paginated_ids
-    cache[:filtered_sorted_paginated_ids]
+    read_cache[:filtered_sorted_paginated_ids]
   end
 
   def cache_key(procedure:, current_instructeur:)

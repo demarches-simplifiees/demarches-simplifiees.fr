@@ -967,7 +967,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:next_dossier) { create(:dossier, :en_construction, procedure: )}
     let(:cached_ids) { [previous_dossier, dossier, next_dossier].map(&:id) }
     before do
-      cache = Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:, session: request.session)
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:)
       cache.persist_last_state(params: { statut:, page: 1 }, filtered_sorted_paginated_ids: cached_ids)
     end
 

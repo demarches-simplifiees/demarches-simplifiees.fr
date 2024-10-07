@@ -1,9 +1,9 @@
 class Instructeurs::DossiersNavigationComponent < ApplicationComponent
   attr_reader :dossier
 
-  def initialize(dossier:, current_instructeur:, session:)
+  def initialize(dossier:, current_instructeur:)
     @dossier = dossier
-    @cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure: dossier.procedure, session:)
+    @cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure: dossier.procedure)
   end
 
   def last_state_opts

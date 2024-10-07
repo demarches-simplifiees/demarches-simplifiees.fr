@@ -645,7 +645,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       before { sign_in(instructeur.user) }
       subject { get :show, params: { procedure_id: procedure.id, statut:, page: } }
       it 'changes cached value' do
-        expect { subject }.to change { Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:, session: request.session).raw }
+        expect { subject }.to change { Cache::ShowProcedureLastState.new(current_instructeur: instructeur, procedure:).raw }
           .from({}).to(filtered_sorted_paginated_ids: [], statut:, page:)
       end
     end

@@ -23,11 +23,9 @@ describe 'instructeurs/dossiers/show', type: :view do
 
   context 'when procedure statut / page was saved in session' do
     let(:last_state) { { statut: 'tous' } }
-    let(:session) { {} }
     before do
-      Cache::ShowProcedureLastState.new(procedure: dossier.procedure, current_instructeur:, session: session)
-        .persist_last_state(params: ActionController::Parameters.new(last_state))
-      allow(view).to receive(:session).and_return(session)
+      Cache::ShowProcedureLastState.new(procedure: dossier.procedure, current_instructeur:)
+        .persist_last_state(params: last_state, filtered_sorted_paginated_ids: [])
     end
 
     it 'renders back button with saved state' do
