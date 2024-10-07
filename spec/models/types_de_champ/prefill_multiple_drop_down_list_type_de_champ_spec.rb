@@ -16,7 +16,7 @@ RSpec.describe TypesDeChamp::PrefillMultipleDropDownListTypeDeChamp do
     context 'when the multiple drop down list has no option' do
       let(:drop_down_options_from_text) { "" }
 
-      it { expect(example_value).to eq(nil) }
+      it { expect(example_value).to eq(["Fromage", "Dessert"]) }
     end
 
     context 'when the multiple drop down list only has one option' do

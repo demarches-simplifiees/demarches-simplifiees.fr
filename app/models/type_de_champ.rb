@@ -211,7 +211,7 @@ class TypeDeChamp < ApplicationRecord
   before_validation :normalize_libelle
 
   before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
-  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
   before_save :remove_block, if: -> { type_champ_changed? }
 
   after_save if: -> { @remove_piece_justificative_template } do
@@ -773,15 +773,11 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def remove_drop_down_list
-    if !drop_down_list?
-      self.drop_down_options = nil
-    elsif !drop_down_options_changed?
-      self.drop_down_options = if linked_drop_down_list?
-        ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
-      else
-        ['Premier choix', 'Deuxième choix']
-      end
+  def set_drop_down_list_options
+    if (simple_drop_down_list? || multiple_drop_down_list?) && drop_down_options.empty?
+      self.drop_down_options = ['Fromage', 'Dessert']
+    elsif linked_drop_down_list? && drop_down_options.none?(/^--.*--$/)
+      self.drop_down_options = ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
     end
   end
 

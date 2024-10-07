@@ -15,14 +15,14 @@ describe Procedure::Card::ChampsComponent, type: :component do
     end
 
     context 'when errors on types_de_champs_public' do
-      let(:types_de_champ_public) { [{ type: :drop_down_list, options: [] }] }
+      let(:types_de_champ_public) { [{ type: :repetition, children: [] }] }
       it 'does not render' do
         expect(subject).to have_selector('.fr-badge--error', text: 'À modifier')
       end
     end
 
     context 'when errors on types_de_champs_private' do
-      let(:types_de_champ_private) { [{ type: :drop_down_list, options: [] }] }
+      let(:types_de_champ_private) { [{ type: :repetition, children: [] }] }
 
       it 'render the template' do
         expect(subject).to have_selector('.fr-badge--warning', text: 'À faire')

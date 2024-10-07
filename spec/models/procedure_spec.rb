@@ -393,10 +393,12 @@ describe Procedure do
         end
 
         it 'validates that no drop-down type de champ is empty' do
-          procedure.validate(:publication)
+          drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
+
+          drop_down.update!(drop_down_options: [])
+          procedure.reload.validate(:publication)
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_drop_down_error_message)
 
-          drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
           drop_down.update!(drop_down_options: ["--title--", "some value"])
           procedure.reload.validate(:publication)
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_drop_down_error_message)
@@ -418,14 +420,17 @@ describe Procedure do
         it 'validates that no repetition type de champ is empty' do
           procedure.validate(:publication)
           expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_repetition_error_message)
+
           repetition = procedure.draft_revision.types_de_champ_private.find(&:repetition?)
           expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(repetition)
         end
 
         it 'validates that no drop-down type de champ is empty' do
-          procedure.validate(:publication)
-          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
           drop_down = procedure.draft_revision.types_de_champ_private.find(&:drop_down_list?)
+          drop_down.update!(drop_down_options: [])
+          procedure.reload.validate(:publication)
+
+          expect(procedure.errors.messages_for(:draft_types_de_champ_private)).to include(invalid_drop_down_error_message)
           expect(procedure.errors.to_enum.to_a.map { _1.options[:type_de_champ] }).to include(drop_down)
         end
       end
