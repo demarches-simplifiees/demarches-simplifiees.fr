@@ -107,19 +107,22 @@ describe TypeDeChamp do
       context 'when the target type_champ is not drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
-        it { expect(tdc.drop_down_options).to be_empty }
+        it { expect(tdc.drop_down_options).to be_present }
+        it { expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"]) }
       end
 
       context 'when the target type_champ is linked_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
 
         it { expect(tdc.drop_down_options).to be_present }
+        it { expect(tdc.drop_down_options).to eq(['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']) }
       end
 
       context 'when the target type_champ is multiple_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
 
         it { expect(tdc.drop_down_options).to be_present }
+        it { expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"]) }
       end
     end
 
