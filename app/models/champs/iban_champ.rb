@@ -12,7 +12,23 @@ class Champs::IbanChamp < Champ
     for_api
   end
 
+  def bic?
+    info.present?
+  end
+
+  def bic
+    info&.dig(:bic)
+  end
+
+  def name
+    info&.dig(:name)
+  end
+
   private
+
+  def info
+    IbanService.bic(value)
+  end
 
   def format_iban
     self.value = value&.gsub(/\s+/, '')&.gsub(/(.{4})/, '\0 ')

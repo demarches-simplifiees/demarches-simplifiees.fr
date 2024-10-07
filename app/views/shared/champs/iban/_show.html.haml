@@ -1,1 +1,8 @@
 %p= champ.blank? ? 'Iban non fourni' : champ
+- if champ.bic?
+  %p.fr-text--sm
+    BIC :
+    = champ.bic
+  %p.fr-text--sm
+    Établissement Bancaire :
+    = champ.name
