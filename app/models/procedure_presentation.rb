@@ -131,6 +131,9 @@ class ProcedurePresentation < ApplicationRecord
       filter.values_at(TABLE, COLUMN, 'value') == [column.table, column.column, value]
     end
 
+    collection = filters_for(statut)
+    collection.delete(collection.find { sym_h = _1.deep_symbolize_keys; sym_h[:id] == h_id && sym_h[:filter] == value })
+
     update!(filters: updated_filters)
   end
 

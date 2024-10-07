@@ -901,6 +901,26 @@ describe ProcedurePresentation do
     end
   end
 
+  describe "#remove_filter" do
+    let(:filters) { { "suivis" => [] } }
+    let(:email_column_id) { procedure.find_column(label: 'Demandeur').id }
+
+    before do
+      procedure_presentation.add_filter("suivis", email_column_id, "a@a.com")
+    end
+
+    it 'should remove filter' do
+      expect(procedure_presentation.filters).to eq({ "suivis" => [{ "column" => "email", "label" => "Demandeur", "table" => "user", "value" => "a@a.com", "value_column" => "value" }] })
+      expect(procedure_presentation.suivis_filters).to eq([{ "filter" => "a@a.com", "id" => { "column_id" => "user/email", "procedure_id" => procedure.id } }])
+
+      procedure_presentation.remove_filter("suivis", email_column_id, "a@a.com")
+      procedure_presentation.reload
+
+      expect(procedure_presentation.filters).to eq({ "suivis" => [] })
+      expect(procedure_presentation.suivis_filters).to eq([])
+    end
+  end
+
   describe '#filtered_sorted_ids' do
     let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
     let(:dossier_1) { create(:dossier) }
