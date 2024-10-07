@@ -1852,7 +1852,7 @@ describe Dossier, type: :model do
       let(:types_de_champ_public) { [{ type: :carte }, { type: :carte }, { type: :carte }] }
 
       it do
-        dossier.champs_for_revision
+        dossier.filled_champs
 
         count = 0
 
