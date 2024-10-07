@@ -117,6 +117,7 @@ class ProcedurePresentation < ApplicationRecord
         'value' => value
       }
 
+      filters_for(statut) << { id: h_id, filter: value }
       update(filters: updated_filters)
     end
   end

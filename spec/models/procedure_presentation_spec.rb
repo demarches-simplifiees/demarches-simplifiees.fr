@@ -862,6 +862,10 @@ describe ProcedurePresentation do
                       { "label" => first_type_de_champ.libelle, "table" => "type_de_champ", "column" => first_type_de_champ_id, "value" => "true", "value_column" => "value" }
                     ]
         })
+
+        suivis = procedure_presentation.suivis_filters.map { [_1['id'], _1['filter']] }
+
+        expect(suivis).to eq([[{ "column_id" => "type_de_champ/#{first_type_de_champ_id}", "procedure_id" => procedure.id }, "true"]])
       end
     end
 
