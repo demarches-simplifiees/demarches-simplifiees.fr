@@ -140,9 +140,8 @@ class ProcedurePresentation < ApplicationRecord
       displayed_columns: columns.map(&:h_id)
     )
 
-    if !sort_to_column_id(sort).in?(column_ids)
-      default_column_id = procedure.dossier_id_column.id
-      update_sort(default_column_id, "desc")
+    if !sorted_column.column.in?(columns)
+      update(sorted_column: nil)
     end
   end
 
@@ -263,11 +262,6 @@ class ProcedurePresentation < ApplicationRecord
         end.pluck(:id)
       end
     end.reduce(:&)
-  end
-
-  # type_de_champ/4373429
-  def sort_to_column_id(sort)
-    [sort[TABLE], sort[COLUMN]].join(SLASH)
   end
 
   def find_type_de_champ(column)
