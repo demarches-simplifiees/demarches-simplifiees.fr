@@ -254,6 +254,10 @@ class Champ < ApplicationRecord
     end
   end
 
+  def same_type?(type_champ)
+    TypeDeChamp.type_champ_to_champ_class_name(type_champ) == type
+  end
+
   def html_id
     type_de_champ.html_id(row_id)
   end
