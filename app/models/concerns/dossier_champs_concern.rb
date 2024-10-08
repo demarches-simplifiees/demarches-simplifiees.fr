@@ -3,24 +3,6 @@
 module DossierChampsConcern
   extend ActiveSupport::Concern
 
-  def champs_for_revision(scope: nil)
-    champs_index = champs.group_by(&:stable_id)
-    revision.types_de_champ_for(scope:)
-      .flat_map { champs_index[_1.stable_id] || [] }
-  end
-
-  # Get all the champs values for the types de champ in the final list.
-  # Dossier might not have corresponding champ – display nil.
-  # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
-  def champs_for_export(types_de_champ, row_id = nil)
-    types_de_champ.flat_map do |type_de_champ|
-      champ = champ_for_export(type_de_champ, row_id)
-      type_de_champ.libelles_for_export.map do |(libelle, path)|
-        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
-      end
-    end
-  end
-
   def project_champ(type_de_champ, row_id)
     check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
@@ -37,6 +19,34 @@ module DossierChampsConcern
 
   def project_champs_private
     revision.types_de_champ_private.map { project_champ(_1, nil) }
+  end
+
+  def filled_champs_public
+    project_champs_public.flat_map do |champ|
+      if champ.repetition?
+        champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
+      elsif champ.persisted? && champ.fillable?
+        champ
+      else
+        []
+      end
+    end
+  end
+
+  def filled_champs_private
+    project_champs_private.flat_map do |champ|
+      if champ.repetition?
+        champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
+      elsif champ.persisted? && champ.fillable?
+        champ
+      else
+        []
+      end
+    end
+  end
+
+  def filled_champs
+    filled_champs_public + filled_champs_private
   end
 
   def project_rows_for(type_de_champ)
@@ -69,6 +79,15 @@ module DossierChampsConcern
       .map { _1.repetition? ? project_champ(_1, nil) : champ_for_update(_1, nil, updated_by: nil) }
   end
 
+  def champs_for_export(types_de_champ, row_id = nil)
+    types_de_champ.flat_map do |type_de_champ|
+      champ = champ_for_export(type_de_champ, row_id)
+      type_de_champ.libelles_for_export.map do |(libelle, path)|
+        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
+      end
+    end
+  end
+
   def champ_for_update(type_de_champ, row_id, updated_by:)
     champ, attributes = champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
     champ.assign_attributes(attributes)
@@ -98,10 +117,10 @@ module DossierChampsConcern
 
     row_id = ULID.generate
     types_de_champ = revision.children_of(type_de_champ)
-    # TODO: clean this up when parent_id is deprecated
-    added_champs = types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
+    self.champs += types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
+    champs.reload if persisted?
     @champs_by_public_id = nil
-    [row_id, added_champs]
+    row_id
   end
 
   def repetition_remove_row(type_de_champ, row_id, updated_by:)
@@ -156,13 +175,6 @@ module DossierChampsConcern
       attributes[:value_json] = nil
       attributes[:external_id] = nil
       attributes[:data] = nil
-    end
-
-    parent = revision.parent_of(type_de_champ)
-    if parent.present?
-      attributes[:parent] = champs.find { _1.stable_id == parent.stable_id }
-    else
-      attributes[:parent] = nil
     end
 
     @champs_by_public_id = nil

@@ -49,7 +49,6 @@ RSpec.describe DossierChampsConcern do
         it {
           expect(subject.persisted?).to be_truthy
           expect(subject.row_id).to eq(row_id)
-          expect(subject.parent_id).not_to be_nil
         }
 
         context "invalid row_id" do
@@ -137,12 +136,7 @@ RSpec.describe DossierChampsConcern do
   describe '#repetition_add_row' do
     let(:type_de_champ_repetition) { dossier.find_type_de_champ_by_stable_id(993) }
     let(:row_ids) { dossier.repetition_row_ids(type_de_champ_repetition) }
-    subject do
-      # TODO: clean this up when parent_id is deprecated
-      row_id, added_champs = dossier.repetition_add_row(type_de_champ_repetition, updated_by: 'test')
-      dossier.champs << added_champs
-      row_id
-    end
+    subject { dossier.repetition_add_row(type_de_champ_repetition, updated_by: 'test') }
 
     it { expect { subject }.to change { dossier.repetition_row_ids(type_de_champ_repetition).size }.by(1) }
     it { expect(subject).to be_in(row_ids) }
@@ -206,7 +200,6 @@ RSpec.describe DossierChampsConcern do
         it {
           expect(subject.persisted?).to be_truthy
           expect(subject.row_id).to eq(row_id)
-          expect(subject.parent_id).not_to be_nil
         }
       end
 
@@ -226,7 +219,6 @@ RSpec.describe DossierChampsConcern do
             expect(subject.persisted?).to be_truthy
             expect(subject.is_a?(Champs::TextChamp)).to be_truthy
             expect(subject.row_id).to eq(row_id)
-            expect(subject.parent_id).not_to be_nil
           }
         end
       end

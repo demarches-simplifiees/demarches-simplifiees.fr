@@ -1037,7 +1037,7 @@ describe Instructeurs::DossiersController, type: :controller do
                   primary_value: 'primary',
                   secondary_value: 'secondary'
                 },
-                champ_repetition.champs.first.public_id => {
+                champ_repetition.rows.first.first.public_id => {
                   value: 'text'
                 },
                 champ_drop_down_list.public_id => {
@@ -1054,7 +1054,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(champ_linked_drop_down_list.primary_value).to eq('primary')
           expect(champ_linked_drop_down_list.secondary_value).to eq('secondary')
           expect(champ_datetime.value).to eq(Time.zone.parse('2019-12-21T13:17:00').iso8601)
-          expect(champ_repetition.champs.first.value).to eq('text')
+          expect(champ_repetition.rows.first.first.value).to eq('text')
           expect(champ_drop_down_list.value).to eq('other value')
           expect(dossier.reload.last_champ_private_updated_at).to eq(now)
           expect(response).to have_http_status(200)
