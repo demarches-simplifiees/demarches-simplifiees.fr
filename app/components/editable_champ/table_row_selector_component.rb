@@ -1,5 +1,4 @@
 class EditableChamp::TableRowSelectorComponent < EditableChamp::ComboSearchComponent
-
   def dsfr_input_classname
     'fr-input'
   end

@@ -72,7 +72,7 @@ class Logic::ChampValue < Logic::Term
         code_region: targeted_champ.code_region
       }
     when "Champs::TableRowSelectorChamp"
-      targeted_champ.value  
+      targeted_champ.value
     when "Champs::CommuneDePolynesieChamp", "Champs::CodePostalDePolynesieChamp"
       {
         archipel: targeted_champ.archipel
