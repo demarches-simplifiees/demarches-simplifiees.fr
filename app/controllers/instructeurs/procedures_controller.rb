@@ -111,6 +111,8 @@ module Instructeurs
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
         .where(seen_at: nil)
         .distinct
+
+      cache_show_procedure_state # don't move in callback, inherited by Instructeurs::DossiersController
     end
 
     def deleted_dossiers
@@ -410,6 +412,12 @@ module Instructeurs
 
     def cookies_export_key
       "exports_#{@procedure.id}_seen_at"
+    end
+
+    def cache_show_procedure_state
+      cache = Cache::ShowProcedureLastState.new(procedure:, current_instructeur:)
+      safe_params = params.permit(:statut, :page).slice(:statut, :page).to_h
+      cache.persist_last_state(params: safe_params, filtered_sorted_paginated_ids: @filtered_sorted_paginated_ids)
     end
   end
 end

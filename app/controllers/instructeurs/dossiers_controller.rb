@@ -392,7 +392,29 @@ module Instructeurs
       @attachments_and_libelles = champs_attachments_and_libelles + commentaires_attachments_and_libelles
     end
 
+    def next
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:)
+
+      navigate_throw_dossier_list(cache.next_dossier_id(from_id: params[:dossier_id]))
+    end
+
+    def previous
+      cache = Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure:)
+
+      navigate_throw_dossier_list(cache.previous_dossier_id(from_id: params[:dossier_id]))
+    end
+
     private
+
+    def navigate_throw_dossier_list(next_or_previous_dossier_id)
+      if next_or_previous_dossier_id
+        redirect_to instructeur_dossier_path(procedure_id: procedure.id, dossier_id: next_or_previous_dossier_id)
+      else
+        redirect_back fallback_location: instructeur_dossier_path(procedure_id: procedure.id, dossier_id: dossier.id), alert: "Une erreur est survenue"
+      end
+    rescue ActiveRecord::RecordNotFound
+      redirect_to instructeur_procedure_path(procedure_id: procedure.id), alert: "Une erreur est survenue"
+    end
 
     def dossier_scope
       if action_name == 'update_annotations'

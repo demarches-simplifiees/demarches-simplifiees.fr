@@ -500,6 +500,8 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show, :destroy], param: :dossier_id do
           member do
             resources :commentaires, only: [:destroy]
+            get 'next'
+            get 'previous'
             post 'repousser-expiration' => 'dossiers#extend_conservation'
             post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
             get 'geo_data'
