@@ -29,7 +29,7 @@ module ProcedurePathConcern
       !path.match?(/[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}/)
     end
 
-    def suggested_path(administrateur)
+    def suggested_path
       if path_customized?
         return path
       end
