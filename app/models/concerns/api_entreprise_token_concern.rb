@@ -22,12 +22,12 @@ module APIEntrepriseTokenConcern
       api_entreprise_token_expires_at && api_entreprise_token_expires_at <= SOON_TO_EXPIRE_DELAY.from_now
     end
 
-    def has_custom_api_entreprise_token?
+    def has_api_entreprise_token?
       self[:api_entreprise_token].present?
     end
 
     def set_api_entreprise_token_expires_at
-      self.api_entreprise_token_expires_at = has_custom_api_entreprise_token? ? APIEntrepriseToken.new(api_entreprise_token).expiration : nil
+      self.api_entreprise_token_expires_at = has_api_entreprise_token? ? APIEntrepriseToken.new(api_entreprise_token).expiration : nil
     end
   end
 end
