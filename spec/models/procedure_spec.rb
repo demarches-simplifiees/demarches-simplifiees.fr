@@ -1950,14 +1950,12 @@ describe Procedure do
     end
   end
 
-  describe "test if path has restriction" do
-    # create 2 procedures with 2 admins
-
+  describe "when there is 2 procedures" do
     let(:admin1) { create(:administrateur) }
     let(:admin2) { create(:administrateur) }
 
-    let(:procedure1) { create(:procedure, administrateurs: [admin1], path: "proc-1") }
-    let(:procedure2) { create(:procedure, administrateurs: [admin2], path: "proc-2") }
+    let(:procedure1) { create(:procedure, :published, administrateurs: [admin1], path: "proc-1") }
+    let(:procedure2) { create(:procedure, :published, administrateurs: [admin2], path: "proc-2") }
 
     it "should have 2 diff paths" do
       expect(procedure1.path).not_to eq(procedure2.path)
@@ -1967,14 +1965,13 @@ describe Procedure do
       expect { procedure1.update!(path: procedure2.path) }.to raise_error
     end
 
-    context "when procedure2 is discarded" do
+    context "when procedure2 is closed" do
       before do
-        procedure2.discard!
+        procedure2.close!
       end
 
-      it "should let procedure1 change path to procedure2 path if discarded" do
-        expect(procedure2.path).to eq("coucou")
-        # expect { procedure1.update!(path: procedure2.path, canonical_procedure: procedure2) }.not_to raise_error
+      it "should let procedure1 change path to procedure2 path" do
+        expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
       end
     end
   end

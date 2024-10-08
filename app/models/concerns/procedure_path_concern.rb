@@ -18,14 +18,23 @@ module ProcedurePathConcern
       end
     end
 
+    def deactivate_all_paths
+      procedure_paths.update_all(deactivated_at: Time.zone.now)
+    end
+
     def update_procedure_path
+      if !publiee?
+        deactivate_all_paths
+      end
+
       return if path_before_last_save == path
 
-      procedure_paths.where(path: path_before_last_save).destroy_all
+      procedure_paths.find_by(path: path_before_last_save)&.destroy!
 
-      if procedure_paths.where(path: path).empty?
-        procedure_paths.create!(path: path)
-      end
+      # disable previous active paths
+      ProcedurePath.find_by(path: path, deactivated_at: nil)&.update!(deactivated_at: Time.zone.now)
+
+      procedure_paths.find_or_create_by(path: path).update!(deactivated_at: publiee? ? nil : Time.zone.now)
     end
 
     def other_procedure_with_path(path)

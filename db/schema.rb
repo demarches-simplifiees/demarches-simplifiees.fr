@@ -891,10 +891,11 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_12_090128) do
 
   create_table "procedure_paths", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "deactivated_at"
     t.string "path"
     t.bigint "procedure_id", null: false
     t.datetime "updated_at", null: false
-    t.index ["path"], name: "index_procedure_paths_on_path", unique: true
+    t.index ["path", "deactivated_at"], name: "index_procedure_paths_on_path_and_deactivated_at", unique: true, where: "(deactivated_at IS NULL)"
     t.index ["procedure_id"], name: "index_procedure_paths_on_procedure_id"
   end
 
