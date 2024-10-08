@@ -741,18 +741,24 @@ class TypeDeChamp < ApplicationRecord
       "TypesDeChamp::#{type_champ.classify}TypeDeChamp"
     end
 
-    private
-
     def use_default_value?(type_champ, champ)
       # no champ
       return true if champ.nil?
       # type de champ on the revision changed
-      if type_champ != champ.type_champ
-        return !castable_on_change?(type_champ, champ.type_champ)
+      if !champ.same_type?(type_champ)
+        return !castable_on_change?(type_champ, champ_class_name_to_type_champ(champ.type))
       end
       # special case for linked drop down champ – it's blank implementation is not what you think
       return champ.value.blank? if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
       champ.blank?
+    end
+
+    private
+
+    def champ_class_name_to_type_champ(class_name)
+      type_champs
+        .values
+        .find { type_champ_to_champ_class_name(_1) == class_name }
     end
 
     def castable_on_change?(from_type, to_type)
