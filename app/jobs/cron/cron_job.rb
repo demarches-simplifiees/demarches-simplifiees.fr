@@ -38,7 +38,11 @@ class Cron::CronJob < ApplicationJob
     end
 
     def enqueued_cron_job
-      sidekiq_cron_job
+      if queue_adapter_name == "sidekiq"
+        sidekiq_cron_job
+      else
+        delayed_job
+      end
     end
 
     def sidekiq_cron_job

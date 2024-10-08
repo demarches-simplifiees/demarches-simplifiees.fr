@@ -22,10 +22,27 @@ Sentry.init do |config|
     # transaction_context is the transaction object in hash form
     # keep in mind that sampling happens right after the transaction is initialized
     # for example, at the beginning of the request
-    if sampling_context[:transaction_context].dig(:env, "REQUEST_METHOD") == "GET"
-      0.001
-    else
-      0.01
+    transaction_context = sampling_context[:transaction_context]
+
+    # transaction_context helps you sample transactions with more sophistication
+    # for example, you can provide different sample rates based on the operation or name
+    case transaction_context[:op]
+    when /delayed_job/
+      contexts = Sentry.get_current_scope.contexts
+      job_class = contexts.dig(:"Active-Job", :job_class)
+      attempts = contexts.dig(:"Delayed-Job", :attempts)
+      max_attempts = job_class.safe_constantize&.new&.max_attempts rescue 25
+
+      # Don't trace on all attempts
+      [0, 2, 5, 10, 20, max_attempts].include?(attempts)
+    else # rails requests
+      if sampling_context.dig(:env, "REQUEST_METHOD") == "GET"
+        0.001
+      else
+        0.01
+      end
     end
   end
+
+  config.delayed_job.report_after_job_retries = false # don't wait for all attempts before reporting
 end

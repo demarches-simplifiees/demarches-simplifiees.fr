@@ -191,6 +191,18 @@ GEM
     date (3.3.4)
     deep_cloneable (3.2.0)
       activerecord (>= 3.1.0, < 8)
+    delayed_cron_job (0.9.0)
+      fugit (>= 1.5)
+    delayed_job (4.1.11)
+      activesupport (>= 3.0, < 8.0)
+    delayed_job_active_record (4.1.8)
+      activerecord (>= 3.0, < 8.0)
+      delayed_job (>= 3.0, < 5)
+    delayed_job_web (1.4.4)
+      activerecord (> 3.0.0)
+      delayed_job (> 2.0.3)
+      rack-protection (>= 1.5.5)
+      sinatra (>= 1.4.4)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     devise (4.9.4)
@@ -436,6 +448,8 @@ GEM
     minitest (5.25.1)
     msgpack (1.7.2)
     multi_json (1.15.0)
+    mustermann (3.0.0)
+      ruby2_keywords (~> 0.0.1)
     net-http (0.4.1)
       uri
     net-imap (0.4.12)
@@ -665,6 +679,7 @@ GEM
     ruby-progressbar (1.13.0)
     ruby-vips (2.2.0)
       ffi (~> 1.12)
+    ruby2_keywords (0.0.5)
     rubyzip (2.3.2)
     saml_idp (0.16.0)
       activesupport (>= 5.2)
@@ -699,6 +714,9 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
+    sentry-delayed_job (5.17.3)
+      delayed_job (>= 4.0)
+      sentry-ruby (~> 5.17.3)
     sentry-rails (5.17.3)
       railties (>= 5.0)
       sentry-ruby (~> 5.17.3)
@@ -737,6 +755,11 @@ GEM
     simplecov_json_formatter (0.1.4)
     simpleidn (0.2.1)
       unf (~> 0.1.4)
+    sinatra (3.2.0)
+      mustermann (~> 3.0)
+      rack (~> 2.2, >= 2.2.4)
+      rack-protection (= 3.2.0)
+      tilt (~> 2.0)
     skylight (6.0.4)
       activesupport (>= 5.2.0)
     smart_properties (1.17.0)
@@ -891,6 +914,9 @@ DEPENDENCIES
   clamav-client
   daemons
   deep_cloneable
+  delayed_cron_job
+  delayed_job_active_record
+  delayed_job_web
   devise
   devise-i18n
   devise-two-factor
@@ -974,6 +1000,7 @@ DEPENDENCIES
   scss_lint
   selenium-devtools
   selenium-webdriver
+  sentry-delayed_job
   sentry-rails
   sentry-ruby
   sentry-sidekiq
