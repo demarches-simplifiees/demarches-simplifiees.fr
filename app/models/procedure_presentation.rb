@@ -72,6 +72,9 @@ class ProcedurePresentation < ApplicationRecord
     elsif filter['table'] == 'groupe_instructeur' && filter['column'] == 'id'
       instructeur.groupe_instructeurs
         .find { _1.id == filter['value'].to_i }&.label || filter['value']
+    elsif filter['table'] == 'dossier_labels' && filter['column'] == 'procedure_label_id'
+      procedure.procedure_labels
+        .find { _1.id == filter['value'].to_i }&.name || filter['value']
     else
       column = procedure.columns.find { _1.table == filter[TABLE] && _1.column == filter[COLUMN] }
 
@@ -258,6 +261,11 @@ class ProcedurePresentation < ApplicationRecord
           dossiers
             .includes(table)
             .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
+        when 'dossier_labels'
+          assert_supported_column(table, column)
+          dossiers
+            .joins(:dossier_labels)
+            .where(dossier_labels: { procedure_label_id: values })
         when 'groupe_instructeur'
           assert_supported_column(table, column)
 
