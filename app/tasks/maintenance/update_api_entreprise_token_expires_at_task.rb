@@ -3,7 +3,7 @@
 module Maintenance
   class UpdateAPIEntrepriseTokenExpiresAtTask < MaintenanceTasks::Task
     def collection
-      Procedure.where.not(api_entreprise_token: nil)
+      Procedure.with_discarded.where.not(api_entreprise_token: nil)
     end
 
     def process(procedure)
