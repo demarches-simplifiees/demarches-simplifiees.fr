@@ -15,4 +15,8 @@ class SortedColumn
   def ==(other)
     other&.column == column && other.order == order
   end
+
+  def sort_by_notifications?
+    @column.notifications? && @order == 'desc'
+  end
 end
