@@ -1450,10 +1450,6 @@ describe Procedure do
     end
   end
 
-  describe ".default_sort" do
-    it { expect(Procedure.default_sort).to eq({ "table" => "self", "column" => "id", "order" => "desc" }) }
-  end
-
   describe "#organisation_name" do
     subject { procedure.organisation_name }
     context 'when the procedure has a service (and no organization)' do

@@ -158,7 +158,7 @@ module Instructeurs
       @statut = statut
       @procedure = procedure
       @procedure_presentation = procedure_presentation
-      @column = procedure.find_column(id: params[:column])
+      @column = procedure.find_column(h_id: JSON.parse(params[:column], symbolize_names: true))
     end
 
     def remove_filter

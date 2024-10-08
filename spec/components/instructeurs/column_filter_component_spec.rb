@@ -5,6 +5,7 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
 
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+  let(:procedure_id) { procedure.id }
   let(:procedure_presentation) { nil }
   let(:statut) { nil }
 
@@ -17,8 +18,8 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
       let(:column) { nil }
       let(:included_displayable_field) do
         [
-          Column.new(label: 'email', table: 'user', column: 'email'),
-          Column.new(label: "depose_since", table: "self", column: "depose_since", displayable: false)
+          Column.new(procedure_id:, label: 'email', table: 'user', column: 'email'),
+          Column.new(procedure_id:, label: "depose_since", table: "self", column: "depose_since", displayable: false)
         ]
       end
 
@@ -26,7 +27,7 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
 
       subject { component.filterable_columns_options }
 
-      it { is_expected.to eq([["email", "user/email"], ["depose_since", "self/depose_since"]]) }
+      it { is_expected.to eq([["email", included_displayable_field.first.id], ["depose_since", included_displayable_field.second.id]]) }
     end
   end
 
@@ -45,7 +46,7 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
       let(:types_de_champ_public) { [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }] }
       let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
       let(:drop_down_stable_id) { procedure.active_revision.types_de_champ.first.stable_id }
-      let(:column) { Column.new(table: 'type_de_champ', scope: nil, column: drop_down_stable_id) }
+      let(:column) { Column.new(procedure_id:, table: 'type_de_champ', scope: nil, column: drop_down_stable_id) }
 
       it 'find most recent tdc' do
         is_expected.to eq(['Paris', 'Lyon', 'Marseille'])

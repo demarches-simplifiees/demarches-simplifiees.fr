@@ -866,11 +866,21 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
   end
 
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
+    t.jsonb "a_suivre_filters", default: [], null: false, array: true
+    t.jsonb "archives_filters", default: [], null: false, array: true
     t.integer "assign_to_id"
     t.datetime "created_at", precision: nil
+    t.jsonb "displayed_columns", default: [], null: false, array: true
     t.jsonb "displayed_fields", default: [{"label"=>"Demandeur", "table"=>"user", "column"=>"email"}], null: false
+    t.jsonb "expirant_filters", default: [], null: false, array: true
     t.jsonb "filters", default: {"tous"=>[], "suivis"=>[], "traites"=>[], "a-suivre"=>[], "archives"=>[], "expirant"=>[], "supprimes"=>[]}, null: false
     t.jsonb "sort", default: {"order"=>"desc", "table"=>"notifications", "column"=>"notifications"}, null: false
+    t.jsonb "sorted_column"
+    t.jsonb "suivis_filters", default: [], null: false, array: true
+    t.jsonb "supprimes_filters", default: [], null: false, array: true
+    t.jsonb "supprimes_recemment_filters", default: [], null: false, array: true
+    t.jsonb "tous_filters", default: [], null: false, array: true
+    t.jsonb "traites_filters", default: [], null: false, array: true
     t.datetime "updated_at", precision: nil
     t.index ["assign_to_id"], name: "index_procedure_presentations_on_assign_to_id", unique: true
   end

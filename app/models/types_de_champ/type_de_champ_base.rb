@@ -98,9 +98,10 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
-  def columns(displayable: true, prefix: nil)
+  def columns(procedure_id:, displayable: true, prefix: nil)
     [
       Column.new(
+        procedure_id:,
         table: Column::TYPE_DE_CHAMP_TABLE,
         column: stable_id.to_s,
         label: libelle_with_prefix(prefix),

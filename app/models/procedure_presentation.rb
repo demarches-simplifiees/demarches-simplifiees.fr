@@ -29,11 +29,28 @@ class ProcedurePresentation < ApplicationRecord
   validate :check_filters_max_length
   validate :check_filters_max_integer
 
+  attribute :sorted_column, :jsonb
+
+  attribute :a_suivre_filters, :jsonb, array: true
+  attribute :suivis_filters, :jsonb, array: true
+  attribute :traites_filters, :jsonb, array: true
+  attribute :tous_filters, :jsonb, array: true
+  attribute :supprimes_filters, :jsonb, array: true
+  attribute :supprimes_recemment_filters, :jsonb, array: true
+  attribute :expirant_filters, :jsonb, array: true
+  attribute :archives_filters, :jsonb, array: true
+
+  def filters_for(statut)
+    send(filters_name_for(statut))
+  end
+
+  def filters_name_for(statut) = statut.tr('-', '_').then { "#{_1}_filters" }
+
   def displayed_fields_for_headers
     [
-      Column.new(table: 'self', column: 'id', classname: 'number-col'),
-      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys) },
-      Column.new(table: 'self', column: 'state', classname: 'state-col'),
+      Column.new(procedure_id: procedure.id, table: 'self', column: 'id', classname: 'number-col'),
+      *displayed_fields.map { Column.new(**_1.deep_symbolize_keys.merge(procedure_id: procedure.id)) },
+      Column.new(procedure_id: procedure.id, table: 'self', column: 'state', classname: 'state-col'),
       *procedure.sva_svr_columns
     ]
   end
@@ -81,8 +98,10 @@ class ProcedurePresentation < ApplicationRecord
   end
 
   def add_filter(statut, column_id, value)
+    h_id = JSON.parse(column_id, symbolize_names: true)
+
     if value.present?
-      column = procedure.find_column(id: column_id)
+      column = procedure.find_column(h_id:)
 
       case column.table
       when TYPE_DE_CHAMP
@@ -98,40 +117,57 @@ class ProcedurePresentation < ApplicationRecord
         'value' => value
       }
 
+      filters_for(statut) << { id: h_id, filter: value }
       update(filters: updated_filters)
     end
   end
 
   def remove_filter(statut, column_id, value)
-    column = procedure.find_column(id: column_id)
+    h_id = JSON.parse(column_id, symbolize_names: true)
+    column = procedure.find_column(h_id:)
     updated_filters = filters.dup
 
     updated_filters[statut] = filters[statut].reject do |filter|
       filter.values_at(TABLE, COLUMN, 'value') == [column.table, column.column, value]
     end
 
+    collection = filters_for(statut)
+    collection.delete(collection.find { sym_h = _1.deep_symbolize_keys; sym_h[:id] == h_id && sym_h[:filter] == value })
+
     update!(filters: updated_filters)
   end
 
   def update_displayed_fields(column_ids)
-    column_ids = Array.wrap(column_ids)
-    columns = column_ids.map { |id| procedure.find_column(id:) }
+    h_ids = Array.wrap(column_ids).map { |id| JSON.parse(id, symbolize_names: true) }
+    columns = h_ids.map { |h_id| procedure.find_column(h_id:) }
 
-    update!(displayed_fields: columns)
+    update!(
+      displayed_fields: columns,
+      displayed_columns: columns.map(&:h_id)
+    )
 
     if !sort_to_column_id(sort).in?(column_ids)
-      update!(sort: Procedure.default_sort)
+      default_column_id = procedure.dossier_id_column.id
+      update_sort(default_column_id, "desc")
     end
   end
 
   def update_sort(column_id, order)
-    column = procedure.find_column(id: column_id)
+    h_id = JSON.parse(column_id, symbolize_names: true)
+    column = procedure.find_column(h_id:)
+    order = order.presence || opposite_order_for(column.table, column.column)
 
-    update!(sort: {
-      TABLE => column.table,
-      COLUMN => column.column,
-      ORDER => order.presence || opposite_order_for(column.table, column.column)
-    })
+    update!(
+      sort: {
+        TABLE => column.table,
+        COLUMN => column.column,
+        ORDER => order
+      },
+      sorted_column: {
+        order:,
+        id: h_id
+      }
+    )
   end
 
   def opposite_order_for(table, column)
@@ -201,7 +237,7 @@ class ProcedurePresentation < ApplicationRecord
       .map do |(table, column), filters|
       values = filters.pluck('value')
       value_column = filters.pluck('value_column').compact.first || :value
-      dossier_column = procedure.find_column(id: Column.make_id(table, column)) # hack to find json path columns
+      dossier_column = procedure.find_column(h_id: { procedure_id: procedure.id, column_id: "#{table}/#{column}" }) # hack to find json path columns
       if dossier_column.is_a?(Columns::JSONPathColumn)
         dossier_column.filtered_ids(dossiers, values)
       else

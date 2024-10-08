@@ -4,7 +4,10 @@ module ColumnsConcern
   extend ActiveSupport::Concern
 
   included do
-    def find_column(id:) = columns.find { |f| f.id == id }
+    def find_column(h_id: nil, label: nil)
+      return columns.find { _1.h_id == h_id } if h_id.present?
+      return columns.find { _1.label == label } if label.present?
+    end
 
     def columns
       columns = dossier_columns
@@ -14,16 +17,24 @@ module ColumnsConcern
       columns.concat(types_de_champ_columns)
     end
 
+    def dossier_id_column
+      Column.new(procedure_id: id, table: 'self', column: 'id', classname: 'number-col', type: :number)
+    end
+
+    def notifications_column
+      Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
+    end
+
     def dossier_columns
-      common = [Column.new(table: 'self', column: 'id', classname: 'number-col', type: :number), Column.new(table: 'notifications', column: 'notifications', label: "notifications", filterable: false)]
+      common = [dossier_id_column, notifications_column]
 
       dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| Column.new(table: 'self', column:, type: :date) }
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
 
       non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
-        .map { |column| Column.new(table: 'self', column:, type: :date, displayable: false) }
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
 
-      states = [Column.new(table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)]
+      states = [Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)]
 
       [common, dates, sva_svr_columns(for_filters: true), non_displayable_dates, states].flatten.compact
     end
@@ -34,12 +45,12 @@ module ColumnsConcern
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
 
       columns = [
-        Column.new(table: 'self', column: 'sva_svr_decision_on', type: :date,
+        Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_on', type: :date,
                   label: I18n.t("#{sva_svr_decision}_decision_on", scope:), classname: for_filters ? '' : 'sva-col')
       ]
 
       if for_filters
-        columns << Column.new(table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
+        columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
                       label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
       end
 
@@ -50,30 +61,30 @@ module ColumnsConcern
 
     def standard_columns
       [
-        Column.new(table: 'user', column: 'email'),
-        Column.new(table: 'followers_instructeurs', column: 'email'),
-        Column.new(table: 'groupe_instructeur', column: 'id', type: :enum),
-        Column.new(table: 'avis', column: 'question_answer', filterable: false) # not filterable ?
+        Column.new(procedure_id: id, table: 'user', column: 'email'),
+        Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
+        Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
+        Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false) # not filterable ?
       ]
     end
 
     def individual_columns
-      ['nom', 'prenom', 'gender'].map { |column| Column.new(table: 'individual', column:) }
+      ['nom', 'prenom', 'gender'].map { |column| Column.new(procedure_id: id, table: 'individual', column:) }
     end
 
     def moral_columns
       etablissements = ['entreprise_siren', 'entreprise_forme_juridique', 'entreprise_nom_commercial', 'entreprise_raison_sociale', 'entreprise_siret_siege_social']
-        .map { |column| Column.new(table: 'etablissement', column:) }
+        .map { |column| Column.new(procedure_id: id, table: 'etablissement', column:) }
 
-      etablissement_dates = ['entreprise_date_creation'].map { |column| Column.new(table: 'etablissement', column:, type: :date) }
+      etablissement_dates = ['entreprise_date_creation'].map { |column| Column.new(procedure_id: id, table: 'etablissement', column:, type: :date) }
 
-      other = ['siret', 'libelle_naf', 'code_postal'].map { |column| Column.new(table: 'etablissement', column:) }
+      other = ['siret', 'libelle_naf', 'code_postal'].map { |column| Column.new(procedure_id: id, table: 'etablissement', column:) }
 
       [etablissements, etablissement_dates, other].flatten
     end
 
     def types_de_champ_columns
-      all_revisions_types_de_champ.flat_map(&:columns)
+      all_revisions_types_de_champ.flat_map { _1.columns(procedure_id: id) }
     end
   end
 end

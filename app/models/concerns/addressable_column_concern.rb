@@ -4,7 +4,7 @@ module AddressableColumnConcern
   extend ActiveSupport::Concern
 
   included do
-    def columns(displayable: true, prefix: nil)
+    def columns(procedure_id:, displayable: true, prefix: nil)
       super.concat([
         ["code postal (5 chiffres)", ['postal_code'], :text],
         ["commune", ['city_name'], :text],
@@ -12,6 +12,7 @@ module AddressableColumnConcern
         ["region", ['region_name'], :enum]
       ].map do |(label, value_column, type)|
         Columns::JSONPathColumn.new(
+          procedure_id:,
           table: Column::TYPE_DE_CHAMP_TABLE,
           column: stable_id,
           label: "#{libelle_with_prefix(prefix)} – #{label}",
