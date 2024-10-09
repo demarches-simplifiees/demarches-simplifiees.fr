@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_09_155037) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -487,6 +487,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.string "hidden_by_reason"
     t.datetime "hidden_by_user_at", precision: nil
     t.datetime "identity_updated_at", precision: nil
+    t.datetime "last_avis_piece_jointe_updated_at"
     t.datetime "last_avis_updated_at", precision: nil
     t.datetime "last_champ_piece_jointe_updated_at"
     t.datetime "last_champ_private_updated_at", precision: nil
