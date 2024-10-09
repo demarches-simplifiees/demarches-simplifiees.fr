@@ -73,11 +73,17 @@ module ColumnsConcern
       SortedColumn.new(column: notifications_column, order: 'desc')
     end
 
+    def default_displayed_columns = [email_column]
+
     private
+
+    def email_column
+      Column.new(procedure_id: id, table: 'user', column: 'email')
+    end
 
     def standard_columns
       [
-        Column.new(procedure_id: id, table: 'user', column: 'email'),
+        email_column,
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false) # not filterable ?
