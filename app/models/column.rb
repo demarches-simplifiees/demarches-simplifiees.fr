@@ -33,9 +33,9 @@ class Column
     }
   end
 
-  def notifications?
-    table == 'notifications' && column == 'notifications'
-  end
+  def notifications? = [table, column] == ['notifications', 'notifications']
+
+  def dossier_state? = [table, column] == ['self', 'state']
 
   def self.find(h_id)
     begin
