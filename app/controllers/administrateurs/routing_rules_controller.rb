@@ -85,7 +85,7 @@ module Administrateurs
       params
         .require(:groupe_instructeur)
         .require(:condition_form)
-        .permit(:top_operator_name, rows: [:targeted_champ, :operator_name, :value])
+        # .permit(:top_operator_name, groups:, rows: [:targeted_champ, :operator_name, :value])
     end
 
     def row_index

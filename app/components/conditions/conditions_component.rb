@@ -40,7 +40,7 @@ class Conditions::ConditionsComponent < ApplicationComponent
   def intra_group_n_ary_operator_tag(condition, row_number)
     if row_number == 1
       select_tag(
-        "#{input_prefix}[top_operator_name]",
+        "#{input_prefix}[groups][][top_operator_name]",
         options_for_select(options_for_far_left_tag, condition.class.name),
         class: 'fr-select'
       )
@@ -50,12 +50,10 @@ class Conditions::ConditionsComponent < ApplicationComponent
   def inter_group_n_ary_operator_tag(group_index)
     if group_index == 0
       select_tag(
-        "#{input_prefix}[top_operator_name]",
+        "#{input_prefix}[inter_group_operator_name]",
         options_for_select(options_for_far_left_tag, @condition.class.name),
         class: 'fr-select'
       )
-    elsif group_index >= 1
-      nil
     end
   end
 
@@ -253,6 +251,6 @@ class Conditions::ConditionsComponent < ApplicationComponent
   end
 
   def input_name_for(name)
-    "#{input_prefix}[rows][][#{name}]"
+    "#{input_prefix}[groups][][rows][][#{name}]"
   end
 end

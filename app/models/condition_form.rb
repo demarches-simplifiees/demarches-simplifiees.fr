@@ -4,7 +4,7 @@ class ConditionForm
   include ActiveModel::Model
   include Logic
 
-  attr_accessor :top_operator_name, :rows, :source_tdcs
+  attr_accessor :top_operator_name, :inter_group_operator_name, :groups, :rows, :source_tdcs
 
   def to_condition
     case sub_conditions.count
@@ -35,7 +35,14 @@ class ConditionForm
     Logic.class_from_name(top_operator_name)
   end
 
+  def inter_group_operator_class
+    Logic.class_from_name(inter_group_operator_name)
+  end
+
   def sub_conditions
+    if groups.present?
+
+    end
     @sub_conditions ||= rows.map { |row| row_to_condition(row) }
   end
 
