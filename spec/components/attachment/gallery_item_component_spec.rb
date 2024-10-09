@@ -101,4 +101,52 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       end
     end
   end
+
+  context "when attachment is from an avis" do
+    context 'from an instructeur' do
+      let(:avis) { create(:avis, :with_introduction, dossier: dossier) }
+      let(:attachment) { avis.introduction_file.attachment }
+
+      it "displays a generic libelle, link, tag and renders title" do
+        expect(subject).to have_text('Pièce jointe à l’avis')
+        expect(subject).to have_link(filename)
+        expect(subject).to have_text('Avis externe (instructeur)')
+        expect(component.title).to eq("Pièce jointe à l’avis -- #{filename}")
+      end
+
+      context "when instructeur has not seen it yet" do
+        let(:seen_at) { now - 1.day }
+
+        before do
+          attachment.blob.update(created_at: now)
+        end
+
+        it 'displays datetime in the right style' do
+          expect(subject).to have_css('.highlighted')
+        end
+      end
+
+      context "when instructeur has already seen it" do
+        let!(:seen_at) { now }
+
+        before do
+          freeze_time
+          attachment.blob.touch(:created_at)
+        end
+
+        it 'displays datetime in the right style' do
+          expect(subject).not_to have_css('.highlighted')
+        end
+      end
+    end
+
+    context 'from an expert' do
+      let(:avis) { create(:avis, :with_piece_justificative, dossier: dossier) }
+      let(:attachment) { avis.piece_justificative_file.attachment }
+
+      it "displays the right tag" do
+        expect(subject).to have_text('Avis externe (expert)')
+      end
+    end
+  end
 end

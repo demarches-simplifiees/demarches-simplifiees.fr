@@ -17,7 +17,13 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def gallery_demande? = @gallery_demande
 
   def libelle
-    from_dossier? ? attachment.record.libelle : 'Pièce jointe au message'
+    if from_dossier?
+      attachment.record.libelle
+    elsif from_messagerie?
+      'Pièce jointe au message'
+    elsif from_avis_externe?
+      'Pièce jointe à l’avis'
+    end
   end
 
   def origin
@@ -28,6 +34,10 @@ class Attachment::GalleryItemComponent < ApplicationComponent
       'Messagerie (instructeur)'
     when from_messagerie_usager?
       'Messagerie (usager)'
+    when from_avis_externe_instructeur?
+      'Avis externe (instructeur)'
+    when from_avis_externe_expert?
+      'Avis externe (expert)'
     end
   end
 
@@ -82,5 +92,17 @@ class Attachment::GalleryItemComponent < ApplicationComponent
 
   def from_messagerie_usager?
     from_messagerie? && attachment.record.instructeur.nil?
+  end
+
+  def from_avis_externe?
+    attachment.record.is_a?(Avis)
+  end
+
+  def from_avis_externe_instructeur?
+    from_avis_externe? && attachment.name == 'introduction_file'
+  end
+
+  def from_avis_externe_expert?
+    from_avis_externe? && attachment.name == 'piece_justificative_file'
   end
 end

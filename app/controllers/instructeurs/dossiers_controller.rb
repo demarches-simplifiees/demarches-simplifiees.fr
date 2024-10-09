@@ -504,7 +504,16 @@ module Instructeurs
           .flatten
           .map(&:id)
 
-        champs_attachments_ids + commentaires_attachments_ids
+        avis_attachments_ids = dossier
+          .avis
+          .map { [_1.introduction_file, _1.piece_justificative_file] }
+          .flatten
+          .map(&:attachments)
+          .flatten
+          .compact
+          .map(&:id)
+
+        champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids
       end
       @gallery_attachments = ActiveStorage::Attachment.where(id: gallery_attachments_ids)
     end
