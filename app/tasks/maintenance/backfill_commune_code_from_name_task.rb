@@ -2,6 +2,9 @@
 
 module Maintenance
   class BackfillCommuneCodeFromNameTask < MaintenanceTasks::Task
+    # corrige structure champs commune pour une démarche donnée. Suite à un bug ?
+    # 2024-05-31-01 PR #10469
+
     attribute :procedure_id, :string
     validates :procedure_id, presence: true
 

@@ -2,10 +2,10 @@
 
 module Maintenance
   class DeleteDraftRevisionTypeDeChampsTask < MaintenanceTasks::Task
-    csv_collection
-
+    # Modifie le form d’une démarche à partir d’un CSV (dev spécifique Fonds Verts).
     # See UpdateDraftRevisionTypeDeChampsTask for more information
-    # Just add delete_flag with "true" to effectively remove the type de champ from the draft.
+    # Just add delete_flag with "true" in CSV to effectively remove the type de champ from the draft.
+    csv_collection
 
     def process(row)
       return unless row["delete_flag"] == "true"

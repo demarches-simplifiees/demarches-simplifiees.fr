@@ -23,6 +23,7 @@ module TPS
     Rails.autoloaders.main.ignore(Rails.root.join('lib/cops'))
     Rails.autoloaders.main.ignore(Rails.root.join('lib/linters'))
     Rails.autoloaders.main.ignore(Rails.root.join('lib/tasks/task_helper.rb'))
+    Rails.autoloaders.main.collapse('app/tasks/maintenance/concerns')
     config.paths.add Rails.root.join('spec/mailers/previews').to_s, eager_load: true
     config.autoload_paths << "#{Rails.root}/app/jobs/concerns"
 

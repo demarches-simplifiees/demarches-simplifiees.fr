@@ -114,6 +114,29 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "7dc4935d5b68365bedb8f6b953f01b396cff4daa533c98ee56a84249ca5a1f90",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/tasks/maintenance/concerns/statements_helpers_concern.rb",
+      "line": 19,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "ApplicationRecord.connection.execute(\"SET LOCAL statement_timeout = '#{timeout}'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Maintenance::StatementsHelpersConcern",
+        "method": "with_statement_timeout"
+      },
+      "user_input": "timeout",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "a7d18cc3434b4428a884f1217791f9a9db67839e73fb499f1ccd0f686f08eccc",

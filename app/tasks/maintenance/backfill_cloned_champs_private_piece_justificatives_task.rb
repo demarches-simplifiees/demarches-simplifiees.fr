@@ -2,6 +2,9 @@
 
 module Maintenance
   class BackfillClonedChampsPrivatePieceJustificativesTask < MaintenanceTasks::Task
+    # Supprime les PJ d’annotations privées
+    # qui étaient conservées par erreur lorsqu’un dossier était cloné
+    # 2024-05-27-01 PR #10435
     def collection
       Dossier.en_brouillon.where.not(parent_dossier_id: nil)
     end

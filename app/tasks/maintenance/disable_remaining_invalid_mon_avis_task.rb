@@ -2,6 +2,8 @@
 
 module Maintenance
   class DisableRemainingInvalidMonAvisTask < MaintenanceTasks::Task
+    # Supprime les codes d’intégration « mon avis » invalides
+    # 2024-03-18-01 PR #10120
     def collection
       # rubocop:disable DS/Unscoped
       Procedure.unscoped.where.not(monavis_embed: nil)

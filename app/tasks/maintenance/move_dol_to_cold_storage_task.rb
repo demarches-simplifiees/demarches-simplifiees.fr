@@ -2,6 +2,10 @@
 
 module Maintenance
   class MoveDolToColdStorageTask < MaintenanceTasks::Task
+    # Opération de rattrapage suite à un cron qui ne fonctionnait plus.
+    # Permet de déplacer toutes les traces fonctionnelles (DossierOperationLog)
+    # vers le stockage object plutot que de les conserver en BDD
+    # 2024-04-15-01
     attribute :start_text, :string
     validates :start_text, presence: true
 

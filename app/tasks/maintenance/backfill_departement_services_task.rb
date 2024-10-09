@@ -2,6 +2,9 @@
 
 module Maintenance
   class BackfillDepartementServicesTask < MaintenanceTasks::Task
+    # Fait le lien service – département pour permettre
+    # le filtrage des démarches par département
+    # 2023-10-30-01 PR #9647
     def collection
       Service.where.not(etablissement_infos: nil)
     end

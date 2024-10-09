@@ -2,6 +2,8 @@
 
 module Maintenance
   class UpdateZonesTask < MaintenanceTasks::Task
+    # Synchronise les zones en base à partir du fichier de config zones.yml
+    # 2024-05-27-01 PR #10077
     def collection
       config = Psych.safe_load(Rails.root.join("config", "zones.yml").read)
       config['ministeres']

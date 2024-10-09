@@ -2,6 +2,8 @@
 
 module Maintenance
   class FixOpenProceduresWithClosingReasonTask < MaintenanceTasks::Task
+    # Corrige des démarches avec un motif de fermerture alors qu’elles ont été publiées
+    # 2024-05-27-01 PR #10181
     def collection
       Procedure
         .with_discarded
