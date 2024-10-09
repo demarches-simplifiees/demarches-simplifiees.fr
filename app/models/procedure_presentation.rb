@@ -27,6 +27,8 @@ class ProcedurePresentation < ApplicationRecord
   attribute :expirant_filters, :filtered_column, array: true
   attribute :archives_filters, :filtered_column, array: true
 
+  before_create { self.displayed_columns = procedure.default_displayed_columns }
+
   validates_associated :a_suivre_filters, :suivis_filters, :traites_filters,
     :tous_filters, :supprimes_filters, :expirant_filters, :archives_filters
 
