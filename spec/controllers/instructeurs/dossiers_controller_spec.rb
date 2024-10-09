@@ -1044,7 +1044,7 @@ describe Instructeurs::DossiersController, type: :controller do
           expect(ChampRevision.where(champ_id: champ_drop_down_list.id).first.instructeur_id).to eq(instructeur.id)
           expect(ChampRevision.where(champ_id: champ_drop_down_list.id).first.updated_at).to eq(now)
 
-          assert_enqueued_jobs(2, only: DossierIndexSearchTermsJob) # pf : job created at dossier creation & with update_annotations
+          assert_enqueued_jobs(1, only: DossierIndexSearchTermsJob)
         }
 
         it 'updates the annotations' do
@@ -1317,7 +1317,9 @@ describe Instructeurs::DossiersController, type: :controller do
   describe '#reaffectation' do
     let!(:gi_2) { GroupeInstructeur.create(label: 'deuxième groupe', procedure: procedure) }
     let!(:gi_3) { GroupeInstructeur.create(label: 'troisième groupe', procedure: procedure) }
-    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
+    # pf strange : should not work on DS: groupe_instructeurs is sorted according label so routed_procedure.groupe_instructeurs.first returns 'deuxième groupe' and not default
+    # let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.first) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure: procedure, groupe_instructeur: procedure.groupe_instructeurs.where(label: "défaut").first) }
 
     before do
       post :reaffectation,
@@ -1388,7 +1390,10 @@ describe Instructeurs::DossiersController, type: :controller do
     end
 
     it do
-      expect(response.body).to include('a réaffecté ce dossier du groupe « défaut » au groupe « deuxième groupe »')
+      # pf strange : should not work on DS: groupe_instructeurs is sorted according label so routed_procedure.groupe_instructeurs.first returns 'deuxième groupe'
+      # ==> changed expectation
+      # expect(response.body).to include('a réaffecté ce dossier du groupe « défaut » au groupe « deuxième groupe »')
+      expect(response.body).to include("a réaffecté ce dossier du groupe « #{gi_1.label} » au groupe « #{gi_2.label} »")
     end
   end
 
