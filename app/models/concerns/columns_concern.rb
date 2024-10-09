@@ -30,7 +30,7 @@ module ColumnsConcern
     end
 
     def dossier_id_column
-      Column.new(procedure_id: id, table: 'self', column: 'id', classname: 'number-col', type: :number)
+      Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
     end
 
     def dossier_state_column

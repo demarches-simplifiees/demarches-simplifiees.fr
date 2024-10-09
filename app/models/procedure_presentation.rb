@@ -40,9 +40,9 @@ class ProcedurePresentation < ApplicationRecord
 
   def displayed_fields_for_headers
     [
-      Column.new(procedure_id: procedure.id, table: 'self', column: 'id', classname: 'number-col'),
+      procedure.dossier_id_column,
       *displayed_columns,
-      Column.new(procedure_id: procedure.id, table: 'self', column: 'state', classname: 'state-col'),
+      procedure.dossier_state_column,
       *procedure.sva_svr_columns
     ]
   end
