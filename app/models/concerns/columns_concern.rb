@@ -33,6 +33,10 @@ module ColumnsConcern
       Column.new(procedure_id: id, table: 'self', column: 'id', classname: 'number-col', type: :number)
     end
 
+    def dossier_state_column
+      Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
+    end
+
     def notifications_column
       Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
     end
@@ -46,7 +50,7 @@ module ColumnsConcern
       non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
 
-      states = [Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)]
+      states = [dossier_state_column]
 
       [common, dates, sva_svr_columns(for_filters: true), non_displayable_dates, states].flatten.compact
     end
