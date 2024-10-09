@@ -255,12 +255,10 @@ describe TypeDeChamp do
     it_behaves_like "a prefillable type de champ", :type_de_champ_checkbox
     it_behaves_like "a prefillable type de champ", :type_de_champ_drop_down_list
     it_behaves_like "a prefillable type de champ", :type_de_champ_repetition
-    it_behaves_like "a prefillable type de champ", :type_de_champ_annuaire_education
     it_behaves_like "a prefillable type de champ", :type_de_champ_multiple_drop_down_list
     it_behaves_like "a prefillable type de champ", :type_de_champ_epci
     it_behaves_like "a prefillable type de champ", :type_de_champ_dossier_link
     it_behaves_like "a prefillable type de champ", :type_de_champ_siret
-    it_behaves_like "a prefillable type de champ", :type_de_champ_rna
 
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_number
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_titre_identite
@@ -273,6 +271,8 @@ describe TypeDeChamp do
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_pole_emploi
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_mesri
     it_behaves_like "a non-prefillable type de champ", :type_de_champ_carte
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_rna
+    it_behaves_like "a non-prefillable type de champ", :type_de_champ_annuaire_education
   end
 
   describe '#normalize_libelle' do
