@@ -124,12 +124,10 @@ RSpec.describe PrefillChamps do
     it_behaves_like "a champ public value that is authorized", :departements, "03"
     it_behaves_like "a champ public value that is authorized", :communes, ['01540', '01457']
     it_behaves_like "a champ public value that is authorized", :address, "20 avenue de Ségur 75007 Paris"
-    it_behaves_like "a champ public value that is authorized", :annuaire_education, "0050009H"
     it_behaves_like "a champ public value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ public value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ public value that is authorized", :epci, ['01', '200042935']
     it_behaves_like "a champ public value that is authorized", :siret, "13002526500013"
-    it_behaves_like "a champ public value that is authorized", :rna, "value"
 
     context "when the public type de champ is authorized (repetition)" do
       let(:types_de_champ_public) { [{ type: :repetition, children: [{ type: :text }] }] }
@@ -164,12 +162,10 @@ RSpec.describe PrefillChamps do
     it_behaves_like "a champ private value that is authorized", :checkbox, "false"
     it_behaves_like "a champ private value that is authorized", :drop_down_list, "value"
     it_behaves_like "a champ private value that is authorized", :regions, "93"
-    it_behaves_like "a champ private value that is authorized", :rna, "value"
     it_behaves_like "a champ private value that is authorized", :siret, "13002526500013"
     it_behaves_like "a champ private value that is authorized", :departements, "03"
     it_behaves_like "a champ private value that is authorized", :communes, ['01540', '01457']
     it_behaves_like "a champ private value that is authorized", :address, "20 avenue de Ségur 75007 Paris"
-    it_behaves_like "a champ private value that is authorized", :annuaire_education, "0050009H"
     it_behaves_like "a champ private value that is authorized", :multiple_drop_down_list, ["val1", "val2"]
     it_behaves_like "a champ private value that is authorized", :dossier_link, "1"
     it_behaves_like "a champ private value that is authorized", :epci, ['01', '200042935']
