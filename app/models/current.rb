@@ -9,4 +9,5 @@ class Current < ActiveSupport::CurrentAttributes
   attribute :no_reply_email
   attribute :request_id
   attribute :user
+  attribute :procedure_columns
 end

@@ -141,7 +141,7 @@ module Instructeurs
     end
 
     def update_sort
-      procedure_presentation.update_sort(params[:column_id], params[:order])
+      procedure_presentation.update!(sorted_column_params)
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
@@ -410,6 +410,10 @@ module Instructeurs
 
     def cookies_export_key
       "exports_#{@procedure.id}_seen_at"
+    end
+
+    def sorted_column_params
+      params.permit(sorted_column: [:order, :id])
     end
   end
 end

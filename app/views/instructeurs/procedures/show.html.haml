@@ -93,8 +93,7 @@
                   %th.text-center
                     %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
 
-                - @procedure_presentation.displayed_fields_for_headers.each do |column|
-                  = render Instructeurs::ColumnTableHeaderComponent.new(procedure_presentation: @procedure_presentation, column:)
+                = render Instructeurs::ColumnTableHeaderComponent.new(procedure_presentation: @procedure_presentation)
 
                 %th.follow-col
                   Actions

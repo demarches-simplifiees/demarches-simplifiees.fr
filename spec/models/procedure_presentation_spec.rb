@@ -41,13 +41,6 @@ describe ProcedurePresentation do
       it { expect(build(:procedure_presentation, displayed_fields: [{ table: "user", column: "reset_password_token", "order" => "asc" }])).to be_invalid }
     end
 
-    context 'of sort' do
-      it { expect(build(:procedure_presentation, sort: { table: "notifications", column: "notifications", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { table: "self", column: "id", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { table: "self", column: "state", "order" => "asc" })).to be_valid }
-      it { expect(build(:procedure_presentation, sort: { table: "user", column: "reset_password_token", "order" => "asc" })).to be_invalid }
-    end
-
     context 'of filters' do
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "reset_password_token", "order" => "asc" }] })).to be_invalid }
       it { expect(build(:procedure_presentation, filters: { "suivis" => [{ table: "user", column: "email", "value" => "exceedingly long filter value" * 10 }] })).to be_invalid }
@@ -61,19 +54,18 @@ describe ProcedurePresentation do
 
   describe '#sorted_ids' do
     let(:instructeur) { create(:instructeur) }
-    let(:assign_to) { create(:assign_to, procedure: procedure, instructeur: instructeur) }
-    let(:sort) { { 'table' => table, 'column' => column, 'order' => order } }
-    let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to, sort: sort) }
+    let(:assign_to) { create(:assign_to, procedure:, instructeur:) }
+    let(:sorted_column) { SortedColumn.new(column:, order:) }
+    let(:procedure_presentation) { create(:procedure_presentation, assign_to:, sorted_column:) }
 
     subject { procedure_presentation.send(:sorted_ids, procedure.dossiers, procedure.dossiers.count) }
 
     context 'for notifications table' do
-      let(:table) { 'notifications' }
-      let(:column) { 'notifications' }
+      let(:column) { procedure.notifications_column }
 
-      let!(:notified_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-      let!(:recent_dossier) { create(:dossier, :en_construction, procedure: procedure) }
-      let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure) }
+      let!(:notified_dossier) { create(:dossier, :en_construction, procedure:) }
+      let!(:recent_dossier) { create(:dossier, :en_construction, procedure:) }
+      let!(:older_dossier) { create(:dossier, :en_construction, procedure:) }
 
       before do
         notified_dossier.update!(last_champ_updated_at: Time.zone.local(2018, 9, 20))
@@ -96,7 +88,7 @@ describe ProcedurePresentation do
       end
 
       context 'with a dossier terminé' do
-        let!(:notified_dossier) { create(:dossier, :accepte, procedure: procedure) }
+        let!(:notified_dossier) { create(:dossier, :accepte, procedure:) }
         let(:order) { 'desc' }
 
         it { is_expected.to eq([notified_dossier, recent_dossier, older_dossier].map(&:id)) }
@@ -104,11 +96,10 @@ describe ProcedurePresentation do
     end
 
     context 'for self table' do
-      let(:table) { 'self' }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       context 'for created_at column' do
-        let(:column) { 'created_at' }
+        let!(:column) { procedure.find_column(label: 'Créé le') }
         let!(:recent_dossier) { Timecop.freeze(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure: procedure) } }
         let!(:older_dossier) { Timecop.freeze(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure: procedure) } }
 
@@ -116,7 +107,7 @@ describe ProcedurePresentation do
       end
 
       context 'for en_construction_at column' do
-        let(:column) { 'en_construction_at' }
+        let!(:column) { procedure.find_column(label: 'En construction le') }
         let!(:recent_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:older_dossier) { create(:dossier, :en_construction, procedure: procedure, en_construction_at: Time.zone.local(2013, 1, 1)) }
 
@@ -124,7 +115,7 @@ describe ProcedurePresentation do
       end
 
       context 'for updated_at column' do
-        let(:column) { 'updated_at' }
+        let(:column) { procedure.find_column(label: 'Mis à jour le') }
         let(:recent_dossier) { create(:dossier, procedure: procedure) }
         let(:older_dossier) { create(:dossier, procedure: procedure) }
 
@@ -140,10 +131,10 @@ describe ProcedurePresentation do
     context 'for type_de_champ table' do
       context 'with no revisions' do
         let(:table) { 'type_de_champ' }
-        let(:column) { procedure.active_revision.types_de_champ_public.first.stable_id.to_s }
+        let(:column) { procedure.find_column(label: first_type_de_champ.libelle) }
 
-        let(:beurre_dossier) { create(:dossier, procedure: procedure) }
-        let(:tartine_dossier) { create(:dossier, procedure: procedure) }
+        let(:beurre_dossier) { create(:dossier, procedure:) }
+        let(:tartine_dossier) { create(:dossier, procedure:) }
 
         before do
           beurre_dossier.project_champs_public.first.update(value: 'beurre')
@@ -165,12 +156,11 @@ describe ProcedurePresentation do
 
       context 'with a revision adding a new type_de_champ' do
         let!(:tdc) { { type_champ: :text, libelle: 'nouveau champ' } }
-        let(:table) { 'type_de_champ' }
-        let(:column) { procedure.active_revision.types_de_champ_public.last.stable_id.to_s }
+        let(:column) { procedure.find_column(label: 'nouveau champ') }
 
-        let(:nothing_dossier) { create(:dossier, procedure: procedure) }
-        let(:beurre_dossier) { create(:dossier, procedure: procedure) }
-        let(:tartine_dossier) { create(:dossier, procedure: procedure) }
+        let!(:nothing_dossier) { create(:dossier, procedure:) }
+        let!(:beurre_dossier) { create(:dossier, procedure:) }
+        let!(:tartine_dossier) { create(:dossier, procedure:) }
 
         before do
           nothing_dossier
@@ -182,20 +172,19 @@ describe ProcedurePresentation do
 
         context 'asc' do
           let(:order) { 'asc' }
-          it { is_expected.to eq([beurre_dossier, tartine_dossier, nothing_dossier].map(&:id)) }
+          it { is_expected.to eq([nothing_dossier, beurre_dossier, tartine_dossier].map(&:id)) }
         end
 
         context 'desc' do
           let(:order) { 'desc' }
-          it { is_expected.to eq([nothing_dossier, tartine_dossier, beurre_dossier].map(&:id)) }
+          it { is_expected.to eq([tartine_dossier, beurre_dossier, nothing_dossier].map(&:id)) }
         end
       end
     end
 
     context 'for type_de_champ_private table' do
       context 'with no revisions' do
-        let(:table) { 'type_de_champ' }
-        let(:column) { procedure.active_revision.types_de_champ_private.first.stable_id.to_s }
+        let(:column) { procedure.find_column(label: procedure.active_revision.types_de_champ_private.first.libelle) }
 
         let(:biere_dossier) { create(:dossier, procedure: procedure) }
         let(:vin_dossier) { create(:dossier, procedure: procedure) }
@@ -217,38 +206,9 @@ describe ProcedurePresentation do
           it { is_expected.to eq([vin_dossier, biere_dossier].map(&:id)) }
         end
       end
-
-      context 'with a revision adding a new type_de_champ' do
-        let!(:tdc) { { type_champ: :text, private: true, libelle: 'nouveau champ' } }
-        let(:table) { 'type_de_champ' }
-        let(:column) { procedure.active_revision.types_de_champ_private.last.stable_id.to_s }
-
-        let(:nothing_dossier) { create(:dossier, procedure: procedure) }
-        let(:biere_dossier) { create(:dossier, procedure: procedure) }
-        let(:vin_dossier) { create(:dossier, procedure: procedure) }
-
-        before do
-          nothing_dossier
-          procedure.draft_revision.add_type_de_champ(tdc)
-          procedure.publish_revision!
-          biere_dossier.project_champs_private.last.update(value: 'biere')
-          vin_dossier.project_champs_private.last.update(value: 'vin')
-        end
-
-        context 'asc' do
-          let(:order) { 'asc' }
-          it { is_expected.to eq([biere_dossier, vin_dossier, nothing_dossier].map(&:id)) }
-        end
-
-        context 'desc' do
-          let(:order) { 'desc' }
-          it { is_expected.to eq([nothing_dossier, vin_dossier, biere_dossier].map(&:id)) }
-        end
-      end
     end
 
     context 'for individual table' do
-      let(:table) { 'individual' }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let(:procedure) { create(:procedure, :for_individual) }
@@ -257,26 +217,25 @@ describe ProcedurePresentation do
       let!(:last_dossier) { create(:dossier, procedure: procedure, individual: build(:individual, gender: 'Mme', prenom: 'Zora', nom: 'Zemmour')) }
 
       context 'for gender column' do
-        let(:column) { 'gender' }
+        let(:column) { procedure.find_column(label: 'Civilité') }
 
         it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
       end
 
       context 'for prenom column' do
-        let(:column) { 'prenom' }
+        let(:column) { procedure.find_column(label: 'Prénom') }
 
         it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
       end
 
       context 'for nom column' do
-        let(:column) { 'nom' }
+        let(:column) { procedure.find_column(label: 'Nom') }
 
         it { is_expected.to eq([first_dossier, last_dossier].map(&:id)) }
       end
     end
 
     context 'for followers_instructeurs table' do
-      let(:table) { 'followers_instructeurs' }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let!(:dossier_z) { create(:dossier, :en_construction, procedure: procedure) }
@@ -290,15 +249,14 @@ describe ProcedurePresentation do
       end
 
       context 'for email column' do
-        let(:column) { 'email' }
+        let(:column) { procedure.find_column(label: 'Email instructeur') }
 
         it { is_expected.to eq([dossier_a, dossier_z, dossier_without_instructeur].map(&:id)) }
       end
     end
 
     context 'for avis table' do
-      let(:table) { 'avis' }
-      let(:column) { 'question_answer' }
+      let(:column) { procedure.find_column(label: 'Avis oui/non') }
       let(:order) { 'asc' }
 
       let!(:dossier_yes) { create(:dossier, procedure:) }
@@ -315,8 +273,7 @@ describe ProcedurePresentation do
 
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
-      let(:table) { 'etablissement' }
-      let(:column) { 'code_postal' }
+      let(:column) { procedure.find_column(label: 'Code postal') }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let!(:huitieme_dossier) { create(:dossier, procedure: procedure, etablissement: create(:etablissement, code_postal: '75008')) }
@@ -971,7 +928,7 @@ describe ProcedurePresentation do
   describe '#update_displayed_fields' do
     let(:procedure_presentation) do
       create(:procedure_presentation, assign_to:).tap do |pp|
-        pp.update_sort(procedure.find_column(label: 'Demandeur').id, 'desc')
+        pp.update(sorted_column: SortedColumn.new(column: procedure.find_column(label: 'Demandeur'), order: 'desc'))
       end
     end
 
@@ -992,26 +949,8 @@ describe ProcedurePresentation do
         { "column_id" => "self/updated_at", "procedure_id" => procedure.id }
       ])
 
-      expect(procedure_presentation.sorted_column['id']).to eq("column_id" => "self/id", "procedure_id" => procedure.id)
-      expect(procedure_presentation.sorted_column['order']).to eq('desc')
-    end
-  end
-
-  describe '#update_sort' do
-    let(:procedure_presentation) { create(:procedure_presentation, assign_to:) }
-
-    subject do
-      column_id = procedure.find_column(label: 'En construction le').id
-      procedure_presentation.update_sort(column_id, 'asc')
-    end
-
-    it 'should update sort and order' do
-      expect(procedure_presentation.sorted_column).to be_nil
-
-      subject
-
-      expect(procedure_presentation.sorted_column['id']).to eq("column_id" => "self/en_construction_at", "procedure_id" => procedure.id)
-      expect(procedure_presentation.sorted_column['order']).to eq('asc')
+      expect(procedure_presentation.sorted_column).to eq(procedure.default_sorted_column)
+      expect(procedure_presentation.sorted_column.order).to eq('desc')
     end
   end
 end

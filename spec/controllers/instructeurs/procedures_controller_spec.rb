@@ -886,11 +886,11 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     it 'can change order' do
-      column_id = procedure.find_column(label: "Nom").id
-      expect { get :update_sort, params: { procedure_id: procedure.id, column_id:, order: 'asc' } }
-        .to change { procedure_presentation.sort }
-        .from({ "column" => "notifications", "order" => "desc", "table" => "notifications" })
-        .to({ "column" => "nom", "order" => "asc", "table" => "individual" })
+      column = procedure.find_column(label: "Nom")
+      expect { get :update_sort, params: { procedure_id: procedure.id, sorted_column: { id: column.id, order: 'asc' } } }
+        .to change { procedure_presentation.sorted_column }
+        .from(procedure.default_sorted_column)
+        .to(SortedColumn.new(column:, order: 'asc'))
     end
   end
 

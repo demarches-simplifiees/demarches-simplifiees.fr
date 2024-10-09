@@ -1,6 +1,22 @@
 # frozen_string_literal: true
 
 describe ColumnsConcern do
+  describe '#find_column' do
+    let(:procedure) { build(:procedure) }
+    let(:notifications_column) { procedure.notifications_column }
+
+    it do
+      label = notifications_column.label
+      expect(procedure.find_column(label:)).to eq(notifications_column)
+
+      h_id = notifications_column.h_id
+      expect(procedure.find_column(h_id:)).to eq(notifications_column)
+
+      unknwon = 'unknown'
+      expect { procedure.find_column(h_id: unknwon) }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
   describe "#columns" do
     subject { procedure.columns }
 

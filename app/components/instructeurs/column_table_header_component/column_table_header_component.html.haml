@@ -1,9 +1,3 @@
-%th{ aria_sort, scope: "col", class: column.classname }
-  = link_to update_sort_instructeur_procedure_path(@procedure_presentation.procedure, column_id:, order: @procedure_presentation.opposite_order_for(column.table, column.column)) do
-    - if sorted_by_current_column?
-      - if sorted_ascending?
-        #{column.label} ↑
-      - else
-        #{column.label} ↓
-    - else
-      #{column.label}
+- @columns.each do |column|
+  %th{ aria_sort(column), scope: "col", class: column.classname }
+    = link_to label_and_arrow(column), update_sort_path(column)

@@ -18,13 +18,26 @@ class Column
     @displayable = displayable
   end
 
+  # the id is a String to be used in forms
   def id = h_id.to_json
+
+  # the h_id is a Hash and hold enough information to find the column
+  # in the ColumnType class, aka be able to do the h_id -> column conversion
   def h_id = { procedure_id: @procedure_id, column_id: "#{table}/#{column}" }
+
   def ==(other) = h_id == other.h_id # using h_id instead of id to avoid inversion of keys
 
   def to_json
     {
       table:, column:, label:, classname:, type:, scope:, value_column:, filterable:, displayable:
     }
+  end
+
+  def notifications?
+    table == 'notifications' && column == 'notifications'
+  end
+
+  def self.find(h_id)
+    Procedure.with_discarded.find(h_id[:procedure_id]).find_column(h_id:)
   end
 end

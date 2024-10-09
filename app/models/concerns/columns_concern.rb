@@ -4,17 +4,29 @@ module ColumnsConcern
   extend ActiveSupport::Concern
 
   included do
+    # we cannot use column.id ( == { procedure_id, column_id }.to_json)
+    # as the order of the keys is not guaranteed
+    # instead, we are using h_id == { procedure_id:, column_id: }
+    # another way to find a column is to look for its label
     def find_column(h_id: nil, label: nil)
-      return columns.find { _1.h_id == h_id } if h_id.present?
-      return columns.find { _1.label == label } if label.present?
+      column = columns.find { _1.h_id == h_id } if h_id.present?
+      column = columns.find { _1.label == label } if label.present?
+
+      raise ActiveRecord::RecordNotFound if column.nil?
+
+      column
     end
 
     def columns
-      columns = dossier_columns
-      columns.concat(standard_columns)
-      columns.concat(individual_columns) if for_individual
-      columns.concat(moral_columns) if !for_individual
-      columns.concat(types_de_champ_columns)
+      Current.procedure_columns ||= {}
+
+      Current.procedure_columns[id] ||= begin
+        columns = dossier_columns
+        columns.concat(standard_columns)
+        columns.concat(individual_columns) if for_individual
+        columns.concat(moral_columns) if !for_individual
+        columns.concat(types_de_champ_columns)
+      end
     end
 
     def dossier_id_column
@@ -55,6 +67,10 @@ module ColumnsConcern
       end
 
       columns
+    end
+
+    def default_sorted_column
+      SortedColumn.new(column: notifications_column, order: 'desc')
     end
 
     private

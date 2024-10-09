@@ -1,11 +1,6 @@
 # frozen_string_literal: true
 
 class ProcedurePresentation < ApplicationRecord
-  EXTRA_SORT_COLUMNS = {
-    'notifications' => ['notifications'],
-    'self' => ['id', 'state']
-  }
-
   TABLE = 'table'
   COLUMN = 'column'
   ORDER = 'order'
@@ -23,13 +18,12 @@ class ProcedurePresentation < ApplicationRecord
   delegate :procedure, :instructeur, to: :assign_to
 
   validate :check_allowed_displayed_fields
-  validate :check_allowed_sort_column
-  validate :check_allowed_sort_order
   validate :check_allowed_filter_columns
   validate :check_filters_max_length
   validate :check_filters_max_integer
 
-  attribute :sorted_column, :jsonb
+  attribute :sorted_column, :sorted_column
+  def sorted_column = super || procedure.default_sorted_column # Dummy override to set default value
 
   attribute :a_suivre_filters, :jsonb, array: true
   attribute :suivis_filters, :jsonb, array: true
@@ -146,37 +140,8 @@ class ProcedurePresentation < ApplicationRecord
       displayed_columns: columns.map(&:h_id)
     )
 
-    if !sort_to_column_id(sort).in?(column_ids)
-      default_column_id = procedure.dossier_id_column.id
-      update_sort(default_column_id, "desc")
-    end
-  end
-
-  def update_sort(column_id, order)
-    h_id = JSON.parse(column_id, symbolize_names: true)
-    column = procedure.find_column(h_id:)
-    order = order.presence || opposite_order_for(column.table, column.column)
-
-    update!(
-      sort: {
-        TABLE => column.table,
-        COLUMN => column.column,
-        ORDER => order
-      },
-      sorted_column: {
-        order:,
-        id: h_id
-      }
-    )
-  end
-
-  def opposite_order_for(table, column)
-    if sort.values_at(TABLE, COLUMN) == [table, column]
-      sort['order'] == 'asc' ? 'desc' : 'asc'
-    elsif [table, column] == ["notifications", "notifications"]
-      'desc' # default order for notifications
-    else
-      'asc'
+    if !sorted_column.column.in?(columns)
+      update(sorted_column: nil)
     end
   end
 
@@ -187,7 +152,9 @@ class ProcedurePresentation < ApplicationRecord
   private
 
   def sorted_ids(dossiers, count)
-    table, column, order = sort.values_at(TABLE, COLUMN, 'order')
+    table = sorted_column.column.table
+    column = sorted_column.column.column
+    order = sorted_column.order
 
     case table
     when 'notifications'
@@ -297,11 +264,6 @@ class ProcedurePresentation < ApplicationRecord
     end.reduce(:&)
   end
 
-  # type_de_champ/4373429
-  def sort_to_column_id(sort)
-    [sort[TABLE], sort[COLUMN]].join(SLASH)
-  end
-
   def find_type_de_champ(column)
     TypeDeChamp
       .joins(:revision_types_de_champ)
@@ -313,17 +275,6 @@ class ProcedurePresentation < ApplicationRecord
   def check_allowed_displayed_fields
     displayed_fields.each do |field|
       check_allowed_field(:displayed_fields, field)
-    end
-  end
-
-  def check_allowed_sort_column
-    check_allowed_field(:sort, sort, EXTRA_SORT_COLUMNS)
-  end
-
-  def check_allowed_sort_order
-    order = sort['order']
-    if !["asc", "desc"].include?(order)
-      errors.add(:sort, "#{order} n’est pas une ordre permis")
     end
   end
 

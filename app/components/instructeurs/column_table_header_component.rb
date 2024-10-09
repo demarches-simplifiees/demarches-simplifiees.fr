@@ -1,47 +1,34 @@
 # frozen_string_literal: true
 
 class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
-  attr_reader :procedure_presentation, :column
-  # maybe extract a ColumnSorter class?
-  #
-
-  def initialize(procedure_presentation:, column:)
-    @procedure_presentation = procedure_presentation
-    @column = column
-  end
-
-  def column_id
-    column.id
-  end
-
-  def sorted_by_current_column?
-    procedure_presentation.sort['table'] == column.table &&
-    procedure_presentation.sort['column'] == column.column
-  end
-
-  def sorted_ascending?
-    current_sort_order == 'asc'
-  end
-
-  def sorted_descending?
-    current_sort_order == 'desc'
-  end
-
-  def aria_sort
-    if sorted_by_current_column?
-      if sorted_ascending?
-        { "aria-sort": "ascending" }
-      elsif sorted_descending?
-        { "aria-sort": "descending" }
-      end
-    else
-      {}
-    end
+  def initialize(procedure_presentation:)
+    @procedure = procedure_presentation.procedure
+    @columns = procedure_presentation.displayed_fields_for_headers
+    @sorted_column = procedure_presentation.sorted_column
   end
 
   private
 
-  def current_sort_order
-    procedure_presentation.sort['order']
+  def update_sort_path(column)
+    id = column.id
+    order = opposite_order_for(column)
+
+    update_sort_instructeur_procedure_path(@procedure, sorted_column: { id:, order: })
+  end
+
+  def opposite_order_for(column)
+    @sorted_column.column == column ? @sorted_column.opposite_order : 'asc'
+  end
+
+  def label_and_arrow(column)
+    return column.label if @sorted_column.column != column
+
+    @sorted_column.ascending? ? "#{column.label} ↑" : "#{column.label} ↓"
+  end
+
+  def aria_sort(column)
+    return {} if @sorted_column.column != column
+
+    @sorted_column.ascending? ? { "aria-sort": "ascending" } : { "aria-sort": "descending" }
   end
 end
