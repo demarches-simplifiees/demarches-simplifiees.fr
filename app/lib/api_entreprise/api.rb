@@ -127,15 +127,28 @@ class APIEntreprise::API
       raise Error::ResourceNotFound.new(response)
     elsif response.code == 400
       raise Error::BadFormatRequest.new(response)
+    elsif service_unavailable?(response)
+      raise Error::ServiceUnavailable.new(response)
     elsif response.code == 502
       raise Error::BadGateway.new(response)
-    elsif response.code == 503
-      raise Error::ServiceUnavailable.new(response)
     elsif response.timed_out?
       raise Error::TimedOut.new(response)
     else
       raise Error::RequestFailed.new(response)
     end
+  end
+
+  def service_unavailable?(response)
+    return true if response.code == 503
+    if response.code == 502 || response.code == 504
+      parse_response_errors(response).any? { _1.is_a?(Hash) && ["01000", "01001", "01002"].include?(_1[:code]) }
+    end
+  end
+
+  def parse_response_errors(response)
+    JSON.parse(response.body, symbolize_names: true).fetch(:errors, [])
+  rescue JSON::ParserError
+    []
   end
 
   def make_url(resource_name, siret_or_siren = nil)
