@@ -4,6 +4,10 @@ module ColumnsConcern
   extend ActiveSupport::Concern
 
   included do
+    # we cannot use column.id ( == { procedure_id, column_id }.to_json)
+    # as the order of the keys is not guaranteed
+    # instead, we are using h_id == { procedure_id:, column_id: }
+    # another way to find a column is to look for its label
     def find_column(h_id: nil, label: nil)
       return columns.find { _1.h_id == h_id } if h_id.present?
       return columns.find { _1.label == label } if label.present?
