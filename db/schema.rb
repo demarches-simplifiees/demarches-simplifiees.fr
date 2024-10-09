@@ -495,6 +495,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.string "hidden_by_reason"
     t.datetime "hidden_by_user_at", precision: nil
     t.datetime "identity_updated_at", precision: nil
+    t.datetime "last_avis_piece_jointe_updated_at"
     t.datetime "last_avis_updated_at", precision: nil
     t.datetime "last_champ_piece_jointe_updated_at"
     t.datetime "last_champ_private_updated_at", precision: nil
