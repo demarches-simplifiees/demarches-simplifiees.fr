@@ -52,23 +52,21 @@ module ColumnsConcern
 
       states = [dossier_state_column]
 
-      [common, dates, sva_svr_columns(for_filters: true), non_displayable_dates, states].flatten.compact
+      [common, dates, sva_svr_columns, non_displayable_dates, states].flatten.compact
     end
 
-    def sva_svr_columns(for_filters: false)
+    def sva_svr_columns
       return if !sva_svr_enabled?
 
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
 
       columns = [
         Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_on', type: :date,
-                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:), classname: for_filters ? '' : 'sva-col')
+                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:))
       ]
 
-      if for_filters
-        columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
-                      label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
-      end
+      columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
+                    label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
 
       columns
     end
