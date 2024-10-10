@@ -501,16 +501,13 @@ describe PiecesJustificativesService do
 
     let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:dossier_1) { create(:dossier, procedure:) }
-    let(:champs) { dossier_1.champs }
+    let(:champs) { dossier_1.project_champs_public.filter(&:repetition?).flat_map(&:rows).flatten }
 
-    def pj_champ(d) = d.project_champs_public.find { _1.type == 'Champs::PieceJustificativeChamp' }
     def repetition(d, index:) = d.project_champs_public.filter(&:repetition?)[index]
 
     subject { PiecesJustificativesService.new(user_profile:, export_template: nil).send(:compute_champ_id_row_index, champs) }
 
     before do
-      pj_champ(dossier_1)
-
       # repet_0 (stable_id: r0)
       # # row_0
       # # # pj_champ_0 (stable_id: 0)
