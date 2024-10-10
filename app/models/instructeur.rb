@@ -125,7 +125,7 @@ class Instructeur < ApplicationRecord
       annotations_privees = dossier.last_champ_private_updated_at&.>(follow.annotations_privees_seen_at) || false
       avis_notif = dossier.last_avis_updated_at&.>(follow.avis_seen_at) || false
       messagerie = dossier.last_commentaire_updated_at&.>(follow.messagerie_seen_at) || false
-      pieces_jointes = dossier.last_champ_piece_jointe_updated_at&.>(follow.pieces_jointes_seen_at) || dossier.last_commentaire_piece_jointe_updated_at&.>(follow.pieces_jointes_seen_at) || false
+      pieces_jointes = dossier.last_champ_piece_jointe_updated_at&.>(follow.pieces_jointes_seen_at) || dossier.last_commentaire_piece_jointe_updated_at&.>(follow.pieces_jointes_seen_at) || dossier.last_avis_piece_jointe_updated_at&.>(follow.pieces_jointes_seen_at) || false
 
       annotations_hash(demande, annotations_privees, avis_notif, messagerie, pieces_jointes)
     else
