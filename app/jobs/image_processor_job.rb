@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class ImageProcessorJob < ApplicationJob
+  queue_as :low # thumbnails and watermarks. Execution depends of virus scanner which is more urgent
+
   class FileNotScannedYetError < StandardError
   end
 
