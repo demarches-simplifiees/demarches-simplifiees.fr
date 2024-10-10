@@ -13,6 +13,6 @@ class PriorizedMailDeliveryJob < ActionMailer::MailDeliveryJob
   end
 
   def custom_queue
-    'low'
+    'default'
   end
 end

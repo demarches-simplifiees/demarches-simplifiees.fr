@@ -10,9 +10,9 @@ RSpec.describe InstructeurMailer, type: :mailer do
     it { expect(subject.body).to include('Bonjour') }
 
     context 'when perform_later is called' do
-      let(:custom_queue) { 'low' }
+      let(:custom_queue) { 'default' }
 
-      it 'enqueues email is custom queue for low priority delivery' do
+      it 'enqueues email is custom queue for non critical delivery' do
         expect { subject.deliver_later }.to have_enqueued_job(PriorizedMailDeliveryJob).on_queue(custom_queue)
       end
     end
@@ -80,8 +80,8 @@ RSpec.describe InstructeurMailer, type: :mailer do
     end
 
     context 'when perform_later is called' do
-      let(:custom_queue) { 'low' }
-      it 'enqueues email is custom queue for low priority delivery' do
+      let(:custom_queue) { 'default' }
+      it 'enqueues email is custom queue for non critical delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
       end
     end
