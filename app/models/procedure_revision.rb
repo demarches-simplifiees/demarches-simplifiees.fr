@@ -440,7 +440,7 @@ class ProcedureRevision < ApplicationRecord
           to_type_de_champ.filename_for_attachement(:notice_explicative))
       end
     elsif to_type_de_champ.textarea?
-      if from_type_de_champ.character_limit != to_type_de_champ.character_limit
+      if from_type_de_champ.character_limit.presence != to_type_de_champ.character_limit.presence
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :character_limit,
           from_type_de_champ.character_limit,
