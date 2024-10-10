@@ -11,8 +11,8 @@ RSpec.describe AdministrateurMailer, type: :mailer do
     it { expect(subject.subject).to include("La suppression automatique des dossiers a été activée sur la démarche") }
 
     context 'when perform_later is called' do
-      let(:custom_queue) { 'low' }
-      it 'enqueues email is custom queue for low priority delivery' do
+      let(:custom_queue) { 'default' }
+      it 'enqueues email is custom queue for non critical delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
       end
     end
@@ -51,8 +51,8 @@ end
     it { expect(subject.body).to include("un de vos services n'a pas son siret renseigné") }
 
     context 'when perform_later is called' do
-      let(:custom_queue) { 'low' }
-      it 'enqueues email is custom queue for low priority delivery' do
+      let(:custom_queue) { 'default' }
+      it 'enqueues email is custom queue for non critical delivery' do
         expect { subject.deliver_later }.to have_enqueued_job.on_queue(custom_queue)
       end
     end
