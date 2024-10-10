@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Migrations::BackfillStableIdJob < ApplicationJob
-  queue_as :low_priority
+  queue_as :low
 
   DEFAULT_LIMIT = 50_000
 
