@@ -10,7 +10,7 @@ on:
 jobs:
   linters:
     name: Linters
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -33,7 +33,7 @@ jobs:
 
   js_tests:
     name: JavaScript tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
@@ -58,7 +58,7 @@ jobs:
 
   unit_tests:
     name: Unit tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
@@ -114,7 +114,7 @@ jobs:
 
   system_tests:
     name: System tests
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
@@ -168,7 +168,7 @@ jobs:
   save_test_reports:
     name: Save test reports
     needs: [unit_tests, system_tests]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v4
