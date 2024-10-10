@@ -105,6 +105,9 @@ module Experts
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
         @avis.dossier.update!(last_avis_updated_at: Time.zone.now)
+        if @avis.piece_justificative_file.attached?
+          @avis.dossier.update!(last_avis_piece_jointe_updated_at: Time.zone.now)
+        end
         if !updated_recently
           @avis.dossier.followers_instructeurs
             .with_instant_expert_avis_email_notifications_enabled
