@@ -250,6 +250,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_26_145420) do
   create_table "champs", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.jsonb "data"
+    t.datetime "discarded_at"
     t.integer "dossier_id"
     t.integer "etablissement_id"
     t.string "external_id"
