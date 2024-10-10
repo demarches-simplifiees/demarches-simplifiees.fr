@@ -17,7 +17,7 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def gallery_demande? = @gallery_demande
 
   def libelle
-    if from_dossier?
+    if from_champ?
       attachment.record.libelle
     elsif from_messagerie?
       'Pièce jointe au message'
@@ -28,8 +28,10 @@ class Attachment::GalleryItemComponent < ApplicationComponent
 
   def origin
     case
-    when from_dossier?
+    when from_public_champ?
       'Dossier usager'
+    when from_private_champ?
+      'Annotation privée'
     when from_messagerie_expert?
       'Messagerie (expert)'
     when from_messagerie_instructeur?
@@ -64,7 +66,7 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   end
 
   def updated?
-    from_dossier? && updated_at > attachment.record.dossier.depose_at
+    from_public_champ? && updated_at > attachment.record.dossier.depose_at
   end
 
   def updated_at
@@ -80,8 +82,16 @@ class Attachment::GalleryItemComponent < ApplicationComponent
 
   private
 
-  def from_dossier?
+  def from_champ?
     attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp])
+  end
+
+  def from_public_champ?
+    from_champ? && !attachment.record.private?
+  end
+
+  def from_private_champ?
+    from_champ? && attachment.record.private?
   end
 
   def from_messagerie?
