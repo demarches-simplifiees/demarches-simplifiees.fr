@@ -48,14 +48,14 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
     end
 
     it 'add row' do
-      expect(annotation.champs.size).to eq(4)
+      expect(annotation.row_ids.size).to eq(2)
       expect(data).to eq(dossierModifierAnnotationAjouterLigne: {
         annotation: {
           id: annotation.to_typed_id
         },
         errors: nil
       })
-      expect(annotation.reload.champs.size).to eq(6)
+      expect(annotation.reload.row_ids.size).to eq(3)
     end
   end
 
