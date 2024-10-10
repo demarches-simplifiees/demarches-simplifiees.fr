@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Cron::CronJob < ApplicationJob
-  queue_as :cron
+  queue_as :default
   class_attribute :schedule_expression
 
   class << self

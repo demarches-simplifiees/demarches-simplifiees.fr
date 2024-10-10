@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ProcessStalledDeclarativeDossierJob < ApplicationJob
+  queue_as :low
   def perform(dossier)
     return if dossier.declarative_triggered_at.present?
 

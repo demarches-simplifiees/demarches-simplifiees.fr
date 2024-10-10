@@ -3,6 +3,7 @@
 class DolistReportJob < ApplicationJob
   # Consolidate random recent emails dispatched to Dolist with their statuses
   # and send a report by email.
+  queue_as :low # reporting will be done asap
   def perform(report_to, sample_size = 1000)
     events = EmailEvent.dolist.dispatched.where(processed_at: 2.weeks.ago..).order("RANDOM()").limit(sample_size)
 

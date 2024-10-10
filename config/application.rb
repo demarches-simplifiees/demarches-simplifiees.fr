@@ -54,14 +54,14 @@ module TPS
     config.action_dispatch.ip_spoofing_check = false
 
     # Set the queue name for the mail delivery jobs to 'mailers'
-    config.action_mailer.deliver_later_queue_name = 'mailers'
+    config.action_mailer.deliver_later_queue_name = 'critical' # otherwise, :low
 
     # Allow the error messages format to be customized
     config.active_model.i18n_customize_full_message = true
 
     # Set the queue name for the analysis jobs to 'active_storage_analysis'
-    config.active_storage.queues.analysis = :active_storage_analysis
-    config.active_storage.queues.purge = :purge
+    config.active_storage.queues.analysis = :default
+    config.active_storage.queues.purge = :low
 
     config.active_support.cache_format_version = 7.0
 
