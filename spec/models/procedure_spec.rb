@@ -1371,7 +1371,7 @@ describe Procedure do
   describe 'suggested_path' do
     let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
 
-    subject { procedure.suggested_path(procedure.administrateurs.first) }
+    subject { procedure.suggested_path }
 
     context 'when the path has been customized' do
       before { procedure.path = 'custom_path' }
@@ -1887,6 +1887,54 @@ describe Procedure do
       it 'returns an empty array when latest_zone_labels is empty' do
         procedure_detail_draft.latest_zone_labels = ''
         expect(procedure_detail_draft.parsed_latest_zone_labels).to eq([])
+      end
+    end
+  end
+
+  describe "#update_procedure_path" do
+    let(:procedure) { build(:procedure) }
+
+    subject { procedure.save! }
+
+    it 'sets the procedure path' do
+      expect { subject }.to change { procedure.procedure_paths.count }.from(0).to(1)
+    end
+
+    context "when the procedure path change" do
+      let(:procedure) { create(:procedure, path: "old-path") }
+
+      before do
+        procedure.path = "new-path"
+      end
+
+      it 'creates a new procedure path' do
+        expect { subject }.to change { procedure.procedure_paths.pluck(:path) }.from(["old-path"]).to(["new-path"])
+      end
+    end
+  end
+
+  describe "when there is 2 procedures" do
+    let(:admin1) { create(:administrateur) }
+    let(:admin2) { create(:administrateur) }
+
+    let(:procedure1) { create(:procedure, :published, administrateurs: [admin1], path: "proc-1") }
+    let(:procedure2) { create(:procedure, :published, administrateurs: [admin2], path: "proc-2") }
+
+    it "should have 2 diff paths" do
+      expect(procedure1.path).not_to eq(procedure2.path)
+    end
+
+    it "should not let procedure1 change path to procedure2 path" do
+      expect { procedure1.update!(path: procedure2.path) }.to raise_error
+    end
+
+    context "when procedure2 is closed" do
+      before do
+        procedure2.close!
+      end
+
+      it "should let procedure1 change path to procedure2 path" do
+        expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
       end
     end
   end

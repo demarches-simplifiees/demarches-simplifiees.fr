@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_03_105247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -242,8 +242,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.integer "dossier_count"
     t.string "dossier_state"
     t.bigint "instructeur_id", null: false
-    t.datetime "sent_at", precision: nil, null: false
     t.bigint "procedure_id"
+    t.datetime "sent_at", precision: nil, null: false
     t.datetime "updated_at", null: false
   end
 
@@ -865,6 +865,16 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.index ["from"], name: "index_path_rewrites_on_from", unique: true
   end
 
+  create_table "procedure_paths", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "deactivated_at"
+    t.string "path"
+    t.bigint "procedure_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["path", "deactivated_at"], name: "index_procedure_paths_on_path_and_deactivated_at", unique: true, where: "(deactivated_at IS NULL)"
+    t.index ["procedure_id"], name: "index_procedure_paths_on_procedure_id"
+  end
+
   create_table "procedure_presentations", id: :serial, force: :cascade do |t|
     t.jsonb "a_suivre_filters", default: [], null: false, array: true
     t.jsonb "archives_filters", default: [], null: false, array: true
@@ -916,6 +926,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
     t.boolean "allow_expert_messaging", default: true, null: false
     t.boolean "allow_expert_review", default: true, null: false
     t.string "api_entreprise_token"
+    t.datetime "api_entreprise_token_expires_at", precision: nil
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "ask_birthday", default: false, null: false
@@ -1282,6 +1293,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
   add_foreign_key "initiated_mails", "procedures"
   add_foreign_key "instructeurs", "users"
   add_foreign_key "merge_logs", "users"
+  add_foreign_key "procedure_paths", "procedures"
   add_foreign_key "procedure_presentations", "assign_tos"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revision_types_de_champ", column: "parent_id"
   add_foreign_key "procedure_revision_types_de_champ", "procedure_revisions", column: "revision_id"
