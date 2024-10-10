@@ -56,6 +56,7 @@ class Procedure < ApplicationRecord
   belongs_to :service, optional: true
   belongs_to :zone, optional: true
   has_and_belongs_to_many :zones
+  has_and_belongs_to_many :procedure_tags
 
   has_many :bulk_messages, dependent: :destroy
 

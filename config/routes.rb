@@ -33,6 +33,8 @@ Rails.application.routes.draw do
       resources :administrateur_confirmations, only: [:new, :create]
     end
 
+    resources :procedure_tags, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+
     resources :archives, only: [:index, :show]
 
     resources :dossiers, only: [:index, :show] do
