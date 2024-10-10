@@ -91,9 +91,13 @@ module DossierChampsConcern
     end
   end
 
-  def champ_for_update(type_de_champ, row_id, updated_by:)
+  def champ_for_update(type_de_champ, row_id, updated_by:, &block)
     champ, attributes = champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
     champ.assign_attributes(attributes)
+    if block_given?
+      yield champ
+      champs_by_public_id[champ.public_id]&.reload
+    end
     champ
   end
 
@@ -108,30 +112,31 @@ module DossierChampsConcern
   def repetition_row_ids(type_de_champ)
     return [] if !type_de_champ.repetition?
 
-    stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
-    champs.filter { _1.stable_id.in?(stable_ids) && _1.row_id.present? }
-      .map(&:row_id)
-      .uniq
-      .sort
+    rows = champs.filter { _1.stable_id == type_de_champ.stable_id && _1.row_id.present? }
+    row_ids = rows.reject(&:discarded?).map(&:row_id)
+
+    # Legacy rows are rows that have been created before the introduction of the discarded_at column
+    # TODO migrate and clean
+    children_stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
+    discarded_row_ids = rows.filter(&:discarded?).map(&:row_id)
+    legacy_row_ids = champs.filter { _1.stable_id.in?(children_stable_ids) && _1.row_id.present? }.map(&:row_id).uniq
+    row_ids += (legacy_row_ids - discarded_row_ids)
+
+    row_ids.uniq.sort
   end
 
   def repetition_add_row(type_de_champ, updated_by:)
     raise "Can't add row to non-repetition type de champ" if !type_de_champ.repetition?
 
     row_id = ULID.generate
-    types_de_champ = revision.children_of(type_de_champ)
-    self.champs += types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
-    champs.reload if persisted?
-    @champs_by_public_id = nil
+    champ_for_update(type_de_champ, row_id, updated_by:, &:save!)
     row_id
   end
 
   def repetition_remove_row(type_de_champ, row_id, updated_by:)
     raise "Can't remove row from non-repetition type de champ" if !type_de_champ.repetition?
 
-    champs.where(row_id:).destroy_all
-    champs.reload if persisted?
-    @champs_by_public_id = nil
+    champ_for_update(type_de_champ, row_id, updated_by:, &:discard!)
   end
 
   def reload
@@ -162,7 +167,7 @@ module DossierChampsConcern
   end
 
   def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
-    check_valid_row_id?(type_de_champ, row_id)
+    check_valid_row_id?(type_de_champ, row_id, write: true)
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
@@ -185,8 +190,12 @@ module DossierChampsConcern
     [champ, attributes]
   end
 
-  def check_valid_row_id?(type_de_champ, row_id)
-    if type_de_champ.child?(revision)
+  def check_valid_row_id?(type_de_champ, row_id, write: false)
+    if type_de_champ.repetition? && write
+      if row_id.blank?
+        raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it represents a row in a repetition"
+      end
+    elsif type_de_champ.child?(revision)
       if row_id.blank?
         raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it is part of a repetition"
       end
