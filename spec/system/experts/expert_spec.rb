@@ -72,7 +72,7 @@ describe 'Inviting an expert:', js: true do
       expect(page).to have_text('1 avis à donner')
       expect(page).to have_text('0 avis donnés')
 
-      expect(page).to have_selector('.badge', text: 1)
+      expect(page).to have_selector('.fr-badge', text: 1)
       expect(page).to have_selector('.notifications')
 
       click_on '1 avis à donner'
@@ -93,7 +93,7 @@ describe 'Inviting an expert:', js: true do
       expect(page).to have_text('0 avis à donner')
       expect(page).to have_text('1 avis donné')
 
-      expect(page).not_to have_selector('.badge', text: 1)
+      expect(page).not_to have_selector('.fr-badge', text: 1)
       expect(page).not_to have_selector('.notifications')
     end
 
