@@ -166,6 +166,9 @@ module Experts
 
       if @commentaire.errors.empty?
         @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        if @commentaire.piece_jointe.attached?
+          @commentaire.dossier.update!(last_commentaire_piece_jointe_updated_at: Time.zone.now)
+        end
         flash.notice = "Message envoyé"
         redirect_to messagerie_expert_avis_path(avis.procedure, avis)
       else
