@@ -522,7 +522,12 @@ module Instructeurs
           .compact
           .map(&:id)
 
-        champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids
+        justificatif_motivation_id = dossier
+          .justificatif_motivation
+          &.attachment
+          &.id
+
+        champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids + [justificatif_motivation_id]
       end
       @gallery_attachments = ActiveStorage::Attachment.where(id: gallery_attachments_ids)
     end

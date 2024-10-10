@@ -145,6 +145,20 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
     end
   end
 
+  context "when attachment is from a justificatif motivation" do
+    let(:fake_justificatif) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
+    let(:attachment) { dossier.justificatif_motivation.attachment }
+
+    before { dossier.update!(justificatif_motivation: fake_justificatif) }
+
+    it "displays a generic libelle, link, tag and renders title" do
+      expect(subject).to have_text('Justificatif de décision')
+      expect(subject).to have_link(filename)
+      expect(subject).to have_text('Pièce jointe à la décision')
+      expect(component.title).to eq("Pièce jointe à la décision -- #{filename}")
+    end
+  end
+
   context "when attachment is from an avis" do
     context 'from an instructeur' do
       let(:avis) { create(:avis, :with_introduction, dossier: dossier) }
