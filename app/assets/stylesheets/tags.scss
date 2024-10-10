@@ -1,0 +1,38 @@
+@import "colors";
+@import "constants";
+
+$colors:
+"green-tilleul-verveine",
+"green-bourgeon",
+"green-emeraude",
+"green-menthe",
+"green-archipel",
+"blue-ecume",
+"blue-cumulus",
+"purple-glycine",
+"pink-macaron",
+"pink-tuile",
+"yellow-tournesol",
+"yellow-moutarde",
+"orange-terre-battue",
+"brown-cafe-creme",
+"brown-caramel",
+"brown-opera",
+"beige-gris-galet";
+
+
+@each $color in $colors {
+  .fr-tag--#{$color},
+    a.fr-tag--#{$color},
+    button.fr-tag--#{$color},
+    input[type=button].fr-tag--#{$color},
+    input[type=image].fr-tag--#{$color},
+    input[type=reset].fr-tag--#{$color},
+    input[type=submit].fr-tag--#{$color} {
+      --idle:transparent;
+      --hover:var(--background-action-low-#{$color}-hover);
+      --active:var(--background-action-low-#{$color}-active);
+      background-color:var(--background-action-low-#{$color});
+      color:var(--text-action-high-#{$color})
+    }
+}

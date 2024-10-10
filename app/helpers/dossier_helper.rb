@@ -118,12 +118,17 @@ module DossierHelper
     tag.span(Dossier.human_attribute_name("pending_correction.resolved"), class: ['fr-badge fr-badge--sm fr-badge--success super', html_class], role: 'status')
   end
 
-  def label_badges(badges)
-    badges.map { label_badge(_1[1], _1[2]) }.join('<br>').html_safe
+  def tags_label(tags)
+    if tags.count > 1
+      tag.div(tags.map { tag_label(_1[1], _1[2]) }.join('<br>').html_safe, class: 'fr-tags-group')
+    else
+      tag = tags.first
+      tag_label(tag[1], tag[2])
+    end
   end
 
-  def label_badge(name, color)
-    tag.span(name, class: ["fr-badge fr-badge--sm fr fr-badge--#{color}"])
+  def tag_label(name, color)
+    tag.span(name, class: "fr-tag fr-tag--sm  fr-tag--#{color}")
   end
 
   def demandeur_dossier(dossier)
