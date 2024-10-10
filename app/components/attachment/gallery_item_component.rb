@@ -23,6 +23,8 @@ class Attachment::GalleryItemComponent < ApplicationComponent
       'Pièce jointe au message'
     elsif from_avis_externe?
       'Pièce jointe à l’avis'
+    elsif from_justificatif_motivation?
+      'Pièce jointe à la décision'
     end
   end
 
@@ -42,6 +44,8 @@ class Attachment::GalleryItemComponent < ApplicationComponent
       'Avis externe (instructeur)'
     when from_avis_externe_expert?
       'Avis externe (expert)'
+    when from_justificatif_motivation?
+      'Justificatif de décision'
     end
   end
 
@@ -120,5 +124,9 @@ class Attachment::GalleryItemComponent < ApplicationComponent
 
   def from_avis_externe_expert?
     from_avis_externe? && attachment.name == 'piece_justificative_file'
+  end
+
+  def from_justificatif_motivation?
+    attachment.name == 'justificatif_motivation'
   end
 end

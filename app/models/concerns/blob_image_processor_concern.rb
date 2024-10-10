@@ -10,7 +10,7 @@ module BlobImageProcessorConcern
   end
 
   def representation_required?
-    from_champ? || from_messagerie? || logo? || from_action_text? || from_avis?
+    from_champ? || from_messagerie? || logo? || from_action_text? || from_avis? || from_justificatif_motivation?
   end
 
   private
@@ -37,5 +37,9 @@ module BlobImageProcessorConcern
 
   def watermark_required?
     attachments.any? { _1.record.class == Champs::TitreIdentiteChamp }
+  end
+
+  def from_justificatif_motivation?
+    attachments.any? { _1.name == 'justificatif_motivation' }
   end
 end

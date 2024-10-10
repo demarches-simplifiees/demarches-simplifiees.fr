@@ -9,7 +9,7 @@
           Visualiser
     - if !gallery_demande?
       .fr-text--sm.fr-mt-2v.fr-mb-1v
-        = libelle.truncate(25)
+        = libelle.truncate(30)
     = render Attachment::ShowComponent.new(attachment:, truncate: true, new_tab: gallery_demande?)
     - if !gallery_demande?
       .fr-mt-2v.fr-mb-2v{ class: badge_updated_class }
@@ -19,7 +19,7 @@
       = image_tag('apercu-indisponible.png')
     - if !gallery_demande?
       .fr-text--sm.fr-mt-2v.fr-mb-1v
-        = libelle.truncate(25)
+        = libelle.truncate(30)
     = render Attachment::ShowComponent.new(attachment:, truncate: true, new_tab: gallery_demande?)
     - if !gallery_demande?
       .fr-mt-2v.fr-mb-2v{ class: badge_updated_class }
