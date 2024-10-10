@@ -1,7 +1,8 @@
 - content_for(:title, "Administrateurs de #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), administrateurs_instructeur_procedure_path(@procedure)],['Administrateurs']] }
+.sub-header= render partial: 'instructeurs/breadcrumbs',
+  locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb, :instructeur], libelle: @procedure.libelle.truncate(22)), instructeur_procedure_path(@procedure)],
+                    ['Administrateurs']] }
 
 .container
   %h1

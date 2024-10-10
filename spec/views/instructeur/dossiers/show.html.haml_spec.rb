@@ -14,6 +14,25 @@ describe 'instructeurs/dossiers/show', type: :view do
 
   it 'renders the header' do
     expect(subject).to have_text("Dossier nº #{dossier.id}")
+    expect(subject).to have_selector(".fr-breadcrumb__link", count: 3)
+    expect(subject).to have_selector('a.fr-breadcrumb__link', text: "Accueil – Liste des démarches")
+    expect(subject).to have_selector('a.fr-breadcrumb__link', text: "#{dossier.procedure.libelle} – Suivi des dossiers")
+    expect(subject).to have_selector('a.fr-breadcrumb__link', text: "Dossier nº #{dossier.id} – #{dossier.owner_name}")
+    expect(subject).to have_selector('.back-btn')
+  end
+
+  context 'when procedure statut / page was saved in session' do
+    let(:last_state) { { statut: 'tous' } }
+    let(:session) { {} }
+    before do
+      Cache::ShowProcedureLastState.new(procedure: dossier.procedure, current_instructeur:, session: session)
+        .persist_last_state(params: ActionController::Parameters.new(last_state))
+      allow(view).to receive(:session).and_return(session)
+    end
+
+    it 'renders back button with saved state' do
+      expect(subject).to have_selector("a[href=\"#{instructeur_procedure_path(dossier.procedure, last_state)}\"]")
+    end
   end
 
   it 'renders the dossier infos' do

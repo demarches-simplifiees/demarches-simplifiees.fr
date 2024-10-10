@@ -1,10 +1,11 @@
 #header-top.fr-container
   .flex.fr-mb-3w
     %div
-      %h1.fr-h3.fr-mb-1w
-        = "Dossier nº #{dossier.id}"
+      .flex.fr-mb-1w
+        = render Instructeurs::BackButtonComponent.new(to: instructeur_procedure_path(dossier.procedure, Cache::ShowProcedureLastState.new(current_instructeur: current_instructeur, procedure: dossier.procedure, session:).fetch_last_state))
+        %h1.fr-h3.fr-mb-0
+          = "Dossier nº #{dossier.id}"
 
-      = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
       .fr-mt-2w.badge-group
         = procedure_badge(dossier.procedure)
 
