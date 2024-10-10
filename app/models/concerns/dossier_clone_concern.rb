@@ -148,22 +148,20 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_added = diff[:added].filter(&:persisted?)
-    champs_updated = diff[:updated].filter(&:persisted?)
-    champs_removed = diff[:removed].filter(&:persisted?)
+    added_champs = diff[:added].filter { _1.persisted? && _1.fillable? }
+    updated_champs = diff[:updated].filter { _1.persisted? && _1.fillable? }
 
-    champs_added.each { _1.update_column(:dossier_id, id) }
+    added_champs.each { _1.update_column(:dossier_id, id) }
 
     # a bit of a hack to work around unicity index
     remove_group_id = ULID.generate
-    champs_index = project_champs_public_all.filter(&:persisted?).index_by(&:public_id)
-    champs_updated.each do |champ|
-      champs_index.fetch(champ.public_id).update(row_id: remove_group_id)
+    champs_index = filled_champs_public.index_by(&:public_id)
+    updated_champs.each do |champ|
+      champs_index[champ.public_id]&.update(row_id: remove_group_id)
       champ.update_column(:dossier_id, id)
     end
 
     Champ.where(row_id: remove_group_id).destroy_all
-    champs_removed.each(&:destroy!)
   end
 
   protected

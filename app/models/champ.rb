@@ -88,7 +88,7 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    row_id.present?
+    row_id.present? && !repetition?
   end
 
   # used for the `required` html attribute

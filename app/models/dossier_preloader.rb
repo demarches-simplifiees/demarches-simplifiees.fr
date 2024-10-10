@@ -63,7 +63,7 @@ class DossierPreloader
 
   def load_etablissements(champs)
     to_include = @includes_for_etablissement.dup
-    champs_siret = champs.filter(&:siret?)
+    champs_siret = champs.filter { _1.type == 'Champs::SiretChamp' }
     etablissements_by_id = Etablissement.includes(to_include).where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
     champs_siret.each do |champ|
       etablissement = etablissements_by_id[champ.etablissement_id]
