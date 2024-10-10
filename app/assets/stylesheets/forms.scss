@@ -2,11 +2,16 @@
 @import "colors";
 @import "placeholders";
 
-.form { // kiki
+.form { // pf
   ul {
     list-style-type: square;
     list-style-position: outside;
-    // padding-left: 30px;
+
+    li {
+      font-size: 1rem;
+      line-height: 1.2rem;
+      margin: 0; // var(--text-spacing);
+    }
   }
 
   ul ul {
@@ -22,6 +27,7 @@
 
   table {
     width: 90%;
+    font-size: 1rem;
     margin-left: auto;
     margin-right: auto;
   }
