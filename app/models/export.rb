@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+# TODO: add migration to store sorted and filtered columns
+# then change snapshot to extract those columns and store it
+# finally, adapt the load_snapshot! method to load those columns
+
 class Export < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern
 

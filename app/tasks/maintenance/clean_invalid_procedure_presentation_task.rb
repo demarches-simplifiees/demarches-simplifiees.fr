@@ -2,7 +2,7 @@
 
 module Maintenance
   # PR: 10774
-  # why: postgres does not support integer greater than ProcedurePresentation::PG_INTEGER_MAX_VALUE)
+  # why: postgres does not support integer greater than FilteredColumn::PG_INTEGER_MAX_VALUE)
   #      it occures when user copypaste the dossier id twice (like missed copy paste,paste)
   #      once this huge integer is saved on procedure presentation, page with this filter can't be loaded
   # when: run this migration when it appears in your maintenance tasks list, this file fix the data and we added some validations too
@@ -16,7 +16,7 @@ module Maintenance
         filters_by_status.reject do |filter|
           filter.is_a?(Hash) &&
           filter['column'] == 'id' &&
-          (filter['value']&.to_i&. >= ProcedurePresentation::PG_INTEGER_MAX_VALUE)
+          (filter['value']&.to_i&. >= FilteredColumn::PG_INTEGER_MAX_VALUE)
         end
       end
       element.save

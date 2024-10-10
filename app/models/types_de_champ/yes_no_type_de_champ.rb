@@ -11,17 +11,6 @@ class TypesDeChamp::YesNoTypeDeChamp < TypesDeChamp::CheckboxTypeDeChamp
     end
   end
 
-  def human_to_filter(human_value)
-    downcased = human_value.downcase
-    if downcased == "oui"
-      "true"
-    elsif downcased == "non"
-      "false"
-    else
-      downcased
-    end
-  end
-
   class << self
     def champ_value(champ)
       champ_formatted_value(champ)

@@ -905,8 +905,8 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
 
     subject do
-      column = procedure.find_column(label: "Nom").id
-      post :add_filter, params: { procedure_id: procedure.id, column:, value: "n" * 110, statut: "a-suivre" }
+      column = procedure.find_column(label: "Nom")
+      post :add_filter, params: { procedure_id: procedure.id, a_suivre_filters: { id: column.id, filter: "n" * 110 } }
     end
 
     it 'should render the error' do

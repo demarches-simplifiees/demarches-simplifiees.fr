@@ -61,7 +61,7 @@
     %hr
     .flex.align-center
       - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-        = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut}
+        = render partial: "dossiers_filter_dropdown", locals: { procedure: @procedure, statut: @statut, procedure_presentation: @procedure_presentation }
         = render Dossiers::NotifiedToggleComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation) if @statut != 'a-suivre'
 
         .fr-ml-auto

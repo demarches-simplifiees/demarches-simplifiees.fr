@@ -8,27 +8,22 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
   let(:procedure_id) { procedure.id }
   let(:procedure_presentation) { nil }
   let(:statut) { nil }
+  let(:column) { nil }
 
   before do
     allow(component).to receive(:current_instructeur).and_return(instructeur)
   end
 
   describe ".filterable_columns_options" do
-    context 'filders' do
-      let(:column) { nil }
-      let(:included_displayable_field) do
-        [
-          Column.new(procedure_id:, label: 'email', table: 'user', column: 'email'),
-          Column.new(procedure_id:, label: "depose_since", table: "self", column: "depose_since", displayable: false)
-        ]
-      end
+    let(:filterable_column) { Column.new(procedure_id:, label: 'email', table: 'user', column: 'email') }
+    let(:non_filterable_column) { Column.new(procedure_id:, label: 'depose_since', table: 'self', column: 'depose_since', filterable: false) }
+    let(:mocked_columns) { [filterable_column, non_filterable_column] }
 
-      before { allow(procedure).to receive(:columns).and_return(included_displayable_field) }
+    before { allow(procedure).to receive(:columns).and_return(mocked_columns) }
 
-      subject { component.filterable_columns_options }
+    subject { component.filterable_columns_options }
 
-      it { is_expected.to eq([["email", included_displayable_field.first.id], ["depose_since", included_displayable_field.second.id]]) }
-    end
+    it { is_expected.to eq([[filterable_column.label, filterable_column.id]]) }
   end
 
   describe '.options_for_select_of_column' do

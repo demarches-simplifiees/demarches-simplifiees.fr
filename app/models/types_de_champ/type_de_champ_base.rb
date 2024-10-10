@@ -54,10 +54,6 @@ class TypesDeChamp::TypeDeChampBase
     filter_value
   end
 
-  def human_to_filter(human_value)
-    human_value
-  end
-
   class << self
     def champ_value(champ)
       champ.value.present? ? champ.value.to_s : champ_default_value
