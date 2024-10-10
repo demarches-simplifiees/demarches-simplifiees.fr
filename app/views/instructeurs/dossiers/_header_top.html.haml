@@ -29,8 +29,7 @@
   .fr-mb-3w
     - if dossier.procedure_labels.present?
       - dossier.procedure_labels.each do |label|
-        .fr-badge.fr-badge--sm{ class: "fr-badge--#{label.color}" }
-          = label.name
+        = tag_label(label.name, label.color)
 
     = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm fr-btn--tertiary-no-outline fr-pl-1v']}, menu_options: { class: ['dropdown-label left-aligned'] }) do |menu|
       - if dossier.procedure_labels.empty?
@@ -42,6 +41,6 @@
           %fieldset.fr-fieldset.fr-mt-2w.fr-mb-0
             = f.collection_check_boxes :procedure_label_id, dossier.procedure.procedure_labels, :id, :name, include_hidden: false do |b|
               .fr-fieldset__element
-                .fr-checkbox-group.fr-checkbox-group--sm.fr-checkbox-custom-with-labels.fr-mb-1w
+                .fr-checkbox-group.fr-checkbox-group--sm.fr-mb-1w
                   = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, procedure_label_id: b.value).present?  )
-                  = b.label(class: "fr-label fr-badge fr-badge--sm fr-badge--#{b.object.color}") { b.text }
+                  = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{b.object.color}") { b.text }
