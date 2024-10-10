@@ -3,29 +3,14 @@
 module DossierChampsConcern
   extend ActiveSupport::Concern
 
-  def champs_for_revision(scope: nil)
-    champs_index = champs.group_by(&:stable_id)
-    revision.types_de_champ_for(scope:)
-      .flat_map { champs_index[_1.stable_id] || [] }
-  end
-
-  # Get all the champs values for the types de champ in the final list.
-  # Dossier might not have corresponding champ – display nil.
-  # To do so, we build a virtual champ when there is no value so we can call for_export with all indexes
-  def champs_for_export(types_de_champ, row_id = nil)
-    types_de_champ.flat_map do |type_de_champ|
-      champ = champ_for_export(type_de_champ, row_id)
-      type_de_champ.libelles_for_export.map do |(libelle, path)|
-        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
-      end
-    end
-  end
-
   def project_champ(type_de_champ, row_id)
     check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:, updated_at: depose_at || created_at)
+    if champ.nil? || !champ.same_type?(type_de_champ.type_champ)
+      type_de_champ.build_champ(dossier: self, row_id:,
+        updated_at: champ&.updated_at || depose_at || created_at,
+        rebased_at: champ&.rebased_at,
+        value: (champ.nil? || TypeDeChamp.use_default_value?(type_de_champ.type_champ, champ)) ? nil : champ.value)
     else
       champ
     end
@@ -37,6 +22,34 @@ module DossierChampsConcern
 
   def project_champs_private
     revision.types_de_champ_private.map { project_champ(_1, nil) }
+  end
+
+  def filled_champs_public
+    project_champs_public.flat_map do |champ|
+      if champ.repetition?
+        champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
+      elsif champ.persisted? && champ.fillable?
+        champ
+      else
+        []
+      end
+    end
+  end
+
+  def filled_champs_private
+    project_champs_private.flat_map do |champ|
+      if champ.repetition?
+        champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
+      elsif champ.persisted? && champ.fillable?
+        champ
+      else
+        []
+      end
+    end
+  end
+
+  def filled_champs
+    filled_champs_public + filled_champs_private
   end
 
   def project_rows_for(type_de_champ)
@@ -69,9 +82,22 @@ module DossierChampsConcern
       .map { _1.repetition? ? project_champ(_1, nil) : champ_for_update(_1, nil, updated_by: nil) }
   end
 
-  def champ_for_update(type_de_champ, row_id, updated_by:)
+  def champs_for_export(types_de_champ, row_id = nil)
+    types_de_champ.flat_map do |type_de_champ|
+      champ = champ_for_export(type_de_champ, row_id)
+      type_de_champ.libelles_for_export.map do |(libelle, path)|
+        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
+      end
+    end
+  end
+
+  def champ_for_update(type_de_champ, row_id, updated_by:, &block)
     champ, attributes = champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
     champ.assign_attributes(attributes)
+    if block_given?
+      yield champ
+      champs_by_public_id[champ.public_id]&.reload
+    end
     champ
   end
 
@@ -86,30 +112,31 @@ module DossierChampsConcern
   def repetition_row_ids(type_de_champ)
     [] if !type_de_champ.repetition?
 
-    stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
-    champs.filter { _1.stable_id.in?(stable_ids) && _1.row_id.present? }
-      .map(&:row_id)
-      .uniq
-      .sort
+    rows = champs.filter { _1.stable_id == type_de_champ.stable_id && _1.row_id.present? }
+    row_ids = rows.reject(&:discarded?).map(&:row_id)
+
+    # Legacy rows are rows that have been created before the introduction of the discarded_at column
+    # TODO migrate and clean
+    children_stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
+    discarded_row_ids = rows.filter(&:discarded?).map(&:row_id)
+    legacy_row_ids = champs.filter { _1.stable_id.in?(children_stable_ids) && _1.row_id.present? }.map(&:row_id).uniq
+    row_ids += (legacy_row_ids - discarded_row_ids)
+
+    row_ids.uniq.sort
   end
 
   def repetition_add_row(type_de_champ, updated_by:)
     raise "Can't add row to non-repetition type de champ" if !type_de_champ.repetition?
 
     row_id = ULID.generate
-    types_de_champ = revision.children_of(type_de_champ)
-    # TODO: clean this up when parent_id is deprecated
-    added_champs = types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
-    @champs_by_public_id = nil
-    [row_id, added_champs]
+    champ_for_update(type_de_champ, row_id, updated_by:) { _1.save! }
+    row_id
   end
 
   def repetition_remove_row(type_de_champ, row_id, updated_by:)
     raise "Can't remove row from non-repetition type de champ" if !type_de_champ.repetition?
 
-    champs.where(row_id:).destroy_all
-    champs.reload if persisted?
-    @champs_by_public_id = nil
+    champ_for_update(type_de_champ, row_id, updated_by:) { _1.discard! }
   end
 
   def reload
@@ -140,7 +167,7 @@ module DossierChampsConcern
   end
 
   def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
-    check_valid_row_id?(type_de_champ, row_id)
+    check_valid_row_id?(type_de_champ, row_id, write: true)
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
@@ -158,20 +185,17 @@ module DossierChampsConcern
       attributes[:data] = nil
     end
 
-    parent = revision.parent_of(type_de_champ)
-    if parent.present?
-      attributes[:parent] = champs.find { _1.stable_id == parent.stable_id }
-    else
-      attributes[:parent] = nil
-    end
-
     @champs_by_public_id = nil
 
     [champ, attributes]
   end
 
-  def check_valid_row_id?(type_de_champ, row_id)
-    if type_de_champ.child?(revision)
+  def check_valid_row_id?(type_de_champ, row_id, write: false)
+    if type_de_champ.repetition? && write
+      if row_id.blank?
+        raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it represents a row in a repetition"
+      end
+    elsif type_de_champ.child?(revision)
       if row_id.blank?
         raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it is part of a repetition"
       end

@@ -45,11 +45,7 @@ class Dossier < ApplicationRecord
 
   has_one_attached :justificatif_motivation
 
-  has_many :champs
-  # We have to remove champs in a particular order - champs with a reference to a parent have to be
-  # removed first, otherwise we get a foreign key constraint error.
-  has_many :champs_to_destroy, -> { order(:parent_id) }, class_name: 'Champ', inverse_of: false, dependent: :destroy
-
+  has_many :champs, dependent: :destroy
   has_many :commentaires, inverse_of: :dossier, dependent: :destroy
   has_many :preloaded_commentaires, -> { includes(:dossier_correction, piece_jointe_attachments: :blob) }, class_name: 'Commentaire', inverse_of: :dossier
 
@@ -519,7 +515,7 @@ class Dossier < ApplicationRecord
   def can_passer_en_construction?
     return true if !revision.ineligibilite_enabled || !revision.ineligibilite_rules
 
-    !revision.ineligibilite_rules.compute(champs_for_revision(scope: :public))
+    !revision.ineligibilite_rules.compute(filled_champs_public)
   end
 
   def can_passer_en_instruction?
@@ -569,7 +565,7 @@ class Dossier < ApplicationRecord
 
   def any_etablissement_as_degraded_mode?
     return true if etablissement&.as_degraded_mode?
-    return true if champs_for_revision(scope: :public).any? { _1.etablissement&.as_degraded_mode? }
+    return true if filled_champs_public.any? { _1.etablissement&.as_degraded_mode? }
 
     false
   end
@@ -1033,7 +1029,7 @@ class Dossier < ApplicationRecord
   end
 
   def linked_dossiers_for(instructeur_or_expert)
-    dossier_ids = champs_for_revision.filter(&:dossier_link?).filter_map(&:value)
+    dossier_ids = filled_champs.filter(&:dossier_link?).filter_map(&:value)
     instructeur_or_expert.dossiers.where(id: dossier_ids)
   end
 
@@ -1042,7 +1038,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_data?
-    GeoArea.exists?(champ_id: champs_for_revision)
+    GeoArea.exists?(champ_id: filled_champs)
   end
 
   def to_feature_collection
@@ -1157,11 +1153,11 @@ class Dossier < ApplicationRecord
   end
 
   def build_default_champs_for(types_de_champ)
-    self.champs << types_de_champ.flat_map do |type_de_champ|
-      if type_de_champ.repetition? && (type_de_champ.private? || type_de_champ.mandatory?)
-        row_id = ULID.generate
-        parent = type_de_champ.build_champ(dossier: self)
-        [parent] + revision.children_of(type_de_champ).map { _1.build_champ(dossier: self, parent:, row_id:) }
+    self.champs << types_de_champ.filter(&:fillable?).filter_map do |type_de_champ|
+      if type_de_champ.repetition?
+        if type_de_champ.private? || type_de_champ.mandatory?
+          type_de_champ.build_champ(dossier: self, row_id: ULID.generate)
+        end
       else
         type_de_champ.build_champ(dossier: self)
       end
@@ -1197,7 +1193,7 @@ class Dossier < ApplicationRecord
   end
 
   def geo_areas
-    champs_for_revision.flat_map(&:geo_areas)
+    filled_champs.flat_map(&:geo_areas)
   end
 
   def bounding_box

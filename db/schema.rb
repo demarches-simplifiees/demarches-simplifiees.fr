@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_07_174301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -250,6 +250,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
   create_table "champs", id: :serial, force: :cascade do |t|
     t.datetime "created_at", precision: nil
     t.jsonb "data"
+    t.datetime "discarded_at"
     t.integer "dossier_id"
     t.integer "etablissement_id"
     t.string "external_id"
@@ -1246,7 +1247,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_23_125619) do
   add_foreign_key "avis", "experts_procedures"
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
-  add_foreign_key "champs", "champs", column: "parent_id"
   add_foreign_key "champs", "dossiers"
   add_foreign_key "champs", "etablissements"
   add_foreign_key "champs", "types_de_champ"

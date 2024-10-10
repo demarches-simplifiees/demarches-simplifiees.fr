@@ -63,7 +63,7 @@ class DossierPreloader
 
   def load_etablissements(champs)
     to_include = @includes_for_etablissement.dup
-    champs_siret = champs.filter(&:siret?)
+    champs_siret = champs.filter { _1.type == 'Champs::SiretChamp' }
     etablissements_by_id = Etablissement.includes(to_include).where(id: champs_siret.map(&:etablissement_id).compact).index_by(&:id)
     champs_siret.each do |champ|
       etablissement = etablissements_by_id[champ.etablissement_id]
@@ -81,20 +81,8 @@ class DossierPreloader
     end
     dossier.association(:champs).target = champs
 
-    # remove once parent_id is deprecated
-    champs_by_parent_id = champs.group_by(&:parent_id)
-
     champs.each do |champ|
       champ.association(:dossier).target = dossier
-
-      # remove once parent_id is deprecated
-      if champ.repetition?
-        children = champs_by_parent_id.fetch(champ.id, [])
-        children.each do |child|
-          child.association(:parent).target = champ
-        end
-        champ.association(:champs).target = children
-      end
     end
 
     # We need to do this because of the check on `Etablissement#champ` in
