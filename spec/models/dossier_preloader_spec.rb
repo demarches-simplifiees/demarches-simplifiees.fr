@@ -12,7 +12,7 @@ describe DossierPreloader do
   let(:dossier) { create(:dossier, procedure: procedure) }
   let(:repetition) { subject.project_champs_public.second }
   let(:repetition_optional) { subject.project_champs_public.third }
-  let(:first_child) { subject.project_champs_public.second.champs.first }
+  let(:first_child) { repetition.rows.first.first }
 
   describe 'all' do
     subject { DossierPreloader.load_one(dossier, pj_template: true) }
@@ -40,9 +40,8 @@ describe DossierPreloader do
         expect(subject.champs.find(&:public?).conditional?).to eq(false)
         expect(subject.project_champs_public.first.conditional?).to eq(false)
 
-        expect(first_child.parent).to eq(repetition)
-        expect(repetition.champs.first).to eq(first_child)
-        expect(repetition_optional.champs).to be_empty
+        expect(repetition.rows.first.first).to eq(first_child)
+        expect(repetition_optional.row_ids).to be_empty
       end
 
       expect(count).to eq(0)

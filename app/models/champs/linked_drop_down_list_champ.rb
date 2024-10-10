@@ -5,7 +5,10 @@ class Champs::LinkedDropDownListChamp < Champ
 
   def primary_value
     if value.present?
-      JSON.parse(value)[0]
+      parsed_value = JSON.parse(value)[0]
+      if primary_options.include?(parsed_value)
+        parsed_value
+      end
     else
       ''
     end
@@ -13,7 +16,10 @@ class Champs::LinkedDropDownListChamp < Champ
 
   def secondary_value
     if value.present?
-      JSON.parse(value)[1]
+      parsed_value = JSON.parse(value)[1]
+      if has_secondary_options_for_primary? && secondary_options[primary_value].include?(parsed_value)
+        parsed_value
+      end
     else
       ''
     end
