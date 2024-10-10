@@ -322,44 +322,42 @@ module Administrateurs
     end
 
     def import
-      if procedure.publiee_or_close?
-        if !CSV_ACCEPTED_CONTENT_TYPES.include?(csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
-          flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
+      if !CSV_ACCEPTED_CONTENT_TYPES.include?(csv_file.content_type) && !CSV_ACCEPTED_CONTENT_TYPES.include?(marcel_content_type)
+        flash[:alert] = "Importation impossible : veuillez importer un fichier CSV"
 
-        elsif csv_file.size > CSV_MAX_SIZE
-          flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
+      elsif csv_file.size > CSV_MAX_SIZE
+        flash[:alert] = "Importation impossible : le poids du fichier est supérieur à #{number_to_human_size(CSV_MAX_SIZE)}"
 
-        else
-          file = csv_file.read
-          base_encoding = CharlockHolmes::EncodingDetector.detect(file)
+      else
+        file = csv_file.read
+        base_encoding = CharlockHolmes::EncodingDetector.detect(file)
 
-          csv_content = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase).map(&:to_h)
+        csv_content = ACSV::CSV.new_for_ruby3(file.encode("UTF-8", base_encoding[:encoding], invalid: :replace, replace: ""), headers: true, header_converters: :downcase).map(&:to_h)
 
-          if csv_content.first.has_key?("groupe") && csv_content.first.has_key?("email")
-            groupes_emails = csv_content.map { |r| r.to_h.slice('groupe', 'email') }
+        if csv_content.first.has_key?("groupe") && csv_content.first.has_key?("email")
+          groupes_emails = csv_content.map { |r| r.to_h.slice('groupe', 'email') }
 
-            added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
+          added_instructeurs_by_group, invalid_emails = InstructeursImportService.import_groupes(procedure, groupes_emails)
 
-            added_instructeurs_by_group.each do |groupe, added_instructeurs|
-              if added_instructeurs.present?
-                notify_instructeurs(groupe, added_instructeurs)
-              end
-              flash_message_for_import(invalid_emails)
-            end
-
-          elsif csv_content.first.has_key?("email") && !csv_content.map(&:to_h).first.keys.many? && procedure.groupe_instructeurs.one?
-            instructors_emails = csv_content.map(&:to_h)
-
-            added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
+          added_instructeurs_by_group.each do |groupe, added_instructeurs|
             if added_instructeurs.present?
-              notify_instructeurs(groupe_instructeur, added_instructeurs)
+              notify_instructeurs(groupe, added_instructeurs)
             end
             flash_message_for_import(invalid_emails)
-          else
-            flash_message_for_invalid_csv
           end
-          redirect_to admin_procedure_groupe_instructeurs_path(procedure)
+
+        elsif csv_content.first.has_key?("email") && !csv_content.map(&:to_h).first.keys.many? && procedure.groupe_instructeurs.one?
+          instructors_emails = csv_content.map(&:to_h)
+
+          added_instructeurs, invalid_emails = InstructeursImportService.import_instructeurs(procedure, instructors_emails)
+          if added_instructeurs.present?
+            notify_instructeurs(groupe_instructeur, added_instructeurs)
+          end
+          flash_message_for_import(invalid_emails)
+        else
+          flash_message_for_invalid_csv
         end
+        redirect_to admin_procedure_groupe_instructeurs_path(procedure)
       end
     end
 

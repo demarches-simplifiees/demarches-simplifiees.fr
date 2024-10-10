@@ -19,7 +19,7 @@ describe 'Manage procedure instructeurs', js: true do
     scenario 'it works' do
       visit admin_procedure_path(procedure)
       find('#groupe-instructeurs').click
-      expect(page).to have_css("h1", text: "Instructeurs")
+      expect(page).to have_css("h1", text: "Gestion des instructeurs")
     end
   end
 
