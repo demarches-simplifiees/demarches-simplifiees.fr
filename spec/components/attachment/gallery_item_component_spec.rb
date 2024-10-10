@@ -100,6 +100,14 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
         expect(subject).to have_text('Messagerie (instructeur)')
       end
     end
+
+    context 'from an expert' do
+      let(:expert) { create(:expert) }
+      before { commentaire.update!(expert:) }
+      it "displays the right tag" do
+        expect(subject).to have_text('Messagerie (expert)')
+      end
+    end
   end
 
   context "when attachment is from an avis" do
