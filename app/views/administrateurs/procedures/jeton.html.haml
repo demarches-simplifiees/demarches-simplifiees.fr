@@ -1,10 +1,10 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Jeton Entreprise']] }
+                    ['Jeton API Entreprise']] }
 
 .fr-container
-  %h1.fr-h2 Jeton Entreprise
+  %h1.fr-h2 Jeton API Entreprise
 
 = form_with model: @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_jeton }) do |f|
   .fr-container
@@ -14,12 +14,16 @@
           Démarches Simplifiées utilise
           = link_to 'API Entreprise', "https://entreprise.api.gouv.fr/"
           qui permet de récupérer les informations administratives des entreprises et des associations.
-          Si votre démarche nécessite des autorisations spécifiques que Démarches Simplifiées n’a pas par défaut, merci de renseigner ici le jeton
-          = link_to 'API Entreprise', "https://api.gouv.fr/les-api/api-entreprise/demande-acces"
+          Si votre démarche nécessite des autorisations spécifiques que Démarches Simplifiées n’a pas par défaut, merci de renseigner ci-dessous
+          %strong le jeton API Entreprise
           propre à votre démarche.
+        %p
+          Si besoin, vous pouvez demander une habilitation API Entreprise en cliquant sur le lien suivant :
+          = link_to "https://api.gouv.fr/les-api/api-entreprise/demande-acces.", "https://api.gouv.fr/les-api/api-entreprise/demande-acces"
 
-    .fr-input-group
-      = f.label :api_entreprise_token, "Jeton", class: 'fr-label'
-      = f.password_field :api_entreprise_token, value: @procedure.read_attribute(:api_entreprise_token), class: 'fr-input'
+
+    = render partial: 'administrateurs/procedures/api_entreprise_token_expiration_alert', locals: { procedure: @procedure }
+
+    = render Dsfr::InputComponent.new(form: f, attribute: :api_entreprise_token, input_type: :password_field, required: false, opts: { value: @procedure.read_attribute(:api_entreprise_token)})
 
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
