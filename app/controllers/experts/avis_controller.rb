@@ -104,7 +104,12 @@ module Experts
       updated_recently = @avis.updated_recently?
       if @avis.update(avis_params)
         flash.notice = 'Votre réponse est enregistrée.'
-        @avis.dossier.update!(last_avis_updated_at: Time.zone.now)
+
+        timestamps = [:last_avis_updated_at, :updated_at]
+        timestamps << :last_avis_piece_jointe_updated_at if @avis.piece_justificative_file.attached?
+
+        @avis.dossier.touch(*timestamps)
+
         if !updated_recently
           @avis.dossier.followers_instructeurs
             .with_instant_expert_avis_email_notifications_enabled
