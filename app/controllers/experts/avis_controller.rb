@@ -167,7 +167,11 @@ module Experts
       @commentaire = CommentaireService.create(current_expert, avis.dossier, commentaire_params)
 
       if @commentaire.errors.empty?
-        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        timestamps = [:last_commentaire_updated_at, :updated_at]
+        timestamps << :last_commentaire_piece_jointe_updated_at if @commentaire.piece_jointe.attached?
+
+        @commentaire.dossier.touch(*timestamps)
+
         flash.notice = "Message envoyé"
         redirect_to messagerie_expert_avis_path(avis.procedure, avis)
       else

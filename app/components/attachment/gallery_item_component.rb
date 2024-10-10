@@ -30,6 +30,8 @@ class Attachment::GalleryItemComponent < ApplicationComponent
     case
     when from_dossier?
       'Dossier usager'
+    when from_messagerie_expert?
+      'Messagerie (expert)'
     when from_messagerie_instructeur?
       'Messagerie (instructeur)'
     when from_messagerie_usager?
@@ -90,8 +92,12 @@ class Attachment::GalleryItemComponent < ApplicationComponent
     from_messagerie? && attachment.record.instructeur.present?
   end
 
+  def from_messagerie_expert?
+    from_messagerie? && attachment.record.expert.present?
+  end
+
   def from_messagerie_usager?
-    from_messagerie? && attachment.record.instructeur.nil?
+    from_messagerie? && attachment.record.instructeur.nil? && attachment.record.expert.nil?
   end
 
   def from_avis_externe?
