@@ -52,7 +52,15 @@
   flex-wrap: wrap;
 
   .gallery-item {
-    margin: 0 2rem 1.5rem 0;
+    margin: 0 2rem 3rem 0;
+
+    .fr-download {
+      margin-bottom: 0;
+    }
+
+    .fr-text--sm {
+      margin-bottom: 0;
+    }
   }
 }
 

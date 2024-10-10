@@ -1,0 +1,3 @@
+en:
+  created_at: "Added on %{datetime}"
+  updated_at: "Updated on %{datetime}"
