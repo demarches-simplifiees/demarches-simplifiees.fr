@@ -24,8 +24,8 @@ class ProcedurePresentation < ApplicationRecord
 
   before_create { self.displayed_columns = procedure.default_displayed_columns }
 
-  validates_associated :a_suivre_filters, :suivis_filters, :traites_filters,
-    :tous_filters, :supprimes_filters, :expirant_filters, :archives_filters
+  validates_associated :displayed_columns, :sorted_column, :a_suivre_filters, :suivis_filters,
+    :traites_filters, :tous_filters, :supprimes_filters, :expirant_filters, :archives_filters
 
   def filters_for(statut)
     send(filters_name_for(statut))
