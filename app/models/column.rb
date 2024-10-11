@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class Column
+  # include validations to enable procedure_presentation.validate_associate,
+  # which enforces the deserialization of columns in the displayed_columns attribute
+  # and raises an error if a column is not found
+  include ActiveModel::Validations
+
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
 
   attr_reader :table, :column, :label, :type, :scope, :value_column, :filterable, :displayable
