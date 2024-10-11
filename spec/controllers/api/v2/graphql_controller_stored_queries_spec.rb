@@ -122,8 +122,9 @@ describe API::V2::GraphqlController do
       end
 
       context 'with entreprise' do
+        let(:types_de_champ_public) { [{ type: :siret }] }
         let(:procedure) { create(:procedure, :published, :with_service, administrateurs: [admin], types_de_champ_public:) }
-        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, procedure: procedure) }
+        let(:dossier) { create(:dossier, :en_construction, :with_entreprise, :with_populated_champs, procedure: procedure) }
 
         it {
           expect(gql_errors).to be_nil
