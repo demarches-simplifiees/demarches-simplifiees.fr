@@ -38,6 +38,12 @@ class Column
   end
 
   def self.find(h_id)
-    Procedure.with_discarded.find(h_id[:procedure_id]).find_column(h_id:)
+    begin
+      procedure = Procedure.with_discarded.find(h_id[:procedure_id])
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound.new("Column: unable to find procedure #{h_id[:procedure_id]} from h_id #{h_id}")
+    end
+
+    procedure.find_column(h_id: h_id)
   end
 end
