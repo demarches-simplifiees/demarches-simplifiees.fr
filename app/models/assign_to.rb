@@ -10,28 +10,31 @@ class AssignTo < ApplicationRecord
 
   def procedure_presentation_or_default_and_errors
     errors = reset_procedure_presentation_if_invalid
+
     if self.procedure_presentation.nil?
-      self.procedure_presentation = build_procedure_presentation
-      self.procedure_presentation.save if procedure_presentation.valid? && !procedure_presentation.persisted?
+      self.procedure_presentation = create_procedure_presentation!
     end
+
     [self.procedure_presentation, errors]
   end
 
   private
 
   def reset_procedure_presentation_if_invalid
-    if procedure_presentation&.invalid?
-      # This is a last defense against invalid `ProcedurePresentation`s persistently
-      # hindering instructeurs. Whenever this gets triggered, it means that there is
-      # a bug somewhere else that we need to fix.
+    errors = begin
+               procedure_presentation.errors if procedure_presentation&.invalid?
+             rescue ActiveRecord::RecordNotFound => e
+               [e.message]
+             end
 
-      errors = procedure_presentation.errors
+    if errors.present?
       Sentry.capture_message(
         "Destroying invalid ProcedurePresentation",
-        extra: { procedure_presentation: procedure_presentation.as_json }
+        extra: { procedure_presentation_id: procedure_presentation.id, errors: }
       )
       self.procedure_presentation = nil
-      errors
     end
+
+    errors
   end
 end
