@@ -142,7 +142,7 @@ class AttestationTemplate < ApplicationRecord
   end
 
   def md_version(procedure)
-    { md_version: procedure.feature_enabled?(:attestation_v2) ? :v2 : :v1 }
+    { md_version: procedure.feature_enabled?(:md_attestation_v2) ? :v2 : :v1 }
   end
 
   def tiptap_body
