@@ -12,7 +12,7 @@ module ColumnsConcern
       column = columns.find { _1.h_id == h_id } if h_id.present?
       column = columns.find { _1.label == label } if label.present?
 
-      raise ActiveRecord::RecordNotFound if column.nil?
+      raise ActiveRecord::RecordNotFound.new("Column: unable to find h_id: #{h_id} or label: #{label} for procedure_id #{id}") if column.nil?
 
       column
     end
