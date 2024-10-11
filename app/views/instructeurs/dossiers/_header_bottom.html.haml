@@ -7,7 +7,7 @@
         instructeur_dossier_path(dossier.procedure, dossier),
         notification: notifications_summary[:demande])
 
-      - if @gallery_attachments.present?
+      - if gallery_attachments.present?
         = dynamic_tab_item(t('views.instructeurs.dossiers.tab_steps.attachments'),
           pieces_jointes_instructeur_dossier_path(dossier.procedure, dossier),
           notification: notifications_summary[:pieces_jointes])
