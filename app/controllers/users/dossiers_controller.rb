@@ -341,7 +341,10 @@ module Users
       @commentaire = CommentaireService.create(current_user, dossier, commentaire_params)
 
       if @commentaire.errors.empty?
-        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        timestamps = [:last_commentaire_updated_at, :updated_at]
+        timestamps << :last_commentaire_piece_jointe_updated_at if @commentaire.piece_jointe.attached?
+
+        @commentaire.dossier.touch(*timestamps)
 
         flash.notice = t('.message_send')
         redirect_to messagerie_dossier_path(dossier)

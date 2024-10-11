@@ -1513,7 +1513,9 @@ describe Instructeurs::DossiersController, type: :controller do
       expect(response.body).to include('Télécharger le fichier logo_test_procedure.png')
       expect(response.body).to include('Télécharger le fichier RIB.pdf')
       expect(response.body).to include('Visualiser')
-      expect(assigns(:attachments_and_libelles).count).to eq 3
+      expect(assigns(:gallery_attachments).count).to eq 3
+      expect(assigns(:gallery_attachments)).to all(be_a(ActiveStorage::Attachment))
+      expect([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp, Commentaire]).to include(*assigns(:gallery_attachments).map { _1.record.class })
     end
   end
 end
