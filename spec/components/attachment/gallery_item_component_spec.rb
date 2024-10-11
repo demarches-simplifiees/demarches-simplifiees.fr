@@ -10,13 +10,11 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
   let(:filename) { attachment.blob.filename.to_s }
   let(:gallery_demande) { false }
   let(:seen_at) { nil }
-  let(:now) { Time.zone.parse('01/01/2010') }
+  let(:now) { Time.zone.now }
 
   let(:component) { described_class.new(attachment: attachment, gallery_demande:, seen_at: seen_at) }
 
   subject { render_inline(component).to_html }
-
-  after { Timecop.return }
 
   context "when attachment is from a piece justificative champ" do
     let(:champ) { dossier.champs.first }
@@ -71,10 +69,10 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       end
 
       context "when instructeur has not seen it yet" do
-        let(:seen_at) { Timecop.freeze(now - 1.day) }
+        let(:seen_at) { now - 1.day }
 
         before do
-          attachment.blob.update(created_at: Timecop.freeze(now))
+          attachment.blob.update(created_at: now)
         end
 
         it 'displays datetime in the right style' do
@@ -83,9 +81,10 @@ RSpec.describe Attachment::GalleryItemComponent, type: :component do
       end
 
       context "when instructeur has already seen it" do
-        let!(:seen_at) { Timecop.freeze(now) }
+        let!(:seen_at) { now }
 
         before do
+          freeze_time
           attachment.blob.touch(:created_at)
         end
 
