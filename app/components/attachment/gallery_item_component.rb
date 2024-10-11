@@ -17,17 +17,35 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   def gallery_demande? = @gallery_demande
 
   def libelle
-    from_dossier? ? attachment.record.libelle : 'Pièce jointe au message'
+    if from_champ?
+      attachment.record.libelle
+    elsif from_messagerie?
+      'Pièce jointe au message'
+    elsif from_avis_externe?
+      'Pièce jointe à l’avis'
+    elsif from_justificatif_motivation?
+      'Pièce jointe à la décision'
+    end
   end
 
   def origin
     case
-    when from_dossier?
+    when from_public_champ?
       'Dossier usager'
+    when from_private_champ?
+      'Annotation privée'
+    when from_messagerie_expert?
+      'Messagerie (expert)'
     when from_messagerie_instructeur?
       'Messagerie (instructeur)'
     when from_messagerie_usager?
       'Messagerie (usager)'
+    when from_avis_externe_instructeur?
+      'Avis externe (instructeur)'
+    when from_avis_externe_expert?
+      'Avis externe (expert)'
+    when from_justificatif_motivation?
+      'Justificatif de décision'
     end
   end
 
@@ -52,7 +70,7 @@ class Attachment::GalleryItemComponent < ApplicationComponent
   end
 
   def updated?
-    from_dossier? && updated_at > attachment.record.dossier.depose_at
+    from_public_champ? && updated_at > attachment.record.dossier.depose_at
   end
 
   def updated_at
@@ -68,8 +86,16 @@ class Attachment::GalleryItemComponent < ApplicationComponent
 
   private
 
-  def from_dossier?
+  def from_champ?
     attachment.record.class.in?([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp])
+  end
+
+  def from_public_champ?
+    from_champ? && !attachment.record.private?
+  end
+
+  def from_private_champ?
+    from_champ? && attachment.record.private?
   end
 
   def from_messagerie?
@@ -80,7 +106,27 @@ class Attachment::GalleryItemComponent < ApplicationComponent
     from_messagerie? && attachment.record.instructeur.present?
   end
 
+  def from_messagerie_expert?
+    from_messagerie? && attachment.record.expert.present?
+  end
+
   def from_messagerie_usager?
-    from_messagerie? && attachment.record.instructeur.nil?
+    from_messagerie? && attachment.record.instructeur.nil? && attachment.record.expert.nil?
+  end
+
+  def from_avis_externe?
+    attachment.record.is_a?(Avis)
+  end
+
+  def from_avis_externe_instructeur?
+    from_avis_externe? && attachment.name == 'introduction_file'
+  end
+
+  def from_avis_externe_expert?
+    from_avis_externe? && attachment.name == 'piece_justificative_file'
+  end
+
+  def from_justificatif_motivation?
+    attachment.name == 'justificatif_motivation'
   end
 end
