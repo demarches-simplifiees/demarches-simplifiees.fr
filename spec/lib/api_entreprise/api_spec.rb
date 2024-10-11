@@ -54,6 +54,26 @@ describe APIEntreprise::API do
       end
     end
 
+    context 'when the service reponds with 02002 code' do
+      let(:siren) { '111111111' }
+      let(:status) { 504 }
+      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_02002.json').read }
+
+      it 'raises APIEntreprise::API::Error::RequestFailed' do
+        expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
+      end
+    end
+
+    context 'when the service reponds with 03002 code' do
+      let(:siren) { '111111111' }
+      let(:status) { 504 }
+      let(:body) { Rails.root.join('spec/fixtures/files/api_entreprise/error_code_03002.json').read }
+
+      it 'raises APIEntreprise::API::Error::RequestFailed' do
+        expect { subject }.to raise_error(APIEntreprise::API::Error::ServiceUnavailable)
+      end
+    end
+
     context 'when siren does not exist' do
       let(:siren) { '111111111' }
       let(:status) { 404 }
