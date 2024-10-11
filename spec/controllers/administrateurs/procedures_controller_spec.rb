@@ -290,18 +290,23 @@ describe Administrateurs::ProceduresController, type: :controller do
       end
 
       it 'returns procedure who contains at least one tag included in params' do
-        get :all, params: { procedure_tag_names: ['environnement'] }
-        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        get :all, params: { tags: ['environnement'] }
+        expect(assigns(:procedures).find { |p| p.id == procedure.id }).to be_present
       end
 
       it 'returns procedures who contains all tags included in params' do
-        get :all, params: { procedure_tag_names: ['environnement', 'diplomatie'] }
-        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        get :all, params: { tags: ['environnement', 'diplomatie'] }
+        expect(assigns(:procedures).find { |p| p.id == procedure.id }).to be_present
       end
 
       it 'returns the procedure when at least one tag is include' do
-        get :all, params: { procedure_tag_names: ['environnement', 'diplomatie', 'football'] }
-        expect(assigns(:procedures).any? { |p| p.id == procedure.id }).to be_truthy
+        get :all, params: { tags: ['environnement', 'diplomatie', 'football'] }
+        expect(assigns(:procedures).find { |p| p.id == procedure.id }).to be_present
+      end
+
+      it 'does not return procedure not having the queried tag' do
+        get :all, params: { tags: ['football'] }
+        expect(assigns(:procedures)).to be_empty
       end
     end
 
