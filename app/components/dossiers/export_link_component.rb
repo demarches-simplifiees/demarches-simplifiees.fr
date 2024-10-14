@@ -30,7 +30,7 @@ class Dossiers::ExportLinkComponent < ApplicationComponent
   end
 
   def export_title(export)
-    if export.procedure_presentation_id.nil?
+    if !export.built_from_procedure_presentation?
       t(".export_title_everything", export_format: export.format)
     elsif export.tous?
       t(".export_title", export_format: export.format, count: export.count)
