@@ -24,43 +24,6 @@ module Administrateurs
       @statut.blank? ? @statut = 'publiees' : @statut = params[:statut]
     end
 
-    def paginated_published_procedures
-      current_administrateur
-        .procedures
-        .publiees
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(published_at: :desc)
-    end
-
-    def paginated_draft_procedures
-      current_administrateur
-        .procedures
-        .brouillons
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(created_at: :desc)
-    end
-
-    def paginated_closed_procedures
-      current_administrateur
-        .procedures
-        .closes
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(created_at: :desc)
-    end
-
-    def paginated_deleted_procedures
-      current_administrateur
-        .procedures
-        .with_discarded
-        .discarded
-        .page(params[:page])
-        .per(ITEMS_PER_PAGE)
-        .order(created_at: :desc)
-    end
-
     def apercu
       @dossier = procedure_without_control.draft_revision.dossier_for_preview(current_user)
       DossierPreloader.load_one(@dossier)
@@ -463,6 +426,47 @@ module Administrateurs
     end
 
     private
+
+    def paginated_published_procedures
+      paginate_procedures(current_administrateur
+        .procedures
+        .publiees
+        .order(published_at: :desc))
+    end
+
+    def paginated_draft_procedures
+      paginate_procedures(current_administrateur
+        .procedures
+        .brouillons
+        .order(created_at: :desc))
+    end
+
+    def paginated_closed_procedures
+      paginate_procedures(current_administrateur
+        .procedures
+        .closes
+        .order(created_at: :desc))
+    end
+
+    def paginated_deleted_procedures
+      paginate_procedures(current_administrateur
+        .procedures
+        .with_discarded
+        .discarded
+        .order(created_at: :desc))
+    end
+
+    def paginate_procedures(procedures)
+      procedures
+        .with_attached_logo
+        .left_joins(groupe_instructeurs: :instructeurs)
+        .select('procedures.*,
+                          COUNT(DISTINCT groupe_instructeurs.id) AS groupe_instructeurs_count,
+                          COUNT(DISTINCT instructeurs.id) AS instructeurs_count')
+        .group('procedures.id')
+        .page(params[:page])
+        .per(ITEMS_PER_PAGE)
+    end
 
     def filter_procedures(filter)
       if filter.service_siret.present?

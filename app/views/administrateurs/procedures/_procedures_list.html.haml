@@ -45,9 +45,9 @@
             %div
               = dsfr_icon('fr-icon-team-fill')
               - if procedure.routing_enabled?
-                %span.fr-badge= procedure.groupe_instructeurs.count
+                %span.fr-badge= procedure.groupe_instructeurs_count
               - else
-                %span.fr-badge= procedure.instructeurs.count
+                %span.fr-badge= procedure.instructeurs_count
 
               = dsfr_icon('fr-icon-file-text-fill fr-ml-1w')
               %span.fr-badge= procedure.dossiers.state_not_brouillon.visible_by_administration.count
