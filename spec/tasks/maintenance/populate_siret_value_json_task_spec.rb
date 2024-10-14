@@ -23,7 +23,9 @@ module Maintenance
             "street_number" => "6",
             "street_address" => "6 RUE RAOUL NORDLING",
             "departement_code" => "92",
-            "departement_name" => "Hauts-de-Seine"
+            "department_code" => "92",
+            "departement_name" => "Hauts-de-Seine",
+            "department_name" => "Hauts-de-Seine"
           })
       end
     end
