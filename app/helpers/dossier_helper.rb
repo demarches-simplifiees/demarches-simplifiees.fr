@@ -120,7 +120,7 @@ module DossierHelper
 
   def tags_label(tags)
     if tags.count > 1
-      tag.div(tags.map { tag_label(_1[1], _1[2]) }.join('<br>').html_safe, class: 'fr-tags-group')
+      tag.ul(tags.map { tag.li(tag_label(_1[1], _1[2])) }.join.html_safe, class: 'fr-tags-group')
     else
       tag = tags.first
       tag_label(tag[1], tag[2])
