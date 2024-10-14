@@ -29,6 +29,21 @@
                   .fr-mb-1w
                     %button{ 'data-action': 'expand#toggle' }
                       %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Thématique
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    %div
+                      = f.search_field :tags, placeholder: 'Choisissez un thème', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input', turbo_force: :server }, multiple: true
+                      %datalist#tags_list
+                        - ProcedureTag.order(:name).each do |tag|
+                          %option{ value: tag.name, data: { id: tag.id } }
+                      - if @filter.tags.present?
+                        - @filter.tags.each do |tag|
+                          = f.hidden_field :tags, value: tag, multiple: true, id: "tag-#{tag.tr(' ', '_')}"
+
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
                       Démarches modèles
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     .fr-checkbox-group.fr-ml-2w.fr-py-1w
@@ -104,22 +119,6 @@
                       .fr-checkbox-group.fr-ml-2w.fr-py-1w
                         = b.check_box(checked: @filter.status_filtered?(b.value))
                         = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
-
-
-                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                  .fr-mb-1w
-                    %button{ 'data-action': 'expand#toggle' }
-                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                      Thématique
-                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
-                    %div
-                      = f.search_field :tags, placeholder: 'Choisissez un thème', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input', turbo_force: :server }, multiple: true
-                      %datalist#tags_list
-                        - Procedure.tags.each do |tag|
-                          %option{ value: tag }
-                      - if @filter.tags.present?
-                        - @filter.tags.each do |tag|
-                          = f.hidden_field :tags, value: tag, multiple: true, id: "tag-#{tag.tr(' ', '_')}"
 
         .fr-col-9
           = yield(:results)

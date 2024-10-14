@@ -121,15 +121,17 @@
 
   .fr-fieldset__element
     = f.label :tags, 'Associez des thématiques à la démarche', class: 'fr-label'
-    %p.fr-hint-text Par des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
+    %p.fr-hint-text
+      Par des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver.
+      Les thèmes sont partagées avec la communauté, ce qui vous permet de voir les thèmes attribués aux démarches créées par les autres administrateurs.
     %react-fragment
       = render ReactComponent.new "ComboBox/MultiComboBox",
         id: "procedure_tags_combo",
-        items: Procedure.tags,
-        selected_keys: @procedure.tags,
-        name: 'procedure[tags][]',
+        items: ProcedureTag.order(:name).pluck(:name),
+        selected_keys: @procedure.procedure_tags.pluck(:name),
+        name: 'procedure[procedure_tag_names][]',
         value_separator: ',|;',
-        allows_custom_value: true,
+        allows_custom_value: false,
         'aria-label': 'Tags',
         'aria-describedby': 'procedure-tags'
 
