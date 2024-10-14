@@ -15,6 +15,12 @@ class Logic::ChampValue < Logic::Term
     :address
   )
 
+  MANAGED_TYPE_DE_CHAMP_BY_CATEGORY = TypeDeChamp::TYPE_DE_CHAMP_TO_CATEGORIE
+    .filter { |k, _| k.in?(MANAGED_TYPE_DE_CHAMP) }
+    .map { |k, v| { v => k } }
+    .flat_map(&:to_a)
+    .group_by(&:first)
+
   CHAMP_VALUE_TYPE = {
     boolean: :boolean, # from yes_no or checkbox champ
     number: :number, # from integer or decimal number champ
