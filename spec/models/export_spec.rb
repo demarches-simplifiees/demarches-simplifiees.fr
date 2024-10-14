@@ -154,10 +154,16 @@ RSpec.describe Export, type: :model do
     let!(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure) }
 
     let(:export) do
-      create(:export,
-             groupe_instructeurs: [procedure.groupe_instructeurs.first],
-             procedure_presentation: procedure_presentation,
-             statut: statut)
+      groupe_instructeurs = [procedure.groupe_instructeurs.first]
+      user_profile = groupe_instructeurs.first.instructeurs.first
+
+      Export.find_or_create_fresh_export(
+        :csv,
+        groupe_instructeurs,
+        user_profile,
+        procedure_presentation:,
+        statut:
+      )
     end
 
     context 'without procedure_presentation or since' do
@@ -171,17 +177,28 @@ RSpec.describe Export, type: :model do
       end
     end
 
-    context 'with procedure_presentation and statut supprimes' do
-      let(:statut) { 'supprimes' }
-      let(:procedure_presentation) do
-        create(:procedure_presentation,
-               procedure: procedure,
-               assign_to: procedure.groupe_instructeurs.first.assign_tos.first)
-      end
-      let!(:dossier_supprime) { create(:dossier, :accepte, procedure: procedure, hidden_by_administration_at: 2.days.ago) }
+    context 'with procedure_presentation and statut tous and filter en_construction' do
+      let(:statut) { 'tous' }
 
-      it 'includes supprimes' do
-        expect(export.send(:dossiers_for_export)).to include(dossier_supprime)
+      let(:procedure_presentation) do
+        statut_column = procedure.find_column(label: 'Statut')
+        en_construction_filter = FilteredColumn.new(column: statut_column, filter: 'en_construction')
+        create(:procedure_presentation,
+               procedure:,
+               assign_to: procedure.groupe_instructeurs.first.assign_tos.first,
+               tous_filters: [en_construction_filter])
+      end
+
+      before do
+        # ensure the export is generated
+        export
+
+        # change the procedure presentation
+        procedure_presentation.update(tous_filters: [])
+      end
+
+      it 'only includes the en_construction' do
+        expect(export.send(:dossiers_for_export)).to eq([dossier_en_construction])
       end
     end
   end

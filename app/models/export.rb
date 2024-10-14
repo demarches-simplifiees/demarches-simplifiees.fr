@@ -3,6 +3,8 @@
 class Export < ApplicationRecord
   include TransientModelsWithPurgeableJobConcern
 
+  self.ignored_columns += ["procedure_presentation_snapshot"]
+
   MAX_DUREE_CONSERVATION_EXPORT = 32.hours
   MAX_DUREE_GENERATION = 16.hours
 
@@ -59,7 +61,6 @@ class Export < ApplicationRecord
 
   def compute
     self.dossiers_count = dossiers_for_export.count
-    load_snapshot!
 
     file.attach(blob.signed_id) # attaching a blob directly might run identify/virus scanner and wipe it
   end
@@ -94,7 +95,6 @@ class Export < ApplicationRecord
     create!(**attributes, groupe_instructeurs:,
                           user_profile:,
                           procedure_presentation:,
-                          procedure_presentation_snapshot: procedure_presentation&.snapshot,
                           filtered_columns:,
                           sorted_column:)
   end
@@ -128,12 +128,6 @@ class Export < ApplicationRecord
   end
 
   private
-
-  def load_snapshot!
-    if procedure_presentation_snapshot.present?
-      procedure_presentation.attributes = procedure_presentation_snapshot
-    end
-  end
 
   def dossiers_for_export
     @dossiers_for_export ||= begin

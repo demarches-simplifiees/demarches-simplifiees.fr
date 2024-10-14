@@ -73,10 +73,6 @@ class ProcedurePresentation < ApplicationRecord
     nil
   end
 
-  def snapshot
-    slice(:filters, :sort, :displayed_fields)
-  end
-
   private
 
   def find_type_de_champ(column)
