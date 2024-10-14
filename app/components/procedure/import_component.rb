@@ -9,7 +9,7 @@ class Procedure::ImportComponent < ApplicationComponent
     @procedure.routing_enabled? ? 'groupes' : 'instructeurs'
   end
 
-  def template_url
+  def template_file
     if @procedure.routing_enabled?
       '/csv/import-groupe-test.csv'
     else
@@ -32,10 +32,6 @@ class Procedure::ImportComponent < ApplicationComponent
   end
 
   def template_path
-    if @procedure.routing_enabled?
-      Rails.public_path.join('csv/import-groupe-test.csv')
-    else
-      Rails.public_path.join('csv/import-instructeurs-test.csv')
-    end
+    Rails.public_path.join(template_file.delete_prefix('/'))
   end
 end
