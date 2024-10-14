@@ -95,11 +95,8 @@ class Export < ApplicationRecord
     joins(:groupe_instructeurs).where(groupe_instructeurs: groupe_instructeurs_ids).distinct(:id)
   end
 
-  def self.by_key(groupe_instructeurs_ids, procedure_presentation)
-    where(key: [
-      generate_cache_key(groupe_instructeurs_ids),
-      generate_cache_key(groupe_instructeurs_ids, procedure_presentation)
-    ])
+  def self.by_key(groupe_instructeurs_ids)
+    where(key: generate_cache_key(groupe_instructeurs_ids))
   end
 
   def self.generate_cache_key(groupe_instructeurs_ids, procedure_presentation = nil)
