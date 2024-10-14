@@ -267,3 +267,8 @@ button.fr-tag-bug {
 .fr-tag {
   white-space: nowrap;
 }
+
+// We remove the line height because it creates unharmonized spaces - most of all in table
+.fr-tags-group > li {
+  line-height: inherit;
+}

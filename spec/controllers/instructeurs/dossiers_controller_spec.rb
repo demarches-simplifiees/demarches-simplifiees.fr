@@ -1527,9 +1527,9 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier.reload
 
         expect(dossier.dossier_labels.count).to eq(1)
+        expect(subject.body).to include('fr-tag--brown-caramel')
+        expect(subject.body).not_to include('Ajouter un label')
       end
-
-      it { expect(subject.body).to include('header-top') }
     end
 
     context 'it remove dossier labels' do
@@ -1546,9 +1546,8 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier.reload
 
         expect(dossier.dossier_labels.count).to eq(0)
+        expect(subject.body).to include('Ajouter un label')
       end
-
-      it { expect(subject.body).to include('header-top') }
     end
   end
 end

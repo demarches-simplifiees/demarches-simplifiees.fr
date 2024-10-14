@@ -94,6 +94,7 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end
+
   describe 'with dropdown' do
     let(:types_de_champ_public) { [{ type: :drop_down_list }] }
 
@@ -168,6 +169,15 @@ describe "procedure filters" do
         add_filter(region_champ.libelle, region_champ.value, type: :enum)
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
+    end
+  end
+
+  describe 'dossier labels' do
+    scenario "should be able to filter by dossier labels", js: true do
+      DossierLabel.create!(dossier_id: new_unfollow_dossier.id, procedure_label_id: procedure.procedure_labels.first.id)
+      add_filter('Labels', procedure.procedure_labels.first.name, type: :enum)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s)
+      expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s)
     end
   end
 

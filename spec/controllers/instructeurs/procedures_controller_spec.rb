@@ -637,6 +637,31 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:last_export)).to eq(nil) }
         end
       end
+
+      context 'dossier labels' do
+        let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2) }
+        let!(:dossier_2) { create(:dossier, :en_construction, groupe_instructeur: gi_2) }
+        let(:statut) { 'tous' }
+        let!(:procedure_presentation) do
+          ProcedurePresentation.create!(assign_to: AssignTo.first, displayed_fields: [{ 'table' => 'dossier_labels', 'column' => 'procedure_label_id' }])
+        end
+        render_views
+
+        before do
+          DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.first.id)
+          DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.second.id)
+          DossierLabel.create(dossier_id: dossier_2.id, procedure_label_id: dossier.procedure.procedure_labels.last.id)
+          subject
+        end
+
+        it 'displays correctly labels in instructeur table' do
+          expect(response.body).to include("Labels")
+          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'à relancer')
+          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'complet')
+          expect(response.body).not_to have_selector('ul li span.fr-tag', text: 'prêt pour validation')
+          expect(response.body).to have_selector('span.fr-tag', text: 'prêt pour validation')
+        end
+      end
     end
   end
 
