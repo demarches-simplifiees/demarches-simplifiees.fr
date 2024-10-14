@@ -7,7 +7,47 @@ describe Administrateurs::ServicesController, type: :controller do
   describe '#create' do
     before do
       sign_in(admin.user)
-      post :create, params: params
+    end
+
+    let(:xhr) { false }
+    subject { post :create, params:, xhr: }
+
+    context 'when prefilling from a SIRET' do
+      let(:xhr) { true }
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          service: { siret: "20004021000060" }
+        }
+      end
+
+      it "prefill from annuaire public" do
+        VCR.use_cassette('annuaire_service_public_success_20004021000060') do
+          subject
+          expect(response.body).to include('turbo-stream')
+          expect(assigns[:service].nom).to eq("Communauté de communes - Lacs et Gorges du Verdon")
+          expect(assigns[:service].adresse).to eq("242 avenue Albert-1er 83630 Aups")
+        end
+      end
+    end
+
+    context 'when attempting to prefilling from unknown SIRET' do
+      let(:xhr) { true }
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          service: { siret: "20004021000000" }
+        }
+      end
+
+      it "render an error" do
+        VCR.use_cassette('annuaire_service_public_failure_20004021000000') do
+          subject
+          expect(response.body).to include('turbo-stream')
+          expect(assigns[:service].nom).to be_nil
+          expect(assigns[:service].errors.key?(:siret)).to be_present
+        end
+      end
     end
 
     context 'when submitting a new service' do
@@ -28,6 +68,7 @@ describe Administrateurs::ServicesController, type: :controller do
       end
 
       it do
+        subject
         expect(flash.alert).to be_nil
         expect(flash.notice).to eq('super service créé')
         expect(Service.last.nom).to eq('super service')
@@ -47,9 +88,12 @@ describe Administrateurs::ServicesController, type: :controller do
     context 'when submitting an invalid service' do
       let(:params) { { service: { nom: 'super service' }, procedure_id: procedure.id } }
 
-      it { expect(flash.alert).not_to be_nil }
-      it { expect(response).to render_template(:new) }
-      it { expect(assigns(:service).nom).to eq('super service') }
+      it do
+        subject
+        expect(flash.alert).not_to be_nil
+        expect(response).to render_template(:new)
+        expect(assigns(:service).nom).to eq('super service')
+      end
     end
   end
 
