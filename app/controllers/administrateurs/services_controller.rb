@@ -18,7 +18,9 @@ module Administrateurs
       @service = Service.new(service_params)
       @service.administrateur = current_administrateur
 
-      if @service.save
+      if request.xhr? && params[:service][:siret].present?
+        handle_siret_update
+      elsif @service.save
         @service.enqueue_api_entreprise
 
         redirect_to admin_services_path(procedure_id: params[:procedure_id]),
@@ -107,6 +109,26 @@ module Administrateurs
 
     def procedure
       current_administrateur.procedures.find(params[:procedure_id])
+    end
+
+    def handle_siret_update
+      @service.assign_attributes(siret: params[:service][:siret])
+      @service.validate
+
+      if !@service.errors.include?(:siret)
+        result = @service.prefill_from_siret
+        prefilled = result.success? ? :success : :failure
+      end
+
+      siret_errors = @service.errors.where(:siret)
+      @service.errors.clear
+      siret_errors.each { @service.errors.import(_1) }
+
+      render turbo_stream: turbo_stream.replace(
+        "service_form",
+        partial: "administrateurs/services/form",
+        locals: { service: @service, prefilled:, procedure: @procedure }
+      )
     end
   end
 end

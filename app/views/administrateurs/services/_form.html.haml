@@ -1,11 +1,21 @@
-= form_with model: [ :admin, service], local: true do |f|
+= form_with model: [:admin, service], id: "service_form", data: { turbo: token_list('true' => service.new_record?), controller: token_list('autosave' => service.new_record?), turbo_method: 'post' } do |f|
 
   = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field, opts: { placeholder: "14 chiffres, sans espace" }) do |c|
-    - c.with_hint do
-      = "Indiquez le numéro de SIRET de l’organisme dont ce service dépend. Rechercher le SIRET sur "
-      = link_to("annuaire-entreprises.data.gouv.fr", annuaire_link, **external_link_attributes)
-      %br
-      = "Nous préremplirons les informations de contact à partir de l’Annuaire Service Public correspondant."
+    - if service.etablissement_infos.blank? && local_assigns[:prefilled].nil?
+      - c.with_hint do
+        = "Indiquez le numéro de SIRET de l’organisme dont ce service dépend. Rechercher le SIRET sur "
+        = link_to("annuaire-entreprises.data.gouv.fr", annuaire_link, **external_link_attributes)
+        - if service.new_record?
+          %br
+          = "Nous préremplirons les informations de contact à partir de l’Annuaire Service Public correspondant."
+
+  .fr-mb-2w
+    - if local_assigns[:prefilled] == :success
+      %p.fr-info-text Génial ! Les informations du service ont été préremplies ci-dessous. Vérifiez-les et complétez-les le cas échéant.
+    - elsif local_assigns[:prefilled] == :failure
+      %p.fr-error-text
+        Une erreur a empêché le préremplissage des informations.
+        Vérifiez que le numéro de SIRET est correct et complétez les informations manuellement le cas échéant.
 
   = render Dsfr::InputComponent.new(form: f, attribute: :nom, input_type: :text_field)
 
@@ -33,7 +43,6 @@
   = render Dsfr::InputComponent.new(form: f, attribute: :horaires, input_type: :text_area)
   = render Dsfr::InputComponent.new(form: f, attribute: :adresse, input_type: :text_area)
 
-  - if procedure_id.present?
-    = hidden_field_tag :procedure_id, procedure_id
-
-  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
+  - if local_assigns[:procedure].present?
+    = hidden_field_tag :procedure_id, procedure.id
+    = render Procedure::FixedFooterComponent.new(procedure: procedure, form: f)
