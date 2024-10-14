@@ -124,8 +124,11 @@ module Types
     field :complement_adresse, String, null: true, deprecation_reason: "Utilisez le champ `address` à la place."
 
     def address
-      APIGeoService
-        .parse_etablissement_address(object)
+      address = object.champ&.value_json
+      if address.blank? || !address.key?("departement_code")
+        address = APIGeoService.parse_etablissement_address(object)
+      end
+      address
         .merge(label: object.adresse, type: "housenumber")
         .with_indifferent_access
     end
