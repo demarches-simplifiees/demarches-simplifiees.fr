@@ -34,9 +34,10 @@ fr:
         service:
           attributes:
             siret:
-              format: "Le numéro SIRET %{message}"
-              length: "doit comporter exactement 14 chiffres"
-              checksum: "est invalide"
+              format: 'Le numéro SIRET %{message}'
+              length: 'doit comporter exactement 14 chiffres'
+              checksum: 'est invalide'
+              not_prefillable: 'Impossible de préremplir les informations pour ce SIRET, veuillez les saisir manuellement'
   type_organisme:
     administration_centrale: 'Administration centrale'
     association: 'Association'
