@@ -1,8 +1,9 @@
-- content_for(:title, 'Instructeurs')
-%h1.fr-h2 Instructeurs
+- content_for(:title, t('.title'))
+%h1.fr-h2= t('.title')
+.fr-icon-mail-line.fr-alert.fr-mb-3w
+  %p= t(@procedure.publiee? ? '.notification_alert.publiee' : '.notification_alert.non_publiee')
 
-= render partial: 'administrateurs/groupe_instructeurs/import_export',
-    locals: { procedure: @procedure }
+= render Procedure::ImportComponent.new(procedure: @procedure)
 
 = render partial: 'administrateurs/groupe_instructeurs/instructeurs',
     locals: { procedure: @procedure,
@@ -10,6 +11,5 @@
     instructeurs: @instructeurs,
     available_instructeur_emails: @available_instructeur_emails,
     disabled_as_super_admin: @disabled_as_super_admin }
-
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)

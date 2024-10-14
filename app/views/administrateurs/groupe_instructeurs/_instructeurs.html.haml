@@ -1,11 +1,12 @@
 
 .card
   = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_admin_procedure_groupe_instructeur_path(@procedure, groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
-  .card-title Affectation des instructeurs
+  .card-title= t('.instructeur_assignation')
   = form_for :instructeur, url: { action: :add_instructeur, id: groupe_instructeur.id }, html: { class: 'form' } do |f|
     .instructeur-wrapper
       - if !procedure.routing_enabled?
-        %p Entrez les adresses email des instructeurs que vous souhaitez affecter à cette démarche
+        %p= t('.instructeur_emails')
+        %p.fr-hint-text= t('.copy_paste_hint')
 
       - if disabled_as_super_admin
         = f.select :emails, available_instructeur_emails, {}, disabled: disabled_as_super_admin, id: 'instructeur_emails'
@@ -13,25 +14,33 @@
         %react-fragment
           = render ReactComponent.new 'ComboBox/MultiComboBox', items: available_instructeur_emails, id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
 
-      = f.submit 'Affecter', class: 'fr-btn', disabled: disabled_as_super_admin
+      = f.submit t('.assign'), class: 'fr-btn fr-btn--tertiary', disabled: disabled_as_super_admin
 
-  %table.fr-table.fr-mt-2w.width-100
+  %hr.fr-mt-4w
+
+  .flex.justify-between.align-baseline
+    .card-title= t('.assigned_instructeur', count: instructeurs.count)
+    = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
+      Exporter la liste (.CSV)
+
+  %table.fr-table.fr-table--bordered.width-100
     %thead
       %tr
-        %th{ colspan: 2 }= t('.assigned_instructeur', count: instructeurs.count)
+        %th= t('.title')
+        %th.text-right= t('.actions')
     %tbody
       - instructeurs.each do |instructeur|
         %tr
           %td
-            = dsfr_icon('fr-icon-user-fill')
+            = dsfr_icon('fr-icon-user-line')
             #{instructeur.email}
 
           - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-          %td.actions= button_to 'Retirer',
+          %td.actions= button_to t('.remove'),
             { action: :remove_instructeur, id: groupe_instructeur.id },
             { method: :delete,
               data: { confirm: confirmation_message },
               params: { instructeur: { id: instructeur.id }},
-              class: 'fr-btn fr-btn--secondary' }
+              class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-subtract-line' }
 
   = paginate instructeurs, views_prefix: 'shared'

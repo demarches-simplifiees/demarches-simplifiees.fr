@@ -1,8 +1,7 @@
 %div{ id: dom_id(@groupe_instructeur, :routing) }
   %h1 Paramètres du groupe
 
-  = render partial: 'administrateurs/groupe_instructeurs/import_export',
-      locals: { procedure: @procedure }
+  = render Procedure::ImportComponent.new(procedure: @procedure)
 
   = form_for @groupe_instructeur,
     url: admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur),
