@@ -17,7 +17,6 @@ class ExportDashboard < Administrate::BaseDashboard
     job_status: Field::Select.with_options(searchable: false, collection: -> (field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     key: Field::Text,
     procedure_presentation: IdField,
-    procedure_presentation_snapshot: Field::String.with_options(searchable: false),
     statut: Field::Select.with_options(searchable: false, collection: -> (field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     time_span_type: Field::Select.with_options(searchable: false, collection: -> (field) { field.resource.class.send(field.attribute.to_s.pluralize).keys }),
     created_at: Field::DateTime.with_options(format: "%d/%m %H:%M:%S"),
@@ -34,7 +33,7 @@ class ExportDashboard < Administrate::BaseDashboard
 
   # SHOW_PAGE_ATTRIBUTES
   # an array of attributes that will be displayed on the model's show page.
-  SHOW_PAGE_ATTRIBUTES = [:id, :procedure, :job_status, :format, :statut, :file, :groupe_instructeurs, :key, :procedure_presentation, :procedure_presentation_snapshot, :time_span_type, :created_at, :updated_at].freeze
+  SHOW_PAGE_ATTRIBUTES = [:id, :procedure, :job_status, :format, :statut, :file, :groupe_instructeurs, :key, :procedure_presentation, :time_span_type, :created_at, :updated_at].freeze
 
   # FORM_ATTRIBUTES
   # an array of attributes that will be displayed
