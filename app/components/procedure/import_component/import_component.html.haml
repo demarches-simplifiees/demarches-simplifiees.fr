@@ -12,7 +12,7 @@
       %label.fr-label.font-weight-bold
         = t('.csv_import.file_to_import')
       .fr-download
-        = link_to template_url, {class: "fr-download__link", download: ''} do
+        = link_to template_file, {class: "fr-download__link", download: ''} do
           = t('.csv_import.download_template')
           %span.fr-download__detail
             = template_detail
