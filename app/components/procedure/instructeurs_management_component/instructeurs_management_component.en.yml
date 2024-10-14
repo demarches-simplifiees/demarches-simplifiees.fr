@@ -1,4 +1,6 @@
 ---
 en:
   title: Instructors management
-  notification_alert: Even if your procedure is still in test / unpublished, all the instructors you add to the procedure will be notified by email.
+  notification_alert:
+    non_publiee: Even if your procedure is still in test / unpublished, all the instructors you add to the procedure will be notified by email.
+    publiee: All the instructors you add to the procedure will be notified by email.

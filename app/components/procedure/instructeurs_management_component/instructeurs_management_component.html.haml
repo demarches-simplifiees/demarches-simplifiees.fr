@@ -1,7 +1,7 @@
 - content_for(:title, t('.title'))
 %h1.fr-h2= t('.title')
 .fr-icon-mail-line.fr-alert.fr-mb-3w
-  %p= t('.notification_alert')
+  %p= t(@procedure.publiee? ? '.notification_alert.publiee' : '.notification_alert.non_publiee')
 
 = render Procedure::ImportComponent.new(procedure: @procedure)
 

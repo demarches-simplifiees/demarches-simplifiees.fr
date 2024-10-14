@@ -1,4 +1,6 @@
 ---
 fr:
   title: Gestion des instructeurs
-  notification_alert: Même si votre démarche est encore en test / non publiée, tous les instructeurs que vous ajouterez à la démarche seront notifiés par email.
+  notification_alert:
+   non_publiee: Même si votre démarche est encore en test / non publiée, tous les instructeurs que vous ajouterez à la démarche seront notifiés par email.
+   publiee: Tous les instructeurs que vous ajouterez à la démarche seront notifiés par email.
