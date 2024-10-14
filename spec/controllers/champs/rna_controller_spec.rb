@@ -126,7 +126,9 @@ describe Champs::RNAController, type: :controller do
             "city_code" => "75108",
             "city_name" => "Paris",
             "departement_code" => nil, # might seem broken lookup, but no, it's anonymized
+            "department_code" => nil, # might seem broken lookup, but no, it's anonymized
             "departement_name" => nil,
+            "department_name" => nil,
             "postal_code" => "75009",
             "region_code" => nil,
             "region_name" => nil,

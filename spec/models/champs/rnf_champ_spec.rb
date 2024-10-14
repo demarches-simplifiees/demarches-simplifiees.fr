@@ -109,7 +109,9 @@ describe Champs::RNFChamp, type: :model do
           :city_name => "Paris 15e Arrondissement",
           :city_code => "75115",
           :departement_code => "75",
+          :department_code => "75",
           :departement_name => "Paris",
+          :department_name => "Paris",
           :region_code => "11",
           :region_name => "Île-de-France"
         }
