@@ -61,31 +61,18 @@ RSpec.describe Export, type: :model do
     it { expect(groupe_instructeur.reload).to be_present }
   end
 
-  describe '.find_by groupe_instructeurs' do
+  describe '.by_key groupe_instructeurs' do
     let!(:procedure) { create(:procedure) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
     let!(:gi_2) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
     let!(:gi_3) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
 
-    context 'without procedure_presentation' do
-      context 'when an export is made for one groupe instructeur' do
-        let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
+    context 'when an export is made for one groupe instructeur' do
+      let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-        it { expect(Export.by_key([gi_1.id], nil)).to be_empty }
-        it { expect(Export.by_key([gi_2.id, gi_1.id], nil)).to eq([export]) }
-        it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id], nil)).to be_empty }
-      end
-    end
-
-    context 'with procedure_presentation and without' do
-      let!(:export_global) { create(:export, statut: Export.statuts.fetch(:tous), groupe_instructeurs: [gi_1, gi_2], procedure_presentation: nil) }
-      let!(:export_with_filter) { create(:export, statut: Export.statuts.fetch(:suivis), groupe_instructeurs: [gi_1, gi_2], procedure_presentation: create(:procedure_presentation, procedure: procedure, assign_to: gi_1.instructeurs.first.assign_to.first)) }
-      let!(:procedure_presentation) { create(:procedure_presentation, procedure: gi_1.procedure) }
-
-      it 'find global exports as well as filtered one' do
-        expect(Export.by_key([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
-          .to contain_exactly(export_with_filter, export_global)
-      end
+      it { expect(Export.by_key([gi_1.id])).to be_empty }
+      it { expect(Export.by_key([gi_2.id, gi_1.id])).to eq([export]) }
+      it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id])).to be_empty }
     end
   end
 
