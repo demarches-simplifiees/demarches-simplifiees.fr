@@ -94,7 +94,6 @@ class Export < ApplicationRecord
 
     create!(**attributes, groupe_instructeurs:,
                           user_profile:,
-                          procedure_presentation:,
                           filtered_columns:,
                           sorted_column:)
   end
@@ -118,13 +117,17 @@ class Export < ApplicationRecord
 
   def count
     return dossiers_count if !dossiers_count.nil? # export generated
-    return dossiers_for_export.count if procedure_presentation_id.present?
+    return dossiers_for_export.count if built_from_procedure_presentation?
 
     nil
   end
 
   def procedure
     groupe_instructeurs.first.procedure
+  end
+
+  def built_from_procedure_presentation?
+    sorted_column.present? # hack has we know that procedure_presentation always has a sorted_column
   end
 
   private
