@@ -1,6 +1,8 @@
 - content_for(:title, 'Groupes')
 %h1 Gestion des groupes
 
+= render Procedure::ImportComponent.new(procedure: @procedure)
+
 = render Procedure::GroupesSearchComponent.new(procedure: @procedure,
   query: @query,
   to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count,
