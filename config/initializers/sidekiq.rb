@@ -26,13 +26,14 @@ end
 
 Sidekiq.configure_server do |config|
   config.redis = sidekiq_redis
-
   if ENV['PROMETHEUS_EXPORTER_ENABLED'] == 'enabled'
     Yabeda.configure!
     Yabeda::Prometheus::Exporter.start_metrics_server!
   end
 
   if ENV['SKIP_RELIABLE_FETCH'].blank?
+    config[:strict] = true
+
     Sidekiq::ReliableFetch.setup_reliable_fetch!(config)
   end
 end
