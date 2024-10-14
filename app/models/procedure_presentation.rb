@@ -8,7 +8,7 @@ class ProcedurePresentation < ApplicationRecord
   SLASH = '/'
   TYPE_DE_CHAMP = 'type_de_champ'
 
-  FILTERS_VALUE_MAX_LENGTH = 100
+  FILTERS_VALUE_MAX_LENGTH = 4048
   # https://www.postgresql.org/docs/current/datatype-numeric.html
   PG_INTEGER_MAX_VALUE = 2147483647
 
