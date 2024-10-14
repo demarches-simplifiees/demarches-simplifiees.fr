@@ -2,6 +2,10 @@
 fr:
   routing_configuration_notice_1:
     Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs.
+  routing_not_configured:
+    Vous n’avez pas configuré de routage.
+  routing_configured_html:
+    Vous avez configuré un routage avec <strong>%{groupe_instructeurs_count} groupes d’instructeurs.</strong>
   routing_configuration_notice_2_html: |
     <p>Pour le configurer, votre formulaire doit comporter
     au moins un champ de type %{conditionable_types}.</p>
