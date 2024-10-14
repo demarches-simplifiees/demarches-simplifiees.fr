@@ -47,29 +47,6 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "31693060072e27c02ca4f884f2a07f4f1c1247b7a6f5cc5c724e88e6ca9b4873",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 40,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} = ?)\"}\", *values)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "DossierFilteringConcern",
-        "method": null
-      },
-      "user_input": "values.count",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "filtered by rails query params where(something: ?, values)"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
       "fingerprint": "5ba3f5d525b15c710215829e0db49f58e8cca06d68eff5931ebfd7d0ca0e35de",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -137,6 +114,29 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "91ff8031e7c639c95fe6c244867349a72078ef456d8b3507deaf2bdb9bf62fe2",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/concerns/dossier_filtering_concern.rb",
+      "line": 34,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"#{values.count} OR #{\"(#{DossierFilterService.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DossierFilteringConcern",
+        "method": null
+      },
+      "user_input": "values.count",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "filtered by rails query params where(something: ?, values)"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "a7d18cc3434b4428a884f1217791f9a9db67839e73fb499f1ccd0f686f08eccc",
@@ -196,13 +196,13 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "bd1df30f95135357b646e21a03d95498874faffa32e3804fc643e9b6b957ee14",
+      "fingerprint": "aaff41afa7bd5a551cd2e3a385071090cb53c95caa40fad3785cd3d68c9b939c",
       "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 34,
+      "line": 40,
       "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{values.count} OR #{\"(#{ProcedurePresentation.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
+      "code": "where(\"#{values.count} OR #{\"(#{DossierFilterService.sanitized_column(table, column)} = ?)\"}\", *values)",
       "render_path": null,
       "location": {
         "type": "method",
@@ -272,6 +272,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-09-24 20:56:24 +0200",
+  "updated": "2024-10-15 15:57:27 +0200",
   "brakeman_version": "6.1.2"
 }
