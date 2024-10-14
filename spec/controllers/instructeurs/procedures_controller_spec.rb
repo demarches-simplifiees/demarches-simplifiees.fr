@@ -906,12 +906,12 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     subject do
       column = procedure.find_column(label: "Nom").id
-      post :add_filter, params: { procedure_id: procedure.id, column:, value: "n" * 110, statut: "a-suivre" }
+      post :add_filter, params: { procedure_id: procedure.id, column:, value: "n" * 4100, statut: "a-suivre" }
     end
 
     it 'should render the error' do
       subject
-      expect(flash.alert[0]).to include("Le filtre Nom est trop long (maximum: 100 caractères)")
+      expect(flash.alert[0]).to include("Le filtre Nom est trop long (maximum: 4048 caractères)")
     end
   end
 end
