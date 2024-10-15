@@ -116,8 +116,14 @@ module Administrateurs
       @service.validate
 
       if !@service.errors.include?(:siret)
-        result = @service.prefill_from_siret
-        prefilled = result.success? ? :success : :failure
+        prefilled = case @service.prefill_from_siret
+        in [Dry::Monads::Result::Success, Dry::Monads::Result::Success]
+          :success
+        in [Dry::Monads::Result::Failure, Dry::Monads::Result::Success] | [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
+          :partial
+        else
+          :failure
+        end
       end
 
       siret_errors = @service.errors.where(:siret)

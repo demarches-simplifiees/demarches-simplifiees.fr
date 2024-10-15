@@ -5,9 +5,9 @@ module PrefillableFromServicePublicConcern
 
   included do
     def prefill_from_siret
-      result = AnnuaireServicePublicService.new.(siret:)
-      # TODO: get organisme, … from API Entreprise
-      case result
+      result_sp = AnnuaireServicePublicService.new.(siret:)
+
+      case result_sp
       in Dry::Monads::Success(data)
         self.nom = data[:nom] if nom.blank?
         self.email = data[:adresse_courriel] if email.blank?
@@ -18,7 +18,19 @@ module PrefillableFromServicePublicConcern
         # NOOP
       end
 
-      result
+      result_api_ent = APIRechercheEntreprisesService.new.call(siret:)
+      case result_api_ent
+      in Dry::Monads::Success(data)
+        self.type_organisme = detect_type_organisme(data) if type_organisme.blank?
+
+        # some services (etablissements, …) are not in service public, so we also try to prefill them with API Entreprise
+        self.nom = data[:nom_complet] if nom.blank?
+        self.adresse = data.dig(:siege, :geo_adresse) if adresse.blank?
+      else
+        # NOOP
+      end
+
+      [result_sp, result_api_ent]
     end
 
     private
@@ -43,6 +55,23 @@ module PrefillableFromServicePublicConcern
         result += " (#{range['commentaire']})" if range['commentaire'].present?
         result
       end.join("\n")
+    end
+
+    def detect_type_organisme(data)
+      # Cf https://recherche-entreprises.api.gouv.fr/docs/#tag/Recherche-textuelle/paths/~1search/get
+      type = if data.dig(:complements, :collectivite_territoriale).present?
+        :collectivite_territoriale
+      elsif data.dig(:complements, :est_association)
+        :association
+      elsif data[:section_activite_principale] == "P"
+        :etablissement_enseignement
+      elsif data[:nom_complet].match?(/MINISTERE|MINISTERIEL/)
+        :administration_centrale
+      else # we can't differentiate between operateur d'état, administration centrale and service déconcentré de l'état, set the most frequent
+        :service_deconcentre_de_l_etat
+      end
+
+      Service.type_organismes[type]
     end
 
     def format_time(str_time)
