@@ -92,6 +92,55 @@ describe ExportTemplate do
         export_template.exported_columns
       end.not_to raise_error
     end
+
+    context 'when there is a previous revision with a renamed tdc' do
+      context 'with already column in export template' do
+        let(:previous_tdc) { procedure.published_revision.types_de_champ_public.find_by(stable_id: 1) }
+        let(:changed_tdc) { { libelle: "Ca roule ?" } }
+
+        context 'with already column in export template' do
+          before do
+            export_template.exported_columns = [
+              ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+            ]
+            export_template.save!
+
+            type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
+            type_de_champ.update(changed_tdc)
+            procedure.publish_revision!
+          end
+
+          it 'update columns with original libelle for champs with new revision' do
+            Current.procedure_columns = {}
+            procedure.reload
+            export_template.reload
+            expect(export_template.exported_columns.find { _1.column.column == "1" }.libelle).to eq('Ça va ?')
+          end
+        end
+      end
+      context 'without columns in export template' do
+        let(:previous_tdc) { procedure.published_revision.types_de_champ_public.find_by(stable_id: 1) }
+        let(:changed_tdc) { { libelle: "Ca roule ?" } }
+
+        before do
+          type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
+          type_de_champ.update(changed_tdc)
+          procedure.publish_revision!
+
+          export_template.exported_columns = [
+            ExportedColumn.new(libelle: 'Ça roule ?', column: procedure.find_column(label: "Ca roule ?"))
+          ]
+          export_template.save!
+        end
+
+        it 'update columns with original libelle for champs with new revision' do
+          Current.procedure_columns = {}
+          procedure.reload
+          export_template.reload
+          expect(export_template.exported_columns.find { _1.column.column == "1" }.libelle).to eq('Ça roule ?')
+        end
+      end
+    end
   end
 
   describe '#all_tdc_columns' do
