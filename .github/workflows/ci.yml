@@ -81,7 +81,8 @@ jobs:
       - name: Install build dependancies
         # - fonts pickable by ImageMagick
         # - rust for YJIT support
-        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server
+        # - poppler-utils for pdf previews
+        run: sudo apt-get update && sudo apt-get install -y gsfonts rustc redis-server poppler-utils
 
       - name: Setup the app runtime and dependencies
         uses: ./.github/actions/ci-setup-rails

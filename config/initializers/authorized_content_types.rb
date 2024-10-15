@@ -15,6 +15,10 @@ AUTHORIZED_IMAGE_TYPES = [
   'image/vnd.dwg' # multimedia x 137 auto desk
 ]
 
+RARE_IMAGE_TYPES = [
+  'image/tiff' # multimedia x 3985
+]
+
 AUTHORIZED_CONTENT_TYPES = AUTHORIZED_IMAGE_TYPES + AUTHORIZED_PDF_TYPES + [
   # multimedia
   'video/mp4', # multimedia x 2075
