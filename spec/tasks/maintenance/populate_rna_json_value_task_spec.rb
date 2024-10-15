@@ -29,7 +29,9 @@ module Maintenance
             "city_name" => "Paris",
             "city_code" => "75108",
             "departement_code" => nil,
+            "department_code" => nil,
             "departement_name" => nil,
+            "department_name" => nil,
             "region_code" => nil,
             "region_name" => nil
           })
