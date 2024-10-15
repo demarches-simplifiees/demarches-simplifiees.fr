@@ -143,6 +143,16 @@ RSpec.describe GeoArea, type: :model do
       it "should return the label" do
         expect(geo_area.label).to eq("Parcelle n° 42 - Feuille 000 A11 - 123 m² – commune 75127")
       end
+
+      context "when area is nil" do
+        let(:geo_area) { build(:geo_area, :selection_utilisateur, :cadastre, properties: { "description" => "48°51'45.81\"N 2°17'15,33\"E" }, geometry: { "type" => "Point", "coordinates" => [7.754444, 48.610556] }, champ: nil) }
+
+        before { allow(geo_area).to receive(:area).and_return(nil) }
+
+        it "should not crash" do
+          expect(geo_area.label).to eq("Parcelle n°  - Feuille   -  m² – commune ")
+        end
+      end
     end
   end
 end
