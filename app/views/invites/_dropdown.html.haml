@@ -1,5 +1,6 @@
 - invites = dossier.invites.load
-= render Dropdown::MenuComponent.new(wrapper: :span, wrapper_options: {class: 'invite-user-action'}, button_options: { class: ['fr-btn--secondary'] }, menu_options: { id: 'invite-content' }) do |menu|
+= render Dropdown::MenuComponent.new(wrapper: :div, wrapper_options: {class: 'invite-user-action'}, button_options: { class: ['fr-btn--secondary'] }, menu_options: { id: 'invite-content' }) do |menu|
+  = 'lab'
   - menu.with_button_inner_html do
     = dsfr_icon('fr-icon-user-add-fill', :sm, :mr)
     - if invites.present?
