@@ -1520,6 +1520,8 @@ describe Instructeurs::DossiersController, type: :controller do
   end
 
   describe 'dossier_labels' do
+    let(:procedure) { create(:procedure, :with_labels, instructeurs: [instructeur]) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure:) }
     context 'it create dossier labels' do
       subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, procedure_label_id: [ProcedureLabel.first.id] }, format: :turbo_stream }
       it 'works' do

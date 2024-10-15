@@ -639,8 +639,9 @@ describe Instructeurs::ProceduresController, type: :controller do
       end
 
       context 'dossier labels' do
-        let!(:dossier) { create(:dossier, :en_construction, groupe_instructeur: gi_2) }
-        let!(:dossier_2) { create(:dossier, :en_construction, groupe_instructeur: gi_2) }
+        let(:procedure) { create(:procedure, :with_labels, instructeurs: [instructeur]) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
+        let!(:dossier_2) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
         let(:statut) { 'tous' }
         let!(:procedure_presentation) do
           ProcedurePresentation.create!(assign_to: AssignTo.first, displayed_fields: [{ 'table' => 'dossier_labels', 'column' => 'procedure_label_id' }])
