@@ -78,7 +78,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def all_usager_columns
-    dossier_columns_for(all_usager_column_keys)
+    procedure.all_usager_columns_for_export
   end
 
   def all_dossier_columns
@@ -96,7 +96,6 @@ class ExportTemplate < ApplicationRecord
       for_tiers: { libelle: "Dépôt pour un tiers", get_value: -> (d) { d.for_tiers } },
       mandataire_last_name: { libelle: 'Nom du mandataire', get_value: -> (d) { d.mandataire_last_name } },
       mandataire_first_name: { libelle: 'Prénom du mandataire', get_value: -> (d) { d.mandataire_first_name } },
-      date_de_naissance: { libelle: 'Date de naissance', get_value: -> (d) { d.individual&.birthdate } },
       etablissement_siret: { libelle: 'Établissement SIRET', get_value: -> (d) { d.etablissement&.siret } },
       etablissement_siege_social: { libelle: 'Établissement siège social', get_value: -> (d) { d.etablissement&.siege_social } },
       etablissement_naf: { libelle: 'Établissement NAF', get_value: -> (d) { d.etablissement&.naf } },

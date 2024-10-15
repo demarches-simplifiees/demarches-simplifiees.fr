@@ -21,8 +21,17 @@ fr:
             sva_decision_before: Date décision SVA avant
             svr_decision_on: Date décision SVR
             svr_decision_before: Date décision SVR avant
+            user_from_france_connect?: "FranceConnect ?"
+            for_tiers: "Dépôt pour un tiers"
+            mandataire_last_name: "Nom du mandataire"
+            mandataire_first_name: "Prénom du mandataire"
           user:
+            id: Identifiant du demandeur
             email: Demandeur
+          procedure:
+            domaine_fonctionnel: Domaine fonctionnel
+            referentiel_prog: Référentiel de programmation
+            centre_de_cout: Centre de coût
           followers_instructeurs:
             email: Email instructeur
           groupe_instructeur:
@@ -45,3 +54,22 @@ fr:
             siret: SIRET
             libelle_naf: Libellé NAF
             code_postal: Code postal
+            siege_social: "Établissement siège social"
+            naf: "Établissement NAF"
+            adresse: "Établissement Adresse"
+            numero_voie: "Établissement numero voie"
+            type_voie: "Établissement type voie"
+            nom_voie: "Établissement nom voie"
+            complement_adresse: "Établissement complément adresse"
+            code_postal: "Établissement code postal"
+            localite: "Établissement localité"
+            code_insee_localite: "Établissement code INSEE localité"
+            entreprise_siren: "Entreprise SIREN"
+            entreprise_capital_social: "Entreprise capital social"
+            entreprise_numero_tva_intracommunautaire: "Entreprise numero TVA intracommunautaire"
+            entreprise_forme_juridique: "Entreprise forme juridique"
+            entreprise_forme_juridique_code: "Entreprise forme juridique code"
+            entreprise_nom_commercial: "Entreprise nom commercial"
+            entreprise_raison_sociale: "Entreprise raison sociale"
+            entreprise_siret_siege_social: "Entreprise SIRET siège social"
+            entreprise_code_effectif_entreprise: "Entreprise code effectif entreprise"
