@@ -189,6 +189,7 @@ GEM
     chunky_png (1.4.0)
     clamav-client (3.2.0)
     cmdparse (3.0.7)
+    coderay (1.1.3)
     coercible (1.0.0)
       descendants_tracker (~> 0.0.1)
     concurrent-ruby (1.2.3)
@@ -461,7 +462,6 @@ GEM
       rake
     mini_magick (4.12.0)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.6)
     minitest (5.23.0)
     msgpack (1.7.2)
     multi_json (1.15.0)
@@ -479,8 +479,9 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.3)
-    nokogiri (1.16.5)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.16.5-x86_64-darwin)
+      racc (~> 1.4)
+    nokogiri (1.16.5-x86_64-linux)
       racc (~> 1.4)
     openid_connect (2.3.0)
       activemodel
@@ -528,6 +529,9 @@ GEM
       premailer (~> 1.7, >= 1.7.9)
     prometheus-client (4.2.2)
     promise.rb (0.7.4)
+    pry (0.14.2)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
     psych (5.1.2)
       stringio
     public_suffix (5.0.5)
@@ -910,6 +914,7 @@ GEM
     zxcvbn-ruby (1.2.0)
 
 PLATFORMS
+  x86_64-darwin-22
   x86_64-linux
 
 DEPENDENCIES
@@ -1006,6 +1011,7 @@ DEPENDENCIES
   prawn-rails
   prawn-table
   premailer-rails
+  pry
   puma
   pundit
   rack-attack

@@ -137,6 +137,7 @@ group :test do
   gem 'simplecov-cobertura', require: false
   gem 'timecop'
   gem 'vcr'
+  gem 'pry'
   gem 'webmock'
 end
 

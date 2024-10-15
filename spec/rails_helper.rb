@@ -15,6 +15,7 @@ require 'devise'
 require 'shoulda-matchers'
 require 'view_component/test_helpers'
 require "rack_session_access/capybara"
+require 'vcr'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -119,6 +120,13 @@ RSpec.configure do |config|
     ensure
       app.env_config['action_dispatch.show_exceptions'] = previous_show_exceptions
     end
+  end
+
+  VCR.configure do |config|
+    config.cassette_library_dir = 'spec/vcr_cassettes'
+    config.hook_into :webmock
+    config.configure_rspec_metadata!
+    config.allow_http_connections_when_no_cassette = false
   end
 
   config.include ActiveSupport::Testing::TimeHelpers

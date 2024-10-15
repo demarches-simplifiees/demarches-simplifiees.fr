@@ -1,0 +1,97 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.baserow.io/api/database/rows/table/202600/1/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - mes-demarches.gov.pf
+      Authorization:
+      - Token TqdlHPclwJkEouMLjtiFOcmKjgsDWtaL
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      Alt-Svc:
+      - h3=":443"; ma=2592000
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Tue, 15 Oct 2024 12:30:42 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Caddy
+      - gunicorn
+      Vary:
+      - origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '324'
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJpZCI6MSwib3JkZXIiOiIxLjAwMDAwMDAwMDAwMDAwMDAwMDAwIiwiZmllbGRfMTM5MTg5NiI6IkNvbW11bmVzIGRlIHBvbHluw6lzaWUiLCJmaWVsZF8xMzkxODk3IjoiIiwiZmllbGRfMTM5MTg5OCI6dHJ1ZSwiZmllbGRfMTM5MTg5OSI6IjIwMjU3OCIsImZpZWxkXzEzOTE5MDAiOiIxMzkxNzQ3LDEzOTE3NTAsMTM5MTc1NSwxMzkxNzU2IiwiZmllbGRfMTM5MTkwMSI6IjEzOTE3NDciLCJmaWVsZF8xMzkxOTAzIjoiMTM5MTc0NywxMzkxNzUwLDEzOTE3NTUsMTM5MTc1NiIsImZpZWxkXzI3NzQ1ODEiOiJUcWRsSFBjbHdKa0VvdU1ManRpRk9jbUtqZ3NEV3RhTCJ9
+  recorded_at: Tue, 15 Oct 2024 12:30:41 GMT
+- request:
+    method: get
+    uri: https://api.baserow.io/api/database/fields/table/202600/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - mes-demarches.gov.pf
+      Authorization:
+      - Token TqdlHPclwJkEouMLjtiFOcmKjgsDWtaL
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      Alt-Svc:
+      - h3=":443"; ma=2592000
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Tue, 15 Oct 2024 12:30:42 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Caddy
+      - gunicorn
+      Vary:
+      - origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '1667'
+    body:
+      encoding: ASCII-8BIT
+      string: '[{"id":1391896,"table_id":202600,"name":"Nom","order":0,"type":"text","primary":true,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"text_default":""},{"id":1391897,"table_id":202600,"name":"Notes","order":1,"type":"long_text","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"long_text_enable_rich_text":false},{"id":1391898,"table_id":202600,"name":"Actif","order":2,"type":"boolean","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null},{"id":1391899,"table_id":202600,"name":"Table","order":3,"type":"number","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"number_decimal_places":0,"number_negative":false},{"id":1391900,"table_id":202600,"name":"Champs
+        usager","order":4,"type":"text","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"text_default":""},{"id":1391901,"table_id":202600,"name":"Champ
+        de recherche","order":5,"type":"number","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"number_decimal_places":0,"number_negative":false},{"id":1391903,"table_id":202600,"name":"Champs
+        instructeur","order":6,"type":"text","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"text_default":""},{"id":2774581,"table_id":202600,"name":"Token","order":7,"type":"text","primary":false,"read_only":false,"immutable_type":false,"immutable_properties":false,"description":null,"text_default":""}]'
+  recorded_at: Tue, 15 Oct 2024 12:30:41 GMT
+recorded_with: VCR 6.2.0

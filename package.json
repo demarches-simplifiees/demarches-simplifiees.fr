@@ -49,6 +49,7 @@
     "debounce": "^1.2.1",
     "dom4": "^2.1.6",
     "email-butler": "^1.0.13",
+    "esbuild": "0.19.9",
     "geojson": "^0.5.0",
     "graphiql": "^3.1.1",
     "graphql": "^16.8.1",
