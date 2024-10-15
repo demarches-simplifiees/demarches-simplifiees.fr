@@ -1,6 +1,8 @@
 module ApplicationHelper
   APP_HOST = ENV['APP_HOST']
   APP_HOST_LEGACY = ENV['APP_HOST_LEGACY']
+  REGEXP_REPLACE_TRAILING_EXTENSION = /(\.\w+)+$/.freeze
+  REGEXP_REPLACE_WORD_SEPARATOR = /[\s_-]+/.freeze
 
   def app_host_legacy?(request)
     return false if APP_HOST_LEGACY.blank?
@@ -126,14 +128,6 @@ module ApplicationHelper
     !BrowserSupport.supported?(browser)
   end
 
-  def vite_legacy?
-    if ENV['VITE_LEGACY'] == 'disabled'
-      false
-    else
-      Rails.env.production? || ENV['VITE_LEGACY'] == 'enabled'
-    end
-  end
-
   def external_link_attributes
     { target: "_blank", rel: "noopener noreferrer" }
   end
@@ -152,5 +146,12 @@ module ApplicationHelper
 
     tag.span(class: class_names(classes, 'fr-icon--sm': sm, 'fr-mr-1v': mr),
              "aria-hidden" => true)
+  end
+
+  def acronymize(str)
+    str.gsub(REGEXP_REPLACE_TRAILING_EXTENSION, '')
+      .split(REGEXP_REPLACE_WORD_SEPARATOR)
+      .map { |word| word[0].upcase }
+      .join
   end
 end
