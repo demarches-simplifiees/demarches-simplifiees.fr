@@ -26,7 +26,6 @@ Rails.application.routes.draw do
       post 'add_administrateur_and_instructeur', on: :member
       post 'add_administrateur_with_confirmation', on: :member
       post 'change_piece_justificative_template', on: :member
-      patch 'add_tags', on: :member
       patch 'update_template_status', on: :member
       get 'export_mail_brouillons', on: :member
       resources :confirmation_urls, only: :new
@@ -119,7 +118,6 @@ Rails.application.routes.draw do
     get 'exports/instructeurs/last_month' => 'instructeurs#export_last_month'
 
     get 'import_procedure_tags' => 'procedures#import_data'
-    post 'import_tags' => 'procedures#import_tags'
     root to: "administrateurs#index"
   end
 

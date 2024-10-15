@@ -80,7 +80,7 @@ Cela évite l’accès récursif aux dossiers."
       procedure.aasm.current_state
     end
 
-    delegate :description, :opendata, :tags, to: :procedure
+    delegate :description, :opendata, to: :procedure
 
     def demarche_url
       Rails.application.routes.url_helpers.commencer_url(path: procedure.path)
@@ -150,6 +150,10 @@ Cela évite l’accès récursif aux dossiers."
     def self.authorized?(object, context)
       procedure = object.is_a?(ProcedureRevision) ? object.procedure : object
       context.authorized_demarche?(procedure, opendata: true)
+    end
+
+    def tags
+      procedure.procedure_tags.pluck(:name)
     end
   end
 end
