@@ -5,7 +5,7 @@ describe EditableChamp::EditableChampComponent, type: :component do
   let(:types_de_champ_public) { [] }
   let(:types_de_champ_private) { [] }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
-  let(:champ) { dossier.champs.first }
+  let(:champ) { (dossier.project_champs_public + dossier.project_champs_private).first }
 
   let(:component) { described_class.new(form: nil, champ:) }
 
