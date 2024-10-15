@@ -5,9 +5,22 @@ module PrefillableFromServicePublicConcern
 
   included do
     def prefill_from_siret
-      result_sp = AnnuaireServicePublicService.new.(siret:)
+      future_sp = Concurrent::Future.execute { AnnuaireServicePublicService.new.call(siret:) }
+      future_api_ent = Concurrent::Future.execute { APIRechercheEntreprisesService.new.call(siret:) }
 
-      case result_sp
+      result_sp = future_sp.value!
+      result_api_ent = future_api_ent.value!
+
+      prefill_from_service_public(result_sp)
+      prefill_from_api_entreprise(result_api_ent)
+
+      [result_sp, result_api_ent]
+    end
+
+    private
+
+    def prefill_from_service_public(result)
+      case result
       in Dry::Monads::Success(data)
         self.nom = data[:nom] if nom.blank?
         self.email = data[:adresse_courriel] if email.blank?
@@ -17,23 +30,18 @@ module PrefillableFromServicePublicConcern
       else
         # NOOP
       end
+    end
 
-      result_api_ent = APIRechercheEntreprisesService.new.call(siret:)
-      case result_api_ent
+    def prefill_from_api_entreprise(result)
+      case result
       in Dry::Monads::Success(data)
         self.type_organisme = detect_type_organisme(data) if type_organisme.blank?
-
-        # some services (etablissements, …) are not in service public, so we also try to prefill them with API Entreprise
         self.nom = data[:nom_complet] if nom.blank?
         self.adresse = data.dig(:siege, :geo_adresse) if adresse.blank?
       else
         # NOOP
       end
-
-      [result_sp, result_api_ent]
     end
-
-    private
 
     def denormalize_plage_ouverture(data)
       return if data.blank?
