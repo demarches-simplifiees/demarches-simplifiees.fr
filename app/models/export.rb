@@ -37,6 +37,9 @@ class Export < ApplicationRecord
 
   has_one_attached :file
 
+  attribute :sorted_column, :sorted_column
+  attribute :filtered_columns, :filtered_column, array: true
+
   validates :format, :groupe_instructeurs, :key, presence: true
 
   scope :ante_chronological, -> { order(updated_at: :desc) }
@@ -66,10 +69,13 @@ class Export < ApplicationRecord
   end
 
   def filtered?
-    procedure_presentation_id.present?
+    filtered_columns.present?
   end
 
   def self.find_or_create_fresh_export(format, groupe_instructeurs, user_profile, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, export_template: nil)
+    filtered_columns = Array.wrap(procedure_presentation&.filters_for(statut))
+    sorted_column = procedure_presentation&.sorted_column
+
     attributes = {
       format:,
       export_template:,
@@ -88,7 +94,9 @@ class Export < ApplicationRecord
     create!(**attributes, groupe_instructeurs:,
                           user_profile:,
                           procedure_presentation:,
-                          procedure_presentation_snapshot: procedure_presentation&.snapshot)
+                          procedure_presentation_snapshot: procedure_presentation&.snapshot,
+                          filtered_columns:,
+                          sorted_column:)
   end
 
   def self.for_groupe_instructeurs(groupe_instructeurs_ids)
@@ -136,7 +144,7 @@ class Export < ApplicationRecord
 
       if since.present?
         dossiers.visible_by_administration.where('dossiers.depose_at > ?', since)
-      elsif procedure_presentation.present?
+      elsif filtered_columns.present? || sorted_column.present?
         instructeur = instructeur_from(user_profile)
         filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, filtered_columns, sorted_column, instructeur)
 
