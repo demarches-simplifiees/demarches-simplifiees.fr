@@ -24,4 +24,8 @@ class SortedColumn
   def sort_by_notifications?
     @column.notifications? && @order == 'desc'
   end
+
+  def id
+    column.h_id.merge(order:).sort.to_json
+  end
 end
