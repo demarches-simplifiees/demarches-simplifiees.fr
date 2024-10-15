@@ -1,6 +1,7 @@
 - content_for(:title, "Démarches")
-
 .sub-header
+  = render partial: 'instructeurs/breadcrumbs', locals: { steps: [] }
+
   .fr-container
     %h1.fr-h3.fr-mb-0 Démarches
     = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
