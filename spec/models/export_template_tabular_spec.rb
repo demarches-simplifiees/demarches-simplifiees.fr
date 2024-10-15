@@ -93,6 +93,9 @@ describe ExportTemplate do
       end.not_to raise_error
     end
 
+    xit 'raises when stable_id is invalid'
+    xit 'raises when invalid path'
+
     context 'when there is a previous revision with a renamed tdc' do
       context 'with already column in export template' do
         let(:previous_tdc) { procedure.published_revision.types_de_champ_public.find_by(stable_id: 1) }
