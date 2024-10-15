@@ -1871,6 +1871,41 @@ describe Procedure do
     end
   end
 
+  describe '#all_revisions_types_de_champ' do
+    let(:types_de_champ_public) do
+      [
+        { type: :text },
+        { type: :header_section }
+      ]
+    end
+
+    context 'when procedure brouillon' do
+      let(:procedure) { create(:procedure, types_de_champ_public:) }
+
+      it 'returns one type de champ' do
+        expect(procedure.all_revisions_types_de_champ.size).to eq 1
+      end
+
+      it "returns types de champ on draft revision" do
+        procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'onemorechamp')
+        expect(procedure.reload.all_revisions_types_de_champ.size).to eq 2
+      end
+    end
+
+    context 'when procedure is published' do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
+
+      it 'returns one type de champ' do
+        expect(procedure.all_revisions_types_de_champ.size).to eq 1
+      end
+
+      it "doesn't return types de champ on draft revision" do
+        procedure.draft_revision.add_type_de_champ(type_champ: :text, libelle: 'onemorechamp')
+        expect(procedure.reload.all_revisions_types_de_champ.size).to eq 1
+      end
+    end
+  end
+
   private
 
   def create_dossier_with_pj_of_size(size, procedure)
