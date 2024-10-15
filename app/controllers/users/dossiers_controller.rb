@@ -614,7 +614,7 @@ module Users
     end
 
     def update_dossier_and_compute_errors
-      @dossier.update_champs_attributes(champs_public_attributes_params, :public)
+      @dossier.update_champs_attributes(champs_public_attributes_params, :public, updated_by: current_user.email)
       if @dossier.champs.any?(&:changed_for_autosave?)
         @dossier.last_champ_updated_at = Time.zone.now
       end

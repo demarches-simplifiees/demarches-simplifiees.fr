@@ -275,7 +275,7 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.update_champs_attributes(remove_changes_forbidden_by_visa, :private)
+      dossier_with_champs.update_champs_attributes(remove_changes_forbidden_by_visa, :private, updated_by: current_user.email)
       if dossier.champs.any?(&:changed_for_autosave?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end

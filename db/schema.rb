@@ -12,9 +12,12 @@
 
 ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_buffercache"
+  enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "postgis"
+  enable_extension "sslinfo"
   enable_extension "unaccent"
 
   create_table "action_text_rich_texts", force: :cascade do |t|
@@ -276,6 +279,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
     t.string "type"
     t.integer "type_de_champ_id"
     t.datetime "updated_at"
+    t.text "updated_by"
     t.string "value"
     t.jsonb "value_json"
     t.index ["dossier_id"], name: "index_champs_on_dossier_id"

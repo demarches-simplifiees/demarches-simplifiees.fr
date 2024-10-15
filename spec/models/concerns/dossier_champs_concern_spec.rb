@@ -124,7 +124,7 @@ RSpec.describe DossierChampsConcern do
     let(:row_id) { nil }
 
     context "public champ" do
-      subject { dossier.champ_for_update(type_de_champ_public, row_id) }
+      subject { dossier.champ_for_update(type_de_champ_public, row_id, updated_by: dossier.user.email) }
 
       it {
         expect(subject.persisted?).to be_truthy
@@ -165,7 +165,7 @@ RSpec.describe DossierChampsConcern do
     end
 
     context "private champ" do
-      subject { dossier.champ_for_update(type_de_champ_private, row_id) }
+      subject { dossier.champ_for_update(type_de_champ_private, row_id, updated_by: dossier.user.email) }
 
       it {
         expect(subject.persisted?).to be_truthy
@@ -191,7 +191,7 @@ RSpec.describe DossierChampsConcern do
     let(:champ_991) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(991), nil) }
     let(:champ_994) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(994), row_id) }
 
-    subject { dossier.update_champs_attributes(attributes, :public) }
+    subject { dossier.update_champs_attributes(attributes, :public, updated_by: dossier.user.email) }
 
     it {
       subject
@@ -229,7 +229,7 @@ RSpec.describe DossierChampsConcern do
 
     let(:annotation_995) { dossier.project_champ(dossier.find_type_de_champ_by_stable_id(995), nil) }
 
-    subject { dossier.update_champs_attributes(attributes, :private) }
+    subject { dossier.update_champs_attributes(attributes, :private, updated_by: dossier.user.email) }
 
     it {
       subject

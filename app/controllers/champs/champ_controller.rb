@@ -7,7 +7,7 @@ class Champs::ChampController < ApplicationController
   def find_champ
     dossier = policy_scope(Dossier).includes(:champs, revision: [:types_de_champ]).find(params[:dossier_id])
     type_de_champ = dossier.find_type_de_champ_by_stable_id(params[:stable_id])
-    dossier.champ_for_update(type_de_champ, params_row_id)
+    dossier.champ_for_update(type_de_champ, params_row_id, updated_by: current_user.email)
   end
 
   def params_row_id
