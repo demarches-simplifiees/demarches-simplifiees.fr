@@ -107,19 +107,22 @@ describe TypeDeChamp do
       context 'when the target type_champ is not drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
 
-        it { expect(tdc.drop_down_options).to be_empty }
+        it { expect(tdc.drop_down_options).to be_present }
+        it { expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"]) }
       end
 
       context 'when the target type_champ is linked_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:linked_drop_down_list) }
 
         it { expect(tdc.drop_down_options).to be_present }
+        it { expect(tdc.drop_down_options).to eq(['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']) }
       end
 
       context 'when the target type_champ is multiple_drop_down_list' do
         let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:multiple_drop_down_list) }
 
         it { expect(tdc.drop_down_options).to be_present }
+        it { expect(tdc.drop_down_options).to eq(["val1", "val2", "val3"]) }
       end
     end
 
@@ -286,5 +289,128 @@ describe TypeDeChamp do
     let(:libelle) { "  #/🐉 1 très  intéressant Bilan " }
 
     it { is_expected.to eq("1-tres-interessant-bilan") }
+  end
+
+  describe '#clean_options' do
+    subject { procedure.published_revision.types_de_champ.first.options }
+
+    let(:procedure) { create(:procedure) }
+
+    context "Header section" do
+      let(:type_de_champ) { create(:type_de_champ_header_section, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'header_section_level' => '1', 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the header_section_level' do
+        is_expected.to eq({ 'header_section_level' => '1' })
+      end
+    end
+
+    context "Explication" do
+      let(:type_de_champ) { create(:type_de_champ_explication, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'collapsible_explanation_enabled' => '1', 'collapsible_explanation_text' => 'hello', 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the collapsible_explanation keys' do
+        is_expected.to eq({ 'collapsible_explanation_enabled' => '1', 'collapsible_explanation_text' => 'hello' })
+      end
+    end
+
+    context "Text area" do
+      let(:type_de_champ) { create(:type_de_champ_textarea, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'character_limit' => '400', 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the character limit' do
+        is_expected.to eq({ 'character_limit' => '400' })
+      end
+    end
+
+    context "Carte" do
+      let(:type_de_champ) { create(:type_de_champ_carte, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'unesco' => '0', 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the layers' do
+        is_expected.to eq({ 'unesco' => '0' })
+      end
+    end
+
+    context "Simple drop down_list" do
+      let(:type_de_champ) { create(:type_de_champ_drop_down_list, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'drop_down_other' => '0', 'drop_down_options' => ['Premier choix', 'Deuxième choix'], 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the drop_down_other and drop_down_options' do
+        is_expected.to eq({ 'drop_down_other' => '0', 'drop_down_options' => ['Premier choix', 'Deuxième choix'] })
+      end
+    end
+
+    context "Multiple drop down_list" do
+      let(:type_de_champ) { create(:type_de_champ_multiple_drop_down_list, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'drop_down_options' => ['Premier choix', 'Deuxième choix'], 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the drop_down_options' do
+        is_expected.to eq({ 'drop_down_options' => ['Premier choix', 'Deuxième choix'] })
+      end
+    end
+
+    context "Linked drop down list" do
+      let(:type_de_champ) { create(:type_de_champ_linked_drop_down_list, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'drop_down_options' => ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes'], 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the drop_down_options' do
+        is_expected.to eq({ 'drop_down_options' => ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes'] })
+      end
+    end
+
+    context "Piece justificative" do
+      let(:type_de_champ) { create(:type_de_champ_piece_justificative, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'old_pj' => '123', 'skip_pj_validation' => '1', 'skip_content_type_pj_validation' => '1', 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the old_pj, skip_validation_pj and skip_content_type_pj_validation' do
+        is_expected.to eq({ 'old_pj' => '123', 'skip_pj_validation' => '1', 'skip_content_type_pj_validation' => '1' })
+      end
+    end
+
+    context "Expression reguliere" do
+      let(:type_de_champ) { create(:type_de_champ_expression_reguliere, procedure:) }
+
+      before do
+        type_de_champ.update!(options: { 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789', 'key' => 'value' })
+        procedure.publish_revision!
+      end
+
+      it 'keeping only the expression_reguliere, expression_reguliere_error_message and expression_reguliere_exemple_text' do
+        is_expected.to eq({ 'expression_reguliere' => '\d{9}', 'expression_reguliere_error_message' => 'error', 'expression_reguliere_exemple_text' => '123456789' })
+      end
+    end
   end
 end

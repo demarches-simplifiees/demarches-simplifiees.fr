@@ -210,13 +210,9 @@ class TypeDeChamp < ApplicationRecord
   before_validation :check_mandatory
   before_validation :normalize_libelle
 
-  before_save :remove_piece_justificative_template, if: -> { type_champ_changed? }
-  before_validation :remove_drop_down_list, if: -> { type_champ_changed? }
+  before_save :remove_attachment, if: -> { type_champ_changed? }
+  before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
   before_save :remove_block, if: -> { type_champ_changed? }
-
-  after_save if: -> { @remove_piece_justificative_template } do
-    piece_justificative_template.purge_later
-  end
 
   def valid?(context = nil)
     super
@@ -680,6 +676,24 @@ class TypeDeChamp < ApplicationRecord
       .parameterize
   end
 
+  OPTS_BY_TYPE = {
+    type_champs.fetch(:header_section) => [:header_section_level],
+    type_champs.fetch(:explication) => [:collapsible_explanation_enabled, :collapsible_explanation_text],
+    type_champs.fetch(:textarea) => [:character_limit],
+    type_champs.fetch(:carte) => TypesDeChamp::CarteTypeDeChamp::LAYERS,
+    type_champs.fetch(:drop_down_list) => [:drop_down_other, :drop_down_options],
+    type_champs.fetch(:multiple_drop_down_list) => [:drop_down_options],
+    type_champs.fetch(:linked_drop_down_list) => [:drop_down_options, :drop_down_secondary_libelle, :drop_down_secondary_description],
+    type_champs.fetch(:piece_justificative) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
+    type_champs.fetch(:titre_identite) => [:old_pj, :skip_pj_validation, :skip_content_type_pj_validation],
+    type_champs.fetch(:expression_reguliere) => [:expression_reguliere, :expression_reguliere_error_message, :expression_reguliere_exemple_text]
+  }
+
+  def clean_options
+    kept_keys = OPTS_BY_TYPE.fetch(type_champ.to_s) { [] }
+    options.slice(*kept_keys.map(&:to_s))
+  end
+
   class << self
     def champ_value(type_champ, champ)
       dynamic_type_class = type_champ_to_class_name(type_champ).constantize
@@ -766,21 +780,19 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def remove_piece_justificative_template
+  def remove_attachment
     if !piece_justificative? && piece_justificative_template.attached?
-      @remove_piece_justificative_template = true
+      piece_justificative_template.purge_later
+    elsif !explication? && notice_explicative.attached?
+      notice_explicative.purge_later
     end
   end
 
-  def remove_drop_down_list
-    if !drop_down_list?
-      self.drop_down_options = nil
-    elsif !drop_down_options_changed?
-      self.drop_down_options = if linked_drop_down_list?
-        ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
-      else
-        ['Premier choix', 'Deuxième choix']
-      end
+  def set_drop_down_list_options
+    if (simple_drop_down_list? || multiple_drop_down_list?) && drop_down_options.empty?
+      self.drop_down_options = ['Fromage', 'Dessert']
+    elsif linked_drop_down_list? && drop_down_options.none?(/^--.*--$/)
+      self.drop_down_options = ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
     end
   end
 
