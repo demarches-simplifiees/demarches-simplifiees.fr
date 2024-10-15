@@ -1,3 +1,6 @@
 web: bin/rails server -p 3000
-jobs: bin/rake jobs:work
 vite: bin/vite dev
+redis-sentinel: redis-sentinel redis/sentinel.conf
+redis-master: redis-server redis/master.conf
+redis-cache: redis-server --port 6379
+sidekiq: bin/sidekiq -c 5 -q critical -q default -q low -q exports -q archives

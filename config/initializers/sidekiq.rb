@@ -11,15 +11,13 @@ sidekiq_redis = if ENV.key?('REDIS_SIDEKIQ_SENTINELS')
   sentinels = ENV.fetch('REDIS_SIDEKIQ_SENTINELS')
     .split(',')
     .map { URI.parse(_1) }
-    .map { { host: _1.host, port: _1.port, username:, password: } }
+    .map { { host: _1.host, port: _1.port }.merge(username.present? && password.present? ? { username:, password: } : {}) }
 
   {
     name:,
     sentinels:,
-    username:,
-    password:,
     role: :master
-  }
+  }.merge((username.present? && password.present?) ? { username:, password: } : {})
 else
   {} # default config from REDIS_URL
 end
