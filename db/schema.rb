@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_15_112456) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -498,16 +498,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.bigint "parent_dossier_id"
     t.string "prefill_token"
     t.boolean "prefilled"
-    t.string "private_search_terms"
+    t.text "private_search_terms"
     t.datetime "processed_at", precision: nil
     t.bigint "revision_id"
-    t.string "search_terms"
+    t.text "search_terms"
     t.string "state"
     t.date "sva_svr_decision_on"
     t.datetime "sva_svr_decision_triggered_at"
     t.datetime "termine_close_to_expiration_notice_sent_at", precision: nil
     t.datetime "updated_at", precision: nil
     t.integer "user_id"
+    t.index "to_tsvector('french'::regconfig, (search_terms || private_search_terms))", name: "index_dossiers_on_search_terms_private_search_terms", using: :gin
+    t.index "to_tsvector('french'::regconfig, search_terms)", name: "index_dossiers_on_search_terms", using: :gin
     t.index ["archived"], name: "index_dossiers_on_archived"
     t.index ["batch_operation_id"], name: "index_dossiers_on_batch_operation_id"
     t.index ["dossier_transfer_id"], name: "index_dossiers_on_dossier_transfer_id"
@@ -648,10 +650,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
   end
 
   create_table "exports_groupe_instructeurs", force: :cascade do |t|
-    t.datetime "created_at", precision: nil, null: false
+    t.datetime "created_at", null: false
     t.bigint "export_id", null: false
     t.bigint "groupe_instructeur_id", null: false
-    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "flipper_features", force: :cascade do |t|
@@ -916,7 +918,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
 
   create_table "procedure_tags", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "description"
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.index ["name"], name: "index_procedure_tags_on_name", unique: true
@@ -991,7 +992,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.boolean "routing_enabled"
     t.bigint "service_id"
     t.jsonb "sva_svr", default: {}, null: false
-    t.text "tags", default: [], array: true
     t.boolean "template", default: false, null: false
     t.datetime "unpublished_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false
@@ -1010,7 +1010,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.index ["procedure_expires_when_termine_enabled"], name: "index_procedures_on_procedure_expires_when_termine_enabled"
     t.index ["published_revision_id"], name: "index_procedures_on_published_revision_id"
     t.index ["service_id"], name: "index_procedures_on_service_id"
-    t.index ["tags"], name: "index_procedures_on_tags", using: :gin
     t.index ["zone_id"], name: "index_procedures_on_zone_id"
   end
 
@@ -1130,7 +1129,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.index ["unlock_token"], name: "index_super_admins_on_unlock_token", unique: true
   end
 
-  create_table "targeted_user_links", id: :uuid, default: -> { "public.gen_random_uuid()" }, force: :cascade do |t|
+  create_table "targeted_user_links", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "target_context", null: false
     t.bigint "target_model_id", null: false
@@ -1172,12 +1171,18 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.text "description"
     t.string "libelle"
     t.boolean "mandatory", default: true
+    t.boolean "migrated_parent"
     t.jsonb "options"
+    t.integer "order_place"
+    t.bigint "parent_id"
     t.boolean "private", default: false, null: false
+    t.bigint "revision_id"
     t.bigint "stable_id"
     t.string "type_champ"
     t.datetime "updated_at", precision: nil
+    t.index ["parent_id"], name: "index_types_de_champ_on_parent_id"
     t.index ["private"], name: "index_types_de_champ_on_private"
+    t.index ["revision_id"], name: "index_types_de_champ_on_revision_id"
     t.index ["stable_id"], name: "index_types_de_champ_on_stable_id"
   end
 
@@ -1267,8 +1272,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
   add_foreign_key "batch_operations", "instructeurs"
   add_foreign_key "bulk_messages", "procedures"
   add_foreign_key "champs", "dossiers"
-  add_foreign_key "champs", "etablissements"
-  add_foreign_key "champs", "types_de_champ"
   add_foreign_key "closed_mails", "procedures"
   add_foreign_key "commentaires", "dossiers"
   add_foreign_key "commentaires", "experts"
@@ -1288,7 +1291,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
   add_foreign_key "dossiers", "groupe_instructeurs"
   add_foreign_key "dossiers", "procedure_revisions", column: "revision_id"
   add_foreign_key "dossiers", "users"
-  add_foreign_key "etablissements", "dossiers"
   add_foreign_key "experts", "users"
   add_foreign_key "experts_procedures", "experts"
   add_foreign_key "experts_procedures", "procedures"
@@ -1318,6 +1320,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
   add_foreign_key "targeted_user_links", "users"
   add_foreign_key "traitements", "dossiers"
   add_foreign_key "trusted_device_tokens", "instructeurs"
+  add_foreign_key "types_de_champ", "procedure_revisions", column: "revision_id"
+  add_foreign_key "types_de_champ", "types_de_champ", column: "parent_id"
   add_foreign_key "users", "users", column: "requested_merge_into_id"
   add_foreign_key "without_continuation_mails", "procedures"
   add_foreign_key "zone_labels", "zones"
