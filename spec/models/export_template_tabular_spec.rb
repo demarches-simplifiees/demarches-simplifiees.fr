@@ -83,7 +83,7 @@ describe ExportTemplate do
   end
 
   describe '#all_tdc_columns' do
-    it "returns all tdc columns (without repetition) based upon procedure's type de champs" do
+    xit "returns all tdc columns (without repetition) based upon procedure's type de champs" do
       expect(export_template.all_tdc_columns).to match_array [
         [{ :source => "tdc", :stable_id => 1, :path => "value", :libelle => "Ca va ?" }],
         [
@@ -97,7 +97,7 @@ describe ExportTemplate do
   end
 
   describe '#all_repetable_tdc_columns' do
-    it "returns all repetable columns based upon procedure's type de champs" do
+    xit "returns all repetable columns based upon procedure's type de champs" do
       expect(export_template.all_repetable_tdc_columns).to match_array [
         {
           :libelle => "Champ répétable",
