@@ -29,7 +29,7 @@ module ProcedurePathConcern
 
       return if path_before_last_save == path
 
-      procedure_paths.find_by(path: path_before_last_save)&.destroy!
+      procedure_paths.find_by(path: path_before_last_save)&.destroy! if brouillon?
 
       # disable previous active paths
       ProcedurePath.find_by(path: path, deactivated_at: nil)&.update!(deactivated_at: Time.zone.now)

@@ -1929,7 +1929,7 @@ describe Procedure do
   end
 
   describe "#update_procedure_path" do
-    let(:procedure) { build(:procedure) }
+    let(:procedure) { build(:procedure, :published) }
 
     subject { procedure.save! }
 
@@ -1948,30 +1948,57 @@ describe Procedure do
         expect { subject }.to change { procedure.procedure_paths.pluck(:path) }.from(["old-path"]).to(["new-path"])
       end
     end
-  end
 
-  describe "when there is 2 procedures" do
-    let(:admin1) { create(:administrateur) }
-    let(:admin2) { create(:administrateur) }
+    context "when procedure is in draft" do
+      let(:procedure) { create(:procedure, :draft, path: "test-1") }
 
-    let(:procedure1) { create(:procedure, :published, administrateurs: [admin1], path: "proc-1") }
-    let(:procedure2) { create(:procedure, :published, administrateurs: [admin2], path: "proc-2") }
-
-    it "should have 2 diff paths" do
-      expect(procedure1.path).not_to eq(procedure2.path)
+      it 'should not create a procedure path' do
+        procedure.path = "test-2"
+        expect { subject }.not_to change { procedure.procedure_paths.count }
+      end
     end
 
-    it "should not let procedure1 change path to procedure2 path" do
-      expect { procedure1.update!(path: procedure2.path) }.to raise_error
+    context "when procedure is in published" do
+      let(:procedure) { create(:procedure, :published, path: "test-1") }
+
+      it 'should create a procedure path' do
+        procedure.path = "test-2"
+        expect { subject }.to change { procedure.procedure_paths.count }.from(1).to(2)
+      end
     end
 
-    context "when procedure2 is closed" do
-      before do
-        procedure2.close!
+    context "when procedure is in unpublished" do
+      let(:procedure) { create(:procedure, :unpublished, path: "test-1") }
+
+      it 'should create a procedure path' do
+        procedure.path = "test-2"
+        expect { subject }.to change { procedure.procedure_paths.count }.from(1).to(2)
+      end
+    end
+
+    context "when there is 2 procedures" do
+      let(:admin1) { create(:administrateur) }
+      let(:admin2) { create(:administrateur) }
+
+      let(:procedure1) { create(:procedure, :published, administrateurs: [admin1], path: "proc-1") }
+      let(:procedure2) { create(:procedure, :published, administrateurs: [admin2], path: "proc-2") }
+
+      it "should have 2 diff paths" do
+        expect(procedure1.path).not_to eq(procedure2.path)
       end
 
-      it "should let procedure1 change path to procedure2 path" do
-        expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
+      it "should not let procedure1 change path to procedure2 path" do
+        expect { procedure1.update!(path: procedure2.path) }.to raise_error
+      end
+
+      context "when procedure2 is closed" do
+        before do
+          procedure2.close!
+        end
+
+        it "should let procedure1 change path to procedure2 path" do
+          expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
+        end
       end
     end
   end
