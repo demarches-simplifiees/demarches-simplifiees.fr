@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_29_141825) do
+ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -628,12 +628,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_29_141825) do
     t.datetime "created_at", precision: nil, null: false
     t.integer "dossiers_count"
     t.bigint "export_template_id"
+    t.jsonb "filtered_columns", default: [], null: false, array: true
     t.string "format", null: false
     t.bigint "instructeur_id"
     t.string "job_status", default: "pending", null: false
     t.text "key", null: false
     t.bigint "procedure_presentation_id"
     t.jsonb "procedure_presentation_snapshot"
+    t.jsonb "sorted_column"
     t.string "statut", default: "tous"
     t.string "time_span_type", default: "everything", null: false
     t.datetime "updated_at", precision: nil, null: false
