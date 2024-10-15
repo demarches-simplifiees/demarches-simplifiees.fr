@@ -150,7 +150,7 @@ RSpec.describe GeoArea, type: :model do
         before { allow(geo_area).to receive(:area).and_return(nil) }
 
         it "should not crash" do
-          expect(geo_area.label).to eq("Parcelle n°  - Feuille   -  m² – commune ")
+          expect(geo_area.label).to eq("Parcelle n°  - Feuille   -  m² – commune ")
         end
       end
     end
