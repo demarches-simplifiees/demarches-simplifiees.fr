@@ -233,6 +233,26 @@ describe BatchOperation, type: :model do
     end
   end
 
+  describe '#process_one' do
+    let(:dossier) { create(:dossier, :en_instruction, :with_individual) }
+    subject { create(:batch_operation, operation, instructeur: create(:instructeur)) }
+
+    context 'accepter' do
+      let(:operation) { :accepter }
+      it { expect { subject.process_one(dossier) }.to have_enqueued_job(PriorizedMailDeliveryJob) }
+    end
+
+    context 'refuser' do
+      let(:operation) { :refuser }
+      it { expect { subject.process_one(dossier) }.to have_enqueued_job(PriorizedMailDeliveryJob) }
+    end
+
+    context 'classer_sans_suite' do
+      let(:operation) { :classer_sans_suite }
+      it { expect { subject.process_one(dossier) }.to have_enqueued_job(PriorizedMailDeliveryJob) }
+    end
+  end
+
   describe 'stale' do
     let(:finished_at) { 6.hours.ago }
     let(:staled_batch_operation) { create(:batch_operation, operation: :archiver, finished_at: 2.days.ago, updated_at: 2.days.ago) }

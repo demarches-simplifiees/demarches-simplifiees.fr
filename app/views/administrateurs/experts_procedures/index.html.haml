@@ -1,13 +1,13 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Liste des experts']] }
+                    ['Avis externes']] }
 
-.container
-  %h1.page-title.mt-2= t('.titles.main', libelle: @procedure.libelle)
+.fr-container
+  %h1.fr-h2
+    Avis externes
 
-  .container.groupe-instructeur
-
+  .groupe-instructeur
     .card
       .card-title= t('.titles.allow_invite_experts')
       %p= t('.descriptions.allow_invite_experts')
@@ -107,3 +107,5 @@
       .blank-tab
         %h2.empty-text Aucun expert invité pour le moment.
         %p.empty-text-details Les instructeurs de cette démarche n’ont pas encore fait appel aux experts.
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

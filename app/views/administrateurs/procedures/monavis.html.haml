@@ -3,12 +3,12 @@
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['MonAvis']] }
 
-.container
-  %h1.page-title
-    Insérer un lien vers « MonAvis »
+.fr-container
+  %h1.fr-h2
+    Bouton « MonAvis »
 
-.container
-  %h1
-  = form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), html: { class: 'form', multipart: true } do |f|
+= form_for @procedure, url: url_for({ controller: 'administrateurs/procedures', action: :update_monavis }), html: { class: 'form', multipart: true } do |f|
+  .fr-container
     = render partial: 'monavis', locals: { f: f }
-    = f.button 'Enregistrer', class: 'fr-btn'
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

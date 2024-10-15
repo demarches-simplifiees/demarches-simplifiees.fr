@@ -11,7 +11,7 @@ en:
     When an instructor asks for a file to be corrected, the countdown of the delay is interrupted.
     The delay resumes when the applicant resubmits their file stating that they have made the requested corrections.
     If the file has been declared incomplete, the delay will be reset, regardless of the configuration below.
-  submit: Apply SVA/SVR configuration
+  submit: Save
   cancel: Cancel
   decision_buttons:
     disabled: "Disabled"

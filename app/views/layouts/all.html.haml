@@ -1,6 +1,5 @@
 - content_for(:main_navigation) do
   = render 'administrateurs/main_navigation'
-
 - content_for :content do
   .fr-container
     %h1.fr-my-4w Toutes les démarches
@@ -25,16 +24,16 @@
                   = link_to all_admin_procedures_path(zone_ids: current_administrateur.zones), { data: { turbo: 'false' } } do
                     %span.fr-icon-arrow-go-back-line Réinitialiser
               %ul
+
                 %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                   .fr-mb-1w
                     %button{ 'data-action': 'expand#toggle' }
                       %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                      Mes zones
-                  .fr-ml-1w{ 'data-expand-target': 'content' }
-                    = f.collection_check_boxes :zone_ids, @filter.admin_zones, :id, :current_label, include_hidden: false do |b|
-                      .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                        = b.check_box(checked: @filter.zone_filtered?(b.value))
-                        = b.label(class: 'fr-label') { b.text }
+                      Démarches modèles
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    .fr-checkbox-group.fr-ml-2w.fr-py-1w
+                      = f.check_box :template, class: 'fr-input'
+                      = f.label :template, 'Modèle DS', class: 'fr-label'
                 %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                   .fr-mb-1w
                     %button{ 'data-action': 'expand#toggle' }
@@ -42,6 +41,16 @@
                       Autres zones
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     = f.collection_check_boxes :zone_ids, @filter.other_zones, :id, :current_label, include_hidden: false do |b|
+                      .fr-checkbox-group.fr-ml-2w.fr-py-1w
+                        = b.check_box(checked: @filter.zone_filtered?(b.value))
+                        = b.label(class: 'fr-label') { b.text }
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Mes zones
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    = f.collection_check_boxes :zone_ids, @filter.admin_zones, :id, :current_label, include_hidden: false do |b|
                       .fr-checkbox-group.fr-ml-2w.fr-py-1w
                         = b.check_box(checked: @filter.zone_filtered?(b.value))
                         = b.label(class: 'fr-label') { b.text }
@@ -65,6 +74,16 @@
                         { selected: @filter.service_departement, include_blank: ''},
                         id: "service_dep_select",
                         class: 'fr-select'
+                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
+                  .fr-mb-1w
+                    %button{ 'data-action': 'expand#toggle' }
+                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
+                      Type d'usager
+                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
+                    = f.collection_check_boxes :kind_usagers, ['individual', 'personne_morale'], :to_s, :to_s, include_hidden: false do |b|
+                      .fr-checkbox-group.fr-ml-2w.fr-py-1w
+                        = b.check_box(checked: @filter.kind_usager_filtered?(b.value))
+                        = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.kind_usager' }
                 %li.fr-py-2w{ 'data-controller': "expand" }
                   .fr-mb-1w.fr-pl-2w
                     %button{ 'data-action': 'click->expand#toggle' }
@@ -86,39 +105,21 @@
                         = b.check_box(checked: @filter.status_filtered?(b.value))
                         = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
+
                 %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
                   .fr-mb-1w
                     %button{ 'data-action': 'expand#toggle' }
                       %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                      Type d'usager
-                  .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
-                    = f.collection_check_boxes :kind_usagers, ['individual', 'personne_morale'], :to_s, :to_s, include_hidden: false do |b|
-                      .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                        = b.check_box(checked: @filter.kind_usager_filtered?(b.value))
-                        = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.kind_usager' }
-                %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                  .fr-mb-1w
-                    %button{ 'data-action': 'expand#toggle' }
-                      %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                      Tags
+                      Thématique
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     %div
-                      = f.search_field :tags, placeholder: 'Choisissez un tag', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input', turbo_force: :server }, multiple: true
+                      = f.search_field :tags, placeholder: 'Choisissez un thème', list: 'tags_list', class: 'fr-input', data: { no_autosubmit: 'input', turbo_force: :server }, multiple: true
                       %datalist#tags_list
                         - Procedure.tags.each do |tag|
                           %option{ value: tag }
                       - if @filter.tags.present?
                         - @filter.tags.each do |tag|
                           = f.hidden_field :tags, value: tag, multiple: true, id: "tag-#{tag.tr(' ', '_')}"
-                  %li.fr-py-2w.fr-pl-2w{ 'data-controller': "expand" }
-                    .fr-mb-1w
-                      %button{ 'data-action': 'expand#toggle' }
-                        %span.fr-icon-add-line.fr-icon--sm.fr-mr-1w.fr-text-action-high--blue-france{ 'aria-hidden': 'true', 'data-expand-target': 'icon' }
-                        Démarches modèles
-                    .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
-                      .fr-checkbox-group.fr-ml-2w.fr-py-1w
-                        = f.check_box :template, class: 'fr-input'
-                        = f.label :template, 'Modèle DS', class: 'fr-label'
 
         .fr-col-9
           = yield(:results)

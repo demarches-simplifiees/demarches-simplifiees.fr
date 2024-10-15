@@ -274,10 +274,11 @@ module Administrateurs
     def update_monavis
       if !@procedure.update(procedure_params)
         flash.now.alert = @procedure.errors.full_messages
+        render 'monavis'
       else
         flash.notice = 'le champ MonAvis a bien été mis à jour'
+        redirect_to admin_procedure_path(id: @procedure.id)
       end
-      render 'monavis'
     end
 
     def accuse_lecture
@@ -302,8 +303,8 @@ module Administrateurs
           APIEntreprise::PrivilegesAdapter.new(token).valid? &&
           @procedure.save
 
-        redirect_to jeton_admin_procedure_path(procedure_id: params[:procedure_id]),
-          notice: 'Le jeton a bien été mis à jour'
+        flash.notice = 'Le jeton a bien été mis à jour'
+        redirect_to admin_procedure_path(id: @procedure.id)
       else
 
         flash.now.alert = "Mise à jour impossible : le jeton n’est pas valide"
@@ -486,7 +487,8 @@ module Administrateurs
       procedures_result = procedures_result.where('unaccent(libelle) ILIKE unaccent(?)', "%#{filter.libelle}%") if filter.libelle.present?
       procedures_sql = procedures_result.to_sql
 
-      sql = "select id, libelle, published_at, aasm_state, estimated_dossiers_count, template, count(administrateurs_procedures.administrateur_id) as admin_count from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
+      sql = "select procedures.id, libelle, published_at, aasm_state, estimated_dossiers_count, template, array_agg(distinct latest_labels.name) filter (where latest_labels.name is not null) as latest_zone_labels from administrateurs_procedures inner join procedures on procedures.id = administrateurs_procedures.procedure_id left join procedures_zones ON procedures.id = procedures_zones.procedure_id left join zones ON zones.id = procedures_zones.zone_id left join (select zone_id, name from zone_labels where (zone_id, designated_on) in (select zone_id, max(designated_on) from zone_labels group by zone_id)) as latest_labels on zones.id = latest_labels.zone_id
+      where procedures.id in (#{procedures_sql}) group by procedures.id order by published_at desc"
       ActiveRecord::Base.connection.execute(sql)
     end
 

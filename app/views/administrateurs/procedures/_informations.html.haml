@@ -120,8 +120,8 @@
                 %use.fr-artwork-major{ href: image_path("pictograms/buildings/school.svg#artwork-major") }
 
   .fr-fieldset__element
-    = f.label :tags, 'Associez les tags à la démarche', class: 'fr-label'
-    %p.fr-hint-text Les tags sont des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
+    = f.label :tags, 'Associez des thématiques à la démarche', class: 'fr-label'
+    %p.fr-hint-text Par des mots ou des expressions que vous attribuez aux démarches pour décrire leur contenu et pour les retrouver. Les tags sont partagés avec la communauté, ce qui vous permet de voir les tags attribués aux démarches créées par les autres administrateurs.
     = hidden_field_tag  'procedure[tags]', JSON.generate(@procedure.tags)
     = react_component("ComboMultiple",
       id: "procedure_tags_combo",

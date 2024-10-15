@@ -6,7 +6,7 @@
 .fr-container
   .fr-grid-row.fr-grid-row--gutters
     .fr-col-12
-      %h1 Configuration des emails
+      %h1.fr-h2 Configuration des emails
       - if @procedure.accuse_lecture?
         = render Dsfr::AlertComponent.new(state: :info, size: :sm) do |c|
           - c.with_body do
@@ -18,10 +18,4 @@
         = render Procedure::EmailTemplateCardComponent.new(email_template: mail_template)
 
 
-.padded-fixed-footer
-  .fixed-footer
-    .fr-container
-      .fr-grid-row
-        .fr-col-12.fr-pb-2w
-          = link_to admin_procedure_path(id: @procedure), class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mb-2w' do
-            Revenir à la démarche
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

@@ -1,12 +1,12 @@
 = render partial: 'administrateurs/breadcrumbs',
   locals: { steps: [['Démarches', admin_procedures_back_path(@procedure)],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
-                    ['Modifications']] }
-.container
-  %h1.page-title
+                    ['Historique des modifications du formulaire']] }
+.fr-container
+  %h1.fr-h2
     Historique des modifications du formulaire
 
-.container
+.fr-container
   - previous_revision = nil
   - @procedure.revisions.each do |revision|
     - if previous_revision.present? && !revision.draft?
@@ -30,3 +30,5 @@
           %p= t('.dossiers_en_instruction', count: dossiers_en_instruction_count)
         = render Procedure::RevisionChangesComponent.new changes:, previous_revision:
     - previous_revision = revision
+
+= render Procedure::FixedFooterComponent.new(procedure: @procedure)

@@ -6,7 +6,7 @@
 .fr-container
   .fr-grid-row
     .fr-col-12.fr-col-offset-md-2.fr-col-md-8
-      %h1.page-title
+      %h1.fr-h2
         Accusé de lecture
 
       = render Dsfr::CalloutComponent.new(title: nil) do |c|
@@ -33,11 +33,4 @@
               hint: "L’accusé de lecture est à activer uniquement pour les démarches avec voies de recours car il complexifie l’accès à la décision finale pour les usagers",
               opt: {"checked" => @procedure.accuse_lecture})
 
-.padded-fixed-footer
-  .fixed-footer
-    .fr-container
-      .fr-grid-row
-        .fr-col-12.fr-col-offset-md-2.fr-col-md-8
-          %ul.fr-btns-group.fr-btns-group--inline-md
-            %li
-              = link_to 'Enregistrer et revenir à la page de suivi', admin_procedure_path(id: @procedure), class: 'fr-btn'
+= render Procedure::FixedFooterComponent.new(procedure: @procedure, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8' )

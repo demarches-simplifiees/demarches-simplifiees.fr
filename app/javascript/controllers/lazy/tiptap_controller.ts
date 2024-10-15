@@ -2,10 +2,10 @@ import { Editor, type JSONContent } from '@tiptap/core';
 import { isButtonElement, isHTMLElement } from '@coldwired/utils';
 import { z } from 'zod';
 
-import { ApplicationController } from './application_controller';
-import { getAction } from '../shared/tiptap/actions';
-import { tagSchema, type TagSchema } from '../shared/tiptap/tags';
-import { createEditor } from '../shared/tiptap/editor';
+import { ApplicationController } from '../application_controller';
+import { getAction } from '../../shared/tiptap/actions';
+import { tagSchema, type TagSchema } from '../../shared/tiptap/tags';
+import { createEditor } from '../../shared/tiptap/editor';
 
 export class TiptapController extends ApplicationController {
   static targets = ['editor', 'input', 'button', 'tag'];
