@@ -9,8 +9,11 @@ RSpec.describe AdministrationMailer, type: :mailer do
     it { expect(subject.subject).not_to be_empty }
 
     describe "when the user has not been activated" do
-      it { expect(subject.body).to include(users_activate_path(token: token)) }
-      it { expect(subject.body).not_to include(edit_user_password_url(admin_user, reset_password_token: token)) }
+      it do
+        expect(subject.body).to include(users_activate_path(token: token))
+        expect(subject.body).not_to include(edit_user_password_url(admin_user, reset_password_token: token))
+        expect(subject['BYPASS_UNVERIFIED_MAIL_PROTECTION']).to be_present
+      end
     end
 
     describe "when the user is already active" do
@@ -25,6 +28,9 @@ RSpec.describe AdministrationMailer, type: :mailer do
 
     subject { described_class.refuse_admin(mail) }
 
-    it { expect(subject.subject).not_to be_empty }
+    it do
+      expect(subject.subject).not_to be_empty
+      expect(subject['BYPASS_UNVERIFIED_MAIL_PROTECTION']).to be_present
+    end
   end
 end

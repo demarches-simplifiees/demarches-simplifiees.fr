@@ -50,6 +50,8 @@ class UserMailer < ApplicationMailer
 
     configure_defaults_for_user(user)
 
+    bypass_unverified_mail_protection!
+
     mail(to: user.email,
       subject: subject,
       reply_to: Current.contact_email)
@@ -62,6 +64,8 @@ class UserMailer < ApplicationMailer
     subject = "Activez votre compte gestionnaire"
 
     configure_defaults_for_user(user)
+
+    bypass_unverified_mail_protection!
 
     mail(to: user.email,
       subject: subject,

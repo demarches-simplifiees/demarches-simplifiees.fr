@@ -95,7 +95,7 @@ class User < ApplicationRecord
     owns?(dossier) || invite?(dossier)
   end
 
-  def invite!
+  def invite_instructeur!
     UserMailer.invite_instructeur(self, set_reset_password_token).deliver_later
   end
 
@@ -288,6 +288,8 @@ class User < ApplicationRecord
   def active_for_authentication?
     super && blocked_at.nil?
   end
+
+  def unverified_email? = !email_verified_at?
 
   private
 

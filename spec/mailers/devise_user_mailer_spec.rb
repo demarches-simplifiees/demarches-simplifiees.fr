@@ -5,7 +5,10 @@ RSpec.describe DeviseUserMailer, type: :mailer do
     subject { described_class.confirmation_instructions(user, token, opts = {}) }
 
     context 'without SafeMailer configured' do
-      it { expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil) }
+      it do
+        expect(subject[BalancerDeliveryMethod::FORCE_DELIVERY_METHOD_HEADER]&.value).to eq(nil)
+        expect(subject[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION]).to be_present
+      end
     end
 
     context 'with SafeMailer configured' do
@@ -70,6 +73,7 @@ RSpec.describe DeviseUserMailer, type: :mailer do
         it "respect preferred domain" do
           expect(header_value("From", subject.message)).to include(CONTACT_EMAIL)
           expect(subject.message.to_s).to include("#{ENV.fetch("APP_HOST_LEGACY")}/users/password")
+          expect(subject[BalancerDeliveryMethod::BYPASS_UNVERIFIED_MAIL_PROTECTION]).to be_present
         end
       end
 
