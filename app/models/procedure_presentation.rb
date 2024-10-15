@@ -17,7 +17,6 @@ class ProcedurePresentation < ApplicationRecord
 
   delegate :procedure, :instructeur, to: :assign_to
 
-  validate :check_allowed_displayed_fields
   validate :check_filters_max_length
   validate :check_filters_max_integer
 
@@ -90,20 +89,6 @@ class ProcedurePresentation < ApplicationRecord
     Date.parse(string)
   rescue Date::Error
     nil
-  end
-
-  def update_displayed_fields(column_ids)
-    h_ids = Array.wrap(column_ids).map { |id| JSON.parse(id, symbolize_names: true) }
-    columns = h_ids.map { |h_id| procedure.find_column(h_id:) }
-
-    update!(
-      displayed_fields: columns,
-      displayed_columns: columns.map(&:h_id)
-    )
-
-    if !sorted_column.column.in?(columns)
-      update(sorted_column: nil)
-    end
   end
 
   def snapshot
@@ -234,19 +219,6 @@ class ProcedurePresentation < ApplicationRecord
       .find_by(stable_id: column)
   end
 
-  def check_allowed_displayed_fields
-    displayed_fields.each do |field|
-      check_allowed_field(:displayed_fields, field)
-    end
-  end
-
-  def check_allowed_field(kind, field, extra_columns = {})
-    table, column = field.values_at(TABLE, COLUMN)
-    if !valid_column?(table, column, extra_columns)
-      errors.add(kind, "#{table}.#{column} n’est pas une colonne permise")
-    end
-  end
-
   def check_filters_max_length
     filters.values.flatten.each do |filter|
       next if !filter.is_a?(Hash)
@@ -264,19 +236,6 @@ class ProcedurePresentation < ApplicationRecord
 
       errors.add(:base, "Le filtre #{filter['label']} n'est pas un numéro de dossier possible")
     end
-  end
-
-  def valid_column?(table, column, extra_columns = {})
-    valid_columns_for_table(table).include?(column) ||
-      extra_columns[table]&.include?(column)
-  end
-
-  def valid_columns_for_table(table)
-    @column_whitelist ||= procedure.columns
-      .group_by(&:table)
-      .transform_values { |columns| Set.new(columns.map(&:column)) }
-
-    @column_whitelist[table] || []
   end
 
   def self.sanitized_column(association, column)
