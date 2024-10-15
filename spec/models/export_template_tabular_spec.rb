@@ -82,6 +82,18 @@ describe ExportTemplate do
     end
   end
 
+  describe '#exported_columns=' do
+    it 'is assignable/readable with ExportedColumn object' do
+      expect do
+        export_template.exported_columns = [
+          ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+        ]
+        export_template.save!
+        export_template.exported_columns
+      end.not_to raise_error
+    end
+  end
+
   describe '#all_tdc_columns' do
     xit "returns all tdc columns (without repetition) based upon procedure's type de champs" do
       expect(export_template.all_tdc_columns).to match_array [
