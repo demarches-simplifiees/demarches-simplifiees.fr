@@ -616,6 +616,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_10_14_084333) do
     t.datetime "created_at", null: false
     t.jsonb "dossier_folder", null: false
     t.jsonb "export_pdf", null: false
+    t.jsonb "exported_columns", default: [], null: false, array: true
     t.bigint "groupe_instructeur_id", null: false
     t.string "kind", null: false
     t.string "name", null: false

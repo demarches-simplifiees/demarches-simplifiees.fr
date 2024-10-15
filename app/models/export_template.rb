@@ -13,6 +13,8 @@ class ExportTemplate < ApplicationRecord
   attribute :export_pdf, :export_item
   attribute :pjs, :export_item, array: true
 
+  attribute :exported_columns, :exported_column, array: true
+
   before_validation :ensure_pjs_are_legit
 
   validates_with ExportTemplateValidator
