@@ -242,8 +242,8 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_29_141825) do
     t.integer "dossier_count"
     t.string "dossier_state"
     t.bigint "instructeur_id", null: false
-    t.datetime "sent_at", precision: nil, null: false
     t.bigint "procedure_id"
+    t.datetime "sent_at", precision: nil, null: false
     t.datetime "updated_at", null: false
   end
 
@@ -933,6 +933,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_29_141825) do
     t.boolean "allow_expert_messaging", default: true, null: false
     t.boolean "allow_expert_review", default: true, null: false
     t.string "api_entreprise_token"
+    t.datetime "api_entreprise_token_expires_at", precision: nil
     t.text "api_particulier_scopes", default: [], array: true
     t.jsonb "api_particulier_sources", default: {}
     t.boolean "ask_birthday", default: false, null: false

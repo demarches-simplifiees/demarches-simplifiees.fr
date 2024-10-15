@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Procedure < ApplicationRecord
+  include APIEntrepriseTokenConcern
   include ProcedureStatsConcern
   include EncryptableConcern
   include InitiationProcedureConcern
@@ -284,7 +285,6 @@ class Procedure < ApplicationRecord
     size: { less_than: LOGO_MAX_SIZE },
     if: -> { new_record? || created_at > Date.new(2020, 11, 13) }
 
-  validates :api_entreprise_token, jwt_token: true, allow_blank: true
   validates :api_particulier_token, format: { with: /\A[A-Za-z0-9\-_=.]{15,}\z/ }, allow_blank: true
   validate :validate_auto_archive_on_in_the_future, if: :will_save_change_to_auto_archive_on?
 
@@ -760,18 +760,6 @@ class Procedure < ApplicationRecord
 
   def flipper_id
     "Procedure;#{id}"
-  end
-
-  def api_entreprise_role?(role)
-    APIEntrepriseToken.new(api_entreprise_token).role?(role)
-  end
-
-  def api_entreprise_token
-    self[:api_entreprise_token].presence || Rails.application.secrets.api_entreprise[:key]
-  end
-
-  def api_entreprise_token_expired?
-    APIEntrepriseToken.new(api_entreprise_token).expired?
   end
 
   def create_new_revision(revision = nil)
