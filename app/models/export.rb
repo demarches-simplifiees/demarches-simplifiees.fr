@@ -69,10 +69,6 @@ class Export < ApplicationRecord
     time_span_type == Export.time_span_types.fetch(:monthly) ? 30.days.ago : nil
   end
 
-  def filtered?
-    filtered_columns.present?
-  end
-
   def self.find_or_create_fresh_export(format, groupe_instructeurs, user_profile, time_span_type: time_span_types.fetch(:everything), statut: statuts.fetch(:tous), procedure_presentation: nil, export_template: nil)
     filtered_columns = Array.wrap(procedure_presentation&.filters_for(statut))
     sorted_column = procedure_presentation&.sorted_column
