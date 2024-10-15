@@ -140,13 +140,22 @@ class Export < ApplicationRecord
       if since.present?
         dossiers.visible_by_administration.where('dossiers.depose_at > ?', since)
       elsif procedure_presentation.present?
-        filtered_sorted_ids = procedure_presentation
-          .filtered_sorted_ids(dossiers, statut)
+        instructeur = instructeur_from(user_profile)
+        filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, filtered_columns, sorted_column, instructeur)
 
         dossiers.where(id: filtered_sorted_ids)
       else
         dossiers.visible_by_administration
       end
+    end
+  end
+
+  def instructeur_from(user_profile)
+    case user_profile
+    when Administrateur
+      user_profile.instructeur
+    when Instructeur
+      user_profile
     end
   end
 
