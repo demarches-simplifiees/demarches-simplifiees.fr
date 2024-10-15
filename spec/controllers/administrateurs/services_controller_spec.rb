@@ -31,7 +31,7 @@ describe Administrateurs::ServicesController, type: :controller do
       end
     end
 
-    context 'when attempting to prefilling from unknown SIRET' do
+    context 'when attempting to prefilling from invalid SIRET' do
       let(:xhr) { true }
       let(:params) do
         {
@@ -41,11 +41,29 @@ describe Administrateurs::ServicesController, type: :controller do
       end
 
       it "render an error" do
-        VCR.use_cassette('annuaire_service_public_failure_20004021000000') do
+        subject
+        expect(response.body).to include('turbo-stream')
+        expect(assigns[:service].nom).to be_nil
+        expect(assigns[:service].errors.key?(:siret)).to be_present
+      end
+    end
+
+    context 'when attempting to prefilling from not service public SIRET' do
+      let(:xhr) { true }
+      let(:params) do
+        {
+          procedure_id: procedure.id,
+          service: { siret: "41816609600051" }
+        }
+      end
+
+      it "render partial information" do
+        VCR.use_cassette('annuaire_service_public_success_41816609600051') do
           subject
           expect(response.body).to include('turbo-stream')
-          expect(assigns[:service].nom).to be_nil
-          expect(assigns[:service].errors.key?(:siret)).to be_present
+          expect(assigns[:service].nom).to eq("OCTO-TECHNOLOGY")
+          expect(assigns[:service].horaires).to be_nil
+          expect(assigns[:service].errors.key?(:siret)).not_to be_present
         end
       end
     end

@@ -1,0 +1,116 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret:11004601800013
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - openresty
+      Date:
+      - Tue, 15 Oct 2024 16:24:17 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '33'
+      X-Ratelimit-Remaining:
+      - '999918'
+      X-Ratelimit-Limit:
+      - '1000000'
+      X-Ratelimit-Reset:
+      - '2024-10-16 00:00:00+00:00'
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Vary:
+      - Accept-Language, Cookie, Host
+      Content-Language:
+      - fr-fr
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, GET, OPTIONS
+      Access-Control-Max-Age:
+      - '1000'
+      Access-Control-Allow-Headers:
+      - Authorization, X-Requested-With, Origin, ODS-API-Analytics-App, ODS-API-Analytics-Embed-Type,
+        ODS-API-Analytics-Embed-Referrer, ODS-Widgets-Version, Accept
+      Access-Control-Expose-Headers:
+      - ODS-Explore-API-Deprecation, Link, X-RateLimit-Remaining, X-RateLimit-Limit,
+        X-RateLimit-Reset, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Limit,
+        X-RateLimit-dataset-Reset
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - midi=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Content-Security-Policy:
+      - upgrade-insecure-requests;
+      X-Ua-Compatible:
+      - IE=edge
+    body:
+      encoding: ASCII-8BIT
+      string: '{"total_count": 0, "results": []}'
+  recorded_at: Tue, 15 Oct 2024 16:24:17 GMT
+- request:
+    method: get
+    uri: https://recherche-entreprises.api.gouv.fr/search?q=11004601800013
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.27.1
+      Date:
+      - Tue, 15 Oct 2024 16:24:17 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3289'
+      Vary:
+      - Accept-Encoding
+      - Accept-Encoding
+      Annuaire-Entreprises-Instance-Number:
+      - '02'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Allow-Origin:
+      - "*"
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJyZXN1bHRzIjpbeyJzaXJlbiI6IjExMDA0NjAxOCIsIm5vbV9jb21wbGV0IjoiTUlOSVNURVJFIERFIExBIENVTFRVUkUiLCJub21fcmFpc29uX3NvY2lhbGUiOiJNSU5JU1RFUkUgREUgTEEgQ1VMVFVSRSIsInNpZ2xlIjpudWxsLCJub21icmVfZXRhYmxpc3NlbWVudHMiOjMsIm5vbWJyZV9ldGFibGlzc2VtZW50c19vdXZlcnRzIjoxLCJzaWVnZSI6eyJhY3Rpdml0ZV9wcmluY2lwYWxlIjoiODQuMTFaIiwiYWN0aXZpdGVfcHJpbmNpcGFsZV9yZWdpc3RyZV9tZXRpZXIiOm51bGwsImFubmVlX3RyYW5jaGVfZWZmZWN0aWZfc2FsYXJpZSI6IjIwMjIiLCJhZHJlc3NlIjoiMTgyIFJVRSBTQUlOVC1IT05PUkUgNzUwMDEgUEFSSVMiLCJjYXJhY3RlcmVfZW1wbG95ZXVyIjoiTiIsImNlZGV4IjpudWxsLCJjb2RlX3BheXNfZXRyYW5nZXIiOm51bGwsImNvZGVfcG9zdGFsIjoiNzUwMDEiLCJjb21tdW5lIjoiNzUxMDEiLCJjb21wbGVtZW50X2FkcmVzc2UiOm51bGwsImNvb3Jkb25uZWVzIjoiNDguODYyMzk4LDIuMzM4OTAzIiwiZGF0ZV9jcmVhdGlvbiI6IjE5ODMtMDMtMDEiLCJkYXRlX2RlYnV0X2FjdGl2aXRlIjoiMjAwOC0wMS0wMSIsImRhdGVfZmVybWV0dXJlIjpudWxsLCJkYXRlX21pc2VfYV9qb3VyIjpudWxsLCJkYXRlX21pc2VfYV9qb3VyX2luc2VlIjoiMjAyNC0wMy0zMFQxMTozMDowNiIsImRlcGFydGVtZW50IjoiNzUiLCJkaXN0cmlidXRpb25fc3BlY2lhbGUiOm51bGwsImVwY2kiOiIyMDAwNTQ3ODEiLCJlc3Rfc2llZ2UiOnRydWUsImV0YXRfYWRtaW5pc3RyYXRpZiI6IkEiLCJnZW9fYWRyZXNzZSI6IjE4MiBSdWUgU2FpbnQtSG9ub3LDqSA3NTAwMSBQYXJpcyIsImdlb19pZCI6Ijc1MTAxXzg2MzVfMDAxODIiLCJpbmRpY2VfcmVwZXRpdGlvbiI6bnVsbCwibGF0aXR1ZGUiOiI0OC44NjIzOTgiLCJsaWJlbGxlX2NlZGV4IjpudWxsLCJsaWJlbGxlX2NvbW11bmUiOiJQQVJJUyIsImxpYmVsbGVfY29tbXVuZV9ldHJhbmdlciI6bnVsbCwibGliZWxsZV9wYXlzX2V0cmFuZ2VyIjpudWxsLCJsaWJlbGxlX3ZvaWUiOiJTQUlOVC1IT05PUkUiLCJsaXN0ZV9lbnNlaWduZXMiOm51bGwsImxpc3RlX2ZpbmVzcyI6bnVsbCwibGlzdGVfaWRfYmlvIjpudWxsLCJsaXN0ZV9pZGNjIjpudWxsLCJsaXN0ZV9pZF9vcmdhbmlzbWVfZm9ybWF0aW9uIjpudWxsLCJsaXN0ZV9yZ2UiOm51bGwsImxpc3RlX3VhaSI6bnVsbCwibG9uZ2l0dWRlIjoiMi4zMzg5MDMiLCJub21fY29tbWVyY2lhbCI6bnVsbCwibnVtZXJvX3ZvaWUiOiIxODIiLCJyZWdpb24iOiIxMSIsInNpcmV0IjoiMTEwMDQ2MDE4MDAwMTMiLCJzdGF0dXRfZGlmZnVzaW9uX2V0YWJsaXNzZW1lbnQiOiJPIiwidHJhbmNoZV9lZmZlY3RpZl9zYWxhcmllIjoiMjIiLCJ0eXBlX3ZvaWUiOiJSVUUifSwiYWN0aXZpdGVfcHJpbmNpcGFsZSI6Ijg0LjExWiIsImNhdGVnb3JpZV9lbnRyZXByaXNlIjoiUE1FIiwiY2FyYWN0ZXJlX2VtcGxveWV1ciI6bnVsbCwiYW5uZWVfY2F0ZWdvcmllX2VudHJlcHJpc2UiOiIyMDIyIiwiZGF0ZV9jcmVhdGlvbiI6IjE5ODEtMDYtMjMiLCJkYXRlX2Zlcm1ldHVyZSI6bnVsbCwiZGF0ZV9taXNlX2Ffam91ciI6IjIwMjQtMTAtMTRUMTQ6NTk6NDkiLCJkYXRlX21pc2VfYV9qb3VyX2luc2VlIjoiMjAyNC0wOS0yN1QxMToxMjoyOSIsImRhdGVfbWlzZV9hX2pvdXJfcm5lIjpudWxsLCJkaXJpZ2VhbnRzIjpbXSwiZXRhdF9hZG1pbmlzdHJhdGlmIjoiQSIsIm5hdHVyZV9qdXJpZGlxdWUiOiI3MTEzIiwic2VjdGlvbl9hY3Rpdml0ZV9wcmluY2lwYWxlIjoiTyIsInRyYW5jaGVfZWZmZWN0aWZfc2FsYXJpZSI6IjIyIiwiYW5uZWVfdHJhbmNoZV9lZmZlY3RpZl9zYWxhcmllIjoiMjAyMiIsInN0YXR1dF9kaWZmdXNpb24iOiJPIiwibWF0Y2hpbmdfZXRhYmxpc3NlbWVudHMiOlt7ImFjdGl2aXRlX3ByaW5jaXBhbGUiOiI4NC4xMVoiLCJhbmNpZW5fc2llZ2UiOmZhbHNlLCJhbm5lZV90cmFuY2hlX2VmZmVjdGlmX3NhbGFyaWUiOiIyMDIyIiwiYWRyZXNzZSI6IjE4MiBSVUUgU0FJTlQtSE9OT1JFIDc1MDAxIFBBUklTIiwiY2FyYWN0ZXJlX2VtcGxveWV1ciI6Ik4iLCJjb2RlX3Bvc3RhbCI6Ijc1MDAxIiwiY29tbXVuZSI6Ijc1MTAxIiwiZGF0ZV9jcmVhdGlvbiI6IjE5ODMtMDMtMDEiLCJkYXRlX2RlYnV0X2FjdGl2aXRlIjoiMjAwOC0wMS0wMSIsImRhdGVfZmVybWV0dXJlIjpudWxsLCJlcGNpIjoiMjAwMDU0NzgxIiwiZXN0X3NpZWdlIjp0cnVlLCJldGF0X2FkbWluaXN0cmF0aWYiOiJBIiwiZ2VvX2lkIjoiNzUxMDFfODYzNV8wMDE4MiIsImxhdGl0dWRlIjoiNDguODYyMzk4IiwibGliZWxsZV9jb21tdW5lIjoiUEFSSVMiLCJsaXN0ZV9lbnNlaWduZXMiOm51bGwsImxpc3RlX2ZpbmVzcyI6bnVsbCwibGlzdGVfaWRfYmlvIjpudWxsLCJsaXN0ZV9pZGNjIjpudWxsLCJsaXN0ZV9pZF9vcmdhbmlzbWVfZm9ybWF0aW9uIjpudWxsLCJsaXN0ZV9yZ2UiOm51bGwsImxpc3RlX3VhaSI6bnVsbCwibG9uZ2l0dWRlIjoiMi4zMzg5MDMiLCJub21fY29tbWVyY2lhbCI6bnVsbCwicmVnaW9uIjoiMTEiLCJzaXJldCI6IjExMDA0NjAxODAwMDEzIiwic3RhdHV0X2RpZmZ1c2lvbl9ldGFibGlzc2VtZW50IjoiTyIsInRyYW5jaGVfZWZmZWN0aWZfc2FsYXJpZSI6IjIyIn1dLCJmaW5hbmNlcyI6bnVsbCwiY29tcGxlbWVudHMiOnsiY29sbGVjdGl2aXRlX3RlcnJpdG9yaWFsZSI6bnVsbCwiY29udmVudGlvbl9jb2xsZWN0aXZlX3JlbnNlaWduZWUiOmZhbHNlLCJsaXN0ZV9pZGNjIjpudWxsLCJlZ2Fwcm9fcmVuc2VpZ25lZSI6ZmFsc2UsImVzdF9hc3NvY2lhdGlvbiI6ZmFsc2UsImVzdF9iaW8iOmZhbHNlLCJlc3RfZW50cmVwcmVuZXVyX2luZGl2aWR1ZWwiOmZhbHNlLCJlc3RfZW50cmVwcmVuZXVyX3NwZWN0YWNsZSI6ZmFsc2UsImVzdF9lc3MiOmZhbHNlLCJlc3RfZmluZXNzIjpmYWxzZSwiZXN0X29yZ2FuaXNtZV9mb3JtYXRpb24iOnRydWUsImVzdF9xdWFsaW9waSI6ZmFsc2UsImxpc3RlX2lkX29yZ2FuaXNtZV9mb3JtYXRpb24iOlsiMTE3NTU2MDg5NzUiXSwiZXN0X3JnZSI6ZmFsc2UsImVzdF9zZXJ2aWNlX3B1YmxpYyI6dHJ1ZSwiZXN0X3NpYWUiOmZhbHNlLCJlc3Rfc29jaWV0ZV9taXNzaW9uIjpmYWxzZSwiZXN0X3VhaSI6ZmFsc2UsImlkZW50aWZpYW50X2Fzc29jaWF0aW9uIjpudWxsLCJzdGF0dXRfZW50cmVwcmVuZXVyX3NwZWN0YWNsZSI6bnVsbCwidHlwZV9zaWFlIjpudWxsfX1dLCJ0b3RhbF9yZXN1bHRzIjoxLCJwYWdlIjoxLCJwZXJfcGFnZSI6MTAsInRvdGFsX3BhZ2VzIjoxfQ==
+  recorded_at: Tue, 15 Oct 2024 16:24:17 GMT
+recorded_with: VCR 6.2.0
