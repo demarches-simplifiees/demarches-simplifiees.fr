@@ -25,8 +25,38 @@ module ColumnsConcern
         columns.concat(standard_columns)
         columns.concat(individual_columns) if for_individual
         columns.concat(moral_columns) if !for_individual
+        columns.concat(chorus_columns) if chorusable? && chorus_configuration.complete?
         columns.concat(types_de_champ_columns)
       end
+    end
+
+    def chorus_columns
+      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
+        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
+    end
+
+    # def dossier_columns_for_export
+    #   columns.filter { ['self', 'individual', 'etablissement', 'followers_instructeurs', 'groupe_instructeur'].include(_1.table) }
+    # end
+
+    def all_usager_columns_for_export
+      common = [
+        dossier_id_column,
+        email_column,
+        Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+      ]
+
+      individual_or_moral_columns = for_individual? ? individual_columns : moral_columns
+
+      _chorus_columns =
+        if chorusable? && chorus_configuration.complete?
+          chorus_columns
+        else
+          []
+        end
+
+
+      [common, individual_or_moral_columns, _chorus_columns].flatten.compact
     end
 
     def dossier_id_column
@@ -52,7 +82,10 @@ module ColumnsConcern
 
       states = [dossier_state_column]
 
-      [common, dates, sva_svr_columns, non_displayable_dates, states].flatten.compact
+      for_export = ['archived', 'motivation', 'last_champ_updated_at']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
+
+      [common, dates, sva_svr_columns, non_displayable_dates, states, for_export].flatten.compact
     end
 
     def sva_svr_columns
@@ -88,12 +121,15 @@ module ColumnsConcern
         email_column,
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
-        Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false) # not filterable ?
+        Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
+        Column.new(procedure_id: id, table: 'user', column: 'id', filterable: false, displayable: false),
+        Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
       ]
     end
 
     def individual_columns
       ['nom', 'prenom', 'gender'].map { |column| Column.new(procedure_id: id, table: 'individual', column:) }
+        .concat ['for_tiers', 'mandataire_last_name', 'mandataire_first_name'].map { |column| Column.new(procedure_id: id, table: 'self', column:) }
     end
 
     def moral_columns
@@ -102,9 +138,12 @@ module ColumnsConcern
 
       etablissement_dates = ['entreprise_date_creation'].map { |column| Column.new(procedure_id: id, table: 'etablissement', column:, type: :date) }
 
+      for_export = ['etablissement_siret', 'etablissement_siege_social', "siege_social", "naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_sire\nn", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "etablissement_adresse", "entreprise\n_raison_sociale", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_\nadministratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declarati\non", "association_date_publication"]
+        .map { |column| Column.new(procedure_id: id, table: 'etablissement', column:, displayable: false, filterable: false) }
+
       other = ['siret', 'libelle_naf', 'code_postal'].map { |column| Column.new(procedure_id: id, table: 'etablissement', column:) }
 
-      [etablissements, etablissement_dates, other].flatten
+      [etablissements, etablissement_dates, other, for_export].flatten
     end
 
     def types_de_champ_columns

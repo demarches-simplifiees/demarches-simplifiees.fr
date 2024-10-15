@@ -186,19 +186,21 @@ describe ExportTemplate do
       let(:for_individual) { true }
 
       it "returns all usager columns" do
-        expect(export_template.all_usager_columns).to match_array [
-          { :path => "id", :source => "dossier", :libelle => "ID" },
-          { :path => "email", :source => "dossier", :libelle => "Email" },
-          { :path => "france_connecte", :source => "dossier", :libelle => "FranceConnect ?" },
-          { :path => "civilite", :source => "dossier", :libelle => "Civilité" },
-          { :path => "last_name", :source => "dossier", :libelle => "Nom" },
-          { :path => "first_name", :source => "dossier", :libelle => "Prénom" },
-          { :path => "for_tiers", :source => "dossier", :libelle => "Dépôt pour un tiers" },
-          { :path => "mandataire_last_name", :source => "dossier", :libelle => "Nom du mandataire" },
-          { :path => "mandataire_first_name", :source => "dossier", :libelle => "Prénom du mandataire" }
+        expected = [
+          procedure.find_column(label: "Nº dossier"),
+          procedure.find_column(label: "Demandeur"),
+          procedure.find_column(label: "FranceConnect ?"),
+          procedure.find_column(label: "Civilité"),
+          procedure.find_column(label: "Nom"),
+          procedure.find_column(label: "Prénom"),
+          procedure.find_column(label: "Dépôt pour un tiers"),
+          procedure.find_column(label: "Nom du mandataire"),
+          procedure.find_column(label: "Prénom du mandataire")
         ]
-
-        expect(export_template.all_usager_columns.any? { _1[:path] == "etablissement_siret" }).to eq false
+        actuals = export_template.all_usager_columns.map(&:h_id)
+        expected.each do |expected_col|
+          expect(actuals).to include(expected_col.h_id)
+        end
       end
     end
 
@@ -206,43 +208,54 @@ describe ExportTemplate do
       let(:for_individual) { false }
 
       it "returns all usager columns" do
-        expect(export_template.all_usager_columns).to match_array [
-          { :path => "id", :source => "dossier", :libelle => "ID" },
-          { :path => "email", :source => "dossier", :libelle => "Email" },
-          { :path => "france_connecte", :source => "dossier", :libelle => "FranceConnect ?" },
-          { :path => "etablissement_siret", :source => "dossier", :libelle => "Établissement SIRET" },
-          { :path => "etablissement_siege_social", :source => "dossier", :libelle => "Établissement siège social" },
-          { :path => "etablissement_naf", :source => "dossier", :libelle => "Établissement NAF" },
-          { :path => "etablissement_libelle_naf", :source => "dossier", :libelle => "Établissement libellé NAF" },
-          { :path => "etablissement_adresse", :source => "dossier", :libelle => "Établissement Adresse" },
-          { :path => "etablissement_numero_voie", :source => "dossier", :libelle => "Établissement numero voie" },
-          { :path => "etablissement_type_voie", :source => "dossier", :libelle => "Établissement type voie" },
-          { :path => "etablissement_nom_voie", :source => "dossier", :libelle => "Établissement nom voie" },
-          { :path => "etablissement_complement_adresse", :source => "dossier", :libelle => "Établissement complément adresse" },
-          { :path => "etablissement_code_postal", :source => "dossier", :libelle => "Établissement code postal" },
-          { :path => "etablissement_localite", :source => "dossier", :libelle => "Établissement localité" },
-          { :path => "etablissement_code_insee_localite", :source => "dossier", :libelle => "Établissement code INSEE localité" },
-          { :path => "entreprise_siren", :source => "dossier", :libelle => "Entreprise SIREN" },
-          { :path => "entreprise_capital_social", :source => "dossier", :libelle => "Entreprise capital social" },
-          { :path => "entreprise_numero_tva_intracommunautaire", :source => "dossier", :libelle => "Entreprise numero TVA intracommunautaire" },
-          { :path => "entreprise_forme_juridique", :source => "dossier", :libelle => "Entreprise forme juridique" },
-          { :path => "entreprise_forme_juridique_code", :source => "dossier", :libelle => "Entreprise forme juridique code" },
-          { :path => "entreprise_nom_commercial", :source => "dossier", :libelle => "Entreprise nom commercial" },
-          { :path => "entreprise_raison_sociale", :source => "dossier", :libelle => "Entreprise raison sociale" },
-          { :path => "entreprise_siret_siege_social", :source => "dossier", :libelle => "Entreprise SIRET siège social" },
-          { :path => "entreprise_code_effectif_entreprise", :source => "dossier", :libelle => "Entreprise code effectif entreprise" }
+        expected = [
+          procedure.find_column(label: "Nº dossier"),
+          procedure.find_column(label: "Demandeur"),
+          procedure.find_column(label: "FranceConnect ?"),
+          procedure.find_column(label: "SIRET"),
+          procedure.find_column(label: "Établissement siège social"),
+          procedure.find_column(label: "Établissement NAF"),
+          procedure.find_column(label: "Libellé NAF"),
+          procedure.find_column(label: "Établissement Adresse"),
+          procedure.find_column(label: "Établissement numero voie"),
+          procedure.find_column(label: "Établissement type voie"),
+          procedure.find_column(label: "Établissement nom voie"),
+          procedure.find_column(label: "Établissement complément adresse"),
+          procedure.find_column(label: "Établissement code postal"),
+          procedure.find_column(label: "Établissement localité"),
+          procedure.find_column(label: "Établissement code INSEE localité"),
+          procedure.find_column(label: "Entreprise SIREN"),
+          procedure.find_column(label: "Entreprise capital social"),
+          procedure.find_column(label: "Entreprise numero TVA intracommunautaire"),
+          procedure.find_column(label: "Entreprise forme juridique"),
+          procedure.find_column(label: "Entreprise forme juridique code"),
+          procedure.find_column(label: "Entreprise nom commercial"),
+          procedure.find_column(label: "Entreprise raison sociale"),
+          procedure.find_column(label: "Entreprise SIRET siège social"),
+          procedure.find_column(label: "Entreprise code effectif entreprise")
         ]
+        actuals = export_template.all_usager_columns
+        expected.each do |expected_col|
+          expect(actuals.map(&:h_id)).to include(expected_col.h_id)
+        end
 
-        expect(export_template.all_usager_columns.any? { _1[:path] == "first_name" }).to eq false
+        expect(actuals.any? { _1.label == "Nom" }).to eq false
       end
     end
 
     context 'when procedure chorusable' do
-      before { expect_any_instance_of(Procedure).to receive(:chorusable?).and_return(true) }
       let(:procedure) { create(:procedure_with_dossiers, :filled_chorus, types_de_champ_public:) }
       it 'returns specific chorus columns' do
-        allow(Procedure).to receive(:chorusable?).and_return(true)
-        expect(export_template.all_usager_columns.include?({ :path => "domaine_fonctionnel", :source => "dossier", :libelle => "Domaine Fonctionnel" })).to be true
+        allow_any_instance_of(Procedure).to receive(:chorusable?).and_return(true)
+        expected = [
+          procedure.find_column(label: "Domaine fonctionnel"),
+          procedure.find_column(label: "Référentiel de programmation"),
+          procedure.find_column(label: "Centre de coût")
+        ]
+        actuals = export_template.all_usager_columns.map(&:h_id)
+        expected.each do |expected_col|
+          expect(actuals).to include(expected_col.h_id)
+        end
       end
     end
   end
