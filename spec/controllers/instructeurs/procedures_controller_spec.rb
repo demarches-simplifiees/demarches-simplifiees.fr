@@ -766,7 +766,7 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { expect { subject }.to change { Export.where(user_profile: instructeur).count }.by(1) }
 
       context 'with an export template' do
-        let(:export_template) { create(:zip_export_template) }
+        let(:export_template) { create(:export_template) }
         subject do
           get :download_export, params: { export_template_id: export_template.id, procedure_id: procedure.id }
         end
