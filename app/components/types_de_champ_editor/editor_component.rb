@@ -17,4 +17,12 @@ class TypesDeChampEditor::EditorComponent < ApplicationComponent
       @revision.revision_types_de_champ_public
     end
   end
+
+  def validation_context
+    if annotations?
+      :types_de_champ_private_editor
+    else
+      :types_de_champ_public_editor
+    end
+  end
 end

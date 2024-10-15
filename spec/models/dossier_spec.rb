@@ -2224,25 +2224,19 @@ describe Dossier, type: :model do
       create(:attestation, dossier: dossier)
     end
 
-    it "can destroy dossier" do
+    it "can destroy dossier, reset demarche, logg context" do
+      json_message = nil
+      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
+
       expect(dossier.destroy).to be_truthy
       expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it "can reset demarche" do
-      expect { dossier.procedure.reset! }.not_to raise_error
-      expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
-    end
-
-    it "call logger with context" do
-      json_message = nil
-
-      allow(Rails.logger).to receive(:info) { json_message ||= _1 }
-      dossier.destroy
 
       expect(JSON.parse(json_message)).to a_hash_including(
         { message: "Dossier destroyed", dossier_id: dossier.id, procedure_id: procedure.id }.stringify_keys
       )
+
+      expect { dossier.procedure.reset! }.not_to raise_error
+      expect { dossier.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 

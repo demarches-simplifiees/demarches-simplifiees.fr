@@ -559,8 +559,12 @@ class Dossier < ApplicationRecord
     false
   end
 
+  def blocked_with_pending_correction?
+    procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+  end
+
   def can_passer_en_instruction?
-    return false if procedure.feature_enabled?(:blocking_pending_correction) && pending_correction?
+    return false if blocked_with_pending_correction?
 
     true
   end
@@ -1016,7 +1020,6 @@ class Dossier < ApplicationRecord
     else
       columns << ['Entreprise raison sociale', etablissement&.entreprise_raison_sociale]
     end
-
     if procedure.chorusable? && procedure.chorus_configuration.complete?
       columns += [
         ['Domaine Fonctionnel', procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' }],

@@ -45,6 +45,7 @@ class BalancerDeliveryMethod
 
   def prevent_delivery?(mail)
     return false if mail[BYPASS_UNVERIFIED_MAIL_PROTECTION].present?
+    return false if mail.to.blank? # bcc list
 
     user = User.find_by(email: mail.to.first)
     return user.unverified_email? if user.present?

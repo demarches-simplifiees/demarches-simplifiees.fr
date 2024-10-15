@@ -67,4 +67,4 @@ fr:
       type_de_champ:
         attributes:
           header_section_level:
-            gap_error: "Un titre de section avec le niveau %{level} est manquant."
+            gap_error: "devrait être précédé d'un titre de niveau %{level}"

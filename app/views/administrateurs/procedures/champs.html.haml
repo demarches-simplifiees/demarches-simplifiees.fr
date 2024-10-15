@@ -9,7 +9,7 @@
   .fr-grid-row
     = render partial: 'champs_summary'
     .fr-col
-      = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision)
+      = render TypesDeChampEditor::EditorComponent.new(revision: @procedure.draft_revision, is_annotation: false)
 
 .padded-fixed-footer
   .fixed-footer

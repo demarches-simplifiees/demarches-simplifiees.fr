@@ -95,10 +95,6 @@ class Champ < ApplicationRecord
     parent_id.present?
   end
 
-  def stable_id_with_row
-    [row_id, stable_id].compact
-  end
-
   # used for the `required` html attribute
   # check visibility to avoid hidden required input
   # which prevent the form from being sent.

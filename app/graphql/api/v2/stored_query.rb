@@ -841,6 +841,19 @@ class API::V2::StoredQuery
     }
   }
 
+  mutation dossierSupprimerMessage($input: DossierSupprimerMessageInput!) {
+    dossierSupprimerMessage(input: $input) {
+      message {
+        id
+        createdAt
+        discardedAt
+      }
+      errors {
+        message
+      }
+    }
+  }
+
   mutation dossierModifierAnnotationText(
     $input: DossierModifierAnnotationTextInput!
   ) {
