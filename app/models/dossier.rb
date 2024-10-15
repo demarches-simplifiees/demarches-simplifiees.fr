@@ -60,7 +60,7 @@ class Dossier < ApplicationRecord
   has_many :previous_follows, -> { inactive }, class_name: 'Follow', inverse_of: :dossier
   has_many :followers_instructeurs, through: :follows, source: :instructeur
   has_many :previous_followers_instructeurs, -> { distinct }, through: :previous_follows, source: :instructeur
-  has_many :avis, inverse_of: :dossier, dependent: :destroy
+  has_many :avis, -> { order(:created_at) }, inverse_of: :dossier, dependent: :destroy
   has_many :experts, through: :avis
   has_many :traitements, -> { order(:processed_at) }, inverse_of: :dossier, dependent: :destroy do
     def passer_en_construction(instructeur: nil, processed_at: Time.zone.now)
