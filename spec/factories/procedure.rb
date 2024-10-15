@@ -291,6 +291,12 @@ FactoryBot.define do
     trait :accuse_lecture do
       accuse_lecture { true }
     end
+
+    trait :with_labels do
+      after(:create) do |procedure, _evaluator|
+        procedure.create_generic_procedure_labels
+      end
+    end
   end
 end
 

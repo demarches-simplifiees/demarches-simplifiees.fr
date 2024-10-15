@@ -108,6 +108,7 @@ module Administrateurs
         flash.now.alert = @procedure.errors.full_messages
         render 'new'
       else
+        @procedure.create_generic_procedure_labels
         flash.notice = 'Démarche enregistrée.'
         current_administrateur.instructeur.assign_to_procedure(@procedure)
 
