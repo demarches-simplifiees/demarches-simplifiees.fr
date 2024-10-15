@@ -23,6 +23,10 @@ class FilteredColumn
     other&.column == column && other.filter == filter
   end
 
+  def id
+    column.h_id.merge(filter:).sort.to_json
+  end
+
   private
 
   def check_filter_max_length
