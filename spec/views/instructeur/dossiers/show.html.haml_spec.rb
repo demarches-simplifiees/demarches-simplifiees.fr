@@ -219,6 +219,8 @@ describe 'instructeurs/dossiers/show', type: :view do
   end
 
   describe "Dossier labels" do
+    let(:procedure) { create(:procedure, :with_labels) }
+    let(:dossier) { create(:dossier, :en_construction, procedure:) }
     context "Dossier without labels" do
       it 'displays button with text to add label' do
         expect(subject).to have_text("Ajouter un label")

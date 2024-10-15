@@ -295,7 +295,6 @@ class Procedure < ApplicationRecord
   after_initialize :ensure_path_exists
   before_save :ensure_path_exists
   after_create :ensure_defaut_groupe_instructeur
-  after_create :create_generic_procedure_labels
 
   include AASM
 
@@ -530,6 +529,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_en_cours = false
     procedure.template = false
     procedure.monavis_embed = nil
+    procedure.procedure_labels = procedure_labels.map(&:dup)
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
