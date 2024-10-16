@@ -221,6 +221,16 @@ describe 'instructeurs/dossiers/show', type: :view do
   describe "Dossier labels" do
     let(:procedure) { create(:procedure, :with_labels) }
     let(:dossier) { create(:dossier, :en_construction, procedure:) }
+
+    context "Procedure without labels" do
+      let(:procedure_without_labels) { create(:procedure) }
+      let(:dossier) { create(:dossier, :en_construction, procedure: procedure_without_labels) }
+      it 'does not display button to add label or dropdown' do
+        expect(subject).not_to have_text("Ajouter un label")
+        expect(subject).not_to have_text("à relancer")
+      end
+    end
+
     context "Dossier without labels" do
       it 'displays button with text to add label' do
         expect(subject).to have_text("Ajouter un label")
