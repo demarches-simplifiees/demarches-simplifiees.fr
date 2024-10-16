@@ -59,6 +59,26 @@ module ColumnsConcern
       [common, individual_or_moral_columns, _chorus_columns].flatten.compact
     end
 
+    def all_dossier_columns_for_export
+      dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
+
+      states = [dossier_state_column]
+
+      for_export = ['archived', 'motivation', 'last_champ_updated_at']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
+
+      instructeurs = [Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')]
+
+      routing =
+        if self.routing_enabled?
+          [Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)]
+        else
+          []
+        end
+      [dates, sva_svr_columns, states, routing, for_export, instructeurs].flatten.compact
+    end
+
     def dossier_id_column
       Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
     end
