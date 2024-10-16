@@ -24,7 +24,7 @@ describe 'Administrateurs can edit procedures', js: true do
     click_on 'Ajouter un champ'
     select "Oui/Non"
     fill_in "Libellé du champ", with: "Un champ oui non"
-    click_on "Revenir à l'écran de gestion"
+    click_on "Revenir à l’écran de gestion"
     procedure.reload
     first_tdc = procedure.draft_revision.types_de_champ.first
     # back to procedure dashboard, explain you can set it up now
