@@ -17,7 +17,6 @@ module Instructeurs
 
     def create
       @export_template = ExportTemplate.new(export_template_params)
-      assign_columns
 
       if @export_template.save
         redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été créé"
@@ -32,7 +31,6 @@ module Instructeurs
 
     def update
       @export_template.assign_attributes(export_template_params)
-      assign_columns
 
       if @export_template.save
         redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
@@ -65,7 +63,7 @@ module Instructeurs
 
     def export_template_params
       params.require(:export_template)
-        .permit(:name, :kind, :groupe_instructeur_id, dossier_folder: [:enabled, :template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template])
+        .permit(:name, :kind, :groupe_instructeur_id, dossier_folder: [:enabled, :template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template], exported_columns: [:id, :libelle])
     end
 
     def set_procedure_and_groupe_instructeurs
