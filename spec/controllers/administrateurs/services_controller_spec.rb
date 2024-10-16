@@ -4,6 +4,58 @@ describe Administrateurs::ServicesController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, administrateur: admin) }
 
+  describe '#new' do
+    let(:admin) { administrateurs(:default_admin) }
+    let(:procedure) { create(:procedure, administrateur: admin) }
+
+    before do
+      sign_in(admin.user)
+    end
+
+    subject { get :new, params: { procedure_id: procedure.id } }
+
+    context 'when admin has a SIRET from AgentConnect' do
+      let(:siret) { "20004021000060" }
+
+      before do
+        agi = build(:agent_connect_information, siret:)
+        admin.instructeur.agent_connect_information << agi
+      end
+
+      context 'when a service already exists for the SIRET' do
+        before do
+          create(:service, administrateur: admin, siret: siret)
+        end
+
+        it 'does not prefill the SIRET' do
+          subject
+          expect(assigns[:service].siret).to be_nil
+          expect(assigns[:prefilled]).to be_nil
+        end
+      end
+
+      context 'when no service exists for the SIRET' do
+        it 'prefills the SIRET and fetches service information' do
+          VCR.use_cassette("annuaire_service_public_success_#{siret}") do
+            subject
+            expect(assigns[:service].siret).to eq(siret)
+            expect(assigns[:service].nom).to eq("Communauté de communes - Lacs et Gorges du Verdon")
+            expect(assigns[:service].adresse).to eq("242 avenue Albert-1er 83630 Aups")
+            expect(assigns[:prefilled]).to eq(:success)
+          end
+        end
+      end
+    end
+
+    context 'when admin has no SIRET from AgentConnect' do
+      it 'does not prefill the SIRET' do
+        subject
+        expect(assigns[:service].siret).to be_nil
+        expect(assigns[:prefilled]).to be_nil
+      end
+    end
+  end
+
   describe '#create' do
     before do
       sign_in(admin.user)
