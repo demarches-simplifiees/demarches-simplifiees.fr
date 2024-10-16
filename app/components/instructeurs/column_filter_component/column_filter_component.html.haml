@@ -9,7 +9,7 @@
     %input.hidden{ type: 'submit', formaction: update_filter_instructeur_procedure_path(procedure), data: { autosubmit_target: 'submitter' } }
 
   = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
-  - if column_type == :enum
+  - if column_type == :enum || column_type == :enums
     = select_tag :filter, options_for_select(options_for_select_of_column), id: 'value', name: "#{prefix}[filter]", class: 'fr-select', data: { no_autosubmit: true }
   - else
     %input#value.fr-input{ type: column_type, name: "#{prefix}[filter]", maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH, disabled: column.nil? ? true : false, data: { no_autosubmit: true } }
