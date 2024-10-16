@@ -262,18 +262,22 @@ describe ExportTemplate do
 
   describe '#all_dossier_columns' do
     it "returns all dossier columns" do
-      expect(export_template.all_dossier_columns).to match_array [
-        { :path => "archived", :source => "dossier", :libelle => "Archivé" },
-        { :path => "dossier_state", :source => "dossier", :libelle => "État du dossier" },
-        { :path => "updated_at", :source => "dossier", :libelle => "Dernière mise à jour le" },
-        { :path => "last_champ_updated_at", :source => "dossier", :libelle => "Dernière mise à jour du dossier le" },
-        { :path => "depose_at", :source => "dossier", :libelle => "Déposé le" },
-        { :path => "en_instruction_at", :source => "dossier", :libelle => "Passé en instruction le" },
-        { :path => "processed_at", :source => "dossier", :libelle => "Traité le" },
-        { :path => "motivation", :source => "dossier", :libelle => "Motivation de la décision" },
-        { :path => "instructeurs", :source => "dossier", :libelle => "Instructeurs" },
-        { :path => "groupe_instructeur", :source => "dossier", :libelle => "Groupe instructeur" }
+      expected = [
+        procedure.find_column(label: "Archivé"),
+        procedure.find_column(label: "Statut"),
+        procedure.find_column(label: "Mis à jour le"),
+        procedure.find_column(label: "Dernière mise à jour du dossier le"),
+        procedure.find_column(label: "Déposé le"),
+        procedure.find_column(label: "En instruction le"),
+        procedure.find_column(label: "Terminé le"),
+        procedure.find_column(label: "Motivation de la décision"),
+        procedure.find_column(label: "Email instructeur"),
+        procedure.find_column(label: "Groupe instructeur")
       ]
+      actuals = export_template.all_dossier_columns.map(&:h_id)
+      expected.each do |expected_col|
+        expect(actuals).to include(expected_col.h_id)
+      end
     end
   end
 

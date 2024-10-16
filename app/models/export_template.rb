@@ -82,7 +82,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def all_dossier_columns
-    dossier_columns_for(all_dossier_column_keys)
+    procedure.all_dossier_columns_for_export
   end
 
   def columns_meta

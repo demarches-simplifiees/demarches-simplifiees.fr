@@ -24,4 +24,4 @@
             .fr-checkbox-group
               - id = sanitize_to_id(field_id('export_template', 'columns', column.to_json))
               = check_box_tag field_name('export_template', 'columns', ''), column.to_json, checked_columns&.include?(column), class: 'fr-checkbox', id: id, data: { "checkbox-select-all-target": 'checkbox' }
-              = label_tag id, column[:libelle]
+              = label_tag id, column.label

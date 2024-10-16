@@ -25,6 +25,10 @@ fr:
             for_tiers: "Dépôt pour un tiers"
             mandataire_last_name: "Nom du mandataire"
             mandataire_first_name: "Prénom du mandataire"
+            archived: 'Archivé'
+            dossier_state: 'État du dossier'
+            last_champ_updated_at: 'Dernière mise à jour du dossier le'
+            motivation: 'Motivation de la décision'
           user:
             id: Identifiant du demandeur
             email: Demandeur
