@@ -95,14 +95,12 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         )
       end
 
-      let(:columns) {
+      let(:exported_columns) do
         [
-          { path: "id", source: "dossier" },
-          { path: "email", source: "dossier" },
-          { path: "updated_at", source: "dossier" },
-          { path: "value", source: "tdc", stable_id: 1 }
-        ].map(&:to_json)
-      }
+          { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
+          { id: procedure.find_column(label: 'Mis à jour le').id, libelle: 'Mis à jour le' }
+        ]
+      end
 
       let(:create_params) do
         {
@@ -111,25 +109,16 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           groupe_instructeur_id: groupe_instructeur.id,
           export_pdf: item_params(text: "export"),
           dossier_folder: item_params(text: "dossier"),
-          columns:
+          exported_columns:
         }
       end
-
-      let(:expected_columns) {
-        [
-          { libelle: "ID", path: "id", source: "dossier" },
-          { libelle: "Email", path: "email", source: "dossier" },
-          { libelle: "Dernière mise à jour le", path: "updated_at", source: "dossier" },
-          { libelle: "un texte", path: "value", source: "tdc", stable_id: 1 }
-        ]
-      }
 
       context 'with valid params' do
         it 'redirect to some page' do
           subject
           expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
           expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été créé"
-          expect(ExportTemplate.last.columns).to eq(expected_columns)
+          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Mis à jour le']
         end
       end
     end
@@ -195,13 +184,12 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     end
 
     context 'for tabular' do
-      let(:columns) {
+      let(:exported_columns) do
         [
-          { path: "id", source: "dossier" },
-          { path: "email", source: "dossier" },
-          { path: "updated_at", source: "dossier" }
-        ].map(&:to_json)
-      }
+          { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
+          { id: procedure.find_column(label: 'Mis à jour le').id, libelle: 'Mis à jour le' }
+        ]
+      end
 
       let(:export_template_params) do
         {
@@ -210,24 +198,16 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           groupe_instructeur_id: groupe_instructeur.id,
           export_pdf: item_params(text: "export"),
           dossier_folder: item_params(text: "dossier"),
-          columns:
+          exported_columns:
         }
       end
-
-      let(:expected_columns) {
-        [
-          { libelle: "ID", path: "id", source: "dossier" },
-          { libelle: "Email", path: "email", source: "dossier" },
-          { libelle: "Dernière mise à jour le", path: "updated_at", source: "dossier" }
-        ]
-      }
 
       context 'with valid params' do
         it 'redirect to some page' do
           subject
           expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
           expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été modifié"
-          expect(ExportTemplate.last.columns).to eq(expected_columns)
+          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Mis à jour le']
         end
       end
     end
