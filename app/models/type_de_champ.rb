@@ -4,6 +4,7 @@ class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
     visa: :visa,
+    table_row_selector: :table_row_selector,
     tefenua: :tefenua,
     engagement_juridique: :engagement_juridique_type_de_champ,
 

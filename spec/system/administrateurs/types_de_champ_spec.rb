@@ -206,6 +206,28 @@ describe 'As an administrateur I can edit types de champ', js: true do
     end
   end
 
+  context 'table_row_selector enabled' do
+    before { Flipper.enable(:table_row_selector, administrateur.user) }
+
+    it "Add table_row_selector champ" do
+      VCR.use_cassette('baserow_api_available_tables') do
+        add_champ
+
+        select('Table Row Selector', from: 'Type de champ')
+        fill_in 'Libellé du champ', with: 'Libellé de champ Table Row Selector', fill_options: { clear: :backspace }
+
+        expect(page).to have_selector('select[name="type_de_champ[table_id]"]')
+
+        find('select[name="type_de_champ[table_id]"]').find('option', text: 'Communes de polynésie').select_option
+
+        expect(page).to have_content('Formulaire enregistré')
+
+        page.refresh
+        expect(page).to have_content('Communes de polynésie')
+      end
+    end
+  end
+
   context "estimated duration visible" do
     scenario "displaying the estimated fill duration" do
       # It doesn't display anything when there are no champs
