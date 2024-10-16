@@ -4,9 +4,9 @@ class TypeDeChamp < ApplicationRecord
   FILE_MAX_SIZE = 200.megabytes
   FEATURE_FLAGS = {
     visa: :visa,
+    referentiel_de_polynesie: :referentiel_de_polynesie,
     tefenua: :tefenua,
     engagement_juridique: :engagement_juridique_type_de_champ,
-
     cojo: :cojo_type_de_champ,
     expression_reguliere: :expression_reguliere_type_de_champ
   }
@@ -18,7 +18,8 @@ class TypeDeChamp < ApplicationRecord
     commune_de_polynesie: 'commune_de_polynesie',
     code_postal_de_polynesie: 'code_postal_de_polynesie',
     numero_dn: 'numero_dn',
-    table_row_selector: 'table_row_selector',
+    # referentiel_de_polynesie: 'referentiel_de_polynesie',
+    referentiel_de_polynesie: 'referentiel_de_polynesie',
     te_fenua: 'te_fenua',
     visa: 'visa'
   }
@@ -40,7 +41,7 @@ class TypeDeChamp < ApplicationRecord
     code_postal_de_polynesie: LOCALISATION,
     numero_dn: REFERENTIEL_EXTERNE,
     te_fenua: REFERENTIEL_EXTERNE,
-    table_row_selector: REFERENTIEL_EXTERNE,
+    referentiel_de_polynesie: REFERENTIEL_EXTERNE,
     visa: STRUCTURE
   }
 
@@ -463,8 +464,8 @@ class TypeDeChamp < ApplicationRecord
     type_champ == TypeDeChamp.type_champs.fetch(:visa)
   end
 
-  def table_row_selector?
-    type_champ == TypeDeChamp.type_champs.fetch(:table_row_selector)
+  def referentiel_de_polynesie?
+    type_champ == TypeDeChamp.type_champs.fetch(:referentiel_de_polynesie)
   end
 
   def te_fenua?
@@ -669,8 +670,12 @@ class TypeDeChamp < ApplicationRecord
     accredited_users.presence || []
   end
 
+  # def available_tables
+  #   TableRowSelector::API.available_tables.map { [_1[:name], _1[:id]] }
+  # end
+
   def available_tables
-    TableRowSelector::API.available_tables.map { [_1[:name], _1[:id]] }
+    ReferentielDePolynesie::API.available_tables.map { [_1[:name], _1[:id]] }
   end
 
   def to_typed_id
@@ -732,7 +737,7 @@ class TypeDeChamp < ApplicationRecord
       type_champs.fetch(:siret),
       type_champs.fetch(:numero_dn),
       type_champs.fetch(:te_fenua),
-      type_champs.fetch(:table_row_selector)
+      type_champs.fetch(:referentiel_de_polynesie)
       false
     else
       true

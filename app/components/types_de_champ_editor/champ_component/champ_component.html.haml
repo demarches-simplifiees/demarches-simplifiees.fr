@@ -103,7 +103,7 @@
               .cell.width-100
                 = form.label :accredited_user_string, "Mails des personnes accréditées", for: dom_id(type_de_champ, :accredited_user_string)
                 = form.text_area :accredited_user_string, class: 'fr-input small-margin small', rows: 7, id: dom_id(type_de_champ, :accredited_user_string), placeholder: 'Ecrire un email par ligne'
-          - if type_de_champ.table_row_selector?
+          - if type_de_champ.referentiel_de_polynesie?
             .flex.width-33
             .flex.column.flex-grow.justify-start
               .cell.width-100

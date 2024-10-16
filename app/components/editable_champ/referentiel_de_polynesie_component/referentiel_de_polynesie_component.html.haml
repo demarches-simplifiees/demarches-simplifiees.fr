@@ -1,0 +1,7 @@
+- render_parent
+
+= @form.hidden_field :value
+= @form.hidden_field :external_id
+= react_component("ComboReferentielDePolynesieSearch",
+  **react_input_opts,
+  **react_combo_props)

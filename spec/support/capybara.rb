@@ -55,7 +55,7 @@ Capybara.register_driver :headless_chrome do |app|
   setup_driver(app, download_path, options)
 end
 
-Capybara.default_max_wait_time = 4
+Capybara.default_max_wait_time = 1
 
 Capybara.ignore_hidden_elements = false
 
@@ -64,7 +64,7 @@ Capybara.enable_aria_label = true
 Capybara.disable_animation = true
 
 # Save a snapshot of the HTML page when an integration test fails
-Capybara::Screenshot.autosave_on_failure = true
+Capybara::Screenshot.autosave_on_failure = false
 # Keep only the screenshots generated from the last failing test suite
 Capybara::Screenshot.prune_strategy = :keep_last_run
 # Tell Capybara::Screenshot how to take screenshots when using the headless_chrome driver

@@ -1,0 +1,49 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.baserow.io/api/database/rows/table/202600/99999/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - mes-demarches.gov.pf
+      Authorization:
+      - Token TqdlHPclwJkEouMLjtiFOcmKjgsDWtaL
+      Expect:
+      - ''
+  response:
+    status:
+      code: 404
+      message: ''
+    headers:
+      Allow:
+      - GET, PATCH, DELETE, HEAD, OPTIONS
+      Alt-Svc:
+      - h3=":443"; ma=2592000
+      Content-Type:
+      - application/json
+      Cross-Origin-Opener-Policy:
+      - same-origin
+      Date:
+      - Wed, 16 Oct 2024 10:46:54 GMT
+      Referrer-Policy:
+      - same-origin
+      Server:
+      - Caddy
+      - gunicorn
+      Vary:
+      - origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - DENY
+      Content-Length:
+      - '80'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":"ERROR_ROW_DOES_NOT_EXIST","detail":"The rows [''99999'']
+        do not exist."}'
+  recorded_at: Wed, 16 Oct 2024 10:46:50 GMT
+recorded_with: VCR 6.2.0

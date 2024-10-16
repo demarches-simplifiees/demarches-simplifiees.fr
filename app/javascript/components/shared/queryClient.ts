@@ -24,8 +24,8 @@ function buildURL(scope: string, term: string, extra: string) {
     params.set('q', term);
     params.set('rows', `${API_EDUCATION_QUERY_LIMIT}`);
     params.set('dataset', 'fr-en-annuaire-education');
-  } else if (scope == 'table-row-selector') {
-    path = '/champs/table_row_selector/search';
+  } else if (scope == 'referentiel-de-polynesie') {
+    path = '/champs/referentiel_de_polynesie/search';
     params.set('domain', extra);
     params.set('term', term);
   }

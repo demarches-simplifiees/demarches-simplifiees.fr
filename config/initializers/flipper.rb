@@ -29,7 +29,8 @@ features = [
   :qrcoded_pdf,
   :sva,
   :switch_domain,
-  :visa
+  :visa,
+  :referentiel_de_polynesie
 ]
 
 def database_exists?
