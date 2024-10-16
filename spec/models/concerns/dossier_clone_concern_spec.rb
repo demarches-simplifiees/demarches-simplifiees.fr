@@ -334,15 +334,17 @@ RSpec.describe DossierCloneConcern do
     subject { dossier.merge_fork(forked_dossier) }
 
     context 'with updated champ' do
+      let(:repetition_champ) { dossier.project_champs_public.last }
       let(:updated_champ) { forked_dossier.champs.find { _1.stable_id == 99 } }
-      let(:updated_repetition_champ) { forked_dossier.champs.find { _1.stable_id == 994 } }
+      let(:updated_repetition_champs) { forked_dossier.champs.filter { _1.stable_id == 994 } }
 
       before do
+        repetition_champ.add_row(updated_by: 'test')
         dossier.champs.each do |champ|
           champ.update(value: 'old value')
         end
         updated_champ.update(value: 'new value')
-        updated_repetition_champ.update(value: 'new value in repetition')
+        updated_repetition_champs.each { _1.update(value: 'new value in repetition') }
         dossier.debounce_index_search_terms_flag.remove
       end
 

@@ -153,14 +153,11 @@ module DossierCloneConcern
 
     diff[:added].each { _1.update_column(:dossier_id, id) }
 
-    # a bit of a hack to work around unicity index
-    remove_group_id = ULID.generate
     diff[:updated].each do |champ|
-      champs_index.fetch(champ.public_id).update(row_id: remove_group_id)
+      champs_index.fetch(champ.public_id)&.destroy!
       champ.update_column(:dossier_id, id)
     end
 
-    Champ.where(row_id: remove_group_id).destroy_all
     diff[:removed].each(&:destroy!)
   end
 end
