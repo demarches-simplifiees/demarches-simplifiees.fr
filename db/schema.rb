@@ -12,12 +12,9 @@
 
 ActiveRecord::Schema[7.0].define(version: 2024_06_24_133648) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "pg_buffercache"
-  enable_extension "pg_stat_statements"
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "postgis"
-  enable_extension "sslinfo"
   enable_extension "unaccent"
 
   create_table "action_text_rich_texts", force: :cascade do |t|

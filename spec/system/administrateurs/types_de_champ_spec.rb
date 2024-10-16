@@ -188,7 +188,7 @@ describe 'As an administrateur I can edit types de champ', js: true do
   end
 
   context 'visa enabled' do
-    before { Flipper.enable(:visa, administrateur.user) }
+    before { Flipper.enable(:visa, procedure) }
 
     it "Add visa champ" do
       add_champ
