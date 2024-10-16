@@ -12,6 +12,12 @@ module Administrateurs
     def new
       @procedure = procedure
       @service = Service.new
+
+      siret = current_administrateur.instructeur.last_agent_connect_information&.siret
+      if siret
+        @service.siret = siret
+        @prefilled = handle_siret_prefill
+      end
     end
 
     def create
@@ -19,7 +25,13 @@ module Administrateurs
       @service.administrateur = current_administrateur
 
       if request.xhr? && params[:service][:siret].present?
-        handle_siret_update
+        @service.siret = params[:service][:siret]
+        prefilled = handle_siret_prefill
+        render turbo_stream: turbo_stream.replace(
+          "service_form",
+          partial: "administrateurs/services/form",
+          locals: { service: @service, prefilled:, procedure: @procedure }
+        )
       elsif @service.save
         @service.enqueue_api_entreprise
 
@@ -111,8 +123,7 @@ module Administrateurs
       current_administrateur.procedures.find(params[:procedure_id])
     end
 
-    def handle_siret_update
-      @service.assign_attributes(siret: params[:service][:siret])
+    def handle_siret_prefill
       @service.validate
 
       if !@service.errors.include?(:siret)
@@ -130,11 +141,7 @@ module Administrateurs
       @service.errors.clear
       siret_errors.each { @service.errors.import(_1) }
 
-      render turbo_stream: turbo_stream.replace(
-        "service_form",
-        partial: "administrateurs/services/form",
-        locals: { service: @service, prefilled:, procedure: @procedure }
-      )
+      prefilled
     end
   end
 end
