@@ -99,7 +99,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
           { id: procedure.find_column(label: 'Mis à jour le').id, libelle: 'Mis à jour le' }
-        ]
+        ].map(&:to_json)
       end
 
       let(:create_params) do
@@ -188,7 +188,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
           { id: procedure.find_column(label: 'Mis à jour le').id, libelle: 'Mis à jour le' }
-        ]
+        ].map(&:to_json)
       end
 
       let(:export_template_params) do

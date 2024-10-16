@@ -10,8 +10,12 @@ class ExportedColumnType < ActiveRecord::Type::Value
       value
     in NilClass # default value
       nil
-    # from form
+    # from db
     in { id: String|Hash, libelle: String } => h
+      ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle])
+    # from form
+    in String
+      h = JSON.parse(value).deep_symbolize_keys
       ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle])
     end
   end
