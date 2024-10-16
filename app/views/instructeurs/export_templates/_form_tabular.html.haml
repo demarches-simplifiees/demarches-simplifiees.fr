@@ -43,10 +43,10 @@
             %label.fr-label{ for: "csv" } csv
 
       %h2 Contenu de l'export
-      = render partial: 'checkbox_group', locals: { title: 'Colonnes Usager', all_columns: @export_template.all_usager_columns, checked_columns: @export_template.columns }
+      = render partial: 'checkbox_group', locals: { title: 'Colonnes Usager', all_columns: @export_template.all_usager_columns, checked_columns: @export_template.exported_columns }
 
 
-      = render partial: 'checkbox_group', locals: { title: 'Colonnes Infos dossier', all_columns: @export_template.all_dossier_columns, checked_columns: @export_template.columns }
+      = render partial: 'checkbox_group', locals: { title: 'Colonnes Infos dossier', all_columns: @export_template.all_dossier_columns, checked_columns: @export_template.exported_columns }
 
       - types_de_champ_public = @procedure.types_de_champ_for_procedure_presentation(with_header_section: true).public_only
       - types_de_champ_private = @procedure.types_de_champ_for_procedure_presentation(with_header_section: true).private_only

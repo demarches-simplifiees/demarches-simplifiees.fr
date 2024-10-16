@@ -63,7 +63,7 @@ module Instructeurs
 
     def export_template_params
       params.require(:export_template)
-        .permit(:name, :kind, :groupe_instructeur_id, dossier_folder: [:enabled, :template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template], exported_columns: [:id, :libelle])
+        .permit(:name, :kind, :groupe_instructeur_id, dossier_folder: [:enabled, :template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template], exported_columns: [])
     end
 
     def set_procedure_and_groupe_instructeurs
