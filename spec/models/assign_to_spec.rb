@@ -9,32 +9,43 @@ describe AssignTo, type: :model do
     let(:procedure_presentation_or_default) { procedure_presentation_and_errors.first }
     let(:errors) { procedure_presentation_and_errors.second }
 
-    context "without a procedure_presentation" do
-      it { expect(procedure_presentation_or_default).to be_persisted }
-      it { expect(procedure_presentation_or_default).to be_valid }
-      it { expect(errors).to be_nil }
+    context "without a preexisting procedure_presentation" do
+      it 'creates a default pp' do
+        expect(procedure_presentation_or_default).to be_persisted
+        expect(procedure_presentation_or_default).to be_valid
+        expect(errors).to be_nil
+      end
     end
 
-    context "with a procedure_presentation" do
-      let!(:procedure_presentation) { ProcedurePresentation.create(assign_to: assign_to) }
+    context "with a preexisting procedure_presentation" do
+      let!(:procedure_presentation) { ProcedurePresentation.create(assign_to:) }
 
-      it { expect(procedure_presentation_or_default).to eq(procedure_presentation) }
-      it { expect(procedure_presentation_or_default).to be_valid }
-      it { expect(errors).to be_nil }
+      it 'returns the preexisting pp' do
+        expect(procedure_presentation_or_default).to eq(procedure_presentation)
+        expect(procedure_presentation_or_default).to be_valid
+        expect(errors).to be_nil
+      end
     end
 
     context "with an invalid procedure_presentation" do
       let!(:procedure_presentation) do
-        pp = ProcedurePresentation.new(assign_to: assign_to, displayed_fields: [{ 'table' => 'invalid', 'column' => 'random' }])
-        pp.save(validate: false)
-        pp
+        pp = ProcedurePresentation.create(assign_to: assign_to)
+
+        sql = <<-SQL.squish
+          UPDATE procedure_presentations
+          SET displayed_columns =  ARRAY['{\"procedure_id\":666}'::jsonb]
+          WHERE id = #{pp.id} ;
+        SQL
+
+        pp.class.connection.execute(sql)
+
+        assign_to.reload
       end
 
-      it { expect(procedure_presentation_or_default).to be_persisted }
-      it { expect(procedure_presentation_or_default).to be_valid }
-      it { expect(errors).to be_present }
       it do
-        procedure_presentation_or_default
+        expect(procedure_presentation_or_default).to be_persisted
+        expect(procedure_presentation_or_default).to be_valid
+        expect(errors).to be_present
         expect(assign_to.procedure_presentation).not_to be(procedure_presentation)
       end
     end

@@ -40,8 +40,10 @@ class DossierProjectionService
   # Those hashes are needed because:
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
-  def self.project(dossiers_ids, fields)
-    fields = fields.deep_dup
+  def self.project(dossiers_ids, columns)
+    fields = columns.map { |c| { TABLE => c.table, COLUMN => c.column } }
+    champ_value = champ_value_formatter(dossiers_ids, fields)
+
     state_field = { TABLE => 'self', COLUMN => 'state' }
     archived_field = { TABLE => 'self', COLUMN => 'archived' }
     batch_operation_field = { TABLE => 'self', COLUMN => 'batch_operation_id' }
@@ -53,7 +55,7 @@ class DossierProjectionService
     individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
     sva_svr_decision_on_field = { TABLE => 'self', COLUMN => 'sva_svr_decision_on' }
     dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
-    champ_value = champ_value_formatter(dossiers_ids, fields)
+
     ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, hidden_by_reason_field, for_tiers_field, individual_first_name, individual_last_name, batch_operation_field, dossier_corrections] + fields)
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table

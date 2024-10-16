@@ -1,16 +1,20 @@
 # frozen_string_literal: true
 
 class Column
+  # include validations to enable procedure_presentation.validate_associate,
+  # which enforces the deserialization of columns in the displayed_columns attribute
+  # and raises an error if a column is not found
+  include ActiveModel::Validations
+
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
 
-  attr_reader :table, :column, :label, :classname, :type, :scope, :value_column, :filterable, :displayable
+  attr_reader :table, :column, :label, :type, :scope, :value_column, :filterable, :displayable
 
-  def initialize(procedure_id:, table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, classname: '', scope: '')
+  def initialize(procedure_id:, table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, scope: '')
     @procedure_id = procedure_id
     @table = table
     @column = column
     @label = label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table])
-    @classname = classname
     @type = type
     @scope = scope
     @value_column = value_column
@@ -29,15 +33,21 @@ class Column
 
   def to_json
     {
-      table:, column:, label:, classname:, type:, scope:, value_column:, filterable:, displayable:
+      table:, column:, label:, type:, scope:, value_column:, filterable:, displayable:
     }
   end
 
-  def notifications?
-    table == 'notifications' && column == 'notifications'
-  end
+  def notifications? = [table, column] == ['notifications', 'notifications']
+
+  def dossier_state? = [table, column] == ['self', 'state']
 
   def self.find(h_id)
-    Procedure.with_discarded.find(h_id[:procedure_id]).find_column(h_id:)
+    begin
+      procedure = Procedure.with_discarded.find(h_id[:procedure_id])
+    rescue ActiveRecord::RecordNotFound
+      raise ActiveRecord::RecordNotFound.new("Column: unable to find procedure #{h_id[:procedure_id]} from h_id #{h_id}")
+    end
+
+    procedure.find_column(h_id: h_id)
   end
 end

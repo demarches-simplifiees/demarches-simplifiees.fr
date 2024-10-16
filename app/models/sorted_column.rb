@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class SortedColumn
+  # include validations to enable procedure_presentation.validate_associate,
+  # which enforces the deserialization of columns in the sorted_column attribute
+  # and raises an error if a column is not found
+  include ActiveModel::Validations
+
   attr_reader :column, :order
 
   def initialize(column:, order:)
@@ -18,5 +23,9 @@ class SortedColumn
 
   def sort_by_notifications?
     @column.notifications? && @order == 'desc'
+  end
+
+  def id
+    column.h_id.merge(order:).sort.to_json
   end
 end

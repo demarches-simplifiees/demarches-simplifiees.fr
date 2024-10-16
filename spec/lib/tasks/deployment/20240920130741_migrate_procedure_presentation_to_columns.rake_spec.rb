@@ -38,10 +38,7 @@ describe '20240920130741_migrate_procedure_presentation_to_columns.rake' do
   it 'populates the columns' do
     procedure_id = procedure.id
 
-    expect(procedure_presentation.displayed_columns).to eq([
-      { "procedure_id" => procedure_id, "column_id" => "etablissement/entreprise_raison_sociale" },
-      { "procedure_id" => procedure_id, "column_id" => "type_de_champ/#{stable_id}" }
-    ])
+    expect(procedure_presentation.displayed_columns.map(&:label)).to eq(["Raison sociale", procedure.active_revision.types_de_champ.first.libelle])
 
     order, column_id = procedure_presentation
       .sorted_column
@@ -52,9 +49,8 @@ describe '20240920130741_migrate_procedure_presentation_to_columns.rake' do
 
     expect(procedure_presentation.tous_filters).to eq([])
 
-    traites = procedure_presentation.traites_filters
-      .map { [_1['id'], _1['filter']] }
+    traites = procedure_presentation.traites_filters.map { [_1.label, _1.filter] }
 
-    expect(traites).to eq([[{ "column_id" => "etablissement/libelle_naf", "procedure_id" => procedure_id }, "Administration publique générale"]])
+    expect(traites).to eq([["Libellé NAF", "Administration publique générale"]])
   end
 end

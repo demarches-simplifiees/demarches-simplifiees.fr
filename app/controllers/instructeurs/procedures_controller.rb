@@ -73,7 +73,7 @@ module Instructeurs
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
 
-      @current_filters = current_filters
+      @current_filters = procedure_presentation.filters_for(statut)
       @counts = current_instructeur
         .dossiers_count_summary(groupe_instructeur_ids)
         .symbolize_keys
@@ -95,7 +95,7 @@ module Instructeurs
 
       @has_export_notification = notify_exports?
       @last_export = last_export_for(statut)
-      @filtered_sorted_ids = procedure_presentation.filtered_sorted_ids(dossiers, statut, count: dossiers_count)
+      @filtered_sorted_ids = DossierFilterService.filtered_sorted_ids(dossiers, statut, procedure_presentation.filters_for(statut), procedure_presentation.sorted_column, current_instructeur, count: dossiers_count)
       page = params[:page].presence || 1
 
       @dossiers_count = @filtered_sorted_ids.size
@@ -104,7 +104,7 @@ module Instructeurs
         .page(page)
         .per(ITEMS_PER_PAGE)
 
-      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_fields)
+      @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_columns)
       @disable_checkbox_all = @projected_dossiers.all? { _1.batch_operation_id.present? }
 
       @batch_operations = BatchOperation.joins(:groupe_instructeurs)
@@ -133,9 +133,9 @@ module Instructeurs
     end
 
     def update_displayed_fields
-      values = (params['values'].presence || []).reject(&:empty?)
+      ids = (params['values'].presence || []).reject(&:empty?)
 
-      procedure_presentation.update_displayed_fields(values)
+      procedure_presentation.update!(displayed_columns: ids)
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
@@ -147,8 +147,10 @@ module Instructeurs
     end
 
     def add_filter
-      if !procedure_presentation.add_filter(statut, params[:column], params[:value])
-        flash.alert = procedure_presentation.errors.full_messages
+      if !procedure_presentation.update(filter_params)
+        # complicated way to display inner error messages
+        flash.alert = procedure_presentation.errors
+          .flat_map { _1.detail[:value].flat_map { |c| c.errors.full_messages } }
       end
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
@@ -158,13 +160,10 @@ module Instructeurs
       @statut = statut
       @procedure = procedure
       @procedure_presentation = procedure_presentation
-      @column = procedure.find_column(h_id: JSON.parse(params[:column], symbolize_names: true))
-    end
-
-    def remove_filter
-      procedure_presentation.remove_filter(statut, params[:column], params[:value])
-
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
+      current_filter = procedure_presentation.filters_name_for(@statut)
+      # According to the html, the selected column is the last one
+      h_id = JSON.parse(params[current_filter].last[:id], symbolize_names: true)
+      @column = procedure.find_column(h_id:)
     end
 
     def download_export
@@ -383,10 +382,6 @@ module Instructeurs
       end
     end
 
-    def current_filters
-      @current_filters ||= procedure_presentation.filters.fetch(statut, [])
-    end
-
     def bulk_message_params
       params.require(:bulk_message).permit(:body)
     end
@@ -414,6 +409,12 @@ module Instructeurs
 
     def sorted_column_params
       params.permit(sorted_column: [:order, :id])
+    end
+
+    def filter_params
+      keys = [:tous_filters, :a_suivre_filters, :suivis_filters, :traites_filters, :expirant_filters, :archives_filters, :supprimes_filters]
+      h = keys.index_with { [:id, :filter] }
+      params.permit(h)
     end
   end
 end

@@ -12,7 +12,7 @@ module ColumnsConcern
       column = columns.find { _1.h_id == h_id } if h_id.present?
       column = columns.find { _1.label == label } if label.present?
 
-      raise ActiveRecord::RecordNotFound if column.nil?
+      raise ActiveRecord::RecordNotFound.new("Column: unable to find h_id: #{h_id} or label: #{label} for procedure_id #{id}") if column.nil?
 
       column
     end
@@ -30,7 +30,11 @@ module ColumnsConcern
     end
 
     def dossier_id_column
-      Column.new(procedure_id: id, table: 'self', column: 'id', classname: 'number-col', type: :number)
+      Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
+    end
+
+    def dossier_state_column
+      Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
     end
 
     def notifications_column
@@ -46,25 +50,23 @@ module ColumnsConcern
       non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
 
-      states = [Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)]
+      states = [dossier_state_column]
 
-      [common, dates, sva_svr_columns(for_filters: true), non_displayable_dates, states].flatten.compact
+      [common, dates, sva_svr_columns, non_displayable_dates, states].flatten.compact
     end
 
-    def sva_svr_columns(for_filters: false)
+    def sva_svr_columns
       return if !sva_svr_enabled?
 
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
 
       columns = [
         Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_on', type: :date,
-                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:), classname: for_filters ? '' : 'sva-col')
+                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:))
       ]
 
-      if for_filters
-        columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
-                      label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
-      end
+      columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
+                    label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
 
       columns
     end
@@ -73,11 +75,17 @@ module ColumnsConcern
       SortedColumn.new(column: notifications_column, order: 'desc')
     end
 
+    def default_displayed_columns = [email_column]
+
     private
+
+    def email_column
+      Column.new(procedure_id: id, table: 'user', column: 'email')
+    end
 
     def standard_columns
       [
-        Column.new(procedure_id: id, table: 'user', column: 'email'),
+        email_column,
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false) # not filterable ?

@@ -61,31 +61,18 @@ RSpec.describe Export, type: :model do
     it { expect(groupe_instructeur.reload).to be_present }
   end
 
-  describe '.find_by groupe_instructeurs' do
+  describe '.by_key groupe_instructeurs' do
     let!(:procedure) { create(:procedure) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
     let!(:gi_2) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
     let!(:gi_3) { create(:groupe_instructeur, procedure: procedure, instructeurs: [create(:instructeur)]) }
 
-    context 'without procedure_presentation' do
-      context 'when an export is made for one groupe instructeur' do
-        let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
+    context 'when an export is made for one groupe instructeur' do
+      let!(:export) { create(:export, groupe_instructeurs: [gi_1, gi_2]) }
 
-        it { expect(Export.by_key([gi_1.id], nil)).to be_empty }
-        it { expect(Export.by_key([gi_2.id, gi_1.id], nil)).to eq([export]) }
-        it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id], nil)).to be_empty }
-      end
-    end
-
-    context 'with procedure_presentation and without' do
-      let!(:export_global) { create(:export, statut: Export.statuts.fetch(:tous), groupe_instructeurs: [gi_1, gi_2], procedure_presentation: nil) }
-      let!(:export_with_filter) { create(:export, statut: Export.statuts.fetch(:suivis), groupe_instructeurs: [gi_1, gi_2], procedure_presentation: create(:procedure_presentation, procedure: procedure, assign_to: gi_1.instructeurs.first.assign_to.first)) }
-      let!(:procedure_presentation) { create(:procedure_presentation, procedure: gi_1.procedure) }
-
-      it 'find global exports as well as filtered one' do
-        expect(Export.by_key([gi_2.id, gi_1.id], export_with_filter.procedure_presentation))
-          .to contain_exactly(export_with_filter, export_global)
-      end
+      it { expect(Export.by_key([gi_1.id])).to be_empty }
+      it { expect(Export.by_key([gi_2.id, gi_1.id])).to eq([export]) }
+      it { expect(Export.by_key([gi_1.id, gi_2.id, gi_3.id])).to be_empty }
     end
   end
 
@@ -94,7 +81,9 @@ RSpec.describe Export, type: :model do
     let(:instructeur) { create(:instructeur) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [instructeur]) }
     let!(:pp) { gi_1.instructeurs.first.procedure_presentation_and_errors_for_procedure_id(procedure.id).first }
-    before { pp.add_filter('tous', procedure.find_column(label: 'Créé le').id, '10/12/2021') }
+    let(:created_at_column) { FilteredColumn.new(column: procedure.find_column(label: 'Créé le'), filter: '10/12/2021') }
+
+    before { pp.update(tous_filters: [created_at_column]) }
 
     context 'with procedure_presentation having different filters' do
       it 'works once' do
@@ -105,7 +94,10 @@ RSpec.describe Export, type: :model do
       it 'works once, changes procedure_presentation, recreate a new' do
         expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
-        pp.add_filter('tous', procedure.find_column(label: 'Mis à jour le').id, '10/12/2021')
+
+        update_at_column = FilteredColumn.new(column: procedure.find_column(label: 'Mis à jour le'), filter: '10/12/2021')
+        pp.update(tous_filters: [created_at_column, update_at_column])
+
         expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
       end
@@ -162,10 +154,16 @@ RSpec.describe Export, type: :model do
     let!(:dossier_accepte) { create(:dossier, :accepte, procedure: procedure) }
 
     let(:export) do
-      create(:export,
-             groupe_instructeurs: [procedure.groupe_instructeurs.first],
-             procedure_presentation: procedure_presentation,
-             statut: statut)
+      groupe_instructeurs = [procedure.groupe_instructeurs.first]
+      user_profile = groupe_instructeurs.first.instructeurs.first
+
+      Export.find_or_create_fresh_export(
+        :csv,
+        groupe_instructeurs,
+        user_profile,
+        procedure_presentation:,
+        statut:
+      )
     end
 
     context 'without procedure_presentation or since' do
@@ -179,17 +177,28 @@ RSpec.describe Export, type: :model do
       end
     end
 
-    context 'with procedure_presentation and statut supprimes' do
-      let(:statut) { 'supprimes' }
-      let(:procedure_presentation) do
-        create(:procedure_presentation,
-               procedure: procedure,
-               assign_to: procedure.groupe_instructeurs.first.assign_tos.first)
-      end
-      let!(:dossier_supprime) { create(:dossier, :accepte, procedure: procedure, hidden_by_administration_at: 2.days.ago) }
+    context 'with procedure_presentation and statut tous and filter en_construction' do
+      let(:statut) { 'tous' }
 
-      it 'includes supprimes' do
-        expect(export.send(:dossiers_for_export)).to include(dossier_supprime)
+      let(:procedure_presentation) do
+        statut_column = procedure.find_column(label: 'Statut')
+        en_construction_filter = FilteredColumn.new(column: statut_column, filter: 'en_construction')
+        create(:procedure_presentation,
+               procedure:,
+               assign_to: procedure.groupe_instructeurs.first.assign_tos.first,
+               tous_filters: [en_construction_filter])
+      end
+
+      before do
+        # ensure the export is generated
+        export
+
+        # change the procedure presentation
+        procedure_presentation.update(tous_filters: [])
+      end
+
+      it 'only includes the en_construction' do
+        expect(export.send(:dossiers_for_export)).to eq([dossier_en_construction])
       end
     end
   end
