@@ -120,7 +120,9 @@ module DossierHelper
 
   def tags_label(tags)
     if tags.count > 1
-      tag.ul(tags.map { tag.li(tag_label(_1[1], _1[2])) }.join.html_safe, class: 'fr-tags-group')
+      tag.ul(class: 'fr-tags-group') do
+        safe_join(tags.map { |t| tag.li(tag_label(t[1], t[2])) })
+      end
     else
       tag = tags.first
       tag_label(tag[1], tag[2])
@@ -128,7 +130,7 @@ module DossierHelper
   end
 
   def tag_label(name, color)
-    tag.span(name, class: "fr-tag fr-tag--sm  fr-tag--#{color}")
+    tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{color}")
   end
 
   def demandeur_dossier(dossier)
