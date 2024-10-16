@@ -1,0 +1,8 @@
+= form_with model: label, url: admin_procedure_procedure_labels_path(@procedure, id: @label.id), local: true do |f|
+  = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field, opts: { maxlength: ProcedureLabel::NAME_MAX_LENGTH})
+  = f.label :color, class: 'fr-label' do
+    = t('activerecord.attributes.procedure_label.color')
+    = render EditableChamp::AsteriskMandatoryComponent.new
+  = f.select :color, options_for_select(@colors_collection, selected: @label.color), {prompt: 'Choisir une couleur'}, {class: 'fr-select'}
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

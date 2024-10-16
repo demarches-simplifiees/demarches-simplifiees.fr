@@ -1,0 +1,6 @@
+fr:
+  activerecord:
+    attributes:
+      procedure_label:
+        color: Couleur
+        name: Nom

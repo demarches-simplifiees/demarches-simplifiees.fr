@@ -708,6 +708,8 @@ Rails.application.routes.draw do
         get 'preview', on: :member
       end
 
+      resources :procedure_labels, controller: 'procedure_labels'
+
       resource :attestation_template, only: [:show, :edit, :update, :create] do
         get 'preview', on: :member
       end

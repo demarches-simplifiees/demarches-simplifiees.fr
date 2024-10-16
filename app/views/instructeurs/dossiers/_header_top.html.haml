@@ -44,4 +44,11 @@
                 .fr-fieldset__element
                   .fr-checkbox-group.fr-checkbox-group--sm.fr-mb-1w
                     = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, label_id: b.value).present?  )
-                    = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{b.object.color}") { b.text }
+                    = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.colors.fetch(b.object.color)}") { b.text }
+
+            %hr
+              %p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+                %b Besoin d'autres labels ?
+                %br
+                Contactez les
+                = link_to 'administrateurs de la démarche', administrateurs_instructeur_procedure_path(dossier.procedure), class: 'fr-link fr-link--sm', **external_link_attributes
