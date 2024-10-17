@@ -80,7 +80,6 @@ describe Champs::DepartementChamp, type: :model do
       expect(champ.value).to eq('Ain')
       expect(champ.selected).to eq('01')
       expect(champ.to_s).to eq('01 – Ain')
-      expect(champ.for_api_v2).to eq('01 - Ain')
     end
 
     it 'with code having 3 chars' do

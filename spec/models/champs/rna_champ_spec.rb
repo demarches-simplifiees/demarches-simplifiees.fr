@@ -23,11 +23,11 @@ describe Champs::RNAChamp do
         champ.update(data: { association_titre: "Super asso" })
       end
 
-      it { expect(champ.for_export).to eq("W182736273 (Super asso)") }
+      it { expect(champ.type_de_champ.champ_value_for_export(champ)).to eq("W182736273 (Super asso)") }
     end
 
     context "no association title" do
-      it { expect(champ.for_export).to eq("W182736273") }
+      it { expect(champ.type_de_champ.champ_value_for_export(champ)).to eq("W182736273") }
     end
   end
 end
