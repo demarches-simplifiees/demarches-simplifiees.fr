@@ -71,8 +71,6 @@ class Logic::ChampValue < Logic::Term
         code_departement: targeted_champ.code_departement,
         code_region: targeted_champ.code_region
       }
-    # when "Champs::TableRowSelectorChamp"
-    #   targeted_champ.value
     when "Champs::ReferentielDePolynesieChamp"
       targeted_champ.value
     when "Champs::CommuneDePolynesieChamp", "Champs::CodePostalDePolynesieChamp"

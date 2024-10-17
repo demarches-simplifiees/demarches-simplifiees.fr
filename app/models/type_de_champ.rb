@@ -669,10 +669,6 @@ class TypeDeChamp < ApplicationRecord
     accredited_users.presence || []
   end
 
-  # def available_tables
-  #   TableRowSelector::API.available_tables.map { [_1[:name], _1[:id]] }
-  # end
-
   def available_tables
     ReferentielDePolynesie::API.available_tables.map { [_1[:name], _1[:id]] }
   end
