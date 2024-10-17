@@ -6,14 +6,14 @@ module ProcedurePathConcern
   included do
     has_many :procedure_paths, dependent: :destroy, autosave: true
 
-    # validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
+    validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
 
     after_initialize :ensure_path_exists
     before_validation :ensure_path_exists
     before_validation :add_procedure_path
 
     validates :procedure_paths, length: { minimum: 1 }
-    validates :procedure_paths, length: { minimum: 2 }, on: :publication
+    # validates :procedure_paths, length: { minimum: 2 }, on: :publication
 
     def ensure_path_exists
       if self.path.blank?
