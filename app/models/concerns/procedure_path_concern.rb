@@ -10,7 +10,7 @@ module ProcedurePathConcern
 
     after_initialize :ensure_path_exists
     before_save :ensure_path_exists
-    after_save :update_procedure_path
+    after_commit :update_procedure_paths
 
     def ensure_path_exists
       if self.path.blank?
@@ -18,29 +18,18 @@ module ProcedurePathConcern
       end
     end
 
-    def deactivate_all_paths
-      procedure_paths.update_all(deactivated_at: Time.zone.now)
-    end
-
-    def update_procedure_path
-      if !publiee?
-        deactivate_all_paths
-      end
-
-      return if path_before_last_save == path
-
-      procedure_paths.find_by(path: path_before_last_save)&.destroy! if brouillon?
-
-      # disable previous active paths
-      ProcedurePath.find_by(path: path, deactivated_at: nil)&.update!(deactivated_at: Time.zone.now)
-
-      procedure_paths.find_or_create_by(path: path).update!(deactivated_at: publiee? ? nil : Time.zone.now)
+    def update_procedure_paths
+      procedure_paths.find_or_create_by!(path: path)
     end
 
     def other_procedure_with_path(path)
       Procedure.publiees
         .where.not(id: self.id)
         .find_by(path: path)
+    end
+
+    def canonical_path
+      procedure_paths.by_created_at.first.path
     end
 
     def path_available?(path)
