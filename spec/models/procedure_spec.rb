@@ -1946,7 +1946,7 @@ describe Procedure do
 
       it "keep old path" do
         expect { subject }.to change { procedure.procedure_paths.count }.from(1).to(2)
-        expect(procedure.procedure_paths.reload.by_created_at.pluck(:path)).to eq(["new-path", "old-path"])
+        expect(procedure.procedure_paths.reload.by_updated_at.pluck(:path)).to eq(["new-path", "old-path"])
       end
     end
 

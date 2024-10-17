@@ -9,11 +9,11 @@ module ProcedurePathConcern
     # validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
 
     after_initialize :ensure_path_exists
+    before_validation :ensure_path_exists
     before_validation :add_procedure_path
-    before_save :ensure_path_exists
 
-    validates :procedure_paths, presence: true
-    # validates :procedure_paths, length: { minimum: 1 }
+    validates :procedure_paths, length: { minimum: 1 }
+    validates :procedure_paths, length: { minimum: 2 }, on: :publication
 
     def ensure_path_exists
       if self.path.blank?
@@ -22,9 +22,10 @@ module ProcedurePathConcern
     end
 
     def add_procedure_path
-      return if path.blank? || procedure_paths.any? { _1.path == path }
+      return if path.blank?
 
-      procedure_paths.find_or_initialize_by(path: path)
+      procedure_path = procedure_paths.find { _1.path == path } || procedure_paths.find_or_initialize_by(path: path)
+      procedure_path.updated_at = Time.zone.now
     end
 
     def other_procedure_with_path(path)
@@ -34,7 +35,7 @@ module ProcedurePathConcern
     end
 
     def canonical_path
-      procedure_paths.by_created_at.first.path
+      procedure_paths.by_updated_at.first.path
     end
 
     def path_available?(path)
