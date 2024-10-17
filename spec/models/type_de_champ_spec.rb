@@ -413,4 +413,10 @@ describe TypeDeChamp do
       end
     end
   end
+
+  describe '#humanized_conditionable_types_by_category' do
+    subject { TypeDeChamp.humanized_conditionable_types_by_category }
+
+    it { is_expected.to eq([["« Adresse »", "« Communes »", "« Départements »", "« Régions »", "« EPCI »"], ["« Nombre décimal »", "« Nombre entier »"], ["« Case à cocher seule »", "« Choix simple »", "« Choix multiple »", "« Oui/Non »"]]) }
+  end
 end
