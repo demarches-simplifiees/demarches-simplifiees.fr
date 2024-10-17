@@ -8,13 +8,13 @@ class ExportTemplate::ChampsComponent < ApplicationComponent
     @sections ||= to_sections
   end
 
-  def pretty_libelle(column)
-    prefix = ''
-    if column[:repetition_champ_stable_id]
-      prefix = "(Bloc répétable #{column[:repetition_libelle]}) "
+  def historical_libelle(column)
+    historical_exported_column = export_template.exported_columns.find { _1.column == column }
+    if historical_exported_column
+      historical_exported_column.libelle
+    else
+      column.label
     end
-
-    [prefix, column[:libelle]].join
   end
 
   private
@@ -35,20 +35,7 @@ class ExportTemplate::ChampsComponent < ApplicationComponent
   end
 
   def tdc_to_columns(type_de_champ)
-    if type_de_champ.repetition?
-      types_de_champ = export_template.procedure.types_de_champ_for_procedure_presentation(type_de_champ)
-
-      if types_de_champ.present?
-        types_de_champ.flat_map do |tdc|
-          tdc.columns_for_export(repetition_champ_stable_id: type_de_champ.stable_id).map do
-            _1.merge({ repetition_libelle: type_de_champ.libelle, libelle: export_template.saved_libelle(_1) || _1[:libelle] })
-          end
-        end
-      end
-    else
-      type_de_champ.columns_for_export.map do
-        _1.merge({ libelle: export_template.saved_libelle(_1) || _1[:libelle] })
-      end
-    end
+    prefix = type_de_champ.repetition? ? "Bloc répétable" : nil
+    type_de_champ.columns(procedure_id: export_template.procedure.id, prefix:)
   end
 end

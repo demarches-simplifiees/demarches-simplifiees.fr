@@ -11,7 +11,7 @@ describe ExportTemplate::ChampsComponent, type: :component do
       { type: :repetition, mandatory: true, stable_id: 7, libelle: "Amis", children: [{ type: 'text', libelle: 'Prénom', stable_id: 8 }] }
     ]
   end
-  let(:component) { described_class.new("Champs publics", export_template, procedure.types_de_champ_for_procedure_presentation(with_header_section: true)) }
+  let(:component) { described_class.new("Champs publics", export_template, procedure.all_revisions_types_de_champ(parent: nil, with_header_section: true)) }
   before { render_inline(component).to_html }
 
   it 'renders champs within fieldset' do
@@ -20,6 +20,6 @@ describe ExportTemplate::ChampsComponent, type: :component do
     expect(page).to have_unchecked_field "Commune"
     expect(page).to have_unchecked_field "Commune (Code INSEE)"
     expect(page).to have_unchecked_field "Siret"
-    expect(page).to have_unchecked_field "(Bloc répétable Amis) Prénom"
+    expect(page).to have_unchecked_field "(Bloc répétable Amis) – Prénom"
   end
 end
