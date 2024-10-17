@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# TODO: remove this job in a few days once all failed etablissements are queued as separate jobs
 class Cron::BackfillSiretDegradedModeJob < Cron::CronJob
   self.schedule_expression = "every 2 hour"
 

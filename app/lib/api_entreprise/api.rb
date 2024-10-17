@@ -138,10 +138,10 @@ class APIEntreprise::API
     end
   end
 
+  SERVICE_UNAVAILABLE_ERRORS = ["01000", "01001", "01002", "02002", "03002", "28002", "29002", "31002", "34002"]
   def service_unavailable?(response)
-    return true if response.code == 503
     if response.code == 502 || response.code == 504
-      parse_response_errors(response).any? { _1.is_a?(Hash) && ["01000", "01001", "01002", "02002", "03002"].include?(_1[:code]) }
+      parse_response_errors(response).any? { _1.is_a?(Hash) && _1[:code]&.in?(SERVICE_UNAVAILABLE_ERRORS) }
     end
   end
 
