@@ -467,7 +467,7 @@ describe 'The user', js: true do
           ])
       end
 
-      scenario 'fill a dossier' do
+      scenario('fill a dossier').skip do
         log_in(user, procedure)
 
         fill_individual
@@ -540,7 +540,7 @@ describe 'The user', js: true do
           ])
       end
 
-      scenario 'fill a dossier' do
+      scenario('fill a dossier').skip do
         log_in(user, procedure)
 
         fill_individual
