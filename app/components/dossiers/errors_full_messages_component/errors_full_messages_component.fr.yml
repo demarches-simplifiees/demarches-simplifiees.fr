@@ -1,7 +1,13 @@
 ---
 fr:
   sumup_html:
-    one: |
-      Votre dossier contient 1 champ en erreur. <a href="%{url}">Corrigez-la</a> pour poursuivre :
-    other: |
-      Votre dossier contient  %{count} champs en erreurs. <a href="%{url}">Corrigez-les</a> pour poursuivre :
+    title:
+      one: |
+        Votre dossier contient 1 champ en erreur
+      other: |
+        Votre dossier contient  %{count} champs en erreur
+    content:
+      one: |
+        Corrigez-la pour poursuivre :
+      other: |
+        Corrigez-les pour poursuivre :
