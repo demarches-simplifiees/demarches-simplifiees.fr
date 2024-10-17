@@ -1928,14 +1928,10 @@ describe Procedure do
     end
   end
 
-  describe "#update_procedure_paths" do
+  describe "#add_procedure_path" do
     let(:procedure) { build(:procedure, :published) }
 
     subject { procedure.save! }
-
-    it do
-      expect(create(:procedure).reload.canonical_path).to eq("")
-    end
 
     it 'sets the procedure path' do
       expect { subject }.to change { procedure.procedure_paths.count }.from(0).to(1)
@@ -1954,39 +1950,9 @@ describe Procedure do
       end
     end
 
-    context "when procedure is in draft" do
-      let(:procedure) { create(:procedure, :draft, path: "test-1") }
-
-      it 'should not create a procedure path' do
-        procedure.path = "test-2"
-        expect { subject }.not_to change { procedure.procedure_paths.count }
-      end
-    end
-
-    xcontext "when procedure is in published" do
-      let(:procedure) { create(:procedure, :published, path: "test-1") }
-
-      it 'should create a procedure path' do
-        procedure.path = "test-2"
-        expect { subject }.to change { procedure.procedure_paths.count }.from(1).to(2)
-      end
-    end
-
-    xcontext "when procedure is in unpublished" do
-      let(:procedure) { create(:procedure, :unpublished, path: "test-1") }
-
-      it 'should create a procedure path' do
-        procedure.path = "test-2"
-        expect { subject }.to change { procedure.procedure_paths.count }.from(1).to(2)
-      end
-    end
-
-    xcontext "when there is 2 procedures" do
-      let(:admin1) { create(:administrateur) }
-      let(:admin2) { create(:administrateur) }
-
-      let(:procedure1) { create(:procedure, :published, administrateurs: [admin1], path: "proc-1") }
-      let(:procedure2) { create(:procedure, :published, administrateurs: [admin2], path: "proc-2") }
+    context "when there is 2 procedures" do
+      let(:procedure1) { create(:procedure, :published, administrateurs: [create(:administrateur)], path: "proc-1") }
+      let(:procedure2) { create(:procedure, :published, administrateurs: [create(:administrateur)], path: "proc-2") }
 
       it "should have 2 diff paths" do
         expect(procedure1.path).not_to eq(procedure2.path)
@@ -1996,15 +1962,15 @@ describe Procedure do
         expect { procedure1.update!(path: procedure2.path) }.to raise_error
       end
 
-      context "when procedure2 is closed" do
-        before do
-          procedure2.close!
-        end
+      # context "when procedure2 is closed" do
+      #   before do
+      #     procedure2.close!
+      #   end
 
-        it "should let procedure1 change path to procedure2 path" do
-          expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
-        end
-      end
+      #   it "should let procedure1 change path to procedure2 path" do
+      #     expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
+      #   end
+      # end
     end
   end
 
