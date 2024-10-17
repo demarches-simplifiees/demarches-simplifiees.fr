@@ -10,7 +10,7 @@ class Champs::MultipleDropDownListChamp < Champ
   end
 
   def selected_options
-    value.blank? ? [] : JSON.parse(value)
+    parsed_options.filter { drop_down_options.include?(_1) }
   end
 
   def render_as_checkboxes?
@@ -90,8 +90,12 @@ class Champs::MultipleDropDownListChamp < Champ
 
   private
 
+  def parsed_options
+    value.blank? ? [] : JSON.parse(value)
+  end
+
   def values_are_in_options
-    json = selected_options.compact_blank
+    json = parsed_options.compact_blank
     return if json.empty?
     return if (json - drop_down_options).empty?
 

@@ -6,8 +6,11 @@ module DossierChampsConcern
   def project_champ(type_de_champ, row_id)
     check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:, updated_at: depose_at || created_at)
+    if champ.nil? || champ.last_write_type_champ != type_de_champ.type_champ
+      value = type_de_champ.use_default_value?(champ) ? nil : champ.value
+      updated_at = champ&.updated_at || depose_at || created_at
+      rebased_at = champ&.rebased_at
+      type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:)
     else
       champ
     end
