@@ -69,7 +69,7 @@ describe Champs::DecimalNumberChamp do
   describe 'for_export' do
     let(:champ) { Champs::DecimalNumberChamp.new(value:) }
     before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_decimal_number)) }
-    subject { champ.for_export }
+    subject { champ.type_de_champ.champ_value_for_export(champ) }
     context 'with nil' do
       let(:value) { 0 }
       it { is_expected.to eq(0.0) }

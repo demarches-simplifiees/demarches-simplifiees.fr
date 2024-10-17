@@ -16,8 +16,10 @@ class Champs::CarteChamp < Champ
   # We are not using scopes here as we want to access
   # the following collections on unsaved records.
   def cadastres
-    geo_areas.filter do |area|
-      area.source == GeoArea.sources.fetch(:cadastre)
+    if cadastres?
+      geo_areas.filter { _1.source == GeoArea.sources.fetch(:cadastre) }
+    else
+      []
     end
   end
 
