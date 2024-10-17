@@ -11,11 +11,12 @@ describe Champs::RepetitionChamp do
       ])
   }
   let(:dossier) { create(:dossier, procedure:) }
-  let(:champ) { dossier.champs.find(&:repetition?) }
+  let(:champ) { dossier.project_champs_public.find(&:repetition?) }
 
   describe "#for_tag" do
     before do
-      champ.rows[0][0].update(value: "rb")
+      champ_text = champ.rows.first.first
+      dossier.champ_for_update(champ_text.type_de_champ, champ_text.row_id, updated_by: 'test').update(value: "rb")
     end
 
     it "can render as string" do

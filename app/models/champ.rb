@@ -88,7 +88,7 @@ class Champ < ApplicationRecord
   end
 
   def child?
-    row_id.present?
+    row_id.present? && !repetition?
   end
 
   # used for the `required` html attribute
@@ -252,6 +252,10 @@ class Champ < ApplicationRecord
     else
       "#{stable_id}-#{row_id}"
     end
+  end
+
+  def same_type?(type_champ)
+    TypeDeChamp.type_champ_to_champ_class_name(type_champ) == type
   end
 
   def html_id

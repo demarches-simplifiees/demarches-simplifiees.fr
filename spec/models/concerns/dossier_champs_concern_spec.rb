@@ -47,7 +47,7 @@ RSpec.describe DossierChampsConcern do
         let(:row_id) { dossier.project_champ(type_de_champ_repetition, nil).row_ids.first }
 
         it {
-          expect(subject.persisted?).to be_truthy
+          expect(subject.new_record?).to be_truthy
           expect(subject.row_id).to eq(row_id)
         }
 
@@ -130,10 +130,11 @@ RSpec.describe DossierChampsConcern do
         { type: :explication }
       ]
     end
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     subject { dossier.filled_champs_public }
 
-    it { expect(subject.size).to eq(4) }
-    it { expect(subject.find { _1.libelle == 'Nom' }).to be_truthy }
+    it { expect(subject.size).to eq(5) }
+    it { expect(subject.filter { _1.libelle == 'Nom' }.size).to eq(2) }
   end
 
   describe '#filled_champs_private' do

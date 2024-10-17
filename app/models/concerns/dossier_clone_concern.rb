@@ -149,21 +149,18 @@ module DossierCloneConcern
   end
 
   def apply_diff(diff)
-    champs_added = diff[:added].filter(&:persisted?)
-    champs_updated = diff[:updated].filter(&:persisted?)
-    champs_removed = diff[:removed].filter(&:persisted?)
+    added_champs = diff[:added].filter { _1.persisted? && _1.fillable? }
+    updated_champs = diff[:updated].filter { _1.persisted? && _1.fillable? }
 
-    champs_added.each { _1.update_column(:dossier_id, id) }
+    added_champs.each { _1.update_column(:dossier_id, id) }
 
-    if champs_updated.present?
+    if updated_champs.present?
       champs_index = filled_champs_public.index_by(&:public_id)
-      champs_updated.each do |champ|
+      updated_champs.each do |champ|
         champs_index[champ.public_id]&.destroy!
         champ.update_column(:dossier_id, id)
       end
     end
-
-    champs_removed.each(&:destroy!)
   end
 
   protected
