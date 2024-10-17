@@ -20,7 +20,7 @@ module Users
     private
 
     def procedure
-      Procedure.publiees_ou_closes.find_by(path: params[:path])
+      Procedure.publiees_ou_closes.find_with_path(params[:path]).first
     end
 
     def procedure_not_found

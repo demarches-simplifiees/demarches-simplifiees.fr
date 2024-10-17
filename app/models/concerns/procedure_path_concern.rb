@@ -33,7 +33,7 @@ module ProcedurePathConcern
     def other_procedure_with_path(path)
       Procedure.publiees
         .where.not(id: self.id)
-        .find_by(path: path)
+        .find_with_path(path).first
     end
 
     def canonical_path
