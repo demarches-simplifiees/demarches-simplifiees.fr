@@ -17,7 +17,7 @@
       .flex
         %span.placeholder
           = commencer_url(path: '')
-        = text_field_tag(:path, @procedure.path,
+        = text_field_tag(:path, @procedure.canonical_path,
                         id: 'procedure_path',
                         placeholder: t('activerecord.attributes.procedure.procedure_path_placeholder'),
                         required: true,
@@ -30,7 +30,5 @@
       - @procedure.procedure_paths.each do |pp|
         %li
           = pp.path
-          = pp.deactivated_at
-      
 
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
