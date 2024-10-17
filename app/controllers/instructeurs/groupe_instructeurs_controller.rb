@@ -21,41 +21,51 @@ module Instructeurs
     end
 
     def add_instructeur
-      email = instructeur_email.present? ? [instructeur_email] : []
-      email = check_if_typo(email)&.first
+      emails = params['emails'].presence || []
+      emails = check_if_typo(emails)
       errors = Array.wrap(generate_emails_suggestions_message(@maybe_typos))
+
+      instructeurs, invalid_emails = groupe_instructeur.add_instructeurs(emails:)
+
+      if invalid_emails.present?
+        errors += [
+          t('.wrong_address',
+            count: invalid_emails.size,
+            emails: invalid_emails.join(', '))
+        ]
+      end
+
+      if instructeurs.present?
+        flash[:notice] = if procedure.routing_enabled?
+          t('.assignment', count: instructeurs.size,
+            emails: instructeurs.map(&:email).join(', '),
+            groupe: groupe_instructeur.label)
+        else
+          "Les instructeurs ont bien été affectés à la démarche"
+        end
+
+        known_instructeurs, not_verified_instructeurs = instructeurs.partition { |instructeur| instructeur.user.email_verified_at }
+
+        not_verified_instructeurs.filter(&:should_receive_email_activation?).each do
+          InstructeurMailer.confirm_and_notify_added_instructeur(_1, groupe_instructeur, current_instructeur.email).deliver_later
+        end
+
+        if known_instructeurs.present?
+          GroupeInstructeurMailer
+            .notify_added_instructeurs(groupe_instructeur, known_instructeurs, current_instructeur.email)
+            .deliver_later
+        end
+      end
+
+      @procedure = procedure
+      @groupe_instructeur = groupe_instructeur
+      @instructeurs = paginated_instructeurs
 
       if !errors.empty?
         flash.now[:alert] = errors.join(". ") if !errors.empty?
-
-        @procedure = procedure
-        @groupe_instructeur = groupe_instructeur
-        @instructeurs = paginated_instructeurs
-        return render :show
       end
 
-      instructeur = Instructeur.by_email(email) ||
-        create_instructeur(email)
-
-      if instructeur.blank?
-        flash[:alert] = "L’adresse email « #{email} » n’est pas valide."
-      elsif groupe_instructeur.instructeurs.include?(instructeur)
-        flash[:alert] = "L’instructeur « #{email} » est déjà dans le groupe."
-      else
-        groupe_instructeur.add(instructeur)
-        flash[:notice] = "L’instructeur « #{email} » a été affecté au groupe."
-
-        if instructeur.user.email_verified_at
-          GroupeInstructeurMailer
-            .notify_added_instructeurs(groupe_instructeur, [instructeur], current_user.email)
-            .deliver_later
-        elsif instructeur.should_receive_email_activation?
-          InstructeurMailer.confirm_and_notify_added_instructeur(instructeur, groupe_instructeur, current_user.email).deliver_later
-        end
-        # else instructeur already exists and email is not verified, so do not spam them
-      end
-
-      redirect_to instructeur_groupe_path(procedure, groupe_instructeur)
+      render :show
     end
 
     def remove_instructeur
@@ -113,10 +123,6 @@ module Instructeurs
         .page(params[:page])
         .per(ITEMS_PER_PAGE)
         .order(:email)
-    end
-
-    def instructeur_email
-      params.dig('instructeur', 'email')&.strip&.downcase
     end
 
     def instructeur_id
