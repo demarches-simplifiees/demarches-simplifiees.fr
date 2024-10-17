@@ -125,11 +125,11 @@ describe Champs::RNFChamp, type: :model do
     let(:champ) { described_class.new(external_id:, data: JSON.parse(body)) }
     before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_rnf)) }
     it do
-      expect(champ.for_export(:value)).to eq '075-FDD-00003-01'
-      expect(champ.for_export(:nom)).to eq 'Fondation SFR'
-      expect(champ.for_export(:address)).to eq '16 Rue du Général de Boissieu 75015 Paris'
-      expect(champ.for_export(:code_insee)).to eq '75115'
-      expect(champ.for_export(:departement)).to eq '75 – Paris'
+      expect(champ.type_de_champ.champ_value_for_export(champ, :value)).to eq '075-FDD-00003-01'
+      expect(champ.type_de_champ.champ_value_for_export(champ, :nom)).to eq 'Fondation SFR'
+      expect(champ.type_de_champ.champ_value_for_export(champ, :address)).to eq '16 Rue du Général de Boissieu 75015 Paris'
+      expect(champ.type_de_champ.champ_value_for_export(champ, :code_insee)).to eq '75115'
+      expect(champ.type_de_champ.champ_value_for_export(champ, :departement)).to eq '75 – Paris'
     end
   end
 end

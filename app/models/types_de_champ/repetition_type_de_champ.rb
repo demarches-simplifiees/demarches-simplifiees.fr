@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  def self.champ_value_for_tag(champ, path = :value)
+  def champ_value_for_tag(champ, path = :value)
     return nil if path != :value
     return champ_default_value if champ.rows.blank?
 

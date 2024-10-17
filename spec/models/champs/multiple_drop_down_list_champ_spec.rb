@@ -90,6 +90,6 @@ describe Champs::MultipleDropDownListChamp do
 
   describe "#for_tag" do
     let(:value) { ["val1", "val2"] }
-    it { expect(champ.for_tag.to_s).to eq("val1, val2") }
+    it { expect(champ.type_de_champ.champ_value_for_tag(champ).to_s).to eq("val1, val2") }
   end
 end
