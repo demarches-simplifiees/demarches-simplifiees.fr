@@ -175,16 +175,16 @@ class DossierProjectionService
     def champ_value_formatter(dossiers_ids, fields)
       stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ', 'type_de_champ_private']) }.map { _1[COLUMN] }
       revision_ids_by_dossier_ids = Dossier.where(id: dossiers_ids).pluck(:id, :revision_id).to_h
-      stable_ids_and_types_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
+      stable_ids_and_types_de_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
         .where(revision_id: revision_ids_by_dossier_ids.values.uniq, type_de_champ: { stable_id: stable_ids })
-        .pluck(:revision_id, 'type_de_champ.stable_id', 'type_de_champ.type_champ')
+        .map { [_1.revision_id, _1.type_de_champ] }
         .group_by(&:first)
-        .transform_values { _1.map { |_, stable_id, type_champ| [stable_id, type_champ] }.to_h }
-      stable_ids_and_types_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_champ_by_revision_ids[_1] }.compact
+        .transform_values { _1.map { |_, type_de_champ| [type_de_champ.stable_id, type_de_champ] }.to_h }
+      stable_ids_and_types_de_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_de_champ_by_revision_ids[_1] }.compact
       -> (champ) {
-        type_champ = stable_ids_and_types_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
-        if type_champ.present? && TypeDeChamp.type_champ_to_champ_class_name(type_champ) == champ.type
-          TypeDeChamp.champ_value(type_champ, champ)
+        type_de_champ = stable_ids_and_types_de_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
+        if type_de_champ.present? && type_de_champ.type_champ == champ.last_write_type_champ
+          type_de_champ.champ_value(champ)
         else
           ''
         end

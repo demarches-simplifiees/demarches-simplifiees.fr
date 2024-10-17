@@ -45,29 +45,7 @@ class Logic::ChampValue < Logic::Term
     return nil if !targeted_champ.visible?
     return nil if targeted_champ.blank? & !targeted_champ.drop_down_other?
 
-    case targeted_champ.type
-    when "Champs::YesNoChamp",
-      "Champs::CheckboxChamp"
-      targeted_champ.true?
-    when "Champs::IntegerNumberChamp", "Champs::DecimalNumberChamp"
-      targeted_champ.for_api
-    when "Champs::DropDownListChamp"
-      targeted_champ.selected
-    when "Champs::MultipleDropDownListChamp"
-      targeted_champ.selected_options
-    when "Champs::RegionChamp"
-      targeted_champ.code
-    when "Champs::DepartementChamp"
-      {
-        value: targeted_champ.code,
-        code_region: targeted_champ.code_region
-      }
-    when "Champs::CommuneChamp", "Champs::EpciChamp", "Champs::AddressChamp"
-      {
-        code_departement: targeted_champ.code_departement,
-        code_region: targeted_champ.code_region
-      }
-    end
+    targeted_champ.type_de_champ.champ_value_for_logic(targeted_champ)
   end
 
   def to_s(type_de_champs) = type_de_champ(type_de_champs)&.libelle # TODO: gerer le cas ou un tdc est supprimé

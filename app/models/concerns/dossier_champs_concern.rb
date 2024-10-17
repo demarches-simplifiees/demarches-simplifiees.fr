@@ -81,11 +81,16 @@ module DossierChampsConcern
 
   def champs_for_export(types_de_champ, row_id = nil)
     types_de_champ.flat_map do |type_de_champ|
-      champ = champ_for_export(type_de_champ, row_id)
+      champ = filled_champ(type_de_champ, row_id)
       type_de_champ.libelles_for_export.map do |(libelle, path)|
-        [libelle, TypeDeChamp.champ_value_for_export(type_de_champ.type_champ, champ, path)]
+        [libelle, type_de_champ.champ_value_for_export(champ, path)]
       end
     end
+  end
+
+  def champ_value_for_tag(type_de_champ, path = :value)
+    champ = filled_champ(type_de_champ, nil)
+    type_de_champ.champ_value_for_tag(champ, path)
   end
 
   def champ_for_update(type_de_champ, row_id, updated_by:)
@@ -143,7 +148,7 @@ module DossierChampsConcern
     @champs_by_public_id ||= champs.sort_by(&:id).index_by(&:public_id)
   end
 
-  def champ_for_export(type_de_champ, row_id)
+  def filled_champ(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.blank? || !champ.visible?
       nil
