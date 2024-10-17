@@ -55,7 +55,6 @@ module ColumnsConcern
           []
         end
 
-
       [common, individual_or_moral_columns, _chorus_columns].flatten.compact
     end
 
