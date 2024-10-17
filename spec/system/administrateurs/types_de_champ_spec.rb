@@ -210,18 +210,19 @@ describe 'As an administrateur I can edit types de champ', js: true do
     before { Flipper.enable(:referentiel_de_polynesie, administrateur.user) }
 
     it "add referentiel_de_polynesie champ" do
-      add_champ
+      VCR.use_cassette('baserow_api_available_tables', record: :new_episodes) do
+        add_champ
 
-      select('Referentiel De Polynesie', from: 'Type de champ')
-      fill_in 'Libellé du champ', with: 'Libellé de champ referentiel de Polynesie', fill_options: { clear: :baskspace }
+        select('Referentiel De Polynesie', from: 'Type de champ')
+        fill_in 'Libellé du champ', with: 'Libellé de champ Référentiel de Polynésie', fill_options: { clear: :backspace }
 
-      expect(page).to have_content('Formulaire enregistré')
+        expect(page).to have_content('Formulaire enregistré')
 
-      waint_until { procedure.draft_types_de_champ_public.first.libelle == 'Libellé du champ référentiel de Polynesie' }
+        wait_until { procedure.draft_types_de_champ_public.first.libelle == 'Libellé de champ Référentiel de Polynésie' }
 
-      page.refresh
-
-      expect(page).to have_content('Libellé de champ referentiel de polynesie')
+        page.refresh
+        expect(page).to have_content('Libellé de champ Référentiel de Polynésie')
+      end
     end
   end
 

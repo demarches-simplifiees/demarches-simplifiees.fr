@@ -18,7 +18,6 @@ class TypeDeChamp < ApplicationRecord
     commune_de_polynesie: 'commune_de_polynesie',
     code_postal_de_polynesie: 'code_postal_de_polynesie',
     numero_dn: 'numero_dn',
-    # referentiel_de_polynesie: 'referentiel_de_polynesie',
     referentiel_de_polynesie: 'referentiel_de_polynesie',
     te_fenua: 'te_fenua',
     visa: 'visa'
