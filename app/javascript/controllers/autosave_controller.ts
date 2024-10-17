@@ -252,7 +252,10 @@ export class AutosaveController extends ApplicationController {
     return httpRequest(form.action, {
       method: 'post',
       body: formData,
-      headers: { 'x-http-method-override': 'PATCH' },
+      headers: {
+        'x-http-method-override':
+          form.dataset.turboMethod?.toUpperCase() || 'PATCH'
+      },
       signal: this.#abortController.signal,
       timeout: AUTOSAVE_TIMEOUT_DELAY
     }).turbo();

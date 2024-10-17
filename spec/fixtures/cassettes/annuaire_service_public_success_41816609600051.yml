@@ -1,0 +1,119 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://recherche-entreprises.api.gouv.fr/search?q=41816609600051
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.27.1
+      Date:
+      - Thu, 17 Oct 2024 07:51:06 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3471'
+      Vary:
+      - Accept-Encoding
+      - Accept-Encoding
+      - Accept-Encoding
+      Annuaire-Entreprises-Instance-Number:
+      - '02'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      - 1; mode=block
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Allow-Origin:
+      - "*"
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        eyJyZXN1bHRzIjpbeyJzaXJlbiI6IjQxODE2NjA5NiIsIm5vbV9jb21wbGV0IjoiT0NUTy1URUNITk9MT0dZIiwibm9tX3JhaXNvbl9zb2NpYWxlIjoiT0NUTy1URUNITk9MT0dZIiwic2lnbGUiOm51bGwsIm5vbWJyZV9ldGFibGlzc2VtZW50cyI6Nywibm9tYnJlX2V0YWJsaXNzZW1lbnRzX291dmVydHMiOjEsInNpZWdlIjp7ImFjdGl2aXRlX3ByaW5jaXBhbGUiOiI2Mi4wMkEiLCJhY3Rpdml0ZV9wcmluY2lwYWxlX3JlZ2lzdHJlX21ldGllciI6bnVsbCwiYW5uZWVfdHJhbmNoZV9lZmZlY3RpZl9zYWxhcmllIjoiMjAyMiIsImFkcmVzc2UiOiIzNCBBVkVOVUUgREUgTCdPUEVSQSA3NTAwMiBQQVJJUyIsImNhcmFjdGVyZV9lbXBsb3lldXIiOiJPIiwiY2VkZXgiOm51bGwsImNvZGVfcGF5c19ldHJhbmdlciI6bnVsbCwiY29kZV9wb3N0YWwiOiI3NTAwMiIsImNvbW11bmUiOiI3NTEwMiIsImNvbXBsZW1lbnRfYWRyZXNzZSI6bnVsbCwiY29vcmRvbm5lZXMiOiI0OC44Njg2NjIsMi4zMzMzODIiLCJkYXRlX2NyZWF0aW9uIjoiMjAxNi0xMS0yOCIsImRhdGVfZGVidXRfYWN0aXZpdGUiOiIyMDE2LTExLTI4IiwiZGF0ZV9mZXJtZXR1cmUiOm51bGwsImRhdGVfbWlzZV9hX2pvdXIiOm51bGwsImRhdGVfbWlzZV9hX2pvdXJfaW5zZWUiOiIyMDI0LTA1LTMxVDA1OjI5OjU4IiwiZGVwYXJ0ZW1lbnQiOiI3NSIsImRpc3RyaWJ1dGlvbl9zcGVjaWFsZSI6bnVsbCwiZXBjaSI6IjIwMDA1NDc4MSIsImVzdF9zaWVnZSI6dHJ1ZSwiZXRhdF9hZG1pbmlzdHJhdGlmIjoiQSIsImdlb19hZHJlc3NlIjoiMzQgQXZlbnVlIGRlIGwnT3DDqXJhIDc1MDAyIFBhcmlzIiwiZ2VvX2lkIjoiNzUxMDJfNjkwNF8wMDAzNCIsImluZGljZV9yZXBldGl0aW9uIjpudWxsLCJsYXRpdHVkZSI6IjQ4Ljg2ODY2MiIsImxpYmVsbGVfY2VkZXgiOm51bGwsImxpYmVsbGVfY29tbXVuZSI6IlBBUklTIiwibGliZWxsZV9jb21tdW5lX2V0cmFuZ2VyIjpudWxsLCJsaWJlbGxlX3BheXNfZXRyYW5nZXIiOm51bGwsImxpYmVsbGVfdm9pZSI6IkRFIEwnT1BFUkEiLCJsaXN0ZV9lbnNlaWduZXMiOm51bGwsImxpc3RlX2ZpbmVzcyI6bnVsbCwibGlzdGVfaWRfYmlvIjpudWxsLCJsaXN0ZV9pZGNjIjpbIjE0ODYiXSwibGlzdGVfaWRfb3JnYW5pc21lX2Zvcm1hdGlvbiI6bnVsbCwibGlzdGVfcmdlIjpudWxsLCJsaXN0ZV91YWkiOm51bGwsImxvbmdpdHVkZSI6IjIuMzMzMzgyIiwibm9tX2NvbW1lcmNpYWwiOm51bGwsIm51bWVyb192b2llIjoiMzQiLCJyZWdpb24iOiIxMSIsInNpcmV0IjoiNDE4MTY2MDk2MDAwNjkiLCJzdGF0dXRfZGlmZnVzaW9uX2V0YWJsaXNzZW1lbnQiOiJPIiwidHJhbmNoZV9lZmZlY3RpZl9zYWxhcmllIjoiNDEiLCJ0eXBlX3ZvaWUiOiJBVkVOVUUifSwiYWN0aXZpdGVfcHJpbmNpcGFsZSI6IjYyLjAyQSIsImNhdGVnb3JpZV9lbnRyZXByaXNlIjoiR0UiLCJjYXJhY3RlcmVfZW1wbG95ZXVyIjpudWxsLCJhbm5lZV9jYXRlZ29yaWVfZW50cmVwcmlzZSI6IjIwMjIiLCJkYXRlX2NyZWF0aW9uIjoiMTk5OC0wNC0wMSIsImRhdGVfZmVybWV0dXJlIjpudWxsLCJkYXRlX21pc2VfYV9qb3VyIjoiMjAyNC0xMC0xNlQxMzowODowMyIsImRhdGVfbWlzZV9hX2pvdXJfaW5zZWUiOiIyMDI0LTA1LTMxVDA1OjI5OjU4IiwiZGF0ZV9taXNlX2Ffam91cl9ybmUiOiIyMDI0LTA1LTE5VDE2OjQ5OjMzIiwiZGlyaWdlYW50cyI6W3sic2lyZW4iOm51bGwsImRlbm9taW5hdGlvbiI6IktQTUciLCJxdWFsaXRlIjoiQ29tbWlzc2FpcmUgYXV4IGNvbXB0ZXMgdGl0dWxhaXJlIiwidHlwZV9kaXJpZ2VhbnQiOiJwZXJzb25uZSBtb3JhbGUifV0sImV0YXRfYWRtaW5pc3RyYXRpZiI6IkEiLCJuYXR1cmVfanVyaWRpcXVlIjoiNTcxMCIsInNlY3Rpb25fYWN0aXZpdGVfcHJpbmNpcGFsZSI6IkoiLCJ0cmFuY2hlX2VmZmVjdGlmX3NhbGFyaWUiOiI0MSIsImFubmVlX3RyYW5jaGVfZWZmZWN0aWZfc2FsYXJpZSI6IjIwMjIiLCJzdGF0dXRfZGlmZnVzaW9uIjoiTyIsIm1hdGNoaW5nX2V0YWJsaXNzZW1lbnRzIjpbeyJhY3Rpdml0ZV9wcmluY2lwYWxlIjoiNjIuMDJBIiwiYW5jaWVuX3NpZWdlIjp0cnVlLCJhbm5lZV90cmFuY2hlX2VmZmVjdGlmX3NhbGFyaWUiOm51bGwsImFkcmVzc2UiOiI1MCBBVkVOVUUgREVTIENIQU1QUyBFTFlTRUVTIDc1MDA4IFBBUklTIiwiY2FyYWN0ZXJlX2VtcGxveWV1ciI6Ik8iLCJjb2RlX3Bvc3RhbCI6Ijc1MDA4IiwiY29tbXVuZSI6Ijc1MTA4IiwiZGF0ZV9jcmVhdGlvbiI6IjIwMDUtMDItMTciLCJkYXRlX2RlYnV0X2FjdGl2aXRlIjoiMjAxNi0xMS0yOCIsImRhdGVfZmVybWV0dXJlIjoiMjAxNi0xMS0yOCIsImVwY2kiOiIyMDAwNTQ3ODEiLCJlc3Rfc2llZ2UiOmZhbHNlLCJldGF0X2FkbWluaXN0cmF0aWYiOiJGIiwiZ2VvX2lkIjoiNzUxMDhfMTczM18wMDA1MCIsImxhdGl0dWRlIjoiNDguODcwMzcxIiwibGliZWxsZV9jb21tdW5lIjoiUEFSSVMiLCJsaXN0ZV9lbnNlaWduZXMiOm51bGwsImxpc3RlX2ZpbmVzcyI6bnVsbCwibGlzdGVfaWRfYmlvIjpudWxsLCJsaXN0ZV9pZGNjIjpudWxsLCJsaXN0ZV9pZF9vcmdhbmlzbWVfZm9ybWF0aW9uIjpudWxsLCJsaXN0ZV9yZ2UiOm51bGwsImxpc3RlX3VhaSI6bnVsbCwibG9uZ2l0dWRlIjoiMi4zMDY4OTkiLCJub21fY29tbWVyY2lhbCI6bnVsbCwicmVnaW9uIjoiMTEiLCJzaXJldCI6IjQxODE2NjA5NjAwMDUxIiwic3RhdHV0X2RpZmZ1c2lvbl9ldGFibGlzc2VtZW50IjoiTyIsInRyYW5jaGVfZWZmZWN0aWZfc2FsYXJpZSI6bnVsbH1dLCJmaW5hbmNlcyI6eyIyMDIzIjp7ImNhIjoxNDYxMzk4MDksInJlc3VsdGF0X25ldCI6MTA2MjY2Mzh9fSwiY29tcGxlbWVudHMiOnsiY29sbGVjdGl2aXRlX3RlcnJpdG9yaWFsZSI6bnVsbCwiY29udmVudGlvbl9jb2xsZWN0aXZlX3JlbnNlaWduZWUiOnRydWUsImxpc3RlX2lkY2MiOlsiMTQ4NiJdLCJlZ2Fwcm9fcmVuc2VpZ25lZSI6dHJ1ZSwiZXN0X2Fzc29jaWF0aW9uIjpmYWxzZSwiZXN0X2JpbyI6ZmFsc2UsImVzdF9lbnRyZXByZW5ldXJfaW5kaXZpZHVlbCI6ZmFsc2UsImVzdF9lbnRyZXByZW5ldXJfc3BlY3RhY2xlIjpmYWxzZSwiZXN0X2VzcyI6ZmFsc2UsImVzdF9maW5lc3MiOmZhbHNlLCJlc3Rfb3JnYW5pc21lX2Zvcm1hdGlvbiI6dHJ1ZSwiZXN0X3F1YWxpb3BpIjp0cnVlLCJsaXN0ZV9pZF9vcmdhbmlzbWVfZm9ybWF0aW9uIjpbIjExNzU0ODkzNjc1Il0sImVzdF9yZ2UiOmZhbHNlLCJlc3Rfc2VydmljZV9wdWJsaWMiOmZhbHNlLCJlc3Rfc2lhZSI6ZmFsc2UsImVzdF9zb2NpZXRlX21pc3Npb24iOmZhbHNlLCJlc3RfdWFpIjpmYWxzZSwiaWRlbnRpZmlhbnRfYXNzb2NpYXRpb24iOm51bGwsInN0YXR1dF9lbnRyZXByZW5ldXJfc3BlY3RhY2xlIjpudWxsLCJ0eXBlX3NpYWUiOm51bGx9fV0sInRvdGFsX3Jlc3VsdHMiOjEsInBhZ2UiOjEsInBlcl9wYWdlIjoxMCwidG90YWxfcGFnZXMiOjF9
+  recorded_at: Thu, 17 Oct 2024 07:51:06 GMT
+- request:
+    method: get
+    uri: https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret:41816609600051
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - openresty
+      Date:
+      - Thu, 17 Oct 2024 07:51:06 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '33'
+      X-Ratelimit-Remaining:
+      - '999989'
+      X-Ratelimit-Limit:
+      - '1000000'
+      X-Ratelimit-Reset:
+      - '2024-10-18 00:00:00+00:00'
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Vary:
+      - Accept-Language, Cookie, Host
+      Content-Language:
+      - fr-fr
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, GET, OPTIONS
+      Access-Control-Max-Age:
+      - '1000'
+      Access-Control-Allow-Headers:
+      - Authorization, X-Requested-With, Origin, ODS-API-Analytics-App, ODS-API-Analytics-Embed-Type,
+        ODS-API-Analytics-Embed-Referrer, ODS-Widgets-Version, Accept
+      Access-Control-Expose-Headers:
+      - ODS-Explore-API-Deprecation, Link, X-RateLimit-Remaining, X-RateLimit-Limit,
+        X-RateLimit-Reset, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Limit,
+        X-RateLimit-dataset-Reset
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - midi=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Content-Security-Policy:
+      - upgrade-insecure-requests;
+      X-Ua-Compatible:
+      - IE=edge
+    body:
+      encoding: ASCII-8BIT
+      string: '{"total_count": 0, "results": []}'
+  recorded_at: Thu, 17 Oct 2024 07:51:06 GMT
+recorded_with: VCR 6.2.0
