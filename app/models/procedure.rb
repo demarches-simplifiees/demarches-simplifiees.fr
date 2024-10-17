@@ -13,6 +13,9 @@ class Procedure < ApplicationRecord
 
   include Discard::Model
   self.discard_column = :hidden_at
+  # rubocop:disable Rails/UnusedIgnoredColumns
+  self.ignored_columns += ["tags"]
+  # rubocop:enable Rails/UnusedIgnoredColumns
 
   default_scope -> { kept }
 
