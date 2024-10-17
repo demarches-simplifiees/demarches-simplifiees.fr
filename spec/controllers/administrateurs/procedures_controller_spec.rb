@@ -513,6 +513,11 @@ describe Administrateurs::ProceduresController, type: :controller do
           expect(response).to redirect_to(champs_admin_procedure_path(Procedure.last))
           expect(flash[:notice]).to be_present
         end
+
+        it "create generic labels" do
+          expect(subject.procedure_labels.size).to eq(3)
+          expect(subject.procedure_labels.first.name).to eq('à relancer')
+        end
       end
 
       describe "procedure is saved with custom retention period" do
@@ -657,7 +662,7 @@ describe Administrateurs::ProceduresController, type: :controller do
   end
 
   describe 'PUT #clone' do
-    let(:procedure) { create(:procedure, :with_notice, :with_deliberation, administrateur: admin) }
+    let(:procedure) { create(:procedure, :with_notice, :with_deliberation, :with_labels, administrateur: admin) }
     let(:params) { { procedure_id: procedure.id } }
 
     subject { put :clone, params: params }
@@ -679,6 +684,10 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
         expect(Procedure.last.deliberation.attached?).to be_truthy
+        expect(Procedure.last.procedure_labels.present?).to be_truthy
+        expect(Procedure.last.procedure_labels.first.procedure_id).to eq(Procedure.last.id)
+        expect(procedure.procedure_labels.first.procedure_id).to eq(procedure.id)
+
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
 
@@ -700,6 +709,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
+        expect(Procedure.last.procedure_labels.present?).to be_truthy
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
     end

@@ -21,6 +21,10 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
           [_1.label, _1.id]
         end
       end
+    elsif column.table == 'dossier_labels'
+      procedure.procedure_labels.filter_map do
+        [_1.name, _1.id]
+      end
     else
       find_type_de_champ(column.column).options_for_select(column)
     end
