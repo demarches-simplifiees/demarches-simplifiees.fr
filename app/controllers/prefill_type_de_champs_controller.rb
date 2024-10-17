@@ -10,7 +10,7 @@ class PrefillTypeDeChampsController < ApplicationController
   private
 
   def retrieve_procedure
-    @procedure = Procedure.publiees_ou_brouillons.opendata.find_by!(path: params[:path])
+    @procedure = Procedure.publiees_ou_brouillons.opendata.find_with_path(params[:path]).first!
   end
 
   def set_prefill_type_de_champ

@@ -28,7 +28,7 @@ module ProcedureContextConcern
     uri = URI(get_stored_location_for(:user))
     path_components = uri.path.split('/')
 
-    Procedure.publiees_ou_brouillons.find_by(path: path_components[2])
+    Procedure.publiees_ou_brouillons.find_with_path(path_components[2]).first
   end
 
   def find_prefill_token_in_context
