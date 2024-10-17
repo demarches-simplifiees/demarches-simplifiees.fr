@@ -103,6 +103,8 @@ module Administrateurs
 
       procedure.toggle_routing
 
+      flash[:routing_mode] = 'custom'
+
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
 
