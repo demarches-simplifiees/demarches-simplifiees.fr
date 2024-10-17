@@ -101,9 +101,9 @@ module Administrateurs
     end
 
     def configurate_custom_routing
-      new_label = procedure.defaut_groupe_instructeur.label + ' bis'
+      procedure.defaut_groupe_instructeur.update!(label: 'Groupe 1 (à renommer et configurer)')
       procedure.groupe_instructeurs
-        .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+        .create({ label: 'Groupe 2 (à renommer et configurer)', instructeurs: [current_administrateur.instructeur] })
 
       procedure.toggle_routing
 
