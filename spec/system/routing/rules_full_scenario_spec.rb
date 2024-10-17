@@ -53,6 +53,11 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Gestion des groupes')
     expect(page).to have_text('règle invalide')
 
+    # close modal
+    expect(page).to have_selector("#routing-mode-modal", visible: true)
+    within("#routing-mode-modal") { click_on "Fermer" }
+    expect(page).to have_selector("#routing-mode-modal", visible: false)
+
     # update defaut groupe
     click_on 'défaut'
     expect(page).to have_text('Paramètres du groupe')
