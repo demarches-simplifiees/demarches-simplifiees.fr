@@ -1058,7 +1058,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
     let!(:drop_down_tdc) { procedure4.draft_revision.types_de_champ.first }
 
-    before { patch :wizard, params: { procedure_id: procedure4.id, choice: { state: 'routage_custom' } } }
+    before { patch :wizard, params: { procedure_id: procedure4.id, choice: { state: 'custom_routing' } } }
 
     it do
       expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure4))
