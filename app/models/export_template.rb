@@ -149,7 +149,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def repetable_columns
-    columns.filter { _1[:source] == 'repet' }
+    exported_columns.filter { _1[:source] == 'repet' }
       .group_by { _1[:repetition_champ_stable_id] }
   end
 

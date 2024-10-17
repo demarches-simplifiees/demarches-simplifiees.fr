@@ -5,7 +5,7 @@ describe ProcedureExportService do
   let(:procedure) { create(:procedure, types_de_champ_public:, for_individual:, ask_birthday: true) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
   # let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, nil) }
-  let(:export_template) { create(:export_template, kind:, content:) }
+  let(:export_template) { create(:export_template, kind:, exported_columns:) }
   let(:for_individual) { true }
   let(:types_de_champ_public) do
     [
@@ -22,19 +22,16 @@ describe ProcedureExportService do
     ]
   end
 
-  let(:content) do
-    {
-      "columns" => [
-        { "path" => "id", "source" => "dossier", "libelle" => "ID" },
-        { "path" => "email", "source" => "dossier", "libelle" => "Email" },
-        { "path" => "date_de_naissance", "source" => "dossier", "libelle" => "Date de naissance" },
-        { "path" => "groupe_instructeur", "source" => "dossier", "libelle" => "Groupe instructeur" },
-        { "path" => "value", "source" => "tdc", "libelle" => "first champ", "stable_id" => 1 },
-        { "path" => "code", "source" => "tdc", "libelle" => "Commune (Code INSEE)", "stable_id" => 17 },
-        { "path" => "value", "source" => "tdc", "libelle" => "PJ", "stable_id" => 30 },
-        { "path" => "value", "source" => "repet", "libelle" => "child second champ", "stable_id" => 9, "repetition_champ_stable_id" => 7 }
-      ]
-    }
+  let(:exported_columns) do
+    [
+      ExportedColumn.new(libelle: 'Mis à jour le', column: procedure.find_column(label: 'Mis à jour le')),
+      ExportedColumn.new(libelle: 'Demandeur', column: procedure.find_column(label: 'Demandeur')),
+      ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
+      ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
+      ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
+      ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ')),
+      ExportedColumn.new(libelle: 'Champ répétable – child second champ', column: procedure.find_column(label: 'Champ répétable – child second champ'))
+    ]
   end
 
   describe 'to_xlsx' do
