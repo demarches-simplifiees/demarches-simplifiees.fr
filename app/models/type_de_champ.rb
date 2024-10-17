@@ -532,7 +532,9 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.filter_hash_type(type_champ)
-    if is_choice_type_from(type_champ)
+    if type_champ == 'multiple_drop_down_list'
+      :enums
+    elsif is_choice_type_from(type_champ)
       :enum
     else
       :text

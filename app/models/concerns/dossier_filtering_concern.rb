@@ -39,5 +39,11 @@ module DossierFilteringConcern
       q = Array.new(values.count, "(#{table_column} = ?)").join(' OR ')
       where(q, *(values))
     }
+
+    scope :filter_array_enum, lambda { |table, column, values|
+      table_column = DossierFilterService.sanitized_column(table, column)
+      q = Array.new(values.count, "(#{table_column} = ?)").join(' OR ')
+      where(q, *(values. map { |value| "[\"#{value}\"]" }))
+    }
   end
 end

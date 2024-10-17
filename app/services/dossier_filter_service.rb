@@ -92,6 +92,9 @@ class DossierFilterService
           if filtered_column.type == :enum
             dossiers.with_type_de_champ(column)
               .filter_enum(:champs, value_column, values)
+          elsif filtered_column.type == :enums
+            dossiers.with_type_de_champ(column)
+              .filter_array_enum(:champs, value_column, values)
           else
             dossiers.with_type_de_champ(column)
               .filter_ilike(:champs, value_column, values)

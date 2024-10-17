@@ -486,6 +486,23 @@ describe DossierFilterService do
 
         it { is_expected.to contain_exactly(kept_dossier.id) }
       end
+
+      context 'with enums type_de_champ' do
+        let(:filter) { [type_de_champ.libelle, 'Favorable'] }
+        let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, options: ['Favorable', 'Defavorable'] }] }
+
+        before do
+          kept_champ = kept_dossier.champs.find_by(stable_id: type_de_champ.stable_id)
+          kept_champ.value = ['Favorable']
+          kept_champ.save!
+
+          discarded_champ = discarded_dossier.champs.find_by(stable_id: type_de_champ.stable_id)
+          discarded_champ.value = ['Defavorable']
+          discarded_champ.save!
+        end
+
+        it { is_expected.to contain_exactly(kept_dossier.id) }
+      end
     end
 
     context 'for type_de_champ_private table' do
