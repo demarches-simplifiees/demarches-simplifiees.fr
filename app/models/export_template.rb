@@ -149,8 +149,15 @@ class ExportTemplate < ApplicationRecord
   end
 
   def repetable_columns
-    exported_columns.filter { _1[:source] == 'repet' }
-      .group_by { _1[:repetition_champ_stable_id] }
+    procedure
+      .all_revisions_types_de_champ
+      .filter(&:repetition?)
+      .reduce({}) do |accu, repet|
+        all_children = procedure.all_revisions_types_de_champ(parent: repet)
+        children_from_exported_columns = exported_columns.filter { _1.column.column.to_s.in?(all_children.map(&:stable_id).map(&:to_s)) }
+        accu[repet] = children_from_exported_columns if children_from_exported_columns.any?
+        accu
+      end
   end
 
   private

@@ -111,9 +111,9 @@ class ProcedureExportService
         types_de_champ = procedure.all_revisions_types_de_champ(parent: type_de_champ_repetition).to_a
         rows = dossiers.flat_map { _1.repetition_rows_for_export(type_de_champ_repetition) }
 
-        if types_de_champ.present? && rows.present?
+        if selected_children_columns.present? && rows.present?
           {
-            sheet_name: type_de_champ_repetition.libelle_for_export,
+            sheet_name: repetition.libelle_for_export,
             instances: rows,
             spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ, export_template: @export_template) }
           }
