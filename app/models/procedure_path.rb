@@ -10,14 +10,14 @@ class ProcedurePath < ApplicationRecord
   scope :by_updated_at, -> { order(updated_at: :desc) }
 
   def ensure_one_path
-    return if procedure.procedure_paths.count > 1
+    return if procedure.procedure_paths.count > 1 || destroyed_by_association
 
     errors.add(:base, :at_least_one_path)
     throw(:abort)
   end
 
   def ensure_is_customized
-    return if path_customized?
+    return if path_customized? || destroyed_by_association
 
     errors.add(:base, :cannot_delete_customized_path)
     throw(:abort)
