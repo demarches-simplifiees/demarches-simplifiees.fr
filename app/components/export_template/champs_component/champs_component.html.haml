@@ -9,7 +9,7 @@
         = label_tag "#{component_prefix}-select-all", "Tout sélectionner"
     - sections.each do |section|
       .fr-fieldset__element.fr-px-4w= section[:libelle]
-      - section[:columns].map { Array.wrap(_1) }.each do |grouped_columns|
+      - section[:columns].each do |grouped_columns|
         - if grouped_columns.many?
           .fr-fieldset__element
             .fieldset-bordered.fr-ml-3v

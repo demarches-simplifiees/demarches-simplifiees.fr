@@ -56,7 +56,7 @@ describe ProcedureExportService do
 
     describe 'Dossiers sheet' do
       let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-      let(:selected_headers) { ["ID", "Email", "first champ", "Commune (Code INSEE)", "Date de naissance", "Groupe instructeur", "PJ"] }
+      let(:selected_headers) { ["Mis à jour le", "Demandeur", "Commune (Code INSEE)", "Date de naissance", "Groupe instructeur", "PJ"] }
 
       it 'should have only headers from export template' do
         expect(dossiers_sheet.headers).to match_array(selected_headers)

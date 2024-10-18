@@ -11,12 +11,12 @@ class ExportedColumnType < ActiveRecord::Type::Value
     in NilClass # default value
       nil
     # from db
-    in { id: String|Hash, libelle: String } => h
-      ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle])
+    in { id: String|Hash, libelle: String, parent: String|NilClass } => h
+      ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle], parent: h[:parent])
     # from form
     in String
       h = JSON.parse(value).deep_symbolize_keys
-      ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle])
+      ExportedColumn.new(column: ColumnType.new.cast(h[:id]), libelle: h[:libelle], parent: h[:parent])
     end
   end
 
@@ -31,7 +31,8 @@ class ExportedColumnType < ActiveRecord::Type::Value
     in ExportedColumn
       JSON.generate({
         id: value.column.h_id,
-        libelle: value.libelle
+        libelle: value.libelle,
+        parent: value.parent
       })
     else
       raise ArgumentError, "Invalid value for ExportedColumn serialization: #{value}"

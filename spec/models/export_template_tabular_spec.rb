@@ -92,6 +92,13 @@ describe ExportTemplate do
         export_template.exported_columns
       end.not_to raise_error
     end
+    it 'create exported_column' do
+      export_template.exported_columns = [
+        ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+      ]
+      export_template.save!
+      expect(export_template.exported_columns.size).to eq 1
+    end
 
     xit 'raises when stable_id is invalid'
     xit 'raises when invalid path'
