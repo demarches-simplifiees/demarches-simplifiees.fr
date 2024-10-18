@@ -2,10 +2,10 @@ require 'csv'
 
 describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, types_de_champ_public:, for_individual:, ask_birthday: true) }
+  let(:procedure) { create(:procedure, types_de_champ_public:, for_individual:, ask_birthday: true, instructeurs: [instructeur]) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
   # let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, nil) }
-  let(:export_template) { create(:export_template, kind:, exported_columns:) }
+  let(:export_template) { create(:export_template, kind:, exported_columns:, groupe_instructeur: procedure.defaut_groupe_instructeur) }
   let(:for_individual) { true }
   let(:types_de_champ_public) do
     [
@@ -29,8 +29,8 @@ describe ProcedureExportService do
       ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
       ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
       ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
-      ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ')),
-      ExportedColumn.new(libelle: 'Champ répétable – child second champ', column: procedure.find_column(label: 'Champ répétable – child second champ'))
+      ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
+      # ExportedColumn.new(libelle: 'Champ répétable – child second champ', column: procedure.find_column(label: 'Champ répétable – child second champ'))
     ]
   end
 

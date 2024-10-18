@@ -103,20 +103,18 @@ class ProcedureExportService
 
   def champs_repetables_options
     if @export_template.present?
-      @export_template.repetable_columns.filter_map do |tuple|
-        type_de_champ_repetition = procedure.types_de_champ_for_procedure_presentation.find_by(stable_id: tuple[0])
+      @export_template.repetable_columns.filter_map do |repetition, selected_children_columns|
         champs_by_stable_id = dossiers
           .flat_map { _1.champs.filter(&:repetition?) }
           .group_by(&:stable_id)
 
-        types_de_champ = tuple[1].map { TypeDeChamp.find_by(stable_id: _1[:stable_id]) }
-        rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
+        rows = champs_by_stable_id.fetch(repetition.stable_id, []).flat_map(&:rows_for_export)
 
-        if types_de_champ.present? && rows.present?
+        if selected_children_columns.present? && rows.present?
           {
-            sheet_name: type_de_champ_repetition.libelle_for_export,
+            sheet_name: repetition.libelle_for_export,
             instances: rows,
-            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
+            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(selected_children_columns) }
           }
         end
       end
