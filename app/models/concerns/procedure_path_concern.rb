@@ -36,6 +36,16 @@ module ProcedurePathConcern
         .find_with_path(path).first
     end
 
+    def claim_path!(administrateur, path)
+      return if path.blank?
+
+      procedure_path = ProcedurePath.find_by(path: path)
+
+      raise "administrateur cannot claim a procedure not owned" if !administrateur.owns?(procedure_path.procedure)
+
+      procedure_path.update!(procedure: self)
+    end
+
     def canonical_path
       procedure_paths.by_updated_at.first.path
     end

@@ -108,4 +108,38 @@ describe ProcedurePathConcern do
       end
     end
   end
+
+  describe "#claim_path!" do
+    let!(:procedure) { create(:procedure) }
+    let!(:procedure_2) { create(:procedure) }
+    let!(:procedure_path) { create(:procedure_path, procedure: procedure, path: "test-path") }
+    let!(:procedure_path_2) { create(:procedure_path, procedure: procedure_2, path: "test-path-2") }
+    let(:administrateur) { procedure.administrateurs.first }
+
+    it "assigns the procedure to the procedure_path" do
+      expect { procedure.claim_path!(administrateur, procedure_path_2.path) }.to change { procedure_path_2.reload.procedure }.from(procedure_2).to(procedure)
+    end
+  end
+
+  describe '#canonical_path' do
+    let!(:procedure) do
+      travel_to(3.days.ago) do
+        create(:procedure)
+      end
+    end
+
+    it 'returns the path of the most recently updated procedure_path' do
+      # Create procedure paths with different timestamps
+      create(:procedure_path,
+        procedure: procedure,
+        path: 'older-path',
+        updated_at: 2.days.ago)
+      create(:procedure_path,
+        procedure: procedure,
+        path: 'newer-path',
+        updated_at: 1.day.ago)
+
+      expect(procedure.canonical_path).to eq('newer-path')
+    end
+  end
 end
