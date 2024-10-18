@@ -71,10 +71,8 @@ describe ApplicationHelper do
   end
 
   describe "#flash_class" do
-    it { expect(flash_class('notice')).to eq 'alert-success' }
-    it { expect(flash_class('alert', sticky: true, fixed: true)).to eq 'alert-danger sticky alert-fixed' }
-    it { expect(flash_class('error')).to eq 'alert-danger' }
-    it { expect(flash_class('unknown-level')).to eq '' }
+    it { expect(flash_class(sticky: true)).to eq 'sticky' }
+    it { expect(flash_class(fixed: true)).to eq 'alert-fixed' }
   end
 
   describe "#try_format_date" do

@@ -36,15 +36,8 @@ module ApplicationHelper
     end
   end
 
-  def flash_class(level, sticky: false, fixed: false)
+  def flash_class(sticky: false, fixed: false)
     class_names = []
-
-    case level
-    when 'notice'
-      class_names << 'alert-success'
-    when 'alert', 'error'
-      class_names << 'alert-danger'
-    end
 
     if sticky
       class_names << 'sticky'

@@ -1,8 +1,9 @@
 = content_tag(@wrapper, wrapper_options) do
   %button{ class: button_class_names, id: button_id, disabled: disabled?, data: data, "aria-expanded": "false", 'aria-haspopup': 'true', 'aria-controls': menu_id }
     = button_inner_html
+    %span.fr-ml-2v{ 'aria-hidden': 'true' }
 
-  %div{ data: { menu_button_target: 'menu' }, id: menu_id, 'aria-labelledby': button_id, role: menu_role, 'tab-index': -1, class: menu_class_names }
+  %div{ data: { menu_button_target: 'menu' }, id: menu_id, 'aria-labelledby': button_id, role: menu_role, 'tabindex': -1, class: menu_class_names }
     = menu_header_html
 
     -# the dropdown can be a menu with a list of item
