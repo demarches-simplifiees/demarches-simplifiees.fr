@@ -107,11 +107,10 @@ describe Champ do
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:public_champ) { dossier.project_champs_public.first }
     let(:private_champ) { dossier.project_champs_private.first }
-    let(:champ_in_repetition) { dossier.project_champs_public.find(&:repetition?).champs.first }
     let(:standalone_champ) { build(:champ, type_de_champ: build(:type_de_champ), dossier: build(:dossier)) }
     let(:public_sections) { dossier.project_champs_public.filter(&:header_section?) }
     let(:private_sections) { dossier.project_champs_private.filter(&:header_section?) }
-    let(:sections_in_repetition) { dossier.champs.filter(&:child?).filter(&:header_section?) }
+    let(:sections_in_repetition) { dossier.project_champs_public.find(&:repetition?).rows.flatten.filter(&:header_section?) }
 
     it 'returns the sibling sections of a champ' do
       expect(public_sections).not_to be_empty
@@ -216,7 +215,7 @@ describe Champ do
 
     context 'when type_de_champ is multiple_drop_down_list' do
       let(:champ) { Champs::MultipleDropDownListChamp.new(value:, dossier: build(:dossier)) }
-      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_multiple_drop_down_list)) }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_multiple_drop_down_list, drop_down_options: ["Crétinier", "Mousserie"])) }
 
       let(:value) { '["Crétinier", "Mousserie"]' }
 
@@ -304,7 +303,7 @@ describe Champ do
     context 'for drop down list champ' do
       let(:champ) { Champs::DropDownListChamp.new(value:) }
       before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_drop_down_list)) }
-      let(:value) { "HLM" }
+      let(:value) { "val1" }
 
       it { is_expected.to eq([value]) }
     end
@@ -330,13 +329,15 @@ describe Champ do
     end
 
     context 'for linked drop down list champ' do
-      let(:champ) { Champs::LinkedDropDownListChamp.new(primary_value: "hello", secondary_value: "world") }
+      let(:champ) { Champs::LinkedDropDownListChamp.new(value: '["hello","world"]') }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_linked_drop_down_list, drop_down_options: ['--hello--', 'world'])) }
 
       it { is_expected.to eq(["hello", "world"]) }
     end
 
     context 'for multiple drop down list champ' do
       let(:champ) { Champs::MultipleDropDownListChamp.new(value:) }
+      before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_multiple_drop_down_list, drop_down_options: ['goodbye', 'cruel', 'world'])) }
 
       context 'when there are multiple values selected' do
         let(:value) { JSON.generate(['goodbye', 'cruel', 'world']) }

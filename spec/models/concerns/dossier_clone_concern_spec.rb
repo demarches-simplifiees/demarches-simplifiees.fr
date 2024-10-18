@@ -308,7 +308,7 @@ RSpec.describe DossierCloneConcern do
     end
 
     context 'with new revision' do
-      let(:added_champ) { forked_dossier.champs.find { _1.libelle == "Un nouveau champ text" } }
+      let(:added_champ) { forked_dossier.project_champs_public.find { _1.libelle == "Un nouveau champ text" } }
       let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
       let(:new_dossier) { dossier.clone }
 
@@ -325,12 +325,16 @@ RSpec.describe DossierCloneConcern do
         expect(dossier.revision_id).to eq(procedure.revisions.first.id)
         expect(new_dossier.revision_id).to eq(procedure.published_revision.id)
         expect(forked_dossier.revision_id).to eq(procedure.published_revision_id)
-        is_expected.to eq(added: [added_champ], updated: [], removed: [removed_champ])
+        expect(subject[:added].map(&:stable_id)).to eq([added_champ.stable_id])
+        expect(subject[:added].first.new_record?).to be_truthy
+        expect(subject[:updated]).to be_empty
+        expect(subject[:removed]).to eq([removed_champ])
       }
     end
   end
 
   describe '#merge_fork' do
+    let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
     subject { dossier.merge_fork(forked_dossier) }
 
     context 'with updated champ' do
@@ -348,11 +352,11 @@ RSpec.describe DossierCloneConcern do
         dossier.debounce_index_search_terms_flag.remove
       end
 
-      it { expect { subject }.to change { dossier.champs.size }.by(0) }
+      it { expect { subject }.to change { dossier.champs.reload.size }.by(0) }
       it { expect { subject }.not_to change { dossier.champs.order(:created_at).reject { _1.stable_id.in?([99, 994]) }.map(&:value) } }
       it { expect { subject }.to have_enqueued_job(DossierIndexSearchTermsJob).with(dossier) }
       it { expect { subject }.to change { dossier.champs.find { _1.stable_id == 99 }.value }.from('old value').to('new value') }
-      it { expect { subject }.to change { dossier.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
+      it { expect { subject }.to change { dossier.reload.champs.find { _1.stable_id == 994 }.value }.from('old value').to('new value in repetition') }
 
       it 'fork is hidden after merge' do
         subject
@@ -362,8 +366,16 @@ RSpec.describe DossierCloneConcern do
     end
 
     context 'with new revision' do
-      let(:added_champ) { forked_dossier.champs.find { _1.libelle == "Un nouveau champ text" } }
-      let(:added_repetition_champ) { forked_dossier.champs.find { _1.libelle == "Texte en répétition" } }
+      let(:added_champ) {
+        tdc = forked_dossier.revision.types_de_champ.find { _1.libelle == "Un nouveau champ text" }
+        forked_dossier.champ_for_update(tdc, nil, updated_by: 'test')
+      }
+      let(:added_repetition_champ) {
+        tdc_repetition = forked_dossier.revision.types_de_champ.find { _1.stable_id == 993 }
+        tdc = forked_dossier.revision.types_de_champ.find { _1.libelle == "Texte en répétition" }
+        row_id = forked_dossier.repetition_row_ids(tdc_repetition).first
+        forked_dossier.champ_for_update(tdc, row_id, updated_by: 'test')
+      }
       let(:removed_champ) { dossier.champs.find { _1.stable_id == 99 } }
       let(:updated_champ) { dossier.champs.find { _1.stable_id == 991 } }
 
@@ -393,8 +405,8 @@ RSpec.describe DossierCloneConcern do
         super()
       }
 
-      it { expect { subject }.to change { dossier.champs.size }.by(1) }
-      it { expect { subject }.to change { dossier.champs.order(:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ', 'new value in repetition champ']) }
+      it { expect { subject }.to change { dossier.filled_champs.size }.by(1) }
+      it { expect { subject }.to change { dossier.filled_champs.sort_by(&:created_at).map(&:to_s) }.from(['old value', 'old value', 'Non', 'old value', 'old value']).to(['new value for updated champ', 'Non', 'old value', 'old value', 'new value for added champ', 'new value in repetition champ']) }
 
       it "dossier after merge should be on last published revision" do
         expect(dossier.revision_id).to eq(procedure.revisions.first.id)
@@ -404,7 +416,7 @@ RSpec.describe DossierCloneConcern do
         perform_enqueued_jobs only: DestroyRecordLaterJob
 
         expect(dossier.revision_id).to eq(procedure.published_revision_id)
-        expect(dossier.champs.all? { dossier.revision.in?(_1.type_de_champ.revisions) }).to be_truthy
+        expect(dossier.filled_champs.all? { dossier.revision.in?(_1.type_de_champ.revisions) }).to be_truthy
         expect(Dossier.exists?(forked_dossier.id)).to be_falsey
       end
     end

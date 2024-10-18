@@ -2,24 +2,28 @@
 
 describe Champs::LinkedDropDownListChamp do
   describe '#unpack_value' do
-    let(:champ) { Champs::LinkedDropDownListChamp.new(value: '["tata", "tutu"]') }
+    let(:champ) { Champs::LinkedDropDownListChamp.new(value: '["primary", "secondary"]', dossier: build(:dossier)) }
+    before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_linked_drop_down_list)) }
 
-    it { expect(champ.primary_value).to eq('tata') }
-    it { expect(champ.secondary_value).to eq('tutu') }
-  end
-
-  describe '#pack_value' do
-    let(:champ) { Champs::LinkedDropDownListChamp.new(primary_value: 'tata', secondary_value: 'tutu') }
-
-    it { expect(champ.value).to eq('["tata","tutu"]') }
+    it { expect(champ.primary_value).to eq('primary') }
+    it { expect(champ.secondary_value).to eq('secondary') }
   end
 
   describe '#primary_value=' do
-    let(:champ) { Champs::LinkedDropDownListChamp.new(primary_value: 'tata', secondary_value: 'tutu') }
+    let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :linked_drop_down_list }]) }
+    let(:dossier) { create(:dossier, procedure:) }
+    let(:champ) { dossier.champs.first }
 
     before { champ.primary_value = '' }
 
-    it { expect(champ.value).to eq('["",""]') }
+    it {
+      champ.primary_value = 'primary'
+      expect(champ.value).to eq('["primary",null]')
+      champ.secondary_value = 'secondary'
+      expect(champ.value).to eq('["primary","secondary"]')
+      champ.primary_value = ''
+      expect(champ.value).to eq('["",""]')
+    }
   end
 
   describe '#to_s' do

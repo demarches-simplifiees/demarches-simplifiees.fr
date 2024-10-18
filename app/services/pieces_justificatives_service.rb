@@ -135,7 +135,7 @@ class PiecesJustificativesService
   end
 
   def pjs_for_champs(dossiers)
-    champs = dossiers.flat_map(&:champs).filter { _1.type == "Champs::PieceJustificativeChamp" }
+    champs = dossiers.flat_map(&:filled_champs).filter { _1.type == "Champs::PieceJustificativeChamp" }
 
     if !liste_documents_allows?(:with_champs_private)
       champs = champs.reject(&:private?)
