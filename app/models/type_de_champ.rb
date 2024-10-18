@@ -146,7 +146,7 @@ class TypeDeChamp < ApplicationRecord
   has_one :revision, through: :revision_type_de_champ
   has_one :procedure, through: :revision
 
-  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
+  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :libelle_for_path, :columns_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
   delegate :used_by_routing_rules?, to: :revision_type_de_champ
 
   class WithIndifferentAccess

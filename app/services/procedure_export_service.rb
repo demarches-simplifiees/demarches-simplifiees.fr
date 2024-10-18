@@ -102,25 +102,43 @@ class ProcedureExportService
   end
 
   def champs_repetables_options
-    champs_by_stable_id = dossiers
-      .flat_map { _1.champs.filter(&:repetition?) }
-      .group_by(&:stable_id)
+    if @export_template.present?
+      @export_template.repetable_columns.filter_map do |repetition, selected_children_columns|
+        champs_by_stable_id = dossiers
+          .flat_map { _1.champs.filter(&:repetition?) }
+          .group_by(&:stable_id)
 
-    procedure
-      .all_revisions_types_de_champ
-      .repetition
-      .filter_map do |type_de_champ_repetition|
-        types_de_champ = procedure.all_revisions_types_de_champ(parent: type_de_champ_repetition).to_a
-        rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
+        rows = champs_by_stable_id.fetch(repetition.stable_id, []).flat_map(&:rows_for_export)
 
-        if types_de_champ.present? && rows.present?
+        if selected_children_columns.present? && rows.present?
           {
-            sheet_name: type_de_champ_repetition.libelle_for_export,
+            sheet_name: repetition.libelle_for_export,
             instances: rows,
-            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
+            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(selected_children_columns) }
           }
         end
       end
+    else
+      champs_by_stable_id = dossiers
+        .flat_map { _1.champs.filter(&:repetition?) }
+        .group_by(&:stable_id)
+
+      procedure
+        .all_revisions_types_de_champ
+        .repetition
+        .filter_map do |type_de_champ_repetition|
+          types_de_champ = procedure.all_revisions_types_de_champ(parent: type_de_champ_repetition).to_a
+          rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
+
+          if types_de_champ.present? && rows.present?
+            {
+              sheet_name: type_de_champ_repetition.libelle_for_export,
+              instances: rows,
+              spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
+            }
+          end
+        end
+    end
   end
 
   DEFAULT_STYLES = {
@@ -154,7 +172,7 @@ class ProcedureExportService
     types_de_champ = procedure.types_de_champ_for_procedure_export.to_a
 
     Proc.new do |instance|
-      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
+      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ, export_template: @export_template)
     end
   end
 end

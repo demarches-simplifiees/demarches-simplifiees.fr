@@ -7,7 +7,12 @@ module Instructeurs
     before_action :ensure_legitimate_groupe_instructeur, only: [:create, :update]
 
     def new
-      @export_template = ExportTemplate.default(groupe_instructeur: @groupe_instructeurs.first)
+      kind = params[:kind] == 'zip' ? 'zip' : 'xlsx'
+
+      @export_template = ExportTemplate.default(
+        groupe_instructeur: @groupe_instructeurs.first,
+        kind:
+      )
     end
 
     def create
@@ -25,7 +30,9 @@ module Instructeurs
     end
 
     def update
-      if @export_template.update(export_template_params)
+      @export_template.assign_attributes(export_template_params)
+
+      if @export_template.save
         redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été modifié"
       else
         flash[:alert] = @export_template.errors.full_messages
@@ -49,9 +56,14 @@ module Instructeurs
 
     private
 
+    def assign_columns
+      columns = params.require(:export_template)[:columns]
+      @export_template.columns = columns.map { JSON.parse(_1).symbolize_keys } if columns
+    end
+
     def export_template_params
       params.require(:export_template)
-        .permit(:name, :kind, :groupe_instructeur_id, dossier_folder: [:enabled, :template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template])
+        .permit(:name, :kind, :groupe_instructeur_id, dossier_folder: [:enabled, :template], export_pdf: [:enabled, :template], pjs: [:stable_id, :enabled, :template], exported_columns: [])
     end
 
     def set_procedure_and_groupe_instructeurs
