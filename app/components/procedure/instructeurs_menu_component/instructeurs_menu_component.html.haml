@@ -1,6 +1,13 @@
 .container
   .fr-grid-row
     .fr-col.fr-col-12.fr-col-md-3
-      = render(Dsfr::SidemenuComponent.new) do |component|
-        - component.with_links(links)
+      - if params[:state] != 'choix'
+        = render(Dsfr::SidemenuComponent.new) do |component|
+          - component.with_links(links)
+      - else
+        .fr-container
+          %ul.fr-btns-group.fr-btns-group--inline-md.fr-ml-0
+            %li
+              = link_to options_admin_procedure_groupe_instructeurs_path, class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mb-2w fr-mr-2w' do
+                Revenir aux options
     .fr-col= content
