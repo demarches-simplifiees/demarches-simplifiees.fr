@@ -5,8 +5,8 @@ module Administrateurs
     skip_before_action :alert_for_missing_siret_service, only: :edit
     skip_before_action :alert_for_missing_service, only: :edit
     def index
-      @services = services.ordered
       @procedure = procedure
+      @services = services.ordered.sort_by { |service| service == procedure.service ? 0 : 1 }
     end
 
     def new
