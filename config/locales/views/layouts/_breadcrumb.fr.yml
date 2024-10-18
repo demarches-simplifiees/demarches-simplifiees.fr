@@ -16,3 +16,4 @@ fr:
       go_to_FAQ: "consulter la FAQ"
       url_FAQ: "/faq#accordion-administrateur-2"
       faq: Foire aux Questions
+      edit_path: Modifier le lien de la démarche
