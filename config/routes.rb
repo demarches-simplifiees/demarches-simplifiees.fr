@@ -504,6 +504,7 @@ Rails.application.routes.draw do
             resources :commentaires, only: [:destroy]
             post 'repousser-expiration' => 'dossiers#extend_conservation'
             post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
+            post 'dossier_labels' => 'dossiers#dossier_labels'
             get 'geo_data'
             get 'apercu_attestation'
             get 'bilans_bdf'

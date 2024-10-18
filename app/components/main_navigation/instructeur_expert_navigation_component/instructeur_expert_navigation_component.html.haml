@@ -9,6 +9,6 @@
         = link_to expert_all_avis_path, class: 'fr-nav__link', aria: aria_current_for(:avis) do
           = Avis.model_name.human(count: 10)
           - if helpers.current_expert.avis_summary[:unanswered] > 0
-            %span.badge.warning= helpers.current_expert.avis_summary[:unanswered]
+            %span.fr-badge.fr-badge--new.fr-badge--no-icon= helpers.current_expert.avis_summary[:unanswered]
 
     = render MainNavigation::AnnouncesLinkComponent.new
