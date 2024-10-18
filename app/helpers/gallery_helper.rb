@@ -2,7 +2,7 @@
 
 module GalleryHelper
   def displayable_pdf?(blob)
-    blob.previewable? && blob.content_type.in?(AUTHORIZED_PDF_TYPES)
+    blob.content_type.in?(AUTHORIZED_PDF_TYPES)
   end
 
   def displayable_image?(blob)
@@ -16,8 +16,7 @@ module GalleryHelper
   end
 
   def preview_url_for(attachment)
-    preview = attachment.preview(resize_to_limit: [400, 400])
-    preview.image.attached? ? preview.processed.url : 'pdf-placeholder.png'
+    attachment.blob.preview_image.url.presence || 'pdf-placeholder.png'
   rescue StandardError
     'pdf-placeholder.png'
   end
