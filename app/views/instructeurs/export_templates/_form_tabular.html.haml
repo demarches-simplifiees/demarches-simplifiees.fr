@@ -48,8 +48,8 @@
 
       = render partial: 'checkbox_group', locals: { title: 'Colonnes Infos dossier', all_columns: @export_template.all_dossier_columns, checked_columns: @export_template.exported_columns }
 
-      - types_de_champ_public = @procedure.types_de_champ_for_procedure_presentation(with_header_section: true).public_only
-      - types_de_champ_private = @procedure.types_de_champ_for_procedure_presentation(with_header_section: true).private_only
+      - types_de_champ_public = @procedure.all_revisions_types_de_champ(parent: nil, with_header_section: true).public_only
+      - types_de_champ_private = @procedure.all_revisions_types_de_champ(parent: nil, with_header_section: true).private_only
 
       = render ExportTemplate::ChampsComponent.new("Informations formulaire", @export_template, types_de_champ_public)
 
