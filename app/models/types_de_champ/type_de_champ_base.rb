@@ -15,12 +15,12 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def tags_for_template
-    tdc = @type_de_champ
+    type_de_champ = @type_de_champ
     paths.map do |path|
       path.merge(
         libelle: TagsSubstitutionConcern::TagsParser.normalize(path[:libelle]),
         id: path[:path] == :value ? "tdc#{stable_id}" : "tdc#{stable_id}/#{path[:path]}",
-        lambda: -> (dossier) { dossier.project_champ(tdc, nil).for_tag(path[:path]) }
+        lambda: -> (dossier) { dossier.champ_value_for_tag(type_de_champ, path[:path]) }
       )
     end
   end
