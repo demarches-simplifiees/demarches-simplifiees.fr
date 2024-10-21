@@ -83,6 +83,14 @@ module Users
       redirect_to france_connect_particulier_path
     end
 
+    def pro_connect
+      @procedure = retrieve_procedure
+      return procedure_not_found if @procedure.blank?
+
+      store_user_location!(@procedure)
+      redirect_to agent_connect_login_path
+    end
+
     def procedure_for_help
       retrieve_procedure
     end

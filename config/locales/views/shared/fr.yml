@@ -11,15 +11,19 @@ fr:
         reponse_donnee_le: "Réponse donnée le %{date}"
         en_attente: "En attente de réponse"
       france_connect_login:
-        title: 'Se créer un compte avec FranceConnect'
-        description: "FranceConnect est la solution proposée par l’État pour sécuriser et simplifier la connexion aux services en ligne."
+        title: 'Vous êtes un particulier ?'
         login_button: "S’identifier avec"
         help_link: "Qu’est-ce que FranceConnect ?"
+        separator: 'ou'
+      pro_connect_login:
+        title: 'Vous êtes un professionnel ?'
+        login_button: "S’identifier avec"
+        help_link: "Qu’est-ce que ProConnect ?"
         separator: 'ou'
       account:
         already_user_question: 'Vous avez déjà un compte ?'
         already_user: 'J’ai déjà un compte'
-        create: 'Créer un compte'
+        create: "Créer un compte sur %{application_name}"
         signin: 'Se connecter'
       messages:
         remove_file: 'Supprimer le fichier'
