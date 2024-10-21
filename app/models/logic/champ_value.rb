@@ -50,7 +50,8 @@ class Logic::ChampValue < Logic::Term
       "Champs::CheckboxChamp"
       targeted_champ.true?
     when "Champs::IntegerNumberChamp", "Champs::DecimalNumberChamp"
-      targeted_champ.for_api
+      # TODO expose raw typed value of champs
+      targeted_champ.type_de_champ.champ_value_for_api(targeted_champ, version: 1)
     when "Champs::DropDownListChamp"
       targeted_champ.selected
     when "Champs::MultipleDropDownListChamp"
