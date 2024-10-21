@@ -17,7 +17,7 @@ class ChampSerializer < ActiveModel::Serializer
     when GeoArea
       object.geometry
     else
-      object.for_api
+      object.type_de_champ.champ_value_for_api(object, version: 1)
     end
   end
 

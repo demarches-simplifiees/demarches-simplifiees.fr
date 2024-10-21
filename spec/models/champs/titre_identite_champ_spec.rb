@@ -4,7 +4,7 @@ describe Champs::TitreIdentiteChamp do
   describe "#for_export" do
     let(:champ) { described_class.new }
     before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_titre_identite)) }
-    subject { champ.for_export }
+    subject { champ.type_de_champ.champ_value_for_export(champ) }
 
     context 'without attached file' do
       let(:piece_justificative_file) { double(attached?: true) }

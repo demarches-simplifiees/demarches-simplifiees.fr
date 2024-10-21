@@ -111,23 +111,11 @@ class Champ < ApplicationRecord
   end
 
   def to_s
-    TypeDeChamp.champ_value(type_champ, self)
+    type_de_champ.champ_value(self)
   end
 
-  def for_api
-    TypeDeChamp.champ_value_for_api(type_champ, self, 1)
-  end
-
-  def for_api_v2
-    TypeDeChamp.champ_value_for_api(type_champ, self, 2)
-  end
-
-  def for_export(path = :value)
-    TypeDeChamp.champ_value_for_export(type_champ, self, path)
-  end
-
-  def for_tag(path = :value)
-    TypeDeChamp.champ_value_for_tag(type_champ, self, path)
+  def last_write_type_champ
+    TypeDeChamp::CHAMP_TYPE_TO_TYPE_CHAMP.fetch(type)
   end
 
   def main_value_name

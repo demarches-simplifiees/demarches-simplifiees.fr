@@ -11,49 +11,47 @@ class TypesDeChamp::YesNoTypeDeChamp < TypesDeChamp::CheckboxTypeDeChamp
     end
   end
 
-  class << self
-    def champ_value(champ)
-      champ_formatted_value(champ)
-    end
+  def champ_value(champ)
+    champ_formatted_value(champ)
+  end
 
-    def champ_value_for_tag(champ, path = :value)
-      champ_formatted_value(champ)
-    end
+  def champ_value_for_tag(champ, path = :value)
+    champ_formatted_value(champ)
+  end
 
-    def champ_value_for_export(champ, path = :value)
-      champ_formatted_value(champ)
-    end
+  def champ_value_for_export(champ, path = :value)
+    champ_formatted_value(champ)
+  end
 
-    def champ_value_for_api(champ, version = 2)
-      case version
-      when 2
-        champ.true? ? 'true' : 'false'
-      else
-        super
-      end
+  def champ_value_for_api(champ, version: 2)
+    case version
+    when 2
+      champ.true? ? 'true' : 'false'
+    else
+      super
     end
+  end
 
-    def champ_default_value
-      'Non'
+  def champ_default_value
+    'Non'
+  end
+
+  def champ_default_export_value(path = :value)
+    'Non'
+  end
+
+  def champ_default_api_value(version = 2)
+    case version
+    when 2
+      'false'
+    else
+      nil
     end
+  end
 
-    def champ_default_export_value(path = :value)
-      'Non'
-    end
+  private
 
-    def champ_default_api_value(version = 2)
-      case version
-      when 2
-        'false'
-      else
-        nil
-      end
-    end
-
-    private
-
-    def champ_formatted_value(champ)
-      champ.true? ? 'Oui' : 'Non'
-    end
+  def champ_formatted_value(champ)
+    champ.true? ? 'Oui' : 'Non'
   end
 end

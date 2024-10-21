@@ -19,7 +19,7 @@ describe Champs::RepetitionChamp do
     end
 
     it "can render as string" do
-      expect(champ.for_tag.to_s).to eq(
+      expect(champ.type_de_champ.champ_value_for_tag(champ).to_s).to eq(
         <<~TXT.strip
           Languages
 
@@ -29,7 +29,7 @@ describe Champs::RepetitionChamp do
     end
 
     it "as tiptap node" do
-      expect(champ.for_tag.to_tiptap_node).to include(type: 'orderedList')
+      expect(champ.type_de_champ.champ_value_for_tag(champ).to_tiptap_node).to include(type: 'orderedList')
     end
   end
 end
