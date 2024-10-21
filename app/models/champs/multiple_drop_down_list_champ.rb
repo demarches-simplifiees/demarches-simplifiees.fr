@@ -29,10 +29,6 @@ class Champs::MultipleDropDownListChamp < Champ
     render_as_checkboxes?
   end
 
-  def blank?
-    selected_options.blank?
-  end
-
   def in?(options)
     (selected_options - options).size != selected_options.size
   end

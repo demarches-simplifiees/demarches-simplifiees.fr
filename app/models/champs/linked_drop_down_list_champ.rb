@@ -35,11 +35,6 @@ class Champs::LinkedDropDownListChamp < Champ
     :primary_value
   end
 
-  def blank?
-    primary_value.blank? ||
-      (has_secondary_options_for_primary? && secondary_value.blank?)
-  end
-
   def search_terms
     [primary_value, secondary_value]
   end

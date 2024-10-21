@@ -28,6 +28,8 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
     champ.geo_areas.map(&:label).join("\n")
   end
 
+  def champ_blank?(champ) = champ.geo_areas.blank?
+
   def columns(procedure_id:, displayable: true, prefix: nil)
     []
   end

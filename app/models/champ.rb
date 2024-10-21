@@ -99,11 +99,11 @@ class Champ < ApplicationRecord
   end
 
   def mandatory_blank?
-    mandatory? && blank?
+    type_de_champ.mandatory_blank?(self)
   end
 
   def blank?
-    value.blank?
+    type_de_champ.champ_blank?(self)
   end
 
   def search_terms

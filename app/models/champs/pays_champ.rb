@@ -35,10 +35,6 @@ class Champs::PaysChamp < Champs::TextChamp
     end
   end
 
-  def blank?
-    value.blank? && external_id.blank?
-  end
-
   def code
     external_id || APIGeoService.country_code(value)
   end

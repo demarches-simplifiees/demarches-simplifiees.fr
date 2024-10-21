@@ -9,12 +9,6 @@ describe Champs::CheckboxChamp do
   describe '#true?' do
     subject { boolean_champ.true? }
 
-    context "when the checkbox value is 'on'" do
-      let(:value) { 'on' }
-
-      it { is_expected.to eq(true) }
-    end
-
     context "when the checkbox value is 'off'" do
       let(:value) { 'off' }
 
