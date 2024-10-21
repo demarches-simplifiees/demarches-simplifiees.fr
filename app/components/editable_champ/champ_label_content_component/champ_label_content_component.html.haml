@@ -2,8 +2,6 @@
 - if @champ.public?
   - if @champ.mandatory?
     = render EditableChamp::AsteriskMandatoryComponent.new
-  - else
-    %span.sr-only= t('.optional_champ')
 
 - if @champ.forked_with_changes?
   %span.updated-at.highlighted

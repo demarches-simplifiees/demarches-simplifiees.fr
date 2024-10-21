@@ -442,7 +442,7 @@ describe 'The user', js: true do
 
         fill_individual
 
-        fill_in('age (facultatif)', with: 10)
+        fill_in('age', with: 10)
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
@@ -513,7 +513,7 @@ describe 'The user', js: true do
 
         fill_individual
 
-        fill_in('age (facultatif)', with: '18')
+        fill_in('age', with: '18')
         expect(page).to have_css('label', text: 'nom', visible: :visible)
         expect(page).to have_css('.icon.mandatory')
         click_on 'Déposer le dossier'
@@ -550,7 +550,7 @@ describe 'The user', js: true do
         expect(page).to have_no_css('legend', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        fill_in('age du candidat (facultatif)', with: '18')
+        fill_in('age du candidat', with: '18')
         expect(page).to have_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_css('legend', text: 'info voiture', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
@@ -563,10 +563,10 @@ describe 'The user', js: true do
         expect(page).to have_css('label', text: 'parking', visible: true)
 
         # try to fill with invalid data
-        fill_in('tonnage (facultatif)', with: 'a')
+        fill_in('tonnage', with: 'a')
         expect(page).to have_no_css('label', text: 'parking', visible: true)
 
-        fill_in('age du candidat (facultatif)', with: '2')
+        fill_in('age du candidat', with: '2')
         expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
@@ -578,7 +578,7 @@ describe 'The user', js: true do
         expect(page).to have_no_css('legend', text: 'permis de conduire', visible: true)
         expect(page).to have_no_css('label', text: 'tonnage', visible: true)
 
-        fill_in('age du candidat (facultatif)', with: '18')
+        fill_in('age du candidat', with: '18')
         wait_for_autosave
 
         # the champ keeps their previous value so they are all displayed
