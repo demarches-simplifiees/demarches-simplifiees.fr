@@ -519,7 +519,7 @@ describe API::V2::GraphqlController do
             {
               id: champ.to_typed_id,
               label: champ.libelle,
-              stringValue: champ.for_api_v2
+              stringValue: champ.type_de_champ.champ_value_for_api(champ)
             }
           end
           expect(gql_data[:dossier][:champs]).to match_array(expected_champs)

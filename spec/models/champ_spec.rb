@@ -176,10 +176,12 @@ describe Champ do
     let(:champ) { Champs::TextChamp.new(value:, dossier: build(:dossier)) }
     before { allow(champ).to receive(:type_de_champ).and_return(build(:type_de_champ_text)) }
 
+    let(:value_for_export) { champ.type_de_champ.champ_value_for_export(champ) }
+
     context 'when type_de_champ is text' do
       let(:value) { '123' }
 
-      it { expect(champ.for_export).to eq('123') }
+      it { expect(value_for_export).to eq('123') }
     end
 
     context 'when type_de_champ is textarea' do
@@ -188,7 +190,7 @@ describe Champ do
 
       let(:value) { '<b>gras<b>' }
 
-      it { expect(champ.for_export).to eq('gras') }
+      it { expect(value_for_export).to eq('gras') }
     end
 
     context 'when type_de_champ is yes_no' do
@@ -198,19 +200,19 @@ describe Champ do
       context 'if yes' do
         let(:value) { 'true' }
 
-        it { expect(champ.for_export).to eq('Oui') }
+        it { expect(value_for_export).to eq('Oui') }
       end
 
       context 'if no' do
         let(:value) { 'false' }
 
-        it { expect(champ.for_export).to eq('Non') }
+        it { expect(value_for_export).to eq('Non') }
       end
 
       context 'if nil' do
         let(:value) { nil }
 
-        it { expect(champ.for_export).to eq('Non') }
+        it { expect(value_for_export).to eq('Non') }
       end
     end
 
@@ -220,19 +222,21 @@ describe Champ do
 
       let(:value) { '["Crétinier", "Mousserie"]' }
 
-      it { expect(champ.for_export).to eq('Crétinier, Mousserie') }
+      it { expect(value_for_export).to eq('Crétinier, Mousserie') }
     end
 
     context 'when type_de_champ and champ.type mismatch' do
       let(:value) { :noop }
       let(:champ_yes_no) { Champs::YesNoChamp.new(value: 'true') }
       let(:champ_text) { Champs::TextChamp.new(value: 'hello') }
+      let(:type_de_champ_yes_no) { build(:type_de_champ_yes_no) }
+      let(:type_de_champ_text) { build(:type_de_champ_text) }
       before do
-        allow(champ_yes_no).to receive(:type_de_champ).and_return(build(:type_de_champ_yes_no))
-        allow(champ_text).to receive(:type_de_champ).and_return(build(:type_de_champ_text))
+        allow(champ_yes_no).to receive(:type_de_champ).and_return(type_de_champ_yes_no)
+        allow(champ_text).to receive(:type_de_champ).and_return(type_de_champ_text)
       end
-      it { expect(TypeDeChamp.champ_value_for_export('text', champ_yes_no)).to eq(nil) }
-      it { expect(TypeDeChamp.champ_value_for_export('yes_no', champ_text)).to eq('Non') }
+      it { expect(type_de_champ_text.champ_value_for_export(champ_yes_no)).to eq(nil) }
+      it { expect(type_de_champ_yes_no.champ_value_for_export(champ_text)).to eq('Non') }
     end
   end
 

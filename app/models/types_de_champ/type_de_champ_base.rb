@@ -54,43 +54,41 @@ class TypesDeChamp::TypeDeChampBase
     filter_value
   end
 
-  class << self
-    def champ_value(champ)
-      champ.value.present? ? champ.value.to_s : champ_default_value
-    end
+  def champ_value(champ)
+    champ.value.present? ? champ.value.to_s : champ_default_value
+  end
 
-    def champ_value_for_api(champ, version = 2)
-      case version
-      when 2
-        champ_value(champ)
-      else
-        champ.value.presence || champ_default_api_value(version)
-      end
+  def champ_value_for_api(champ, version: 2)
+    case version
+    when 2
+      champ_value(champ)
+    else
+      champ.value.presence || champ_default_api_value(version)
     end
+  end
 
-    def champ_value_for_export(champ, path = :value)
-      path == :value ? champ.value.presence : champ_default_export_value(path)
-    end
+  def champ_value_for_export(champ, path = :value)
+    path == :value ? champ.value.presence : champ_default_export_value(path)
+  end
 
-    def champ_value_for_tag(champ, path = :value)
-      path == :value ? champ_value(champ) : nil
-    end
+  def champ_value_for_tag(champ, path = :value)
+    path == :value ? champ_value(champ) : nil
+  end
 
-    def champ_default_value
+  def champ_default_value
+    ''
+  end
+
+  def champ_default_export_value(path = :value)
+    nil
+  end
+
+  def champ_default_api_value(version = 2)
+    case version
+    when 2
       ''
-    end
-
-    def champ_default_export_value(path = :value)
+    else
       nil
-    end
-
-    def champ_default_api_value(version = 2)
-      case version
-      when 2
-        ''
-      else
-        nil
-      end
     end
   end
 

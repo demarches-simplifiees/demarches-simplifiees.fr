@@ -33,7 +33,7 @@ describe Champs::PieceJustificativeChamp do
     let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :piece_justificative }]) }
     let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     let(:champ) { dossier.champs.first }
-    subject { champ.for_export }
+    subject { champ.type_de_champ.champ_value_for_export(champ) }
 
     it { is_expected.to eq('toto.txt') }
 
@@ -50,7 +50,7 @@ describe Champs::PieceJustificativeChamp do
 
     before { champ.piece_justificative_file.first.blob.update(virus_scan_result:) }
 
-    subject { champ.for_api }
+    subject { champ.type_de_champ.champ_value_for_api(champ, version: 1) }
 
     context 'when file is safe' do
       let(:virus_scan_result) { ActiveStorage::VirusScanner::SAFE }
