@@ -10,6 +10,6 @@ class ExportedColumn
   end
 
   def to_json
-    { id: column.id, libelle: column.label, parent: }.to_json
+    { id: column.id, libelle:, parent: }.to_json
   end
 end

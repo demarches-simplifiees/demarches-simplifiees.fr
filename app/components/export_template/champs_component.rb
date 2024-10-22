@@ -38,7 +38,7 @@ class ExportTemplate::ChampsComponent < ApplicationComponent
     prefix = type_de_champ.repetition? ? "Bloc répétable" : nil
     type_de_champ.columns(procedure_id: export_template.procedure.id, prefix:).map do |column|
       ExportedColumn.new(column:,
-                         libelle: column.label,
+                         libelle: historical_libelle(column),
                          parent: type_de_champ.repetition? ? type_de_champ.stable_id : nil)
     end
   end

@@ -65,7 +65,8 @@ describe ProcedureExportService do
       it 'should have data' do
         expect(procedure.dossiers.count).to eq 1
         expect(dossiers_sheet.data.size).to eq 1
-        expect(dossiers_sheet.data).to eq([["2024-10-22T16:40:35.000Z", "user1@user.com", "défaut", "text", "60172", "toto.txt"]])
+
+        expect(dossiers_sheet.data).to match_array([[anything, dossier.user_email_for_display, "défaut", "text", "60172", "toto.txt"]])
       end
 
       context 'with a procedure routee' do
