@@ -218,13 +218,24 @@
     }
   }
 
-  .fr-label .fr-hint-text > *,
-  .fr-fieldset__legend .fr-hint-text > * {
+  .fr-label + .fr-hint-text > *,
+  .fr-fieldset__legend + .fr-hint-text > * {
     // la description d'un champ peut contenir du markup (markdown->html),
-    // on herite donc la fontsize/mrgin/padding du fr-hint-text
+    // on herite donc la fontsize/margin/padding du fr-hint-text
     font-size: inherit;
+    line-height: inherit;
     margin: inherit;
     padding: inherit;
+  }
+
+  .fr-label + .fr-hint-text {
+    // les messages d'aide se trouvant juste après un label prennent le même style que ceux se trouvant dans un label
+    margin-top: .25rem;
+  }
+
+  .fr-hint-text + .fr-input {
+    // les champs se trouvant juste après un message d'aide prennent le même syle que ceux se trouvant juste après un label
+    margin-top: .5rem;
   }
 
   input[type='password'],
