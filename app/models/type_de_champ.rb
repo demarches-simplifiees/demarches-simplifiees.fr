@@ -24,7 +24,6 @@ class TypeDeChamp < ApplicationRecord
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     engagement_juridique: REFERENTIEL_EXTERNE,
-
     header_section: STRUCTURE,
     repetition: STRUCTURE,
     dossier_link: STRUCTURE,
@@ -712,11 +711,13 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def champ_value_for_export(champ, path = :value)
+  def champ_value_for_export(champ, path_or_column = :value)
     if use_default_value?(champ)
-      dynamic_type.champ_default_export_value(path)
+      dynamic_type.champ_default_export_value(path_or_column)
+    elsif path_or_column.is_a?(Column)
+      dynamic_type.champ_value_by_column_for_export(champ, path_or_column)
     else
-      dynamic_type.champ_value_for_export(champ, path)
+      dynamic_type.champ_value_for_export(champ, path_or_column)
     end
   end
 

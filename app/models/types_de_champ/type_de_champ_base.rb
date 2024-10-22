@@ -79,12 +79,16 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
-  def champ_value_for_export(champ, path_or_column = :value)
-    if path_or_column.is_a?(Column)
-      path_or_column.get_value(champ)
+  def champ_value_by_column_for_export(champ, column)
+    if column.is_a?(Columns::JSONPathColumn) || column.value_column != :value
+      column.get_value(champ)
     else
-      path_or_column == :value ? champ.value.presence : champ_default_export_value(path_or_column)
+      champ_value_for_export(champ, path = :value)
     end
+  end
+
+  def champ_value_for_export(champ, path = :value)
+    path == :value ? champ.value.presence : champ_default_export_value(path)
   end
 
   def champ_value_for_tag(champ, path = :value)
