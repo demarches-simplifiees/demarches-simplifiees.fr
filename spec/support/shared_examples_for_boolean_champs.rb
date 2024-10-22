@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples "a boolean champ" do
+RSpec.shared_examples "a boolean champ" do |nullable|
   describe 'before validation' do
     subject { boolean_champ.valid? }
 
@@ -55,7 +55,7 @@ RSpec.shared_examples "a boolean champ" do
     context 'when the value is nil' do
       let(:value) { nil }
 
-      it { is_expected.to eq("Non") }
+      it { is_expected.to eq(nullable ? '' : 'Non') }
     end
   end
 end
