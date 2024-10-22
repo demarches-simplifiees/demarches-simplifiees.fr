@@ -1,4 +1,4 @@
-class EditableChamp::TableRowSelectorComponent < EditableChamp::ComboSearchComponent
+class EditableChamp::ReferentielDePolynesieComponent < EditableChamp::ComboSearchComponent
   def dsfr_input_classname
     'fr-input'
   end

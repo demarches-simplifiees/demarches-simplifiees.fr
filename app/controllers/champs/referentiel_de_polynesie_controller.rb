@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Champs::TableRowSelectorController < ApplicationController
+class Champs::ReferentielDePolynesieController < ApplicationController
   before_action :authenticate_logged_user!
 
   def search
@@ -8,7 +8,7 @@ class Champs::TableRowSelectorController < ApplicationController
     if bad_parameters
       render json: [], status: 400
     else
-      render json: TableRowSelector::API.search(@params[:domain], @params[:term])
+      render json: ReferentielDePolynesie::API.search(@params[:domain], @params[:term])
     end
   end
 

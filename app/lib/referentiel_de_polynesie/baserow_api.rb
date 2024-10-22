@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TableRowSelector::BaserowAPI
+class ReferentielDePolynesie::BaserowAPI
   class << self
     SECRETS = Rails.application.secrets.baserow
 

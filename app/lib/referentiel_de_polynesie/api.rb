@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TableRowSelector::API
+class ReferentielDePolynesie::API
   class << self
     def available_tables
       engine&.available_tables
@@ -16,7 +16,7 @@ class TableRowSelector::API
     end
 
     def engine
-      @engine ||= ENV['API_BASEROW_URL'].present? ? TableRowSelector::BaserowAPI : nil
+      @engine ||= ENV['API_BASEROW_URL'].present? ? ReferentielDePolynesie::BaserowAPI : nil
     end
   end
 end

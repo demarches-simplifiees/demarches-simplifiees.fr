@@ -19,7 +19,7 @@ fr:
 
 
     champs:
-      table_row_selector:
+      referentiel_de_polynesie:
         show:
           toggle_champ: "Afficher/Cacher les champs de « %{champ} »"
       cnaf:

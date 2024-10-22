@@ -206,24 +206,22 @@ describe 'As an administrateur I can edit types de champ', js: true do
     end
   end
 
-  context 'table_row_selector enabled' do
-    before { Flipper.enable(:table_row_selector, administrateur.user) }
+  context 'referentiel_de_polynesie enabled' do
+    before { Flipper.enable(:referentiel_de_polynesie, administrateur.user) }
 
-    it "Add table_row_selector champ" do
-      VCR.use_cassette('baserow_api_available_tables') do
+    it "add referentiel_de_polynesie champ" do
+      VCR.use_cassette('baserow_api_available_tables', record: :new_episodes) do
         add_champ
 
-        select('Table Row Selector', from: 'Type de champ')
-        fill_in 'Libellé du champ', with: 'Libellé de champ Table Row Selector', fill_options: { clear: :backspace }
-
-        expect(page).to have_selector('select[name="type_de_champ[table_id]"]')
-
-        find('select[name="type_de_champ[table_id]"]').find('option', text: 'Communes de polynésie').select_option
+        select('Referentiel De Polynesie', from: 'Type de champ')
+        fill_in 'Libellé du champ', with: 'Libellé de champ Référentiel de Polynésie', fill_options: { clear: :backspace }
 
         expect(page).to have_content('Formulaire enregistré')
 
+        wait_until { procedure.draft_types_de_champ_public.first.libelle == 'Libellé de champ Référentiel de Polynésie' }
+
         page.refresh
-        expect(page).to have_content('Communes de polynésie')
+        expect(page).to have_content('Libellé de champ Référentiel de Polynésie')
       end
     end
   end

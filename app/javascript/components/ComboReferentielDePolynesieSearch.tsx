@@ -4,24 +4,24 @@ import { QueryClientProvider } from 'react-query';
 import ComboSearch, { ComboSearchProps } from './ComboSearch';
 import { queryClient } from './shared/queryClient';
 
-type TableRowSelectorResult = {
+type ReferentielDePolynesieResult = {
   name: string;
   id: string;
   domain: string;
 };
 
 function transformResults(_: unknown, result: unknown) {
-  return result as TableRowSelectorResult[];
+  return result as ReferentielDePolynesieResult[];
 }
 
-export default function ComboTableRowSelectorSearch(
-  props: ComboSearchProps<TableRowSelectorResult>
+export default function ComboReferentielDePolynesieResultSearch(
+  props: ComboSearchProps<ReferentielDePolynesieResult>
 ) {
   return (
     <QueryClientProvider client={queryClient}>
       <ComboSearch
         {...props}
-        scope="table-row-selector"
+        scope="referentiel-de-polynesie"
         scopeExtra={props.scopeExtra}
         minimumInputLength={3}
         transformResults={transformResults}

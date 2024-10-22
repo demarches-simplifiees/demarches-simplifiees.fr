@@ -30,7 +30,7 @@ features = [
   :sva,
   :switch_domain,
   :visa,
-  :table_row_selector
+  :referentiel_de_polynesie
 ]
 
 def database_exists?

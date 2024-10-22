@@ -245,6 +245,10 @@ FactoryBot.define do
       type_de_champ { association :type_de_champ_annuaire_education, procedure: dossier.procedure }
     end
 
+    factory :champ_referentiel_de_polynesie, class: 'Champs::ReferentielDePolynesieChamp' do
+      type_de_champ { association :type_de_champ_referentiel_de_polynesie, procedure: dossier.procedure }
+    end
+
     factory :champ_visa, class: 'Champs::VisaChamp' do
       type_de_champ { association :type_de_champ_visa, procedure: dossier.procedure }
     end
