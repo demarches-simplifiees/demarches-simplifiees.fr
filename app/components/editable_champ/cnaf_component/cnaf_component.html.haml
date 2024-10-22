@@ -4,7 +4,7 @@
     %p.notice= t('.numero_allocataire_notice')
     = @form.text_field :numero_allocataire,
       required: @champ.required?,
-      aria: { describedby: @champ.describedby_id },
+      aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
       class: "width-33-desktop", id: @champ.numero_allocataire_input_id
 
   %div
@@ -12,6 +12,6 @@
     %p.notice= t('.code_postal_notice')
     = @form.text_field :code_postal,
       required: @champ.required?,
-      aria: { describedby: @champ.describedby_id },
+      aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" },
       class: "width-33-desktop",
       id: @champ.code_postal_input_id
