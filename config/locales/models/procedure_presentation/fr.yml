@@ -5,6 +5,7 @@ fr:
         fields:
           self:
             id: Dossier ID
+            user_email_for_display: Email
             state: Statut
             created_at: Créé le
             updated_at: Mis à jour le

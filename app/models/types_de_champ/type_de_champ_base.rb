@@ -81,7 +81,7 @@ class TypesDeChamp::TypeDeChampBase
 
   def champ_value_for_export(champ, path_or_column = :value)
     if path_or_column.is_a?(Column)
-      # ...
+      path_or_column.get_value(champ)
     else
       path_or_column == :value ? champ.value.presence : champ_default_export_value(path_or_column)
     end

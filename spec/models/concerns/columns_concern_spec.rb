@@ -145,7 +145,7 @@ describe ColumnsConcern do
         it "returns all usager columns" do
           expected = [
             procedure.find_column(label: "Dossier ID"),
-            procedure.find_column(label: "Demandeur"),
+            procedure.find_column(label: "Email"),
             procedure.find_column(label: "FranceConnect ?"),
             procedure.find_column(label: "Civilité"),
             procedure.find_column(label: "Nom"),
@@ -167,7 +167,7 @@ describe ColumnsConcern do
         it "returns all usager columns" do
           expected = [
             procedure.find_column(label: "Dossier ID"),
-            procedure.find_column(label: "Demandeur"),
+            procedure.find_column(label: "Email"),
             procedure.find_column(label: "FranceConnect ?"),
             procedure.find_column(label: "SIRET"),
             procedure.find_column(label: "Établissement siège social"),

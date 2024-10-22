@@ -38,7 +38,7 @@ module ColumnsConcern
     def all_usager_columns_for_export
       common = [
         dossier_id_column,
-        email_column,
+        Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false),
         Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
       ]
 
@@ -134,6 +134,7 @@ module ColumnsConcern
     def standard_columns
       [
         email_column,
+        Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false),
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
