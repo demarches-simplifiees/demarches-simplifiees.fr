@@ -74,7 +74,7 @@ class ExportTemplate < ApplicationRecord
   end
 
   def columns_without_repet
-    columns.filter { _1[:source] != 'repet' }
+    exported_columns.filter { !_1.parent.present? }
   end
 
   def all_usager_columns

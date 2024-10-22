@@ -79,8 +79,12 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
-  def champ_value_for_export(champ, path = :value)
-    path == :value ? champ.value.presence : champ_default_export_value(path)
+  def champ_value_for_export(champ, path_or_column = :value)
+    if path_or_column.is_a?(Column)
+      # ...
+    else
+      path_or_column == :value ? champ.value.presence : champ_default_export_value(path_or_column)
+    end
   end
 
   def champ_value_for_tag(champ, path = :value)

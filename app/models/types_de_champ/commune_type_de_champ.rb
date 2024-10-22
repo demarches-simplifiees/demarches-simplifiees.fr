@@ -1,14 +1,21 @@
 # frozen_string_literal: true
 
 class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
-  def champ_value_for_export(champ, path = :value)
-    case path
-    when :value
-      champ_value(champ)
-    when :departement
-      champ.departement_code_and_name || ''
-    when :code
-      champ.code || ''
+  # POC
+  def champ_value_for_export(champ, path_or_column = :value)
+    if path_or_column.is_a?(Column)
+      champ.send(path_or_column.value_column.to_sym) # TODO see,
+    elsif path_or_column
+      case path_or_column
+      when :value
+        champ_value(champ)
+      when :departement
+        champ.departement_code_and_name || ''
+      when :code
+        champ.code || ''
+      end
+    else
+      raise
     end
   end
 

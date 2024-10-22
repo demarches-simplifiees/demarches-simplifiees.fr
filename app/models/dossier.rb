@@ -1305,22 +1305,18 @@ class Dossier < ApplicationRecord
     )
   end
 
+  # revoir le find_by,
   def champs_for_export_template(export_template)
-    export_template.columns_without_repet.map do |column|
-      case column[:source]
-      when 'tdc'
-        type_de_champ = TypeDeChamp.find_by(stable_id: column[:stable_id])
-        path = column[:path].to_sym
-        champ = champ_for_export(type_de_champ, nil)
-        [column[:libelle], champ&.for_export(path)]
-      when 'repet'
-        type_de_champ = TypeDeChamp.find_by(stable_id: column[:stable_id])
-        path = column[:path].to_sym
-        champ = champ_for_export(type_de_champ, nil)
-        [type_de_champ.libelle_for_path(path), champ&.for_export(path)]
-        [column[:libelle], champ&.for_export(path)]
-      when 'dossier'
-        [column[:libelle], export_template.columns_meta[column[:path].to_sym][:get_value].(self)]
+    tdc_by_stable_id = procedure.all_revisions_types_de_champ.index_by(&:stable_id)
+    export_template.columns_without_repet.map do |exported_column|
+      column = exported_column.column
+      case column.table
+      when 'type_de_champ'
+        type_de_champ = tdc_by_stable_id.fetch(exported_column.column.column.to_i)
+        champ = filled_champ(type_de_champ, nil)
+        [column.label, type_de_champ.champ_value_for_export(champ, column)]
+      else
+        [column.label, column.get_value(self)]
       end
     end
   end

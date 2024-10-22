@@ -50,4 +50,15 @@ class Column
 
     procedure.find_column(h_id: h_id)
   end
+
+  def get_value(dossier)
+    case table
+    when 'self' # dossiers, ?
+      dossier.send(column)
+    when 'groupe_instructeur'
+      dossier.groupe_instructeur.label
+    when 'followers_instructeurs'
+      dossier.followers_instructeurs.map(&:email).join(' ')
+    end
+  end
 end

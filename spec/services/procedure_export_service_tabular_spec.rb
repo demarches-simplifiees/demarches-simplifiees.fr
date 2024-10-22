@@ -21,19 +21,7 @@ describe ProcedureExportService do
       }
     ]
   end
-
-  let(:exported_columns) do
-    [
-      ExportedColumn.new(libelle: 'Mis à jour le', column: procedure.find_column(label: 'Mis à jour le')),
-      ExportedColumn.new(libelle: 'Demandeur', column: procedure.find_column(label: 'Demandeur')),
-      ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
-      ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
-      ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
-      ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
-      # ExportedColumn.new(libelle: 'Champ répétable – child second champ', column: procedure.find_column(label: 'Champ répétable – child second champ'))
-    ]
-  end
-
+  let(:exported_columns) { [] }
   describe 'to_xlsx' do
     subject do
       service
@@ -55,8 +43,20 @@ describe ProcedureExportService do
     end
 
     describe 'Dossiers sheet' do
+      let(:exported_columns) do
+        [
+          ExportedColumn.new(libelle: 'Mis à jour le', column: procedure.find_column(label: 'Mis à jour le')),
+          ExportedColumn.new(libelle: 'Demandeur', column: procedure.find_column(label: 'Demandeur')),
+          ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
+          ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
+          ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
+          ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
+          # ExportedColumn.new(libelle: 'Champ répétable – child second champ', column: procedure.find_column(label: 'Champ répétable – child second champ'))
+        ]
+      end
+
       let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-      let(:selected_headers) { ["ID", "Email", "first champ", "Commune (Code INSEE)", "Date de naissance", "Groupe instructeur", "PJ"] }
+      let(:selected_headers) { ["Demandeur", "first champ", "Commune (Code INSEE)", "Groupe instructeur", "Mis à jour le", "PJ"] }
 
       it 'should have only headers from export template' do
         expect(dossiers_sheet.headers).to match_array(selected_headers)
@@ -83,7 +83,7 @@ describe ProcedureExportService do
         let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
         let!(:dossier_2) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
         before do
-          dossier_2.champs_public
+          dossier_2.filled_champs_public
             .find { _1.is_a? Champs::PieceJustificativeChamp }
             .piece_justificative_file
             .attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
@@ -93,25 +93,22 @@ describe ProcedureExportService do
     end
 
     describe 'Etablissement sheet' do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
       let(:types_de_champ_public) { [{ type: :siret, libelle: 'siret', stable_id: 40 }] }
+      let(:exported_columns) do
+        [
+          ExportedColumn.new(libelle: "Nº dossier", column: procedure.find_column(label: "Nº dossier")),
+          ExportedColumn.new(libelle: "Demandeur", column: procedure.find_column(label: "Demandeur")),
+          ExportedColumn.new(libelle: "siret", column: procedure.find_column(label: "siret"))
+        ]
+      end
+      let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
       let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_entreprise, procedure: procedure) }
 
       let(:dossier_etablissement) { etablissements_sheet.data[1] }
       let(:champ_etablissement) { etablissements_sheet.data[0] }
 
-      let(:content) do
-        {
-          "columns" => [
-            { "path" => "id", "source" => "dossier", "libelle" => "ID" },
-            { "path" => "email", "source" => "dossier", "libelle" => "Email" },
-            { "path" => "siret", "source" => "tdc", "libelle" => "Siret Entreprise", "stable_id" => 40 }
-          ]
-        }
-      end
-
       it 'should have siret header in dossiers sheet' do
-        expect(dossiers_sheet.headers).to include('Siret Entreprise')
+        expect(dossiers_sheet.headers).to include('siret')
       end
 
       it 'should have headers in etablissement sheet' do
