@@ -106,8 +106,40 @@ describe ExportTemplate do
   end
 
   describe 'columns_for_stable_id' do
-    it 'fails' do
-      expect(false).to be_truthy
+    before do
+      export_template.exported_columns = procedure.published_revision.types_de_champ.first.columns(procedure_id: procedure.id).map do |column|
+        ExportedColumn.new(libelle: column.label, column:)
+      end
+    end
+    context 'when procedure has a TypeDeChamp::Commune' do
+      let(:types_de_champ_public) do
+        [
+          { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 }
+        ]
+      end
+      it 'is able to resolve stable_id' do
+        expect(export_template.columns_for_stable_id(17).size).to eq(3)
+      end
+    end
+    context 'when procedure has a TypeDeChamp::Siret' do
+      let(:types_de_champ_public) do
+        [
+          { type: :siret, libelle: 'siret', stable_id: 20 }
+        ]
+      end
+      it 'is able to resolve stable_id' do
+        expect(export_template.columns_for_stable_id(20).size).to eq(5)
+      end
+    end
+    context 'when procedure has a TypeDeChamp::Text' do
+      let(:types_de_champ_public) do
+        [
+          { type: :text, libelle: "Text", mandatory: true, stable_id: 15 }
+        ]
+      end
+      it 'is able to resolve stable_id' do
+        expect(export_template.columns_for_stable_id(15).size).to eq(1)
+      end
     end
   end
 end
