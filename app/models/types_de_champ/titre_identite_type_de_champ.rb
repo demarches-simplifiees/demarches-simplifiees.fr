@@ -21,4 +21,8 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_default_export_value(path = :value)
     "absent"
   end
+
+  def champ_value_blank?(champ)
+    champ.piece_justificative_file.blank?
+  end
 end

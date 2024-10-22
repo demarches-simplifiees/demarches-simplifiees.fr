@@ -85,10 +85,6 @@ class Champs::CarteChamp < Champ
     end
   end
 
-  def blank?
-    geo_areas.blank?
-  end
-
   private
 
   def selection_utilisateur_legacy_geometry

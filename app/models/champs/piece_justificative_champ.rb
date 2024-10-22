@@ -25,8 +25,4 @@ class Champs::PieceJustificativeChamp < Champ
   def mandatory_blank?
     mandatory? && !piece_justificative_file.attached?
   end
-
-  def blank?
-    piece_justificative_file.blank?
-  end
 end

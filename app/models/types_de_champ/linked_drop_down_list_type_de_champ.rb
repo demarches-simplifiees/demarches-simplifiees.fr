@@ -67,6 +67,11 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     end
   end
 
+  def champ_value_blank?(champ)
+    champ.primary_value.blank? ||
+      (champ.has_secondary_options_for_primary? && champ.secondary_value.blank?)
+  end
+
   private
 
   def paths

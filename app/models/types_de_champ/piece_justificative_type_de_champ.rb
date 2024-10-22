@@ -22,4 +22,8 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
       attachment.url
     end
   end
+
+  def champ_value_blank?(champ)
+    champ.piece_justificative_file.blank?
+  end
 end

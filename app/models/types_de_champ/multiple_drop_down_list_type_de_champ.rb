@@ -12,4 +12,8 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
   def champ_value_for_export(champ, path = :value)
     champ.selected_options.join(', ')
   end
+
+  def champ_value_blank?(champ)
+    champ_value(champ).blank?
+  end
 end

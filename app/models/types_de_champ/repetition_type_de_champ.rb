@@ -3,9 +3,9 @@
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_value_for_tag(champ, path = :value)
     return nil if path != :value
-    return champ_default_value if champ.rows.blank?
+    return champ_default_value if champ_value_blank?(champ)
 
-    ChampPresentations::RepetitionPresentation.new(champ.libelle, champ.rows)
+    ChampPresentations::RepetitionPresentation.new(libelle, champ.dossier.project_rows_for(@type_de_champ))
   end
 
   def estimated_fill_duration(revision)
@@ -25,6 +25,10 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
     str = "(#{stable_id}) #{libelle}"
     # /\*?[] are invalid Excel worksheet characters
     ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
+  end
+
+  def champ_value_blank?(champ)
+    champ.dossier.repetition_row_ids(@type_de_champ).blank?
   end
 
   def columns(procedure_id:, displayable: true, prefix: nil)

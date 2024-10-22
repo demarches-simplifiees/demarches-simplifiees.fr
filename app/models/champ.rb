@@ -103,7 +103,7 @@ class Champ < ApplicationRecord
   end
 
   def blank?
-    value.blank?
+    type_de_champ.champ_value_blank?(self)
   end
 
   def search_terms

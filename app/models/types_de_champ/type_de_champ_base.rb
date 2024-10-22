@@ -92,6 +92,10 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
+  def champ_value_blank?(champ)
+    champ.value.blank?
+  end
+
   def columns(procedure_id:, displayable: true, prefix: nil)
     [
       Column.new(

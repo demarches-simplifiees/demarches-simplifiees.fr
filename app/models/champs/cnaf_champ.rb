@@ -8,10 +8,6 @@ class Champs::CnafChamp < Champs::TextChamp
 
   store_accessor :value_json, :numero_allocataire, :code_postal
 
-  def blank?
-    external_id.nil?
-  end
-
   def fetch_external_data?
     true
   end
