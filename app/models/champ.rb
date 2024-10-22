@@ -179,6 +179,10 @@ class Champ < ApplicationRecord
     "#{html_id}-describedby_id"
   end
 
+  def error_id
+    "#{html_id}-error_id"
+  end
+
   def log_fetch_external_data_exception(exception)
     update_column(:fetch_external_data_exceptions, [exception.inspect])
   end
