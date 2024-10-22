@@ -47,7 +47,9 @@ class ProcedureExportService
   end
 
   def to_geo_json
-    io = StringIO.new(dossiers.to_feature_collection.to_json)
+    champs_carte = dossiers.flat_map { _1.filled_champs.filter(&:carte?) }
+    features = GeoArea.where(champ_id: champs_carte).map(&:to_feature)
+    io = StringIO.new({ type: 'FeatureCollection', features: }.to_json)
     create_blob(io, :json)
   end
 
@@ -92,9 +94,9 @@ class ProcedureExportService
   end
 
   def etablissements
-    @etablissements ||= dossiers.flat_map do |dossier|
-      dossier.champs.filter { _1.is_a?(Champs::SiretChamp) }
-    end.filter_map(&:etablissement) + dossiers.filter_map(&:etablissement)
+    @etablissements ||= dossiers
+      .flat_map { _1.filled_champs.filter(&:siret?) }
+      .filter_map(&:etablissement) + dossiers.filter_map(&:etablissement)
   end
 
   def avis
@@ -102,16 +104,12 @@ class ProcedureExportService
   end
 
   def champs_repetables_options
-    champs_by_stable_id = dossiers
-      .flat_map { _1.champs.filter(&:repetition?) }
-      .group_by(&:stable_id)
-
     procedure
       .all_revisions_types_de_champ
       .repetition
       .filter_map do |type_de_champ_repetition|
         types_de_champ = procedure.all_revisions_types_de_champ(parent: type_de_champ_repetition).to_a
-        rows = champs_by_stable_id.fetch(type_de_champ_repetition.stable_id, []).flat_map(&:rows_for_export)
+        rows = dossiers.flat_map { _1.repetition_rows_for_export(type_de_champ_repetition) }
 
         if types_de_champ.present? && rows.present?
           {
