@@ -178,6 +178,34 @@ describe 'The user' do
     ])
   }
 
+  let(:simple_procedure_with_referentiel_de_polynesie) {
+    create(:procedure, :published, :for_individual, types_de_champ_public: [
+      { mandatory: false, libelle: 'referentiel de polynesie', type_champ: 'referentiel_de_polynesie', table_id: "1" }
+    ])
+  }
+
+  scenario 'fill a dossier with referentiel_de_polynesie', js: true, vcr: true do
+    log_in(user, simple_procedure_with_referentiel_de_polynesie)
+    fill_individual
+
+    find_field('referentiel de polynesie').click
+    fill_in('referentiel de polynesie', with: 'Mahina')
+
+    using_wait_time 5 do
+      expect(page).to have_selector('input[aria-expanded="true"]', visible: true, wait: 10)
+    end
+
+    using_wait_time 5 do
+      expect(page).to have_selector('ul[role="listbox"]', visible: true, wait: 10)
+      expect(page).to have_selector('ul[role="listbox"] li', text: 'Mahina - Tahiti - 98709')
+    end
+
+    find('ul[role="listbox"] li', text: 'Mahina - Tahiti - 98709').click
+    click_on 'Déposer le dossier'
+
+    expect(page).to have_content('Vous avez désormais accès à votre dossier en ligne.')
+  end
+
   scenario 'save an incomplete dossier as draft but cannot not submit it', js: true do
     log_in(user, simple_procedure)
     fill_individual
