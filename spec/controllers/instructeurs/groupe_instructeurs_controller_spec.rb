@@ -2,9 +2,9 @@
 
 describe Instructeurs::GroupeInstructeursController, type: :controller do
   render_views
-  let(:administrateurs) { [create(:administrateur, user: instructeur.user)] }
-  let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, administrateurs:) }
+  let(:administrateur) { create(:administrateur) }
+  let(:instructeur) { administrateur.instructeur }
+  let(:procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
   let!(:gi_1_1) { procedure.defaut_groupe_instructeur }
   let!(:gi_1_2) { create(:groupe_instructeur, label: 'groupe instructeur 2', procedure: procedure) }
 
