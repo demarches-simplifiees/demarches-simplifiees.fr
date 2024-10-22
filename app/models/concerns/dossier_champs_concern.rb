@@ -107,6 +107,12 @@ module DossierChampsConcern
     assign_attributes(champs_attributes:)
   end
 
+  def repetition_rows_for_export(type_de_champ)
+    repetition_row_ids(type_de_champ).map.with_index(1) do |row_id, index|
+      Champs::RepetitionChamp::Row.new(index:, row_id:, dossier: self)
+    end
+  end
+
   def repetition_row_ids(type_de_champ)
     return [] if !type_de_champ.repetition?
 
