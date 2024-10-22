@@ -1,11 +1,12 @@
-import { httpRequest } from '@utils';
-import { show, hide } from '@utils';
+import { hide, httpRequest, show } from '@utils';
 import { ApplicationController } from './application_controller';
 
-type checkEmailResponse = {
-  success: boolean;
-  suggestions: string[];
-};
+type CheckEmailResponse =
+  | {
+      success: true;
+      suggestions: string[];
+    }
+  | { success: false };
 
 export class EmailInputController extends ApplicationController {
   static targets = ['ariaRegion', 'suggestion', 'input'];
@@ -32,14 +33,17 @@ export class EmailInputController extends ApplicationController {
     const url = new URL(this.urlValue, document.baseURI);
     url.searchParams.append('email', this.inputTarget.value);
 
-    const data: checkEmailResponse | null = await httpRequest(
-      url.toString()
-    ).json();
+    const data = await httpRequest(url.toString())
+      .json<CheckEmailResponse>()
+      .catch(() => null);
 
-    if (data && data.suggestions && data.suggestions.length > 0) {
-      this.suggestionTarget.innerHTML = data.suggestions[0];
-      show(this.ariaRegionTarget);
-      this.ariaRegionTarget.focus();
+    if (data?.success) {
+      const suggestion = data.suggestions.at(0);
+      if (suggestion) {
+        this.suggestionTarget.innerHTML = suggestion;
+        show(this.ariaRegionTarget);
+        this.ariaRegionTarget.focus();
+      }
     }
   }
 
