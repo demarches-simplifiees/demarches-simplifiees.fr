@@ -20,8 +20,5 @@
 - if hint?
   %span.fr-hint-text{ data: { controller: 'date-input-hint' } }= hint
 
-- if @champ.description.present?
-  %span.fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
-
 - if @champ.textarea?
   %span.sr-only= t('.recommended_size', size: @champ.character_limit_base)
