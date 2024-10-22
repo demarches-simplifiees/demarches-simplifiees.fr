@@ -1197,20 +1197,4 @@ class Dossier < ApplicationRecord
       }
     )
   end
-
-  # revoir le find_by,
-  def champs_for_export_template(export_template)
-    tdc_by_stable_id = procedure.all_revisions_types_de_champ.index_by(&:stable_id)
-    export_template.columns_without_repet.map do |exported_column|
-      column = exported_column.column
-      case column.table
-      when 'type_de_champ'
-        type_de_champ = tdc_by_stable_id.fetch(exported_column.column.column.to_i)
-        champ = filled_champ(type_de_champ, nil)
-        [column.label, type_de_champ.champ_value_for_export(champ, column)]
-      else
-        [column.label, column.get_value(self)]
-      end
-    end
-  end
 end

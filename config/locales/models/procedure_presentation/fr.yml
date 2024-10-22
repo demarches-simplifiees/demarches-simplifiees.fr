@@ -4,7 +4,7 @@ fr:
       procedure_presentation:
         fields:
           self:
-            id: Nº dossier
+            id: Dossier ID
             state: Statut
             created_at: Créé le
             updated_at: Mis à jour le

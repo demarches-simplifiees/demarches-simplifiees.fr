@@ -63,20 +63,6 @@ class ExportTemplate < ApplicationRecord
     File.join(dossier_folder.path(dossier), file_path) if file_path.present?
   end
 
-  def columns=(columns)
-    content["columns"] = columns.compact_blank
-      .each { _1[:libelle] = libelle_for_column_hash(_1) }
-      .filter { _1[:libelle].present? }
-  end
-
-  def columns
-    content["columns"]&.map(&:symbolize_keys)
-  end
-
-  def columns_without_repet
-    exported_columns.filter { !_1.parent.present? }
-  end
-
   def dossier_exported_columns
     exported_columns.filter { _1.column.table != 'type_de_champ' }
   end
@@ -96,140 +82,11 @@ class ExportTemplate < ApplicationRecord
     procedure.all_dossier_columns_for_export
   end
 
-  def columns_meta
-    {
-      id: { libelle: "ID", get_value: -> (d) { d.id.to_s } },
-      email: { libelle: "Email", get_value: -> (d) { d.user_email_for(:display) } },
-      france_connecte: { libelle: 'FranceConnect ?', get_value: -> (d) { d.user_from_france_connect? } },
-      civilite: { libelle: "Civilité", get_value: -> (d) { d.individual&.gender } },
-      last_name: { libelle: 'Nom', get_value: -> (d) { d.individual&.nom } },
-      first_name: { libelle: 'Prénom', get_value: -> (d) { d.individual&.prenom } },
-      for_tiers: { libelle: "Dépôt pour un tiers", get_value: -> (d) { d.for_tiers } },
-      mandataire_last_name: { libelle: 'Nom du mandataire', get_value: -> (d) { d.mandataire_last_name } },
-      mandataire_first_name: { libelle: 'Prénom du mandataire', get_value: -> (d) { d.mandataire_first_name } },
-      etablissement_siret: { libelle: 'Établissement SIRET', get_value: -> (d) { d.etablissement&.siret } },
-      etablissement_siege_social: { libelle: 'Établissement siège social', get_value: -> (d) { d.etablissement&.siege_social } },
-      etablissement_naf: { libelle: 'Établissement NAF', get_value: -> (d) { d.etablissement&.naf } },
-      etablissement_libelle_naf: { libelle: 'Établissement libellé NAF', get_value: -> (d) { d.etablissement&.libelle_naf } },
-      etablissement_adresse: { libelle: 'Établissement Adresse', get_value: -> (d) { d.etablissement&.adresse } },
-      etablissement_numero_voie: { libelle: 'Établissement numero voie', get_value: -> (d) { d.etablissement&.numero_voie } },
-      etablissement_type_voie: { libelle: 'Établissement type voie', get_value: -> (d) { d.etablissement&.type_voie } },
-      etablissement_nom_voie: { libelle: 'Établissement nom voie', get_value: -> (d) { d.etablissement&.nom_voie } },
-      etablissement_complement_adresse: { libelle: 'Établissement complément adresse', get_value: -> (d) { d.etablissement&.complement_adresse } },
-      etablissement_code_postal: { libelle: 'Établissement code postal', get_value: -> (d) { d.etablissement&.code_postal } },
-      etablissement_localite: { libelle: 'Établissement localité', get_value: -> (d) { d.etablissement&.localite } },
-      etablissement_code_insee_localite: { libelle: 'Établissement code INSEE localité', get_value: -> (_d) { etablissement&.code_insee_localite } },
-      entreprise_siren: { libelle: 'Entreprise SIREN', get_value: -> (d) { d.etablissement&.entreprise_siren } },
-      entreprise_capital_social: { libelle: 'Entreprise capital social', get_value: -> (d) { d.etablissement&.entreprise_capital_social } },
-      entreprise_numero_tva_intracommunautaire: { libelle: 'Entreprise numero TVA intracommunautaire', get_value: -> (d) { d.etablissement&.entreprise_numero_tva_intracommunautaire } },
-      entreprise_forme_juridique: { libelle: 'Entreprise forme juridique', get_value: -> (d) { d.etablissement&.entreprise_forme_juridique } },
-      entreprise_forme_juridique_code: { libelle: 'Entreprise forme juridique code', get_value: -> (d) { d.etablissement&.entreprise_forme_juridique_code } },
-      entreprise_nom_commercial: { libelle: 'Entreprise nom commercial', get_value: -> (d) { d.etablissement&.entreprise_nom_commercial } },
-      entreprise_raison_sociale: { libelle: 'Entreprise raison sociale', get_value: -> (d) { d.etablissement&.entreprise_raison_sociale } },
-      entreprise_siret_siege_social: { libelle: 'Entreprise SIRET siège social', get_value: -> (d) { d.etablissement&.entreprise_siret_siege_social } },
-      entreprise_code_effectif_entreprise: { libelle: 'Entreprise code effectif entreprise', get_value: -> (d) { d.etablissement&.entreprise_code_effectif_entreprise } },
-      entreprise_date_creation: { libelle: 'Entreprise date de création', get_value: -> (d) { d.etablissement&.entreprise_date_creation } },
-      entreprise_etat_administratif: { libelle: 'Entreprise état administratif', get_value: -> (d) { d.etablissement&.entreprise_etat_administratif } },
-      entreprise_nom: { libelle: 'Entreprise nom', get_value: -> (d) { d.etablissement&.entreprise_nom } },
-      entreprise_prenom: { libelle: 'Entreprise prénom', get_value: -> (d) { d.etablissement&.entreprise_prenom } },
-      association_rna: { libelle: 'Association RNA', get_value: -> (d) { d.etablissement&.association_rna } },
-      association_titre: { libelle: 'Association titre', get_value: -> (d) { d.etablissement&.association_titre } },
-      association_objet: { libelle: 'Association objet', get_value: -> (d) { d.etablissement&.association_objet } },
-      association_date_creation: { libelle: 'Association date de création', get_value: -> (d) { d.etablissement&.association_date_creation } },
-      association_date_declaration: { libelle: 'Association date de déclaration', get_value: -> (d) { d.etablissement&.association_date_declaration } },
-      association_date_publication: { libelle: 'Association date de publication', get_value: -> (d) { d.etablissement&.association_date_publication } },
-      domaine_fonctionnel: { libelle: 'Domaine Fonctionnel', get_value: -> (d) { d.procedure.chorus_configuration.domaine_fonctionnel&.fetch("code") { '' } } },
-      referentiel_prog: { libelle: 'Référentiel De Programmation', get_value: -> (d) { d.procedure.chorus_configuration.referentiel_de_programmation&.fetch("code") { '' } } },
-      centre_de_cout: { libelle: 'Centre De Coût', get_value: -> (d) { d.procedure.chorus_configuration.centre_de_cout&.fetch("code") { '' } } },
-      archived: { libelle: 'Archivé', get_value: -> (d) { d.archived } },
-      dossier_state: { libelle: 'État du dossier', get_value: -> (d) { Dossier.human_attribute_name("state.#{d.state}") } },
-      updated_at: { libelle: 'Dernière mise à jour le', get_value: -> (d) { d.updated_at } },
-      last_champ_updated_at: { libelle: 'Dernière mise à jour du dossier le', get_value: -> (d) { d.last_champ_updated_at } },
-      depose_at: { libelle: 'Déposé le', get_value: -> (d) { d.depose_at } },
-      en_instruction_at: { libelle: 'Passé en instruction le', get_value: -> (d) { d.en_instruction_at } },
-      sva_svr_decision_on: { libelle: "Date décision #{procedure.sva_svr_configuration.human_decision}", get_value: -> (d) { d.sva_svr_decision_on } },
-      processed_at: { libelle: 'Traité le', get_value: -> (d) { d.processed_at } },
-      motivation: { libelle: 'Motivation de la décision', get_value: -> (d) { d.motivation } },
-      instructeurs: { libelle: 'Instructeurs', get_value: -> (d) { d.followers_instructeurs.map(&:email).join(' ') } },
-      groupe_instructeur: { libelle: 'Groupe instructeur', get_value: -> (d) { d.groupe_instructeur.label } }
-    }
-  end
-
-  def saved_libelle(path_h)
-    columns&.find { _1.slice(:path, :stable_id) == path_h.slice(:path, :stable_id) }&.dig(:libelle)
-  end
-
-  def repetable_columns
-    procedure
-      .all_revisions_types_de_champ
-      .filter(&:repetition?)
-      .reduce({}) do |accu, repet|
-        all_children = procedure.all_revisions_types_de_champ(parent: repet)
-        children_from_exported_columns = exported_columns.filter { _1.column.column.to_s.in?(all_children.map(&:stable_id).map(&:to_s)) }
-        accu[repet] = children_from_exported_columns if children_from_exported_columns.any?
-        accu
-      end
-  end
-
   private
 
   def ensure_pjs_are_legit
     legitimate_pj_stable_ids = procedure.exportables_pieces_jointes_for_all_versions.map(&:stable_id)
 
     self.pjs = pjs.filter { _1.stable_id.in?(legitimate_pj_stable_ids) }
-  end
-
-  def libelle_for_column_hash(current_column)
-    case current_column[:source]
-    when 'tdc', 'repet'
-      active_type_de_champ = procedure.active_revision.types_de_champ.find_by(stable_id: current_column[:stable_id])
-      if active_type_de_champ
-        active_libelle = active_type_de_champ.libelle_for_path(current_column[:path])
-        saved_libelle(current_column) || active_libelle
-      end
-    when 'dossier'
-      columns_meta[current_column[:path].to_sym][:libelle]
-    end
-  end
-
-  def dossier_columns_for(columns)
-    columns.map { { path: _1.to_s, source: 'dossier', libelle: columns_meta[_1][:libelle] } }
-  end
-
-  def all_usager_column_keys
-    column_keys = []
-    column_keys.push :id, :email, :france_connecte
-    if procedure.for_individual?
-      column_keys.push :civilite, :last_name, :first_name, :for_tiers, :mandataire_last_name, :mandataire_first_name
-    else
-      column_keys.push(
-        :etablissement_siret, :etablissement_siege_social, :etablissement_naf, :etablissement_libelle_naf,
-        :etablissement_adresse, :etablissement_numero_voie, :etablissement_type_voie, :etablissement_nom_voie, :etablissement_complement_adresse, :etablissement_code_postal, :etablissement_localite, :etablissement_code_insee_localite,
-        :entreprise_siren, :entreprise_capital_social, :entreprise_numero_tva_intracommunautaire,
-        :entreprise_forme_juridique, :entreprise_forme_juridique_code,
-        :entreprise_nom_commercial, :entreprise_raison_sociale,
-        :entreprise_siret_siege_social,
-        :entreprise_code_effectif_entreprise
-      )
-    end
-
-    if procedure.chorusable? && procedure.chorus_configuration.complete?
-      column_keys.push(:domaine_fonctionnel, :referentiel_prog, :centre_de_cout)
-    end
-
-    column_keys
-  end
-
-  def all_dossier_column_keys
-    column_keys = []
-    column_keys.push(
-      :archived, :dossier_state, :updated_at, :last_champ_updated_at,
-      :depose_at, :en_instruction_at,
-      procedure.sva_svr_enabled? ? :sva_svr_decision_on : nil,
-      :processed_at,
-      :motivation,
-      :instructeurs,
-      procedure.routing_enabled? ? :groupe_instructeur : nil
-    ).compact
   end
 end

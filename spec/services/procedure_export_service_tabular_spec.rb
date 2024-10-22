@@ -4,7 +4,6 @@ describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, types_de_champ_public:, for_individual:, ask_birthday: true, instructeurs: [instructeur]) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
-  # let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, nil) }
   let(:export_template) { create(:export_template, kind:, exported_columns:, groupe_instructeur: procedure.defaut_groupe_instructeur) }
   let(:for_individual) { true }
   let(:types_de_champ_public) do
@@ -22,6 +21,7 @@ describe ProcedureExportService do
     ]
   end
   let(:exported_columns) { [] }
+
   describe 'to_xlsx' do
     subject do
       service
@@ -96,7 +96,7 @@ describe ProcedureExportService do
       let(:types_de_champ_public) { [{ type: :siret, libelle: 'siret', stable_id: 40 }] }
       let(:exported_columns) do
         [
-          ExportedColumn.new(libelle: "Nº dossier", column: procedure.find_column(label: "Nº dossier")),
+          ExportedColumn.new(libelle: "Dossier ID", column: procedure.find_column(label: "Dossier ID")),
           ExportedColumn.new(libelle: "Demandeur", column: procedure.find_column(label: "Demandeur")),
           ExportedColumn.new(libelle: "siret", column: procedure.find_column(label: "siret"))
         ]

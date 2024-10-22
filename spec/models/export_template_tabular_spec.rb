@@ -13,75 +13,6 @@ describe ExportTemplate do
     ]
   end
 
-  describe '#columns=' do
-    let(:columns) {
-  [
-    { :path => "id", :source => "dossier" },
-    { :path => "email", :source => "dossier" },
-    { :path => "archived", :source => "dossier" },
-    { :path => "dossier_state", :source => "dossier" },
-    { :path => "value", :source => "tdc", :stable_id => 1 },
-    { :path => "value", :source => "tdc", :stable_id => 17 },
-    { :path => "code", :source => "tdc", :stable_id => 17 },
-    { :path => "value", :repetition_champ_stable_id => 7, :source => "repet", :stable_id => 8 }
-  ]
-}
-
-    it 'update columns when assiging columns' do
-      export_template.columns = columns
-      expect(export_template.columns).to match_array [
-        { :libelle => "ID", :path => "id", :source => "dossier" },
-        { :libelle => "Email", :path => "email", :source => "dossier" },
-        { :libelle => "Archivé", :path => "archived", :source => "dossier" },
-        { :libelle => "État du dossier", :path => "dossier_state", :source => "dossier" },
-        { :libelle => "Ca va ?", :path => "value", :source => "tdc", :stable_id => 1 },
-        { :libelle => "Commune", :path => "value", :source => "tdc", :stable_id => 17 },
-        { :libelle => "Commune (Code INSEE)", :path => "code", :source => "tdc", :stable_id => 17 },
-        { :libelle => "Qqchose à rajouter?", :path => "value", :repetition_champ_stable_id => 7, :source => "repet", :stable_id => 8 }
-      ]
-    end
-
-    context 'when there is a previous revision with a renamed tdc' do
-      let(:previous_tdc) { procedure.published_revision.types_de_champ_public.find_by(stable_id: 1) }
-      let(:changed_tdc) { { libelle: "Ca roule ?" } }
-
-      context 'with already column in export template' do
-        before do
-          export_template.columns = columns
-          type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
-          type_de_champ.update(changed_tdc)
-          procedure.publish_revision!
-          export_template.columns = columns
-        end
-
-        it 'update columns with original libelle for champs with new revision' do
-          expect(export_template.columns.find { _1[:stable_id] == 1 }).to eq({ :libelle => "Ca va ?", :path => "value", :source => "tdc", :stable_id => 1 })
-        end
-      end
-
-      context 'without columns in export template' do
-        before do
-          type_de_champ = procedure.draft_revision.find_and_ensure_exclusive_use(previous_tdc.stable_id)
-          type_de_champ.update(changed_tdc)
-          procedure.publish_revision!
-          export_template.columns = columns
-        end
-
-        it 'update columns with new libelle for champs with new revision' do
-          expect(export_template.columns.find { _1[:stable_id] == 1 }).to eq({ :libelle => "Ca roule ?", :path => "value", :source => "tdc", :stable_id => 1 })
-        end
-      end
-    end
-    it 'ignores columns when invalid stable_id' do
-      export_template.columns = [{ :path => "value", :source => "tdc", :stable_id => 987 }]
-      expect(export_template.columns).to match_array []
-    end
-
-    it 'raises when invalid path' do
-      expect { export_template.columns = ['blabla'] }.to raise_exception
-    end
-  end
-
   describe '#exported_columns=' do
     it 'is assignable/readable with ExportedColumn object' do
       expect do
@@ -153,48 +84,13 @@ describe ExportTemplate do
     end
   end
 
-  describe '#all_tdc_columns' do
-    xit "returns all tdc columns (without repetition) based upon procedure's type de champs" do
-      expect(export_template.all_tdc_columns).to match_array [
-        [{ :source => "tdc", :stable_id => 1, :path => "value", :libelle => "Ca va ?" }],
-        [
-          { :source => "tdc", :stable_id => 17, :path => "value", :libelle => "Commune" },
-          { :source => "tdc", :stable_id => 17, :path => "code", :libelle => "Commune (Code INSEE)" },
-          { :source => "tdc", :stable_id => 17, :path => "departement", :libelle => "Commune (Département)" }
-        ],
-        [{ :source => "tdc", :stable_id => 20, :path => "value", :libelle => "siret" }]
-      ]
-    end
-  end
-
-  describe '#all_repetable_tdc_columns' do
-    xit "returns all repetable columns based upon procedure's type de champs" do
-      expect(export_template.all_repetable_tdc_columns).to match_array [
-        {
-          :libelle => "Champ répétable",
-         :types_de_champ =>  [
-           [
-             {
-               :source => "repet",
-              :repetition_champ_stable_id => 7,
-              :path => "value",
-              :stable_id => 8,
-              :libelle => "Qqchose à rajouter?"
-             }
-           ]
-         ]
-        }
-      ]
-    end
-  end
-
   describe '#all_usager_columns' do
     context 'for individual procedure' do
       let(:for_individual) { true }
 
       it "returns all usager columns" do
         expected = [
-          procedure.find_column(label: "Nº dossier"),
+          procedure.find_column(label: "Dossier ID"),
           procedure.find_column(label: "Demandeur"),
           procedure.find_column(label: "FranceConnect ?"),
           procedure.find_column(label: "Civilité"),
@@ -216,7 +112,7 @@ describe ExportTemplate do
 
       it "returns all usager columns" do
         expected = [
-          procedure.find_column(label: "Nº dossier"),
+          procedure.find_column(label: "Dossier ID"),
           procedure.find_column(label: "Demandeur"),
           procedure.find_column(label: "FranceConnect ?"),
           procedure.find_column(label: "SIRET"),
@@ -288,51 +184,15 @@ describe ExportTemplate do
     end
   end
 
-  describe '#columns and #repetable columns' do
-    let(:tabular_export_template) { create(:export_template, kind: 'ods', content:, groupe_instructeur:) }
-    let(:content) {
-      {
-        "columns" => [
-          { :path => "email", :source => "dossier", :libelle => "Email" },
-          { :path => "value", :source => "tdc", :libelle => "Ca va ?", "stable_id" => 1 },
-          { :path => "code", :source => "tdc", :libelle => "Commune", "stable_id" => 2 },
-          { :path => "value", :source => "repet", :libelle => "PJ répétable", "stable_id" => 4, "repetition_champ_stable_id" => 3 },
-          { :path => "value", :source => "repet", :libelle => "Champ repetable", "stable_id" => 5, "repetition_champ_stable_id" => 3 },
-          { :path => "value", :source => "repet", :libelle => "PJ", "stable_id" => 7, "repetition_champ_stable_id" => 6 }
-        ]
-      }
-    }
-
-    describe '#columns' do
-      it 'returns all columns stored in export template' do
-        expect(tabular_export_template.columns).to match_array [
-          { :path => "email", :source => "dossier", :libelle => "Email" },
-          { :path => "value", :source => "tdc", :libelle => "Ca va ?", :stable_id => 1 },
-          { :path => "code", :source => "tdc", :libelle => "Commune", :stable_id => 2 },
-          { :path => "value", :source => "repet", :libelle => "PJ répétable", :stable_id => 4, :repetition_champ_stable_id => 3 },
-          { :path => "value", :source => "repet", :libelle => "Champ repetable", :stable_id => 5, :repetition_champ_stable_id => 3 },
-          { :path => "value", :source => "repet", :libelle => "PJ", :stable_id => 7, :repetition_champ_stable_id => 6 }
-        ]
-      end
-    end
-
-    describe '#repetable_columns' do
-      it 'returns repetable columns stored in export template grouped by repetition champ' do
-        expect(tabular_export_template.repetable_columns).to eq(
-          {
-            3 => [
-              { :path => "value", :source => "repet", :libelle => "PJ répétable", :stable_id => 4, :repetition_champ_stable_id => 3 },
-              { :path => "value", :source => "repet", :libelle => "Champ repetable", :stable_id => 5, :repetition_champ_stable_id => 3 }
-            ],
-            6 => [
-              { :path => "value", :source => "repet", :libelle => "PJ", :stable_id => 7, :repetition_champ_stable_id => 6 }
-            ]
-          }
-        )
-      end
+  describe 'dossier_exported_columns' do
+    it 'fails' do
+      expect(false).to be_truthy
     end
   end
 
-  describe '#all_usager_columns' do
+  describe 'columns_for_stable_id' do
+    it 'fails' do
+      expect(false).to be_truthy
+    end
   end
 end
