@@ -210,6 +210,20 @@ describe Procedure do
       it { is_expected.not_to allow_value([]).for(:administrateurs) }
     end
 
+    context 'before_remove callback for minimal administrator presence' do
+      let(:procedure) { create(:procedure) }
+
+      it 'raises an error when trying to remove the last administrateur' do
+        expect(procedure.administrateurs.count).to eq(1)
+        expect {
+          procedure.administrateurs.destroy(procedure.administrateurs.first)
+        }.to raise_error(
+          ActiveRecord::RecordNotDestroyed,
+          "Cannot remove the last administrateur of procedure #{procedure.libelle} (#{procedure.id})"
+        )
+      end
+    end
+
     context 'juridique' do
       it { is_expected.not_to allow_value(nil).on(:publication).for(:cadre_juridique) }
       it { is_expected.to allow_value('text').on(:publication).for(:cadre_juridique) }
