@@ -1,4 +1,4 @@
-= @form.text_field(:value, input_opts(id: @champ.input_id, aria: { describedby: @champ.describedby_id }, data: { controller: 'turbo-input format', format: 'siret', turbo_input_load_on_connect_value: @champ.prefilled? && @champ.value.present? && @champ.etablissement.blank?, turbo_input_url_value: update_path }, required: @champ.required?, class: "width-33-desktop"))
+= @form.text_field(:value, input_opts(id: @champ.input_id, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, data: { controller: 'turbo-input format', format: 'siret', turbo_input_load_on_connect_value: @champ.prefilled? && @champ.value.present? && @champ.etablissement.blank?, turbo_input_url_value: update_path }, required: @champ.required?, class: "width-33-desktop"))
 .siret-info{ id: dom_id(@champ, :siret_info) }
   - if @champ.etablissement.present?
     = render EditableChamp::EtablissementTitreComponent.new(etablissement: @champ.etablissement)
