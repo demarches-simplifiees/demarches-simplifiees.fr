@@ -111,7 +111,7 @@ class ProcedureExportService
         types_de_champ = procedure.all_revisions_types_de_champ(parent: type_de_champ_repetition).to_a
         rows = dossiers.flat_map { _1.repetition_rows_for_export(type_de_champ_repetition) }
 
-        if selected_children_columns.present? && rows.present?
+        if types_de_champ.present? && rows.present?
           {
             sheet_name: repetition.libelle_for_export,
             instances: rows,
@@ -119,7 +119,6 @@ class ProcedureExportService
           }
         end
       end
-    end
   end
 
   DEFAULT_STYLES = {
