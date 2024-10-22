@@ -77,6 +77,17 @@ class ExportTemplate < ApplicationRecord
     exported_columns.filter { !_1.parent.present? }
   end
 
+  def dossier_exported_columns
+    exported_columns.filter { _1.column.table != 'type_de_champ' }
+  end
+
+  def columns_for_stable_id(stable_id)
+    exported_columns.filter do
+     _1.column.column.to_s == stable_id.to_s ||
+     _1.column.column.to_s.starts_with?("#{stable_id}.")
+   end
+  end
+
   def all_usager_columns
     procedure.all_usager_columns_for_export
   end

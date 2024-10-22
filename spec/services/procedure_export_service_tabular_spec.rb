@@ -172,6 +172,11 @@ describe ProcedureExportService do
     end
 
     describe 'Repetitions sheet' do
+      let(:exported_columns) do
+        [
+          ExportedColumn.new(libelle: "Champ répétable – child second champ", column: procedure.find_column(label: "Champ répétable – child second champ"))
+        ]
+      end
       let!(:dossiers) do
         [
           create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure),
@@ -187,7 +192,7 @@ describe ProcedureExportService do
 
       it 'should have headers' do
         expect(repetition_sheet.headers).to eq([
-          "Dossier ID", "Ligne", "child second champ"
+          "Dossier ID", "Ligne", "Champ répétable – child second champ"
         ])
       end
 

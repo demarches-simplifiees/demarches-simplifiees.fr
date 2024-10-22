@@ -113,7 +113,7 @@ class ProcedureExportService
 
         if types_de_champ.present? && rows.present?
           {
-            sheet_name: repetition.libelle_for_export,
+            sheet_name: type_de_champ_repetition.libelle_for_export,
             instances: rows,
             spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ, export_template: @export_template) }
           }

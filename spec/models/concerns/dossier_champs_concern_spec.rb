@@ -183,8 +183,8 @@ RSpec.describe DossierChampsConcern do
     it { row_id; subject; expect(row_id).not_to be_in(row_ids) }
   end
 
-  describe "#champs_for_export" do
-    subject { dossier.champs_for_export(dossier.revision.types_de_champ_public) }
+  describe "#champ_values_for_export" do
+    subject { dossier.champ_values_for_export(dossier.revision.types_de_champ_public) }
 
     it { expect(subject.size).to eq(4) }
     it { expect(subject.first).to eq(["Un champ text", nil]) }
