@@ -27,7 +27,7 @@
     required: @champ.required?,
     id: @champ.input_id,
     class: select_class_names,
-    aria: { describedby: @champ.describedby_id }
+    aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }
 
 - if @champ.drop_down_other?
   %div{ class: other_element_class_names }
