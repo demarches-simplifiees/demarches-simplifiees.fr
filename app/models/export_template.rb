@@ -74,14 +74,6 @@ class ExportTemplate < ApplicationRecord
    end
   end
 
-  def all_usager_columns
-    procedure.all_usager_columns_for_export
-  end
-
-  def all_dossier_columns
-    procedure.all_dossier_columns_for_export
-  end
-
   private
 
   def ensure_pjs_are_legit

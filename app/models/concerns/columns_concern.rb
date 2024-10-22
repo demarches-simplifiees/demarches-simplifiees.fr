@@ -35,10 +35,6 @@ module ColumnsConcern
         .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
     end
 
-    # def dossier_columns_for_export
-    #   columns.filter { ['self', 'individual', 'etablissement', 'followers_instructeurs', 'groupe_instructeur'].include(_1.table) }
-    # end
-
     def all_usager_columns_for_export
       common = [
         dossier_id_column,
