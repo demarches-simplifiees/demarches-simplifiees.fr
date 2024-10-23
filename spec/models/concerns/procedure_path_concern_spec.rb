@@ -51,7 +51,7 @@ describe ProcedurePathConcern do
     end
   end
 
-  describe "#add_procedure_path" do
+  describe "#sync_procedure_path" do
     let(:procedure) { build(:procedure, :published) }
 
     subject { procedure.save! }

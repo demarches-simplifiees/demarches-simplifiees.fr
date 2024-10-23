@@ -10,7 +10,7 @@ module ProcedurePathConcern
 
     after_initialize :ensure_path_exists
     before_validation :ensure_path_exists
-    before_validation :add_procedure_path
+    before_validation :sync_procedure_path, if: :path_changed?
 
     validates :procedure_paths, length: { minimum: 1 }
     # validates :procedure_paths, length: { minimum: 2 }, on: :publication
@@ -23,8 +23,14 @@ module ProcedurePathConcern
       end
     end
 
-    def add_procedure_path
-      return if path.blank? || !path_changed?
+    def sync_procedure_path
+      if path.blank?
+        if procedure_paths.empty?
+          procedure_paths.build(path: SecureRandom.uuid)
+        end
+
+        return
+      end
 
       procedure_path = procedure_paths.find { _1.path == path } || ProcedurePath.find_or_initialize_by(path: path)
 
