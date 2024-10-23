@@ -1,70 +1,71 @@
 import { ApplicationController } from './application_controller';
 
 export class CheckboxSelectAll extends ApplicationController {
-  hasCheckboxAllTarget: boolean
-  checkboxTargets: HTMLInputElement[]
-  checkboxAllTarget: HTMLInputElement
+  declare readonly hasCheckboxAllTarget: boolean;
+  declare readonly checkboxTargets: HTMLInputElement[];
+  declare readonly checkboxAllTarget: HTMLInputElement;
 
-  static targets: string[] = ["checkboxAll", "checkbox"]
+  static targets: string[] = ['checkboxAll', 'checkbox'];
 
   initialize() {
-    this.toggle = this.toggle.bind(this)
-    this.refresh = this.refresh.bind(this)
+    this.toggle = this.toggle.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
 
   checkboxAllTargetConnected(checkbox: HTMLInputElement): void {
-    checkbox.addEventListener("change", this.toggle)
+    checkbox.addEventListener('change', this.toggle);
 
-    this.refresh()
+    this.refresh();
   }
 
   checkboxTargetConnected(checkbox: HTMLInputElement): void {
-    checkbox.addEventListener("change", this.refresh)
+    checkbox.addEventListener('change', this.refresh);
 
-    this.refresh()
+    this.refresh();
   }
 
   checkboxAllTargetDisconnected(checkbox: HTMLInputElement): void {
-    checkbox.removeEventListener("change", this.toggle)
+    checkbox.removeEventListener('change', this.toggle);
 
-    this.refresh()
+    this.refresh();
   }
 
   checkboxTargetDisconnected(checkbox: HTMLInputElement): void {
-    checkbox.removeEventListener("change", this.refresh)
+    checkbox.removeEventListener('change', this.refresh);
 
-    this.refresh()
+    this.refresh();
   }
 
   toggle(e: Event): void {
-    e.preventDefault()
+    e.preventDefault();
 
     this.checkboxTargets.forEach((checkbox) => {
-      // @ts-ignore
-      checkbox.checked = e.target.checked
-    this.triggerInputEvent(checkbox)
-    })
+      // @ts-expect-error faut savoir hein
+      checkbox.checked = e.target.checked;
+      this.triggerInputEvent(checkbox);
+    });
   }
 
   refresh(): void {
-    const checkboxesCount = this.checkboxTargets.length
-    const checkboxesCheckedCount = this.checked.length
+    const checkboxesCount = this.checkboxTargets.length;
+    const checkboxesCheckedCount = this.checked.length;
 
-    this.checkboxAllTarget.checked = checkboxesCheckedCount > 0
-    this.checkboxAllTarget.indeterminate = checkboxesCheckedCount > 0 && checkboxesCheckedCount < checkboxesCount
+    this.checkboxAllTarget.checked = checkboxesCheckedCount > 0;
+    this.checkboxAllTarget.indeterminate =
+      checkboxesCheckedCount > 0 && checkboxesCheckedCount < checkboxesCount;
   }
 
   triggerInputEvent(checkbox: HTMLInputElement): void {
-    const event = new Event("input", { bubbles: false, cancelable: true })
+    const event = new Event('input', { bubbles: false, cancelable: true });
 
-    checkbox.dispatchEvent(event)
+    checkbox.dispatchEvent(event);
   }
 
   get checked(): HTMLInputElement[] {
-    return this.checkboxTargets.filter((checkbox) => checkbox.checked)
+    return this.checkboxTargets.filter((checkbox) => checkbox.checked);
   }
 
   get unchecked(): HTMLInputElement[] {
-    return this.checkboxTargets.filter((checkbox) => !checkbox.checked)
+    return this.checkboxTargets.filter((checkbox) => !checkbox.checked);
   }
 }
