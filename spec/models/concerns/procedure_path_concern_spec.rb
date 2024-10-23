@@ -81,8 +81,9 @@ describe ProcedurePathConcern do
         expect(procedure1.path).not_to eq(procedure2.path)
       end
 
-      it "should not let procedure1 change path to procedure2 path" do
-        expect { procedure1.update!(path: procedure2.path) }.to raise_error(ActiveRecord::RecordInvalid)
+      it "should let procedure1 change path to procedure2 path" do
+        expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
+        expect(procedure1.path).to eq("proc-2")
       end
     end
   end

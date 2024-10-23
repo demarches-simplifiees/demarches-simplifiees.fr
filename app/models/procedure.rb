@@ -328,7 +328,26 @@ class Procedure < ApplicationRecord
       end
 
       other_procedure = other_procedure_with_path(path)
+      puts ""
+      puts "*" * 100
+      puts "publish_or_reopen!"
+      puts "*" * 100
+      puts "path                                        #{path}"
+      puts "id                                          #{id}"
+      puts "procedure_paths.pluck(:path, :procedure_id) #{procedure_paths.pluck(:path, :procedure_id)}"
+      puts "ProcedurePath.pluck(:path, :procedure_id)   #{ProcedurePath.pluck(:path, :procedure_id)}"
+      puts "Procedure.pluck(:path, :id)                 #{Procedure.pluck(:path, :id)}"
+      puts "other_procedure.id                          #{other_procedure&.id}"
+      puts "other_procedure.path                        #{other_procedure&.path}"
+      puts "other_procedure.procedure_paths             #{other_procedure&.procedure_paths&.pluck(:path, :procedure_id)}"
+      puts "*" * 100
+      puts ""
+
       if other_procedure.present? && administrateur.owns?(other_procedure)
+        claim_path!(administrateur, path)
+
+        other_procedure.save!
+
         other_procedure.unpublish!
         publish!(other_procedure.canonical_procedure || other_procedure)
       else
@@ -849,6 +868,12 @@ class Procedure < ApplicationRecord
     self.canonical_procedure = canonical_procedure
     self.published_revision = draft_revision
     self.draft_revision = create_new_revision
+    puts ""
+    puts "(after_publish)"
+    puts "self.path                         #{self.path}"
+    puts "self.id                           #{self.id}"
+    puts "Procedure.pluck(:id, :path)       #{Procedure.pluck(:id, :path)}"
+    puts ""
     save!(context: :publication)
     touch(:published_at)
     published_revision.touch(:published_at)
