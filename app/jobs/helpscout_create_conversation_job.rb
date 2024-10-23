@@ -2,6 +2,9 @@
 
 class HelpscoutCreateConversationJob < ApplicationJob
   queue_as :critical # user feedback is critical
+
+  def max_attempts = 15 # ~10h
+
   class FileNotScannedYetError < StandardError
   end
 
