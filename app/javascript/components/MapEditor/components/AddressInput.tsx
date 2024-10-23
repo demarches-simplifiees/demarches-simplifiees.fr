@@ -6,11 +6,13 @@ import { RemoteComboBox } from '../../ComboBox';
 export function AddressInput({
   source,
   featureCollection,
-  champId
+  champId,
+  translations
 }: {
   source: string;
   featureCollection: FeatureCollection;
   champId: string;
+  translations: Record<string, string>;
 }) {
   return (
     <div style={{ marginBottom: '10px' }}>
@@ -18,8 +20,8 @@ export function AddressInput({
         minimumInputLength={2}
         id={champId}
         loader={source}
-        label="Rechercher une Adresse"
-        description="Saisissez au moins 2 caractères"
+        label={translations.address_input_label}
+        description={translations.address_input_description}
         onChange={(item) => {
           if (item && item.data) {
             fire(document, 'map:zoom', {

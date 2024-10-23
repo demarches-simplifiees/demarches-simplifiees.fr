@@ -9,11 +9,13 @@ import { CreateFeatures, DeleteFeatures } from '../hooks';
 export function ImportFileInput({
   featureCollection,
   createFeatures,
-  deleteFeatures
+  deleteFeatures,
+  translations
 }: {
   featureCollection: FeatureCollection;
   createFeatures: CreateFeatures;
   deleteFeatures: DeleteFeatures;
+  translations: Record<string, string>;
 }) {
   const { inputs, addInputFile, removeInputFile, onFileChange } =
     useImportFiles(featureCollection, { createFeatures, deleteFeatures });
@@ -24,14 +26,14 @@ export function ImportFileInput({
         className="fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-circle-line"
         onClick={addInputFile}
       >
-        Ajouter un fichier GPX ou KML
+        {translations.add_file}
       </button>
       <div>
         {inputs.map((input) => (
           <div key={input.id}>
             <input
-              title="Choisir un fichier gpx ou kml"
-              style={{ marginTop: '15px' }}
+              title={translations.choose_file}
+              className="fr-mt-2w"
               id={input.id}
               type="file"
               accept=".gpx, .kml"
@@ -40,7 +42,7 @@ export function ImportFileInput({
             />
             {input.hasValue && (
               <span
-                title="Supprimer le fichier"
+                title={translations.delete_file}
                 className="fr-icon-delete-line fr-text-default--error"
                 style={{
                   cursor: 'pointer'
