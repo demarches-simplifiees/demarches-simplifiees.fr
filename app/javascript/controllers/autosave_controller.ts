@@ -1,13 +1,13 @@
-import { httpRequest, ResponseError, getConfig } from '@utils';
-import { matchInputElement, isButtonElement } from '@coldwired/utils';
+import { isButtonElement, matchInputElement } from '@coldwired/utils';
+import { getConfig, httpRequest, ResponseError } from '@utils';
 
-import { ApplicationController } from './application_controller';
 import { AutoUpload } from '../shared/activestorage/auto-upload';
 import {
-  FileUploadError,
+  ERROR_CODE_READ,
   FAILURE_CLIENT,
-  ERROR_CODE_READ
+  FileUploadError
 } from '../shared/activestorage/file-upload-error';
+import { ApplicationController } from './application_controller';
 
 const {
   autosave: { debounce_delay }
@@ -182,7 +182,7 @@ export class AutosaveController extends ApplicationController {
       .catch((e) => {
         const error = e as FileUploadError;
 
-        this.globalDispatch('autosave:error');
+        this.globalDispatch('autosave:error', { error });
 
         // Report unexpected client errors to Sentry.
         // (But ignore usual client errors, or errors we can monitor better on the server side.)

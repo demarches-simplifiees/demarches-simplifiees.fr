@@ -36,7 +36,7 @@ export class DateInputHintController extends ApplicationController {
 
   private translatePlaceholder() {
     const locale = document.documentElement.lang as 'fr' | 'en';
-    const parts = PARTS[locale];
+    const parts = PARTS[locale] ?? PARTS.fr;
     const example = new Date(2022, 9, 15).toLocaleDateString();
     return [
       Object.entries(parts).reduce(
