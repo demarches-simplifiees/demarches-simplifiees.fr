@@ -16,13 +16,15 @@ export default function MapEditor({
   url,
   adresseSource,
   options,
-  champId
+  champId,
+  translations
 }: {
   featureCollection: FeatureCollection;
   url: string;
   adresseSource: string;
   options: { layers: string[] };
   champId: string;
+  translations: Record<string, string>;
 }) {
   const [cadastreEnabled, setCadastreEnabled] = useState(false);
 
@@ -40,6 +42,7 @@ export default function MapEditor({
         source={adresseSource}
         champId={champId}
         featureCollection={featureCollection}
+        translations={translations}
       />
 
       <MapLibre layers={options.layers}>
@@ -57,7 +60,10 @@ export default function MapEditor({
           />
         ) : null}
       </MapLibre>
-      <PointInput featureCollection={featureCollection} />
+      <PointInput
+        featureCollection={featureCollection}
+        translations={translations}
+      />
     </>
   );
 }

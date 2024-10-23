@@ -12,7 +12,13 @@ class EditableChamp::CarteComponent < EditableChamp::EditableChampBaseComponent
       champ_id: @champ.input_id,
       url: update_path,
       adresse_source: data_sources_data_source_adresse_path,
-      options: @champ.render_options
+      options: @champ.render_options,
+      translations: {
+        address_input_label: t(".address_input_label"),
+        address_input_description: t(".address_input_description"),
+        pin_input_label: t(".pin_input_label"),
+        pin_input_description: t(".pin_input_description")
+      }
     }
   end
 

@@ -4,9 +4,11 @@ import type { Feature, FeatureCollection } from 'geojson';
 import CoordinateInput from 'react-coordinate-input';
 
 export function PointInput({
-  featureCollection
+  featureCollection,
+  translations
 }: {
   featureCollection: FeatureCollection;
+  translations: Record<string, string>;
 }) {
   const inputId = useId();
   const [value, setValue] = useState('');
@@ -35,9 +37,10 @@ export function PointInput({
   return (
     <div className="fr-input-group fr-mt-3w">
       <label className="fr-label" htmlFor={inputId}>
-        Ajouter un point sur la carte
+        {translations.pin_input_label}
         <span className="fr-hint-text">
-          Exemple : 43°48&#39;06&#34;N 006°14&#39;59&#34;E
+          {translations.pin_input_description}
+          43°48&#39;06&#34;N 006°14&#39;59&#34;E
         </span>
       </label>
       <div className="flex flex-gap-1 fr-mt-1w">

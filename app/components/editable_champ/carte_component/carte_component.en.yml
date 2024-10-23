@@ -1,0 +1,6 @@
+---
+en:
+  address_input_label: "Find an address"
+  address_input_description: "Enter at least 2 characters"
+  pin_input_label: "Add a point to the map"
+  pin_input_description: "Example: "

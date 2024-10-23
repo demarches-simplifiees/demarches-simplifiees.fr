@@ -1,0 +1,6 @@
+---
+fr:
+  address_input_label: "Rechercher une adresse"
+  address_input_description: "Saisissez au moins 2 caractères"
+  pin_input_label: "Ajouter un point sur la carte"
+  pin_input_description: "Exemple : "
