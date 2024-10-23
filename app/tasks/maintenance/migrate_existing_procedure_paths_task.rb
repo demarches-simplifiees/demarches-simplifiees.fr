@@ -7,7 +7,8 @@ module Maintenance
     end
 
     def process(element)
-      element.update_procedure_path
+      element.sync_procedure_path
+      element.save!
     end
   end
 end

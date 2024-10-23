@@ -14,7 +14,7 @@ module Maintenance
 
         before do
           # destroy the procedure path created by the after_save hook
-          element.procedure_paths.destroy_all
+          element.procedure_paths.delete_all
         end
 
         it "should use the same generated path as procedure_path" do
