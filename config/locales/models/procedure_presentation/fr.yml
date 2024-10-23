@@ -58,7 +58,6 @@ fr:
             entreprise_date_creation: Date de création
             siret: SIRET
             libelle_naf: Libellé NAF
-            code_postal: Code postal
             siege_social: "Établissement siège social"
             naf: "Établissement NAF"
             adresse: "Établissement Adresse"

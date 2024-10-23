@@ -142,7 +142,7 @@ describe DossierProjectionService do
       end
 
       context 'for etablissement table' do
-        let(:label) { 'Code postal' }
+        let(:label) { 'Établissement code postal' }
 
         let!(:dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75008')) }
 

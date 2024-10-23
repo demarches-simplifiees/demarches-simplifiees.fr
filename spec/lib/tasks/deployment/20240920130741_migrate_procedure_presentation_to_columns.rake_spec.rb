@@ -38,7 +38,7 @@ describe '20240920130741_migrate_procedure_presentation_to_columns.rake' do
   it 'populates the columns' do
     procedure_id = procedure.id
 
-    expect(procedure_presentation.displayed_columns.map(&:label)).to eq(["Raison sociale", procedure.active_revision.types_de_champ.first.libelle])
+    expect(procedure_presentation.displayed_columns.map(&:label)).to eq(["Entreprise raison sociale", procedure.active_revision.types_de_champ.first.libelle])
 
     order, column_id = procedure_presentation
       .sorted_column

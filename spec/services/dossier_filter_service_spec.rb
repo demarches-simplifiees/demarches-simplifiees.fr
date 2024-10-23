@@ -275,7 +275,7 @@ describe DossierFilterService do
 
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
-      let(:column) { procedure.find_column(label: 'Code postal') }
+      let(:column) { procedure.find_column(label: 'Établissement code postal') }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let!(:huitieme_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75008')) }
@@ -601,7 +601,7 @@ describe DossierFilterService do
       context 'for code_postal column' do
         # All columns except entreprise_date_creation work exacly the same, just testing one
 
-        let(:filter) { ['Code postal', '75017'] }
+        let(:filter) { ['Établissement code postal', '75017'] }
 
         let!(:kept_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75017')) }
         let!(:discarded_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '25000')) }
@@ -609,7 +609,7 @@ describe DossierFilterService do
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
         context 'with multiple search values' do
-          let(:filters) { [['Code postal', '75017'], ['Code postal', '88100']] }
+          let(:filters) { [['Établissement code postal', '75017'], ['Établissement code postal', '88100']] }
 
           let!(:other_kept_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '88100')) }
 

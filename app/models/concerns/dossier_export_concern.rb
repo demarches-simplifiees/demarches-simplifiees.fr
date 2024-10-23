@@ -29,11 +29,11 @@ module DossierExportConcern
     end
   end
 
-  private
-
-  def spreadsheet_columns(with_etablissement: false, types_de_champ:, export_template:)
+  def spreadsheet_columns(types_de_champ:, with_etablissement: false, export_template: nil)
     dossier_values_for_export(with_etablissement:, export_template:) + champ_values_for_export(types_de_champ, export_template:)
   end
+
+  private
 
   def dossier_values_for_export(with_etablissement: false, export_template: nil)
     if export_template.present?
