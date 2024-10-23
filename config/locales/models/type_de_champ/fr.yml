@@ -20,6 +20,7 @@ fr:
           numero_dn: 'Numéro DN'
           te_fenua: 'Carte de Polynésie'
           visa: 'Visa'
+          referentiel_de_polynesie: 'Référentiel de Polynésie'
           header_section: 'Titre de section'
           repetition: 'Bloc répétable'
           dossier_link: 'Lien vers un autre dossier'

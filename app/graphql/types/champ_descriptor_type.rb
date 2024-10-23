@@ -35,6 +35,8 @@ module Types
           Types::Champs::Descriptor::TeFenuaChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:visa)
           Types::Champs::Descriptor::VisaChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:referentiel_de_polynesie)
+          Types::Champs::Descriptor::ReferentielDePolynesieChampDescriptorType
 
           # ----- DS champs
         when TypeDeChamp.type_champs.fetch(:engagement_juridique)

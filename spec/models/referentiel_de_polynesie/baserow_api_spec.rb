@@ -11,7 +11,7 @@ RSpec.describe ReferentielDePolynesie::BaserowAPI, type: :model do
         'Token' => ENV['API_BASEROW_TOKEN'].to_s
       })
 
-      VCR.use_cassette('baserow_search') do
+      VCR.use_cassette('baserow/baserow_search') do
         results = ReferentielDePolynesie::BaserowAPI.search(123, "term")
 
         expect(results).to be_an(Array)
@@ -29,7 +29,7 @@ RSpec.describe ReferentielDePolynesie::BaserowAPI, type: :model do
         'Token' => ENV['API_BASEROW_TOKEN'].to_s
       })
 
-      VCR.use_cassette('baserow_fetch_row') do
+      VCR.use_cassette('baserow/baserow_fetch_row') do
         result = ReferentielDePolynesie::BaserowAPI.fetch_row(123, 1)
 
         expect(result[:row]["Nom"]).to eq("Communes de polynésie")
@@ -48,7 +48,7 @@ RSpec.describe ReferentielDePolynesie::BaserowAPI, type: :model do
         'Token' => ENV['API_BASEROW_TOKEN'].to_s
       })
 
-      VCR.use_cassette('baserow404_error') do
+      VCR.use_cassette('baserow/baserow404_error') do
         results = ReferentielDePolynesie::BaserowAPI.fetch_row(123, 99999)
 
         expect(results).to eq(nil)
@@ -60,7 +60,7 @@ RSpec.describe ReferentielDePolynesie::BaserowAPI, type: :model do
     it 'fetch the available tables', :vcr do
       allow(ReferentielDePolynesie::BaserowAPI).to receive(:config)
 
-      VCR.use_cassette('baserow_available_tables') do
+      VCR.use_cassette('baserow/baserow_available_tables') do
         results = ReferentielDePolynesie::BaserowAPI.available_tables
 
         expect(results).to be_an(Array)

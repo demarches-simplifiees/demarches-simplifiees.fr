@@ -62,6 +62,7 @@ jobs:
     timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
+      API_BASEROW_URL: ${{ secrets.API_BASEROW_URL }}
     services:
       postgres:
         image: postgis/postgis:14-3.3
@@ -124,6 +125,7 @@ jobs:
     timeout-minutes: 20
     env:
       RUBY_YJIT_ENABLE: "1"
+      API_BASEROW_URL: ${{ secrets.API_BASEROW_URL }}
     services:
       postgres:
         image: postgis/postgis:14-3.3

@@ -79,6 +79,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::TextChampType,
     Types::Champs::TitreIdentiteChampType,
     Types::Champs::VisaChampType,
+    Types::Champs::ReferentielDePolynesieChampType,
     Types::Champs::EngagementJuridiqueChampType,
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
@@ -128,6 +129,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::Descriptor::TextChampDescriptorType,
     Types::Champs::Descriptor::TitreIdentiteChampDescriptorType,
     Types::Champs::Descriptor::VisaChampDescriptorType,
+    Types::Champs::Descriptor::ReferentielDePolynesieChampDescriptorType,
     Types::Champs::Descriptor::YesNoChampDescriptorType,
     Types::Champs::Descriptor::ExpressionReguliereChampDescriptorType,
     Types::Champs::Descriptor::EngagementJuridiqueChampDescriptorType
