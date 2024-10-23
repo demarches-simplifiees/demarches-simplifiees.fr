@@ -744,8 +744,6 @@ class TypeDeChamp < ApplicationRecord
 
   CHAMP_TYPE_TO_TYPE_CHAMP = type_champs.values.map { [type_champ_to_champ_class_name(_1), _1] }.to_h
 
-  private
-
   def use_default_value?(champ)
     # no champ
     return true if champ.nil?
@@ -757,6 +755,8 @@ class TypeDeChamp < ApplicationRecord
     return champ.value.blank? if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
     champ.blank?
   end
+
+  private
 
   def castable_on_change?(from_type, to_type)
     case [from_type, to_type]
