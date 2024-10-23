@@ -25,6 +25,10 @@ class HelpscoutCreateConversationJob < ApplicationJob
     create_conversation
 
     contact_form.delete
+  rescue StandardError
+    contact_form.delete if executions >= max_attempts
+
+    raise
   end
 
   private
