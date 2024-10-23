@@ -24,17 +24,16 @@ module ProcedurePathConcern
     end
 
     def add_procedure_path
-      return if path.blank?
+      return if path.blank? || !path_changed?
 
       procedure_path = procedure_paths.find { _1.path == path } || ProcedurePath.find_or_initialize_by(path: path)
 
       if procedure_path.procedure && procedure_path.procedure != self
         procedure_path.procedure.update!(path: SecureRandom.uuid)
       end
+      procedure_path.updated_at = Time.zone.now
 
       procedure_paths << procedure_path
-
-      procedure_path.updated_at = Time.zone.now
     end
 
     def other_procedure_with_path(path)
