@@ -1,22 +1,13 @@
-#flash_messages{ tabindex: '-1' }
+#flash_messages{ tabindex: '-1', data: { turbo_force: :server } }
   #flash_message.center{ class: defined?(unique_classname) ? unique_classname : '' }
     - if flash.any?
       - flash.each do |key, value|
         - sticky = defined?(sticky) ? sticky : false
         - fixed = defined?(fixed) ? fixed : false
-        - if flash_role(key) == 'status'
-          .alert.alert-success{ role: 'status', class: flash_class(sticky: sticky, fixed: fixed), tabindex: '-1', data: { controller: 'autofocus' } }
-            - if value.class == Array
-              - value.each do |message|
-                = sanitize_with_link(message)
-                %br
-            - elsif value.present?
-              = sanitize_with_link(value)
-        - elsif flash_role(key) == 'alert'
-          .alert.alert-danger{ role: 'alert', class: flash_class(sticky: sticky, fixed: fixed), tabindex: '-1', data: { controller: 'autofocus' } }
-            - if value.class == Array
-              - value.each do |message|
-                = sanitize_with_link(message)
-                %br
-            - elsif value.present?
-              = sanitize_with_link(value)
+        .alert{ role: flash_role(key), class: flash_class(key, sticky: sticky, fixed: fixed) }
+          - if value.class == Array
+            - value.each do |message|
+              = sanitize_with_link(message)
+              %br
+          - elsif value.present?
+            = sanitize_with_link(value)
