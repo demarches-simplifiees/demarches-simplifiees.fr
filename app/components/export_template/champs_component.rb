@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ExportTemplate::ChampsComponent < ApplicationComponent
   attr_reader :sections, :export_template, :title
 

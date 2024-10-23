@@ -25,14 +25,18 @@ module ColumnsConcern
         columns.concat(standard_columns)
         columns.concat(individual_columns) if for_individual
         columns.concat(moral_columns) if !for_individual
-        columns.concat(chorus_columns) if chorusable? && chorus_configuration.complete?
+        columns.concat(chorus_columns)
         columns.concat(types_de_champ_columns)
       end
     end
 
     def chorus_columns
-      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
-        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
+      if chorusable? && chorus_configuration.complete?
+        ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
+          .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
+      else
+        []
+      end
     end
 
     def all_usager_columns_for_export
@@ -44,14 +48,7 @@ module ColumnsConcern
 
       individual_or_moral_columns = for_individual? ? individual_columns : moral_columns
 
-      _chorus_columns =
-        if chorusable? && chorus_configuration.complete?
-          chorus_columns
-        else
-          []
-        end
-
-      [common, individual_or_moral_columns, _chorus_columns].flatten.compact
+      [common, individual_or_moral_columns, chorus_columns].flatten.compact
     end
 
     def all_dossier_columns_for_export

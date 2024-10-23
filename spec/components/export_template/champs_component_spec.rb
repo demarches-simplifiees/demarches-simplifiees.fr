@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 describe ExportTemplate::ChampsComponent, type: :component do
   let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
   let(:export_template) { build(:export_template, kind: 'csv', groupe_instructeur:) }

@@ -83,7 +83,7 @@ class TypesDeChamp::TypeDeChampBase
     if column.is_a?(Columns::JSONPathColumn) || column.value_column != :value
       column.get_value(champ)
     else
-      champ_value_for_export(champ, path = :value)
+      champ_value_for_export(champ, :value)
     end
   end
 
