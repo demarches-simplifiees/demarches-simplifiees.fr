@@ -33,20 +33,11 @@ class TypesDeChamp::YesNoTypeDeChamp < TypesDeChamp::CheckboxTypeDeChamp
   end
 
   def champ_default_value
-    'Non'
+    ''
   end
 
   def champ_default_export_value(path = :value)
-    'Non'
-  end
-
-  def champ_default_api_value(version = 2)
-    case version
-    when 2
-      'false'
-    else
-      nil
-    end
+    ''
   end
 
   private

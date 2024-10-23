@@ -78,6 +78,7 @@ class API::V2::Schema < GraphQL::Schema
     Types::Champs::TextChampType,
     Types::Champs::TitreIdentiteChampType,
     Types::Champs::EngagementJuridiqueChampType,
+    Types::Champs::YesNoChampType,
     Types::GeoAreas::ParcelleCadastraleType,
     Types::GeoAreas::SelectionUtilisateurType,
     Types::PersonneMoraleType,

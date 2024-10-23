@@ -212,7 +212,7 @@ describe Champ do
       context 'if nil' do
         let(:value) { nil }
 
-        it { expect(value_for_export).to eq('Non') }
+        it { expect(value_for_export).to eq('') }
       end
     end
 
@@ -236,7 +236,7 @@ describe Champ do
         allow(champ_text).to receive(:type_de_champ).and_return(type_de_champ_text)
       end
       it { expect(type_de_champ_text.champ_value_for_export(champ_yes_no)).to eq(nil) }
-      it { expect(type_de_champ_yes_no.champ_value_for_export(champ_text)).to eq('Non') }
+      it { expect(type_de_champ_yes_no.champ_value_for_export(champ_text)).to eq('') }
     end
   end
 

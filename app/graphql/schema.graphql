@@ -4605,6 +4605,31 @@ type WarningMessage {
   message: String!
 }
 
+type YesNoChamp implements Champ {
+  """
+  L'identifiant du champDescriptor de ce champ
+  """
+  champDescriptorId: String!
+  id: ID!
+
+  """
+  Libellé du champ.
+  """
+  label: String!
+  prefilled: Boolean!
+
+  """
+  La valeur du champ sous forme texte.
+  """
+  stringValue: String
+
+  """
+  Date de dernière modification du champ.
+  """
+  updatedAt: ISO8601DateTime!
+  value: Boolean
+}
+
 type YesNoChampDescriptor implements ChampDescriptor {
   """
   Description des champs d’un bloc répétable.

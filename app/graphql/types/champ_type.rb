@@ -24,8 +24,14 @@ module Types
           else
             Types::Champs::TextChampType
           end
-        when ::Champs::YesNoChamp, ::Champs::CheckboxChamp
+        when ::Champs::CheckboxChamp
           Types::Champs::CheckboxChampType
+        when ::Champs::YesNoChamp
+          if context.has_fragment?(:YesNoChamp)
+            Types::Champs::YesNoChampType
+          else
+            Types::Champs::CheckboxChampType
+          end
         when ::Champs::DateChamp
           Types::Champs::DateChampType
         when ::Champs::DatetimeChamp

@@ -509,6 +509,9 @@ class API::V2::StoredQuery
     ... on CheckboxChamp {
       checked: value
     }
+    ... on YesNoChamp {
+      selected: value
+    }
     ... on DecimalNumberChamp {
       decimalNumber: value
     }
