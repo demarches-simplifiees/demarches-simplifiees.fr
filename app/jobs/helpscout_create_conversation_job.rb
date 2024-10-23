@@ -49,6 +49,7 @@ class HelpscoutCreateConversationJob < ApplicationJob
 
   def safe_blob
     return if !contact_form.piece_jointe.virus_scanner&.safe?
+    return if contact_form.piece_jointe.byte_size.zero? # HS don't support empty attachment
 
     contact_form.piece_jointe
   end
