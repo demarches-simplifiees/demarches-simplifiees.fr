@@ -12,9 +12,3 @@
 - elsif @champ.single_checkbox?
   - if @champ.description.present?
     .fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
-- else
-  -# champ civilite (and other?)
-  .fr-label.fr-mb-1w{ id: @champ.labelledby_id }
-    = render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
-  - if @champ.description.present?
-    .fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
