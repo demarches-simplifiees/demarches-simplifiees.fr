@@ -5,8 +5,6 @@ class ProcedurePath < ApplicationRecord
 
   before_destroy :ensure_one_path, :ensure_is_customized
 
-  before_validation :temp
-
   validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { case_sensitive: false }
 
   scope :by_updated_at, -> { order(updated_at: :desc) }
@@ -16,20 +14,6 @@ class ProcedurePath < ApplicationRecord
 
     errors.add(:base, :at_least_one_path)
     throw(:abort)
-  end
-
-  def temp
-    puts ""
-    puts "*" * 100
-    puts "(before_validation procedure_path)"
-    puts "*" * 100
-
-    puts "procedure_id                                #{procedure_id}"
-    puts "path                                        #{path}"
-    puts "ProcedurePath.pluck(:path, :procedure_id)   #{ProcedurePath.pluck(:path, :procedure_id)}"
-
-    puts "*" * 100
-    puts ""
   end
 
   def ensure_is_customized
