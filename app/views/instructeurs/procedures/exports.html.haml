@@ -33,7 +33,7 @@
         = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
 
     - if @procedure.feature_enabled?(:export_template)
-      .fr-tabs__panel.fr-tabs__panel--selected{ id: "tabpanel-export-templates-panel", role: "tabpanel", "aria-labelledby": "tabpanel-export-templates", tabindex: "0" }
+      .fr-tabs__panel.fr-tabs__panel{ id: "tabpanel-export-templates-panel", role: "tabpanel", "aria-labelledby": "tabpanel-export-templates", tabindex: "0" }
         = render Dsfr::AlertComponent.new(state: :info) do |c|
           - c.with_body do
             %p= t('.export_template_list_description_html')
