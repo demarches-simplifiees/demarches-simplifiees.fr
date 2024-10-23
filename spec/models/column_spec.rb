@@ -2,40 +2,78 @@
 
 describe Column do
   describe 'get_value' do
-    let(:procedure) { create(:procedure, :with_all_champs_mandatory) }
-    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+    let(:procedure) { create(:procedure, :with_all_champs_mandatory, groupe_instructeurs: [groupe_instructeur]) }
+    let(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_entreprise, procedure:) }
+    let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [create(:instructeur)]) }
+    let(:export_template) { create(:export_template, groupe_instructeur:) }
 
     context 'when params is a dossier' do
-      let(:columns) do
-        procedure.all_usager_columns_for_export +
-        procedure.all_dossier_columns_for_export
+      before do
+        export_template.exported_columns = (procedure.all_usager_columns_for_export + procedure.all_dossier_columns_for_export)
+          .map { ExportedColumn.new(libelle: _1.label, column: _1) }
       end
+
       it 'does not raise error' do
-        expect { columns.map { _1.get_value(dossier) } }.not_to raise_error
+        expect(procedure.find_column(label: "Dossier ID").get_value(dossier)).to eq(dossier.id)
+        expect(procedure.find_column(label: "Email").get_value(dossier)).to eq(dossier.user_email_for(:display))
+        expect(procedure.find_column(label: "FranceConnect ?").get_value(dossier)).to eq(false)
+        expect(procedure.find_column(label: "Entreprise forme juridique").get_value(dossier)).to eq("SA à conseil d'administration (s.a.i.)")
+        expect(procedure.find_column(label: "Entreprise SIREN").get_value(dossier)).to eq('440117620')
+        expect(procedure.find_column(label: "Entreprise nom commercial").get_value(dossier)).to eq('GRTGAZ')
+        expect(procedure.find_column(label: "Entreprise raison sociale").get_value(dossier)).to eq('GRTGAZ')
+        expect(procedure.find_column(label: "Entreprise SIRET siège social").get_value(dossier)).to eq('44011762001530')
+        expect(procedure.find_column(label: "Date de création").get_value(dossier)).to eq(Date.parse('1990-04-24'))
+        expect(procedure.find_column(label: "SIRET").get_value(dossier)).to eq('44011762001530')
+        expect(procedure.find_column(label: "Libellé NAF").get_value(dossier)).to eq('Transports par conduites')
+        expect(procedure.find_column(label: "Établissement code postal").get_value(dossier)).to eq('92270')
+        expect(procedure.find_column(label: "Établissement siège social").get_value(dossier)).to eq(true)
+        expect(procedure.find_column(label: "Établissement NAF").get_value(dossier)).to eq('4950Z')
+        expect(procedure.find_column(label: "Établissement Adresse").get_value(dossier)).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r")
+        expect(procedure.find_column(label: "Établissement numero voie").get_value(dossier)).to eq('6')
+        expect(procedure.find_column(label: "Établissement type voie").get_value(dossier)).to eq('RUE')
+        expect(procedure.find_column(label: "Établissement nom voie").get_value(dossier)).to eq('RAOUL NORDLING')
+        expect(procedure.find_column(label: "Établissement complément adresse").get_value(dossier)).to eq('IMMEUBLE BORA')
+        expect(procedure.find_column(label: "Établissement localité").get_value(dossier)).to eq('BOIS COLOMBES')
+        expect(procedure.find_column(label: "Établissement code INSEE localité").get_value(dossier)).to eq('92009')
+        expect(procedure.find_column(label: "Entreprise SIREN").get_value(dossier)).to eq('440117620')
+        expect(procedure.find_column(label: "Entreprise capital social").get_value(dossier)).to eq(537_100_000)
+        expect(procedure.find_column(label: "Entreprise numero TVA intracommunautaire").get_value(dossier)).to eq('FR27440117620')
+        expect(procedure.find_column(label: "Entreprise forme juridique code").get_value(dossier)).to eq('5599')
+        expect(procedure.find_column(label: "Entreprise code effectif entreprise").get_value(dossier)).to eq('51')
+        expect(procedure.find_column(label: "Entreprise état administratif").get_value(dossier)).to eq("actif")
+        expect(procedure.find_column(label: "Entreprise nom").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Entreprise prénom").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Association RNA").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Association titre").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Association objet").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Association date de création").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Association date de déclaration").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Association date de publication").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Créé le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+        expect(procedure.find_column(label: "Mis à jour le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+        expect(procedure.find_column(label: "Déposé le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+        expect(procedure.find_column(label: "En construction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+        expect(procedure.find_column(label: "En instruction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+        expect(procedure.find_column(label: "Terminé le").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Statut").get_value(dossier)).to eq('en_instruction')
+        expect(procedure.find_column(label: "Archivé").get_value(dossier)).to eq(false)
+        expect(procedure.find_column(label: "Motivation de la décision").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Dernière mise à jour du dossier le").get_value(dossier)).to eq(nil)
+        expect(procedure.find_column(label: "Email instructeur").get_value(dossier)).to eq('')
+      end
+
+      it 'when dossier entreprise is an association' do
+        expect('PENDING').to eq('DOING')
       end
     end
 
     context 'when params is a champ' do
-      let(:groupe_instructeur) { create(:groupe_instructeur, procedure:) }
-      let(:export_template) { create(:export_template, groupe_instructeur:) }
       let(:types_de_champ) { procedure.all_revisions_types_de_champ }
 
-      def expect_type_de_champ_values(type, values)
-        type_de_champ = types_de_champ.find { _1.type_champ == type }
-        champ = dossier.send(:filled_champ, type_de_champ, nil)
-        columns = export_template.columns_for_stable_id(type_de_champ.stable_id)
-        expect(columns.map { type_de_champ.champ_value_for_export(champ, _1.column) }).to eq(values)
-      end
-
-      def retrieve_champ(type)
-        type_de_champ = types_de_champ.find { _1.type_champ == type }
-        dossier.send(:filled_champ, type_de_champ, nil)
-      end
-
       before do
-        export_template.exported_columns =
-          types_de_champ.flat_map { _1.columns(procedure_id: procedure.id) }
-            .map { ExportedColumn.new(libelle: _1.label, column: _1) }
+        export_template.exported_columns = types_de_champ
+          .flat_map { _1.columns(procedure_id: procedure.id) }
+          .map { ExportedColumn.new(libelle: _1.label, column: _1) }
       end
 
       it 'extracts values for columns and type de champ' do
@@ -77,5 +115,19 @@ describe Column do
         expect_type_de_champ_values('expression_reguliere', [nil])
       end
     end
+  end
+
+  private
+
+  def expect_type_de_champ_values(type, values)
+    type_de_champ = types_de_champ.find { _1.type_champ == type }
+    champ = dossier.send(:filled_champ, type_de_champ, nil)
+    columns = export_template.columns_for_stable_id(type_de_champ.stable_id)
+    expect(columns.map { type_de_champ.champ_value_for_export(champ, _1.column) }).to eq(values)
+  end
+
+  def retrieve_champ(type)
+    type_de_champ = types_de_champ.find { _1.type_champ == type }
+    dossier.send(:filled_champ, type_de_champ, nil)
   end
 end

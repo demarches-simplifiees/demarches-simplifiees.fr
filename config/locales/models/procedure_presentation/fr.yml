@@ -50,7 +50,7 @@ fr:
             answer: Avis
             question_answer: Avis oui/non
           etablissement:
-            entreprise_siren: SIREN
+            entreprise_etat_administratif: 'Entreprise état administratif'
             entreprise_forme_juridique: Forme juridique
             entreprise_nom_commercial: Nom commercial
             entreprise_raison_sociale: Raison sociale
@@ -77,3 +77,11 @@ fr:
             entreprise_raison_sociale: "Entreprise raison sociale"
             entreprise_siret_siege_social: "Entreprise SIRET siège social"
             entreprise_code_effectif_entreprise: "Entreprise code effectif entreprise"
+            entreprise_nom: 'Entreprise nom'
+            entreprise_prenom: 'Entreprise prénom'
+            association_rna: 'Association RNA'
+            association_titre: 'Association titre'
+            association_objet: 'Association objet'
+            association_date_creation: 'Association date de création'
+            association_date_declaration: 'Association date de déclaration'
+            association_date_publication: 'Association date de publication'

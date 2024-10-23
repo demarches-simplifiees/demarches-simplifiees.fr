@@ -146,12 +146,12 @@ module ColumnsConcern
     end
 
     def moral_columns
-      etablissements = ['entreprise_siren', 'entreprise_forme_juridique', 'entreprise_nom_commercial', 'entreprise_raison_sociale', 'entreprise_siret_siege_social']
+      etablissements = ['entreprise_forme_juridique', 'entreprise_siren', 'entreprise_nom_commercial', 'entreprise_raison_sociale', 'entreprise_siret_siege_social']
         .map { |column| Column.new(procedure_id: id, table: 'etablissement', column:) }
 
       etablissement_dates = ['entreprise_date_creation'].map { |column| Column.new(procedure_id: id, table: 'etablissement', column:, type: :date) }
 
-      for_export = ['etablissement_siret', 'etablissement_siege_social', "siege_social", "naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_sire\nn", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "etablissement_adresse", "entreprise\n_raison_sociale", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_\nadministratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declarati\non", "association_date_publication"]
+      for_export = ["siege_social", "naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_siren", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_administratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declaration", "association_date_publication"]
         .map { |column| Column.new(procedure_id: id, table: 'etablissement', column:, displayable: false, filterable: false) }
 
       other = ['siret', 'libelle_naf', 'code_postal'].map { |column| Column.new(procedure_id: id, table: 'etablissement', column:) }
