@@ -1,7 +1,7 @@
 %fieldset
   %legend.fr-h5{ legend_params }= @champ.libelle
   - if @champ.description.present?
-    .notice{ notice_params }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
+    .notice.fr-mt-n2w{ notice_params }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
 
 
   .repetition{ id: dom_id(@champ, :rows), class: class_names('utils-repetition-required' => @champ.mandatory?) }

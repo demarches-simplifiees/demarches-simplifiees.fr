@@ -50,11 +50,15 @@ export function ComboBox({
       className={`fr-ds-combobox ${className ?? ''}`}
       shouldFocusWrap={true}
     >
-      {label ? <Label className="fr-label">{label}</Label> : null}
-      {description ? (
-        <Text slot="description" className="fr-hint-text">
-          {description}
-        </Text>
+      {label ? (
+        <Label className="fr-label">
+          {label}
+          {description ? (
+            <Text slot="description" className="fr-hint-text fr-mb-1w">
+              {description}
+            </Text>
+          ) : null}
+        </Label>
       ) : null}
       <div className="fr-ds-combobox__input" style={{ position: 'relative' }}>
         <Input className="fr-select fr-autocomplete" ref={inputRef} />

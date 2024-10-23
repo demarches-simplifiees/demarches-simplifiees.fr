@@ -15,22 +15,21 @@ export function AddressInput({
   translations: Record<string, string>;
 }) {
   return (
-    <div style={{ marginBottom: '10px' }}>
-      <RemoteComboBox
-        minimumInputLength={2}
-        id={champId}
-        loader={source}
-        label={translations.address_input_label}
-        description={translations.address_input_description}
-        onChange={(item) => {
-          if (item && item.data) {
-            fire(document, 'map:zoom', {
-              featureCollection,
-              feature: item.data
-            });
-          }
-        }}
-      />
-    </div>
+    <RemoteComboBox
+      minimumInputLength={2}
+      id={champId}
+      className="fr-input-group"
+      loader={source}
+      label={translations.address_input_label}
+      description={translations.address_input_description}
+      onChange={(item) => {
+        if (item && item.data) {
+          fire(document, 'map:zoom', {
+            featureCollection,
+            feature: item.data
+          });
+        }
+      }}
+    />
   );
 }
