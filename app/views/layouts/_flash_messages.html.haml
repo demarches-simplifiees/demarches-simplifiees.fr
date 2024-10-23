@@ -1,5 +1,5 @@
-#flash_messages
-  #flash_message.center
+#flash_messages{ tabindex: '-1' }
+  #flash_message.center{ class: defined?(unique_classname) ? unique_classname : '' }
     - if flash.any?
       - flash.each do |key, value|
         - sticky = defined?(sticky) ? sticky : false
