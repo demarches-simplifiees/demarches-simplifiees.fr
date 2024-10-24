@@ -504,6 +504,7 @@ Rails.application.routes.draw do
             resources :commentaires, only: [:destroy]
             post 'repousser-expiration' => 'dossiers#extend_conservation'
             post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
+            post 'dossier_labels' => 'dossiers#dossier_labels'
             get 'geo_data'
             get 'apercu_attestation'
             get 'bilans_bdf'
@@ -698,6 +699,8 @@ Rails.application.routes.draw do
       resources :mail_templates, only: [:index] do
         get 'preview', on: :member
       end
+
+      resources :procedure_labels, controller: 'procedure_labels'
 
       resource :attestation_template, only: [:show, :edit, :update, :create] do
         get 'preview', on: :member

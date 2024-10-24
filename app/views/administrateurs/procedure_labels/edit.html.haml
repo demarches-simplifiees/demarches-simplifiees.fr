@@ -1,0 +1,17 @@
+= render partial: 'administrateurs/breadcrumbs',
+  locals: { steps: [['Démarches', admin_procedures_path],
+                    [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
+                    ['gestion des labels', admin_services_path(procedure_id: @procedure.id)],
+                    ['Modifier le label']] }
+
+
+.fr-container
+  .flex.justify-between.align-center.fr-mb-3w
+    = link_to "Liste de tous les labels", admin_procedure_procedure_labels_path(procedure_id: @procedure.id), class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
+    = link_to "Nouveau label", new_admin_procedure_procedure_label_path(procedure_id: @procedure.id), class: "fr-btn fr-btn--primary fr-btn--icon-left fr-icon-add-circle-line"
+
+  %h1.fr-h2
+    Modifier le label
+
+  = render partial: 'form',
+    locals: { label: @label, procedure_id: @procedure.id }
