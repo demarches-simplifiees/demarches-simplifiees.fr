@@ -103,6 +103,7 @@ ignore_unused:
 - 'activerecord.attributes.*'
 - 'activemodel.attributes.map_filter.*'
 - 'activemodel.attributes.helpscout/form.*'
+- 'activemodel.errors.models.*'
 - 'activerecord.errors.*'
 - 'errors.messages.blank'
 - 'errors.messages.content_type_invalid'

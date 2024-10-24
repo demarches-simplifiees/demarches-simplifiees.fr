@@ -911,7 +911,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     it 'should render the error' do
       subject
-      expect(flash.alert[0]).to include("Le filtre Nom est trop long (maximum: 4048 caractères)")
+      expect(flash.alert[0]).to include("Le filtre « Nom » est trop long (maximum: 4048 caractères)")
     end
   end
 end
