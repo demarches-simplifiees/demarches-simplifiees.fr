@@ -717,26 +717,26 @@ describe Procedure do
 
       procedure.draft_revision.types_de_champ_public.zip(subject.draft_revision.types_de_champ_public).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
-        expect(stc.revision).to eq(subject.draft_revision)
+        expect(stc.revisions).to include(subject.draft_revision)
       end
 
       public_repetition = type_de_champ_repetition
       cloned_public_repetition = subject.draft_revision.types_de_champ_public.repetition.first
       procedure.draft_revision.children_of(public_repetition).zip(subject.draft_revision.children_of(cloned_public_repetition)).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
-        expect(stc.revision).to eq(subject.draft_revision)
+        expect(stc.revisions).to include(subject.draft_revision)
       end
 
       procedure.draft_revision.types_de_champ_private.zip(subject.draft_revision.types_de_champ_private).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
-        expect(stc.revision).to eq(subject.draft_revision)
+        expect(stc.revisions).to include(subject.draft_revision)
       end
 
       private_repetition = type_de_champ_private_repetition
       cloned_private_repetition = subject.draft_revision.types_de_champ_private.repetition.first
       procedure.draft_revision.children_of(private_repetition).zip(subject.draft_revision.children_of(cloned_private_repetition)).each do |ptc, stc|
         expect(stc).to have_same_attributes_as(ptc)
-        expect(stc.revision).to eq(subject.draft_revision)
+        expect(stc.revisions).to include(subject.draft_revision)
       end
 
       expect(subject.attestation_template.title).to eq(procedure.attestation_template.title)

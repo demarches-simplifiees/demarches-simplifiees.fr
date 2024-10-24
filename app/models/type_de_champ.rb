@@ -141,13 +141,9 @@ class TypeDeChamp < ApplicationRecord
                  :header_section_level
 
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
-  has_one :revision_type_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: false
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
-  has_one :revision, through: :revision_type_de_champ
-  has_one :procedure, through: :revision
 
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
-  delegate :used_by_routing_rules?, to: :revision_type_de_champ
 
   class WithIndifferentAccess
     def self.load(options)
@@ -212,7 +208,6 @@ class TypeDeChamp < ApplicationRecord
 
   before_save :remove_attachment, if: -> { type_champ_changed? }
   before_validation :set_drop_down_list_options, if: -> { type_champ_changed? }
-  before_save :remove_block, if: -> { type_champ_changed? }
 
   def valid?(context = nil)
     super
@@ -791,14 +786,6 @@ class TypeDeChamp < ApplicationRecord
       self.drop_down_options = ['Fromage', 'Dessert']
     elsif linked_drop_down_list? && drop_down_options.none?(/^--.*--$/)
       self.drop_down_options = ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']
-    end
-  end
-
-  def remove_block
-    if !block? && procedure.present?
-      procedure
-        .draft_revision # action occurs only on draft
-        .remove_children_of(self)
     end
   end
 

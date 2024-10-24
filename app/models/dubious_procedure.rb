@@ -19,11 +19,11 @@ class DubiousProcedure
   end
 
   def self.all
-    procedures_with_forbidden_tdcs_sql = TypeDeChamp
-      .joins(:procedure)
+    procedures_with_forbidden_tdcs_sql = ProcedureRevisionTypeDeChamp
+      .joins(:procedure, :type_de_champ)
       .select("string_agg(types_de_champ.libelle, ' - ') as dubious_champs, procedures.id as procedure_id, procedures.libelle as procedure_libelle, procedures.aasm_state as procedure_aasm_state, procedures.hidden_at_as_template as procedure_hidden_at_as_template")
       .where("unaccent(types_de_champ.libelle) ~* unaccent(?)", forbidden_regexp)
-      .where(type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)])
+      .where(types_de_champ: { type_champ: [TypeDeChamp.type_champs.fetch(:text), TypeDeChamp.type_champs.fetch(:textarea)] })
       .where(procedures: { closed_at: nil, whitelisted_at: nil })
       .group("procedures.id")
       .order("procedures.id asc")

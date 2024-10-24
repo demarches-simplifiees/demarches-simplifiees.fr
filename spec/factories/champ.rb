@@ -190,7 +190,7 @@ FactoryBot.define do
       end
 
       after(:build) do |champ_repetition, evaluator|
-        revision = champ_repetition.type_de_champ.procedure.active_revision
+        revision = champ_repetition.procedure.active_revision
         parent = revision.revision_types_de_champ.find { _1.type_de_champ == champ_repetition.type_de_champ }
         types_de_champ = revision.revision_types_de_champ.filter { _1.parent == parent }.map(&:type_de_champ)
 

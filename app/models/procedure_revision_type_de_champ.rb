@@ -75,7 +75,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   end
 
   def used_by_routing_rules?
-    stable_id.in?(procedure.stable_ids_used_by_routing_rules)
+    procedure.used_by_routing_rules?(type_de_champ)
   end
 
   def used_by_ineligibilite_rules?
