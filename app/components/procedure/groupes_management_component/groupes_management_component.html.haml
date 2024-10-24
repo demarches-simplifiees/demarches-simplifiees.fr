@@ -50,3 +50,6 @@
   = select_tag :defaut_groupe_instructeur_id,
     options_for_select(@procedure.groupe_instructeurs.pluck(:label, :id), selected: @procedure.defaut_groupe_instructeur.id),
     class: 'fr-select'
+
+- if flash[:routing_mode] == 'custom'
+  = render partial: 'custom_routing_modal'

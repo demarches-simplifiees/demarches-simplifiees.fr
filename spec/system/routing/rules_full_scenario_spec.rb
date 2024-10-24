@@ -53,8 +53,13 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Gestion des groupes')
     expect(page).to have_text('règle invalide')
 
+    # close modal
+    expect(page).to have_selector("#routing-mode-modal", visible: true)
+    within("#routing-mode-modal") { click_on "Fermer" }
+    expect(page).to have_selector("#routing-mode-modal", visible: false)
+
     # update defaut groupe
-    click_on 'défaut'
+    click_on 'Groupe 1 (à renommer et configurer)'
     expect(page).to have_text('Paramètres du groupe')
     fill_in 'Nom du groupe', with: 'littéraire'
     click_on 'Renommer'
@@ -83,7 +88,7 @@ describe 'The routing with rules', js: true do
 
     # # add scientifique groupe
     click_on '3 groupes'
-    click_on 'défaut bis'
+    click_on 'Groupe 2 (à renommer et configurer)'
     fill_in 'Nom du groupe', with: 'scientifique'
     click_on 'Renommer'
     expect(page).to have_text('Le nom est à présent « scientifique ». ')
