@@ -53,7 +53,7 @@ module ProcedurePathConcern
 
       procedure_path = ProcedurePath.find_by(path: path)
 
-      raise "administrateur cannot claim a path of a procedure not owned" if !administrateur.owns?(procedure_path.procedure)
+      errors.add(:procedure_paths, :path_not_available_for_claim) if !administrateur.owns?(procedure_path.procedure)
 
       procedure_path.update!(procedure: self)
     end
