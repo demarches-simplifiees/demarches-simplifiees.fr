@@ -22,11 +22,16 @@
 
   .card.fr-mt-2w
     = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: add_instructeur_instructeur_groupe_path(@procedure, @groupe_instructeur.id), title: "Avant d'ajouter l'email, veuillez confirmer" )
-    %h2.fr-h3 Gestion des instructeurs
-    = form_for(Instructeur.new(user: User.new), url: { action: :add_instructeur }, html: { class: 'form' }) do |f|
-      %h3.fr-h4 Affecter un nouvel instructeur
-      = render Dsfr::InputComponent.new(form: f, attribute: :email)
-      = f.submit 'Affecter', class: 'fr-btn fr-primary'
+    %h2.fr-h3= t('.title')
+
+    = form_for :instructeur, url: { action: :add_instructeur, id: @groupe_instructeur.id }, html: { class: 'form' } do |f|
+      .instructeur-wrapper
+        %p= t('.instructeur_emails')
+        %p.fr-hint-text= t('.copy_paste_hint')
+        %react-fragment
+          = render ReactComponent.new 'ComboBox/MultiComboBox', id: 'instructeur_emails', name: 'emails[]', allows_custom_value: true, 'aria-label': 'Emails'
+
+        = f.submit t('.assign'), class: 'fr-btn fr-btn--tertiary'
 
     %table.fr-table.fr-mt-2w.width-100
       %thead
