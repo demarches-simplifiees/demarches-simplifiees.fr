@@ -39,22 +39,32 @@ class AgentConnect::AgentController < ApplicationController
       return redirect_to agent_connect_explanation_2fa_path
     end
 
-    instructeur = Instructeur.find_by(users: { email: santized_email(user_info) })
+    user = User.find_by(email: santized_email(user_info))
 
-    if instructeur.nil?
-      user = User.create_or_promote_to_instructeur(santized_email(user_info), Devise.friendly_token[0, 20], agent_connect: true)
-      instructeur = user.instructeur
+    if user.nil?
+      user = User.create!(
+        email: santized_email(user_info),
+        password: Devise.friendly_token[0, 20],
+        agent_connect: true,
+        email_verified_at: Time.zone.now
+      )
+    else
+      user.update!(email_verified_at: Time.zone.now)
     end
 
-    instructeur.update!(agent_connect_id_token: id_token)
-    instructeur.user.update!(email_verified_at: Time.zone.now)
+    if user.instructeur.present?
+      user.instructeur.update!(agent_connect_id_token: id_token)
+      aci = AgentConnectInformation.find_or_initialize_by(instructeur: user.instructeur, sub: user_info['sub'])
+      aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:))
+    end
 
-    aci = AgentConnectInformation.find_or_initialize_by(instructeur:, sub: user_info['sub'])
-    aci.update(user_info.slice('given_name', 'usual_name', 'email', 'sub', 'siret', 'organizational_unit', 'belonging_population', 'phone').merge(amr:))
+    sign_in(:user, user)
 
-    sign_in(:user, instructeur.user)
-
-    redirect_to instructeur_procedures_path
+    if user.instructeur?
+      redirect_to instructeur_procedures_path
+    else
+      redirect_to root_path
+    end
 
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
