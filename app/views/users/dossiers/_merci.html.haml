@@ -24,7 +24,7 @@
       = link_to t('views.users.dossiers.merci.acces_dossier'), dossier ? dossier_path(dossier) : "#dossier" , class: 'fr-btn fr-mx-2w'
 
     %hr.fr-hr
-      = link_to t('views.users.dossiers.merci.submit_dossier'), commencer_url(procedure.path), class: 'fr-btn fr-btn--secondary fr-mt-2w'
+      = link_to t('views.users.dossiers.merci.submit_dossier'), commencer_url(procedure.canonical_path), class: 'fr-btn fr-btn--secondary fr-mt-2w'
 
       - if procedure.monavis_embed
         .monavis

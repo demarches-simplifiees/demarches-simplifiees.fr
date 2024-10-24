@@ -24,7 +24,11 @@ module ProcedurePathConcern
     end
 
     def sync_procedure_path
-      if path.blank?
+      add_procedure_path(self.path)
+    end
+
+    def add_procedure_path(new_path)
+      if new_path.blank?
         if procedure_paths.empty?
           procedure_paths.build(path: SecureRandom.uuid)
         end
@@ -32,7 +36,7 @@ module ProcedurePathConcern
         return
       end
 
-      procedure_path = procedure_paths.find { _1.path == path } || ProcedurePath.find_or_initialize_by(path: path)
+      procedure_path = procedure_paths.find { _1.path == new_path } || ProcedurePath.find_or_initialize_by(path: new_path)
 
       if procedure_path.procedure && procedure_path.procedure != self
         procedure_path.procedure.update!(path: SecureRandom.uuid)
@@ -58,8 +62,12 @@ module ProcedurePathConcern
       procedure_path.update!(procedure: self)
     end
 
+    def path
+      canonical_path || super
+    end
+
     def canonical_path
-      procedure_paths.by_updated_at.first.path
+      procedure_paths.by_updated_at.first&.path
     end
 
     def path_available?(path)

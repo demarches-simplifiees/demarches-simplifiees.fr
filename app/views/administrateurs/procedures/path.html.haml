@@ -25,10 +25,12 @@
                         pattern: '[a-z0-9.\-_]{3,200}',
                         autocomplete: 'off',
                         data: { controller: 'turbo-input', turbo_input_url_value: admin_procedure_check_path_path })
+    #check_path
 
     %ul
       - @procedure.procedure_paths.each do |pp|
         %li
           = pp.path
+          = pp.updated_at
 
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)
