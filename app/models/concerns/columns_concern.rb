@@ -67,7 +67,7 @@ module ColumnsConcern
 
       instructeurs = [Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')]
 
-      [states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns, routing, instructeurs].flatten.compact
+      [states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns(for_export: true), routing, instructeurs].flatten.compact
     end
 
     def dossier_id_column
@@ -95,7 +95,7 @@ module ColumnsConcern
       for_export_after_date = ['motivation']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
 
-      [common, states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns, non_displayable_dates].flatten.compact
+      [common, states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns(for_export: false), non_displayable_dates].flatten.compact
     end
 
     def dossier_dates_columns
@@ -103,19 +103,19 @@ module ColumnsConcern
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
     end
 
-    def sva_svr_columns
+    def sva_svr_columns(for_export: false)
       return if !sva_svr_enabled?
 
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
 
       columns = [
         Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_on', type: :date,
-                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:, date: sva_svr_configuration.human_decision))
+                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:, type: sva_svr_configuration.human_decision))
       ]
-
-      columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
-                    label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
-
+      if !for_export
+        columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
+                      label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
+      end
       columns
     end
 

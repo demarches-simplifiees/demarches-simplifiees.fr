@@ -18,9 +18,9 @@ fr:
             en_construction_since: En construction depuis
             en_instruction_since: En instruction depuis
             processed_since: Terminé depuis
-            sva_decision_on: "Date décision %{date}"
+            sva_decision_on: "Date décision %{type}"
             sva_decision_before: Date décision SVA avant
-            svr_decision_on: Date décision SVR
+            svr_decision_on: "Date décision %{type}"
             svr_decision_before: Date décision SVR avant
             user_from_france_connect?: "FranceConnect ?"
             for_tiers: "Dépôt pour un tiers"

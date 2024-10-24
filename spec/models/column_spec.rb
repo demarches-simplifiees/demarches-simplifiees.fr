@@ -94,6 +94,15 @@ describe Column do
           expect(procedure.find_column(label: "Association date de publication").get_value(dossier)).to eq(Date.parse("1990-05-16"))
         end
       end
+
+      context 'when sva/svr enabled' do
+        let(:procedure) { create(:procedure, :sva, for_individual: true, groupe_instructeurs: [groupe_instructeur]) }
+        let(:dossier) { create(:dossier, :en_instruction, procedure:) }
+
+        it 'does not fail' do
+          expect(procedure.find_column(label: "Date décision SVA").get_value(dossier)).to eq(nil)
+        end
+      end
     end
 
     context 'when champ columns' do
