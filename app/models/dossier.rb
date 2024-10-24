@@ -12,6 +12,7 @@ class Dossier < ApplicationRecord
   include DossierSectionsConcern
   include DossierStateConcern
   include DossierChampsConcern
+  include DossierEmptyConcern
 
   enum state: {
     brouillon:       'brouillon',
