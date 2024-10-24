@@ -307,7 +307,8 @@ module Administrateurs
     end
 
     def update_path
-      if @procedure.update(path: params[:path])
+      @procedure.add_procedure_path(params.permit(:path)[:path])
+      if @procedure.save
         flash.notice = "L'URL de la démarche a bien été mise à jour"
         redirect_to admin_procedure_path(@procedure)
       else
@@ -318,6 +319,7 @@ module Administrateurs
 
     def publish
       @procedure.assign_attributes(publish_params)
+      @procedure.add_procedure_path(publish_params[:path])
 
       @procedure.publish_or_reopen!(current_administrateur)
 
