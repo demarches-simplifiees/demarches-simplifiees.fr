@@ -12,19 +12,33 @@ module Administrateurs
     def new
       @procedure = procedure
       @service = Service.new
+
+      siret = current_administrateur.instructeur.last_agent_connect_information&.siret
+      if siret
+        @service.siret = siret
+        @prefilled = handle_siret_prefill
+      end
     end
 
     def create
+      @procedure = procedure
       @service = Service.new(service_params)
       @service.administrateur = current_administrateur
 
-      if @service.save
+      if request.xhr? && params[:service][:siret].present?
+        @service.siret = params[:service][:siret]
+        prefilled = handle_siret_prefill
+        render turbo_stream: turbo_stream.replace(
+          "service_form",
+          partial: "administrateurs/services/form",
+          locals: { service: @service, prefilled:, procedure: @procedure }
+        )
+      elsif @service.save
         @service.enqueue_api_entreprise
 
         redirect_to admin_services_path(procedure_id: params[:procedure_id]),
           notice: "#{@service.nom} créé"
       else
-        @procedure = procedure
         flash[:alert] = @service.errors.full_messages
         render :new
       end
@@ -107,6 +121,27 @@ module Administrateurs
 
     def procedure
       current_administrateur.procedures.find(params[:procedure_id])
+    end
+
+    def handle_siret_prefill
+      @service.validate
+
+      if !@service.errors.include?(:siret)
+        prefilled = case @service.prefill_from_siret
+        in [Dry::Monads::Result::Success, Dry::Monads::Result::Success]
+          :success
+        in [Dry::Monads::Result::Failure, Dry::Monads::Result::Success] | [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
+          :partial
+        else
+          :failure
+        end
+      end
+
+      siret_errors = @service.errors.where(:siret)
+      @service.errors.clear
+      siret_errors.each { @service.errors.import(_1) }
+
+      prefilled
     end
   end
 end

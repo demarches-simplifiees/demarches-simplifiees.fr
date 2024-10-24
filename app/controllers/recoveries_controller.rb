@@ -68,7 +68,7 @@ class RecoveriesController < ApplicationController
   def structure_name
     # we know that the structure exists because
     # of the ensure_collectivite_territoriale guard
-    APIRechercheEntreprisesService.new.(siret:).value![:nom_complet]
+    APIRechercheEntreprisesService.new.call(siret:).value![:nom_complet]
   end
 
   def ensure_agent_connect_is_used

@@ -1,0 +1,122 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api-lannuaire.service-public.fr/api/explore/v2.1/catalog/datasets/api-lannuaire-administration/records?where=siret:35600082800018
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - openresty
+      Date:
+      - Tue, 15 Oct 2024 16:24:16 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '33'
+      X-Ratelimit-Remaining:
+      - '999919'
+      X-Ratelimit-Limit:
+      - '1000000'
+      X-Ratelimit-Reset:
+      - '2024-10-16 00:00:00+00:00'
+      Cache-Control:
+      - no-cache, no-store, max-age=0, must-revalidate
+      Vary:
+      - Accept-Language, Cookie, Host
+      Content-Language:
+      - fr-fr
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, GET, OPTIONS
+      Access-Control-Max-Age:
+      - '1000'
+      Access-Control-Allow-Headers:
+      - Authorization, X-Requested-With, Origin, ODS-API-Analytics-App, ODS-API-Analytics-Embed-Type,
+        ODS-API-Analytics-Embed-Referrer, ODS-Widgets-Version, Accept
+      Access-Control-Expose-Headers:
+      - ODS-Explore-API-Deprecation, Link, X-RateLimit-Remaining, X-RateLimit-Limit,
+        X-RateLimit-Reset, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Limit,
+        X-RateLimit-dataset-Reset
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Referrer-Policy:
+      - strict-origin-when-cross-origin
+      Permissions-Policy:
+      - midi=(),microphone=(),camera=(),magnetometer=(),gyroscope=(),fullscreen=(self),payment=()
+      Content-Security-Policy:
+      - upgrade-insecure-requests;
+      X-Ua-Compatible:
+      - IE=edge
+    body:
+      encoding: ASCII-8BIT
+      string: '{"total_count": 0, "results": []}'
+  recorded_at: Tue, 15 Oct 2024 16:24:16 GMT
+- request:
+    method: get
+    uri: https://recherche-entreprises.api.gouv.fr/search?q=35600082800018
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - demarches-simplifiees.fr
+      Expect:
+      - ''
+  response:
+    status:
+      code: 200
+      message: ''
+    headers:
+      Server:
+      - nginx/1.27.1
+      Date:
+      - Tue, 15 Oct 2024 16:24:16 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3374'
+      Vary:
+      - Accept-Encoding
+      - Accept-Encoding
+      - Accept-Encoding
+      Annuaire-Entreprises-Instance-Number:
+      - '01'
+      - '02'
+      X-Frame-Options:
+      - DENY
+      X-Content-Type-Options:
+      - nosniff
+      Strict-Transport-Security:
+      - max-age=31536000
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Headers:
+      - Content-Type
+      Access-Control-Allow-Origin:
+      - "*"
+    body:
+      encoding: ASCII-8BIT
+      string: '{"results":[{"siren":"356000828","nom_complet":"LA POSTE (REGION RHONE
+        ALPES)","nom_raison_sociale":"LA POSTE","sigle":null,"nombre_etablissements":2948,"nombre_etablissements_ouverts":0,"siege":{"activite_principale":"53.10Z","activite_principale_registre_metier":null,"annee_tranche_effectif_salarie":null,"adresse":"4
+        QUAI DU POINT DU JOUR 92100 BOULOGNE-BILLANCOURT","caractere_employeur":"N","cedex":null,"code_pays_etranger":null,"code_postal":"92100","commune":"92012","complement_adresse":null,"coordonnees":"48.832893,2.259972","date_creation":"1991-01-01","date_debut_activite":"2011-12-31","date_fermeture":"2011-12-31","date_mise_a_jour":null,"date_mise_a_jour_insee":"2024-03-22T15:40:57","departement":"92","distribution_speciale":null,"epci":"200054781","est_siege":true,"etat_administratif":"F","geo_adresse":"4
+        Quai du Point du Jour 92100 Boulogne-Billancourt","geo_id":"92012_7231_00004","indice_repetition":null,"latitude":"48.832893","libelle_cedex":null,"libelle_commune":"BOULOGNE-BILLANCOURT","libelle_commune_etranger":null,"libelle_pays_etranger":null,"libelle_voie":"DU
+        POINT DU JOUR","liste_enseignes":null,"liste_finess":null,"liste_id_bio":null,"liste_idcc":null,"liste_id_organisme_formation":null,"liste_rge":null,"liste_uai":null,"longitude":"2.259972","nom_commercial":null,"numero_voie":"4","region":"11","siret":"35600082800018","statut_diffusion_etablissement":"O","tranche_effectif_salarie":null,"type_voie":"QUAI"},"activite_principale":"53.10Z","categorie_entreprise":null,"caractere_employeur":null,"annee_categorie_entreprise":null,"date_creation":"1991-01-01","date_fermeture":"2011-12-31","date_mise_a_jour":"2024-10-14T15:38:40","date_mise_a_jour_insee":"2024-03-22T14:26:06","date_mise_a_jour_rne":null,"dirigeants":[],"etat_administratif":"C","nature_juridique":"4130","section_activite_principale":"H","tranche_effectif_salarie":null,"annee_tranche_effectif_salarie":null,"statut_diffusion":"O","matching_etablissements":[{"activite_principale":"53.10Z","ancien_siege":false,"annee_tranche_effectif_salarie":null,"adresse":"4
+        QUAI DU POINT DU JOUR 92100 BOULOGNE-BILLANCOURT","caractere_employeur":"N","code_postal":"92100","commune":"92012","date_creation":"1991-01-01","date_debut_activite":"2011-12-31","date_fermeture":"2011-12-31","epci":"200054781","est_siege":true,"etat_administratif":"F","geo_id":"92012_7231_00004","latitude":"48.832893","libelle_commune":"BOULOGNE-BILLANCOURT","liste_enseignes":null,"liste_finess":null,"liste_id_bio":null,"liste_idcc":null,"liste_id_organisme_formation":null,"liste_rge":null,"liste_uai":null,"longitude":"2.259972","nom_commercial":null,"region":"11","siret":"35600082800018","statut_diffusion_etablissement":"O","tranche_effectif_salarie":null}],"finances":null,"complements":{"collectivite_territoriale":null,"convention_collective_renseignee":false,"liste_idcc":null,"egapro_renseignee":false,"est_association":false,"est_bio":false,"est_entrepreneur_individuel":false,"est_entrepreneur_spectacle":false,"est_ess":false,"est_finess":false,"est_organisme_formation":false,"est_qualiopi":false,"liste_id_organisme_formation":null,"est_rge":false,"est_service_public":true,"est_siae":false,"est_societe_mission":false,"est_uai":false,"identifiant_association":null,"statut_entrepreneur_spectacle":null,"type_siae":null}}],"total_results":1,"page":1,"per_page":10,"total_pages":1}'
+  recorded_at: Tue, 15 Oct 2024 16:24:16 GMT
+recorded_with: VCR 6.2.0
