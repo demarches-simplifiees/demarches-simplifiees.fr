@@ -2,6 +2,9 @@
 
 class HelpscoutCreateConversationJob < ApplicationJob
   queue_as :critical # user feedback is critical
+
+  def max_attempts = 15 # ~10h
+
   class FileNotScannedYetError < StandardError
   end
 
@@ -22,6 +25,10 @@ class HelpscoutCreateConversationJob < ApplicationJob
     create_conversation
 
     contact_form.delete
+  rescue StandardError
+    contact_form.delete if executions >= max_attempts
+
+    raise
   end
 
   private
@@ -49,6 +56,7 @@ class HelpscoutCreateConversationJob < ApplicationJob
 
   def safe_blob
     return if !contact_form.piece_jointe.virus_scanner&.safe?
+    return if contact_form.piece_jointe.byte_size.zero? # HS don't support empty attachment
 
     contact_form.piece_jointe
   end

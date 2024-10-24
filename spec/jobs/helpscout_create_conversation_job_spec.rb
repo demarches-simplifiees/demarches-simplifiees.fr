@@ -110,5 +110,21 @@ RSpec.describe HelpscoutCreateConversationJob, type: :job do
         end
       end
     end
+
+    context 'when max attempts are reached' do
+      before do
+        allow(api).to receive(:create_conversation).and_raise(StandardError)
+        allow_any_instance_of(described_class).to receive(:executions).and_return(described_class.new.max_attempts)
+      end
+
+      it 'deletes the contact form' do
+        expect { subject }.to raise_error(StandardError)
+        expect(contact_form).to be_destroyed
+      end
+
+      it 'does not enqueue the job again' do
+        expect { subject rescue nil }.not_to have_enqueued_job(described_class)
+      end
+    end
   end
 end
