@@ -4,21 +4,21 @@ fr:
       procedure_presentation:
         fields:
           self:
-            id: Dossier ID
+            id: Nº dossier
             user_email_for_display: Email
-            state: Statut
+            state: État du dossier
             created_at: Créé le
-            updated_at: Mis à jour le
+            updated_at: Dernière mise à jour le
             depose_at: Déposé le
-            en_construction_at: En construction le
-            en_instruction_at: En instruction le
-            processed_at: Terminé le
+            en_construction_at: Passé en construction le
+            en_instruction_at: Passé en instruction le
+            processed_at: Traité le
             updated_since: Mis à jour depuis
             depose_since: Déposé depuis
             en_construction_since: En construction depuis
             en_instruction_since: En instruction depuis
             processed_since: Terminé depuis
-            sva_decision_on: Date décision SVA
+            sva_decision_on: "Date décision %{date}"
             sva_decision_before: Date décision SVA avant
             svr_decision_on: Date décision SVR
             svr_decision_before: Date décision SVR avant
@@ -34,11 +34,11 @@ fr:
             id: Identifiant du demandeur
             email: Demandeur
           procedure:
-            domaine_fonctionnel: Domaine fonctionnel
-            referentiel_prog: Référentiel de programmation
-            centre_de_cout: Centre de coût
+            domaine_fonctionnel: Domaine Fonctionnel
+            referentiel_prog: Référentiel De Programmation
+            centre_de_cout: Centre De Coût
           followers_instructeurs:
-            email: Email instructeur
+            email: Instructeurs
           groupe_instructeur:
             id: Groupe instructeur
             label: Groupe instructeur
@@ -55,8 +55,8 @@ fr:
             entreprise_nom_commercial: Nom commercial
             entreprise_raison_sociale: Raison sociale
             entreprise_siret_siege_social: SIRET siège social
-            entreprise_date_creation: Date de création
-            siret: SIRET
+            entreprise_date_creation: Entreprise date de création
+            siret: Établissement SIRET
             libelle_naf: Libellé NAF
             siege_social: "Établissement siège social"
             naf: "Établissement NAF"

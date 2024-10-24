@@ -47,7 +47,7 @@ describe ProcedureExportService do
     describe 'Dossiers sheet' do
       let(:exported_columns) do
         [
-          ExportedColumn.new(libelle: 'Mis à jour le', column: procedure.find_column(label: 'Mis à jour le')),
+          ExportedColumn.new(libelle: 'Dernière mise à jour le', column: procedure.find_column(label: 'Dernière mise à jour le')),
           ExportedColumn.new(libelle: 'Email', column: procedure.find_column(label: 'Email')),
           ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
           ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
@@ -58,7 +58,7 @@ describe ProcedureExportService do
       end
 
       let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-      let(:selected_headers) { ["Email", "first champ", "Commune (Code INSEE)", "Groupe instructeur", "Mis à jour le", "PJ"] }
+      let(:selected_headers) { ["Email", "first champ", "Commune (Code INSEE)", "Groupe instructeur", "Dernière mise à jour le", "PJ"] }
 
       it 'should have only headers from export template' do
         expect(dossiers_sheet.headers).to match_array(selected_headers)
@@ -99,7 +99,7 @@ describe ProcedureExportService do
       let(:types_de_champ_public) { [{ type: :siret, libelle: 'siret', stable_id: 40 }] }
       let(:exported_columns) do
         [
-          ExportedColumn.new(libelle: "Dossier ID", column: procedure.find_column(label: "Dossier ID")),
+          ExportedColumn.new(libelle: "Nº dossier", column: procedure.find_column(label: "Nº dossier")),
           ExportedColumn.new(libelle: "Demandeur", column: procedure.find_column(label: "Demandeur")),
           ExportedColumn.new(libelle: "siret", column: procedure.find_column(label: "siret"))
         ]

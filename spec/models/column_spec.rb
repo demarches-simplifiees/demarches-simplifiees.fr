@@ -31,7 +31,7 @@ describe Column do
         let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
 
         it 'retrieve entreprise information' do
-          expect(procedure.find_column(label: "Dossier ID").get_value(dossier)).to eq(dossier.id)
+          expect(procedure.find_column(label: "Nº dossier").get_value(dossier)).to eq(dossier.id)
           expect(procedure.find_column(label: "Email").get_value(dossier)).to eq(dossier.user_email_for(:display))
           expect(procedure.find_column(label: "FranceConnect ?").get_value(dossier)).to eq(false)
           expect(procedure.find_column(label: "Entreprise forme juridique").get_value(dossier)).to eq("SA à conseil d'administration (s.a.i.)")
@@ -39,8 +39,8 @@ describe Column do
           expect(procedure.find_column(label: "Entreprise nom commercial").get_value(dossier)).to eq('GRTGAZ')
           expect(procedure.find_column(label: "Entreprise raison sociale").get_value(dossier)).to eq('GRTGAZ')
           expect(procedure.find_column(label: "Entreprise SIRET siège social").get_value(dossier)).to eq('44011762001530')
-          expect(procedure.find_column(label: "Date de création").get_value(dossier)).to eq(Date.parse('1990-04-24'))
-          expect(procedure.find_column(label: "SIRET").get_value(dossier)).to eq('44011762001530')
+          expect(procedure.find_column(label: "Créé le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Établissement SIRET").get_value(dossier)).to eq('44011762001530')
           expect(procedure.find_column(label: "Libellé NAF").get_value(dossier)).to eq('Transports par conduites')
           expect(procedure.find_column(label: "Établissement code postal").get_value(dossier)).to eq('92270')
           expect(procedure.find_column(label: "Établissement siège social").get_value(dossier)).to eq(true)
@@ -67,16 +67,16 @@ describe Column do
           expect(procedure.find_column(label: "Association date de déclaration").get_value(dossier)).to eq(nil)
           expect(procedure.find_column(label: "Association date de publication").get_value(dossier)).to eq(nil)
           expect(procedure.find_column(label: "Créé le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
-          expect(procedure.find_column(label: "Mis à jour le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Dernière mise à jour le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Déposé le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
-          expect(procedure.find_column(label: "En construction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
-          expect(procedure.find_column(label: "En instruction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
-          expect(procedure.find_column(label: "Terminé le").get_value(dossier)).to eq(nil)
-          expect(procedure.find_column(label: "Statut").get_value(dossier)).to eq('en_instruction')
+          expect(procedure.find_column(label: "Passé en construction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Passé en instruction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Traité le").get_value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "État du dossier").get_value(dossier)).to eq('en_instruction')
           expect(procedure.find_column(label: "Archivé").get_value(dossier)).to eq(false)
           expect(procedure.find_column(label: "Motivation de la décision").get_value(dossier)).to eq(nil)
           expect(procedure.find_column(label: "Dernière mise à jour du dossier le").get_value(dossier)).to eq(nil)
-          expect(procedure.find_column(label: "Email instructeur").get_value(dossier)).to eq('')
+          expect(procedure.find_column(label: "Instructeurs").get_value(dossier)).to eq('')
         end
       end
 

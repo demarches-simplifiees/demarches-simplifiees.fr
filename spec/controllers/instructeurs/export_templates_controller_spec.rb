@@ -98,7 +98,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       let(:exported_columns) do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
-          { id: procedure.find_column(label: 'Mis à jour le').id, libelle: 'Mis à jour le' }
+          { id: procedure.find_column(label: 'Dernière mise à jour le').id, libelle: 'Dernière mise à jour le' }
         ].map(&:to_json)
       end
 
@@ -118,7 +118,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           subject
           expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
           expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été créé"
-          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Mis à jour le']
+          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Dernière mise à jour le']
         end
       end
     end
@@ -187,7 +187,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       let(:exported_columns) do
         [
           { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
-          { id: procedure.find_column(label: 'Mis à jour le').id, libelle: 'Mis à jour le' }
+          { id: procedure.find_column(label: 'Dernière mise à jour le').id, libelle: 'Dernière mise à jour le' }
         ].map(&:to_json)
       end
 
@@ -207,7 +207,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
           subject
           expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
           expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été modifié"
-          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Mis à jour le']
+          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Dernière mise à jour le']
         end
       end
     end

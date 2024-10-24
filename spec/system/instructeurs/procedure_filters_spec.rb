@@ -99,10 +99,10 @@ describe "procedure filters" do
 
     scenario "should be able to user custom fiters", js: true do
       # use date filter
-      add_filter("En construction le", "10/10/2010", type: :date)
+      add_filter("Passé en construction le", "10/10/2010", type: :date)
 
       # use statut dropdown filter
-      add_filter('Statut', 'En construction', type: :enum)
+      add_filter('État du dossier', 'En construction', type: :enum)
 
       # use choice dropdown filter
       add_filter('Choix unique', 'val1', type: :enum)

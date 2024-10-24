@@ -144,7 +144,7 @@ describe ColumnsConcern do
 
         it "returns all usager columns" do
           expected = [
-            procedure.find_column(label: "Dossier ID"),
+            procedure.find_column(label: "Nº dossier"),
             procedure.find_column(label: "Email"),
             procedure.find_column(label: "FranceConnect ?"),
             procedure.find_column(label: "Civilité"),
@@ -166,10 +166,10 @@ describe ColumnsConcern do
 
         it "returns all usager columns" do
           expected = [
-            procedure.find_column(label: "Dossier ID"),
+            procedure.find_column(label: "Nº dossier"),
             procedure.find_column(label: "Email"),
             procedure.find_column(label: "FranceConnect ?"),
-            procedure.find_column(label: "SIRET"),
+            procedure.find_column(label: "Établissement SIRET"),
             procedure.find_column(label: "Établissement siège social"),
             procedure.find_column(label: "Établissement NAF"),
             procedure.find_column(label: "Libellé NAF"),
@@ -205,9 +205,9 @@ describe ColumnsConcern do
         it 'returns specific chorus columns' do
           allow_any_instance_of(Procedure).to receive(:chorusable?).and_return(true)
           expected = [
-            procedure.find_column(label: "Domaine fonctionnel"),
-            procedure.find_column(label: "Référentiel de programmation"),
-            procedure.find_column(label: "Centre de coût")
+            procedure.find_column(label: "Domaine Fonctionnel"),
+            procedure.find_column(label: "Référentiel De Programmation"),
+            procedure.find_column(label: "Centre De Coût")
           ]
           actuals = procedure.all_usager_columns_for_export.map(&:h_id)
           expected.each do |expected_col|
@@ -223,14 +223,14 @@ describe ColumnsConcern do
       it "returns all dossier columns" do
         expected = [
           procedure.find_column(label: "Archivé"),
-          procedure.find_column(label: "Statut"),
-          procedure.find_column(label: "Mis à jour le"),
+          procedure.find_column(label: "État du dossier"),
+          procedure.find_column(label: "Dernière mise à jour le"),
           procedure.find_column(label: "Dernière mise à jour du dossier le"),
           procedure.find_column(label: "Déposé le"),
-          procedure.find_column(label: "En instruction le"),
-          procedure.find_column(label: "Terminé le"),
+          procedure.find_column(label: "Passé en instruction le"),
+          procedure.find_column(label: "Traité le"),
           procedure.find_column(label: "Motivation de la décision"),
-          procedure.find_column(label: "Email instructeur"),
+          procedure.find_column(label: "Instructeurs"),
           procedure.find_column(label: "Groupe instructeur")
         ]
         actuals = procedure.all_dossier_columns_for_export.map(&:h_id)

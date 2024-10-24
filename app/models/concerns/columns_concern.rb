@@ -52,23 +52,22 @@ module ColumnsConcern
     end
 
     def all_dossier_columns_for_export
-      dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
-
       states = [dossier_state_column]
 
-      for_export = ['archived', 'motivation', 'last_champ_updated_at']
+      for_export_before_date = ['archived']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
-
-      instructeurs = [Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')]
-
+      for_export_after_date = ['motivation']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
       routing =
         if self.routing_enabled?
-          [Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)]
+          [Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id')]
         else
           []
         end
-      [dates, sva_svr_columns, states, routing, for_export, instructeurs].flatten.compact
+
+      instructeurs = [Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')]
+
+      [states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns, routing, instructeurs].flatten.compact
     end
 
     def dossier_id_column
@@ -76,7 +75,7 @@ module ColumnsConcern
     end
 
     def dossier_state_column
-      Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
+      Column.new(procedure_id: id, table: 'self', column: 'state', label: I18n.t('activerecord.attributes.procedure_presentation.fields.self.state'), type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
     end
 
     def notifications_column
@@ -86,18 +85,22 @@ module ColumnsConcern
     def dossier_columns
       common = [dossier_id_column, notifications_column]
 
-      dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
+      states = [dossier_state_column]
 
       non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
 
-      states = [dossier_state_column]
-
-      for_export = ['archived', 'motivation', 'last_champ_updated_at']
+      for_export_before_date = ['archived']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
+      for_export_after_date = ['motivation']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
 
-      [common, dates, sva_svr_columns, non_displayable_dates, states, for_export].flatten.compact
+      [common, states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns, non_displayable_dates].flatten.compact
+    end
+
+    def dossier_dates_columns
+      ['created_at', 'updated_at', 'last_champ_updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
     end
 
     def sva_svr_columns
@@ -107,7 +110,7 @@ module ColumnsConcern
 
       columns = [
         Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_on', type: :date,
-                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:))
+                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:, date: sva_svr_configuration.human_decision))
       ]
 
       columns << Column.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
@@ -141,7 +144,7 @@ module ColumnsConcern
     end
 
     def individual_columns
-      ['nom', 'prenom', 'gender'].map { |column| Column.new(procedure_id: id, table: 'individual', column:) }
+      ['gender', 'nom', 'prenom'].map { |column| Column.new(procedure_id: id, table: 'individual', column:) }
         .concat ['for_tiers', 'mandataire_last_name', 'mandataire_first_name'].map { |column| Column.new(procedure_id: id, table: 'self', column:) }
     end
 
