@@ -72,7 +72,7 @@ describe Column do
           expect(procedure.find_column(label: "Passé en construction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Passé en instruction le").get_value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Traité le").get_value(dossier)).to eq(nil)
-          expect(procedure.find_column(label: "État du dossier").get_value(dossier)).to eq('en_instruction')
+          expect(procedure.find_column(label: "État du dossier").get_value(dossier)).to eq('En instruction')
           expect(procedure.find_column(label: "Archivé").get_value(dossier)).to eq(false)
           expect(procedure.find_column(label: "Motivation de la décision").get_value(dossier)).to eq(nil)
           expect(procedure.find_column(label: "Dernière mise à jour du dossier le").get_value(dossier)).to eq(nil)
