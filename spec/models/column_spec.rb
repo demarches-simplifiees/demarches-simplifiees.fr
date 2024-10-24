@@ -2,17 +2,32 @@
 
 describe Column do
   describe 'get_value' do
-    let(:procedure) { create(:procedure, :with_all_champs_mandatory, groupe_instructeurs: [groupe_instructeur]) }
     let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [create(:instructeur)]) }
     let(:export_template) { create(:export_template, groupe_instructeur:) }
 
-    context 'when params is a dossier' do
+    context 'when dossier columns' do
       before do
         export_template.exported_columns = (procedure.all_usager_columns_for_export + procedure.all_dossier_columns_for_export)
           .map { ExportedColumn.new(libelle: _1.label, column: _1) }
       end
 
-      context 'when entreprise' do
+      context 'when procedure for individual' do
+        let(:individual) { create(:individual, nom: "Sim", prenom: "Paul", gender: 'M.') }
+        let(:procedure) { create(:procedure, for_individual: true, groupe_instructeurs: [groupe_instructeur]) }
+        let(:dossier) { create(:dossier, individual:, mandataire_first_name: "Martin", mandataire_last_name: "Christophe", for_tiers: true) }
+
+        it 'retrieve individual information' do
+          expect(procedure.find_column(label: "Prénom").get_value(dossier)).to eq("Paul")
+          expect(procedure.find_column(label: "Nom").get_value(dossier)).to eq("Sim")
+          expect(procedure.find_column(label: "Civilité").get_value(dossier)).to eq("M.")
+          expect(procedure.find_column(label: "Dépôt pour un tiers").get_value(dossier)).to eq(true)
+          expect(procedure.find_column(label: "Nom du mandataire").get_value(dossier)).to eq("Christophe")
+          expect(procedure.find_column(label: "Prénom du mandataire").get_value(dossier)).to eq("Martin")
+        end
+      end
+
+      context 'when procedure for entreprise' do
+        let(:procedure) { create(:procedure, for_individual: false, groupe_instructeurs: [groupe_instructeur]) }
         let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
 
         it 'retrieve entreprise information' do
@@ -65,11 +80,12 @@ describe Column do
         end
       end
 
-      context 'when association' do
+      context 'when procedure for entreprise which is also an association' do
+        let(:procedure) { create(:procedure, for_individual: false, groupe_instructeurs: [groupe_instructeur]) }
         let(:etablissement) { create(:etablissement, :is_association) }
         let(:dossier) { create(:dossier, :en_instruction, procedure:, etablissement:) }
 
-        it 'retrieve association information' do
+        it 'retrieve also association information' do
           expect(procedure.find_column(label: "Association RNA").get_value(dossier)).to eq("W072000535")
           expect(procedure.find_column(label: "Association titre").get_value(dossier)).to eq("ASSOCIATION POUR LA PROMOTION DE SPECTACLES AU CHATEAU DE ROCHEMAURE")
           expect(procedure.find_column(label: "Association objet").get_value(dossier)).to eq("mise en oeuvre et réalisation de spectacles au chateau de rochemaure")
@@ -80,7 +96,8 @@ describe Column do
       end
     end
 
-    context 'when params is a champ' do
+    context 'when champ columns' do
+      let(:procedure) { create(:procedure, :with_all_champs_mandatory, groupe_instructeurs: [groupe_instructeur]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
       let(:types_de_champ) { procedure.all_revisions_types_de_champ }
 

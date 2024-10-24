@@ -53,10 +53,12 @@ class Column
 
   def get_value(dossier_or_champ)
     case table
-    when 'self' # dossiers, ?
+    when 'self'
       dossier_or_champ.send(column)
     when 'etablissement'
       dossier_or_champ.etablissement.send(column)
+    when 'individual'
+      dossier_or_champ.individual.send(column)
     when 'groupe_instructeur'
       dossier_or_champ.groupe_instructeur.label
     when 'followers_instructeurs'
