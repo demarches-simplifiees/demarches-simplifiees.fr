@@ -293,8 +293,10 @@ module Administrateurs
     end
 
     def check_path
-      @path_available = @procedure.path_available?(params[:path])
-      @other_procedure = @procedure.other_procedure_with_path(params[:path])
+      path = params.permit(:path)[:path]
+      @path_available = @procedure.path_available?(path)
+      @other_procedure = @procedure.other_procedure_with_path(path)
+
       respond_to do |format|
         format.turbo_stream do
           render :check_path

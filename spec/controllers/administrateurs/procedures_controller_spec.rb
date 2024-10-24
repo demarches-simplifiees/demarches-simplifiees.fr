@@ -1068,6 +1068,54 @@ describe Administrateurs::ProceduresController, type: :controller do
     end
   end
 
+  describe 'GET #check_path' do
+    render_views
+
+    let(:procedure) { create(:procedure, :published, administrateur: admin) }
+
+    subject(:perform_request) { get :check_path, params: { procedure_id: procedure.id, path: path }, format: :turbo_stream }
+
+    context 'when path is not used' do
+      let(:path) { SecureRandom.uuid }
+
+      it do
+        perform_request
+        is_expected.to have_http_status(:success)
+        expect(response.body).to include('<turbo-stream action="update" target="check_path"><template></template></turbo-stream>')
+      end
+    end
+
+    context 'when path is used' do
+      context "by same admin" do
+        let(:procedure_path) { build(:procedure_path, path: "plop") }
+        let!(:procedure2) { create(:procedure, :published, administrateur: admin, procedure_paths: [procedure_path]) }
+
+        let(:path) { "plop" }
+
+        it do
+          perform_request
+          is_expected.to have_http_status(:success)
+          expect(response.body).to include('<turbo-stream action="update" target="check_path">')
+          expect(response.body).to include('Cette url est identique à celle d’une autre de vos démarches publiées.')
+        end
+      end
+
+      context "by another admin" do
+        let(:procedure_path) { build(:procedure_path, path: "plip") }
+        let!(:procedure3) { create(:procedure, :published, administrateur: create(:administrateur), procedure_paths: [procedure_path]) }
+
+        let(:path) { "plip" }
+
+        it do
+          perform_request
+          is_expected.to have_http_status(:success)
+          expect(response.body).to include('<turbo-stream action="update" target="check_path">')
+          expect(response.body).to include('Cette url est identique à celle d’une autre démarche, vous devez la modifier afin de pouvoir publier votre démarche.')
+        end
+      end
+    end
+  end
+
   describe 'GET #publication' do
     subject(:perform_request) { get :publication, params: { procedure_id: procedure.id } }
 
