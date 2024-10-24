@@ -3,13 +3,14 @@
 class Dossiers::ExportDropdownComponent < ApplicationComponent
   include ApplicationHelper
 
-  def initialize(procedure:, export_templates: nil, statut: nil, count: nil, class_btn: nil, export_url: nil)
+  def initialize(procedure:, export_templates: nil, statut: nil, count: nil, class_btn: nil, export_url: nil, show_export_template_tab: true)
     @procedure = procedure
     @export_templates = export_templates
     @statut = statut
     @count = count
     @class_btn = class_btn
     @export_url = export_url
+    @show_export_template_tab = show_export_template_tab
   end
 
   def formats

@@ -89,6 +89,7 @@ FactoryBot.define do
       code_postal { '60580' }
     end
 
+    # invalid, no value
     factory :champ_do_not_use_epci, class: 'Champs::EpciChamp' do
       value { 'CC Retz en Valois' }
       external_id { '200071991' }
@@ -170,15 +171,20 @@ FactoryBot.define do
 
     factory :champ_do_not_use_rna, class: 'Champs::RNAChamp' do
       value { 'W173847273' }
+      value_json { AddressProxy::ADDRESS_PARTS.index_by(&:itself) }
     end
 
     factory :champ_do_not_use_engagement_juridique, class: 'Champs::EngagementJuridiqueChamp' do
+      value { 'EJ' }
     end
 
     factory :champ_do_not_use_cojo, class: 'Champs::COJOChamp' do
     end
 
     factory :champ_do_not_use_rnf, class: 'Champs::RNFChamp' do
+      value { '075-FDD-00003-01' }
+      external_id { '075-FDD-00003-01' }
+      value_json { AddressProxy::ADDRESS_PARTS.index_by(&:itself) }
     end
 
     factory :champ_do_not_use_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do

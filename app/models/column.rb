@@ -41,6 +41,8 @@ class Column
 
   def dossier_state? = [table, column] == ['self', 'state']
 
+  def enum? = @type == :enum
+
   def self.find(h_id)
     begin
       procedure = Procedure.with_discarded.find(h_id[:procedure_id])
@@ -49,5 +51,29 @@ class Column
     end
 
     procedure.find_column(h_id: h_id)
+  end
+
+  def get_value(dossier_or_champ)
+    raw_value = case table
+    when 'self'
+      dossier_or_champ.send(column)
+    when 'etablissement'
+      dossier_or_champ.etablissement.send(column)
+    when 'individual'
+      dossier_or_champ.individual.send(column)
+    when 'groupe_instructeur'
+      dossier_or_champ.groupe_instructeur.label
+    when 'followers_instructeurs'
+      dossier_or_champ.followers_instructeurs.map(&:email).join(' ')
+    when 'type_de_champ'
+      dossier_or_champ.send(value_column)
+    end
+
+    # TODO, extract columns by type + add method format_value
+    if enum? && I18n.exists?(raw_value, scope: scope)
+      raw_value = I18n.t(raw_value, scope: scope)
+    end
+
+    raw_value
   end
 end

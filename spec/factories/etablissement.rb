@@ -11,7 +11,7 @@ FactoryBot.define do
     type_voie { 'RUE' }
     nom_voie { 'RAOUL NORDLING' }
     complement_adresse { 'IMMEUBLE BORA' }
-    code_postal { '92270' }
+    code_postal { '92270' } # maybe missing
     localite { 'BOIS COLOMBES' }
     code_insee_localite { '92009' }
 

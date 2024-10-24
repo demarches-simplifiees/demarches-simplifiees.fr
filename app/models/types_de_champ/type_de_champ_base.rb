@@ -25,8 +25,20 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
+  def columns_for_export(repetition_champ_stable_id: nil)
+    paths.map do
+      { source: 'tdc', stable_id:, path: _1[:path].to_s, libelle: _1[:libelle] }.tap do |p|
+        p.merge!({ source: 'repet', repetition_champ_stable_id: }) if repetition_champ_stable_id
+      end
+    end
+  end
+
   def libelles_for_export
     paths.map { [_1[:libelle], _1[:path]] }
+  end
+
+  def libelle_for_path(path)
+    libelles_for_export.find { _1[1] == path.to_sym }&.first
   end
 
   # Default estimated duration to fill the champ in a form, in seconds.
@@ -64,6 +76,14 @@ class TypesDeChamp::TypeDeChampBase
       champ_value(champ)
     else
       champ.value.presence || champ_default_api_value(version)
+    end
+  end
+
+  def champ_value_by_column_for_export(champ, column)
+    if column.is_a?(Columns::JSONPathColumn) || column.value_column != :value
+      column.get_value(champ)
+    else
+      champ_value_for_export(champ, :value)
     end
   end
 

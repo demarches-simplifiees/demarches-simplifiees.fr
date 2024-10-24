@@ -23,6 +23,10 @@ class Columns::JSONPathColumn < Column
     end
   end
 
+  def get_value(champ)
+    champ.value_json.dig(*value_column)
+  end
+
   private
 
   def stable_id

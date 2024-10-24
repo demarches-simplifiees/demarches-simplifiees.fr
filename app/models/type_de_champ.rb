@@ -24,7 +24,6 @@ class TypeDeChamp < ApplicationRecord
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     engagement_juridique: REFERENTIEL_EXTERNE,
-
     header_section: STRUCTURE,
     repetition: STRUCTURE,
     dossier_link: STRUCTURE,
@@ -146,7 +145,7 @@ class TypeDeChamp < ApplicationRecord
   has_one :revision, through: :revision_type_de_champ
   has_one :procedure, through: :revision
 
-  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
+  delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :libelle_for_path, :columns_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
   delegate :used_by_routing_rules?, to: :revision_type_de_champ
 
   class WithIndifferentAccess
@@ -712,11 +711,13 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def champ_value_for_export(champ, path = :value)
+  def champ_value_for_export(champ, path_or_column = :value)
     if use_default_value?(champ)
-      dynamic_type.champ_default_export_value(path)
+      dynamic_type.champ_default_export_value(path_or_column)
+    elsif path_or_column.is_a?(Column)
+      dynamic_type.champ_value_by_column_for_export(champ, path_or_column)
     else
-      dynamic_type.champ_value_for_export(champ, path)
+      dynamic_type.champ_value_for_export(champ, path_or_column)
     end
   end
 
