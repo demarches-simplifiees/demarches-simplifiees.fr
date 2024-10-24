@@ -151,10 +151,8 @@
   .dropdown-button {
     white-space: nowrap;
 
-    &::after {
+    [aria-hidden="true"].fr-ml-2v::after {
       content: "▾";
-      margin-left: $default-spacer;
-      font-weight: bold;
     }
 
     &.icon-only {

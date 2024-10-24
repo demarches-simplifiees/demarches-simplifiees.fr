@@ -2,8 +2,6 @@
 - if @champ.public?
   - if @champ.mandatory?
     = render EditableChamp::AsteriskMandatoryComponent.new
-  - else
-    %span.sr-only= t('.optional_champ')
 
 - if @champ.forked_with_changes?
   %span.updated-at.highlighted
@@ -21,7 +19,7 @@
   %span.fr-hint-text{ data: { controller: 'date-input-hint' } }= hint
 
 - if @champ.description.present?
-  %span.fr-hint-text{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
+  %span.fr-hint-text= render SimpleFormatComponent.new(@champ.description, allow_a: true)
 
 - if @champ.textarea?
   %span.sr-only= t('.recommended_size', size: @champ.character_limit_base)
