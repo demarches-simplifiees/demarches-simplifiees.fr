@@ -1,0 +1,7 @@
+en:
+ activemodel:
+    errors:
+      models:
+        filtered_column:
+          format: "%{message}"
+

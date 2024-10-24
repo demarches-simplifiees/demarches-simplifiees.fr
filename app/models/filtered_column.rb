@@ -13,6 +13,9 @@ class FilteredColumn
 
   validate :check_filter_max_length
   validate :check_filter_max_integer
+  validates :filter, presence: {
+    message: -> (object, _data) { "Le filtre « #{object.label} » ne peut pas être vide" }
+  }
 
   def initialize(column:, filter:)
     @column = column
@@ -33,14 +36,14 @@ class FilteredColumn
     if @filter.present? && @filter.length.to_i > FILTERS_VALUE_MAX_LENGTH
       errors.add(
         :base,
-        "Le filtre #{label} est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)"
+        "Le filtre « #{label} » est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)"
       )
     end
   end
 
   def check_filter_max_integer
     if @column.column == 'id' && @filter.to_i > PG_INTEGER_MAX_VALUE
-      errors.add(:base, "Le filtre #{label} n'est pas un numéro de dossier possible")
+      errors.add(:base, "Le filtre « #{label} » n'est pas un numéro de dossier possible")
     end
   end
 end
