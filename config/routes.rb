@@ -176,6 +176,9 @@ Rails.application.routes.draw do
 
   resources :targeted_user_links, only: [:show]
 
+  # Omniauth
+  get 'auth/:provider/callback', to: 'rdv_service_public/oauth#callback'
+
   #
   # Main routes
   #
