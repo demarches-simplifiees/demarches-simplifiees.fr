@@ -498,6 +498,7 @@ Rails.application.routes.draw do
               get 'avis'
               get 'avis_new'
               get 'personnes-impliquees' => 'dossiers#personnes_impliquees'
+              get 'rendez-vous' => 'dossiers#rendez_vous'
               patch 'follow'
               patch 'unfollow'
               patch 'archive'
