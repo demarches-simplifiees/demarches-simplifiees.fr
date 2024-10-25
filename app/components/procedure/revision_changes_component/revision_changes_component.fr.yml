@@ -83,7 +83,7 @@ fr:
   ineligibilite_rules:
     add: La condition d’inéligibilité « %{new_condition} » a été ajoutée.
     remove: La condition d’inéligibilité « %{previous_condition} » a été supprimée
-    update: La conditon d’inéligibilité  « %{previous_condition} » a été changée pour « %{new_condition} »
+    update: La condition d’inéligibilité  « %{previous_condition} » a été changée pour « %{new_condition} »
     enabled: "L’inéligibilité des dossiers a été activée"
     disabled: "L’inéligibilité des dossiers a été désactivée"
     message_updated: "Le message d’inéligibilité a été changé pour « %{ineligibilite_message} »"
