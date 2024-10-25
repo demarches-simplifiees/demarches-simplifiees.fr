@@ -2,6 +2,8 @@
 
 class ExportTemplateValidator < ActiveModel::Validator
   def validate(export_template)
+    return if !export_template.template_zip?
+
     validate_all_templates(export_template)
 
     return if export_template.errors.any? # no need to continue if the templates are invalid
