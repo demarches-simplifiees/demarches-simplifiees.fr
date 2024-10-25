@@ -384,6 +384,7 @@ Rails.application.routes.draw do
         get 'merci'
         get 'demande'
         get 'messagerie'
+        get 'rendez-vous'
         post 'commentaire' => 'dossiers#create_commentaire'
         patch 'restore', to: 'dossiers#restore'
         get 'attestation'

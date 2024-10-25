@@ -105,6 +105,11 @@ module Users
       @commentaire = Commentaire.new
     end
 
+    def rendez_vous
+      @dossier = dossier
+      @rdvs = @dossier.rdvs.booked.by_starts_at
+    end
+
     def attestation
       if dossier.attestation&.pdf&.attached?
         redirect_to dossier.attestation.pdf.url, allow_other_host: true
