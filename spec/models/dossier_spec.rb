@@ -1982,7 +1982,7 @@ describe Dossier, type: :model do
     end
   end
 
-  describe "champs_for_export" do
+  describe "champ_values_for_export" do
     context 'with integer_number' do
       let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :integer_number, libelle: 'c1' }]) }
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
@@ -1993,7 +1993,7 @@ describe Dossier, type: :model do
         expect {
           integer_number_type_de_champ.update(type_champ: :decimal_number)
           procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
-        }.to change { dossier.reload.champs_for_export(procedure.all_revisions_types_de_champ.not_repetition.to_a) }
+        }.to change { dossier.reload.champ_values_for_export(procedure.all_revisions_types_de_champ.not_repetition.to_a) }
           .from([["c1", 42]]).to([["c1", 42.0]])
       end
     end
@@ -2020,8 +2020,8 @@ describe Dossier, type: :model do
       let(:repetition_second_revision_champ) { dossier_second_revision.project_champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
-      let(:dossier_champs_for_export) { dossier.champs_for_export(procedure.types_de_champ_for_procedure_export) }
-      let(:dossier_second_revision_champs_for_export) { dossier_second_revision.champs_for_export(procedure.types_de_champ_for_procedure_export) }
+      let(:dossier_champ_values_for_export) { dossier.champ_values_for_export(procedure.types_de_champ_for_procedure_export) }
+      let(:dossier_second_revision_champ_values_for_export) { dossier_second_revision.champ_values_for_export(procedure.types_de_champ_for_procedure_export) }
 
       context "when procedure published" do
         before do
@@ -2040,8 +2040,8 @@ describe Dossier, type: :model do
         it "should have champs from all revisions" do
           expect(dossier.types_de_champ.map(&:libelle)).to eq([text_type_de_champ.libelle, datetime_type_de_champ.libelle, "Yes/no", explication_type_de_champ.libelle, commune_type_de_champ.libelle, repetition_type_de_champ.libelle])
           expect(dossier_second_revision.types_de_champ.map(&:libelle)).to eq([datetime_type_de_champ.libelle, "Updated yes/no", explication_type_de_champ.libelle, 'Commune de naissance', "Repetition", "New text field"])
-          expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, text_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code INSEE)", "Commune de naissance (Département)", "New text field"])
-          expect(dossier_champs_for_export).to eq(dossier_second_revision_champs_for_export)
+          expect(dossier_champ_values_for_export.map { |(libelle)| libelle }).to eq([datetime_type_de_champ.libelle, text_type_de_champ.libelle, "Updated yes/no", "Commune de naissance", "Commune de naissance (Code INSEE)", "Commune de naissance (Département)", "New text field"])
+          expect(dossier_champ_values_for_export).to eq(dossier_second_revision_champ_values_for_export)
         end
 
         context 'within a repetition having a type de champs commune (multiple values for export)' do
@@ -2056,7 +2056,7 @@ describe Dossier, type: :model do
             dossier_test = create(:dossier, procedure: proc_test)
             type_champs = proc_test.all_revisions_types_de_champ(parent: tdc_repetition).to_a
             expect(type_champs.size).to eq(1)
-            expect(dossier.champs_for_export(type_champs).size).to eq(3)
+            expect(dossier.champ_values_for_export(type_champs).size).to eq(3)
           end
         end
       end
@@ -2065,7 +2065,7 @@ describe Dossier, type: :model do
         let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :text }, { type: :explication }]) }
 
         it "should not contain non-exportable types de champ" do
-          expect(dossier_champs_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
+          expect(dossier_champ_values_for_export.map { |(libelle)| libelle }).to eq([text_type_de_champ.libelle])
         end
       end
     end
@@ -2079,7 +2079,7 @@ describe Dossier, type: :model do
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
       let(:tdcs) { dossier.project_champs_public.map(&:type_de_champ) }
 
-      subject { dossier.champs_for_export(tdcs) }
+      subject { dossier.champ_values_for_export(tdcs) }
 
       before do
         text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))

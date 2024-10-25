@@ -24,7 +24,6 @@ class TypeDeChamp < ApplicationRecord
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     engagement_juridique: REFERENTIEL_EXTERNE,
-
     header_section: STRUCTURE,
     repetition: STRUCTURE,
     dossier_link: STRUCTURE,
