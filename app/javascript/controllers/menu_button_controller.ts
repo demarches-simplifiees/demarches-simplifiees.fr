@@ -61,6 +61,12 @@ export class MenuButtonController extends ApplicationController {
     });
   }
 
+  close() {
+    this.buttonTarget.setAttribute('aria-expanded', 'false');
+    this.menuTarget.parentElement?.classList.remove('open');
+    this.setFocusToMenuitem(null);
+  }
+
   private open(focusMenuItem: 'first' | 'last' = 'first') {
     this.buttonTarget.setAttribute('aria-expanded', 'true');
     this.menuTarget.parentElement?.classList.add('open');
@@ -73,12 +79,6 @@ export class MenuButtonController extends ApplicationController {
         this.setFocusToLastMenuitem();
       }
     });
-  }
-
-  private close() {
-    this.buttonTarget.setAttribute('aria-expanded', 'false');
-    this.menuTarget.parentElement?.classList.remove('open');
-    this.setFocusToMenuitem(null);
   }
 
   private isClickOutside(target: HTMLElement) {
