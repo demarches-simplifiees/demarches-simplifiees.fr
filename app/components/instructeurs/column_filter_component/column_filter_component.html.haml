@@ -18,22 +18,8 @@
     }
 
   = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
-  - if column_type.in?([:enum, :enums, :boolean])
-    = select_tag :filter,
-      options_for_select(options_for_select_of_column),
-      id: 'value',
-      name: "#{prefix}[filter]",
-      class: 'fr-select',
-      data: { no_autosubmit: true }
-  - else
-    %input#value.fr-input{
-      type: html_column_type,
-      name: "#{prefix}[filter]",
-      maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
-      disabled: column.nil? ? true : false,
-      data: { no_autosubmit: true },
-      required: true
-    }
+  = render Instructeurs::ColumnFilterValueComponent.new(column:, prefix:)
 
   = hidden_field_tag :statut, statut
+  = hidden_field_tag :prefix, prefix
   = submit_tag t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'

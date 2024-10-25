@@ -15,16 +15,13 @@ module Instructeurs
     end
 
     def refresh_column_filter
-      procedure_presentation = @procedure_presentation
-      statut = params[:statut]
-      current_filter = procedure_presentation.filters_name_for(statut)
-      # According to the html, the selected column is the last one
-      h_id = JSON.parse(params[current_filter].last[:id], symbolize_names: true)
-      column = procedure.find_column(h_id:)
+      prefix = params[:prefix]
+      key = prefix.gsub('[]', '')
+      column = ColumnType.new.cast(params[key].last['id'])
 
-      filter_component = Instructeurs::ColumnFilterComponent.new(procedure:, procedure_presentation:, statut:, column:)
+      component = Instructeurs::ColumnFilterValueComponent.new(column:, prefix:)
 
-      render turbo_stream: turbo_stream.replace('filter-component', filter_component)
+      render turbo_stream: turbo_stream.replace('value', component)
     end
 
     private
@@ -32,6 +29,9 @@ module Instructeurs
     def procedure = @procedure_presentation.procedure
 
     def procedure_presentation_params
+      # TODO: peut etre simplifier en transformer un parametre filter -> tous_filter, suivant le params statut
+
+
       filters = [
         :tous_filters, :a_suivre_filters, :suivis_filters, :traites_filters,
         :expirant_filters, :archives_filters, :supprimes_filters

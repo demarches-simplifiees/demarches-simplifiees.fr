@@ -10,33 +10,6 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
     @column = column
   end
 
-  def column_type = column.present? ? column.type : :text
-
-  def html_column_type
-    case column_type
-    when :datetime, :date
-      'date'
-    when :integer, :decimal
-      'number'
-    else
-      'text'
-    end
-  end
-
-  def options_for_select_of_column
-    if column.scope.present?
-      I18n.t(column.scope).map(&:to_a).map(&:reverse)
-    elsif column.table == 'groupe_instructeur'
-      current_instructeur.groupe_instructeurs.filter_map do
-        if _1.procedure_id == procedure.id
-          [_1.label, _1.id]
-        end
-      end
-    else
-      find_type_de_champ(column.column).options_for_select(column)
-    end
-  end
-
   def filter_react_props
     {
       selected_key: column.present? ? column.id : '',
@@ -63,15 +36,4 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
   end
 
   def prefix = "#{procedure_presentation.filters_name_for(@statut)}[]"
-
-  private
-
-  def find_type_de_champ(column)
-    stable_id = column.to_s.split('->').first
-    TypeDeChamp
-      .joins(:revision_types_de_champ)
-      .where(revision_types_de_champ: { revision_id: procedure.revisions })
-      .order(created_at: :desc)
-      .find_by(stable_id:)
-  end
 end
