@@ -763,7 +763,7 @@ class TypeDeChamp < ApplicationRecord
     when ['integer_number', 'decimal_number'], # recast numbers automatically
       ['decimal_number', 'integer_number'], # may lose some data, but who cares ?
       ['text', 'textarea'], # allow short text to long text
-      ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
+      # ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
       ['date', 'datetime'], # date <=> datetime
       ['datetime', 'date'] # may lose some data, but who cares ?
       true
