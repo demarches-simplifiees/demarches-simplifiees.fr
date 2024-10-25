@@ -26,9 +26,11 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def columns(procedure:, displayable: nil, prefix: nil)
+    prefix = prefix.present? ? "(#{prefix} #{libelle})" : libelle
+
     procedure
       .all_revisions_types_de_champ(parent: @type_de_champ)
-      .flat_map { _1.columns(procedure:, displayable: false, prefix: libelle) }
+      .flat_map { _1.columns(procedure:, displayable: false, prefix:) }
   end
 
   def champ_blank?(champ) = champ.dossier.repetition_row_ids(@type_de_champ).blank?
