@@ -571,6 +571,7 @@ Rails.application.routes.draw do
         patch 'update_email_notifications'
         get 'deleted_dossiers'
         get 'email_usagers'
+        get 'usagers_rdvs'
         post 'create_multiple_commentaire'
       end
     end
