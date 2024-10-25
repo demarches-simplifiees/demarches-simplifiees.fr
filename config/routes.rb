@@ -461,6 +461,8 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :procedure_presentation, only: [:update]
+
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
         resources :archives, only: [:index, :create]
