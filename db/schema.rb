@@ -1036,6 +1036,7 @@ ActiveRecord::Schema[7.0].define(version: 2025_01_27_093613) do
     t.boolean "procedure_expires_when_termine_enabled", default: true
     t.datetime "published_at", precision: nil
     t.bigint "published_revision_id"
+    t.boolean "rdv_enabled", default: false, null: false
     t.bigint "replaced_by_procedure_id"
     t.boolean "routing_enabled"
     t.bigint "service_id"
