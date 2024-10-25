@@ -1,4 +1,7 @@
-= form_with model: [:instructeur, @procedure_presentation], class: 'dropdown-form large', id: 'filter-component', data: { turbo: true, controller: 'autosubmit' } do
+= form_with model: [:instructeur, @procedure_presentation],
+  class: 'dropdown-form large',
+  id: 'filter-component',
+  data: { turbo: true, controller: 'autosubmit' } do
   = current_filter_tags
 
   .fr-select-group

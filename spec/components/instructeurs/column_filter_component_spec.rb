@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 describe Instructeurs::ColumnFilterComponent, type: :component do
-  let(:component) { described_class.new(procedure:, procedure_presentation:, statut:, column:) }
+  let(:component) { described_class.new(procedure_presentation:, statut:, column:) }
 
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, instructeurs: [instructeur]) }
+  let(:procedure) { create(:procedure) }
   let(:procedure_id) { procedure.id }
-  let(:procedure_presentation) { nil }
+  let(:procedure_presentation) do
+    groupe_instructeur = procedure.defaut_groupe_instructeur
+    assign_to = create(:assign_to, instructeur:, groupe_instructeur:)
+    assign_to.procedure_presentation_or_default_and_errors.first
+  end
+
   let(:statut) { nil }
   let(:column) { nil }
 
@@ -19,7 +24,7 @@ describe Instructeurs::ColumnFilterComponent, type: :component do
     let(:non_filterable_column) { Column.new(procedure_id:, label: 'depose_since', table: 'self', column: 'depose_since', filterable: false) }
     let(:mocked_columns) { [filterable_column, non_filterable_column] }
 
-    before { allow(procedure).to receive(:columns).and_return(mocked_columns) }
+    before { allow_any_instance_of(Procedure).to receive(:columns).and_return(mocked_columns) }
 
     subject { component.filterable_columns_options }
 

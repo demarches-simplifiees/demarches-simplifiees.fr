@@ -3,9 +3,9 @@
 class Instructeurs::ColumnFilterComponent < ApplicationComponent
   attr_reader :procedure, :procedure_presentation, :statut, :column
 
-  def initialize(procedure:, procedure_presentation:, statut:, column: nil)
-    @procedure = procedure
+  def initialize(procedure_presentation:, statut:, column: nil)
     @procedure_presentation = procedure_presentation
+    @procedure = procedure_presentation.procedure
     @statut = statut
     @column = column
   end
