@@ -14,6 +14,19 @@ module Instructeurs
       redirect_back_or_to([:instructeur, procedure])
     end
 
+    def refresh_column_filter
+      procedure_presentation = @procedure_presentation
+      statut = params[:statut]
+      current_filter = procedure_presentation.filters_name_for(statut)
+      # According to the html, the selected column is the last one
+      h_id = JSON.parse(params[current_filter].last[:id], symbolize_names: true)
+      column = procedure.find_column(h_id:)
+
+      filter_component = Instructeurs::ColumnFilterComponent.new(procedure:, procedure_presentation:, statut:, column:)
+
+      render turbo_stream: turbo_stream.replace('filter-component', filter_component)
+    end
+
     private
 
     def procedure = @procedure_presentation.procedure

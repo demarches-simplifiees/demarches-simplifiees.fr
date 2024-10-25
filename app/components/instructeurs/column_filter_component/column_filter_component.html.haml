@@ -8,7 +8,8 @@
 
     %input.hidden{
       type: 'submit',
-      formaction: update_filter_instructeur_procedure_path(procedure),
+      formmethod: 'get',
+      formaction: url_for([:refresh_column_filter, :instructeur, @procedure_presentation]),
       formnovalidate: 'true',
       data: { autosubmit_target: 'submitter' }
     }

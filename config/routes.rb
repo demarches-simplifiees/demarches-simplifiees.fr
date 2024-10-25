@@ -461,7 +461,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :procedure_presentation, only: [:update]
+    resources :procedure_presentation, only: [:update] do
+      member do
+        get 'refresh_column_filter'
+      end
+    end
 
     resources :procedures, only: [:index, :show], param: :procedure_id do
       member do
