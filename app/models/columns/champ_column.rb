@@ -45,6 +45,8 @@ class Columns::ChampColumn < Column
     end
   end
 
+  def champ_column? = true
+
   private
 
   def column_id = "type_de_champ/#{stable_id}"

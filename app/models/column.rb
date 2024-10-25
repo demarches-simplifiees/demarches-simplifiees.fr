@@ -47,6 +47,9 @@ class Column
     procedure.find_column(h_id: h_id)
   end
 
+  def dossier_column? = false
+  def champ_column? = false
+
   private
 
   def column_id = "#{table}/#{column}"
