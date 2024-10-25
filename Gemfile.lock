@@ -1,4 +1,14 @@
 GIT
+  remote: https://github.com/betagouv/rdv-service-public.git
+  revision: f9de028ccd731c59bf6ca34cd3a13ff0f83e4d42
+  branch: production
+  glob: lib/omniauth-rdv-service-public/omniauth-rdv-service-public.gemspec
+  specs:
+    omniauth-rdv-service-public (0.1.0)
+      omniauth (~> 2.0)
+      omniauth-oauth2 (~> 1.8)
+
+GIT
   remote: https://github.com/demarches-simplifiees/reliable-fetch.git
   revision: f547a270c402b0180091516d790434e83287fae7
   specs:
@@ -462,6 +472,8 @@ GEM
     minitest (5.25.4)
     msgpack (1.7.5)
     multi_json (1.15.0)
+    multi_xml (0.7.1)
+      bigdecimal (~> 3.1)
     mustermann (3.0.3)
       ruby2_keywords (~> 0.0.1)
     mutex_m (0.3.0)
@@ -496,6 +508,23 @@ GEM
       racc (~> 1.4)
     nokogiri (1.18.3-x86_64-linux-musl)
       racc (~> 1.4)
+    oauth2 (2.0.9)
+      faraday (>= 0.17.3, < 3.0)
+      jwt (>= 1.0, < 3.0)
+      multi_xml (~> 0.5)
+      rack (>= 1.2, < 4)
+      snaky_hash (~> 2.0)
+      version_gem (~> 1.1)
+    omniauth (2.1.2)
+      hashie (>= 3.4.6)
+      rack (>= 2.2.3)
+      rack-protection
+    omniauth-oauth2 (1.8.0)
+      oauth2 (>= 1.4, < 3)
+      omniauth (~> 2.0)
+    omniauth-rails_csrf_protection (1.0.2)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     openid_connect (2.3.1)
       activemodel
       attr_required (>= 1.0.0)
@@ -782,6 +811,9 @@ GEM
       tilt (~> 2.0)
     skylight (6.0.4)
       activesupport (>= 5.2.0)
+    snaky_hash (2.0.1)
+      hashie
+      version_gem (~> 1.1, >= 1.1.1)
     spreadsheet_architect (5.1.0)
       caxlsx (<= 4.0)
       csv
@@ -835,6 +867,7 @@ GEM
       public_suffix
     vcr (6.3.1)
       base64
+    version_gem (1.1.4)
     view_component (3.21.0)
       activesupport (>= 5.2.0, < 8.1)
       concurrent-ruby (~> 1.0)
@@ -998,6 +1031,10 @@ DEPENDENCIES
   net-imap
   net-pop
   net-smtp
+  oauth2
+  omniauth
+  omniauth-rails_csrf_protection
+  omniauth-rdv-service-public!
   openid_connect
   parsby
   pg
