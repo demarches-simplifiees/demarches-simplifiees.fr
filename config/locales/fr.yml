@@ -384,6 +384,7 @@ fr:
           involved_persons: Personnes impliquées
           reaffectation: Réaffectation
           attachments: Pièces jointes
+          rendez_vous: Rendez-vous
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
         delete_dossier: "Mettre à la corbeille"
         deleted_reason:
@@ -457,6 +458,7 @@ fr:
             summary: "Résumé"
             request: "Demande"
             mailbox: "Messagerie"
+            rendez_vous: "Rendez-vous"
             dossier_number_html: "Dossier <span class='visually-hidden'>numéro</span> <span aria-hidden='true'>nº</span> %{dossier_id}"
             created_date: "- En brouillon depuis le %{date_du_dossier}"
             submit_date: "- Déposé le %{date_du_dossier}"
@@ -756,6 +758,7 @@ fr:
     formats:
       default: "%d %B %Y %R"
       long: "%d %B %y %H:%M"
+      human: "%A %-d %B à %Hh%M"
   datetime:
     formats:
       long: "%d %B %y %H:%M"
