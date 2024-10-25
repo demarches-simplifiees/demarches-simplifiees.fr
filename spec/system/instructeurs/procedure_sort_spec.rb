@@ -22,12 +22,12 @@ describe "procedure sort", js: true do
     expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
 
-    find("thead .number-col a").click # sort by id asc
+    click_on "Nº dossier" # sort by id asc
 
     expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
 
-    find("thead .number-col a").click # reverse order - sort by id desc
+    click_on "Nº dossier" # reverse order - sort by id desc
 
     expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier.id.to_s)
@@ -44,12 +44,14 @@ describe "procedure sort", js: true do
     expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
 
-    find("thead .sva-col a").click # sort by sva date asc
+    click_on "Date décision SVA", exact: true # sort by sva date asc
+    # find("thead .sva-col a").click # sort by sva date asc
 
     expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier_2.id.to_s)
 
-    find("thead .sva-col a").click # reverse order - sort by sva date desc
+    click_on "Date décision SVA ↑", exact: true # reverse order - sort by sva date desc
+    # find("thead .sva-col a").click # reverse order - sort by sva date desc
 
     expect(find(".dossiers-table tbody tr:nth-child(2) .number-col a").text).to eq(followed_dossier_2.id.to_s)
     expect(find(".dossiers-table tbody tr:nth-child(3) .number-col a").text).to eq(followed_dossier.id.to_s)
@@ -74,7 +76,7 @@ describe "procedure sort", js: true do
   end
 
   scenario "should be able to sort back by notification filter after any other sort" do
-    find("thead .number-col a").click # sort by id asc
+    click_on "Nº dossier" # sort by id asc
 
     expect(page).not_to have_checked_field("Remonter les dossiers avec une notification")
 

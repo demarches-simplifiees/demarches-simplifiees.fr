@@ -1,4 +1,4 @@
-= form_tag add_filter_instructeur_procedure_path(procedure), method: :post, class: 'dropdown-form large', id: 'filter-component', data: { turbo: true, controller: 'autosubmit' } do
+= form_with model: [:instructeur, @procedure_presentation], class: 'dropdown-form large', id: 'filter-component', data: { turbo: true, controller: 'autosubmit' } do
   = current_filter_tags
 
   .fr-select-group

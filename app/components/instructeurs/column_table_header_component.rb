@@ -2,7 +2,7 @@
 
 class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
   def initialize(procedure_presentation:)
-    @procedure = procedure_presentation.procedure
+    @procedure_presentation = procedure_presentation
     @columns = procedure_presentation.displayed_fields_for_headers
     @sorted_column = procedure_presentation.sorted_column
   end
@@ -15,11 +15,16 @@ class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
     return 'sva-col' if column.column == 'sva_svr_decision_on'
   end
 
-  def update_sort_path(column)
+  def column_header(column)
     id = column.id
     order = opposite_order_for(column)
 
-    update_sort_instructeur_procedure_path(@procedure, sorted_column: { id:, order: })
+    button_to(
+      label_and_arrow(column),
+      [:instructeur, @procedure_presentation],
+      params: { sorted_column: { id: id, order: order } },
+      class: 'fr-text--bold'
+    )
   end
 
   def opposite_order_for(column)
