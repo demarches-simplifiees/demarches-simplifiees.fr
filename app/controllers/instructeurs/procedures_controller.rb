@@ -275,6 +275,11 @@ module Instructeurs
       @dossiers_count = reachable_brouillons.count
     end
 
+    def usagers_rdvs
+      @procedure = procedure
+      @rdvs = @procedure.rdvs.by_starts_at
+    end
+
     def create_multiple_commentaire
       @procedure = procedure
       errors = []
