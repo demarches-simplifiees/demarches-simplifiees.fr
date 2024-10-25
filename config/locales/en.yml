@@ -386,6 +386,7 @@ en:
           involved_persons: Involved persons
           reaffectation: reassignment
           attachments: Attachments
+          rendez_vous: Appointment
         archived_dossier: "This file will be kept for an additional month"
         delete_dossier: "Move file to trash"
         acts_on_behalf: "acts for"
@@ -455,6 +456,7 @@ en:
             summary: "Summary"
             request: "Request"
             mailbox: "Mailbox"
+            rendez_vous: "Appointment"
             dossier_number_html: "File <span class='visually-hidden'>number</span> <span aria-hidden='true'>n.</span> %{dossier_id}"
             created_date: "- Draft on %{date_du_dossier}"
             submit_date: "- Submit on %{date_du_dossier}"

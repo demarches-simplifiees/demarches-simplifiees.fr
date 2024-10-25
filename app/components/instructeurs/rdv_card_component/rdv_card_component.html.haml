@@ -1,0 +1,33 @@
+.card.rounded-4.mb-4.fr-p-0
+  .flex
+    - if with_dossier_infos
+      .p-3.bg-light-grey
+        .flex.column.flex-gap-1
+          %h3.card-title
+            = t('.dossier_number')
+            = helpers.number_with_html_delimiter(dossier.id)
+
+          %p= helpers.status_badge(dossier.state)
+
+          %p.fr-icon--sm.fr-icon-user-line
+            = helpers.demandeur_dossier(dossier)
+
+          %p.fr-icon--sm.fr-icon-calendar-line
+            %span
+              = t('.submitted_on')
+              = l(dossier.depose_at.to_date)
+
+          %p.fr-mb-0
+            = link_to dossier_path(dossier), class: "fr-link" do
+              = t('.view_file')
+              %span.fr-icon-arrow-right-line.fr-icon--sm{ "aria-hidden": "true" }
+    .p-3
+      .flex.column.flex-gap-1
+        %p
+          %span.fr-icon-calendar-fill{ "aria-hidden": "true" }
+          %strong
+            = t('.appointment_on')
+            = l(rdv.starts_at, format: :human)
+        %p.fr-mb-0
+          = t('.info_and_cancellation')
+          = link_to rdv.rdv_plan_url, rdv.rdv_plan_url, class: "fr-link", target: "_blank"
