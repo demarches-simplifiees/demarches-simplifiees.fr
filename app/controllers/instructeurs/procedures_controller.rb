@@ -246,6 +246,11 @@ module Instructeurs
       @dossiers_count = procedure.dossiers.state_brouillon.where(groupe_instructeur_id: instructeur_groupe_ids).count
     end
 
+    def usagers_rdvs
+      @procedure = procedure
+      @rdvs = @procedure.rdvs
+    end
+
     def create_multiple_commentaire
       @procedure = procedure
       errors = []
