@@ -450,6 +450,10 @@ class Dossier < ApplicationRecord
     end
   end
 
+  def user_email_for_display
+    user_email_for(:display)
+  end
+
   def expiration_started?
     [
       brouillon_close_to_expiration_notice_sent_at,

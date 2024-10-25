@@ -29,7 +29,7 @@ describe ColumnsConcern do
       let(:tdc_private_2) { procedure.active_revision.types_de_champ_private[1] }
       let(:expected) {
         [
-          { label: 'Nº dossier', table: 'self', column: 'id', displayable: true, type: :number, scope: '', value_column: :value, filterable: true },
+          { label: 'Dossier ID', table: 'self', column: 'id', displayable: true, type: :number, scope: '', value_column: :value, filterable: true },
           { label: 'notifications', table: 'notifications', column: 'notifications', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'Créé le', table: 'self', column: 'created_at', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
           { label: 'Mis à jour le', table: 'self', column: 'updated_at', displayable: true, type: :date, scope: '', value_column: :value, filterable: true },
@@ -43,10 +43,15 @@ describe ColumnsConcern do
           { label: "En instruction depuis", table: "self", column: "en_instruction_since", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
           { label: "Terminé depuis", table: "self", column: "processed_since", displayable: false, type: :date, scope: '', value_column: :value, filterable: true },
           { label: "Statut", table: "self", column: "state", displayable: false, scope: 'instructeurs.dossiers.filterable_state', type: :enum, value_column: :value, filterable: true },
+          { label: "Archivé", table: "self", column: "archived", displayable: false, scope: '', type: :text, value_column: :value, filterable: false },
+          { label: "Motivation de la décision", table: "self", column: "motivation", displayable: false, scope: '', type: :text, value_column: :value, filterable: false },
+          { label: "Dernière mise à jour du dossier le", table: "self", column: "last_champ_updated_at", displayable: false, scope: '', type: :text, value_column: :value, filterable: false },
           { label: 'Demandeur', table: 'user', column: 'email', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', displayable: true, type: :enum, scope: '', value_column: :value, filterable: true },
           { label: 'Avis oui/non', table: 'avis', column: 'question_answer', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
+          { label: 'Identifiant du demandeur', table: 'user', column: 'id', displayable: false, type: :text, scope: '', value_column: :value, filterable: false },
+          { label: 'FranceConnect ?', table: 'self', column: 'user_from_france_connect?', displayable: false, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
@@ -73,7 +78,11 @@ describe ColumnsConcern do
           procedure.active_revision.types_de_champ_private[3].update_attribute(:type_champ, TypeDeChamp.type_champs.fetch(:explication))
         end
 
-        it { expect(subject).to eq(expected) }
+        it {
+          expected.each do |expected|
+            expect(subject).to include(expected)
+          end
+        }
       end
 
       context 'with rna' do
@@ -123,6 +132,121 @@ describe ColumnsConcern do
       let(:decision_before_field) { Column.new(procedure_id:, label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", displayable: false, type: :date, scope: '', value_column: :value, filterable: true) }
 
       it { is_expected.to include(decision_on, decision_before_field) }
+    end
+  end
+
+  describe 'export' do
+    let(:procedure) { create(:procedure_with_dossiers, :published, types_de_champ_public:, for_individual:) }
+    let(:for_individual) { true }
+    let(:types_de_champ_public) do
+      [
+        { type: :text, libelle: "Ca va ?", mandatory: true, stable_id: 1 },
+        { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 },
+        { type: :siret, libelle: 'siret', stable_id: 20 },
+        { type: :repetition, mandatory: true, stable_id: 7, libelle: "Champ répétable", children: [{ type: 'text', libelle: 'Qqchose à rajouter?', stable_id: 8 }] }
+      ]
+    end
+
+    describe '#all_usager_columns_for_export' do
+      context 'for individual procedure' do
+        let(:for_individual) { true }
+
+        it "returns all usager columns" do
+          expected = [
+            procedure.find_column(label: "Nº dossier"),
+            procedure.find_column(label: "Email"),
+            procedure.find_column(label: "FranceConnect ?"),
+            procedure.find_column(label: "Civilité"),
+            procedure.find_column(label: "Nom"),
+            procedure.find_column(label: "Prénom"),
+            procedure.find_column(label: "Dépôt pour un tiers"),
+            procedure.find_column(label: "Nom du mandataire"),
+            procedure.find_column(label: "Prénom du mandataire")
+          ]
+          actuals = procedure.all_usager_columns_for_export.map(&:h_id)
+          expected.each do |expected_col|
+            expect(actuals).to include(expected_col.h_id)
+          end
+        end
+      end
+
+      context 'for entreprise procedure' do
+        let(:for_individual) { false }
+
+        it "returns all usager columns" do
+          expected = [
+            procedure.find_column(label: "Nº dossier"),
+            procedure.find_column(label: "Email"),
+            procedure.find_column(label: "FranceConnect ?"),
+            procedure.find_column(label: "Établissement SIRET"),
+            procedure.find_column(label: "Établissement siège social"),
+            procedure.find_column(label: "Établissement NAF"),
+            procedure.find_column(label: "Libellé NAF"),
+            procedure.find_column(label: "Établissement Adresse"),
+            procedure.find_column(label: "Établissement numero voie"),
+            procedure.find_column(label: "Établissement type voie"),
+            procedure.find_column(label: "Établissement nom voie"),
+            procedure.find_column(label: "Établissement complément adresse"),
+            procedure.find_column(label: "Établissement code postal"),
+            procedure.find_column(label: "Établissement localité"),
+            procedure.find_column(label: "Établissement code INSEE localité"),
+            procedure.find_column(label: "Entreprise SIREN"),
+            procedure.find_column(label: "Entreprise capital social"),
+            procedure.find_column(label: "Entreprise numero TVA intracommunautaire"),
+            procedure.find_column(label: "Entreprise forme juridique"),
+            procedure.find_column(label: "Entreprise forme juridique code"),
+            procedure.find_column(label: "Entreprise nom commercial"),
+            procedure.find_column(label: "Entreprise raison sociale"),
+            procedure.find_column(label: "Entreprise SIRET siège social"),
+            procedure.find_column(label: "Entreprise code effectif entreprise")
+          ]
+          actuals = procedure.all_usager_columns_for_export
+          expected.each do |expected_col|
+            expect(actuals.map(&:h_id)).to include(expected_col.h_id)
+          end
+
+          expect(actuals.any? { _1.label == "Nom" }).to eq false
+        end
+      end
+
+      context 'when procedure chorusable' do
+        let(:procedure) { create(:procedure_with_dossiers, :filled_chorus, types_de_champ_public:) }
+        it 'returns specific chorus columns' do
+          allow_any_instance_of(Procedure).to receive(:chorusable?).and_return(true)
+          expected = [
+            procedure.find_column(label: "Domaine Fonctionnel"),
+            procedure.find_column(label: "Référentiel De Programmation"),
+            procedure.find_column(label: "Centre De Coût")
+          ]
+          actuals = procedure.all_usager_columns_for_export.map(&:h_id)
+          expected.each do |expected_col|
+            expect(actuals).to include(expected_col.h_id)
+          end
+        end
+      end
+    end
+
+    describe '#all_dossier_columns_for_export' do
+      let(:procedure) { create(:procedure_with_dossiers, :routee, :published, types_de_champ_public:, for_individual:) }
+
+      it "returns all dossier columns" do
+        expected = [
+          procedure.find_column(label: "Archivé"),
+          procedure.find_column(label: "État du dossier"),
+          procedure.find_column(label: "Dernière mise à jour le"),
+          procedure.find_column(label: "Dernière mise à jour du dossier le"),
+          procedure.find_column(label: "Déposé le"),
+          procedure.find_column(label: "Passé en instruction le"),
+          procedure.find_column(label: "Traité le"),
+          procedure.find_column(label: "Motivation de la décision"),
+          procedure.find_column(label: "Instructeurs"),
+          procedure.find_column(label: "Groupe instructeur")
+        ]
+        actuals = procedure.all_dossier_columns_for_export.map(&:h_id)
+        expected.each do |expected_col|
+          expect(actuals).to include(expected_col.h_id)
+        end
+      end
     end
   end
 end

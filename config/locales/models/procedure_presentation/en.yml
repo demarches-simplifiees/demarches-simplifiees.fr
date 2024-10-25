@@ -5,24 +5,34 @@ en:
         fields:
           self:
             id: File Nº
+            user_email_for_display: Email
             state: State
             created_at: Created on
             updated_at: Updated on
             depose_at: First submission on
             en_construction_at: Submitted on
-            en_instruction_at: En instruction on
+            en_instruction_at: Instructed on
             processed_at: Done on
             depose_since: First Submission since
             updated_since: Updated since
             en_construction_since: Submitted since
             en_instruction_since: Instructed since
             processed_since: Finished since
-            sva_decision_on: SVA decision date
+            sva_decision_on: Date décision %{type}
             sva_decision_before: SVA decision date before
-            svr_decision_on: SVR decision date
+            svr_decision_on: Date décision %{type}
             svr_decision_before: SVR decision date before
+            user_from_france_connect?: "FranceConnect ?"
+            for_tiers: "For tiers"
+            mandataire_last_name: "Tier last name"
+            mandataire_first_name: "Tier first name"
           user:
+            id: User Id
             email: Requester
+          procedure:
+            domaine_fonctionnel: Domaine Fonctionnel
+            referentiel_prog: Référentiel De Programmation
+            centre_de_cout: Centre De Coût
           followers_instructeurs:
             email: Email instructeur
           groupe_instructeur:
@@ -36,12 +46,38 @@ en:
             answer: Opinion
             question_answer: Opinion yes/no
           etablissement:
-            entreprise_siren: SIREN
+            entreprise_etat_administratif: 'Entreprise état administratif'
             entreprise_forme_juridique: Forme juridique
             entreprise_nom_commercial: Commercial name
             entreprise_raison_sociale: Raison sociale
             entreprise_siret_siege_social: SIRET siège social
-            entreprise_date_creation: Creation date
-            siret: SIRET
+            entreprise_date_creation: Entreprise date de création
+            siret: Établissement SIRET
             libelle_naf: Libellé NAF
-            code_postal: Postal code
+            siege_social: "Établissement siège social"
+            naf: "Établissement NAF"
+            adresse: "Établissement Adresse"
+            numero_voie: "Établissement numero voie"
+            type_voie: "Établissement type voie"
+            nom_voie: "Établissement nom voie"
+            complement_adresse: "Établissement complément adresse"
+            code_postal: "Établissement code postal"
+            localite: "Établissement localité"
+            code_insee_localite: "Établissement code INSEE localité"
+            entreprise_siren: SIREN
+            entreprise_capital_social: "Entreprise capital social"
+            entreprise_numero_tva_intracommunautaire: "Entreprise numero TVA intracommunautaire"
+            entreprise_forme_juridique: "Entreprise forme juridique"
+            entreprise_forme_juridique_code: "Entreprise forme juridique code"
+            entreprise_nom_commercial: "Entreprise nom commercial"
+            entreprise_raison_sociale: "Entreprise raison sociale"
+            entreprise_siret_siege_social: "Entreprise SIRET siège social"
+            entreprise_code_effectif_entreprise: "Entreprise code effectif entreprise"
+            entreprise_nom: 'Entreprise nom'
+            entreprise_prenom: 'Entreprise prénom'
+            association_rna: 'Association RNA'
+            association_titre: 'Association titre'
+            association_objet: 'Association objet'
+            association_date_creation: 'Association date de création'
+            association_date_declaration: 'Association date de déclaration'
+            association_date_publication: 'Association date de publication'
