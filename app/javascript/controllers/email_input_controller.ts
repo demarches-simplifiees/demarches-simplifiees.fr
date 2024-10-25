@@ -4,7 +4,7 @@ import { ApplicationController } from './application_controller';
 type CheckEmailResponse =
   | {
       success: true;
-      suggestions: string[];
+      suggestions?: string[];
     }
   | { success: false };
 
@@ -38,7 +38,7 @@ export class EmailInputController extends ApplicationController {
       .catch(() => null);
 
     if (data?.success) {
-      const suggestion = data.suggestions.at(0);
+      const suggestion = data.suggestions?.at(0);
       if (suggestion) {
         this.suggestionTarget.innerHTML = suggestion;
         show(this.ariaRegionTarget);
