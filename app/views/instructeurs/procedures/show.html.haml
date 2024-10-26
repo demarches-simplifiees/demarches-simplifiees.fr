@@ -70,7 +70,7 @@
               = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
-      = render partial: "dossiers_filter_tags", locals: { procedure: @procedure, procedure_presentation: @procedure_presentation, current_filters: @current_filters, statut: @statut }
+      = render Instructeurs::FilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
 
       - batch_operation_component = Dossiers::BatchOperationComponent.new(statut: @statut, procedure: @procedure)
 

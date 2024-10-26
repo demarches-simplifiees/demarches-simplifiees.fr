@@ -55,44 +55,6 @@ describe ProcedurePresentation do
     end
   end
 
-  describe "#human_value_for_filter" do
-    let(:filtered_column) { to_filter([first_type_de_champ.libelle, "true"]) }
-
-    subject do
-      procedure_presentation.human_value_for_filter(filtered_column)
-    end
-
-    context 'when type_de_champ text' do
-      it 'should passthrough value' do
-        expect(subject).to eq("true")
-      end
-    end
-
-    context 'when type_de_champ yes_no' do
-      let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :yes_no }]) }
-
-      it 'should transform value' do
-        expect(subject).to eq("oui")
-      end
-    end
-
-    context 'when filter is state' do
-      let(:filtered_column) { to_filter(['État du dossier', "en_construction"]) }
-
-      it 'should get i18n value' do
-        expect(subject).to eq("En construction")
-      end
-    end
-
-    context 'when filter is a date' do
-      let(:filtered_column) { to_filter(['Date de création', "15/06/2023"]) }
-
-      it 'should get formatted value' do
-        expect(subject).to eq("15/06/2023")
-      end
-    end
-  end
-
   describe '#update_displayed_fields' do
     let(:en_construction_column) { procedure.find_column(label: 'Date de passage en construction') }
     let(:mise_a_jour_column) { procedure.find_column(label: 'Date du dernier évènement') }
