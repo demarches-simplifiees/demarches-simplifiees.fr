@@ -3,9 +3,8 @@
 class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   attr_reader :column
 
-  def initialize(column:, prefix:)
+  def initialize(column:)
     @column = column
-    @prefix = prefix
   end
 
   def column_type = column.present? ? column.type : :text
@@ -15,15 +14,15 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       select_tag :filter,
         options_for_select(options_for_select_of_column),
         id: 'value',
-        name: "#{@prefix}[filter]",
+        name: "filters[][filter]",
         class: 'fr-select',
         data: { no_autosubmit: true }
     else
       tag.input(
         class: 'fr-input',
         id: 'value',
-        type: html_column_type,
-        name: "#{@prefix}[filter]",
+        type:,
+        name: "filters[][filter]",
         maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
         disabled: column.nil? ? true : false,
         data: { no_autosubmit: true },

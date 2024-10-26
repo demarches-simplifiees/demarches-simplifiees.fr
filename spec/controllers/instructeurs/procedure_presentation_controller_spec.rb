@@ -22,7 +22,8 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
         {
           displayed_columns: [state_column.id],
           sorted_column: { order: 'asc', id: state_column.id },
-          tous_filters: [{ id: state_column.id, filter: 'en_construction' }]
+          filters: [{ id: state_column.id, filter: 'en_construction' }],
+          statut: 'tous'
         }
       end
 
@@ -71,7 +72,9 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
     context 'with an error in filters' do
       before { sign_in(instructeur.user) }
 
-      let(:presentation_params) { { tous_filters: [{ id: state_column.id, filter: '' }] } }
+      let(:presentation_params) do
+        { filters: [{ id: state_column.id, filter: '' }], statut: 'tous' }
+      end
 
       it 'does not update the procedure_presentation' do
         subject

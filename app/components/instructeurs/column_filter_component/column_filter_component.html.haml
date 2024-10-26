@@ -18,8 +18,7 @@
     }
 
   = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
-  = render Instructeurs::ColumnFilterValueComponent.new(column:, prefix:)
+  = render Instructeurs::ColumnFilterValueComponent.new(column:)
 
   = hidden_field_tag :statut, statut
-  = hidden_field_tag :prefix, prefix
   = submit_tag t('.add_filter'), class: 'fr-btn fr-btn--secondary fr-mt-2w'

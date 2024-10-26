@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProcedurePresentationController < InstructeurController
-    before_action :set_procedure_presentation
+    before_action :set_procedure_presentation, only: [:update]
 
     def update
       if !@procedure_presentation.update(procedure_presentation_params)
@@ -15,11 +15,9 @@ module Instructeurs
     end
 
     def refresh_column_filter
-      prefix = params[:prefix]
-      key = prefix.gsub('[]', '')
-      column = ColumnType.new.cast(params[key].last['id'])
-
-      component = Instructeurs::ColumnFilterValueComponent.new(column:, prefix:)
+      # According to the html, the selected filters is the last one
+      column = ColumnType.new.cast(params['filters'].last['id'])
+      component = Instructeurs::ColumnFilterValueComponent.new(column:)
 
       render turbo_stream: turbo_stream.replace('value', component)
     end
@@ -29,15 +27,12 @@ module Instructeurs
     def procedure = @procedure_presentation.procedure
 
     def procedure_presentation_params
-      # TODO: peut etre simplifier en transformer un parametre filter -> tous_filter, suivant le params statut
+      h = params.permit(displayed_columns: [], sorted_column: [:order, :id], filters: [:id, :filter]).to_h
 
-
-      filters = [
-        :tous_filters, :a_suivre_filters, :suivis_filters, :traites_filters,
-        :expirant_filters, :archives_filters, :supprimes_filters
-      ].index_with { [:id, :filter] }
-
-      h = params.permit(displayed_columns: [], sorted_column: [:order, :id], **filters).to_h
+      if params[:statut].present?
+        filter_name = @procedure_presentation.filters_name_for(params[:statut])
+        h[filter_name] = h.delete("filters") # move filters to the right key, ex: tous_filters
+      end
 
       # React ComboBox/MultiComboBox return [''] when no value is selected
       # We need to remove them
