@@ -12,13 +12,13 @@ fr:
         identite:
           title: "Nouveau dossier (%{procedure_label}) - Étape 1 : Identité"
         show:
-          title: "Résumé · Dossier nº %{number} (%{procedure_label})"
+          title: "Résumé · Dossier %{number} (%{procedure_label})"
         demande:
-          title: "Demande · Dossier nº %{number} (%{procedure_label})"
+          title: "Demande · Dossier %{number} (%{procedure_label})"
         messagerie:
-          title: "Messagerie · Dossier nº %{number} (%{procedure_label})"
+          title: "Messagerie · Dossier %{number} (%{procedure_label})"
         brouillon:
-          title: "Modification du brouillon nº %{number} (%{procedure_label})"
+          title: "Dossier %{number} en brouillon (%{procedure_label}) - Étape 2 : Formulaire"
         merci:
           title: "Dossier envoyé (%{procedure_label})"
       activate:

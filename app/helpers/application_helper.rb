@@ -45,7 +45,6 @@ module ApplicationHelper
     when 'alert', 'error'
       class_names << 'alert-danger'
     end
-
     if sticky
       class_names << 'sticky'
     end

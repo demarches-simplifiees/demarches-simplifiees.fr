@@ -1,14 +1,13 @@
-#flash_messages{ aria: { live: 'assertive' } }
-  - if flash.any?
-    #flash_message.center
+#flash_messages{ tabindex: '-1', data: { turbo_force: :server } }
+  #flash_message.center{ class: defined?(unique_classname) ? unique_classname : '' }
+    - if flash.any?
       - flash.each do |key, value|
         - sticky = defined?(sticky) ? sticky : false
         - fixed = defined?(fixed) ? fixed : false
-        - if value.class == Array
-          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
+        .alert{ role: flash_role(key), class: flash_class(key, sticky: sticky, fixed: fixed) }
+          - if value.class == Array
             - value.each do |message|
               = sanitize_with_link(message)
               %br
-        - elsif value.present?
-          .alert{ class: flash_class(key, sticky: sticky, fixed: fixed), role: flash_role(key) }
+          - elsif value.present?
             = sanitize_with_link(value)
