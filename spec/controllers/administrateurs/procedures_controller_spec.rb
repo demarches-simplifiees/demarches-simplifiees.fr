@@ -515,8 +515,8 @@ describe Administrateurs::ProceduresController, type: :controller do
         end
 
         it "create generic labels" do
-          expect(subject.labels.size).to eq(3)
-          expect(subject.labels.first.name).to eq('à relancer')
+          expect(subject.labels.size).to eq(5)
+          expect(subject.labels.first.name).to eq('À examiner')
         end
       end
 

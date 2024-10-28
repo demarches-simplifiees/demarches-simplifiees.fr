@@ -1529,7 +1529,7 @@ describe Instructeurs::DossiersController, type: :controller do
         dossier.reload
 
         expect(dossier.dossier_labels.count).to eq(1)
-        expect(subject.body).to include('fr-tag--brown-caramel')
+        expect(subject.body).to include('fr-tag--purple-glycine')
         expect(subject.body).not_to include('Ajouter un label')
       end
     end

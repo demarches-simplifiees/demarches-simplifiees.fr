@@ -227,7 +227,7 @@ describe 'instructeurs/dossiers/show', type: :view do
       let(:dossier) { create(:dossier, :en_construction, procedure: procedure_without_labels) }
       it 'does not display button to add label or dropdown' do
         expect(subject).not_to have_text("Ajouter un label")
-        expect(subject).not_to have_text("à relancer")
+        expect(subject).not_to have_text("À examiner")
       end
     end
 
@@ -235,9 +235,9 @@ describe 'instructeurs/dossiers/show', type: :view do
       it 'displays button with text to add label' do
         expect(subject).to have_text("Ajouter un label")
         expect(subject).to have_selector("button.dropdown-button")
-        expect(subject).to have_text("à relancer", count: 1)
+        expect(subject).to have_text("À examiner", count: 1)
         within('.dropdown') do
-          expect(subject).to have_text("à relancer", count: 1)
+          expect(subject).to have_text("À examiner", count: 1)
         end
       end
     end
@@ -250,9 +250,9 @@ describe 'instructeurs/dossiers/show', type: :view do
       it 'displays labels and button without text to add label' do
         expect(subject).not_to have_text("Ajouter un label")
         expect(subject).to have_selector("button.dropdown-button")
-        expect(subject).to have_text("à relancer", count: 2)
+        expect(subject).to have_text("À examiner", count: 2)
         within('.dropdown') do
-          expect(subject).to have_text("à relancer", count: 1)
+          expect(subject).to have_text("À examiner", count: 1)
         end
       end
     end

@@ -663,10 +663,10 @@ describe Instructeurs::ProceduresController, type: :controller do
 
         it 'displays correctly labels in instructeur table' do
           expect(response.body).to include("Labels")
-          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'à relancer')
-          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'complet')
-          expect(response.body).not_to have_selector('ul li span.fr-tag', text: 'prêt pour validation')
-          expect(response.body).to have_selector('span.fr-tag', text: 'prêt pour validation')
+          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'À examiner')
+          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'À relancer')
+          expect(response.body).not_to have_selector('ul li span.fr-tag', text: 'Urgent')
+          expect(response.body).to have_selector('span.fr-tag', text: 'Urgent')
         end
       end
     end
