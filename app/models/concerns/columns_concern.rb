@@ -47,10 +47,6 @@ module ColumnsConcern
     def all_dossier_columns_for_export
       states = [dossier_state_column]
 
-      for_export_before_date = ['archived']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
-      for_export_after_date = ['motivation']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
       routing =
         if self.routing_enabled?
           [Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id')]
@@ -60,7 +56,7 @@ module ColumnsConcern
 
       instructeurs = [Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')]
 
-      [states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns(for_export: true), routing, instructeurs].flatten.compact
+      [states, dossier_archived_column, dossier_dates_columns, dossier_motivation_column, sva_svr_columns(for_export: true), routing, instructeurs].flatten.compact
     end
 
     def dossier_id_column
@@ -87,12 +83,7 @@ module ColumnsConcern
       non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
 
-      for_export_before_date = ['archived']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
-      for_export_after_date = ['motivation']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :text, displayable: false, filterable: false) }
-
-      [common, states, for_export_before_date, dossier_dates_columns, for_export_after_date, sva_svr_columns(for_export: false), non_displayable_dates].flatten.compact
+      [common, states, dossier_archived_column, dossier_dates_columns, dossier_motivation_column, sva_svr_columns(for_export: false), non_displayable_dates].flatten.compact
     end
 
     def dossier_dates_columns
@@ -121,6 +112,10 @@ module ColumnsConcern
     end
 
     def default_displayed_columns = [email_column]
+
+    def dossier_archived_column = Column.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
+
+    def dossier_motivation_column = Column.new(procedure_id: id, table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
 
     private
 
