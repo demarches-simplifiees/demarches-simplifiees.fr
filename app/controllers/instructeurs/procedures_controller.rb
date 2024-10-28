@@ -132,6 +132,7 @@ module Instructeurs
       @statut = 'supprime'
     end
 
+    # TODO: to remove because of new procedure_presentation_controller
     def update_displayed_fields
       ids = (params['values'].presence || []).reject(&:empty?)
 
@@ -140,12 +141,14 @@ module Instructeurs
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
+    # TODO: to remove because of new procedure_presentation_controller
     def update_sort
       procedure_presentation.update!(sorted_column_params)
 
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
+    # TODO: to remove because of new procedure_presentation_controller
     def add_filter
       if !procedure_presentation.update(filter_params)
         # complicated way to display inner error messages
@@ -156,6 +159,7 @@ module Instructeurs
       redirect_back(fallback_location: instructeur_procedure_url(procedure))
     end
 
+    # TODO: to remove because of new procedure_presentation_controller
     def update_filter
       @statut = statut
       @procedure = procedure
@@ -407,10 +411,12 @@ module Instructeurs
       "exports_#{@procedure.id}_seen_at"
     end
 
+    # TODO: to remove because of new procedure_presentation_controller
     def sorted_column_params
       params.permit(sorted_column: [:order, :id])
     end
 
+    # TODO: to remove because of new procedure_presentation_controller
     def filter_params
       keys = [:tous_filters, :a_suivre_filters, :suivis_filters, :traites_filters, :expirant_filters, :archives_filters, :supprimes_filters]
       h = keys.index_with { [:id, :filter] }

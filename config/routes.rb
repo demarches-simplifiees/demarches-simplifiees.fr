@@ -488,11 +488,13 @@ Rails.application.routes.draw do
           end
         end
 
+        # TODO: to remove because of new procedure_presentation_controller
         patch 'update_displayed_fields'
         get 'update_sort' => 'procedures#update_sort', as: 'update_sort'
         post 'add_filter'
         post 'update_filter'
         get 'remove_filter'
+
         get 'download_export'
         post 'download_export'
         get 'polling_last_export'
