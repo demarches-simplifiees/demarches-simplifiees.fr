@@ -25,21 +25,16 @@ module ColumnsConcern
         columns.concat(standard_columns)
         columns.concat(individual_columns) if for_individual
         columns.concat(moral_columns) if !for_individual
-        columns.concat(chorus_columns)
+        columns.concat(procedure_chorus_columns)
         columns.concat(types_de_champ_columns)
       end
     end
 
-    def chorus_columns
-      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
-        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
-    end
-
     def all_usager_columns_for_export
-      columns = [dossier_id_column, email_for_display_column, france_connected_column]
+      columns = [dossier_id_column, user_email_for_display_column, user_france_connected_column]
       columns.concat(individual_columns) if for_individual
       columns.concat(moral_columns) if !for_individual
-      columns.concat(chorus_columns) if chorusable? && chorus_configuration.complete?
+      columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
 
       columns.flatten.compact
     end
@@ -59,20 +54,25 @@ module ColumnsConcern
       [states, dossier_archived_column, dossier_dates_columns, dossier_motivation_column, sva_svr_columns(for_export: true), routing, instructeurs].flatten.compact
     end
 
-    def dossier_id_column
-      Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
-    end
+    ####
 
-    def dossier_state_column
-      Column.new(procedure_id: id, table: 'self', column: 'state', label: I18n.t('activerecord.attributes.procedure_presentation.fields.self.state'), type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
-    end
+    def dossier_archived_column = Column.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
 
-    def email_for_display_column = Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
+    def dossier_motivation_column = Column.new(procedure_id: id, table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
 
-    def france_connected_column = Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+    def dossier_id_column = Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
 
-    def notifications_column
-      Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
+    def dossier_state_column = Column.new(procedure_id: id, table: 'self', column: 'state', label: I18n.t('activerecord.attributes.procedure_presentation.fields.self.state'), type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
+
+    def notifications_column = Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
+
+    def user_email_for_display_column = Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
+
+    def user_france_connected_column = Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+
+    def procedure_chorus_columns
+      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
+        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
     end
 
     def dossier_columns
@@ -113,10 +113,6 @@ module ColumnsConcern
 
     def default_displayed_columns = [email_column]
 
-    def dossier_archived_column = Column.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
-
-    def dossier_motivation_column = Column.new(procedure_id: id, table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
-
     private
 
     def email_column
@@ -126,12 +122,12 @@ module ColumnsConcern
     def standard_columns
       [
         email_column,
-        email_for_display_column,
+        user_email_for_display_column,
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
         Column.new(procedure_id: id, table: 'user', column: 'id', filterable: false, displayable: false),
-        france_connected_column
+        user_france_connected_column
       ]
     end
 
