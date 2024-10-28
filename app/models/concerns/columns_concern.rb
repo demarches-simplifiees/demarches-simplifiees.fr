@@ -31,24 +31,17 @@ module ColumnsConcern
     end
 
     def chorus_columns
-      if chorusable? && chorus_configuration.complete?
-        ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
-          .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
-      else
-        []
-      end
+      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
+        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
     end
 
     def all_usager_columns_for_export
-      common = [
-        dossier_id_column,
-        email_for_display_column,
-        france_connected_column
-      ]
+      columns = [dossier_id_column, email_for_display_column, france_connected_column]
+      columns.concat(individual_columns) if for_individual
+      columns.concat(moral_columns) if !for_individual
+      columns.concat(chorus_columns) if chorusable? && chorus_configuration.complete?
 
-      individual_or_moral_columns = for_individual? ? individual_columns : moral_columns
-
-      [common, individual_or_moral_columns, chorus_columns].flatten.compact
+      columns.flatten.compact
     end
 
     def all_dossier_columns_for_export
