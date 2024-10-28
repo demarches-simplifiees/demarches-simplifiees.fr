@@ -428,7 +428,7 @@ describe 'The user', js: true do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', mandatory: false, stable_id: },
+            { type: :integer_number, libelle: 'UNIQ_LABEL', mandatory: false, stable_id: },
             {
               type: :repetition, libelle: 'repetition', condition:, children: [
                 { type: :text, libelle: 'nom', mandatory: true }
@@ -441,8 +441,7 @@ describe 'The user', js: true do
         log_in(user, procedure)
 
         fill_individual
-
-        fill_in('age', with: 10)
+        fill_in('UNIQ_LABEL', with: 10)
         click_on 'Déposer le dossier'
         expect(page).to have_current_path(merci_dossier_path(user_dossier))
       end
@@ -494,7 +493,7 @@ describe 'The user', js: true do
       let(:procedure) do
         create(:procedure, :published, :for_individual,
           types_de_champ_public: [
-            { type: :integer_number, libelle: 'age', mandatory: false, stable_id: },
+            { type: :integer_number, libelle: 'UNIQ_LABEL', mandatory: false, stable_id: },
             { type: :text, libelle: 'nom', mandatory: true, condition: }
           ])
       end
@@ -513,7 +512,7 @@ describe 'The user', js: true do
 
         fill_individual
 
-        fill_in('age', with: '18')
+        fill_in('UNIQ_LABEL', with: '18')
         expect(page).to have_css('label', text: 'nom', visible: :visible)
         expect(page).to have_css('.icon.mandatory')
         click_on 'Déposer le dossier'
