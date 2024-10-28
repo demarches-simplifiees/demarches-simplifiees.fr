@@ -102,7 +102,7 @@ describe DossierFilterService do
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       context 'for created_at column' do
-        let!(:column) { procedure.find_column(label: 'Créé le') }
+        let!(:column) { procedure.find_column(label: 'Date de création') }
         let!(:recent_dossier) { Timecop.freeze(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure:) } }
         let!(:older_dossier) { Timecop.freeze(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure:) } }
 
@@ -110,7 +110,7 @@ describe DossierFilterService do
       end
 
       context 'for en_construction_at column' do
-        let!(:column) { procedure.find_column(label: 'Passé en construction le') }
+        let!(:column) { procedure.find_column(label: 'Date de passage en construction') }
         let!(:recent_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:older_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2013, 1, 1)) }
 
@@ -118,7 +118,7 @@ describe DossierFilterService do
       end
 
       context 'for updated_at column' do
-        let(:column) { procedure.find_column(label: 'Dernière mise à jour le') }
+        let(:column) { procedure.find_column(label: 'Date du dernier évènement') }
         let(:recent_dossier) { create(:dossier, procedure:) }
         let(:older_dossier) { create(:dossier, procedure:) }
 
@@ -297,7 +297,7 @@ describe DossierFilterService do
 
     context 'for self table' do
       context 'for created_at column' do
-        let(:filter) { ['Créé le', '18/9/2018'] }
+        let(:filter) { ['Date de création', '18/9/2018'] }
 
         let!(:kept_dossier) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
         let!(:discarded_dossier) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
@@ -306,7 +306,7 @@ describe DossierFilterService do
       end
 
       context 'for en_construction_at column' do
-        let(:filter) { ['Passé en construction le', '17/10/2018'] }
+        let(:filter) { ['Date de passage en construction', '17/10/2018'] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2013, 1, 1)) }
@@ -315,7 +315,7 @@ describe DossierFilterService do
       end
 
       context 'for updated_at column' do
-        let(:filter) { ['Dernière mise à jour le', '18/9/2018'] }
+        let(:filter) { ['Date du dernier évènement', '18/9/2018'] }
 
         let(:kept_dossier) { create(:dossier, procedure:) }
         let(:discarded_dossier) { create(:dossier, procedure:) }
@@ -329,7 +329,7 @@ describe DossierFilterService do
       end
 
       context 'for updated_since column' do
-        let(:filter) { ['Mis à jour depuis', '18/9/2018'] }
+        let(:filter) { ['Dernier évènement depuis', '18/9/2018'] }
 
         let(:kept_dossier) { create(:dossier, procedure:) }
         let(:later_dossier) { create(:dossier, procedure:) }
@@ -362,7 +362,7 @@ describe DossierFilterService do
       end
 
       context 'ignore time of day' do
-        let(:filter) { ['Passé en construction le', '17/10/2018 19:30'] }
+        let(:filter) { ['Date de passage en construction', '17/10/2018 19:30'] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
@@ -372,20 +372,20 @@ describe DossierFilterService do
 
       context 'for a malformed date' do
         context 'when its a string' do
-          let(:filter) { ['Dernière mise à jour le', 'malformed date'] }
+          let(:filter) { ['Date du dernier évènement', 'malformed date'] }
 
           it { is_expected.to match([]) }
         end
 
         context 'when its a number' do
-          let(:filter) { ['Dernière mise à jour le', '177500'] }
+          let(:filter) { ['Date du dernier évènement', '177500'] }
 
           it { is_expected.to match([]) }
         end
       end
 
       context 'with multiple search values' do
-        let(:filters) { [['Passé en construction le', '17/10/2018'], ['Passé en construction le', '19/10/2018']] }
+        let(:filters) { [['Date de passage en construction', '17/10/2018'], ['Date de passage en construction', '19/10/2018']] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:other_kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 19)) }

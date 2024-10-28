@@ -22,7 +22,7 @@ en:
             sva_decision_before: SVA decision date before
             svr_decision_on: Date décision %{type}
             svr_decision_before: SVR decision date before
-            user_from_france_connect?: "FranceConnect ?"
+            user_from_france_connect?: "France connecté ?"
             for_tiers: "For tiers"
             mandataire_last_name: "Tier last name"
             mandataire_first_name: "Tier first name"

@@ -7,28 +7,28 @@ fr:
             id: Nº dossier
             user_email_for_display: Email
             state: État du dossier
-            created_at: Créé le
-            updated_at: Dernière mise à jour le
-            depose_at: Déposé le
-            en_construction_at: Passé en construction le
-            en_instruction_at: Passé en instruction le
-            processed_at: Traité le
-            updated_since: Mis à jour depuis
+            created_at: Date de création
+            updated_at: Date du dernier évènement
+            depose_at: Date de dépot
+            en_construction_at: Date de passage en construction
+            en_instruction_at: Date de passage en instruction
+            processed_at: Date de traitement
+            updated_since: Dernier évènement depuis
             depose_since: Déposé depuis
             en_construction_since: En construction depuis
             en_instruction_since: En instruction depuis
-            processed_since: Terminé depuis
+            processed_since: Traité depuis
             sva_decision_on: Date décision %{type}
             sva_decision_before: Date décision SVA avant
             svr_decision_on: Date décision %{type}
             svr_decision_before: Date décision SVR avant
-            user_from_france_connect?: "FranceConnect ?"
+            user_from_france_connect?: "France connecté ?"
             for_tiers: "Dépôt pour un tiers"
             mandataire_last_name: "Nom du mandataire"
             mandataire_first_name: "Prénom du mandataire"
             archived: 'Archivé'
             dossier_state: 'État du dossier'
-            last_champ_updated_at: 'Dernière mise à jour du dossier le'
+            last_champ_updated_at: Date de dernière modification (usager)
             motivation: 'Motivation de la décision'
           user:
             id: Identifiant du demandeur

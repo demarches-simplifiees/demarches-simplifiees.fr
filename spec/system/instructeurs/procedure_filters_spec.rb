@@ -44,9 +44,9 @@ describe "procedure filters" do
   end
 
   scenario "should add be able to add created_at column", js: true do
-    add_column("Créé le")
+    add_column("Date de création")
     within ".dossiers-table" do
-      expect(page).to have_link("Créé le")
+      expect(page).to have_link("Date de création")
       expect(page).to have_link(new_unfollow_dossier.created_at.strftime('%d/%m/%Y'))
     end
   end
@@ -99,7 +99,7 @@ describe "procedure filters" do
 
     scenario "should be able to user custom fiters", js: true do
       # use date filter
-      add_filter("Passé en construction le", "10/10/2010", type: :date)
+      add_filter("Date de passage en construction", "10/10/2010", type: :date)
 
       # use statut dropdown filter
       add_filter('État du dossier', 'En construction', type: :enum)
