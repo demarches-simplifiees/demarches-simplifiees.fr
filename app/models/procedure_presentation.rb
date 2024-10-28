@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ProcedurePresentation < ApplicationRecord
-  TYPE_DE_CHAMP = 'type_de_champ'
-
   belongs_to :assign_to, optional: false
   has_many :exports, dependent: :destroy
 
@@ -41,46 +39,5 @@ class ProcedurePresentation < ApplicationRecord
     ]
     columns.concat(procedure.sva_svr_columns) if procedure.sva_svr_enabled?
     columns
-  end
-
-  def human_value_for_filter(filtered_column)
-    if filtered_column.column.table == TYPE_DE_CHAMP
-      find_type_de_champ(filtered_column.column.column).dynamic_type.filter_to_human(filtered_column.filter)
-    elsif filtered_column.column.column == 'state'
-      if filtered_column.filter == 'pending_correction'
-        Dossier.human_attribute_name("pending_correction.for_instructeur")
-      else
-        Dossier.human_attribute_name("state.#{filtered_column.filter}")
-      end
-    elsif filtered_column.column.table == 'groupe_instructeur' && filtered_column.column.column == 'id'
-      instructeur.groupe_instructeurs
-        .find { _1.id == filtered_column.filter.to_i }&.label || filtered_column.filter
-    else
-      column = procedure.columns.find { _1.table == filtered_column.column.table && _1.column == filtered_column.column.column }
-
-      if column.type == :date
-        parsed_date = safe_parse_date(filtered_column.filter)
-
-        return parsed_date.present? ? I18n.l(parsed_date) : nil
-      end
-
-      filtered_column.filter
-    end
-  end
-
-  def safe_parse_date(string)
-    Date.parse(string)
-  rescue Date::Error
-    nil
-  end
-
-  private
-
-  def find_type_de_champ(column)
-    TypeDeChamp
-      .joins(:revision_types_de_champ)
-      .where(revision_types_de_champ: { revision_id: procedure.revisions })
-      .order(created_at: :desc)
-      .find_by(stable_id: column)
   end
 end

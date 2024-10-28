@@ -42,6 +42,37 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   end
 
   def button_content(filter)
-    "#{filter.column.label.truncate(50)} : #{@procedure_presentation.human_value_for_filter(filter)}"
+    "#{filter.label.truncate(50)} : #{human_value(filter)}"
+  end
+
+  def human_value(filter_column)
+    column, filter = filter_column.column, filter_column.filter
+
+    if column.type_de_champ?
+      find_type_de_champ(column.column).dynamic_type.filter_to_human(filter)
+    elsif column.dossier_state?
+      if filter == 'pending_correction'
+        Dossier.human_attribute_name("pending_correction.for_instructeur")
+      else
+        Dossier.human_attribute_name("state.#{filter}")
+      end
+    elsif column.groupe_instructeur?
+      current_instructeur.groupe_instructeurs
+        .find { _1.id == filter.to_i }&.label || filter
+    elsif column.type == :date
+      helpers.try_parse_format_date(filter)
+    else
+      filter
+    end
+  end
+
+  def find_type_de_champ(column)
+    stable_id = column.to_s.split('->').first
+
+    TypeDeChamp
+      .joins(:revision_types_de_champ)
+      .where(revision_types_de_champ: { revision_id: @procedure_presentation.procedure.revisions })
+      .order(created_at: :desc)
+      .find_by(stable_id:)
   end
 end
