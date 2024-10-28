@@ -42,8 +42,8 @@ module ColumnsConcern
     def all_usager_columns_for_export
       common = [
         dossier_id_column,
-        Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false),
-        Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+        email_for_display_column,
+        france_connected_column
       ]
 
       individual_or_moral_columns = for_individual? ? individual_columns : moral_columns
@@ -77,6 +77,10 @@ module ColumnsConcern
     def dossier_state_column
       Column.new(procedure_id: id, table: 'self', column: 'state', label: I18n.t('activerecord.attributes.procedure_presentation.fields.self.state'), type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
     end
+
+    def email_for_display_column = Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
+
+    def france_connected_column = Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
 
     def notifications_column
       Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
@@ -134,12 +138,12 @@ module ColumnsConcern
     def standard_columns
       [
         email_column,
-        Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false),
+        email_for_display_column,
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
         Column.new(procedure_id: id, table: 'user', column: 'id', filterable: false, displayable: false),
-        Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+        france_connected_column
       ]
     end
 
