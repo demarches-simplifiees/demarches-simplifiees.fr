@@ -40,21 +40,30 @@ module ColumnsConcern
     end
 
     def all_dossier_columns_for_export
-      states = [dossier_state_column]
-
-      routing =
-        if self.routing_enabled?
-          [Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id')]
-        else
-          []
-        end
-
-      instructeurs = [Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')]
-
-      [states, dossier_archived_column, dossier_dates_columns, dossier_motivation_column, sva_svr_columns(for_export: true), routing, instructeurs].flatten.compact
+      columns = [dossier_state_column]
+      columns.concat([dossier_archived_column])
+      columns.concat(dossier_dates_columns)
+      columns.concat([dossier_motivation_column])
+      columns.concat(sva_svr_columns(for_export: true)) if sva_svr_enabled?
+      columns.concat([groupe_instructeurs_id_column])
+      columns.concat([followers_instructeurs_email_column])
+      columns.flatten.compact
     end
 
-    ####
+    def dossier_columns
+      dossier_columns = [dossier_id_column, notifications_column]
+      dossier_columns.concat([dossier_state_column])
+      dossier_columns.concat([dossier_archived_column])
+      dossier_columns.concat(dossier_dates_columns)
+      dossier_columns.concat([dossier_motivation_column])
+      dossier_columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
+      dossier_columns.concat(dossier_non_displayable_dates_columns)
+      dossier_columns.flatten.compact
+    end
+
+    def groupe_instructeurs_id_column = Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)
+
+    def followers_instructeurs_email_column = Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')
 
     def dossier_archived_column = Column.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
 
@@ -75,15 +84,9 @@ module ColumnsConcern
         .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
     end
 
-    def dossier_columns
-      common = [dossier_id_column, notifications_column]
-
-      states = [dossier_state_column]
-
-      non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
+    def dossier_non_displayable_dates_columns
+      ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
         .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
-
-      [common, states, dossier_archived_column, dossier_dates_columns, dossier_motivation_column, sva_svr_columns(for_export: false), non_displayable_dates].flatten.compact
     end
 
     def dossier_dates_columns
@@ -92,8 +95,6 @@ module ColumnsConcern
     end
 
     def sva_svr_columns(for_export: false)
-      return if !sva_svr_enabled?
-
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
 
       columns = [
@@ -123,8 +124,8 @@ module ColumnsConcern
       [
         email_column,
         user_email_for_display_column,
-        Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
-        Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
+        followers_instructeurs_email_column,
+        groupe_instructeurs_id_column,
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
         Column.new(procedure_id: id, table: 'user', column: 'id', filterable: false, displayable: false),
         user_france_connected_column

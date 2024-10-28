@@ -34,12 +34,13 @@ class ProcedurePresentation < ApplicationRecord
   def filters_name_for(statut) = statut.tr('-', '_').then { "#{_1}_filters" }
 
   def displayed_fields_for_headers
-    [
+    columns = [
       procedure.dossier_id_column,
       *displayed_columns,
-      procedure.dossier_state_column,
-      *procedure.sva_svr_columns
+      procedure.dossier_state_column
     ]
+    columns.concat(procedure.sva_svr_columns) if procedure.sva_svr_enabled?
+    columns
   end
 
   def human_value_for_filter(filtered_column)
