@@ -127,7 +127,6 @@ module ColumnsConcern
         followers_instructeurs_email_column,
         groupe_instructeurs_id_column,
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
-        Column.new(procedure_id: id, table: 'user', column: 'id', filterable: false, displayable: false),
         user_france_connected_column
       ]
     end

@@ -50,7 +50,6 @@ describe ColumnsConcern do
           { label: 'Email instructeur', table: 'followers_instructeurs', column: 'email', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', displayable: true, type: :enum, scope: '', value_column: :value, filterable: true },
           { label: 'Avis oui/non', table: 'avis', column: 'question_answer', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
-          { label: 'Identifiant du demandeur', table: 'user', column: 'id', displayable: false, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'FranceConnect ?', table: 'self', column: 'user_from_france_connect?', displayable: false, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
