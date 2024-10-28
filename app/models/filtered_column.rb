@@ -33,7 +33,7 @@ class FilteredColumn
   private
 
   def check_filter_max_length
-    if @filter.present? && @filter.length.to_i > FILTERS_VALUE_MAX_LENGTH
+    if @filter.present? && @filter.length > FILTERS_VALUE_MAX_LENGTH
       errors.add(
         :base,
         "Le filtre « #{label} » est trop long (maximum: #{FILTERS_VALUE_MAX_LENGTH} caractères)"
