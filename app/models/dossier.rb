@@ -133,7 +133,7 @@ class Dossier < ApplicationRecord
   belongs_to :transfer, class_name: 'DossierTransfer', foreign_key: 'dossier_transfer_id', optional: true, inverse_of: :dossiers
   has_many :transfer_logs, class_name: 'DossierTransferLog', dependent: :destroy
   has_many :dossier_labels, dependent: :destroy
-  has_many :procedure_labels, through: :dossier_labels
+  has_many :labels, through: :dossier_labels
 
   after_destroy_commit :log_destroy
 

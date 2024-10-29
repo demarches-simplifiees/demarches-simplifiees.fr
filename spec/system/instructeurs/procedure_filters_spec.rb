@@ -174,8 +174,8 @@ describe "procedure filters" do
 
   describe 'dossier labels' do
     scenario "should be able to filter by dossier labels", js: true do
-      DossierLabel.create!(dossier_id: new_unfollow_dossier.id, procedure_label_id: procedure.procedure_labels.first.id)
-      add_filter('Labels', procedure.procedure_labels.first.name, type: :enum)
+      DossierLabel.create!(dossier_id: new_unfollow_dossier.id, label_id: procedure.labels.first.id)
+      add_filter('Labels', procedure.labels.first.name, type: :enum)
       expect(page).to have_link(new_unfollow_dossier.id.to_s)
       expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s)
     end

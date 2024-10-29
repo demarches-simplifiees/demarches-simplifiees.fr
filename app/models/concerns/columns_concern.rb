@@ -89,7 +89,7 @@ module ColumnsConcern
         Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
         Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
         Column.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false), # not filterable ?
-        Column.new(procedure_id: id, table: 'dossier_labels', column: 'procedure_label_id', type: :enum)
+        Column.new(procedure_id: id, table: 'dossier_labels', column: 'label_id', type: :enum)
       ]
     end
 

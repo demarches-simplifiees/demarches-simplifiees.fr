@@ -22,7 +22,7 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
         end
       end
     elsif column.table == 'dossier_labels'
-      procedure.procedure_labels.filter_map do
+      procedure.labels.filter_map do
         [_1.name, _1.id]
       end
     else

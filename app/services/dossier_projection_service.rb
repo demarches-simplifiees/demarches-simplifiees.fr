@@ -128,9 +128,9 @@ class DossierProjectionService
 
         id_value_h =
           DossierLabel
-            .includes(:procedure_label)
+            .includes(:label)
             .where(dossier_id: dossiers_ids)
-            .pluck('dossier_id, procedure_labels.name, procedure_labels.color')
+            .pluck('dossier_id, labels.name, labels.color')
             .group_by { |dossier_id, _| dossier_id }
 
         fields[0][:id_value_h] = id_value_h.transform_values { |v| { value: v, type: :label } }

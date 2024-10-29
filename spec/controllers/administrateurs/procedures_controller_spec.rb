@@ -515,8 +515,8 @@ describe Administrateurs::ProceduresController, type: :controller do
         end
 
         it "create generic labels" do
-          expect(subject.procedure_labels.size).to eq(3)
-          expect(subject.procedure_labels.first.name).to eq('à relancer')
+          expect(subject.labels.size).to eq(3)
+          expect(subject.labels.first.name).to eq('à relancer')
         end
       end
 
@@ -684,9 +684,9 @@ describe Administrateurs::ProceduresController, type: :controller do
         expect(Procedure.last.cloned_from_library).to be_falsey
         expect(Procedure.last.notice.attached?).to be_truthy
         expect(Procedure.last.deliberation.attached?).to be_truthy
-        expect(Procedure.last.procedure_labels.present?).to be_truthy
-        expect(Procedure.last.procedure_labels.first.procedure_id).to eq(Procedure.last.id)
-        expect(procedure.procedure_labels.first.procedure_id).to eq(procedure.id)
+        expect(Procedure.last.labels.present?).to be_truthy
+        expect(Procedure.last.labels.first.procedure_id).to eq(Procedure.last.id)
+        expect(procedure.labels.first.procedure_id).to eq(procedure.id)
 
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
@@ -709,7 +709,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
       it 'creates a new procedure and redirect to it' do
         expect(response).to redirect_to admin_procedure_path(id: Procedure.last.id)
-        expect(Procedure.last.procedure_labels.present?).to be_truthy
+        expect(Procedure.last.labels.present?).to be_truthy
         expect(flash[:notice]).to have_content 'Démarche clonée. Pensez à vérifier la présentation et choisir le service à laquelle cette démarche est associée.'
       end
     end

@@ -643,19 +643,19 @@ describe Instructeurs::ProceduresController, type: :controller do
         let!(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
         let!(:dossier_2) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
         let(:statut) { 'tous' }
-        let(:procedure_label_id) { procedure.find_column(label: 'Labels') }
+        let(:label_id) { procedure.find_column(label: 'Labels') }
         let!(:procedure_presentation) do
           ProcedurePresentation.create!(assign_to: AssignTo.first)
         end
         render_views
 
         before do
-          DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.first.id)
-          DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.second.id)
-          DossierLabel.create(dossier_id: dossier_2.id, procedure_label_id: dossier.procedure.procedure_labels.last.id)
+          DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.first.id)
+          DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.second.id)
+          DossierLabel.create(dossier_id: dossier_2.id, label_id: dossier.procedure.labels.last.id)
 
           procedure_presentation.update(displayed_columns: [
-            procedure_label_id.id
+            label_id.id
           ])
 
           subject

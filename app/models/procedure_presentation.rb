@@ -54,8 +54,8 @@ class ProcedurePresentation < ApplicationRecord
     elsif filtered_column.column.table == 'groupe_instructeur' && filtered_column.column.column == 'id'
       instructeur.groupe_instructeurs
         .find { _1.id == filtered_column.filter.to_i }&.label || filtered_column.filter
-    elsif filtered_column.column.table == 'dossier_labels' && filtered_column.column.column == 'procedure_label_id'
-      procedure.procedure_labels
+    elsif filtered_column.column.table == 'dossier_labels' && filtered_column.column.column == 'label_id'
+      procedure.labels
         .find { _1.id == filtered_column.filter.to_i }&.name || filtered_column.filter
     else
       column = procedure.columns.find { _1.table == filtered_column.column.table && _1.column == filtered_column.column.column }

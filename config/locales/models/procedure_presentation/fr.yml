@@ -46,4 +46,4 @@ fr:
             libelle_naf: Libellé NAF
             code_postal: Code postal
           dossier_labels:
-            procedure_label_id: Labels
+            label_id: Labels
