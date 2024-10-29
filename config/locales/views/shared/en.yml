@@ -23,3 +23,6 @@ en:
         signin: 'Sign in'
       messages:
         remove_file: 'Remove file'
+      piece_justificative:
+        name: "Download template"
+        title: "Download template %{filename}"
