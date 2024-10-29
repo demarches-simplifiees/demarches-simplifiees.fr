@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe Administrateurs::ProcedureLabelsController, type: :controller do
+describe Administrateurs::LabelsController, type: :controller do
   let(:admin) { administrateurs(:default_admin) }
   let(:procedure) { create(:procedure, administrateur: admin) }
   let(:admin_2) { create(:administrateur) }
@@ -8,9 +8,9 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
 
   describe '#index' do
     render_views
-    let!(:label_1) { create(:procedure_label, procedure:) }
-    let!(:label_2) { create(:procedure_label, procedure:) }
-    let!(:label_3) { create(:procedure_label, procedure:) }
+    let!(:label_1) { create(:label, procedure:) }
+    let!(:label_2) { create(:label, procedure:) }
+    let!(:label_3) { create(:label, procedure:) }
 
     before do
       sign_in(admin.user)
@@ -36,7 +36,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
     context 'when submitting a new label' do
       let(:params) do
         {
-          procedure_label: {
+          label: {
             name: 'Nouveau label',
                     color: 'green-bourgeon'
           },
@@ -44,22 +44,22 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
         }
       end
 
-      it { expect { subject }.to change { ProcedureLabel.count } .by(1) }
+      it { expect { subject }.to change { Label.count } .by(1) }
 
       it 'creates a new label' do
         subject
         expect(flash.alert).to be_nil
         expect(flash.notice).to eq('Le label a bien été créé')
-        expect(ProcedureLabel.last.name).to eq('Nouveau label')
-        expect(ProcedureLabel.last.color).to eq('green_bourgeon')
-        expect(procedure.procedure_labels.last).to eq(ProcedureLabel.last)
+        expect(Label.last.name).to eq('Nouveau label')
+        expect(Label.last.color).to eq('green_bourgeon')
+        expect(procedure.labels.last).to eq(Label.last)
       end
     end
 
     context 'when submitting an invalid label' do
-      let(:params) { { procedure_label: { name: 'Nouveau label' }, procedure_id: procedure.id } }
+      let(:params) { { label: { name: 'Nouveau label' }, procedure_id: procedure.id } }
 
-      it { expect { subject }.not_to change { ProcedureLabel.count } }
+      it { expect { subject }.not_to change { Label.count } }
 
       it 'does not create a new label' do
         subject
@@ -72,7 +72,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
     context 'when submitting a label for a not own procedure' do
       let(:params) do
         {
-          procedure_label: {
+          label: {
             name: 'Nouveau label',
             color: 'green-bourgeon'
           },
@@ -80,7 +80,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
         }
       end
 
-      it { expect { subject }.not_to change { ProcedureLabel.count } }
+      it { expect { subject }.not_to change { Label.count } }
 
       it 'does not create a new label' do
         subject
@@ -91,9 +91,9 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
   end
 
   describe '#update' do
-    let!(:label) { create(:procedure_label, procedure:) }
+    let!(:label) { create(:label, procedure:) }
     let(:label_params) { { name: 'Nouveau nom' } }
-    let(:params) { { id: label.id, procedure_label: label_params, procedure_id: procedure.id } }
+    let(:params) { { id: label.id, label: label_params, procedure_id: procedure.id } }
 
     before do
       sign_in(admin.user)
@@ -109,7 +109,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
         expect(label.reload.name).to eq('Nouveau nom')
         expect(label.reload.color).to eq('green_bourgeon')
         expect(label.reload.updated_at).not_to eq(label.reload.created_at)
-        expect(response).to redirect_to(admin_procedure_procedure_labels_path(procedure_id: procedure.id))
+        expect(response).to redirect_to(admin_procedure_labels_path(procedure_id: procedure.id))
       end
     end
 
@@ -125,7 +125,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
     end
 
     context 'when updating a label for a not own procedure' do
-      let(:params) { { id: label.id, procedure_label: label_params, procedure_id: procedure_2.id } }
+      let(:params) { { id: label.id, label: label_params, procedure_id: procedure_2.id } }
 
       it 'does not update' do
         subject
@@ -135,7 +135,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
   end
 
   describe '#destroy' do
-    let(:label) { create(:procedure_label, procedure:) }
+    let(:label) { create(:label, procedure:) }
 
     before do
       sign_in(admin.user)
@@ -150,7 +150,7 @@ describe Administrateurs::ProcedureLabelsController, type: :controller do
         subject
         expect { label.reload }.to raise_error(ActiveRecord::RecordNotFound)
         expect(flash.notice).to eq('Le label a bien été supprimé')
-        expect(response).to redirect_to((admin_procedure_procedure_labels_path(procedure_id: procedure.id)))
+        expect(response).to redirect_to(admin_procedure_labels_path(procedure_id: procedure.id))
       end
     end
 

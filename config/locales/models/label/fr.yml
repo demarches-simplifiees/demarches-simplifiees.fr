@@ -1,10 +1,10 @@
 fr:
   activerecord:
     attributes:
-      procedure_label:
+      label:
         color: Couleur
         name: Nom
-      procedure_label/color: &color
+      label/color: &color
         green_tilleul_verveine: 'tilleul'
         green_bourgeon: 'bourgeon'
         green_emeraude: 'émeraude'
