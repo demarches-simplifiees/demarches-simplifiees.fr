@@ -67,6 +67,29 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     end
   end
 
+  def columns(procedure_id:, displayable: true, prefix: nil)
+    super.concat([
+      Columns::LinkedDropDownColumn.new(
+        procedure_id:,
+        table: Column::TYPE_DE_CHAMP_TABLE,
+        column: stable_id.to_s,
+        label: "#{libelle_with_prefix(prefix)} (Primaire)",
+        type: :enum,
+        value_column: :primary,
+        displayable: false
+      ),
+      Columns::LinkedDropDownColumn.new(
+        procedure_id:,
+        table: Column::TYPE_DE_CHAMP_TABLE,
+        column: stable_id.to_s,
+        label: "#{libelle_with_prefix(prefix)} (Secondaire)",
+        type: :enum,
+        value_column: :secondary,
+        displayable: false
+      )
+    ])
+  end
+
   private
 
   def paths

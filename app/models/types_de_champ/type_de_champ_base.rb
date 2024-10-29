@@ -99,8 +99,8 @@ class TypesDeChamp::TypeDeChampBase
         table: Column::TYPE_DE_CHAMP_TABLE,
         column: stable_id.to_s,
         label: libelle_with_prefix(prefix),
-        type: TypeDeChamp.filter_hash_type(type_champ),
-        value_column: TypeDeChamp.filter_hash_value_column(type_champ),
+        type: TypeDeChamp.column_type(type_champ),
+        value_column: TypeDeChamp.value_column(type_champ),
         displayable:
       )
     ]

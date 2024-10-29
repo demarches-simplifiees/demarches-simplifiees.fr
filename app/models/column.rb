@@ -50,4 +50,100 @@ class Column
 
     procedure.find_column(h_id: h_id)
   end
+
+  def get_value(champ)
+    return if champ.nil?
+
+    value = get_raw_value(champ)
+    if should_cast?
+      # FIXME: remove this, once displayable is implemented through columns
+      return nil if champ.last_write_type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+      from_type = champ.last_write_column_type
+      to_type = type
+      parsed_value = parse_value(value, from_type)
+      cast_value(parsed_value, from_type:, to_type:)
+    else
+      value
+    end
+  end
+
+  private
+
+  def get_raw_value(champ)
+    champ.public_send(value_column)
+  end
+
+  def should_cast?
+    true
+  end
+
+  def parse_value(value, type)
+    return if value.blank?
+
+    case type
+    when :boolean
+      parse_boolean(value)
+    when :integer
+      value.to_i
+    when :decimal
+      value.to_f
+    when :datetime
+      parse_datetime(value)
+    when :date
+      parse_datetime(value)&.to_date
+    when :enums
+      parse_enums(value)
+    else
+      value
+    end
+  end
+
+  def cast_value(value, from_type:, to_type:)
+    return if value.blank?
+    return value if from_type == to_type
+
+    case [from_type, to_type]
+    when [:integer, :decimal] # recast numbers automatically
+      value.to_f
+    when [:decimal, :integer] # may lose some data, but who cares ?
+      value.to_i
+    when [:integer, :text], [:decimal, :text] # number to text
+      value.to_s
+    when [:enum, :enums] # single list can become multi
+      [value]
+    when [:enum, :text] # single list can become text
+      value
+    when [:enums, :enum] # multi list can become single list
+      value.first
+    when [:enums, :text] # multi list can become text
+      value.join(', ')
+    when [:date, :datetime] # date <=> datetime
+      value.to_datetime
+    when [:datetime, :date] # may lose some data, but who cares ?
+      value.to_date
+    else
+      nil
+    end
+  end
+
+  def parse_boolean(value)
+    case value
+    when 'true', 'on', '1'
+      true
+    when 'false'
+      false
+    end
+  end
+
+  def parse_enums(value)
+    JSON.parse(value)
+  rescue JSON::ParserError
+    nil
+  end
+
+  def parse_datetime(value)
+    Time.zone.parse(value)
+  rescue ArgumentError
+    nil
+  end
 end

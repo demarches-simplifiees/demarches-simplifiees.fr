@@ -25,6 +25,14 @@ class Columns::JSONPathColumn < Column
 
   private
 
+  def get_raw_value(champ)
+    champ.value_json&.dig(*value_column)
+  end
+
+  def should_cast?
+    false
+  end
+
   def stable_id
     @column
   end

@@ -327,11 +327,6 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
-  def self.is_choice_type_from(type_champ)
-    return false if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list) # To remove when we stop using linked_drop_down_list
-    TYPE_DE_CHAMP_TO_CATEGORIE[type_champ.to_sym] == CHOICE || type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
-  end
-
   def drop_down_list?
     type_champ.in?([
       TypeDeChamp.type_champs.fetch(:drop_down_list),
@@ -531,17 +526,28 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def self.filter_hash_type(type_champ)
-    if type_champ == 'multiple_drop_down_list'
+  def self.column_type(type_champ)
+    case type_champ
+    when TypeDeChamp.type_champs.fetch(:datetime)
+      :datetime
+    when TypeDeChamp.type_champs.fetch(:date)
+      :date
+    when TypeDeChamp.type_champs.fetch(:integer_number)
+      :integer
+    when TypeDeChamp.type_champs.fetch(:decimal_number)
+      :decimal
+    when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
       :enums
-    elsif is_choice_type_from(type_champ)
+    when TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)
       :enum
+    when TypeDeChamp.type_champs.fetch(:checkbox), TypeDeChamp.type_champs.fetch(:yes_no)
+      :boolean
     else
       :text
     end
   end
 
-  def self.filter_hash_value_column(type_champ)
+  def self.value_column(type_champ)
     if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
       :external_id
     else
@@ -554,6 +560,12 @@ class TypeDeChamp < ApplicationRecord
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
+    elsif linked_drop_down_list?
+      if column.value_column == :primary
+        primary_options
+      else
+        secondary_options.values.flatten
+      end
     elsif choice_type?
       if drop_down_list?
         drop_down_options

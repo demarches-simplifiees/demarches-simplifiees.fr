@@ -81,6 +81,15 @@ describe ColumnsConcern do
         let(:types_de_champ_private) { [] }
         it { expect(subject.map(&:label)).to include('rna – commune') }
       end
+
+      context 'with linked drop down list' do
+        let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'linked' }] }
+        let(:types_de_champ_private) { [] }
+        it {
+          expect(subject.map(&:label)).to include('linked (Primaire)')
+          expect(subject.map(&:label)).to include('linked (Secondaire)')
+        }
+      end
     end
 
     context 'when the procedure is for individuals' do

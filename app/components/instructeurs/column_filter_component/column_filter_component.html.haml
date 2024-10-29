@@ -14,7 +14,7 @@
     }
 
   = label_tag :value, t('.value'), for: 'value', class: 'fr-label'
-  - if column_type == :enum || column_type == :enums
+  - if column_type.in?([:enum, :enums, :boolean])
     = select_tag :filter,
       options_for_select(options_for_select_of_column),
       id: 'value',
@@ -23,7 +23,7 @@
       data: { no_autosubmit: true }
   - else
     %input#value.fr-input{
-      type: column_type,
+      type: html_column_type,
       name: "#{prefix}[filter]",
       maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
       disabled: column.nil? ? true : false,

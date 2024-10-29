@@ -12,6 +12,17 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
 
   def column_type = column.present? ? column.type : :text
 
+  def html_column_type
+    case column_type
+    when :datetime, :date
+      'date'
+    when :integer, :decimal
+      'number'
+    else
+      'text'
+    end
+  end
+
   def options_for_select_of_column
     if column.scope.present?
       I18n.t(column.scope).map(&:to_a).map(&:reverse)
@@ -56,10 +67,11 @@ class Instructeurs::ColumnFilterComponent < ApplicationComponent
   private
 
   def find_type_de_champ(column)
+    stable_id = column.to_s.split('->').first
     TypeDeChamp
       .joins(:revision_types_de_champ)
       .where(revision_types_de_champ: { revision_id: procedure.revisions })
       .order(created_at: :desc)
-      .find_by(stable_id: column)
+      .find_by(stable_id:)
   end
 end
