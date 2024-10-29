@@ -3,6 +3,7 @@
 module Administrateurs
   class ProcedureLabelsController < AdministrateurController
     before_action :retrieve_procedure
+    before_action :retrieve_label, only: [:edit, :update, :destroy]
     before_action :set_colors_collection, only: [:edit, :new, :create, :update]
 
     def index
@@ -10,7 +11,6 @@ module Administrateurs
     end
 
     def edit
-      @label = label
     end
 
     def new
@@ -22,7 +22,7 @@ module Administrateurs
 
       if @label.save
         flash.notice = 'Le label a bien été créé'
-        redirect_to admin_procedure_procedure_labels_path(@procedure)
+        redirect_to [:admin, @procedure, :procedure_labels]
       else
         flash.alert = @label.errors.full_messages
         render :new
@@ -30,12 +30,9 @@ module Administrateurs
     end
 
     def update
-      @label = label
-      @label.update(procedure_label_params)
-
-      if @label.valid?
+      if @label.update(procedure_label_params)
         flash.notice = 'Le label a bien été modifié'
-        redirect_to admin_procedure_procedure_labels_path(@procedure)
+        redirect_to [:admin, @procedure, :procedure_labels]
       else
         flash.alert = @label.errors.full_messages
         render :edit
@@ -43,10 +40,9 @@ module Administrateurs
     end
 
     def destroy
-      @label = label
       @label.destroy!
       flash.notice = 'Le label a bien été supprimé'
-      redirect_to admin_procedure_procedure_labels_path(@procedure)
+      redirect_to [:admin, @procedure, :procedure_labels]
     end
 
     private
@@ -55,8 +51,8 @@ module Administrateurs
       params.require(:procedure_label).permit(:name, :color)
     end
 
-    def label
-      @procedure.procedure_labels.find(params[:id])
+    def retrieve_label
+      @label = @procedure.procedure_labels.find(params[:id])
     end
 
     def set_colors_collection
