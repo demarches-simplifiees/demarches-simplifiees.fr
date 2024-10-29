@@ -15,4 +15,4 @@ en:
     attributes:
       champs/rna_champ:
           hints:
-            value: "Expected format : W123456789. Exemple : W503726238"
+            value: "Expected format: W123456789. Example: W503726238"
