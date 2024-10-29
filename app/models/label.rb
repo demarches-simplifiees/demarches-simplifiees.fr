@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProcedureLabel < ApplicationRecord
+class Label < ApplicationRecord
   belongs_to :procedure
   has_many :dossier_labels, dependent: :destroy
 

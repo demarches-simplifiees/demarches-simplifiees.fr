@@ -51,7 +51,7 @@ describe ColumnsConcern do
           { label: 'Groupe instructeur', table: 'groupe_instructeur', column: 'id', displayable: true, type: :enum, scope: '', value_column: :value, filterable: true },
           { label: 'Avis oui/non', table: 'avis', column: 'question_answer', displayable: true, type: :text, scope: '', value_column: :value, filterable: false },
           { label: 'France connecté ?', table: 'self', column: 'user_from_france_connect?', displayable: false, type: :text, scope: '', value_column: :value, filterable: false },
-          { label: "Labels", table: "dossier_labels", column: "procedure_label_id", displayable: true, scope: '', value_column: :value, filterable: true },
+          { label: "Labels", table: "dossier_labels", column: "label_id", displayable: true, scope: '', value_column: :value, filterable: true },
           { label: 'SIREN', table: 'etablissement', column: 'entreprise_siren', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Forme juridique', table: 'etablissement', column: 'entreprise_forme_juridique', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },
           { label: 'Nom commercial', table: 'etablissement', column: 'entreprise_nom_commercial', displayable: true, type: :text, scope: '', value_column: :value, filterable: true },

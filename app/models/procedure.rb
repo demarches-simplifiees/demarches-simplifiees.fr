@@ -60,7 +60,7 @@ class Procedure < ApplicationRecord
   has_and_belongs_to_many :procedure_tags
 
   has_many :bulk_messages, dependent: :destroy
-  has_many :procedure_labels, dependent: :destroy
+  has_many :labels, dependent: :destroy
 
   def active_dossier_submitted_message
     published_dossier_submitted_message || draft_dossier_submitted_message
@@ -529,7 +529,7 @@ class Procedure < ApplicationRecord
     procedure.closing_notification_en_cours = false
     procedure.template = false
     procedure.monavis_embed = nil
-    procedure.procedure_labels = procedure_labels.map(&:dup)
+    procedure.labels = labels.map(&:dup)
 
     if !procedure.valid?
       procedure.errors.attribute_names.each do |attribute|
@@ -937,9 +937,9 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def create_generic_procedure_labels
-    ProcedureLabel::GENERIC_LABELS.each do |label|
-      ProcedureLabel.create(name: label[:name], color: label[:color], procedure_id: self.id)
+  def create_generic_labels
+    Label::GENERIC_LABELS.each do |label|
+      Label.create(name: label[:name], color: label[:color], procedure_id: self.id)
     end
   end
 

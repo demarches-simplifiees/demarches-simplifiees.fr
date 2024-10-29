@@ -244,7 +244,7 @@ describe 'instructeurs/dossiers/show', type: :view do
 
     context "Dossier with labels" do
       before do
-        DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.first.id)
+        DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.first.id)
       end
 
       it 'displays labels and button without text to add label' do

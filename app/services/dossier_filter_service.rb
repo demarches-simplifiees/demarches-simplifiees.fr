@@ -131,7 +131,7 @@ class DossierFilterService
           assert_supported_column(table, column)
           dossiers
             .joins(:dossier_labels)
-            .where(dossier_labels: { procedure_label_id: values })
+            .where(dossier_labels: { label_id: values })
         when 'groupe_instructeur'
           assert_supported_column(table, column)
 

@@ -294,7 +294,7 @@ FactoryBot.define do
 
     trait :with_labels do
       after(:create) do |procedure, _evaluator|
-        procedure.create_generic_procedure_labels
+        procedure.create_generic_labels
       end
     end
   end

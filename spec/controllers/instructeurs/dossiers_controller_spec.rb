@@ -1523,7 +1523,7 @@ describe Instructeurs::DossiersController, type: :controller do
     let(:procedure) { create(:procedure, :with_labels, instructeurs: [instructeur]) }
     let!(:dossier) { create(:dossier, :en_construction, procedure:) }
     context 'it create dossier labels' do
-      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, procedure_label_id: [ProcedureLabel.first.id] }, format: :turbo_stream }
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [Label.first.id] }, format: :turbo_stream }
       it 'works' do
         subject
         dossier.reload
@@ -1536,10 +1536,10 @@ describe Instructeurs::DossiersController, type: :controller do
 
     context 'it remove dossier labels' do
       before do
-        DossierLabel.create(dossier_id: dossier.id, procedure_label_id: dossier.procedure.procedure_labels.first.id)
+        DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.first.id)
       end
 
-      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, procedure_label_id: [] }, format: :turbo_stream }
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [] }, format: :turbo_stream }
 
       it 'works' do
         expect(dossier.dossier_labels.count).to eq(1)

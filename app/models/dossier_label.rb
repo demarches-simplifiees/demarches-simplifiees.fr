@@ -2,5 +2,5 @@
 
 class DossierLabel < ApplicationRecord
   belongs_to :dossier
-  belongs_to :procedure_label
+  belongs_to :label
 end
