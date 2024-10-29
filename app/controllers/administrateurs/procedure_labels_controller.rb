@@ -56,7 +56,7 @@ module Administrateurs
     end
 
     def set_colors_collection
-      @colors_collection = ProcedureLabel.colors.values
+      @colors_collection = ProcedureLabel.colors.keys
     end
   end
 end

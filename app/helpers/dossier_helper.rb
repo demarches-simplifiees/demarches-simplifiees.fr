@@ -130,7 +130,7 @@ module DossierHelper
   end
 
   def tag_label(name, color)
-    tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{ProcedureLabel.colors.fetch(color.underscore)}")
+    tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{ProcedureLabel.class_name(color)}")
   end
 
   def demandeur_dossier(dossier)

@@ -28,15 +28,3 @@ $colors: "green-tilleul-verveine",
     color: var(--text-action-high-#{$color});
     }
 }
-
-.grid-tags {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-}
-
-@media (min-width: 62em) {
-  .grid-tags {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-  }
-}

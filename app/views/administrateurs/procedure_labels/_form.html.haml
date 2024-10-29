@@ -6,11 +6,10 @@
       = t('activerecord.attributes.procedure_label.color')
       = asterisk
 
-    .grid-tags
-      - @colors_collection.each do |color|
-        .fr-fieldset__element
-          .fr-radio-group
-            = f.radio_button :color, color, checked: (label.color == color.underscore)
-            = f.label :color, value: color, class: "fr-label fr-tag fr-tag--sm fr-tag--#{color}"
+    - @colors_collection.each do |color|
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-radio-group
+          = f.radio_button :color, color, checked: (label.color == color)
+          = f.label :color, t("activerecord.attributes.label/color.#{color}"), value: color, class: "fr-label fr-tag fr-tag--sm fr-tag--#{ProcedureLabel.class_name(color)}"
 
   = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

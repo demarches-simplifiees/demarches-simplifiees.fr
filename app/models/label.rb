@@ -28,4 +28,8 @@ class Label < ApplicationRecord
 
   validates :name, :color, presence: true
   validates :name, length: { maximum: NAME_MAX_LENGTH }
+
+  def self.class_name(color)
+    ProcedureLabel.colors.fetch(color.underscore)
+  end
 end
