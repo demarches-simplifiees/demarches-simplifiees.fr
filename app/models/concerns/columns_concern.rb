@@ -71,7 +71,7 @@ module ColumnsConcern
 
     def dossier_id_column = Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
 
-    def dossier_state_column = Column.new(procedure_id: id, table: 'self', column: 'state', label: I18n.t('activerecord.attributes.procedure_presentation.fields.self.state'), type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
+    def dossier_state_column = Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
 
     def notifications_column = Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
 
