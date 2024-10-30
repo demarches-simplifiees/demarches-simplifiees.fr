@@ -71,7 +71,7 @@ class DossierFilterService
       filtered_column = filters_for_column.first.column
       value_column = filtered_column.value_column
 
-      if filtered_column.is_a?(Columns::JSONPathColumn)
+      if filtered_column.respond_to?(:filtered_ids)
         filtered_column.filtered_ids(dossiers, values)
       else
         case table

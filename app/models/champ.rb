@@ -118,6 +118,10 @@ class Champ < ApplicationRecord
     TypeDeChamp::CHAMP_TYPE_TO_TYPE_CHAMP.fetch(type)
   end
 
+  def last_write_column_type
+    TypeDeChamp.column_type(last_write_type_champ)
+  end
+
   def main_value_name
     :value
   end
