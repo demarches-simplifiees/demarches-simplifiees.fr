@@ -50,49 +50,11 @@ module ColumnsConcern
       columns.flatten.compact
     end
 
-    def dossier_columns
-      dossier_columns = [dossier_id_column, notifications_column]
-      dossier_columns.concat([dossier_state_column])
-      dossier_columns.concat([dossier_archived_column])
-      dossier_columns.concat(dossier_dates_columns)
-      dossier_columns.concat([dossier_motivation_column])
-      dossier_columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
-      dossier_columns.concat(dossier_non_displayable_dates_columns)
-      dossier_columns.flatten.compact
-    end
-
-    def groupe_instructeurs_id_column = Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)
-
-    def followers_instructeurs_email_column = Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')
-
-    def dossier_archived_column = Column.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
-
-    def dossier_motivation_column = Column.new(procedure_id: id, table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
-
     def dossier_id_column = Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
 
     def dossier_state_column = Column.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
 
     def notifications_column = Column.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
-
-    def user_email_for_display_column = Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
-
-    def user_france_connected_column = Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
-
-    def procedure_chorus_columns
-      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
-        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
-    end
-
-    def dossier_non_displayable_dates_columns
-      ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
-    end
-
-    def dossier_dates_columns
-      ['created_at', 'updated_at', 'last_champ_updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
-    end
 
     def sva_svr_columns(for_export: false)
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
@@ -116,8 +78,46 @@ module ColumnsConcern
 
     private
 
+    def groupe_instructeurs_id_column = Column.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)
+
+    def followers_instructeurs_email_column = Column.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')
+
+    def dossier_archived_column = Column.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
+
+    def dossier_motivation_column = Column.new(procedure_id: id, table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
+
+    def user_email_for_display_column = Column.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
+
+    def user_france_connected_column = Column.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+
+    def procedure_chorus_columns
+      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
+        .map { |column| Column.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
+    end
+
+    def dossier_non_displayable_dates_columns
+      ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
+    end
+
+    def dossier_dates_columns
+      ['created_at', 'updated_at', 'last_champ_updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
+        .map { |column| Column.new(procedure_id: id, table: 'self', column:, type: :date) }
+    end
+
     def email_column
       Column.new(procedure_id: id, table: 'user', column: 'email')
+    end
+
+    def dossier_columns
+      columns = [dossier_id_column, notifications_column]
+      columns.concat([dossier_state_column])
+      columns.concat([dossier_archived_column])
+      columns.concat(dossier_dates_columns)
+      columns.concat([dossier_motivation_column])
+      columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
+      columns.concat(dossier_non_displayable_dates_columns)
+      columns.flatten.compact
     end
 
     def standard_columns
