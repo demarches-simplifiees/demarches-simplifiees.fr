@@ -93,17 +93,21 @@ class TypesDeChamp::TypeDeChampBase
   end
 
   def columns(procedure_id:, displayable: true, prefix: nil)
-    [
-      Column.new(
-        procedure_id:,
-        table: Column::TYPE_DE_CHAMP_TABLE,
-        column: stable_id.to_s,
-        label: libelle_with_prefix(prefix),
-        type: TypeDeChamp.column_type(type_champ),
-        value_column: TypeDeChamp.value_column(type_champ),
-        displayable:
-      )
-    ]
+    if fillable?
+      [
+        Column.new(
+          procedure_id:,
+          table: Column::TYPE_DE_CHAMP_TABLE,
+          column: stable_id.to_s,
+          label: libelle_with_prefix(prefix),
+          type: TypeDeChamp.column_type(type_champ),
+          value_column: TypeDeChamp.value_column(type_champ),
+          displayable:
+        )
+      ]
+    else
+      []
+    end
   end
 
   private
