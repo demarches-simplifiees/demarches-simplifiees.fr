@@ -1,0 +1,11 @@
+---
+fr:
+  address_input_label: "Rechercher une adresse"
+  address_input_description: "Saisissez au moins 2 caractères"
+  pin_input_label: "Ajouter un point sur la carte"
+  pin_input_description: "Exemple : "
+  show_pin: "Afficher votre position sur la carte"
+  add_pin: "Ajouter le point avec les coordonnées saisies sur la carte"
+  add_file: "Ajouter un fichier GPX ou KML"
+  choose_file: "Choisir un fichier GPX ou KML"
+  delete_file: "Supprimer le fichier"
