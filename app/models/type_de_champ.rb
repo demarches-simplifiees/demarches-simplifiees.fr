@@ -528,19 +528,19 @@ class TypeDeChamp < ApplicationRecord
 
   def self.column_type(type_champ)
     case type_champ
-    when TypeDeChamp.type_champs.fetch(:datetime)
+    when type_champs.fetch(:datetime)
       :datetime
-    when TypeDeChamp.type_champs.fetch(:date)
+    when type_champs.fetch(:date)
       :date
-    when TypeDeChamp.type_champs.fetch(:integer_number)
+    when type_champs.fetch(:integer_number)
       :integer
-    when TypeDeChamp.type_champs.fetch(:decimal_number)
+    when type_champs.fetch(:decimal_number)
       :decimal
-    when TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
+    when type_champs.fetch(:multiple_drop_down_list)
       :enums
-    when TypeDeChamp.type_champs.fetch(:drop_down_list), TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)
+    when type_champs.fetch(:drop_down_list), type_champs.fetch(:departements), type_champs.fetch(:regions)
       :enum
-    when TypeDeChamp.type_champs.fetch(:checkbox), TypeDeChamp.type_champs.fetch(:yes_no)
+    when type_champs.fetch(:checkbox), type_champs.fetch(:yes_no), type_champs.fetch(:titre_identite)
       :boolean
     else
       :text
@@ -548,7 +548,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def self.value_column(type_champ)
-    if type_champ.in?([TypeDeChamp.type_champs.fetch(:departements), TypeDeChamp.type_champs.fetch(:regions)])
+    if type_champ.in?([type_champs.fetch(:departements), type_champs.fetch(:regions)])
       :external_id
     else
       :value

@@ -57,8 +57,6 @@ class Column
 
     value = get_raw_value(champ)
     if should_cast?
-      # FIXME: remove this, once displayable is implemented through columns
-      return nil if champ.last_write_type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
       from_type = champ.last_write_column_type
       to_type = type
       parsed_value = parse_value(value, from_type)

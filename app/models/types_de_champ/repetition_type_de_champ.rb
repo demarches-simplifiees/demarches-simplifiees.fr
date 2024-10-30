@@ -27,7 +27,7 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
     ActiveStorage::Filename.new(str.delete('[]*?')).sanitized
   end
 
-  def columns(procedure_id:, displayable: true, prefix: nil)
+  def columns(procedure_id:, displayable: nil, prefix: nil)
     @type_de_champ.procedure
       .all_revisions_types_de_champ(parent: @type_de_champ)
       .flat_map { _1.columns(procedure_id:, displayable: false, prefix: libelle) }

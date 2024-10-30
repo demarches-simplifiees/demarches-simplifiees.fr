@@ -68,6 +68,7 @@ describe Column do
         expect_type_de_champ_values('annuaire_education', [nil])
         expect_type_de_champ_values('carte', [])
         expect_type_de_champ_values('piece_justificative', [])
+        expect_type_de_champ_values('titre_identite', [true])
         expect_type_de_champ_values('cnaf', [nil])
         expect_type_de_champ_values('dgfip', [nil])
         expect_type_de_champ_values('pole_emploi', [nil])
