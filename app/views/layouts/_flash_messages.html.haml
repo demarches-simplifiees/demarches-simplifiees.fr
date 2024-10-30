@@ -1,5 +1,5 @@
 - displayable_flash = flash.filter { |key, _| key.in?(['notice', 'alert']) }
-#flash_messages{ tabindex: '-1', data: { turbo_force: :server } }
+#flash_messages{ tabindex: '-1', data: { turbo_force: :server }.merge(displayable_flash.any? ? {controller: :autofocus} : {}) }
   #flash_message.center{ class: defined?(unique_classname) ? unique_classname : '' }
     - if displayable_flash.any?
       - displayable_flash.each do |key, value|
