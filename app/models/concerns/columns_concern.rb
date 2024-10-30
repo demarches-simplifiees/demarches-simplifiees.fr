@@ -36,18 +36,19 @@ module ColumnsConcern
       columns.concat(moral_columns) if !for_individual
       columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
 
-      columns.flatten.compact
+      # ensure the columns exist in main list
+      columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
     def dossier_columns_for_export
-      columns = [dossier_state_column]
-      columns.concat([dossier_archived_column])
+      columns = [dossier_state_column, dossier_archived_column]
       columns.concat(dossier_dates_columns)
       columns.concat([dossier_motivation_column])
       columns.concat(sva_svr_columns(for_export: true)) if sva_svr_enabled?
-      columns.concat([groupe_instructeurs_id_column])
-      columns.concat([followers_instructeurs_email_column])
-      columns.flatten.compact
+      columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
+
+      # ensure the columns exist in main list
+      columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
     def dossier_id_column = Column.new(procedure_id: id, table: 'self', column: 'id', type: :number)
