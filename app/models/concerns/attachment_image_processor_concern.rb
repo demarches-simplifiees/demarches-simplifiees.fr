@@ -19,7 +19,7 @@ module AttachmentImageProcessorConcern
   def process_image
     return if blob.nil?
     return if blob.attachments.size > 1
-    return if blob.attachments.last.record_type == "Export"
+    return if blob.attachments.any? { _1.record_type == "Export" }
 
     ImageProcessorJob.perform_later(blob)
   end
