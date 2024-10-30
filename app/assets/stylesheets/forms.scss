@@ -221,21 +221,32 @@
   .fr-label + .fr-hint-text > *,
   .fr-fieldset__legend + .fr-hint-text > * {
     // la description d'un champ peut contenir du markup (markdown->html),
-    // on herite donc la fontsize/margin/padding du fr-hint-text
+    // on herite donc la taille de police, la couleur et l'interlignage de fr-hint-text
+    // on réinitialise les marges des éléments
     font-size: inherit;
     line-height: inherit;
-    margin: inherit;
-    padding: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
   }
 
-  .fr-label + .fr-hint-text {
-    // les messages d'aide se trouvant juste après un label prennent le même style que ceux se trouvant dans un label
-    margin-top: .25rem;
+  .fr-fieldset .fr-hint-text ul {
+    margin-left: 0.75rem;
   }
+
+  .fr-fieldset .fr-hint-text ol {
+    margin-left: 1.25rem;
+  }
+
 
   .fr-hint-text + .fr-input {
-    // les champs se trouvant juste après un message d'aide prennent le même syle que ceux se trouvant juste après un label
-    margin-top: .5rem;
+    // les champs se trouvant juste après un message d'aide ont le même espacement que ceux se trouvant juste après un label
+    margin-top: 0.5rem;
+  }
+
+  .fr-fieldset__legend .fr-hint-text {
+    // les messages d'aide se trouvant dans une légende ont le même espacement que ceux se trouvant dans un label
+    margin-top: 0.25rem;
   }
 
   input[type='password'],
@@ -398,10 +409,6 @@
       .utils-repetition-required-destroy-button {
       display: none;
     }
-  }
-
-  .editable-champ-titre_identite {
-    margin-bottom: 2 * $default-padding;
   }
 
   .cnaf-inputs,

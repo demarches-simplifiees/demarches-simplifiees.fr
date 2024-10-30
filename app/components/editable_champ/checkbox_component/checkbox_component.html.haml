@@ -1,8 +1,10 @@
-.fr-checkbox-group
+.fr-checkbox-group.fr-mb-2w
   = @form.check_box :value,
-    { required: @champ.required?, id: @champ.input_id, checked: @champ.true?, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, class: class_names('required' => @champ.required?)},
+    { required: @champ.required?, id: @champ.input_id, checked: @champ.true?, aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" } },
     'true',
     'false'
   %label.fr-label{ for: @champ.input_id, id: @champ.labelledby_id }
-    %span
+    %span.width-100
       = render EditableChamp::ChampLabelContentComponent.new form: @form, champ: @champ, seen_at: @seen_at
+  - if @champ.description.present?
+    .fr-hint-text.fr-mt-1v.fr-ml-4w{ id: @champ.describedby_id }= render SimpleFormatComponent.new(@champ.description, allow_a: true)
