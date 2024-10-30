@@ -1,4 +1,4 @@
-#flash_messages{ tabindex: '-1', data: { turbo_force: :server } }
+#flash_messages{ tabindex: '-1', data: { turbo_force: :server }.merge(flash.any? ? {controller: :autofocus} : {}) }
   #flash_message.center{ class: defined?(unique_classname) ? unique_classname : '' }
     - if flash.any?
       - flash.each do |key, value|
