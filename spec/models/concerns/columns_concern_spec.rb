@@ -146,7 +146,7 @@ describe ColumnsConcern do
       ]
     end
 
-    describe '#all_usager_columns_for_export' do
+    describe '#usager_columns_for_export' do
       context 'for individual procedure' do
         let(:for_individual) { true }
 
@@ -162,7 +162,7 @@ describe ColumnsConcern do
             procedure.find_column(label: "Nom du mandataire"),
             procedure.find_column(label: "Prénom du mandataire")
           ]
-          actuals = procedure.all_usager_columns_for_export.map(&:h_id)
+          actuals = procedure.usager_columns_for_export.map(&:h_id)
           expected.each do |expected_col|
             expect(actuals).to include(expected_col.h_id)
           end
@@ -199,7 +199,7 @@ describe ColumnsConcern do
             procedure.find_column(label: "Entreprise SIRET siège social"),
             procedure.find_column(label: "Entreprise code effectif entreprise")
           ]
-          actuals = procedure.all_usager_columns_for_export
+          actuals = procedure.usager_columns_for_export
           expected.each do |expected_col|
             expect(actuals.map(&:h_id)).to include(expected_col.h_id)
           end
@@ -217,7 +217,7 @@ describe ColumnsConcern do
             procedure.find_column(label: "Référentiel De Programmation"),
             procedure.find_column(label: "Centre De Coût")
           ]
-          actuals = procedure.all_usager_columns_for_export.map(&:h_id)
+          actuals = procedure.usager_columns_for_export.map(&:h_id)
           expected.each do |expected_col|
             expect(actuals).to include(expected_col.h_id)
           end
@@ -225,7 +225,7 @@ describe ColumnsConcern do
       end
     end
 
-    describe '#all_dossier_columns_for_export' do
+    describe '#dossier_columns_for_export' do
       let(:procedure) { create(:procedure_with_dossiers, :routee, :published, types_de_champ_public:, for_individual:) }
 
       it "returns all dossier columns" do
@@ -241,7 +241,7 @@ describe ColumnsConcern do
           procedure.find_column(label: "Instructeurs"),
           procedure.find_column(label: "Groupe instructeur")
         ]
-        actuals = procedure.all_dossier_columns_for_export.map(&:h_id)
+        actuals = procedure.dossier_columns_for_export.map(&:h_id)
         expected.each do |expected_col|
           expect(actuals).to include(expected_col.h_id)
         end

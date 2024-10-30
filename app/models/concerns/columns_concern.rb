@@ -30,7 +30,7 @@ module ColumnsConcern
       end
     end
 
-    def all_usager_columns_for_export
+    def usager_columns_for_export
       columns = [dossier_id_column, user_email_for_display_column, user_france_connected_column]
       columns.concat(individual_columns) if for_individual
       columns.concat(moral_columns) if !for_individual
@@ -39,7 +39,7 @@ module ColumnsConcern
       columns.flatten.compact
     end
 
-    def all_dossier_columns_for_export
+    def dossier_columns_for_export
       columns = [dossier_state_column]
       columns.concat([dossier_archived_column])
       columns.concat(dossier_dates_columns)
