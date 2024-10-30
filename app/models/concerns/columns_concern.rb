@@ -118,7 +118,6 @@ module ColumnsConcern
       columns.concat([dossier_motivation_column])
       columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
       columns.concat(dossier_non_displayable_dates_columns)
-      columns.flatten.compact
     end
 
     def standard_columns
