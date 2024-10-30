@@ -17,6 +17,7 @@ class UninterlaceService
   end
 
   def interlaced?(png_path)
+    return false if png_path.blank?
     png = MiniMagick::Image.open(png_path)
     png.data["interlace"] != "None"
   end
