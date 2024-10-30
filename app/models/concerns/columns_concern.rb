@@ -25,7 +25,7 @@ module ColumnsConcern
         columns.concat(standard_columns)
         columns.concat(individual_columns) if for_individual
         columns.concat(moral_columns) if !for_individual
-        columns.concat(procedure_chorus_columns)
+        columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
         columns.concat(types_de_champ_columns)
       end
     end
