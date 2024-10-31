@@ -25,7 +25,7 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
       let(:types_de_champ_public) { [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }] }
       let(:procedure) { create(:procedure, :published, types_de_champ_public:) }
       let(:drop_down_stable_id) { procedure.active_revision.types_de_champ.first.stable_id }
-      let(:column) { Column.new(procedure_id:, table: 'type_de_champ', scope: nil, column: drop_down_stable_id) }
+      let(:column) { procedure.find_column(label: 'Votre ville') }
 
       it 'find most recent tdc' do
         is_expected.to eq(['Paris', 'Lyon', 'Marseille'])
