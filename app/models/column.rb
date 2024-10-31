@@ -52,15 +52,12 @@ class Column
     procedure.find_column(h_id: h_id)
   end
 
-  def get_value(champ)
+  def value(champ)
     return if champ.nil?
 
-    value = get_raw_value(champ)
-    if should_cast?
-      from_type = champ.last_write_column_type
-      to_type = type
-      parsed_value = parse_value(value, from_type)
-      cast_value(parsed_value, from_type:, to_type:)
+    value = typed_value(champ)
+    if default_column?
+      cast_value(value, from_type: champ.last_write_column_type, to_type: type)
     else
       value
     end
@@ -68,15 +65,15 @@ class Column
 
   private
 
-  def get_raw_value(champ)
-    champ.public_send(value_column)
+  def typed_value(champ)
+    value = string_value(champ)
+    parse_value(value, type: champ.last_write_column_type)
   end
 
-  def should_cast?
-    true
-  end
+  def string_value(champ) = champ.public_send(value_column)
+  def default_column? = value_column.in?([:value, :external_id])
 
-  def parse_value(value, type)
+  def parse_value(value, type:)
     return if value.blank?
 
     case type
