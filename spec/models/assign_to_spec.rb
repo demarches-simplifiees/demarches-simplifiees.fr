@@ -45,7 +45,7 @@ describe AssignTo, type: :model do
       it do
         expect(procedure_presentation_or_default).to be_persisted
         expect(procedure_presentation_or_default).to be_valid
-        expect(errors).to be_present
+        expect(errors.full_messages).to include(/unable to find procedure 666/)
         expect(assign_to.procedure_presentation).not_to be(procedure_presentation)
       end
     end
