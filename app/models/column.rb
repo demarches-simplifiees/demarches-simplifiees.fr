@@ -27,7 +27,7 @@ class Column
 
   # the h_id is a Hash and hold enough information to find the column
   # in the ColumnType class, aka be able to do the h_id -> column conversion
-  def h_id = { procedure_id: @procedure_id, column_id: "#{table}/#{column}" }
+  def h_id = { procedure_id: @procedure_id, column_id: }
 
   def ==(other) = h_id == other.h_id # using h_id instead of id to avoid inversion of keys
 
@@ -64,6 +64,8 @@ class Column
   end
 
   private
+
+  def column_id = "#{table}/#{column}"
 
   def typed_value(champ)
     value = string_value(champ)
