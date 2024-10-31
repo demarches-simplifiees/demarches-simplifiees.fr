@@ -22,4 +22,8 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
       attachment.url
     end
   end
+
+  def columns(procedure_id:, displayable: true, prefix: nil)
+    []
+  end
 end

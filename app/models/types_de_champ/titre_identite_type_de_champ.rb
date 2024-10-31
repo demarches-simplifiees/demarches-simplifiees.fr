@@ -21,4 +21,19 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_default_export_value(path = :value)
     "absent"
   end
+
+  def columns(procedure_id:, displayable: nil, prefix: nil)
+    [
+      Columns::TitreIdentiteColumn.new(
+        procedure_id:,
+        table: Column::TYPE_DE_CHAMP_TABLE,
+        column: stable_id.to_s,
+        label: libelle_with_prefix(prefix),
+        type: TypeDeChamp.column_type(type_champ),
+        value_column: TypeDeChamp.value_column(type_champ),
+        displayable: false,
+        filterable: false
+      )
+    ]
+  end
 end

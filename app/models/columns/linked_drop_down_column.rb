@@ -2,7 +2,11 @@
 
 class Columns::LinkedDropDownColumn < Column
   def column
-    "#{@column}->#{value_column}" # override column otherwise json path facets will have same id as other
+    if value_column == :value
+      super
+    else
+      "#{@column}->#{value_column}" # override column otherwise json path facets will have same id as other
+    end
   end
 
   def filtered_ids(dossiers, values)
@@ -16,6 +20,8 @@ class Columns::LinkedDropDownColumn < Column
   def get_raw_value(champ)
     primary_value, secondary_value = unpack_values(champ.value)
     case value_column
+    when :value
+      nil
     when :primary
       primary_value
     when :secondary

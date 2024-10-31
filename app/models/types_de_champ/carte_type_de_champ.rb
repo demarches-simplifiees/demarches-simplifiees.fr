@@ -27,4 +27,8 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_value_for_export(champ, path = :value)
     champ.geo_areas.map(&:label).join("\n")
   end
+
+  def columns(procedure_id:, displayable: true, prefix: nil)
+    []
+  end
 end

@@ -68,7 +68,16 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
   end
 
   def columns(procedure_id:, displayable: true, prefix: nil)
-    super.concat([
+    [
+      Columns::LinkedDropDownColumn.new(
+        procedure_id:,
+        table: Column::TYPE_DE_CHAMP_TABLE,
+        column: stable_id.to_s,
+        label: libelle_with_prefix(prefix),
+        type: :text,
+        value_column: :value,
+        displayable:
+      ),
       Columns::LinkedDropDownColumn.new(
         procedure_id:,
         table: Column::TYPE_DE_CHAMP_TABLE,
@@ -87,7 +96,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         value_column: :secondary,
         displayable: false
       )
-    ])
+    ]
   end
 
   private
