@@ -1,11 +1,16 @@
 - content_for(:title, "Archives pour #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    ['Archives']] }
+-# = render partial: 'administrateurs/breadcrumbs',
+-#   locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+-#                     ['Archives']] }
+
+.sub-header
+  .fr-container.flex
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
 
 .container
-  %h1.mb-2 Archives
+  %h1.mb-2 Téléchargement mensuel
 
   = render partial: "shared/archives/notice"
   = render partial: "shared/archives/table", locals: {count_dossiers_termines_by_month: @count_dossiers_termines_by_month, archives: @archives, average_dossier_weight: @average_dossier_weight, procedure: @procedure }

@@ -1,8 +1,9 @@
-- title = "Statistiques · #{@procedure.libelle}"
+- title = "Statistiques de la démarche"
 - content_for(:title, title)
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    [t('.title')]] }
+.sub-header
+  .fr-container.flex
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
 
 = render partial: 'shared/procedures/stats', locals: { title: title }

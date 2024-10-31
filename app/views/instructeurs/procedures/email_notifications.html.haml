@@ -1,8 +1,10 @@
 - content_for(:title, "Notifications pour #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    ['Notifications']] }
+.sub-header
+  .fr-container.flex
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
+
 
 .fr-container
   %h1.fr-h3

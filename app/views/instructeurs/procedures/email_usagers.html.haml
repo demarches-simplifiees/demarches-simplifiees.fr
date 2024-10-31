@@ -1,10 +1,12 @@
 - content_for(:title, "Contacter les usagers pour #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    [t('.contact_users')]] }
+.sub-header
+  .fr-container.flex
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
+
 .messagerie.fr-container
-  %h1 Contacter les usagers
+  %h1= t('instructeurs.dossiers.header.banner.contact_users')
   %p.fr-highlight
     = t('.hint', count: @dossiers_without_groupe_count).html_safe
 

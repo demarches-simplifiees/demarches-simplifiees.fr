@@ -4,9 +4,6 @@
   .sub-header
     .fr-container.flex
 
-      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
-        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
-
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
 
       .procedure-actions

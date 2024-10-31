@@ -1,11 +1,9 @@
 - content_for(:title, "#{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    ['Historique des dossiers supprimés']] }
+.sub-header
+  .fr-container.flex
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
 
-.fr-container
-  .fr-mb-3w
-    = link_to "Retour à la démarche", instructeur_procedure_path(@procedure), class: "fr-link fr-icon-arrow-left-line fr-link--icon-left"
 
 = render Dossiers::DeletedDossiersComponent.new(deleted_dossiers: @deleted_dossiers)
