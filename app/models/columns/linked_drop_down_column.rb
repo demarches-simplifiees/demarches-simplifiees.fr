@@ -1,9 +1,15 @@
 # frozen_string_literal: true
 
-class Columns::LinkedDropDownColumn < Column
-  def column
-    return super if default_column?
-    "#{@column}->#{value_column}" # override column otherwise json path facets will have same id as other
+class Columns::LinkedDropDownColumn < Columns::ChampColumn
+  def initialize(procedure_id:, label:, stable_id:, value_column:, displayable:, type: :text)
+    super(
+      procedure_id:,
+      label:,
+      stable_id:,
+      displayable:,
+      type:,
+      value_column:
+    )
   end
 
   def filtered_ids(dossiers, values)
@@ -13,6 +19,14 @@ class Columns::LinkedDropDownColumn < Column
   end
 
   private
+
+  def column_id
+    if value_column == :value
+      "type_de_champ/#{stable_id}"
+    else
+      "type_de_champ/#{stable_id}->#{path}"
+    end
+  end
 
   def typed_value(champ)
     return nil if default_column?
