@@ -80,28 +80,28 @@ describe DossierProjectionService do
 
       context 'for self table' do
         context 'for created_at column' do
-          let(:label) { 'Créé le' }
+          let(:label) { 'Date de création' }
           let(:dossier) { Timecop.freeze(Time.zone.local(1992, 3, 22)) { create(:dossier, procedure:) } }
 
           it { is_expected.to eq('22/03/1992') }
         end
 
         context 'for en_construction_at column' do
-          let(:label) { 'En construction le' }
+          let(:label) { 'Date de passage en construction' }
           let(:dossier) { create(:dossier, :en_construction, en_construction_at: Time.zone.local(2018, 10, 17), procedure:) }
 
           it { is_expected.to eq('17/10/2018') }
         end
 
         context 'for depose_at column' do
-          let(:label) { 'Déposé le' }
+          let(:label) { 'Date de dépot' }
           let(:dossier) { create(:dossier, :en_construction, depose_at: Time.zone.local(2018, 10, 17), procedure:) }
 
           it { is_expected.to eq('17/10/2018') }
         end
 
         context 'for updated_at column' do
-          let(:label) { 'Mis à jour le' }
+          let(:label) { 'Date du dernier évènement' }
           let(:dossier) { create(:dossier, procedure:) }
 
           before { dossier.touch(time: Time.zone.local(2018, 9, 25)) }
@@ -142,7 +142,7 @@ describe DossierProjectionService do
       end
 
       context 'for etablissement table' do
-        let(:label) { 'Code postal' }
+        let(:label) { 'Établissement code postal' }
 
         let!(:dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75008')) }
 
@@ -158,7 +158,7 @@ describe DossierProjectionService do
       end
 
       context 'for followers_instructeurs table' do
-        let(:label) { 'Email instructeur' }
+        let(:label) { 'Instructeurs' }
 
         let(:dossier) { create(:dossier, procedure:) }
         let!(:follow1) { create(:follow, dossier: dossier, instructeur: create(:instructeur, email: 'b@host.fr')) }

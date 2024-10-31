@@ -81,7 +81,7 @@ RSpec.describe Export, type: :model do
     let(:instructeur) { create(:instructeur) }
     let!(:gi_1) { create(:groupe_instructeur, procedure: procedure, instructeurs: [instructeur]) }
     let!(:pp) { gi_1.instructeurs.first.procedure_presentation_and_errors_for_procedure_id(procedure.id).first }
-    let(:created_at_column) { FilteredColumn.new(column: procedure.find_column(label: 'Créé le'), filter: '10/12/2021') }
+    let(:created_at_column) { FilteredColumn.new(column: procedure.find_column(label: 'Date de création'), filter: '10/12/2021') }
 
     before { pp.update(tous_filters: [created_at_column]) }
 
@@ -95,7 +95,7 @@ RSpec.describe Export, type: :model do
         expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
           .to change { Export.count }.by(1)
 
-        update_at_column = FilteredColumn.new(column: procedure.find_column(label: 'Mis à jour le'), filter: '10/12/2021')
+        update_at_column = FilteredColumn.new(column: procedure.find_column(label: 'Date du dernier évènement'), filter: '10/12/2021')
         pp.update(tous_filters: [created_at_column, update_at_column])
 
         expect { Export.find_or_create_fresh_export(:zip, [gi_1], instructeur, time_span_type: Export.time_span_types.fetch(:everything), statut: Export.statuts.fetch(:tous), procedure_presentation: pp) }
@@ -181,7 +181,7 @@ RSpec.describe Export, type: :model do
       let(:statut) { 'tous' }
 
       let(:procedure_presentation) do
-        statut_column = procedure.find_column(label: 'Statut')
+        statut_column = procedure.dossier_state_column
         en_construction_filter = FilteredColumn.new(column: statut_column, filter: 'en_construction')
         create(:procedure_presentation,
                procedure:,

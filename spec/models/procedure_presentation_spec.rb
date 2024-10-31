@@ -77,7 +77,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is state' do
-      let(:filtered_column) { to_filter(['Statut', "en_construction"]) }
+      let(:filtered_column) { to_filter(['État du dossier', "en_construction"]) }
 
       it 'should get i18n value' do
         expect(subject).to eq("En construction")
@@ -85,7 +85,7 @@ describe ProcedurePresentation do
     end
 
     context 'when filter is a date' do
-      let(:filtered_column) { to_filter(['Créé le', "15/06/2023"]) }
+      let(:filtered_column) { to_filter(['Date de création', "15/06/2023"]) }
 
       it 'should get formatted value' do
         expect(subject).to eq("15/06/2023")
@@ -94,8 +94,8 @@ describe ProcedurePresentation do
   end
 
   describe '#update_displayed_fields' do
-    let(:en_construction_column) { procedure.find_column(label: 'En construction le') }
-    let(:mise_a_jour_column) { procedure.find_column(label: 'Mis à jour le') }
+    let(:en_construction_column) { procedure.find_column(label: 'Date de passage en construction') }
+    let(:mise_a_jour_column) { procedure.find_column(label: 'Date du dernier évènement') }
 
     let(:procedure_presentation) do
       create(:procedure_presentation, assign_to:).tap do |pp|

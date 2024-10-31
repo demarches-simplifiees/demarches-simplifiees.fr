@@ -41,7 +41,7 @@ describe DossierFilterService do
 
       context 'when a filter is present' do
         let(:filtered_ids) { [dossier_1, dossier_2, dossier_3].map(&:id) }
-        let(:filters) { [to_filter(['Statut', 'en_construction'])] }
+        let(:filters) { [to_filter(['État du dossier', 'en_construction'])] }
 
         before do
           expect(described_class).to receive(:filtered_ids).and_return(filtered_ids)
@@ -102,7 +102,7 @@ describe DossierFilterService do
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       context 'for created_at column' do
-        let!(:column) { procedure.find_column(label: 'Créé le') }
+        let!(:column) { procedure.find_column(label: 'Date de création') }
         let!(:recent_dossier) { Timecop.freeze(Time.zone.local(2018, 10, 17)) { create(:dossier, procedure:) } }
         let!(:older_dossier) { Timecop.freeze(Time.zone.local(2003, 11, 11)) { create(:dossier, procedure:) } }
 
@@ -110,7 +110,7 @@ describe DossierFilterService do
       end
 
       context 'for en_construction_at column' do
-        let!(:column) { procedure.find_column(label: 'En construction le') }
+        let!(:column) { procedure.find_column(label: 'Date de passage en construction') }
         let!(:recent_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:older_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2013, 1, 1)) }
 
@@ -118,7 +118,7 @@ describe DossierFilterService do
       end
 
       context 'for updated_at column' do
-        let(:column) { procedure.find_column(label: 'Mis à jour le') }
+        let(:column) { procedure.find_column(label: 'Date du dernier évènement') }
         let(:recent_dossier) { create(:dossier, procedure:) }
         let(:older_dossier) { create(:dossier, procedure:) }
 
@@ -251,7 +251,7 @@ describe DossierFilterService do
       end
 
       context 'for email column' do
-        let(:column) { procedure.find_column(label: 'Email instructeur') }
+        let(:column) { procedure.find_column(label: 'Instructeurs') }
 
         it { is_expected.to eq([dossier_a, dossier_z, dossier_without_instructeur].map(&:id)) }
       end
@@ -275,7 +275,7 @@ describe DossierFilterService do
 
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
-      let(:column) { procedure.find_column(label: 'Code postal') }
+      let(:column) { procedure.find_column(label: 'Établissement code postal') }
       let(:order) { 'asc' } # Desc works the same, no extra test required
 
       let!(:huitieme_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75008')) }
@@ -297,7 +297,7 @@ describe DossierFilterService do
 
     context 'for self table' do
       context 'for created_at column' do
-        let(:filter) { ['Créé le', '18/9/2018'] }
+        let(:filter) { ['Date de création', '18/9/2018'] }
 
         let!(:kept_dossier) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 18, 14, 28)) }
         let!(:discarded_dossier) { create(:dossier, procedure:, created_at: Time.zone.local(2018, 9, 17, 23, 59)) }
@@ -306,7 +306,7 @@ describe DossierFilterService do
       end
 
       context 'for en_construction_at column' do
-        let(:filter) { ['En construction le', '17/10/2018'] }
+        let(:filter) { ['Date de passage en construction', '17/10/2018'] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2013, 1, 1)) }
@@ -315,7 +315,7 @@ describe DossierFilterService do
       end
 
       context 'for updated_at column' do
-        let(:filter) { ['Mis à jour le', '18/9/2018'] }
+        let(:filter) { ['Date du dernier évènement', '18/9/2018'] }
 
         let(:kept_dossier) { create(:dossier, procedure:) }
         let(:discarded_dossier) { create(:dossier, procedure:) }
@@ -329,7 +329,7 @@ describe DossierFilterService do
       end
 
       context 'for updated_since column' do
-        let(:filter) { ['Mis à jour depuis', '18/9/2018'] }
+        let(:filter) { ['Dernier évènement depuis', '18/9/2018'] }
 
         let(:kept_dossier) { create(:dossier, procedure:) }
         let(:later_dossier) { create(:dossier, procedure:) }
@@ -362,7 +362,7 @@ describe DossierFilterService do
       end
 
       context 'ignore time of day' do
-        let(:filter) { ['En construction le', '17/10/2018 19:30'] }
+        let(:filter) { ['Date de passage en construction', '17/10/2018 19:30'] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17, 15, 56)) }
         let!(:discarded_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 18, 5, 42)) }
@@ -372,20 +372,20 @@ describe DossierFilterService do
 
       context 'for a malformed date' do
         context 'when its a string' do
-          let(:filter) { ['Mis à jour le', 'malformed date'] }
+          let(:filter) { ['Date du dernier évènement', 'malformed date'] }
 
           it { is_expected.to match([]) }
         end
 
         context 'when its a number' do
-          let(:filter) { ['Mis à jour le', '177500'] }
+          let(:filter) { ['Date du dernier évènement', '177500'] }
 
           it { is_expected.to match([]) }
         end
       end
 
       context 'with multiple search values' do
-        let(:filters) { [['En construction le', '17/10/2018'], ['En construction le', '19/10/2018']] }
+        let(:filters) { [['Date de passage en construction', '17/10/2018'], ['Date de passage en construction', '19/10/2018']] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 17)) }
         let!(:other_kept_dossier) { create(:dossier, :en_construction, procedure:, en_construction_at: Time.zone.local(2018, 10, 19)) }
@@ -397,7 +397,7 @@ describe DossierFilterService do
       end
 
       context 'with multiple state filters' do
-        let(:filters) { [['Statut', 'en_construction'], ['Statut', 'en_instruction']] }
+        let(:filters) { [['État du dossier', 'en_construction'], ['État du dossier', 'en_instruction']] }
 
         let!(:kept_dossier) { create(:dossier, :en_construction, procedure:) }
         let!(:other_kept_dossier) { create(:dossier, :en_instruction, procedure:) }
@@ -409,7 +409,7 @@ describe DossierFilterService do
       end
 
       context 'with en_construction state filters' do
-        let(:filter) { ['Statut', 'en_construction'] }
+        let(:filter) { ['État du dossier', 'en_construction'] }
 
         let!(:en_construction) { create(:dossier, :en_construction, procedure:) }
         let!(:en_construction_with_correction) { create(:dossier, :en_construction, procedure:) }
@@ -580,7 +580,7 @@ describe DossierFilterService do
 
     context 'for etablissement table' do
       context 'for entreprise_date_creation column' do
-        let(:filter) { ['Date de création', '21/6/2018'] }
+        let(:filter) { ['Entreprise date de création', '21/6/2018'] }
 
         let!(:kept_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2018, 6, 21))) }
         let!(:discarded_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2008, 6, 21))) }
@@ -588,7 +588,7 @@ describe DossierFilterService do
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
         context 'with multiple search values' do
-          let(:filters) { [['Date de création', '21/6/2016'], ['Date de création', '21/6/2018']] }
+          let(:filters) { [['Entreprise date de création', '21/6/2016'], ['Entreprise date de création', '21/6/2018']] }
 
           let!(:other_kept_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, entreprise_date_creation: Time.zone.local(2016, 6, 21))) }
 
@@ -601,7 +601,7 @@ describe DossierFilterService do
       context 'for code_postal column' do
         # All columns except entreprise_date_creation work exacly the same, just testing one
 
-        let(:filter) { ['Code postal', '75017'] }
+        let(:filter) { ['Établissement code postal', '75017'] }
 
         let!(:kept_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '75017')) }
         let!(:discarded_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '25000')) }
@@ -609,7 +609,7 @@ describe DossierFilterService do
         it { is_expected.to contain_exactly(kept_dossier.id) }
 
         context 'with multiple search values' do
-          let(:filters) { [['Code postal', '75017'], ['Code postal', '88100']] }
+          let(:filters) { [['Établissement code postal', '75017'], ['Établissement code postal', '88100']] }
 
           let!(:other_kept_dossier) { create(:dossier, procedure:, etablissement: create(:etablissement, code_postal: '88100')) }
 
@@ -674,7 +674,7 @@ describe DossierFilterService do
     end
 
     context 'for followers_instructeurs table' do
-      let(:filter) { ['Email instructeur', 'keepmail'] }
+      let(:filter) { ['Instructeurs', 'keepmail'] }
 
       let!(:kept_dossier) { create(:dossier, procedure:) }
       let!(:discarded_dossier) { create(:dossier, procedure:) }
@@ -687,7 +687,7 @@ describe DossierFilterService do
       it { is_expected.to contain_exactly(kept_dossier.id) }
 
       context 'with multiple search values' do
-        let(:filters) { [['Email instructeur', 'keepmail'], ['Email instructeur', 'beta.gouv.fr']] }
+        let(:filters) { [['Instructeurs', 'keepmail'], ['Instructeurs', 'beta.gouv.fr']] }
 
         let(:other_kept_dossier) { create(:dossier, procedure:) }
 

@@ -25,49 +25,49 @@ module ColumnsConcern
         columns.concat(standard_columns)
         columns.concat(individual_columns) if for_individual
         columns.concat(moral_columns) if !for_individual
+        columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
         columns.concat(types_de_champ_columns)
       end
     end
 
-    def dossier_id_column
-      Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'id', type: :number)
+    def usager_columns_for_export
+      columns = [dossier_id_column, user_email_for_display_column, user_france_connected_column]
+      columns.concat(individual_columns) if for_individual
+      columns.concat(moral_columns) if !for_individual
+      columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
+
+      # ensure the columns exist in main list
+      columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
-    def dossier_state_column
-      Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
+    def dossier_columns_for_export
+      columns = [dossier_state_column, dossier_archived_column]
+      columns.concat(dossier_dates_columns)
+      columns.concat([dossier_motivation_column])
+      columns.concat(sva_svr_columns(for_export: true)) if sva_svr_enabled?
+      columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
+
+      # ensure the columns exist in main list
+      columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
-    def notifications_column
-      Columns::DossierColumn.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
-    end
+    def dossier_id_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'id', type: :number)
 
-    def dossier_columns
-      common = [dossier_id_column, notifications_column]
+    def dossier_state_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
 
-      dates = ['created_at', 'updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'self', column:, type: :date) }
+    def notifications_column = Columns::DossierColumn.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
 
-      non_displayable_dates = ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
-        .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
-
-      states = [dossier_state_column]
-
-      [common, dates, sva_svr_columns, non_displayable_dates, states].flatten.compact
-    end
-
-    def sva_svr_columns
-      return if !sva_svr_enabled?
-
+    def sva_svr_columns(for_export: false)
       scope = [:activerecord, :attributes, :procedure_presentation, :fields, :self]
 
       columns = [
         Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_on', type: :date,
-                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:))
+                  label: I18n.t("#{sva_svr_decision}_decision_on", scope:, type: sva_svr_configuration.human_decision))
       ]
-
-      columns << Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
-                    label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
-
+      if !for_export
+        columns << Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'sva_svr_decision_before', type: :date, displayable: false,
+                      label: I18n.t("#{sva_svr_decision}_decision_before", scope:))
+      end
       columns
     end
 
@@ -79,32 +79,75 @@ module ColumnsConcern
 
     private
 
+    def groupe_instructeurs_id_column = Columns::DossierColumn.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)
+
+    def followers_instructeurs_email_column = Columns::DossierColumn.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')
+
+    def dossier_archived_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
+
+    def dossier_motivation_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
+
+    def user_email_for_display_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
+
+    def user_france_connected_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+
+    def procedure_chorus_columns
+      ['domaine_fonctionnel', 'referentiel_prog', 'centre_de_cout']
+        .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'procedure', column:, displayable: false, filterable: false) }
+    end
+
+    def dossier_non_displayable_dates_columns
+      ['updated_since', 'depose_since', 'en_construction_since', 'en_instruction_since', 'processed_since']
+        .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'self', column:, type: :date, displayable: false) }
+    end
+
+    def dossier_dates_columns
+      ['created_at', 'updated_at', 'last_champ_updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
+        .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'self', column:, type: :date) }
+    end
+
     def email_column
       Columns::DossierColumn.new(procedure_id: id, table: 'user', column: 'email')
+    end
+
+    def dossier_columns
+      columns = [dossier_id_column, notifications_column]
+      columns.concat([dossier_state_column])
+      columns.concat([dossier_archived_column])
+      columns.concat(dossier_dates_columns)
+      columns.concat([dossier_motivation_column])
+      columns.concat(sva_svr_columns(for_export: false)) if sva_svr_enabled?
+      columns.concat(dossier_non_displayable_dates_columns)
     end
 
     def standard_columns
       [
         email_column,
-        Columns::DossierColumn.new(procedure_id: id, table: 'followers_instructeurs', column: 'email'),
-        Columns::DossierColumn.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum),
-        Columns::DossierColumn.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false) # not filterable ?
+        user_email_for_display_column,
+        followers_instructeurs_email_column,
+        groupe_instructeurs_id_column,
+        Columns::DossierColumn.new(procedure_id: id, table: 'avis', column: 'question_answer', filterable: false),
+        user_france_connected_column
       ]
     end
 
     def individual_columns
-      ['nom', 'prenom', 'gender'].map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'individual', column:) }
+      ['gender', 'nom', 'prenom'].map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'individual', column:) }
+        .concat ['for_tiers', 'mandataire_last_name', 'mandataire_first_name'].map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'self', column:) }
     end
 
     def moral_columns
-      etablissements = ['entreprise_siren', 'entreprise_forme_juridique', 'entreprise_nom_commercial', 'entreprise_raison_sociale', 'entreprise_siret_siege_social']
+      etablissements = ['entreprise_forme_juridique', 'entreprise_siren', 'entreprise_nom_commercial', 'entreprise_raison_sociale', 'entreprise_siret_siege_social']
         .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'etablissement', column:) }
 
       etablissement_dates = ['entreprise_date_creation'].map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'etablissement', column:, type: :date) }
 
+      for_export = ["siege_social", "naf", "adresse", "numero_voie", "type_voie", "nom_voie", "complement_adresse", "localite", "code_insee_localite", "entreprise_siren", "entreprise_capital_social", "entreprise_numero_tva_intracommunautaire", "entreprise_forme_juridique_code", "entreprise_code_effectif_entreprise", "entreprise_etat_administratif", "entreprise_nom", "entreprise_prenom", "association_rna", "association_titre", "association_objet", "association_date_creation", "association_date_declaration", "association_date_publication"]
+        .map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'etablissement', column:, displayable: false, filterable: false) }
+
       other = ['siret', 'libelle_naf', 'code_postal'].map { |column| Columns::DossierColumn.new(procedure_id: id, table: 'etablissement', column:) }
 
-      [etablissements, etablissement_dates, other].flatten
+      [etablissements, etablissement_dates, other, for_export].flatten
     end
 
     def types_de_champ_columns

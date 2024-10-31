@@ -5,26 +5,40 @@ fr:
         fields:
           self:
             id: Nº dossier
-            state: Statut
-            created_at: Créé le
-            updated_at: Mis à jour le
-            depose_at: Déposé le
-            en_construction_at: En construction le
-            en_instruction_at: En instruction le
-            processed_at: Terminé le
-            updated_since: Mis à jour depuis
+            user_email_for_display: Email
+            state: État du dossier
+            created_at: Date de création
+            updated_at: Date du dernier évènement
+            depose_at: Date de dépot
+            en_construction_at: Date de passage en construction
+            en_instruction_at: Date de passage en instruction
+            processed_at: Date de traitement
+            updated_since: Dernier évènement depuis
             depose_since: Déposé depuis
             en_construction_since: En construction depuis
             en_instruction_since: En instruction depuis
-            processed_since: Terminé depuis
-            sva_decision_on: Date décision SVA
+            processed_since: Traité depuis
+            sva_decision_on: Date décision %{type}
             sva_decision_before: Date décision SVA avant
-            svr_decision_on: Date décision SVR
+            svr_decision_on: Date décision %{type}
             svr_decision_before: Date décision SVR avant
+            user_from_france_connect?: "France connecté ?"
+            for_tiers: "Dépôt pour un tiers"
+            mandataire_last_name: "Nom du mandataire"
+            mandataire_first_name: "Prénom du mandataire"
+            archived: 'Archivé'
+            dossier_state: 'État du dossier'
+            last_champ_updated_at: Date de dernière modification (usager)
+            motivation: 'Motivation de la décision'
           user:
+            id: Identifiant du demandeur
             email: Demandeur
+          procedure:
+            domaine_fonctionnel: Domaine Fonctionnel
+            referentiel_prog: Référentiel De Programmation
+            centre_de_cout: Centre De Coût
           followers_instructeurs:
-            email: Email instructeur
+            email: Instructeurs
           groupe_instructeur:
             id: Groupe instructeur
             label: Groupe instructeur
@@ -36,12 +50,38 @@ fr:
             answer: Avis
             question_answer: Avis oui/non
           etablissement:
-            entreprise_siren: SIREN
+            entreprise_etat_administratif: 'Entreprise état administratif'
             entreprise_forme_juridique: Forme juridique
             entreprise_nom_commercial: Nom commercial
             entreprise_raison_sociale: Raison sociale
             entreprise_siret_siege_social: SIRET siège social
-            entreprise_date_creation: Date de création
-            siret: SIRET
+            entreprise_date_creation: Entreprise date de création
+            siret: Établissement SIRET
             libelle_naf: Libellé NAF
-            code_postal: Code postal
+            siege_social: "Établissement siège social"
+            naf: "Établissement NAF"
+            adresse: "Établissement Adresse"
+            numero_voie: "Établissement numero voie"
+            type_voie: "Établissement type voie"
+            nom_voie: "Établissement nom voie"
+            complement_adresse: "Établissement complément adresse"
+            code_postal: "Établissement code postal"
+            localite: "Établissement localité"
+            code_insee_localite: "Établissement code INSEE localité"
+            entreprise_siren: "Entreprise SIREN"
+            entreprise_capital_social: "Entreprise capital social"
+            entreprise_numero_tva_intracommunautaire: "Entreprise numero TVA intracommunautaire"
+            entreprise_forme_juridique: "Entreprise forme juridique"
+            entreprise_forme_juridique_code: "Entreprise forme juridique code"
+            entreprise_nom_commercial: "Entreprise nom commercial"
+            entreprise_raison_sociale: "Entreprise raison sociale"
+            entreprise_siret_siege_social: "Entreprise SIRET siège social"
+            entreprise_code_effectif_entreprise: "Entreprise code effectif entreprise"
+            entreprise_nom: 'Entreprise nom'
+            entreprise_prenom: 'Entreprise prénom'
+            association_rna: 'Association RNA'
+            association_titre: 'Association titre'
+            association_objet: 'Association objet'
+            association_date_creation: 'Association date de création'
+            association_date_declaration: 'Association date de déclaration'
+            association_date_publication: 'Association date de publication'
