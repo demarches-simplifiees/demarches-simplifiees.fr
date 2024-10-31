@@ -19,7 +19,7 @@ describe "procedure filters" do
 
   scenario "should display demandeur by default" do
     within ".dossiers-table" do
-      expect(page).to have_link("Demandeur")
+      expect(page).to have_button("Demandeur")
       expect(page).to have_link(new_unfollow_dossier.user.email)
     end
   end
@@ -28,7 +28,7 @@ describe "procedure filters" do
     procedure.update!(sva_svr: SVASVRConfiguration.new(decision: :sva).attributes)
     visit instructeur_procedure_path(procedure)
     within ".dossiers-table" do
-      expect(page).to have_link("Date décision SVA")
+      expect(page).to have_button("Date décision SVA")
       expect(page).to have_link(new_unfollow_dossier.user.email)
     end
   end
@@ -46,7 +46,7 @@ describe "procedure filters" do
   scenario "should add be able to add created_at column", js: true do
     add_column("Date de création")
     within ".dossiers-table" do
-      expect(page).to have_link("Date de création")
+      expect(page).to have_button("Date de création")
       expect(page).to have_link(new_unfollow_dossier.created_at.strftime('%d/%m/%Y'))
     end
   end
@@ -54,20 +54,20 @@ describe "procedure filters" do
   scenario "should add be able to add and remove custom type_de_champ column", js: true do
     add_column(type_de_champ.libelle)
     within ".dossiers-table" do
-      expect(page).to have_link(type_de_champ.libelle)
+      expect(page).to have_button(type_de_champ.libelle)
       expect(page).to have_link(champ.value)
     end
 
     remove_column(type_de_champ.libelle)
     within ".dossiers-table" do
-      expect(page).not_to have_link(type_de_champ.libelle)
+      expect(page).not_to have_button(type_de_champ.libelle)
       expect(page).not_to have_link(champ.value)
     end
 
     # Test removal of all customizable fields
     remove_column("Demandeur")
     within ".dossiers-table" do
-      expect(page).not_to have_link("Demandeur")
+      expect(page).not_to have_button("Demandeur")
     end
   end
 

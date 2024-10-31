@@ -113,6 +113,10 @@ module ApplicationHelper
     datetime.present? ? I18n.l(datetime, format:) : ''
   end
 
+  def try_parse_format_date(date)
+    date.then { Date.parse(_1) rescue nil }&.then { I18n.l(_1) }
+  end
+
   def try_format_mois_effectif(etablissement)
     if etablissement.entreprise_effectif_mois.present? && etablissement.entreprise_effectif_annee.present?
       [etablissement.entreprise_effectif_mois, etablissement.entreprise_effectif_annee].join('/')

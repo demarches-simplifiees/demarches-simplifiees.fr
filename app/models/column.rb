@@ -38,8 +38,9 @@ class Column
   end
 
   def notifications? = [table, column] == ['notifications', 'notifications']
-
   def dossier_state? = [table, column] == ['self', 'state']
+  def groupe_instructeur? = [table, column] == ['groupe_instructeur', 'id']
+  def type_de_champ? = table == TYPE_DE_CHAMP_TABLE
 
   def self.find(h_id)
     begin

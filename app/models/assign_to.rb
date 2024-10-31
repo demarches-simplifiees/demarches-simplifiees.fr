@@ -24,7 +24,9 @@ class AssignTo < ApplicationRecord
     errors = begin
                procedure_presentation.errors if procedure_presentation&.invalid?
              rescue ActiveRecord::RecordNotFound => e
-               [e.message]
+               errors = ActiveModel::Errors.new(self)
+               errors.add(:procedure_presentation, e.message)
+               errors
              end
 
     if errors.present?
