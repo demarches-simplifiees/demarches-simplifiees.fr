@@ -12,9 +12,18 @@ fr:
             termine: Le traitement de ce dossier est terminé, mais il va bientôt être supprimé. Si vous souhaitez en conserver une trace, vous pouvez le télécharger au format PDF.
           button_delay_expiration: "Conserver un mois de plus"
           notification_management: Gestion des notifications
-          administrators_list: Voir les administrateurs
-          exports_list: Voir les exports et modèles d'export
+          follow_up: Suivi des dossiers
+          procedure_management: Gestion de la démarche
+          administrators_list: Administrateurs de la démarche
+          exports_list: Liste des exports
+          exports_models: Modèles d'exports
           exports_notification_label: Un nouvel export est prêt à être téléchargé
-          statistics: Statistiques
-          instructeurs: instructeurs
-          contact_users: Contacter les usagers (brouillon)
+          statistics: Statistiques de la démarche
+          user_support: Accompagnement des usagers
+          instructeurs: Gestion des instructeurs
+          contact_users: Contacter les usagers avec un dossier "brouillon"
+          preview: Prévisualiser le formulaire
+          copy_link_button: Copier le lien usager de la démarche
+          downloads: Téléchargements
+          archives: Téléchargement mensuel
+          procedure_navigation: "Navigation dans la démarche"

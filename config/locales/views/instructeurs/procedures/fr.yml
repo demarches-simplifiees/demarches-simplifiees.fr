@@ -14,12 +14,10 @@ fr:
         dossiers_supprimes: supprimés
         copy_link_button: Copier le lien de la démarche dans le presse-papiers
       email_usagers:
-        contact_users: Contacter les usagers (brouillon)
         hint:
           zero: "Aucun usager n'a de dossier en brouillon."
           one: "Vous allez envoyer un message à <strong>1</strong> usager ayant un dossier en brouillon."
           other: "Vous allez envoyer un message à <strong>%{count}</strong> usagers ayant un dossier en brouillon."
       administrators_list:
-        title: "%{procedure_libelle} - n°%{procedure_id} - administrateurs"
-      stats:
-        title: Statistiques
+        title: Administrateurs de la démarche
+
