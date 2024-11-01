@@ -68,7 +68,7 @@ class DossierProjectionService
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
       case table
-      when 'type_de_champ', 'type_de_champ_private'
+      when 'type_de_champ'
         Champ
           .where(
             stable_id: fields.map { |f| f[STABLE_ID] },
@@ -183,7 +183,7 @@ class DossierProjectionService
     private
 
     def champ_value_formatter(dossiers_ids, fields)
-      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ', 'type_de_champ_private']) }.map { _1[STABLE_ID] }
+      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ']) }.map { _1[STABLE_ID] }
       revision_ids_by_dossier_ids = Dossier.where(id: dossiers_ids).pluck(:id, :revision_id).to_h
       stable_ids_and_types_de_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
         .where(revision_id: revision_ids_by_dossier_ids.values.uniq, type_de_champ: { stable_id: stable_ids })
