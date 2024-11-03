@@ -78,7 +78,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         label: libelle_with_prefix(prefix),
         stable_id: stable_id,
         type: :text,
-        value_column: :value,
+        path: :value,
         displayable:
       ),
       Columns::LinkedDropDownColumn.new(
@@ -86,7 +86,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         stable_id:,
         label: "#{libelle_with_prefix(prefix)} (Primaire)",
         type: :enum,
-        value_column: :primary,
+        path: :primary,
         displayable: false
       ),
       Columns::LinkedDropDownColumn.new(
@@ -94,7 +94,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         stable_id:,
         label: "#{libelle_with_prefix(prefix)} (Secondaire)",
         type: :enum,
-        value_column: :secondary,
+        path: :secondary,
         displayable: false
       )
     ]

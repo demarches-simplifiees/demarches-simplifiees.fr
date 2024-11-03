@@ -1,14 +1,17 @@
 # frozen_string_literal: true
 
 class Columns::LinkedDropDownColumn < Columns::ChampColumn
-  def initialize(procedure_id:, label:, stable_id:, value_column:, displayable:, type: :text)
+  attr_reader :path
+
+  def initialize(procedure_id:, label:, stable_id:, path:, displayable:, type: :text)
+    @path = path
+
     super(
       procedure_id:,
       label:,
       stable_id:,
       displayable:,
-      type:,
-      value_column:
+      type:
     )
   end
 
@@ -21,7 +24,7 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
   private
 
   def column_id
-    if value_column == :value
+    if path == :value
       "type_de_champ/#{stable_id}"
     else
       "type_de_champ/#{stable_id}->#{path}"
@@ -29,10 +32,10 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
   end
 
   def typed_value(champ)
-    return nil if default_column?
+    return nil if path == :value
 
     primary_value, secondary_value = unpack_values(champ.value)
-    case value_column
+    case path
     when :primary
       primary_value
     when :secondary
