@@ -26,7 +26,7 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
 
   def columns(procedure_id:, displayable: nil, prefix: nil)
     [
-      Columns::TitreIdentiteColumn.new(
+      Columns::AttachedManyColumn.new(
         procedure_id:,
         stable_id:,
         tdc_type: type_champ,

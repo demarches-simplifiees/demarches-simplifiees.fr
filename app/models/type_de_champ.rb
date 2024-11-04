@@ -540,8 +540,10 @@ class TypeDeChamp < ApplicationRecord
       :enums
     when type_champs.fetch(:drop_down_list), type_champs.fetch(:departements), type_champs.fetch(:regions)
       :enum
-    when type_champs.fetch(:checkbox), type_champs.fetch(:yes_no), type_champs.fetch(:titre_identite)
+    when type_champs.fetch(:checkbox), type_champs.fetch(:yes_no)
       :boolean
+    when type_champs.fetch(:titre_identite), type_champs.fetch(:piece_justificative)
+      :attachements
     else
       :text
     end
