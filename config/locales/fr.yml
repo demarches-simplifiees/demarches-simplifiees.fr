@@ -47,6 +47,8 @@ fr:
     no_mandatory: (facultatif)
     send_mail: Envoyer le message
     new_tab: "Nouvel onglet"
+    modal_close: "Fermer"
+    modal_close_alt: "Fermer la fenêtre modale"
   helpers:
     procedure:
       testing_procedure: démarche en test
