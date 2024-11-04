@@ -51,9 +51,9 @@ module Maintenance
         tdc = find_by_stable_id(11)
         expect(tdc).to be_nil
 
-        tdc = find_by_stable_id(131)
+        tdc, coord = find_with_coordinate_by_stable_id(131)
         expect(tdc).not_to be_nil
-        expect(tdc.revision_type_de_champ.position).to eq(0) # reindexed
+        expect(coord.position).to eq(0) # reindexed
 
         tdc = find_by_stable_id(132)
         expect(tdc).to be_nil
@@ -62,6 +62,11 @@ module Maintenance
 
     def find_by_stable_id(stable_id)
       procedure.draft_revision.types_de_champ.find { _1.stable_id == stable_id }
+    end
+
+    def find_with_coordinate_by_stable_id(stable_id)
+      tdc = find_by_stable_id(stable_id)
+      [tdc, procedure.draft_revision.coordinate_for(tdc)]
     end
   end
 end

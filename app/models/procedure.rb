@@ -687,7 +687,7 @@ class Procedure < ApplicationRecord
   end
 
   def routing_champs
-    active_revision.types_de_champ_public.filter(&:used_by_routing_rules?).map(&:libelle)
+    active_revision.revision_types_de_champ_public.filter(&:used_by_routing_rules?).map(&:libelle)
   end
 
   def can_be_deleted_by_administrateur?
@@ -829,8 +829,8 @@ class Procedure < ApplicationRecord
     end
   end
 
-  def stable_ids_used_by_routing_rules
-    @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact
+  def used_by_routing_rules?(type_de_champ)
+    type_de_champ.stable_id.in?(stable_ids_used_by_routing_rules)
   end
 
   # We need this to unfuck administrate + aasm
@@ -870,6 +870,10 @@ class Procedure < ApplicationRecord
   end
 
   private
+
+  def stable_ids_used_by_routing_rules
+    @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact.uniq
+  end
 
   def published_revisions_types_de_champ(parent = nil)
     # all published revisions

@@ -40,31 +40,31 @@ module Maintenance
       it "updates the type de champ" do
         process
 
-        tdc = find_by_stable_id(12)
-        expect(tdc.revision_type_de_champ.position).to eq(0)
+        tdc, coord = find_with_coordinate_by_stable_id(12)
+        expect(coord.position).to eq(0)
         expect(tdc.libelle).to eq("[NEW] Number")
         expect(tdc.description).to eq("[NEW] Number desc")
         expect(tdc.mandatory).to eq(true)
 
-        tdc = find_by_stable_id(13)
-        expect(tdc.revision_type_de_champ.position).to eq(1)
+        tdc, coord = find_with_coordinate_by_stable_id(13)
+        expect(coord.position).to eq(1)
         expect(tdc.libelle).to eq("Bloc")
         expect(tdc.description).to eq("[NEW] bloc desc")
         expect(tdc.mandatory).to eq(false)
 
-        tdc = find_by_stable_id(132)
-        expect(tdc.revision_type_de_champ.position).to eq(0)
+        tdc, coord = find_with_coordinate_by_stable_id(132)
+        expect(coord.position).to eq(0)
         expect(tdc.libelle).to eq("[NEW] RepNum")
         expect(tdc.mandatory).to eq(true)
 
-        tdc = find_by_stable_id(131)
-        expect(tdc.revision_type_de_champ.position).to eq(1)
+        tdc, coord = find_with_coordinate_by_stable_id(131)
+        expect(coord.position).to eq(1)
         expect(tdc.libelle).to eq("[NEW] RepText")
         expect(tdc.description).to eq("")
         expect(tdc.mandatory).to eq(false)
 
-        tdc = find_by_stable_id(11)
-        expect(tdc.revision_type_de_champ.position).to eq(2)
+        tdc, coord = find_with_coordinate_by_stable_id(11)
+        expect(coord.position).to eq(2)
         expect(tdc.libelle).to eq("[supp] Text")
         expect(tdc.mandatory).to eq(false)
       end
@@ -72,6 +72,11 @@ module Maintenance
 
     def find_by_stable_id(stable_id)
       procedure.draft_revision.types_de_champ.find { _1.stable_id == stable_id }
+    end
+
+    def find_with_coordinate_by_stable_id(stable_id)
+      tdc = find_by_stable_id(stable_id)
+      [tdc, procedure.draft_revision.coordinate_for(tdc)]
     end
   end
 end

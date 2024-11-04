@@ -230,7 +230,7 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def coordinate_for(tdc)
-    revision_types_de_champ.find_by!(type_de_champ: tdc)
+    revision_types_de_champ.find { _1.stable_id == tdc.stable_id }
   end
 
   def carte?

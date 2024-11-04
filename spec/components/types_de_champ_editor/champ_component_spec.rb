@@ -16,7 +16,7 @@ describe TypesDeChampEditor::ChampComponent, type: :component do
     describe 'tdc dropdown' do
       let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :drop_down_list, libelle: 'Votre ville', options: ['Paris', 'Lyon', 'Marseille'] }]) }
       let(:tdc) { procedure.draft_revision.types_de_champ.first }
-      let(:coordinate) { tdc.revision_type_de_champ }
+      let(:coordinate) { procedure.draft_revision.coordinate_for(tdc) }
 
       context 'drop down tdc not used for routing' do
         it do
