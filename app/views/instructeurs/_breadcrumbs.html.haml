@@ -1,0 +1,45 @@
+%nav.fr-breadcrumb.mt-0{ role: "navigation", aria: { label: t('you_are_here', scope: [:layouts, :breadcrumb]) } }
+  %button.fr-breadcrumb__button{ aria: { expanded: "false", controls: "breadcrumb-1" } }
+    = t('show', scope: [:layouts, :breadcrumb])
+
+  .fr-collapse#breadcrumb-1
+    %ol.fr-breadcrumb__list
+      %li= link_to t('root', scope: [:layouts, :breadcrumb]), root_path, class: 'fr-breadcrumb__link'
+
+      - steps.each.with_index do |step, i|
+        - if i == 0
+          %li= link_to "#{step[0]} - Suivi des dossiers", step[1], class: 'fr-breadcrumb__link'
+        - else
+          %li= link_to step[0], step[1], class: 'fr-breadcrumb__link'
+
+- if defined?(metadatas)
+  .metadatas.pb-3
+    %h1.fr-h6.fr-mb-1w
+      = @procedure.libelle
+
+    - if @procedure.close?
+      .flex
+        %span.fr-badge.fr-badge--warning.fr-mr-1w
+          = t('closed', scope: [:layouts, :breadcrumb])
+        = t('since', scope: [:layouts, :breadcrumb], date: l(@procedure.closed_at.to_date))
+
+    - elsif @procedure.locked?
+      = link_to commencer_url(@procedure.path), commencer_url(@procedure.path), class: "fr-link"
+      .flex.fr-mt-1w
+
+        - if @procedure.api_entreprise_token_expired_or_expires_soon?
+          %span.fr-badge.fr-badge--error.fr-mr-1w
+            = t('to_modify', scope: [:layouts, :breadcrumb])
+
+        %span.fr-badge.fr-badge--success.fr-mr-1w
+          = t('published', scope: [:layouts, :breadcrumb])
+        = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.published_at.to_date))
+
+    - else
+      %p.fr-mb-1w
+        = t('more_info_on_test', scope: [:layouts, :breadcrumb])
+        = link_to t('go_to_FAQ', scope: [:layouts, :breadcrumb]), t("url_FAQ", scope: [:layouts, :breadcrumb]), title: new_tab_suffix(t('go_to_FAQ', scope: [:layouts, :breadcrumb]))
+      .flex
+        %span.fr-badge.fr-badge--new.fr-mr-1w
+          = t('draft', scope: [:layouts, :breadcrumb])
+        = t('since', scope: [:layouts, :breadcrumb], number: @procedure.id, date: l(@procedure.created_at.to_date))

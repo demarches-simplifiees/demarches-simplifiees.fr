@@ -1,7 +1,11 @@
 - content_for(:title, "#{@procedure.libelle}")
 
 .sub-header
-  .fr-container.flex
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                        ['Historique des dossiers supprimés']] }
+
     = render partial: 'instructeurs/procedures/header',
       locals: { procedure: @procedure }
 

@@ -1,7 +1,7 @@
 en:
   layouts:
     breadcrumb:
-      root: "Home"
+      root: "Home - List of procedures"
       you_are_here: "You are here"
       show: Show breadcrumb
       preview: "Preview the form"

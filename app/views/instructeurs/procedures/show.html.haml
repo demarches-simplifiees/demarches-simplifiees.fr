@@ -2,8 +2,9 @@
 
 #procedure-show
   .sub-header
-    .fr-container.flex
-
+    .fr-container.flex.column
+      = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)]] }
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
 
       .procedure-actions

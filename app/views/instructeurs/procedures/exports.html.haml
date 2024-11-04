@@ -6,7 +6,11 @@
 -#                     [t('.title')]] }
 
 .sub-header
-  .fr-container.flex
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                        [t('instructeurs.dossiers.header.banner.exports_list')]] }
+
     = render partial: 'instructeurs/procedures/header',
       locals: { procedure: @procedure }
 
