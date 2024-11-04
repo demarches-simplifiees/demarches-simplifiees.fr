@@ -32,7 +32,19 @@ module Manager
         end
       end
 
-      send_data csv, filename: "instructeurs_#{Date.today.strftime('%d-%m-%Y')}.csv"
+      send_data csv, filename: "instructeurs_recents_#{Date.today.strftime('%d-%m-%Y')}.csv"
+    end
+
+    def export_currently_active
+      instructeurs = Instructeur.joins(:user).where(users: { current_sign_in_at: 6.months.ago.. }).where.not(users: { email_verified_at: nil })
+      csv = CSV.generate(headers: true) do |csv|
+        csv << ['ID', 'Email', 'Date de création']
+        instructeurs.each do |instructeur|
+          csv << [instructeur.id, instructeur.email, instructeur.created_at]
+        end
+      end
+
+      send_data csv, filename: "instructeurs_actifs_#{Date.today.strftime('%d-%m-%Y')}.csv"
     end
   end
 end

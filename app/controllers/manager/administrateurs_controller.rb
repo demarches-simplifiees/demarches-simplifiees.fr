@@ -49,7 +49,19 @@ module Manager
         end
       end
 
-      send_data csv, filename: "administrateurs_#{Date.today.strftime('%d-%m-%Y')}.csv"
+      send_data csv, filename: "administrateurs_recents_#{Date.today.strftime('%d-%m-%Y')}.csv"
+    end
+
+    def export_with_publiee_procedure
+      administrateurs = Administrateur.joins(:user).where.not(users: { email_verified_at: nil }).joins(:procedures).where(procedures: { aasm_state: [:publiee] })
+      csv = CSV.generate(headers: true) do |csv|
+        csv << ['ID', 'Email', 'Date de création']
+        administrateurs.each do |administrateur|
+          csv << [administrateur.id, administrateur.email, administrateur.created_at]
+        end
+      end
+
+      send_data csv, filename: "administrateurs_actifs_#{Date.today.strftime('%d-%m-%Y')}.csv"
     end
 
     private
