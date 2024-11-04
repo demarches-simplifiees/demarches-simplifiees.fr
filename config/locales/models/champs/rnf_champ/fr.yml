@@ -18,4 +18,4 @@ fr:
     attributes:
       champs/rnf_champ:
           hints:
-            value: "Format attendu : 075-FDD-00003-01"
+            value_html: "Format attendu : <span aria-hidden='true'>075-FDD-00003-01</span> <span class='sr-only'>075 tiret FDD tiret 00003 tiret 01</span>"
