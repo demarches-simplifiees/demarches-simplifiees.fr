@@ -31,8 +31,9 @@ describe Champ do
       end
 
       context 'when repetition blank' do
-        let(:type_de_champ) { build(:type_de_champ_repetition) }
-        let(:champ) { Champs::RepetitionChamp.new(dossier: Dossier.new(revision: ProcedureRevision.new)) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :repetition, mandatory: false, children: [{ type: :text }] }]) }
+        let(:dossier) { create(:dossier, procedure:) }
+        let(:champ) { dossier.project_champs_public.find(&:repetition?) }
 
         it { expect(champ.blank?).to be(true) }
       end

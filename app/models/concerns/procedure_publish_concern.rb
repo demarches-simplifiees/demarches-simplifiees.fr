@@ -122,8 +122,8 @@ module ProcedurePublishConcern
   end
 
   def cleanup_types_de_champ_children!
-    draft_revision.types_de_champ.reject(&:repetition?).each do |type_de_champ|
-      draft_revision.remove_children_of(type_de_champ)
-    end
+    draft_revision.revision_types_de_champ
+      .filter(&:orphan?)
+      .each { draft_revision.remove_type_de_champ(_1.stable_id) }
   end
 end
