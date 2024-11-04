@@ -70,29 +70,6 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
-      "fingerprint": "5ba3f5d525b15c710215829e0db49f58e8cca06d68eff5931ebfd7d0ca0e35de",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/columns/json_path_column.rb",
-      "line": 11,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "dossiers.with_type_de_champ(stable_id).where(\"#{search_occurences.count} OR #{\"(#{json_path_query_part} ILIKE ?)\"}\", *search_occurences.map do\n \"%#{value}%\"\n end)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Columns::JSONPathColumn",
-        "method": "filtered_ids"
-      },
-      "user_input": "search_occurences.count",
-      "confidence": "Weak",
-      "cwe_id": [
-        89
-      ],
-      "note": "already sanitized"
-    },
-    {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
       "fingerprint": "737aa4f7931ece068cce98d7cc66057a1ec81b9be43e469c3569ff1be91bbf09",
       "check_name": "SQL",
       "message": "Possible SQL injection",
@@ -135,6 +112,29 @@
         89
       ],
       "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "83b5a474065af330c47603d1f60fc31edaab55be162825385d53b77c1c98a6d7",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/columns/json_path_column.rb",
+      "line": 24,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "dossiers.with_type_de_champ(stable_id).where(\"champs.value_json @? '#{jsonpath} ? (@ like_regex \\\"#{quote_string(search_terms.join(\"|\"))}\\\" flag \\\"i\\\")'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Columns::JSONPathColumn",
+        "method": "filtered_ids"
+      },
+      "user_input": "jsonpath",
+      "confidence": "Weak",
+      "cwe_id": [
+        89
+      ],
+      "note": "escaped by hand"
     },
     {
       "warning_type": "SQL Injection",
@@ -295,6 +295,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-10-16 18:07:17 +0200",
+  "updated": "2024-11-04 09:56:55 +0100",
   "brakeman_version": "6.1.2"
 }
