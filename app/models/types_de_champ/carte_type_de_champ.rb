@@ -30,7 +30,7 @@ class TypesDeChamp::CarteTypeDeChamp < TypesDeChamp::TypeDeChampBase
 
   def champ_blank?(champ) = champ.geo_areas.blank?
 
-  def columns(procedure_id:, displayable: true, prefix: nil)
+  def columns(procedure:, displayable: true, prefix: nil)
     []
   end
 end

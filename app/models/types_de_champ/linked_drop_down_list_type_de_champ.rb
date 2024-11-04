@@ -71,10 +71,10 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
       (has_secondary_options_for_primary?(champ) && secondary_value(champ).blank?)
   end
 
-  def columns(procedure_id:, displayable: true, prefix: nil)
+  def columns(procedure:, displayable: true, prefix: nil)
     [
       Columns::LinkedDropDownColumn.new(
-        procedure_id:,
+        procedure_id: procedure.id,
         label: libelle_with_prefix(prefix),
         stable_id:,
         tdc_type: type_champ,
@@ -83,7 +83,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         displayable:
       ),
       Columns::LinkedDropDownColumn.new(
-        procedure_id:,
+        procedure_id: procedure.id,
         stable_id:,
         tdc_type: type_champ,
         label: "#{libelle_with_prefix(prefix)} (Primaire)",
@@ -92,7 +92,7 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         displayable: false
       ),
       Columns::LinkedDropDownColumn.new(
-        procedure_id:,
+        procedure_id: procedure.id,
         stable_id:,
         tdc_type: type_champ,
         label: "#{libelle_with_prefix(prefix)} (Secondaire)",

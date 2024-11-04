@@ -154,7 +154,7 @@ module ColumnsConcern
     end
 
     def types_de_champ_columns
-      all_revisions_types_de_champ.flat_map { _1.columns(procedure_id: id) }
+      all_revisions_types_de_champ.flat_map { _1.columns(procedure: self) }
     end
   end
 end
