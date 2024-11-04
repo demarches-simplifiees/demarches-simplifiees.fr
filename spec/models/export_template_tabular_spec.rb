@@ -82,4 +82,63 @@ describe ExportTemplate do
       end
     end
   end
+
+  describe 'dossier_exported_columns' do
+    context 'when exported_columns is empty' do
+      it 'returns an empty array' do
+        expect(export_template.dossier_exported_columns).to eq([])
+      end
+    end
+
+    context 'when exported_columns is not empty' do
+      before do
+        export_template.exported_columns = [
+          ExportedColumn.new(libelle: 'Colonne usager', column: procedure.find_column(label: "Email")),
+          ExportedColumn.new(libelle: 'Ça va ?', column: procedure.find_column(label: "Ca va ?"))
+        ]
+      end
+      it 'returns all columns except tdc columns' do
+        expect(export_template.dossier_exported_columns.size).to eq(1) # exclude tdc
+        expect(export_template.dossier_exported_columns.first.libelle).to eq("Colonne usager")
+      end
+    end
+  end
+
+  describe 'columns_for_stable_id' do
+    before do
+      export_template.exported_columns = procedure.published_revision.types_de_champ.first.columns(procedure: procedure).map do |column|
+        ExportedColumn.new(libelle: column.label, column:)
+      end
+    end
+    context 'when procedure has a TypeDeChamp::Commune' do
+      let(:types_de_champ_public) do
+        [
+          { type: :communes, libelle: "Commune", mandatory: true, stable_id: 17 }
+        ]
+      end
+      it 'is able to resolve stable_id' do
+        expect(export_template.columns_for_stable_id(17).size).to eq(3)
+      end
+    end
+    context 'when procedure has a TypeDeChamp::Siret' do
+      let(:types_de_champ_public) do
+        [
+          { type: :siret, libelle: 'siret', stable_id: 20 }
+        ]
+      end
+      it 'is able to resolve stable_id' do
+        expect(export_template.columns_for_stable_id(20).size).to eq(5)
+      end
+    end
+    context 'when procedure has a TypeDeChamp::Text' do
+      let(:types_de_champ_public) do
+        [
+          { type: :text, libelle: "Text", mandatory: true, stable_id: 15 }
+        ]
+      end
+      it 'is able to resolve stable_id' do
+        expect(export_template.columns_for_stable_id(15).size).to eq(1)
+      end
+    end
+  end
 end

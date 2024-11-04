@@ -1,5 +1,5 @@
 %fieldset.fr-fieldset{ id: "#{component_prefix}-fieldset", data: { controller: 'checkbox-select-all' } }
-  %legend.fr-fieldset__legend--regular.fr-fieldset__legend
+  %legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-h5.fr-pb-0
     = title
   .checkbox-group-bordered.fr-mx-1w.fr-mb-2w
     .fr-fieldset__element.fr-background-contrast--grey.fr-py-2w.fr-px-4w
@@ -16,14 +16,8 @@
             .fieldset-bordered.fr-ml-3v
               - grouped_columns.each do |exported_column|
                 .fr-fieldset__element.fr-px-3v
-                  .fr-checkbox-group
-                    - id = sanitize_to_id(field_id('export_template', 'exported_columns', exported_column.id))
-                    = check_box_tag field_name('export_template', 'exported_columns', ''), exported_column.id, export_template.exported_columns.map(&:column).include?(exported_column.column), class: 'fr-checkbox', id: id, data: { "checkbox-select-all-target": 'checkbox' }
-                    = label_tag id, historical_libelle(exported_column.column)
+                  .fr-checkbox-group= render ExportTemplate::CheckboxComponent.new(export_template:, exported_column:)
         - else
           - grouped_columns.each do |exported_column|
             .fr-fieldset__element.fr-px-4w
-              .fr-checkbox-group
-                - id = sanitize_to_id(field_id('export_template', 'exported_columns', exported_column.id))
-                = check_box_tag field_name('export_template', 'exported_columns', ''), exported_column.id, export_template.exported_columns.map(&:column).include?(exported_column.column), class: 'fr-checkbox', id: id, data: { "checkbox-select-all-target": 'checkbox' }
-                = label_tag id, historical_libelle(exported_column.column)
+              .fr-checkbox-group= render ExportTemplate::CheckboxComponent.new(export_template:, exported_column:)
