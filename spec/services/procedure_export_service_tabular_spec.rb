@@ -44,35 +44,42 @@ describe ProcedureExportService do
     end
 
     describe 'Dossiers sheet' do
-      let(:exported_columns) do
-        [
-          ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'Date du dernier évènement')),
-          ExportedColumn.new(libelle: 'Email', column: procedure.find_column(label: 'Email')),
-          ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
-          ExportedColumn.new(libelle: 'État du dossier', column: procedure.dossier_state_column),
-          ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
-          ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
-          ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
-        ]
+      context 'multiple columns' do
+        let(:exported_columns) do
+          [
+            ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'Date du dernier évènement')),
+            ExportedColumn.new(libelle: 'Email', column: procedure.find_column(label: 'Email')),
+            ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
+            ExportedColumn.new(libelle: 'État du dossier', column: procedure.dossier_state_column),
+            ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
+            ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
+            ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
+          ]
+        end
+
+        let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
+        let(:selected_headers) { ["Email", "first champ", "Commune (Code INSEE)", "Groupe instructeur", "Date du dernier évènement", "État du dossier", "PJ"] }
+
+        it 'should have only headers from export template' do
+          expect(dossiers_sheet.headers).to match_array(selected_headers)
+        end
+
+        it 'should have data' do
+          expect(procedure.dossiers.count).to eq 1
+          expect(dossiers_sheet.data.size).to eq 1
+
+          expect(dossiers_sheet.data).to match_array([[anything, dossier.user_email_for_display, "défaut", "En instruction", "text", "60172", "toto.txt"]])
+        end
       end
 
-      let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-      let(:selected_headers) { ["Email", "first champ", "Commune (Code INSEE)", "Groupe instructeur", "Date du dernier évènement", "État du dossier", "PJ"] }
+      context 'with a procedure having multiple groupe instructeur' do
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur'))] }
+        let(:types_de_champ_public) { [] }
 
-      it 'should have only headers from export template' do
-        expect(dossiers_sheet.headers).to match_array(selected_headers)
-      end
-
-      it 'should have data' do
-        expect(procedure.dossiers.count).to eq 1
-        expect(dossiers_sheet.data.size).to eq 1
-
-        expect(dossiers_sheet.data).to match_array([[anything, dossier.user_email_for_display, "défaut", "En instruction", "text", "60172", "toto.txt"]])
-      end
-
-      context 'with a procedure routee' do
-        let!(:dossier) { create(:dossier, :en_instruction, :with_individual, procedure:) }
-        before { create(:groupe_instructeur, label: '2', procedure:) }
+        before do
+          create(:groupe_instructeur, label: '2', procedure:)
+          create(:dossier, :en_instruction, procedure:)
+        end
 
         it 'find groupe instructeur data' do
           expect(dossiers_sheet.headers).to include('Groupe instructeur')
@@ -81,16 +88,23 @@ describe ProcedureExportService do
       end
 
       context 'with a dossier having multiple pjs' do
-        let(:procedure) { create(:procedure, :published, :for_individual, types_de_champ_public:) }
-        let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
-        let!(:dossier_2) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure:) }
+        let(:types_de_champ_public) { [{ type: :piece_justificative, libelle: "PJ" }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))] }
         before do
-          dossier_2.filled_champs_public
+          dossier = create(:dossier, :en_instruction, :with_populated_champs, procedure:)
+          dossier.filled_champs_public
             .find { _1.is_a? Champs::PieceJustificativeChamp }
             .piece_justificative_file
             .attach(io: StringIO.new("toto"), filename: "toto.txt", content_type: "text/plain")
         end
         it { expect(dossiers_sheet.data.last.last).to eq "toto.txt, toto.txt" }
+      end
+
+      context 'with a dossier TypeDeChamp::MutlipleDropDownList' do
+        let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, libelle: "multiple_drop_down_list", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'multiple_drop_down_list'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to eq "val1, val2" }
       end
     end
 
