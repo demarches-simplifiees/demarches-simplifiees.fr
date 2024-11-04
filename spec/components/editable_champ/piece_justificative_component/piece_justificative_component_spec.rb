@@ -22,14 +22,14 @@ describe EditableChamp::PieceJustificativeComponent, type: :component do
     end
 
     it 'renders a link to template' do
-      expect(subject).to have_link('Modèle à télécharger')
+      expect(subject).to have_link('Télécharger le modèle')
       expect(subject).not_to have_text("éphémère")
     end
 
     context 'as an administrator' do
       let(:profil) { :administrateur }
       it 'warn about ephemeral template url' do
-        expect(subject).to have_link('Modèle à télécharger')
+        expect(subject).to have_link('Télécharger le modèle')
         expect(subject).to have_text("éphémère")
       end
     end

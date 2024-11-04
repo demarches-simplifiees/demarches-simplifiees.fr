@@ -9,4 +9,4 @@ en:
     attributes:
       champs/iban_champ:
         hints:
-          value: "Example (France) : FR76 1234 1234 1234 1234 1234 123"
+          value: "Example (France): FR76 1234 1234 1234 1234 1234 123"

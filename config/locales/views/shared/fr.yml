@@ -24,3 +24,6 @@ fr:
       messages:
         remove_file: 'Supprimer le fichier'
         remove_all: "Supprimer tous les fichiers"
+      piece_justificative:
+        name: "Télécharger le modèle"
+        title: "Télécharger le modèle %{filename}"
