@@ -19,8 +19,9 @@ module DossierExportConcern
     types_de_champ.flat_map do |type_de_champ|
       champ = filled_champ(type_de_champ, row_id)
       if export_template.present?
-        columns = export_template.columns_for_stable_id(type_de_champ.stable_id)
-        columns.map { [_1.libelle, type_de_champ.champ_value_for_export(champ, _1.column)] }
+        export_template
+          .columns_for_stable_id(type_de_champ.stable_id)
+          .map { |exported_column| exported_column.libelle_with_value(champ) }
       else
         type_de_champ.libelles_for_export.map do |(libelle, path)|
           [libelle, type_de_champ.champ_value_for_export(champ, path)]
@@ -37,7 +38,7 @@ module DossierExportConcern
 
   def dossier_values_for_export(with_etablissement: false, export_template: nil)
     if export_template.present?
-      return export_template.dossier_exported_columns.map { [_1.libelle, _1.column.get_value(self)] }
+      return export_template.dossier_exported_columns.map { _1.libelle_with_value(self) }
     end
 
     columns = [

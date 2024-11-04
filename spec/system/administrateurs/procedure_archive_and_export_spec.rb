@@ -41,7 +41,10 @@ describe 'Creating a new procedure', js: true do
     click_on "Télécharger tous les dossiers"
 
     expect {
-      click_on "Demander un export au format .xlsx"
+      within(:css, '#tabpanel-standard-panel') do
+        choose "Fichier xlsx", allow_label_click: true
+        click_on "Demander l'export"
+      end
       expect(page).to have_content("Nous générons cet export. Veuillez revenir dans quelques minutes pour le télécharger.")
     }.to have_enqueued_job(ExportJob).with(an_instance_of(Export))
   end

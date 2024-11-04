@@ -14,6 +14,9 @@ describe Columns::DossierColumn do
           expect(procedure.find_column(label: "Prénom").value(dossier)).to eq("Paul")
           expect(procedure.find_column(label: "Nom").value(dossier)).to eq("Sim")
           expect(procedure.find_column(label: "Civilité").value(dossier)).to eq("M.")
+          expect(procedure.find_column(label: "Dépôt pour un tiers").value(dossier)).to eq(true)
+          expect(procedure.find_column(label: "Nom du mandataire").value(dossier)).to eq("Christophe")
+          expect(procedure.find_column(label: "Prénom du mandataire").value(dossier)).to eq("Martin")
         end
       end
 
@@ -22,7 +25,67 @@ describe Columns::DossierColumn do
         let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
 
         it 'retrieve entreprise information' do
+          expect(procedure.find_column(label: "Nº dossier").value(dossier)).to eq(dossier.id)
+          expect(procedure.find_column(label: "Email").value(dossier)).to eq(dossier.user_email_for(:display))
+          expect(procedure.find_column(label: "France connecté ?").value(dossier)).to eq(false)
+          expect(procedure.find_column(label: "Entreprise forme juridique").value(dossier)).to eq("SA à conseil d'administration (s.a.i.)")
+          expect(procedure.find_column(label: "Entreprise SIREN").value(dossier)).to eq('440117620')
+          expect(procedure.find_column(label: "Entreprise nom commercial").value(dossier)).to eq('GRTGAZ')
+          expect(procedure.find_column(label: "Entreprise raison sociale").value(dossier)).to eq('GRTGAZ')
+          expect(procedure.find_column(label: "Entreprise SIRET siège social").value(dossier)).to eq('44011762001530')
+          expect(procedure.find_column(label: "Date de création").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Établissement SIRET").value(dossier)).to eq('44011762001530')
           expect(procedure.find_column(label: "Libellé NAF").value(dossier)).to eq('Transports par conduites')
+          expect(procedure.find_column(label: "Établissement code postal").value(dossier)).to eq('92270')
+          expect(procedure.find_column(label: "Établissement siège social").value(dossier)).to eq(true)
+          expect(procedure.find_column(label: "Établissement NAF").value(dossier)).to eq('4950Z')
+          expect(procedure.find_column(label: "Établissement Adresse").value(dossier)).to eq("GRTGAZ\r IMMEUBLE BORA\r 6 RUE RAOUL NORDLING\r 92270 BOIS COLOMBES\r")
+          expect(procedure.find_column(label: "Établissement numero voie").value(dossier)).to eq('6')
+          expect(procedure.find_column(label: "Établissement type voie").value(dossier)).to eq('RUE')
+          expect(procedure.find_column(label: "Établissement nom voie").value(dossier)).to eq('RAOUL NORDLING')
+          expect(procedure.find_column(label: "Établissement complément adresse").value(dossier)).to eq('IMMEUBLE BORA')
+          expect(procedure.find_column(label: "Établissement localité").value(dossier)).to eq('BOIS COLOMBES')
+          expect(procedure.find_column(label: "Établissement code INSEE localité").value(dossier)).to eq('92009')
+          expect(procedure.find_column(label: "Entreprise SIREN").value(dossier)).to eq('440117620')
+          expect(procedure.find_column(label: "Entreprise capital social").value(dossier)).to eq(537_100_000)
+          expect(procedure.find_column(label: "Entreprise numero TVA intracommunautaire").value(dossier)).to eq('FR27440117620')
+          expect(procedure.find_column(label: "Entreprise forme juridique code").value(dossier)).to eq('5599')
+          expect(procedure.find_column(label: "Entreprise code effectif entreprise").value(dossier)).to eq('51')
+          expect(procedure.find_column(label: "Entreprise état administratif").value(dossier)).to eq("actif")
+          expect(procedure.find_column(label: "Entreprise nom").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Entreprise prénom").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Association RNA").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Association titre").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Association objet").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Association date de création").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Association date de déclaration").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Association date de publication").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Date de création").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Date du dernier évènement").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Date de dépot").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Date de passage en construction").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Date de passage en instruction").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Date de traitement").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "État du dossier").value(dossier)).to eq('en_instruction')
+          expect(procedure.find_column(label: "Archivé").value(dossier)).to eq(false)
+          expect(procedure.find_column(label: "Motivation de la décision").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Date de dernière modification (usager)").value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Instructeurs").value(dossier)).to eq('')
+        end
+      end
+
+      context 'when procedure for entreprise which is also an association' do
+        let(:procedure) { create(:procedure, for_individual: false, groupe_instructeurs: [groupe_instructeur]) }
+        let(:etablissement) { create(:etablissement, :is_association) }
+        let(:dossier) { create(:dossier, :en_instruction, procedure:, etablissement:) }
+
+        it 'retrieve also association information' do
+          expect(procedure.find_column(label: "Association RNA").value(dossier)).to eq("W072000535")
+          expect(procedure.find_column(label: "Association titre").value(dossier)).to eq("ASSOCIATION POUR LA PROMOTION DE SPECTACLES AU CHATEAU DE ROCHEMAURE")
+          expect(procedure.find_column(label: "Association objet").value(dossier)).to eq("mise en oeuvre et réalisation de spectacles au chateau de rochemaure")
+          expect(procedure.find_column(label: "Association date de création").value(dossier)).to eq(Date.parse("1990-04-24"))
+          expect(procedure.find_column(label: "Association date de déclaration").value(dossier)).to eq(Date.parse("2014-11-28"))
+          expect(procedure.find_column(label: "Association date de publication").value(dossier)).to eq(Date.parse("1990-05-16"))
         end
       end
 
