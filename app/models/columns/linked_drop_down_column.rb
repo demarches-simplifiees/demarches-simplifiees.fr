@@ -23,13 +23,7 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
 
   private
 
-  def column_id
-    if path == :value
-      "type_de_champ/#{stable_id}"
-    else
-      "type_de_champ/#{stable_id}->#{path}"
-    end
-  end
+  def column_id = "type_de_champ/#{stable_id}->#{path}"
 
   def typed_value(champ)
     return nil if path == :value
