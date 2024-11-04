@@ -40,7 +40,7 @@ module Manager
     def data_exports
     end
 
-    def export_last_month
+    def export_last_half_year
       administrateurs = Administrateur.joins(:user).where(created_at: 6.months.ago..).where.not(users: { email_verified_at: nil })
       csv = CSV.generate(headers: true) do |csv|
         csv << ['ID', 'Email', 'Date de création']
