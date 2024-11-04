@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe Column do
-  describe 'get_value' do
+  describe 'value' do
     let(:groupe_instructeur) { create(:groupe_instructeur, instructeurs: [create(:instructeur)]) }
 
     context 'when dossier columns' do
@@ -11,9 +11,9 @@ describe Column do
         let(:dossier) { create(:dossier, individual:, mandataire_first_name: "Martin", mandataire_last_name: "Christophe", for_tiers: true) }
 
         it 'retrieve individual information' do
-          expect(procedure.find_column(label: "Prénom").get_value(dossier)).to eq("Paul")
-          expect(procedure.find_column(label: "Nom").get_value(dossier)).to eq("Sim")
-          expect(procedure.find_column(label: "Civilité").get_value(dossier)).to eq("M.")
+          expect(procedure.find_column(label: "Prénom").value(dossier)).to eq("Paul")
+          expect(procedure.find_column(label: "Nom").value(dossier)).to eq("Sim")
+          expect(procedure.find_column(label: "Civilité").value(dossier)).to eq("M.")
         end
       end
 
@@ -22,7 +22,7 @@ describe Column do
         let(:dossier) { create(:dossier, :en_instruction, :with_entreprise, procedure:) }
 
         it 'retrieve entreprise information' do
-          expect(procedure.find_column(label: "Libellé NAF").get_value(dossier)).to eq('Transports par conduites')
+          expect(procedure.find_column(label: "Libellé NAF").value(dossier)).to eq('Transports par conduites')
         end
       end
 
@@ -31,7 +31,7 @@ describe Column do
         let(:dossier) { create(:dossier, :en_instruction, procedure:) }
 
         it 'does not fail' do
-          expect(procedure.find_column(label: "Date décision SVA").get_value(dossier)).to eq(nil)
+          expect(procedure.find_column(label: "Date décision SVA").value(dossier)).to eq(nil)
         end
       end
     end
@@ -85,7 +85,7 @@ describe Column do
     type_de_champ = types_de_champ.find { _1.type_champ == type }
     champ = dossier.send(:filled_champ, type_de_champ, nil)
     columns = type_de_champ.columns(procedure_id: procedure.id)
-    expect(columns.map { _1.get_value(champ) }).to eq(values)
+    expect(columns.map { _1.value(champ) }).to eq(values)
   end
 
   def retrieve_champ(type)

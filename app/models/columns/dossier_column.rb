@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Columns::DossierColumn < Column
-  def get_value(dossier)
+  def value(dossier)
     case table
     when 'self'
       dossier.public_send(column)
