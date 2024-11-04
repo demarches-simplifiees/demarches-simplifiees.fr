@@ -92,6 +92,9 @@ class TypesDeChamp::TypeDeChampBase
     end
   end
 
+  def champ_blank?(champ) = champ.value.blank?
+  def champ_blank_or_invalid?(champ) = champ_blank?(champ)
+
   def columns(procedure_id:, displayable: true, prefix: nil)
     if fillable?
       [

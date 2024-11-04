@@ -709,7 +709,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def champ_value(champ)
-    if use_default_value?(champ)
+    if champ_blank?(champ)
       dynamic_type.champ_default_value
     else
       dynamic_type.champ_value(champ)
@@ -717,7 +717,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def champ_value_for_api(champ, version: 2)
-    if use_default_value?(champ)
+    if champ_blank?(champ)
       dynamic_type.champ_default_api_value(version)
     else
       dynamic_type.champ_value_for_api(champ, version:)
@@ -725,7 +725,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def champ_value_for_export(champ, path = :value)
-    if use_default_value?(champ)
+    if champ_blank?(champ)
       dynamic_type.champ_default_export_value(path)
     else
       dynamic_type.champ_value_for_export(champ, path)
@@ -733,10 +733,32 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def champ_value_for_tag(champ, path = :value)
-    if use_default_value?(champ)
+    if champ_blank?(champ)
       ''
     else
       dynamic_type.champ_value_for_tag(champ, path)
+    end
+  end
+
+  def champ_blank?(champ)
+    # no champ
+    return true if champ.nil?
+    # type de champ on the revision changed
+    if champ.last_write_type_champ == type_champ || castable_on_change?(champ.last_write_type_champ, type_champ)
+      dynamic_type.champ_blank?(champ)
+    else
+      true
+    end
+  end
+
+  def mandatory_blank?(champ)
+    # no champ
+    return true if champ.nil?
+    # type de champ on the revision changed
+    if champ.last_write_type_champ == type_champ || castable_on_change?(champ.last_write_type_champ, type_champ)
+      mandatory? && dynamic_type.champ_blank_or_invalid?(champ)
+    else
+      true
     end
   end
 
@@ -758,24 +780,12 @@ class TypeDeChamp < ApplicationRecord
 
   private
 
-  def use_default_value?(champ)
-    # no champ
-    return true if champ.nil?
-    # type de champ on the revision changed
-    if champ.last_write_type_champ != type_champ
-      return !castable_on_change?(champ.last_write_type_champ, type_champ)
-    end
-    # special case for linked drop down champ – it's blank implementation is not what you think
-    return champ.value.blank? if type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
-    champ.blank?
-  end
-
   def castable_on_change?(from_type, to_type)
     case [from_type, to_type]
     when ['integer_number', 'decimal_number'], # recast numbers automatically
       ['decimal_number', 'integer_number'], # may lose some data, but who cares ?
       ['text', 'textarea'], # allow short text to long text
-      # ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
+      ['drop_down_list', 'multiple_drop_down_list'], # single list can become multi
       ['date', 'datetime'], # date <=> datetime
       ['datetime', 'date'] # may lose some data, but who cares ?
       true

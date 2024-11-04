@@ -12,21 +12,17 @@ class TypesDeChamp::CheckboxTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def champ_value(champ)
-    champ.true? ? 'Oui' : 'Non'
-  end
-
-  def champ_value_for_tag(champ, path = :value)
-    champ_value(champ)
+    champ_value_true?(champ) ? 'Oui' : 'Non'
   end
 
   def champ_value_for_export(champ, path = :value)
-    champ.true? ? 'on' : 'off'
+    champ_value_true?(champ) ? 'on' : 'off'
   end
 
   def champ_value_for_api(champ, version: 2)
     case version
     when 2
-      champ.true? ? 'true' : 'false'
+      champ_value_true?(champ).to_s
     else
       super
     end
@@ -48,4 +44,10 @@ class TypesDeChamp::CheckboxTypeDeChamp < TypesDeChamp::TypeDeChampBase
       nil
     end
   end
+
+  def champ_blank_or_invalid?(champ) = !champ_value_true?(champ)
+
+  private
+
+  def champ_value_true?(champ) = champ.value == 'true'
 end

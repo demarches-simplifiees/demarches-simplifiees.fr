@@ -27,10 +27,6 @@ class Champs::RNFChamp < Champ
     true
   end
 
-  def blank?
-    rnf_id.blank?
-  end
-
   def code_departement
     address.present? && address['departmentCode']
   end

@@ -22,6 +22,8 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
     "absent"
   end
 
+  def champ_blank?(champ) = champ.piece_justificative_file.blank?
+
   def columns(procedure_id:, displayable: nil, prefix: nil)
     [
       Columns::TitreIdentiteColumn.new(

@@ -23,6 +23,10 @@ class TypesDeChamp::PaysTypeDeChamp < TypesDeChamp::TextTypeDeChamp
     end
   end
 
+  def champ_blank?(champ)
+    champ.value.blank? && champ.external_id.blank?
+  end
+
   private
 
   def paths

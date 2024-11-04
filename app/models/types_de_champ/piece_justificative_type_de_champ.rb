@@ -23,6 +23,8 @@ class TypesDeChamp::PieceJustificativeTypeDeChamp < TypesDeChamp::TypeDeChampBas
     end
   end
 
+  def champ_blank?(champ) = champ.piece_justificative_file.blank?
+
   def columns(procedure_id:, displayable: true, prefix: nil)
     []
   end

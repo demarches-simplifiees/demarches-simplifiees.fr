@@ -33,6 +33,8 @@ class TypesDeChamp::RNFTypeDeChamp < TypesDeChamp::TextTypeDeChamp
     end
   end
 
+  def champ_blank?(champ) = champ.external_id.blank?
+
   private
 
   def paths

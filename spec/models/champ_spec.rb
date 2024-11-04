@@ -5,7 +5,7 @@ describe Champ do
 
   describe 'mandatory_blank?' do
     let(:type_de_champ) { build(:type_de_champ, mandatory: mandatory) }
-    let(:champ) { Champ.new(value: value) }
+    let(:champ) { Champs::TextChamp.new(value: value) }
     let(:value) { '' }
     let(:mandatory) { true }
 

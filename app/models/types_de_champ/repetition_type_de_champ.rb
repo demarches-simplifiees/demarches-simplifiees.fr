@@ -3,9 +3,7 @@
 class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
   def champ_value_for_tag(champ, path = :value)
     return nil if path != :value
-    return champ_default_value if champ.rows.blank?
-
-    ChampPresentations::RepetitionPresentation.new(champ.libelle, champ.rows)
+    ChampPresentations::RepetitionPresentation.new(libelle, champ.dossier.project_rows_for(@type_de_champ))
   end
 
   def estimated_fill_duration(revision)
@@ -32,4 +30,6 @@ class TypesDeChamp::RepetitionTypeDeChamp < TypesDeChamp::TypeDeChampBase
       .all_revisions_types_de_champ(parent: @type_de_champ)
       .flat_map { _1.columns(procedure_id:, displayable: false, prefix: libelle) }
   end
+
+  def champ_blank?(champ) = champ.dossier.repetition_row_ids(@type_de_champ).blank?
 end
