@@ -24,15 +24,7 @@ module Administrateurs
       @service = Service.new(service_params)
       @service.administrateur = current_administrateur
 
-      if request.xhr? && params[:service][:siret].present?
-        @service.siret = params[:service][:siret]
-        prefilled = handle_siret_prefill
-        render turbo_stream: turbo_stream.replace(
-          "service_form",
-          partial: "administrateurs/services/form",
-          locals: { service: @service, prefilled:, procedure: @procedure }
-        )
-      elsif @service.save
+      if @service.save
         @service.enqueue_api_entreprise
 
         redirect_to admin_services_path(procedure_id: params[:procedure_id]),
@@ -65,6 +57,19 @@ module Administrateurs
         render :edit
       end
     end
+
+    def prefill
+      @procedure = procedure
+      @service = Service.new(siret: params[:siret])
+
+      prefilled = handle_siret_prefill
+
+      render turbo_stream: turbo_stream.replace(
+        "service_form",
+        partial: "administrateurs/services/form",
+        locals: { service: @service, prefilled:, procedure: @procedure }
+      )
+        end
 
     def add_to_procedure
       procedure = current_administrateur.procedures.find(procedure_params[:id])
@@ -137,6 +142,8 @@ module Administrateurs
         end
       end
 
+      # On prefill from SIRET, we only want to display errors for the SIRET input
+      # so we have to remove other errors (ie. required attributes not yet filled)
       siret_errors = @service.errors.where(:siret)
       @service.errors.clear
       siret_errors.each { @service.errors.import(_1) }

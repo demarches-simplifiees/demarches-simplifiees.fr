@@ -1,6 +1,8 @@
-= form_with model: [:admin, service], id: "service_form", data: { turbo: token_list('true' => service.new_record?), controller: token_list('autosave' => service.new_record?), turbo_method: 'post' } do |f|
+= form_with model: [:admin, service], id: "service_form" do |f|
 
-  = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field, opts: { placeholder: "14 chiffres, sans espace" }) do |c|
+  = render Dsfr::InputComponent.new(form: f, attribute: :siret, input_type: :text_field,
+    opts: { placeholder: "14 chiffres, sans espace",
+            onblur: token_list("Turbo.visit('#{prefill_admin_services_path(procedure_id: procedure.id)}?siret=' + this.value)" => service.new_record?) }) do |c|
     - if service.etablissement_infos.blank? && local_assigns[:prefilled].nil?
       - c.with_hint do
         = "Indiquez le numéro de SIRET de l’organisme dont ce service dépend. Rechercher le SIRET sur "

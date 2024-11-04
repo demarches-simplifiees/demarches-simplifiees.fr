@@ -42,20 +42,18 @@ describe Administrateurs::ServicesController, type: :controller do
     end
   end
 
-  describe '#create' do
+  describe '#prefill' do
     before do
       sign_in(admin.user)
     end
 
-    let(:xhr) { false }
-    subject { post :create, params:, xhr: }
+    subject { get :prefill, params:, xhr: true }
 
     context 'when prefilling from a SIRET' do
-      let(:xhr) { true }
       let(:params) do
         {
           procedure_id: procedure.id,
-          service: { siret: "20004021000060" }
+          siret: "20004021000060"
         }
       end
 
@@ -70,11 +68,10 @@ describe Administrateurs::ServicesController, type: :controller do
     end
 
     context 'when attempting to prefilling from invalid SIRET' do
-      let(:xhr) { true }
       let(:params) do
         {
           procedure_id: procedure.id,
-          service: { siret: "20004021000000" }
+          siret: "20004021000000"
         }
       end
 
@@ -87,11 +84,10 @@ describe Administrateurs::ServicesController, type: :controller do
     end
 
     context 'when attempting to prefilling from not service public SIRET' do
-      let(:xhr) { true }
       let(:params) do
         {
           procedure_id: procedure.id,
-          service: { siret: "41816609600051" }
+          siret: "41816609600051"
         }
       end
 
@@ -105,6 +101,14 @@ describe Administrateurs::ServicesController, type: :controller do
         end
       end
     end
+  end
+
+  describe '#create' do
+    before do
+      sign_in(admin.user)
+    end
+
+    subject { post :create, params: }
 
     context 'when submitting a new service' do
       let(:params) do
