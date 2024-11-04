@@ -2,8 +2,9 @@
 
 describe Columns::ChampColumn do
   describe '#value' do
-    context 'when champ columns' do
-      let(:procedure) { create(:procedure, :with_all_champs_mandatory) }
+    let(:procedure) { create(:procedure, :with_all_champs_mandatory) }
+
+    context 'without any cast' do
       let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
       let(:types_de_champ) { procedure.all_revisions_types_de_champ }
 
@@ -41,6 +42,78 @@ describe Columns::ChampColumn do
         expect_type_de_champ_values('mesri', [nil])
         expect_type_de_champ_values('cojo', [nil])
         expect_type_de_champ_values('expression_reguliere', [nil])
+      end
+    end
+
+    context 'with cast' do
+      def column(label) = procedure.find_column(label:)
+
+      context 'from a integer_number' do
+        let(:champ) { double(last_write_type_champ: 'integer_number', value: '42') }
+
+        it do
+          expect(column('decimal_number').value(champ)).to eq(42.0)
+          expect(column('text').value(champ)).to eq('42')
+        end
+      end
+
+      context 'from a decimal_number' do
+        let(:champ) { double(last_write_type_champ: 'decimal_number', value: '42.1') }
+
+        it do
+          expect(column('integer_number').value(champ)).to eq(42)
+          expect(column('text').value(champ)).to eq('42.1')
+        end
+      end
+
+      context 'from a date' do
+        let(:champ) { double(last_write_type_champ: 'date', value:) }
+
+        describe 'when the value is valid' do
+          let(:value) { '2019-07-10' }
+
+          it { expect(column('datetime').value(champ)).to eq(Time.zone.parse('2019-07-10')) }
+        end
+
+        describe 'when the value is invalid' do
+          let(:value) { 'invalid' }
+
+          it { expect(column('datetime').value(champ)).to be_nil }
+        end
+      end
+
+      context 'from a datetime' do
+        let(:champ) { double(last_write_type_champ: 'datetime', value:) }
+
+        describe 'when the value is valid' do
+          let(:value) { '1962-09-15T15:35:00+01:00' }
+
+          it { expect(column('date').value(champ)).to eq('1962-09-15'.to_date) }
+        end
+
+        describe 'when the value is invalid' do
+          let(:value) { 'invalid' }
+
+          it { expect(column('date').value(champ)).to be_nil }
+        end
+      end
+
+      context 'from a drop_down_list' do
+        let(:champ) { double(last_write_type_champ: 'drop_down_list', value: 'val1') }
+
+        it do
+          expect(column('multiple_drop_down_list').value(champ)).to eq(['val1'])
+          expect(column('text').value(champ)).to eq('val1')
+        end
+      end
+
+      context 'from a multiple_drop_down_list' do
+        let(:champ) { double(last_write_type_champ: 'multiple_drop_down_list', value: '["val1","val2"]') }
+
+        it do
+          expect(column('simple_drop_down_list').value(champ)).to eq('val1')
+          expect(column('text').value(champ)).to eq('val1, val2')
+        end
       end
     end
   end

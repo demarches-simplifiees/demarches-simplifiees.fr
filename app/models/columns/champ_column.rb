@@ -22,11 +22,11 @@ class Columns::ChampColumn < Column
   def value(champ)
     return if champ.nil?
 
-    value = typed_value(champ)
-    if default_column?
-      cast_value(value, from_type: champ.last_write_column_type, to_type: type)
+    # nominal case
+    if @tdc_type == champ.last_write_type_champ
+      typed_value(champ)
     else
-      value
+      cast_value(champ)
     end
   end
 
@@ -34,15 +34,11 @@ class Columns::ChampColumn < Column
 
   def column_id = "type_de_champ/#{stable_id}"
 
+  def string_value(champ) = champ.public_send(value_column)
+
   def typed_value(champ)
     value = string_value(champ)
-    parse_value(value, type: champ.last_write_column_type)
-  end
 
-  def string_value(champ) = champ.public_send(value_column)
-  def default_column? = value_column.in?([:value, :external_id])
-
-  def parse_value(value, type:)
     return if value.blank?
 
     case type
@@ -63,29 +59,30 @@ class Columns::ChampColumn < Column
     end
   end
 
-  def cast_value(value, from_type:, to_type:)
-    return if value.blank?
-    return value if from_type == to_type
+  def cast_value(champ)
+    value = string_value(champ)
 
-    case [from_type, to_type]
-    when [:integer, :decimal] # recast numbers automatically
+    return if value.blank?
+
+    case [champ.last_write_type_champ, @tdc_type]
+    when ['integer_number', 'decimal_number'] # recast numbers automatically
       value.to_f
-    when [:decimal, :integer] # may lose some data, but who cares ?
+    when ['decimal_number', 'integer_number'] # may lose some data, but who cares ?
       value.to_i
-    when [:integer, :text], [:decimal, :text] # number to text
-      value.to_s
-    when [:enum, :enums] # single list can become multi
-      [value]
-    when [:enum, :text] # single list can become text
+    when ['integer_number', 'text'], ['decimal_number', 'text'] # number to text
       value
-    when [:enums, :enum] # multi list can become single list
-      value.first
-    when [:enums, :text] # multi list can become text
-      value.join(', ')
-    when [:date, :datetime] # date <=> datetime
-      value.to_datetime
-    when [:datetime, :date] # may lose some data, but who cares ?
-      value.to_date
+    when ['drop_down_list', 'multiple_drop_down_list'] # single list can become multi
+      [value]
+    when ['drop_down_list', 'text'] # single list can become text
+      value
+    when ['multiple_drop_down_list', 'drop_down_list'] # multi list can become single
+      parse_enums(value).first
+    when ['multiple_drop_down_list', 'text'] # single list can become text
+      parse_enums(value).join(', ')
+    when ['date', 'datetime'] # date <=> datetime
+      parse_datetime(value)&.to_datetime
+    when ['datetime', 'date'] # may lose some data, but who cares ?
+      parse_datetime(value)&.to_date
     else
       nil
     end
