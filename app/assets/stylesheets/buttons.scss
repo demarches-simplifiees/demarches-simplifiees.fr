@@ -393,3 +393,24 @@ ul.dropdown-items {
     content: none !important;
   }
 }
+
+.btn-back {
+  border: 1px solid $blue-france-500;
+  color: $blue-france-500;
+  background-color: transparent;
+  height: 2em;
+  width: 2em;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: $default-spacer * 2;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.btn-back .fr-icon-arrow-left-line {
+  font-size: 0.8em;
+}
