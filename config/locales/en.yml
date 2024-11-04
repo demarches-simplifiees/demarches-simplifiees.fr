@@ -56,6 +56,8 @@ en:
     no_mandatory: (optional)
     send_mail: Send message
     new_tab: New tab
+    modal_close: "Close"
+    modal_close_alt: "Close this modal"
   helpers:
     procedure:
       testing_procedure: testing procedure

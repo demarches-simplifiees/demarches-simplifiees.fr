@@ -5,7 +5,7 @@ module Administrateurs
     layout 'all', only: [:all, :administrateurs]
     respond_to :html, :xlsx
 
-    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path]
+    before_action :retrieve_procedure, only: [:champs, :annotations, :modifications, :edit, :zones, :monavis, :update_monavis, :accuse_lecture, :update_accuse_lecture, :jeton, :update_jeton, :publication, :publish, :transfert, :close, :confirmation, :allow_expert_review, :allow_expert_messaging, :experts_require_administrateur_invitation, :reset_draft, :publish_revision, :check_path, :api_champ_columns]
     before_action :draft_valid?, only: [:apercu]
     after_action :reset_procedure, only: [:update]
 
@@ -420,6 +420,30 @@ module Administrateurs
       @admins = Administrateur.includes(:user, :procedures).where(id: pids, procedures: { hidden_at_as_template: nil })
       @admins = @admins.where('unaccent(users.email) ILIKE unaccent(?)', "%#{@filter.email}%") if @filter.email.present?
       @admins = paginate(@admins, 'users.email')
+    end
+
+    def api_champ_columns
+      _, @type_de_champ = @procedure.draft_revision.coordinate_and_tdc(params[:stable_id])
+      @columns = [
+        "Raison sociale",
+        "Adresse du siège social",
+        "Code NAF",
+        "Libellé NAF",
+        "Date de création",
+        "Numéro TVA intracommunautaire",
+        "Attestation sociale",
+        "Attestation fiscale",
+        "Raison sociale",
+        "Adresse du siège social",
+        "Code NAF",
+        "Libellé NAF",
+        "Date de création",
+        "Numéro TVA intracommunautaire",
+        "Attestation sociale",
+        "Attestation fiscale"
+      ].map do |label|
+        Column.new(procedure_id: @procedure.id, table: :etablissement, column: nil, label:)
+      end.sort_by(&:label)
     end
 
     private

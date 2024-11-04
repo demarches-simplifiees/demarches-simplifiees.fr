@@ -1,6 +1,11 @@
 en:
   administrateurs:
     procedures:
+      api_champ_columns:
+        title: 'Informations complementary to the field %{type_de_champ}'
+        hint_html: |
+          The following data is automatically retrieved via API and displayed in files or exports.
+          <strong>No need to ask the user for this information in other fields!</strong>
       close:
         page_title: Close the procedure
         replacement_procedure_callout_title: You are about to close a procedure
