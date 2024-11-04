@@ -3,8 +3,9 @@
 class Columns::ChampColumn < Column
   attr_reader :stable_id
 
-  def initialize(procedure_id:, label:, stable_id:, displayable: true, filterable: true, type: :text, value_column: :value)
+  def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, value_column: :value)
     @stable_id = stable_id
+    @tdc_type = tdc_type
 
     super(
       procedure_id:,

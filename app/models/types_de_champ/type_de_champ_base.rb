@@ -100,7 +100,8 @@ class TypesDeChamp::TypeDeChampBase
       [
         Columns::ChampColumn.new(
           procedure_id:,
-          stable_id: stable_id,
+          stable_id:,
+          tdc_type: type_champ,
           label: libelle_with_prefix(prefix),
           type: TypeDeChamp.column_type(type_champ),
           value_column: TypeDeChamp.value_column(type_champ),

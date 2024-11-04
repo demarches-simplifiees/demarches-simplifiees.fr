@@ -14,6 +14,7 @@ module AddressableColumnConcern
         Columns::JSONPathColumn.new(
           procedure_id:,
           stable_id:,
+          tdc_type: type_champ,
           label: "#{libelle_with_prefix(prefix)} – #{label}",
           jsonpath:,
           displayable:,
