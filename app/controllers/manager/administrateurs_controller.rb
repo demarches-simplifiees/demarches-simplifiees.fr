@@ -40,16 +40,20 @@ module Manager
     def data_exports
     end
 
-    def export_last_month
+    def export_last_half_year
       administrateurs = Administrateur.joins(:user).where(created_at: 6.months.ago..).where.not(users: { email_verified_at: nil })
-      csv = CSV.generate(headers: true) do |csv|
-        csv << ['ID', 'Email', 'Date de création']
-        administrateurs.each do |administrateur|
-          csv << [administrateur.id, administrateur.email, administrateur.created_at]
-        end
-      end
 
-      send_data csv, filename: "administrateurs_#{Date.today.strftime('%d-%m-%Y')}.csv"
+      csv = generate_csv(administrateurs)
+
+      send_data csv, filename: "administrateurs_recents_#{Date.today.strftime('%d-%m-%Y')}.csv"
+    end
+
+    def export_with_publiee_procedure
+      administrateurs = Administrateur.joins(:user).where.not(users: { email_verified_at: nil }).joins(:procedures).where(procedures: { aasm_state: [:publiee] })
+
+      csv = generate_csv(administrateurs)
+
+      send_data csv, filename: "administrateurs_actifs_#{Date.today.strftime('%d-%m-%Y')}.csv"
     end
 
     private

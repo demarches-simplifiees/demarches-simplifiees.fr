@@ -115,8 +115,10 @@ Rails.application.routes.draw do
     end
 
     get 'data_exports' => 'administrateurs#data_exports'
-    get 'exports/administrateurs/last_month' => 'administrateurs#export_last_month'
-    get 'exports/instructeurs/last_month' => 'instructeurs#export_last_month'
+    get 'exports/administrateurs/last_half_year' => 'administrateurs#export_last_half_year'
+    get 'exports/instructeurs/last_half_year' => 'instructeurs#export_last_half_year'
+    get 'exports/administrateurs/with_publiee_procedure' => 'administrateurs#export_with_publiee_procedure'
+    get 'exports/instructeurs/currently_active' => 'instructeurs#export_currently_active'
 
     get 'import_procedure_tags' => 'procedures#import_data'
     post 'import_tags' => 'procedures#import_tags'
