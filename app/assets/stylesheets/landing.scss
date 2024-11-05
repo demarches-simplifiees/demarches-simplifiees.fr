@@ -1,7 +1,7 @@
-@import "constants";
-@import "colors";
-@import "mixins";
-@import "placeholders";
+@import 'constants';
+@import 'colors';
+@import 'mixins';
+@import 'placeholders';
 
 $landing-breakpoint: 1040px;
 
@@ -90,7 +90,7 @@ $landing-breakpoint: 1040px;
   @extend %horizontal-list-item;
   max-width: 500px;
   width: 100%;
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   box-shadow: 0 4px 16px 0 rgba(153, 153, 153, 0.2);
   padding: 24px;
   display: flex;
@@ -125,7 +125,6 @@ $landing-breakpoint: 1040px;
 }
 
 .landing {
-
   .numbers {
     @extend %horizontal-list;
     justify-content: space-around;
@@ -167,8 +166,8 @@ $landing-breakpoint: 1040px;
   }
 }
 
-html[lang="fr"] .landing .number-label-third::before {
-  content: "de ";
+html[lang='fr'] .landing .number-label-third::before {
+  content: 'de ';
 }
 
 $users-breakpoint: 950px;
@@ -248,7 +247,6 @@ $users-breakpoint: 950px;
   }
 }
 
-
 .role-administrations-image {
   text-align: right;
 
@@ -289,22 +287,22 @@ $cta-panel-button-border-size: 2px;
 
 .cta-panel-button-white {
   @include cta-panel-button;
-  border: $cta-panel-button-border-size solid #FFFFFF;
-  color: #FFFFFF;
+  border: $cta-panel-button-border-size solid #ffffff;
+  color: #ffffff;
 
   &:hover {
-    color: #FFFFFF;
+    color: #ffffff;
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0.2);
   }
 
   &:focus {
-    color: #FFFFFF;
+    color: #ffffff;
     text-decoration: none;
   }
 
   &:active,
   &:focus {
-    outline: 3px solid #FFFFFF;
+    outline: 3px solid #ffffff;
   }
 }

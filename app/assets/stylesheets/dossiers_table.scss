@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 .table.dossiers-table {
   font-size: 14px;
@@ -22,7 +22,8 @@
     // In order to have identical height in the table header and the table rows,
     // we compensate for the height difference between the biggest element of the header
     // (the Personnaliser button, 38px) and the biggest cell-link element of the rows (the label, 28px)
-    padding: calc((2 * #{$default-spacer}) + ((38px - 28px) / 2)) $default-spacer;
+    padding: calc((2 * #{$default-spacer}) + ((38px - 28px) / 2))
+      $default-spacer;
     display: block;
   }
 
@@ -52,7 +53,6 @@
   .updated-at-col {
     width: 110px;
   }
-
 
   .follow-col {
     width: 450px;

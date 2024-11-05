@@ -1,5 +1,5 @@
-@import "constants";
-@import "colors";
+@import 'constants';
+@import 'colors';
 
 .code-example {
   background-color: var(--background-contrast-grey);
@@ -13,7 +13,6 @@
       margin-right: auto;
       padding: $default-padding;
     }
-
   }
 
   pre {

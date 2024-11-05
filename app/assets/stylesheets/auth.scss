@@ -1,7 +1,7 @@
-@import "colors";
-@import "constants";
-@import "placeholders";
-@import "mixins";
+@import 'colors';
+@import 'constants';
+@import 'placeholders';
+@import 'mixins';
 
 #auth,
 #agentconnect {
@@ -48,15 +48,15 @@
 }
 
 .sign-in-form .form {
-  input[type="email"] {
+  input[type='email'] {
     margin-bottom: $default-spacer;
   }
 
-  input[type="password"] {
+  input[type='password'] {
     margin-bottom: $default-spacer;
   }
 
-  input[type="checkbox"] {
+  input[type='checkbox'] {
     margin-bottom: 0;
   }
 }

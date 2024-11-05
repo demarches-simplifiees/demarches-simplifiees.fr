@@ -27,7 +27,12 @@
   }
 
   // Add space between button edge and content
-  .fr-container .fr-header__menu-links .fr-btns-group.flex.align-center .fr-translate.fr-nav .fr-nav__item .fr-translate__btn.fr-btn {
+  .fr-container
+    .fr-header__menu-links
+    .fr-btns-group.flex.align-center
+    .fr-translate.fr-nav
+    .fr-nav__item
+    .fr-translate__btn.fr-btn {
     margin-right: 0;
     margin-left: 0;
     padding-right: 0.5rem;

@@ -1,10 +1,10 @@
-@import "colors";
+@import 'colors';
 
-$dep-nothing: #E3E3FD; // blue-france-925
-$dep-small: #CACAFB;   // blue-france-850
-$dep-medium: #8585F6;  // blue-france-625
-$dep-large: #313178;   // blue-france-200
-$dep-xlarge: #272747;  // blue-france-125
+$dep-nothing: #e3e3fd; // blue-france-925
+$dep-small: #cacafb; // blue-france-850
+$dep-medium: #8585f6; // blue-france-625
+$dep-large: #313178; // blue-france-200
+$dep-xlarge: #272747; // blue-france-125
 
 #map-svg {
   max-width: 100%;

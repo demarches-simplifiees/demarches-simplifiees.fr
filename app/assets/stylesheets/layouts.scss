@@ -1,14 +1,20 @@
-@import "colors";
-@import "constants";
-@import "placeholders";
+@import 'colors';
+@import 'constants';
+@import 'placeholders';
 
 .two-columns {
-
   @media (min-width: $two-columns-breakpoint) {
-    background: linear-gradient(to right, transparent 0%, transparent 50%, var(--background-alt-blue-france) 50%, var(--background-alt-blue-france) 100%);
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      transparent 50%,
+      var(--background-alt-blue-france) 50%,
+      var(--background-alt-blue-france) 100%
+    );
   }
 
-  .columns-container { // TODO: https://github.com/betagouv/demarches-simplifiees.fr/issues/7882, once implemented, we won't need container anymore
+  .columns-container {
+    // TODO: https://github.com/betagouv/demarches-simplifiees.fr/issues/7882, once implemented, we won't need container anymore
     @extend %container;
     display: flex;
     flex-direction: column;

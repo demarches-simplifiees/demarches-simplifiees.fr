@@ -1,8 +1,7 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 #routing-rules {
-
   .routing-rules-table {
     table-layout: fixed;
 
@@ -39,7 +38,6 @@
   th {
     text-align: left;
     padding: $default-spacer;
-
   }
 
   td {
@@ -50,7 +48,7 @@
       margin-bottom: 0;
     }
 
-    input[type=text] {
+    input[type='text'] {
       display: inline-block;
       margin-bottom: 0;
     }

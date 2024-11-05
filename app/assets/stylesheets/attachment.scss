@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 .attachment-error,
 .attachment-upload-error {
@@ -8,7 +8,7 @@
   &::before {
     box-shadow: inset 2px 0 0 0 var(--border-plain-error);
     height: 100%;
-    content: "";
+    content: '';
     left: -0.75rem;
     position: absolute;
     width: 2px;
@@ -26,7 +26,7 @@
 }
 
 .attachment-multiple:not(.fr-downloads-group),
-.attachment-multiple.fr-downloads-group[data-controller=replace-attachment] {
+.attachment-multiple.fr-downloads-group[data-controller='replace-attachment'] {
   ul {
     list-style-type: none;
     padding-inline-start: 0;

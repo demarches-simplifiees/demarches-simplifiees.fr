@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 form.form > .conditionnel {
   .condition-table {
@@ -37,7 +37,6 @@ form.form > .conditionnel {
   th {
     text-align: left;
     padding: $default-spacer;
-
   }
 
   td {
@@ -48,7 +47,7 @@ form.form > .conditionnel {
       margin-bottom: 0;
     }
 
-    input[type=text] {
+    input[type='text'] {
       display: inline-block;
       margin-bottom: 0;
     }

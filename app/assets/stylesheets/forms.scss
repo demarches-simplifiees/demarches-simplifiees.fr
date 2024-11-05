@@ -1,6 +1,6 @@
-@import "constants";
-@import "colors";
-@import "placeholders";
+@import 'constants';
+@import 'colors';
+@import 'placeholders';
 
 .form {
   input.unstyled {
@@ -45,7 +45,11 @@
   }
 
   // Keep only bottom margin in nested (consecutive) header sections, ie. first legend for a same level
-  .fr-fieldset > .fr-fieldset__legend + .fr-fieldset__element > .fr-fieldset:first-of-type .header-section {
+  .fr-fieldset
+    > .fr-fieldset__legend
+    + .fr-fieldset__element
+    > .fr-fieldset:first-of-type
+    .header-section {
     margin-top: 0 !important;
   }
 
@@ -81,7 +85,7 @@
     &.required {
       &::after {
         color: $dark-red;
-        content: " *";
+        content: ' *';
       }
     }
   }
@@ -93,7 +97,7 @@
   }
 
   .notice {
-    margin-top: - $default-spacer;
+    margin-top: -$default-spacer;
     margin-bottom: $default-padding;
     color: var(--text-mention-grey);
 
@@ -128,7 +132,7 @@
         gap: 0.25rem; // Space before mandatory icon because dsfr set display:flex on checkbox label
       }
 
-      input[type=checkbox] {
+      input[type='checkbox'] {
         position: absolute;
         top: 3px;
         left: 0px;
@@ -168,7 +172,8 @@
     }
 
     label {
-      padding: $default-padding $default-padding $default-padding $default-spacer;
+      padding: $default-padding $default-padding $default-padding
+        $default-spacer;
       border: 1px solid $border-grey;
       border-radius: 4px;
       font-weight: normal;
@@ -197,7 +202,7 @@
         font-style: italic;
       }
 
-      input[type=radio] {
+      input[type='radio'] {
         margin-bottom: 0;
       }
 
@@ -222,7 +227,7 @@
     padding: inherit;
   }
 
-  input[type=password],
+  input[type='password'],
   select:not(.fr-select) {
     display: block;
     margin-bottom: 0;
@@ -241,14 +246,13 @@
     }
   }
 
-
-  input[type=checkbox] {
+  input[type='checkbox'] {
     &.small-margin {
       margin-bottom: $default-spacer;
     }
   }
 
-  input[type=text]:not(.fr-input):not(.fr-select) {
+  input[type='text']:not(.fr-input):not(.fr-select) {
     border: solid 1px $border-grey;
     padding: $default-padding;
 
@@ -282,14 +286,14 @@
     border: 1px solid $dark-red;
   }
 
-  input[type=text],
-  input[type=email],
-  input[type=password],
-  input[type=date],
-  input[type=number],
-  input[type=datetime-local],
+  input[type='text'],
+  input[type='email'],
+  input[type='password'],
+  input[type='date'],
+  input[type='number'],
+  input[type='datetime-local'],
   textarea,
-  input[type=tel] {
+  input[type='tel'] {
     @media (max-width: $two-columns-breakpoint) {
       width: 100%;
     }
@@ -303,17 +307,17 @@
   }
 
   @media (min-width: $two-columns-breakpoint) {
-    input[type=email],
-    input[type=password],
-    input[type=number],
-    input[inputmode=numeric],
-    input[inputmode=decimal],
-    input[type=tel] {
+    input[type='email'],
+    input[type='password'],
+    input[type='number'],
+    input[inputmode='numeric'],
+    input[inputmode='decimal'],
+    input[type='tel'] {
       max-width: 500px;
     }
   }
 
-  input[type=date] {
+  input[type='date'] {
     max-width: 180px;
   }
 
@@ -341,8 +345,8 @@
     }
   }
 
-  input[type=checkbox],
-  input[type=radio] {
+  input[type='checkbox'],
+  input[type='radio'] {
     @extend %outline;
 
     // Firefox tends to display some controls smaller than other browsers.
@@ -378,7 +382,9 @@
       }
     }
 
-    .utils-repetition-required .row:first-child .utils-repetition-required-destroy-button {
+    .utils-repetition-required
+      .row:first-child
+      .utils-repetition-required-destroy-button {
       display: none;
     }
   }
@@ -484,7 +490,7 @@
   &:before,
   &:after {
     font-weight: bold;
-    content: "/";
+    content: '/';
   }
 }
 

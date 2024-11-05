@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 // Toggle-switch
 // The switch - the box around
@@ -22,7 +22,7 @@
 }
 
 // Hide default HTML checkbox
-.form label.toggle-switch input[type="checkbox"] {
+.form label.toggle-switch input[type='checkbox'] {
   opacity: 0;
   width: 0;
   height: 0;
@@ -45,7 +45,7 @@
 
 .toggle-switch-control::before {
   position: absolute;
-  content: "";
+  content: '';
   height: 20px;
   width: 20px;
   left: 1px;

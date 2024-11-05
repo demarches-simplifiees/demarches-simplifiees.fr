@@ -1,5 +1,5 @@
-@import "constants";
-@import "colors";
+@import 'constants';
+@import 'colors';
 
 table.dgfip {
   margin: 2 * $default-padding 0 $default-padding $default-padding;
@@ -7,7 +7,7 @@ table.dgfip {
 
   caption {
     font-weight: bold;
-    margin-left: - $default-padding;
+    margin-left: -$default-padding;
     margin-bottom: $default-spacer;
     text-align: left;
   }

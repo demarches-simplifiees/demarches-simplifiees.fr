@@ -1,8 +1,9 @@
-@import "colors";
-@import "constants";
-@import "mixins";
+@import 'colors';
+@import 'constants';
+@import 'mixins';
 
-.table { // TODO : tester de remplacer par l'élément table uniquement
+.table {
+  // TODO : tester de remplacer par l'élément table uniquement
   width: 100%;
 
   tbody tr {
@@ -10,7 +11,7 @@
   }
 
   td,
-  th[scope="row"] {
+  th[scope='row'] {
     @include vertical-padding($default-spacer);
     vertical-align: middle;
   }

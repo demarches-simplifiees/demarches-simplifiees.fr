@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 .procedure-header {
   a.header-link {
@@ -33,7 +33,7 @@
     padding-right: 10px;
     background-color: $light-blue;
     border-radius: 4px;
-    color: #FFFFFF;
+    color: #ffffff;
     height: 36px;
     line-height: 36px;
   }
