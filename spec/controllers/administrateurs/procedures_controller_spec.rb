@@ -484,8 +484,26 @@ describe Administrateurs::ProceduresController, type: :controller do
     let(:procedure) { create(:procedure, administrateur: admin) }
     let(:procedure_id) { procedure.id }
 
+    let(:last_zone) { create(:zone, labels: [{ designated_on: '1981-05-08', name: 'Autre' }]) }
+    let(:other_zone_1) { create(:zone, labels: [{ designated_on: '1981-05-08', name: 'Zone 1' }]) }
+    let(:other_zone_2) { create(:zone, labels: [{ designated_on: '1981-05-08', name: 'Zone 2' }]) }
+
+    before do
+      procedure.zones << [last_zone, other_zone_1, other_zone_2]
+    end
+
     subject { get :zones, params: { id: procedure_id } }
-    it { is_expected.to have_http_status(:success) }
+
+    it 'returns a successful response' do
+      subject
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'assigns @zones with the correct order' do
+      subject
+      assigned_labels = assigns(:zones).map(&:label)
+      expect(assigned_labels).to eq(['Zone 1', 'Zone 2', 'Autre'])
+    end
   end
 
   describe 'POST #create' do
