@@ -12,6 +12,12 @@ module Administrateurs
     def new
       @procedure = procedure
       @service = Service.new
+
+      siret = current_administrateur.instructeur.last_agent_connect_information&.siret
+      if siret
+        @service.siret = siret
+        @prefilled = handle_siret_prefill
+      end
     end
 
     def create
@@ -51,6 +57,19 @@ module Administrateurs
         render :edit
       end
     end
+
+    def prefill
+      @procedure = procedure
+      @service = Service.new(siret: params[:siret])
+
+      prefilled = handle_siret_prefill
+
+      render turbo_stream: turbo_stream.replace(
+        "service_form",
+        partial: "administrateurs/services/form",
+        locals: { service: @service, prefilled:, procedure: @procedure }
+      )
+        end
 
     def add_to_procedure
       procedure = current_administrateur.procedures.find(procedure_params[:id])
@@ -107,6 +126,29 @@ module Administrateurs
 
     def procedure
       current_administrateur.procedures.find(params[:procedure_id])
+    end
+
+    def handle_siret_prefill
+      @service.validate
+
+      if !@service.errors.include?(:siret)
+        prefilled = case @service.prefill_from_siret
+        in [Dry::Monads::Result::Success, Dry::Monads::Result::Success]
+          :success
+        in [Dry::Monads::Result::Failure, Dry::Monads::Result::Success] | [Dry::Monads::Result::Success, Dry::Monads::Result::Failure]
+          :partial
+        else
+          :failure
+        end
+      end
+
+      # On prefill from SIRET, we only want to display errors for the SIRET input
+      # so we have to remove other errors (ie. required attributes not yet filled)
+      siret_errors = @service.errors.where(:siret)
+      @service.errors.clear
+      siret_errors.each { @service.errors.import(_1) }
+
+      prefilled
     end
   end
 end

@@ -737,6 +737,7 @@ Rails.application.routes.draw do
     resources :services, except: [:show] do
       collection do
         patch 'add_to_procedure'
+        get ':procedure_id/prefill' => :prefill, as: :prefill
       end
     end
 
