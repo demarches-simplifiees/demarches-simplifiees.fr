@@ -1,3 +1,3 @@
 en:
   remaining_characters: You have %{remaining_words} characters remaining.
-  excess_characters: You have %{excess_words} characters too many.
+  excess_characters: You have exceeded the recommended size of %{excess_words} characters. Please reduce the number of characters.
