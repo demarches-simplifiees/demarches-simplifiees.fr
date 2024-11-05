@@ -27,6 +27,7 @@ class DossierProjectionService
 
   TABLE = 'table'
   COLUMN = 'column'
+  STABLE_ID = 'stable_id'
 
   # Returns [DossierProjection(dossier, columns)] ordered by dossiers_ids
   # and the columns orderd by fields.
@@ -41,7 +42,13 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, columns)
-    fields = columns.map { |c| { TABLE => c.table, COLUMN => c.column } }
+    fields = columns.map do |c|
+      if c.is_a?(Columns::ChampColumn)
+        { TABLE => c.table, STABLE_ID => c.stable_id, original_column: c }
+      else
+        { TABLE => c.table, COLUMN => c.column }
+      end
+    end
     champ_value = champ_value_formatter(dossiers_ids, fields)
 
     state_field = { TABLE => 'self', COLUMN => 'state' }
@@ -61,17 +68,20 @@ class DossierProjectionService
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
       case table
-      when 'type_de_champ', 'type_de_champ_private'
+      when 'type_de_champ'
         Champ
           .where(
-            stable_id: fields.map { |f| f[COLUMN] },
+            stable_id: fields.map { |f| f[STABLE_ID] },
             dossier_id: dossiers_ids
           )
           .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json) # we cannot pluck :value, as we need the champ.to_s method
           .group_by(&:stable_id) # the champs are redispatched to their respective fields
           .map do |stable_id, champs|
-            field = fields.find { |f| f[COLUMN] == stable_id.to_s }
-            field[:id_value_h] = champs.to_h { |c| [c.dossier_id, champ_value.(c)] }
+            fields
+              .filter { |f| f[STABLE_ID] == stable_id }
+              .each do |field|
+              field[:id_value_h] = champs.to_h { |c| [c.dossier_id, champ_value.(c, field[:original_column])] }
+            end
           end
       when 'self'
         Dossier
@@ -185,7 +195,7 @@ class DossierProjectionService
     private
 
     def champ_value_formatter(dossiers_ids, fields)
-      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ', 'type_de_champ_private']) }.map { _1[COLUMN] }
+      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ']) }.map { _1[STABLE_ID] }
       revision_ids_by_dossier_ids = Dossier.where(id: dossiers_ids).pluck(:id, :revision_id).to_h
       stable_ids_and_types_de_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
         .where(revision_id: revision_ids_by_dossier_ids.values.uniq, type_de_champ: { stable_id: stable_ids })
@@ -193,10 +203,14 @@ class DossierProjectionService
         .group_by(&:first)
         .transform_values { _1.map { |_, type_de_champ| [type_de_champ.stable_id, type_de_champ] }.to_h }
       stable_ids_and_types_de_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_de_champ_by_revision_ids[_1] }.compact
-      -> (champ) {
+      -> (champ, column) {
         type_de_champ = stable_ids_and_types_de_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
         if type_de_champ.present? && type_de_champ.type_champ == champ.last_write_type_champ
-          type_de_champ.champ_value(champ)
+          if column.is_a?(Columns::JSONPathColumn)
+            column.get_value(champ)
+          else
+            type_de_champ.champ_value(champ)
+          end
         else
           ''
         end

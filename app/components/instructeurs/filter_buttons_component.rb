@@ -49,7 +49,7 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
     column, filter = filter_column.column, filter_column.filter
 
     if column.type_de_champ?
-      find_type_de_champ(column.column).dynamic_type.filter_to_human(filter)
+      find_type_de_champ(column.stable_id).dynamic_type.filter_to_human(filter)
     elsif column.dossier_state?
       if filter == 'pending_correction'
         Dossier.human_attribute_name("pending_correction.for_instructeur")
@@ -68,9 +68,7 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
     end
   end
 
-  def find_type_de_champ(column)
-    stable_id = column.to_s.split('->').first
-
+  def find_type_de_champ(stable_id)
     TypeDeChamp
       .joins(:revision_types_de_champ)
       .where(revision_types_de_champ: { revision_id: @procedure_presentation.procedure.revisions })

@@ -58,12 +58,11 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
         [_1.name, _1.id]
       end
     else
-      find_type_de_champ(column.column).options_for_select(column)
+      find_type_de_champ(column.stable_id).options_for_select(column)
     end
   end
 
-  def find_type_de_champ(column)
-    stable_id = column.to_s.split('->').first
+  def find_type_de_champ(stable_id)
     TypeDeChamp
       .joins(:revision_types_de_champ)
       .where(revision_types_de_champ: { revision_id: ProcedureRevision.where(procedure_id:) })

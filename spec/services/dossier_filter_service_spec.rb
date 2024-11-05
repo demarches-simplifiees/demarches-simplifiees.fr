@@ -528,7 +528,7 @@ describe DossierFilterService do
 
       context "when searching by postal_code (text)" do
         let(:value) { "60580" }
-        let(:filter) { ["rna – code postal (5 chiffres)", value] }
+        let(:filter) { ["rna – code postal (5 chiffres)", value] }
 
         before do
           kept_dossier.project_champs_public.find { _1.stable_id == 1 }.update(value_json: { "postal_code" => value })

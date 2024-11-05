@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Columns::TitreIdentiteColumn < Column
+class Columns::TitreIdentiteColumn < Columns::ChampColumn
   private
 
   def typed_value(champ)

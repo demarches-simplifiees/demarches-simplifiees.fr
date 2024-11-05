@@ -75,29 +75,29 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     [
       Columns::LinkedDropDownColumn.new(
         procedure_id:,
-        table: Column::TYPE_DE_CHAMP_TABLE,
-        column: stable_id.to_s,
         label: libelle_with_prefix(prefix),
+        stable_id:,
+        tdc_type: type_champ,
         type: :text,
-        value_column: :value,
+        path: :value,
         displayable:
       ),
       Columns::LinkedDropDownColumn.new(
         procedure_id:,
-        table: Column::TYPE_DE_CHAMP_TABLE,
-        column: stable_id.to_s,
+        stable_id:,
+        tdc_type: type_champ,
         label: "#{libelle_with_prefix(prefix)} (Primaire)",
         type: :enum,
-        value_column: :primary,
+        path: :primary,
         displayable: false
       ),
       Columns::LinkedDropDownColumn.new(
         procedure_id:,
-        table: Column::TYPE_DE_CHAMP_TABLE,
-        column: stable_id.to_s,
+        stable_id:,
+        tdc_type: type_champ,
         label: "#{libelle_with_prefix(prefix)} (Secondaire)",
         type: :enum,
-        value_column: :secondary,
+        path: :secondary,
         displayable: false
       )
     ]

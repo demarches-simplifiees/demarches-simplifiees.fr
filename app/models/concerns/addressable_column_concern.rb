@@ -6,19 +6,19 @@ module AddressableColumnConcern
   included do
     def columns(procedure_id:, displayable: true, prefix: nil)
       super.concat([
-        ["code postal (5 chiffres)", ['postal_code'], :text],
-        ["commune", ['city_name'], :text],
-        ["département", ['departement_code'], :enum],
-        ["region", ['region_name'], :enum]
-      ].map do |(label, value_column, type)|
+        ["code postal (5 chiffres)", '$.postal_code', :text],
+        ["commune", '$.city_name', :text],
+        ["département", '$.departement_code', :enum],
+        ["region", '$.region_name', :enum]
+      ].map do |(label, jsonpath, type)|
         Columns::JSONPathColumn.new(
           procedure_id:,
-          table: Column::TYPE_DE_CHAMP_TABLE,
-          column: stable_id,
+          stable_id:,
+          tdc_type: type_champ,
           label: "#{libelle_with_prefix(prefix)} – #{label}",
-          displayable: false,
-          type:,
-          value_column:
+          jsonpath:,
+          displayable:,
+          type:
         )
       end)
     end
