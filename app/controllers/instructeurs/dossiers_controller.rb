@@ -513,11 +513,21 @@ module Instructeurs
           .commentaires
           .includes(piece_jointe_attachments: :blob)
           .map(&:piece_jointe)
-          .map(&:attachments)
-          .flatten
+          .flat_map(&:attachments)
           .map(&:id)
 
-        champs_attachments_ids + commentaires_attachments_ids
+        avis_attachments_ids = dossier
+          .avis.flat_map { [_1.introduction_file, _1.piece_justificative_file] }
+          .flat_map(&:attachments)
+          .compact
+          .map(&:id)
+
+        justificatif_motivation_id = dossier
+          .justificatif_motivation
+          &.attachment
+          &.id
+
+        champs_attachments_ids + commentaires_attachments_ids + avis_attachments_ids + [justificatif_motivation_id]
       end
       @gallery_attachments = ActiveStorage::Attachment.where(id: gallery_attachments_ids)
     end
