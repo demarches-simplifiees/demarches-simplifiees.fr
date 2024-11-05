@@ -246,7 +246,7 @@ module Administrateurs
       end
 
       if instructeurs.present?
-        flash.now[:notice] = if procedure.routing_enabled?
+        flash[:notice] = if procedure.routing_enabled?
           t('.assignment',
             count: instructeurs.size,
             emails: instructeurs.map(&:email).join(', '),
@@ -268,7 +268,7 @@ module Administrateurs
         end
       end
 
-      flash.now[:alert] = errors.join(". ") if !errors.empty?
+      flash[:alert] = errors.join(". ") if !errors.empty?
 
       @procedure = procedure
       @instructeurs = paginated_instructeurs
@@ -276,10 +276,10 @@ module Administrateurs
 
       if procedure.routing_enabled?
         @groupe_instructeur = groupe_instructeur
-        render :show
+        redirect_to admin_procedure_groupe_instructeur_path(@procedure, @groupe_instructeur)
       else
         @groupes_instructeurs = paginated_groupe_instructeurs
-        render :index
+        redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
       end
     end
 

@@ -343,7 +343,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'when all emails are valid' do
       let(:emails) { ['test@b.gouv.fr', 'test2@b.gouv.fr'] }
       it do
-        expect(subject).to render_template(:index)
+        expect(subject).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure_non_routee))
         expect(subject.request.flash[:alert]).to be_nil
         expect(subject.request.flash[:notice]).to be_present
       end
@@ -352,7 +352,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'when there is at least one bad email' do
       let(:emails) { ['badmail', 'instructeur2@gmail.com'] }
       it do
-        expect(subject).to render_template(:index)
+        expect(subject).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure_non_routee))
         expect(subject.request.flash[:alert]).to be_present
         expect(subject.request.flash[:notice]).to be_present
       end
@@ -362,7 +362,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       let(:instructeur) { create(:instructeur) }
       before { procedure_non_routee.groupe_instructeurs.first.add_instructeurs(emails: [instructeur.user.email]) }
       let(:emails) { [instructeur.email] }
-      it { expect(subject).to render_template(:index) }
+      it { expect(subject).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure_non_routee)) }
     end
 
     context 'when signed in admin comes from manager' do
@@ -403,7 +403,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it 'validates changes and responses' do
         expect(gi_1_2.instructeurs.pluck(:email)).to include(*new_instructeur_emails)
         expect(flash.notice).to be_present
-        expect(response).to render_template(:show)
+        expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2))
         expect(procedure.routing_enabled?).to be_truthy
         expect(GroupeInstructeurMailer).to have_received(:notify_added_instructeurs).with(
           gi_1_2,
@@ -442,7 +442,10 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
     context 'of an instructeur already in the group' do
       let(:new_instructeur_emails) { [instructeur.email] }
       before { do_request }
-      it { expect(response).to render_template(:show) }
+      it do
+        expect(flash.alert).not_to be_present
+        expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2))
+      end
     end
 
     context 'of badly formed email' do
@@ -450,14 +453,17 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       before { do_request }
       it do
         expect(flash.alert).to be_present
-        expect(response).to render_template(:show)
+        expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2))
       end
     end
 
     context 'of an empty string' do
       let(:new_instructeur_emails) { [''] }
       before { do_request }
-      it { expect(response).to render_template(:show) }
+      it do
+        expect(flash.alert).to be_present
+        expect(response).to redirect_to(admin_procedure_groupe_instructeur_path(procedure, gi_1_2))
+      end
     end
 
     context 'when connected as an administrateur from manager' do
