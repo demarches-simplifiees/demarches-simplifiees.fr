@@ -17,7 +17,7 @@ def setup_features(features)
   end
 end
 
-# A list of features to be deployed on first push
+# A list of features to be deployed by default
 features = [
   :administrateur_web_hook,
   :agent_connect_2fa,
@@ -31,6 +31,7 @@ features = [
   :export_template,
   :expression_reguliere_type_de_champ,
   :groupe_instructeur_api_hack,
+  :rdv,
   :sva,
   :switch_domain
 ]
