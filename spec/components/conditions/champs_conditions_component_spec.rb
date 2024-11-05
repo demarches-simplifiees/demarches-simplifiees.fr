@@ -131,6 +131,18 @@ describe Conditions::ChampsConditionsComponent, type: :component do
           end
         end
 
+        context 'pays' do
+          let(:pays) { create(:type_de_champ_pays) }
+          let(:upper_tdcs) { [pays] }
+          let(:condition) { empty_operator(champ_value(pays.stable_id), constant(true)) }
+          let(:pays_options) { APIGeoService.countries.map { "#{_1[:name]} – #{_1[:code]}" } }
+
+          it do
+            expect(page).to have_select('type_de_champ[condition_form][rows][][operator_name]', with_options: ['Est'])
+            expect(page).to have_select('type_de_champ[condition_form][rows][][value]', options: (['Sélectionner'] + pays_options))
+          end
+        end
+
         context 'address' do
           let(:address) { create(:type_de_champ_address) }
           let(:upper_tdcs) { [address] }

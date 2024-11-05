@@ -60,6 +60,10 @@ module Administrateurs
         rule_operator = :ds_eq
         tdc_options = APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
         create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)
+      when TypeDeChamp.type_champs.fetch(:pays)
+        rule_operator = :ds_eq
+        tdc_options = APIGeoService.countries.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+        create_groups_from_territorial_tdc(tdc_options, stable_id, rule_operator)
       when TypeDeChamp.type_champs.fetch(:drop_down_list)
         tdc_options = tdc.drop_down_options.reject(&:empty?)
         create_groups_from_drop_down_list_tdc(tdc_options, stable_id)
