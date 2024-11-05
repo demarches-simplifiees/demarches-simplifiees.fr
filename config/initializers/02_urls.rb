@@ -11,6 +11,7 @@ API_TCHAP_URL = ENV.fetch("API_TCHAP_URL", "https://matrix.agent.tchap.gouv.fr/_
 API_COJO_URL = ENV.fetch("API_COJO_URL", nil)
 API_RNF_URL = ENV.fetch("API_RNF_URL", "https://rnf.apps.app1.numerique-interieur.com")
 API_RECHERCHE_ENTREPRISE_URL = ENV.fetch("API_RECHERCHE_ENTREPRISE_URL", "https://recherche-entreprises.api.gouv.fr")
+API_RDV_URL = ENV.fetch("API_RDV_URL", nil)
 HELPSCOUT_API_URL = ENV.fetch("HELPSCOUT_API_URL", "https://api.helpscout.net/v2")
 SENDINBLUE_API_URL = ENV.fetch("SENDINBLUE_API_URL", "https://in-automate.sendinblue.com/api/v2")
 SENDINBLUE_API_V3_URL = ENV.fetch("SENDINBLUE_API_V3_URL", "https://api.sendinblue.com/v3")
