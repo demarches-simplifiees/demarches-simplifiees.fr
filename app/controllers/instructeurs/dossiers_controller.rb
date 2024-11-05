@@ -63,6 +63,19 @@ module Instructeurs
       end
     end
 
+    def dossier_labels
+      labels = params[:label_id]&.map(&:to_i) || []
+
+      @dossier = dossier
+      labels.each { |params_label| DossierLabel.find_or_create_by(dossier_id: @dossier.id, label_id: params_label) }
+
+      all_labels = DossierLabel.where(dossier_id: @dossier.id).pluck(:label_id)
+
+      (all_labels - labels).each { DossierLabel.find_by(dossier_id: @dossier.id, label_id: _1).destroy }
+
+      render :change_state
+    end
+
     def messagerie
       @commentaire = Commentaire.new
       @messagerie_seen_at = current_instructeur.follows.find_by(dossier: dossier)&.messagerie_seen_at

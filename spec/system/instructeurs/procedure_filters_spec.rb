@@ -2,7 +2,7 @@
 
 describe "procedure filters" do
   let(:instructeur) { create(:instructeur) }
-  let(:procedure) { create(:procedure, :published, types_de_champ_public:, instructeurs: [instructeur]) }
+  let(:procedure) { create(:procedure, :published, :with_labels, types_de_champ_public:, instructeurs: [instructeur]) }
   let(:types_de_champ_public) { [{ type: :text }] }
   let!(:type_de_champ) { procedure.active_revision.types_de_champ_public.first }
   let!(:new_unfollow_dossier) { create(:dossier, procedure: procedure, state: Dossier.states.fetch(:en_instruction)) }
@@ -94,6 +94,7 @@ describe "procedure filters" do
       expect(page).to have_link(new_unfollow_dossier_2.user.email)
     end
   end
+
   describe 'with dropdown' do
     let(:types_de_champ_public) { [{ type: :drop_down_list }] }
 
@@ -168,6 +169,15 @@ describe "procedure filters" do
         add_filter(region_champ.libelle, region_champ.value, type: :enum)
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
+    end
+  end
+
+  describe 'dossier labels' do
+    scenario "should be able to filter by dossier labels", js: true do
+      DossierLabel.create!(dossier_id: new_unfollow_dossier.id, label_id: procedure.labels.first.id)
+      add_filter('Labels', procedure.labels.first.name, type: :enum)
+      expect(page).to have_link(new_unfollow_dossier.id.to_s)
+      expect(page).not_to have_link(new_unfollow_dossier_2.id.to_s)
     end
   end
 

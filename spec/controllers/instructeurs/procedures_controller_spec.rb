@@ -637,6 +637,38 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:last_export)).to eq(nil) }
         end
       end
+
+      context 'dossier labels' do
+        let(:procedure) { create(:procedure, :with_labels, instructeurs: [instructeur]) }
+        let!(:dossier) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
+        let!(:dossier_2) { create(:dossier, :en_construction, procedure:, groupe_instructeur: gi_2) }
+        let(:statut) { 'tous' }
+        let(:label_id) { procedure.find_column(label: 'Labels') }
+        let!(:procedure_presentation) do
+          ProcedurePresentation.create!(assign_to: AssignTo.first)
+        end
+        render_views
+
+        before do
+          DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.first.id)
+          DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.second.id)
+          DossierLabel.create(dossier_id: dossier_2.id, label_id: dossier.procedure.labels.last.id)
+
+          procedure_presentation.update(displayed_columns: [
+            label_id.id
+          ])
+
+          subject
+        end
+
+        it 'displays correctly labels in instructeur table' do
+          expect(response.body).to include("Labels")
+          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'À examiner')
+          expect(response.body).to have_selector('ul.fr-tags-group li span.fr-tag', text: 'À relancer')
+          expect(response.body).not_to have_selector('ul li span.fr-tag', text: 'Urgent')
+          expect(response.body).to have_selector('span.fr-tag', text: 'Urgent')
+        end
+      end
     end
   end
 

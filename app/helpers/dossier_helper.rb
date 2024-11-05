@@ -118,6 +118,21 @@ module DossierHelper
     tag.span(Dossier.human_attribute_name("pending_correction.resolved"), class: ['fr-badge fr-badge--sm fr-badge--success super', html_class], role: 'status')
   end
 
+  def tags_label(tags)
+    if tags.count > 1
+      tag.ul(class: 'fr-tags-group') do
+        safe_join(tags.map { |t| tag.li(tag_label(t[1], t[2])) })
+      end
+    else
+      tag = tags.first
+      tag_label(tag[1], tag[2])
+    end
+  end
+
+  def tag_label(name, color)
+    tag.span(name, class: "fr-tag fr-tag--sm fr-tag--#{Label.class_name(color)}")
+  end
+
   def demandeur_dossier(dossier)
     if dossier.procedure.for_individual? && dossier.for_tiers?
       return t('shared.dossiers.beneficiaire', mandataire: dossier.mandataire_full_name, beneficiaire: "#{dossier&.individual&.prenom} #{dossier&.individual&.nom}")

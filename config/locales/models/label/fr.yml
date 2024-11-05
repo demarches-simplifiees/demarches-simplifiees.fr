@@ -1,0 +1,17 @@
+fr:
+  activerecord:
+    attributes:
+      label:
+        color: Couleur
+        name: Nom
+      label/color: &color
+        green_tilleul_verveine: 'tilleul'
+        green_bourgeon: 'bourgeon'
+        green_emeraude: 'émeraude'
+        green_menthe: 'menthe'
+        blue_ecume: 'écume'
+        purple_glycine: 'glycine'
+        pink_macaron: 'macaron'
+        yellow_tournesol: 'tournesol'
+        brown_cafe_creme: 'café'
+        beige_gris_galet: 'galet'

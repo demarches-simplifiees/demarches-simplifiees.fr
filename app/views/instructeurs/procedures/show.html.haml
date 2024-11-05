@@ -132,12 +132,12 @@
                     %td
                       - if p.hidden_by_administration_at.present?
                         %span.cell-link
-                          = column
+                          = column.is_a?(Hash) ? tags_label(column[:value]) : column
                           - if p.hidden_by_user_at.present?
                             = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}"
                       - else
                         %a.cell-link{ href: path }
-                          = column
+                          = column.is_a?(Hash) ? tags_label(column[:value]) : column
                           = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
 
                   %td.status-col

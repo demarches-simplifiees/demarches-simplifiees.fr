@@ -1,0 +1,15 @@
+= form_with model: label, url: [:admin, @procedure, @label], local: true do |f|
+  = render Dsfr::InputComponent.new(form: f, attribute: :name, input_type: :text_field, opts: { maxlength: Label::NAME_MAX_LENGTH})
+
+  %fieldset.fr-fieldset
+    %legend.fr-fieldset__legend.fr-fieldset__legend--regular
+      = t('activerecord.attributes.label.color')
+      = asterisk
+
+    - @colors_collection.each do |color|
+      .fr-fieldset__element.fr-fieldset__element--inline
+        .fr-radio-group
+          = f.radio_button :color, color, checked: (label.color == color)
+          = f.label :color, t("activerecord.attributes.label/color.#{color}"), value: color, class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.class_name(color)}"
+
+  = render Procedure::FixedFooterComponent.new(procedure: @procedure, form: f)

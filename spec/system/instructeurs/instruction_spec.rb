@@ -272,6 +272,39 @@ describe 'Instructing a dossier:', js: true do
     after { DownloadHelpers.clear_downloads }
   end
 
+  context 'An instructeur can add labels' do
+    let(:procedure) { create(:procedure, :with_labels, :published, instructeurs: [instructeur]) }
+
+    scenario 'An instructeur can add and remove labels to a dossier' do
+      log_in(instructeur.email, password)
+
+      visit instructeur_dossier_path(procedure, dossier)
+      click_on 'Ajouter un label'
+
+      check 'À relancer', allow_label_click: true
+      expect(page).to have_css('.fr-tag', text: "À relancer", count: 2)
+      expect(dossier.dossier_labels.count).to eq(1)
+
+      expect(page).not_to have_text('Ajouter un label')
+      find('span.dropdown button.dropdown-button').click
+
+      expect(page).to have_checked_field('À relancer')
+      check 'Complet', allow_label_click: true
+
+      expect(page).to have_css('.fr-tag', text: "Complet", count: 2)
+      expect(dossier.dossier_labels.count).to eq(2)
+
+      find('span.dropdown button.dropdown-button').click
+      uncheck 'À relancer', allow_label_click: true
+
+      expect(page).to have_unchecked_field('À relancer')
+      expect(page).to have_checked_field('Complet')
+      expect(page).to have_css('.fr-tag', text: "À relancer", count: 1)
+      expect(page).to have_css('.fr-tag', text: "Complet", count: 2)
+      expect(dossier.dossier_labels.count).to eq(1)
+    end
+  end
+
   def log_in(email, password, check_email: true)
     visit new_user_session_path
     expect(page).to have_current_path(new_user_session_path)

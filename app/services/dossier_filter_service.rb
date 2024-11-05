@@ -56,6 +56,11 @@ class DossierFilterService
         .order("#{sanitized_column(table, column)} #{order}")
         .pluck(:id)
         .uniq
+    when 'dossier_labels'
+      dossiers.includes(table)
+        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .pluck(:id)
+        .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
       (table == 'self' ? dossiers : dossiers.includes(table))
         .order("#{sanitized_column(table, column)} #{order}")
@@ -122,6 +127,11 @@ class DossierFilterService
           dossiers
             .includes(table)
             .filter_ilike(table, column, values) # ilike or where column == 'value' are both valid, we opted for ilike
+        when 'dossier_labels'
+          assert_supported_column(table, column)
+          dossiers
+            .joins(:dossier_labels)
+            .where(dossier_labels: { label_id: values })
         when 'groupe_instructeur'
           assert_supported_column(table, column)
 

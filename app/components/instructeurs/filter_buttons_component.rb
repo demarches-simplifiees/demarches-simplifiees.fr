@@ -59,6 +59,8 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
     elsif column.groupe_instructeur?
       current_instructeur.groupe_instructeurs
         .find { _1.id == filter.to_i }&.label || filter
+    elsif column.dossier_labels?
+      Label.find(filter)&.name || filter
     elsif column.type == :date
       helpers.try_parse_format_date(filter)
     else

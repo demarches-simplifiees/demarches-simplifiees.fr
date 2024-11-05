@@ -1518,4 +1518,38 @@ describe Instructeurs::DossiersController, type: :controller do
       expect([Champs::PieceJustificativeChamp, Champs::TitreIdentiteChamp, Commentaire]).to include(*assigns(:gallery_attachments).map { _1.record.class })
     end
   end
+
+  describe 'dossier_labels' do
+    let(:procedure) { create(:procedure, :with_labels, instructeurs: [instructeur]) }
+    let!(:dossier) { create(:dossier, :en_construction, procedure:) }
+    context 'it create dossier labels' do
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [Label.first.id] }, format: :turbo_stream }
+      it 'works' do
+        subject
+        dossier.reload
+
+        expect(dossier.dossier_labels.count).to eq(1)
+        expect(subject.body).to include('fr-tag--purple-glycine')
+        expect(subject.body).not_to include('Ajouter un label')
+      end
+    end
+
+    context 'it remove dossier labels' do
+      before do
+        DossierLabel.create(dossier_id: dossier.id, label_id: dossier.procedure.labels.first.id)
+      end
+
+      subject { post :dossier_labels, params: { procedure_id: procedure.id, dossier_id: dossier.id, label_id: [] }, format: :turbo_stream }
+
+      it 'works' do
+        expect(dossier.dossier_labels.count).to eq(1)
+
+        subject
+        dossier.reload
+
+        expect(dossier.dossier_labels.count).to eq(0)
+        expect(subject.body).to include('Ajouter un label')
+      end
+    end
+  end
 end

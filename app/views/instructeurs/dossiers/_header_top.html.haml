@@ -1,11 +1,11 @@
 #header-top.fr-container
-  .flex.fr-mb-3w
+  .flex
     %div
       %h1.fr-h3.fr-mb-1w
         = "Dossier nº #{dossier.id}"
 
       = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
-      .fr-mt-2w.badge-group
+      .fr-mt-2w.fr-badge-group
         = procedure_badge(dossier.procedure)
 
         = status_badge(dossier.state)
@@ -14,7 +14,6 @@
         - elsif dossier.en_construction? && dossier.last_correction_resolved?
           = correction_resolved_badge
         = render Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: dossier, procedure: dossier.procedure, with_label: true)
-
 
 
     .header-actions.fr-ml-auto
@@ -26,3 +25,30 @@
   - if dossier.user_deleted?
     %p.fr-mb-1w
       %small L’usager a supprimé son compte. Vous pouvez archiver puis supprimer le dossier.
+
+  - if dossier.procedure.labels.present?
+    .fr-mb-3w
+      - if dossier.labels.present?
+        - dossier.labels.each do |label|
+          = tag_label(label.name, label.color)
+
+      = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm fr-btn--tertiary-no-outline fr-pl-1v']}, menu_options: { class: ['dropdown-label left-aligned'] }) do |menu|
+        - if dossier.labels.empty?
+          - menu.with_button_inner_html do
+            Ajouter un label
+
+        - menu.with_form do
+          = form_with(url: dossier_labels_instructeur_dossier_path(dossier_id: dossier.id, procedure_id: dossier.procedure.id), method: :post, class: 'fr-p-3w', data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+            %fieldset.fr-fieldset.fr-mt-2w.fr-mb-0
+              = f.collection_check_boxes :label_id, dossier.procedure.labels, :id, :name, include_hidden: false do |b|
+                .fr-fieldset__element
+                  .fr-checkbox-group.fr-checkbox-group--sm.fr-mb-1w
+                    = b.check_box(checked: DossierLabel.find_by(dossier_id: dossier.id, label_id: b.value).present?  )
+                    = b.label(class: "fr-label fr-tag fr-tag--sm fr-tag--#{Label.colors.fetch(b.object.color)}") { b.text }
+
+            %hr
+              %p.fr-text--sm.fr-text-mention--grey.fr-mb-0
+                %b Besoin d'autres labels ?
+                %br
+                Contactez les
+                = link_to 'administrateurs de la démarche', administrateurs_instructeur_procedure_path(dossier.procedure), class: 'fr-link fr-link--sm', **external_link_attributes
