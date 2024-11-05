@@ -2,10 +2,15 @@
 fr:
   routing_configuration_notice_1:
     Le routage permet d’acheminer les dossiers vers différents groupes d’instructeurs.
+  routing_not_configured:
+    Vous n’avez pas configuré de routage.
+  routing_configured_html:
+    Vous avez configuré un routage avec <strong>%{groupe_instructeurs_count} groupes d’instructeurs.</strong>
   routing_configuration_notice_2_html: |
-    <p>Pour le configurer, votre formulaire doit comporter
-    au moins un champ de type %{conditionable_types}.</p>
-    <p>Ajoutez ce champ dans la page <a href="%{path}">« Configuration des champs »</a>.</p>
+    Pour le configurer, votre formulaire doit comporter
+    au moins un <strong>« champ routable »</strong>, soit un champ de type :
+  routing_configuration_notice_3_html: |
+    Ajoutez ce champ dans la page d’édition <a href="%{path}">des champs du formulaire</a>.
   delete_title: Aucun dossier ne sera supprimé. Les groupes d'instructeurs vont être supprimés. Seuls les instructeurs du groupe « %{defaut_label} » resteront affectés à la démarche.
   delete_confirmation: |
     Attention : tous les dossiers vont être déplacés dans le groupe « %{defaut_label} » et seuls les instructeurs présent dans ce groupe resteront affectés à la démarche. Souhaitez-vous continuer ?

@@ -655,10 +655,9 @@ class TypeDeChamp < ApplicationRecord
     Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.include?(type_champ)
   end
 
-  def self.humanized_conditionable_types
-    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP.values.map do
-      "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »"
-    end.to_sentence(last_word_connector: ' ou ')
+  def self.humanized_conditionable_types_by_category
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP_BY_CATEGORY
+      .map { |_, v| v.map { "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »" } }
   end
 
   def invalid_regexp?
