@@ -61,7 +61,7 @@ en:
       security:
         label: "Security"
         title: "Security policy and procedures"
-        url: "https://github.com/betagouv/demarches-simplifiees.fr/blob/main/SECURITY.md"
+        url: 'https://github.com/demarches-simplifiees/demarches-simplifiees.fr/blob/main/SECURITY.md'
       carte:
         label: "Deployment map"
         title: "Deployment map by department"
