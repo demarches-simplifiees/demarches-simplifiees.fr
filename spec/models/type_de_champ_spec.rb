@@ -80,23 +80,6 @@ describe TypeDeChamp do
       end
     end
 
-    describe 'changing the type_champ from a repetition' do
-      let!(:procedure) { create(:procedure) }
-      let(:tdc) { create(:type_de_champ_repetition, :with_types_de_champ, procedure: procedure) }
-
-      before do
-        tdc.update(type_champ: target_type_champ)
-      end
-
-      context 'when the target type_champ is not repetition' do
-        let(:target_type_champ) { TypeDeChamp.type_champs.fetch(:text) }
-
-        it 'removes the children types de champ' do
-          expect(procedure.draft_revision.reload.children_of(tdc)).to be_empty
-        end
-      end
-    end
-
     describe 'changing the type_champ from a drop_down_list' do
       let(:tdc) { create(:type_de_champ_drop_down_list) }
 

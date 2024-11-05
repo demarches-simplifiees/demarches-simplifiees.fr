@@ -95,11 +95,11 @@ class TypesDeChamp::TypeDeChampBase
   def champ_blank?(champ) = champ.value.blank?
   def champ_blank_or_invalid?(champ) = champ_blank?(champ)
 
-  def columns(procedure_id:, displayable: true, prefix: nil)
+  def columns(procedure:, displayable: true, prefix: nil)
     if fillable?
       [
         Columns::ChampColumn.new(
-          procedure_id:,
+          procedure_id: procedure.id,
           stable_id:,
           tdc_type: type_champ,
           label: libelle_with_prefix(prefix),

@@ -24,10 +24,10 @@ class TypesDeChamp::TitreIdentiteTypeDeChamp < TypesDeChamp::TypeDeChampBase
 
   def champ_blank?(champ) = champ.piece_justificative_file.blank?
 
-  def columns(procedure_id:, displayable: nil, prefix: nil)
+  def columns(procedure:, displayable: nil, prefix: nil)
     [
       Columns::AttachedManyColumn.new(
-        procedure_id:,
+        procedure_id: procedure.id,
         stable_id:,
         tdc_type: type_champ,
         label: libelle_with_prefix(prefix),

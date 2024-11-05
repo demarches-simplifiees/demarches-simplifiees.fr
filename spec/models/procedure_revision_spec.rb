@@ -63,7 +63,7 @@ describe ProcedureRevision do
       it do
         expect { subject }.to change { draft.reload.types_de_champ.count }.from(4).to(5)
         expect(draft.children_of(type_de_champ_repetition).last).to eq(subject)
-        expect(draft.children_of(type_de_champ_repetition).map(&:revision_type_de_champ).map(&:position)).to eq([0, 1])
+        expect(draft.children_of(type_de_champ_repetition).map { draft.coordinate_for(_1).position }).to eq([0, 1])
 
         expect(last_coordinate.position).to eq(1)
 

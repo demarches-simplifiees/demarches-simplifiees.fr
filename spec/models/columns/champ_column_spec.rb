@@ -122,7 +122,7 @@ describe Columns::ChampColumn do
   def expect_type_de_champ_values(type, assertion)
     type_de_champ = types_de_champ.find { _1.type_champ == type }
     champ = dossier.send(:filled_champ, type_de_champ, nil)
-    columns = type_de_champ.columns(procedure_id: procedure.id)
+    columns = type_de_champ.columns(procedure:)
     expect(columns.map { _1.value(champ) }).to assertion
   end
 
