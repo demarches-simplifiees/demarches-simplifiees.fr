@@ -4,24 +4,34 @@
                     ['Groupes', admin_procedure_groupe_instructeurs_path(@procedure)],
                     ['Routage à partir d’un champ']] }
 
-= render Procedure::InstructeursMenuComponent.new(procedure: @procedure) do
-  - content_for(:title, 'Routage')
-  %h1 Routage à partir d’un champ
-  = form_for :create_simple_routing,
-    method: :post,
-    data: { controller: 'enable-submit-if-checked' },
-    url: create_simple_routing_admin_procedure_groupe_instructeurs_path(@procedure) do |f|
+.container
+  .fr-grid-row
+    .fr-col.fr-col-12.fr-col-md-3
+      .fr-container
+        %ul.fr-btns-group.fr-btns-group--inline-md.fr-ml-0
+          %li
+            = link_to options_admin_procedure_groupe_instructeurs_path, class: 'fr-link fr-icon-arrow-left-line fr-link--icon-left fr-mb-2w fr-mr-2w' do
+              Revenir aux options
 
-    %div{ data: { 'action': "click->enable-submit-if-checked#click" } }
-      .notice
-        Sélectionner le champ à partir duquel créer des groupes d’instructeurs
-      - buttons_content = @procedure.active_revision.simple_routable_types_de_champ.map { |tdc| { label: tdc.libelle, value: tdc.stable_id } }
-      = render Dsfr::RadioButtonListComponent.new(form: f,
-        target: :stable_id,
-        buttons: buttons_content)
+    .fr-col
+      - content_for(:title, 'Routage')
+      %h1 Configuration du routage
+      %h2 Routage à partir d’un champ
+      = form_for :create_simple_routing,
+        method: :post,
+        data: { controller: 'enable-submit-if-checked' },
+        url: create_simple_routing_admin_procedure_groupe_instructeurs_path(@procedure) do |f|
 
-      %ul.fr-btns-group.fr-btns-group--inline-sm
-        %li
-          = link_to 'Retour', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn fr-btn--secondary'
-        %li
-          %button.fr-btn{ disabled: true,  data: { disable_with: 'Création des groupes…', 'enable-submit-if-checked-target': 'submit' } } Créer les groupes
+        .card.fr-pb-0{ data: { 'action': "click->enable-submit-if-checked#click" } }
+          .notice
+            Sélectionner le champ à partir duquel créer des groupes d’instructeurs
+          - buttons_content = @procedure.active_revision.simple_routable_types_de_champ.map { |tdc| { label: tdc.libelle, value: tdc.stable_id } }
+          = render Dsfr::RadioButtonListComponent.new(form: f,
+            target: :stable_id,
+            buttons: buttons_content)
+
+        %ul.fr-btns-group.fr-btns-group--inline-sm
+          %li
+            = link_to 'Annuler', options_admin_procedure_groupe_instructeurs_path(@procedure, state: :choix), class: 'fr-btn fr-btn--secondary'
+          %li
+            %button.fr-btn{ disabled: true,  data: { disable_with: 'Création des groupes…', 'enable-submit-if-checked-target': 'submit' } } Créer les groupes
