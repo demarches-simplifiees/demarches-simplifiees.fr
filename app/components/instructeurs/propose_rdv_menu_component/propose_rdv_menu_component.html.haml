@@ -3,8 +3,15 @@
     = t('.propose_rdv')
 
   - menu.with_item do
-    .dropdown-description
+    .dropdown-description{ id: dom_id(@dossier, :propose_rdv) }
       %h4= t('.propose_rdv')
+      %br
       = t('.propose_rdv_description')
       = link_to t('.connect_with_rdv_service_public'), "", class: "fr-btn"
+      %br
+      = t('.propose_rdv_explaination')
 
+      .fr-mt-2w
+        = form_tag(instructeur_rdvs_path(@dossier.procedure, @dossier), data: { turbo: true, turbo_confirm: t('.confirm') }, method: :post, multipart: true) do
+          -# = button_tag "Annuler", type: :reset, class: 'fr-btn fr-btn--secondary', onclick: 'DS.motivationCancel();'
+          = button_tag t('.confirm'), class: 'fr-btn fr-mr-0'

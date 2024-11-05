@@ -1,5 +1,7 @@
 ---
 fr:
+  confirm: Confirmer
   propose_rdv: Proposer un rendez-vous
-  propose_rdv_description: "Vous pouvez proposer à l'usager de prendre rendez-vous sur des plages horaires de votre choix via RDV Service Public."
+  propose_rdv_description: Vous pouvez proposer à l'usager de prendre rendez-vous sur des plages horaires de votre choix via RDV Service Public.
+  propose_rdv_explaination: L'usager sera informé de votre proposition de rendez-vous et sera invité à choisir un créneau parmi les plages d'ouverture renseignées par l'administrateur de la démarche.
   connect_with_rdv_service_public: Se connecter à RDV Service Public
