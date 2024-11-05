@@ -2,7 +2,9 @@
 
 .sub-header
   .fr-container
-    %h1.fr-h3.fr-mb-0 Démarches
+    .flex.fr-mb-2v
+      %h1.fr-h3.fr-mb-0 Démarches
+      = render TabsExplanationsComponent.new
     = render partial: 'instructeurs/procedures/synthese', locals: { procedures: @procedures, all_dossiers_counts: @all_dossiers_counts }
 
     %nav.fr-tabs{ role: 'navigation', 'aria-label': t('views.users.dossiers.secondary_menu') }
@@ -13,21 +15,13 @@
 
 .fr-container
   - if @statut == "en-cours"
-    = render Dsfr::CalloutComponent.new(title: nil) do |c|
-      - c.with_body do
-        = t(".procedure_en_cours_description")
     - collection = @procedures_en_cours
-  - if @statut == "brouillons"
-    = render Dsfr::CalloutComponent.new(title: nil) do |c|
-      - c.with_body do
-        = t(".procedure_en_test_description")
-    - collection = @procedures_draft
-  - if @statut == "archivees"
-    = render Dsfr::CalloutComponent.new(title: nil) do |c|
-      - c.with_body do
-        = t(".procedure_close_description")
-    - collection = @procedures_closes
 
+  - if @statut == "brouillons"
+    - collection = @procedures_draft
+
+  - if @statut == "archivees"
+    - collection = @procedures_closes
 
   - if collection.present?
     .fr-container.flex.justify-between.fr-mb-6w

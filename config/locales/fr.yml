@@ -388,17 +388,8 @@ fr:
           involved_persons: Personnes impliquées
           reaffectation: Réaffectation
           attachments: Pièces jointes
-        tab_explainations:
-          a_suivre: Aucun instructeur n’est affecté au suivi de ces dossiers. Soyez le premier !
-          suivis: Les dossiers qui sont dans cet onglet sont uniquement ceux que vous suivez. Vous pouvez échanger avec le demandeur jusqu’à pouvoir les accepter, les refuser ou les classer sans suite.
-          traites_html: "Les dossiers dans cet onglet sont terminés : ils ont été acceptés, refusés ou classés sans suite. Vous pouvez <a href=%{archives_path}>télécharger</a> les archives au format zip des dossiers terminés et leurs pièces jointes."
-          tous: Tous les dossiers déposés sur cette démarche, qu’ils soient à suivre, suivis par vous ou suivis par d’autres instructeurs.
-          tous_with_routing: Tous les dossiers déposés sur cette démarche et attribués aux groupes d’instructeurs dont vous faites partie.
-          supprimes: Tous les dossiers <strong>non archivés</strong>, <strong>terminés</strong> et <strong>supprimés par les instructeurs</strong> sur cette démarche
-          archives:  "Les dossiers de cet onglet sont archivés : vous ne pouvez plus y répondre, et les demandeurs ne peuvent plus les modifier."
-          expirant: Les dossiers n’expireront pas avant la période de conservation des données.
         archived_dossier: "Le dossier sera conservé 1 mois supplémentaire"
-        delete_dossier: "Supprimer le dossier"
+        delete_dossier: "Placer le dossier à la corbeille"
         deleted_reason:
           user_request: supprimé par l’usager
           expired: a expiré
@@ -538,7 +529,7 @@ fr:
           edit_dossier: "Modifier le dossier"
           start_other_dossier: "Commencer un nouveau dossier"
           clone: "Dupliquer ce dossier"
-          delete_dossier: "Supprimer le dossier"
+          delete_dossier: "Placer le dossier à la corbeille"
           delete_dossier_confirm: "En continuant, vous allez supprimer ce dossier ainsi que les informations qu’il contient. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           delete_dossier_with_transfer_confirm: "En continuant, vous allez supprimer ce dossier, les informations qu’il contient ainsi que sa demande de transfert à %{email}. Toute suppression entraîne l’annulation de la démarche en cours.\n\nConfirmer la suppression ?"
           transfer_dossier: "Transférer le dossier"
@@ -795,9 +786,7 @@ fr:
     dossiers_invites:
       one: dossier invité
       other: dossiers invités
-    dossiers_supprimes:
-      one: supprimé
-      other: supprimés
+    dossiers_supprimes: corbeille
     dossiers_historique:
       one:  supprimé définitivement
       other: supprimés définitivement

@@ -46,6 +46,22 @@ describe Instructeurs::ProceduresController, type: :controller do
     let(:instructeur) { create(:instructeur) }
     subject { get :index }
 
+    describe 'tabs explanation' do
+      render_views
+
+      before do
+        sign_in(instructeur.user)
+        subject
+      end
+
+      it 'contains tabs explanation' do
+        expect(response.body).to have_text('L’onglet « en cours » regroupe')
+        expect(response.body).to have_text('L’onglet « en test » regroupe')
+        expect(response.body).to have_text('L’onglet « terminée » regroupe')
+        expect(response.body).not_to have_text('L’onglet « expirant » contient')
+      end
+    end
+
     context "when not logged" do
       before { subject }
       it { expect(response).to redirect_to(new_user_session_path) }
@@ -258,6 +274,26 @@ describe Instructeurs::ProceduresController, type: :controller do
 
     subject do
       get :show, params: { procedure_id: procedure.id, statut: statut }
+    end
+
+    describe 'tabs explanation' do
+      render_views
+
+      before do
+        sign_in(instructeur.user)
+        subject
+      end
+
+      it 'contains tabs explanation' do
+        expect(response.body).to have_text('L’onglet « à suivre » contient')
+        expect(response.body).to have_text('L’onglet « suivi » contient')
+        expect(response.body).to have_text('L’onglet « traité » contient')
+        expect(response.body).to have_text('L’onglet « au total » contient')
+        expect(response.body).to have_text('L’onglet « corbeille » contient')
+        expect(response.body).to have_text('L’onglet « à archiver » contient')
+        expect(response.body).to have_text('L’onglet « expirant » contient')
+        expect(response.body).not_to have_text('L’onglet « terminée » regroupe')
+      end
     end
 
     describe 'access to groupes_instructeur' do

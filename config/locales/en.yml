@@ -390,17 +390,8 @@ en:
           involved_persons: Involved persons
           reaffectation: reassignment
           attachments: Attachments
-        tab_explainations:
-          a_suivre: No instructor is assigned to follow up on these files. Be the first !
-          suivis: The folders that are in this tab are only those that you follow. You can exchange with the requester until you can accept them, refuse them or classify them without follow-up.
-          traites_html: "The files in this tab are finished: they have been accepted, refused or closed without follow-up. You can <a href=%{archives_path}>download</a> the zip archives of finished files and their attachments."
-          tous: All the files that have been submitted on this approach, included files to be follow and files followed by you or other instructors.
-          tous_with_routing: All the files that have been submitted on this approach, and assigned to your instructors groups.
-          supprimes: All files not <strong>archive</strong>, <strong>completed</strong> and <strong>deleted by the instructors</strong> on this approach.
-          archives: "The files in this tab are archived: you can no longer reply to them, and requesters can no longer modify them."
-          expirant: Records will not expire prior to the data retention period.
         archived_dossier: "This file will be kept for an additional month"
-        delete_dossier: "Delete file"
+        delete_dossier: "Move file to trash"
         acts_on_behalf: "acts for"
         deleted_by_administration: "File deleted by administration"
         restore: "Restore"
@@ -545,7 +536,7 @@ en:
           edit_dossier: "Edit the file"
           start_other_dossier: "Start another empty file"
           clone: "Duplicate the file"
-          delete_dossier: "Delete the file"
+          delete_dossier: "Move file to trash"
           delete_dossier_confirm: "If you continue, you will delete this file and the information it contains. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
           delete_dossier_with_transfer_confirm: "If you continue, you will delete this file, the information it contains and its transfer request to %{email}. Any deletion will result in the cancellation of the current procedure.\n\nConfirm deletion?"
           transfer_dossier: "Transfer the file"
@@ -786,9 +777,7 @@ en:
     dossiers_invites:
       one: guest file
       other: guest files
-    dossiers_supprimes:
-      one: deleted
-      other: deleted
+    dossiers_supprimes: trash
     dossiers_transferes:
       one: transfer request
       other: transfer requests
