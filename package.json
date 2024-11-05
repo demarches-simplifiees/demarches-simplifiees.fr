@@ -7,7 +7,7 @@
     "@coldwired/utils": "^0.13.0",
     "@formatjs/intl-listformat": "^7.5.7",
     "@frsource/autoresize-textarea": "^2.0.87",
-    "@gouvfr/dsfr": "^1.11.2",
+    "@gouvfr/dsfr": "^1.12.1",
     "@graphiql/plugin-explorer": "^3.1.0",
     "@graphiql/toolkit": "^0.9.1",
     "@heroicons/react": "^1.0.6",
