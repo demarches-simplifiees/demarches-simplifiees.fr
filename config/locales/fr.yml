@@ -379,8 +379,6 @@ fr:
     instructeurs:
       dossiers:
         tab_steps:
-          to_follow: à suivre
-          total: au total
           request: Demande
           private_annotations: Annotations privées
           external_opinion: Avis externes
@@ -786,7 +784,9 @@ fr:
     dossiers_invites:
       one: dossier invité
       other: dossiers invités
-    dossiers_supprimes: corbeille
+    dossiers_supprimes:
+      one: corbeille
+      other: corbeille
     dossiers_historique:
       one:  supprimé définitivement
       other: supprimés définitivement
@@ -795,7 +795,7 @@ fr:
       other: demandes de transfert
     dossiers_close_to_expiration:
       one: expirant
-      other: expirants
+      other: expirant
     dossier_trouve:
       one: "%{count} dossier trouvé"
       other: "%{count} dossiers trouvés"
@@ -856,18 +856,18 @@ fr:
           filename: "attestation-de-depot.pdf"
   instructeurs:
     dossiers:
-       deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
-       impossible_deletion: "Supression impossible : le dossier n’est pas traité"
-       restore: "Le dossier a bien été restauré"
-       reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
-       existing_groupe:
-         one: "%{count} groupe existe"
-         other: "%{count} groupes existent"
-       labels:
+      deleted_by_instructeur: "Le dossier a bien été supprimé de votre interface"
+      impossible_deletion: "Supression impossible : le dossier n’est pas traité"
+      restore: "Le dossier a bien été restauré"
+      reaffectation: "Le dossier nº %{dossier_id} a été réaffecté au groupe d’instructeurs « %{label} »."
+      existing_groupe:
+        one: "%{count} groupe existe"
+        other: "%{count} groupes existent"
+      labels:
         to_follow: à suivre
         to_archive: à archiver
-        dossiers_supprimes: corbeille
         total: au total
+        trash: corbeille
   administrateurs:
     activate:
       new:

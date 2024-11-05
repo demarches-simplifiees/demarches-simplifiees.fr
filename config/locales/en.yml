@@ -381,8 +381,6 @@ en:
     instructeurs:
       dossiers:
         tab_steps:
-          to_follow: to follow
-          total: total
           request: Request
           private_annotations: Private annotations
           external_opinion: External opinion
@@ -777,13 +775,15 @@ en:
     dossiers_invites:
       one: guest file
       other: guest files
-    dossiers_supprimes: trash
+    dossiers_supprimes:
+      one: trash
+      other: trash
     dossiers_transferes:
       one: transfer request
       other: transfer requests
     dossiers_close_to_expiration:
-      one: expiring file
-      other: expiring files
+      one: expiring
+      other: expiring
     dossier_trouve:
       one: "%{count} file found"
       other: "%{count} files found"
@@ -858,14 +858,14 @@ en:
         signature: "%{app_name}"
   instructeurs:
     dossiers:
-       deleted_by_instructeur: "The folder has been deleted"
-       impossible_deletion: "Unable to delete : the folder is not processed"
-       restore: "The folder has been restored"
-       labels:
-          to_follow: to follow
-          to_archive: to archive
-          dossiers_supprimes: trash
-          total: total
+      deleted_by_instructeur: "The folder has been deleted"
+      impossible_deletion: "Unable to delete : the folder is not processed"
+      restore: "The folder has been restored"
+      labels:
+        to_follow: to follow
+        to_archive: to archive
+        total: total
+        trash: trash
   france_connect:
     particulier:
       choose_email:
