@@ -1,6 +1,6 @@
-= @form.text_field :external_id, input_opts(id: @champ.input_id, required: @champ.required?, class: "width-33-desktop fr-input small-margin", aria: { describedby: @champ.describedby_id })
+= @form.text_field :external_id, input_opts(id: @champ.input_id, required: @champ.required?, class: "width-33-desktop fr-input", aria: { describedby: @champ.describedby_id })
 
-.rnf-info{ id: dom_id(@champ, :rnf_info) }
+.rnf-info{ id: dom_id(@champ, :rnf_info), role: 'status' }
   - if @champ.fetch_external_data_error?
     %p.fr-error-text= t('.rnf_info_error')
   - elsif @champ.fetch_external_data_pending?
