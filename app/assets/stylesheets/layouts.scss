@@ -54,17 +54,13 @@
 
 .sticky--top {
   position: sticky;
-  // scss-lint:disable VendorPrefix
   position: -webkit-sticky; // This is needed on Safari (tested on 12.1)
-  // scss-lint:enable VendorPrefix
   top: 1rem;
 }
 
 .sticky--bottom {
   position: sticky;
-  // scss-lint:disable VendorPrefix
   position: -webkit-sticky; // This is needed on Safari (tested on 12.1)
-  // scss-lint:enable VendorPrefix
   bottom: 0;
 
   z-index: 10; // above DSFR btn which are at 1

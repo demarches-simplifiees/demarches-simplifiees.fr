@@ -51,11 +51,9 @@ $dossier-actions-bar-border-width: 1px;
   }
 
   .dossier-edit-sticky-footer {
-    // scss-lint:disable VendorPrefix DuplicateProperty
     position: fixed;           // Fallback for IE 11, and other browser that don't support sticky
     position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
     position: sticky;
-    // scss-lint:enable VendorPrefix DuplicateProperty
 
     // IE 11 uses `position:fixed` – and thus needs an explicit width, content-box for better layout, etc.
     width: 100%;

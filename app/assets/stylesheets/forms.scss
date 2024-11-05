@@ -52,7 +52,6 @@
   // Don't cumulate margin-bottoms for inlined elements (radio...), because .fr-fieldset has already its own
   // This is important because of multilpe conditional hidden elements to not take additional space,
   // but we need the usual margin when there are an error or conditional spinner is visible.
-  // scss-lint:disable SingleLinePerSelector
   .fr-fieldset__element
     > .fr-fieldset:not(.fr-fieldset--error):not(:has(+ .spinner))
     > .fr-fieldset__element.fr-fieldset__element--inline {
@@ -208,7 +207,7 @@
     }
   }
 
-  .drop_down_other { // scss-lint:disable SelectorFormat
+  .drop_down_other {
     label {
       font-weight: normal;
     }
@@ -279,7 +278,7 @@
     }
   }
 
-  div.field_with_errors > input { // scss-lint:disable SelectorFormat
+  div.field_with_errors > input {
     border: 1px solid $dark-red;
   }
 
@@ -384,7 +383,7 @@
     }
   }
 
-  .editable-champ-titre_identite { // scss-lint:disable SelectorFormat
+  .editable-champ-titre_identite {
     margin-bottom: 2 * $default-padding;
   }
 

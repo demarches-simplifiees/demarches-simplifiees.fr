@@ -690,11 +690,6 @@ GEM
     sanitize (6.1.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
     sassc (2.4.0)
       ffi (~> 1.9)
     sassc-rails (2.1.2)
@@ -703,8 +698,6 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    scss_lint (0.60.0)
-      sass (~> 3.5, >= 3.5.5)
     selectize-rails (0.12.6)
     selenium-devtools (0.126.0)
       selenium-webdriver (~> 4.2)
@@ -997,7 +990,6 @@ DEPENDENCIES
   rubocop-rspec
   saml_idp
   sassc-rails
-  scss_lint
   selenium-devtools
   selenium-webdriver
   sentry-delayed_job
