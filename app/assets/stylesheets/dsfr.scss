@@ -266,6 +266,11 @@ button.fr-tag-bug {
   white-space: nowrap;
 }
 
+// Caption is bold, but all-procedures table use fr-tag in caption
+.fr-table caption .fr-tag {
+  font-weight: normal;
+}
+
 // We remove the line height because it creates unharmonized spaces - most of all in table
 .fr-tags-group > li {
   line-height: inherit;
