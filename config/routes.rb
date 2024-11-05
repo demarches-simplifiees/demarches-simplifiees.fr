@@ -744,6 +744,9 @@ Rails.application.routes.draw do
     end
 
     resources :api_tokens, only: [:create, :destroy, :edit, :update] do
+      member do
+        delete 'remove_procedure'
+      end
       collection do
         get :nom
         get :autorisations
