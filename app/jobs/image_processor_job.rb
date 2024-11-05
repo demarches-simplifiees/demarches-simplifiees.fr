@@ -14,6 +14,10 @@ class ImageProcessorJob < ApplicationJob
   # (to avoid modifying the file while it is being scanned).
   retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
 
+  # Usually invalid image or ImageMagick decoder blocked for this format
+  retry_on MiniMagick::Invalid, attempts: 3
+  retry_on MiniMagick::Error, attempts: 3
+
   rescue_from ActiveStorage::PreviewError do
     retry_or_discard
   end
@@ -82,12 +86,8 @@ class ImageProcessorJob < ApplicationJob
   end
 
   def retry_or_discard
-    if executions < max_attempts
+    if executions < 3
       retry_job wait: 5.minutes
     end
-  end
-
-  def max_attempts
-    3
   end
 end

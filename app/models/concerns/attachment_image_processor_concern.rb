@@ -21,6 +21,7 @@ module AttachmentImageProcessorConcern
     return if blob.attachments.size != 1
     return if blob.attachments.last.record_type == "Export"
     return if !blob.content_type.in?(PROCESSABLE_TYPES)
+    return if blob.byte_size.zero? # some empty files may be considered as image depending on filename
 
     ImageProcessorJob.perform_later(blob)
   end
