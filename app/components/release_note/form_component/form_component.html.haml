@@ -24,7 +24,7 @@
                 = category.humanize
 
         - if categories_error?
-          .fr-messages-group{ id: "checkboxes-error-messages", aria_live: "assertive" }
+          .fr-messages-group{ id: "checkboxes-error-messages", "aria-live": "assertive" }
             - if categories_full_messages_errors.one?
               %p.fr-message.fr-message--error{ id: categories_errors_describedby_id }= categories_full_messages_errors.first
             - else
