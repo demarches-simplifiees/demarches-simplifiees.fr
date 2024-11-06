@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 describe ColumnsConcern do
+  let(:procedure_id) { procedure.id }
+
   describe '#find_column' do
     let(:procedure) { build(:procedure) }
     let(:notifications_column) { procedure.notifications_column }
@@ -22,7 +24,6 @@ describe ColumnsConcern do
 
     context 'when the procedure can have a SIRET number' do
       let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
-      let(:procedure_id) { procedure.id }
       let(:tdc_1) { procedure.active_revision.types_de_champ_public[0] }
       let(:tdc_2) { procedure.active_revision.types_de_champ_public[1] }
       let(:tdc_private_1) { procedure.active_revision.types_de_champ_private[0] }
@@ -106,16 +107,12 @@ describe ColumnsConcern do
       let(:surname_field) { Column.new(procedure_id:, label: "Nom", table: "individual", column: "nom", displayable: true, type: :text, value_column: :value, filterable: true) }
       let(:gender_field) { Column.new(procedure_id:, label: "Civilité", table: "individual", column: "gender", displayable: true, type: :text, value_column: :value, filterable: true) }
       let(:procedure) { create(:procedure, :for_individual) }
-      let(:procedure_id) { procedure.id }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
 
       it { is_expected.to include(name_field, surname_field, gender_field) }
     end
 
     context 'when the procedure is sva' do
-      let(:procedure) { create(:procedure, :for_individual, :sva) }
-      let(:procedure_id) { procedure.id }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
+      let(:procedure) { create(:procedure, :sva) }
 
       let(:decision_on) { Column.new(procedure_id:, label: "Date décision SVA", table: "self", column: "sva_svr_decision_on", displayable: true, type: :date, value_column: :value, filterable: true) }
       let(:decision_before_field) { Column.new(procedure_id:, label: "Date décision SVA avant", table: "self", column: "sva_svr_decision_before", displayable: false, type: :date, value_column: :value, filterable: true) }
@@ -124,9 +121,7 @@ describe ColumnsConcern do
     end
 
     context 'when the procedure is svr' do
-      let(:procedure) { create(:procedure, :for_individual, :svr) }
-      let(:procedure_id) { procedure.id }
-      let(:procedure_presentation) { create(:procedure_presentation, assign_to: assign_to) }
+      let(:procedure) { create(:procedure, :svr) }
 
       let(:decision_on) { Column.new(procedure_id:, label: "Date décision SVR", table: "self", column: "sva_svr_decision_on", displayable: true, type: :date, value_column: :value, filterable: true) }
       let(:decision_before_field) { Column.new(procedure_id:, label: "Date décision SVR avant", table: "self", column: "sva_svr_decision_before", displayable: false, type: :date, value_column: :value, filterable: true) }
