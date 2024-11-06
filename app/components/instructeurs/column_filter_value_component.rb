@@ -12,7 +12,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   def call
     if column_type.in?([:enum, :enums, :boolean])
       select_tag :filter,
-        options_for_select(options_for_select_of_column),
+        options_for_select(column.options_for_select),
         id: 'value',
         name: "filters[][filter]",
         class: 'fr-select',
@@ -44,18 +44,4 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       'text'
     end
   end
-
-  def options_for_select_of_column
-    if column.groupe_instructeur?
-      current_instructeur.groupe_instructeurs.filter_map do
-        if _1.procedure_id == procedure_id
-          [_1.label, _1.id]
-        end
-      end
-    else
-      column.options_for_select
-    end
-  end
-
-  def procedure_id = @column.h_id[:procedure_id]
 end
