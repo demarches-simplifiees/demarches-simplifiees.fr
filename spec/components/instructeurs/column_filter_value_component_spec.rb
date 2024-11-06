@@ -17,4 +17,10 @@ describe Instructeurs::ColumnFilterValueComponent, type: :component do
 
     it { expect(page).to have_selector('input[name="filters[][filter]"][type="date"]') }
   end
+
+  describe 'the column empty case' do
+    let(:column) { nil }
+
+    it { expect(page).to have_selector('input[disabled]') }
+  end
 end

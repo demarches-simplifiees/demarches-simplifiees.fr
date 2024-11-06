@@ -7,25 +7,23 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
     @column = column
   end
 
-  def column_type = column.present? ? column.type : :text
-
   def call
-    if column_type.in?([:enum, :enums, :boolean])
-      select_tag :filter,
+    if column.nil?
+      tag.input(id: 'value', class: 'fr-input', disabled: true)
+    elsif column.type.in?([:enum, :enums, :boolean])
+      select_tag 'filters[][filter]',
         options_for_select(column.options_for_select),
         id: 'value',
-        name: "filters[][filter]",
         class: 'fr-select',
         data: { no_autosubmit: true },
         required: true
     else
       tag.input(
-        class: 'fr-input',
-        id: 'value',
-        type:,
         name: "filters[][filter]",
+        id: 'value',
+        class: 'fr-input',
+        type:,
         maxlength: FilteredColumn::FILTERS_VALUE_MAX_LENGTH,
-        disabled: column.nil? ? true : false,
         data: { no_autosubmit: true },
         required: true
       )
@@ -35,7 +33,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   private
 
   def type
-    case column_type
+    case column.type
     when :datetime, :date
       'date'
     when :integer, :decimal
