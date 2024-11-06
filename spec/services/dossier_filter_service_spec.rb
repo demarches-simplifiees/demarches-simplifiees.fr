@@ -273,6 +273,23 @@ describe DossierFilterService do
       it { is_expected.to eq([dossier_no, dossier_yes].map(&:id)) }
     end
 
+    context 'for labels table' do
+      let(:column) { procedure.find_column(label: 'Labels') }
+      let(:order) { 'asc' }
+
+      let(:label_a) { Label.create(name: "a", color: 'green-bourgeon', procedure:) }
+      let(:label_z) { Label.create(name: "z", color: 'green-bourgeon', procedure:) }
+      let!(:dossier_a) { create(:dossier, procedure:) }
+      let!(:dossier_z) { create(:dossier, procedure:) }
+      let(:dossier_label_a) { DossierLabel.create(dossier: dossier_a, label: label_a) }
+      let(:dossier_label_z) { DossierLabel.create(dossier: dossier_z, label: label_z) }
+
+      before do
+      end
+
+      it { is_expected.to eq([dossier_a, dossier_z].map(&:id)) }
+    end
+
     context 'for other tables' do
       # All other columns and tables work the same so it’s ok to test only one
       let(:column) { procedure.find_column(label: 'Établissement code postal') }
