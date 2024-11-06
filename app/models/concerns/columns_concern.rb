@@ -53,7 +53,11 @@ module ColumnsConcern
 
     def dossier_id_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'id', type: :number)
 
-    def dossier_state_column = Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'state', type: :enum, scope: 'instructeurs.dossiers.filterable_state', displayable: false)
+    def dossier_state_column
+      options_for_select = I18n.t('instructeurs.dossiers.filterable_state').map(&:to_a).map(&:reverse)
+
+      Columns::DossierColumn.new(procedure_id: id, table: 'self', column: 'state', type: :enum, options_for_select:, displayable: false)
+    end
 
     def notifications_column = Columns::DossierColumn.new(procedure_id: id, table: 'notifications', column: 'notifications', label: "notifications", filterable: false)
 
