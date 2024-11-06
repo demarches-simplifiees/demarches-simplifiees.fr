@@ -16,7 +16,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
         id: 'value',
         name: "filters[][filter]",
         class: 'fr-select',
-        data: { no_autosubmit: true }
+        data: { no_autosubmit: true },
+        required: true
     else
       tag.input(
         class: 'fr-input',
