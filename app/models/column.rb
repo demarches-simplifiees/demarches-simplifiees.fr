@@ -30,12 +30,6 @@ class Column
 
   def ==(other) = h_id == other.h_id # using h_id instead of id to avoid inversion of keys
 
-  def to_json
-    {
-      table:, column:, label:, type:, filterable:, displayable:
-    }
-  end
-
   def notifications? = [table, column] == ['notifications', 'notifications']
   def dossier_state? = [table, column] == ['self', 'state']
   def groupe_instructeur? = [table, column] == ['groupe_instructeur', 'id']
