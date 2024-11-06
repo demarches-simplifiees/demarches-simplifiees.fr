@@ -48,7 +48,7 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
   def options_for_select_of_column
     if column.scope.present?
       I18n.t(column.scope).map(&:to_a).map(&:reverse)
-    elsif column.table == 'groupe_instructeur'
+    elsif column.groupe_instructeur?
       current_instructeur.groupe_instructeurs.filter_map do
         if _1.procedure_id == procedure_id
           [_1.label, _1.id]
