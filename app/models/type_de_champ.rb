@@ -558,14 +558,12 @@ class TypeDeChamp < ApplicationRecord
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }.sort
     elsif region?
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
-    elsif choice_type?
-      if drop_down_list?
-        drop_down_options
-      elsif yes_no?
-        Champs::YesNoChamp.options
-      elsif checkbox?
-        Champs::CheckboxChamp.options
-      end
+    elsif drop_down_list?
+      drop_down_options
+    elsif yes_no?
+      Champs::YesNoChamp.options
+    elsif checkbox?
+      Champs::CheckboxChamp.options
     end
   end
 
