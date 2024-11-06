@@ -58,7 +58,7 @@ class DossierFilterService
         .uniq
     when 'dossier_labels'
       dossiers.includes(table)
-        .order("#{self.class.sanitized_column(table, column)} #{order}")
+        .order("#{sanitized_column(table, column)} #{order}")
         .pluck(:id)
         .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
