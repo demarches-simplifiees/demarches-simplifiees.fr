@@ -83,7 +83,12 @@ module ColumnsConcern
 
     private
 
-    def groupe_instructeurs_id_column = Columns::DossierColumn.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum)
+    def groupe_instructeurs_id_column
+      groupes = Current.user&.instructeur&.groupe_instructeurs || []
+      options_for_select = groupes.filter_map { [_1.label, _1.id] if _1.procedure_id == id }
+
+      Columns::DossierColumn.new(procedure_id: id, table: 'groupe_instructeur', column: 'id', type: :enum, options_for_select:)
+    end
 
     def followers_instructeurs_email_column = Columns::DossierColumn.new(procedure_id: id, table: 'followers_instructeurs', column: 'email')
 
