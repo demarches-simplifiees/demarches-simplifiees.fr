@@ -54,10 +54,6 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
           [_1.label, _1.id]
         end
       end
-    elsif column.table == 'dossier_labels'
-      Procedure.find(procedure_id).labels.filter_map do
-        [_1.name, _1.id]
-      end
     else
       column.options_for_select
     end
