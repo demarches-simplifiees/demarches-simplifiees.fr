@@ -117,7 +117,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(0) }
         end
 
@@ -181,7 +181,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1 + 1 + 1) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3 + 2 + 1) }
-          it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(1 + 0) }
+          it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(1 + 0) }
           it { expect(assigns(:all_dossiers_counts)['expirant']).to eq(2 + 0) }
 
           it { expect(assigns(:procedures_en_cours)).to match_array([procedure2, procedure, procedure3]) }
@@ -245,7 +245,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(6) }
             it { expect(assigns(:all_dossiers_counts)['traités']).to eq(10) }
             it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(4 + 6 + 10) }
-            it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(14) }
+            it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(14) }
           end
 
           context 'when an instructeur only belongs to one of them gi' do
@@ -266,7 +266,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(3) }
             it { expect(assigns(:all_dossiers_counts)['traités']).to eq(5) }
             it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(2 + 3 + 5) }
-            it { expect(assigns(:all_dossiers_counts)['archivés']).to eq(7) }
+            it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(7) }
           end
         end
       end
