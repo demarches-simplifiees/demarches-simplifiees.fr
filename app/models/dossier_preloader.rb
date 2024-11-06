@@ -92,5 +92,7 @@ class DossierPreloader
     if dossier.etablissement
       dossier.etablissement.association(:champ).target = nil
     end
+
+    dossier.send(:reset_champs_cache)
   end
 end

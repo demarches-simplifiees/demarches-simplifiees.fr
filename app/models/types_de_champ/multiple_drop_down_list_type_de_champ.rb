@@ -24,7 +24,7 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
       [champ.value]
     else
       JSON.parse(champ.value)
-    end
+    end.filter { drop_down_options.include?(_1) }
   rescue JSON::ParserError
     []
   end

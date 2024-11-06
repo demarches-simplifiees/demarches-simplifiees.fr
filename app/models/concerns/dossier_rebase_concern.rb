@@ -68,7 +68,7 @@ module DossierRebaseConcern
     changes_by_op[:remove].each { champs_by_stable_id[_1.stable_id].destroy_all }
 
     # update champ
-    changes_by_op[:update].each { apply(_1, champs_by_stable_id[_1.stable_id]) }
+    changes_by_op[:update].each { champs_by_stable_id[_1.stable_id].update_all(rebased_at: Time.zone.now) }
 
     # update dossier revision
     update_column(:revision_id, target_revision.id)
@@ -77,40 +77,6 @@ module DossierRebaseConcern
     changes_by_op[:add]
       .map { target_coordinates_by_stable_id[_1.stable_id] }
       .each { add_new_champs_for_revision(_1) }
-  end
-
-  def apply(change, champs)
-    case change.attribute
-    when :type_champ
-      champs.each { purge_piece_justificative_file(_1) }
-      GeoArea.where(champ: champs).destroy_all
-      Etablissement.where(champ: champs).destroy_all
-      champs.update_all(type: "Champs::#{change.to.classify}Champ",
-        value: nil,
-        value_json: nil,
-        external_id: nil,
-        data: nil,
-        rebased_at: Time.zone.now)
-    when :drop_down_options
-      # we are removing options, we need to remove the value if it contains one of the removed options
-      removed_options = change.from - change.to
-      if removed_options.present? && champs.any? { _1.in?(removed_options) }
-        champs.filter { _1.in?(removed_options) }.each do
-          _1.remove_option(removed_options)
-          _1.update_column(:rebased_at, Time.zone.now)
-        end
-      end
-    when :carte_layers
-      # if we are removing cadastres layer, we need to remove cadastre geo areas
-      if change.from.include?(:cadastres) && !change.to.include?(:cadastres)
-        champs.filter { _1.cadastres.present? }.each do
-          _1.cadastres.each(&:destroy)
-          _1.update_column(:rebased_at, Time.zone.now)
-        end
-      end
-    else
-      champs.update_all(rebased_at: Time.zone.now)
-    end
   end
 
   def add_new_champs_for_revision(target_coordinate)

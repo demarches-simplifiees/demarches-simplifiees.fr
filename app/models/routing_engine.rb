@@ -5,7 +5,7 @@ module RoutingEngine
     return if dossier.forced_groupe_instructeur
 
     matching_groupe = dossier.procedure.groupe_instructeurs.active.reject(&:invalid_rule?).find do |gi|
-      gi.routing_rule&.compute(dossier.champs)
+      gi.routing_rule&.compute(dossier.filled_champs)
     end
 
     matching_groupe ||= dossier.procedure.defaut_groupe_instructeur

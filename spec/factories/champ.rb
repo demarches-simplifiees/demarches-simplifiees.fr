@@ -69,7 +69,7 @@ FactoryBot.define do
     end
 
     factory :champ_do_not_use_linked_drop_down_list, class: 'Champs::LinkedDropDownListChamp' do
-      value { '["categorie 1", "choix 1"]' }
+      value { '["primary", "secondary"]' }
     end
 
     factory :champ_do_not_use_pays, class: 'Champs::PaysChamp' do
