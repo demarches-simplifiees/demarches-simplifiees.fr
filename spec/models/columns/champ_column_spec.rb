@@ -48,7 +48,7 @@ describe Columns::ChampColumn do
       def column(label) = procedure.find_column(label:)
 
       context 'from a integer_number' do
-        let(:champ) { double(last_write_type_champ: 'integer_number', value: '42') }
+        let(:champ) { Champs::IntegerNumberChamp.new(value: '42') }
 
         it do
           expect(column('decimal_number').value(champ)).to eq(42.0)
@@ -57,7 +57,7 @@ describe Columns::ChampColumn do
       end
 
       context 'from a decimal_number' do
-        let(:champ) { double(last_write_type_champ: 'decimal_number', value: '42.1') }
+        let(:champ) { Champs::DecimalNumberChamp.new(value: '42.1') }
 
         it do
           expect(column('integer_number').value(champ)).to eq(42)
@@ -66,7 +66,7 @@ describe Columns::ChampColumn do
       end
 
       context 'from a date' do
-        let(:champ) { double(last_write_type_champ: 'date', value:) }
+        let(:champ) { Champs::DateChamp.new(value:) }
 
         describe 'when the value is valid' do
           let(:value) { '2019-07-10' }
@@ -82,7 +82,7 @@ describe Columns::ChampColumn do
       end
 
       context 'from a datetime' do
-        let(:champ) { double(last_write_type_champ: 'datetime', value:) }
+        let(:champ) { Champs::DatetimeChamp.new(value:) }
 
         describe 'when the value is valid' do
           let(:value) { '1962-09-15T15:35:00+01:00' }
@@ -98,7 +98,7 @@ describe Columns::ChampColumn do
       end
 
       context 'from a drop_down_list' do
-        let(:champ) { double(last_write_type_champ: 'drop_down_list', value: 'val1') }
+        let(:champ) { Champs::DropDownListChamp.new(value: 'val1') }
 
         it do
           expect(column('multiple_drop_down_list').value(champ)).to eq(['val1'])
@@ -107,7 +107,7 @@ describe Columns::ChampColumn do
       end
 
       context 'from a multiple_drop_down_list' do
-        let(:champ) { double(last_write_type_champ: 'multiple_drop_down_list', value: '["val1","val2"]') }
+        let(:champ) { Champs::MultipleDropDownListChamp.new(value: '["val1","val2"]') }
 
         it do
           expect(column('simple_drop_down_list').value(champ)).to eq('val1')

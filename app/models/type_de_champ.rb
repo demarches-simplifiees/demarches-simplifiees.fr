@@ -723,7 +723,7 @@ class TypeDeChamp < ApplicationRecord
     # no champ
     return true if champ.nil?
     # type de champ on the revision changed
-    if champ.last_write_type_champ == type_champ || castable_on_change?(champ.last_write_type_champ, type_champ)
+    if champ.is_type?(type_champ) || castable_on_change?(champ.last_write_type_champ, type_champ)
       dynamic_type.champ_blank?(champ)
     else
       true
@@ -734,7 +734,7 @@ class TypeDeChamp < ApplicationRecord
     # no champ
     return true if champ.nil?
     # type de champ on the revision changed
-    if champ.last_write_type_champ == type_champ || castable_on_change?(champ.last_write_type_champ, type_champ)
+    if champ.is_type?(type_champ) || castable_on_change?(champ.last_write_type_champ, type_champ)
       mandatory? && dynamic_type.champ_blank_or_invalid?(champ)
     else
       true

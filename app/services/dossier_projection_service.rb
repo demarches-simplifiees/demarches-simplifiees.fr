@@ -80,8 +80,9 @@ class DossierProjectionService
             fields
               .filter { |f| f[STABLE_ID] == stable_id }
               .each do |field|
-              field[:id_value_h] = champs.to_h { |c| [c.dossier_id, champ_value.(c, field[:original_column])] }
-            end
+                column = field[:original_column]
+                field[:id_value_h] = champs.to_h { [_1.dossier_id, column.is_a?(Columns::JSONPathColumn) ? column.value(_1) : champ_value.(_1)] }
+              end
           end
       when 'self'
         Dossier
@@ -203,17 +204,10 @@ class DossierProjectionService
         .group_by(&:first)
         .transform_values { _1.map { |_, type_de_champ| [type_de_champ.stable_id, type_de_champ] }.to_h }
       stable_ids_and_types_de_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_de_champ_by_revision_ids[_1] }.compact
-      -> (champ, column) {
-        type_de_champ = stable_ids_and_types_de_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
-        if type_de_champ.present? && type_de_champ.type_champ == champ.last_write_type_champ
-          if column.is_a?(Columns::JSONPathColumn)
-            column.value(champ)
-          else
-            type_de_champ.champ_value(champ)
-          end
-        else
-          ''
-        end
+      -> (champ) {
+        type_de_champ = stable_ids_and_types_de_champ_by_dossier_ids
+          .fetch(champ.dossier_id, {})[champ.stable_id]
+        type_de_champ&.champ_value(champ)
       }
     end
   end
