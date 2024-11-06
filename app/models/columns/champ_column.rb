@@ -3,7 +3,7 @@
 class Columns::ChampColumn < Column
   attr_reader :stable_id
 
-  def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, value_column: :value, options_for_select: [])
+  def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, options_for_select: [])
     @stable_id = stable_id
     @tdc_type = tdc_type
 
@@ -13,7 +13,6 @@ class Columns::ChampColumn < Column
       column: stable_id.to_s,
       label:,
       type:,
-      value_column:,
       displayable:,
       filterable:,
       options_for_select:
@@ -47,6 +46,8 @@ class Columns::ChampColumn < Column
   private
 
   def column_id = "type_de_champ/#{stable_id}"
+
+  def value_column = @tdc_type.in?(['departements', 'regions']) ? :external_id : :value
 
   def string_value(champ) = champ.public_send(value_column)
 

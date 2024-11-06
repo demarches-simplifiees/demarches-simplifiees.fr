@@ -545,14 +545,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def self.value_column(type_champ)
-    if type_champ.in?([type_champs.fetch(:departements), type_champs.fetch(:regions)])
-      :external_id
-    else
-      :value
-    end
-  end
-
   def options_for_select
     if departement?
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }.sort
