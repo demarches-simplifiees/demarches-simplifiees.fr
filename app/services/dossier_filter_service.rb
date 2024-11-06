@@ -32,8 +32,9 @@ class DossierFilterService
             dossiers_id_with_notification
       end
     when TYPE_DE_CHAMP
+      stable_id = sorted_column.column.stable_id
       ids = dossiers
-        .with_type_de_champ(column)
+        .with_type_de_champ(stable_id)
         .order("champs.value #{order}")
         .pluck(:id)
       if ids.size != count

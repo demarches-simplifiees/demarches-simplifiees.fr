@@ -6,11 +6,12 @@ class Columns::ChampColumn < Column
   def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, options_for_select: [])
     @stable_id = stable_id
     @tdc_type = tdc_type
+    column = tdc_type.in?(['departements', 'regions']) ? :external_id : :value
 
     super(
       procedure_id:,
       table: 'type_de_champ',
-      column: stable_id.to_s,
+      column:,
       label:,
       type:,
       displayable:,
@@ -33,13 +34,13 @@ class Columns::ChampColumn < Column
   def filtered_ids(dossiers, search_terms)
     if type == :enum
       dossiers.with_type_de_champ(stable_id)
-        .filter_enum(:champs, value_column, search_terms).ids
+        .filter_enum(:champs, column, search_terms).ids
     elsif type == :enums
       dossiers.with_type_de_champ(stable_id)
-        .filter_array_enum(:champs, value_column, search_terms).ids
+        .filter_array_enum(:champs, column, search_terms).ids
     else
       dossiers.with_type_de_champ(stable_id)
-        .filter_ilike(:champs, value_column, search_terms).ids
+        .filter_ilike(:champs, column, search_terms).ids
     end
   end
 
@@ -47,9 +48,7 @@ class Columns::ChampColumn < Column
 
   def column_id = "type_de_champ/#{stable_id}"
 
-  def value_column = @tdc_type.in?(['departements', 'regions']) ? :external_id : :value
-
-  def string_value(champ) = champ.public_send(value_column)
+  def string_value(champ) = champ.public_send(column)
 
   def typed_value(champ)
     value = string_value(champ)
