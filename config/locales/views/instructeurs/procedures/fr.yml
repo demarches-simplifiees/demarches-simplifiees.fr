@@ -6,6 +6,7 @@ fr:
         followed: suivis
         processed: traités
         all: dossiers
+        archived: à archiver
         dossiers_close_to_expiration: expirant
         copy_link_button: Copier le lien de la démarche dans le presse-papiers
       show:

@@ -104,7 +104,7 @@ module DossierExportConcern
       ]
     end
     columns += [
-      ['Archivé', :archived],
+      ['À archiver', :archived],
       ['État du dossier', Dossier.human_attribute_name("state.#{state}")],
       ['Dernière mise à jour le', :updated_at],
       ['Dernière mise à jour du dossier le', :last_champ_updated_at],

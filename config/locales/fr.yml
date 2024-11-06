@@ -771,7 +771,9 @@ fr:
     followed:
       one: suivi par moi
       other: suivis par moi
-    archived: à archiver
+    archived:
+      one: à archiver
+      other: à archiver
     en_cours:
       one: en cours
       other: en cours
