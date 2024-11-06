@@ -74,7 +74,6 @@ class DossierFilterService
       .map do |(table, column), filters_for_column|
       values = filters_for_column.map(&:filter)
       filtered_column = filters_for_column.first.column
-      value_column = filtered_column.value_column
 
       if filtered_column.respond_to?(:filtered_ids)
         filtered_column.filtered_ids(dossiers, values)
@@ -92,17 +91,6 @@ class DossierFilterService
             dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
           else
             dossiers.where("dossiers.#{column} IN (?)", values)
-          end
-        when TYPE_DE_CHAMP
-          if filtered_column.type == :enum
-            dossiers.with_type_de_champ(column)
-              .filter_enum(:champs, value_column, values)
-          elsif filtered_column.type == :enums
-            dossiers.with_type_de_champ(column)
-              .filter_array_enum(:champs, value_column, values)
-          else
-            dossiers.with_type_de_champ(column)
-              .filter_ilike(:champs, value_column, values)
           end
         when 'etablissement'
           if column == 'entreprise_date_creation'

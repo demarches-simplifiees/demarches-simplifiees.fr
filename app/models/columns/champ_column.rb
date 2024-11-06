@@ -31,6 +31,19 @@ class Columns::ChampColumn < Column
     end
   end
 
+  def filtered_ids(dossiers, search_terms)
+    if type == :enum
+      dossiers.with_type_de_champ(stable_id)
+        .filter_enum(:champs, value_column, search_terms).ids
+    elsif type == :enums
+      dossiers.with_type_de_champ(stable_id)
+        .filter_array_enum(:champs, value_column, search_terms).ids
+    else
+      dossiers.with_type_de_champ(stable_id)
+        .filter_ilike(:champs, value_column, search_terms).ids
+    end
+  end
+
   private
 
   def column_id = "type_de_champ/#{stable_id}"
