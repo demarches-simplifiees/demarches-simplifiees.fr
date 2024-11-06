@@ -558,12 +558,6 @@ class TypeDeChamp < ApplicationRecord
       APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     elsif region?
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
-    elsif linked_drop_down_list?
-      if column.path == :primary
-        primary_options
-      else
-        secondary_options.values.flatten
-      end
     elsif choice_type?
       if drop_down_list?
         drop_down_options

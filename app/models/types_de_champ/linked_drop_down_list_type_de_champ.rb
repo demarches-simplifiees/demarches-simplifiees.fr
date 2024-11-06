@@ -89,7 +89,8 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         label: "#{libelle_with_prefix(prefix)} (Primaire)",
         type: :enum,
         path: :primary,
-        displayable: false
+        displayable: false,
+        options_for_select: primary_options
       ),
       Columns::LinkedDropDownColumn.new(
         procedure_id: procedure.id,
@@ -98,7 +99,8 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
         label: "#{libelle_with_prefix(prefix)} (Secondaire)",
         type: :enum,
         path: :secondary,
-        displayable: false
+        displayable: false,
+        options_for_select: secondary_options.values.flatten.uniq.sort
       )
     ]
   end
