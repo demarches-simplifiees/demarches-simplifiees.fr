@@ -555,7 +555,7 @@ class TypeDeChamp < ApplicationRecord
 
   def options_for_select
     if departement?
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }.sort
     elsif region?
       APIGeoService.regions.map { [_1[:name], _1[:code]] }
     elsif choice_type?
