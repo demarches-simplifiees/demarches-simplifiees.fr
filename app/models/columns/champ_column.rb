@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 class Columns::ChampColumn < Column
-  attr_reader :stable_id, :options_for_select
+  attr_reader :stable_id
 
   def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, value_column: :value, options_for_select: [])
     @stable_id = stable_id
     @tdc_type = tdc_type
-    @options_for_select = options_for_select
 
     super(
       procedure_id:,
@@ -16,7 +15,8 @@ class Columns::ChampColumn < Column
       type:,
       value_column:,
       displayable:,
-      filterable:
+      filterable:,
+      options_for_select:
     )
   end
 

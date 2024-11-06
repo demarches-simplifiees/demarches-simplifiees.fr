@@ -58,10 +58,8 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       Procedure.find(procedure_id).labels.filter_map do
         [_1.name, _1.id]
       end
-    elsif column.is_a?(Columns::ChampColumn)
-      column.options_for_select
     else
-      []
+      column.options_for_select
     end
   end
 

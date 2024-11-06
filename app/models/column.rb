@@ -8,9 +8,9 @@ class Column
 
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
 
-  attr_reader :table, :column, :label, :type, :scope, :value_column, :filterable, :displayable
+  attr_reader :table, :column, :label, :type, :scope, :value_column, :filterable, :displayable, :options_for_select
 
-  def initialize(procedure_id:, table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, scope: '')
+  def initialize(procedure_id:, table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, scope: '', options_for_select: [])
     @procedure_id = procedure_id
     @table = table
     @column = column
@@ -20,6 +20,7 @@ class Column
     @value_column = value_column
     @filterable = filterable
     @displayable = displayable
+    @options_for_select = options_for_select
   end
 
   # the id is a String to be used in forms
