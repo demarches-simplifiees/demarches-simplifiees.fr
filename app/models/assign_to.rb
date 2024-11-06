@@ -32,7 +32,7 @@ class AssignTo < ApplicationRecord
     if errors.present?
       Sentry.capture_message(
         "Destroying invalid ProcedurePresentation",
-        extra: { procedure_presentation_id: procedure_presentation.id, errors: }
+        extra: { procedure_presentation_id: procedure_presentation.id, errors: errors.full_messages }
       )
       self.procedure_presentation = nil
     end
