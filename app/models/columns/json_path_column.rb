@@ -3,7 +3,7 @@
 class Columns::JSONPathColumn < Columns::ChampColumn
   attr_reader :jsonpath
 
-  def initialize(procedure_id:, label:, stable_id:, tdc_type:, jsonpath:, displayable:, type: :text)
+  def initialize(procedure_id:, label:, stable_id:, tdc_type:, jsonpath:, options_for_select: [], displayable:, type: :text)
     @jsonpath = quote_string(jsonpath)
 
     super(
@@ -12,7 +12,8 @@ class Columns::JSONPathColumn < Columns::ChampColumn
       stable_id:,
       tdc_type:,
       displayable:,
-      type:
+      type:,
+      options_for_select:
     )
   end
 
@@ -24,17 +25,6 @@ class Columns::JSONPathColumn < Columns::ChampColumn
     dossiers.with_type_de_champ(stable_id)
       .where(condition)
       .ids
-  end
-
-  def options_for_select
-    case jsonpath.split('.').last
-    when 'departement_code'
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
-    when 'region_name'
-      APIGeoService.regions.map { [_1[:name], _1[:name]] }
-    else
-      []
-    end
   end
 
   private
