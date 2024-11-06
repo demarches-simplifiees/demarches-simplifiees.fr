@@ -58,17 +58,11 @@ class Instructeurs::ColumnFilterValueComponent < ApplicationComponent
       Procedure.find(procedure_id).labels.filter_map do
         [_1.name, _1.id]
       end
+    elsif column.is_a?(Columns::ChampColumn)
+      column.options_for_select
     else
-      find_type_de_champ(column.stable_id).options_for_select(column)
+      []
     end
-  end
-
-  def find_type_de_champ(stable_id)
-    TypeDeChamp
-      .joins(:revision_types_de_champ)
-      .where(revision_types_de_champ: { revision_id: ProcedureRevision.where(procedure_id:) })
-      .order(created_at: :desc)
-      .find_by(stable_id:)
   end
 
   def procedure_id = @column.h_id[:procedure_id]
