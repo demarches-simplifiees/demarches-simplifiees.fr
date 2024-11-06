@@ -1,7 +1,5 @@
-@import "colors";
-@import "constants";
-
-// scss-lint:disable SelectorFormat
+@import 'colors';
+@import 'constants';
 
 .procedure-form .page-title {
   text-align: left;
@@ -23,7 +21,7 @@
   flex: 10;
   padding: 0 $default-padding;
 
-  input[type=file] {
+  input[type='file'] {
     background-color: transparent; // Remove white bg set by DSFR
   }
 
@@ -66,7 +64,7 @@
   }
 }
 
-[data-fr-theme="dark"] .procedure-form__actions {
+[data-fr-theme='dark'] .procedure-form__actions {
   background: var(--background-action-low-blue-france);
   border-top: 1px solid var(--background-action-low-blue-france-hover);
 }

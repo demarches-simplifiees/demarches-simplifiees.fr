@@ -1,4 +1,4 @@
-@import "constants";
+@import 'constants';
 
 .export-template-preview {
   // From https://codepen.io/myramoki/pen/xZJjrr
@@ -19,7 +19,7 @@
 
   .tree:before,
   .tree ul:before {
-    content: "";
+    content: '';
     display: block;
     width: 0;
     position: absolute;
@@ -45,7 +45,7 @@
   }
 
   .tree li:before {
-    content: "";
+    content: '';
     display: block;
     width: 10px; // same with indentation
     height: 0;
@@ -61,9 +61,7 @@
   }
 
   .tree li:last-child:before {
-    background: var(
-      --background-alt-blue-france
-    ); // same with body background
+    background: var(--background-alt-blue-france); // same with body background
     height: auto;
     top: 1em; // (line-height/2)
     bottom: 0;

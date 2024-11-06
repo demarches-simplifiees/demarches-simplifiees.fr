@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 .status-timeline {
   display: inline-block;
@@ -29,7 +29,7 @@
 
     // Arrows
     &:not(:last-child)::after {
-      content: "▸";
+      content: '▸';
       display: inline-block;
       margin-left: 10px;
       margin-right: 10px;
@@ -59,7 +59,7 @@
   }
 
   blockquote {
-    quotes: "« " " »" "‘" "’";
+    quotes: '« ' ' »' '‘' '’';
     margin-bottom: $default-padding * 3;
   }
 

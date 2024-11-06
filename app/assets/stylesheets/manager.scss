@@ -1,4 +1,4 @@
-@import "constants";
+@import 'constants';
 
 .hidden {
   display: none;
@@ -21,7 +21,7 @@
 }
 
 .manager-mandatory {
-  color: #A10005;
+  color: #a10005;
   font-size: 18px;
 }
 
@@ -70,19 +70,19 @@
   }
 
   .fr-ds-combobox__menu {
-    &[data-placement=top] {
+    &[data-placement='top'] {
       --origin: translateY(8px);
     }
 
-    &[data-placement=bottom] {
+    &[data-placement='bottom'] {
       --origin: translateY(-8px);
     }
 
-    &[data-placement=right] {
+    &[data-placement='right'] {
       --origin: translateX(-8px);
     }
 
-    &[data-placement=left] {
+    &[data-placement='left'] {
       --origin: translateX(8px);
     }
 

@@ -1,4 +1,4 @@
-@import "constants";
+@import 'constants';
 
 .fixed-footer {
   border-top: 2px solid var(--border-plain-blue-france);
@@ -23,7 +23,7 @@
   }
 }
 
-[data-fr-theme="dark"] .fixed-footer {
+[data-fr-theme='dark'] .fixed-footer {
   background-color: var(--background-action-low-blue-france);
 }
 

@@ -1,6 +1,6 @@
-@import "colors";
-@import "constants";
-@import "mixins";
+@import 'colors';
+@import 'constants';
+@import 'mixins';
 
 .procedure-list {
   .procedure-logo-link {
@@ -15,7 +15,6 @@
     margin-right: 3 * $default-spacer;
     background-position: 95% 50%;
   }
-
 
   .procedure-stats {
     list-style-type: none;
@@ -35,7 +34,6 @@
       &:hover {
         background-color: rgba(0, 0, 0, 0.05);
       }
-
 
       .stats-number,
       .stats-legend {

@@ -1,11 +1,11 @@
-@import "colors";
-@import "constants";
-@import "mixins";
+@import 'colors';
+@import 'constants';
+@import 'mixins';
 
 .procedure-logo {
   @include ie-compatible-background-image();
 
-  background-color: #FFFFFF; // also in dark mode: logos assume transparent pixels are white
+  background-color: #ffffff; // also in dark mode: logos assume transparent pixels are white
   background-position: 95% 50%;
   color: #000000; // alt text when image is not loaded
   height: 84px;

@@ -1,4 +1,4 @@
-@import "colors";
+@import 'colors';
 
 .direct-upload {
   display: inline-block;
@@ -20,7 +20,9 @@
   left: 0;
   bottom: 0;
   background-color: var(--background-contrast-grey);
-  transition: width 120ms ease-out, opacity 60ms 60ms ease-in;
+  transition:
+    width 120ms ease-out,
+    opacity 60ms 60ms ease-in;
   transform: translate3d(0, 0, 0);
 }
 
@@ -36,7 +38,7 @@
   border-color: var(--border-plain-error);
 }
 
-input[type=file][data-direct-upload-url][disabled],
-input[type=file][data-auto-attach-url][disabled] {
+input[type='file'][data-direct-upload-url][disabled],
+input[type='file'][data-auto-attach-url][disabled] {
   display: none;
 }

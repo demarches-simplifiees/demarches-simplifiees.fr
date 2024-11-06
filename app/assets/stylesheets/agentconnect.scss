@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 #agentconnect {
   .agent {
@@ -10,7 +10,7 @@
   }
 
   .box {
-    background-color: #F2F2F9;
+    background-color: #f2f2f9;
     padding: $default-padding;
 
     ul {

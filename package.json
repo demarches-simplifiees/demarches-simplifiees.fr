@@ -109,6 +109,8 @@
     "clean": "del tmp public/graphql && bin/vite clobber",
     "lint:js": "eslint --ext .js,.jsx,.ts,.tsx ./app/javascript",
     "lint:types": "tsc",
+    "lint:css": "prettier app/assets/stylesheets --check",
+    "lint:css:fix": "prettier app/assets/stylesheets --write",
     "graphql:doc:build": "RAILS_ENV=production bin/rake graphql:schema:idl && spectaql spectaql_config.yml",
     "postinstall": "patch-package",
     "test": "vitest",

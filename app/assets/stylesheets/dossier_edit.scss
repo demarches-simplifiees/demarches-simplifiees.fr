@@ -1,9 +1,9 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 $dossier-actions-bar-border-width: 1px;
 
-[data-fr-theme="dark"] .dossier-edit .dossier-edit-sticky-footer {
+[data-fr-theme='dark'] .dossier-edit .dossier-edit-sticky-footer {
   background-color: var(--background-action-low-blue-france);
   border: none;
 }
@@ -32,7 +32,7 @@ $dossier-actions-bar-border-width: 1px;
     align-items: baseline;
 
     .mandatory-explanation {
-      flex-grow: 1;   // Push the "notice" button to the right
+      flex-grow: 1; // Push the "notice" button to the right
       flex-shrink: 1; // Allow the text to shrink
       margin-bottom: $default-spacer; // Leave space when the "notice" button wraps under the text
     }
@@ -51,11 +51,9 @@ $dossier-actions-bar-border-width: 1px;
   }
 
   .dossier-edit-sticky-footer {
-    // scss-lint:disable VendorPrefix DuplicateProperty
-    position: fixed;           // Fallback for IE 11, and other browser that don't support sticky
-    position: -webkit-sticky;  // This is needed on Safari (tested on 12.1)
+    position: fixed; // Fallback for IE 11, and other browser that don't support sticky
+    position: -webkit-sticky; // This is needed on Safari (tested on 12.1)
     position: sticky;
-    // scss-lint:enable VendorPrefix DuplicateProperty
 
     // IE 11 uses `position:fixed` – and thus needs an explicit width, content-box for better layout, etc.
     width: 100%;
@@ -72,9 +70,9 @@ $dossier-actions-bar-border-width: 1px;
     padding-right: $default-padding - $dossier-actions-bar-border-width;
     padding-left: $default-padding - $dossier-actions-bar-border-width;
 
-    background: #FFFFFF;
+    background: #ffffff;
 
-    border: $dossier-actions-bar-border-width solid #CCCCCC;
+    border: $dossier-actions-bar-border-width solid #cccccc;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom: none;

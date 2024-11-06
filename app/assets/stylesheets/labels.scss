@@ -1,12 +1,12 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 .label {
   display: inline-block;
   padding: 4px $default-spacer;
   background: $dark-grey;
   border: 1px solid transparent;
-  color: #FFFFFF;
+  color: #ffffff;
   border-radius: 4px;
   font-size: 12px;
   line-height: 18px;

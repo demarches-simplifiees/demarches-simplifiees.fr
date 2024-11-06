@@ -1,5 +1,5 @@
-@import "colors";
-@import "constants";
+@import 'colors';
+@import 'constants';
 
 .messages-list {
   max-height: 350px;
@@ -23,7 +23,7 @@
     margin-bottom: $default-spacer;
   }
 
-  .form input[type="file"] {
+  .form input[type='file'] {
     margin-bottom: 0;
   }
 }

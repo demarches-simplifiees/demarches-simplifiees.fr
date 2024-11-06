@@ -1,4 +1,4 @@
-@import "placeholders";
+@import 'placeholders';
 
 html,
 body {
@@ -7,7 +7,7 @@ body {
 }
 
 // Forces line breaks to prevent buttons from overflowing their container
-input[type="submit"] {
+input[type='submit'] {
   white-space: normal;
 }
 

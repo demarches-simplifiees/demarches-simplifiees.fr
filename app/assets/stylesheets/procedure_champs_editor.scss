@@ -1,6 +1,6 @@
-@import "colors";
-@import "constants";
-@import "placeholders";
+@import 'colors';
+@import 'constants';
+@import 'placeholders';
 
 .types-de-champ-editor {
   > .types-de-champ-block {
@@ -108,7 +108,7 @@
 
     a {
       // Remove the icon indicating an external link (for less visual noise)
-      &[target="_blank"]::after {
+      &[target='_blank']::after {
         display: none;
       }
     }
