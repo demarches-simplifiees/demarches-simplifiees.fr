@@ -746,7 +746,7 @@ en:
       dossier_not_found: "The file does not exist or you do not have access to it."
       # # dossier_map_not_activated: "The file does not have access to the map."
       targeted_user_link_expired: "This invitation link or the file is no longer available."
-      invalid_siret_length: "The TAHITI number must contain exactly 6 characters."
+      invalid_siret_length: "The TAHITI number must contain exactly 9 or 14 characters."
       invalid_siret_checksum: "The TAHITI number is invalid."
       procedure_not_found: "The procedure does not exist"
       siret_unknown: 'We did not find any establishment registered under this TAHITI number.'

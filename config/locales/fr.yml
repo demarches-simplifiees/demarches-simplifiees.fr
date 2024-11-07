@@ -750,7 +750,7 @@ fr:
       dossier_not_found: "Le dossier n’existe pas ou vous n’y avez pas accès."
       # dossier_map_not_activated: "Le dossier n’a pas accès à la cartographie."
       targeted_user_link_expired: "Ce lien d’invitation n’est plus valable ou le dossier n’est plus accessible."
-      invalid_siret_length: "Le numéro TAHITI doit comporter exactement 6 caractères."
+      invalid_siret_length: "Le numéro TAHITI doit comporter exactement 9 ou 14 caractères."
       invalid_siret_checksum: "Le format du numéro TAHITI est invalide."
       procedure_not_found: "La démarche n’existe pas"
       siret_unknown: 'Nous n’avons pas trouvé d’établissement enregistré correspondant à ce numéro TAHITI.'

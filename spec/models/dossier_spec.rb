@@ -1558,21 +1558,22 @@ describe Dossier, type: :model do
 
       before do
         champ_siret.update(value: '44011762001530')
+        champ_siret.valid?
       end
 
       it 'should not have errors' do
-        expect(errors).to be_empty
+        expect(champ_siret.errors).to be_empty
       end
 
       context "and invalid SIRET" do
         before do
           champ_siret.update(value: "1234")
-          dossier.reload
+          champ_siret.valid?
         end
 
         it 'should have errors' do
-          expect(errors).not_to be_empty
-          expect(errors.first.full_message).to eq("doit être rempli")
+          expect(champ_siret.errors).not_to be_empty
+          expect(champ_siret.errors.first.full_message).to eq("Le Numéro Tahiti doit comporter au moins 9 chiffres, selectionnez une proposition dans la liste.")
         end
       end
     end

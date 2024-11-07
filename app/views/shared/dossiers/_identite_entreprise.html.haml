@@ -57,21 +57,21 @@
                   = humanized_entreprise_etat_administratif(etablissement)
 
         - if profile == 'instructeur'
-          = render Dossiers::RowShowComponent.new(label: "Effectif mensuel #{try_format_mois_effectif(etablissement)} de l'établissement (URSSAF ou MSA)") do |c|
-            - c.with_value do
-              %p= etablissement.entreprise_effectif_mensuel
-
-          = render Dossiers::RowShowComponent.new(label: "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} de l'unité légale (URSSAF ou MSA)") do |c|
-            - c.with_value do
-              %p= etablissement.entreprise_effectif_annuel
+          -# = render Dossiers::RowShowComponent.new(label: "Effectif mensuel #{try_format_mois_effectif(etablissement)} de l'établissement (URSSAF ou MSA)") do |c|
+          -#   - c.with_value do
+          -#     %p= etablissement.entreprise_effectif_mensuel
+          -#
+          -# = render Dossiers::RowShowComponent.new(label: "Effectif moyen annuel #{etablissement.entreprise_effectif_annuel_annee} de l'unité légale (URSSAF ou MSA)") do |c|
+          -#   - c.with_value do
+          -#     %p= etablissement.entreprise_effectif_annuel
 
           = render Dossiers::RowShowComponent.new(label: "Effectif de l’organisation (INSEE)") do |c|
             - c.with_value do
               %p= effectif(etablissement)
 
-          = render Dossiers::RowShowComponent.new(label: "Numéro de TVA intracommunautaire") do |c|
-            - c.with_value do
-              %p= etablissement.entreprise.numero_tva_intracommunautaire
+          -# = render Dossiers::RowShowComponent.new(label: "Numéro de TVA intracommunautaire") do |c|
+          -#   - c.with_value do
+          -#     %p= etablissement.entreprise.numero_tva_intracommunautaire
 
           = render Dossiers::RowShowComponent.new(label: "Adresse") do |c|
             - c.with_value do
@@ -80,21 +80,21 @@
                   = line
                   %br
 
-          = render Dossiers::RowShowComponent.new(label: "Capital social") do |c|
-            - c.with_value do
-              %p= pretty_currency(etablissement.entreprise.capital_social)
+          -# = render Dossiers::RowShowComponent.new(label: "Capital social") do |c|
+          -#   - c.with_value do
+          -#     %p= pretty_currency(etablissement.entreprise.capital_social)
 
-        - if etablissement.exercices.any?
-          = render Dossiers::RowShowComponent.new(label: "Chiffre d’affaires") do |c|
-            - c.with_value do
-              - if profile == 'instructeur'
-                %details
-                  - etablissement.exercices.each_with_index do |exercice, index|
-                    = "#{exercice.date_fin_exercice.year} : "
-                    = pretty_currency(exercice.ca)
-                    %br
-              - elsif etablissement.exercices.present?
-                = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
+        -# - if etablissement.exercices.any?
+        -#   = render Dossiers::RowShowComponent.new(label: "Chiffre d’affaires") do |c|
+        -#     - c.with_value do
+        -#       - if profile == 'instructeur'
+        -#         %details
+        -#           - etablissement.exercices.each_with_index do |exercice, index|
+        -#             = "#{exercice.date_fin_exercice.year} : "
+        -#             = pretty_currency(exercice.ca)
+        -#             %br
+        -#       - elsif etablissement.exercices.present?
+        -#         = t('activemodel.models.exercices_summary', count: etablissement.exercices.count)
 
         - if etablissement.entreprise_bilans_bdf.present?
           - if profile == 'instructeur'

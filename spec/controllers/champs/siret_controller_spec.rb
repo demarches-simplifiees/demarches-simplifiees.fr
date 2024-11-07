@@ -61,7 +61,7 @@ describe Champs::SiretController, type: :controller do
         end
 
         it 'displays a “SIRET is invalid” error message' do
-          expect(response.body).to include("Le numéro TAHITI doit comporter exactement #{SIRET_LENGTH} caractères.")
+          expect(response.body).to include("Le numéro TAHITI doit comporter exactement 9 ou 14 caractères.")
         end
       end
 
@@ -135,7 +135,7 @@ describe Champs::SiretController, type: :controller do
       end
 
       context 'when the Numéro TAHITI is valid but unknown', vcr: { cassette_name: 'pf_api_entreprise_not_found' } do
-        let(:siret) { '111111' }
+        let(:siret) { '111111111' }
         let(:api_etablissement_status) { 404 }
 
         subject! { get :show, params: params, format: :turbo_stream }
