@@ -31,6 +31,7 @@ class RdvService
   end
 
   def create_default_motif
+    sleep(1) # Simulate API call
     Success({
       motif: {
         id: 1,
@@ -40,6 +41,7 @@ class RdvService
   end
 
   def create_webhook
+    sleep(1) # Simulate API call
     Success({
       webhook: {
         id: 1,

@@ -44,11 +44,11 @@
       = button_to follow_instructeur_dossier_path(procedure_id, dossier_id), method: :patch, class: 'fr-btn fr-btn--secondary fr-icon-star-line' do
         = t('views.instructeurs.dossiers.follow_file')
 
-  - if dossier.procedure.rdv_enabled?
-    %li.propose-rdv-menu{ 'data-turbo': turbo ? 'true' : 'false' }
-      = render Instructeurs::ProposeRdvMenuComponent.new(dossier:)
-
   - if with_menu
+    - if dossier.procedure.rdv_enabled?
+      %li.propose-rdv-menu{ 'data-turbo': turbo ? 'true' : 'false' }
+        = render Instructeurs::ProposeRdvMenuComponent.new(dossier:)
+
     %li.en-construction-menu{ 'data-turbo': turbo ? 'true' : 'false' }
       = render Instructeurs::EnConstructionMenuComponent.new(dossier:)
 

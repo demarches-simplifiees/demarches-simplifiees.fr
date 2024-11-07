@@ -1052,6 +1052,14 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_12_090128) do
     t.index ["zone_id"], name: "index_procedures_zones_on_zone_id"
   end
 
+  create_table "rdv_connections", force: :cascade do |t|
+    t.string "access_token"
+    t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.string "refresh_token"
+    t.datetime "updated_at", null: false
+  end
+
   create_table "re_instructed_mails", force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
