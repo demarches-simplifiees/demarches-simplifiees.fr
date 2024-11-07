@@ -257,6 +257,14 @@ module Administrateurs
     end
 
     def update_rdv
+      rdv_enabled = procedure_params[:rdv_enabled]
+      result = RdvService.new(user: current_administrateur).configure_rdv_binding(procedure: @procedure, enabled: rdv_enabled)
+
+      if result.failure?
+        flash.now.alert = result.failure[:message]
+        render 'rdv'
+      end
+
       @procedure.update!(procedure_params)
       flash.notice = @procedure.rdv_enabled ? "La prise de rendez-vous est activée" : "La prise de rendez-vous est désactivée"
       redirect_to rdv_admin_procedure_path(@procedure)
