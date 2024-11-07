@@ -5,9 +5,7 @@ class Champs::RNAController < Champs::ChampController
     champs_attributes = params.dig(:dossier, :champs_public_attributes) || params.dig(:dossier, :champs_private_attributes)
     rna = champs_attributes.values.first[:value]
 
-    unless @champ.fetch_association!(rna)
-      @error = @champ.association_fetch_error_key
-    end
+    @champ.fetch_association!(rna)
     @champ.dossier.touch_champs_changed([:last_champ_updated_at])
   end
 end
