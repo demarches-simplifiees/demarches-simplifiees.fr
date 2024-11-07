@@ -8,26 +8,31 @@
     .fr-col-12.fr-col-offset-md-2.fr-col-md-8
       %h1.fr-h2 RDV Service Public
 
-      = render Dsfr::CalloutComponent.new(title: nil) do |c|
-        - c.with_body do
-          %p
-            Cette fonctionnalité permet à vos instructeurs de proposer un rendez-vous aux usagers depuis la messagerie de leur dossier.
-          %br
-          %p
-            Pour activer cette fonctionnalité, vous devez commencer par connecter votre compte RDV Service Public à Démarches Simplifiées.
+      - if current_administrateur.instructeur.rdv_connection.nil?
 
-      = link_to "Connecter RDV Service Public", "", class: 'fr-btn'
+        = render Dsfr::CalloutComponent.new(title: nil) do |c|
+          - c.with_body do
+            %p
+              Cette fonctionnalité permet à vos instructeurs de proposer un rendez-vous aux usagers depuis la messagerie de leur dossier.
+            %br
+            %p
+              Pour activer cette fonctionnalité, vous devez commencer par connecter votre compte RDV Service Public à Démarches Simplifiées.
+              
+        = link_to "Connecter RDV Service Public", rdv_service_public_oauth_callback_url(next: request.path), class: 'fr-btn'
+      - else
 
-      %ul.fr-toggle__list
-        %li
-          = form_for(@procedure,
-            method: :patch,
-            url: rdv_admin_procedure_path(@procedure),
-            data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+        %p Votre compte RDV Service Public est connecté.
 
-            = render Dsfr::ToggleComponent.new(form: f,
-              target: :rdv_enabled,
-              title: "Activer la prise de rendez-vous",
-              opt: {"checked" => @procedure.rdv_enabled})
+        %ul.fr-toggle__list
+          %li
+            = form_for(@procedure,
+              method: :patch,
+              url: rdv_admin_procedure_path(@procedure),
+              data: { controller: 'autosubmit', turbo: 'true' }) do |f|
+
+              = render Dsfr::ToggleComponent.new(form: f,
+                target: :rdv_enabled,
+                title: "Activer la prise de rendez-vous",
+                opt: {"checked" => @procedure.rdv_enabled})
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure, extra_class_names: 'fr-col-offset-md-2 fr-col-md-8' )

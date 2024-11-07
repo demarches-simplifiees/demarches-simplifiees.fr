@@ -211,6 +211,10 @@ Rails.application.routes.draw do
     get 'logout_from_mcp' => 'agent#logout_from_mcp'
   end
 
+  namespace :rdv_service_public do
+    get 'oauth/callback' => 'oauth#callback'
+  end
+
   namespace :champs do
     post ':dossier_id/:stable_id/repetition', to: 'repetition#add', as: :repetition
     delete ':dossier_id/:stable_id/repetition', to: 'repetition#remove'
@@ -613,6 +617,7 @@ Rails.application.routes.draw do
         patch 'update_jeton'
         get 'rdv'
         patch 'rdv', to: 'procedures#update_rdv'
+        get 'rdv/callback', to: 'procedures#rdv_callback'
         put :allow_expert_review
         put :allow_expert_messaging
         put :experts_require_administrateur_invitation
