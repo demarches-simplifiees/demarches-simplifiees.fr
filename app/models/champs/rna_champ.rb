@@ -21,6 +21,10 @@ class Champs::RNAChamp < Champ
     title.present? ? "#{value} (#{title})" : value
   end
 
+  def status_message?
+    true
+  end
+
   def search_terms
     etablissement.present? ? etablissement.search_terms : [value]
   end
