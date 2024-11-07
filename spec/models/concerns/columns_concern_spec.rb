@@ -128,28 +128,6 @@ describe ColumnsConcern do
 
       it { is_expected.to include(decision_on, decision_before_field) }
     end
-
-    context 'when the procedure has several groupe instructeur' do
-      let(:procedure) { create(:procedure, :routee) }
-      let(:groupe_1) { procedure.groupe_instructeurs.first }
-      let(:groupe_2) { procedure.groupe_instructeurs.last }
-      let(:groupe_instructeur_column) { procedure.find_column(label: "Groupe instructeur") }
-
-      context 'and no instructeur is available in current' do
-        it { expect(groupe_instructeur_column.options_for_select).to eq([]) }
-      end
-
-      context 'and instructeur is available in current' do
-        let(:instructeur) { create(:instructeur) }
-
-        before do
-          procedure.groupe_instructeurs.each { _1.add(instructeur) }
-          allow(Current).to receive(:user).and_return(instructeur.user)
-        end
-
-        it { expect(groupe_instructeur_column.options_for_select).to match_array([groupe_1, groupe_2].map { [_1.label, _1.id] }) }
-      end
-    end
   end
 
   describe 'export' do

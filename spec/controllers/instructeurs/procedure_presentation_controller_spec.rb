@@ -83,4 +83,28 @@ describe Instructeurs::ProcedurePresentationController, type: :controller do
       end
     end
   end
+
+  describe '#refresh_column_filter' do
+    subject { get :refresh_column_filter, params: { id: procedure_presentation.id, filters: [{ id: column.id }] } }
+
+    let(:procedure) { create(:procedure, :routee) }
+    let(:instructeur) { create(:instructeur) }
+    let(:column) { procedure.find_column(label: "Groupe instructeur") }
+
+    let(:procedure_presentation) do
+      procedure.groupe_instructeurs.each { _1.add(instructeur) }
+      instructeur.reload.assign_to.first.procedure_presentation_or_default_and_errors.first
+    end
+
+    before { sign_in(instructeur.user) }
+
+    it 'refreshes the column filter' do
+      subject
+
+      expect(response).to be_successful
+      procedure.groupe_instructeurs.each do |gi|
+        expect(response.body).to include(gi.label)
+      end
+    end
+  end
 end

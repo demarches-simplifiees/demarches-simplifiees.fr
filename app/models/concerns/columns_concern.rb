@@ -83,12 +83,7 @@ module ColumnsConcern
 
     private
 
-    def groupe_instructeurs_id_column
-      groupes = Current.user&.instructeur&.groupe_instructeurs || []
-      options_for_select = groupes.filter_map { [_1.label, _1.id] if _1.procedure_id == id }
-
-      dossier_col(table: 'groupe_instructeur', column: 'id', type: :enum, options_for_select:)
-    end
+    def groupe_instructeurs_id_column = dossier_col(table: 'groupe_instructeur', column: 'id', type: :enum)
 
     def followers_instructeurs_email_column = dossier_col(table: 'followers_instructeurs', column: 'email')
 

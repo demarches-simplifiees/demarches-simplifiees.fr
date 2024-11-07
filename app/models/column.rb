@@ -8,7 +8,8 @@ class Column
 
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
 
-  attr_reader :table, :column, :label, :type, :filterable, :displayable, :options_for_select
+  attr_reader :table, :column, :label, :type, :filterable, :displayable
+  attr_accessor :options_for_select
 
   def initialize(procedure_id:, table:, column:, label: nil, type: :text, filterable: true, displayable: true, options_for_select: [])
     @procedure_id = procedure_id
