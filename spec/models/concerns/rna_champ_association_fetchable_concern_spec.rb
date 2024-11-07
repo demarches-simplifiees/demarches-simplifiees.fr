@@ -25,9 +25,13 @@ RSpec.describe RNAChampAssociationFetchableConcern do
 
       it { expect(fetch_association!).to eq(expected_result) }
 
-      it 'populates the association_fetch_error_key when an error occurs' do
+      it 'populates model errors' do
         fetch_association!
-        expect(champ.association_fetch_error_key).to eq(expected_error)
+        if expected_error
+          expect(champ.errors.where(:value, expected_error).present?).to be_truthy
+        else
+          expect(champ.errors.where(:value, expected_error).present?).to be_falsey
+        end
       end
     end
 
@@ -36,7 +40,7 @@ RSpec.describe RNAChampAssociationFetchableConcern do
       let(:status) { 422 }
       let(:body) { '' }
 
-      it_behaves_like "an association fetcher", false, :empty, '', nil
+      it_behaves_like "an association fetcher", true, nil, '', nil
     end
 
     context 'when the RNA is invalid' do

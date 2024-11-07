@@ -7,15 +7,32 @@ describe Champs::RNAChamp do
   let(:champ) { dossier.champs.first.tap { _1.update(value:) } }
   let(:value) { "W182736273" }
 
-  def with_value(value)
-    champ.tap { _1.value = value }
+  def with_value(value, data)
+    champ.tap do
+      _1.value = value
+      _1.data = data
+    end
   end
+
   describe '#valid?' do
-    it { expect(with_value(nil).validate(:champs_public_value)).to be_truthy }
-    it { expect(with_value("2736251627").validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("A172736283").validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("W1827362718").validate(:champs_public_value)).to be_falsey }
-    it { expect(with_value("W182736273").validate(:champs_public_value)).to be_truthy }
+    it { expect(with_value(nil, nil).validate(:champs_public_value)).to be_truthy }
+    it { expect(with_value("2736251627", nil).validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("A172736283", nil).validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("W1827362718", nil).validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("W182736273", nil).validate(:champs_public_value)).to be_falsey }
+    it { expect(with_value("W182736273", { "api" => "response" }).validate(:champs_public_value)).to be_truthy }
+
+    it 'when invalid format, it contains only error message for invalid format' do
+      champ = with_value("W1827362", nil)
+      champ.validate(:champs_public_value)
+      expect(champ.errors.full_messages).to eq(["doit commencer par un W majuscule suivi de 9 chiffres ou lettres, saisissez un numéro RNA valide"])
+    end
+
+    it 'when valid format, but no data, it contains only error message for not found' do
+      champ = with_value("W182736273", nil)
+      champ.validate(:champs_public_value)
+      expect(champ.errors.full_messages).to eq(["le numéro RNA saisi ne correspond à aucun établissement, saisissez un numéro RNA valide"])
+    end
   end
 
   describe "#export" do

@@ -14,7 +14,7 @@ module Maintenance
       return if champ&.dossier&.procedure&.id.blank?
       data = APIEntreprise::RNAAdapter.new(champ.value, champ&.dossier&.procedure&.id).to_params
       return if data.blank?
-      champ.update_with_external_data!(data:)
+      champ.update_with_external_data!(data:, value: champ.value)
     rescue URI::InvalidURIError
       # some Champs::RNAChamp contain spaces which raise this error
     rescue ActiveRecord::RecordNotFound
