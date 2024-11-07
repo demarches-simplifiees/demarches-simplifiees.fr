@@ -10,7 +10,7 @@ class EditableChamp::DepartementsComponent < EditableChamp::EditableChampBaseCom
   end
 
   def options
-    APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+    APIGeoService.departement_options
   end
 
   def select_options

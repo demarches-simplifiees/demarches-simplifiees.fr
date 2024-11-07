@@ -27,6 +27,8 @@ class APIGeoService
       get_from_api_geo(:regions).sort_by { I18n.transliterate(_1[:name]) }
     end
 
+    def region_options = regions.map { [_1[:name], _1[:code]] }
+
     def region_name(code)
       regions.find { _1[:code] == code }&.dig(:name)
     end
@@ -42,7 +44,11 @@ class APIGeoService
     end
 
     def departements
-      [{ code: '99', name: 'Etranger' }] + get_from_api_geo(:departements).sort_by { _1[:code] }
+      ([{ code: '99', name: 'Etranger' }] + get_from_api_geo(:departements)).sort_by { _1[:code] }
+    end
+
+    def departement_options
+      departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
     end
 
     def departement_name(code)

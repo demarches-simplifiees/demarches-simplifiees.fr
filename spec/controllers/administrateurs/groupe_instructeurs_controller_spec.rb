@@ -959,8 +959,8 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
         expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
-        expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Guadeloupe")
-        expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(regions_tdc.stable_id), constant('01')))
+        expect(procedure3.groupe_instructeurs.pluck(:label)).to include("Guadeloupe")
+        expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(regions_tdc.stable_id), constant('84')))
         expect(procedure3.routing_enabled).to be_truthy
       end
     end

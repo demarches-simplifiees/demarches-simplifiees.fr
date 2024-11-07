@@ -131,9 +131,9 @@ class Logic::ChampValue < Logic::Term
     tdc = type_de_champ(type_de_champs)
 
     if operator_name.in?([Logic::InRegionOperator.name, Logic::NotInRegionOperator.name]) || tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:regions)
-      APIGeoService.regions.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+      APIGeoService.region_options
     elsif operator_name.in?([Logic::InDepartementOperator.name, Logic::NotInDepartementOperator.name]) || tdc.type_champ.in?([MANAGED_TYPE_DE_CHAMP.fetch(:communes), MANAGED_TYPE_DE_CHAMP.fetch(:epci), MANAGED_TYPE_DE_CHAMP.fetch(:departements), MANAGED_TYPE_DE_CHAMP.fetch(:address)])
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+      APIGeoService.departement_options
     elsif tdc.type_champ == MANAGED_TYPE_DE_CHAMP.fetch(:pays)
       APIGeoService.countries.map { ["#{_1[:name]} – #{_1[:code]}", _1[:code]] }
     else
