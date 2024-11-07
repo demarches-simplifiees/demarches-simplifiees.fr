@@ -5,8 +5,9 @@ class Champs::RNAController < Champs::ChampController
     champs_attributes = params.dig(:dossier, :champs_public_attributes) || params.dig(:dossier, :champs_private_attributes)
     rna = champs_attributes.values.first[:value]
 
-    unless @champ.fetch_association!(rna)
-      @error = @champ.association_fetch_error_key
+    if !@champ.fetch_association!(rna) && @champ.association_fetch_error_key != :blank
+      err = ActiveModel::Error.new(@champ, :value, @champ.association_fetch_error_key)
+      @champ.errors.import(err)
     end
   end
 end
