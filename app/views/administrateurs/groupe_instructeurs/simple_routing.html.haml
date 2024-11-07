@@ -17,6 +17,16 @@
       - content_for(:title, 'Routage')
       %h1 Configuration du routage
       %h2 Routage à partir d’un champ
+      .fr-alert.fr-alert--info.fr-mb-3w{ aria: { hidden: true } }
+        %p
+          Vous trouverez ci-dessous une <strong>suggestion</strong> (non exhaustive) de champs issus de votre formulaire. Les groupes d’instructeurs seront créés sur la base du champ que vous aurez sélectionné.
+          %br
+          Vous pourrez ensuite affiner votre routage en ajoutant des groupes sur la base de l’ensemble des <strong>champs « routables »</strong> de votre formulaire, soit des champs de type :
+        %ul
+          - TypeDeChamp.humanized_conditionable_types_by_category.each do |category|
+            %li
+              = category.join(', ')
+
       = form_for :create_simple_routing,
         method: :post,
         data: { controller: 'enable-submit-if-checked' },
