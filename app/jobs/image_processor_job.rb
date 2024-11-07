@@ -10,6 +10,17 @@ class ImageProcessorJob < ApplicationJob
   discard_on ActiveRecord::RecordNotFound
   # If the file is deleted during the scan, ignore the error
   discard_on ActiveStorage::FileNotFoundError
+  discard_on ActiveRecord::InvalidForeignKey
+  # If the file is not an image, not in format we can process or the image is corrupted, ignore the error
+  DISCARDABLE_ERRORS = [
+    'improper image header',
+    'width or height exceeds limit',
+    'attempt to perform an operation not allowed by the security policy',
+    'no decode delegate for this image format'
+  ]
+  discard_on do |_, error|
+    DISCARDABLE_ERRORS.any? { error.message.match?(_1) }
+  end
   # If the file is not analyzed or scanned for viruses yet, retry later
   # (to avoid modifying the file while it is being scanned).
   retry_on FileNotScannedYetError, wait: :exponentially_longer, attempts: 10
