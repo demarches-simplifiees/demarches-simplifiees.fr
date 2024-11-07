@@ -45,7 +45,7 @@ describe Champs::RNAController, type: :controller do
         end
 
         it 'clears any information or error message' do
-          expect(response.body).to include(ActionView::RecordIdentifier.dom_id(champ, :rna_info))
+          expect(response.body).to include(champ.input_group_id)
         end
       end
 

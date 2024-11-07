@@ -1,0 +1,4 @@
+---
+en:
+  rna:
+    data_fetched: "This RNA number is linked to: %{title}, %{address}."
