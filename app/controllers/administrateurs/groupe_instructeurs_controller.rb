@@ -27,7 +27,7 @@ module Administrateurs
     def options
       @procedure = procedure
       if params[:state] == 'choix' && @procedure.active_revision.simple_routable_types_de_champ.none?
-        configurate_routage_custom
+        configurate_custom_routing
       end
     end
 
@@ -93,19 +93,21 @@ module Administrateurs
     end
 
     def wizard
-      if params[:choice][:state] == 'routage_custom'
-        configurate_routage_custom
+      if params[:choice][:state] == 'custom_routing'
+        configurate_custom_routing
       elsif params[:choice][:state] == 'routage_simple'
         redirect_to simple_routing_admin_procedure_groupe_instructeurs_path
       end
     end
 
-    def configurate_routage_custom
-      new_label = procedure.defaut_groupe_instructeur.label + ' bis'
+    def configurate_custom_routing
+      procedure.defaut_groupe_instructeur.update!(label: 'Groupe 1 (à renommer et configurer)')
       procedure.groupe_instructeurs
-        .create({ label: new_label, instructeurs: [current_administrateur.instructeur] })
+        .create({ label: 'Groupe 2 (à renommer et configurer)', instructeurs: [current_administrateur.instructeur] })
 
       procedure.toggle_routing
+
+      flash[:routing_mode] = 'custom'
 
       redirect_to admin_procedure_groupe_instructeurs_path(procedure)
     end
