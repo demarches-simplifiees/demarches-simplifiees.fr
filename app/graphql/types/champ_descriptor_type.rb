@@ -110,13 +110,13 @@ module Types
     end
 
     def champ_descriptors
-      if type_de_champ.block?
+      if type_de_champ.repetition?
         Loaders::Association.for(object.class, revision_types_de_champ: :type_de_champ).load(object)
       end
     end
 
     def options
-      if type_de_champ.drop_down_list?
+      if type_de_champ.any_drop_down_list?
         type_de_champ.drop_down_options.reject(&:empty?)
       end
     end

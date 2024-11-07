@@ -219,7 +219,7 @@ describe API::V2::GraphqlController do
                 description: tdc.description,
                 required: tdc.mandatory?,
                 champDescriptors: tdc.repetition? ? procedure.active_revision.children_of(tdc.reload).map { { id: _1.to_typed_id, __typename: format_type_champ(_1.type_champ) } } : nil,
-                options: tdc.drop_down_list? ? tdc.drop_down_options.reject(&:empty?) : nil
+                options: tdc.any_drop_down_list? ? tdc.drop_down_options.reject(&:empty?) : nil
               }.compact
             end,
             dossiers: {

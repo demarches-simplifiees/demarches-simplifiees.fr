@@ -66,7 +66,7 @@ class TypeDeChamp < ApplicationRecord
     expression_reguliere: STANDARD
   }
 
-  enum type_champs: {
+  enum type_champ: {
     engagement_juridique: 'engagement_juridique',
 
     header_section: 'header_section',
@@ -323,116 +323,8 @@ class TypeDeChamp < ApplicationRecord
     ])
   end
 
-  def drop_down_list?
-    type_champ.in?([
-      TypeDeChamp.type_champs.fetch(:drop_down_list),
-      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
-      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
-    ])
-  end
-
-  def simple_drop_down_list?
-    type_champ == TypeDeChamp.type_champs.fetch(:drop_down_list)
-  end
-
-  def multiple_drop_down_list?
-    type_champ == TypeDeChamp.type_champs.fetch(:multiple_drop_down_list)
-  end
-
-  def linked_drop_down_list?
-    type_champ == TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
-  end
-
-  def yes_no?
-    type_champ == TypeDeChamp.type_champs.fetch(:yes_no)
-  end
-
-  def block?
-    type_champ == TypeDeChamp.type_champs.fetch(:repetition)
-  end
-
-  def header_section?
-    type_champ == TypeDeChamp.type_champs.fetch(:header_section)
-  end
-
   def exclude_from_view?
     type_champ == TypeDeChamp.type_champs.fetch(:explication)
-  end
-
-  def explication?
-    type_champ == TypeDeChamp.type_champs.fetch(:explication)
-  end
-
-  def repetition?
-    type_champ == TypeDeChamp.type_champs.fetch(:repetition)
-  end
-
-  def dossier_link?
-    type_champ == TypeDeChamp.type_champs.fetch(:dossier_link)
-  end
-
-  def siret?
-    type_champ == TypeDeChamp.type_champs.fetch(:siret)
-  end
-
-  def piece_justificative?
-    type_champ == TypeDeChamp.type_champs.fetch(:piece_justificative) || type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
-  end
-
-  def legacy_number?
-    type_champ == TypeDeChamp.type_champs.fetch(:number)
-  end
-
-  def textarea?
-    type_champ == TypeDeChamp.type_champs.fetch(:textarea)
-  end
-
-  def titre_identite?
-    type_champ == TypeDeChamp.type_champs.fetch(:titre_identite)
-  end
-
-  def carte?
-    type_champ == TypeDeChamp.type_champs.fetch(:carte)
-  end
-
-  def cnaf?
-    type_champ == TypeDeChamp.type_champs.fetch(:cnaf)
-  end
-
-  def rna?
-    type_champ == TypeDeChamp.type_champs.fetch(:rna)
-  end
-
-  def dgfip?
-    type_champ == TypeDeChamp.type_champs.fetch(:dgfip)
-  end
-
-  def pole_emploi?
-    type_champ == TypeDeChamp.type_champs.fetch(:pole_emploi)
-  end
-
-  def departement?
-    type_champ == TypeDeChamp.type_champs.fetch(:departements)
-  end
-
-  def region?
-    type_champ == TypeDeChamp.type_champs.fetch(:regions)
-  end
-
-  def mesri?
-    type_champ == TypeDeChamp.type_champs.fetch(:mesri)
-  end
-
-  def datetime?
-    type_champ == TypeDeChamp.type_champs.fetch(:datetime)
-  end
-
-  def checkbox?
-    type_champ == TypeDeChamp.type_champs.fetch(:checkbox)
-  end
-
-  def expression_reguliere?
-    type_champ == TypeDeChamp.type_champs.fetch(:expression_reguliere)
   end
 
   def public?
@@ -546,11 +438,11 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def options_for_select
-    if departement?
+    if departements?
       APIGeoService.departement_options
-    elsif region?
+    elsif regions?
       APIGeoService.region_options
-    elsif drop_down_list?
+    elsif any_drop_down_list?
       drop_down_options
     elsif yes_no?
       Champs::YesNoChamp.options
@@ -757,6 +649,21 @@ class TypeDeChamp < ApplicationRecord
 
   CHAMP_TYPE_TO_TYPE_CHAMP = type_champs.values.map { [type_champ_to_champ_class_name(_1), _1] }.to_h
 
+  def piece_justificative_or_titre_identite?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:piece_justificative),
+      TypeDeChamp.type_champs.fetch(:titre_identite)
+    ])
+  end
+
+  def any_drop_down_list?
+    type_champ.in?([
+      TypeDeChamp.type_champs.fetch(:drop_down_list),
+      TypeDeChamp.type_champs.fetch(:multiple_drop_down_list),
+      TypeDeChamp.type_champs.fetch(:linked_drop_down_list)
+    ])
+  end
+
   private
 
   def castable_on_change?(from_type, to_type)
@@ -780,7 +687,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def remove_attachment
-    if !piece_justificative? && piece_justificative_template.attached?
+    if !piece_justificative_or_titre_identite? && piece_justificative_template.attached?
       piece_justificative_template.purge_later
     elsif !explication? && notice_explicative.attached?
       notice_explicative.purge_later
@@ -788,7 +695,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def set_drop_down_list_options
-    if (simple_drop_down_list? || multiple_drop_down_list?) && drop_down_options.empty?
+    if (drop_down_list? || multiple_drop_down_list?) && drop_down_options.empty?
       self.drop_down_options = ['Fromage', 'Dessert']
     elsif linked_drop_down_list? && drop_down_options.none?(/^--.*--$/)
       self.drop_down_options = ['--Fromage--', 'bleu de sassenage', 'picodon', '--Dessert--', 'éclair', 'tarte aux pommes']

@@ -24,7 +24,7 @@ FactoryBot.define do
     after(:create) do |dossier, evaluator|
       if evaluator.populate_champs
         dossier.revision.types_de_champ_public.each do |type_de_champ|
-          value = if type_de_champ.simple_drop_down_list?
+          value = if type_de_champ.drop_down_list?
             type_de_champ.drop_down_options.first
           elsif type_de_champ.multiple_drop_down_list?
             type_de_champ.drop_down_options.first(2).to_json
@@ -36,7 +36,7 @@ FactoryBot.define do
 
       if evaluator.populate_annotations
         dossier.revision.types_de_champ_private.each do |type_de_champ|
-          value = if type_de_champ.simple_drop_down_list?
+          value = if type_de_champ.drop_down_list?
             type_de_champ.drop_down_options.first
           elsif type_de_champ.multiple_drop_down_list?
             type_de_champ.drop_down_options.first(2).to_json

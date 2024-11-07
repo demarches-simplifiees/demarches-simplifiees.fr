@@ -122,7 +122,7 @@ describe "procedure filters" do
     describe 'departements' do
       let(:types_de_champ_public) { [{ type: :departements }] }
       scenario "should be able to find by departements with custom enum lookup", js: true do
-        departement_champ = new_unfollow_dossier.champs.find(&:departement?)
+        departement_champ = new_unfollow_dossier.champs.find(&:departements?)
         departement_champ.update!(value: 'Oise', external_id: '60')
         departement_champ.reload
         champ_select_value = "#{departement_champ.external_id} – #{departement_champ.value}"
@@ -162,7 +162,7 @@ describe "procedure filters" do
     describe 'region' do
       let(:types_de_champ_public) { [{ type: :regions }] }
       scenario "should be able to find by region with custom enum lookup", js: true do
-        region_champ = new_unfollow_dossier.champs.find(&:region?)
+        region_champ = new_unfollow_dossier.champs.find(&:regions?)
         region_champ.update!(value: 'Bretagne', external_id: '53')
         region_champ.reload
 

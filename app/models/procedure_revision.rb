@@ -391,7 +391,7 @@ class ProcedureRevision < ApplicationRecord
         to_type_de_champ.condition&.to_s(to_coordinates.map(&:type_de_champ)))
     end
 
-    if to_type_de_champ.drop_down_list?
+    if to_type_de_champ.any_drop_down_list?
       if from_type_de_champ.drop_down_options != to_type_de_champ.drop_down_options
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :drop_down_options,
@@ -425,7 +425,7 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.carte_optional_layers,
           to_type_de_champ.carte_optional_layers)
       end
-    elsif to_type_de_champ.piece_justificative?
+    elsif to_type_de_champ.piece_justificative_or_titre_identite?
       if from_type_de_champ.checksum_for_attachment(:piece_justificative_template) != to_type_de_champ.checksum_for_attachment(:piece_justificative_template)
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :piece_justificative_template,

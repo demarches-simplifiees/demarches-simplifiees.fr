@@ -38,38 +38,20 @@ class Champ < ApplicationRecord
     :current_section_level,
     :exclude_from_export?,
     :exclude_from_view?,
-    :repetition?,
-    :block?,
-    :dossier_link?,
-    :departement?,
-    :region?,
-    :textarea?,
-    :piece_justificative?,
-    :titre_identite?,
-    :header_section?,
-    :checkbox?,
-    :simple_drop_down_list?,
-    :linked_drop_down_list?,
     :non_fillable?,
     :fillable?,
-    :cnaf?,
-    :dgfip?,
-    :pole_emploi?,
-    :mesri?,
-    :rna?,
-    :siret?,
-    :carte?,
-    :datetime?,
     :mandatory?,
     :prefillable?,
     :refresh_after_update?,
     :character_limit?,
     :character_limit,
-    :yes_no?,
     :expression_reguliere,
     :expression_reguliere_exemple_text,
     :expression_reguliere_error_message,
     to: :type_de_champ
+
+  delegate(*TypeDeChamp.type_champs.values.map { "#{_1}?".to_sym }, to: :type_de_champ)
+  delegate :piece_justificative_or_titre_identite?, :any_drop_down_list?, to: :type_de_champ
 
   delegate :to_typed_id, :to_typed_id_for_query, to: :type_de_champ, prefix: true
 
