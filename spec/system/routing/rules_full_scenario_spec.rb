@@ -33,6 +33,8 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('3 groupes')
     expect(page).not_to have_text('à configurer')
 
+    within("#routing-mode-modal") { click_on "Fermer" }
+
     click_on 'littéraire'
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][targeted_champ]", selected: "Spécialité")
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][value]", selected: "littéraire")

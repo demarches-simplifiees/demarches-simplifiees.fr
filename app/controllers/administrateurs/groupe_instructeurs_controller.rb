@@ -88,7 +88,8 @@ module Administrateurs
         defaut.destroy!
       end
 
-      flash.notice = 'Les groupes instructeurs ont été ajoutés'
+      flash[:routing_mode] = 'simple'
+
       redirect_to admin_procedure_groupe_instructeurs_path(@procedure)
     end
 

@@ -53,3 +53,5 @@
 
 - if flash[:routing_mode] == 'custom'
   = render partial: 'custom_routing_modal'
+- elsif flash[:routing_mode] == 'simple'
+  = render partial: 'simple_routing_modal', locals: { procedure: @procedure }
