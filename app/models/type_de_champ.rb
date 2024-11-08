@@ -522,29 +522,6 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def self.column_type(type_champ)
-    case type_champ
-    when type_champs.fetch(:datetime)
-      :datetime
-    when type_champs.fetch(:date)
-      :date
-    when type_champs.fetch(:integer_number)
-      :integer
-    when type_champs.fetch(:decimal_number)
-      :decimal
-    when type_champs.fetch(:multiple_drop_down_list)
-      :enums
-    when type_champs.fetch(:drop_down_list), type_champs.fetch(:departements), type_champs.fetch(:regions)
-      :enum
-    when type_champs.fetch(:checkbox), type_champs.fetch(:yes_no)
-      :boolean
-    when type_champs.fetch(:titre_identite), type_champs.fetch(:piece_justificative)
-      :attachements
-    else
-      :text
-    end
-  end
-
   def options_for_select
     if departement?
       APIGeoService.departement_options

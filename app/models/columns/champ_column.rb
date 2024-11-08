@@ -3,9 +3,10 @@
 class Columns::ChampColumn < Column
   attr_reader :stable_id
 
-  def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, options_for_select: [])
+  def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: nil, options_for_select: [])
     @stable_id = stable_id
     @tdc_type = tdc_type
+    type = type || self.class.type(tdc_type)
     column = tdc_type.in?(['departements', 'regions']) ? :external_id : :value
 
     super(
@@ -49,6 +50,29 @@ class Columns::ChampColumn < Column
   def column_id = "type_de_champ/#{stable_id}"
 
   def string_value(champ) = champ.public_send(column)
+
+  def self.type(tdc_type)
+    case tdc_type
+    when :datetime
+      :datetime
+    when :date
+      :date
+    when :integer_number
+      :integer
+    when :decimal_number
+      :decimal
+    when :multiple_drop_down_list
+      :enums
+    when :drop_down_list, :departements, :regions
+      :enum
+    when :checkbox, :yes_no
+      :boolean
+    when :titre_identite, :piece_justificative
+      :attachements
+    else
+      :text
+    end
+  end
 
   def typed_value(champ)
     value = string_value(champ)

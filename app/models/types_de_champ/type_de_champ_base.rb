@@ -103,7 +103,6 @@ class TypesDeChamp::TypeDeChampBase
           stable_id:,
           tdc_type: type_champ,
           label: libelle_with_prefix(prefix),
-          type: TypeDeChamp.column_type(type_champ),
           displayable:,
           options_for_select:
         )

@@ -3,8 +3,9 @@
 class Columns::LinkedDropDownColumn < Columns::ChampColumn
   attr_reader :path
 
-  def initialize(procedure_id:, label:, stable_id:, tdc_type:, path:, options_for_select: [], displayable:, type: :text)
+  def initialize(procedure_id:, label:, stable_id:, tdc_type:, path:, options_for_select: [], displayable:)
     @path = path
+    type = path == :value ? :text : :enum
 
     super(
       procedure_id:,
