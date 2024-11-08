@@ -514,7 +514,11 @@ Rails.application.routes.draw do
         resources :dossiers, only: [:show, :destroy], param: :dossier_id do
           member do
             resources :commentaires, only: [:destroy]
-            resources :rdvs, only: [:create]
+            resources :rdvs, only: [:create] do
+              collection do
+                get 'propose_rdv_menu_content_lazy'
+              end
+            end
             post 'repousser-expiration' => 'dossiers#extend_conservation'
             post 'repousser-expiration-and-restore' => 'dossiers#extend_conservation_and_restore'
             post 'dossier_labels' => 'dossiers#dossier_labels'

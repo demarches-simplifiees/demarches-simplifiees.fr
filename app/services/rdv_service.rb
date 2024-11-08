@@ -33,6 +33,11 @@ class RdvService
     })
   end
 
+  def check_plage_ouvertures
+    sleep(1) # Simulate API call
+    true
+  end
+
   def create_default_motif
     sleep(1) # Simulate API call
     Success({
