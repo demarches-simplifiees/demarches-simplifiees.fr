@@ -132,44 +132,6 @@ module Instructeurs
       @statut = 'supprime'
     end
 
-    # TODO: to remove because of new procedure_presentation_controller
-    def update_displayed_fields
-      ids = (params['values'].presence || []).reject(&:empty?)
-
-      procedure_presentation.update!(displayed_columns: ids)
-
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
-    end
-
-    # TODO: to remove because of new procedure_presentation_controller
-    def update_sort
-      procedure_presentation.update!(sorted_column_params)
-
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
-    end
-
-    # TODO: to remove because of new procedure_presentation_controller
-    def add_filter
-      if !procedure_presentation.update(filter_params)
-        # complicated way to display inner error messages
-        flash.alert = procedure_presentation.errors
-          .flat_map { _1.detail[:value].flat_map { |c| c.errors.full_messages } }
-      end
-
-      redirect_back(fallback_location: instructeur_procedure_url(procedure))
-    end
-
-    # TODO: to remove because of new procedure_presentation_controller
-    def update_filter
-      @statut = statut
-      @procedure = procedure
-      @procedure_presentation = procedure_presentation
-      current_filter = procedure_presentation.filters_name_for(@statut)
-      # According to the html, the selected column is the last one
-      h_id = JSON.parse(params[current_filter].last[:id], symbolize_names: true)
-      @column = procedure.find_column(h_id:)
-    end
-
     def download_export
       groupe_instructeurs = current_instructeur
         .groupe_instructeurs
@@ -409,18 +371,6 @@ module Instructeurs
 
     def cookies_export_key
       "exports_#{@procedure.id}_seen_at"
-    end
-
-    # TODO: to remove because of new procedure_presentation_controller
-    def sorted_column_params
-      params.permit(sorted_column: [:order, :id])
-    end
-
-    # TODO: to remove because of new procedure_presentation_controller
-    def filter_params
-      keys = [:tous_filters, :a_suivre_filters, :suivis_filters, :traites_filters, :expirant_filters, :archives_filters, :supprimes_filters]
-      h = keys.index_with { [:id, :filter] }
-      params.permit(h)
     end
   end
 end
