@@ -33,15 +33,14 @@ class Columns::ChampColumn < Column
   end
 
   def filtered_ids(dossiers, search_terms)
+    relation = dossiers.with_type_de_champ(stable_id)
+
     if type == :enum
-      dossiers.with_type_de_champ(stable_id)
-        .filter_enum(:champs, column, search_terms).ids
+      relation.filter_exact(:champs, column, search_terms).ids
     elsif type == :enums
-      dossiers.with_type_de_champ(stable_id)
-        .filter_array_enum(:champs, column, search_terms).ids
+      relation.filter_exact_in_array(:champs, column, search_terms).ids
     else
-      dossiers.with_type_de_champ(stable_id)
-        .filter_ilike(:champs, column, search_terms).ids
+      relation.filter_ilike(:champs, column, search_terms).ids
     end
   end
 

@@ -34,13 +34,13 @@ module DossierFilteringConcern
       where(q, *(values.map { |value| "%#{value}%" }))
     }
 
-    scope :filter_enum, lambda { |table, column, values|
+    scope :filter_exact, lambda { |table, column, values|
       table_column = DossierFilterService.sanitized_column(table, column)
       q = Array.new(values.count, "(#{table_column} = ?)").join(' OR ')
       where(q, *(values))
     }
 
-    scope :filter_array_enum, lambda { |table, column, values|
+    scope :filter_exact_in_array, lambda { |table, column, values|
       table_column = DossierFilterService.sanitized_column(table, column)
       q = Array.new(values.count, "(#{table_column} = ?)").join(' OR ')
       where(q, *(values. map { |value| "[\"#{value}\"]" }))
