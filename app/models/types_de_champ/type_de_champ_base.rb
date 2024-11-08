@@ -3,7 +3,7 @@
 class TypesDeChamp::TypeDeChampBase
   include ActiveModel::Validations
 
-  delegate :description, :libelle, :mandatory, :mandatory?, :stable_id, :fillable?, :public?, :type_champ, to: :@type_de_champ
+  delegate :description, :libelle, :mandatory, :mandatory?, :stable_id, :fillable?, :public?, :type_champ, :options_for_select, to: :@type_de_champ
 
   FILL_DURATION_SHORT  = 10.seconds
   FILL_DURATION_MEDIUM = 1.minute
@@ -104,8 +104,8 @@ class TypesDeChamp::TypeDeChampBase
           tdc_type: type_champ,
           label: libelle_with_prefix(prefix),
           type: TypeDeChamp.column_type(type_champ),
-          value_column: TypeDeChamp.value_column(type_champ),
-          displayable:
+          displayable:,
+          options_for_select:
         )
       ]
     else

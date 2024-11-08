@@ -8,18 +8,18 @@ class Column
 
   TYPE_DE_CHAMP_TABLE = 'type_de_champ'
 
-  attr_reader :table, :column, :label, :type, :scope, :value_column, :filterable, :displayable
+  attr_reader :table, :column, :label, :type, :filterable, :displayable
+  attr_accessor :options_for_select
 
-  def initialize(procedure_id:, table:, column:, label: nil, type: :text, value_column: :value, filterable: true, displayable: true, scope: '')
+  def initialize(procedure_id:, table:, column:, label: nil, type: :text, filterable: true, displayable: true, options_for_select: [])
     @procedure_id = procedure_id
     @table = table
     @column = column
     @label = label || I18n.t(column, scope: [:activerecord, :attributes, :procedure_presentation, :fields, table])
     @type = type
-    @scope = scope
-    @value_column = value_column
     @filterable = filterable
     @displayable = displayable
+    @options_for_select = options_for_select
   end
 
   # the id is a String to be used in forms
@@ -30,12 +30,6 @@ class Column
   def h_id = { procedure_id: @procedure_id, column_id: }
 
   def ==(other) = h_id == other.h_id # using h_id instead of id to avoid inversion of keys
-
-  def to_json
-    {
-      table:, column:, label:, type:, scope:, value_column:, filterable:, displayable:
-    }
-  end
 
   def notifications? = [table, column] == ['notifications', 'notifications']
   def dossier_state? = [table, column] == ['self', 'state']

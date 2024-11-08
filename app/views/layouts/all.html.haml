@@ -85,7 +85,7 @@
                   .fr-ml-1w.hidden{ 'data-expand-target': 'content' }
                     %div
                       = f.select :service_departement,
-                        APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] },
+                        APIGeoService.departement_options,
                         { selected: @filter.service_departement, include_blank: ''},
                         id: "service_dep_select",
                         class: 'fr-select'

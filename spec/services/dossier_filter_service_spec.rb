@@ -556,7 +556,7 @@ describe DossierFilterService do
 
         it 'describes column' do
           expect(column.type).to eq(:enum)
-          expect(column.options_for_select.first).to eq(["99 – Etranger", "99"])
+          expect(column.options_for_select.first).to eq(["01 – Ain", "01"])
         end
       end
 
@@ -573,7 +573,7 @@ describe DossierFilterService do
 
         it 'describes column' do
           expect(column.type).to eq(:enum)
-          expect(column.options_for_select.first).to eq(["Auvergne-Rhône-Alpes", "Auvergne-Rhône-Alpes"])
+          expect(column.options_for_select.first).to eq(["Auvergne-Rhône-Alpes", "84"])
         end
       end
     end

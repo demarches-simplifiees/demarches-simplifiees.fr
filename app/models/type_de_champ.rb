@@ -545,35 +545,17 @@ class TypeDeChamp < ApplicationRecord
     end
   end
 
-  def self.value_column(type_champ)
-    if type_champ.in?([type_champs.fetch(:departements), type_champs.fetch(:regions)])
-      :external_id
-    else
-      :value
-    end
-  end
-
-  def options_for_select(column)
+  def options_for_select
     if departement?
-      APIGeoService.departements.map { ["#{_1[:code]} – #{_1[:name]}", _1[:code]] }
+      APIGeoService.departement_options
     elsif region?
-      APIGeoService.regions.map { [_1[:name], _1[:code]] }
-    elsif linked_drop_down_list?
-      if column.path == :primary
-        primary_options
-      else
-        secondary_options.values.flatten
-      end
-    elsif choice_type?
-      if drop_down_list?
-        drop_down_options
-      elsif yes_no?
-        Champs::YesNoChamp.options
-      elsif checkbox?
-        Champs::CheckboxChamp.options
-      end
-    elsif siret? || rna? || rnf?
-      column.options_for_select
+      APIGeoService.region_options
+    elsif drop_down_list?
+      drop_down_options
+    elsif yes_no?
+      Champs::YesNoChamp.options
+    elsif checkbox?
+      Champs::CheckboxChamp.options
     end
   end
 
