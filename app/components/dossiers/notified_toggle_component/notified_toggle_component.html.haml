@@ -1,5 +1,5 @@
-= form_tag update_sort_instructeur_procedure_path(@procedure),
-  method: :get, data: { controller: 'autosubmit' } do
+= form_with model: [:instructeur, @procedure_presentation],
+  data: { controller: 'autosubmit' } do
   .fr-fieldset__element.fr-m-0
     .fr-checkbox-group.fr-checkbox-group--sm
       = hidden_field_tag 'sorted_column[id]', @procedure.notifications_column.id
