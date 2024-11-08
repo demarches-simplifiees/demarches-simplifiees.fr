@@ -3,8 +3,8 @@
 class RdvService
   include Dry::Monads[:result]
 
-  def initialize(user:)
-    @user = user
+  def initialize(rdv_connection:)
+    @rdv_connection = rdv_connection
   end
 
   def configure_rdv_binding(procedure:, enabled:)
@@ -20,13 +20,16 @@ class RdvService
     result
   end
 
-  def create_rdv(dossier:)
+  def send_rdv_invitation(dossier:, reason:)
+    # Mock rdv creation
+
+    rdv = Rdv.create!(
+      starts_at: 7.days.from_now,
+      dossier: dossier
+    )
+
     Success({
-      rdv: {
-        id: 1,
-        dossier_id: dossier&.id,
-        details: "to be implemented"
-      }
+      rdv:
     })
   end
 

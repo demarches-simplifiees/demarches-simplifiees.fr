@@ -4,5 +4,4 @@ class Instructeurs::ProposeRdvMenuComponent < ApplicationComponent
   def initialize(dossier:)
     @dossier = dossier
   end
-
 end
