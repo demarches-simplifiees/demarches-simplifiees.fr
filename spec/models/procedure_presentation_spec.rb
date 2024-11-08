@@ -25,18 +25,6 @@ describe ProcedurePresentation do
 
   def to_filter((label, filter)) = FilteredColumn.new(column: procedure.find_column(label: label), filter: filter)
 
-  describe "#displayed_fields" do
-    it { expect(procedure_presentation.displayed_fields).to eq([{ "label" => "test1", "table" => "user", "column" => "email" }, { "label" => "test2", "table" => "type_de_champ", "column" => first_type_de_champ_id }]) }
-  end
-
-  describe "#sort" do
-    it { expect(procedure_presentation.sort).to eq({ "table" => "user", "column" => "email", "order" => "asc" }) }
-  end
-
-  describe "#filters" do
-    it { expect(procedure_presentation.filters).to eq({ "a-suivre" => [], "suivis" => [{ "label" => "label1", "table" => "self", "column" => "created_at" }] }) }
-  end
-
   describe 'validation' do
     it { expect(build(:procedure_presentation)).to be_valid }
 
