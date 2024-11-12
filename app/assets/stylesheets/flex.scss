@@ -56,6 +56,10 @@
   flex-grow: 1;
 }
 
+.flex-no-grow {
+  flex-grow: 0;
+}
+
 .flex-no-shrink {
   flex-shrink: 0;
 }

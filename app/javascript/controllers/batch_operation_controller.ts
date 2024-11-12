@@ -17,10 +17,16 @@ export class BatchOperationController extends ApplicationController {
   onCheckAll(event: Event) {
     const target = event.target as HTMLInputElement;
 
-    this.inputTargets.forEach((e) => (e.checked = target.checked));
+    this.inputTargets.forEach((e) => {
+      e.checked = target.checked;
+      e.dispatchEvent(new Event('change')); // dispatch change for dsfr checkbox behavior
+    });
+
     this.toggleSubmitButtonWhenNeeded();
 
-    const pagination = document.querySelector('tfoot .fr-pagination');
+    const pagination = document.querySelector(
+      '.fr-table__footer .fr-pagination'
+    );
     if (pagination) {
       displayNotice(this.inputTargets);
     }
