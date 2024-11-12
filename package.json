@@ -195,5 +195,8 @@
         }
       }
     ]
+  },
+  "patchedDependencies": {
+    "@gouvfr/dsfr@1.12.1": "patches/@gouvfr%2Fdsfr@1.12.1.patch"
   }
 }
