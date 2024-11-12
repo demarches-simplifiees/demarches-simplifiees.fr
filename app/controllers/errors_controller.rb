@@ -23,15 +23,6 @@ class ErrorsController < ApplicationController
     render_error @status
   end
 
-  private
-
-  def render_error(status)
-    respond_to do |format|
-      format.html { render status: }
-      format.json { render status:, json: { status:, name: Rack::Utils::HTTP_STATUS_CODES[status] } }
-    end
-  end
-
   # Intercept errors in before_action when fetching user or roles
   # when db is unreachable so we can still display a nice 500 static page
   def current_user
@@ -44,5 +35,14 @@ class ErrorsController < ApplicationController
     super
   rescue
     nil
+  end
+
+  private
+
+  def render_error(status)
+    respond_to do |format|
+      format.html { render status: }
+      format.json { render status:, json: { status:, name: Rack::Utils::HTTP_STATUS_CODES[status] } }
+    end
   end
 end
