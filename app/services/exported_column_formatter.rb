@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 class ExportedColumnFormatter
-  def self.format(column:, champ_or_dossier:)
+  def self.format(column:, champ_or_dossier:, format:)
     return if champ_or_dossier.nil?
 
     raw_value = column.value(champ_or_dossier)
 
     case column.type
+    when :boolean
+      format_boolean(column:, raw_value:, format:)
     when :attachements
       format_attachments(column:, raw_value:)
     when :enum
@@ -19,6 +21,14 @@ class ExportedColumnFormatter
   end
 
   private
+
+  def self.format_boolean(column:, raw_value:, format:)
+    if format == :ods
+      raw_value ? 1 : 0
+    else
+      raw_value
+    end
+  end
 
   def self.format_attachments(column:, raw_value:)
     case column.tdc_type

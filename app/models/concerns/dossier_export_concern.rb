@@ -4,24 +4,24 @@ module DossierExportConcern
   extend ActiveSupport::Concern
 
   def spreadsheet_columns_csv(types_de_champ:, export_template: nil)
-    spreadsheet_columns(with_etablissement: true, types_de_champ:, export_template:)
+    spreadsheet_columns(with_etablissement: true, types_de_champ:, export_template:, format: :csv)
   end
 
   def spreadsheet_columns_xlsx(types_de_champ:, export_template: nil)
-    spreadsheet_columns(types_de_champ:, export_template:)
+    spreadsheet_columns(types_de_champ:, export_template:, format: :xlsx)
   end
 
   def spreadsheet_columns_ods(types_de_champ:, export_template: nil)
-    spreadsheet_columns(types_de_champ:, export_template:)
+    spreadsheet_columns(types_de_champ:, export_template:, format: :ods)
   end
 
-  def champ_values_for_export(types_de_champ, row_id: nil, export_template: nil)
+  def champ_values_for_export(types_de_champ, row_id: nil, export_template: nil, format:)
     types_de_champ.flat_map do |type_de_champ|
       champ = filled_champ(type_de_champ, row_id)
       if export_template.present?
         export_template
           .columns_for_stable_id(type_de_champ.stable_id)
-          .map { |exported_column| exported_column.libelle_with_value(champ) }
+          .map { |exported_column| exported_column.libelle_with_value(champ, format:) }
       else
         type_de_champ.libelles_for_export.map do |(libelle, path)|
           [libelle, type_de_champ.champ_value_for_export(champ, path)]
@@ -30,15 +30,15 @@ module DossierExportConcern
     end
   end
 
-  def spreadsheet_columns(types_de_champ:, with_etablissement: false, export_template: nil)
-    dossier_values_for_export(with_etablissement:, export_template:) + champ_values_for_export(types_de_champ, export_template:)
+  def spreadsheet_columns(types_de_champ:, with_etablissement: false, export_template: nil, format: nil)
+    dossier_values_for_export(with_etablissement:, export_template:, format:) + champ_values_for_export(types_de_champ, export_template:, format:)
   end
 
   private
 
-  def dossier_values_for_export(with_etablissement: false, export_template: nil)
+  def dossier_values_for_export(with_etablissement: false, export_template: nil, format:)
     if export_template.present?
-      return export_template.dossier_exported_columns.map { _1.libelle_with_value(self) }
+      return export_template.dossier_exported_columns.map { _1.libelle_with_value(self, format:) }
     end
 
     columns = [

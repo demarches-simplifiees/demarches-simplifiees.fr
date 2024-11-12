@@ -184,7 +184,7 @@ RSpec.describe DossierChampsConcern do
   end
 
   describe "#champ_values_for_export" do
-    subject { dossier.champ_values_for_export(dossier.revision.types_de_champ_public) }
+    subject { dossier.champ_values_for_export(dossier.revision.types_de_champ_public, format: :xlsx) }
 
     it { expect(subject.size).to eq(4) }
     it { expect(subject.first).to eq(["Un champ text", nil]) }

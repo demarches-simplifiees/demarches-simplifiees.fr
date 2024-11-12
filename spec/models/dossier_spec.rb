@@ -1993,7 +1993,7 @@ describe Dossier, type: :model do
         expect {
           integer_number_type_de_champ.update(type_champ: :decimal_number)
           procedure.update(published_revision: procedure.draft_revision, draft_revision: procedure.create_new_revision)
-        }.to change { dossier.reload.champ_values_for_export(procedure.all_revisions_types_de_champ.not_repetition.to_a) }
+        }.to change { dossier.reload.champ_values_for_export(procedure.all_revisions_types_de_champ.not_repetition.to_a, format: :xlsx) }
           .from([["c1", 42]]).to([["c1", 42.0]])
       end
     end
@@ -2020,8 +2020,8 @@ describe Dossier, type: :model do
       let(:repetition_second_revision_champ) { dossier_second_revision.project_champs_public.find(&:repetition?) }
       let(:dossier) { create(:dossier, procedure: procedure) }
       let(:dossier_second_revision) { create(:dossier, procedure: procedure) }
-      let(:dossier_champ_values_for_export) { dossier.champ_values_for_export(procedure.types_de_champ_for_procedure_export) }
-      let(:dossier_second_revision_champ_values_for_export) { dossier_second_revision.champ_values_for_export(procedure.types_de_champ_for_procedure_export) }
+      let(:dossier_champ_values_for_export) { dossier.champ_values_for_export(procedure.types_de_champ_for_procedure_export, format: :xlsx) }
+      let(:dossier_second_revision_champ_values_for_export) { dossier_second_revision.champ_values_for_export(procedure.types_de_champ_for_procedure_export, format: :xlsx) }
 
       context "when procedure published" do
         before do
@@ -2056,7 +2056,7 @@ describe Dossier, type: :model do
             dossier_test = create(:dossier, procedure: proc_test)
             type_champs = proc_test.all_revisions_types_de_champ(parent: tdc_repetition).to_a
             expect(type_champs.size).to eq(1)
-            expect(dossier.champ_values_for_export(type_champs).size).to eq(3)
+            expect(dossier.champ_values_for_export(type_champs, format: :xlsx).size).to eq(3)
           end
         end
       end
@@ -2079,7 +2079,7 @@ describe Dossier, type: :model do
       let(:text_tdc) { procedure.active_revision.types_de_champ_public.second }
       let(:tdcs) { dossier.project_champs_public.map(&:type_de_champ) }
 
-      subject { dossier.champ_values_for_export(tdcs) }
+      subject { dossier.champ_values_for_export(tdcs, format: :xlsx) }
 
       before do
         text_tdc.update(condition: ds_eq(champ_value(yes_no_tdc.stable_id), constant(true)))
