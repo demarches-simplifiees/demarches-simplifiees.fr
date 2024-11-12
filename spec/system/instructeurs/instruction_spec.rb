@@ -85,7 +85,7 @@ describe 'Instructing a dossier:', js: true do
     click_on procedure.libelle
     click_on 'traité'
     expect(page).to have_button('Repasser en instruction')
-    click_on 'Supprimer le dossier'
+    click_on 'Placer le dossier à la corbeille'
     expect(page).not_to have_button('Repasser en instruction')
   end
 

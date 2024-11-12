@@ -56,12 +56,12 @@ fr:
   supprimer:
     finish:
       text_success:
-        one: "%{success_count}/1 dossier a été supprimé"
-        other: "%{success_count}/%{count} dossiers ont été supprimés"
+        one: "%{success_count}/1 dossier a été placé à la corbeille"
+        other: "%{success_count}/%{count} dossiers ont été placés à la corbeille"
     in_progress:
       text_success:
         one: "1 dossier est en cours de suppression"
-        other: "%{success_count}/%{count} dossiers ont été supprimés"
+        other: "%{success_count}/%{count} dossiers ont été placés à la corbeille"
   restaurer:
     finish:
       text_success:
