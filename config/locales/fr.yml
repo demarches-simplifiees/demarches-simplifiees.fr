@@ -413,7 +413,7 @@ fr:
           enabled: "Ajouter le dossier %{dossier_id} à la sélection pour un traitement de masse"
           disabled: "Impossible d'ajouter le dossier %{dossier_id} à la selection car il est déjà dans un traitement de masse"
         show_deleted_dossiers: Historique des dossiers supprimés
-        personalize: Personnaliser
+        customize: Personnaliser le tableau
         passer_en_instruction: Passer en instruction
         repasser_en_construction: Repasser en construction
         follow_file: Suivre le dossier

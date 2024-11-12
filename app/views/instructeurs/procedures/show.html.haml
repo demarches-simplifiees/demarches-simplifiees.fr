@@ -62,8 +62,15 @@
 
         .fr-ml-auto
           - if @dossiers_count > 0
-            %span.dossiers-export
-              = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
+            %ul.fr-btns-group.fr-btns-group--right.fr-btns-group--sm.fr-btns-group--inline-md.fr-btns-group--icon-left
+              = render Dossiers::ExportDropdownComponent.new(wrapper: :li, procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count,
+                class_btn: 'fr-btn--secondary fr-icon-download-line', export_url: method(:download_export_instructeur_procedure_path))
+
+              = render Dropdown::MenuComponent.new(wrapper: :li, button_options: { class: ['fr-btn--tertiary', 'fr-icon-settings-5-line'] }, menu_options: { id: 'custom-menu' }) do |menu|
+                - menu.with_button_inner_html do
+                  = t('views.instructeurs.dossiers.customize')
+                - menu.with_form do
+                  = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       = render Instructeurs::FilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
@@ -98,13 +105,6 @@
 
                       %th.follow-col{ scope: 'col' }
                         Actions
-
-                      %th.fr-cell--right
-                        = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', 'fr-btn--tertiary-no-outline', 'fr-btn--icon-right', 'fr-icon-settings-5-line'] }, menu_options: { id: 'custom-menu' }) do |menu|
-                          - menu.with_button_inner_html do
-                            = t('views.instructeurs.dossiers.personalize')
-                          - menu.with_form do
-                            = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
                   %tbody
                     = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
@@ -163,7 +163,7 @@
                               = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
 
                         %td.follow-col
-                          %ul.fr-btns-group.fr-btns-group--lg.fr-btns-group--inline-lg.fr-btns-group--icon-right
+                          %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                             = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
                                         dossier_id: p.dossier_id,
                                         state: p.state,
