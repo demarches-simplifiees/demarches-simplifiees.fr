@@ -1,0 +1,16 @@
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/component/table/table.module.js b/dist/component/table/table.module.js
+index 5d61112f0cdc60ec85adc0c1a39ddabca4c332d2..0de2a3fadaaec783903def5084c4c77add3fc723 100644
+--- a/dist/component/table/table.module.js
++++ b/dist/component/table/table.module.js
+@@ -157,7 +157,9 @@ class TableRow extends api.core.Instance {
+   }
+ 
+   _handleCheckboxChange (node) {
+-    if (node.name === 'row-select') {
++    if (node.name === 'row-select' ||
++      node.getAttribute(api.internals.ns.attr('row-select')) === 'true'
++    ) {
+       this.isSelected = node.checked === true;
+     }
+   }
