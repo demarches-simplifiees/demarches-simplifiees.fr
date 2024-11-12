@@ -24,7 +24,7 @@ class Columns::ChampColumn < Column
     return if champ.nil?
 
     # nominal case
-    if @tdc_type == champ.last_write_type_champ
+    if champ.is_type?(@tdc_type)
       typed_value(champ)
     else
       cast_value(champ)

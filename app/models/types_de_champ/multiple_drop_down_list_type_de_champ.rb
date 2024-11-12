@@ -20,7 +20,7 @@ class TypesDeChamp::MultipleDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampB
   def selected_options(champ)
     return [] if champ.value.blank?
 
-    if champ.last_write_type_champ == TypeDeChamp.type_champs.fetch(:drop_down_list)
+    if champ.is_type?(TypeDeChamp.type_champs.fetch(:drop_down_list))
       [champ.value]
     else
       JSON.parse(champ.value)
