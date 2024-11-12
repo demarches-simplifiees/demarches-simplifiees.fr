@@ -217,29 +217,6 @@
       "note": ""
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "aaff41afa7bd5a551cd2e3a385071090cb53c95caa40fad3785cd3d68c9b939c",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 40,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{values.count} OR #{\"(#{DossierFilterService.sanitized_column(table, column)} = ?)\"}\", *values)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "DossierFilteringConcern",
-        "method": null
-      },
-      "user_input": "values.count",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "The table and column are escaped, which should make this safe"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "c97049798ff05438dcca6f3ee1a714f2336041837411ab001a7e3caf1bfb75c8",
