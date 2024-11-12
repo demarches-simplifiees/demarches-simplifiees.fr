@@ -207,7 +207,7 @@ class DossierProjectionService
         type_de_champ = stable_ids_and_types_de_champ_by_dossier_ids.fetch(champ.dossier_id, {})[champ.stable_id]
         if type_de_champ.present? && type_de_champ.type_champ == champ.last_write_type_champ
           if column.is_a?(Columns::JSONPathColumn)
-            column.get_value(champ)
+            column.value(champ)
           else
             type_de_champ.champ_value(champ)
           end
