@@ -3,6 +3,15 @@
 describe 'Errors handling', js: false do
   let(:procedure) { create(:procedure) }
 
+  scenario 'not found returns 404' do
+    without_detailed_exceptions do
+      visit '/nonexistent-path'
+    end
+
+    expect(page).to have_http_status(:not_found)
+    expect(page).to have_content('Page non trouvée')
+  end
+
   scenario 'bug renders dynamic 500 page' do
     procedure.revisions.destroy_all # break procedure
 

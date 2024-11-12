@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class ErrorsController < ApplicationController
-  rescue_from Exception do
+  rescue_from StandardError do |exception|
+    Sentry.capture_exception(exception)
     # catch any error, except errors triggered by middlewares outside controller (like warden middleware)
     render file: Rails.public_path.join('500.html'), layout: false, status: :internal_server_error
   end
