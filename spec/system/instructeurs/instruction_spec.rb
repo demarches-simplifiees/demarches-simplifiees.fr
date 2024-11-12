@@ -74,7 +74,7 @@ describe 'Instructing a dossier:', js: true do
     click_on procedure.libelle
     click_on 'traité'
     expect(page).to have_button('Repasser en instruction')
-    click_on 'Supprimer le dossier'
+    click_on 'Placer le dossier à la corbeille'
     click_on 'traité'
     expect(page).not_to have_button('Repasser en instruction')
   end
@@ -98,7 +98,7 @@ describe 'Instructing a dossier:', js: true do
     dossier.passer_en_instruction(instructeur: instructeur)
     dossier.accepter!(instructeur: instructeur)
     visit instructeur_dossier_path(procedure, dossier)
-    click_on 'Supprimer le dossier'
+    click_on 'Placer le dossier à la corbeille'
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do

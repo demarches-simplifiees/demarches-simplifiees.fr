@@ -781,8 +781,8 @@ en:
       one: guest file
       other: guest files
     dossiers_supprimes:
-      one: recently deleted file
-      other: recently deleted files
+      one: trash
+      other: trash
     dossiers_transferes:
       one: transfer request
       other: transfer requests

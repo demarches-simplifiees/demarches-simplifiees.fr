@@ -97,7 +97,7 @@ describe 'instructeurs/dossiers/show', type: :view do
       within("form[action=\"#{archive_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
         expect(subject).to have_button('Archiver le dossier')
       end
-      expect(subject).to have_selector('[title^="Supprimer le dossier"]')
+      expect(subject).to have_selector('[title^="Placer le dossier à la corbeille"]')
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 3)
     end
   end
@@ -138,7 +138,7 @@ describe 'instructeurs/dossiers/show', type: :view do
       within("form[action=\"#{unarchive_instructeur_dossier_path(dossier.procedure, dossier)}\"]") do
         expect(subject).to have_button('Désarchiver le dossier')
       end
-      expect(subject).to have_selector('[title^="Supprimer le dossier"]')
+      expect(subject).to have_selector('[title^="Placer le dossier à la corbeille"]')
       expect(subject).to have_selector('.header-actions ul:first-child .fr-btn', count: 2)
     end
   end
