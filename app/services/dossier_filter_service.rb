@@ -58,8 +58,8 @@ class DossierFilterService
         .pluck(:id)
         .uniq
     when 'dossier_labels'
-      dossiers.includes(table)
-        .order("#{sanitized_column(table, column)} #{order}")
+      dossiers.includes(:labels)
+        .order("labels.name #{order}")
         .pluck(:id)
         .uniq
     when 'self', 'user', 'individual', 'etablissement', 'groupe_instructeur'
