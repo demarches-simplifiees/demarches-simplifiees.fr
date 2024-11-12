@@ -62,7 +62,7 @@ class RootController < ApplicationController
                 "option C"
               ]
             type_de_champ.save
-          elsif type_de_champ.drop_down_list?
+          elsif type_de_champ.any_drop_down_list?
             type_de_champ.drop_down_options =
               [
                 "option A",

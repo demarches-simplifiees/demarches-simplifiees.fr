@@ -520,7 +520,7 @@ describe Dossier, type: :model do
 
           context 'when titre identite' do
             let(:types_de_champ_public) { [{ type: :titre_identite }] }
-            let(:champ) { dossier.project_champs_public.find(&:piece_justificative?) }
+            let(:champ) { dossier.project_champs_public.find(&:titre_identite?) }
 
             context 'when not visible' do
               let(:visible) { false }

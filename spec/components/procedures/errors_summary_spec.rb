@@ -60,7 +60,7 @@ describe Procedure::ErrorsSummary, type: :component do
     let(:validation_context) { :types_de_champ_public_editor }
 
     before do
-      drop_down_public = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
+      drop_down_public = procedure.draft_revision.types_de_champ_public.find(&:any_drop_down_list?)
       drop_down_public.update!(drop_down_options: [])
       subject
     end

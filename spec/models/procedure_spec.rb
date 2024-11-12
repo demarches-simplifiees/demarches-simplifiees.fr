@@ -407,7 +407,7 @@ describe Procedure do
         end
 
         it 'validates that no drop-down type de champ is empty' do
-          drop_down = procedure.draft_revision.types_de_champ_public.find(&:drop_down_list?)
+          drop_down = procedure.draft_revision.types_de_champ_public.find(&:any_drop_down_list?)
 
           drop_down.update!(drop_down_options: [])
           procedure.reload.validate(:publication)
@@ -440,7 +440,7 @@ describe Procedure do
         end
 
         it 'validates that no drop-down type de champ is empty' do
-          drop_down = procedure.draft_revision.types_de_champ_private.find(&:drop_down_list?)
+          drop_down = procedure.draft_revision.types_de_champ_private.find(&:any_drop_down_list?)
           drop_down.update!(drop_down_options: [])
           procedure.reload.validate(:publication)
 
