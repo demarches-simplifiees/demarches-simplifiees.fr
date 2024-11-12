@@ -4,6 +4,7 @@ import '@gouvfr/dsfr/dist/scheme/scheme.module';
 import '@gouvfr/dsfr/dist/component/display/display.module';
 import '@gouvfr/dsfr/dist/component/toggle/toggle.module';
 import '@gouvfr/dsfr/dist/component/breadcrumb/breadcrumb.module';
+import '@gouvfr/dsfr/dist/component/checkbox/checkbox.module';
 import '@gouvfr/dsfr/dist/component/modal/modal.module';
 import '@gouvfr/dsfr/dist/component/navigation/navigation.module';
 import '@gouvfr/dsfr/dist/component/segmented/segmented.module';

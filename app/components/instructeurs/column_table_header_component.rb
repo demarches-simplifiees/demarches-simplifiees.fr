@@ -10,7 +10,6 @@ class Instructeurs::ColumnTableHeaderComponent < ApplicationComponent
   private
 
   def classname(column)
-    return 'status-col' if column.dossier_state?
     return 'number-col' if column.dossier_id?
     return 'sva-col' if column.column == 'sva_svr_decision_on'
   end

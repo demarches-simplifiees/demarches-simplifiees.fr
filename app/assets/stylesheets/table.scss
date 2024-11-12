@@ -27,12 +27,6 @@
     }
   }
 
-  &.hoverable {
-    tbody tr:hover {
-      background-color: var(--hover);
-    }
-  }
-
   &.vertical {
     font-size: 16px;
     line-height: 22px;
@@ -65,9 +59,4 @@
       }
     }
   }
-}
-
-// Hacky css to display dropdown "customize table" for table with only 1 or 2 lines
-table.min-height-300 {
-  min-height: 300px;
 }
