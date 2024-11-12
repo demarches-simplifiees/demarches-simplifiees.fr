@@ -52,13 +52,13 @@ describe ProcedureExportService do
             ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur')),
             ExportedColumn.new(libelle: 'État du dossier', column: procedure.dossier_state_column),
             ExportedColumn.new(libelle: 'first champ', column: procedure.find_column(label: 'first champ')),
-            ExportedColumn.new(libelle: 'Commune (Code INSEE)', column: procedure.find_column(label: 'Commune (Code INSEE)')),
+            ExportedColumn.new(libelle: 'Commune', column: procedure.find_column(label: 'Commune')),
             ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))
           ]
         end
 
         let!(:dossier) { create(:dossier, :en_instruction, :with_populated_champs, :with_individual, procedure: procedure) }
-        let(:selected_headers) { ["Email", "first champ", "Commune (Code INSEE)", "Groupe instructeur", "Date du dernier évènement", "État du dossier", "PJ"] }
+        let(:selected_headers) { ["Email", "first champ", "Commune", "Groupe instructeur", "Date du dernier évènement", "État du dossier", "PJ"] }
 
         it 'should have only headers from export template' do
           expect(dossiers_sheet.headers).to match_array(selected_headers)
@@ -68,7 +68,7 @@ describe ProcedureExportService do
           expect(procedure.dossiers.count).to eq 1
           expect(dossiers_sheet.data.size).to eq 1
 
-          expect(dossiers_sheet.data).to match_array([[anything, dossier.user_email_for_display, "défaut", "En instruction", "text", "60172", "toto.txt"]])
+          expect(dossiers_sheet.data).to match_array([[anything, dossier.user_email_for_display, "défaut", "En instruction", "text", "Coye-la-Forêt", "toto.txt"]])
         end
       end
 

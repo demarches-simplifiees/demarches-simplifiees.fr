@@ -13,7 +13,7 @@ describe Columns::ChampColumn do
         expect_type_de_champ_values('email', eq(['yoda@beta.gouv.fr']))
         expect_type_de_champ_values('phone', eq(['0666666666']))
         expect_type_de_champ_values('address', eq(["2 rue des Démarches"]))
-        expect_type_de_champ_values('communes', eq(["Coye-la-Forêt"]))
+        expect_type_de_champ_values('communes', eq(["Coye-la-Forêt", "60580", "60"]))
         expect_type_de_champ_values('departements', eq(['01']))
         expect_type_de_champ_values('regions', eq(['01']))
         expect_type_de_champ_values('pays', eq(['France']))

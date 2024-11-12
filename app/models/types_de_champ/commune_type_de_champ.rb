@@ -27,6 +27,31 @@ class TypesDeChamp::CommuneTypeDeChamp < TypesDeChamp::TypeDeChampBase
     champ.code_postal? ? "#{champ.name} (#{champ.code_postal})" : champ.name
   end
 
+  def columns(procedure:, displayable: true, prefix: nil)
+    super.concat(
+      [
+        Columns::JSONPathColumn.new(
+          procedure_id: procedure.id,
+          stable_id:,
+          tdc_type: type_champ,
+          label: "#{libelle_with_prefix(prefix)} - code postal (5 chiffres)",
+          jsonpath: '$.code_postal',
+          displayable:,
+          type: :text
+        ),
+        Columns::JSONPathColumn.new(
+          procedure_id: procedure.id,
+          stable_id:,
+          tdc_type: type_champ,
+          label: "#{libelle_with_prefix(prefix)} - département",
+          jsonpath: '$.code_departement',
+          displayable:,
+          type: :number
+        )
+      ]
+    )
+  end
+
   private
 
   def paths
