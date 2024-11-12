@@ -238,6 +238,18 @@ describe DossierProjectionService do
         end
       end
 
+      context 'for a json column' do
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret, libelle: 'siret' }]) }
+        let(:dossier) { create(:dossier, procedure:) }
+        let(:label) { "siret – département" }
+
+        before do
+          dossier.project_champs_public.first.update(value_json: { 'departement_code': '38' })
+        end
+
+        it { is_expected.to eq('38') }
+      end
+
       context 'for dossier corrections table' do
         let(:table) { 'dossier_corrections' }
         let(:column) { 'resolved_at' }
