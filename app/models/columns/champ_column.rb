@@ -37,7 +37,9 @@ class Columns::ChampColumn < Column
     if type == :enum
       relation.where(champs: { column => search_terms }).ids
     elsif type == :enums
-      relation.filter_array_enum(:champs, column, search_terms).ids
+      # in a multiple drop down list, the value are stored as '["v1", "v2"]'
+      quoted_search_terms = search_terms.map { %{"#{_1}"} }
+      relation.filter_ilike(:champs, column, quoted_search_terms).ids
     else
       relation.filter_ilike(:champs, column, search_terms).ids
     end
