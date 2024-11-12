@@ -137,29 +137,6 @@
       "note": "escaped by hand"
     },
     {
-      "warning_type": "SQL Injection",
-      "warning_code": 0,
-      "fingerprint": "91ff8031e7c639c95fe6c244867349a72078ef456d8b3507deaf2bdb9bf62fe2",
-      "check_name": "SQL",
-      "message": "Possible SQL injection",
-      "file": "app/models/concerns/dossier_filtering_concern.rb",
-      "line": 34,
-      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
-      "code": "where(\"#{values.count} OR #{\"(#{DossierFilterService.sanitized_column(table, column)} ILIKE ?)\"}\", *values.map do\n \"%#{value}%\"\n end)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "DossierFilteringConcern",
-        "method": null
-      },
-      "user_input": "values.count",
-      "confidence": "Medium",
-      "cwe_id": [
-        89
-      ],
-      "note": "filtered by rails query params where(something: ?, values)"
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "a7d18cc3434b4428a884f1217791f9a9db67839e73fb499f1ccd0f686f08eccc",
@@ -217,6 +194,29 @@
       "note": ""
     },
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "afd2a1a41bd87fa62e065671670bd9bd8cc503ca4cbd3cfdb74a38a794146926",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/models/concerns/dossier_filtering_concern.rb",
+      "line": 35,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "where(\"#{DossierFilterService.sanitized_column(table, column)} LIKE ANY (ARRAY[?])\", search_terms.map do\n \"%#{sanitize_sql_like(_1)}%\"\n end)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "DossierFilteringConcern",
+        "method": null
+      },
+      "user_input": "DossierFilterService.sanitized_column(table, column)",
+      "confidence": "Medium",
+      "cwe_id": [
+        89
+      ],
+      "note": "The table and column are escaped, which should make this safe"
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "c97049798ff05438dcca6f3ee1a714f2336041837411ab001a7e3caf1bfb75c8",
@@ -272,6 +272,6 @@
       "note": "Current is not a model"
     }
   ],
-  "updated": "2024-11-04 09:56:55 +0100",
+  "updated": "2024-11-12 17:33:07 +0100",
   "brakeman_version": "6.1.2"
 }

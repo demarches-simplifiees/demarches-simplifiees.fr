@@ -28,10 +28,11 @@ module DossierFilteringConcern
       end
     }
 
-    scope :filter_ilike, lambda { |table, column, values|
+    scope :filter_ilike, lambda { |table, column, search_terms|
+      safe_quoted_terms = search_terms.map { "%#{sanitize_sql_like(_1)}%" }
       table_column = DossierFilterService.sanitized_column(table, column)
-      q = Array.new(values.count, "(#{table_column} ILIKE ?)").join(' OR ')
-      where(q, *(values.map { |value| "%#{value}%" }))
+
+      where("#{table_column} LIKE ANY (ARRAY[?])", safe_quoted_terms)
     }
 
     scope :filter_array_enum, lambda { |table, column, values|
@@ -39,5 +40,7 @@ module DossierFilteringConcern
       q = Array.new(values.count, "(#{table_column} = ?)").join(' OR ')
       where(q, *(values. map { |value| "[\"#{value}\"]" }))
     }
+
+    def sanitize_sql_like(q) = ActiveRecord::Base.sanitize_sql_like(q)
   end
 end
