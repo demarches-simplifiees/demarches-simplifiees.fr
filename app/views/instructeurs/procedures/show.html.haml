@@ -159,7 +159,7 @@
                                   dossier_id: p.dossier_id,
                                   state: p.state,
                                   archived: p.archived,
-                                  dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                  dossier_is_followed: current_instructeur&.follow?(Dossier.find_by_id(p.dossier_id)),
                                   close_to_expiration: @statut == 'expirant',
                                   hidden_by_administration: @statut == 'supprimes',
                                   hidden_by_expired: p.hidden_by_reason == 'expired',
