@@ -127,7 +127,7 @@
                                     aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
                               = label_tag dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), "Sélectionner le dossier #{p.dossier_id}", class: 'fr-label'
 
-                        %td.number-col
+                        %td.fr-cell--numeric
                           - if p.hidden_by_administration_at.present?
                             %span.cell-link= p.dossier_id
                           - else

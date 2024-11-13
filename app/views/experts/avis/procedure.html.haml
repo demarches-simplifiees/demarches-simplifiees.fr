@@ -42,7 +42,7 @@
               %tbody
                 - @avis.each do |avis|
                   %tr
-                    %td.number-col
+                    %td.fr-cell--numeric
                       = link_to(expert_avis_path(avis.procedure, avis), class: 'cell-link') do
                         = avis.dossier.id
                     %td= link_to(avis.dossier.user_email_for(:display), expert_avis_path(avis.procedure, avis), class: 'cell-link')

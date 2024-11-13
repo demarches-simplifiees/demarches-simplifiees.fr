@@ -248,3 +248,7 @@ input[type='radio'] {
 .fr-tags-group > li {
   line-height: inherit;
 }
+
+.fr-cell--numeric {
+  font-variant-numeric: tabular-nums;
+}

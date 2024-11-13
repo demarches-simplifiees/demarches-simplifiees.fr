@@ -16,31 +16,38 @@
           %li
             = t(".deleted_explanation_second_#{role}")
 
-    .fr-table.fr-table--layout-fixed.fr-mt-3w
-      %table
-        %thead
-          %tr
-            %th N° dossier
-            %th Libellé de la démarche
-            %th Raison de suppression
-            %th Date de suppression
-        %tbody
-          - @deleted_dossiers.each do |deleted_dossier|
-            %tr
-              %td.number-col
-                = deleted_dossier.dossier_id
+    .fr-table
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            %table
+              %thead
+                %tr
+                  %th N° dossier
+                  %th Libellé de la démarche
+                  %th Raison de suppression
+                  %th Date de suppression
+              %tbody
+                - @deleted_dossiers.each do |deleted_dossier|
+                  %tr
+                    %td.fr-cell--numeric
+                      = deleted_dossier.dossier_id
 
-              %td.number-col
-                = deleted_dossier.procedure.libelle.truncate_words(10)
+                    %td.fr-cell--numeric
+                      = deleted_dossier.procedure.libelle.truncate_words(10)
 
-              %td
-                = deletion_reason_badge(deleted_dossier.reason)
-                -# .fr-badge
-                -#   = t("activerecord.attributes.deleted_dossier.reason.#{deleted_dossier.reason}")
-              %td.deleted-cell
-                = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
+                    %td
+                      = deletion_reason_badge(deleted_dossier.reason)
+                      -# .fr-badge
+                      -#   = t("activerecord.attributes.deleted_dossier.reason.#{deleted_dossier.reason}")
+                    %td.deleted-cell
+                      = l(deleted_dossier.deleted_at, format: '%d/%m/%y')
 
-      = paginate @deleted_dossiers, views_prefix: 'shared'
+      .fr-table__footer
+        .fr-table__footer--start
+        .fr-table__footer--middle
+          = paginate @deleted_dossiers, views_prefix: 'shared'
+        .fr-table__footer--end.flex-no-grow
 
   - else
     %p
