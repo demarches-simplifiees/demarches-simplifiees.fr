@@ -8,11 +8,7 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
 
   def perform(*args)
     GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, HEADERS, data) do |file|
-      begin
-        APIDatagouv::API.upload(file, :statistics_dataset)
-      ensure
-        FileUtils.rm(file)
-      end
+      APIDatagouv::API.upload(file, :statistics_dataset)
     end
   end
 

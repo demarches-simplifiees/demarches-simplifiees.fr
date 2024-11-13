@@ -6,7 +6,6 @@ class GenerateOpenDataCsvService
       file << generate_csv(headers, data)
       file.rewind
       yield file if block_given?
-      file.close
     end
   end
 
