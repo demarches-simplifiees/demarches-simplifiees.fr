@@ -29,17 +29,17 @@ describe DossierProjectionService do
       it 'respects the dossiers_ids order, returns state, archived and nil for empty result' do
         expect(result.length).to eq(3)
 
-        expect(result[0].dossier_id).to eq(dossier_3.id)
-        expect(result[1].dossier_id).to eq(dossier_1.id)
-        expect(result[2].dossier_id).to eq(dossier_2.id)
+        expect(result[0].dossier.id).to eq(dossier_3.id)
+        expect(result[1].dossier.id).to eq(dossier_1.id)
+        expect(result[2].dossier.id).to eq(dossier_2.id)
 
-        expect(result[0].state).to eq('en_instruction')
-        expect(result[1].state).to eq('brouillon')
-        expect(result[2].state).to eq('en_construction')
+        expect(result[0].dossier.state).to eq('en_instruction')
+        expect(result[1].dossier.state).to eq('brouillon')
+        expect(result[2].dossier.state).to eq('en_construction')
 
-        expect(result[0].archived).to be false
-        expect(result[1].archived).to be false
-        expect(result[2].archived).to be true
+        expect(result[0].dossier.archived).to be false
+        expect(result[1].dossier.archived).to be false
+        expect(result[2].dossier.archived).to be true
 
         expect(result[0].columns[0]).to be nil
         expect(result[1].columns[0]).to eq('champ_1')
@@ -66,7 +66,7 @@ describe DossierProjectionService do
 
       it 'returns champ value' do
         expect(result.length).to eq(1)
-        expect(result[0].dossier_id).to eq(dossier.id)
+        expect(result[0].dossier.id).to eq(dossier.id)
         expect(result[0].columns[0]).to eq('Châteldon (63290)')
       end
     end
