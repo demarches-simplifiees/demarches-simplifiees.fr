@@ -37,7 +37,7 @@ class ProcedurePresentation < ApplicationRecord
       *displayed_columns,
       procedure.dossier_state_column
     ]
-    columns.concat(procedure.sva_svr_columns) if procedure.sva_svr_enabled?
+    columns.concat(procedure.sva_svr_columns.filter(&:displayable)) if procedure.sva_svr_enabled?
     columns
   end
 end
