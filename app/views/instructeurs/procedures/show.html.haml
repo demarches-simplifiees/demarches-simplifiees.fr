@@ -44,7 +44,7 @@
       %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
         %br
-        Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
+        Ces dossiers seront supprimés lorsque leur délai de conservation dans #{APPLICATION_NAME}
         - if @procedure.duree_conservation_dossiers_dans_ds
           = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
         sera expiré.

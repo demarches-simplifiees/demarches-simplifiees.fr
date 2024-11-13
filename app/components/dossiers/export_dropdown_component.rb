@@ -4,6 +4,7 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
   include ApplicationHelper
 
   attr_reader :wrapper
+  attr_reader :export_templates
 
   def initialize(procedure:, export_templates: nil, statut: nil, count: nil, class_btn: nil, export_url: nil, show_export_template_tab: true, wrapper: :div)
     @procedure = procedure
@@ -34,9 +35,5 @@ class Dossiers::ExportDropdownComponent < ApplicationComponent
       export_template_id:,
       statut: @statut,
       no_progress_notification: no_progress_notification)
-  end
-
-  def export_templates
-    @export_templates
   end
 end
