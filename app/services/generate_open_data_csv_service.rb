@@ -2,11 +2,12 @@
 
 class GenerateOpenDataCsvService
   def self.save_csv_to_tmp(file_name, headers, data)
-    f = Tempfile.create(["#{file_name}_#{date_last_month}", '.csv'], 'tmp')
-    f << generate_csv(headers, data)
-    f.rewind
-    yield f if block_given?
-    f.close
+    Tempfile.create(["#{file_name}_#{date_last_month}", '.csv'], 'tmp') do |file|
+      file << generate_csv(headers, data)
+      file.rewind
+      yield file if block_given?
+      file.close
+    end
   end
 
   private
