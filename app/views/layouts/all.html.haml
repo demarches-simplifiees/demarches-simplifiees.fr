@@ -12,7 +12,7 @@
 
     .fr-container--fluid{ data: { turbo: 'true' } }
       %turbo-frame#procedures.fr-grid-row.fr-grid-row--gutters{ 'data-turbo-action': 'advance' }
-        .fr-col-3
+        .fr-col-12.fr-col-lg-3
           = form_with(url: all_admin_procedures_path, method: :get, data: { controller: 'autosubmit', turbo_frame: 'procedures' }) do |f|
 
             %fieldset.sidebar-filter
@@ -120,6 +120,6 @@
                         = b.check_box(checked: @filter.status_filtered?(b.value))
                         = b.label(class: 'fr-label') { t b.text, scope: 'activerecord.attributes.procedure.aasm_state' }
 
-        .fr-col-9
+        .fr-col-12.fr-col-lg-9
           = yield(:results)
 = render template: 'layouts/application'
