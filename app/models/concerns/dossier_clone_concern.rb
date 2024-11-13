@@ -181,18 +181,18 @@ module DossierCloneConcern
     added_champs = diff[:added].filter { _1.persisted? && _1.fillable? }
     updated_champs = diff[:updated].filter { _1.persisted? && _1.fillable? }
 
-    added_champs.each { _1.update_column(:dossier_id, id) }
+    added_champs.each { _1.update_columns(dossier_id: id, stream:) }
 
     if updated_champs.present?
       champs_index = champs.index_by(&:public_id)
       updated_champs.each do |champ|
         champs_index[champ.public_id]&.destroy!
-        champ.update_column(:dossier_id, id)
+        champ.update_columns(dossier_id: id, stream:)
       end
     end
 
     added_row_ids.each do |row_id, repetition_type_de_champ|
-      champ_for_update(repetition_type_de_champ, row_id:, updated_by: user.email).save!
+      champ_for_update(repetition_type_de_champ, row_id:, updated_by: user.email)
     end
     removed_row_ids.each do |row_id, repetition_type_de_champ|
       champ_for_update(repetition_type_de_champ, row_id:, updated_by: user.email).discard!
