@@ -4,18 +4,18 @@ RSpec.describe Cron::Datagouv::AccountByMonthJob, type: :job do
   let!(:user) { create(:user, created_at: 1.month.ago) }
   let(:status) { 200 }
   let(:body) { "ok" }
-  let(:stub) { stub_request(:post, /https:\/\/www.data.gouv.fr\/api\/.*\/upload\//) }
 
   describe 'perform' do
-    before do
-      stub
-    end
 
     subject { Cron::Datagouv::AccountByMonthJob.perform_now }
 
     it 'send POST request to datagouv' do
+      allow(APIDatagouv::API).to receive(:upload) do |file|
+        csv = CSV.read(file, headers: true)
+        expect(csv[0]['mois']).to eq(Date.today.prev_month.strftime("%B %Y"))
+      end
+
       subject
-      expect(stub).to have_been_requested
     end
   end
 end

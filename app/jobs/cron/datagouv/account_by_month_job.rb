@@ -7,6 +7,7 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
   HEADERS = ["mois", FILE_NAME]
 
   def perform(*args)
+    file_name = "#{FILE_NAME}_#{date_last_month}.csv"
     GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, HEADERS, data) do |file|
       APIDatagouv::API.upload(file, :statistics_dataset)
     end
@@ -18,7 +19,7 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
     [[date_last_month, User.where(created_at: 1.month.ago.all_month).count]]
   end
 
-  def self.date_last_month
+  def date_last_month
     Date.today.prev_month.strftime("%B %Y")
   end
 end
