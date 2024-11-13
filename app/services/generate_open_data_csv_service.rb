@@ -9,6 +9,8 @@ class GenerateOpenDataCsvService
     f.close
   end
 
+  private
+
   def self.date_last_month
     Date.today.prev_month.strftime("%B %Y")
   end
