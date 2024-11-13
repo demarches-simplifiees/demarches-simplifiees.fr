@@ -12,7 +12,13 @@ class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
     end
   end
 
+  private
+
   def data
-    [[User.where(created_at: 1.month.ago.all_month).count]]
+    [[date_last_month, User.where(created_at: 1.month.ago.all_month).count]]
+  end
+
+  def self.date_last_month
+    Date.today.prev_month.strftime("%B %Y")
   end
 end
