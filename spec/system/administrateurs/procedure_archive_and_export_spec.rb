@@ -32,7 +32,7 @@ describe 'Creating a new procedure', js: true do
 
     # check archive
     expect {
-      page.first(".archive-table .fr-btn").click
+      page.first(".fr-table .fr-btn").click
     }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), administrateur)
     expect(page).to have_content("Votre demande a été prise en compte. Selon le nombre de dossiers, cela peut prendre de quelques minutes à plusieurs heures. Vous recevrez un courriel lorsque le fichier sera disponible.")
     expect(Archive.first.month).not_to be_nil

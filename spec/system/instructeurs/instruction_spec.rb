@@ -208,7 +208,7 @@ describe 'Instructing a dossier:', js: true do
     end
     scenario 'download' do
       expect {
-        page.first(".archive-table .fr-btn").click
+        page.first(".fr-table .fr-btn").click
       }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), instructeur)
       expect(Archive.first.month).not_to be_nil
     end

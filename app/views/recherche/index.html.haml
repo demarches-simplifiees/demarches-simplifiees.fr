@@ -36,7 +36,7 @@
 
                 %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
                   - if instructeur_and_expert_dossier
-                    %td.number-col
+                    %td.fr-cell--numeric
                       .cell-link.relative
                         = p.dossier_id
                         - if @notifications_dossier_ids.include?(p.dossier_id)
@@ -52,7 +52,7 @@
                     = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
 
                   - else
-                    %td.number-col
+                    %td.fr-cell--numeric
                       %a.cell-link.relative{ href: path }
                         = p.dossier_id
                         - if @notifications_dossier_ids.include?(p.dossier_id)
