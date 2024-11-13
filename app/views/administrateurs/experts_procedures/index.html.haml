@@ -4,8 +4,7 @@
                     ['Avis externes']] }
 
 .fr-container
-  %h1.fr-h2
-    Avis externes
+  %h1 Avis externes
 
   = render Dsfr::CalloutComponent.new(title: nil) do |c|
     - c.with_body do
@@ -15,106 +14,106 @@
           title: t('.experts_doc.title'),
           **external_link_attributes)
 
-  %ul.fr-toggle__list
-    %li
-      = form_for @procedure,
-        method: :put,
-        url: allow_expert_review_admin_procedure_path(@procedure),
-        data: { controller: 'autosubmit', turbo: 'true' } do |f|
+  %fieldset.fr-fieldset
+    .fr-fieldset__element
+      %ul.fr-toggle__list
+        %li
+          = form_for @procedure,
+            method: :put,
+            url: allow_expert_review_admin_procedure_path(@procedure),
+            data: { controller: 'autosubmit', turbo: 'true' } do |f|
 
-        = render Dsfr::ToggleComponent.new(form: f,
-          target: :allow_expert_review,
-          title: t('.titles.allow_invite_experts'),
-          hint: t('.descriptions.allow_invite_experts'),
-          disabled: false,
-          extra_class_names: 'fr-toggle--border-bottom')
+            = render Dsfr::ToggleComponent.new(form: f,
+              target: :allow_expert_review,
+              title: t('.titles.allow_invite_experts'),
+              hint: t('.descriptions.allow_invite_experts'),
+              disabled: false,
+              extra_class_names: 'fr-toggle--border-bottom')
 
-    - if @procedure.allow_expert_review?
-      %li
-        = form_for @procedure,
-          method: :put,
-          url: allow_expert_messaging_admin_procedure_path(@procedure),
-          data: { controller: 'autosubmit', turbo: 'true' } do |f|
+        - if @procedure.allow_expert_review?
+          %li
+            = form_for @procedure,
+              method: :put,
+              url: allow_expert_messaging_admin_procedure_path(@procedure),
+              data: { controller: 'autosubmit', turbo: 'true' } do |f|
 
-          = render Dsfr::ToggleComponent.new(form: f,
-            target: :allow_expert_messaging,
-            title: t('.titles.allow_expert_messaging'),
-            hint: t('.descriptions.allow_expert_messaging'),
-            disabled: false,
-            extra_class_names: 'fr-toggle--border-bottom')
+              = render Dsfr::ToggleComponent.new(form: f,
+                target: :allow_expert_messaging,
+                title: t('.titles.allow_expert_messaging'),
+                hint: t('.descriptions.allow_expert_messaging'),
+                disabled: false,
+                extra_class_names: 'fr-toggle--border-bottom')
 
-      %li
-        = form_for @procedure,
-          method: :put,
-          url: experts_require_administrateur_invitation_admin_procedure_path(@procedure),
-          data: { controller: 'autosubmit', turbo: 'true' } do |f|
+          %li
+            = form_for @procedure,
+              method: :put,
+              url: experts_require_administrateur_invitation_admin_procedure_path(@procedure),
+              data: { controller: 'autosubmit', turbo: 'true' } do |f|
 
-          = render Dsfr::ToggleComponent.new(form: f,
-            target: :experts_require_administrateur_invitation,
-            title: t('.titles.manage_procedure_experts'),
-            hint: t('.descriptions.manage_procedure_experts'),
-            disabled: false)
+              = render Dsfr::ToggleComponent.new(form: f,
+                target: :experts_require_administrateur_invitation,
+                title: t('.titles.manage_procedure_experts'),
+                hint: t('.descriptions.manage_procedure_experts'),
+                disabled: false)
 
 
-      - if @procedure.experts_require_administrateur_invitation?
-        .card
-          = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: admin_procedure_experts_path(@procedure), title: "Avant d'ajouter l'email à la liste d'expert prédéfinie, veuillez confirmer" )
-          = form_for :experts_procedure,
-            url: admin_procedure_experts_path(@procedure),
-            html: { class: 'form' } do |f|
+  - if @procedure.experts_require_administrateur_invitation?
+    .card
+      = render Procedure::InvitationWithTypoComponent.new(maybe_typos: @maybe_typos, url: admin_procedure_experts_path(@procedure), title: "Avant d'ajouter l'email à la liste d'expert prédéfinie, veuillez confirmer" )
+      = form_for :experts_procedure,
+        url: admin_procedure_experts_path(@procedure),
+        html: { class: 'form' } do |f|
 
-            .instructeur-wrapper
-              %p#experts-emails Entrez les adresses emails des experts que vous souhaitez ajouter à la liste prédéfinie
-              %react-fragment
-                = render ReactComponent.new "ComboBox/MultiComboBox",
-                  id: 'emails',
-                  name: 'emails[]',
-                  allows_custom_value: true,
-                  'aria-label': 'Emails',
-                  'aria-describedby': 'experts-emails'
+        .instructeur-wrapper
+          %p#experts-emails Entrez les adresses emails des experts que vous souhaitez ajouter à la liste prédéfinie
+          %react-fragment
+            = render ReactComponent.new "ComboBox/MultiComboBox",
+              id: 'emails',
+              name: 'emails[]',
+              allows_custom_value: true,
+              'aria-label': 'Emails',
+              'aria-describedby': 'experts-emails'
 
-              = f.submit 'Ajouter à la liste', class: 'fr-btn'
+          = f.submit 'Ajouter à la liste', class: 'fr-btn'
 
-    - if @experts_procedure.present?
-      .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-3w
-        %table
-          %thead
+  - if @experts_procedure.present?
+    .fr-table.fr-table--no-caption.fr-table--layout-fixed.fr-mt-3w
+      %table
+        %thead
+          %tr
+            %th Liste des experts
+            %th Nombre d’avis
+            - if @procedure.experts_require_administrateur_invitation
+              %th Notifier des décisions sur les dossiers
+            - if @procedure.experts_require_administrateur_invitation
+              %th Action
+        %tbody
+          - @experts_procedure.each do |expert_procedure|
             %tr
-              %th Liste des experts
-              %th Nombre d’avis
+              %td
+                = dsfr_icon('fr-icon-user-fill')
+                = expert_procedure.expert.email
+              %td.fr-cell--center
+                = expert_procedure.avis.count
               - if @procedure.experts_require_administrateur_invitation
-                %th Notifier des décisions sur les dossiers
+                %td.fr-cell--center
+                  = form_for expert_procedure,
+                    url: admin_procedure_expert_path(id: expert_procedure),
+                    method: :put,
+                    data: { controller: 'autosubmit', turbo: 'true' } do |f|
+                    = render Dsfr::ToggleComponent.new(form: f,
+                      title: "Notifier",
+                      target: :allow_decision_access,
+                    )
               - if @procedure.experts_require_administrateur_invitation
-                %th Action
-          %tbody
-            - @experts_procedure.each do |expert_procedure|
-              %tr
-                %td
-                  = dsfr_icon('fr-icon-user-fill')
-                  = expert_procedure.expert.email
-                %td.text-center
-                  = expert_procedure.avis.count
-                - if @procedure.experts_require_administrateur_invitation
-                  %td.text-center
-                    = form_for expert_procedure,
-                      url: admin_procedure_expert_path(id: expert_procedure),
-                      method: :put,
-                      data: { turbo: true },
-                      html: { class: 'form procedure-form__column--form no-background' } do |f|
-                      %label.toggle-switch{ data: { controller: 'autosubmit' } }
-                        = f.check_box :allow_decision_access, class: 'toggle-switch-checkbox'
-                        %span.toggle-switch-control.round
-                        %span.toggle-switch-label.on
-                        %span.toggle-switch-label.off
-                - if @procedure.experts_require_administrateur_invitation
-                  %td.actions= button_to 'retirer',
-                    admin_procedure_expert_path(id: expert_procedure, procedure: @procedure),
-                    method: :delete,
-                    data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d’avis" },
-                    class: 'fr-btn fr-btn--secondary'
-    - else
-      .blank-tab
-        %h2.empty-text Aucun expert invité pour le moment.
-        %p.empty-text-details Les instructeurs de cette démarche n’ont pas encore fait appel aux experts.
+                %td.actions= button_to 'Retirer',
+                  admin_procedure_expert_path(id: expert_procedure, procedure: @procedure),
+                  method: :delete,
+                  data: { confirm: "Êtes-vous sûr de vouloir révoquer l'expert « #{expert_procedure.expert.email} » de la démarche #{expert_procedure.procedure.libelle} ? Les instructeurs ne pourront plus lui demander d’avis" },
+                  class: 'fr-btn fr-btn--secondary'
+  - else
+    .blank-tab
+      %h2.empty-text Aucun expert invité pour le moment.
+      %p.empty-text-details Les instructeurs de cette démarche n’ont pas encore fait appel aux experts.
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)
