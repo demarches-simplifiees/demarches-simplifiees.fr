@@ -57,7 +57,7 @@ module CreateAvisConcern
     persisted, failed = create_results.partition(&:persisted?)
 
     if persisted.any?
-      dossier.update!(last_avis_updated_at: Time.zone.now)
+      dossier.touch(:last_avis_updated_at)
       sent_emails_addresses = []
       persisted.each do |avis|
         avis.dossier.demander_un_avis!(avis)

@@ -30,8 +30,14 @@ class Champs::PieceJustificativeController < Champs::ChampController
       save_succeed = @champ.save
     end
 
-    @champ.dossier.update(last_champ_updated_at: Time.zone.now.utc) if save_succeed
+    if save_succeed && dossier.brouillon?
+      dossier.touch(:last_champ_updated_at, :last_champ_piece_jointe_updated_at)
+    end
 
     save_succeed
+  end
+
+  def dossier
+    @champ.dossier
   end
 end
