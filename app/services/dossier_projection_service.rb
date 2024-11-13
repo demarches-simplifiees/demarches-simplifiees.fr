@@ -49,7 +49,6 @@ class DossierProjectionService
         { TABLE => c.table, COLUMN => c.column }
       end
     end
-    champ_value = champ_value_formatter(dossiers_ids, fields)
 
     individual_first_name = { TABLE => 'individual', COLUMN => 'prenom' }
     individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
@@ -72,9 +71,8 @@ class DossierProjectionService
             fields
               .filter { |f| f[STABLE_ID] == stable_id }
               .each do |field|
-                column = field[:original_column]
-                field[:id_value_h] = champs.to_h { [_1.dossier_id, column.is_a?(Columns::JSONPathColumn) ? column.value(_1) : champ_value.(_1)] }
-              end
+              field[:id_value_h] = champs.to_h { |c| [c.dossier_id, field[:original_column].value(c)] }
+            end
           end
       when 'self'
         Dossier
@@ -176,30 +174,6 @@ class DossierProjectionService
         dossier_corrections[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
-    end
-  end
-
-  class << self
-    private
-
-    def champ_value_formatter(dossiers_ids, fields)
-      stable_ids = fields.filter { _1[TABLE].in?(['type_de_champ']) }.map { _1[STABLE_ID] }
-
-      revision_ids_by_dossier_ids = Dossier.where(id: dossiers_ids).pluck(:id, :revision_id).to_h
-
-      stable_ids_and_types_de_champ_by_revision_ids = ProcedureRevisionTypeDeChamp.includes(:type_de_champ)
-        .where(revision_id: revision_ids_by_dossier_ids.values.uniq, type_de_champ: { stable_id: stable_ids })
-        .map { [_1.revision_id, _1.type_de_champ] }
-        .group_by(&:first)
-        .transform_values { _1.map { |_, type_de_champ| [type_de_champ.stable_id, type_de_champ] }.to_h }
-
-      stable_ids_and_types_de_champ_by_dossier_ids = revision_ids_by_dossier_ids.transform_values { stable_ids_and_types_de_champ_by_revision_ids[_1] }.compact
-
-      -> (champ) {
-        type_de_champ = stable_ids_and_types_de_champ_by_dossier_ids
-          .fetch(champ.dossier_id, {})[champ.stable_id]
-        type_de_champ&.champ_value(champ)
-      }
     end
   end
 end
