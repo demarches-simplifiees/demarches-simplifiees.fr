@@ -17,10 +17,28 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
     )
   end
 
-  def filtered_ids(dossiers, values)
-    dossiers.with_type_de_champ(@column)
-      .filter_ilike(:champs, :value, values)
-      .ids
+  def filtered_ids(dossiers, search_terms)
+    relation = dossiers.with_type_de_champ(@stable_id)
+
+    case path
+    when :value
+      search_terms.flat_map do |search_term|
+        # when looking for "section 1 / option A",
+        # the value must contain both "section 1" and "option A"
+        primary, *secondary = search_term.split(%r{[[:space:]]*/[[:space:]]*})
+        safe_terms = [primary, *secondary].map { "%#{safe_like(_1)}%" }
+
+        relation.where("champs.value ILIKE ALL (ARRAY[?])", safe_terms).ids
+      end.uniq
+    when :primary
+      primary_terms = search_terms.map { |term| %{["#{safe_like(term)}","%"]} }
+
+      relation.where("champs.value ILIKE ANY (array[?])", primary_terms).ids
+    when :secondary
+      secondary_terms = search_terms.map { |term| %{["%","#{safe_like(term)}"]} }
+
+      relation.where("champs.value ILIKE ANY (array[?])", secondary_terms).ids
+    end
   end
 
   private
@@ -44,4 +62,6 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
   rescue JSON::ParserError
     []
   end
+
+  def safe_like(q) = ActiveRecord::Base.sanitize_sql_like(q)
 end
