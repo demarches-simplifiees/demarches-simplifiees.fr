@@ -13,7 +13,7 @@
             %h3.card-title
               = link_to procedure.libelle, admin_procedure_path(procedure)
 
-            = link_to commencer_url(procedure.canonical_path), commencer_url(procedure.canonical_path), class: 'fr-link fr-mb-1w'
+            = link_to commencer_url(procedure.path), commencer_url(procedure.path), class: 'fr-link fr-mb-1w'
 
             %p.fr-mt-1w.fr-mb-1w
               = t('administrateurs.procedures.created_at')
