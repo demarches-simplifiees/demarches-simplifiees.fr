@@ -28,123 +28,12 @@ describe DossierRebaseConcern do
         dossier
       end
 
-      context 'with added non mandatory type de champ' do
+      context 'with added type de champ' do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text",
-            mandatory: false
+            libelle: "Un champ text"
           })
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be true' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_truthy
-        end
-      end
-
-      context 'with added mandatory type de champ' do
-        before do
-          procedure.draft_revision.add_type_de_champ({
-            type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text",
-            mandatory: true
-          })
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be false' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
-        end
-      end
-
-      context 'with type de champ made optional' do
-        before do
-          procedure.draft_revision.find_and_ensure_exclusive_use(mandatory_type_de_champ.stable_id).update(mandatory: false)
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be true' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_truthy
-        end
-      end
-
-      context 'with type de champ made mandatory' do
-        before do
-          procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(mandatory: true)
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be false' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
-        end
-
-        context 'with a value' do
-          before do
-            dossier.champs.find_by(stable_id: type_de_champ.stable_id).update(value: 'a value')
-          end
-
-          it 'should be true' do
-            expect(dossier.pending_changes).not_to be_empty
-            expect(dossier.can_rebase?).to be_truthy
-          end
-        end
-      end
-
-      context 'with type de champ change type' do
-        context 'type de champ public' do
-          before do
-            procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(type_champ: :checkbox)
-            procedure.publish_revision!
-            dossier.reload
-          end
-
-          it 'should be false' do
-            expect(dossier.pending_changes).not_to be_empty
-            expect(dossier.can_rebase?).to be_falsey
-          end
-        end
-
-        context 'type de champ private' do
-          before do
-            procedure.draft_revision.find_and_ensure_exclusive_use(private_type_de_champ.stable_id).update(type_champ: :checkbox)
-            procedure.publish_revision!
-            dossier.reload
-          end
-
-          it 'should be true' do
-            expect(dossier.pending_changes).not_to be_empty
-            expect(dossier.can_rebase?).to be_truthy
-          end
-        end
-      end
-
-      context 'with type de champ regexp and regexp change' do
-        let(:procedure) { create(:procedure, types_de_champ_public: [{ mandatory: true }, { type: :expression_reguliere, mandatory: false }], types_de_champ_private: [{}]) }
-
-        before do
-          procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(expression_reguliere: /\d+/)
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be false' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
-        end
-      end
-
-      context 'with removed type de champ' do
-        before do
-          procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
           procedure.publish_revision!
           dossier.reload
         end
@@ -165,12 +54,11 @@ describe DossierRebaseConcern do
         dossier
       end
 
-      context 'with added non mandatory type de champ' do
+      context 'with added type de champ' do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text",
-            mandatory: false
+            libelle: "Un champ text"
           })
           procedure.publish_revision!
           dossier.reload
@@ -181,88 +69,30 @@ describe DossierRebaseConcern do
           expect(dossier.can_rebase?).to be_truthy
         end
       end
+    end
 
-      context 'with added mandatory type de champ' do
+    context 'accepte' do
+      let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
+
+      before do
+        procedure.publish!
+        procedure.reload
+        dossier
+      end
+
+      context 'with added type de champ' do
         before do
           procedure.draft_revision.add_type_de_champ({
             type_champ: TypeDeChamp.type_champs.fetch(:text),
-            libelle: "Un champ text",
-            mandatory: true
+            libelle: "Un champ text"
           })
           procedure.publish_revision!
           dossier.reload
         end
 
-        it 'should be false' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_falsey
-        end
-      end
-
-      context 'with type de champ made optional' do
-        before do
-          procedure.draft_revision.find_and_ensure_exclusive_use(mandatory_type_de_champ.stable_id).update(mandatory: false)
-          procedure.publish_revision!
-          dossier.reload
-        end
-
         it 'should be true' do
           expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_truthy
-        end
-      end
-
-      context 'with type de champ made mandatory' do
-        before do
-          procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(mandatory: true)
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be false' do
-          expect(dossier.pending_changes).not_to be_empty
           expect(dossier.can_rebase?).to be_falsey
-        end
-      end
-
-      context 'with type de champ change type' do
-        context 'type de champ public' do
-          before do
-            procedure.draft_revision.find_and_ensure_exclusive_use(type_de_champ.stable_id).update(type_champ: :checkbox)
-            procedure.publish_revision!
-            dossier.reload
-          end
-
-          it 'should be false' do
-            expect(dossier.pending_changes).not_to be_empty
-            expect(dossier.can_rebase?).to be_falsey
-          end
-        end
-
-        context 'type de champ private' do
-          before do
-            procedure.draft_revision.find_and_ensure_exclusive_use(private_type_de_champ.stable_id).update(type_champ: :checkbox)
-            procedure.publish_revision!
-            dossier.reload
-          end
-
-          it 'should be true' do
-            expect(dossier.pending_changes).not_to be_empty
-            expect(dossier.can_rebase?).to be_truthy
-          end
-        end
-      end
-
-      context 'with removed type de champ' do
-        before do
-          procedure.draft_revision.remove_type_de_champ(type_de_champ.stable_id)
-          procedure.publish_revision!
-          dossier.reload
-        end
-
-        it 'should be true' do
-          expect(dossier.pending_changes).not_to be_empty
-          expect(dossier.can_rebase?).to be_truthy
         end
       end
     end
@@ -396,8 +226,8 @@ describe DossierRebaseConcern do
       end
     end
 
-    context 'force rebase en construction' do
-      subject { dossier.rebase!(force: true) }
+    context 'rebase en construction' do
+      subject { dossier.rebase! }
 
       context 'procedure not published' do
         let(:procedure) { create(:procedure, :draft, types_de_champ_public:, types_de_champ_private:) }
