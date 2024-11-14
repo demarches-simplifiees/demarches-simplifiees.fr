@@ -1,12 +1,10 @@
 %fieldset{ class: class_names("fr-fieldset": true, "fr-fieldset--error": error?), 'aria-labelledby': 'radio-hint-element-legend radio-hint-element-messages', role: error? ? :group : nil }
   %legend.fr-fieldset__legend--regular.fr-fieldset__legend
     = content
-  - index = 0
   - each_button do |label, value, hint, tooltip, **button_options|
-    - index += 1
     .fr-fieldset__element
       .fr-radio-group
-        = @form.radio_button @target, value, **button_options
+        = @form.radio_button @target, value, **button_options.except(:index)
         = @form.label @target, value: value, class: 'fr-label' do
           - capture do
             = label
@@ -16,9 +14,9 @@
             - if hint.present?
               .flex
                 .fr-hint-text= hint
-                - if tooltip.present?
-                  .fr-icon-information-line.fr-icon--sm.ml-1{ 'aria-describedby': "tooltip-#{index}" }
-                  %span.fr-tooltip.fr-placement{ id: "tooltip-#{index}", role: 'tooltip', 'aria-hidden': 'true' }= tooltip
+                - if tooltip.present? && button_options[:index]
+                  .fr-icon-information-line.fr-icon--sm.ml-1{ 'aria-describedby': "tooltip-#{button_options[:index]}" }
+                  %span.fr-tooltip.fr-placement{ id: "tooltip-#{button_options[:index]}", role: 'tooltip', 'aria-hidden': 'true' }= tooltip
 
   .fr-messages-group{ 'aria-live': 'assertive' }
     - if error?
