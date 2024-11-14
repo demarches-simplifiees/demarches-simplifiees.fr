@@ -32,6 +32,7 @@ class Column
   def ==(other) = h_id == other.h_id # using h_id instead of id to avoid inversion of keys
 
   def notifications? = [table, column] == ['notifications', 'notifications']
+  def dossier_id? = [table, column] == ['self', 'id']
   def dossier_state? = [table, column] == ['self', 'state']
   def groupe_instructeur? = [table, column] == ['groupe_instructeur', 'id']
   def dossier_labels? = [table, column] == ['dossier_labels', 'label_id']

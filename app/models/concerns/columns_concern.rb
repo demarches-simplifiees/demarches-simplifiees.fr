@@ -51,7 +51,7 @@ module ColumnsConcern
       columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
-    def dossier_id_column = dossier_col(table: 'self', column: 'id', type: :number)
+    def dossier_id_column = dossier_col(table: 'self', column: 'id', type: :integer)
 
     def dossier_state_column
       options_for_select = I18n.t('instructeurs.dossiers.filterable_state').map(&:to_a).map(&:reverse)
