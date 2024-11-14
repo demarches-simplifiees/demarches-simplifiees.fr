@@ -11,7 +11,11 @@ module ProcedurePublishConcern
 
       other_procedure = other_procedure_with_path(path)
       if other_procedure.present? && administrateur.owns?(other_procedure)
+        other_procedure.save!
+
         other_procedure.unpublish!
+        claim_path!(administrateur, path)
+
         publish!(other_procedure.canonical_procedure || other_procedure)
       else
         publish!
