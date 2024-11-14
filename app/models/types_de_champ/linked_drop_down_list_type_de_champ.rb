@@ -3,7 +3,6 @@
 class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   PRIMARY_PATTERN = /^--(.*)--$/
 
-  delegate :drop_down_options, to: :@type_de_champ
   validate :check_presence_of_primary_options
 
   def libelles_for_export
@@ -112,9 +111,17 @@ class TypesDeChamp::LinkedDropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBas
     options.unshift('')
   end
 
-  def primary_value(champ) = unpack_value(champ.value, 0)
-  def secondary_value(champ) = unpack_value(champ.value, 1)
-  def unpack_value(value, index) = value&.then { JSON.parse(_1)[index] rescue nil }
+  def primary_value(champ) = unpack_value(champ.value, 0, primary_options)
+  def secondary_value(champ) = unpack_value(champ.value, 1, secondary_options.values.flatten)
+
+  def unpack_value(value, index, options)
+    value&.then do
+      unpacked_value = JSON.parse(_1)[index]
+      unpacked_value if options.include?(unpacked_value)
+    rescue
+      nil
+    end
+  end
 
   def has_secondary_options_for_primary?(champ)
     primary_value(champ).present? && secondary_options[primary_value(champ)]&.any?(&:present?)

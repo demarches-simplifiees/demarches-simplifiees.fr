@@ -4,18 +4,18 @@ class Champs::LinkedDropDownListChamp < Champ
   delegate :primary_options, :secondary_options, to: :type_de_champ
 
   def primary_value
-    if value.present?
-      JSON.parse(value)[0]
-    else
+    if type_de_champ.champ_blank?(self)
       ''
+    else
+      JSON.parse(value)[0]
     end
   end
 
   def secondary_value
-    if value.present?
-      JSON.parse(value)[1]
-    else
+    if type_de_champ.champ_blank?(self)
       ''
+    else
+      JSON.parse(value)[1]
     end
   end
 
@@ -45,14 +45,6 @@ class Champs::LinkedDropDownListChamp < Champ
 
   def in?(options)
     options.include?(primary_value) || options.include?(secondary_value)
-  end
-
-  def remove_option(options, touch = false)
-    if touch
-      update(value: nil)
-    else
-      update_column(:value, nil)
-    end
   end
 
   private

@@ -77,6 +77,7 @@ describe PiecesJustificativesService do
         expect(export_template).to receive(:attachment_path)
           .with(dossier, second_child_attachments.first, index: 0, row_index: 1, champ: second_champ)
 
+        DossierPreloader.new(dossiers).all
         count = 0
 
         callback = lambda { |*_args| count += 1 }
@@ -84,7 +85,7 @@ describe PiecesJustificativesService do
           subject
         end
 
-        expect(count).to eq(10)
+        expect(count).to eq(0)
       end
     end
   end

@@ -33,15 +33,6 @@ class Champs::MultipleDropDownListChamp < Champ
     (selected_options - options).size != selected_options.size
   end
 
-  def remove_option(options, touch = false)
-    value = (selected_options - options).to_json
-    if touch
-      update(value:)
-    else
-      update_columns(value:)
-    end
-  end
-
   def focusable_input_id
     render_as_checkboxes? ? checkbox_id(drop_down_options.first) : input_id
   end
@@ -78,10 +69,6 @@ class Champs::MultipleDropDownListChamp < Champ
     else
       super(values.to_json)
     end
-  end
-
-  def render?
-    @champ.drop_down_options.any?
   end
 
   private

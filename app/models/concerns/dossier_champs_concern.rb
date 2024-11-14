@@ -6,23 +6,26 @@ module DossierChampsConcern
   def project_champ(type_de_champ, row_id)
     check_valid_row_id?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.nil?
-      type_de_champ.build_champ(dossier: self, row_id:, updated_at: depose_at || created_at)
+    if champ.nil? || !champ.is_type?(type_de_champ.type_champ)
+      value = type_de_champ.champ_blank?(champ) ? nil : champ.value
+      updated_at = champ&.updated_at || depose_at || created_at
+      rebased_at = champ&.rebased_at
+      type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:)
     else
       champ
     end
   end
 
   def project_champs_public
-    revision.types_de_champ_public.map { project_champ(_1, nil) }
+    @project_champs_public ||= revision.types_de_champ_public.map { project_champ(_1, nil) }
   end
 
   def project_champs_private
-    revision.types_de_champ_private.map { project_champ(_1, nil) }
+    @project_champs_private ||= revision.types_de_champ_private.map { project_champ(_1, nil) }
   end
 
   def filled_champs_public
-    project_champs_public.flat_map do |champ|
+    @filled_champs_public ||= project_champs_public.flat_map do |champ|
       if champ.repetition?
         champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
       elsif champ.persisted? && champ.fillable?
@@ -34,7 +37,7 @@ module DossierChampsConcern
   end
 
   def filled_champs_private
-    project_champs_private.flat_map do |champ|
+    @filled_champs_private ||= project_champs_private.flat_map do |champ|
       if champ.repetition?
         champ.rows.flatten.filter { _1.persisted? && _1.fillable? }
       elsif champ.persisted? && champ.fillable?
@@ -129,8 +132,7 @@ module DossierChampsConcern
     row_id = ULID.generate
     types_de_champ = revision.children_of(type_de_champ)
     self.champs += types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
-    champs.reload if persisted?
-    @champs_by_public_id = nil
+    reload_champs_cache
     row_id
   end
 
@@ -138,14 +140,11 @@ module DossierChampsConcern
     raise "Can't remove row from non-repetition type de champ" if !type_de_champ.repetition?
 
     champs.where(row_id:).destroy_all
-    champs.reload if persisted?
-    @champs_by_public_id = nil
+    reload_champs_cache
   end
 
   def reload
-    super.tap do
-      @champs_by_public_id = nil
-    end
+    super.tap { reset_champs_cache }
   end
 
   private
@@ -156,7 +155,7 @@ module DossierChampsConcern
 
   def filled_champ(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
-    if champ.blank? || !champ.visible?
+    if type_de_champ.champ_blank?(champ) || !champ.visible?
       nil
     else
       champ
@@ -188,7 +187,7 @@ module DossierChampsConcern
       attributes[:data] = nil
     end
 
-    @champs_by_public_id = nil
+    reset_champs_cache
 
     [champ, attributes]
   end
@@ -201,5 +200,18 @@ module DossierChampsConcern
     elsif row_id.present? && type_de_champ.in_revision?(revision)
       raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} can not have a row_id because it is not part of a repetition"
     end
+  end
+
+  def reset_champs_cache
+    @champs_by_public_id = nil
+    @filled_champs_public = nil
+    @filled_champs_private = nil
+    @project_champs_public = nil
+    @project_champs_private = nil
+  end
+
+  def reload_champs_cache
+    champs.reload if persisted?
+    reset_champs_cache
   end
 end

@@ -249,7 +249,7 @@ describe TagsSubstitutionConcern, type: :model do
 
     context 'when the procedure has a linked drop down menus type de champ' do
       let(:type_de_champ) { procedure.draft_revision.types_de_champ.first }
-      let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'libelle' }] }
+      let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'libelle', options: ["--primo--", "secundo"] }] }
       let(:template) { 'tout : --libelle--, primaire : --libelle/primaire--, secondaire : --libelle/secondaire--' }
 
       context 'and the champ has no value' do
@@ -275,7 +275,7 @@ describe TagsSubstitutionConcern, type: :model do
           context 'and the same libelle is used by a header' do
             let(:types_de_champ_public) do
               [
-                { type: :linked_drop_down_list, libelle: 'libelle' },
+                { type: :linked_drop_down_list, libelle: 'libelle', options: ["--primo--", "secundo"] },
                 { type: :header_section, libelle: 'libelle' }
               ]
             end
