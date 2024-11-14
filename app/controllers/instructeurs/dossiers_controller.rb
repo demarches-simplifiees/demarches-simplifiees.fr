@@ -275,7 +275,9 @@ module Instructeurs
     end
 
     def update_annotations
-      dossier_with_champs.update_champs_attributes(remove_changes_forbidden_by_visa, :private, updated_by: current_user.email)
+      dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private, updated_by: current_user.email)
+      remove_changes_forbidden_by_visa
+      # dossier_with_champs.update_champs_attributes(remove_changes_forbidden_by_visa, :private)
       if dossier.champs.any?(&:changed_for_autosave?)
         dossier.last_champ_private_updated_at = Time.zone.now
       end
@@ -430,7 +432,9 @@ module Instructeurs
     end
 
     def champs_private_attributes_params
-      champs_private_params.fetch(:champs_private_attributes)
+      r = champs_private_params.fetch(:champs_private_attributes)
+      Rails.logger.info("VISAFIX champ_private_attributes_params #{r}")
+      r
     end
 
     def remove_changes_forbidden_by_visa
@@ -439,6 +443,7 @@ module Instructeurs
       private_champs = dossier.champs_private.joins(:type_de_champ)
       return champs_private_attributes_params unless private_champs.where(type_de_champ: { type_champ: visa_type }).where.not(value: ["", nil]).any?
 
+      Rails.logger.info("VISAFIX Find if annotation modification #{params[:dossier][:champs_private_attributes]} is not forbidden by a checked visa")
       # retrieve champ ordered like display (position of (parent | self), line, position)
       order = Arel.sql("COALESCE(revision_types_de_champ_types_de_champ.position, procedure_revision_types_de_champ.position), \
                        COALESCE(champs.row_id,' '), procedure_revision_types_de_champ.position")
@@ -448,12 +453,13 @@ module Instructeurs
         .where(procedure_revision_types_de_champ: { revision_id: dossier.revision_id })
         .left_joins(parent: { type_de_champ: :revision_types_de_champ })
         .where(revision_types_de_champ_types_de_champ: { revision_id: [dossier.revision_id, nil] })
-        .order(order)
+        .order(order).to_a
 
       params[:dossier][:champs_private_attributes]&.reject! do |k, _v|
         # find modified champ
         champ_index = ordered_champs.index { _1.public_id == k }
         next unless champ_index
+        Rails.logger.info("VISAFIX Found champ #{ordered_champs[champ_index].id} for public_id #{k}")
 
         # check following checked visa or header section level 1
         row_id = ordered_champs[champ_index].row_id
@@ -466,6 +472,7 @@ module Instructeurs
         Rails.logger.warn("Annulation sauvegarde de l'annotation '#{ordered_champs[champ_index].libelle}' sur dossier #{dossier_with_champs.id} car le visa '#{following_champ.libelle}' est validé.") if to_reject
         to_reject
       end
+      Rails.logger.info("VISAFIX Modifications finales #{params[:dossier][:champs_private_attributes]}")
       champs_private_attributes_params
     end
 
