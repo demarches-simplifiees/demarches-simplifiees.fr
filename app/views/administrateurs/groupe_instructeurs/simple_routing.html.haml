@@ -2,7 +2,7 @@
   locals: { steps: [[t('.procedures'), admin_procedures_path],
                     [@procedure.libelle.truncate_words(10), admin_procedure_path(@procedure)],
                     ['Groupes', admin_procedure_groupe_instructeurs_path(@procedure)],
-                    ['Routage à partir d’un champ']] }
+                    ['Configuration automatique du routage']] }
 
 .container
   .fr-grid-row
@@ -16,14 +16,21 @@
     .fr-col
       - content_for(:title, 'Routage')
       %h1 Configuration du routage
-      %h2 Routage à partir d’un champ
+      %h2 Configuration automatique
       .fr-alert.fr-alert--info.fr-mb-3w{ aria: { hidden: true } }
         %p
-          Vous trouverez ci-dessous une <strong>suggestion</strong> (non exhaustive) de champs issus de votre formulaire. Les groupes d’instructeurs seront créés sur la base du champ que vous aurez sélectionné.
-          %br
-          Vous pourrez ensuite affiner votre routage en ajoutant des groupes sur la base de l’ensemble des <strong>champs « routables »</strong> de votre formulaire, soit des champs de type :
+        Vous trouverez ci-dessous une liste de champs de votre formulaire à partir desquels configurer le routage de façon <strong>automatique</strong>. Les groupes d’instructeurs seront créés à partir des valeurs possibles du champ.
+        Seuls les champs suivants sont ouverts à ce mode de configuration :
         %ul
-          - TypeDeChamp.humanized_conditionable_types_by_category.each do |category|
+          - TypeDeChamp.humanized_simple_routable_types_by_category.each do |category|
+            %li
+              = category.join(', ')
+
+        %p
+          Si besoin, vous pourrez ensuite affiner votre configuration de façon <strong>manuelle</strong>, également à partir des champs suivants :
+
+        %ul
+          - TypeDeChamp.humanized_custom_routable_types_by_category.each do |category|
             %li
               = category.join(', ')
 

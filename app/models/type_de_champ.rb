@@ -529,6 +529,18 @@ class TypeDeChamp < ApplicationRecord
       .map { |_, v| v.map { "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »" } }
   end
 
+  def self.humanized_simple_routable_types_by_category
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP_BY_CATEGORY
+      .map { |_, v| v.filter_map { "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »" if _1.to_s.in?(SIMPLE_ROUTABLE_TYPES) } }
+      .reject(&:empty?)
+  end
+
+  def self.humanized_custom_routable_types_by_category
+    Logic::ChampValue::MANAGED_TYPE_DE_CHAMP_BY_CATEGORY
+      .map { |_, v| v.filter_map { "« #{I18n.t(_1, scope: [:activerecord, :attributes, :type_de_champ, :type_champs])} »" if !_1.to_s.in?(SIMPLE_ROUTABLE_TYPES) } }
+      .reject(&:empty?)
+  end
+
   def invalid_regexp?
     self.errors.delete(:expression_reguliere)
     self.errors.delete(:expression_reguliere_exemple_text)

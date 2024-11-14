@@ -55,14 +55,14 @@
     url: wizard_admin_procedure_groupe_instructeurs_path(@procedure) do |f|
 
     %h1 Configuration du routage
-    %h2 Choix du type de routage
+    %h2 Choix du type de configuration
 
     .card.fr-pb-0{ data: { 'action': "click->enable-submit-if-checked#click" } }
-      %p.fr-mb-0 Routage
+      %p.fr-mb-0 Configuration
       = render Dsfr::RadioButtonListComponent.new(form: f,
         target: :state,
-        buttons: [ { label: 'À partir d’un champ', value: 'routage_simple', hint: 'crée les groupes en fonction d’un champ du formulaire' } ,
-          { label: 'Avancé', value: 'custom_routing', hint: 'libre à vous de créer et de configurer les groupes' }])
+        buttons: [ { label: 'Automatique', value: 'routage_simple', hint: 'crée les groupes automatiquement à partir des valeurs possibles d’un champ du formulaire usager' } ,
+          { label: 'Manuelle', value: 'custom_routing', hint: 'libre à vous de créer et de configurer les groupes en utilisant les champs « routables » du formulaire usager' }])
 
 
     %ul.fr-btns-group.fr-btns-group--inline-sm

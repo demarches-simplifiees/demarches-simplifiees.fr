@@ -879,7 +879,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Choix du type de routage')
+        expect(response.body).to include('Choix du type de configuration')
         expect(procedure.reload.routing_enabled).to be_falsey
       end
     end
