@@ -5,12 +5,18 @@ module DossierChampsConcern
 
   def project_champ(type_de_champ, row_id)
     check_valid_row_id_on_read?(type_de_champ, row_id)
-    champ = champs_by_public_id[type_de_champ.public_id(row_id)]
+    public_id = type_de_champ.public_id(row_id)
+    champ = champs_by_public_id[public_id]
     if champ.nil? || !champ.is_type?(type_de_champ.type_champ)
       value = type_de_champ.champ_blank?(champ) ? nil : champ.value
       updated_at = champ&.updated_at || depose_at || created_at
       rebased_at = champ&.rebased_at
-      type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:)
+      champ = type_de_champ.build_champ(dossier: self, row_id:, updated_at:, rebased_at:, value:)
+      # FIXME we need this untill we make views not create new projections
+      errors
+        .filter_map { champ_error_for_public_id(_1, public_id) }
+        .each { champ.errors.import(_1) }
+      champ
     else
       champ
     end
@@ -178,6 +184,13 @@ module DossierChampsConcern
   end
 
   private
+
+  def champ_error_for_public_id(error, public_id)
+    return if !error.is_a? ActiveModel::NestedError
+    return if !error.inner_error.base.is_a? Champ
+    return if error.inner_error.base.public_id != public_id
+    error.inner_error
+  end
 
   def champs_by_public_id
     @champs_by_public_id ||= champs_in_revision.index_by(&:public_id)

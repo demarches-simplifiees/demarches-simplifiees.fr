@@ -254,6 +254,12 @@ module Users
     def modifier
       @dossier = dossier_with_champs
       @dossier_for_editing = dossier.owner_editing_fork
+
+      dossier.validate(:champs_public_value)
+      dossier.check_mandatory_and_visible_champs
+
+      @dossier_for_editing.validate(:champs_public_value)
+      @dossier_for_editing.check_mandatory_and_visible_champs
     end
 
     def submit_en_construction
