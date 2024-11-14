@@ -13,8 +13,8 @@ fr:
           other: "%{count} %{entry_name}"
   views:
     pagination:
-      first: "&laquo; Premier"
-      last: Dernier &raquo;
-      next: Suivant &rsaquo;
-      previous: "&lsaquo; Précédent"
-      truncate: "&hellip;"
+      first: 'Premier'
+      last: Dernier
+      next: Suivant
+      previous: 'Précédent'
+      truncate: '&hellip;'
