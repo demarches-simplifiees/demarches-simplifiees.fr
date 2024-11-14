@@ -39,8 +39,12 @@ fr:
       dematerialisation:
         header: Dématérialisation
         title_1: Télécharger le formulaire PDF
-        title_2: Trouver une maison France Services
-        link: "https://www.transformation.gouv.fr/france-services"
-        alt: France services
       support:
         header: Être accompagné dans votre démarche
+      support_links:
+        france_service:
+          title: Trouver une maison France Services
+          url: 'https://www.transformation.gouv.fr/france-services'
+        carte_inclusion:
+          title: Carte des lieux d‘inclusion numérique
+          url: 'https://cartographie.societenumerique.gouv.fr/'
