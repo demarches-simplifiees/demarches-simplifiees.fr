@@ -44,7 +44,7 @@ describe ProcedureExportService do
     end
 
     describe 'Dossiers sheet' do
-      context 'multiple columns' do
+      context 'with multiple columns' do
         let(:exported_columns) do
           [
             ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'Date du dernier évènement')),
@@ -72,7 +72,7 @@ describe ProcedureExportService do
         end
       end
 
-      context 'with a procedure having multiple groupe instructeur' do
+      context 'with multiple groupe instructeur' do
         let(:exported_columns) { [ExportedColumn.new(libelle: 'Groupe instructeur', column: procedure.find_column(label: 'Groupe instructeur'))] }
         let(:types_de_champ_public) { [] }
 
@@ -87,7 +87,7 @@ describe ProcedureExportService do
         end
       end
 
-      context 'with a dossier having multiple pjs' do
+      context 'with multiple pjs' do
         let(:types_de_champ_public) { [{ type: :piece_justificative, libelle: "PJ" }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'PJ', column: procedure.find_column(label: 'PJ'))] }
         before do
@@ -100,38 +100,46 @@ describe ProcedureExportService do
         it { expect(dossiers_sheet.data.last.last).to eq "toto.txt, toto.txt" }
       end
 
-      context 'with a dossier TypeDeChamp::MutlipleDropDownList' do
+      context 'with TypeDeChamp::MutlipleDropDownListTypeDeChamp' do
         let(:types_de_champ_public) { [{ type: :multiple_drop_down_list, libelle: "multiple_drop_down_list", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'multiple_drop_down_list'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq "val1, val2" }
       end
 
-      context 'with a dossier TypeDeChamp:YesNo' do
+      context 'with TypeDeChamp:YesNoTypeDeChamp' do
         let(:types_de_champ_public) { [{ type: :yes_no, libelle: "yes_no", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'yes_no', column: procedure.find_column(label: 'yes_no'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq true }
       end
 
-      context 'with a dossier TypeDeChamp:Checkbox' do
+      context 'with TypeDeChamp:CheckboxTypeDeChamp' do
         let(:types_de_champ_public) { [{ type: :checkbox, libelle: "checkbox", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'checkbox', column: procedure.find_column(label: 'checkbox'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq true }
       end
 
-      context 'with a dossier TypeDeChamp:DecimalNumber' do
+      context 'with TypeDeChamp:DecimalNumberTypeDeChamp' do
         let(:types_de_champ_public) { [{ type: :decimal_number, libelle: "decimal", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'decimal', column: procedure.find_column(label: 'decimal'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq 42.1 }
       end
-      context 'with a dossier TypeDeChamp:IntegerNumber' do
+
+      context 'with TypeDeChamp:IntegerNumberTypeDeChamp' do
         let(:types_de_champ_public) { [{ type: :integer_number, libelle: "integer", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'integer', column: procedure.find_column(label: 'integer'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq 42.0 }
+      end
+
+      context 'with having TypesDeChamp::LinkedDropDownListTypeDeChamp' do
+        let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: "linked_drop_down_list", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'linked_drop_down_list', column: procedure.find_column(label: 'linked_drop_down_list'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to eq "primary / secondary" }
       end
     end
 
