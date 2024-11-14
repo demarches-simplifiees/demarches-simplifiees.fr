@@ -329,7 +329,6 @@ module Administrateurs
 
     def publish
       @procedure.assign_attributes(publish_params)
-      @procedure.add_procedure_path(publish_params[:path])
 
       @procedure.publish_or_reopen!(current_administrateur)
 
