@@ -135,11 +135,38 @@ describe ProcedureExportService do
         it { expect(dossiers_sheet.data.last.last).to eq 42.0 }
       end
 
-      context 'with having TypesDeChamp::LinkedDropDownListTypeDeChamp' do
+      context 'with TypesDeChamp::LinkedDropDownListTypeDeChamp' do
         let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: "linked_drop_down_list", mandatory: true }] }
         let(:exported_columns) { [ExportedColumn.new(libelle: 'linked_drop_down_list', column: procedure.find_column(label: 'linked_drop_down_list'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq "primary / secondary" }
+      end
+
+      context 'with TypesDeChamp::DateTimeTypeDeChamp' do
+        let(:types_de_champ_public) { [{ type: :datetime, libelle: "datetime", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'datetime', column: procedure.find_column(label: 'datetime'))] }
+        let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+        before { dossier }
+        it do
+          champ_value = Time.zone.parse(dossier.champs.first.value)
+          offset = champ_value.utc_offset
+          sheet_value = Time.zone.at(dossiers_sheet.data.last.last - offset.seconds)
+          expect(sheet_value).to eq(champ_value.round)
+        end
+      end
+
+      context 'with TypesDeChamp::Date' do
+        let(:types_de_champ_public) { [{ type: :date, libelle: "date", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'date', column: procedure.find_column(label: 'date'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to be_an_instance_of(Date) }
+      end
+
+      context 'with DossierColumn as datetime' do
+        let(:types_de_champ_public) { [] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'Date de passage en instruction', column: procedure.find_column(label: 'Date de passage en instruction'))] }
+        before { create(:dossier, :en_instruction, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to be_an_instance_of(Time) }
       end
     end
 

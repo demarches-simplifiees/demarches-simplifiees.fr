@@ -109,7 +109,7 @@ module ColumnsConcern
 
     def dossier_dates_columns
       ['created_at', 'updated_at', 'last_champ_updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| dossier_col(table: 'self', column:, type: :date) }
+        .map { |column| dossier_col(table: 'self', column:, type: :datetime) }
     end
 
     def email_column
