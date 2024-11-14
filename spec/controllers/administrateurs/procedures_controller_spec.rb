@@ -1236,7 +1236,7 @@ describe Administrateurs::ProceduresController, type: :controller do
 
         it {
           expect { perform_request }.not_to change { procedure.reload.updated_at }
-          expect(flash[:alert]).to have_content "« Lien public » n’est pas valide"
+          expect(flash[:alert]).to have_content "Le champ « Lien public » n'est pas valide"
         }
       end
 

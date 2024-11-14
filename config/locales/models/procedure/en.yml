@@ -66,6 +66,15 @@ en:
         aasm_state: Status
         admin_count: Administrators count
         template: Is a template
+
+        id: Id
+        libelle: Libelle
+        published_at: 'Date de publication'
+        aasm_state: 'Statut'
+        admin_count: 'Nb administrateurs'
+        template: 'Est un modèle'
+      procedure/procedure_paths:
+        path: Public link
     errors:
       models:
         procedure:
