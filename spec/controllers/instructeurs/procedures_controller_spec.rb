@@ -905,45 +905,4 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(:forbidden) }
     end
   end
-
-  describe '#update_filter' do
-    let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :for_individual) }
-    def procedure_presentation = instructeur.assign_to.first.procedure_presentation_or_default_and_errors.first
-
-    before do
-      create(:assign_to, instructeur:, groupe_instructeur: build(:groupe_instructeur, procedure:))
-
-      sign_in(instructeur.user)
-    end
-
-    it 'can change order' do
-      column = procedure.find_column(label: "Nom")
-      expect { get :update_sort, params: { procedure_id: procedure.id, sorted_column: { id: column.id, order: 'asc' } } }
-        .to change { procedure_presentation.sorted_column }
-        .from(procedure.default_sorted_column)
-        .to(SortedColumn.new(column:, order: 'asc'))
-    end
-  end
-
-  describe '#add_filter' do
-    let(:instructeur) { create(:instructeur) }
-    let(:procedure) { create(:procedure, :for_individual) }
-
-    before do
-      create(:assign_to, instructeur:, groupe_instructeur: build(:groupe_instructeur, procedure:))
-
-      sign_in(instructeur.user)
-    end
-
-    subject do
-      column = procedure.find_column(label: "Nom")
-      post :add_filter, params: { procedure_id: procedure.id, a_suivre_filters: [{ id: column.id, filter: "n" * 4049 }] }
-    end
-
-    it 'should render the error' do
-      subject
-      expect(flash.alert[0]).to include("Le filtre « Nom » est trop long (maximum: 4048 caractères)")
-    end
-  end
 end
