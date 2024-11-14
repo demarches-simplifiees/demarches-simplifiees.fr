@@ -139,7 +139,8 @@ describe 'Instructing a dossier:', js: true do
 
     expect(page).to have_text('Nous générons cet export.')
 
-    click_on "Voir les exports et modèles d'export"
+    find("button", text: "Téléchargements").click
+    click_on "Liste des exports"
     expect(page).to have_text("Export .csv d’un dossier « à suivre » demandé il y a moins d'une minute")
     expect(page).to have_text("En préparation")
 
