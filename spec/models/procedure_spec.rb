@@ -1342,7 +1342,10 @@ describe Procedure do
     end
 
     context 'when the path has been changed' do
-      before { procedure.path = 'custom_path' }
+      before do
+        procedure.path = 'custom_path'
+        procedure.save!
+      end
 
       it { is_expected.to be_truthy }
     end
@@ -1368,7 +1371,10 @@ describe Procedure do
     subject { procedure.suggested_path }
 
     context 'when the path has been customized' do
-      before { procedure.path = 'custom_path' }
+      before do
+        procedure.path = 'custom_path'
+        procedure.save!
+      end
 
       it { is_expected.to eq 'custom_path' }
     end
