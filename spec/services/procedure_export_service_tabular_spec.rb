@@ -6,7 +6,6 @@ describe ProcedureExportService do
   let(:instructeur) { create(:instructeur) }
   let(:procedure) { create(:procedure, types_de_champ_public:, for_individual:, ask_birthday: true, instructeurs: [instructeur]) }
   let(:service) { ProcedureExportService.new(procedure, procedure.dossiers, instructeur, export_template) }
-  let(:export_template) { create(:export_template, kind:, exported_columns:, groupe_instructeur: procedure.defaut_groupe_instructeur) }
   let(:for_individual) { true }
   let(:types_de_champ_public) do
     [
@@ -25,17 +24,18 @@ describe ProcedureExportService do
   let(:exported_columns) { [] }
 
   describe 'to_xlsx' do
+    let(:kind) { 'xlsx' }
+    let(:export_template) { create(:export_template, kind:, exported_columns:, groupe_instructeur: procedure.defaut_groupe_instructeur) }
+    let(:dossiers_sheet) { subject.sheets.first }
+    let(:etablissements_sheet) { subject.sheets.second }
+    let(:avis_sheet) { subject.sheets.third }
+    let(:repetition_sheet) { subject.sheets.fourth }
+
     subject do
       service
         .to_xlsx
         .open { |f| SimpleXlsxReader.open(f.path) }
     end
-
-    let(:kind) { 'xlsx' }
-    let(:dossiers_sheet) { subject.sheets.first }
-    let(:etablissements_sheet) { subject.sheets.second }
-    let(:avis_sheet) { subject.sheets.third }
-    let(:repetition_sheet) { subject.sheets.fourth }
 
     describe 'sheets' do
       it 'should have a sheet for each record type' do
@@ -105,6 +105,33 @@ describe ProcedureExportService do
         let(:exported_columns) { [ExportedColumn.new(libelle: 'Date du dernier évènement', column: procedure.find_column(label: 'multiple_drop_down_list'))] }
         before { create(:dossier, :with_populated_champs, procedure:) }
         it { expect(dossiers_sheet.data.last.last).to eq "val1, val2" }
+      end
+
+      context 'with a dossier TypeDeChamp:YesNo' do
+        let(:types_de_champ_public) { [{ type: :yes_no, libelle: "yes_no", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'yes_no', column: procedure.find_column(label: 'yes_no'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to eq true }
+      end
+
+      context 'with a dossier TypeDeChamp:Checkbox' do
+        let(:types_de_champ_public) { [{ type: :checkbox, libelle: "checkbox", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'checkbox', column: procedure.find_column(label: 'checkbox'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to eq true }
+      end
+
+      context 'with a dossier TypeDeChamp:DecimalNumber' do
+        let(:types_de_champ_public) { [{ type: :decimal_number, libelle: "decimal", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'decimal', column: procedure.find_column(label: 'decimal'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to eq 42.1 }
+      end
+      context 'with a dossier TypeDeChamp:IntegerNumber' do
+        let(:types_de_champ_public) { [{ type: :integer_number, libelle: "integer", mandatory: true }] }
+        let(:exported_columns) { [ExportedColumn.new(libelle: 'integer', column: procedure.find_column(label: 'integer'))] }
+        before { create(:dossier, :with_populated_champs, procedure:) }
+        it { expect(dossiers_sheet.data.last.last).to eq 42.0 }
       end
     end
 
