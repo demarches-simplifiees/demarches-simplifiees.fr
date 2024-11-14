@@ -157,7 +157,7 @@ describe 'The routing with rules', js: true do
     # the search only show litteraires dossiers
     fill_in 'q', with: scientifique_user.email
     find('.fr-search-bar .fr-btn').click
-    expect(page).to have_text('0 dossier trouvé')
+    expect(page).to have_text('Aucun dossier')
 
     # weird bug, capabary appends text instead of replaces it
     # see https://github.com/redux-form/redux-form/issues/686
@@ -284,7 +284,7 @@ describe 'The routing with rules', js: true do
     expect(dossier.groupe_instructeur_id).to be_nil
     expect(page).to have_text(procedure.service.nom)
 
-    choose(groupe)
+    choose(groupe, allow_label_click: true)
     wait_for_autosave
 
     expect(dossier.reload.groupe_instructeur_id).not_to be_nil
@@ -303,7 +303,7 @@ describe 'The routing with rules', js: true do
     click_on user.dossiers.first.procedure.libelle
     click_on "Modifier mon dossier"
 
-    choose(new_group)
+    choose(new_group, allow_label_click: true)
     wait_for_autosave
 
     expect(page).to have_text(new_group)
