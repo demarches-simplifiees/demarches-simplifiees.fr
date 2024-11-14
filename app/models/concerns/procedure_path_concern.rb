@@ -24,7 +24,7 @@ module ProcedurePathConcern
     end
 
     def sync_procedure_path
-      add_procedure_path(self.path)
+      add_procedure_path(self[:path])
     end
 
     def add_procedure_path(new_path)
@@ -38,9 +38,6 @@ module ProcedurePathConcern
 
       procedure_path = procedure_paths.find { _1.path == new_path } || ProcedurePath.find_or_initialize_by(path: new_path)
 
-      if procedure_path.procedure && procedure_path.procedure != self
-        procedure_path.procedure.update!(path: SecureRandom.uuid)
-      end
       procedure_path.updated_at = Time.zone.now
 
       procedure_paths << procedure_path

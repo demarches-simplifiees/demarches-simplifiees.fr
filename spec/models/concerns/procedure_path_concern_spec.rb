@@ -23,14 +23,6 @@ describe ProcedurePathConcern do
     it "returns the path of the earliest created procedure_path" do
       expect(procedure.canonical_path).to eq("path2")
     end
-
-    context "when the procedure set path1 as main path again" do
-      before { procedure.update(path: "path1") }
-
-      it "returns the path of the earliest created procedure_path" do
-        expect(procedure.canonical_path).to eq("path1")
-      end
-    end
   end
 
   describe "#destroy" do
@@ -60,8 +52,14 @@ describe ProcedurePathConcern do
       expect { subject }.to change { procedure.procedure_paths.count }.from(0).to(1)
     end
 
+    it "generates a random uuid path if none is provided" do
+      procedure.path = nil
+      subject
+      expect(procedure.procedure_paths.first.path).to match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
+    end
+
     context "when the procedure path change" do
-      let(:procedure) { create(:procedure, path: "old-path") }
+      let!(:procedure) { create(:procedure, path: "old-path") }
 
       before do
         procedure.path = "new-path"
@@ -69,21 +67,7 @@ describe ProcedurePathConcern do
 
       it "keep old path" do
         expect { subject }.to change { procedure.procedure_paths.count }.from(1).to(2)
-        expect(procedure.procedure_paths.reload.by_updated_at.pluck(:path)).to eq(["new-path", "old-path"])
-      end
-    end
-
-    context "when there is 2 procedures" do
-      let(:procedure1) { create(:procedure, :published, administrateurs: [create(:administrateur)], path: "proc-1") }
-      let(:procedure2) { create(:procedure, :published, administrateurs: [create(:administrateur)], path: "proc-2") }
-
-      it "should have 2 diff paths" do
-        expect(procedure1.path).not_to eq(procedure2.path)
-      end
-
-      it "should let procedure1 change path to procedure2 path" do
-        expect { procedure1.update!(path: procedure2.path) }.not_to raise_error
-        expect(procedure1.path).to eq("proc-2")
+        expect(procedure.procedure_paths.by_updated_at.pluck(:path)).to eq(["new-path", "old-path"])
       end
     end
   end
