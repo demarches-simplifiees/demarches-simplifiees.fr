@@ -59,7 +59,10 @@ module Instructeurs
           @acls = PiecesJustificativesService.new(user_profile: current_instructeur, export_template: nil).acl_for_dossier_export(dossier.procedure)
           render(template: 'dossiers/show', formats: [:pdf])
         end
-        format.all
+        format.all do
+          dossier.validate(:champs_public_value)
+          dossier.check_mandatory_and_visible_champs
+        end
       end
     end
 

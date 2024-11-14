@@ -9,8 +9,20 @@
     .champ-content.fr-text-mention--grey{ class: content_class }
       - if usager?
         %p.champ-blank= blank
+      - if errors.present?
+        .fr-messages-group
+          %p.fr-message.fr-message--error
+            = "« #{label} » "
+            - errors.each do |error_message|
+              = error_message
 
   - else
 
     .champ-content{ class: content_class }
       = value
+      - if errors.present?
+        .fr-messages-group
+          %p.fr-message.fr-message--error
+            = "« #{label} » "
+            - errors.each do |error_message|
+              = error_message
