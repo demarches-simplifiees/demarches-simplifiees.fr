@@ -175,7 +175,7 @@ def add_single_champ(pdf, champ)
     if champ.etablissement.present?
       add_identite_etablissement(pdf, champ.etablissement)
     end
-  when 'Champs::NumberChamp'
+  when 'Champs::NumberChamp', 'Champs::IntegerNumberChamp', 'Champs::DecimalNumberChamp'
     value = champ.blank? ? 'Non communiqué' : number_with_delimiter(champ.to_s)
     format_in_2_lines(pdf, tdc.libelle, value)
   when 'Champs::AddressChamp'
@@ -200,14 +200,12 @@ def add_single_champ(pdf, champ)
   end
 end
 
-def add_champs(pdf, types_de_champ)
-  types_de_champ.each do |tdc|
-    champ = @dossier.project_champ(tdc, nil)
-    if tdc.repetition?
-      inner_types_de_champ = @dossier.revision.children_of(tdc)
-      champ.row_ids.each do |row_id|
-        inner_types_de_champ.each do |inner_tdc|
-          add_single_champ(pdf, @dossier.project_champ(inner_tdc, row_id))
+def add_champs(pdf, champs)
+  champs.each do |champ|
+    if champ.repetition?
+      champ.rows.each do |row|
+        row.each do |champ|
+          add_single_champ(pdf, champ)
         end
       end
     else
@@ -351,11 +349,11 @@ prawn_document(page_size: "A4") do |pdf|
   end
 
   add_title(pdf, 'Formulaire')
-  add_champs(pdf, @dossier.revision.types_de_champ_public)
+  add_champs(pdf, @dossier.project_champs_public)
 
   if @acls[:include_infos_administration] && @dossier.has_annotations?
     add_title(pdf, "Annotations privées")
-    add_champs(pdf, @dossier.revision.types_de_champ_private)
+    add_champs(pdf, @dossier.project_champs_private)
   end
 
   if @acls[:include_infos_administration] && @dossier.avis.present?
