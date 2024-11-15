@@ -9,7 +9,10 @@ module ProcedurePathConcern
     # validates :path, presence: true, format: { with: /\A[a-z0-9_\-]{3,200}\z/ }, uniqueness: { scope: [:path, :closed_at, :hidden_at, :unpublished_at], case_sensitive: false }
 
     after_initialize :ensure_path_exists
-    before_save :ensure_path_exists
+    before_validation :ensure_path_exists
+
+    validates :procedure_paths, length: { minimum: 1 }
+
     scope :find_with_path, -> (path) { joins(:procedure_paths).where(procedure_paths: { path: }).limit(1) }
 
     def ensure_path_exists
