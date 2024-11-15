@@ -23,6 +23,14 @@ module ProcedurePathConcern
         .find_by(path: path)
     end
 
+    def path
+      canonical_path || super
+    end
+
+    def canonical_path
+      procedure_paths.by_updated_at.first&.path
+    end
+
     def path_available?(path)
       other_procedure_with_path(path).blank?
     end
