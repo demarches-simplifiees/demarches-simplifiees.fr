@@ -1,6 +1,28 @@
 # frozen_string_literal: true
 
 describe ProcedurePathConcern do
+  describe ".find_with_path" do
+    let!(:procedure1) { create(:procedure) }
+
+    let!(:procedure_path1) { procedure1.procedure_paths.create(path: "test-path-1") }
+
+    context "when a procedure with the given path exists" do
+      it "returns the procedure with the matching path" do
+        result = Procedure.find_with_path("test-path-1").first
+
+        expect(result).to eq(procedure1)
+      end
+    end
+
+    context "when no procedure with the given path exists" do
+      it "returns an empty result" do
+        result = Procedure.find_with_path("unknown-path").first
+
+        expect(result).to be_nil
+      end
+    end
+  end
+
   describe '#canonical_path' do
     let!(:procedure) do
       travel_to(3.days.ago) do

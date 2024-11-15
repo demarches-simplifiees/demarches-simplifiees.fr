@@ -1002,8 +1002,8 @@ describe Procedure do
       it 'changes the procedure state to published' do
         expect(procedure.closed_at).to be_nil
         expect(procedure.published_at).to eq(now)
-        expect(Procedure.find_by(path: "example-path")).to eq(procedure)
-        expect(Procedure.find_by(path: "example-path").administrateurs).to eq(procedure.administrateurs)
+        expect(Procedure.find_with_path("example-path").first).to eq(procedure)
+        expect(Procedure.find_with_path("example-path").first.administrateurs).to eq(procedure.administrateurs)
       end
 
       it 'creates a new draft revision' do
