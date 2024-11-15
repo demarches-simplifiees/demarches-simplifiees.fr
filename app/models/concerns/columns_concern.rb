@@ -37,6 +37,7 @@ module ColumnsConcern
       columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
 
       # ensure the columns exist in main list
+      # otherwise, they will be found by the find_column method
       columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
@@ -48,6 +49,7 @@ module ColumnsConcern
       columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
 
       # ensure the columns exist in main list
+      # otherwise, they will be found by the find_column method
       columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
