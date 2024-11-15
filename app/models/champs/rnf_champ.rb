@@ -16,7 +16,7 @@ class Champs::RNFChamp < Champ
   end
 
   def update_with_external_data!(data:)
-    update!(data:, value_json: APIGeoService.parse_rnf_address(data[:address]))
+    update!(data:, value_json: extract_value_json(data:))
   end
 
   def fetch_external_data?
@@ -108,5 +108,12 @@ class Champs::RNFChamp < Champ
     if address.present?
       address['label']
     end
+  end
+
+  private
+
+  def extract_value_json(data:)
+    h = APIGeoService.parse_rnf_address(data[:address])
+    h.merge(title: data[:title])
   end
 end
