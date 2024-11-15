@@ -71,10 +71,11 @@ class Procedure < ApplicationRecord
     brouillon? ? draft_revision : published_revision
   end
 
-  def all_revisions_types_de_champ(parent: nil)
+  def all_revisions_types_de_champ(parent: nil, with_header_section: false)
+    types_de_champ_scope = with_header_section ? TypeDeChamp.with_header_section : TypeDeChamp.fillable
     if brouillon?
       if parent.nil?
-        TypeDeChamp.fillable
+        types_de_champ_scope
           .joins(:revision_types_de_champ)
           .where(revision_types_de_champ: { revision_id: draft_revision_id, parent_id: nil })
           .order(:private, :position)
@@ -82,8 +83,8 @@ class Procedure < ApplicationRecord
         draft_revision.children_of(parent)
       end
     else
-      cache_key = ['all_revisions_types_de_champ', published_revision, parent].compact
-      Rails.cache.fetch(cache_key, expires_in: 1.month) { published_revisions_types_de_champ(parent) }
+      cache_key = ['all_revisions_types_de_champ', published_revision, parent, with_header_section].compact
+      Rails.cache.fetch(cache_key, expires_in: 1.month) { published_revisions_types_de_champ(parent:, with_header_section:) }
     end
   end
 
@@ -875,7 +876,7 @@ class Procedure < ApplicationRecord
     @stable_ids_used_by_routing_rules ||= groupe_instructeurs.flat_map { _1.routing_rule&.sources }.compact.uniq
   end
 
-  def published_revisions_types_de_champ(parent = nil)
+  def published_revisions_types_de_champ(parent: nil, with_header_section: false)
     # all published revisions
     revision_ids = revisions.ids - [draft_revision_id]
     # fetch all parent types de champ
@@ -889,8 +890,8 @@ class Procedure < ApplicationRecord
 
     # fetch all type_de_champ.stable_id for all the revisions expect draft
     # and for each stable_id take the bigger (more recent) type_de_champ.id
-    recent_ids = TypeDeChamp
-      .fillable
+    types_de_champ_scope = with_header_section ? TypeDeChamp.with_header_section : TypeDeChamp.fillable
+    recent_ids = types_de_champ_scope
       .joins(:revision_types_de_champ)
       .where(revision_types_de_champ: { revision_id: revision_ids, parent_id: parent_ids })
       .group(:stable_id).select('MAX(types_de_champ.id)')

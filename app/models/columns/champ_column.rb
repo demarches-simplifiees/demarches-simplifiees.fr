@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Columns::ChampColumn < Column
-  attr_reader :stable_id
+  attr_reader :stable_id, :tdc_type
 
   def initialize(procedure_id:, label:, stable_id:, tdc_type:, displayable: true, filterable: true, type: :text, options_for_select: [])
     @stable_id = stable_id
@@ -44,6 +44,8 @@ class Columns::ChampColumn < Column
       relation.filter_ilike(:champs, column, search_terms).ids
     end
   end
+
+  def champ_column? = true
 
   private
 

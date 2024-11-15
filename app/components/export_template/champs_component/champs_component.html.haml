@@ -1,0 +1,23 @@
+%fieldset.fr-fieldset{ id: "#{component_prefix}-fieldset", data: { controller: 'checkbox-select-all' } }
+  %legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-h5.fr-pb-0
+    = title
+  .checkbox-group-bordered.fr-mx-1w.fr-mb-2w
+    .fr-fieldset__element.fr-background-contrast--grey.fr-py-2w.fr-px-4w
+      .fr-checkbox-group
+        = check_box_tag "#{component_prefix}-select-all", "select-all", false, data: { "checkbox-select-all-target": 'checkboxAll' }
+        = label_tag "#{component_prefix}-select-all", "Tout sélectionner"
+    - sections.each.with_index do |section, idx|
+      - if section[:libelle]
+        .fr-fieldset__element.fr-text--bold.fr-px-4w{ class: idx > 0 ? "fr-pt-1w" : "" }= section[:libelle]
+
+      - section[:columns].each do |grouped_columns|
+        - if grouped_columns.many?
+          .fr-fieldset__element
+            .fieldset-bordered.fr-ml-3v
+              - grouped_columns.each do |exported_column|
+                .fr-fieldset__element.fr-px-3v
+                  .fr-checkbox-group= render ExportTemplate::CheckboxComponent.new(export_template:, exported_column:)
+        - else
+          - grouped_columns.each do |exported_column|
+            .fr-fieldset__element.fr-px-4w
+              .fr-checkbox-group= render ExportTemplate::CheckboxComponent.new(export_template:, exported_column:)

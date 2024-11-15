@@ -132,13 +132,14 @@ describe 'Instructing a dossier:', js: true do
     test_statut_bar(a_suivre: 1, tous_les_dossiers: 1)
 
     click_on "Télécharger un dossier"
-    within(:css, '.dossiers-export') do
-      click_on "Demander un export au format .csv"
+    within(:css, '#tabpanel-standard1-panel') do
+      choose "Fichier csv", allow_label_click: true
+      click_on "Demander l'export"
     end
 
     expect(page).to have_text('Nous générons cet export.')
 
-    click_on "Voir les exports"
+    click_on "Voir les exports et modèles d'export"
     expect(page).to have_text("Export .csv d’un dossier « à suivre » demandé il y a moins d'une minute")
     expect(page).to have_text("En préparation")
 

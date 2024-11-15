@@ -51,7 +51,7 @@ module ColumnsConcern
       columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
-    def dossier_id_column = dossier_col(table: 'self', column: 'id', type: :number)
+    def dossier_id_column = dossier_col(table: 'self', column: 'id', type: :integer)
 
     def dossier_state_column
       options_for_select = I18n.t('instructeurs.dossiers.filterable_state').map(&:to_a).map(&:reverse)
@@ -87,13 +87,13 @@ module ColumnsConcern
 
     def followers_instructeurs_email_column = dossier_col(table: 'followers_instructeurs', column: 'email')
 
-    def dossier_archived_column = dossier_col(table: 'self', column: 'archived', type: :text, displayable: false, filterable: false);
+    def dossier_archived_column = dossier_col(table: 'self', column: 'archived', type: :boolean, displayable: false, filterable: false);
 
     def dossier_motivation_column = dossier_col(table: 'self', column: 'motivation', type: :text, displayable: false, filterable: false);
 
     def user_email_for_display_column = dossier_col(table: 'self', column: 'user_email_for_display', filterable: false, displayable: false)
 
-    def user_france_connected_column = dossier_col(table: 'self', column: 'user_from_france_connect?', filterable: false, displayable: false)
+    def user_france_connected_column = dossier_col(table: 'self', column: 'user_from_france_connect?', type: :boolean, filterable: false, displayable: false)
 
     def dossier_labels_column = dossier_col(table: 'dossier_labels', column: 'label_id', type: :enum, options_for_select: labels.map { [_1.name, _1.id] })
 
@@ -109,7 +109,7 @@ module ColumnsConcern
 
     def dossier_dates_columns
       ['created_at', 'updated_at', 'last_champ_updated_at', 'depose_at', 'en_construction_at', 'en_instruction_at', 'processed_at']
-        .map { |column| dossier_col(table: 'self', column:, type: :date) }
+        .map { |column| dossier_col(table: 'self', column:, type: :datetime) }
     end
 
     def email_column
@@ -140,7 +140,8 @@ module ColumnsConcern
 
     def individual_columns
       ['gender', 'nom', 'prenom'].map { |column| dossier_col(table: 'individual', column:) }
-        .concat ['for_tiers', 'mandataire_last_name', 'mandataire_first_name'].map { |column| dossier_col(table: 'self', column:) }
+        .concat ['mandataire_last_name', 'mandataire_first_name'].map { |column| dossier_col(table: 'self', column:) }
+        .concat ['for_tiers'].map { |column| dossier_col(table: 'self', column:, type: :boolean) }
     end
 
     def moral_columns

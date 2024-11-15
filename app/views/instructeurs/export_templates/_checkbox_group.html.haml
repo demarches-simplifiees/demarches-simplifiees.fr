@@ -1,0 +1,14 @@
+%fieldset.fr-fieldset{ id: "#{title.parameterize}-fieldset", data: { controller: 'checkbox-select-all' } }
+  %legend.fr-fieldset__legend--regular.fr-fieldset__legend.fr-h5.fr-pb-0
+    = title
+
+  .checkbox-group-bordered.fr-mx-1w.fr-mb-2w
+    .fr-fieldset__element.fr-background-contrast--grey.fr-py-2w.fr-px-4w
+      .fr-checkbox-group
+        = check_box_tag "#{title.parameterize}-select-all", "select-all", false, data: { "checkbox-select-all-target": 'checkboxAll' }
+        = label_tag "#{title.parameterize}-select-all", "Tout sélectionner"
+
+    - all_columns.each do |column|
+      .fr-fieldset__element.fr-px-4w
+        .fr-checkbox-group
+          = render ExportTemplate::CheckboxComponent.new(export_template:, exported_column: ExportedColumn.new(libelle: column.label, column:))

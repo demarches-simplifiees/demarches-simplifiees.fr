@@ -18,7 +18,7 @@ class ProcedureExportService
 
   def to_xlsx
     @dossiers = @dossiers.downloadable_sorted_batch
-    tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
+    tables = [:dossiers, :etablissements, :avis] + champs_repetables_options(format: :xlsx)
 
     # We recursively build multi page spreadsheet
     io = tables.reduce(nil) do |package, table|
@@ -29,7 +29,7 @@ class ProcedureExportService
 
   def to_ods
     @dossiers = @dossiers.downloadable_sorted_batch
-    tables = [:dossiers, :etablissements, :avis] + champs_repetables_options
+    tables = [:dossiers, :etablissements, :avis] + champs_repetables_options(format: :ods)
 
     # We recursively build multi page spreadsheet
     io = StringIO.new(tables.reduce(nil) do |spreadsheet, table|
@@ -103,7 +103,7 @@ class ProcedureExportService
     @avis ||= dossiers.flat_map(&:avis)
   end
 
-  def champs_repetables_options
+  def champs_repetables_options(format:)
     procedure
       .all_revisions_types_de_champ
       .repetition
@@ -115,7 +115,7 @@ class ProcedureExportService
           {
             sheet_name: type_de_champ_repetition.libelle_for_export,
             instances: rows,
-            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ) }
+            spreadsheet_columns: Proc.new { |instance| instance.spreadsheet_columns(types_de_champ, export_template: @export_template, format:) }
           }
         end
       end
@@ -152,7 +152,7 @@ class ProcedureExportService
     types_de_champ = procedure.types_de_champ_for_procedure_export.to_a
 
     Proc.new do |instance|
-      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ)
+      instance.send(:"spreadsheet_columns_#{format}", types_de_champ: types_de_champ, export_template: @export_template)
     end
   end
 end

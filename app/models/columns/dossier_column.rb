@@ -15,4 +15,6 @@ class Columns::DossierColumn < Column
       dossier.followers_instructeurs.map(&:email).join(' ')
     end
   end
+
+  def dossier_column? = true
 end

@@ -24,7 +24,6 @@ class TypeDeChamp < ApplicationRecord
 
   TYPE_DE_CHAMP_TO_CATEGORIE = {
     engagement_juridique: REFERENTIEL_EXTERNE,
-
     header_section: STRUCTURE,
     repetition: STRUCTURE,
     dossier_link: STRUCTURE,
@@ -171,6 +170,7 @@ class TypeDeChamp < ApplicationRecord
   scope :not_repetition, -> { where.not(type_champ: type_champs.fetch(:repetition)) }
   scope :not_condition, -> { where(condition: nil) }
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
+  scope :with_header_section, -> { where.not(type_champ: TypeDeChamp.type_champs[:explication]) }
 
   scope :dubious, -> {
     where("unaccent(types_de_champ.libelle) ~* unaccent(?)", DubiousProcedure.forbidden_regexp)

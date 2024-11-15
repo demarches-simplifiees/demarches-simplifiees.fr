@@ -46,10 +46,10 @@ class Columns::LinkedDropDownColumn < Columns::ChampColumn
   def column_id = "type_de_champ/#{stable_id}->#{path}"
 
   def typed_value(champ)
-    return nil if path == :value
-
     primary_value, secondary_value = unpack_values(champ.value)
     case path
+    when :value
+      "#{primary_value} / #{secondary_value}"
     when :primary
       primary_value
     when :secondary

@@ -81,7 +81,7 @@ class DossierFilterService
       else
         case table
         when 'self'
-          if filtered_column.type == :date
+          if filtered_column.type == :date || filtered_column.type == :datetime
             dates = values
               .filter_map { |v| Time.zone.parse(v).beginning_of_day rescue nil }
 

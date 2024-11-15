@@ -86,6 +86,42 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         expect(ExportTemplate.last.pjs).to match_array([])
       end
     end
+
+    context 'with tabular params' do
+      let(:procedure) do
+        create(
+          :procedure, instructeurs: [instructeur],
+          types_de_champ_public: [{ type: :text, libelle: 'un texte', stable_id: 1 }]
+        )
+      end
+
+      let(:exported_columns) do
+        [
+          { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
+          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' }
+        ].map(&:to_json)
+      end
+
+      let(:create_params) do
+        {
+          name: "ExportODS",
+          kind: "ods",
+          groupe_instructeur_id: groupe_instructeur.id,
+          export_pdf: item_params(text: "export"),
+          dossier_folder: item_params(text: "dossier"),
+          exported_columns:
+        }
+      end
+
+      context 'with valid params' do
+        it 'redirect to some page' do
+          subject
+          expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
+          expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été créé"
+          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Date du dernier évènement']
+        end
+      end
+    end
   end
 
   describe '#edit' do
@@ -144,6 +180,35 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
         subject
         expect(export_template.export_pdf.template_json).not_to eq(item_params(text: "exPort_")["template"])
         expect(flash.alert).to be_present
+      end
+    end
+
+    context 'for tabular' do
+      let(:exported_columns) do
+        [
+          { id: procedure.find_column(label: 'Demandeur').id, libelle: 'Demandeur' },
+          { id: procedure.find_column(label: 'Date du dernier évènement').id, libelle: 'Date du dernier évènement' }
+        ].map(&:to_json)
+      end
+
+      let(:export_template_params) do
+        {
+          name: "ExportODS",
+          kind: "ods",
+          groupe_instructeur_id: groupe_instructeur.id,
+          export_pdf: item_params(text: "export"),
+          dossier_folder: item_params(text: "dossier"),
+          exported_columns:
+        }
+      end
+
+      context 'with valid params' do
+        it 'redirect to some page' do
+          subject
+          expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
+          expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été modifié"
+          expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Date du dernier évènement']
+        end
       end
     end
   end
