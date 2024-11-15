@@ -10,6 +10,7 @@ module ProcedurePathConcern
 
     after_initialize :ensure_path_exists
     before_save :ensure_path_exists
+    scope :find_with_path, -> (path) { joins(:procedure_paths).where(procedure_paths: { path: }).limit(1) }
 
     def ensure_path_exists
       if self.path.blank?
@@ -20,7 +21,7 @@ module ProcedurePathConcern
     def other_procedure_with_path(path)
       Procedure.publiees
         .where.not(id: self.id)
-        .find_by(path: path)
+        .find_with_path(path).first
     end
 
     def path

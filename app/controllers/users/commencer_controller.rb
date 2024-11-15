@@ -90,7 +90,7 @@ module Users
     def nav_bar_profile = nav_bar_user_or_guest
 
     def closing_details
-      @procedure = Procedure.find_by(path: params[:path])
+      @procedure = Procedure.find_with_path(params[:path]).first
 
       return procedure_not_found if @procedure.blank?
 
@@ -114,11 +114,11 @@ module Users
     end
 
     def retrieve_procedure
-      Procedure.publiees.or(Procedure.brouillons).find_by(path: params[:path])
+      Procedure.publiees.or(Procedure.brouillons).find_with_path(params[:path]).first
     end
 
     def retrieve_procedure_with_closed
-      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_by(path: params[:path])
+      Procedure.publiees.or(Procedure.brouillons).or(Procedure.closes).order(published_at: :desc).find_with_path(params[:path]).first
     end
 
     def build_prefilled_dossier
@@ -151,7 +151,7 @@ module Users
     end
 
     def procedure_not_found
-      procedure = Procedure.find_by(path: params[:path])
+      procedure = Procedure.find_with_path(params[:path]).first
 
       if procedure&.replaced_by_procedure
         redirect_to commencer_path(procedure.replaced_by_procedure.path, **extra_query_params)
