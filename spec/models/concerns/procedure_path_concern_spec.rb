@@ -1,6 +1,24 @@
 # frozen_string_literal: true
 
 describe ProcedurePathConcern do
+  describe "#destroy" do
+    let!(:procedure) { create(:procedure) }
+
+    context "when there is only one procedure_path (the uuid)" do
+      it do
+        procedure_path = procedure.procedure_paths.first
+        expect { procedure_path.destroy }.not_to change { procedure.procedure_paths.count }
+        expect { procedure_path.destroy! }.to raise_error(ActiveRecord::RecordNotDestroyed)
+      end
+    end
+
+    context "when there is more than one procedure_path" do
+      let!(:procedure_path1) { procedure.procedure_paths.create(path: "path1") }
+
+      it { expect { procedure_path1.destroy }.to change { procedure.procedure_paths.count }.from(2).to(1) }
+    end
+  end
+
   describe ".find_with_path" do
     let!(:procedure1) { create(:procedure) }
 
