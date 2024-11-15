@@ -11,7 +11,8 @@ class ExportedColumn
   def id = { id: column.id, libelle: }.to_json
 
   def libelle_with_value(champ_or_dossier, format:)
-    [libelle, ExportedColumnFormatter.format(column:, champ_or_dossier:, format:), spreadsheet_architect_type]
+    raw_value = champ_or_dossier.present? ? @column.value(champ_or_dossier) : nil
+    [libelle, ExportedColumnFormatter.format(column:, raw_value:, format:), spreadsheet_architect_type]
   end
 
   def spreadsheet_architect_type
