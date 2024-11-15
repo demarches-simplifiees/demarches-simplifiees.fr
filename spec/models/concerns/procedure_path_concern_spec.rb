@@ -89,4 +89,21 @@ describe ProcedurePathConcern do
       expect(procedure.canonical_path).to eq('newer-path')
     end
   end
+
+  describe "#claim_path" do
+    let!(:procedure) { create(:procedure) }
+    let!(:procedure_2) { create(:procedure) }
+    let!(:procedure_path) { create(:procedure_path, procedure: procedure, path: "test-path") }
+    let!(:procedure_path_2) { create(:procedure_path, procedure: procedure_2, path: "test-path-2") }
+    let(:administrateur) { procedure.administrateurs.first }
+
+    subject do
+      procedure.claim_path(administrateur, procedure_path_2.path)
+      procedure.save!
+    end
+
+    it "assigns the procedure to the procedure_path" do
+      expect { subject }.to change { procedure_path_2.reload.procedure }.from(procedure_2).to(procedure)
+    end
+  end
 end
