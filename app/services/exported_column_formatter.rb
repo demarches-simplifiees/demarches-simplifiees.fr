@@ -2,6 +2,8 @@
 
 class ExportedColumnFormatter
   def self.format(column:, raw_value:, format:)
+    return if raw_value.nil?
+
     case column.type
     when :boolean
       format_boolean(column:, raw_value:, format:)
@@ -11,6 +13,8 @@ class ExportedColumnFormatter
       format_enum(column:, raw_value:)
     when :enums
       format_enums(column:, raw_values: raw_value)
+    when :datetime, :date
+      I18n.l(raw_value)
     else
       raw_value
     end

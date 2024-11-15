@@ -71,7 +71,11 @@ class DossierProjectionService
             fields
               .filter { |f| f[STABLE_ID] == stable_id }
               .each do |field|
-              field[:id_value_h] = champs.to_h { |c| [c.dossier_id, field[:original_column].value(c)] }
+              field[:id_value_h] = champs.to_h do |c|
+                raw_value = field[:original_column].value(c)
+                value = ExportedColumnFormatter.format(column: field[:original_column], raw_value:, format: :view)
+                [c.dossier_id, value]
+              end
             end
           end
       when 'self'
