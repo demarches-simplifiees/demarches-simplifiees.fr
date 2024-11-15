@@ -134,7 +134,8 @@ describe Champs::RNAController, type: :controller do
             "region_name" => nil,
             "street_address" => "33 rue de Modagor",
             "street_name" => "de Modagor",
-            "street_number" => "33"
+            "street_number" => "33",
+            "title" => "LA PRÉVENTION ROUTIERE"
           })
         end
       end
