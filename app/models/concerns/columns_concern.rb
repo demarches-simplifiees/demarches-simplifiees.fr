@@ -12,6 +12,13 @@ module ColumnsConcern
       column = columns.find { _1.h_id == h_id } if h_id.present?
       column = columns.find { _1.label == label } if label.present?
 
+      # TODO: to remove after linked_drop_down column column_id migration
+      if column.nil? && h_id.is_a?(Hash) && h_id[:column_id].present?
+        h_id[:column_id].gsub!('->', '.')
+
+        column = columns.find { _1.h_id == h_id }
+      end
+
       raise ActiveRecord::RecordNotFound.new("Column: unable to find h_id: #{h_id} or label: #{label} for procedure_id #{id}") if column.nil?
 
       column

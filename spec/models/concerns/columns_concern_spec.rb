@@ -4,7 +4,8 @@ describe ColumnsConcern do
   let(:procedure_id) { procedure.id }
 
   describe '#find_column' do
-    let(:procedure) { build(:procedure) }
+    let(:types_de_champ_public) { [{ type: :linked_drop_down_list, libelle: 'linked' }] }
+    let(:procedure) { create(:procedure, types_de_champ_public:) }
     let(:notifications_column) { procedure.notifications_column }
 
     it do
@@ -16,6 +17,17 @@ describe ColumnsConcern do
 
       unknwon = 'unknown'
       expect { procedure.find_column(h_id: unknwon) }.to raise_error(ActiveRecord::RecordNotFound)
+
+      value_column = procedure.find_column(label: 'linked')
+
+      procedure_id = procedure.id
+      linked_tdc = procedure.active_revision.types_de_champ
+        .find { _1.type_champ == 'linked_drop_down_list' }
+
+      column_id = "type_de_champ/#{linked_tdc.stable_id}->value"
+
+      h_id = { procedure_id:, column_id: }
+      expect(procedure.find_column(h_id:)).to eq(value_column)
     end
   end
 
