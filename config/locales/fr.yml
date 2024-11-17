@@ -47,6 +47,10 @@ fr:
     no_mandatory: (facultatif)
     send_mail: Envoyer le message
     new_tab: "Nouvel onglet"
+    accepted: acceptés
+    accepted_f: acceptées
+    forbidden: interdits
+    forbidden_f: interdites
   helpers:
     procedure:
       testing_procedure: démarche en test
