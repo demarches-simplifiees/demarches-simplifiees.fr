@@ -138,6 +138,32 @@
         - else
           - list.with_item do
             = t(".#{prefix}.update_expression_reguliere_error_message", label: change.label, to: change.to)
+      - when :formatted_mode
+        - list.with_item do
+          = t(".#{prefix}.update_formatted_mode", label: change.label, to: change.to)
+      - when :letters_accepted
+        - list.with_item do
+          = t(".#{prefix}.update_letters_acceptance", label: change.label, to: change.to == '0' ? t('utils.forbidden_f') : t('utils.accepted_f'))
+      - when :numbers_accepted
+        - list.with_item do
+          = t(".#{prefix}.update_numbers_acceptance", label: change.label, to: change.to == '0' ? t('utils.forbidden') : t('utils.accepted'))
+      - when :special_characters_accepted
+        - list.with_item do
+          = t(".#{prefix}.update_special_characters_acceptance", label: change.label, to: change.to == '0' ? t('utils.forbidden') : t('utils.accepted'))
+      - when :min_character_length
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_min_character_length", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_min_character_length", label: change.label, to: change.to)
+      - when :max_character_length
+        - if change.to.blank?
+          - list.with_item do
+            = t(".#{prefix}.remove_max_character_length", label: change.label, to: change.to)
+        - else
+          - list.with_item do
+            = t(".#{prefix}.update_max_character_length", label: change.label, to: change.to)
 
   - if @public_move_changes.present?
     - list.with_item do
