@@ -463,6 +463,42 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.expression_reguliere_error_message,
           to_type_de_champ.expression_reguliere_error_message)
       end
+      if from_type_de_champ.formatted_mode != to_type_de_champ.formatted_mode
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :formatted_mode,
+          from_type_de_champ.formatted_mode,
+          to_type_de_champ.formatted_mode)
+      end
+      if from_type_de_champ.letters_accepted != to_type_de_champ.letters_accepted
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :letters_accepted,
+          from_type_de_champ.letters_accepted,
+          to_type_de_champ.letters_accepted)
+      end
+      if from_type_de_champ.numbers_accepted != to_type_de_champ.numbers_accepted
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :numbers_accepted,
+          from_type_de_champ.numbers_accepted,
+          to_type_de_champ.numbers_accepted)
+      end
+      if from_type_de_champ.special_characters_accepted != to_type_de_champ.special_characters_accepted
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :special_characters_accepted,
+          from_type_de_champ.special_characters_accepted,
+          to_type_de_champ.special_characters_accepted)
+      end
+      if from_type_de_champ.min_character_length != to_type_de_champ.min_character_length
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :min_character_length,
+          from_type_de_champ.min_character_length,
+          to_type_de_champ.min_character_length)
+      end
+      if from_type_de_champ.max_character_length != to_type_de_champ.max_character_length
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :max_character_length,
+          from_type_de_champ.max_character_length,
+          to_type_de_champ.max_character_length)
+      end
     end
     changes
   end
