@@ -49,6 +49,10 @@ fr:
     new_tab: "Nouvel onglet"
     modal_close: "Fermer"
     modal_close_alt: "Fermer la fenêtre modale"
+    accepted: acceptés
+    accepted_f: acceptées
+    forbidden: interdits
+    forbidden_f: interdites
   helpers:
     commentaire:
       send_message_to_instructeur: "Envoyer un message à l’instructeur"
