@@ -13,7 +13,11 @@ module ProcedurePathConcern
 
     validates :procedure_paths, length: { minimum: 1 }
 
-    scope :find_with_path, -> (path) { joins(:procedure_paths).where(procedure_paths: { path: path.downcase.strip }).limit(1) }
+    scope :find_with_path, -> (path) do
+      normalized_path = path.downcase.strip
+      joins(:procedure_paths).where(procedure_paths: { path: normalized_path }).or(where(path: normalized_path)).limit(1)
+      # TODO: remove the or(where(path: normalized_path)) when the migration is done
+    end
 
     def ensure_path_exists
       uuid = SecureRandom.uuid
