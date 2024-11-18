@@ -37,7 +37,7 @@
 
 
       .fr-mt-5w
-        = link_to t('.new_zip_export_template'), new_instructeur_procedure_export_template_path(@procedure), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mr-1w"
+        = link_to t('.new_zip_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'zip'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mr-1w"
         = link_to t('.new_tabular_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
 
       .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-5w
