@@ -16,13 +16,17 @@ module ProcedurePathConcern
     scope :find_with_path, -> (path) { joins(:procedure_paths).where(procedure_paths: { path: }).limit(1) }
 
     def ensure_path_exists
+      uuid = SecureRandom.uuid
       if self.path.blank?
-        self.path = SecureRandom.uuid
+        self.path = uuid
+      end
+      if self.procedure_paths.empty?
+        self.procedure_paths.build(path: uuid)
       end
     end
 
     def other_procedure_with_path(path)
-      Procedure.publiees
+      Procedure
         .where.not(id: self.id)
         .find_with_path(path).first
     end

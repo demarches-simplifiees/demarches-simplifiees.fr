@@ -1043,9 +1043,8 @@ describe Procedure do
 
     context 'when publishing over a previous canonical procedure' do
       before do
-        procedure.path = canonical_procedure.path
         Timecop.freeze(now) do
-          procedure.publish_or_reopen!(administrateur)
+          procedure.publish_or_reopen!(administrateur, canonical_procedure.path)
         end
         procedure.reload
         canonical_procedure.reload
@@ -1074,14 +1073,15 @@ describe Procedure do
     end
 
     context 'when publishing over a previous procedure with canonical procedure' do
-      let(:canonical_procedure) { create(:procedure, :closed) }
+      let(:canonical_path) { 'canonical-path' }
+      let(:canonical_procedure) { create(:procedure, :closed, path: canonical_path) }
       let(:parent_procedure) { create(:procedure, :published, administrateurs: [administrateur]) }
 
       before do
-        parent_procedure.update!(path: canonical_procedure.path, canonical_procedure: canonical_procedure)
-        procedure.path = canonical_procedure.path
+        parent_procedure.update!(canonical_procedure: canonical_procedure)
+        parent_procedure.claim_path(administrateur, canonical_path)
         Timecop.freeze(now) do
-          procedure.publish_or_reopen!(administrateur)
+          procedure.publish_or_reopen!(administrateur, canonical_path)
         end
         parent_procedure.reload
       end
@@ -1108,7 +1108,7 @@ describe Procedure do
       before do
         procedure.close!
         Timecop.freeze(now) do
-          procedure.publish_or_reopen!(administrateur)
+          procedure.publish_or_reopen!(administrateur, procedure.path)
         end
       end
 
@@ -1362,7 +1362,8 @@ describe Procedure do
   end
 
   describe 'suggested_path' do
-    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
+    let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)], path: path) }
+    let(:path) { nil }
 
     subject { procedure.suggested_path }
 
