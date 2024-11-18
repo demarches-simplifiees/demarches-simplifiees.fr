@@ -12,6 +12,6 @@ class TypesDeChamp::DropDownListTypeDeChamp < TypesDeChamp::TypeDeChampBase
   end
 
   def champ_with_other_value?(champ)
-    drop_down_other? && champ.value_json['other']
+    drop_down_other? && champ.value_json&.fetch('other', false)
   end
 end
