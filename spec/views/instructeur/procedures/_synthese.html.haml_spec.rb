@@ -12,7 +12,7 @@ describe 'instructeurs/procedures/_synthese', type: :view do
       render 'instructeurs/procedures/synthese',
       all_dossiers_counts: {
         'à suivre': 0,
-        'suivis': 0,
+        'suivis par moi': 0,
         'traités': 1,
         'dossiers': 1,
         'à archiver': 0
@@ -21,7 +21,7 @@ describe 'instructeurs/procedures/_synthese', type: :view do
     }
 
     it { is_expected.to have_text('Synthèse des dossiers') }
-    it { is_expected.not_to have_text('suivis') }
+    it { is_expected.not_to have_text('suivis par moi') }
     it { is_expected.to have_text('traités') }
     it { is_expected.to have_text('dossiers') }
     it { is_expected.not_to have_text('à archiver') }
@@ -32,7 +32,7 @@ describe 'instructeurs/procedures/_synthese', type: :view do
       render 'instructeurs/procedures/synthese',
       all_dossiers_counts: {
         'à suivre': 0,
-        'suivis': 0,
+        'suivis par moi': 0,
         'traités': 1,
         'dossiers': 1,
         'à archiver': 0
@@ -41,7 +41,7 @@ describe 'instructeurs/procedures/_synthese', type: :view do
     }
 
     it { is_expected.not_to have_text('Synthèse des dossiers') }
-    it { is_expected.not_to have_text('suivis') }
+    it { is_expected.not_to have_text('suivis par moi') }
     it { is_expected.not_to have_text('traités') }
     it { is_expected.not_to have_text('dossiers') }
     it { is_expected.not_to have_text('à archiver') }
