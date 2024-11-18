@@ -1125,6 +1125,15 @@ describe Procedure do
         expect(procedure.revisions).to eq([procedure.published_revision, procedure.draft_revision])
       end
     end
+
+    context 'when publishing a procedure with the same path as another procedure from another admin' do
+      let(:procedure) { create(:procedure, path: 'example-path', administrateurs: [administrateur]) }
+      let(:other_procedure) { create(:procedure, path: 'example-path', administrateurs: [create(:administrateur)]) }
+
+      it 'raises an error' do
+        expect { procedure.publish_or_reopen!(administrateur, other_procedure.path) }.to raise_error(ActiveRecord::RecordInvalid)
+      end
+    end
   end
 
   describe "#publish_revision!" do
