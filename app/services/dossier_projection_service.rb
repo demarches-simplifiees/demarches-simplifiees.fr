@@ -44,10 +44,9 @@ class DossierProjectionService
   def self.project(dossiers_ids, columns)
     tableau = Tableau.new(dossiers_ids, columns)
     tableau.dossiers = Dossier.find(dossiers_ids)
-    tableau.data = columns.group_by(&:loader)
-      .map do |loader, columns|
-        loader.load(columns, dossiers_ids)
-      end.reduce(&:deep_merge)
+    columns.group_by(&:loader).map do |loader, columns|
+      tableau.add_data(loader.load(columns, dossiers_ids))
+    end
 
     return tableau
 

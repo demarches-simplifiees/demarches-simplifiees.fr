@@ -1,21 +1,25 @@
 # frozen_string_literal: true
 
 class ColumnLoaders::ChampColumnLoader
-  def self.load(champ_columns, dossier_ids)
+  def self.load(columns, dossier_ids)
     Champ
-      .where(stable_id: champ_columns.map(&:stable_id), dossier_id: dossier_ids)
+      .where(stable_id: columns.map(&:stable_id), dossier_id: dossier_ids)
       .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json)
-      .group_by(&:stable_id)
-      .map do |stable_id, champs|
-        columns = champ_columns.filter { |c| c.stable_id == stable_id }
+      .group_by(&:dossier_id)
+      .map { |dossier_id, champs| load_one_dossier(dossier_id, champs, columns) }
+      .reduce(&:merge)
+  end
 
-        columns.map do |column|
-          champs.map do |champ|
-            raw_value = column.value(champ)
-            value = ExportedColumnFormatter.format(column:, raw_value:, format: :view)
-            { champ.dossier_id => { column.id => value } }
-          end.reduce(&:deep_merge)
-        end.reduce(&:deep_merge)
-      end.reduce(&:deep_merge)
+  private
+
+  def self.load_one_dossier(dossier_id, champs, columns)
+    { dossier_id => columns.map { |c| load_one_column(c, champs) }.reduce(:merge) }
+  end
+
+  def self.load_one_column(column, champs)
+    champ = champs.find { |c| c.stable_id == column.stable_id }
+
+    raw_value = column.value(champ)
+    { column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :view) }
   end
 end

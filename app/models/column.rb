@@ -50,7 +50,7 @@ class Column
 
   def dossier_column? = false
   def champ_column? = false
-  def loader = ColumnLoaders::NilLoader
+  def loader = ColumnLoaders::StubColumnLoader
 
   private
 

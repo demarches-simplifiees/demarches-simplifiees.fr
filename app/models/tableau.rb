@@ -21,6 +21,11 @@ class Tableau
   def initialize(dossier_ids, columns)
     @dossiers_ids = dossier_ids
     @columns = columns
+    @data = {}
+  end
+
+  def add_data(data)
+    @data.deep_merge!(data)
   end
 
   def projected_dossiers
@@ -31,7 +36,7 @@ class Tableau
         nil,
         nil,
         nil,
-        @columns.map { |column| data[dossier_id][column.id] }
+        @columns.map { |column| @data[dossier_id][column.id] }
       )
     end
   end
