@@ -35,6 +35,22 @@ class TypesDeChamp::RNFTypeDeChamp < TypesDeChamp::TextTypeDeChamp
 
   def champ_blank?(champ) = champ.external_id.blank?
 
+  def columns(procedure:, displayable: true, prefix: nil)
+    super
+      .concat(addressable_columns(procedure:, displayable:, prefix:))
+      .concat([
+        Columns::JSONPathColumn.new(
+          procedure_id: procedure.id,
+          stable_id:,
+          tdc_type: type_champ,
+          label: "#{libelle_with_prefix(prefix)} – Titre au répertoire national des fondations ",
+          type: :text,
+          jsonpath: '$.title',
+          displayable:
+        )
+      ])
+  end
+
   private
 
   def paths

@@ -12,7 +12,7 @@ module RNAChampAssociationFetchableConcern
     return clear_association!(:invalid) unless valid_champ_value?
     return clear_association!(:not_found) if (data = APIEntreprise::RNAAdapter.new(rna, procedure_id).to_params).blank?
 
-    update!(data:, value_json: APIGeoService.parse_rna_address(data['adresse']))
+    update_with_external_data!(data:)
   rescue APIEntreprise::API::Error, APIEntrepriseToken::TokenError => error
     if APIEntrepriseService.service_unavailable_error?(error, target: :djepva)
       clear_association!(:network_error)

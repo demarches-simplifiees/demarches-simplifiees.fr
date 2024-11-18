@@ -33,7 +33,8 @@ module Maintenance
             "departement_name" => nil,
             "department_name" => nil,
             "region_code" => nil,
-            "region_name" => nil
+            "region_name" => nil,
+            "title" => "LA PRÉVENTION ROUTIERE"
           })
       end
     end
