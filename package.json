@@ -118,10 +118,6 @@
     "up": "bunx npm-check-updates --root --format group -i",
     "vite-bundle-visualizer": "bunx vite-bundle-visualizer"
   },
-  "resolutions": {
-    "string-width": "4.2.2",
-    "wrap-ansi": "7.0.0"
-  },
   "trustedDependencies": [
     "core-js",
     "esbuild",
