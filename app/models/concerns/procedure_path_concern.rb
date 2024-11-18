@@ -13,7 +13,7 @@ module ProcedurePathConcern
 
     validates :procedure_paths, length: { minimum: 1 }
 
-    scope :find_with_path, -> (path) { joins(:procedure_paths).where(procedure_paths: { path: }).limit(1) }
+    scope :find_with_path, -> (path) { joins(:procedure_paths).where(procedure_paths: { path: path.downcase.strip }).limit(1) }
 
     def ensure_path_exists
       uuid = SecureRandom.uuid

@@ -30,6 +30,14 @@ describe ProcedurePathConcern do
 
         expect(result).to eq(procedure1)
       end
+
+      context "when the path is in uppercase or has trailing spaces" do
+        it "returns the procedure with the matching path" do
+          result = Procedure.find_with_path("TEST-PATH-1 ").first
+
+          expect(result).to eq(procedure1)
+        end
+      end
     end
 
     context "when no procedure with the given path exists" do
