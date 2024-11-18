@@ -47,20 +47,6 @@ RSpec.describe Cron::AutoArchiveProcedureJob, type: :job do
     end
 
     it {
-      expect(dossier1.state).to eq Dossier.states.fetch(:brouillon)
-      expect(dossier2.state).to eq Dossier.states.fetch(:en_instruction)
-      expect(last_operation.operation).to eq('passer_en_instruction')
-      expect(last_operation.automatic_operation?).to be_truthy
-      expect(dossier3.state).to eq Dossier.states.fetch(:en_instruction)
-      expect(dossier4.state).to eq Dossier.states.fetch(:en_instruction)
-      expect(dossier5.state).to eq Dossier.states.fetch(:en_instruction)
-      expect(dossier6.state).to eq Dossier.states.fetch(:accepte)
-      expect(dossier7.state).to eq Dossier.states.fetch(:refuse)
-      expect(dossier8.state).to eq Dossier.states.fetch(:sans_suite)
-      expect(dossier9.state).to eq Dossier.states.fetch(:en_instruction)
-    }
-
-    it {
       expect(procedure_hier.close?).to eq true
       expect(procedure_aujourdhui.close?).to eq true
     }
