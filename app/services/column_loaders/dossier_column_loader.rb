@@ -1,0 +1,127 @@
+# frozen_string_literal: true
+
+class ColumnLoaders::DossierColumnLoader
+  def self.load(all_columns, dossiers)
+    dossier_ids = dossiers.map(&:id)
+
+    base = dossier_ids.map do |dossier_id|
+      { dossier_id => all_columns.to_h { |column| [column.id, nil] } }
+    end.reduce(:merge)
+
+    columns_by_table = all_columns.group_by(&:table)
+
+    all_h = columns_by_table.flat_map do |table, columns|
+      case table
+      when 'user'
+        # there is only one column available for user table
+        column = columns.first
+
+        Dossier
+          .joins(:user)
+          .includes(:individual)
+          .where(id: dossier_ids)
+          .pluck('dossiers.id, dossiers.for_tiers, users.email, individuals.prenom, individuals.nom')
+          .map { |dossier_id, *array| { dossier_id => { column.id => for_tiers_translation(array) } } }
+      when 'individual'
+        Individual
+          .where(dossier_id: dossier_ids)
+          .pluck(:dossier_id, *columns.map(&:column))
+          .flat_map do |dossier_id, *values|
+            columns.zip(values).map { |column, value| { dossier_id => { column.id => value } } }
+          end
+      when 'etablissement'
+        Etablissement
+          .where(dossier_id: dossier_ids)
+          .pluck(:dossier_id, *columns.map(&:column))
+          .flat_map do |dossier_id, *values|
+            columns.zip(values).map { |column, value| { dossier_id => { column.id => value } } }
+          end
+      when 'self'
+        dossiers.flat_map do |dossier|
+          columns.map do |column|
+            value = column.value(dossier)
+            # SVA must remain a date: in other column we compute remaining delay with it
+            if value.respond_to?(:strftime) && column.column != 'sva_svr_decision_on'
+              { dossier.id => { column.id => I18n.l(value.to_date) } }
+            else
+              { dossier.id => { column.id => value } }
+            end
+          end
+        end
+      when 'groupe_instructeur'
+        # there is only one column available for groupe instructeur
+        column = columns.first
+
+        Dossier
+          .joins(:groupe_instructeur)
+          .where(id: dossier_ids)
+          .pluck('dossiers.id, groupe_instructeurs.label')
+          .map { |dossier_id, label| { dossier_id => { column.id => label } } }
+      when 'dossier_labels'
+        # there is only one column available for dossier_labels
+        column = columns.first
+
+        DossierLabel
+          .includes(:label)
+          .where(dossier_id: dossier_ids)
+          .pluck('dossier_id, labels.name, labels.color')
+          .group_by { |dossier_id, _| dossier_id }
+          .map do |dossier_id, labels|
+            { dossier_id => { column.id => { value: labels, type: :label } } }
+          end
+      end
+    end.compact.reduce(&:deep_merge)
+
+    base.deep_merge(all_h)
+  end
+
+  private
+
+  def self.for_tiers_translation(array)
+    for_tiers, email, first_name, last_name = array
+    if for_tiers == true
+      "#{email} #{I18n.t('views.instructeurs.dossiers.acts_on_behalf')} #{first_name} #{last_name}"
+    else
+      email
+    end
+  end
+
+     # case table
+     #  when 'dossier_corrections'
+     #    columns = fields.map { _1[COLUMN].to_sym }
+
+     #    id_value_h = DossierCorrection.where(dossier_id: dossiers_ids)
+     #      .pluck(:dossier_id, *columns)
+     #      .group_by(&:first) # group corrections by dossier_id
+     #      .transform_values do |values| # build each correction has an hash column => value
+     #        values.map { Hash[columns.zip(_1[1..-1])] }
+     #      end
+
+     #    fields[0][:id_value_h] = id_value_h
+
+     #  when 'procedure'
+     #    Dossier
+     #      .joins(:procedure)
+     #      .where(id: dossiers_ids)
+     #      .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
+     #      .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
+     #  when 'followers_instructeurs'
+     #    # rubocop:disable Style/HashTransformValues
+     #    fields[0][:id_value_h] = Follow
+     #      .active
+     #      .joins(instructeur: :user)
+     #      .where(dossier_id: dossiers_ids)
+     #      .pluck('dossier_id, users.email')
+     #      .group_by { |dossier_id, _| dossier_id }
+     #      .to_h { |dossier_id, dossier_id_emails| [dossier_id, dossier_id_emails.sort.map { |_, email| email }&.join(', ')] }
+     #    # rubocop:enable Style/HashTransformValues
+     #  when 'avis'
+     #    # rubocop:disable Style/HashTransformValues
+     #    fields[0][:id_value_h] = Avis
+     #      .where(dossier_id: dossiers_ids)
+     #      .pluck('dossier_id', 'question_answer')
+     #      .group_by { |dossier_id, _| dossier_id }
+     #      .to_h { |dossier_id, question_answer| [dossier_id, question_answer.map { |_, answer| answer }&.compact&.tally&.map { |k, v| I18n.t("helpers.label.question_answer_with_count.#{k}", count: v) }&.join(' / ')] }
+     #    # rubocop:enable Style/HashTransformValues
+     #  end
+end

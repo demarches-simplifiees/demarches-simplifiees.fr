@@ -17,4 +17,6 @@ class Columns::DossierColumn < Column
   end
 
   def dossier_column? = true
+
+  def loader = ColumnLoaders::DossierColumnLoader
 end

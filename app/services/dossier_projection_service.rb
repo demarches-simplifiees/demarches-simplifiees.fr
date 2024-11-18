@@ -16,15 +16,6 @@ class DossierProjectionService
     end
   end
 
-  def self.for_tiers_translation(array)
-    for_tiers, email, first_name, last_name = array
-    if for_tiers == true
-      "#{email} #{I18n.t('views.instructeurs.dossiers.acts_on_behalf')} #{first_name} #{last_name}"
-    else
-      email
-    end
-  end
-
   TABLE = 'table'
   COLUMN = 'column'
   STABLE_ID = 'stable_id'
@@ -46,7 +37,7 @@ class DossierProjectionService
     tableau.dossiers = Dossier.find(dossiers_ids)
 
     columns.group_by(&:loader).map do |loader, columns|
-      tableau.add_data(loader.load(columns, dossiers_ids))
+      tableau.add_data(loader.load(columns, tableau.dossiers))
     end
 
     tableau

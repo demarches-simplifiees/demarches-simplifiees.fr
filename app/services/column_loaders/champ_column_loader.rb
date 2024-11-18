@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class ColumnLoaders::ChampColumnLoader
-  def self.load(columns, dossier_ids)
+  def self.load(columns, dossiers)
+    dossier_ids = dossiers.map(&:id)
+
     champs = Champ
       .where(stable_id: columns.map(&:stable_id), dossier_id: dossier_ids)
       .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json)
@@ -18,6 +20,10 @@ class ColumnLoaders::ChampColumnLoader
   def self.h(column, champ)
     raw_value = column.value(champ)
 
-    { champ.dossier_id => { column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :view) } }
+    {
+      champ.dossier_id => {
+        column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :view)
+      }
+    }
   end
 end
