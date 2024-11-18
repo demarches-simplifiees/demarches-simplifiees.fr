@@ -2,7 +2,7 @@
 
 describe DossierProjectionService do
   describe '#project' do
-    subject { described_class.project(dossiers_ids, columns) }
+    subject { described_class.project(dossiers_ids, columns).projected_dossiers }
 
     context 'with multiple dossier' do
       let!(:procedure) { create(:procedure, types_de_champ_public: [{}, { type: :linked_drop_down_list }]) }
@@ -251,12 +251,9 @@ describe DossierProjectionService do
       end
 
       context 'for dossier corrections table' do
-        let(:table) { 'dossier_corrections' }
-        let(:column) { 'resolved_at' }
         let(:procedure) { create(:procedure) }
-        let(:columns) { [Column.new(procedure_id: procedure.id, table:, column:)] } # should somehow be present in column concern
         let(:dossier) { create(:dossier, :en_construction, procedure:) }
-        subject { described_class.project(dossiers_ids, columns)[0] }
+        subject { described_class.project(dossiers_ids, []).projected_dossiers[0] }
 
         context "when dossier has pending correction" do
           before { create(:dossier_correction, dossier:) }
