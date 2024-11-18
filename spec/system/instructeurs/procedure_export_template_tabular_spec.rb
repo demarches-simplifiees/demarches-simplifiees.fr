@@ -6,7 +6,7 @@ describe "procedure exports" do
   let(:types_de_champ_public) { [{ type: :text }] }
   before { login_as(instructeur.user, scope: :user) }
 
-  scenario "create an export_template tabular and u", js: true do
+  scenario "create an export_template tabular", js: true do
     Flipper.enable(:export_template, procedure)
     visit instructeur_procedure_path(procedure)
 
