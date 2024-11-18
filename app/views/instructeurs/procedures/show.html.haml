@@ -109,22 +109,22 @@
               = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
 
               - @projected_dossiers.each do |p|
-                - path = instructeur_dossier_path(@procedure, p.dossier_id)
+                - path = instructeur_dossier_path(@procedure, p.dossier.id)
                 %tr{ class: [p.dossier.hidden_by_user_at.present? && "file-hidden-by-user"] }
                   - if batch_operation_component.render?
                     %td.text-center
                       - if p.dossier.batch_operation_id.present?
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier_id) }
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier.id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier.id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier.id) }
                       - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p.dossier).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
+                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier.id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p.dossier).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier.id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier.id) }
 
                   %td.number-col
                     - if p.dossier.hidden_by_administration_at.present?
-                      %span.cell-link= p.dossier_id
+                      %span.cell-link= p.dossier.id
                     - else
                       %a.cell-link.relative{ href: path }
-                        = p.dossier_id
-                        - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                        = p.dossier.id
+                        - if @not_archived_notifications_dossier_ids.include?(p.dossier.id)
                           %span.notifications{ 'aria-label': 'notifications' }
 
 
@@ -156,10 +156,10 @@
                   %td.follow-col{ colspan:'2' }
                     %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                       = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
-                                  dossier_id: p.dossier_id,
+                                  dossier_id: p.dossier.id,
                                   state: p.dossier.state,
                                   archived: p.dossier.archived,
-                                  dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                  dossier_is_followed: @followed_dossiers_id.include?(p.dossier.id),
                                   close_to_expiration: @statut == 'expirant',
                                   hidden_by_administration: @statut == 'supprimes',
                                   hidden_by_expired: p.dossier.hidden_by_reason == 'expired',

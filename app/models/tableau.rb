@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Tableau
-  class DossierProjection < Struct.new(:dossier, :dossier_id, :corrections, :columns) do
+  class DossierProjection < Struct.new(:dossier, :corrections, :columns) do
       def pending_correction?
         return false if corrections.blank?
 
@@ -32,7 +32,6 @@ class Tableau
     @dossiers_ids.map do |dossier_id|
       DossierProjection.new(
         @dossiers.find { _1.id == dossier_id },
-        dossier_id,
         @corrections_by_dossier_id[dossier_id],
         @columns.map { |column| @data[dossier_id][column.id] }
       )
