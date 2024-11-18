@@ -879,7 +879,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to have_http_status(:ok)
-        expect(response.body).to include('Choix du type de routage')
+        expect(response.body).to include('Choix du type de configuration')
         expect(procedure.reload.routing_enabled).to be_falsey
       end
     end
@@ -918,7 +918,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to match_array(['Paris', 'Lyon', 'Marseille'])
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(drop_down_tdc.stable_id), constant('Lyon')))
         expect(procedure3.routing_enabled).to be_truthy
@@ -938,7 +938,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(departements_tdc.stable_id), constant('01')))
         expect(procedure3.routing_enabled).to be_truthy
@@ -958,7 +958,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("Guadeloupe")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(regions_tdc.stable_id), constant('84')))
         expect(procedure3.routing_enabled).to be_truthy
@@ -978,7 +978,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("AD – Andorre")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_eq(champ_value(pays_tdc.stable_id), constant('AD')))
         expect(procedure3.routing_enabled).to be_truthy
@@ -998,7 +998,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_in_departement(champ_value(communes_tdc.stable_id), constant('01')))
         expect(procedure3.routing_enabled).to be_truthy
@@ -1018,7 +1018,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_in_departement(champ_value(epci_tdc.stable_id), constant('01')))
         expect(procedure3.routing_enabled).to be_truthy
@@ -1038,7 +1038,7 @@ describe Administrateurs::GroupeInstructeursController, type: :controller do
 
       it do
         expect(response).to redirect_to(admin_procedure_groupe_instructeurs_path(procedure3))
-        expect(flash.notice).to eq 'Les groupes instructeurs ont été ajoutés'
+        expect(flash[:routing_mode]).to eq 'simple'
         expect(procedure3.groupe_instructeurs.pluck(:label)).to include("01 – Ain")
         expect(procedure3.reload.defaut_groupe_instructeur.routing_rule).to eq(ds_in_departement(champ_value(address_tdc.stable_id), constant('01')))
         expect(procedure3.routing_enabled).to be_truthy

@@ -18,13 +18,13 @@ describe 'The routing with rules', js: true do
     procedure.defaut_groupe_instructeur.instructeurs << administrateur.instructeur
   end
 
-  scenario 'Routage à partir d’un champ' do
+  scenario 'Configuration automatique du routage' do
     steps_to_routing_configuration
 
-    choose('À partir d’un champ', allow_label_click: true)
+    choose('Automatique', allow_label_click: true)
     click_on 'Continuer'
 
-    expect(page).to have_text('Routage à partir d’un champ')
+    expect(page).to have_text('Configuration automatique')
 
     choose('Spécialité', allow_label_click: true)
     click_on 'Créer les groupes'
@@ -32,6 +32,8 @@ describe 'The routing with rules', js: true do
     expect(page).to have_text('Gestion des groupes')
     expect(page).to have_text('3 groupes')
     expect(page).not_to have_text('à configurer')
+
+    within("#routing-mode-modal") { click_on "Fermer" }
 
     click_on 'littéraire'
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][targeted_champ]", selected: "Spécialité")
@@ -44,10 +46,10 @@ describe 'The routing with rules', js: true do
     expect(page).to have_select("groupe_instructeur[condition_form][rows][][value]", selected: "scientifique")
   end
 
-  scenario 'Routage avancé' do
+  scenario 'Configuration manuelle du routage' do
     steps_to_routing_configuration
 
-    choose('Avancé', allow_label_click: true)
+    choose('Manuelle', allow_label_click: true)
     click_on 'Continuer'
 
     expect(page).to have_text('Gestion des groupes')
@@ -331,6 +333,6 @@ describe 'The routing with rules', js: true do
     click_on 'Options'
     expect(page).to have_text('Options concernant l’instruction')
     click_on 'Configurer le routage'
-    expect(page).to have_text('Choix du type de routage')
+    expect(page).to have_text('Choix du type de configuration')
   end
 end

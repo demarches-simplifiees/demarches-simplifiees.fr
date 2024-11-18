@@ -17,8 +17,8 @@ class Dsfr::RadioButtonListComponent < ApplicationComponent
   end
 
   def each_button
-    @buttons.each do |button|
-      yield(*button.values_at(:label, :value, :hint), **button.except(:label, :value, :hint))
+    @buttons.each.with_index do |button, index|
+      yield(*button.values_at(:label, :value, :hint, :tooltip), **button.merge!(index:).except(:label, :value, :hint, :tooltip))
     end
   end
 end
