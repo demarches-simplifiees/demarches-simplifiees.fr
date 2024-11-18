@@ -33,15 +33,12 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossier_ids, columns)
-    tableau = Tableau.new(dossier_ids, columns)
-    tableau.dossiers = Dossier.find(dossier_ids)
+    dossiers = Dossier.find(dossier_ids)
+    tableau = Tableau.new(dossiers, columns, corrections_by_dossier_id(dossier_ids))
 
     columns.group_by(&:loader).map do |loader, columns|
-      tableau.add_data(loader.load(columns, tableau.dossiers))
+      tableau.add_data(loader.load(columns, dossiers))
     end
-
-    # on charge toujours les corrections
-    tableau.corrections_by_dossier_id = corrections_by_dossier_id(dossier_ids)
 
     tableau
   end
