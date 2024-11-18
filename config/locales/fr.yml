@@ -771,8 +771,8 @@ fr:
       one: nouveau
       other: nouveaux
     followed:
-      one: suivi
-      other: suivis
+      one: suivi par moi
+      other: suivis par moi
     archived:
       one: à archiver
       other: à archiver

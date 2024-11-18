@@ -114,7 +114,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_expirant_count_per_procedure)[procedure.id]).to eq(nil) }
 
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(0) }
-          it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0) }
+          it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(0) }
           it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(0) }
@@ -178,7 +178,7 @@ describe Instructeurs::ProceduresController, type: :controller do
           it { expect(assigns(:dossiers_count_per_procedure)[procedure3.id]).to eq(2) }
 
           it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(3 + 0) }
-          it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(0 + 1) }
+          it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(0 + 1) }
           it { expect(assigns(:all_dossiers_counts)['traités']).to eq(2 + 1 + 1 + 1) }
           it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(5 + 3 + 2 + 1) }
           it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(1 + 0) }
@@ -242,7 +242,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(14) }
 
             it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(4) }
-            it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(6) }
+            it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(6) }
             it { expect(assigns(:all_dossiers_counts)['traités']).to eq(10) }
             it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(4 + 6 + 10) }
             it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(14) }
@@ -263,7 +263,7 @@ describe Instructeurs::ProceduresController, type: :controller do
             it { expect(assigns(:dossiers_archived_count_per_procedure)[procedure.id]).to eq(7) }
 
             it { expect(assigns(:all_dossiers_counts)['à suivre']).to eq(2) }
-            it { expect(assigns(:all_dossiers_counts)['suivis']).to eq(3) }
+            it { expect(assigns(:all_dossiers_counts)['suivis par moi']).to eq(3) }
             it { expect(assigns(:all_dossiers_counts)['traités']).to eq(5) }
             it { expect(assigns(:all_dossiers_counts)['dossiers']).to eq(2 + 3 + 5) }
             it { expect(assigns(:all_dossiers_counts)['à archiver']).to eq(7) }
@@ -295,7 +295,7 @@ describe Instructeurs::ProceduresController, type: :controller do
 
       it 'contains tabs explanation' do
         expect(response.body).to have_text('L’onglet « à suivre » contient')
-        expect(response.body).to have_text('L’onglet « suivi » contient')
+        expect(response.body).to have_text('L’onglet « suivi par moi» contient')
         expect(response.body).to have_text('L’onglet « traité » contient')
         expect(response.body).to have_text('L’onglet « au total » contient')
         expect(response.body).to have_text('L’onglet « corbeille » contient')
