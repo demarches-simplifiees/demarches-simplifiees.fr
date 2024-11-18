@@ -69,6 +69,34 @@ class ColumnLoaders::DossierColumnLoader
           .map do |dossier_id, labels|
             { dossier_id => { column.id => { value: labels, type: :label } } }
           end
+      when 'followers_instructeurs'
+        # there is only one column available for followers_instructeurs
+        column = columns.first
+
+        Follow
+          .active
+          .joins(instructeur: :user)
+          .where(dossier_id: dossier_ids)
+          .pluck('dossier_id, users.email')
+          .group_by { |dossier_id, _| dossier_id }
+          .map do |dossier_id, dossier_id_emails|
+            { dossier_id => { column.id => dossier_id_emails.sort.map { |_, email| email }&.join(', ') } }
+          end
+      when 'avis'
+        # there is only one column available for avis
+        column = columns.first
+
+        Avis
+          .where(dossier_id: dossier_ids)
+          .pluck('dossier_id', 'question_answer')
+          .group_by { |dossier_id, _| dossier_id }
+          .map do |dossier_id, question_answer|
+            value = question_answer.map { |_, answer| answer }&.compact&.tally
+              &.map { |k, v| I18n.t("helpers.label.question_answer_with_count.#{k}", count: v) }
+              &.join(' / ')
+
+            { dossier_id => { column.id => value } }
+          end
       end
     end.compact.reduce(&:deep_merge)
 
@@ -99,29 +127,12 @@ class ColumnLoaders::DossierColumnLoader
 
      #    fields[0][:id_value_h] = id_value_h
 
+     #  ??
      #  when 'procedure'
      #    Dossier
      #      .joins(:procedure)
      #      .where(id: dossiers_ids)
      #      .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
      #      .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
-     #  when 'followers_instructeurs'
-     #    # rubocop:disable Style/HashTransformValues
-     #    fields[0][:id_value_h] = Follow
-     #      .active
-     #      .joins(instructeur: :user)
-     #      .where(dossier_id: dossiers_ids)
-     #      .pluck('dossier_id, users.email')
-     #      .group_by { |dossier_id, _| dossier_id }
-     #      .to_h { |dossier_id, dossier_id_emails| [dossier_id, dossier_id_emails.sort.map { |_, email| email }&.join(', ')] }
-     #    # rubocop:enable Style/HashTransformValues
-     #  when 'avis'
-     #    # rubocop:disable Style/HashTransformValues
-     #    fields[0][:id_value_h] = Avis
-     #      .where(dossier_id: dossiers_ids)
-     #      .pluck('dossier_id', 'question_answer')
-     #      .group_by { |dossier_id, _| dossier_id }
-     #      .to_h { |dossier_id, question_answer| [dossier_id, question_answer.map { |_, answer| answer }&.compact&.tally&.map { |k, v| I18n.t("helpers.label.question_answer_with_count.#{k}", count: v) }&.join(' / ')] }
-     #    # rubocop:enable Style/HashTransformValues
      #  end
 end
