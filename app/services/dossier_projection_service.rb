@@ -42,6 +42,15 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, columns)
+    tableau = Tableau.new(dossiers_ids, columns)
+    tableau.dossiers = Dossier.find(dossiers_ids)
+    tableau.data = columns.group_by(&:loader)
+      .map do |loader, columns|
+        loader.load(columns, dossiers_ids)
+      end.reduce(&:deep_merge)
+
+    return tableau
+
     fields = columns.map do |c|
       if c.is_a?(Columns::ChampColumn)
         { TABLE => c.table, STABLE_ID => c.stable_id, original_column: c }
@@ -50,11 +59,12 @@ class DossierProjectionService
       end
     end
 
-    individual_first_name = { TABLE => 'individual', COLUMN => 'prenom' }
-    individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
-    dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
+    # individual_first_name = { TABLE => 'individual', COLUMN => 'prenom' }
+    # individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
+    # dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
 
-    ([individual_first_name, individual_last_name, dossier_corrections] + fields)
+    # ([individual_first_name, individual_last_name, dossier_corrections] + fields)
+    fields
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
@@ -173,9 +183,9 @@ class DossierProjectionService
       DossierProjection.new(
         dossiers.find { _1.id == dossier_id },
         dossier_id,
-        individual_first_name[:id_value_h][dossier_id],
-        individual_last_name[:id_value_h][dossier_id],
-        dossier_corrections[:id_value_h][dossier_id],
+        nil, #individual_first_name[:id_value_h][dossier_id],
+        nil, #individual_last_name[:id_value_h][dossier_id],
+        nil, #dossier_corrections[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
     end
