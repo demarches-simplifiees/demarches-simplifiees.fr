@@ -2,24 +2,22 @@
 
 class ColumnLoaders::ChampColumnLoader
   def self.load(columns, dossier_ids)
-    Champ
+    champs = Champ
       .where(stable_id: columns.map(&:stable_id), dossier_id: dossier_ids)
       .select(:dossier_id, :value, :stable_id, :type, :external_id, :data, :value_json)
-      .group_by(&:dossier_id)
-      .map { |dossier_id, champs| load_one_dossier(dossier_id, champs, columns) }
-      .reduce(&:merge)
+
+    columns_for = columns.group_by(&:stable_id)
+
+    all_h = champs.flat_map { |champ| columns_for[champ.stable_id].map { |column| h(column, champ) } }
+
+    all_h.reduce(&:deep_merge)
   end
 
   private
 
-  def self.load_one_dossier(dossier_id, champs, columns)
-    { dossier_id => columns.map { |c| load_one_column(c, champs) }.reduce(:merge) }
-  end
-
-  def self.load_one_column(column, champs)
-    champ = champs.find { |c| c.stable_id == column.stable_id }
-
+  def self.h(column, champ)
     raw_value = column.value(champ)
-    { column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :view) }
+
+    { champ.dossier_id => { column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :view) } }
   end
 end
