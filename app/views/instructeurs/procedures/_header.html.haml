@@ -9,7 +9,7 @@
     .fr-nav__item.relative{ class: ('section-active' if current_nav_section == 'procedure_management') }
       %button.account-btn.fr-translate__btn.fr-btn.fr-btn--tertiary.fr-btn--no-border.fr-text--md{ "aria-controls" => "procedure-management", "aria-expanded" => "false", style: "box-shadow: none; background: none;" }
         = t('instructeurs.dossiers.header.banner.procedure_management')
-      #procedure-management.fr-collapse.fr-menu.absolute
+      #procedure-management.fr-collapse.fr-menu
         %ul.fr-menu__list
           %li
             = link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(procedure), class: 'fr-nav__link'
@@ -29,7 +29,7 @@
     .fr-nav__item.relative{ class: ('section-active' if current_nav_section == 'user_support') }
       %button.account-btn.fr-translate__btn.fr-btn.fr-btn--tertiary.fr-btn--no-border.fr-text--md{ "aria-controls" => "user-support", "aria-expanded" => "false", style: "box-shadow: none; background: none;" }
         = t('instructeurs.dossiers.header.banner.user_support')
-      #user-support.fr-collapse.fr-menu.absolute
+      #user-support.fr-collapse.fr-menu
         %ul.fr-menu__list
           %li
             = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(procedure), class: 'fr-nav__link'
@@ -42,7 +42,7 @@
     .fr-nav__item.relative{ class: ('section-active' if current_nav_section == 'downloads') }
       %button.account-btn.fr-translate__btn.fr-btn.fr-btn--tertiary.fr-btn--no-border.fr-text--md{ "aria-controls" => "downloads", "aria-expanded" => "false", style: "box-shadow: none; background: none;" }
         = t('instructeurs.dossiers.header.banner.downloads')
-      #downloads.fr-collapse.fr-menu.absolute
+      #downloads.fr-collapse.fr-menu
         %ul.fr-menu__list
           %li
             = link_to t('instructeurs.dossiers.header.banner.exports_list'), exports_instructeur_procedure_path(procedure), class: 'fr-nav__link'

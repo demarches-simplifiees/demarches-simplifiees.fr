@@ -10,7 +10,9 @@ describe "procedure exports" do
     Flipper.enable(:export_template, procedure)
     visit instructeur_procedure_path(procedure)
 
-    click_on "Voir les exports et modèles d'export"
+    find("button", text: "Téléchargements").click
+
+    click_on "Liste des exports"
 
     click_on "Modèles d'export"
 

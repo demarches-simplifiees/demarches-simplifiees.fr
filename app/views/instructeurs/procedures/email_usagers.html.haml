@@ -9,7 +9,7 @@
       locals: { procedure: @procedure }
 
 .messagerie.fr-container
-  %h1= t('instructeurs.dossiers.header.banner.contact_users')
+  %h1.fr-h4= t('instructeurs.dossiers.header.banner.contact_users')
   %p.fr-highlight
     = t('.hint', count: @dossiers_without_groupe_count).html_safe
 

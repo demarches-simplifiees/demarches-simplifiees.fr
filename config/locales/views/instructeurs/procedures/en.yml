@@ -13,6 +13,8 @@ en:
         dossiers_close_to_expiration: expiring
         dossiers_supprimes: recently deleted
         copy_link_button: Copy the procedure link to clipboard
+      show:
+        file_tracking: File tracking
       email_usagers:
         hint:
           zero: "There is no user with a draft."
