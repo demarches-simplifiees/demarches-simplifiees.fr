@@ -443,7 +443,7 @@ class TypeDeChamp < ApplicationRecord
     elsif regions?
       APIGeoService.region_options
     elsif any_drop_down_list?
-      drop_down_options
+      drop_down_options.map { [_1, _1] }
     elsif yes_no?
       Champs::YesNoChamp.options
     elsif checkbox?

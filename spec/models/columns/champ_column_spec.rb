@@ -100,20 +100,38 @@ describe Columns::ChampColumn do
       end
 
       context 'from a drop_down_list' do
-        let(:champ) { Champs::DropDownListChamp.new(value: 'val1') }
+        let(:champ) { Champs::DropDownListChamp.new(value:) }
+        let(:value) { 'val1' }
 
         it do
           expect(column('multiple_drop_down_list').value(champ)).to eq(['val1'])
           expect(column('text').value(champ)).to eq('val1')
         end
+
+        context 'value not in options' do
+          let(:value) { 'toto' }
+
+          it do
+            expect(column('simple_drop_down_list').value(champ)).to eq(nil)
+          end
+        end
       end
 
       context 'from a multiple_drop_down_list' do
-        let(:champ) { Champs::MultipleDropDownListChamp.new(value: '["val1","val2"]') }
+        let(:champ) { Champs::MultipleDropDownListChamp.new(value:) }
+        let(:value) { '["val1","val2"]' }
 
         it do
           expect(column('simple_drop_down_list').value(champ)).to eq('val1')
           expect(column('text').value(champ)).to eq('val1, val2')
+        end
+
+        context 'value not in options' do
+          let(:value) { '["toto","val2"]' }
+
+          it do
+            expect(column('multiple_drop_down_list').value(champ)).to eq(['val2'])
+          end
         end
       end
     end
