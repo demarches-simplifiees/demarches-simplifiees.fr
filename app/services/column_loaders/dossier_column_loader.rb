@@ -4,13 +4,9 @@ class ColumnLoaders::DossierColumnLoader
   def self.load(all_columns, dossiers)
     dossier_ids = dossiers.map(&:id)
 
-    base = dossier_ids.map do |dossier_id|
-      { dossier_id => all_columns.to_h { |column| [column.id, nil] } }
-    end.reduce(:merge)
-
     columns_by_table = all_columns.group_by(&:table)
 
-    all_h = columns_by_table.flat_map do |table, columns|
+    columns_by_table.flat_map do |table, columns|
       case table
       when 'user'
         # there is only one column available for user table
@@ -98,9 +94,7 @@ class ColumnLoaders::DossierColumnLoader
             { dossier_id => { column.id => value } }
           end
       end
-    end.compact.reduce(&:deep_merge)
-
-    base.deep_merge(all_h)
+    end.reduce(&:deep_merge)
   end
 
   private
@@ -113,26 +107,4 @@ class ColumnLoaders::DossierColumnLoader
       email
     end
   end
-
-     # case table
-     #  when 'dossier_corrections'
-     #    columns = fields.map { _1[COLUMN].to_sym }
-
-     #    id_value_h = DossierCorrection.where(dossier_id: dossiers_ids)
-     #      .pluck(:dossier_id, *columns)
-     #      .group_by(&:first) # group corrections by dossier_id
-     #      .transform_values do |values| # build each correction has an hash column => value
-     #        values.map { Hash[columns.zip(_1[1..-1])] }
-     #      end
-
-     #    fields[0][:id_value_h] = id_value_h
-
-     #  ??
-     #  when 'procedure'
-     #    Dossier
-     #      .joins(:procedure)
-     #      .where(id: dossiers_ids)
-     #      .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
-     #      .each { |id, *columns| fields.zip(columns).each { |field, value| field[:id_value_h][id] = value } }
-     #  end
 end
