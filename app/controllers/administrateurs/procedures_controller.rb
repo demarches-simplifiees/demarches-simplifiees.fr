@@ -285,7 +285,7 @@ module Administrateurs
         flash.alert = "La date limite de dépôt des dossiers doit être postérieure à la date du jour pour réactiver la procédure. #{view_context.link_to('Veuillez la modifier', edit_admin_procedure_path(@procedure))}"
         redirect_to admin_procedure_path(@procedure)
       else
-        @procedure.path = @procedure.suggested_path
+        @procedure.claim_path(current_administrateur, @procedure.suggested_path)
         @current_administrateur = current_administrateur
         @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
       end
@@ -327,9 +327,9 @@ module Administrateurs
     end
 
     def publish
-      @procedure.assign_attributes(publish_params)
+      @procedure.assign_attributes(publish_params.except(:path))
 
-      @procedure.publish_or_reopen!(current_administrateur)
+      @procedure.publish_or_reopen!(current_administrateur, publish_params[:path])
 
       if params[:old_procedure].present? && @procedure.errors.empty?
         current_administrateur
@@ -594,7 +594,7 @@ module Administrateurs
       permited_params = if @procedure&.locked?
         params.require(:procedure).permit(*editable_params)
       else
-        params.require(:procedure).permit(*editable_params, :for_individual, :path)
+        params.require(:procedure).permit(*editable_params, :for_individual)
       end
       if permited_params[:auto_archive_on].present?
         permited_params[:auto_archive_on] = Date.parse(permited_params[:auto_archive_on]) + 1.day

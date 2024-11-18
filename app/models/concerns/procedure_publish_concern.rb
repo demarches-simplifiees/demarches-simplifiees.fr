@@ -3,7 +3,7 @@
 module ProcedurePublishConcern
   extend ActiveSupport::Concern
 
-  def publish_or_reopen!(administrateur)
+  def publish_or_reopen!(administrateur, path)
     Procedure.transaction do
       if brouillon?
         reset!

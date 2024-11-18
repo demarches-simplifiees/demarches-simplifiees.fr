@@ -431,7 +431,7 @@ class Procedure < ApplicationRecord
     procedure = self.deep_clone(include: include_list) do |original, kopy|
       ClonePiecesJustificativesService.clone_attachments(original, kopy)
     end
-    procedure.path = SecureRandom.uuid
+    procedure.claim_path(admin, SecureRandom.uuid)
     procedure.aasm_state = :brouillon
     procedure.closed_at = nil
     procedure.unpublished_at = nil
