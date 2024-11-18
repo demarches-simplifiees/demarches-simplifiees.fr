@@ -5,18 +5,18 @@ class Tableau
       def pending_correction?
         return false if corrections.blank?
 
-        corrections.any? { _1[:resolved_at].nil? }
+        corrections.any?(&:nil?)
       end
 
       def resolved_corrections?
         return false if corrections.blank?
 
-        corrections.all? { _1[:resolved_at].present? }
+        corrections.all?(&:present?)
       end
     end
   end
 
-  attr_accessor :dossiers, :data
+  attr_accessor :dossiers, :data, :corrections_by_dossier_id
 
   def initialize(dossier_ids, columns)
     @dossiers_ids = dossier_ids
@@ -35,7 +35,7 @@ class Tableau
         dossier_id,
         nil,
         nil,
-        nil,
+        @corrections_by_dossier_id[dossier_id],
         @columns.map { |column| @data[dossier_id][column.id] }
       )
     end

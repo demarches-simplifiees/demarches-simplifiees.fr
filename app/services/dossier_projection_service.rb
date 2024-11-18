@@ -32,14 +32,28 @@ class DossierProjectionService
   # Those hashes are needed because:
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
-  def self.project(dossiers_ids, columns)
-    tableau = Tableau.new(dossiers_ids, columns)
-    tableau.dossiers = Dossier.find(dossiers_ids)
+  def self.project(dossier_ids, columns)
+    tableau = Tableau.new(dossier_ids, columns)
+    tableau.dossiers = Dossier.find(dossier_ids)
 
     columns.group_by(&:loader).map do |loader, columns|
       tableau.add_data(loader.load(columns, tableau.dossiers))
     end
 
+    # on charge toujours les corrections
+    tableau.corrections_by_dossier_id = corrections_by_dossier_id(dossier_ids)
+
     tableau
+  end
+
+  private
+
+  def self.corrections_by_dossier_id(dossier_ids)
+    DossierCorrection.where(dossier_id: dossier_ids)
+      .pluck(:dossier_id, :resolved_at)
+      .group_by(&:first) # group corrections by dossier_id
+      .transform_values do |dossier_id_resolved_ats| # build each correction has an hash column => value
+        dossier_id_resolved_ats.map { |_, resolved_at| resolved_at }
+      end
   end
 end
