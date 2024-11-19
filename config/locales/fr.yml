@@ -75,6 +75,7 @@ fr:
       back: "Revenir en arrière"
       back_title: "Revenir en arrière, sur le site de mon administration"
       main_menu: "Menu principal"
+      files: "Mes dossiers"
     locale_dropdown:
       select_locale: "Sélectionner une langue"
       locale_name: "Français"

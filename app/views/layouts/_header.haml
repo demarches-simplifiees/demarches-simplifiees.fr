@@ -35,7 +35,7 @@
               %ul.fr-btns-group.flex.align-center
                 - if instructeur_signed_in? || user_signed_in?
                   %li
-                    = render partial: 'layouts/account_dropdown', locals: { nav_bar_profile: nav_bar_profile, dossier: dossier }
+                    = render AccountDropdownComponent.new(dossier: @dossier, nav_bar_profile:)
                 - elsif (request.path != new_user_session_path && request.path !=agent_connect_path)
                   - if request.path == new_user_registration_path
                     %li.fr-hidden-sm.fr-unhidden-lg.fr-link--sm.fr-mb-2w.fr-mr-1v= t('views.shared.account.already_user_question')

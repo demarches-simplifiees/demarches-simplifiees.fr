@@ -84,6 +84,7 @@ en:
       back: "Back"
       back_title: "Back to my administration's website"
       main_menu: "Main menu"
+      files: "My files"
     locale_dropdown:
       select_locale: "Choose a language"
       locale_name: "English"
