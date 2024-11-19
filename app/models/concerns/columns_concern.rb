@@ -12,6 +12,13 @@ module ColumnsConcern
       column = columns.find { _1.h_id == h_id } if h_id.present?
       column = columns.find { _1.label == label } if label.present?
 
+      # TODO: to remove after linked_drop_down column column_id migration
+      if column.nil? && h_id.is_a?(Hash) && h_id[:column_id].present?
+        h_id[:column_id].gsub!('->', '.')
+
+        column = columns.find { _1.h_id == h_id }
+      end
+
       raise ActiveRecord::RecordNotFound.new("Column: unable to find h_id: #{h_id} or label: #{label} for procedure_id #{id}") if column.nil?
 
       column
@@ -37,6 +44,7 @@ module ColumnsConcern
       columns.concat(procedure_chorus_columns) if chorusable? && chorus_configuration.complete?
 
       # ensure the columns exist in main list
+      # otherwise, they will be found by the find_column method
       columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
@@ -48,6 +56,7 @@ module ColumnsConcern
       columns.concat([groupe_instructeurs_id_column, followers_instructeurs_email_column])
 
       # ensure the columns exist in main list
+      # otherwise, they will be found by the find_column method
       columns.filter { _1.id.in?(self.columns.map(&:id)) }
     end
 
