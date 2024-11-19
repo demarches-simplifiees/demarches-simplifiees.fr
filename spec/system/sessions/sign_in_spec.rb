@@ -28,7 +28,7 @@ describe 'Signin in:' do
 
       sign_in_with user.email, password
       expect(page).to have_current_path admin_procedures_path
-      expect(page).to have_content('Vous êtes connecté(e) ! Vous pouvez à tout moment alterner entre vos différents profils : administrateur, instructeur, usager.')
+      expect(page).to have_content('Vous êtes connecté(e) ! Vous pouvez à tout moment alterner entre vos différents profils : administrateur, instructeur et usager.')
     end
   end
 
