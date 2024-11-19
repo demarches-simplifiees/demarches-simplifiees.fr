@@ -23,7 +23,7 @@
                 = t('.go_user')
           - if instructeur_signed_in? && nav_bar_profile != :instructeur
             %li
-              = link_to instructeur_procedures_path, class: "fr-nav__link" do
+              = link_to instructeur_path, class: "fr-nav__link" do
                 %span.fr-icon-refresh-line.fr-icon--sm
                 = t('.go_instructor')
           - if expert_signed_in? && nav_bar_profile != :expert
@@ -33,7 +33,7 @@
                 = t('.go_expert')
           - if administrateur_signed_in? && nav_bar_profile != :administrateur
             %li
-              = link_to admin_procedures_path, class: "fr-nav__link" do
+              = link_to admin_path, class: "fr-nav__link" do
                 %span.fr-icon-refresh-line.fr-icon--sm
                 = t('.go_admin')
           - if gestionnaire_signed_in? && nav_bar_profile != :gestionnaire

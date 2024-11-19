@@ -21,4 +21,22 @@ class AccountDropdownComponent < ViewComponent::Base
   def show_profile_badge?
     nav_bar_profile != :guest
   end
+
+  def instructeur_path
+    if controller_name == "procedures" && params[:id].present?
+      instructeur_procedure_path(params[:id])
+    elsif params[:procedure_id].present?
+      instructeur_procedure_path(params[:procedure_id])
+    else
+      instructeur_procedures_path
+    end
+  end
+
+  def admin_path
+    if params[:procedure_id].present?
+      admin_procedure_path(params[:procedure_id])
+    else
+      admin_procedures_path
+    end
+  end
 end

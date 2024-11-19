@@ -55,4 +55,22 @@ describe AccountDropdownComponent, type: :component do
       end
     end
   end
+
+  context 'when in procedures controller' do
+    before do
+      allow_any_instance_of(ApplicationController).to receive(:instructeur_signed_in?).and_return(true)
+      allow_any_instance_of(ApplicationController).to receive(:controller_name).and_return('procedures')
+    end
+
+    context 'with procedure id' do
+      before do
+        allow_any_instance_of(ApplicationController).to receive(:params)
+          .and_return({ id: '123' })
+      end
+
+      it 'links to specific procedure for instructor' do
+        expect(subject.to_html).to include('/procedures/123')
+      end
+    end
+  end
 end
