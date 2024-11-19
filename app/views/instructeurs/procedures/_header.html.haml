@@ -1,55 +1,59 @@
 .procedure-header
   .clipboard-container
-    %h1.fr-h3
+    %h1.fr-h3.fr-mb-0
       = "#{procedure_libelle procedure} (n°#{procedure.id})"
-  %nav.flex.align-center.fr-translate.fr-nav{ role: "navigation", "aria-label"=> t('instructeurs.dossiers.header.banner.procedure_navigation') }
-    .fr-nav__item{ class: ('section-active' if current_nav_section == 'follow_up') }
-      = link_to instructeur_procedure_path(procedure), class: "account-btn fr-btn fr-btn--tertiary fr-btn--no-border", style: "box-shadow: none; background: none;" do
-        %span.fr-mr-1w= t('instructeurs.dossiers.header.banner.follow_up')
-    .fr-nav__item.relative{ class: ('section-active' if current_nav_section == 'procedure_management') }
-      %button.account-btn.fr-translate__btn.fr-btn.fr-btn--tertiary.fr-btn--no-border.fr-text--md{ "aria-controls" => "procedure-management", "aria-expanded" => "false", style: "box-shadow: none; background: none;" }
-        = t('instructeurs.dossiers.header.banner.procedure_management')
-      #procedure-management.fr-collapse.fr-menu
-        %ul.fr-menu__list
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-          - if procedure.instructeurs_self_management_enabled?
-            %li
-              = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(procedure), class: 'fr-nav__link'
-          - elsif procedure.administrateurs.exists?(id: current_administrateur&.id)
-            %li
-              = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(procedure), class: 'fr-nav__link'
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-          %li
-            = link_to t('views.instructeurs.dossiers.show_deleted_dossiers'), deleted_dossiers_instructeur_procedure_path(@procedure), class: 'fr-nav__link'
+  %nav.fr-nav#navigation{ role: "navigation", "aria-label": t('instructeurs.dossiers.header.banner.procedure_navigation') }
+    %ul.fr-nav__list
+      %li.fr-nav__item
+        = link_to t('instructeurs.dossiers.header.banner.follow_up'), instructeur_procedure_path(procedure), target: "_self", "aria-current": ('page' if current_nav_section == 'follow_up'), class: "fr-nav__link"
 
-    .fr-nav__item.relative{ class: ('section-active' if current_nav_section == 'user_support') }
-      %button.account-btn.fr-translate__btn.fr-btn.fr-btn--tertiary.fr-btn--no-border.fr-text--md{ "aria-controls" => "user-support", "aria-expanded" => "false", style: "box-shadow: none; background: none;" }
-        = t('instructeurs.dossiers.header.banner.user_support')
-      #user-support.fr-collapse.fr-menu
-        %ul.fr-menu__list
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-nav__link'
-          %li
-            = link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: {controller: "clipboard", clipboard_text_value: commencer_url(@procedure.path), action: "click->clipboard#copy" } do
-              = t('instructeurs.dossiers.header.banner.copy_link_button')
+      %li.fr-nav__item.relative
+        %button.fr-nav__btn{ 'aria-expanded': 'false', 'aria-controls': "menu-procedure", 'aria-current': ('page' if current_nav_section == 'procedure_management') }
+          = t('instructeurs.dossiers.header.banner.procedure_management')
+        #menu-procedure.fr-collapse.fr-menu
+          %ul.fr-menu__list
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.administrators_list'), administrateurs_instructeur_procedure_path(procedure), class: 'fr-nav__link'
 
-    .fr-nav__item.relative{ class: ('section-active' if current_nav_section == 'downloads') }
-      %button.account-btn.fr-translate__btn.fr-btn.fr-btn--tertiary.fr-btn--no-border.fr-text--md{ "aria-controls" => "downloads", "aria-expanded" => "false", style: "box-shadow: none; background: none;" }
-        = t('instructeurs.dossiers.header.banner.downloads')
-      #downloads.fr-collapse.fr-menu
-        %ul.fr-menu__list
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.exports_list'), exports_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.archives'), instructeur_archives_path(procedure), class: 'fr-nav__link'
-          %li
-            = link_to t('instructeurs.dossiers.header.banner.exports_models'), exports_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+            - if procedure.instructeurs_self_management_enabled?
+              %li
+                = link_to t('instructeurs.dossiers.header.banner.instructeurs'), instructeur_groupes_path(procedure), class: 'fr-nav__link'
+
+            - elsif procedure.administrateurs.exists?(id: current_administrateur&.id)
+              %li
+                = link_to t('instructeurs.dossiers.header.banner.instructeurs'), admin_procedure_groupe_instructeurs_path(procedure), class:
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.notification_management'), email_notifications_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.statistics'), stats_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+            %li
+              = link_to t('views.instructeurs.dossiers.show_deleted_dossiers'), deleted_dossiers_instructeur_procedure_path(@procedure), class: 'fr-nav__link'
+
+      %li.fr-nav__item.relative
+        %button.fr-nav__btn{ 'aria-expanded': 'false', 'aria-controls': 'menu-support', 'aria-current': ('page' if current_nav_section == 'user_support') }
+          = t('instructeurs.dossiers.header.banner.user_support')
+        #menu-support.fr-collapse.fr-menu
+          %ul.fr-menu__list
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-nav__link'
+            %li
+              = link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: {controller: "clipboard", clipboard_text_value: commencer_url(@procedure.path), action: "click->clipboard#copy" } do
+                = t('instructeurs.dossiers.header.banner.copy_link_button')
+
+      %li.fr-nav__item.relative
+        %button.fr-nav__btn{ 'aria-expanded': 'false', 'aria-controls': 'menu-downloads', 'aria-current': ('page' if current_nav_section == 'downloads') }
+          = t('instructeurs.dossiers.header.banner.downloads')
+        #menu-downloads.fr-collapse.fr-menu
+          %ul.fr-menu__list
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.exports_list'), exports_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.archives'), instructeur_archives_path(procedure), class: 'fr-nav__link'
+            %li
+              = link_to t('instructeurs.dossiers.header.banner.exports_models'), exports_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+
   - if @has_export_notification
     %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
 

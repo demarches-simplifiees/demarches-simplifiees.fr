@@ -6,7 +6,7 @@
       = render partial: 'instructeurs/breadcrumbs',
       locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)]] }
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
-      %hr.fr-mt-1v
+      %hr
       %h1.fr-h5.fr-mb-0= t('.file_tracking')
 
     .fr-container.flex= render partial: "tabs", locals: { procedure: @procedure,
