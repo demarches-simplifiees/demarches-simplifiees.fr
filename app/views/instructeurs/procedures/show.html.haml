@@ -142,9 +142,9 @@
 
                   %td.status-col
                     - status = [status_badge(p.dossier.state)]
-                    - if p.pending_correction?
+                    - if p.dossier.pending_correction?
                       - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                    - elsif p.dossier.state.to_sym == :en_construction && p.resolved_corrections?
+                    - elsif p.dossier.last_correction_resolved?
                       - status << correction_resolved_badge(html_class: "fr-mt-1v")
                     = link_to_if(p.dossier.hidden_by_administration_at.blank?, safe_join(status), path, class: class_names("cell-link": true, "fr-py-0": status.many?))
 
