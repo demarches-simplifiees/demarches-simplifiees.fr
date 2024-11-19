@@ -3,6 +3,8 @@
 
 = render Procedure::ImportComponent.new(procedure: @procedure)
 
+= link_to 'Ajouter un groupe', ajout_admin_procedure_groupe_instructeurs_path(@procedure), class: "fr-btn fr-btn--icon-left fr-icon-add-line fr-mb-3w"
+
 = render Procedure::GroupesSearchComponent.new(procedure: @procedure,
   query: @query,
   to_configure_count: @procedure.groupe_instructeurs.filter(&:routing_to_configure?).count,
