@@ -198,6 +198,16 @@ describe ContactController, question_type: :controller do
           expect(response.body).to include("un message")
         end
       end
+
+      context "with an invalid attachment type" do
+        let(:params) { super().merge(piece_jointe: "not_a_file") }
+
+        it "returns unprocessable entity status" do
+          subject
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to include("La pièce jointe doit être un fichier")
+        end
+      end
     end
   end
 

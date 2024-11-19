@@ -71,3 +71,4 @@ en:
     create:
       direct_message_sent: Your message has been sent to the mailbox in your file.
       message_sent: Your message has been sent.
+      invalid_piece_jointe: 'The attachment must be a file'

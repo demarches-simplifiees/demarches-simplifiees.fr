@@ -2,6 +2,7 @@
 
 class ContactController < ApplicationController
   invisible_captcha only: [:create], on_spam: :redirect_to_root
+  before_action :reject_invalid_attachment, only: [:create]
 
   def index
     @form = ContactForm.new(tags: contact_form_params.fetch(:tags, []), dossier_id: dossier&.id)
@@ -74,5 +75,15 @@ class ContactController < ApplicationController
     else
       params.permit(:dossier_id, tags: []) # prefilling form
     end
+  end
+
+  def reject_invalid_attachment
+    piece_jointe = params.dig(:contact_form, :piece_jointe)
+    return if piece_jointe.nil?
+    return if piece_jointe.is_a?(ActionDispatch::Http::UploadedFile)
+
+    @form = ContactForm.new(user: current_user)
+    flash.alert = t('invalid_piece_jointe', scope: "contact.create")
+    render(@form.for_admin ? :admin : :index, status: :unprocessable_entity)
   end
 end
