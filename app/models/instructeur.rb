@@ -27,6 +27,8 @@ class Instructeur < ApplicationRecord
   has_many :exports, as: :user_profile
   has_many :archives, as: :user_profile
 
+  has_many :instructeurs_procedures, dependent: :destroy
+
   belongs_to :user
 
   scope :with_instant_email_message_notifications, -> {
