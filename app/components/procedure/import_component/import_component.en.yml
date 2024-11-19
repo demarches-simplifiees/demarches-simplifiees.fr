@@ -6,9 +6,11 @@ en:
     file_size_limit: "File size limit : %{max_file_size}."
     groupes:
       title: Bulk Import / Export
-      notice_1_html: For the import, your csv file must have <strong>2 columns (Group, Email)</strong> (see file model below). The file size must be less than %{csv_max_size}.
-      notice_2_html: The import does not overwrite existing groups and instructors. It only allows you to <strong>add them</strong>.
+      notice_1_html: For the import, your csv file must have <strong>2 columns (Group, Email)</strong> (see file model below). The file size must be less than %{csv_max_size}<br>The import does not overwrite existing groups and instructors. It only allows you to <strong>add them</strong>. Once your import is done, you will then need to <strong>configure routing rules</strong> for each of the added groups.
     instructeurs:
       title: Adding instructors with file import
       notice_1_html: For the import, your csv file must have <strong>1 column (Email)</strong> listing the email addresses of the instructors (see file model below). The file size must be less than %{csv_max_size}.
       notice_2_html: The import does not overwrite existing instructors. It only allows you to <strong>add them</strong>.
+    notification_alert:
+      non_publiee: Even if your procedure is still in test / unpublished, all the instructors you add to the procedure will be notified by email.
+      publiee: All the instructors you add to the procedure will be notified by email.
