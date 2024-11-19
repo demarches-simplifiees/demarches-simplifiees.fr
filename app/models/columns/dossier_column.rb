@@ -18,5 +18,5 @@ class Columns::DossierColumn < Column
 
   def dossier_column? = true
 
-  def loader = ColumnLoaders::DossierColumnLoader
+  def projector = ColumnProjectors::DossierColumnProjector
 end

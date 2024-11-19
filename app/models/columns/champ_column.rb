@@ -47,7 +47,7 @@ class Columns::ChampColumn < Column
 
   def champ_column? = true
 
-  def loader = ColumnLoaders::ChampColumnLoader
+  def projector = ColumnProjectors::ChampColumnProjector
 
   private
 

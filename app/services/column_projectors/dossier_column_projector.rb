@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class ColumnLoaders::DossierColumnLoader
-  def self.load(all_columns, dossiers)
+class ColumnProjectors::DossierColumnProjector
+  def self.project(all_columns, dossiers)
     dossier_ids = dossiers.map(&:id)
 
     columns_by_table = all_columns.group_by(&:table)

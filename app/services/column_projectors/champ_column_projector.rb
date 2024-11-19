@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class ColumnLoaders::ChampColumnLoader
-  def self.load(columns, dossiers)
+class ColumnProjectors::ChampColumnProjector
+  def self.project(columns, dossiers)
     dossier_ids = dossiers.map(&:id)
 
     champs = Champ
