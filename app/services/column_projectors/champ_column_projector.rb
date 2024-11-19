@@ -22,8 +22,10 @@ class ColumnProjectors::ChampColumnProjector
 
     {
       champ.dossier_id => {
-        column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :view)
+        column.id => ExportedColumnFormatter.format(column:, raw_value:, format: :html)
       }
     }
   end
 end
+
+# essayer de faire le formatage dans un view component qui prendrait Column, et Dossier/ ou champ suivant comment marche Column.value
