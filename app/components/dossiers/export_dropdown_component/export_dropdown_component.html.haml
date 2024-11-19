@@ -38,6 +38,12 @@
                   = f.label :export_format_zip do
                     Fichier zip
                     %span.fr-hint-text ne contient pas l'horodatage ni le journal de log
+              - if allowed_format?({format: :json})
+                .fr-fieldset__element
+                  .fr-radio-group
+                    = f.radio_button :export_format, 'json'
+                    = f.label :export_format_json do
+                      Fichier geojson
 
               .fr-fieldset__element
                 %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
