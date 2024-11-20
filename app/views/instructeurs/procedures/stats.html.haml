@@ -4,7 +4,7 @@
 .sub-header
   .fr-container.flex.column
     = render partial: 'instructeurs/breadcrumbs',
-      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+      locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb], libelle: @procedure.libelle.truncate(22)), instructeur_procedure_path(@procedure)],
                         [t('instructeurs.dossiers.header.banner.statistics')]] }
 
     = render partial: 'instructeurs/procedures/header',

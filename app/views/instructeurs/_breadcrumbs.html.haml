@@ -1,4 +1,4 @@
-%nav.fr-mb-0.fr-breadcrumb.mt-0{ role: "navigation", aria: { label: t('you_are_here', scope: [:layouts, :breadcrumb]) } }
+%nav.fr-breadcrumb.fr-mt-0.fr-mb-1w{ role: "navigation", aria: { label: t('you_are_here', scope: [:layouts, :breadcrumb]) } }
   %button.fr-breadcrumb__button{ aria: { expanded: "false", controls: "breadcrumb-1" } }
     = t('show', scope: [:layouts, :breadcrumb])
 
@@ -10,4 +10,4 @@
         - if i == steps.size - 1
           %li= link_to step[0], '', { aria: { current: "page" } , class: 'fr-breadcrumb__link' }
         - else
-          %li= link_to "#{step[0]} - Suivi des dossiers", step[1], class: 'fr-breadcrumb__link'
+          %li= link_to step[0], step[1], class: 'fr-breadcrumb__link'

@@ -16,3 +16,5 @@ fr:
       go_to_FAQ: "consulter la FAQ"
       url_FAQ: "/faq#accordion-administrateur-2"
       faq: Foire aux Questions
+      show_dossier: "Dossier nº %{dossier_id} – %{owner_name}"
+      show_procedure: '%{libelle} – Suivi des dossiers'
