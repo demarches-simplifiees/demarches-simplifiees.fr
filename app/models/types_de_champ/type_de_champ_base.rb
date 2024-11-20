@@ -116,7 +116,12 @@ class TypesDeChamp::TypeDeChampBase
   private
 
   def libelle_with_prefix(prefix)
-    [prefix, libelle].compact.join(' – ')
+    # SIRET needs to be explicit in listings for better UI readability
+    if type_champ == "siret" && !libelle.upcase.include?("SIRET")
+      [prefix, libelle, "SIRET"].compact.join(' – ')
+    else
+      [prefix, libelle].compact.join(' – ')
+    end
   end
 
   def paths
