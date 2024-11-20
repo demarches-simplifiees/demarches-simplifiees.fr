@@ -1,5 +1,6 @@
 .procedure-header
-  .clipboard-container
+  .clipboard-container.flex
+    = render Instructeurs::BackButtonComponent.new(to: instructeur_procedures_path)
     %h1.fr-h3.fr-mb-0
       = "#{procedure_libelle procedure} (n°#{procedure.id})"
   %nav.fr-nav#navigation{ role: "navigation", "aria-label": t('instructeurs.dossiers.header.banner.procedure_navigation') }
