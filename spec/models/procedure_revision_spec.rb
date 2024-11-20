@@ -830,6 +830,7 @@ describe ProcedureRevision do
             .revision_types_de_champ
             .where(type_de_champ: first_child)
             .update(type_de_champ: new_child)
+          new_draft.revision_types_de_champ.reload
         end
 
         it 'returns the children regarding the revision' do

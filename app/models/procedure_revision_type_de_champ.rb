@@ -5,7 +5,9 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
   belongs_to :type_de_champ
 
   belongs_to :parent, class_name: 'ProcedureRevisionTypeDeChamp', optional: true
+  has_one :parent_type_de_champ, through: :parent, source: :type_de_champ
   has_many :revision_types_de_champ, -> { ordered }, foreign_key: :parent_id, class_name: 'ProcedureRevisionTypeDeChamp', inverse_of: :parent, dependent: :destroy
+  has_many :types_de_champ, through: :revision_types_de_champ, source: :type_de_champ
   has_one :procedure, through: :revision
   scope :root, -> { where(parent: nil) }
   scope :ordered, -> { order(:position, :id) }
@@ -17,6 +19,10 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   def child?
     parent_id.present?
+  end
+
+  def orphan?
+    child? && !parent_type_de_champ.repetition?
   end
 
   def first?
@@ -33,7 +39,7 @@ class ProcedureRevisionTypeDeChamp < ApplicationRecord
 
   def siblings
     if child?
-      revision.revision_types_de_champ.where(parent_id:).ordered
+      parent.revision_types_de_champ
     elsif private?
       revision.revision_types_de_champ_private
     else

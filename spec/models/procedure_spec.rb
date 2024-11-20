@@ -398,9 +398,8 @@ describe Procedure do
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).to include(invalid_repetition_error_message)
 
           new_draft = procedure.draft_revision
-          repetition = procedure.draft_revision.types_de_champ_public.find(&:repetition?)
-          parent_coordinate = new_draft.revision_types_de_champ.find_by(type_de_champ: repetition)
-          new_draft.revision_types_de_champ.create(type_de_champ: create(:type_de_champ), position: 0, parent: parent_coordinate)
+          repetition = new_draft.types_de_champ_public.find(&:repetition?)
+          new_draft.add_type_de_champ(type_champ: :text, libelle: 'Nom', parent_stable_id: repetition.stable_id)
 
           procedure.validate(:publication)
           expect(procedure.errors.messages_for(:draft_types_de_champ_public)).not_to include(invalid_repetition_error_message)

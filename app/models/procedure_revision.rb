@@ -45,22 +45,26 @@ class ProcedureRevision < ApplicationRecord
     after_stable_id = params.delete(:after_stable_id)
     after_coordinate, _ = coordinate_and_tdc(after_stable_id)
 
-    siblings = siblings_for(parent_coordinate:, private_tdc: params[:private])
+    type_de_champ = TypeDeChamp.new(params)
 
-    tdc = TypeDeChamp.new(params)
-    if tdc.save
-      # moving all the impacted tdc down
-      position = next_position_for(after_coordinate:, siblings:)
-      siblings.where("position >= ?", position).update_all("position = position + 1")
+    if type_de_champ.save
+      siblings = siblings_for(type_de_champ:, parent_coordinate:)
+      position = next_position_for(after_coordinate:)
 
-      # insertion of the new tdc
-      h = { type_de_champ: tdc, parent_id: parent_id, position: position }
-      revision_types_de_champ.create!(h)
+      transaction do
+        # moving all the impacted tdc down
+        siblings.where("position >= ?", position).update_all("position = position + 1")
+
+        # insertion of the new tdc
+        revision_types_de_champ.create!(type_de_champ:, parent_id:, position:)
+      end
+
+      revision_types_de_champ.reset
     end
 
-    tdc
+    type_de_champ
   rescue => e
-    TypeDeChamp.new.tap { |tdc| tdc.errors.add(:base, e.message) }
+    TypeDeChamp.new.tap { _1.errors.add(:base, e.message) }
   end
 
   def find_and_ensure_exclusive_use(stable_id)
@@ -77,12 +81,17 @@ class ProcedureRevision < ApplicationRecord
     coordinate, _ = coordinate_and_tdc(stable_id)
     siblings = coordinate.siblings
 
-    if position > coordinate.position
-      siblings.where(position: coordinate.position..position).update_all("position = position - 1")
-    else
-      siblings.where(position: position..coordinate.position).update_all("position = position + 1")
+    transaction do
+      if position > coordinate.position
+        siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+      else
+        siblings.where(position: position..coordinate.position).update_all("position = position + 1")
+      end
+      coordinate.update_column(:position, position)
     end
-    coordinate.update_column(:position, position)
+
+    revision_types_de_champ.reset
+    coordinate.reload
     coordinate
   end
 
@@ -90,16 +99,18 @@ class ProcedureRevision < ApplicationRecord
     coordinate, _ = coordinate_and_tdc(stable_id)
     siblings = coordinate.siblings
 
-    if position > coordinate.position
-      siblings.where(position: coordinate.position..position).update_all("position = position - 1")
-      coordinate.update_column(:position, position)
-    else
-      siblings.where(position: (position + 1)...coordinate.position).update_all("position = position + 1")
-      coordinate.update_column(:position, position + 1)
+    transaction do
+      if position > coordinate.position
+        siblings.where(position: coordinate.position..position).update_all("position = position - 1")
+        coordinate.update_column(:position, position)
+      else
+        siblings.where(position: (position + 1)...coordinate.position).update_all("position = position + 1")
+        coordinate.update_column(:position, position + 1)
+      end
     end
 
+    revision_types_de_champ.reset
     coordinate.reload
-
     coordinate
   end
 
@@ -110,13 +121,17 @@ class ProcedureRevision < ApplicationRecord
     return nil if coordinate.nil?
 
     children = children_of(tdc).to_a
-    coordinate.destroy
 
-    children.each(&:destroy_if_orphan)
-    tdc.destroy_if_orphan
+    transaction do
+      coordinate.destroy
 
-    coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+      children.each(&:destroy_if_orphan)
+      tdc.destroy_if_orphan
 
+      coordinate.siblings.where("position >= ?", coordinate.position).update_all("position = position - 1")
+    end
+
+    revision_types_de_champ.reset
     coordinate
   end
 
@@ -181,33 +196,11 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def children_of(tdc)
-    if revision_types_de_champ.loaded?
-      parent_coordinate_id = revision_types_de_champ
-        .filter { _1.type_de_champ_id == tdc.id }
-        .map(&:id)
-
-      revision_types_de_champ
-        .filter { _1.parent_id.in?(parent_coordinate_id) }
-        .sort_by(&:position)
-        .map(&:type_de_champ)
-    else
-      parent_coordinate_id = revision_types_de_champ.where(type_de_champ: tdc).select(:id)
-
-      types_de_champ
-        .where(procedure_revision_types_de_champ: { parent_id: parent_coordinate_id })
-        .order("procedure_revision_types_de_champ.position")
-    end
+    coordinate_for(tdc).types_de_champ
   end
 
   def parent_of(tdc)
-    revision_types_de_champ
-      .find { _1.type_de_champ_id == tdc.id }.parent&.type_de_champ
-  end
-
-  def remove_children_of(tdc)
-    children_of(tdc).each do |child|
-      remove_type_de_champ(child.stable_id)
-    end
+    coordinate_for(tdc).parent_type_de_champ
   end
 
   def dependent_conditions(tdc)
@@ -268,24 +261,17 @@ class ProcedureRevision < ApplicationRecord
     end
   end
 
-  def children_types_de_champ_as_json(tdcs_as_json, parent_tdcs)
-    parent_tdcs.each do |parent_tdc|
-      tdc_as_json = tdcs_as_json.find { |json| json["id"] == parent_tdc.stable_id }
-      tdc_as_json&.merge!(types_de_champ: children_of(parent_tdc).includes(piece_justificative_template_attachment: :blob).map(&:as_json_for_editor))
-    end
-  end
-
-  def siblings_for(parent_coordinate: nil, private_tdc: false)
+  def siblings_for(type_de_champ:, parent_coordinate: nil)
     if parent_coordinate
       parent_coordinate.revision_types_de_champ
-    elsif private_tdc
+    elsif type_de_champ.private?
       revision_types_de_champ_private
     else
       revision_types_de_champ_public
     end
   end
 
-  def next_position_for(siblings:, after_coordinate: nil)
+  def next_position_for(after_coordinate: nil)
     # either we are at the beginning of the list or after another item
     if after_coordinate.nil? # first element of the list, starts at 0
       0
@@ -477,10 +463,12 @@ class ProcedureRevision < ApplicationRecord
   end
 
   def replace_type_de_champ_by_clone(coordinate)
-    cloned_type_de_champ = coordinate.type_de_champ.deep_clone do |original, kopy|
-      ClonePiecesJustificativesService.clone_attachments(original, kopy)
+    transaction do
+      cloned_type_de_champ = coordinate.type_de_champ.deep_clone do |original, kopy|
+        ClonePiecesJustificativesService.clone_attachments(original, kopy)
+      end
+      coordinate.update!(type_de_champ: cloned_type_de_champ)
+      cloned_type_de_champ
     end
-    coordinate.update!(type_de_champ: cloned_type_de_champ)
-    cloned_type_de_champ
   end
 end

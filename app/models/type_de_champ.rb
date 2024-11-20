@@ -336,7 +336,7 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def child?(revision)
-    revision.revision_types_de_champ.find { _1.stable_id == stable_id }&.child?
+    revision.coordinate_for(self)&.child?
   end
 
   def filename_for_attachement(attachment_sym)
@@ -403,10 +403,10 @@ class TypeDeChamp < ApplicationRecord
   end
 
   def level_for_revision(revision)
-    rtdc = revision.revision_types_de_champ.find { |rtdc| rtdc.stable_id == stable_id }
+    parent_type_de_champ = revision.parent_of(self)
 
-    if rtdc.child?
-      header_section_level_value.to_i + rtdc.parent.type_de_champ.current_section_level(revision)
+    if parent_type_de_champ.present?
+      header_section_level_value.to_i + parent_type_de_champ.current_section_level(revision)
     elsif header_section_level_value
       header_section_level_value.to_i
     else
