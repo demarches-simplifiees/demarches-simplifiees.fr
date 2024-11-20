@@ -151,6 +151,10 @@
   padding: 0 0.5rem;
 }
 
+.grey-background {
+  background-color: var(--background-overlap-grey-hover);
+}
+
 .overflow-y-visible {
   overflow: visible;
 }
