@@ -51,6 +51,16 @@ class Column
   def dossier_column? = false
   def champ_column? = false
 
+  def label_for_value(value)
+    if options_for_select.present?
+      # options for select store ["trad", :enum_value]
+      options_for_select.to_h { |(label, value)| [value.to_s, label] }
+        .fetch(value.to_s, value.to_s)
+    else
+      value
+    end
+  end
+
   private
 
   def column_id = "#{table}/#{column}"

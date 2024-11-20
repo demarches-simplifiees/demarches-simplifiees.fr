@@ -44,9 +44,6 @@ class ExportedColumnFormatter
   end
 
   def self.format_enum(column:, raw_value:)
-    # options for select store ["trad", :enum_value]
-    selected_option = column.options_for_select.find { _1[1].to_s == raw_value }
-
-    selected_option ? selected_option.first : raw_value
+    column.label_for_value(raw_value)
   end
 end
