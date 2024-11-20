@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier, :columns)
-  end
-
   def self.project(dossier_ids, columns)
     to_include = columns.map(&:table).uniq.map(&:to_sym).map do |sym|
       case sym

@@ -19,6 +19,7 @@ class Instructeurs::CellComponent < ApplicationComponent
       helpers.tags_label(@dossier.labels)
     elsif @column.avis?
       sum_up_avis(@dossier.avis)
+    # needed ?
     elsif @column.column == 'sva_svr_decision_on'
       raise
       @column.value(@dossier)

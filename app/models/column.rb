@@ -52,7 +52,6 @@ class Column
 
   def dossier_column? = false
   def champ_column? = false
-  def projector = ColumnProjectors::StubColumnProjector
 
   private
 

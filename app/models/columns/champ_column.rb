@@ -47,8 +47,6 @@ class Columns::ChampColumn < Column
 
   def champ_column? = true
 
-  def projector = ColumnProjectors::ChampColumnProjector
-
   private
 
   def column_id = "type_de_champ/#{stable_id}"
