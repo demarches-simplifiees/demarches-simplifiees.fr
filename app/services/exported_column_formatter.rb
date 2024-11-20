@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class ExportedColumnFormatter
-  def self.format(column:, raw_value:, format:)
-    return if raw_value.nil?
+  def self.format(column:, champ_or_dossier:, format:)
+    return if champ_or_dossier.nil?
+
+    raw_value = column.value(champ_or_dossier)
 
     case column.type
     when :boolean
@@ -13,8 +15,6 @@ class ExportedColumnFormatter
       format_enum(column:, raw_value:)
     when :enums
       format_enums(column:, raw_values: raw_value)
-    when :datetime, :date
-      I18n.l(raw_value)
     else
       raw_value
     end
