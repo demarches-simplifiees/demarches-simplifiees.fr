@@ -1497,8 +1497,7 @@ Style/WhileUntilModifier:
   Enabled: false
 
 Style/WordArray:
-  Enabled: true
-  EnforcedStyle: brackets
+  Enabled: false
 
 Style/YodaCondition:
   Enabled: true
