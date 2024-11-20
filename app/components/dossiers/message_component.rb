@@ -80,7 +80,7 @@ class Dossiers::MessageComponent < ApplicationComponent
   end
 
   def delete_url
-    groupe_gestionnaire ? gestionnaire_groupe_gestionnaire_commentaire_path(groupe_gestionnaire, commentaire) : instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire)
+    groupe_gestionnaire ? gestionnaire_groupe_gestionnaire_commentaire_path(groupe_gestionnaire, commentaire, statut: params[:statut]) : instructeur_commentaire_path(commentaire.dossier.procedure, commentaire.dossier, commentaire, statut: params[:statut])
   end
 
   def highlight?

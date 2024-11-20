@@ -1,5 +1,5 @@
 .motivation{ class: class_names(popup_class => true, hidden: !defined?(visible) || !visible, "fr-pb-2w fr-px-2w": true) }
-  = form_tag(defined?(form_path) ? form_path : terminer_instructeur_dossier_path(dossier.procedure, dossier), data: { turbo: true, turbo_confirm: confirm }, method: :post, multipart: true) do
+  = form_tag(defined?(form_path) ? form_path : terminer_instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut]), data: { turbo: true, turbo_confirm: confirm }, method: :post, multipart: true) do
     - if title == 'Accepter'
       = text_area :dossier, :motivation, class: 'fr-input', placeholder: placeholder, required: false
       - if dossier.attestation_template&.activated?

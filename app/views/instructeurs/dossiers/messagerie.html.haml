@@ -2,4 +2,4 @@
 
 = render partial: "header", locals: { dossier: @dossier, gallery_attachments: @gallery_attachments }
 
-= render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_instructeur, messagerie_seen_at: @messagerie_seen_at , new_commentaire: @commentaire, form_url: commentaire_instructeur_dossier_path(@dossier.procedure, @dossier) }
+= render partial: "shared/dossiers/messagerie", locals: { dossier: @dossier, connected_user: current_instructeur, messagerie_seen_at: @messagerie_seen_at , new_commentaire: @commentaire, form_url: commentaire_instructeur_dossier_path(@dossier.procedure, @dossier, statut: params[:statut]) }

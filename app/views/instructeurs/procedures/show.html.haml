@@ -111,7 +111,7 @@
 
                     - @projected_dossiers.each do |p|
                       - dossier = p.dossier
-                      - path = instructeur_dossier_path(@procedure, dossier.id)
+                      - path = instructeur_dossier_path(@procedure, dossier.id, statut: params[:statut])
                       %tr{ class: class_names("file-hidden-by-user" => dossier.hidden_by_user_at.present?), id: "table-dossiers-row-#{dossier.id}", "aria-selected" => "false", "data-row-key" => dossier.id }
                         - if batch_operation_component.render?
                           %th.fr-cell--fixed{ scope: 'row' }

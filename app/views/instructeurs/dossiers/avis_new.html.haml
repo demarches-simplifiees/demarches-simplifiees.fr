@@ -9,7 +9,7 @@
     .fr-col
       - if !@dossier.termine?
         - if @dossier.procedure.allow_expert_review
-          = render partial: "shared/avis/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, @dossier), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: false, avis: @avis }
+          = render partial: "shared/avis/form", locals: { url: avis_instructeur_dossier_path(@dossier.procedure, params[:statut], @dossier), linked_dossiers: @dossier.linked_dossiers_for(current_instructeur), must_be_confidentiel: false, avis: @avis }
         - else
           %h2.empty-text
             = t('helpers.information_text.unauthorized_avis_text')

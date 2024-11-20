@@ -7,6 +7,7 @@ describe 'instructeurs/dossiers/annotations_privees', type: :view do
   before do
     sign_in(current_instructeur.user)
     allow(view).to receive(:current_instructeur).and_return(current_instructeur)
+    allow(controller).to receive(:params).and_return({ statut: 'a-suivre' })
     assign(:dossier, dossier)
   end
 

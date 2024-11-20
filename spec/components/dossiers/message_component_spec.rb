@@ -10,6 +10,10 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
       groupe_gestionnaire: groupe_gestionnaire
     )
   end
+  before do
+    allow(component).to receive(:params).and_return({ statut: 'a-suivre' })
+  end
+
   let(:seen_at) { commentaire.created_at + 1.hour }
 
   describe 'for dossier' do
@@ -230,7 +234,7 @@ RSpec.describe Dossiers::MessageComponent, type: :component do
 
       describe 'delete message button for gestionnaire' do
         let(:connected_user) { gestionnaire }
-        let(:form_url) { component.helpers.gestionnaire_groupe_gestionnaire_commentaire_path(groupe_gestionnaire, commentaire) }
+        let(:form_url) { component.helpers.gestionnaire_groupe_gestionnaire_commentaire_path(groupe_gestionnaire, commentaire, statut: 'a-suivre') }
 
         context 'when commentaire had been written by connected gestionnaire' do
           it { is_expected.to have_selector("form[action=\"#{form_url}\"]") }

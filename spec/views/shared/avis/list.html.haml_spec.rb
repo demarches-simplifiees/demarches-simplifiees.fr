@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 describe 'shared/avis/_list', type: :view do
-  before { view.extend DossierHelper }
+  before do
+    view.extend DossierHelper
+    allow(view).to receive(:params).and_return({ statut: 'a-suivre' })
+  end
 
   subject { render 'shared/avis/list', avis: avis, avis_seen_at: seen_at, expert_or_instructeur: instructeur }
 

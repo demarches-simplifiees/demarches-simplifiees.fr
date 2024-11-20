@@ -22,7 +22,7 @@ module Instructeurs
       else
         flash[:notice] = "Cette archive a déjà été générée."
       end
-      redirect_to instructeur_archives_path(@procedure)
+      redirect_to list_instructeur_archives_path(@procedure)
     end
 
     private

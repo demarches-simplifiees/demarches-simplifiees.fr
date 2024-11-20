@@ -5,6 +5,15 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
   let(:procedure) { create(:procedure) }
 
   subject { render_inline(component).to_html }
+  let(:component) do
+    described_class.new(
+      batch: batch_operation,
+      procedure:
+    )
+  end
+  before do
+    allow(component).to receive(:procedure_path).and_return(Rails.application.routes.url_helpers.instructeur_procedure_path(procedure, statut: 'a-suivre'))
+  end
 
   describe 'archiver' do
     let(:component) do
@@ -54,7 +63,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -108,7 +117,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -162,7 +171,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -216,7 +225,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -270,7 +279,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -396,7 +405,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -450,7 +459,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -504,7 +513,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -558,7 +567,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end
@@ -612,7 +621,7 @@ RSpec.describe Dossiers::BatchAlertComponent, type: :component do
       it { expect(batch_operation.seen_at).to eq(nil) }
 
       it 'on next render "seen_at" is set to avoid rendering alert' do
-        render_inline(component).to_html
+        render_inline(described_class.new(batch: batch_operation, procedure:)).to_html
         expect(batch_operation.seen_at).not_to eq(nil)
       end
     end

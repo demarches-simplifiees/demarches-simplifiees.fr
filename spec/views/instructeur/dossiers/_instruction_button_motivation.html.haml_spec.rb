@@ -4,6 +4,7 @@ describe 'instructeurs/dossiers/instruction_button_motivation', type: :view do
   let(:dossier) { create(:dossier, :en_instruction) }
 
   subject do
+    allow(controller).to receive(:params).and_return(statut: 'a-suivre')
     render(
       'instructeurs/dossiers/instruction_button_motivation',
       dossier: dossier,

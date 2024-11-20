@@ -12,7 +12,7 @@
         Uniquement cet onglet
 
     - menu.with_item do
-      = link_to instructeur_dossier_path(dossier.procedure, dossier, format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link", role: 'menuitem' do
+      = link_to instructeur_dossier_path(dossier.procedure, dossier, statut: params[:statut], format: :pdf), target: "_blank", rel: "noopener", class: "menu-item menu-link", role: 'menuitem' do
         Export PDF
 
     - if dossier.geo_data?

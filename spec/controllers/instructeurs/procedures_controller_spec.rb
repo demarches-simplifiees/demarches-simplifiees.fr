@@ -263,7 +263,7 @@ describe Instructeurs::ProceduresController, type: :controller do
     let!(:gi_2) { create(:groupe_instructeur, label: '2', procedure: procedure) }
     let!(:gi_3) { create(:groupe_instructeur, label: '3', procedure: procedure) }
 
-    let(:statut) { nil }
+    let(:statut) { 'a-suivre' }
 
     subject do
       get :show, params: { procedure_id: procedure.id, statut: statut }
