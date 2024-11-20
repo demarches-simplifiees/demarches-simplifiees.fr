@@ -107,6 +107,17 @@ class Instructeur < ApplicationRecord
     end
   end
 
+  def ensure_instructeur_procedures_for(procedures)
+    current_instructeur_procedures = instructeurs_procedures.where(procedure_id: procedures.map(&:id))
+    top_position = current_instructeur_procedures.map(&:position).max || 0
+    missing_instructeur_procedures = procedures.sort_by(&:published_at).map(&:id).filter_map do |procedure_id|
+      if !procedure_id.in?(current_instructeur_procedures.map(&:procedure_id))
+        { instructeur_id: id, procedure_id:, position: top_position += 1 }
+      end
+    end
+    InstructeursProcedure.insert_all(missing_instructeur_procedures) if missing_instructeur_procedures.size.positive?
+  end
+
   def procedure_presentation_and_errors_for_procedure_id(procedure_id)
     assign_to
       .joins(:groupe_instructeur)

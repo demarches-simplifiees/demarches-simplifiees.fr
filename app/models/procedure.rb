@@ -193,6 +193,17 @@ class Procedure < ApplicationRecord
     )
   }
 
+  scope :for_api_v2, -> {
+    includes(:draft_revision, :published_revision, administrateurs: :user)
+  }
+
+  scope :order_by_position_for, -> (instructeur) {
+    joins(:instructeurs_procedures)
+      .select('procedures.*, instructeurs_procedures.position AS position')
+      .where(instructeurs_procedures: { instructeur_id: instructeur.id })
+      .order('position DESC')
+  }
+
   enum declarative_with_state: {
     en_instruction:  'en_instruction',
     accepte:         'accepte'
@@ -202,10 +213,6 @@ class Procedure < ApplicationRecord
     internal_procedure: 'internal_procedure',
     other: 'other'
   }, _prefix: true
-
-  scope :for_api_v2, -> {
-    includes(:draft_revision, :published_revision, administrateurs: :user)
-  }
 
   validates :libelle, presence: true, allow_blank: false, allow_nil: false
   validates :description, presence: true, allow_blank: false, allow_nil: false
