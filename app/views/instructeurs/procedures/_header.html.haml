@@ -56,7 +56,7 @@
                 - if @has_export_notification
                   %span.fr-ml-1v.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
             %li
-              = link_to t('instructeurs.dossiers.header.banner.archives'), instructeur_archives_path(procedure), class: 'fr-nav__link'
+              = link_to t('instructeurs.dossiers.header.banner.archives'), list_instructeur_archives_path(procedure), class: 'fr-nav__link'
             %li
               = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(procedure), class: 'fr-nav__link'
 

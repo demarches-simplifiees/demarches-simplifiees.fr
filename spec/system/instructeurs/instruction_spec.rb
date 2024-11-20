@@ -199,20 +199,19 @@ describe 'Instructing a dossier:', js: true do
     expect(page).to have_text("Dossier envoyé")
   end
 
-  context 'A instructeur can ask for an Archive' do
-    let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
-    let(:dossier) { create(:dossier, :accepte, procedure: procedure) }
-    before do
-      log_in(instructeur.email, password)
-      visit instructeur_archives_path(procedure)
-    end
-    scenario 'download' do
-      expect {
-        page.first(".fr-table .fr-btn").click
-      }.to have_enqueued_job(ArchiveCreationJob).with(procedure, an_instance_of(Archive), instructeur)
-      expect(Archive.first.month).not_to be_nil
-    end
+  scenario 'A instructeur can ask for an Archive', chrome: true do
+    archivable_procedure = create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur])
+    create(:dossier, :accepte, procedure: archivable_procedure)
+
+    log_in(instructeur.email, password)
+    visit list_instructeur_archives_path(archivable_procedure)
+
+    expect {
+      page.first(".fr-table .fr-btn").click
+    }.to have_enqueued_job(ArchiveCreationJob).with(archivable_procedure, an_instance_of(Archive), instructeur)
+    expect(Archive.first.month).not_to be_nil
   end
+
   context 'with dossiers having attached files' do
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :piece_justificative }], instructeurs: [instructeur]) }
     let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }

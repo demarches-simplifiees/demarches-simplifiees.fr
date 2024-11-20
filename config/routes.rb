@@ -532,6 +532,13 @@ Rails.application.routes.draw do
           end
         end
 
+        resources :archives, only: [] do
+          collection do
+            get 'list' => "archives#index"
+            post 'create' => "archives#create"
+          end
+        end
+
         resources :groupes, only: [:index, :show], controller: 'groupe_instructeurs' do
           resource :contact_information
           member do

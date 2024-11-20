@@ -30,7 +30,7 @@
         = t('views.instructeurs.dossiers.tab_explainations.suivis')
     - if @statut == 'traites'
       %p
-        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: instructeur_archives_path(@procedure))
+        = t('views.instructeurs.dossiers.tab_explainations.traites_html', archives_path: list_instructeur_archives_path(@procedure))
     - if @statut == 'tous'
       %p
         - if @procedure.routing_enabled?
