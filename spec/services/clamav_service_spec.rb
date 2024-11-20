@@ -9,13 +9,15 @@ describe ClamavService do
         @saved_clamav = Rails.configuration.x.clamav.enabled
         Rails.configuration.x.clamav.enabled = true
 
-        client = double("ClamAV::Client", execute: [response])
+        client = double("ClamAV::Client", execute: response)
+        File.open(path_file, "a") {}
         allow(ClamAV::Client).to receive(:new).and_return(client)
         allow(FileUtils).to receive(:chmod).with(0666, path_file).and_return(true)
       end
 
       after do
         Rails.configuration.x.clamav.enabled = @saved_clamav
+        File.delete(path_file)
       end
 
       context 'When response type is ClamAV::SuccessResponse' do

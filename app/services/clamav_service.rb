@@ -5,7 +5,7 @@ class ClamavService
     FileUtils.chmod(0666, file_path)
 
     client = ClamAV::Client.new
-    response = client.execute(ClamAV::Commands::ScanCommand.new(file_path)).first
+    response = client.execute(ClamAV::Commands::InstreamCommand.new(File.open(file_path, 'rb')))
 
     case response
     when ClamAV::SuccessResponse

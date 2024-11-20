@@ -75,7 +75,8 @@ services:
       - AR_ENCRYPTION_PRIMARY_KEY
       - BANNER_MESSAGE
       - CERTIGNA_USERPWD
-      - CLAMD_TCP_HOST=clamav-${ENV:-dev}
+      - CLAMAV_ENABLED=enabled
+      - CLAMD_TCP_HOST=clamav
       - CLAMD_TCP_PORT=3310
       - COJO_JWT_RSA_PRIVATE_KEY
       - CRISP_CLIENT_KEY
@@ -160,8 +161,6 @@ services:
     volumes:
       - md-data-files:/app/storage
       - md-tmp:/app/tmp
-      - md-logo-uploads:/app/public/uploads
-      - md-logo-downloads:/app/public/downloads
     networks:
       - md-network
     depends_on:
@@ -195,7 +194,8 @@ services:
       - AR_ENCRYPTION_KEY_DERIVATION_SALT
       - AR_ENCRYPTION_PRIMARY_KEY
       - CERTIGNA_USERPWD
-      - CLAMD_TCP_HOST=clamav-${ENV:-dev}
+      - CLAMAV_ENABLED=enabled
+      - CLAMD_TCP_HOST=clamav
       - CLAMD_TCP_PORT=3310
       - COJO_JWT_RSA_PRIVATE_KEY
       - DB_DATABASE
@@ -239,7 +239,6 @@ services:
       - WATERMARK_FILE
     volumes:
       - md-data-files:/app/storage
-      - md-root-tmp:/tmp
       - md-tmp:/app/tmp
     networks:
       - md-network
@@ -251,7 +250,6 @@ services:
     volumes:
       - clamav-db:/data
       - clamav-logs:/var/log/clamav
-      - md-root-tmp:/tmp
     networks:
       - md-network
 
@@ -295,29 +293,11 @@ volumes:
       type: none
       device: $ROOT/redis
       o: bind
-  md-logo-uploads:
-    driver: local
-    driver_opts:
-      type: none
-      device: $ROOT/logos/uploads
-      o: bind
-  md-logo-downloads:
-    driver: local
-    driver_opts:
-      type: none
-      device: $ROOT/logos/downloads
-      o: bind
   md-tmp:
     driver: local
     driver_opts:
       type: none
       device: $ROOT/tmp
-      o: bind
-  #----- to share file between worker and clamav
-  md-root-tmp:
-    driver_opts:
-      type: none
-      device: $ROOT/systmp
       o: bind
   clamav-db:
     driver: local
