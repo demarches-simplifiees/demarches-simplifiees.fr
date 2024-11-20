@@ -21,6 +21,17 @@ class Etablissement < ApplicationRecord
 
   after_commit -> { dossier&.index_search_terms_later }
 
+  # See https://github.com/demarches-simplifiees/demarches-simplifiees.fr/pull/10591#discussion_r1819399688
+  # SIRET is already exposed as base column.
+  DISPLAYABLE_COLUMNS = {
+    "entreprise_raison_sociale" => { type: :text },
+    "entreprise_siren" => { type: :text },
+    "entreprise_nom_commercial" => { type: :text },
+    "entreprise_forme_juridique" => { type: :text },
+    "entreprise_date_creation" => { type: :date, filterable: false },
+    "libelle_naf" => { type: :text }
+  }.freeze
+
   def entreprise_raison_sociale
     read_attribute(:entreprise_raison_sociale).presence || raison_sociale_for_ei
   end
