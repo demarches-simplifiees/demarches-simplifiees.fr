@@ -47,10 +47,6 @@ en:
             question_answer: Opinion yes/no
           etablissement:
             entreprise_etat_administratif: 'Entreprise état administratif'
-            entreprise_forme_juridique: Forme juridique
-            entreprise_nom_commercial: Commercial name
-            entreprise_raison_sociale: Raison sociale
-            entreprise_siret_siege_social: SIRET siège social
             entreprise_date_creation: Entreprise date de création
             siret: Établissement SIRET
             libelle_naf: Libellé NAF
