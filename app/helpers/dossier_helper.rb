@@ -118,14 +118,14 @@ module DossierHelper
     tag.span(Dossier.human_attribute_name("pending_correction.resolved"), class: ['fr-badge fr-badge--sm fr-badge--success super', html_class], role: 'status')
   end
 
-  def tags_label(tags)
-    if tags.count > 1
+  def tags_label(labels)
+    if labels.size > 1
       tag.ul(class: 'fr-tags-group') do
-        safe_join(tags.map { |t| tag.li(tag_label(t[1], t[2])) })
+        safe_join(labels.map { |l| tag.li(tag_label(l.name, l.color)) })
       end
-    else
-      tag = tags.first
-      tag_label(tag[1], tag[2])
+    elsif labels.one?
+      label = labels.first
+      label_label(label.name, label.color)
     end
   end
 

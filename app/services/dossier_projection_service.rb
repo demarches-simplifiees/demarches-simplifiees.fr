@@ -5,19 +5,29 @@ class DossierProjectionService
   end
 
   def self.project(dossier_ids, columns)
-    dossiers = Dossier.includes(:corrections, :pending_corrections).find(dossier_ids)
+    to_include = columns.map(&:table).uniq.map(&:to_sym).map do |sym|
+      case sym
+      when :self
+        nil
+      when :type_de_champ
+        :champs
+      when :user
+        [:user, :individual]
+      when :individual
+        :individual
+      when :etablissement
+        :etablissement
+      when :groupe_instructeur
+        :groupe_instructeur
+      when :followers_instructeurs
+        :followers_instructeurs
+      when :avis
+        :avis
+      when :dossier_labels
+        :labels
+      end
+    end.flatten.uniq
 
-    # each project should return
-    # { dossier_id => { column_id => value, column_id2 ... }, dossier_id2 ... }
-    projection = columns.group_by(&:projector)
-      .map { |p, columns| p.project(columns, dossiers) }
-      .reduce(:deep_merge)
-
-    dossiers.map do |dossier|
-      DossierProjection.new(
-        dossier,
-        columns.map { |column| projection[dossier.id][column.id] }
-      )
-    end
+    Dossier.includes(:corrections, :pending_corrections, *to_include).find(dossier_ids)
   end
 end

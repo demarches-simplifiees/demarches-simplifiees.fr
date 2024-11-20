@@ -72,6 +72,7 @@ module Instructeurs
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+      @displayed_columns = procedure_presentation.displayed_columns
 
       @current_filters = procedure_presentation.filters_for(statut)
       @counts = current_instructeur
@@ -106,7 +107,7 @@ module Instructeurs
 
       # @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_columns)
       @projected_dossiers = DossierProjectionService.project(@filtered_sorted_paginated_ids, procedure_presentation.displayed_columns)
-      @disable_checkbox_all = @projected_dossiers.all? { _1.dossier.batch_operation_id.present? }
+      @disable_checkbox_all = @projected_dossiers.all? { _1.batch_operation_id.present? }
 
       @batch_operations = BatchOperation.joins(:groupe_instructeurs)
         .where(groupe_instructeurs: current_instructeur.groupe_instructeurs.where(procedure_id: @procedure.id))
