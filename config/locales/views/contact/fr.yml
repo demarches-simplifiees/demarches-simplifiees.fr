@@ -72,3 +72,4 @@ fr:
     create:
       direct_message_sent: Votre message a été envoyé sur la messagerie de votre dossier.
       message_sent: Votre message a été envoyé.
+      invalid_piece_jointe: 'La pièce jointe doit être un fichier'
