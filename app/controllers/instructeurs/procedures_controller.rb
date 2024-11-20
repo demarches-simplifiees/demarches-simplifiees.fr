@@ -72,6 +72,7 @@ module Instructeurs
       # Technically, procedure_presentation already sets the attribute.
       # Setting it here to make clear that it is used by the view
       @procedure_presentation = procedure_presentation
+      @displayed_columns = procedure_presentation.displayed_columns
 
       @current_filters = procedure_presentation.filters_for(statut)
       @counts = current_instructeur

@@ -22,8 +22,8 @@ en:
         true: 'yes'
         false: 'no'
       question_answer_with_count:
-        true: "yes : %{count}"
-        false: "no : %{count}"
+        true: "yes : %{count}"
+        false: "no : %{count}"
     confirmation:
       revoke: "Would you like to revoke the opinion request to %{email} ?"
       remind: "Would you like to remind %{email} ?"

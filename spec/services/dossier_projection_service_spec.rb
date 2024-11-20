@@ -66,7 +66,7 @@ describe DossierProjectionService do
 
       it 'returns champ value' do
         expect(result.length).to eq(1)
-        expect(result[0].dossier_id).to eq(dossier.id)
+        expect(result[0].dossier.id).to eq(dossier.id)
         expect(result[0].columns[0]).to eq('Châteldon (63290)')
       end
     end
@@ -251,12 +251,9 @@ describe DossierProjectionService do
       end
 
       context 'for dossier corrections table' do
-        let(:table) { 'dossier_corrections' }
-        let(:column) { 'resolved_at' }
         let(:procedure) { create(:procedure) }
-        let(:columns) { [Column.new(procedure_id: procedure.id, table:, column:)] } # should somehow be present in column concern
         let(:dossier) { create(:dossier, :en_construction, procedure:) }
-        subject { described_class.project(dossiers_ids, columns)[0] }
+        subject { described_class.project(dossiers_ids, [])[0] }
 
         context "when dossier has pending correction" do
           before { create(:dossier_correction, dossier:) }
