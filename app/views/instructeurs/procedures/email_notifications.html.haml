@@ -1,11 +1,16 @@
 - content_for(:title, "Notifications pour #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    ['Notifications']] }
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                        [t('instructeurs.dossiers.header.banner.notification_management')]] }
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
+
 
 .fr-container
-  %h1.fr-h3
+  %h1.fr-h4
     = t('.title')
 
   = form_for @assign_to, url: update_email_notifications_instructeur_procedure_path(@procedure), html: { class: 'form' } do |form|

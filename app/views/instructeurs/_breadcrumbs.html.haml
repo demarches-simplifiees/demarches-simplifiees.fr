@@ -1,0 +1,13 @@
+%nav.fr-mb-0.fr-breadcrumb.mt-0{ role: "navigation", aria: { label: t('you_are_here', scope: [:layouts, :breadcrumb]) } }
+  %button.fr-breadcrumb__button{ aria: { expanded: "false", controls: "breadcrumb-1" } }
+    = t('show', scope: [:layouts, :breadcrumb])
+
+  .fr-collapse#breadcrumb-1
+    %ol.fr-breadcrumb__list
+      %li= link_to t('root', scope: [:layouts, :breadcrumb]), root_path, class: 'fr-breadcrumb__link'
+
+      - steps.each.with_index do |step, i|
+        - if i == steps.size - 1
+          %li= link_to step[0], '', { aria: { current: "page" } , class: 'fr-breadcrumb__link' }
+        - else
+          %li= link_to "#{step[0]} - Suivi des dossiers", step[1], class: 'fr-breadcrumb__link'

@@ -1,11 +1,16 @@
 - content_for(:title, "Notifications pour #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
-                    ['Groupes d’instructeurs']] }
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)],
+                        ['Gestion des instructeurs']] }
+
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
 
 .fr-container.groupe-instructeur
-  %h1 Gestion des Groupes
+  %h1.fr-h4 Gestion des instructeurs
   .card
     %h2.fr-h3 Liste des groupes
     %table.table.mt-2

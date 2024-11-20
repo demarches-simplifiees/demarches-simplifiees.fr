@@ -5,7 +5,7 @@ fr:
         utils:
           positive: Oui
           negative: Non
-        title: Notifications par email
+        title: Gestion des notifications
         subtitle: Configurez sur cette page les notifications que vous souhaitez recevoir par email pour cette démarche.
         for_each_file_submitted:
           title: Recevoir une notification à chaque dossier déposé

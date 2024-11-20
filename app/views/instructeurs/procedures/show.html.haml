@@ -2,16 +2,12 @@
 
 #procedure-show
   .sub-header
-    .fr-container.flex
-
-      .procedure-logo{ style: "background-image: url(#{@procedure.logo_url})",
-        role: 'img', 'aria-label': "logo de la démarche #{@procedure.libelle}" }
-
+    .fr-container.flex.column
+      = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)]] }
       = render partial: 'header', locals: { procedure: @procedure, statut: @statut }
-
-      .procedure-actions
-        - if @can_download_dossiers
-          = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), export_url: method(:download_export_instructeur_procedure_path))
+      %hr
+      %h1.fr-h5.fr-mb-0= t('.file_tracking')
 
     .fr-container.flex= render partial: "tabs", locals: { procedure: @procedure,
         statut: @statut,

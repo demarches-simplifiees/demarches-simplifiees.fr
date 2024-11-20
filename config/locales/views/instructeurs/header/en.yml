@@ -10,10 +10,14 @@ en:
             en_construction: This file is pending for instruction. The maximum delay is 6 months, you can extend the duration by a month by clicking on the underneath button.
             termine: This file had been processed and will soon expire. So it will be deleted soon. If you want to keep it, you can dowload a PDF file of it.
           button_delay_expiration: "Keep for one more month"
+          follow_up: File tracking
+          procedure_management: File management
           notification_management: notification management
           administrators_list: administrators list
           exports_list: exports and export templates
           exports_notification_label: A new export is ready to download
           statistics: statistics
           instructeurs: instructors
-          contact_users: contact users (draft)
+          contact_users: Contact users with a draft file
+          downloads: Downloads
+          user_support: User support

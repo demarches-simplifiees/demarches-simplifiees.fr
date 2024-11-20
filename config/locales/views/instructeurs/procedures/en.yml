@@ -13,15 +13,14 @@ en:
         dossiers_close_to_expiration: expiring
         dossiers_supprimes: recently deleted
         copy_link_button: Copy the procedure link to clipboard
+      show:
+        file_tracking: File tracking
       email_usagers:
-        contact_users: Contact users (draft)
         hint:
           zero: "There is no user with a draft."
           one: "You will send a message to <strong>1</strong> user."
           other: "You will send a message to <strong>%{count}</strong> users."
       administrators_list:
-        title: "%{procedure_libelle} - n°%{procedure_id} - administrators"
-      stats:
-        title: Statistics
+        title: Procedure administrators
       exports:
         title: Exports

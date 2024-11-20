@@ -1,10 +1,14 @@
 - content_for(:title, "Administrateurs de #{@procedure.libelle}")
 
-= render partial: 'administrateurs/breadcrumbs',
-  locals: { steps: [[@procedure.libelle.truncate_words(10), administrateurs_instructeur_procedure_path(@procedure)],['Administrateurs']] }
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[@procedure.libelle.truncate_words(10), administrateurs_instructeur_procedure_path(@procedure)],[t('instructeurs.dossiers.header.banner.administrators_list')]] }
 
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
 .container
-  %h1
+  %h1.fr-h4
     = t('instructeurs.procedures.administrators_list.title', procedure_id: @procedure.id, procedure_libelle: @procedure.libelle)
 
   %ul

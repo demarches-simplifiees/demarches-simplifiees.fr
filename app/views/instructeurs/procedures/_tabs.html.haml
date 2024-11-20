@@ -1,5 +1,5 @@
 %nav.fr-tabs.mt-3
-  %ul.fr-tabs__list{ role: 'tablist' }
+  %ul.fr-tabs__list.fr-pl-0{ role: 'tablist' }
     = tab_item(t(tab_i18n_key_from_status('a-suivre')),
       instructeur_procedure_path(procedure, statut: 'a-suivre'),
       active: statut == 'a-suivre',

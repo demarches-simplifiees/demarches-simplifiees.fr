@@ -1,7 +1,7 @@
 fr:
   layouts:
     breadcrumb:
-      root: "Accueil"
+      root: "Accueil - Liste des démarches"
       you_are_here: "Vous êtes ici"
       show: "Voir le fil d’Ariane"
       preview: "Prévisualiser le formulaire"
