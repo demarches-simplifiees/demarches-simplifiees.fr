@@ -2,7 +2,7 @@
 
 module Instructeurs
   class ProceduresController < InstructeurController
-    before_action :ensure_ownership!, except: [:index]
+    before_action :ensure_ownership!, except: [:index, :order_positions, :update_order_positions]
     before_action :ensure_not_super_admin!, only: [:download_export, :exports]
 
     ITEMS_PER_PAGE = 100
@@ -66,6 +66,14 @@ module Instructeurs
       @procedure_ids_termines_with_notifications = current_instructeur.procedure_ids_with_notifications(:termine)
       @statut = params[:statut]
       @statut.blank? ? @statut = 'en-cours' : @statut = params[:statut]
+    end
+
+    def order_positions
+      @procedures = Procedure.where(id: params[:collection_ids]).order_by_position_for(current_instructeur)
+      render layout: "empty_layout"
+    end
+
+    def update_order_positions
     end
 
     def show

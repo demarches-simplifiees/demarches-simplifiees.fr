@@ -1,0 +1,24 @@
+.fr-container.fr-mt-6w.fr-mb-15w
+  = link_to " Liste des démarches", instructeur_procedures_path, class: 'fr-link fr-icon-arrow-left-line fr-link--icon--left fr-icon--sm'
+  %h3.fr-my-3w
+    Personnaliser l'ordre des #{@procedures.size} démarches « en cours »
+  %p Déplacez les démarches dans la liste pour les classer en fonction de vos préférences :
+
+  %fr-container
+    = form_tag update_order_positions_instructeur_procedures_path, method: :patch do
+      - @procedures.each do |procedure|
+        .fr-card.fr-mb-1w.fr-py-1w.fr-px-2w
+          .flex.align-center
+            %button.fr-btn.fr-icon-arrow-up-line.fr-btn--secondary.fr-col-1
+            %button.fr-btn.fr-icon-arrow-down-line.fr-btn--secondary.fr-col-1.fr-mx-2w
+            - if procedure.close?
+              %span.fr-badge.fr-mr-2w Close
+            - elsif procedure.depubliee?
+              %span.fr-badge.fr-mr-2w Dépubliée
+            = "#{procedure.libelle} - n°#{procedure.id}"
+          = hidden_field_tag "ordered_procedure_ids[]", procedure.id
+
+.fixed-footer.fr-py-1w
+  .fr-btns-group.fr-btns-group--center.fr-btns-group--inline.fr-btns-group--inline-lg
+    = link_to "Annuler", instructeur_procedures_path, class: 'fr-btn fr-btn--secondary fr-my-1w'
+    %button.fr-btn.fr-my-1w{ type: "submit", form: 'order-instructeur-procedures-form' } Valider
