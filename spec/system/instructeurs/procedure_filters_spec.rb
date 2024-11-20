@@ -154,7 +154,7 @@ describe "procedure filters" do
         rna_champ.reload
         champ_select_value = "37 – Indre-et-Loire"
 
-        add_filter("#{rna_champ.libelle} – département", champ_select_value, type: :enum)
+        add_filter("#{rna_champ.libelle} – Département", champ_select_value, type: :enum)
         expect(page).to have_link(new_unfollow_dossier.id.to_s)
       end
     end

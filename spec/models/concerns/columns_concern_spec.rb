@@ -99,9 +99,9 @@ describe ColumnsConcern do
       end
 
       context 'with rna' do
-        let(:types_de_champ_public) { [{ type: :rna, libelle: 'rna' }] }
+        let(:types_de_champ_public) { [{ type: :rna, libelle: 'RNA' }] }
         let(:types_de_champ_private) { [] }
-        it { expect(subject.map(&:label)).to include('rna – commune') }
+        it { expect(subject.map(&:label)).to include('RNA – Commune') }
       end
 
       context 'with linked drop down list' do

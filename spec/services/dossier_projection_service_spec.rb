@@ -239,9 +239,9 @@ describe DossierProjectionService do
       end
 
       context 'for a json column' do
-        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret, libelle: 'siret' }]) }
+        let(:procedure) { create(:procedure, types_de_champ_public: [{ type: :siret, libelle: 'SIRET' }]) }
         let(:dossier) { create(:dossier, procedure:) }
-        let(:label) { "siret – département" }
+        let(:label) { "SIRET – Département" }
 
         before do
           dossier.project_champs_public.first.update(value_json: { 'departement_code': '38' })
