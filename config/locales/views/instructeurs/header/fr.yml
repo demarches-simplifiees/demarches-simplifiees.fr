@@ -16,7 +16,7 @@ fr:
           procedure_management: Gestion de la démarche
           administrators_list: Administrateurs de la démarche
           exports_list: Liste des exports
-          exports_models: Modèles d'exports
+          export_templates: Modèles d'export
           exports_notification_label: Un nouvel export est prêt à être téléchargé
           statistics: Statistiques de la démarche
           user_support: Accompagnement des usagers

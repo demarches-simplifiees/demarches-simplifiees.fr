@@ -15,7 +15,7 @@ module Instructeurs
       @export_template = ExportTemplate.new(export_template_params)
 
       if @export_template.save
-        redirect_to [:exports, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été créé"
+        redirect_to [:export_templates, :instructeur, @procedure], notice: "Le modèle d'export #{@export_template.name} a bien été créé"
       else
         flash[:alert] = @export_template.errors.full_messages
         render :new

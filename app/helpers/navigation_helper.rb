@@ -27,7 +27,9 @@ module NavigationHelper
   end
 
   def downloads_section?
-    params[:action] == 'exports' ||
-    params[:controller] == 'instructeurs/archives'
+    return true if params[:action].in?(['exports', 'export_templates'])
+    return true if params[:controller] == 'instructeurs/archives'
+
+    false
   end
 end
