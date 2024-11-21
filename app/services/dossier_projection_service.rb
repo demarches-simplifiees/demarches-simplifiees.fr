@@ -30,7 +30,7 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, columns)
-    dossiers = Dossier.includes(:corrections, :pending_corrections).find(dossiers_ids)
+    dossiers = Dossier.includes(:corrections, :pending_corrections, :traitements).find(dossiers_ids)
 
     fields = columns.map do |c|
       if c.is_a?(Columns::ChampColumn)
