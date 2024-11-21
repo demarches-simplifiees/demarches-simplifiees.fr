@@ -74,7 +74,7 @@ describe 'Instructing a dossier:', js: true do
     click_on procedure.libelle
     click_on 'traité'
     expect(page).to have_button('Repasser en instruction')
-    click_on 'Supprimer le dossier'
+    click_on 'Placer le dossier à la corbeille'
     click_on 'traité'
     expect(page).not_to have_button('Repasser en instruction')
   end
@@ -98,7 +98,7 @@ describe 'Instructing a dossier:', js: true do
     dossier.passer_en_instruction(instructeur: instructeur)
     dossier.accepter!(instructeur: instructeur)
     visit instructeur_dossier_path(procedure, dossier)
-    click_on 'Supprimer le dossier'
+    click_on 'Placer le dossier à la corbeille'
   end
 
   scenario 'A instructeur can follow/unfollow a dossier' do
@@ -113,7 +113,7 @@ describe 'Instructing a dossier:', js: true do
     test_statut_bar(suivi: 1, tous_les_dossiers: 1)
     expect(page).to have_text('Aucun dossier')
 
-    click_on 'suivi'
+    click_on 'suivi par moi'
     expect(page).to have_current_path(instructeur_procedure_path(procedure, statut: 'suivis'))
     dossier_present?(dossier.id, 'en construction')
 
@@ -331,10 +331,10 @@ describe 'Instructing a dossier:', js: true do
   def test_statut_bar(a_suivre: 0, suivi: 0, traite: 0, tous_les_dossiers: 0, archive: 0)
     texts = [
       "#{a_suivre} à suivre",
-      "#{suivi} suivi",
+      "#{suivi} suivi par moi",
       "#{traite} traité",
       "#{tous_les_dossiers} au total",
-      "#{archive} archivé"
+      "à archiver"
     ]
 
     texts.each { |text| expect(page).to have_text(text) }

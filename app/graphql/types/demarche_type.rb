@@ -41,7 +41,7 @@ module Types
       argument :created_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers déposés depuis la date."
       argument :updated_since, GraphQL::Types::ISO8601DateTime, required: false, description: "Dossiers mis à jour depuis la date."
       argument :state, Types::DossierType::DossierState, required: false, description: "Dossiers avec statut."
-      argument :archived, Boolean, required: false, description: "Seulement les dossiers archivés."
+      argument :archived, Boolean, required: false, description: "Seulement les dossiers à archiver."
       argument :revision, ID, required: false, description: "Seulement les dossiers pour la révision donnée."
       argument :max_revision, ID, required: false, description: "Seulement les dossiers pour les révisons avant la révision donnée."
       argument :min_revision, ID, required: false, description: "Seulement les dossiers pour les révisons après la révision donnée."

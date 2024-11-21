@@ -2,11 +2,11 @@ fr:
   dossier_mailer:
     notify_automatic_deletion_to_user:
       subject:
-        one: "Un dossier a été supprimé de votre compte"
-        other: "Des dossiers ont été supprimés de votre compte"
+        one: "Un dossier de votre compte a été placé à la corbeille"
+        other: "Des dossiers de votre compte ont été placés à la corbeille"
       header:
-        one: "Le délai maximum pour la conservation du dossier a été atteint.\nLe dossier suivant a été supprimé :"
-        other: "Le délai maximum pour la conservation des dossiers a été atteint.\nLes dossiers suivants ont été  supprimés :"
+        one: "Le délai maximum pour la conservation du dossier a été atteint.\nLe dossier suivant a été placé à la corbeille:"
+        other: "Le délai maximum pour la conservation des dossiers a été atteint.\nLes dossiers suivants ont été placés à la corbeille :"
       footer:
-        one: Vous pouvez retrouver ce dossier pendant encore une semaine depuis l’onglet « Supprimé » sur la page
-        other: Vous pouvez retrouver ces dossiers pendant encore une semaine depuis l’onglet « Supprimés » sur la page
+        one: Vous pouvez retrouver ce dossier pendant encore une semaine depuis l’onglet « Corbeille » sur la page
+        other: Vous pouvez retrouver ces dossiers pendant encore une semaine depuis l’onglet « Corbeille » sur la page
