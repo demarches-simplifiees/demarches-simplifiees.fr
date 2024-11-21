@@ -22,6 +22,15 @@ s3:
   region: "<%= ENV['S3_REGION'] %>"
   force_path_style: true
 
+new_s3:
+  service: S3
+  endpoint: "<%= ENV['NEW_S3_ENDPOINT'] %>"
+  bucket: "<%= ENV.fetch('NEW_S3_BUCKET','') %>"
+  access_key_id: "<%= ENV['NEW_S3_ACCESS_KEY'] %>"
+  secret_access_key: "<%= ENV['NEW_S3_SECRET_KEY'] %>"
+  region: "<%= ENV['NEW_S3_REGION'] %>"
+  force_path_style: true
+
 local_mirror:
   service: Mirror
   primary: local
@@ -32,7 +41,7 @@ s3_mirror:
   service: Mirror
   primary: s3
   mirrors:
-    - local
+    - new_s3
 
 amazon:
   service: S3
