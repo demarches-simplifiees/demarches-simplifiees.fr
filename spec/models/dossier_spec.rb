@@ -1740,11 +1740,139 @@ describe Dossier, type: :model do
     end
   end
 
-  describe "#check_expressions_regulieres_champs" do
+  describe "check simple mode options for formatted champ" do
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { [type_de_champ] }
-    let(:type_de_champ) { { type: :formatted, expression_reguliere:, expression_reguliere_exemple_text:, expression_reguliere_error_message: } }
+    let(:type_de_champ) { { type: :formatted, formatted_mode: 'simple', letters_accepted:, numbers_accepted:, special_characters_accepted:, min_character_length:, max_character_length: } }
+    let(:letters_accepted) { '1' }
+    let(:numbers_accepted) { '1' }
+    let(:special_characters_accepted) { '1' }
+    let(:min_character_length) { nil }
+    let(:max_character_length) { nil }
+
+    before do
+      champ = dossier.project_champs_public.first
+      champ.value = value
+      dossier.save(context: :champs_public_value)
+    end
+
+    context 'with letters forbidden' do
+      let(:letters_accepted) { '0' }
+
+      context 'with valid value' do
+        let(:value) { '1234*' }
+        it 'should have no error' do
+          expect(dossier.errors).to be_empty
+        end
+      end
+
+      context 'with invalid value' do
+        let(:value) { 'azerlkj' }
+        it 'should have errors' do
+          expect(dossier.errors.map(&:type)).to eq [:letters_forbidden]
+        end
+      end
+    end
+
+    context 'with only letters accepted' do
+      let(:letters_accepted) { '1' }
+      let(:numbers_accepted) { '0' }
+      let(:special_characters_accepted) { '0' }
+
+      context 'with valid value' do
+        let(:value) { 'oupsàèœÅ' }
+        it 'should have no error' do
+          expect(dossier.errors).to be_empty
+        end
+      end
+
+      context 'with invalid value' do
+        let(:value) { '123ab*' }
+        it 'should have errors' do
+          expect(dossier.errors.map(&:type)).to match_array [:numbers_forbidden, :special_characters_forbidden]
+        end
+      end
+    end
+
+    context 'with numbers forbidden' do
+      let(:numbers_accepted) { '0' }
+
+      context 'with valid value' do
+        let(:value) { 'azer*' }
+        it 'should have no error' do
+          expect(dossier.errors).to be_empty
+        end
+      end
+
+      context 'with invalid value' do
+        let(:value) { '1234' }
+        it 'should have errors' do
+          expect(dossier.errors).not_to be_empty
+        end
+      end
+    end
+
+    context 'with special characters forbidden' do
+      let(:special_characters_accepted) { '0' }
+
+      context 'with valid value' do
+        let(:value) { 'azer123' }
+        it 'should have no error' do
+          expect(dossier.errors).to be_empty
+        end
+      end
+
+      context 'with invalid value' do
+        let(:value) { '*1234' }
+        it 'should have errors' do
+          expect(dossier.errors).not_to be_empty
+        end
+      end
+    end
+
+    context 'with min charachter length' do
+      let(:min_character_length) { '3' }
+
+      context 'with valid value' do
+        let(:value) { 'az*er123' }
+        it 'should have no error' do
+          expect(dossier.errors).to be_empty
+        end
+      end
+
+      context 'with invalid value' do
+        let(:value) { '*1' }
+        it 'should have errors' do
+          expect(dossier.errors).not_to be_empty
+        end
+      end
+    end
+
+    context 'with max charachter length' do
+      let(:max_character_length) { '3' }
+
+      context 'with valid value' do
+        let(:value) { 'az*' }
+        it 'should have no error' do
+          expect(dossier.errors).to be_empty
+        end
+      end
+
+      context 'with invalid value' do
+        let(:value) { '*1az' }
+        it 'should have errors' do
+          expect(dossier.errors).not_to be_empty
+        end
+      end
+    end
+  end
+
+  describe "check advanced mode options for formatted champ" do
+    let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
+    let(:dossier) { create(:dossier, procedure: procedure) }
+    let(:types_de_champ) { [type_de_champ] }
+    let(:type_de_champ) { { type: :formatted, formatted_mode: 'advanced', expression_reguliere:, expression_reguliere_exemple_text:, expression_reguliere_error_message: } }
 
     context "with bad example" do
       let(:expression_reguliere_exemple_text) { "01234567" }
