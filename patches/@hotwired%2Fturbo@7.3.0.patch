@@ -1,7 +1,7 @@
-diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
+diff --git a/dist/turbo.es2017-esm.js b/dist/turbo.es2017-esm.js
 index cfe4084..fd54933 100644
---- a/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
-+++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js
+--- a/dist/turbo.es2017-esm.js
++++ b/dist/turbo.es2017-esm.js
 @@ -802,6 +802,7 @@ class FormSubmission {
          var _a;
          this.state = FormSubmissionState.stopped;
@@ -10,10 +10,10 @@ index cfe4084..fd54933 100644
          this.resetSubmitterText();
          dispatch("turbo:submit-end", {
              target: this.formElement,
-diff --git a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
+diff --git a/dist/turbo.es2017-umd.js b/dist/turbo.es2017-umd.js
 index 303ecf2..08dd969 100644
---- a/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
-+++ b/node_modules/@hotwired/turbo/dist/turbo.es2017-umd.js
+--- a/dist/turbo.es2017-umd.js
++++ b/dist/turbo.es2017-umd.js
 @@ -808,6 +808,7 @@ Copyright © 2023 37signals LLC
              var _a;
              this.state = FormSubmissionState.stopped;

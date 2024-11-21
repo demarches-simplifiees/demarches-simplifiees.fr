@@ -53,7 +53,6 @@
     "lightgallery": "^2.7.2",
     "maplibre-gl": "^4.5.0",
     "match-sorter": "^6.3.4",
-    "patch-package": "^8.0.0",
     "react": "^18.3.1",
     "react-aria-components": "^1.3.1",
     "react-coordinate-input": "^1.0.0",
@@ -112,7 +111,6 @@
     "lint:css": "prettier app/assets/stylesheets --check",
     "lint:css:fix": "prettier app/assets/stylesheets --write",
     "graphql:doc:build": "RAILS_ENV=production bin/rake graphql:schema:idl && spectaql spectaql_config.yml",
-    "postinstall": "patch-package",
     "test": "vitest",
     "coverage": "vitest run --coverage",
     "up": "bunx npm-check-updates --root --format group -i",
@@ -197,6 +195,7 @@
     ]
   },
   "patchedDependencies": {
-    "@gouvfr/dsfr@1.12.1": "patches/@gouvfr%2Fdsfr@1.12.1.patch"
+    "@gouvfr/dsfr@1.12.1": "patches/@gouvfr%2Fdsfr@1.12.1.patch",
+    "@hotwired/turbo@7.3.0": "patches/@hotwired%2Fturbo@7.3.0.patch"
   }
 }
