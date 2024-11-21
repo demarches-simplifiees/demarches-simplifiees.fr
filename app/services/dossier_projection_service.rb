@@ -30,11 +30,13 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, columns)
+    dossiers = Dossier.includes(:corrections, :pending_corrections).find(dossiers_ids)
+
     fields = columns.map do |c|
       if c.is_a?(Columns::ChampColumn)
         { TABLE => c.table, STABLE_ID => c.stable_id, original_column: c }
       else
-        { TABLE => c.table, COLUMN => c.column }
+        { TABLE => c.table, COLUMN => c.column, original_column: c }
       end
     end
     champ_value = champ_value_formatter(dossiers_ids, fields)
@@ -61,19 +63,17 @@ class DossierProjectionService
               end
           end
       when 'self'
-        Dossier
-          .where(id: dossiers_ids)
-          .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
-          .each do |id, *columns|
-            fields.zip(columns).each do |field, value|
-              # SVA must remain a date: in other column we compute remaining delay with it
-              field[:id_value_h][id] = if value.respond_to?(:strftime)
-                I18n.l(value.to_date)
-              else
-                value
-              end
+        dossiers.each do |dossier|
+          fields.each do |field|
+            column = field[:original_column]
+            value = column.value(dossier)
+            field[:id_value_h][dossier.id] = if value.respond_to?(:strftime)
+              I18n.l(value.to_date)
+            else
+              value
             end
           end
+        end
       when 'individual'
         Individual
           .where(dossier_id: dossiers_ids)
@@ -148,8 +148,6 @@ class DossierProjectionService
         # rubocop:enable Style/HashTransformValues
       end
     end
-
-    dossiers = Dossier.includes(:corrections, :pending_corrections).find(dossiers_ids)
 
     dossiers_ids.map do |dossier_id|
       DossierProjection.new(
