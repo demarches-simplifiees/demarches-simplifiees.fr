@@ -1,19 +1,7 @@
 # frozen_string_literal: true
 
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier, :corrections, :columns) do
-      def pending_correction?
-        return false if corrections.blank?
-
-        corrections.any? { _1[:resolved_at].nil? }
-      end
-
-      def resolved_corrections?
-        return false if corrections.blank?
-
-        corrections.all? { _1[:resolved_at].present? }
-      end
-    end
+  class DossierProjection < Struct.new(:dossier, :columns)
   end
 
   def self.for_tiers_translation(array)
@@ -51,9 +39,7 @@ class DossierProjectionService
     end
     champ_value = champ_value_formatter(dossiers_ids, fields)
 
-    dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
-
-    ([dossier_corrections] + fields)
+    fields
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
@@ -163,12 +149,11 @@ class DossierProjectionService
       end
     end
 
-    dossiers = Dossier.find(dossiers_ids)
+    dossiers = Dossier.includes(:corrections, :pending_corrections).find(dossiers_ids)
 
     dossiers_ids.map do |dossier_id|
       DossierProjection.new(
         dossiers.find { _1.id == dossier_id },
-        dossier_corrections[:id_value_h][dossier_id],
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
     end

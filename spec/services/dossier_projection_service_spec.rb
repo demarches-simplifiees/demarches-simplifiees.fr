@@ -249,34 +249,6 @@ describe DossierProjectionService do
 
         it { is_expected.to eq('38') }
       end
-
-      context 'for dossier corrections table' do
-        let(:table) { 'dossier_corrections' }
-        let(:column) { 'resolved_at' }
-        let(:procedure) { create(:procedure) }
-        let(:columns) { [Column.new(procedure_id: procedure.id, table:, column:)] } # should somehow be present in column concern
-        let(:dossier) { create(:dossier, :en_construction, procedure:) }
-        subject { described_class.project(dossiers_ids, columns)[0] }
-
-        context "when dossier has pending correction" do
-          before { create(:dossier_correction, dossier:) }
-
-          it { expect(subject.pending_correction?).to be(true) }
-          it { expect(subject.resolved_corrections?).to eq(false) }
-        end
-
-        context "when dossier has a resolved correction" do
-          before { create(:dossier_correction, :resolved, dossier:) }
-
-          it { expect(subject.pending_correction?).to eq(false) }
-          it { expect(subject.resolved_corrections?).to eq(true) }
-        end
-
-        context "when dossier has no correction at all" do
-          it { expect(subject.pending_correction?).to eq(false) }
-          it { expect(subject.resolved_corrections?).to eq(false) }
-        end
-      end
     end
   end
 end

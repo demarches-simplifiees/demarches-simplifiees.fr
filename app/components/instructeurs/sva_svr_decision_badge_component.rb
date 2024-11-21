@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
-  attr_reader :object
+  attr_reader :dossier
   attr_reader :procedure
   attr_reader :with_label
 
-  def initialize(projection_or_dossier:, procedure:, with_label: false)
-    @object = projection_or_dossier
+  def initialize(dossier:, procedure:, with_label: false)
+    @dossier = dossier
     @procedure = procedure
     @decision = procedure.sva_svr_configuration.decision.to_sym
     @with_label = with_label
@@ -15,11 +15,11 @@ class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
   def render?
     return false unless procedure.sva_svr_enabled?
 
-    [:en_construction, :en_instruction].include? object.state.to_sym
+    [:en_construction, :en_instruction].include? dossier.state.to_sym
   end
 
   def without_date?
-    object.sva_svr_decision_on.nil?
+    dossier.sva_svr_decision_on.nil?
   end
 
   def classes
@@ -31,17 +31,17 @@ class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
   end
 
   def soon?
-    return false if object.sva_svr_decision_on.nil?
+    return false if dossier.sva_svr_decision_on.nil?
 
-    object.sva_svr_decision_on < 7.days.from_now.to_date
+    dossier.sva_svr_decision_on < 7.days.from_now.to_date
   end
 
   def pending_correction?
-    object.pending_correction?
+    dossier.pending_correction?
   end
 
   def days_count
-    (object.sva_svr_decision_on - Date.current).to_i
+    (dossier.sva_svr_decision_on - Date.current).to_i
   end
 
   def sva?
@@ -66,7 +66,7 @@ class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
     elsif pending_correction?
       t(".dossier_terminated_x_days_after_correction", count: days_count)
     else
-      t(".dossier_terminated_on", date: helpers.l(object.sva_svr_decision_on))
+      t(".dossier_terminated_on", date: helpers.l(dossier.sva_svr_decision_on))
     end
   end
 
@@ -75,14 +75,10 @@ class Instructeurs::SVASVRDecisionBadgeComponent < ApplicationComponent
   end
 
   def previously_termine?
-    return if !object.respond_to?(:previously_termine?)
-
-    object.previously_termine?
+    dossier.previously_termine?
   end
 
   def depose_before_configuration?
-    return if !object.respond_to?(:sva_svr_decision_triggered_at)
-
-    object.sva_svr_decision_on.nil? && object.sva_svr_decision_triggered_at.nil?
+    dossier.sva_svr_decision_on.nil? && dossier.sva_svr_decision_triggered_at.nil?
   end
 end

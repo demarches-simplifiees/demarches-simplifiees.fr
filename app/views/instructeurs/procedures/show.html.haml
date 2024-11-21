@@ -152,16 +152,16 @@
 
                         %td
                           - status = [status_badge(dossier.state)]
-                          - if p.pending_correction?
+                          - if dossier.pending_correction?
                             - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                          - elsif dossier.state.to_sym == :en_construction && p.resolved_corrections?
+                          - elsif dossier.last_correction_resolved?
                             - status << correction_resolved_badge(html_class: "fr-mt-1v")
                           = link_to_if(dossier.hidden_by_administration_at.blank?, safe_join(status), path, class: "flex column")
 
                         - if @procedure.sva_svr_enabled?
                           %td
                             %span
-                              = link_to_if dossier.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: dossier, procedure: @procedure)), path
+                              = link_to_if dossier.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: @procedure)), path
 
                         %td.follow-col
                           %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
