@@ -9,19 +9,31 @@
       %p= t('.use_email_for_notifications')
 
       %fieldset.fr-fieldset
-        = form_with url: france_connect_particulier_merge_using_fc_email_path(merge_token: @fci.merge_token), method: :post, data: { controller: 'email-france-connect' } do |f|
+        = form_with url: france_connect_particulier_merge_using_fc_email_path,
+          method: :post,
+          data: { controller: 'email-france-connect' } do |f|
+
           = hidden_field_tag :merge_token, @fci.merge_token
 
           %fieldset.fr-fieldset
             %legend.fr-fieldset__legend
             .fr-fieldset__element
               .fr-radio-group
-                = f.radio_button :use_france_connect_email, true, id: 'use_france_connect_email_yes', class: 'fr-radio', required: true, data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
+                = f.radio_button :use_france_connect_email, true,
+                  id: 'use_france_connect_email_yes',
+                  class: 'fr-radio',
+                  required: true,
+                  data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
                 %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_yes' }
                   = t('.keep_fc_email_html', email: h(@fci.email_france_connect)).html_safe
+
             .fr-fieldset__element
               .fr-radio-group
-                = f.radio_button :use_france_connect_email, false, id: 'use_france_connect_email_no', class: 'fr-radio', required: true, data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
+                = f.radio_button :use_france_connect_email, false,
+                  id: 'use_france_connect_email_no',
+                  class: 'fr-radio',
+                  required: true,
+                  data: { action: "email-france-connect#triggerEmailField", email_france_connect_target: "useFranceConnectEmail" }
                 %label.fr-label.fr-text--wrap{ for: 'use_france_connect_email_no' }
                   = t('.use_another_email')
 
