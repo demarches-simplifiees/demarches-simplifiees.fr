@@ -1,29 +1,43 @@
 import { ApplicationController } from './application_controller';
 
 export class EmailFranceConnectController extends ApplicationController {
-  static targets = ['useFranceConnectEmail', 'emailField'];
+  static targets = ['useFranceConnectEmail', 'emailField', 'submit', 'emailInput'];
 
   emailFieldTarget!: HTMLElement;
   useFranceConnectEmailTargets!: HTMLInputElement[];
+  submitTarget!: HTMLButtonElement;
+  emailInputTarget!: HTMLInputElement;
 
   triggerEmailField() {
-    const checkedTarget = this.useFranceConnectEmailTargets.find(
-      (target) => target.checked
-    );
-
-    const inputElement = this.emailFieldTarget.querySelector(
-      'input[type="email"]'
-    ) as HTMLInputElement;
-
-    if (checkedTarget && checkedTarget.value === 'false') {
-      this.emailFieldTarget.classList.remove('hidden');
-      this.emailFieldTarget.setAttribute('aria-hidden', 'false');
-      inputElement.setAttribute('required', '');
-    } else {
+    if (this.useFCEmail()) {
       this.emailFieldTarget.classList.add('hidden');
       this.emailFieldTarget.setAttribute('aria-hidden', 'true');
-      inputElement.removeAttribute('required');
-      inputElement.value = '';
+
+      this.emailInputTarget.removeAttribute('required');
+      this.emailInputTarget.value = '';
+    } else {
+      this.emailFieldTarget.classList.remove('hidden');
+      this.emailFieldTarget.setAttribute('aria-hidden', 'false');
+
+      this.emailInputTarget.setAttribute('required', '');
     }
+  }
+
+  triggerSubmitDisabled() {
+    if (this.useFCEmail() || this.isEmailInputFilled()) {
+      this.submitTarget.disabled = false;
+    } else {
+      this.submitTarget.disabled = true;
+    }
+  }
+
+  useFCEmail() {
+    return this.useFranceConnectEmailTargets.find(
+      (target) => target.checked
+    )?.value === 'true' || false;
+  }
+
+  isEmailInputFilled() {
+    return this.emailInputTarget.value.length > 0;
   }
 }
