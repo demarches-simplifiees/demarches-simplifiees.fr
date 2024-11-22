@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_11_12_090128) do
+ActiveRecord::Schema[7.0].define(version: 2024_11_22_125956) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_buffercache"
   enable_extension "pg_stat_statements"
@@ -1061,6 +1061,23 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_12_090128) do
     t.index ["procedure_id"], name: "index_received_mails_on_procedure_id"
   end
 
+  create_table "referentiel_items", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.jsonb "data", default: {}
+    t.jsonb "option", default: {}, null: false
+    t.bigint "referentiel_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["referentiel_id"], name: "index_referentiel_items_on_referentiel_id"
+  end
+
+  create_table "referentiels", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.bigint "procedure_id", null: false
+    t.bigint "type_de_champ_stable_id", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "refused_mails", id: :serial, force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", precision: nil, null: false
@@ -1337,6 +1354,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_11_12_090128) do
   add_foreign_key "procedures", "services"
   add_foreign_key "procedures", "zones"
   add_foreign_key "received_mails", "procedures"
+  add_foreign_key "referentiel_items", "referentiels"
   add_foreign_key "refused_mails", "procedures"
   add_foreign_key "services", "administrateurs"
   add_foreign_key "targeted_user_links", "users"
