@@ -27,23 +27,24 @@
                   %th.follow-col
               %tbody
               - @projected_dossiers.each do |p|
+                - dossier = p.dossier
                 - procedure_libelle, user_email, procedure_id = p.columns
-                - instructeur_dossier =  @instructeur_dossiers_ids.include?(p.dossier_id)
-                - expert_dossier = @dossier_avis_ids_h[p.dossier_id].present?
-                - hidden_by_administration = p.hidden_by_administration_at.present?
+                - instructeur_dossier =  @instructeur_dossiers_ids.include?(dossier.id)
+                - expert_dossier = @dossier_avis_ids_h[dossier.id].present?
+                - hidden_by_administration = dossier.hidden_by_administration_at.present?
                 - instructeur_and_expert_dossier = instructeur_dossier && expert_dossier
-                - path = instructeur_dossier ? instructeur_dossier_path(procedure_id, p.dossier_id) : expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id])
+                - path = instructeur_dossier ? instructeur_dossier_path(procedure_id, dossier.id) : expert_avis_path(procedure_id, @dossier_avis_ids_h[dossier.id])
 
-                %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
+                %tr{ class: [dossier.hidden_by_administration_at.present? && "file-hidden-by-user"] }
                   - if instructeur_and_expert_dossier
                     %td.fr-cell--numeric
                       .relative
-                        = p.dossier_id
-                        - if @notifications_dossier_ids.include?(p.dossier_id)
+                        = dossier.id
+                        - if @notifications_dossier_ids.include?(dossier.id)
                           %span.notifications{ 'aria-label': 'notifications' }
                     %td.fr-cell--multiline= procedure_libelle
                     %td= user_email
-                    %td.flex.column= status_badge(p.state)
+                    %td.flex.column= status_badge(dossier.state)
 
                   - elsif hidden_by_administration
                     = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
@@ -51,8 +52,8 @@
                   - else
                     %td.fr-cell--numeric
                       %a.fr-link.relative{ href: path }
-                        = p.dossier_id
-                        - if @notifications_dossier_ids.include?(p.dossier_id)
+                        = dossier.id
+                        - if @notifications_dossier_ids.include?(dossier.id)
                           %span.notifications{ 'aria-label': 'notifications' }
 
                     %td
@@ -62,8 +63,7 @@
                       %a{ href: path }= user_email
 
                     %td
-                      %a.flex.column{ href: path }= status_badge(p.state)
-
+                      %a.flex.column{ href: path }= status_badge(dossier.state)
 
                   - if instructeur_dossier && expert_dossier
                     %td.follow-col
@@ -72,13 +72,13 @@
                           Actions
 
                         - menu.with_item do
-                          = link_to(instructeur_dossier_path(procedure_id, p.dossier_id), role: 'menuitem') do
+                          = link_to(instructeur_dossier_path(procedure_id, dossier.id), role: 'menuitem') do
                             = dsfr_icon('fr-icon-file-text-fill', :sm)
                             .dropdown-description
                               Voir le dossier
 
                         - menu.with_item do
-                          = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id]), role: 'menuitem') do
+                          = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[dossier.id]), role: 'menuitem') do
                             = dsfr_icon('fr-icon-chat-3-fill', :sm)
                             .dropdown-description
                               Donner mon avis
@@ -86,7 +86,7 @@
                   - elsif instructeur_dossier
                     - if hidden_by_administration
                       %td.follow-col
-                        = link_to restore_instructeur_dossier_path(procedure_id, p.dossier_id), method: :patch, class: "button primary" do
+                        = link_to restore_instructeur_dossier_path(procedure_id, dossier.id), method: :patch, class: "button primary" do
                           = t('views.instructeurs.dossiers.restore')
 
                     - else
@@ -94,15 +94,15 @@
                         %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline-lg.fr-btns-group--icon-right
                           = render partial: "instructeurs/procedures/dossier_actions",
                                                                   locals: { procedure_id: procedure_id,
-                                                                            dossier_id: p.dossier_id,
-                                                                            state: p.state,
-                                                                            archived: p.archived,
-                                                                            dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                                                            dossier_id: dossier.id,
+                                                                            state: dossier.state,
+                                                                            archived: dossier.archived,
+                                                                            dossier_is_followed: @followed_dossiers_id.include?(dossier.id),
                                                                             close_to_expiration: nil,
                                                                             hidden_by_administration: nil,
                                                                             hidden_by_expired: nil,
-                                                                            sva_svr: p.sva_svr_decision_on.present?,
-                                                                            has_blocking_pending_correction: p.pending_correction? && Flipper.enabled?(:blocking_pending_correction, ProcedureFlipperActor.new(procedure_id)),
+                                                                            sva_svr: dossier.sva_svr_decision_on.present?,
+                                                                            has_blocking_pending_correction: dossier.pending_correction? && Flipper.enabled?(:blocking_pending_correction, ProcedureFlipperActor.new(procedure_id)),
                                                                             turbo: false,
                                                                             with_menu: false }
 
