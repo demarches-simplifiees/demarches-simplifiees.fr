@@ -1,9 +1,9 @@
 %tr.procedure{ id: "procedure_#{procedure.id}" }
-  %td
+  %th.fr-cell--fixed{ scope: 'row' }
     - title = show_detail ? 'Cacher les détails de la démarche' : 'Afficher les détails de la démarche'
     - icon = show_detail ? 'fr-icon-subtract-line' : 'fr-icon-add-line'
     - params = show_detail ? {} : { show_detail: true }
-    = button_to detail_admin_procedure_path(procedure["id"]), method: :post, params:, title:, class: [icon, "fr-icon--sm fr-mr-1w fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline" ] do
+    = button_to detail_admin_procedure_path(procedure["id"]), method: :post, params:, title:, class: [icon, "fr-icon--sm fr-mb-1w fr-text-action-high--blue-france fr-btn fr-btn--tertiary-no-outline" ] do
       = title
   %td
     - if procedure.template
@@ -11,7 +11,7 @@
       %abbr{ title: APPLICATION_NAME }= acronymize(APPLICATION_NAME)
     = procedure.libelle
   %td= procedure.id
-  %td= procedure.estimated_dossiers_count
+  %td.fr-cell--right= procedure.estimated_dossiers_count
   %td
     - if procedure.respond_to?(:parsed_latest_zone_labels)
       - procedure.parsed_latest_zone_labels.uniq.each do |zone_label|
@@ -31,8 +31,7 @@
 
 - if show_detail
   %tr.procedure{ id: "procedure_detail_#{procedure.id}" }
-    %td.fr-highlight--green-emeraude{ colspan: '8' }
-      .fr-container
-        .fr-col-6
-          - procedure.administrateurs.uniq.each do |admin|
-            = admin.email
+    %td.fr-background-alt--green-emeraude{ colspan: '8' }
+      %ul
+        - procedure.administrateurs.uniq.each do |admin|
+          %li= admin.email

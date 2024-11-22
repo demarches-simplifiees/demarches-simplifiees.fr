@@ -1,4 +1,1 @@
--# not renderable as administrateur flagged as manager, so render it anyway
-- if @can_download_dossiers
-  = turbo_stream.update_all '.procedure-actions' do
-    = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, count: @dossiers_count, export_url: method(:admin_procedure_exports_path))
+-# empty file so notice are still rendered

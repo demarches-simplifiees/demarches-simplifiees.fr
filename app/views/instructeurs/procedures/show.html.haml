@@ -44,7 +44,7 @@
       %p
         = t('views.instructeurs.dossiers.tab_explainations.archives')
         %br
-        Ces dossiers seront supprimés lorsque leur délai de conservation dans Démarches-simplifiées
+        Ces dossiers seront supprimés lorsque leur délai de conservation dans #{APPLICATION_NAME}
         - if @procedure.duree_conservation_dossiers_dans_ds
           = "(#{@procedure.duree_conservation_dossiers_dans_ds} mois)"
         sera expiré.
@@ -62,8 +62,15 @@
 
         .fr-ml-auto
           - if @dossiers_count > 0
-            %span.dossiers-export
-              = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
+            %ul.fr-btns-group.fr-btns-group--right.fr-btns-group--sm.fr-btns-group--inline-md.fr-btns-group--icon-left
+              = render Dossiers::ExportDropdownComponent.new(wrapper: :li, procedure: @procedure, export_templates: current_instructeur.export_templates_for(@procedure), statut: @statut, count: @dossiers_count,
+                class_btn: 'fr-btn--secondary fr-icon-download-line', export_url: method(:download_export_instructeur_procedure_path))
+
+              = render Dropdown::MenuComponent.new(wrapper: :li, button_options: { class: ['fr-btn--tertiary', 'fr-icon-settings-5-line'] }, menu_options: { id: 'custom-menu' }) do |menu|
+                - menu.with_button_inner_html do
+                  = t('views.instructeurs.dossiers.customize')
+                - menu.with_form do
+                  = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
 
     - if @filtered_sorted_paginated_ids.present? || @current_filters.count > 0
       = render Instructeurs::FilterButtonsComponent.new(filters: @current_filters, procedure_presentation: @procedure_presentation, statut: @statut)
@@ -82,92 +89,102 @@
           = render batch_operation_component
 
         .fr-table.fr-table--bordered
-          %table.table.dossiers-table.hoverable.min-height-300
-            %thead
-              %tr
-                - if batch_operation_component.render?
-                  %th.text-center
-                    %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
+          .fr-table__wrapper
+            .fr-table__container
+              .fr-table__content
+                %table#table-dossiers.dossiers-table
+                  %thead
+                    %tr
+                      - if batch_operation_component.render?
+                        %th.fr-cell--fixed{ role: 'columnheader', scope: 'col' }
+                          .fr-checkbox-group.fr-checkbox-group--sm
+                            %input{ type: "checkbox", disabled: @disable_checkbox_all, checked: @disable_checkbox_all, data: { action: "batch-operation#onCheckAll" }, id: dom_id(BatchOperation.new, :checkbox_all), aria: { label: t('views.instructeurs.dossiers.select_all') } }
+                            = label_tag dom_id(BatchOperation.new, :checkbox_all), "Sélectionner tous les dossiers", class: 'fr-label'
 
-                = render Instructeurs::ColumnTableHeaderComponent.new(procedure_presentation: @procedure_presentation)
+                      = render Instructeurs::ColumnTableHeaderComponent.new(procedure_presentation: @procedure_presentation)
 
-                %th.follow-col
-                  Actions
+                      %th.follow-col{ scope: 'col' }
+                        Actions
 
-                %th.text-right
-                  = render Dropdown::MenuComponent.new(wrapper: :span, button_options: { class: ['fr-btn--sm', 'fr-btn--tertiary-no-outline', 'fr-btn--icon-right', 'fr-icon-settings-5-line'] }, menu_options: { id: 'custom-menu' }) do |menu|
-                    - menu.with_button_inner_html do
-                      = t('views.instructeurs.dossiers.personalize')
-                    - menu.with_form do
-                      = render Instructeurs::ColumnPickerComponent.new(procedure: @procedure, procedure_presentation: @procedure_presentation)
+                  %tbody
+                    = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
 
-            %tbody
-              = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
+                    - @projected_dossiers.each do |p|
+                      - path = instructeur_dossier_path(@procedure, p.dossier_id)
+                      %tr{ class: class_names("file-hidden-by-user" => p.hidden_by_user_at.present?), id: "table-dossiers-row-#{p.dossier_id}", "aria-selected" => "false", "data-row-key" => p.dossier_id }
+                        - if batch_operation_component.render?
+                          %th.fr-cell--fixed{ scope: 'row' }
+                            .fr-checkbox-group.fr-checkbox-group--sm
+                              - if p.batch_operation_id.present?
+                                = check_box_tag "batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true,
+                                  id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"),
+                                  aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier_id) },
+                                  data: { "fr-row-select" => "true" }
+                              - else
+                                = check_box_tag "batch_operation[dossier_ids][]", p.dossier_id, false,
+                                    data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(','), "fr-row-select" => "true" },
+                                    form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"),
+                                    aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
+                              = label_tag dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), "Sélectionner le dossier #{p.dossier_id}", class: 'fr-label'
 
-              - @projected_dossiers.each do |p|
-                - path = instructeur_dossier_path(@procedure, p.dossier_id)
-                %tr{ class: [p.hidden_by_user_at.present? && "file-hidden-by-user"] }
-                  - if batch_operation_component.render?
-                    %td.text-center
-                      - if p.batch_operation_id.present?
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true, id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier_id) }
-                      - else
-                        = check_box_tag :"batch_operation[dossier_ids][]", p.dossier_id, false, data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(',') }, form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
-
-                  %td.number-col
-                    - if p.hidden_by_administration_at.present?
-                      %span.cell-link= p.dossier_id
-                    - else
-                      %a.cell-link.relative{ href: path }
-                        = p.dossier_id
-                        - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
-                          %span.notifications{ 'aria-label': 'notifications' }
+                        %td.fr-cell--numeric
+                          - if p.hidden_by_administration_at.present?
+                            %span.cell-link= p.dossier_id
+                          - else
+                            %a.cell-link.relative{ href: path }
+                              = p.dossier_id
+                              - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                                %span.notifications{ 'aria-label': 'notifications' }
 
 
-                  - p.columns.each do |column|
-                    %td
-                      - if p.hidden_by_administration_at.present?
-                        %span.cell-link
-                          = column.is_a?(Hash) ? tags_label(column[:value]) : column
-                          - if p.hidden_by_user_at.present?
-                            = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}"
-                      - else
-                        %a.cell-link{ href: path }
-                          = column.is_a?(Hash) ? tags_label(column[:value]) : column
-                          = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
+                        - p.columns.each do |column|
+                          %td
+                            - if p.hidden_by_administration_at.present?
+                              %span.cell-link
+                                = column.is_a?(Hash) ? tags_label(column[:value]) : column
+                                - if p.hidden_by_user_at.present?
+                                  = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}"
+                            - else
+                              %a.cell-link{ href: path }
+                                = column.is_a?(Hash) ? tags_label(column[:value]) : column
+                                = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
 
-                  %td.status-col
-                    - status = [status_badge(p.state)]
-                    - if p.pending_correction?
-                      - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                    - elsif p.state.to_sym == :en_construction && p.resolved_corrections?
-                      - status << correction_resolved_badge(html_class: "fr-mt-1v")
-                    = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: class_names("cell-link": true, "fr-py-0": status.many?))
+                        %td
+                          - status = [status_badge(p.state)]
+                          - if p.pending_correction?
+                            - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
+                          - elsif p.state.to_sym == :en_construction && p.resolved_corrections?
+                            - status << correction_resolved_badge(html_class: "fr-mt-1v")
+                          = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: "cell-link flex column")
 
-                  - if @procedure.sva_svr_enabled?
-                    %td
-                      %span.cell-link
-                        = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
+                        - if @procedure.sva_svr_enabled?
+                          %td
+                            %span.cell-link
+                              = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
 
-                  %td.follow-col{ colspan:'2' }
-                    %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
-                      = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
-                                  dossier_id: p.dossier_id,
-                                  state: p.state,
-                                  archived: p.archived,
-                                  dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                                  close_to_expiration: @statut == 'expirant',
-                                  hidden_by_administration: @statut == 'supprimes',
-                                  hidden_by_expired: p.hidden_by_reason == 'expired',
-                                  sva_svr: @procedure.sva_svr_enabled?,
-                                  has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,
-                                  turbo: false,
-                                  with_menu: false }
+                        %td.follow-col
+                          %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
+                            = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
+                                        dossier_id: p.dossier_id,
+                                        state: p.state,
+                                        archived: p.archived,
+                                        dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                        close_to_expiration: @statut == 'expirant',
+                                        hidden_by_administration: @statut == 'supprimes',
+                                        hidden_by_expired: p.hidden_by_reason == 'expired',
+                                        sva_svr: @procedure.sva_svr_enabled?,
+                                        has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,
+                                        turbo: false,
+                                        with_menu: false }
 
-            %tfoot
-              %tr
-                %td.force-table-100{ colspan: @procedure_presentation.displayed_fields_for_headers.size + 2 }
-                  = paginate @filtered_sorted_paginated_ids, views_prefix: 'shared'
+          .fr-table__footer
+            .fr-table__footer--start
+              %p.fr-table__detail
+                = number_with_delimiter @dossiers_count
+                = t('activerecord.models.dossier', count: @dossiers_count).downcase
+            .fr-table__footer--middle
+              = paginate @filtered_sorted_paginated_ids, views_prefix: 'shared'
+            .fr-table__footer--end.flex-no-grow
 
     - else
       %h2.empty-text

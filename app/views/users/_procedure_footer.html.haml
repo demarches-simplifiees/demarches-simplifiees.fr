@@ -37,9 +37,14 @@
             .fr-download
               = link_to I18n.t('users.procedure_footer.dematerialisation.title_1'), commencer_dossier_vide_for_revision_path(procedure.active_revision), download: 'true', class: 'fr-download__link'
           %h3.fr-footer__top-cat= I18n.t('users.procedure_footer.support.header')
-          .fr-footer__brand.fr-enlarge-link
-            = link_to t("users.procedure_footer.dematerialisation.link"), title: t("users.procedure_footer.dematerialisation.alt"), class: "fr-footer__brand-link" do
-              = image_tag("footer/logo-france-services.svg", class: "fr-footer__logo logo-france-service-fr", alt: t("users.procedure_footer.dematerialisation.alt"))
+          %ul.fr-footer__top-list
+            %li
+              = link_to I18n.t('users.procedure_footer.support_links.france_service.title'), t("users.procedure_footer.support_links.france_service.url"),
+                title: new_tab_suffix(t("users.procedure_footer.support_links.france_service.title")), class: "fr-footer__link", **external_link_attributes
+
+            %li
+              = link_to I18n.t('users.procedure_footer.support_links.carte_inclusion.title'), t("users.procedure_footer.support_links.carte_inclusion.url"),
+                title: new_tab_suffix(t("users.procedure_footer.support_links.carte_inclusion.title")), class: "fr-footer__link", **external_link_attributes
 
   .fr-footer__bottom.fr-mt-0
     .fr-container

@@ -23,7 +23,12 @@ en:
       dematerialisation:
         header: Paperless
         title_1: Download the PDF form
-        link: "https://www.transformation.gouv.fr/france-services"
-        alt: France services
       support:
         header: Being supported in your approach
+      support_links:
+        france_service:
+          title: Find a France Services house
+          url: 'https://www.transformation.gouv.fr/france-services'
+        carte_inclusion:
+          title: Map of digital inclusion sites
+          url: 'https://cartographie.societenumerique.gouv.fr/'

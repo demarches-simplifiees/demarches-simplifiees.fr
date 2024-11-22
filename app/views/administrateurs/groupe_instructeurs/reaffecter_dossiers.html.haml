@@ -4,23 +4,34 @@
                     ['Groupes d’instructeurs', admin_procedure_groupe_instructeurs_path(@procedure)],
                     [@groupe_instructeur.label]] }
 
-.container.groupe-instructeur
+.fr-container
+  %h1.fr-h2 Réaffectation des dossiers du groupe « #{@groupe_instructeur.label} »
+  %p
+    Le groupe « #{@groupe_instructeur.label} » contient des dossiers. Afin de procéder à sa suppression, vous devez réaffecter ses dossiers à un autre groupe d’instructeurs.
 
-  .card
-    .card-title Réaffectation des dossiers du groupe « #{@groupe_instructeur.label} »
-    %p
-      Le groupe « #{@groupe_instructeur.label} » contient des dossiers. Afin de procéder à sa suppression, vous devez réaffecter ses dossiers à un autre groupe d’instructeurs.
-    %table.table.mt-2
-      %thead
-        %tr
-          %th{ colspan: 2 }= t(".existing_groupe", count: @groupes_instructeurs.total_count)
-      %tbody
-        - @groupes_instructeurs.each do |group|
-          .flex.justify-between.align-center.fr-mb-2w
-            %p.fr-mb-0= group.label
-            = button_to 'Réaffecter les dossiers à ce groupe',
-              reaffecter_admin_procedure_groupe_instructeur_path(:target_group => group),
-              { class: 'fr-btn fr-btn--secondary fr-btn--sm',
-                data: { confirm: "Êtes-vous sûr de vouloir réaffecter les dossiers du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
+  .fr-table
+    .fr-table__wrapper
+      .fr-table__container
+        .fr-table__content
+          %table
+            %caption
+              = t(".existing_groupe", count: @groupes_instructeurs.total_count)
+            %thead
+              %tr
+                %th{ scope: 'col' } Groupe
+                %th{ scope: 'col' } Réaffectation
+            %tbody
+              - @groupes_instructeurs.each do |group|
+                %tr
+                  %td= group.label
+                  %td
+                    = button_to 'Réaffecter les dossiers à ce groupe',
+                      reaffecter_admin_procedure_groupe_instructeur_path(:target_group => group),
+                      { class: 'fr-btn fr-btn--secondary fr-btn--sm',
+                        data: { confirm: "Êtes-vous sûr de vouloir réaffecter les dossiers du groupe « #{@groupe_instructeur.label} » vers le groupe  « #{group.label} » ?" } }
 
-    = paginate @groupes_instructeurs, views_prefix: 'shared'
+    .fr-table__footer
+      .fr-table__footer--start
+        %p.fr-table__detail
+      .fr-table__footer--middle
+        = paginate @groupes_instructeurs, views_prefix: 'shared'

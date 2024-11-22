@@ -19,28 +19,38 @@
   %hr.fr-mt-4w
 
   .flex.justify-between.align-baseline
-    .card-title= t('.assigned_instructeur', count: instructeurs.count)
+    .card-title= t('.assigned_instructeur', count: instructeurs.total_count)
     = button_to export_groupe_instructeurs_admin_procedure_groupe_instructeurs_path(procedure, format: :csv), method: :get, class: 'fr-btn fr-btn--tertiary fr-btn--icon-left fr-icon-download-line' do
       Exporter la liste (.CSV)
 
-  %table.fr-table.fr-table--bordered.width-100
-    %thead
-      %tr
-        %th= t('.title')
-        %th.text-right= t('.actions')
-    %tbody
-      - instructeurs.each do |instructeur|
-        %tr
-          %td
-            = dsfr_icon('fr-icon-user-line')
-            #{instructeur.email}
+  .fr-table
+    .fr-table__wrapper
+      .fr-table__container
+        .fr-table__content
+          %table
+            %thead
+              %tr
+                %th{ scope: 'col' }= t('.title')
+                %th{ scope: 'col' }= t('.actions')
+            %tbody
+              - instructeurs.each do |instructeur|
+                %tr
+                  %td
+                    = dsfr_icon('fr-icon-user-line')
+                    #{instructeur.email}
 
-          - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
-          %td.actions= button_to t('.remove'),
-            { action: :remove_instructeur, id: groupe_instructeur.id },
-            { method: :delete,
-              data: { confirm: confirmation_message },
-              params: { instructeur: { id: instructeur.id }},
-              class: 'fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-subtract-line' }
+                  - confirmation_message = procedure.routing_enabled? ? "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » du groupe « #{groupe_instructeur.label} » ?" : "Êtes-vous sûr de vouloir retirer l’instructeur « #{instructeur.email} » de la démarche ?"
+                  %td.actions= button_to t('.remove'),
+                    { action: :remove_instructeur, id: groupe_instructeur.id },
+                    { method: :delete,
+                      data: { confirm: confirmation_message },
+                      params: { instructeur: { id: instructeur.id }},
+                      class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-subtract-line' }
 
-  = paginate instructeurs, views_prefix: 'shared'
+    .fr-table__footer
+      .fr-table__footer--start
+        %p.fr-table__detail
+          = number_with_delimiter instructeurs.total_count
+          = t('activerecord.models.instructeur', count: instructeurs.total_count).downcase
+      .fr-table__footer--middle
+        = paginate instructeurs, views_prefix: 'shared'

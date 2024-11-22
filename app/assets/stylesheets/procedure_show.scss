@@ -9,15 +9,6 @@
 }
 
 #procedure-show {
-  .titre-dossiers {
-    text-align: center;
-  }
-
-  .dossiers-table {
-    margin-top: $default-spacer;
-    margin-bottom: 3 * $default-spacer;
-  }
-
   .procedure-actions {
     margin-left: auto;
     flex-shrink: 0;
@@ -47,10 +38,5 @@
 
   .fr-ds-combobox__multiple {
     margin-bottom: $default-fields-spacer;
-  }
-
-  // fix/dsfr
-  .fr-checkbox-group.fix-dsfr-notified-toggle-component {
-    margin-top: -0.5rem;
   }
 }

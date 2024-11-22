@@ -1,5 +1,5 @@
 = paginator.render do
-  %nav.fr-pagination.fr-mt-2w{ role: 'navigation', 'aria-label': 'Pagination' }
+  %nav.fr-pagination{ role: 'navigation', 'aria-label': 'Pagination' }
     %ul.fr-pagination__list
       = first_page_tag unless current_page.first?
       = prev_page_tag unless current_page.first?

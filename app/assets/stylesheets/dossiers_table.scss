@@ -1,69 +1,19 @@
 @import 'colors';
 @import 'constants';
 
-.table.dossiers-table {
-  font-size: 14px;
-
-  th {
-    padding: (2 * $default-spacer) $default-spacer;
-  }
-
+.dossiers-table {
   a {
     background-image: none; // remove DSFR underline
   }
 
-  .caret-icon {
-    vertical-align: top;
-    margin-top: 9px;
-    margin-left: 4px;
-  }
-
-  .cell-link {
-    // In order to have identical height in the table header and the table rows,
-    // we compensate for the height difference between the biggest element of the header
-    // (the Personnaliser button, 38px) and the biggest cell-link element of the rows (the label, 28px)
-    padding: calc((2 * #{$default-spacer}) + ((38px - 28px) / 2))
-      $default-spacer;
-    display: block;
-  }
-
-  .deleted-cell {
-    padding: (2 * $default-spacer) $default-spacer;
-  }
-
-  .notification-col {
-    a {
-      font-size: 16px;
-    }
-  }
-
-  .number-col,
   .fr-badge {
     white-space: nowrap;
   }
 
-  .text-center {
-    text-align: center;
-  }
-
-  .status-col {
-    width: 175px;
-  }
-
-  .updated-at-col {
-    width: 110px;
-  }
-
   .follow-col {
-    width: 450px;
-
     .fr-btn {
       margin-bottom: 0;
     }
-  }
-
-  .no-border {
-    background-image: none;
   }
 }
 
@@ -73,8 +23,4 @@
   &:hover {
     background-color: rgba(242, 137, 0, 0.6) !important;
   }
-}
-
-table.display-table {
-  display: table;
 }

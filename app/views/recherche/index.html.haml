@@ -9,108 +9,113 @@
     .fr-alert.fr-alert--info.fr-alert--sm.fr-mt-3w
       = p t('views.instructeurs.search.deleted_dossier', dossier_id: @deleted_dossier.dossier_id, procedure_libelle: @deleted_dossier.procedure.libelle, deleted_at: l(@deleted_dossier.deleted_at))
 
-  .page-title
-    Résultat de la recherche :
-    = t('pluralize.dossier_trouve', count: @dossiers_count)
-
   - if @projected_dossiers.present?
-    = paginate @paginated_ids, views_prefix: 'shared'
-    .fr-table.fr-table--bordered
-      %table.table.dossiers-table.hoverable
-        %thead
-          %tr
-            %th.number-col Nº dossier
-            %th Démarche
-            %th Demandeur
-            %th.status-col Statut
-            %th.follow-col
-        %tbody
-        - @projected_dossiers.each do |p|
-          - procedure_libelle, user_email, procedure_id = p.columns
-          - instructeur_dossier =  @instructeur_dossiers_ids.include?(p.dossier_id)
-          - expert_dossier = @dossier_avis_ids_h[p.dossier_id].present?
-          - hidden_by_administration = p.hidden_by_administration_at.present?
-          - instructeur_and_expert_dossier = instructeur_dossier && expert_dossier
-          - path = instructeur_dossier ? instructeur_dossier_path(procedure_id, p.dossier_id) : expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id])
+    .fr-table.fr-table--no-scroll.fr-table--bordered
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            %table.dossiers-table
+              %caption
+                Résultat de la recherche :
+                = t('pluralize.dossier_trouve', count: @dossiers_count)
+              %thead
+                %tr
+                  %th Nº dossier
+                  %th Démarche
+                  %th Demandeur
+                  %th Statut
+                  %th.follow-col
+              %tbody
+              - @projected_dossiers.each do |p|
+                - procedure_libelle, user_email, procedure_id = p.columns
+                - instructeur_dossier =  @instructeur_dossiers_ids.include?(p.dossier_id)
+                - expert_dossier = @dossier_avis_ids_h[p.dossier_id].present?
+                - hidden_by_administration = p.hidden_by_administration_at.present?
+                - instructeur_and_expert_dossier = instructeur_dossier && expert_dossier
+                - path = instructeur_dossier ? instructeur_dossier_path(procedure_id, p.dossier_id) : expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id])
 
-          %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
-            - if instructeur_and_expert_dossier
-              %td.number-col
-                .cell-link.relative
-                  = p.dossier_id
-                  - if @notifications_dossier_ids.include?(p.dossier_id)
-                    %span.notifications{ 'aria-label': 'notifications' }
-              %td
-                .cell-link= procedure_libelle
-              %td
-                .cell-link= user_email
-              %td.status-col
-                .cell-link= status_badge(p.state)
+                %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
+                  - if instructeur_and_expert_dossier
+                    %td.fr-cell--numeric
+                      .cell-link.relative
+                        = p.dossier_id
+                        - if @notifications_dossier_ids.include?(p.dossier_id)
+                          %span.notifications{ 'aria-label': 'notifications' }
+                    %td
+                      .cell-link= procedure_libelle
+                    %td
+                      .cell-link= user_email
+                    %td
+                      .cell-link.flex.column= status_badge(p.state)
 
-            - elsif hidden_by_administration
-              = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
+                  - elsif hidden_by_administration
+                    = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
 
-            - else
-              %td.number-col
-                %a.cell-link.relative{ href: path }
-                  = p.dossier_id
-                  - if @notifications_dossier_ids.include?(p.dossier_id)
-                    %span.notifications{ 'aria-label': 'notifications' }
+                  - else
+                    %td.fr-cell--numeric
+                      %a.cell-link.relative{ href: path }
+                        = p.dossier_id
+                        - if @notifications_dossier_ids.include?(p.dossier_id)
+                          %span.notifications{ 'aria-label': 'notifications' }
 
-              %td
-                %a.cell-link{ href: path }= procedure_libelle
+                    %td
+                      %a.cell-link{ href: path }= procedure_libelle
 
-              %td
-                %a.cell-link{ href: path }= user_email
+                    %td
+                      %a.cell-link{ href: path }= user_email
 
-              %td.status-col
-                %a.cell-link{ href: path }= status_badge(p.state)
+                    %td
+                      %a.cell-link.flex.column{ href: path }= status_badge(p.state)
 
 
-            - if instructeur_dossier && expert_dossier
-              %td.follow-col
-                = render Dropdown::MenuComponent.new(wrapper: :div, button_options: {class: ['fr-btn--sm']}) do |menu|
-                  - menu.with_button_inner_html do
-                    Actions
+                  - if instructeur_dossier && expert_dossier
+                    %td.follow-col
+                      = render Dropdown::MenuComponent.new(wrapper: :div, button_options: {class: ['fr-btn--sm']}) do |menu|
+                        - menu.with_button_inner_html do
+                          Actions
 
-                  - menu.with_item do
-                    = link_to(instructeur_dossier_path(procedure_id, p.dossier_id), role: 'menuitem') do
-                      = dsfr_icon('fr-icon-file-text-fill', :sm)
-                      .dropdown-description
-                        Voir le dossier
+                        - menu.with_item do
+                          = link_to(instructeur_dossier_path(procedure_id, p.dossier_id), role: 'menuitem') do
+                            = dsfr_icon('fr-icon-file-text-fill', :sm)
+                            .dropdown-description
+                              Voir le dossier
 
-                  - menu.with_item do
-                    = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id]), role: 'menuitem') do
-                      = dsfr_icon('fr-icon-chat-3-fill', :sm)
-                      .dropdown-description
-                        Donner mon avis
+                        - menu.with_item do
+                          = link_to(expert_avis_path(procedure_id, @dossier_avis_ids_h[p.dossier_id]), role: 'menuitem') do
+                            = dsfr_icon('fr-icon-chat-3-fill', :sm)
+                            .dropdown-description
+                              Donner mon avis
 
-            - elsif instructeur_dossier
-              - if hidden_by_administration
-                %td.follow-col
-                  = link_to restore_instructeur_dossier_path(procedure_id, p.dossier_id), method: :patch, class: "button primary" do
-                    = t('views.instructeurs.dossiers.restore')
+                  - elsif instructeur_dossier
+                    - if hidden_by_administration
+                      %td.follow-col
+                        = link_to restore_instructeur_dossier_path(procedure_id, p.dossier_id), method: :patch, class: "button primary" do
+                          = t('views.instructeurs.dossiers.restore')
 
-              - else
-                %td.follow-col
-                  %ul.inline.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
-                    = render partial: "instructeurs/procedures/dossier_actions",
-                                                            locals: { procedure_id: procedure_id,
-                                                                      dossier_id: p.dossier_id,
-                                                                      state: p.state,
-                                                                      archived: p.archived,
-                                                                      dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
-                                                                      close_to_expiration: nil,
-                                                                      hidden_by_administration: nil,
-                                                                      hidden_by_expired: nil,
-                                                                      sva_svr: p.sva_svr_decision_on.present?,
-                                                                      has_blocking_pending_correction: p.pending_correction? && Flipper.enabled?(:blocking_pending_correction, ProcedureFlipperActor.new(procedure_id)),
-                                                                      turbo: false,
-                                                                      with_menu: false }
+                    - else
+                      %td.follow-col
+                        %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline-lg.fr-btns-group--icon-right
+                          = render partial: "instructeurs/procedures/dossier_actions",
+                                                                  locals: { procedure_id: procedure_id,
+                                                                            dossier_id: p.dossier_id,
+                                                                            state: p.state,
+                                                                            archived: p.archived,
+                                                                            dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                                                            close_to_expiration: nil,
+                                                                            hidden_by_administration: nil,
+                                                                            hidden_by_expired: nil,
+                                                                            sva_svr: p.sva_svr_decision_on.present?,
+                                                                            has_blocking_pending_correction: p.pending_correction? && Flipper.enabled?(:blocking_pending_correction, ProcedureFlipperActor.new(procedure_id)),
+                                                                            turbo: false,
+                                                                            with_menu: false }
 
-            - else
-              %td
-    = paginate @paginated_ids, views_prefix: 'shared'
+                  - else
+                    %td
+      .fr-table__footer
+        .fr-table__footer--start
+        .fr-table__footer--middle
+          = paginate @paginated_ids, views_prefix: 'shared'
+        .fr-table__footer--end
 
   - else
-    %h2 Aucun dossier correspondant à votre recherche n’a été trouvé
+    %h2.fr-h4.fr-my-4w Aucun dossier correspondant à votre recherche n’a été trouvé

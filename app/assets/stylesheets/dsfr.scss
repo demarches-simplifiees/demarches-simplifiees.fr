@@ -159,11 +159,6 @@ input[type='radio'] {
   box-shadow: 0px 0px 0px 1px $light-red;
 }
 
-.fr-table table.hack-to-display-dropdown {
-  padding-bottom: 300px;
-  margin-bottom: -300px;
-}
-
 // on utilise le dropdown de sélecteur de langue pour un autre usage donc on veut retirer l'icone
 .fr-translate .fr-translate__btn.custom-fr-translate-no-icon::before {
   display: none;
@@ -172,21 +167,6 @@ input[type='radio'] {
 // on souhaite que le dropdown s'adapate correctement en largeur
 .fr-translate .fr-menu__list.max-content {
   width: max-content;
-}
-
-button.fr-tag-bug {
-  background-color: $blue-france-500;
-  color: #ffffff;
-
-  &:hover {
-    background-color: #1212ff;
-    color: #ffffff;
-  }
-
-  .tag-dismiss {
-    font-size: 1rem;
-    margin-left: 10px;
-  }
 }
 
 // on applique le comportement desktop du sélecteur de langue aux terminaux de toute dimension
@@ -248,13 +228,6 @@ button.fr-tag-bug {
   display: block; // Pour cette valeur spécifique, on récupère celle de .fr-label
 }
 
-// Fix toggles having labels on 2 lines
-// From upstream https://github.com/GouvernementFR/dsfr/pull/928
-// Remove it when PR is merged (v1.12 ?)
-.fr-toggle label[data-fr-unchecked-label][data-fr-checked-label]::before {
-  word-wrap: normal;
-}
-
 // We use the DSFR badge design to highlight the email in France Connect page
 // but we don't want it to be uppercase
 .fr-badge--lowercase {
@@ -266,7 +239,16 @@ button.fr-tag-bug {
   white-space: nowrap;
 }
 
+// Caption is bold, but all-procedures table use fr-tag in caption
+.fr-table caption .fr-tag {
+  font-weight: normal;
+}
+
 // We remove the line height because it creates unharmonized spaces - most of all in table
 .fr-tags-group > li {
   line-height: inherit;
+}
+
+.fr-cell--numeric {
+  font-variant-numeric: tabular-nums;
 }

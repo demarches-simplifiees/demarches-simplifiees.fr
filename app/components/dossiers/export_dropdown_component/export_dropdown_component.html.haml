@@ -1,4 +1,4 @@
-= render Dropdown::MenuComponent.new(wrapper: :div, button_options: { class: ['fr-btn--sm', @class_btn.present? ? @class_btn : 'fr-btn--secondary']}, menu_options: { id: @count.nil? ? "download_menu" : "download_all_menu", class: ['dropdown-export'] }) do |menu|
+= render Dropdown::MenuComponent.new(wrapper:, button_options: { class: ['fr-btn--sm', @class_btn.present? ? @class_btn : 'fr-btn--secondary']}, menu_options: { id: @count.nil? ? "download_all_menu" : "download_menu", class: ['dropdown-export'] }) do |menu|
   - menu.with_button_inner_html do
     = @count.nil? ? t(".download_all") : t(".download", count: @count)
 

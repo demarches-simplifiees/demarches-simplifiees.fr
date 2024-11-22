@@ -4,12 +4,14 @@
                     ['Export et Archives']] }
 
 
-.container.flex
-  %h1.mb-2.mr-2
+.fr-container.flex
+  %h1
     Archives
     -# index not renderable as administrateur flagged as manager, so render it anyway
-  = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_url: method(:download_admin_procedure_exports_path), show_export_template_tab: false)
-.container
+  .fr-ml-2w.fr-my-1w
+    = render Dossiers::ExportDropdownComponent.new(procedure: @procedure, export_url: method(:download_admin_procedure_exports_path), show_export_template_tab: false)
+
+.fr-container
   = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, export_url: method(:download_admin_procedure_exports_path))
 
   = render partial: "shared/archives/notice"

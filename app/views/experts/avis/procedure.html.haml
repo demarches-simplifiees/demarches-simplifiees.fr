@@ -29,20 +29,28 @@
 
 .fr-container
   - if @avis.present?
-    %table.table.dossiers-table.hoverable
-      %thead
-        %tr
-          %th.number-col Nº dossier
-          %th Demandeur
-          %th Démarche
-      %tbody
-        - @avis.each do |avis|
-          %tr
-            %td.number-col
-              = link_to(expert_avis_path(avis.procedure, avis), class: 'cell-link') do
-                = avis.dossier.id
-            %td= link_to(avis.dossier.user_email_for(:display), expert_avis_path(avis.procedure, avis), class: 'cell-link')
-            %td= link_to(avis.procedure.libelle, expert_avis_path(avis.procedure, avis), class: 'cell-link')
-    = paginate @avis, views_prefix: 'shared'
+    .fr-table.fr-table--no-scroll.fr-table--bordered
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            %table.dossiers-table
+              %thead
+                %tr
+                  %th Nº dossier
+                  %th Demandeur
+                  %th Démarche
+              %tbody
+                - @avis.each do |avis|
+                  %tr
+                    %td.fr-cell--numeric
+                      = link_to(expert_avis_path(avis.procedure, avis), class: 'cell-link') do
+                        = avis.dossier.id
+                    %td= link_to(avis.dossier.user_email_for(:display), expert_avis_path(avis.procedure, avis), class: 'cell-link')
+                    %td= link_to(avis.procedure.libelle, expert_avis_path(avis.procedure, avis), class: 'cell-link')
+      .fr-table__footer
+        .fr-table__footer--start
+        .fr-table__footer--middle
+          = paginate @avis, views_prefix: 'shared'
+        .fr-table__footer--end.flex-no-grow
   - else
     %h2.empty-text Aucun avis

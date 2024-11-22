@@ -59,7 +59,6 @@ describe Administrateurs::ExportsController, type: :controller do
         end
 
         it 'responds in the correct format' do
-          expect(response.media_type).to eq('text/vnd.turbo-stream.html')
           expect(response).to have_http_status(:ok)
         end
       end

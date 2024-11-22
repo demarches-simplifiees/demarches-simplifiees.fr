@@ -1,4 +1,4 @@
-%td.number-col
+%td.fr-cell--numeric
   %p.cell-link= p.dossier_id
 
 %td
@@ -9,5 +9,5 @@
     = user_email
     = "- #{t('views.instructeurs.dossiers.deleted_by_administration')}" if p.hidden_by_administration_at.present?
 
-%td.status-col
-  %p.cell-link= status_badge(p.state)
+%td
+  %p.cell-link.flex.column= status_badge(p.state)
