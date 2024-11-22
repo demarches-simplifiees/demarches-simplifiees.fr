@@ -6,10 +6,6 @@ export class EmailFranceConnectController extends ApplicationController {
   emailFieldTarget!: HTMLElement;
   useFranceConnectEmailTargets!: HTMLInputElement[];
 
-  connect() {
-    this.triggerEmailField();
-  }
-
   triggerEmailField() {
     const checkedTarget = this.useFranceConnectEmailTargets.find(
       (target) => target.checked
