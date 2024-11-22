@@ -888,11 +888,6 @@ en:
         alternative_email: "Please provide the email to use for contacting you."
         keep_fc_email_html: Yes, use <b class='bold'>%{email}</b> as contact email.
         use_another_email: No, use another address.
-      confirmation_sent:
-        confirmation_sent_by_email: "Confirm your email"
-        intro_html: "A confirmation email has been sent to your address <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span>"
-        click_the_link_in_the_email: "Please click the link in the email to confirm your account and connect with France Connect in the future."
-        continue: "Continue"
       merge:
         title: "Merge your account FranceConnect and %{application_name}"
         subtitle_html: "Hello,<br /><br />Your account FranceConnect uses <b class='bold'>%{email}</b> as contact email.<br />But there is an existing %{application_name} account using this email."

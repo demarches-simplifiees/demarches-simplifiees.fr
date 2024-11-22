@@ -59,12 +59,11 @@ class FranceConnect::ParticulierController < ApplicationController
 
   def merge_using_fc_email
     @fci.safely_associate_user!(@fci.email_france_connect)
+    @fci.user.update!(email_verified_at: Time.current)
 
     sign_in(@fci.user)
 
-    @fci.send_custom_confirmation_instructions
-
-    render :confirmation_sent, locals: { email: @fci.email_france_connect, destination_path: destination_path(@fci.user) }
+    redirect_to destination_path(@fci.user), notice: t('france_connect.particulier.flash.connection_done', application_name: Current.application_name)
   end
 
   def merge_using_password
