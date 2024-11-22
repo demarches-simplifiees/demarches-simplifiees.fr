@@ -1573,7 +1573,7 @@ describe Dossier, type: :model do
 
         it 'should have errors' do
           expect(champ_siret.errors).not_to be_empty
-          expect(champ_siret.errors.first.full_message).to eq("Le Numéro Tahiti doit comporter au moins 9 chiffres, selectionnez une proposition dans la liste.")
+          expect(champ_siret.errors.first.full_message).to eq("Veuillez selectionner un des établissements")
         end
       end
     end

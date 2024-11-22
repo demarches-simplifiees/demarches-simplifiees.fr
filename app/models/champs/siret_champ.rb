@@ -17,7 +17,7 @@ class Champs::SiretChamp < Champ
     return if value.blank?
 
     if value.length < 9
-      errors.add(:value, "Le Numéro Tahiti doit comporter au moins 9 chiffres, selectionnez une proposition dans la liste.")
+      errors.add(:value, "Veuillez selectionner un des établissements")
     end
   end
 end
