@@ -10,9 +10,11 @@ describe 'Signing up:', js: true do
 
     sign_up_with user_email, user_password
     expect(page).to have_content "nous avons besoin de vérifier votre adresse électronique #{user_email}"
+    expect(User.find_by(email: user_email).email_verified_at).to be_nil
 
     click_confirmation_link_for user_email
     expect(page).to have_content('Votre compte a bien été confirmé.')
+    expect(User.find_by(email: user_email).email_verified_at).to be_present
     expect(page).to have_current_path dossiers_path
   end
 
