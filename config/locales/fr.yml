@@ -935,17 +935,17 @@ fr:
       choose_email:
         intro_html: "Votre compte FranceConnect utilise <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span> comme email de contact."
         use_email_for_notifications: Souhaitez-vous l’utiliser pour recevoir les notifications concernant l’avancement de vos dossiers ?
-        confirm: Confirmer
+        confirm: Valider
         choose_email_contact: Choisissez votre email de contact pour finaliser votre connexion
-        alternative_email: Veuillez nous fournir l'email à utiliser pour vous contacter.
-        keep_fc_email_html: "Oui, utiliser %{email} comme email de contact."
-        use_another_email: Non, utiliser une autre adresse.
+        alternative_email: Veuillez nous fournir l’adresse électronique à utiliser pour vous contacter
+        keep_fc_email_html: "<span>Oui, utiliser <b>%{email}</b> comme email de contact</span>"
+        use_another_email: Non, utiliser une autre adresse
         email_suggest:
           wanna_say: 'Voulez-vous dire ?'
       confirmation_sent:
         confirmation_sent_by_email: Confirmez votre email
         intro_html: "Un mail de confirmation a été envoyé à votre adresse <span class='fr-badge fr-badge--info fr-badge--no-icon fr-badge--lowercase'>%{email}</span>"
-        click_the_link_in_the_email: Vous devez impérativement cliquer sur le lien du mail pour activer votre adresse et recevoir les notifications sur l'avancement de vos dossiers.
+        click_the_link_in_the_email: Vous devez impérativement cliquer sur le lien du mail pour activer votre adresse et recevoir les notifications sur l’avancement de vos dossiers.
         continue: Continuer
       merge:
         title: "Fusion des comptes FranceConnect et %{application_name}"
