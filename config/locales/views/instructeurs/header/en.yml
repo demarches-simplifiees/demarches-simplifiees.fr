@@ -15,6 +15,7 @@ en:
           notification_management: notification management
           administrators_list: administrators list
           exports_list: exports and export templates
+          export_templates: Export templates
           exports_notification_label: A new export is ready to download
           statistics: statistics
           instructeurs: instructors

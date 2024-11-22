@@ -495,6 +495,7 @@ Rails.application.routes.draw do
         get 'polling_last_export'
         get 'stats'
         get 'exports'
+        get 'export_templates'
         get 'email_notifications'
         get 'administrateurs'
         patch 'update_email_notifications'

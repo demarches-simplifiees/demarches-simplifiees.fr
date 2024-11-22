@@ -42,7 +42,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
     context 'with valid params' do
       it 'redirect to some page' do
         subject
-        expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
+        expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
         expect(flash.notice).to eq "Le modèle d'export coucou a bien été créé"
       end
     end
@@ -116,7 +116,7 @@ describe Instructeurs::ExportTemplatesController, type: :controller do
       context 'with valid params' do
         it 'redirect to some page' do
           subject
-          expect(response).to redirect_to(exports_instructeur_procedure_path(procedure))
+          expect(response).to redirect_to(export_templates_instructeur_procedure_path(procedure))
           expect(flash.notice).to eq "Le modèle d'export ExportODS a bien été créé"
           expect(ExportTemplate.last.exported_columns.map(&:libelle)).to match_array ['Demandeur', 'Date du dernier évènement']
         end

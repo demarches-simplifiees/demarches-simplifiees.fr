@@ -869,6 +869,27 @@ describe Instructeurs::ProceduresController, type: :controller do
     end
   end
 
+  describe '#export_templates' do
+    render_views
+
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure) }
+    let(:groupe_instructeur) { create(:groupe_instructeur, procedure: procedure) }
+    let!(:export_template) { create(:export_template, name: "My Template", groupe_instructeur: groupe_instructeur) }
+
+    before do
+      sign_in(instructeur.user)
+      create(:assign_to, instructeur: instructeur, groupe_instructeur: groupe_instructeur)
+    end
+
+    it 'displays export templates' do
+      get :export_templates, params: { procedure_id: procedure.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("My Template")
+    end
+  end
+
   describe '#exports' do
     let(:instructeur) { create(:instructeur) }
     let!(:procedure) { create(:procedure) }

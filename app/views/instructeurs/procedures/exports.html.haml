@@ -12,59 +12,19 @@
 
 .fr-container
   %h1.fr-h4= t('.title')
-  .fr-tabs.mb-3
-    %ul.fr-tabs__list{ role: 'tablist' }
-      %li{ role: 'presentation' }
-        %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-exports", tabindex: "0", role: "tab", "aria-selected": "true", "aria-controls": "tabpanel-exports-panel" } Liste des exports
-      %li{ role: 'presentation' }
-        %button.fr-tabs__tab.fr-tabs__tab--icon-left{ id: "tabpanel-export-templates", tabindex: "-1", role: "tab", "aria-selected": "false", "aria-controls": "tabpanel-export-templates-panel" } Modèles d'export
 
-    .fr-tabs__panel.fr-tabs__panel--selected{ id: "tabpanel-exports-panel", role: "tabpanel", "aria-labelledby": "tabpanel-exports", tabindex: "0" }
-      = render Dsfr::CalloutComponent.new(title: nil) do |c|
+  = render Dsfr::CalloutComponent.new(title: nil) do |c|
+    - c.with_body do
+      %p= t('.export_description', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i)
+
+  - if @exports.present?
+    %div{ data: @exports.any?(&:pending?) ? { controller: "turbo-poll", turbo_poll_url_value: "", turbo_poll_interval_value: 10_000, turbo_poll_max_checks_value: 6 } : {} }
+      = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
+
+    - if @exports.any?{_1.format == Export.formats.fetch(:zip)}
+      = render Dsfr::AlertComponent.new(title: t('.title_zip'), state: :info, extra_class_names: 'fr-mb-3w') do |c|
         - c.with_body do
-          %p= t('.export_description', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i)
+          %p= t('.export_description_zip_html')
 
-      - if @exports.present?
-        %div{ data: @exports.any?(&:pending?) ? { controller: "turbo-poll", turbo_poll_url_value: "", turbo_poll_interval_value: 10_000, turbo_poll_max_checks_value: 6 } : {} }
-          = render Dossiers::ExportLinkComponent.new(procedure: @procedure, exports: @exports, statut: @statut, count: @dossiers_count, class_btn: 'fr-btn--tertiary', export_url: method(:download_export_instructeur_procedure_path))
-
-        - if @exports.any?{_1.format == Export.formats.fetch(:zip)}
-          = render Dsfr::AlertComponent.new(title: t('.title_zip'), state: :info, extra_class_names: 'fr-mb-3w') do |c|
-            - c.with_body do
-              %p= t('.export_description_zip_html')
-
-      - else
-        = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )
-
-    .fr-tabs__panel.fr-tabs__panel{ id: "tabpanel-export-templates-panel", role: "tabpanel", "aria-labelledby": "tabpanel-export-templates", tabindex: "0" }
-      = render Dsfr::AlertComponent.new(state: :info) do |c|
-        - c.with_body do
-          %p= t('.export_template_list_description_html')
-
-
-      .fr-mt-5w
-        = link_to t('.new_zip_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'zip'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mr-1w"
-        = link_to t('.new_tabular_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
-
-      .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-5w
-        .fr-table__wrapper
-          .fr-table__container
-            .fr-table__content
-              %table
-                %thead
-                  %tr
-                    = tag.th "Nom du modèle", scope: 'col'
-                    = tag.th "Format", scope: 'col'
-                    = tag.th "Date de création", scope: 'col'
-                    = tag.th "Partagé avec (groupe instructeurs)", scope: 'col' if @procedure.groupe_instructeurs.many?
-                    = tag.th "Actions", scope: 'col'
-                %tbody
-                  - @export_templates.each do |export_template|
-                    %tr
-                      %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
-                      %td= pretty_kind(export_template.kind)
-                      %td= l(export_template.created_at)
-                      = tag.td export_template.groupe_instructeur.label if @procedure.groupe_instructeurs.many?
-                      %td
-                        = link_to "Modifier", [:edit, :instructeur, @procedure, export_template], class: "fr-btn fr-btn--icon-left fr-icon-edit-line fr-mr-1w"
-                        = link_to "Supprimer", [:instructeur, @procedure, export_template], method: :delete, data: { confirm: "Voulez-vous vraiment supprimer ce modèle ? Il sera supprimé pour tous les instructeurs du groupe"}, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line"
+  - else
+    = t('.no_export_html', expiration_time: Export::MAX_DUREE_CONSERVATION_EXPORT.in_hours.to_i )

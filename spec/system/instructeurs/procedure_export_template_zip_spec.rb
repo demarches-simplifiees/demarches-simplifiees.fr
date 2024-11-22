@@ -11,8 +11,6 @@ describe "procedure exports zip" do
 
     find("button", text: "Téléchargements").click
 
-    click_on "Liste des exports"
-
     click_on "Modèles d'export"
 
     click_on "Créer un modèle d'export zip"
@@ -21,11 +19,6 @@ describe "procedure exports zip" do
     expect(page).to have_content("Sélectionnez les fichiers que vous souhaitez exporter")
     click_on "Enregistrer"
 
-    find("#tabpanel-export-templates", wait: 5, visible: true)
-    find("#tabpanel-export-templates").click
-
-    within 'table' do
-      expect(page).to have_content('Mon modèle')
-    end
+    expect(page).to have_content('Mon modèle')
   end
 end

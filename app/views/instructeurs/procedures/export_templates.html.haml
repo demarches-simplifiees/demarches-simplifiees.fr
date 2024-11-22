@@ -1,0 +1,49 @@
+- title = t('.page_title', procedure: @procedure.libelle)
+- content_for(:title, title)
+
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs', locals: { steps: [[@procedure.libelle.truncate_words(10), instructeur_procedure_path(@procedure)], [t('instructeurs.dossiers.header.banner.export_templates')]] }
+
+    = render partial: 'instructeurs/procedures/header', locals: { procedure: @procedure }
+
+
+.fr-container
+  %h1.fr-h4= t('instructeurs.dossiers.header.banner.export_templates')
+  = render Dsfr::AlertComponent.new(state: :info) do |c|
+    - c.with_body do
+      %p= t('.export_template_list_description_html')
+
+  .fr-mt-5w
+    = link_to t('.new_zip_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'zip'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line fr-mr-1w"
+    = link_to t('.new_tabular_export_template'), new_instructeur_procedure_export_template_path(@procedure, kind: 'tabular'), class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-add-line"
+
+  - if @export_templates.any?
+    .fr-table.fr-table--bordered.fr-table--no-caption.fr-mt-5w
+      .fr-table__wrapper
+        .fr-table__container
+          %table.fr-table__content
+            %thead
+              %tr
+                %th{ scope: 'col' }= t('.template_name')
+                %th{ scope: 'col' }= t('.template_format')
+                %th{ scope: 'col' }= t('.template_creation_date')
+                - if @procedure.groupe_instructeurs.many?
+                  %th{ scope: 'col' }= t('.template_shared_with')
+                %th{ scope: 'col' }= t('.actions')
+
+            %tbody
+              - @export_templates.each do |export_template|
+                %tr
+                  %td= link_to export_template.name, [:edit, :instructeur, @procedure, export_template]
+                  %td= pretty_kind(export_template.kind)
+                  %td= l(export_template.created_at)
+                  - if @procedure.groupe_instructeurs.many?
+                    %td= export_template.groupe_instructeur.label
+                  %td
+                    = link_to t('.modify_template'), [:edit, :instructeur, @procedure, export_template], class: "fr-btn fr-btn--icon-left fr-icon-edit-line fr-mr-1w"
+                    = link_to t('.delete_template'), [:instructeur, @procedure, export_template], method: :delete, data: { confirm: t('.delete_template_alert')}, class: "fr-btn fr-btn--secondary fr-btn--icon-left fr-icon-delete-line"
+  - else
+    .fr-alert.fr-alert--info.fr-mt-4w
+      .fr-alert__body
+        %p= t('.no_existing_template')

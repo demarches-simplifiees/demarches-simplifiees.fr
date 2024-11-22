@@ -12,8 +12,6 @@ describe "procedure exports" do
 
     find("button", text: "Téléchargements").click
 
-    click_on "Liste des exports"
-
     click_on "Modèles d'export"
 
     click_on "Créer un modèle d'export tabulaire"
@@ -21,23 +19,20 @@ describe "procedure exports" do
     fill_in "Nom du modèle", with: "Mon modèle"
 
     find("#informations-usager-fieldset label", text: "Tout sélectionner").click
+
     within '#informations-usager-fieldset' do
       expect(all('input[type=checkbox]').all?(&:checked?)).to be_truthy
     end
 
     find("#informations-dossier-fieldset label", text: "Tout sélectionner").click
+
     within '#informations-dossier-fieldset' do
       expect(all('input[type=checkbox]').all?(&:checked?)).to be_truthy
     end
 
     click_on "Enregistrer"
 
-    find("#tabpanel-export-templates", wait: 5, visible: true)
-    find("#tabpanel-export-templates").click
-
-    within 'table' do
-      expect(page).to have_content('Mon modèle')
-    end
+    expect(page).to have_content('Mon modèle')
 
     # check if all usager colonnes are selected
     #
