@@ -72,6 +72,18 @@
       }
     }
 
+    .vertical-border {
+      border-left: 1px solid;
+    }
+
+    legend {
+      text-transform: uppercase;
+      padding: 0;
+      margin: 0;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
     .cell {
       .checkboxes-fieldset {
         padding: 0;
