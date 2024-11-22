@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Champs::DropDownListChamp < Champ
+  belongs_to :referentiel_item, foreign_key: 'value', optional: true
   store_accessor :value_json, :other
   THRESHOLD_NB_OPTIONS_AS_RADIO = 5
   THRESHOLD_NB_OPTIONS_AS_AUTOCOMPLETE = 20
