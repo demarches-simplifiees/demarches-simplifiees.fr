@@ -161,7 +161,7 @@
           - if type_de_champ.formatted?
             .flex.justify-start.column.width-33
               %fieldset.fr-segmented.fr-segmented
-                %legend.fr-segmented__legend
+                %legend.fr-segmented__legend.fr-mb-1w
                   Spécifier le format requis
                 .fr-segmented__elements
                   .fr-segmented__element
@@ -171,8 +171,8 @@
                     = form.radio_button :formatted_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'formatted-mode#toggle', "mode-to-show": "advanced" }
                     = form.label :formatted_mode_advanced, t('.kind.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
-            %div{class: class_names("flex column", "justify-start", "flex-grow", "formatted_mode_simple", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'advanced' : nil), data: { 'formatted-mode-target': 'simple'  } }
-              .cell.fr-mt-1w
+            %div{class: class_names("flex column", "justify-start", "flex-grow", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_simple", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'advanced' : nil), data: { 'formatted-mode-target': 'simple'  } }
+              .cell
                 %fieldset.checkboxes-fieldset.fr-fieldset{aria_labelledby: 'checkboxes-inline-legend'}
                   %legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
                   .fr-fieldset__element.fr-fieldset__element--inline
@@ -190,7 +190,7 @@
                       = form.check_box :special_characters_accepted, id: dom_id(type_de_champ, :special_characters_accepted)
                       = form.label :special_characters_accepted, class: 'small-label', for: dom_id(type_de_champ, :special_characters_accepted) do
                         = t('.simple_mode.labels.special_characters')
-              .cell.fr-mt-1w
+              .cell
                 .nb-characters.flex.justify-between
                   .input-group
                     = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
@@ -200,9 +200,9 @@
                     = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
                       = t('.simple_mode.labels.max_character_length')
                     = form.text_field :max_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :max_character_length)
-            %div{class: class_names("flex column", "justify-start", "flex-grow", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'formatted-mode-target': 'advanced' } }
-              .cell.fr-mt-1w.formatted_mode_advanced
-                = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere) do
+            %div{class: class_names("flex column", "justify-start", "flex-grow", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'formatted-mode-target': 'advanced' } }
+              .cell.formatted_mode_advanced
+                = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere), class: "fr-md-1w" do
                   = t('.expression_reguliere.labels.regex')
 
                 .type-de-champ-expression-reguliere
