@@ -28,7 +28,7 @@ fr:
         Pensez aux ancres de début (^) et fin ($) :<br>
         `12 km` serait accepté par /[[:digit:]]+/ mais rejeté par /^[[:digit:]]+$/ <br>
         <a href="https://rubular.com" target="_blank" rel="noreferrer">En savoir plus sur la syntaxe des expressions régulières</a>
-      valid_exemple: Exemple valide qui passe l'expression régulière
+      valid_exemple: Exemple de saisie valide (ou de format de saisie requis)
       error_message: Message d'erreur à afficher à l'usager en cas de saisie invalide
   drop_down_list:
     labels:
