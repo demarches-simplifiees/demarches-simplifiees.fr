@@ -143,6 +143,8 @@ class TypeDeChamp < ApplicationRecord
   has_many :revision_types_de_champ, -> { revision_ordered }, class_name: 'ProcedureRevisionTypeDeChamp', dependent: :destroy, inverse_of: :type_de_champ
   has_many :revisions, -> { ordered }, through: :revision_types_de_champ
 
+  has_one :referentiel, primary_key: :stable_id, foreign_key: :type_de_champ_stable_id, dependent: :destroy
+
   delegate :estimated_fill_duration, :estimated_read_duration, :tags_for_template, :libelles_for_export, :libelle_for_export, :primary_options, :secondary_options, :columns, to: :dynamic_type
 
   class WithIndifferentAccess
