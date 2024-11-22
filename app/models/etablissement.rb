@@ -204,6 +204,16 @@ class Etablissement < ApplicationRecord
     adresse.nil? # TOOD: maybe dedicated column or more robust way
   end
 
+  def update_champ_value_json!
+    return if champ.nil?
+
+    champ.update!(value_json: champ_value_json)
+  end
+
+  def champ_value_json
+    APIGeoService.parse_etablissement_address(self)
+  end
+
   private
 
   def bilans_new_keys

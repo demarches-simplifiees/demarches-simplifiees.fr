@@ -22,10 +22,7 @@ class APIEntrepriseService
 
       etablissement = dossier_or_champ.build_etablissement(etablissement_params)
       etablissement.save!
-
-      if dossier_or_champ.is_a?(Champ)
-        dossier_or_champ.update!(value_json: APIGeoService.parse_etablissement_address(etablissement))
-      end
+      etablissement.update_champ_value_json!
 
       perform_later_fetch_jobs(etablissement, procedure_id, user_id)
 
@@ -49,10 +46,7 @@ class APIEntrepriseService
       return nil if etablissement_params.empty?
 
       etablissement.update!(etablissement_params)
-
-      if etablissement.champ.present?
-        etablissement.champ.update!(value_json: APIGeoService.parse_etablissement_address(etablissement))
-      end
+      etablissement.update_champ_value_json!
 
       etablissement
     end

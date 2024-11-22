@@ -5,5 +5,6 @@ class APIEntreprise::EntrepriseJob < APIEntreprise::Job
     find_etablissement(etablissement_id)
     etablissement_params = APIEntreprise::EntrepriseAdapter.new(etablissement.siret, procedure_id).to_params
     etablissement.update!(etablissement_params)
+    etablissement.update_champ_value_json!
   end
 end
