@@ -76,7 +76,8 @@ gem 'parallel'
 gem 'parsby'
 gem 'pg'
 gem 'phonelib'
-gem 'prawn' # PDF Generation
+# 'Cannot extract font' in acrobat https://github.com/prawnpdf/ttfunk/pull/104 ==> Stick to previous version
+gem 'prawn', '~> 2.4.0' # PDF Generation
 gem 'prawn-qrcode' # to generate qrcode in pdfs
 gem 'prawn-rails' # PDF Generation
 gem 'prawn-table'
