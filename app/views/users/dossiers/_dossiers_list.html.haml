@@ -8,7 +8,7 @@
         %div
           %h3.card-title
             - if ["dossiers-transferes", "dossiers-supprimes"].exclude?(@statut)
-              = link_to(url_for_dossier(dossier), class: 'cell-link') do
+              = link_to(url_for_dossier(dossier)) do
                 = dossier.procedure.libelle
             - else
               = dossier.procedure.libelle

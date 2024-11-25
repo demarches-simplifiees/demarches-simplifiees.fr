@@ -37,35 +37,32 @@
                 %tr{ class: [p.hidden_by_administration_at.present? && "file-hidden-by-user"] }
                   - if instructeur_and_expert_dossier
                     %td.fr-cell--numeric
-                      .cell-link.relative
+                      .relative
                         = p.dossier_id
                         - if @notifications_dossier_ids.include?(p.dossier_id)
                           %span.notifications{ 'aria-label': 'notifications' }
-                    %td
-                      .cell-link= procedure_libelle
-                    %td
-                      .cell-link= user_email
-                    %td
-                      .cell-link.flex.column= status_badge(p.state)
+                    %td= procedure_libelle
+                    %td= user_email
+                    %td.flex.column= status_badge(p.state)
 
                   - elsif hidden_by_administration
                     = render partial: "recherche/hidden_dossier", locals: {p: p, procedure_libelle: procedure_libelle, user_email: user_email}
 
                   - else
                     %td.fr-cell--numeric
-                      %a.cell-link.relative{ href: path }
+                      %a.fr-link.relative{ href: path }
                         = p.dossier_id
                         - if @notifications_dossier_ids.include?(p.dossier_id)
                           %span.notifications{ 'aria-label': 'notifications' }
 
                     %td
-                      %a.cell-link{ href: path }= procedure_libelle
+                      %a{ href: path }= procedure_libelle
 
                     %td
-                      %a.cell-link{ href: path }= user_email
+                      %a{ href: path }= user_email
 
                     %td
-                      %a.cell-link.flex.column{ href: path }= status_badge(p.state)
+                      %a.flex.column{ href: path }= status_badge(p.state)
 
 
                   - if instructeur_dossier && expert_dossier

@@ -43,10 +43,10 @@
                 - @avis.each do |avis|
                   %tr
                     %td.fr-cell--numeric
-                      = link_to(expert_avis_path(avis.procedure, avis), class: 'cell-link') do
+                      = link_to(expert_avis_path(avis.procedure, avis), class: "fr-link") do
                         = avis.dossier.id
-                    %td= link_to(avis.dossier.user_email_for(:display), expert_avis_path(avis.procedure, avis), class: 'cell-link')
-                    %td= link_to(avis.procedure.libelle, expert_avis_path(avis.procedure, avis), class: 'cell-link')
+                    %td= link_to(avis.dossier.user_email_for(:display), expert_avis_path(avis.procedure, avis))
+                    %td= link_to(avis.procedure.libelle, expert_avis_path(avis.procedure, avis))
       .fr-table__footer
         .fr-table__footer--start
         .fr-table__footer--middle
