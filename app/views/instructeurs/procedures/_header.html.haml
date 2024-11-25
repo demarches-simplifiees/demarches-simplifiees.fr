@@ -44,13 +44,17 @@
 
       %li.fr-nav__item.relative
         %button.fr-nav__btn{ 'aria-expanded': 'false', 'aria-controls': 'menu-downloads', 'aria-current': ('page' if current_nav_section == 'downloads') }
-          = t('instructeurs.dossiers.header.banner.downloads')
-          - if @has_export_notification
-            %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
+          %span.relative{ class: class_names("fr-pr-1w" => @has_export_notification) }
+            = t('instructeurs.dossiers.header.banner.downloads')
+            - if @has_export_notification
+              %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
         #menu-downloads.fr-collapse.fr-menu
           %ul.fr-menu__list
             %li
-              = link_to t('instructeurs.dossiers.header.banner.exports_list'), exports_instructeur_procedure_path(procedure), class: 'fr-nav__link'
+              = link_to exports_instructeur_procedure_path(procedure), class: 'fr-nav__link' do
+                = t('instructeurs.dossiers.header.banner.exports_list')
+                - if @has_export_notification
+                  %span.fr-ml-1v.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
             %li
               = link_to t('instructeurs.dossiers.header.banner.archives'), instructeur_archives_path(procedure), class: 'fr-nav__link'
             %li
