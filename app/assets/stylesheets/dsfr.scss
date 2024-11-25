@@ -234,11 +234,6 @@ input[type='radio'] {
   text-transform: lowercase;
 }
 
-// We don't want badge to split in two lines
-.fr-tag {
-  white-space: nowrap;
-}
-
 // Caption is bold, but all-procedures table use fr-tag in caption
 .fr-table caption .fr-tag {
   font-weight: normal;
@@ -251,4 +246,9 @@ input[type='radio'] {
 
 .fr-cell--numeric {
   font-variant-numeric: tabular-nums;
+}
+
+// We don't want badge to split in two lines
+.fr-tag.no-wrap {
+  white-space: nowrap;
 }
