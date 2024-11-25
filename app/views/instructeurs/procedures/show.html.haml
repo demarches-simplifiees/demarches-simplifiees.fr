@@ -129,7 +129,7 @@
 
                         %td.fr-cell--numeric
                           - if p.hidden_by_administration_at.present?
-                            %span.cell-link= p.dossier_id
+                            %span= p.dossier_id
                           - else
                             %a.fr-link.relative{ href: path }
                               = p.dossier_id
@@ -140,12 +140,12 @@
                         - p.columns.each do |column|
                           %td.fr-cell--multiline
                             - if p.hidden_by_administration_at.present?
-                              %span.cell-link
+                              %span
                                 = column.is_a?(Hash) ? tags_label(column[:value]) : column
                                 - if p.hidden_by_user_at.present?
                                   = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}"
                             - else
-                              %a.cell-link{ href: path }
+                              %a{ href: path }
                                 = column.is_a?(Hash) ? tags_label(column[:value]) : column
                                 = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
 
@@ -155,11 +155,11 @@
                             - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
                           - elsif p.state.to_sym == :en_construction && p.resolved_corrections?
                             - status << correction_resolved_badge(html_class: "fr-mt-1v")
-                          = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: "cell-link flex column")
+                          = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: "flex column")
 
                         - if @procedure.sva_svr_enabled?
                           %td
-                            %span.cell-link
+                            %span
                               = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
 
                         %td.follow-col
