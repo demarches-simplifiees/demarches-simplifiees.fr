@@ -1,5 +1,5 @@
 %tr.procedure{ id: "procedure_#{procedure.id}" }
-  %th.fr-cell--fixed{ scope: 'row' }
+  %th{ scope: 'row' }
     - title = show_detail ? 'Cacher les détails de la démarche' : 'Afficher les détails de la démarche'
     - icon = show_detail ? 'fr-icon-subtract-line' : 'fr-icon-add-line'
     - params = show_detail ? {} : { show_detail: true }
