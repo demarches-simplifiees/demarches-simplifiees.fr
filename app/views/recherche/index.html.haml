@@ -53,7 +53,7 @@
 
                   - else
                     %td.fr-cell--numeric
-                      %a.cell-link.relative{ href: path }
+                      %a.fr-link.relative{ href: path }
                         = p.dossier_id
                         - if @notifications_dossier_ids.include?(p.dossier_id)
                           %span.notifications{ 'aria-label': 'notifications' }

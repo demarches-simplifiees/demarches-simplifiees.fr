@@ -131,7 +131,7 @@
                           - if p.hidden_by_administration_at.present?
                             %span.cell-link= p.dossier_id
                           - else
-                            %a.cell-link.relative{ href: path }
+                            %a.fr-link.relative{ href: path }
                               = p.dossier_id
                               - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
                                 %span.notifications{ 'aria-label': 'notifications' }
