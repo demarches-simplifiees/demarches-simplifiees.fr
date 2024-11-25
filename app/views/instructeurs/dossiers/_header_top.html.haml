@@ -2,7 +2,7 @@
   .flex
     %div
       %h1.fr-h3.fr-mb-1w
-        = "Dossier nº #{dossier.id}"
+        = t('show_dossier', scope: [:layouts, :breadcrumb], dossier_id: dossier.id, owner_name: dossier.owner_name)
 
       = link_to dossier.procedure.libelle.truncate_words(10), instructeur_procedure_path(dossier.procedure), title: dossier.procedure.libelle, class: "fr-link"
       .fr-mt-2w.fr-badge-group
