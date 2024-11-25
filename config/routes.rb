@@ -490,6 +490,7 @@ Rails.application.routes.draw do
           end
         end
 
+        get 'apercu'
         get 'download_export'
         post 'download_export'
         get 'polling_last_export'

@@ -26,5 +26,6 @@ en:
         buttons:
           back_to_procedure: Back to procedure
           save: Save
-
-  
+      apercu:
+        title_with_libelle: Preview of « %{libelle} »
+        title: Procedure preview

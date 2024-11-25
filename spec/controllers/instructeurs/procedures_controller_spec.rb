@@ -926,4 +926,24 @@ describe Instructeurs::ProceduresController, type: :controller do
       it { is_expected.to have_http_status(:forbidden) }
     end
   end
+
+  describe '#preview' do
+    render_views
+
+    let(:instructeur) { create(:instructeur) }
+    let(:procedure) { create(:procedure, types_de_champ_public: [type: :text, libelle: "Premier champ"]) }
+
+    before do
+      sign_in(instructeur.user)
+      create(:groupe_instructeur, procedure:, instructeurs: [instructeur])
+    end
+
+    it 'displays preview' do
+      get :apercu, params: { procedure_id: procedure.id }
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include("Premier champ")
+      expect(response.body).not_to include("Déposer")
+    end
+  end
 end
