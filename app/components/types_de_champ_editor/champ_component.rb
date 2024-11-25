@@ -10,6 +10,26 @@ class TypesDeChampEditor::ChampComponent < ApplicationComponent
     @errors = errors
   end
 
+  def template_file
+    '/csv/modele-import-referentiel.csv'
+  end
+
+  def template_detail
+    "#{File.extname(csv_template.to_path).upcase.delete_prefix('.')} – #{number_to_human_size(csv_template.size)}"
+  end
+
+  def referentiel_max_size
+    Administrateurs::TypesDeChampController::CSV_MAX_SIZE
+  end
+
+  def csv_template
+    template_path.open
+  end
+
+  def template_path
+    Rails.public_path.join(template_file.delete_prefix('/'))
+  end
+
   private
 
   delegate :type_de_champ, :revision, :procedure, to: :coordinate

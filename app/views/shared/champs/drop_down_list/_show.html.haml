@@ -1,6 +1,21 @@
-- if champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
+
+
+- if champ.referentiel?
+  - referentiel_item = champ.referentiel_item
+  - if !current_user.instructeur?
+    %p= referentiel_item.option[referentiel_item.option.keys.first]
+  - else
+    .fr-background-alt--grey.fr-p-3v
+      - referentiel_item.option.merge(referentiel_item.data).each do |key, value|
+        - if key.present?
+          = render Dossiers::RowShowComponent.new(label: key) do |c|
+            - c.with_value do
+              %p= value
+
+- elsif champ.used_by_routing_rules? && champ.dossier.forced_groupe_instructeur
   %p
     %span= champ.value
     %span.fr-badge.fr-badge--warning.fr-badge--sm dossier réaffecté au groupe « #{champ.dossier.groupe_instructeur.label} »
+
 - else
   %p= champ.value
