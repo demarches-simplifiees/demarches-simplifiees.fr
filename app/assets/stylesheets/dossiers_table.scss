@@ -2,6 +2,10 @@
 @import 'constants';
 
 .dossiers-table {
+  .fr-cell--fixed {
+    width: 1%; // never expand this cell when table is too wide
+  }
+
   a:not(.fr-link) {
     background-image: none; // remove DSFR underline
   }
