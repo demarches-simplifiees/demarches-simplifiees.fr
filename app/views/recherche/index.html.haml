@@ -41,7 +41,7 @@
                         = p.dossier_id
                         - if @notifications_dossier_ids.include?(p.dossier_id)
                           %span.notifications{ 'aria-label': 'notifications' }
-                    %td= procedure_libelle
+                    %td.fr-cell--multiline= procedure_libelle
                     %td= user_email
                     %td.flex.column= status_badge(p.state)
 
