@@ -1,0 +1,15 @@
+- content_for(:title, t('.title_with_libelle', libelle: @dossier.procedure.libelle))
+
+.sub-header
+  .fr-container.flex.column
+    = render partial: 'instructeurs/breadcrumbs',
+      locals: { steps: [[t('show_procedure', scope: [:layouts, :breadcrumb], libelle: @procedure.libelle.truncate(22)), instructeur_procedure_path(@procedure)],
+                        [t('instructeurs.dossiers.header.banner.preview')]] }
+    = render partial: 'instructeurs/procedures/header',
+      locals: { procedure: @procedure }
+
+
+.fr-container
+  %h2.fr-h4= t('.title')
+
+= render partial: "shared/dossiers/edit", locals: { dossier: @dossier }

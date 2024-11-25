@@ -20,4 +20,13 @@ class EditableChamp::ChampLabelContentComponent < ApplicationComponent
   def highlight?
     @champ.updated_at.present? && @seen_at&.<(@champ.updated_at)
   end
+
+  def rebased?
+    return false if @champ.rebased_at.blank?
+    return false if @champ.rebased_at <= (@seen_at || @champ.updated_at)
+    return false if !current_user.owns_or_invite?(@champ.dossier)
+    return false if @champ.dossier.for_procedure_preview?
+
+    true
+  end
 end

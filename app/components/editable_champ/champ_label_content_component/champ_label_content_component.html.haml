@@ -10,7 +10,7 @@
   %span.updated-at{ class: highlight_if_unseen_class }
     = t('.modified_at', datetime: try_format_datetime(@champ.updated_at))
 
-- if @champ.rebased_at.present? && @champ.rebased_at > (@seen_at || @champ.updated_at) && current_user.owns_or_invite?(@champ.dossier)
+- if rebased?
   %span.updated-at.highlighted
     = t('.check_content_rebased')
 

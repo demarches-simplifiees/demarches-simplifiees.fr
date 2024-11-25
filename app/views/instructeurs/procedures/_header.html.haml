@@ -37,7 +37,7 @@
             %li
               = link_to t('instructeurs.dossiers.header.banner.contact_users'), email_usagers_instructeur_procedure_path(procedure), class: 'fr-nav__link'
             %li
-              = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_admin_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-nav__link'
+              = link_to t('instructeurs.dossiers.header.banner.preview'), apercu_instructeur_procedure_path(@procedure), target: "_blank", rel: "noopener", class: 'fr-nav__link'
             %li
               = link_to "#", class: "fr-nav__link fr-link fr-link--md fr-link--icon-left fr-icon-clipboard-line", data: {controller: "clipboard", clipboard_text_value: commencer_url(@procedure.path), action: "click->clipboard#copy" } do
                 = t('instructeurs.dossiers.header.banner.copy_link_button')

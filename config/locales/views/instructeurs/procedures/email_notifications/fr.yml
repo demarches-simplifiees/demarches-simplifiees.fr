@@ -30,3 +30,6 @@ fr:
         buttons:
           back_to_procedure: Revenir à la procédure
           save: Enregistrer
+      apercu:
+        title_with_libelle: Prévisualisation de « %{libelle} »
+        title: Prévisualisation de la démarche
