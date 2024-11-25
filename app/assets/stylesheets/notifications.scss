@@ -17,8 +17,13 @@ span.notifications {
     position: relative;
   }
 
-  .notifications {
+  .fr-nav__link + .notifications {
     top: 1rem;
     right: 0.25rem;
+  }
+
+  .fr-nav__btn .notifications {
+    top: 0;
+    right: -0.25rem;
   }
 }
