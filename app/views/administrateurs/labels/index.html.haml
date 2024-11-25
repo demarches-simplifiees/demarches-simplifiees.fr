@@ -13,31 +13,34 @@
     class: "fr-btn fr-btn--primary fr-btn--icon-left fr-icon-add-circle-line mb-3"
 
   - if @procedure.labels.present?
-    .fr-table.fr-table--layout-fixed
-      %table
-        %caption Liste des labels
-        %thead
-          %tr
-            %th{ scope: "col" }
-              Nom
-            %th.change{ scope: "col" }
-              Actions
+    .fr-table.fr-table--lg
+      .fr-table__wrapper
+        .fr-table__container
+          .fr-table__content
+            %table
+              %caption Liste des labels
+              %thead
+                %tr
+                  %th{ scope: "col" }
+                    Nom
+                  %th.change{ scope: "col" }
+                    Actions
 
-        %tbody
-          - @labels.each do |label|
-            %tr
-              %td
-                = tag_label(label.name, label.color)
-              %td.change
+              %tbody
+                - @labels.each do |label|
+                  %tr
+                    %td
+                      = tag_label(label.name, label.color)
+                    %td.change
 
-                = link_to 'Modifier',
-                  [:edit, :admin, @procedure, label],
-                  class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-pencil-line'
+                      = link_to 'Modifier',
+                        [:edit, :admin, @procedure, label],
+                        class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-pencil-line'
 
-                = link_to 'Supprimer',
-                  [:admin, @procedure, label],
-                  method: :delete,
-                  data: { confirm: "Confirmez vous la suppression de #{label.name}" },
-                  class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-delete-line fr-ml-1w'
+                      = link_to 'Supprimer',
+                        [:admin, @procedure, label],
+                        method: :delete,
+                        data: { confirm: "Confirmez vous la suppression de #{label.name}" },
+                        class: 'fr-btn fr-btn--sm fr-btn--secondary fr-btn--icon-left fr-icon-delete-line fr-ml-1w'
 
 = render Procedure::FixedFooterComponent.new(procedure: @procedure)
