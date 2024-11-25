@@ -52,7 +52,7 @@ export class TypeDeChampEditorController extends ApplicationController {
   private onChange(event: Event) {
     matchInputElement(event.target, {
       file: (target) => {
-        if (target.files?.length) {
+        if (target.files?.length && target.id != 'referentiel_file') {
           const autoupload = new AutoUpload(target, target.files[0]);
           autoupload.start();
         }
