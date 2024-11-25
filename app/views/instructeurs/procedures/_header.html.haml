@@ -45,6 +45,8 @@
       %li.fr-nav__item.relative
         %button.fr-nav__btn{ 'aria-expanded': 'false', 'aria-controls': 'menu-downloads', 'aria-current': ('page' if current_nav_section == 'downloads') }
           = t('instructeurs.dossiers.header.banner.downloads')
+          - if @has_export_notification
+            %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
         #menu-downloads.fr-collapse.fr-menu
           %ul.fr-menu__list
             %li
@@ -53,9 +55,6 @@
               = link_to t('instructeurs.dossiers.header.banner.archives'), instructeur_archives_path(procedure), class: 'fr-nav__link'
             %li
               = link_to t('instructeurs.dossiers.header.banner.export_templates'), export_templates_instructeur_procedure_path(procedure), class: 'fr-nav__link'
-
-  - if @has_export_notification
-    %span.notifications{ 'aria-label': t('instructeurs.dossiers.header.banner.exports_notification_label') }
 
   #last-export-alert
     = render partial: "instructeurs/procedures/last_export_alert", locals: { export: @last_export, statut: @statut }
