@@ -171,7 +171,7 @@ describe 'The user', js: true do
       wait_until { page.all(".row").size == 1 }
       # removing a repetition means one child only, thus its button destroy is not visible
       expect(page).to have_selector(".repetition .row:first-child .utils-repetition-required-destroy-button", count: 1, visible: false)
-    end.to change { Champ.count }
+    end.to change { Champ.where.not(discarded_at: nil).count }
   end
 
   let(:simple_procedure) {

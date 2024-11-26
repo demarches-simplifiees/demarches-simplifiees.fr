@@ -55,7 +55,8 @@ RSpec.describe Mutations::DossierModifierAnnotation, type: :graphql do
         },
         errors: nil
       })
-      expect(annotation.reload.row_ids.size).to eq(3)
+      dossier.reload
+      expect(annotation.row_ids.size).to eq(3)
     end
   end
 

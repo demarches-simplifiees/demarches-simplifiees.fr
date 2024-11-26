@@ -29,7 +29,7 @@ describe DossierPreloader do
         expect(subject.changed?).to be false
 
         expect(first_child.type).to eq('Champs::TextChamp')
-        expect(repetition.id).not_to eq(first_child.id)
+        expect(repetition).not_to eq(first_child)
         expect(subject.champs.first.dossier).to eq(subject)
         expect(subject.champs.find(&:public?).dossier).to eq(subject)
         expect(subject.project_champs_public.first.dossier).to eq(subject)
@@ -40,7 +40,7 @@ describe DossierPreloader do
         expect(subject.champs.find(&:public?).conditional?).to eq(false)
         expect(subject.project_champs_public.first.conditional?).to eq(false)
 
-        expect(repetition.rows.first.first).to eq(first_child)
+        expect(repetition.rows.first.first.public_id).to eq(first_child.public_id)
         expect(repetition_optional.row_ids).to be_empty
       end
 
