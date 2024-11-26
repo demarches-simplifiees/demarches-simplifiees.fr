@@ -2,8 +2,8 @@ import { ApplicationController } from './application_controller';
 
 export class FixTableBorderController extends ApplicationController {
   connect() {
-    const pixelSize = Math.round((1 / window.devicePixelRatio) * 100) / 100;
-
+    let pixelSize = Math.round((1 / window.devicePixelRatio) * 100) / 100;
+    pixelSize = pixelSize < 1 ? 1 : pixelSize;
     // Safari does not support devicePixelRatio
     if (navigator.userAgent.indexOf('Safari') > -1) {
       return;
