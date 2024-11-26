@@ -3,7 +3,7 @@
     - capture do
       .fr-fieldset__element
         .fr-checkbox-group
-          = b.check_box(checked: @champ.selected_options.include?(b.value), aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }, id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
+          = b.check_box(checked: @champ.selected_options.include?(b.value), id: @champ.checkbox_id(b.value), class: 'fr-checkbox-group__checkbox')
           %label.fr-label{ for: @champ.checkbox_id(b.value) }
             = b.text
 
