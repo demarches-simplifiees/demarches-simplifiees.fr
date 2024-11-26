@@ -90,6 +90,8 @@ class DossierFilterService
             dossiers.joins(:corrections).where(corrections: DossierCorrection.pending)
           elsif filtered_column.column == "state" && values.include?("en_construction")
             dossiers.where("dossiers.#{column} IN (?)", values).includes(:corrections).where.not(corrections: DossierCorrection.pending)
+          elsif filtered_column.type == :integer
+            dossiers.where("dossiers.#{column} IN (?)", values.filter_map { Integer(_1) rescue nil })
           else
             dossiers.where("dossiers.#{column} IN (?)", values)
           end
