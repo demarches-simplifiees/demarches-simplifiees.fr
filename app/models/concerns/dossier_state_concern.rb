@@ -3,6 +3,19 @@
 module DossierStateConcern
   extend ActiveSupport::Concern
 
+  def submit_en_construction!
+    self.traitements.submit_en_construction
+    save!
+
+    RoutingEngine.compute(self)
+
+    resolve_pending_correction!
+    process_sva_svr!
+    remove_piece_justificative_file_not_visible!
+
+    editing_forks.each(&:destroy_editing_fork!)
+  end
+
   def after_passer_en_construction
     self.conservation_extension = 0.days
     self.depose_at = self.en_construction_at = self.traitements
@@ -16,12 +29,18 @@ module DossierStateConcern
     MailTemplatePresenterService.create_commentaire_for_state(self, Dossier.states.fetch(:en_construction))
     procedure.compute_dossiers_count
 
+    process_declarative!
+    process_sva_svr!
+
     index_search_terms_later
   end
 
   def after_commit_passer_en_construction
     NotificationMailer.send_en_construction_notification(self).deliver_later
     NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
+    groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
+      DossierMailer.notify_new_dossier_depose_to_instructeur(self, instructeur.email).deliver_later
+    end
     remove_piece_justificative_file_not_visible!
   end
 
@@ -49,6 +68,8 @@ module DossierStateConcern
       NotificationMailer.send_en_instruction_notification(self).deliver_later
       NotificationMailer.send_notification_for_tiers(self).deliver_later if self.for_tiers?
     end
+
+    editing_forks.each(&:destroy_editing_fork!)
   end
 
   def after_passer_automatiquement_en_instruction

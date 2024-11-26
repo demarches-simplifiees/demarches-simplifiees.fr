@@ -233,11 +233,6 @@ module Users
 
       if @dossier.errors.blank? && @dossier.can_passer_en_construction?
         @dossier.passer_en_construction!
-        @dossier.process_declarative!
-        @dossier.process_sva_svr!
-        @dossier.groupe_instructeur.instructeurs.with_instant_email_dossier_notifications.each do |instructeur|
-          DossierMailer.notify_new_dossier_depose_to_instructeur(@dossier, instructeur.email).deliver_later
-        end
         redirect_to merci_dossier_path(@dossier)
       else
         respond_to do |format|

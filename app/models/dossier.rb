@@ -865,17 +865,6 @@ class Dossier < ApplicationRecord
     procedure.email_template_for(state)
   end
 
-  def submit_en_construction!
-    self.traitements.submit_en_construction
-    save!
-
-    RoutingEngine.compute(self)
-
-    resolve_pending_correction!
-    process_sva_svr!
-    remove_piece_justificative_file_not_visible!
-  end
-
   def process_declarative!
     if procedure.declarative_accepte? && may_accepter_automatiquement?
       accepter_automatiquement!
