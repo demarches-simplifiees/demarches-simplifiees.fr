@@ -211,7 +211,12 @@ class Etablissement < ApplicationRecord
   end
 
   def champ_value_json
-    APIGeoService.parse_etablissement_address(self)
+    address_data = APIGeoService.parse_etablissement_address(self)
+
+    DISPLAYABLE_COLUMNS.keys.each_with_object(address_data) do |attr, hash|
+      value = public_send(attr)
+      hash[attr.to_sym] = value if value.present?
+    end
   end
 
   private

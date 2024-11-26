@@ -152,10 +152,18 @@ describe Etablissement do
       etablissement.champ = champ
     end
 
-    it 'updates the associated champ value_json with geocoded address' do
+    subject(:value_json) {
       etablissement.update_champ_value_json!
+      champ.reload.value_json
+    }
 
-      expect(champ.reload.value_json).to eq(address_data)
+    it 'updates the associated champ value_json with geocoded address' do
+      expect(value_json).to include(address_data.stringify_keys)
+    end
+
+    it 'includes jsonpathables columns entreprise attributes' do
+      expect(value_json["entreprise_siren"]).to eq(etablissement.siren)
+      expect(value_json["entreprise_raison_sociale"]).to eq(etablissement.entreprise_raison_sociale)
     end
   end
 

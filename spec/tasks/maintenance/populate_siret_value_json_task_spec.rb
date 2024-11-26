@@ -29,7 +29,14 @@ module Maintenance
             "departement_code" => "92",
             "department_code" => "92",
             "departement_name" => "Hauts-de-Seine",
-            "department_name" => "Hauts-de-Seine"
+            "department_name" => "Hauts-de-Seine",
+
+            "entreprise_date_creation" => "1990-04-24",
+            "entreprise_forme_juridique" => "SA à conseil d'administration (s.a.i.)",
+            "entreprise_nom_commercial" => "GRTGAZ",
+            "entreprise_raison_sociale" => "GRTGAZ",
+            "entreprise_siren" => "440117620",
+            "libelle_naf" => "Transports par conduites"
           })
       end
     end
