@@ -754,6 +754,8 @@ fr:
       france_connect:
         connexion: "Erreur lors de la connexion à France Connect."
         forbidden_html: "Seul-e-s les usagers peuvent se connecter via France Connect. En tant qu’instructeur ou administrateur, nous vous invitons à <a href='%{reset_link}'>réininitialiser votre mot de passe</a>."
+      invalid_character_rules: Aucun caractère accepté
+      invalid_character_length: "Le nombre minimum de caractères doit être inférieur au nombre maximum de caractères"
       evil_regexp: L'expression régulière que vous avez entrée est potentiellement dangereuse et pourrait entraîner des problèmes de performance
       mismatch_regexp: L'exemple doit correspondre à l'expression régulière fournie
       syntax_error_regexp: La syntaxe de l'expression régulière n'est pas valide
