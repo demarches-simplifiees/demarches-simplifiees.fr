@@ -501,15 +501,13 @@ describe Dossier, type: :model do
           let(:procedure) { create(:procedure, types_de_champ_public:) }
           let(:dossier) { create(:dossier, :brouillon, :with_populated_champs, procedure:) }
 
-          before { expect(champ).to receive(:visible?).and_return(visible) }
-
           context 'when piece_justificative' do
-            let(:types_de_champ_public) { [{ type: :piece_justificative }] }
+            let(:types_de_champ_public) { [{ type: :piece_justificative, condition: ds_eq(constant(true), constant(visible)) }] }
             let(:champ) { dossier.project_champs_public.find(&:piece_justificative?) }
 
             context 'when not visible' do
               let(:visible) { false }
-              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+              it { expect { subject }.to change { Champ.exists?(champ.id) } }
             end
 
             context 'when visible' do
@@ -519,12 +517,12 @@ describe Dossier, type: :model do
           end
 
           context 'when titre identite' do
-            let(:types_de_champ_public) { [{ type: :titre_identite }] }
+            let(:types_de_champ_public) { [{ type: :titre_identite, condition: ds_eq(constant(true), constant(visible)) }] }
             let(:champ) { dossier.project_champs_public.find(&:titre_identite?) }
 
             context 'when not visible' do
               let(:visible) { false }
-              it { expect { subject }.to change { champ.reload.piece_justificative_file.attached? } }
+              it { expect { subject }.to change { Champ.exists?(champ.id) } }
             end
 
             context 'when visible' do

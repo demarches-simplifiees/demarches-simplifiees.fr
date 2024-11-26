@@ -905,19 +905,6 @@ class Dossier < ApplicationRecord
     traitements.any?(&:termine?)
   end
 
-  def remove_titres_identite!
-    champs.filter(&:titre_identite?).map(&:piece_justificative_file).each(&:purge_later)
-  end
-
-  def remove_piece_justificative_file_not_visible!
-    champs.each do |champ|
-      next unless champ.piece_justificative_file.attached?
-      next if champ.visible?
-
-      champ.piece_justificative_file.purge_later
-    end
-  end
-
   def check_mandatory_and_visible_champs
     project_champs_public.filter(&:visible?).each do |champ|
       if champ.mandatory_blank?
