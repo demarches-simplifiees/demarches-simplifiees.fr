@@ -456,7 +456,7 @@ describe Experts::AvisController, type: :controller do
         end
       end
 
-      context 'when the preivous avis is confidentiel' do
+      context 'when the previous avis is confidentiel' do
         let(:previous_avis_confidentiel) { true }
 
         context 'when the user asked for a public avis' do
@@ -504,6 +504,42 @@ describe Experts::AvisController, type: :controller do
               expect(Avis.count).to eq(old_avis_count + 1)
               expect(created_avis.dossier).to eq(dossier)
             end
+          end
+        end
+      end
+
+      context 'when creating avis for linked dossiers with different procedures' do
+        let(:types_de_champ_public) { [{ type: :dossier_link }] }
+        let(:another_procedure) { create(:procedure, :published) }
+        let(:dossier) { create(:dossier, :en_construction, procedure: procedure) }
+        let(:linked_dossier) { create(:dossier, :en_construction, procedure: another_procedure) }
+        let(:linked_experts_procedure) { create(:experts_procedure, expert: previous_avis.expert, procedure: another_procedure) }
+        let!(:linked_avis) { create(:avis, dossier: linked_dossier, experts_procedure: linked_experts_procedure, claimant: previous_avis.claimant) }
+
+        let(:invite_linked_dossiers) { true }
+
+        before do
+          dossier_link_champ = dossier.champs.find_by(type: "Champs::DossierLinkChamp")
+          dossier_link_champ.update!(value: linked_dossier.id)
+        end
+
+        it 'creates experts_procedure with correct procedure for each dossier' do
+          expect {
+            post :create_avis, params: {
+              id: previous_avis.id,
+              procedure_id: procedure.id,
+              avis: {
+                emails: ["expert@example.com"],
+                introduction: "Please review",
+                confidentiel: false,
+                invite_linked_dossiers: true
+              }
+            }
+          }.to change(Avis, :count).by(2)
+
+          Avis.all.each do |avis|
+            # Verify experts_procedures are created with correct procedures
+            expect(avis.experts_procedure.procedure_id).to eq(avis.dossier.procedure.id)
           end
         end
       end
