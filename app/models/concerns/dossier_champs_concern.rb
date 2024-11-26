@@ -135,6 +135,10 @@ module DossierChampsConcern
     reload_champs_cache
   end
 
+  def stable_id_in_revision?(stable_id)
+    revision_stable_ids.member?(stable_id.to_i)
+  end
+
   def reload
     super.tap { reset_champs_cache }
   end
@@ -142,7 +146,15 @@ module DossierChampsConcern
   private
 
   def champs_by_public_id
-    @champs_by_public_id ||= champs.sort_by(&:id).index_by(&:public_id)
+    @champs_by_public_id ||= champs_in_revision.index_by(&:public_id)
+  end
+
+  def revision_stable_ids
+    @revision_stable_ids ||= revision.types_de_champ.map(&:stable_id).to_set
+  end
+
+  def champs_in_revision
+    champs.filter { stable_id_in_revision?(_1.stable_id) }
   end
 
   def filled_champ(type_de_champ, row_id)
