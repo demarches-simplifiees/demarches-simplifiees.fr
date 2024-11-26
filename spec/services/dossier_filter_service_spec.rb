@@ -766,5 +766,11 @@ describe DossierFilterService do
         end
       end
     end
+
+    context 'with a buggy filter, for instance a text in a integer column' do
+      let(:filter) { ['Nº dossier', 'buggy'] }
+
+      it { is_expected.to be_empty }
+    end
   end
 end
