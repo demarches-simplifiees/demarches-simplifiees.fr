@@ -2,24 +2,16 @@
   .send-dossier-actions-bar
     = render Dossiers::AutosaveFooterComponent.new(dossier: @dossier, annotation: annotation?)
 
-    - if !annotation? && @dossier.can_transition_to_en_construction?
+    - if can_submit?
       - if !can_passer_en_construction?
-        = link_to t('.submit_disabled'), "#", disabled_submit_buttons_options
-      = button_to t('.submit'), brouillon_dossier_url(@dossier), submit_draft_button_options
-
-    - if @dossier.forked_with_changes?
-      - if !can_passer_en_construction?
-        = link_to t('.submit_disabled'), "#", disabled_submit_buttons_options
-      = button_to t('.submit_changes'), modifier_dossier_url(@dossier.editing_fork_origin), submit_en_construction_button_options
-
+        = link_to t('.submit_disabled'), "#", disabled_submit_button_options
+      = button_to submit_button_label, submit_button_path, submit_button_options
 
   - if @dossier.brouillon? && !owner?
     .fr-pb-2w.invite-cannot-submit
       = render ::Dsfr::AlertComponent.new(state: :info, title: nil, size: :sm, heading_level: :p, extra_class_names:'') do |c|
         - c.with_body do
           %p.fr-pb-0= t('.invite_notice').html_safe
-
-
 
   - if !annotation?
     = render partial: "shared/dossiers/submit_is_over", locals: { dossier: @dossier }

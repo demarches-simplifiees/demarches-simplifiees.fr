@@ -26,12 +26,6 @@ module DossierCloneConcern
     find_or_create_editing_fork(user).tap { DossierPreloader.load_one(_1) }
   end
 
-  def reset_editing_fork!
-    if editing_fork? && forked_with_changes?
-      destroy_editing_fork!
-    end
-  end
-
   def destroy_editing_fork!
     if editing_fork?
       update!(hidden_by_administration_at: Time.current, hidden_by_reason: :stale_fork)
@@ -41,6 +35,18 @@ module DossierCloneConcern
 
   def editing_fork?
     editing_fork_origin_id.present?
+  end
+
+  def forked_with_changes?
+    if forked_diff.present?
+      forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
+    end
+  end
+
+  def champ_forked_with_changes?(champ)
+    if forked_diff.present?
+      forked_diff.values.any? { |champs| champs.any? { _1.public_id == champ.public_id } }
+    end
   end
 
   def make_diff(editing_fork)
@@ -124,18 +130,6 @@ module DossierCloneConcern
 
     cloned_dossier.index_search_terms_later if !fork
     cloned_dossier.reload
-  end
-
-  def forked_with_changes?
-    if forked_diff.present?
-      forked_diff.values.any?(&:present?) || forked_groupe_instructeur_changed?
-    end
-  end
-
-  def champ_forked_with_changes?(champ)
-    if forked_diff.present?
-      forked_diff.values.any? { _1.include?(champ) }
-    end
   end
 
   private

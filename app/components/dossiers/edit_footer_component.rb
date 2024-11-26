@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Dossiers::EditFooterComponent < ApplicationComponent
-  delegate :can_passer_en_construction?, to: :@dossier
+  delegate :can_passer_en_construction?, :can_transition_to_en_construction?, :forked_with_changes?, to: :@dossier
 
   def initialize(dossier:, annotation:)
     @dossier = dossier
@@ -18,7 +18,43 @@ class Dossiers::EditFooterComponent < ApplicationComponent
     @annotation.present?
   end
 
-  def disabled_submit_buttons_options
+  def can_submit?
+    can_submit_draft? || can_submit_en_construction?
+  end
+
+  def can_submit_draft?
+    !annotation? && can_transition_to_en_construction?
+  end
+
+  def can_submit_en_construction?
+    forked_with_changes?
+  end
+
+  def submit_button_label
+    if can_submit_draft?
+      t('.submit')
+    else
+      t('.submit_changes')
+    end
+  end
+
+  def submit_button_path
+    if can_submit_draft?
+      brouillon_dossier_path(@dossier)
+    else
+      modifier_dossier_path(@dossier.editing_fork_origin)
+    end
+  end
+
+  def submit_button_options
+    if can_submit_draft?
+      submit_draft_button_options
+    else
+      submit_en_construction_button_options
+    end
+  end
+
+  def disabled_submit_button_options
     {
       class: 'fr-text--sm fr-mb-0 fr-mr-2w',
       data: { 'fr-opened': "true" },
