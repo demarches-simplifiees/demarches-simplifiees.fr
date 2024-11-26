@@ -20,7 +20,7 @@ module Maintenance
         expert: expert
       )
 
-      avis.update!(experts_procedure: correct_experts_procedure)
+      avis.update_column(:experts_procedure_id, correct_experts_procedure.id)
     end
   end
 end
