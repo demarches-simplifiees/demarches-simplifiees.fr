@@ -1,19 +1,7 @@
 # frozen_string_literal: true
 
 class DossierProjectionService
-  class DossierProjection < Struct.new(:dossier_id, :state, :archived, :hidden_by_user_at, :hidden_by_administration_at, :hidden_by_reason, :for_tiers, :prenom, :nom, :batch_operation_id, :sva_svr_decision_on, :corrections, :columns) do
-      def pending_correction?
-        return false if corrections.blank?
-
-        corrections.any? { _1[:resolved_at].nil? }
-      end
-
-      def resolved_corrections?
-        return false if corrections.blank?
-
-        corrections.all? { _1[:resolved_at].present? }
-      end
-    end
+  class DossierProjection < Struct.new(:dossier, :columns)
   end
 
   def self.for_tiers_translation(array)
@@ -42,28 +30,18 @@ class DossierProjectionService
   # - the order of the intermediary query results are unknown
   # - some values can be missing (if a revision added or removed them)
   def self.project(dossiers_ids, columns)
+    dossiers = Dossier.includes(:corrections, :pending_corrections, :traitements).find(dossiers_ids)
+
     fields = columns.map do |c|
       if c.is_a?(Columns::ChampColumn)
         { TABLE => c.table, STABLE_ID => c.stable_id, original_column: c }
       else
-        { TABLE => c.table, COLUMN => c.column }
+        { TABLE => c.table, COLUMN => c.column, original_column: c }
       end
     end
     champ_value = champ_value_formatter(dossiers_ids, fields)
 
-    state_field = { TABLE => 'self', COLUMN => 'state' }
-    archived_field = { TABLE => 'self', COLUMN => 'archived' }
-    batch_operation_field = { TABLE => 'self', COLUMN => 'batch_operation_id' }
-    hidden_by_user_at_field = { TABLE => 'self', COLUMN => 'hidden_by_user_at' }
-    hidden_by_administration_at_field = { TABLE => 'self', COLUMN => 'hidden_by_administration_at' }
-    hidden_by_reason_field = { TABLE => 'self', COLUMN => 'hidden_by_reason' }
-    for_tiers_field = { TABLE => 'self', COLUMN => 'for_tiers' }
-    individual_first_name = { TABLE => 'individual', COLUMN => 'prenom' }
-    individual_last_name = { TABLE => 'individual', COLUMN => 'nom' }
-    sva_svr_decision_on_field = { TABLE => 'self', COLUMN => 'sva_svr_decision_on' }
-    dossier_corrections = { TABLE => 'dossier_corrections', COLUMN => 'resolved_at' }
-
-    ([state_field, archived_field, sva_svr_decision_on_field, hidden_by_user_at_field, hidden_by_administration_at_field, hidden_by_reason_field, for_tiers_field, individual_first_name, individual_last_name, batch_operation_field, dossier_corrections] + fields)
+    fields
       .each { |f| f[:id_value_h] = {} }
       .group_by { |f| f[TABLE] } # one query per table
       .each do |table, fields|
@@ -85,19 +63,17 @@ class DossierProjectionService
               end
           end
       when 'self'
-        Dossier
-          .where(id: dossiers_ids)
-          .pluck(:id, *fields.map { |f| f[COLUMN].to_sym })
-          .each do |id, *columns|
-            fields.zip(columns).each do |field, value|
-              # SVA must remain a date: in other column we compute remaining delay with it
-              field[:id_value_h][id] = if value.respond_to?(:strftime) && field != sva_svr_decision_on_field
-                I18n.l(value.to_date)
-              else
-                value
-              end
+        dossiers.each do |dossier|
+          fields.each do |field|
+            column = field[:original_column]
+            value = column.value(dossier)
+            field[:id_value_h][dossier.id] = if value.respond_to?(:strftime)
+              I18n.l(value.to_date)
+            else
+              value
             end
           end
+        end
       when 'individual'
         Individual
           .where(dossier_id: dossiers_ids)
@@ -175,18 +151,7 @@ class DossierProjectionService
 
     dossiers_ids.map do |dossier_id|
       DossierProjection.new(
-        dossier_id,
-        state_field[:id_value_h][dossier_id],
-        archived_field[:id_value_h][dossier_id],
-        hidden_by_user_at_field[:id_value_h][dossier_id],
-        hidden_by_administration_at_field[:id_value_h][dossier_id],
-        hidden_by_reason_field[:id_value_h][dossier_id],
-        for_tiers_field[:id_value_h][dossier_id],
-        individual_first_name[:id_value_h][dossier_id],
-        individual_last_name[:id_value_h][dossier_id],
-        batch_operation_field[:id_value_h][dossier_id],
-        sva_svr_decision_on_field[:id_value_h][dossier_id],
-        dossier_corrections[:id_value_h][dossier_id],
+        dossiers.find { _1.id == dossier_id },
         fields.map { |f| f[:id_value_h][dossier_id] }
       )
     end

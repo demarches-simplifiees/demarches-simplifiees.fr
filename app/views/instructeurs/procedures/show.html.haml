@@ -110,70 +110,71 @@
                     = render Dossiers::BatchSelectMoreComponent.new(dossiers_count: @dossiers_count, filtered_sorted_ids: @filtered_sorted_ids)
 
                     - @projected_dossiers.each do |p|
-                      - path = instructeur_dossier_path(@procedure, p.dossier_id)
-                      %tr{ class: class_names("file-hidden-by-user" => p.hidden_by_user_at.present?), id: "table-dossiers-row-#{p.dossier_id}", "aria-selected" => "false", "data-row-key" => p.dossier_id }
+                      - dossier = p.dossier
+                      - path = instructeur_dossier_path(@procedure, dossier.id)
+                      %tr{ class: class_names("file-hidden-by-user" => dossier.hidden_by_user_at.present?), id: "table-dossiers-row-#{dossier.id}", "aria-selected" => "false", "data-row-key" => dossier.id }
                         - if batch_operation_component.render?
                           %th.fr-cell--fixed{ scope: 'row' }
                             .fr-checkbox-group.fr-checkbox-group--sm
-                              - if p.batch_operation_id.present?
-                                = check_box_tag "batch_operation[dossier_ids][]", p.dossier_id, true, disabled: true,
-                                  id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"),
-                                  aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: p.dossier_id) },
+                              - if dossier.batch_operation_id.present?
+                                = check_box_tag "batch_operation[dossier_ids][]", dossier.id, true, disabled: true,
+                                  id: dom_id(BatchOperation.new, "checkbox_#{dossier.id}"),
+                                  aria: { label: t('views.instructeurs.dossiers.batch_operation.disabled', dossier_id: dossier.id) },
                                   data: { "fr-row-select" => "true" }
                               - else
-                                = check_box_tag "batch_operation[dossier_ids][]", p.dossier_id, false,
-                                    data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(p).join(','), "fr-row-select" => "true" },
-                                    form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"),
-                                    aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: p.dossier_id) }
-                              = label_tag dom_id(BatchOperation.new, "checkbox_#{p.dossier_id}"), "Sélectionner le dossier #{p.dossier_id}", class: 'fr-label'
+                                = check_box_tag "batch_operation[dossier_ids][]", dossier.id, false,
+                                    data: { batch_operation_target: "input", action: "batch-operation#onCheckOne", operations: batch_operation_component.operations_for_dossier(dossier).join(','), "fr-row-select" => "true" },
+                                    form: dom_id(BatchOperation.new), id: dom_id(BatchOperation.new, "checkbox_#{dossier.id}"),
+                                    aria: { label: t('views.instructeurs.dossiers.batch_operation.enabled', dossier_id: dossier.id) }
+                              = label_tag dom_id(BatchOperation.new, "checkbox_#{dossier.id}"), "Sélectionner le dossier #{dossier.id}", class: 'fr-label'
 
                         %td.fr-cell--numeric
-                          - if p.hidden_by_administration_at.present?
-                            %span= p.dossier_id
+                          - if dossier.hidden_by_administration_at.present?
+                            %span= dossier.id
                           - else
                             %a.fr-link.relative{ href: path }
-                              = p.dossier_id
-                              - if @not_archived_notifications_dossier_ids.include?(p.dossier_id)
+                              = dossier.id
+                              - if @not_archived_notifications_dossier_ids.include?(dossier.id)
                                 %span.notifications{ 'aria-label': 'notifications' }
 
 
                         - p.columns.each do |column|
                           %td.fr-cell--multiline
-                            - if p.hidden_by_administration_at.present?
+                            - if dossier.hidden_by_administration_at.present?
                               %span
                                 = column.is_a?(Hash) ? tags_label(column[:value]) : column
-                                - if p.hidden_by_user_at.present?
-                                  = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}"
+                                - if dossier.hidden_by_user_at.present?
+                                  = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}"
                             - else
                               %a{ href: path }
                                 = column.is_a?(Hash) ? tags_label(column[:value]) : column
-                                = "- #{t("views.instructeurs.dossiers.deleted_reason.#{p.hidden_by_reason}")}" if p.hidden_by_user_at.present?
+                                = "- #{t("views.instructeurs.dossiers.deleted_reason.#{dossier.hidden_by_reason}")}" if dossier.hidden_by_user_at.present?
 
                         %td
-                          - status = [status_badge(p.state)]
-                          - if p.pending_correction?
+                          - status = [status_badge(dossier.state)]
+                          - if dossier.pending_correction?
                             - status << pending_correction_badge(:for_instructeur, html_class: "fr-mt-1v")
-                          - elsif p.state.to_sym == :en_construction && p.resolved_corrections?
+                          - elsif dossier.last_correction_resolved?
                             - status << correction_resolved_badge(html_class: "fr-mt-1v")
-                          = link_to_if(p.hidden_by_administration_at.blank?, safe_join(status), path, class: "flex column")
+                          = link_to_if(dossier.hidden_by_administration_at.blank?, safe_join(status), path, class: "flex column")
 
                         - if @procedure.sva_svr_enabled?
                           %td
                             %span
-                              = link_to_if p.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: p, procedure: @procedure)), path
+                              = link_to_if dossier.hidden_by_administration_at.blank?, render(Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: @procedure)), path
 
                         %td.follow-col
                           %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline.fr-btns-group--icon-right
                             = render partial: 'instructeurs/procedures/dossier_actions', locals: { procedure_id: @procedure.id,
-                                        dossier_id: p.dossier_id,
-                                        state: p.state,
-                                        archived: p.archived,
-                                        dossier_is_followed: @followed_dossiers_id.include?(p.dossier_id),
+                                        dossier_id: dossier.id,
+                                        state: dossier.state,
+                                        archived: dossier.archived,
+                                        dossier_is_followed: @followed_dossiers_id.include?(dossier.id),
                                         close_to_expiration: @statut == 'expirant',
                                         hidden_by_administration: @statut == 'supprimes',
-                                        hidden_by_expired: p.hidden_by_reason == 'expired',
+                                        hidden_by_expired: dossier.hidden_by_reason == 'expired',
                                         sva_svr: @procedure.sva_svr_enabled?,
-                                        has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && p.pending_correction?,
+                                        has_blocking_pending_correction: @procedure.feature_enabled?(:blocking_pending_correction) && dossier.pending_correction?,
                                         turbo: false,
                                         with_menu: false }
 

@@ -896,7 +896,7 @@ class Dossier < ApplicationRecord
   end
 
   def previously_termine?
-    traitements.termine.exists?
+    traitements.any?(&:termine?)
   end
 
   def remove_titres_identite!

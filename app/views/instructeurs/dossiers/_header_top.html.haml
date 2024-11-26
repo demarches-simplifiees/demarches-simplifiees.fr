@@ -13,7 +13,7 @@
           = pending_correction_badge(:for_instructeur)
         - elsif dossier.en_construction? && dossier.last_correction_resolved?
           = correction_resolved_badge
-        = render Instructeurs::SVASVRDecisionBadgeComponent.new(projection_or_dossier: dossier, procedure: dossier.procedure, with_label: true)
+        = render Instructeurs::SVASVRDecisionBadgeComponent.new(dossier:, procedure: dossier.procedure, with_label: true)
 
 
     .header-actions.fr-ml-auto

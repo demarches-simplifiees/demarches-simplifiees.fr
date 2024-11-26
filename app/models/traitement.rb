@@ -26,4 +26,6 @@ class Traitement < ApplicationRecord
       self.browser_supported = BrowserSupport.supported?(browser)
     end
   end
+
+  def termine? = state.in?(Dossier::TERMINE)
 end
