@@ -190,16 +190,22 @@
                       = form.check_box :special_characters_accepted, id: dom_id(type_de_champ, :special_characters_accepted)
                       = form.label :special_characters_accepted, class: 'small-label', for: dom_id(type_de_champ, :special_characters_accepted) do
                         = t('.simple_mode.labels.special_characters')
+                - if type_de_champ.invalid_characters_rules?
+                  %p.fr-message.fr-message--error
+                    = type_de_champ.errors[:characters_accepted].join
               .cell
                 .nb-characters.flex.justify-between
                   .input-group
                     = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
                       = t('.simple_mode.labels.min_character_length')
-                    = form.text_field :min_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :min_character_length)
+                    = form.number_field :min_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :min_character_length)
                   .input-group
                     = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
                       = t('.simple_mode.labels.max_character_length')
-                    = form.text_field :max_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :max_character_length)
+                    = form.number_field :max_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :max_character_length)
+                - if type_de_champ.invalid_character_length?
+                  %p.fr-message.fr-message--error
+                    = type_de_champ.errors[:character_length].join
             %div{class: class_names("flex column", "justify-start", "flex-grow", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'formatted-mode-target': 'advanced' } }
               .cell.formatted_mode_advanced
                 = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere), class: "fr-md-1w" do
