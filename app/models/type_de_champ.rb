@@ -171,6 +171,7 @@ class TypeDeChamp < ApplicationRecord
   scope :not_condition, -> { where(condition: nil) }
   scope :fillable, -> { where.not(type_champ: [type_champs.fetch(:header_section), type_champs.fetch(:explication)]) }
   scope :with_header_section, -> { where.not(type_champ: TypeDeChamp.type_champs[:explication]) }
+  scope :mandatory, -> { where(mandatory: true) }
 
   scope :dubious, -> {
     where("unaccent(types_de_champ.libelle) ~* unaccent(?)", DubiousProcedure.forbidden_regexp)
