@@ -35,7 +35,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
       let(:filter) { to_filter(['État du dossier', "en_construction"]) }
 
       it 'should get i18n value' do
-        expect(page).to have_text("En construction")
+        expect(page).to have_text("En construction")
       end
     end
 
@@ -57,7 +57,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
       end
 
       it 'should display all filters' do
-        text = "État du dossier : En construction ou État du dossier : En instruction et Date de création : 15/06/2023"
+        text = "État du dossier : En construction ou État du dossier : En instruction et Date de création : 15/06/2023"
         expect(page).to have_text(text)
       end
     end
@@ -78,7 +78,7 @@ describe Instructeurs::FilterButtonsComponent, type: :component do
         expect(page.all('form').count).to eq(2)
 
         del_en_construction = page.all('form').first
-        expect(del_en_construction).to have_text('En construction')
+        expect(del_en_construction).to have_text('En construction')
         expect(del_en_construction).to have_field('filters[]', with: '', type: 'hidden')
         expect(del_en_construction).to have_field('filters[][id]', with: column_id, type: 'hidden')
         expect(del_en_construction).to have_field('filters[][filter]', with: 'en_instruction', type: 'hidden')

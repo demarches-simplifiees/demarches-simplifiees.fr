@@ -48,31 +48,10 @@ class Instructeurs::FilterButtonsComponent < ApplicationComponent
   def human_value(filter_column)
     column, filter = filter_column.column, filter_column.filter
 
-    if column.type_de_champ?
-      find_type_de_champ(column.stable_id).dynamic_type.filter_to_human(filter)
-    elsif column.dossier_state?
-      if filter == 'pending_correction'
-        Dossier.human_attribute_name("pending_correction.for_instructeur")
-      else
-        Dossier.human_attribute_name("state.#{filter}")
-      end
-    elsif column.groupe_instructeur?
-      current_instructeur.groupe_instructeurs
-        .find { _1.id == filter.to_i }&.label || filter
-    elsif column.dossier_labels?
-      Label.find(filter)&.name || filter
-    elsif column.type == :date
+    if column.type == :date || column.type == :datetime
       helpers.try_parse_format_date(filter)
     else
-      filter
+      column.label_for_value(filter)
     end
-  end
-
-  def find_type_de_champ(stable_id)
-    TypeDeChamp
-      .joins(:revision_types_de_champ)
-      .where(revision_types_de_champ: { revision_id: @procedure_presentation.procedure.revisions })
-      .order(created_at: :desc)
-      .find_by(stable_id:)
   end
 end
