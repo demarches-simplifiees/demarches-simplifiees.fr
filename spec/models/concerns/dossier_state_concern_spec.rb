@@ -27,7 +27,11 @@ RSpec.describe DossierStateConcern do
       procedure.publish_revision!
       perform_enqueued_jobs
       dossier.reload
+<<<<<<< HEAD
       champ_repetition = dossier.project_champs_public.find { _1.stable_id == 94 }
+=======
+      champ_repetition = dossier.project_champs_public.find(&:repetition?)
+>>>>>>> 3cd4021e6 (refactor(champs): remove orphaned and invisible champs after submit)
       row_id = champ_repetition.row_ids.first
       champ_repetition.remove_row(row_id, updated_by: 'test')
     end
@@ -39,19 +43,31 @@ RSpec.describe DossierStateConcern do
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(2)
       expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(1)
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(4)
+<<<<<<< HEAD
       expect(dossier.champs.filter { _1.stable_id.in?([90, 92, 93, 97, 961, 951]) }.size).to eq(8)
 
       champ_text = dossier.project_champs_public.find { _1.stable_id == 90 }
       champ_text.update(value: '')
+=======
+      expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) }.size).to eq(7)
+>>>>>>> 3cd4021e6 (refactor(champs): remove orphaned and invisible champs after submit)
 
       dossier.passer_en_construction!
       dossier.reload
 
+<<<<<<< HEAD
       expect(dossier.champs.size).to eq(3)
       expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
       expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(0)
       expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(0)
       expect(dossier.champs.filter { _1.stable_id.in?([90, 92, 93, 97, 961, 951]) }.size).to eq(0)
+=======
+      expect(dossier.champs.size).to eq(4)
+      expect(dossier.champs.filter { _1.row? && _1.stable_id == 94 }.size).to eq(1)
+      expect(dossier.champs.filter { _1.row? && _1.discarded? }.size).to eq(0)
+      expect(dossier.champs.filter { _1.row? && _1.stable_id.in?([95, 96]) }.size).to eq(0)
+      expect(dossier.champs.filter { _1.stable_id.in?([92, 93, 97, 961, 951]) }.size).to eq(0)
+>>>>>>> 3cd4021e6 (refactor(champs): remove orphaned and invisible champs after submit)
     end
   end
 
