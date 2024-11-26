@@ -580,6 +580,25 @@ class TypeDeChamp < ApplicationRecord
       .reject(&:empty?)
   end
 
+  def invalid_characters_rules?
+    if formatted_mode == 'simple' && letters_accepted == '0' && numbers_accepted == '0' && special_characters_accepted == '0'
+      self.errors.add(:characters_accepted, I18n.t('errors.messages.invalid_character_rules'))
+      return true
+    end
+    return false
+  end
+
+  def invalid_character_length?
+    self.errors.delete(:character_length)
+    if formatted_mode == 'simple' &&
+        max_character_length.present? &&
+        (min_character_length.to_i > max_character_length.to_i)
+      self.errors.add(:character_length, I18n.t('errors.messages.invalid_character_length'))
+      return true
+    end
+    return false
+  end
+
   def invalid_regexp?
     self.errors.delete(:expression_reguliere)
     self.errors.delete(:expression_reguliere_exemple_text)
