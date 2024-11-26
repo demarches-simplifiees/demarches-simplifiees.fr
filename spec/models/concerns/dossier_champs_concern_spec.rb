@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe DossierChampsConcern do
-  let(:procedure) do
-    create(:procedure, types_de_champ_public:, types_de_champ_private:)
-  end
+  let(:procedure) { create(:procedure, types_de_champ_public:, types_de_champ_private:) }
   let(:types_de_champ_public) do
     [
       { type: :text, libelle: "Un champ text", stable_id: 99 },
@@ -47,7 +45,7 @@ RSpec.describe DossierChampsConcern do
         let(:row_id) { dossier.project_champ(type_de_champ_repetition, nil).row_ids.first }
 
         it {
-          expect(subject.persisted?).to be_truthy
+          expect(subject.new_record?).to be_truthy
           expect(subject.row_id).to eq(row_id)
         }
 
@@ -130,10 +128,11 @@ RSpec.describe DossierChampsConcern do
         { type: :explication }
       ]
     end
+    let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
     subject { dossier.filled_champs_public }
 
-    it { expect(subject.size).to eq(4) }
-    it { expect(subject.find { _1.libelle == 'Nom' }).to be_truthy }
+    it { expect(subject.size).to eq(5) }
+    it { expect(subject.filter { _1.libelle == 'Nom' }.size).to eq(2) }
   end
 
   describe '#filled_champs_private' do
@@ -156,14 +155,8 @@ RSpec.describe DossierChampsConcern do
     it { expect(subject.size).to eq(1) }
 
     context 'given a type de champ repetition in another revision' do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
-      let(:draft) { procedure.draft_revision }
-      let(:errored_stable_id) { 666 }
-      let(:type_de_champ_repetition) { procedure.active_revision.types_de_champ.find { _1.stable_id == errored_stable_id } }
       before do
-        dossier
-        tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition", stable_id: errored_stable_id)
-        draft.add_type_de_champ(type_champ: :text, libelle: "t1", parent_stable_id: tdc_repetition.stable_id)
+        procedure.draft_revision.remove_type_de_champ(type_de_champ_repetition.stable_id)
         procedure.publish_revision!
       end
 

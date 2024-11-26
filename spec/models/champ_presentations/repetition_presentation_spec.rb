@@ -15,7 +15,7 @@ describe ChampPresentations::RepetitionPresentation do
   }
 
   let(:dossier) { create(:dossier, procedure:) }
-  let(:champ_repetition) { dossier.champs.find(&:repetition?) }
+  let(:champ_repetition) { dossier.project_champs_public.first }
 
   before do
     champ_repetition.add_row(updated_by: 'test')
@@ -23,15 +23,15 @@ describe ChampPresentations::RepetitionPresentation do
     row1, row2, row3 = champ_repetition.rows
 
     nom, stars = row1
-    nom.update(value: "ruby")
-    stars.update(value: 5)
+    champ_for_update(nom).update(value: "ruby")
+    champ_for_update(stars).update(value: 5)
 
     nom = row2.first
-    nom.update(value: "js")
+    champ_for_update(nom).update(value: "js")
 
     nom, stars = row3
-    nom.update(value: "rust")
-    stars.update(value: 4)
+    champ_for_update(nom).update(value: "rust")
+    champ_for_update(stars).update(value: 4)
   end
 
   let(:representation) { described_class.new(libelle, champ_repetition.rows) }

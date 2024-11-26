@@ -594,11 +594,11 @@ describe Users::DossiersController, type: :controller do
       let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:, user:) }
       let(:types_de_champ_public) { [{ type: :repetition, libelle: 'repetition', children: [{ type: :text, libelle: 'child' }] }] }
       let(:editing_fork) { dossier.owner_editing_fork }
-      let(:champ_repetition) { editing_fork.champs.find(&:repetition?) }
+      let(:champ_repetition) { editing_fork.project_champs_public.find(&:repetition?) }
       before do
         editing_fork
 
-        procedure.draft_revision.remove_type_de_champ(editing_fork.champs.find(&:repetition?).stable_id)
+        procedure.draft_revision.remove_type_de_champ(champ_repetition.stable_id)
         procedure.publish_revision!
 
         editing_fork.reload
@@ -611,7 +611,7 @@ describe Users::DossiersController, type: :controller do
 
     context 'when dossier was already submitted' do
       before do
-        expect_any_instance_of(Dossier).to receive(:remove_piece_justificative_file_not_visible!)
+        expect_any_instance_of(Dossier).to receive(:remove_not_visible_or_empty_champs!)
         post :submit_en_construction, params: payload
       end
 
