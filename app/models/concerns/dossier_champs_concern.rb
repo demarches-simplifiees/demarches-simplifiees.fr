@@ -109,6 +109,7 @@ module DossierChampsConcern
 
   def repetition_row_ids(type_de_champ)
     return [] if !type_de_champ.repetition?
+    return [] if !revision.in_revision?(type_de_champ.stable_id)
 
     stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
     champs.filter { _1.stable_id.in?(stable_ids) && _1.row_id.present? }

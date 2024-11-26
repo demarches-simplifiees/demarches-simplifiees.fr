@@ -203,6 +203,10 @@ class ProcedureRevision < ApplicationRecord
     coordinate_for(tdc).parent_type_de_champ
   end
 
+  def in_revision?(stable_id)
+    types_de_champ.any? { _1.stable_id == stable_id }
+  end
+
   def dependent_conditions(tdc)
     stable_id = tdc.stable_id
 
