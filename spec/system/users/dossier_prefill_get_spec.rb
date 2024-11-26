@@ -182,12 +182,10 @@ describe 'Prefilling a dossier (with a GET request):', js: true do
           page.find('.fr-connect').click
 
           expect(page).to have_content("Choisissez votre email de contact pour finaliser votre connexion")
-          expect(page).to have_selector("#use_france_connect_email_no", visible: false, wait: 10)
-          page.execute_script('document.getElementById("use_france_connect_email_no").click()')
-          fill_in("email", with: "exemple@email.com")
-          page.find("input[type='submit'][name='commit'][value='Confirmer']").click
-          expect(page).to have_content("Confirmez votre email")
-          click_on 'Continuer'
+
+          find('label', text: /Oui, utiliser .* comme email de contact/).click
+
+          click_on 'Valider'
           expect(page).to have_content('Vous avez un dossier prérempli')
           find('.fr-btn.fr-mb-2w', text: 'Poursuivre mon dossier prérempli', wait: 10).click
         end
