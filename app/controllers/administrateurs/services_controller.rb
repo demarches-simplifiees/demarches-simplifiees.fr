@@ -6,7 +6,7 @@ module Administrateurs
     skip_before_action :alert_for_missing_service, only: :edit
     def index
       @procedure = procedure
-      @services = services.ordered.sort_by { |service| service == procedure.service ? 0 : 1 }
+      @services = ([procedure.service].compact + services.ordered).uniq
     end
 
     def new
