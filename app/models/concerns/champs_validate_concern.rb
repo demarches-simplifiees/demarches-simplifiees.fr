@@ -29,7 +29,7 @@ module ChampsValidateConcern
     end
 
     def in_dossier_revision?
-      dossier.revision.types_de_champ.any? { _1.stable_id == stable_id } && is_type?(type_de_champ.type_champ)
+      dossier.revision.in_revision?(stable_id) && is_type?(type_de_champ.type_champ)
     end
   end
 end
