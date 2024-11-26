@@ -286,7 +286,7 @@ module Administrateurs
         flash.alert = "La date limite de dépôt des dossiers doit être postérieure à la date du jour pour réactiver la procédure. #{view_context.link_to('Veuillez la modifier', edit_admin_procedure_path(@procedure))}"
         redirect_to admin_procedure_path(@procedure)
       else
-        @procedure.path = @procedure.suggested_path(current_administrateur)
+        @procedure.path = @procedure.suggested_path
         @current_administrateur = current_administrateur
         @closed_procedures = current_administrateur.procedures.with_discarded.closes.map { |p| ["#{p.libelle} (#{p.id})", p.id] }.to_h
       end

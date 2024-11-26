@@ -1364,7 +1364,7 @@ describe Procedure do
   describe 'suggested_path' do
     let(:procedure) { create(:procedure, aasm_state: :publiee, libelle: 'Inscription au Collège', zones: [create(:zone)]) }
 
-    subject { procedure.suggested_path(procedure.administrateurs.first) }
+    subject { procedure.suggested_path }
 
     context 'when the path has been customized' do
       before { procedure.path = 'custom_path' }
