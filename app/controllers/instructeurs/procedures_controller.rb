@@ -237,7 +237,7 @@ module Instructeurs
       dossiers.each do |dossier|
         commentaire = CommentaireService.create(current_instructeur, dossier, bulk_message_params.except(:targets))
         if commentaire.errors.empty?
-          commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+          commentaire.dossier.touch(:last_commentaire_updated_at)
         else
           errors << dossier.id
         end

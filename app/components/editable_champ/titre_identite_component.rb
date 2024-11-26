@@ -4,8 +4,4 @@ class EditableChamp::TitreIdentiteComponent < EditableChamp::EditableChampBaseCo
   def dsfr_input_classname
     'fr-input'
     end
-
-  def user_can_destroy?
-    !@champ.mandatory? || @champ.dossier.brouillon?
-  end
 end

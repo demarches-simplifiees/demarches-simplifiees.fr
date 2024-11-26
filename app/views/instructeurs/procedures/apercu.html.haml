@@ -12,4 +12,4 @@
 .fr-container
   %h2.fr-h4= t('.title')
 
-= render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
+= render partial: "shared/dossiers/edit", locals: { dossier: @dossier, dossier_for_editing: @dossier }

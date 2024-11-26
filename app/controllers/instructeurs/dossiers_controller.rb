@@ -250,7 +250,7 @@ module Instructeurs
 
         if commentaire.valid?
           dossier.flag_as_pending_correction!(commentaire, params[:reason].presence)
-          dossier.update!(last_commentaire_updated_at: Time.zone.now)
+          dossier.touch(:last_commentaire_updated_at)
           current_instructeur.follow(dossier)
 
           flash.notice = "Dossier marqué comme en attente de correction."
@@ -275,7 +275,7 @@ module Instructeurs
       @commentaire = CommentaireService.create(current_instructeur, dossier, commentaire_params)
 
       if @commentaire.errors.empty?
-        @commentaire.dossier.update!(last_commentaire_updated_at: Time.zone.now)
+        @commentaire.dossier.touch(:last_commentaire_updated_at)
         current_instructeur.follow(dossier)
         flash.notice = "Message envoyé"
         redirect_to messagerie_instructeur_dossier_path(procedure, dossier)
@@ -300,7 +300,7 @@ module Instructeurs
     def update_annotations
       dossier_with_champs.update_champs_attributes(champs_private_attributes_params, :private, updated_by: current_user.email)
       if dossier.champs.any?(&:changed_for_autosave?)
-        dossier.last_champ_private_updated_at = Time.zone.now
+        dossier.touch(:last_champ_private_updated_at)
       end
 
       dossier.save(context: :champs_private_value)

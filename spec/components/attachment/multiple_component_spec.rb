@@ -96,14 +96,6 @@ RSpec.describe Attachment::MultipleComponent, type: :component do
     end
   end
 
-  context 'when user can replace' do
-    let(:kwargs) { { user_can_replace: true } }
-
-    before do
-      attach_to_champ(attached_file, champ)
-    end
-  end
-
   def attach_to_champ(attached_file, champ)
     attached_file.attach(
       io: StringIO.new("x" * 2),

@@ -9,4 +9,4 @@
     .fr-container
       = render partial: "shared/dossiers/header", locals: { dossier: @dossier }
 
-  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier }
+  = render partial: "shared/dossiers/edit", locals: { dossier: @dossier, dossier_for_editing: @dossier }

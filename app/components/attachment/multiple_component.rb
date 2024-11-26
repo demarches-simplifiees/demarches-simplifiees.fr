@@ -17,7 +17,7 @@ class Attachment::MultipleComponent < ApplicationComponent
 
   delegate :count, :empty?, to: :attachments, prefix: true
 
-  def initialize(champ: nil, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, user_can_replace: false, max: nil)
+  def initialize(champ: nil, attached_file:, form_object_name: nil, view_as: :link, user_can_destroy: true, max: nil)
     @champ = champ
     @attached_file = attached_file
     @form_object_name = form_object_name

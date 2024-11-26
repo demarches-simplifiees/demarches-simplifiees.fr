@@ -380,7 +380,6 @@ Rails.application.routes.draw do
         post 'brouillon', to: 'dossiers#submit_brouillon'
         get 'modifier', to: 'dossiers#modifier'
         post 'modifier', to: 'dossiers#submit_en_construction'
-        patch 'modifier', to: 'dossiers#modifier_legacy'
         get 'champs/:stable_id', to: 'dossiers#champ', as: :champ
         get 'merci'
         get 'demande'

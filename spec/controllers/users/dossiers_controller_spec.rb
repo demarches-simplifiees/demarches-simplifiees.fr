@@ -836,10 +836,11 @@ describe Users::DossiersController, type: :controller do
     before { sign_in(user) }
 
     let(:procedure) { create(:procedure, :published, types_de_champ_public: [{}, { type: :piece_justificative }]) }
-    let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
-    let(:first_champ) { dossier.project_champs_public.first }
+    let(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
+    let!(:editing_fork) { dossier.owner_editing_fork }
+    let(:first_champ) { editing_fork.project_champs_public.first }
+    let(:piece_justificative_champ) { editing_fork.project_champs_public.last }
     let(:anchor_to_first_champ) { controller.helpers.link_to I18n.t('views.users.dossiers.fix_champ'), brouillon_dossier_path(anchor: first_champ.labelledby_id), class: 'error-anchor' }
-    let(:piece_justificative_champ) { dossier.project_champs_public.last }
     let(:value) { 'beautiful value' }
     let(:file) { fixture_file_upload('spec/fixtures/files/piece_justificative_0.pdf', 'application/pdf') }
     let(:now) { Time.zone.parse('01/01/2100') }
@@ -887,14 +888,9 @@ describe Users::DossiersController, type: :controller do
 
       it 'updates the dossier timestamps' do
         subject
-        dossier.reload
-        expect(dossier.updated_at).to eq(now)
-        expect(dossier.last_champ_updated_at).to eq(now)
-      end
-
-      it 'updates the dossier state' do
-        subject
-        expect(dossier.reload.state).to eq(Dossier.states.fetch(:en_construction))
+        editing_fork.reload
+        expect(editing_fork.updated_at).to eq(now)
+        expect(editing_fork.last_champ_updated_at).to eq(now)
       end
 
       it { is_expected.to have_http_status(:ok) }
@@ -923,9 +919,9 @@ describe Users::DossiersController, type: :controller do
 
         it 'updates the dossier timestamps' do
           subject
-          dossier.reload
-          expect(dossier.updated_at).to eq(now)
-          expect(dossier.last_champ_updated_at).to eq(now)
+          editing_fork.reload
+          expect(editing_fork.updated_at).to eq(now)
+          expect(editing_fork.last_champ_updated_at).to eq(now)
         end
       end
     end
@@ -958,14 +954,10 @@ describe Users::DossiersController, type: :controller do
       end
 
       context 'iban error' do
+        let(:types_de_champ_public) { [{ type: :iban }] }
         let(:value) { 'abc' }
 
-        before do
-          first_champ.type_de_champ.update!(type_champ: :iban, mandatory: true, libelle: 'l')
-          dossier.project_champs_public.first.becomes!(Champs::IbanChamp).save!
-
-          subject
-        end
+        before { subject }
 
         it { expect(response).to have_http_status(:success) }
       end
@@ -998,9 +990,7 @@ describe Users::DossiersController, type: :controller do
     end
 
     context 'when the champ is a phone number' do
-      let(:procedure) { create(:procedure, :published, types_de_champ_public: [{ type: :phone }]) }
-      let!(:dossier) { create(:dossier, :en_construction, user:, procedure:) }
-      let(:first_champ) { dossier.project_champs_public.first }
+      let(:types_de_champ_public) { [{ type: :phone }] }
       let(:now) { Time.zone.parse('01/01/2100') }
 
       let(:submit_payload) do
