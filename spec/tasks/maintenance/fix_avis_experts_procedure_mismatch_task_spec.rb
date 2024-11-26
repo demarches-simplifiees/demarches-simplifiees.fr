@@ -78,6 +78,25 @@ module Maintenance
           expect(avis.experts_procedure).to eq(correct_experts_procedure)
         end
       end
+
+      context "when the avis has an invalid question_answer" do
+        let(:avis) do
+          create(:avis,
+            dossier: dossier,
+            expert: expert,
+            experts_procedure: wrong_experts_procedure,
+            question_label: "Some question",
+            question_answer: nil)
+        end
+
+        it "fixes the experts_procedure association without validation errors" do
+          expect(avis).not_to be_valid
+          expect { process }.not_to raise_error
+
+          avis.reload
+          expect(avis.experts_procedure.procedure_id).to eq(procedure2.id)
+        end
+      end
     end
   end
 end
