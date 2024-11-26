@@ -154,6 +154,21 @@ RSpec.describe DossierChampsConcern do
     subject { dossier.repetition_row_ids(type_de_champ_repetition) }
 
     it { expect(subject.size).to eq(1) }
+
+    context 'given a type de champ repetition in another revision' do
+      let(:procedure) { create(:procedure, :published, types_de_champ_public:, types_de_champ_private:) }
+      let(:draft) { procedure.draft_revision }
+      let(:errored_stable_id) { 666 }
+      let(:type_de_champ_repetition) { procedure.active_revision.types_de_champ.find { _1.stable_id == errored_stable_id } }
+      before do
+        dossier
+        tdc_repetition = draft.add_type_de_champ(type_champ: :repetition, libelle: "repetition", stable_id: errored_stable_id)
+        draft.add_type_de_champ(type_champ: :text, libelle: "t1", parent_stable_id: tdc_repetition.stable_id)
+        procedure.publish_revision!
+      end
+
+      it { expect { subject }.not_to raise_error }
+    end
   end
 
   describe '#project_rows_for' do
