@@ -6,7 +6,7 @@
 
     .flex.justify-start.section.head
       = form_for(type_de_champ, form_options) do |form|
-        .flex.justify-start.flex-gap
+        .flex.justify-start.flex-gap.fr-mb-4w
           .flex.justify-start.width-33
             .cell.flex.justify-start.column.flex-grow
               = form.label :type_champ, "Type de champ", for: dom_id(type_de_champ, :type_champ)
@@ -171,58 +171,68 @@
                     = form.radio_button :formatted_mode, 'advanced', id: dom_id(type_de_champ, :advanced), data: { action: 'formatted-mode#toggle', "mode-to-show": "advanced" }
                     = form.label :formatted_mode_advanced, t('.kind.labels.advanced'), for: dom_id(type_de_champ, :advanced), class: 'fr-label'
 
-            %div{class: class_names("flex column", "justify-start", "flex-grow", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_simple", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'advanced' : nil), data: { 'formatted-mode-target': 'simple'  } }
+            %div{ class: class_names("flex column", "justify-start", "flex-grow", "width-66", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_simple", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'advanced' : nil), data: { 'formatted-mode-target': 'simple' } }
               .cell
-                %fieldset.checkboxes-fieldset.fr-fieldset{aria_labelledby: 'checkboxes-inline-legend'}
-                  %legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
-                  .fr-fieldset__element.fr-fieldset__element--inline
+                %fieldset.fr-fieldset{ aria_labelledby: 'checkboxes-inline-legend' }
+                  .fr-fieldset__element.fr-mb-0
+                    %legend.fr-fieldset__legend#checkboxes-inline-legend= t('.simple_mode.labels.accepted_format')
+                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
                     .fr-checkbox-group
                       = form.check_box :numbers_accepted, id: dom_id(type_de_champ, :numbers_accepted)
-                      = form.label :numbers_accepted, class: 'small-label', for: dom_id(type_de_champ, :numbers_accepted) do
+                      = form.label :numbers_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :numbers_accepted) do
                         = t('.simple_mode.labels.numbers')
-                  .fr-fieldset__element.fr-fieldset__element--inline
+                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
                     .fr-checkbox-group
                       = form.check_box :letters_accepted, id: dom_id(type_de_champ, :letters_accepted)
-                      = form.label :letters_accepted, class: 'small-label', for: dom_id(type_de_champ, :letters_accepted) do
+                      = form.label :letters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :letters_accepted) do
                         = t('.simple_mode.labels.letters')
-                  .fr-fieldset__element.fr-fieldset__element--inline
+                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
                     .fr-checkbox-group
                       = form.check_box :special_characters_accepted, id: dom_id(type_de_champ, :special_characters_accepted)
-                      = form.label :special_characters_accepted, class: 'small-label', for: dom_id(type_de_champ, :special_characters_accepted) do
+                      = form.label :special_characters_accepted, class: 'fr-label fr-text--sm fr-mb-3v', for: dom_id(type_de_champ, :special_characters_accepted) do
                         = t('.simple_mode.labels.special_characters')
-                - if type_de_champ.invalid_characters_rules?
-                  %p.fr-message.fr-message--error
-                    = type_de_champ.errors[:characters_accepted].join
+                  .fr-messages-group
+                    - if type_de_champ.invalid_characters_rules?
+                      %p.fr-message.fr-message--error
+                        = type_de_champ.errors[:characters_accepted].join
               .cell
-                .nb-characters.flex.justify-between
-                  .input-group
-                    = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
-                      = t('.simple_mode.labels.min_character_length')
-                    = form.number_field :min_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :min_character_length)
-                  .input-group
-                    = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
-                      = t('.simple_mode.labels.max_character_length')
-                    = form.number_field :max_character_length, class: "fr-input small-margin small", id: dom_id(type_de_champ, :max_character_length)
-                - if type_de_champ.invalid_character_length?
-                  %p.fr-message.fr-message--error
-                    = type_de_champ.errors[:character_length].join
-            %div{class: class_names("flex column", "justify-start", "flex-grow", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'formatted-mode-target': 'advanced' } }
+                %fieldset.fr-fieldset
+                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                    .fr-input-group
+                      = form.label :min_character_length, for: dom_id(type_de_champ, :min_character_length) do
+                        = t('.simple_mode.labels.min_character_length')
+                      = form.number_field :min_character_length, class: "fr-input", id: dom_id(type_de_champ, :min_character_length)
+
+                  .fr-fieldset__element.fr-fieldset__element--inline.fr-mb-0
+                    .fr-input-group
+                      = form.label :max_character_length, for: dom_id(type_de_champ, :max_character_length) do
+                        = t('.simple_mode.labels.max_character_length')
+                      = form.number_field :max_character_length, class: "fr-input", id: dom_id(type_de_champ, :max_character_length)
+                  .fr-messages-group
+                    - if type_de_champ.invalid_character_length?
+                      %p.fr-message.fr-message--error
+                        = type_de_champ.errors[:character_length].join
+
+            %div{ class: class_names("flex column", "justify-start", "flex-grow", "width-66", "vertical-border", "fr-pl-2w", "fr-mb-4w", "formatted_mode_advanced", hidden: type_de_champ.formatted_mode ? type_de_champ.formatted_mode == 'simple' : true), data: { 'formatted-mode-target': 'advanced' } }
               .cell.formatted_mode_advanced
-                = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere), class: "fr-md-1w" do
-                  = t('.expression_reguliere.labels.regex')
+                .fr-input-group
+                  = form.label :expression_reguliere, for: dom_id(type_de_champ, :expression_reguliere), class: "fr-md-1w" do
+                    = t('.expression_reguliere.labels.regex')
 
-                .type-de-champ-expression-reguliere
-                  = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
-                %p.fr-hint-text= t('.expression_reguliere.labels.hint_html')
+                  .type-de-champ-expression-reguliere
+                    = form.text_field :expression_reguliere, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere)
+                  %p.fr-hint-text= t('.expression_reguliere.labels.hint_html')
 
-              .cell.fr-mt-1w
-                = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do
-                  = t('.expression_reguliere.labels.valid_exemple')
-                = form.text_field :expression_reguliere_exemple_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_exemple_text)
-                - if type_de_champ.invalid_regexp?
-                  %p.fr-message.fr-message--error
-                    = type_de_champ.errors[:expression_reguliere_exemple_text].join(", ")
-              .cell.fr-mt-1w
+              .cell.fr-mt-2w
+                .fr-input-group
+                  = form.label :expression_reguliere_exemple_text, for: dom_id(type_de_champ, :expression_reguliere_exemple_text) do
+                    = t('.expression_reguliere.labels.valid_exemple')
+                  = form.text_field :expression_reguliere_exemple_text, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_exemple_text)
+                .fr-messages-group
+                  - if type_de_champ.invalid_regexp?
+                    %p.fr-message.fr-message--error
+                      = type_de_champ.errors[:expression_reguliere_exemple_text].join(", ")
+              .cell.fr-mt-2w
                 = form.label :expression_reguliere_error_message, for: dom_id(type_de_champ, :expression_reguliere_error_message) do
                   = t('.expression_reguliere.labels.error_message')
                 = form.text_field :expression_reguliere_error_message, class: "fr-input small-margin small", id: dom_id(type_de_champ, :expression_reguliere_error_message)
