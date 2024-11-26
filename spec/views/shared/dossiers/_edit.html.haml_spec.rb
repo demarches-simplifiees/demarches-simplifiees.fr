@@ -6,10 +6,11 @@ describe 'shared/dossiers/edit', type: :view do
     allow(view).to receive(:administrateur_signed_in?).and_return(false)
   end
 
-  subject { render 'shared/dossiers/edit', dossier: dossier, apercu: false }
+  subject { render 'shared/dossiers/edit', dossier:, dossier_for_editing:, apercu: false }
 
   let(:procedure) { create(:procedure, types_de_champ_public:) }
   let(:dossier) { create(:dossier, :with_populated_champs, procedure:) }
+  let(:dossier_for_editing) { dossier }
 
   context 'when there are some champs' do
     let(:type_de_champ_header_section) { procedure.draft_types_de_champ_public.find(&:header_section?) }
@@ -116,6 +117,7 @@ describe 'shared/dossiers/edit', type: :view do
 
     context 'when dossier is en construction' do
       let(:dossier) { create(:dossier, :en_construction, :with_populated_champs, procedure:) }
+      let(:dossier_for_editing) { dossier.owner_editing_fork }
 
       it 'can delete a piece justificative' do
         expect(subject).to have_selector("[title='Supprimer le fichier #{champ.piece_justificative_file.attachments[0].filename}']")
