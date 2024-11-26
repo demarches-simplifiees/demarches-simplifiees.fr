@@ -331,10 +331,6 @@ class TypeDeChamp < ApplicationRecord
     !private?
   end
 
-  def in_revision?(revision)
-    revision.types_de_champ.any? { _1.stable_id == stable_id }
-  end
-
   def child?(revision)
     revision.coordinate_for(self)&.child?
   end
