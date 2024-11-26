@@ -4,7 +4,7 @@ module DossierChampsConcern
   extend ActiveSupport::Concern
 
   def project_champ(type_de_champ, row_id)
-    check_valid_row_id?(type_de_champ, row_id)
+    check_valid_row_id_on_read?(type_de_champ, row_id)
     champ = champs_by_public_id[type_de_champ.public_id(row_id)]
     if champ.nil? || !champ.is_type?(type_de_champ.type_champ)
       value = type_de_champ.champ_blank?(champ) ? nil : champ.value
@@ -52,6 +52,28 @@ module DossierChampsConcern
     filled_champs_public + filled_champs_private
   end
 
+  def project_champs_public_all
+    revision.types_de_champ_public.flat_map do |type_de_champ|
+      champ = project_champ(type_de_champ, nil)
+      if type_de_champ.repetition?
+        [champ] + project_rows_for(type_de_champ).flatten
+      else
+        champ
+      end
+    end
+  end
+
+  def project_champs_private_all
+    revision.types_de_champ_private.flat_map do |type_de_champ|
+      champ = project_champ(type_de_champ, nil)
+      if type_de_champ.repetition?
+        [champ] + project_rows_for(type_de_champ).flatten
+      else
+        champ
+      end
+    end
+  end
+
   def project_rows_for(type_de_champ)
     return [] if !type_de_champ.repetition?
 
@@ -83,7 +105,11 @@ module DossierChampsConcern
   end
 
   def champ_value_for_tag(type_de_champ, path = :value)
-    champ = filled_champ(type_de_champ, nil)
+    champ = if type_de_champ.repetition?
+      project_champ(type_de_champ, nil)
+    else
+      filled_champ(type_de_champ, nil)
+    end
     type_de_champ.champ_value_for_tag(champ, path)
   end
 
@@ -109,30 +135,38 @@ module DossierChampsConcern
 
   def repetition_row_ids(type_de_champ)
     return [] if !type_de_champ.repetition?
-    return [] if !revision.in_revision?(type_de_champ.stable_id)
+    return [] unless stable_id_in_revision?(type_de_champ.stable_id)
+    @repetition_row_ids ||= {}
+    @repetition_row_ids[type_de_champ.stable_id] ||= begin
+      rows = champs_in_revision.filter { _1.row? && _1.stable_id == type_de_champ.stable_id }
+      row_ids = rows.reject(&:discarded?).map(&:row_id)
 
-    stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
-    champs.filter { _1.stable_id.in?(stable_ids) && _1.row_id.present? }
-      .map(&:row_id)
-      .uniq
-      .sort
+      # Legacy rows are rows that have been created before the introduction of the discarded_at column
+      # TODO migrate and clean
+      children_stable_ids = revision.children_of(type_de_champ).map(&:stable_id)
+      discarded_row_ids = rows.filter(&:discarded?).map(&:row_id)
+      legacy_row_ids = champs_in_revision.filter { _1.stable_id.in?(children_stable_ids) && _1.row_id.present? }.map(&:row_id).uniq
+      row_ids += (legacy_row_ids - discarded_row_ids)
+      row_ids.uniq.sort
+    end
   end
 
   def repetition_add_row(type_de_champ, updated_by:)
     raise "Can't add row to non-repetition type de champ" if !type_de_champ.repetition?
 
     row_id = ULID.generate
-    types_de_champ = revision.children_of(type_de_champ)
-    self.champs += types_de_champ.map { _1.build_champ(row_id:, updated_by:) }
-    reload_champs_cache
+    champ = champ_for_update(type_de_champ, row_id, updated_by:)
+    champ.save!
+    reset_champ_cache(champ)
     row_id
   end
 
   def repetition_remove_row(type_de_champ, row_id, updated_by:)
     raise "Can't remove row from non-repetition type de champ" if !type_de_champ.repetition?
 
-    champs.where(row_id:).destroy_all
-    reload_champs_cache
+    champ = champ_for_update(type_de_champ, row_id, updated_by:)
+    champ.discard!
+    reset_champ_cache(champ)
   end
 
   def stable_id_in_revision?(stable_id)
@@ -173,7 +207,7 @@ module DossierChampsConcern
   end
 
   def champ_with_attributes_for_update(type_de_champ, row_id, updated_by:)
-    check_valid_row_id?(type_de_champ, row_id)
+    check_valid_row_id_on_write?(type_de_champ, row_id)
     attributes = type_de_champ.params_for_champ
     # TODO: Once we have the right index in place, we should change this to use `create_or_find_by` instead of `find_or_create_by`
     champ = champs
@@ -198,12 +232,22 @@ module DossierChampsConcern
     [champ, attributes]
   end
 
-  def check_valid_row_id?(type_de_champ, row_id)
+  def check_valid_row_id_on_write?(type_de_champ, row_id)
+    if type_de_champ.repetition?
+      if row_id.blank?
+        raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it represents a row in a repetition"
+      end
+    else
+      check_valid_row_id_on_read?(type_de_champ, row_id)
+    end
+  end
+
+  def check_valid_row_id_on_read?(type_de_champ, row_id)
     if type_de_champ.child?(revision)
       if row_id.blank?
         raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} must have a row_id because it is part of a repetition"
       end
-    elsif row_id.present? && type_de_champ.in_revision?(revision)
+    elsif row_id.present? && stable_id_in_revision?(type_de_champ.stable_id)
       raise "type_de_champ #{type_de_champ.stable_id} in revision #{revision_id} can not have a row_id because it is not part of a repetition"
     end
   end
@@ -214,15 +258,12 @@ module DossierChampsConcern
     @filled_champs_private = nil
     @project_champs_public = nil
     @project_champs_private = nil
+    @repetition_row_ids = nil
+    @revision_stable_ids = nil
   end
 
   def reset_champ_cache(champ)
     champs_by_public_id[champ.public_id]&.reload
-    reset_champs_cache
-  end
-
-  def reload_champs_cache
-    champs.reload if persisted?
     reset_champs_cache
   end
 end
