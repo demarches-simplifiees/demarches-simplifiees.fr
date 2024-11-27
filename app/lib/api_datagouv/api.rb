@@ -12,7 +12,20 @@ class APIDatagouv::API
     end
   end
 
+  API_URL = 'https://www.data.gouv.fr/api/1'
+
   class << self
+    def existing_file_url(dataset, resource)
+      response = Typhoeus.get(
+        datagouv_resource_url(dataset, resource),
+        followlocation: true
+      )
+
+      return nil unless response.success?
+
+      JSON.parse(response.body)["url"]
+    end
+
     def upload(io, dataset, resource = nil)
       response = Typhoeus.post(
         datagouv_upload_url(dataset, resource),
@@ -31,6 +44,14 @@ class APIDatagouv::API
     end
 
     private
+
+    def datagouv_resource_url(dataset, resource)
+      [
+        API_URL,
+        "/datasets/", dataset,
+        "/resources/", resource
+      ].join
+    end
 
     def datagouv_upload_url(dataset, resource = nil)
       if resource.present?
