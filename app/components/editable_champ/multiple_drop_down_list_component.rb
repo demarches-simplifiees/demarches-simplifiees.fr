@@ -12,14 +12,13 @@ class EditableChamp::MultipleDropDownListComponent < EditableChamp::EditableCham
   end
 
   def react_props
-    react_input_opts(id: @champ.input_id,
+    react_input_opts(
+      id: @champ.input_id,
       class: 'fr-mt-1w',
       name: @form.field_name(:value, multiple: true),
       selected_keys: @champ.selected_options,
       items: @champ.drop_down_options,
-      value_separator: false,
-      'aria-label': @champ.libelle,
-      'aria-describedby': @champ.describedby_id,
-      'aria-labelledby': @champ.labelledby_id)
+      value_separator: false
+    )
   end
 end
