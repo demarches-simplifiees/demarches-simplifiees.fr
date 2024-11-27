@@ -38,7 +38,13 @@ module Dsfr
 
       def fieldset_error_opts
         if dsfr_champ_container == :fieldset && errors_on_attribute?
-          { aria: { labelledby: "#{describedby_id} #{object.labelledby_id}" } }
+          labelledby = [@champ.labelledby_id]
+          labelledby << describedby_id if @champ.description.present?
+          labelledby << @champ.error_id
+
+          {
+            aria: { labelledby: labelledby.join(' ') }
+          }
         else
           {}
         end
