@@ -150,7 +150,7 @@ describe TypeDeChamp do
   end
 
   describe "validate_regexp" do
-    let(:tdc) { create(:type_de_champ_expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text:) }
+    let(:tdc) { create(:type_de_champ_formatted, expression_reguliere:, expression_reguliere_exemple_text:) }
     subject { tdc.invalid_regexp? }
 
     context "expression_reguliere and bad example" do

@@ -451,7 +451,7 @@ class ProcedureRevision < ApplicationRecord
           from_type_de_champ.character_limit,
           to_type_de_champ.character_limit)
       end
-    elsif to_type_de_champ.expression_reguliere?
+    elsif to_type_de_champ.formatted?
       if from_type_de_champ.expression_reguliere != to_type_de_champ.expression_reguliere
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :expression_reguliere,
