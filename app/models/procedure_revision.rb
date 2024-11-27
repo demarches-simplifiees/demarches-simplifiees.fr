@@ -378,6 +378,12 @@ class ProcedureRevision < ApplicationRecord
     end
 
     if to_type_de_champ.any_drop_down_list?
+      if from_type_de_champ.drop_down_mode != to_type_de_champ.drop_down_mode
+        changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
+          :drop_down_mode,
+          from_type_de_champ.drop_down_mode,
+          to_type_de_champ.drop_down_mode)
+      end
       if from_type_de_champ.drop_down_options != to_type_de_champ.drop_down_options
         changes << ProcedureRevisionChange::UpdateChamp.new(from_type_de_champ,
           :drop_down_options,

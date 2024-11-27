@@ -60,8 +60,13 @@ class Champs::DropDownListChamp < Champ
   private
 
   def value_is_in_options
+    return if referentiel? && value_is_in_referentiel_ids?
     return if drop_down_options.include?(value)
 
     errors.add(:value, :not_in_options)
+  end
+
+  def value_is_in_referentiel_ids?
+    referentiel_drop_down_options.map { _1['id'] }.include?(value.to_i)
   end
 end
