@@ -67,14 +67,6 @@ module Dsfr
         }
       end
 
-      def input_error_opts
-        {
-          aria: {
-            describedby: describedby_id
-          }
-        }
-      end
-
       def react_input_opts(other_opts = {})
         input_opts(other_opts, true)
       end
