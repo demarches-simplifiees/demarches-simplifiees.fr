@@ -3,19 +3,22 @@
 class Cron::Datagouv::AccountByMonthJob < Cron::CronJob
   include DatagouvCronSchedulableConcern
   self.schedule_expression = "every month at 4:30"
-  FILE_NAME = "nb_comptes_crees_par_mois"
+  HEADERS = ["mois", "nb_comptes_crees_par_mois"]
+  FILE_NAME = "#{HEADERS[1]}.csv"
 
   def perform(*args)
-    GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, data) do |file|
-      begin
-        APIDatagouv::API.upload(file, :statistics_dataset)
-      ensure
-        FileUtils.rm(file)
-      end
+    GenerateOpenDataCsvService.save_csv_to_tmp(FILE_NAME, HEADERS, data) do |file|
+      APIDatagouv::API.upload(file, :statistics_dataset)
     end
   end
 
+  private
+
   def data
-    User.where(created_at: 1.month.ago.all_month).count
+    [[date_last_month, User.where(created_at: 1.month.ago.all_month).count]]
+  end
+
+  def date_last_month
+    Date.today.prev_month.strftime("%Y %B")
   end
 end
