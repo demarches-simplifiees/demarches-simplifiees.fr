@@ -88,12 +88,14 @@ describe Procedure::ErrorsSummary, type: :component do
 
     let(:validation_context) { :publication }
     let(:procedure) { create(:procedure, attestation_template:, initiated_mail:) }
-    let(:attestation_template) { build(:attestation_template) }
+    let(:attestation_template) { build(:attestation_template, :v2) }
     let(:initiated_mail) { build(:initiated_mail) }
 
     before do
-      [:attestation_template, :initiated_mail].map { procedure.send(_1).update_column(:body, '--invalidtag--') }
+      procedure.initiated_mail.update_column(:body, '--invalidtag--')
       procedure.draft_revision.update(ineligibilite_enabled: true, ineligibilite_rules: ds_eq(constant(true), constant(1)), ineligibilite_message: 'ko')
+
+      procedure.attestation_template.update_column(:json_body, { type: :doc, content: [{ type: :mention, attrs: { id: "tdc123", label: "oops" } }] })
       subject
     end
 
@@ -102,6 +104,22 @@ describe Procedure::ErrorsSummary, type: :component do
       expect(page).to have_selector("a", text: "Le modèle d’attestation")
       expect(page).to have_selector("a", text: "L’email de notification de passage de dossier en instruction")
       expect(page).to have_text("n'est pas valide", count: 2)
+    end
+  end
+
+  describe 'render error for attestation v1' do
+    let(:validation_context) { :publication }
+    let(:procedure) { create(:procedure, attestation_template:) }
+    let(:attestation_template) { build(:attestation_template) }
+
+    before do
+      procedure.attestation_template.update_column(:body, '--invalidtag--')
+      subject
+    end
+
+    it 'render error nicely' do
+      expect(page).to have_selector("a", text: "Le modèle d’attestation")
+      expect(page).to have_text("n'est pas valide", count: 1)
     end
   end
 end
