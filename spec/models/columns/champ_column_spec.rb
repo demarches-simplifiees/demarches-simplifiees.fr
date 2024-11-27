@@ -54,7 +54,7 @@ describe Columns::ChampColumn do
         expect_type_de_champ_values('pole_emploi', eq([nil]))
         expect_type_de_champ_values('mesri', eq([nil]))
         expect_type_de_champ_values('cojo', eq([nil]))
-        expect_type_de_champ_values('expression_reguliere', eq([nil]))
+        expect_type_de_champ_values('formatted', eq([nil]))
         expect_type_de_champ_values('rna', eq(["W173847273", "postal_code", "city_name", "department_code", "region_name", "LA PRÉVENTION ROUTIERE"]))
         expect_type_de_champ_values('rnf', eq(["075-FDD-00003-01", "postal_code", "city_name", "department_code", "region_name", "Fondation SFR"]))
       end

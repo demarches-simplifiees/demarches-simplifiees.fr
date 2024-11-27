@@ -53,7 +53,7 @@ describe Procedure::ErrorsSummary, type: :component do
         { libelle: 'drop down list requires options', type: :drop_down_list, options: [] },
         { libelle: 'invalid condition', type: :text, condition: ds_eq(constant(true), constant(1)) },
         { libelle: 'header sections must have consistent order', type: :header_section, level: 2 },
-        { libelle: 'regexp invalid', type: :expression_reguliere, expression_reguliere_exemple_text: 'kthxbye', expression_reguliere: /{/ }
+        { libelle: 'regexp invalid', type: :formatted, expression_reguliere_exemple_text: 'kthxbye', expression_reguliere: /{/ }
       ])
     end
 
