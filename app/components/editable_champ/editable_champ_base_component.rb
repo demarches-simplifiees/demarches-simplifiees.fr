@@ -21,4 +21,17 @@ class EditableChamp::EditableChampBaseComponent < ApplicationComponent
   def describedby_id
     @champ.describedby_id
   end
+
+  def fieldset_aria_opts
+    if dsfr_champ_container == :fieldset
+      labelledby = [@champ.labelledby_id]
+      labelledby << describedby_id if @champ.description.present?
+
+      {
+        aria: { labelledby: labelledby.join(' ') }
+      }
+    else
+      {}
+    end
+  end
 end
