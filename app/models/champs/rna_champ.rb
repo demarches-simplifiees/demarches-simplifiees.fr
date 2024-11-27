@@ -3,9 +3,7 @@
 class Champs::RNAChamp < Champ
   include RNAChampAssociationFetchableConcern
 
-  validates :value, allow_blank: true, format: {
-    with: /\AW[0-9A-Z]{9}\z/, message: I18n.t(:not_a_rna, scope: 'activerecord.errors.messages')
-  }, if: :validate_champ_value_or_prefill?
+  validates :value, allow_blank: true, format: { with: /\AW[0-9A-Z]{9}\z/, message: :invalid_rna }, if: :validate_champ_value_or_prefill?
 
   delegate :id, to: :procedure, prefix: true
 
@@ -19,6 +17,10 @@ class Champs::RNAChamp < Champ
 
   def identifier
     title.present? ? "#{value} (#{title})" : value
+  end
+
+  def status_message?
+    true
   end
 
   def search_terms

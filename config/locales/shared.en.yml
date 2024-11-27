@@ -23,15 +23,6 @@ en:
           fetching_data: "Fetching data for recipient No. %{numero_allocataire} with postal code %{code_postal}."
           data_fetched: "Data concerning %{sources} linked to the account Nº %{numero_allocataire} with the postal code %{code_postal} has been received from the CAF."
           data_fetched_title: "Data received from la Caisse nationale d’allocations familiales"
-      rna:
-        show:
-          not_filled: not filled
-          not_found: "RNA number %{rna} (no association found)"
-        association:
-          data_fetched: "This RNA number is linked to: %{title}, %{address}"
-          not_found: "No association found"
-          network_error: "A network error has prevented the association associated with this RNA to be fetched"
-          invalid_number: "The RNA number must begin with a capital W followed by 9 digits or letters"
       rnf:
         show:
           not_found: "RNF %{rnf} (no foundation found)"
