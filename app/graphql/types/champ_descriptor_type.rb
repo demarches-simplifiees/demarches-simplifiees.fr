@@ -105,6 +105,8 @@ module Types
           Types::Champs::Descriptor::COJOChampDescriptorType
         when TypeDeChamp.type_champs.fetch(:expression_reguliere)
           Types::Champs::Descriptor::ExpressionReguliereChampDescriptorType
+        when TypeDeChamp.type_champs.fetch(:formatted)
+          Types::Champs::Descriptor::FormattedChampDescriptorType
         end
       end
     end
