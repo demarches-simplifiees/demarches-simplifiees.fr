@@ -1,0 +1,9 @@
+en:
+  layouts:
+    instructeur: instructor
+    administrateur: admin
+    gestionnaire: admins group manager
+    superadmin: super-admin
+    expert: expert
+    user: user
+    guest: guest

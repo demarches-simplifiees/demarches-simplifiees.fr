@@ -20,7 +20,7 @@ class Users::SessionsController < Devise::SessionsController
 
     super
     if current_account.count > 1
-      flash[:notice] = t("devise.sessions.signed_in_multiple_profile", roles: current_account.keys.map { |role| t("layouts.#{role}") }.join(', '))
+      flash[:notice] = t("devise.sessions.signed_in_multiple_profile", roles: current_account.keys.map { |role| t("layouts.#{role}") }.to_sentence)
     end
   end
 

@@ -40,7 +40,7 @@ describe 'Inviting an expert:', js: true do
         visit new_user_session_path
         sign_in_with avis.expert.email, password
 
-        expect(page).to have_content('Vous pouvez à tout moment alterner entre vos différents profils : expert, usager.')
+        expect(page).to have_content('Vous pouvez à tout moment alterner entre vos différents profils : expert et usager.')
         expect(page).to have_current_path(expert_all_avis_path)
       end
     end
