@@ -1744,7 +1744,7 @@ describe Dossier, type: :model do
     let(:procedure) { create(:procedure, types_de_champ_public: types_de_champ) }
     let(:dossier) { create(:dossier, procedure: procedure) }
     let(:types_de_champ) { [type_de_champ] }
-    let(:type_de_champ) { { type: :expression_reguliere, expression_reguliere:, expression_reguliere_exemple_text:, expression_reguliere_error_message: } }
+    let(:type_de_champ) { { type: :formatted, expression_reguliere:, expression_reguliere_exemple_text:, expression_reguliere_error_message: } }
 
     context "with bad example" do
       let(:expression_reguliere_exemple_text) { "01234567" }

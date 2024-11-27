@@ -57,6 +57,7 @@ fr:
           epci: "EPCI"
           cojo: "Accréditation Paris 2024"
           expression_reguliere: 'Expression régulière'
+          formatted: Champ formaté
           referentiel: 'Référentiel à configurer (avancé)'
         default_libelle:
           annuaire_education: Établissement
