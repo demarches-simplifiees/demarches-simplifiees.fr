@@ -62,7 +62,8 @@ class TypeDeChamp < ApplicationRecord
     pole_emploi: REFERENTIEL_EXTERNE,
     mesri: REFERENTIEL_EXTERNE,
     cojo: REFERENTIEL_EXTERNE,
-    expression_reguliere: STANDARD
+    expression_reguliere: STANDARD,
+    formatted: STANDARD
   }
 
   enum type_champ: {
@@ -106,7 +107,8 @@ class TypeDeChamp < ApplicationRecord
     mesri: 'mesri',
     epci: 'epci',
     cojo: 'cojo',
-    expression_reguliere: 'expression_reguliere'
+    expression_reguliere: 'expression_reguliere',
+    formatted: 'formatted'
   }
 
   SIMPLE_ROUTABLE_TYPES = [

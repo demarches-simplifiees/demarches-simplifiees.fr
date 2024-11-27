@@ -1,0 +1,8 @@
+fr:
+  activerecord:
+    errors:
+      models:
+        champs/formatted_champ:
+          attributes:
+            value:
+              invalid_regexp: '%{expression_reguliere_error_message}'

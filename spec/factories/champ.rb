@@ -189,6 +189,9 @@ FactoryBot.define do
     factory :champ_do_not_use_expression_reguliere, class: 'Champs::ExpressionReguliereChamp' do
     end
 
+    factory :champ_do_not_use_formatted, class: 'Champs::FormattedChamp' do
+    end
+
     factory :champ_do_not_use_repetition, class: 'Champs::RepetitionChamp' do
       transient do
         rows { 2 }
