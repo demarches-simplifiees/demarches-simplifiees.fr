@@ -24,10 +24,10 @@
   = @form.select :value,
     @champ.drop_down_options_with_other,
     { selected: @champ.selected, include_blank: true },
-    required: @champ.required?,
+    { required: @champ.required?,
     id: @champ.input_id,
     class: select_class_names,
-    aria: { describedby: "#{@champ.describedby_id} #{@champ.error_id}" }
+    aria: { describedby: select_aria_describedby } }
 
 - if @champ.drop_down_other?
   %div{ class: other_element_class_names }
