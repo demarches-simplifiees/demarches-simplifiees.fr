@@ -17,7 +17,7 @@
           = form_with url: download_export_path, namespace: "export#{@count}", data: { turbo_method: :post, turbo: true } do |f|
             = f.hidden_field :statut, value: @statut
             %fieldset.fr-fieldset#radio-hint{ "aria-labelledby": "radio-hint-legend" }
-              %legend.fr-fieldset__legend--regular.fr-fieldset__legend#radio-hint-legend Séletionner le format de l'export
+              %legend.fr-fieldset__legend--regular.fr-fieldset__legend#radio-hint-legend Sélectionner le format de l'export
               .fr-fieldset__element
                 .fr-radio-group
                   = f.radio_button :export_format, 'xlsx'
