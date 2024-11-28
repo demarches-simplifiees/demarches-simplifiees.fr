@@ -66,7 +66,7 @@
                   %p
                     %i Aucun modèle configuré
                 %p
-                  = link_to "Configurer les modèles d'export", exports_instructeur_procedure_path(procedure_id: params[:procedure_id]), class: 'fr-link'
+                  = link_to "Configurer les modèles d'export", export_templates_instructeur_procedure_path(procedure_id: params[:procedure_id]), class: 'fr-link'
                 %ul.fr-btns-group.fr-btns-group--sm.fr-btns-group--inline
                   %li
                     %button.fr-btn.fr-btn--secondary{ type: 'button', "data-action": "click->menu-button#close" } Annuler
