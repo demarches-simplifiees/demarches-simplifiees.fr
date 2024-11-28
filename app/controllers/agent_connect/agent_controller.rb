@@ -54,7 +54,7 @@ class AgentConnect::AgentController < ApplicationController
 
     sign_in(:user, instructeur.user)
 
-    redirect_to instructeur_procedures_path
+    redirect_to stored_location_for(:user) || instructeur_procedures_path
 
   rescue Rack::OAuth2::Client::Error => e
     Rails.logger.error e.message
