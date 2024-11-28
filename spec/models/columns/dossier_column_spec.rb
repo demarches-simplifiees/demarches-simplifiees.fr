@@ -62,7 +62,7 @@ describe Columns::DossierColumn do
           expect(procedure.find_column(label: "Association date de publication").value(dossier)).to eq(nil)
           expect(procedure.find_column(label: "Date de création").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Date du dernier évènement").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
-          expect(procedure.find_column(label: "Date de dépot").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
+          expect(procedure.find_column(label: "Date de dépôt").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Date de passage en construction").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Date de passage en instruction").value(dossier)).to be_an_instance_of(ActiveSupport::TimeWithZone)
           expect(procedure.find_column(label: "Date de traitement").value(dossier)).to eq(nil)

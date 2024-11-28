@@ -94,7 +94,7 @@ describe DossierProjectionService do
         end
 
         context 'for depose_at column' do
-          let(:label) { 'Date de dépot' }
+          let(:label) { 'Date de dépôt' }
           let(:dossier) { create(:dossier, :en_construction, depose_at: Time.zone.local(2018, 10, 17), procedure:) }
 
           it { is_expected.to eq('17/10/2018') }
